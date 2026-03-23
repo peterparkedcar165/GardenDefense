@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ant
+  - Insect
   layers:
   - Default
   - TransparentFX
