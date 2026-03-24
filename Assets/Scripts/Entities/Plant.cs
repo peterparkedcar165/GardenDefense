@@ -21,7 +21,7 @@ public abstract class Plant : Entity
         maxHealth = 20;
     }
 
-    protected void Start()
+    protected virtual void Start()
     {
         
     }

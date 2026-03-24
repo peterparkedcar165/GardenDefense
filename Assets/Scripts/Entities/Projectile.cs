@@ -9,9 +9,10 @@ public abstract class Projectile : MonoBehaviour
     protected Vector3 direction;
     protected Vector3 spawnPosition;
 
-    public virtual void Initialize(GameObject target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType)
+    // spawns the projectile, and assigns basic stats to it
+    public virtual void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType)
     {
-        direction = (target.transform.position - transform.position).normalized;
+        direction = (target - transform.position).normalized;
         this.projectileDamage = projectileDamage;
         this.projectileSpeed = projectileSpeed;
         this.piercing = piercing;
@@ -31,7 +32,6 @@ public abstract class Projectile : MonoBehaviour
         transform.position += direction * projectileSpeed * Time.deltaTime;
         if (Vector3.Distance(transform.position, spawnPosition) >= maxRange)
         {
-            Debug.Log(gameObject + " deleted due to reaching max range");
             Destroy(gameObject);
         }
     }

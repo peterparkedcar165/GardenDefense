@@ -11,6 +11,8 @@ public class CameraFit : MonoBehaviour
 
         Camera cam = GetComponent<Camera>();
 
+
+        // setting the camera's orthographic size to  half of the backdrop height. so that the camera is always including the entire backdrop
         cam.orthographicSize = backdropHeight/2;
 
         transform.position = new Vector3(backdrop.bounds.center.x, backdrop.bounds.center.y, transform.position.z);

@@ -13,6 +13,7 @@ public abstract class Insect : Entity
     protected override void Awake()
     {
         base.Awake();
+        Debug.Log("SPAWNED: " + gameObject);
     }
 
     protected void Start()
@@ -47,6 +48,16 @@ public abstract class Insect : Entity
     protected virtual void ReachObjective()
     {
         Destroy(gameObject);
+    }
+
+    public virtual Vector3 GetVelocity()
+    {
+        if (currentWaypointIndex >= waypoints.Length)
+        return Vector3.zero;
+
+        Transform target = waypoints[currentWaypointIndex];
+        Vector3 direction = (target.position - transform.position).normalized;
+        return direction * movementSpeed;
     }
 
 }

@@ -4,12 +4,12 @@ using UnityEngine;
 public class AcornProjectile : Projectile
 {
 
-    public override void Initialize(GameObject target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType)
+    public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType)
     {
         base.Initialize(target, projectileDamage, projectileSpeed, maxRange, piercing, damageType);
     }
 
-    protected virtual void Update()
+    protected override void Update()
     {
         base.Update();
     }
