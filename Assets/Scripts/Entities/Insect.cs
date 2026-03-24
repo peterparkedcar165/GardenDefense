@@ -10,6 +10,8 @@ public abstract class Insect : Entity
 
     public int sunDrop;
 
+    private GameManager gameManager;
+
     protected override void Awake()
     {
         base.Awake();
@@ -18,6 +20,7 @@ public abstract class Insect : Entity
 
     protected void Start()
     {
+        gameManager = FindAnyObjectByType<GameManager>();
         waypoints = PathManager.instance.waypoints;
     }
 
@@ -60,4 +63,9 @@ public abstract class Insect : Entity
         return direction * movementSpeed;
     }
 
+    public override void Kill()
+    {
+        base.Kill();
+        gameManager.AddSun(sunDrop);
+    }
 }
