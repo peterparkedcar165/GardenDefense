@@ -6,7 +6,7 @@ public abstract class Ant : Insect
     protected override void Awake()
     {
         base.Awake();
-        movementSpeed = 1f;
+        baseMovementSpeed = 1f;
     }
 
     

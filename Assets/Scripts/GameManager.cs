@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 
     static GameManager instance;
     public int SunCount;
+    public int playerHealth, playerMaxHealth = 20;
     public float BonusSunGain;
     
     public TextMeshProUGUI sunText;
@@ -49,5 +50,22 @@ public class GameManager : MonoBehaviour
         {
             sunText.text = "Sun: " + SunCount;
         }
+    }
+
+    public void Damage(int damage)
+    {
+        playerHealth -= damage;
+        Debug.Log("Player health: " + playerHealth);
+        if (playerHealth < 0)
+        {
+            GameOver();
+        }
+    }
+
+    private void GameOver()
+    {
+        Debug.Log("Game Over");
+        Time.timeScale = 0; // pauses game
+        // show game over screen later
     }
 }

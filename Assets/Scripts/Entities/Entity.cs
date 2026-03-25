@@ -10,9 +10,25 @@ public enum DamageType
 public abstract class Entity : MonoBehaviour
 {
 
-    public float maxHealth, health, physicalResistance, magicResistance, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus = 1, healingReceived = 1;
+    public float baseMaxHealth, basePhysicalResistance, baseMagicResistance, baseAttackDamage, baseMagicDamage, baseAttackSpeed, baseAttackRange, baseHealingBonus = 0, baseHealingReceived = 0;
+    protected float maxHealthAdder, physicalResistanceAdder, magicResistanceAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
+    protected float maxHealthMultiplier, physicalResistanceMultiplier, magicResistanceMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
+    public float maxHealth, health, physicalResistance, magicResistance, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
 
     public float timeAlive; // leaving it public jsut so i can debug, but shgould be private
+
+    protected virtual void UpdateStats()
+    {
+        maxHealth = baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier);
+        physicalResistance = basePhysicalResistance + physicalResistanceAdder + (basePhysicalResistance * physicalResistanceMultiplier);
+        magicResistance = baseMagicResistance + magicResistanceAdder + (baseMagicResistance * magicResistanceMultiplier);
+        attackDamage = baseAttackDamage + attackDamageAdder + (baseAttackDamage * attackDamageMultiplier);
+        magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
+        attackSpeed = baseAttackSpeed + attackSpeedAdder + (baseAttackSpeed * attackSpeedMultiplier);
+        attackRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
+        healingBonus = baseHealingBonus + healingBonusAdder + (baseHealingBonus * healingBonusMultiplier);
+        healingReceived = baseHealingReceived + healingReceivedAdder + (baseHealingReceived * healingReceivedMultiplier);
+    }
 
     public virtual void Damage(float damageDealt, DamageType damageType)
     {
@@ -57,12 +73,14 @@ public abstract class Entity : MonoBehaviour
 // upon spawning, occurs before Start()
     protected virtual void Awake()
     {
+        UpdateStats();
         health = maxHealth;
     }
 
     //every tick
     protected virtual void Update()
     {
+        UpdateStats();
         timeAlive += Time.deltaTime;
     }
 }

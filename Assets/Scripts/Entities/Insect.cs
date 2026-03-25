@@ -1,14 +1,27 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class Insect : Entity
 {
 
-    protected int currentWaypointIndex = 0;
+    public int currentWaypointIndex = 0;
     protected Transform[] waypoints;
 
-    public float movementSpeed;
+    // base and final
+    public float movementSpeed, baseMovementSpeed;
+
+    // bonus
+    protected float movementSpeedAdder, movementSpeedMultiplier;
+    
+    protected override void UpdateStats()
+    {
+        base.UpdateStats();
+        movementSpeed = baseMovementSpeed + movementSpeedAdder + (baseMovementSpeed * movementSpeedMultiplier);
+
+    }
 
     public int sunDrop;
+    public int expDrop;
 
     private GameManager gameManager;
 
@@ -18,10 +31,11 @@ public abstract class Insect : Entity
         Debug.Log("SPAWNED: " + gameObject);
     }
 
-    protected void Start()
+    protected virtual void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
         waypoints = PathManager.instance.waypoints;
+        expDrop = sunDrop /2;
     }
 
     protected override void Update()
@@ -48,8 +62,17 @@ public abstract class Insect : Entity
         }
     }
 
+    public Transform GetCurrentWaypoint()
+    {
+        if (currentWaypointIndex >= waypoints.Length)
+        return null;
+
+        return waypoints[currentWaypointIndex];
+    }
+
     protected virtual void ReachObjective()
     {
+        gameManager.Damage((int)baseAttackDamage);
         Destroy(gameObject);
     }
 
@@ -65,7 +88,33 @@ public abstract class Insect : Entity
 
     public override void Kill()
     {
-        base.Kill();
+        DistributeExp();
         gameManager.AddSun(sunDrop);
+        base.Kill();
+    }
+
+    // EXP MANAGING
+    
+    public HashSet<Plant> attackerSet = new HashSet<Plant>();
+
+    public void RegisterAttacker(Plant source)
+    {
+        if (source == null) return;
+        attackerSet.Add(source); // if source already exists, the hashset automatically ignores it
+    }
+
+    private void DistributeExp()
+    {
+        int attackerCount = attackerSet.Count;
+        if (attackerCount == 0) return;
+
+        // calculating the share per plant with a minimum of 25% obtained
+        float share = Mathf.Max(0.25f, 1f / attackerCount);
+        int expReward = (int)(expDrop*share);
+
+        foreach (Plant plant in attackerSet)
+        {
+            plant.GainExp(expReward);
+        }
     }
 }

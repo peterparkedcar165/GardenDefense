@@ -5,12 +5,12 @@ public class AcornSprout : Shooter
     protected override void Awake()
     {
         base.Awake();
-        attackDamage = 7f;
-        attackSpeed = 0.8f;
-        attackRange = 3f;
-        projectileSpeed = 8f;
-        piercing = 0;
-        maxRange = 3f;
+        baseAttackDamage = 7f;
+        baseAttackSpeed = 0.8f;
+        baseAttackRange = 3f;
+        baseProjectileSpeed = 8f;
+        basePiercing = 0;
+        baseMaxRange = 3f;
     }
 
     protected override void Update()
@@ -25,6 +25,7 @@ public class AcornSprout : Shooter
 
         if (acorn != null)
         {
+            acorn.owner = this; // sets owner of projectile to this plant
             acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical); 
         }
     }

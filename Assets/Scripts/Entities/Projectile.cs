@@ -8,6 +8,7 @@ public abstract class Projectile : MonoBehaviour
     public DamageType damageType;
     protected Vector3 direction;
     protected Vector3 spawnPosition;
+    public Plant owner; // will be set by the plant who fires this projectile
 
     // spawns the projectile, and assigns basic stats to it
     public virtual void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType)
@@ -38,22 +39,27 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
+
         if (other.CompareTag("Insect"))
         {
-            Entity entity = other.GetComponent<Entity>();
-            if (entity != null)
+            Insect insect = other.GetComponent<Insect>();
+            if (insect != null && owner != null)
             {
-                entity.Damage(projectileDamage, damageType);
+                insect.RegisterAttacker(owner); // add plant to hashset of insect
             }
+            if (insect != null)
+                {
+                    insect.Damage(projectileDamage, damageType);
+                }
 
             if (piercing > 0)
-            {
-                piercing--;
-            }
+                {
+                    piercing--;
+                }  
             else
-            {
-                Destroy(gameObject);
-            }
+                {
+                    Destroy(gameObject);
+                }
         }
     }
     

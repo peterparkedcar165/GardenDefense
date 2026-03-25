@@ -5324,6 +5324,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   SunCount: 0
+  playerHealth: 0
+  playerMaxHealth: 20
   BonusSunGain: 0
   sunText: {fileID: 572278663}
 --- !u!4 &612021302
