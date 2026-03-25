@@ -9,7 +9,7 @@ public class SpawnManager : MonoBehaviour
     {
         // invoke repeating of Object, starting at ..., every ...
         InvokeRepeating(nameof(SpawnWorkerAnt), 2f, 2f);
-        Invoke(nameof(StopSpawning), 8f); // stops after ... seconds
+       // Invoke(nameof(StopSpawning), 30f); // stops after ... seconds
     }
 
     void StopSpawning()
