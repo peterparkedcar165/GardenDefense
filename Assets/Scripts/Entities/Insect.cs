@@ -35,7 +35,7 @@ public abstract class Insect : Entity
     {
         gameManager = FindAnyObjectByType<GameManager>();
         waypoints = PathManager.instance.waypoints;
-        expDrop = sunDrop /2;
+        expDrop = sunDrop/2;
     }
 
     protected override void Update()

@@ -138,7 +138,7 @@ MonoBehaviour:
   magicShredMultiplier: 0
   bonusEffectChanceAdder: 0
   bonusEffectChanceMultiplier: 0
-  sunCost: 0
+  sunCost: 100
   exp: 0
   expToNextLevel: 52
   level: 1

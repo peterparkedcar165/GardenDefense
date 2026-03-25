@@ -10,14 +10,14 @@ public class AcornSprout : Shooter
         baseAttackRange = 3f;
         baseProjectileSpeed = 8f;
         basePiercing = 0;
-        baseMaxRange = 3f;
+        baseMaxRange = 7f;
     }
 
     protected override void Update()
     {
         base.Update();
     }
-    
+
     protected override void Shoot(Vector3 target)
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
@@ -26,7 +26,17 @@ public class AcornSprout : Shooter
         if (acorn != null)
         {
             acorn.owner = this; // sets owner of projectile to this plant
-            acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical); 
+            acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical);
         }
+    }
+
+    public override void LevelUp()
+    {
+        base.LevelUp();
+        int perLevel = (1 - level);
+        baseAttackDamage = 7f + (perLevel * 0.25f);
+        baseAttackSpeed = 0.8f + (perLevel * 0.08f);
+        baseAttackRange = 3f + (perLevel * 0.2f);
+        // baseProjectileSpeed = 8f + (perLevel * 0.2f);
     }
 }
