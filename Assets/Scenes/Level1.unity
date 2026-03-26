@@ -4584,28 +4584,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
---- !u!1 &520657703 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4336965381066371071, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
-  m_PrefabInstance: {fileID: 8866980882107167874}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &520657706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 520657703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66c5c63efc99fe14b82d37eab2c1f98f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Level1
-  spawnPoint: {fileID: 4069475746422670408, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
-  levelTime: 0
-  wave: 0
-  workerAnt: {fileID: 2279086888993795066, guid: aed4e1644fb8f1943b81ae3753b7e240, type: 3}
-  soldierAnt: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
 --- !u!4 &521767363 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 53325059456561594, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
@@ -13749,12 +13727,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -14466,7 +14444,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 53.32, y: -19.862}
+  m_AnchoredPosition: {x: 680.8077, y: 338.13776}
   m_SizeDelta: {x: 106.640625, y: 155.27344}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1906887412
@@ -16815,14 +16793,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnPoint
       objectReference: {fileID: 0}
+    - target: {fileID: 8902658371101449206, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
+      propertyPath: scoutAnt
+      value: 
+      objectReference: {fileID: 2279086888993795066, guid: c3349ff3828f87047a2105c4748346ef, type: 3}
     m_RemovedComponents:
     - {fileID: 2018508753106936876, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4336965381066371071, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 520657706}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

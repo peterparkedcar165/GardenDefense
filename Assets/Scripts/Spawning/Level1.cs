@@ -5,7 +5,7 @@ public class Level1 : SpawnManager
 {
     public float levelTime;
     public int wave;
-    public GameObject workerAnt, soldierAnt;
+    public GameObject workerAnt, soldierAnt, scoutAnt, carpenterAnt;
 
     protected override void Start()
     {
@@ -19,6 +19,10 @@ public class Level1 : SpawnManager
         InvokeRepeating(nameof(SpawnWorkerAnt), 2f, 2f);
         yield return new WaitForSeconds(24f);
         CancelInvoke(nameof(SpawnWorkerAnt));
+
+        InvokeRepeating(nameof(SpawnScoutAnt), 0f, 3f);
+        yield return new WaitForSeconds(18);
+        CancelInvoke(nameof(SpawnScoutAnt));
 
         InvokeRepeating(nameof(SpawnSoldierAnt), 0f, 4f);
         yield return new WaitForSeconds(20f);
@@ -34,6 +38,16 @@ public class Level1 : SpawnManager
 
     void SpawnSoldierAnt() {
         Spawn(soldierAnt);
+    }
+    
+    void SpawnScoutAnt()
+    {
+        Spawn(scoutAnt);
+    }
+
+    void SpawnCarpenterAnt()
+    {
+        Spawn(carpenterAnt);
     }
 
 
