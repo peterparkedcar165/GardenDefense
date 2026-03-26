@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum DamageType
 {
@@ -82,5 +83,44 @@ public abstract class Entity : MonoBehaviour
     {
         UpdateStats();
         timeAlive += Time.deltaTime;
+        TickEffects();
+    }
+
+    // STATUS EFFECTS
+
+    public List<StatusEffect> activeEffects = new List<StatusEffect>();
+
+    public void ApplyEffect(StatusEffect effect)
+    {
+        activeEffects.Add(effect);
+        effect.OnApply();
+    }
+
+    public bool HasEffect<T>() where T : StatusEffect
+    {
+        foreach (StatusEffect effect in activeEffects)
+        {
+            if (effect is T)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+// tick effects of the status effect. starts at end of the list
+// checks until head, if duration is under or equal to 0, executes isExpired
+// and then removes it from the list
+    private void TickEffects()
+    {
+        for (int i = activeEffects.Count - 1; i >= 0; i--)
+        {
+            activeEffects[i].Tick(Time.deltaTime);
+            if (activeEffects[i].IsExpired())
+            {
+                activeEffects[i].OnExpire();
+                activeEffects.Remove(activeEffects[i]);
+            }
+        }
     }
 }

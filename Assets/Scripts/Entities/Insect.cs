@@ -46,6 +46,12 @@ public abstract class Insect : Entity
 
     protected virtual void Move()
     {
+        // IF INSECT HAS EFFECT THAT STOPS MOVEMENT
+        if (HasEffect<StunEffect>())
+        {
+            return;
+        }
+
         if (currentWaypointIndex >= waypoints.Length)
         {
             ReachObjective();

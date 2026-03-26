@@ -33,7 +33,7 @@ public class AcornSprout : Shooter
     public override void LevelUp()
     {
         base.LevelUp();
-        int perLevel = (1 - level);
+        int perLevel = (level - 1);
         baseAttackDamage = 7f + (perLevel * 0.25f);
         baseAttackSpeed = 0.8f + (perLevel * 0.08f);
         baseAttackRange = 3f + (perLevel * 0.2f);

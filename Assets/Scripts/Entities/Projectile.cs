@@ -36,30 +36,31 @@ public abstract class Projectile : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    protected virtual void OnHit(Insect insect)
+    {
+        if (owner != null)
+        insect.RegisterAttacker(owner);
+        insect.Damage(projectileDamage, damageType);
 
+        if (piercing > 0)
+        {
+            piercing--;
+        } else
+        {
+            Destroy(gameObject);
+        }
+    }
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
 
         if (other.CompareTag("Insect"))
         {
             Insect insect = other.GetComponent<Insect>();
-            if (insect != null && owner != null)
-            {
-                insect.RegisterAttacker(owner); // add plant to hashset of insect
-            }
             if (insect != null)
-                {
-                    insect.Damage(projectileDamage, damageType);
-                }
-
-            if (piercing > 0)
-                {
-                    piercing--;
-                }  
-            else
-                {
-                    Destroy(gameObject);
-                }
+            {
+                OnHit(insect);
+            }
+            
         }
     }
     
