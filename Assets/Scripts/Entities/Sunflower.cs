@@ -8,7 +8,7 @@ public class Sunflower : Shooter
         baseAttackDamage = 4f;
         baseAttackSpeed = 0.8f;
         baseAttackRange = 3f;
-        baseProjectileSpeed = 2f;
+        baseProjectileSpeed = 3f;
         basePiercing = 0;
         baseMaxRange = 6f;
         // sun cost is set in inspector!

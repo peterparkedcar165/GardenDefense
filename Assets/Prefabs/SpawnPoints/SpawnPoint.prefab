@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4069475746422670408}
-  - component: {fileID: 2018508753106936876}
+  - component: {fileID: 8902658371101449206}
   m_Layer: 0
   m_Name: SpawnPoint
   m_TagString: Untagged
@@ -26,13 +26,13 @@ Transform:
   m_GameObject: {fileID: 4336965381066371071}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.7, y: 5, z: 0}
+  m_LocalPosition: {x: -4, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2018508753106936876
+--- !u!114 &8902658371101449206
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,9 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4336965381066371071}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e649daa80c820d047b0efd5d9a79db23, type: 3}
+  m_Script: {fileID: 11500000, guid: 66c5c63efc99fe14b82d37eab2c1f98f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  levelTime: 0
+  m_EditorClassIdentifier: Assembly-CSharp::Level1
   spawnPoint: {fileID: 4069475746422670408}
-  workerAntPrefab: {fileID: 2279086888993795066, guid: aed4e1644fb8f1943b81ae3753b7e240, type: 3}
+  levelTime: 0
+  wave: 0
+  workerAnt: {fileID: 2279086888993795066, guid: aed4e1644fb8f1943b81ae3753b7e240, type: 3}
+  soldierAnt: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
