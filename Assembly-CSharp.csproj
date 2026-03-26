@@ -54,6 +54,7 @@
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\Scripts\Entities\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\GridManager.cs" />
+    <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Ant.cs" />
     <Compile Include="Assets\Scripts\Entities\Sunflower.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\StunEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\SunflowerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insect.cs" />
-    <Compile Include="Assets\Scripts\SpawnManager.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Level1.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
   </ItemGroup>
   <ItemGroup>

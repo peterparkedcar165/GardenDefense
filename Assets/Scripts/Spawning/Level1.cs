@@ -1,15 +1,18 @@
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class Level1 : SpawnManager
 {
     public float levelTime;
+    public int wave;
     public Transform spawnPoint;
     public GameObject workerAntPrefab;
     void Start()
     {
         // invoke repeating of Object, starting at ..., every ...
-        InvokeRepeating(nameof(SpawnWorkerAnt), 2f, 2f);
+        InvokeRepeating(nameof(SpawnWorkerAnt/*method*/), 2f/*starts at*/, 2f /*repeats every*/);
+        Invoke(nameof(StopSpawning),10f);
        // Invoke(nameof(StopSpawning), 30f); // stops after ... seconds
+        InvokeRepeating(nameof(SpawnSoldierAnt), 11f, 5f);
     }
 
     void StopSpawning()
@@ -17,11 +20,12 @@ public class SpawnManager : MonoBehaviour
         CancelInvoke(nameof(SpawnWorkerAnt));
     }
 
-    
-    void SpawnWorkerAnt()
+    protected virtual void Spawn(Insect insect)
     {
-         Instantiate(workerAntPrefab, spawnPoint.position, Quaternion.identity);
+        Instantiate(insect, spawnPoint. position, Quaternion.identity);
     }
+
+
     void Update()
     {
        
