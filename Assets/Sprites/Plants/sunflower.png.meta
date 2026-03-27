@@ -1,7 +1,13 @@
 fileFormatVersion: 2
-guid: 61ed802b81b693c4fba4309505d4eaaf
+guid: e470d82d1a72b284db0fc11d7825e607
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 7367808777163505026
+    second: sunflower_0
+  - first:
+      213: 239437230208277327
+    second: sunflower_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -97,23 +103,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: acornboyplaceholder_0
+      name: sunflower_0
       rect:
         serializedVersion: 2
-        x: 229
-        y: 260
-        width: 573
-        height: 577
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 13, w: 0}
+        x: 15
+        y: 36
+        width: 697
+        height: 669
+      alignment: 9
+      pivot: {x: 0.47699144, y: 0.4760284}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 706adf114d8b70e40800000000000000
-      internalID: 5622665880769766919
+      spriteID: 28df5d7eb07bf3660800000000000000
+      internalID: 7367808777163505026
       vertices: []
       indices: 
       edges: []
@@ -122,7 +128,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 87f79c7d0022d5e43b88d9d703cc2e0f
+    spriteID: 20dd832189084d749ad52099498ceeeb
     internalID: 0
     vertices: []
     indices: 
@@ -130,9 +136,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      acornboyplaceholder_0: 5622665880769766919
+      sunflower_0: 7367808777163505026
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

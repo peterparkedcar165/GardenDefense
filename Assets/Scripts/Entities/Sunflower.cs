@@ -4,13 +4,13 @@ public class Sunflower : Shooter
 {
     protected override void Awake()
     {
-        base.Awake();
-        baseAttackDamage = 4f;
-        baseAttackSpeed = 0.8f;
+        baseAttackDamage = 12f;
+        baseAttackSpeed = 0.5f;
         baseAttackRange = 3f;
         baseProjectileSpeed = 3f;
         basePiercing = 0;
         baseMaxRange = 6f;
+        base.Awake();
         // sun cost is set in inspector!
     }
 
@@ -28,17 +28,17 @@ public class Sunflower : Shooter
         {
             petal.owner = this; // sets owner of projectile to this plant
             petal.SetTarget(FindTarget()); // assign the target of this plant to the projectile
-            petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical);
+            petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Magic);
         }
     }
     
     public override void LevelUp()
         {
             base.LevelUp();
-            int perLevel = (1 - level);
-            baseAttackDamage = 4f + (perLevel * 0.25f);
-            baseAttackSpeed = 1.2f + (perLevel * 0.08f);
+            int perLevel = (level - 1);
+            baseAttackDamage = 12f + (perLevel * 1f);
+            baseAttackSpeed = 0.5f + (perLevel * 0.03f);
             baseAttackRange = 3f + (perLevel * 0.2f);
-            baseProjectileSpeed = 2f + (perLevel * 0.2f);
+            baseProjectileSpeed = 3f + (perLevel * 0.3f);
         }
 }
