@@ -13,20 +13,35 @@ public class AcornProjectile : Projectile
         base.Update();
     }
 
-    protected override void OnHit(Insect insectHit)
+    protected override void OnHit(Insect insect) // to change for every plant
     {
-        base.OnHit(insectHit); // will handle damage, registration and pierce/destroy
+        
+        if (owner != null)
+            insect.RegisterAttacker(owner);
+
+        insect.Damage(projectileDamage * (1 - insect.natureResistance), damageType);
+
+        if (piercing > 0)
+        {
+            piercing--;
+        } else
+        {
+            Destroy(gameObject);
+         }
 
         AcornSprout shooter = owner as AcornSprout;
 
+
+        /* SPECIAL EFFECT */
+        
         // checking the passive level
         if (shooter != null && shooter.passiveLevel > 0)
         {
              float procChance = 0.33f * (1 + shooter.bonusEffectChance);
              if (Random.value < procChance)
              {
-                 insectHit.ApplyEffect(new StunEffect(
-                    insectHit /*target*/,
+                 insect.ApplyEffect(new StunEffect(
+                    insect /*target*/,
                     1f/*duration in seconds*/,
                     1/*level*/,
                     shooter/*source*/));

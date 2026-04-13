@@ -20,6 +20,7 @@ public class StatusEffect
         this.source = source;
     }
 
+
     public virtual void OnApply() {} // nothing because will be implemented in specific effects
     public virtual void OnTick(float deltaTime) {} // nothing because will be implemented in specific effects
     public virtual void OnExpire() {} // same

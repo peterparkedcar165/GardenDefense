@@ -108,6 +108,18 @@ public abstract class Entity : MonoBehaviour
         return false;
     }
 
+    public int GetEffectLevel<T>() where T : StatusEffect
+    {
+        foreach (StatusEffect effect in activeEffects)
+        {
+            if (effect is T typedEffect)
+            {
+                return typedEffect.level;
+            }
+        }
+        return 0; // no effect found
+    }
+
 // tick effects of the status effect. starts at end of the list
 // checks until head, if duration is under or equal to 0, executes isExpired
 // and then removes it from the list

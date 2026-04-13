@@ -12,16 +12,38 @@ public enum PlantType
 public abstract class Plant : Entity
 {
     // base
-    public float basePhysicalShred, physicalShred, baseMagicShred, magicShred, baseBonusEffectChance, bonusEffectChance;
-    
+    public float basePhysicalShred, physicalShred, 
+    baseMagicShred, magicShred, 
+    baseBonusEffectChance, bonusEffectChance,
+    baseFireDamage, fireDamage,
+    baseWaterDamage, waterDamage,
+    baseNatureDamage, natureDamage,
+    baseWindDamage, windDamage,
+    basePoisonDamage, poisonDamage;
+
+
     // bonus
-    public float physicalShredAdder, physicalShredMultiplier, magicShredAdder, magicShredMultiplier, bonusEffectChanceAdder, bonusEffectChanceMultiplier;
+    public float physicalShredAdder, physicalShredMultiplier, 
+    magicShredAdder, magicShredMultiplier, 
+    bonusEffectChanceAdder, bonusEffectChanceMultiplier,
+    fireDamageAdder, fireDamageMultiplier,
+    waterDamageAdder, waterDamageMultiplier,
+    natureDamageAdder, natureDamageMultiplier,
+    windDamageAdder, windDamageMultiplier,
+    poisonDamageAdder, poisonDamageMultiplier;
+
     protected override void UpdateStats()
     {
         base.UpdateStats();
         physicalShred = basePhysicalShred + physicalShredAdder + (basePhysicalShred * physicalShredMultiplier);
         magicShred = baseMagicShred + magicShredAdder + (baseMagicShred * magicShredMultiplier);
         bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
+        fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
+        waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
+        natureDamage = baseNatureDamage + natureDamageAdder + (baseNatureDamage * natureDamageMultiplier);
+        windDamage = baseWindDamage + windDamageAdder + (baseWindDamage * windDamageMultiplier);
+        poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
+    
     }
 
     public int sunCost;
@@ -32,8 +54,8 @@ public abstract class Plant : Entity
 
     protected override void Awake()
     {
-        base.Awake();
         baseMaxHealth = 20;
+        base.Awake();
     }
 
     protected virtual void Start()

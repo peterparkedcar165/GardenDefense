@@ -21,6 +21,23 @@ public class SunflowerProjectile : Projectile
     {
         trackedTarget = target;
     }
+
+    protected override void OnHit(Insect insect) // to change for every plant
+    {
+        if (owner != null)
+            insect.RegisterAttacker(owner);
+
+        insect.Damage(projectileDamage * (1 - insect.fireResistance), damageType);
+
+        if (piercing > 0)
+        {
+            piercing--;
+        } else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     protected override void Move()
     {
         if (trackedTarget == null)

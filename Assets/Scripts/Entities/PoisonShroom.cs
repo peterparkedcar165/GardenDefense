@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public class AcornSprout : Shooter
+public class PoisonShroom : Shooter
 {
     protected override void Awake()
     {
         base.Awake();
-        baseAttackDamage = 7f;
-        baseAttackSpeed = 0.8f;
+        baseAttackDamage = 4f;
+        baseAttackSpeed = 0.6f;
         baseAttackRange = 3f;
-        baseProjectileSpeed = 8f;
+        baseProjectileSpeed = 3f;
         basePiercing = 0;
         baseMaxRange = 7f;
     }
@@ -21,12 +21,12 @@ public class AcornSprout : Shooter
     protected override void Shoot(Vector3 target)
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        AcornProjectile acorn = projectile.GetComponent<AcornProjectile>();
+        PoisonShroomProjectile puff = projectile.GetComponent<PoisonShroomProjectile>();
 
-        if (acorn != null)
+        if (puff != null)
         {
-            acorn.owner = this; // sets owner of projectile to this plant
-            acorn.Initialize(target, attackDamage * (1 + natureDamage), projectileSpeed, maxRange, piercing, DamageType.Physical);
+            puff.owner = this; // sets owner of projectile to this plant
+            puff.Initialize(target, attackDamage * (1 + poisonDamage), projectileSpeed, maxRange, piercing, DamageType.Magic);
         }
     }
 
@@ -34,8 +34,8 @@ public class AcornSprout : Shooter
     {
         base.LevelUp();
         int perLevel = (level - 1);
-        baseAttackDamage = 7f + (perLevel * 0.25f);
-        baseAttackSpeed = 0.8f + (perLevel * 0.08f);
+        baseAttackDamage = 4f + (perLevel * 0.2f);
+        baseAttackSpeed = 0.6f + (perLevel * 0.04f);
         baseAttackRange = 3f + (perLevel * 0.2f);
         // baseProjectileSpeed = 8f + (perLevel * 0.2f);
     }

@@ -28,7 +28,7 @@ public class Sunflower : Shooter
         {
             petal.owner = this; // sets owner of projectile to this plant
             petal.SetTarget(FindTarget()); // assign the target of this plant to the projectile
-            petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Magic);
+            petal.Initialize(target, attackDamage * (1 + fireDamage), projectileSpeed, maxRange, piercing, DamageType.Magic); // change elemental everytime
         }
     }
     

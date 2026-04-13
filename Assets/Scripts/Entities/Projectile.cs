@@ -36,20 +36,12 @@ public abstract class Projectile : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     protected virtual void OnHit(Insect insect)
     {
-        if (owner != null)
-        insect.RegisterAttacker(owner);
-        insect.Damage(projectileDamage, damageType);
-
-        if (piercing > 0)
-        {
-            piercing--;
-        } else
-        {
-            Destroy(gameObject);
-        }
+        //EMPTY METHOD INTENTIONAL
     }
+    
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
 
