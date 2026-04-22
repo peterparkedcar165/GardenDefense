@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Snowdrop : Shooter
+public class Snowdrop : Aura
 {
     protected override void Awake()
     {
