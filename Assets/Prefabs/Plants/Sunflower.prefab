@@ -132,12 +132,32 @@ MonoBehaviour:
   magicShred: 0
   baseBonusEffectChance: 0
   bonusEffectChance: 0
+  baseFireDamage: 0
+  fireDamage: 0
+  baseWaterDamage: 0
+  waterDamage: 0
+  baseNatureDamage: 0
+  natureDamage: 0
+  baseWindDamage: 0
+  windDamage: 0
+  basePoisonDamage: 0
+  poisonDamage: 0
   physicalShredAdder: 0
   physicalShredMultiplier: 0
   magicShredAdder: 0
   magicShredMultiplier: 0
   bonusEffectChanceAdder: 0
   bonusEffectChanceMultiplier: 0
+  fireDamageAdder: 0
+  fireDamageMultiplier: 0
+  waterDamageAdder: 0
+  waterDamageMultiplier: 0
+  natureDamageAdder: 0
+  natureDamageMultiplier: 0
+  windDamageAdder: 0
+  windDamageMultiplier: 0
+  poisonDamageAdder: 0
+  poisonDamageMultiplier: 0
   sunCost: 125
   exp: 0
   expToNextLevel: 52

@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class StunEffect : StatusEffect
+public class StunEffect : HardCrowdControl
 {
-    public Type effectType = Type.negative;
     public StunEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         // for stun, nothing occurs.
+        effectType = Type.negative;
     }
 
     public override void OnApply()

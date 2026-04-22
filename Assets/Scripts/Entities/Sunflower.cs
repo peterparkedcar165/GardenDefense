@@ -4,7 +4,7 @@ public class Sunflower : Shooter
 {
     protected override void Awake()
     {
-        baseAttackDamage = 12f;
+        baseAttackDamage = 10f;
         baseAttackSpeed = 0.5f;
         baseAttackRange = 3f;
         baseProjectileSpeed = 3f;
@@ -36,7 +36,7 @@ public class Sunflower : Shooter
         {
             base.LevelUp();
             int perLevel = (level - 1);
-            baseAttackDamage = 12f + (perLevel * 1f);
+            baseAttackDamage = 10f + (perLevel * 1f);
             baseAttackSpeed = 0.5f + (perLevel * 0.03f);
             baseAttackRange = 3f + (perLevel * 0.2f);
             baseProjectileSpeed = 3f + (perLevel * 0.3f);

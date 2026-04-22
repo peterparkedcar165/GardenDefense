@@ -49,6 +49,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.4.0f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\StatusEffect\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\Entities\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Assets\Scripts\Entities\AcornProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\SoldierAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Plant.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Shooter.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />

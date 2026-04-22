@@ -158,7 +158,7 @@ MonoBehaviour:
   windDamageMultiplier: 0
   poisonDamageAdder: 0
   poisonDamageMultiplier: 0
-  sunCost: 75
+  sunCost: 100
   exp: 0
   expToNextLevel: 52
   level: 1

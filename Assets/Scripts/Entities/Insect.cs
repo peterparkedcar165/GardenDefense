@@ -11,7 +11,7 @@ public abstract class Insect : Entity
     public float movementSpeed, baseMovementSpeed;
 
     // bonus
-    protected float movementSpeedAdder, movementSpeedMultiplier;
+    public float movementSpeedAdder, movementSpeedMultiplier;
 
     public float baseFireResistance, fireResistance, fireResistanceAdder, fireResistanceMultiplier,
     baseWaterResistance, waterResistance, waterResistanceAdder, waterResistanceMultiplier,
@@ -56,8 +56,9 @@ public abstract class Insect : Entity
 
     protected virtual void Move()
     {
-        // IF INSECT HAS EFFECT THAT STOPS MOVEMENT
-        if (HasEffect<StunEffect>())
+        if (waypoints == null) return;
+        // IF INSECT IS HARD CC'ED
+        if (HasEffect<HardCrowdControl>())
         {
             return;
         }

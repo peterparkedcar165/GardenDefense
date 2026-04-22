@@ -49,6 +49,9 @@ public abstract class Entity : MonoBehaviour
         }
 
         health -= modifiedDamage;
+
+        UpdateHealthBar();
+
         if (health <= 0)
         {
             Kill();
@@ -63,6 +66,7 @@ public abstract class Entity : MonoBehaviour
         {
             health = maxHealth;
         }
+        UpdateHealthBar();
     }
 
 // method for death
@@ -76,6 +80,7 @@ public abstract class Entity : MonoBehaviour
     {
         UpdateStats();
         health = maxHealth;
+        SpawnHealthBar();
     }
 
     //every tick
@@ -86,12 +91,84 @@ public abstract class Entity : MonoBehaviour
         TickEffects();
     }
 
+    // HEALTH BAR
+
+    private Vector3 healthBarOffset = new Vector3(0, 0.6f, 0); // OFFSET
+    private GameObject healthBarInstance;
+    private Transform healthBarFill;
+
+    private void SpawnHealthBar()
+    {
+        GameObject healthBarPrefab = Resources.Load<GameObject>("HealthBar");
+        if (healthBarPrefab == null)
+        {
+            Debug.LogWarning("HealthBar prefab not found in Resources folder");
+            return;
+        }
+
+        healthBarInstance = Instantiate(healthBarPrefab, transform);
+
+        Vector3 offset = healthBarOffset;
+        offset.x -= 0.475f;
+        healthBarInstance.transform.localPosition = offset;
+
+        healthBarFill = healthBarInstance.transform.Find("Fill");
+        healthBarInstance.SetActive(false);
+    }
+    
+    private void UpdateHealthBar()
+    {
+            Debug.Log($"UpdateHealthBar called. health: {health}, maxHealth: {maxHealth}, ratio: {health/maxHealth}");
+
+        if (healthBarFill == null) {
+            Debug.Log("healthBarFill is null, bailing");
+            return;
+        }
+
+        float ratio = Mathf.Clamp01(health/maxHealth);
+        Vector3 scale = healthBarFill.localScale;
+        scale.x = ratio;
+        healthBarFill.localScale = scale;
+    }
+    
+    void OnMouseEnter()
+    {
+        if (healthBarInstance != null)
+        {
+            healthBarInstance.SetActive(true);
+        }
+    }
+
+    void OnMouseExit()
+    {
+        if (healthBarInstance != null)
+        {
+            healthBarInstance.SetActive(false);
+        }
+    }
+
     // STATUS EFFECTS
 
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
 
     public void ApplyEffect(StatusEffect effect)
     {
+        foreach (StatusEffect existing in activeEffects)
+        {
+            if (existing.GetType() == effect.GetType())
+            {
+                if (effect.level > existing.level)
+                {
+                    existing.level = effect.level;
+                    existing.duration = effect.duration;
+                    existing.OnApply();
+                } else if (effect.duration > existing.duration) 
+                {
+                    existing.duration = effect.duration;
+                }
+                return;
+            }
+        }
         activeEffects.Add(effect);
         effect.OnApply();
     }
@@ -132,6 +209,49 @@ public abstract class Entity : MonoBehaviour
             {
                 activeEffects[i].OnExpire();
                 activeEffects.Remove(activeEffects[i]);
+            }
+        }
+    }
+
+    // removing all debuffs
+    public void RemoveAllDebuffs()
+    {
+        // start at end of the list then go leftwards
+        for (int i = activeEffects.Count - 1; i >= 0; i--)
+        {
+            if (activeEffects[i].effectType == StatusEffect.Type.negative)
+            {
+                activeEffects[i].OnExpire();
+                activeEffects.RemoveAt(i);
+            }
+        }
+    }
+
+    // remove all buffs
+    public void RemoveAllBuffs()
+    {
+        // start at end of the list then go leftwards
+        for (int i = activeEffects.Count - 1; i >= 0; i--)
+        {
+            if (activeEffects[i].effectType == StatusEffect.Type.positive)
+            {
+                activeEffects[i].OnExpire();
+                activeEffects.RemoveAt(i);
+            }
+        }
+    }
+
+    // remove one specific effect
+
+    public void RemoveEffect<T>() where T : StatusEffect
+    {
+        for (int i = activeEffects.Count -1; i>=0 ; i--)
+        {
+            if (activeEffects[i] is T)
+            {
+                activeEffects[i].OnExpire();
+                activeEffects.RemoveAt(i);
+                return;
             }
         }
     }

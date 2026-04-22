@@ -34,7 +34,7 @@ public class PoisonShroom : Shooter
     {
         base.LevelUp();
         int perLevel = (level - 1);
-        baseAttackDamage = 4f + (perLevel * 0.2f);
+        baseAttackDamage = 4f + (perLevel * 0.3f);
         baseAttackSpeed = 0.6f + (perLevel * 0.04f);
         baseAttackRange = 3f + (perLevel * 0.2f);
         // baseProjectileSpeed = 8f + (perLevel * 0.2f);

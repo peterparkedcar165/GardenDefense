@@ -9,8 +9,10 @@ public class StatusEffect
         neutral,
         negative
     }
+    public Type effectType;
     public int level;
     public Entity target, source;
+
 
     public StatusEffect(Entity target, float duration, int level, Entity source)
     {
