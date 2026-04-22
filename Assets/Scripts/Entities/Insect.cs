@@ -17,7 +17,8 @@ public abstract class Insect : Entity
     baseWaterResistance, waterResistance, waterResistanceAdder, waterResistanceMultiplier,
     baseNatureResistance, natureResistance, natureResistanceAdder, natureResistanceMultiplier,
     baseWindResistance, windResistance, windResistanceAdder, windResistanceMultiplier,
-    basePoisonResistance, poisonResistance, poisonResistanceAdder, poisonResistanceMultiplier;
+    basePoisonResistance, poisonResistance, poisonResistanceAdder, poisonResistanceMultiplier,
+    baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;
     
     protected override void UpdateStats()
     {
@@ -28,6 +29,7 @@ public abstract class Insect : Entity
         natureResistance = baseNatureResistance + natureResistanceAdder + (baseNatureResistance * natureResistanceMultiplier);
         windResistance = baseWindResistance + windResistanceAdder + (baseWindResistance * windResistanceMultiplier);
         poisonResistance = basePoisonResistance + poisonResistanceAdder + (basePoisonResistance * poisonResistanceMultiplier);
+        iceResistance = baseIceResistance + iceResistanceAdder + (baseIceResistance * iceResistanceMultiplier);
     }
 
     public int sunDrop;

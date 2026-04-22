@@ -118,8 +118,6 @@ public abstract class Entity : MonoBehaviour
     
     private void UpdateHealthBar()
     {
-            Debug.Log($"UpdateHealthBar called. health: {health}, maxHealth: {maxHealth}, ratio: {health/maxHealth}");
-
         if (healthBarFill == null) {
             Debug.Log("healthBarFill is null, bailing");
             return;

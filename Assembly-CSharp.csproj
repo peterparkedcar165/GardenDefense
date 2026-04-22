@@ -50,33 +50,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\StatusEffect\HardCrowdControl.cs" />
-    <Compile Include="Assets\Scripts\Entities\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
-    <Compile Include="Assets\Scripts\Entities\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\GridManager.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Ant.cs" />
-    <Compile Include="Assets\Scripts\Entities\Sunflower.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
     <Compile Include="Assets\Scripts\Entities\AcornProjectile.cs" />
-    <Compile Include="Assets\Scripts\Entities\SoldierAnt.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Plant.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Shooter.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StunEffect.cs" />
-    <Compile Include="Assets\Scripts\Entities\ScoutAnt.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\Entities\PoisonShroomProjectile.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
     <Compile Include="Assets\Scripts\Entities\SunflowerProjectile.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
     <Compile Include="Assets\Scripts\Entities\Insect.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level1.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Entities\PoisonShroom.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

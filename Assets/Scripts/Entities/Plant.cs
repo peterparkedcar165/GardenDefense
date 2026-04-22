@@ -19,7 +19,8 @@ public abstract class Plant : Entity
     baseWaterDamage, waterDamage,
     baseNatureDamage, natureDamage,
     baseWindDamage, windDamage,
-    basePoisonDamage, poisonDamage;
+    basePoisonDamage, poisonDamage,
+    baseIceDamage, iceDamage;
 
 
     // bonus
@@ -30,7 +31,8 @@ public abstract class Plant : Entity
     waterDamageAdder, waterDamageMultiplier,
     natureDamageAdder, natureDamageMultiplier,
     windDamageAdder, windDamageMultiplier,
-    poisonDamageAdder, poisonDamageMultiplier;
+    poisonDamageAdder, poisonDamageMultiplier,
+    iceDamageAdder,iceDamageMultiplier;
 
     protected override void UpdateStats()
     {
@@ -43,6 +45,7 @@ public abstract class Plant : Entity
         natureDamage = baseNatureDamage + natureDamageAdder + (baseNatureDamage * natureDamageMultiplier);
         windDamage = baseWindDamage + windDamageAdder + (baseWindDamage * windDamageMultiplier);
         poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
+        iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
     
     }
 
