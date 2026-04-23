@@ -16,8 +16,7 @@ public class PoisonEffect : StatusEffect
 
     public override void OnTick(float deltaTime)
     {
-        Insect insect = (Insect)target;
-        target.Damage((damagePerSecond * deltaTime) * (1 - insect.poisonResistance), DamageType.Magic);
+        target.Damage((damagePerSecond * deltaTime), DamageType.Magic, ElementalType.Poison, source);
     }
 
     public override void OnExpire()

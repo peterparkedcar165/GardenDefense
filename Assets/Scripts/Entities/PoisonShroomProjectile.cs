@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class PoisonShroomProjectile : Projectile
 {
-
-    public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType)
+    public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
     {
-        base.Initialize(target, projectileDamage, projectileSpeed, maxRange, piercing, damageType);
+        base.Initialize(target, projectileDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, source);
     }
 
     protected override void Update()
@@ -16,10 +15,10 @@ public class PoisonShroomProjectile : Projectile
     protected override void OnHit(Insect insect) // to change for every plant
     {
         
-        if (owner != null)
-            insect.RegisterAttacker(owner);
+        if (source != null)
+            insect.RegisterAttacker(source);
 
-        insect.Damage(projectileDamage * (1 - insect.poisonResistance), damageType);
+        insect.Damage(projectileDamage, damageType, elementalType, source);
 
         if (piercing > 0)
         {
@@ -30,23 +29,20 @@ public class PoisonShroomProjectile : Projectile
          }
 
 
-        PoisonShroom shooter = owner as PoisonShroom;
-
-
         /* SPECIAL EFFECT */
 
-        if (shooter != null) 
+        if (source != null) 
         {
             int newPoisonLevel;
-            if(shooter.passiveLevel <= 0)
+            if(source.passiveLevel <= 0)
             {
                 newPoisonLevel = 1;
             } else
             {
-                newPoisonLevel = 1 + shooter.passiveLevel;
+                newPoisonLevel = 1 + source.passiveLevel;
             }
 
-            insect.ApplyEffect(new PoisonEffect(insect, 4f, newPoisonLevel, shooter));
+            insect.ApplyEffect(new PoisonEffect(insect, 4f, newPoisonLevel, source));
 
         } else { 
             return;

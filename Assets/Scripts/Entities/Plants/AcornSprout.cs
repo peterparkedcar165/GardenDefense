@@ -25,8 +25,7 @@ public class AcornSprout : Shooter
 
         if (acorn != null)
         {
-            acorn.owner = this; // sets owner of projectile to this plant
-            acorn.Initialize(target, attackDamage * (1 + natureDamage), projectileSpeed, maxRange, piercing, DamageType.Physical);
+            acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical, ElementalType.Nature, this);
         }
     }
 

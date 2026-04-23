@@ -25,8 +25,7 @@ public class PoisonShroom : Shooter
 
         if (puff != null)
         {
-            puff.owner = this; // sets owner of projectile to this plant
-            puff.Initialize(target, attackDamage * (1 + poisonDamage), projectileSpeed, maxRange, piercing, DamageType.Magic);
+            puff.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Magic, ElementalType.Poison, this);
         }
     }
 

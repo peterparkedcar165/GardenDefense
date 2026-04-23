@@ -8,15 +8,48 @@ public enum DamageType
     True
 }
 
+public enum ElementalType
+{
+    Fire, Water, Nature, Poison, Ice, Wind, Neutral
+}
+
 public abstract class Entity : MonoBehaviour
 {
+    // STATS A BIT MESSY BUT WILL CLEAN EVENTUALLY
+    public float basePhysicalShred, physicalShred, 
+    baseMagicShred, magicShred, 
+    baseBonusEffectChance, bonusEffectChance,
+    baseFireDamage, fireDamage,
+    baseWaterDamage, waterDamage,
+    baseNatureDamage, natureDamage,
+    baseWindDamage, windDamage,
+    basePoisonDamage, poisonDamage,
+    baseIceDamage, iceDamage;
+
+
+    // bonus
+    public float physicalShredAdder, physicalShredMultiplier, 
+    magicShredAdder, magicShredMultiplier, 
+    bonusEffectChanceAdder, bonusEffectChanceMultiplier,
+    fireDamageAdder, fireDamageMultiplier,
+    waterDamageAdder, waterDamageMultiplier,
+    natureDamageAdder, natureDamageMultiplier,
+    windDamageAdder, windDamageMultiplier,
+    poisonDamageAdder, poisonDamageMultiplier,
+    iceDamageAdder,iceDamageMultiplier;
 
     public float baseMaxHealth, basePhysicalResistance, baseMagicResistance, baseAttackDamage, baseMagicDamage, baseAttackSpeed, baseAttackRange, baseHealingBonus = 0, baseHealingReceived = 0;
     protected float maxHealthAdder, physicalResistanceAdder, magicResistanceAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
     protected float maxHealthMultiplier, physicalResistanceMultiplier, magicResistanceMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
     public float maxHealth, health, physicalResistance, magicResistance, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
 
-    public float timeAlive; // leaving it public jsut so i can debug, but shgould be private
+    public float baseFireResistance, fireResistance, fireResistanceAdder, fireResistanceMultiplier,
+    baseWaterResistance, waterResistance, waterResistanceAdder, waterResistanceMultiplier,
+    baseNatureResistance, natureResistance, natureResistanceAdder, natureResistanceMultiplier,
+    baseWindResistance, windResistance, windResistanceAdder, windResistanceMultiplier,
+    basePoisonResistance, poisonResistance, poisonResistanceAdder, poisonResistanceMultiplier,
+    baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;
+    public float timeAlive, totalDamageDealt; // leaving it public jsut so i can debug, but shgould be private
 
     protected virtual void UpdateStats()
     {
@@ -29,11 +62,50 @@ public abstract class Entity : MonoBehaviour
         attackRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
         healingBonus = baseHealingBonus + healingBonusAdder + (baseHealingBonus * healingBonusMultiplier);
         healingReceived = baseHealingReceived + healingReceivedAdder + (baseHealingReceived * healingReceivedMultiplier);
+        fireResistance = baseFireResistance + fireResistanceAdder + (baseFireResistance * fireResistanceMultiplier);
+        waterResistance = baseWaterResistance + waterResistanceAdder + (baseWaterResistance * waterResistanceMultiplier);
+        natureResistance = baseNatureResistance + natureResistanceAdder + (baseNatureResistance * natureResistanceMultiplier);
+        windResistance = baseWindResistance + windResistanceAdder + (baseWindResistance * windResistanceMultiplier);
+        poisonResistance = basePoisonResistance + poisonResistanceAdder + (basePoisonResistance * poisonResistanceMultiplier);
+        iceResistance = baseIceResistance + iceResistanceAdder + (baseIceResistance * iceResistanceMultiplier);
+        physicalShred = basePhysicalShred + physicalShredAdder + (basePhysicalShred * physicalShredMultiplier);
+        magicShred = baseMagicShred + magicShredAdder + (baseMagicShred * magicShredMultiplier);
+        bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
+        fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
+        waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
+        natureDamage = baseNatureDamage + natureDamageAdder + (baseNatureDamage * natureDamageMultiplier);
+        windDamage = baseWindDamage + windDamageAdder + (baseWindDamage * windDamageMultiplier);
+        poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
+        iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
     }
 
-    public virtual void Damage(float damageDealt, DamageType damageType)
+    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType)
     {
-        float modifiedDamage;
+        float modifiedDamage, elementalMultiplier;
+        switch (elementalType)
+        {
+            case ElementalType.Fire:
+            elementalMultiplier = (1 - this.fireResistance);
+            break;
+            case ElementalType.Water:
+            elementalMultiplier = (1 - this.waterResistance);
+            break;
+            case ElementalType.Ice:
+            elementalMultiplier = (1 - this.iceResistance);
+            break;
+            case ElementalType.Wind:
+            elementalMultiplier = (1 - this.windResistance);
+            break;
+            case ElementalType.Nature:
+            elementalMultiplier = (1 - this.natureResistance);
+            break;
+            case ElementalType.Poison:
+            elementalMultiplier = (1 - this.poisonResistance);
+            break;
+            default:
+            elementalMultiplier = 1;
+            break;
+        }
 
         switch (damageType)
         {
@@ -48,13 +120,65 @@ public abstract class Entity : MonoBehaviour
             break;
         }
 
-        health -= modifiedDamage;
+        health -= (modifiedDamage * elementalMultiplier);
 
         UpdateHealthBar();
 
         if (health <= 0)
         {
             Kill();
+        }
+    }
+
+    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source) // damage with source
+    {
+        float modifiedDamage, elementalMultiplier;
+        switch (elementalType)
+        {
+            case ElementalType.Fire:
+            elementalMultiplier = (1 - this.fireResistance + source.fireDamage);
+            break;
+            case ElementalType.Water:
+            elementalMultiplier = (1 - this.waterResistance + source.waterDamage);
+            break;
+            case ElementalType.Ice:
+            elementalMultiplier = (1 - this.iceResistance + source.iceDamage);
+            break;
+            case ElementalType.Wind:
+            elementalMultiplier = (1 - this.windResistance + source.windDamage);
+            break;
+            case ElementalType.Nature:
+            elementalMultiplier = (1 - this.natureResistance + source.natureDamage);
+            break;
+            case ElementalType.Poison:
+            elementalMultiplier = (1 - this.poisonResistance + source.poisonDamage);
+            break;
+            default:
+            elementalMultiplier = 1;
+            break;
+        }
+
+        switch (damageType)
+        {
+            case DamageType.Physical:
+            modifiedDamage = damageDealt * (1 - physicalResistance + source.physicalShred);
+            break;
+            case DamageType.Magic:
+            modifiedDamage = damageDealt * (1 - magicResistance + source.magicShred);
+            break;
+            default:
+            modifiedDamage = damageDealt;
+            break;
+        }
+
+        health -= (modifiedDamage * elementalMultiplier);
+        source.totalDamageDealt += modifiedDamage*elementalMultiplier; // FOR DEBUG
+
+        UpdateHealthBar();
+
+        if (health <= 0)
+        {
+            Kill(source);
         }
     }
 
@@ -71,6 +195,11 @@ public abstract class Entity : MonoBehaviour
 
 // method for death
     public virtual void Kill()
+    {
+        Destroy(gameObject);
+    }
+
+    public virtual void Kill(Entity source) // death including source
     {
         Destroy(gameObject);
     }

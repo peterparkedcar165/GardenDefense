@@ -11,42 +11,10 @@ public enum PlantType
 }
 public abstract class Plant : Entity
 {
-    // base
-    public float basePhysicalShred, physicalShred, 
-    baseMagicShred, magicShred, 
-    baseBonusEffectChance, bonusEffectChance,
-    baseFireDamage, fireDamage,
-    baseWaterDamage, waterDamage,
-    baseNatureDamage, natureDamage,
-    baseWindDamage, windDamage,
-    basePoisonDamage, poisonDamage,
-    baseIceDamage, iceDamage;
-
-
-    // bonus
-    public float physicalShredAdder, physicalShredMultiplier, 
-    magicShredAdder, magicShredMultiplier, 
-    bonusEffectChanceAdder, bonusEffectChanceMultiplier,
-    fireDamageAdder, fireDamageMultiplier,
-    waterDamageAdder, waterDamageMultiplier,
-    natureDamageAdder, natureDamageMultiplier,
-    windDamageAdder, windDamageMultiplier,
-    poisonDamageAdder, poisonDamageMultiplier,
-    iceDamageAdder,iceDamageMultiplier;
 
     protected override void UpdateStats()
     {
         base.UpdateStats();
-        physicalShred = basePhysicalShred + physicalShredAdder + (basePhysicalShred * physicalShredMultiplier);
-        magicShred = baseMagicShred + magicShredAdder + (baseMagicShred * magicShredMultiplier);
-        bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
-        fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
-        waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
-        natureDamage = baseNatureDamage + natureDamageAdder + (baseNatureDamage * natureDamageMultiplier);
-        windDamage = baseWindDamage + windDamageAdder + (baseWindDamage * windDamageMultiplier);
-        poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
-        iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
-    
     }
 
     public int sunCost;

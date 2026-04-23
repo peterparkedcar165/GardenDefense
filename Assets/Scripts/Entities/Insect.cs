@@ -12,24 +12,11 @@ public abstract class Insect : Entity
 
     // bonus
     public float movementSpeedAdder, movementSpeedMultiplier;
-
-    public float baseFireResistance, fireResistance, fireResistanceAdder, fireResistanceMultiplier,
-    baseWaterResistance, waterResistance, waterResistanceAdder, waterResistanceMultiplier,
-    baseNatureResistance, natureResistance, natureResistanceAdder, natureResistanceMultiplier,
-    baseWindResistance, windResistance, windResistanceAdder, windResistanceMultiplier,
-    basePoisonResistance, poisonResistance, poisonResistanceAdder, poisonResistanceMultiplier,
-    baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;
     
     protected override void UpdateStats()
     {
         base.UpdateStats();
         movementSpeed = baseMovementSpeed + movementSpeedAdder + (baseMovementSpeed * movementSpeedMultiplier);
-        fireResistance = baseFireResistance + fireResistanceAdder + (baseFireResistance * fireResistanceMultiplier);
-        waterResistance = baseWaterResistance + waterResistanceAdder + (baseWaterResistance * waterResistanceMultiplier);
-        natureResistance = baseNatureResistance + natureResistanceAdder + (baseNatureResistance * natureResistanceMultiplier);
-        windResistance = baseWindResistance + windResistanceAdder + (baseWindResistance * windResistanceMultiplier);
-        poisonResistance = basePoisonResistance + poisonResistanceAdder + (basePoisonResistance * poisonResistanceMultiplier);
-        iceResistance = baseIceResistance + iceResistanceAdder + (baseIceResistance * iceResistanceMultiplier);
     }
 
     public int sunDrop;

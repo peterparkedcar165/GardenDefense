@@ -3,7 +3,7 @@ using UnityEngine;
 public class SlowEffect : StatusEffect
 {
 
-    public float slowness = 0.12f;
+    public float slowness = 0.24f;
     public SlowEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
