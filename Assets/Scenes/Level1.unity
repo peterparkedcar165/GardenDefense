@@ -7922,6 +7922,7 @@ GameObject:
   - component: {fileID: 986929924}
   - component: {fileID: 986929923}
   - component: {fileID: 986929922}
+  - component: {fileID: 986929925}
   m_Layer: 5
   m_Name: SunflowerButton
   m_TagString: Untagged
@@ -7993,7 +7994,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1248693328}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlantSelector, Assembly-CSharp
         m_MethodName: SelectPlant
         m_Mode: 2
@@ -8043,6 +8044,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986929920}
   m_CullTransparentMesh: 1
+--- !u!114 &986929925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986929920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6242a3d291dfb547808670a15407a76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlantButton
+  plantPrefab: {fileID: 2387982406283412628, guid: 530019c35e88f4345b4a1465a481b7ec, type: 3}
+  costText: {fileID: 1709058455}
 --- !u!1001 &988107953
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8117,6 +8132,7 @@ GameObject:
   - component: {fileID: 989291959}
   - component: {fileID: 989291958}
   - component: {fileID: 989291957}
+  - component: {fileID: 989291960}
   m_Layer: 5
   m_Name: SnowdropButton
   m_TagString: Untagged
@@ -8188,7 +8204,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1248693328}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlantSelector, Assembly-CSharp
         m_MethodName: SelectPlant
         m_Mode: 2
@@ -8238,6 +8254,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989291955}
   m_CullTransparentMesh: 1
+--- !u!114 &989291960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989291955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6242a3d291dfb547808670a15407a76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlantButton
+  plantPrefab: {fileID: 2387982406283412628, guid: 21a1c1a83dbeb7646befb06cee88d601, type: 3}
+  costText: {fileID: 1281889294}
 --- !u!1001 &994619153
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9784,50 +9814,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 53325059456561594, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
   m_PrefabInstance: {fileID: 1645523526}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1248693327
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1248693329}
-  - component: {fileID: 1248693328}
-  m_Layer: 0
-  m_Name: PlantSelector
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1248693328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1248693327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89228e7b3b4e0ec479815e452cf36df4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlantSelector
---- !u!4 &1248693329
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1248693327}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1017.777, y: 86.31564, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1248720486 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 53325059456561594, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
@@ -12466,114 +12452,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
---- !u!1001 &1593529488
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -1.2228689
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.8289428
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3018524267372953983, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4338163813712622119, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_Name
-      value: DamageIndicator
-      objectReference: {fileID: 0}
-    - target: {fileID: 8666052445125870598, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_fontSize
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 8666052445125870598, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 12
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4338163813712622119, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-  m_SourcePrefab: {fileID: 100100000, guid: 4741ff8e70852fb478f25d6efbbf03ed, type: 3}
 --- !u!4 &1616870303 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 53325059456561594, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
@@ -15208,6 +15086,7 @@ GameObject:
   - component: {fileID: 1906887414}
   - component: {fileID: 1906887413}
   - component: {fileID: 1906887412}
+  - component: {fileID: 1906887415}
   m_Layer: 5
   m_Name: AcornSproutButton
   m_TagString: Untagged
@@ -15279,7 +15158,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1248693328}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlantSelector, Assembly-CSharp
         m_MethodName: SelectPlant
         m_Mode: 2
@@ -15329,6 +15208,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1906887410}
   m_CullTransparentMesh: 1
+--- !u!114 &1906887415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906887410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6242a3d291dfb547808670a15407a76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  plantPrefab: {fileID: 2387982406283412628, guid: 5b9d0894a6ad0cc458e0f317dbf13a44, type: 3}
+  costText: {fileID: 1225337137}
 --- !u!4 &1907381160 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 53325059456561594, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
@@ -15698,6 +15591,7 @@ GameObject:
   - component: {fileID: 1946682937}
   - component: {fileID: 1946682936}
   - component: {fileID: 1946682935}
+  - component: {fileID: 1946682938}
   m_Layer: 5
   m_Name: PoisonShroomButton
   m_TagString: Untagged
@@ -15769,7 +15663,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1248693328}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlantSelector, Assembly-CSharp
         m_MethodName: SelectPlant
         m_Mode: 2
@@ -15819,6 +15713,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1946682933}
   m_CullTransparentMesh: 1
+--- !u!114 &1946682938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946682933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6242a3d291dfb547808670a15407a76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlantButton
+  plantPrefab: {fileID: 2387982406283412628, guid: d08989aa5a1b0e74c84350560309b2fe, type: 3}
+  costText: {fileID: 1570017253}
 --- !u!1001 &1953117250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17736,5 +17644,3 @@ SceneRoots:
   - {fileID: 1834192901}
   - {fileID: 119846907}
   - {fileID: 531320439}
-  - {fileID: 1248693329}
-  - {fileID: 1593529488}
