@@ -104,24 +104,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 846215f54bf768343a075ab4a7a38520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Snowdrop
-  basePhysicalShred: 0
-  physicalShred: 0
-  baseMagicShred: 0
-  magicShred: 0
-  baseBonusEffectChance: 0
-  bonusEffectChance: 0
-  baseFireDamage: 0
-  fireDamage: 0
-  baseWaterDamage: 0
-  waterDamage: 0
-  baseNatureDamage: 0
-  natureDamage: 0
-  baseWindDamage: 0
-  windDamage: 0
-  basePoisonDamage: 0
-  poisonDamage: 0
-  baseIceDamage: 0
-  iceDamage: 0
   physicalShredAdder: 0
   physicalShredMultiplier: 0
   magicShredAdder: 0
@@ -140,6 +122,10 @@ MonoBehaviour:
   poisonDamageMultiplier: 0
   iceDamageAdder: 0
   iceDamageMultiplier: 0
+  criticalChanceAdder: 0
+  criticalChanceMultiplier: 0
+  criticalDamageAdder: 0
+  criticalDamageMultiplier: 0
   baseMaxHealth: 0
   basePhysicalResistance: 0
   baseMagicResistance: 0
@@ -185,9 +171,31 @@ MonoBehaviour:
   iceResistance: 0
   iceResistanceAdder: 0
   iceResistanceMultiplier: 0
+  basePhysicalShred: 0
+  physicalShred: 0
+  baseMagicShred: 0
+  magicShred: 0
+  baseBonusEffectChance: 0
+  bonusEffectChance: 0
+  baseFireDamage: 0
+  fireDamage: 0
+  baseWaterDamage: 0
+  waterDamage: 0
+  baseNatureDamage: 0
+  natureDamage: 0
+  baseWindDamage: 0
+  windDamage: 0
+  basePoisonDamage: 0
+  poisonDamage: 0
+  baseIceDamage: 0
+  iceDamage: 0
+  baseCriticalChance: 0
+  criticalChance: 0
+  baseCriticalDamage: 0
+  criticalDamage: 0
   timeAlive: 0
   totalDamageDealt: 0
-  sunCost: 100
+  sunCost: 125
   exp: 0
   expToNextLevel: 52
   level: 1

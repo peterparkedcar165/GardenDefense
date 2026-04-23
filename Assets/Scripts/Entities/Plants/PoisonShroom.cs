@@ -11,7 +11,7 @@ public class PoisonShroom : Shooter
         baseAttackRange = 3f;
         baseProjectileSpeed = 3f;
         basePiercing = 0;
-        baseMaxRange = 7f;
+        baseMaxRange = 5f;
     }
 
     protected override void Update()
@@ -36,7 +36,7 @@ public class PoisonShroom : Shooter
         int perLevel = (level - 1);
         baseAttackDamage = 3f + (perLevel * 0.3f);
         baseAttackSpeed = 0.6f + (perLevel * 0.04f);
-        baseAttackRange = 3f + (perLevel * 0.2f);
+        baseAttackRange = 3f + (perLevel * 0.1f);
         // baseProjectileSpeed = 8f + (perLevel * 0.2f);
     }
 

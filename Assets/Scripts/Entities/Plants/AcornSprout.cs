@@ -10,7 +10,7 @@ public class AcornSprout : Shooter
         baseAttackRange = 3f;
         baseProjectileSpeed = 8f;
         basePiercing = 0;
-        baseMaxRange = 7f;
+        baseMaxRange = 5f;
     }
 
     protected override void Update()
@@ -35,7 +35,7 @@ public class AcornSprout : Shooter
         int perLevel = (level - 1);
         baseAttackDamage = 7f + (perLevel * 0.25f);
         baseAttackSpeed = 0.8f + (perLevel * 0.08f);
-        baseAttackRange = 3f + (perLevel * 0.2f);
+        baseAttackRange = 3f + (perLevel * 0.1f);
         // baseProjectileSpeed = 8f + (perLevel * 0.2f);
     }
 }

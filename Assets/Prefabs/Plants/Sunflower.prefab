@@ -104,6 +104,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c850317862e1a45968381f35fc9cf0a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sunflower
+  physicalShredAdder: 0
+  physicalShredMultiplier: 0
+  magicShredAdder: 0
+  magicShredMultiplier: 0
+  bonusEffectChanceAdder: 0
+  bonusEffectChanceMultiplier: 0
+  fireDamageAdder: 0
+  fireDamageMultiplier: 0
+  waterDamageAdder: 0
+  waterDamageMultiplier: 0
+  natureDamageAdder: 0
+  natureDamageMultiplier: 0
+  windDamageAdder: 0
+  windDamageMultiplier: 0
+  poisonDamageAdder: 0
+  poisonDamageMultiplier: 0
+  iceDamageAdder: 0
+  iceDamageMultiplier: 0
+  criticalChanceAdder: 0
+  criticalChanceMultiplier: 0
+  criticalDamageAdder: 0
+  criticalDamageMultiplier: 0
   baseMaxHealth: 0
   basePhysicalResistance: 0
   baseMagicResistance: 0
@@ -125,7 +147,30 @@ MonoBehaviour:
   attackRange: 0
   healingBonus: 0
   healingReceived: 0
-  timeAlive: 0
+  baseFireResistance: 0
+  fireResistance: 0
+  fireResistanceAdder: 0
+  fireResistanceMultiplier: 0
+  baseWaterResistance: 0
+  waterResistance: 0
+  waterResistanceAdder: 0
+  waterResistanceMultiplier: 0
+  baseNatureResistance: 0
+  natureResistance: 0
+  natureResistanceAdder: 0
+  natureResistanceMultiplier: 0
+  baseWindResistance: 0
+  windResistance: 0
+  windResistanceAdder: 0
+  windResistanceMultiplier: 0
+  basePoisonResistance: 0
+  poisonResistance: 0
+  poisonResistanceAdder: 0
+  poisonResistanceMultiplier: 0
+  baseIceResistance: 0
+  iceResistance: 0
+  iceResistanceAdder: 0
+  iceResistanceMultiplier: 0
   basePhysicalShred: 0
   physicalShred: 0
   baseMagicShred: 0
@@ -142,23 +187,15 @@ MonoBehaviour:
   windDamage: 0
   basePoisonDamage: 0
   poisonDamage: 0
-  physicalShredAdder: 0
-  physicalShredMultiplier: 0
-  magicShredAdder: 0
-  magicShredMultiplier: 0
-  bonusEffectChanceAdder: 0
-  bonusEffectChanceMultiplier: 0
-  fireDamageAdder: 0
-  fireDamageMultiplier: 0
-  waterDamageAdder: 0
-  waterDamageMultiplier: 0
-  natureDamageAdder: 0
-  natureDamageMultiplier: 0
-  windDamageAdder: 0
-  windDamageMultiplier: 0
-  poisonDamageAdder: 0
-  poisonDamageMultiplier: 0
-  sunCost: 125
+  baseIceDamage: 0
+  iceDamage: 0
+  baseCriticalChance: 0
+  criticalChance: 0
+  baseCriticalDamage: 0
+  criticalDamage: 0
+  timeAlive: 0
+  totalDamageDealt: 0
+  sunCost: 100
   exp: 0
   expToNextLevel: 52
   level: 1

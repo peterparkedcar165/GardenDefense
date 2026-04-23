@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Plant.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
+    <Compile Include="Assets\Scripts\PlantButton.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Shooter.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
