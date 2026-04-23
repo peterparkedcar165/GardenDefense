@@ -11,7 +11,7 @@ public class PoisonEffect : StatusEffect
     public override void OnApply()
     {
         damagePerSecond = 2 + level;
-        Debug.Log("Poison applied at level " + damagePerSecond);
+        Debug.Log("Poison applied at level " + level);
     }
 
     public override void OnTick(float deltaTime)

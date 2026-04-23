@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f0e97f14042ec7d4097da447787794af
+guid: e32f7955f2156924a9dca8632cbe022d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8692600135984219313
-    second: acornplaceholder_0
+      213: 8714251798847170978
+    second: leafarcher_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 514
+  spritePixelsToUnits: 512
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -96,30 +96,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: acornplaceholder_0
+      name: leafarcher_0
       rect:
         serializedVersion: 2
-        x: 273
-        y: 280
-        width: 466
-        height: 524
+        x: 165
+        y: 146
+        width: 723
+        height: 723
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f4bf5205b3ead5780800000000000000
-      internalID: -8692600135984219313
+      spriteID: 2a9289947dd3fe870800000000000000
+      internalID: 8714251798847170978
       vertices: []
       indices: 
       edges: []
@@ -138,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: e5d42b3c93045a0418b4fc9f9b0b0b2a
+    spriteID: ba05109f476738a478e1e4b101330c6f
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      acornplaceholder_0: -8692600135984219313
+      leafarcher_0: 8714251798847170978
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

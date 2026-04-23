@@ -1,11 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PoisonShroom : Shooter
 {
     protected override void Awake()
     {
         base.Awake();
-        baseAttackDamage = 4f;
+        baseAttackDamage = 3f;
         baseAttackSpeed = 0.6f;
         baseAttackRange = 3f;
         baseProjectileSpeed = 3f;
@@ -33,9 +34,32 @@ public class PoisonShroom : Shooter
     {
         base.LevelUp();
         int perLevel = (level - 1);
-        baseAttackDamage = 4f + (perLevel * 0.3f);
+        baseAttackDamage = 3f + (perLevel * 0.3f);
         baseAttackSpeed = 0.6f + (perLevel * 0.04f);
         baseAttackRange = 3f + (perLevel * 0.2f);
         // baseProjectileSpeed = 8f + (perLevel * 0.2f);
+    }
+
+    protected override GameObject FindTarget()
+    {
+        GameObject[] allInsects = GameObject.FindGameObjectsWithTag("Insect");
+        List<GameObject> unpoisoned = new List<GameObject>();
+        
+        foreach (GameObject obj in allInsects)
+        {
+            float distance = Vector3.Distance(transform.position, obj.transform.position);
+            if (distance <= attackRange && !obj.GetComponent<Insect>().HasEffect<PoisonEffect>())
+            {
+                unpoisoned.Add(obj);
+            }
+        }
+
+        if (unpoisoned.Count > 0)
+        {
+            return FindFirst(unpoisoned.ToArray());
+        }
+
+        return base.FindTarget();
+
     }
 }

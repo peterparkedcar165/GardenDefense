@@ -33,7 +33,7 @@ public class Snowdrop : Aura
         {
         insect.Damage(attackDamage * Time.deltaTime, DamageType.Magic, ElementalType.Ice, this, false);
 
-        insect.ApplyEffect(new SlowEffect(insect, 0.25f, 1, this));
+        insect.ApplyEffect(new ChillEffect(insect, 0.25f, 1, this));
 
         }
 

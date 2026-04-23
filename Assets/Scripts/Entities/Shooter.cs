@@ -81,7 +81,7 @@ public abstract class Shooter : Plant
 // then if within range, and if distance between the plant and the insect is smaller than
 // any other insect that have gotten the "nearest" will be overriden
 // return the nearest to the method caller
-    private GameObject FindNearest(GameObject[] insects)
+    protected GameObject FindNearest(GameObject[] insects)
     {
         GameObject nearest = null;
         float nearestDistance = Mathf.Infinity;
@@ -98,7 +98,7 @@ public abstract class Shooter : Plant
         return nearest;
     }
 
-    private GameObject FindFirst(GameObject[] insects)
+    protected GameObject FindFirst(GameObject[] insects)
     {
         GameObject furthest = null;
         int highestWaypointIndex = -1;
@@ -149,7 +149,7 @@ public abstract class Shooter : Plant
 
         // where the target be after that time
         // insect moves in its current direction at its current speed
-        Vector3 predictedPosition = target.transform.position + insect.GetVelocity() * 0.5f *travelTime;
+        Vector3 predictedPosition = target.transform.position + insect.GetVelocity() * 0.75f *travelTime;
         
         return predictedPosition;
     }

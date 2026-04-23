@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\Entities\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ChillEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\SunflowerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
     <Compile Include="Assets\Scripts\Entities\Insect.cs" />
