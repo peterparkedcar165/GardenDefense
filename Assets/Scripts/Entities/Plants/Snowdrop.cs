@@ -31,7 +31,7 @@ public class Snowdrop : Aura
         List<Insect> targets = GetInsectsInRange();
         foreach (Insect insect in targets)
         {
-        insect.Damage(attackDamage * Time.deltaTime, DamageType.Magic, ElementalType.Ice, this);
+        insect.Damage(attackDamage * Time.deltaTime, DamageType.Magic, ElementalType.Ice, this, false);
 
         insect.ApplyEffect(new SlowEffect(insect, 0.25f, 1, this));
 

@@ -27,6 +27,8 @@ public abstract class Plant : Entity
     {
         baseMaxHealth = 20;
         base.Awake();
+        baseCriticalChance = 0.05f;
+        baseCriticalDamage = 1.5f;
     }
 
     protected virtual void Start()

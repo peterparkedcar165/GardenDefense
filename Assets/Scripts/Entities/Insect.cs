@@ -92,6 +92,12 @@ public abstract class Insect : Entity
         return direction * movementSpeed;
     }
 
+    public override void Kill(Entity source)
+    {
+        DistributeExp();
+        gameManager.AddSun(sunDrop);
+        base.Kill();
+    }
     public override void Kill()
     {
         DistributeExp();

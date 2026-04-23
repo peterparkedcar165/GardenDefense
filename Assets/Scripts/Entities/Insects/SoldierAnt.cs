@@ -11,7 +11,7 @@ public class SoldierAnt : Ant
         base.Awake();
     }
 
-    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source) // sourced
+    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit) // sourced
     {
         float reducedDamage;
         // passive of the soldier ant, reduces physical damage taken by a flat 2
@@ -24,7 +24,7 @@ public class SoldierAnt : Ant
             reducedDamage = damageDealt;
         }
       
-        base.Damage(reducedDamage, damageType, elementalType, source); // calls up to parent for damage reduction
+        base.Damage(reducedDamage, damageType, elementalType, source, canCrit); // calls up to parent for damage reduction
     }
     public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType) // non-sourced
     {

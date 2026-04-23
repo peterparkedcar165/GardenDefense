@@ -149,7 +149,7 @@ public abstract class Shooter : Plant
 
         // where the target be after that time
         // insect moves in its current direction at its current speed
-        Vector3 predictedPosition = target.transform.position + insect.GetVelocity() * travelTime;
+        Vector3 predictedPosition = target.transform.position + insect.GetVelocity() * 0.5f *travelTime;
         
         return predictedPosition;
     }

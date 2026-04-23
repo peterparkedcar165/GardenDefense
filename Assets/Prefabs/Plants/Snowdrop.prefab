@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1839221878583724804}
   - component: {fileID: 8037422639100695375}
-  - component: {fileID: 1216329997766717309}
+  - component: {fileID: -1218289086641490182}
   m_Layer: 0
   m_Name: Snowdrop
   m_TagString: Untagged
@@ -92,7 +92,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &1216329997766717309
+--- !u!114 &-1218289086641490182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -101,31 +101,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2387982406283412628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46f550e62ebea9b4dbe5c81ce08d2cf9, type: 3}
+  m_Script: {fileID: 11500000, guid: 846215f54bf768343a075ab4a7a38520, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PoisonShroom
-  baseMaxHealth: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
-  baseAttackDamage: 0
-  baseMagicDamage: 0
-  baseAttackSpeed: 0
-  baseAttackRange: 0
-  baseHealingBonus: 0
-  baseHealingReceived: 0
-  maxHealth: 0
-  health: 0
-  physicalResistance: 0
-  magicResistance: 0
-  attackDamage: 0
-  magicDamage: 0
-  attackSpeed: 0
-  attackCooldown: 0
-  attackCooldownTimer: 0
-  attackRange: 0
-  healingBonus: 0
-  healingReceived: 0
-  timeAlive: 0
+  m_EditorClassIdentifier: Assembly-CSharp::Snowdrop
   basePhysicalShred: 0
   physicalShred: 0
   baseMagicShred: 0
@@ -162,6 +140,53 @@ MonoBehaviour:
   poisonDamageMultiplier: 0
   iceDamageAdder: 0
   iceDamageMultiplier: 0
+  baseMaxHealth: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseAttackDamage: 0
+  baseMagicDamage: 0
+  baseAttackSpeed: 0
+  baseAttackRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  maxHealth: 0
+  health: 0
+  physicalResistance: 0
+  magicResistance: 0
+  attackDamage: 0
+  magicDamage: 0
+  attackSpeed: 0
+  attackCooldown: 0
+  attackCooldownTimer: 0
+  attackRange: 0
+  healingBonus: 0
+  healingReceived: 0
+  baseFireResistance: 0
+  fireResistance: 0
+  fireResistanceAdder: 0
+  fireResistanceMultiplier: 0
+  baseWaterResistance: 0
+  waterResistance: 0
+  waterResistanceAdder: 0
+  waterResistanceMultiplier: 0
+  baseNatureResistance: 0
+  natureResistance: 0
+  natureResistanceAdder: 0
+  natureResistanceMultiplier: 0
+  baseWindResistance: 0
+  windResistance: 0
+  windResistanceAdder: 0
+  windResistanceMultiplier: 0
+  basePoisonResistance: 0
+  poisonResistance: 0
+  poisonResistanceAdder: 0
+  poisonResistanceMultiplier: 0
+  baseIceResistance: 0
+  iceResistance: 0
+  iceResistanceAdder: 0
+  iceResistanceMultiplier: 0
+  timeAlive: 0
+  totalDamageDealt: 0
   sunCost: 100
   exp: 0
   expToNextLevel: 52
@@ -174,11 +199,3 @@ MonoBehaviour:
   activeLevelCap: 5
   passiveCooldown: 0
   activeCooldown: 0
-  projectilePrefab: {fileID: 7388594979766616069, guid: a7539cd823b05be45a6baf0ab6f0e8cc, type: 3}
-  baseProjectileSpeed: 0
-  projectileSpeed: 0
-  baseMaxRange: 0
-  maxRange: 0
-  basePiercing: 0
-  piercing: 0
-  targeting: 1

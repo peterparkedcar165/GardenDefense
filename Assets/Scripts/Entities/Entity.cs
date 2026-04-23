@@ -15,18 +15,9 @@ public enum ElementalType
 
 public abstract class Entity : MonoBehaviour
 {
+    private GameObject damageIndicatorPrefab;
+
     // STATS A BIT MESSY BUT WILL CLEAN EVENTUALLY
-    public float basePhysicalShred, physicalShred, 
-    baseMagicShred, magicShred, 
-    baseBonusEffectChance, bonusEffectChance,
-    baseFireDamage, fireDamage,
-    baseWaterDamage, waterDamage,
-    baseNatureDamage, natureDamage,
-    baseWindDamage, windDamage,
-    basePoisonDamage, poisonDamage,
-    baseIceDamage, iceDamage;
-
-
     // bonus
     public float physicalShredAdder, physicalShredMultiplier, 
     magicShredAdder, magicShredMultiplier, 
@@ -36,7 +27,9 @@ public abstract class Entity : MonoBehaviour
     natureDamageAdder, natureDamageMultiplier,
     windDamageAdder, windDamageMultiplier,
     poisonDamageAdder, poisonDamageMultiplier,
-    iceDamageAdder,iceDamageMultiplier;
+    iceDamageAdder,iceDamageMultiplier,
+    criticalChanceAdder, criticalChanceMultiplier,
+    criticalDamageAdder, criticalDamageMultiplier;
 
     public float baseMaxHealth, basePhysicalResistance, baseMagicResistance, baseAttackDamage, baseMagicDamage, baseAttackSpeed, baseAttackRange, baseHealingBonus = 0, baseHealingReceived = 0;
     protected float maxHealthAdder, physicalResistanceAdder, magicResistanceAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -48,7 +41,9 @@ public abstract class Entity : MonoBehaviour
     baseNatureResistance, natureResistance, natureResistanceAdder, natureResistanceMultiplier,
     baseWindResistance, windResistance, windResistanceAdder, windResistanceMultiplier,
     basePoisonResistance, poisonResistance, poisonResistanceAdder, poisonResistanceMultiplier,
-    baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;
+    baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;    public float basePhysicalShred, physicalShred, 
+    baseMagicShred, magicShred, baseBonusEffectChance, bonusEffectChance,baseFireDamage, fireDamage,baseWaterDamage, waterDamage, baseNatureDamage, natureDamage,baseWindDamage, windDamage,basePoisonDamage, poisonDamage,baseIceDamage, iceDamage, baseCriticalChance, criticalChance, baseCriticalDamage, criticalDamage;    
+    
     public float timeAlive, totalDamageDealt; // leaving it public jsut so i can debug, but shgould be private
 
     protected virtual void UpdateStats()
@@ -77,11 +72,13 @@ public abstract class Entity : MonoBehaviour
         windDamage = baseWindDamage + windDamageAdder + (baseWindDamage * windDamageMultiplier);
         poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
         iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
+        criticalChance = baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier);
+        criticalDamage = baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier);
     }
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType)
     {
-        float modifiedDamage, elementalMultiplier;
+        float modifiedDamage, elementalMultiplier, finalDamage;
         switch (elementalType)
         {
             case ElementalType.Fire:
@@ -119,8 +116,9 @@ public abstract class Entity : MonoBehaviour
             modifiedDamage = damageDealt;
             break;
         }
-
-        health -= (modifiedDamage * elementalMultiplier);
+        
+        finalDamage = (modifiedDamage * elementalMultiplier);
+        health -= finalDamage;
 
         UpdateHealthBar();
 
@@ -130,9 +128,11 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source) // damage with source
+    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit) // damage with source
     {
-        float modifiedDamage, elementalMultiplier;
+        float modifiedDamage, elementalMultiplier, finalDamage;
+        bool isCrit = false;
+
         switch (elementalType)
         {
             case ElementalType.Fire:
@@ -170,9 +170,27 @@ public abstract class Entity : MonoBehaviour
             modifiedDamage = damageDealt;
             break;
         }
+        finalDamage = (modifiedDamage * elementalMultiplier);
 
-        health -= (modifiedDamage * elementalMultiplier);
-        source.totalDamageDealt += modifiedDamage*elementalMultiplier; // FOR DEBUG
+        // if damage source can crit, then calculate if it crits or not
+        if (canCrit)
+        {
+            if (Random.value < source.criticalChance)
+            {
+                finalDamage *= source.criticalDamage;
+                isCrit = true; // important for the damage indicator
+                // Debug.Log("CRITICAL HIT");
+            }
+        }
+        
+        health -= finalDamage;
+        source.totalDamageDealt += finalDamage; // FOR DEBUG
+
+        // damage indicator
+
+        GameObject indicator = Instantiate(damageIndicatorPrefab, this.transform.position + Vector3.up * 0.25f, Quaternion.identity);
+        indicator.GetComponent<DamageIndicator>().Initialize(finalDamage, elementalType, isCrit);
+
 
         UpdateHealthBar();
 
@@ -207,6 +225,7 @@ public abstract class Entity : MonoBehaviour
 // upon spawning, occurs before Start()
     protected virtual void Awake()
     {
+        damageIndicatorPrefab = Resources.Load<GameObject>("DamageIndicator");
         UpdateStats();
         health = maxHealth;
         SpawnHealthBar();

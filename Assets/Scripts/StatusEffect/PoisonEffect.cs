@@ -16,7 +16,7 @@ public class PoisonEffect : StatusEffect
 
     public override void OnTick(float deltaTime)
     {
-        target.Damage((damagePerSecond * deltaTime), DamageType.Magic, ElementalType.Poison, source);
+        target.Damage((damagePerSecond * deltaTime), DamageType.Magic, ElementalType.Poison, source, false);
     }
 
     public override void OnExpire()
