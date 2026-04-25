@@ -6,7 +6,7 @@ using System.Collections;
 public class SceneTransition : MonoBehaviour
 {
 
-    CanvasGroup canvasGroup;
+    [SerializeField] private CanvasGroup canvasGroup;
     float fadeSpeed;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -24,9 +24,9 @@ public class SceneTransition : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        canvasGroup = FindAnyObjectByType<CanvasGroup>();
         canvasGroup.alpha = 0;
-        fadeSpeed = 1.5f;
+        canvasGroup.blocksRaycasts = false;
+        fadeSpeed = 1f;
     }
 
     public IEnumerator FadeToScene(string sceneName)
@@ -44,5 +44,7 @@ public class SceneTransition : MonoBehaviour
             canvasGroup.alpha -= fadeSpeed * Time.deltaTime;
             yield return null;   
         }
+        
+        canvasGroup.blocksRaycasts = false;
     }
 }
