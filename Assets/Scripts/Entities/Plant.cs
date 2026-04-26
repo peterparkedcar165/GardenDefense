@@ -12,9 +12,16 @@ public enum PlantType
 public abstract class Plant : Entity
 {
 
+    [SerializeField] private Transform circleRadius;
     protected override void UpdateStats()
     {
         base.UpdateStats();
+        float plantSpriteRadius = GetComponent<CircleCollider2D>().radius*2;
+
+        if (circleRadius != null)
+        {
+            circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f);
+        }
     }
 
     public int sunCost;
@@ -33,7 +40,22 @@ public abstract class Plant : Entity
 
     protected virtual void Start()
     {
-        
+        if (circleRadius != null)
+            circleRadius.gameObject.SetActive(false);
+    }
+
+    protected override void OnHover()
+    {
+        Debug.Log("OnHover called, circleRadius is: " + circleRadius);
+        if (circleRadius != null)
+            circleRadius.gameObject.SetActive(true);
+    }
+
+    protected override void OnHoverExit()
+    {
+        Debug.Log("OnHoverExit called");
+        if (circleRadius != null)
+            circleRadius.gameObject.SetActive(false);
     }
 
     protected override void Update()

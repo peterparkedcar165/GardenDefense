@@ -300,18 +300,19 @@ public abstract class Entity : MonoBehaviour
     void OnMouseEnter()
     {
         if (healthBarInstance != null)
-        {
             healthBarInstance.SetActive(true);
-        }
+        OnHover();
     }
 
     void OnMouseExit()
     {
         if (healthBarInstance != null)
-        {
             healthBarInstance.SetActive(false);
-        }
+        OnHoverExit();
     }
+
+    protected virtual void OnHover() {}
+    protected virtual void OnHoverExit() {}
 
     // STATUS EFFECTS
 

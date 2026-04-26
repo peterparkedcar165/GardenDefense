@@ -42,7 +42,7 @@ public class PoisonShroomProjectile : Projectile
                 newPoisonLevel = 1 + source.passiveLevel;
             }
 
-            insect.ApplyEffect(new PoisonEffect(insect, 6f, newPoisonLevel, source));
+            insect.ApplyEffect(new PoisonEffect(insect, 8f, newPoisonLevel, source));
 
         } else { 
             return;

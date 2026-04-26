@@ -4,7 +4,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
 
-    static GameManager instance;
+    public static GameManager instance;
     public int SunCount;
     public int playerHealth, playerMaxHealth = 20;
     public float BonusSunGain;

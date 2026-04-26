@@ -12,7 +12,7 @@ public class PoisonEffect : StatusEffect
 
     public override void OnApply()
     {
-        damagePerSecond = 2 + level;
+        damagePerSecond = 1 + level;
         Debug.Log("Poison applied at level " + level);
     }
 

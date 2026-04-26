@@ -7,7 +7,7 @@ public class SoldierAnt : Ant
         baseAttackDamage = 3;
         baseMaxHealth = 40f;
         basePhysicalResistance = 0.15f;
-        sunDrop = 18;
+        sunDrop = 35;
         base.Awake();
     }
 

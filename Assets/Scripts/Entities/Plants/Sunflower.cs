@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Sunflower : Shooter
 {
+    public float generationInterval, sunTimer = 15f;
+    public int sunGenerated;
     protected override void Awake()
     {
         baseAttackDamage = 10f;
@@ -17,6 +19,24 @@ public class Sunflower : Shooter
     protected override void Update()
     {
         base.Update();
+
+
+        /* SPECIAL EFFECT */
+        // checking the passive level
+        if (passiveLevel > 0)
+        {
+            generationInterval = (15 - 1 * (passiveLevel -1));
+            sunGenerated = 15 + 1 * (passiveLevel -1);
+            sunTimer -= Time.deltaTime;
+
+            if (sunTimer <= 0)
+            {
+                GameManager.instance.AddSun(sunGenerated);
+                sunTimer = generationInterval;
+                Debug.Log(this + " has generated " + sunGenerated + " sun");
+            }
+        }
+        
     }
 
     protected override void Shoot(Vector3 target)
@@ -29,6 +49,12 @@ public class Sunflower : Shooter
             petal.SetTarget(FindTarget()); // assign the target of this plant to the projectile
             petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Magic, ElementalType.Fire, this); // change elemental everytime
         }
+    }
+
+    public void ReduceSunTimer()
+    {
+        sunTimer = Mathf.Max(0f, sunTimer - 1f);
+        Debug.Log("Reduced timer by 1");
     }
     
     public override void LevelUp()
