@@ -18,7 +18,7 @@ public class PoisonShroomProjectile : Projectile
         if (source != null)
             insect.RegisterAttacker(source);
 
-        insect.Damage(projectileDamage, damageType, elementalType, source, true);
+        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
 
         if (piercing > 0)
         {

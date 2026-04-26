@@ -8,6 +8,26 @@ public enum DamageType
     True
 }
 
+public enum DamageTag
+{
+    Projectile,
+    SingleTarget,
+    // MultiTarget,
+    AoE,
+    DoT,
+    Melee,
+    Attack,
+    Skill,
+    // Coordinated,
+    // IgnoresPhysicalResistance,
+    // IgnoresMagicResistance,
+    // IgnoresIceResistance,
+    // IgnoresNatureResistance,
+    // IgnoresFireResistance,
+    // IgnoresWaterResistance,
+    // IgnoresWindResistance
+}
+
 public enum ElementalType
 {
     Fire, Water, Nature, Poison, Ice, Wind, Neutral
@@ -76,7 +96,7 @@ public abstract class Entity : MonoBehaviour
         criticalDamage = baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier);
     }
 
-    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType)
+    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
     {
         float modifiedDamage, elementalMultiplier, finalDamage;
         switch (elementalType)
@@ -128,7 +148,7 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit) // damage with source
+    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag) // damage with source
     {
         float modifiedDamage, elementalMultiplier, finalDamage;
         bool isCrit = false;

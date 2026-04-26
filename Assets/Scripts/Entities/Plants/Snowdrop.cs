@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class Snowdrop : Aura
 {
+    private float tickTimer = 0f;
+    private const float tickInterval = 0.5f;
     protected override void Awake()
     {
         base.Awake();
@@ -15,7 +17,7 @@ public class Snowdrop : Aura
     protected override void Update()
     {
         base.Update();
-
+        
         if (attackCooldownTimer < attackCooldown)
         {
             attackCooldownTimer += Time.deltaTime;
@@ -27,14 +29,24 @@ public class Snowdrop : Aura
            // Attack(GetInsectsInRange());
         }
         
+
         // passive damage tick
+        tickTimer += Time.deltaTime;
+
         List<Insect> targets = GetInsectsInRange();
         foreach (Insect insect in targets)
         {
-        insect.Damage(attackDamage * Time.deltaTime, DamageType.Magic, ElementalType.Ice, this, false);
-
         insect.ApplyEffect(new ChillEffect(insect, 0.25f, 1, this));
 
+        if (tickTimer >= tickInterval)
+        {
+            insect.Damage(attackDamage * tickInterval, DamageType.Magic, ElementalType.Ice, this, false, new DamageTag [] {DamageTag.AoE, DamageTag.DoT});
+        }
+        }
+
+        if (tickTimer >= tickInterval)
+        {
+            tickTimer -= tickInterval;
         }
 
     }

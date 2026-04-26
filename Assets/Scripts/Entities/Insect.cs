@@ -58,7 +58,7 @@ public abstract class Insect : Entity
             return;
         }
 
-        Transform target = waypoints[currentWaypointIndex];
+        Transform target = waypoints[currentWaypointIndex]; // maybe randomize?
         Vector3 direction = (target.position - transform.position).normalized;
         transform.position += direction * movementSpeed * Time.deltaTime;
 

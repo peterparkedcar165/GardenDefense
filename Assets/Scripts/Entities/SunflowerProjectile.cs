@@ -26,7 +26,7 @@ public class SunflowerProjectile : Projectile
         if (source != null)
             insect.RegisterAttacker(source);
 
-        insect.Damage(projectileDamage, damageType, elementalType, source, true);
+        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile});
 
         if (piercing > 0)
         {
