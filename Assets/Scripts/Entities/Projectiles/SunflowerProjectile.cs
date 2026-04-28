@@ -12,14 +12,6 @@ public class SunflowerProjectile : Projectile
         base.Update();
     }
 
-    // override move so we can home
-
-    private GameObject trackedTarget; // keep reference to the actual target object
-
-    public void SetTarget(GameObject target)
-    {
-        trackedTarget = target;
-    }
 
     protected override void OnHit(Insect insect) // to change for every plant
     {
@@ -44,21 +36,6 @@ public class SunflowerProjectile : Projectile
 
     protected override void Move()
     {
-        if (trackedTarget == null)
-        {
-            base.Move();
-            return;
-        }
-
-        direction = (trackedTarget.transform.position - transform.position).normalized;
-        transform.position += direction * projectileSpeed * Time.deltaTime;
-
-
-        // while homing, if the distance of the projectile exceeds the max range
-        // destroy, but idk if iw ant that so i comment it
-        //if (Vector3.Distance(transform.position, spawnPosition) >= maxRange)
-        //{
-        //    Destroy(gameObject);
-        //}
+        base.Move();
     }  
 }

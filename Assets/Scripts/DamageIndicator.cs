@@ -66,6 +66,7 @@ public class DamageIndicator : MonoBehaviour
         if (isCrit)
         {
             tmpText.fontStyle = FontStyles.Bold;
+            tmpText.fontSize *= 1.5f;
         } else
         {
             tmpText.fontStyle = FontStyles.Normal;
@@ -75,7 +76,7 @@ public class DamageIndicator : MonoBehaviour
         int rounded = Mathf.RoundToInt(damage);
 
         tmpText.text = rounded.ToString();
-        Debug.Log("Damage shown: " + rounded + " at " + transform.position);
+        // Debug.Log("Damage shown: " + rounded + " at " + transform.position);
 
     }
 }

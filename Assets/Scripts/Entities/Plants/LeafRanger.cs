@@ -1,14 +1,15 @@
 using UnityEngine;
 
-public class AcornSprout : Shooter
+public class LeafRanger : Shooter
 {
     private float 
-    bAD = 32f, // base attack damage
-    bAS = 0.8f, // base attack speed
-    bAR = 3f, // base attack range
-    bPS = 8f, // base projectile speed
+    bAD = 72f, // base attack damage
+    bAS = 0.4f, // base attack speed
+    bAR = 99f, // base attack range
+    bPS = 20f, // base projectile speed
     bMR = 20f; // base max range
-    private int bP = 0; // base piercing
+    private int bP = 1; // base piercing
+
     protected override void Awake()
     {
         base.Awake();
@@ -17,23 +18,23 @@ public class AcornSprout : Shooter
         baseAttackRange = bAR;
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
-        basePiercing = bP;
     }
 
     protected override void Update()
     {
         base.Update();
+        basePiercing = bP + passiveLevel;
     }
 
     protected override void Shoot(Vector3 target)
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        AcornProjectile acorn = projectile.GetComponent<AcornProjectile>();
+        LeafRangerProjectile arrow = projectile.GetComponent<LeafRangerProjectile>();
 
-        if (acorn != null)
+        if (arrow != null)
         {
-            acorn.SetTarget(FindTarget());
-            acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical, ElementalType.Nature, this);
+            arrow.SetTarget(FindTarget());
+            arrow.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical, ElementalType.Nature, this);
         }
     }
 
@@ -41,9 +42,9 @@ public class AcornSprout : Shooter
     {
         base.LevelUp();
         int perLevel = (level - 1);
-        baseAttackDamage = bAD + (perLevel * 2f);
-        baseAttackSpeed = bAS + (perLevel * 0.08f);
-        baseAttackRange = bAR + (perLevel * 0.1f);
+        baseAttackDamage = bAD + (perLevel * 1f);
+        baseAttackSpeed = bAS + (perLevel * 0.02f);
+        baseAttackRange = bAR + (perLevel * 0f);
         baseProjectileSpeed = bPS + (perLevel * 0.2f);
     }
 }

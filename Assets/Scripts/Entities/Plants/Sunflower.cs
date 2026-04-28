@@ -2,16 +2,24 @@ using UnityEngine;
 
 public class Sunflower : Shooter
 {
+    private float 
+    bAD = 30f, // base attack damage
+    bAS = 0.6f, // base attack speed
+    bAR = 3f, // base attack range
+    bPS = 3f, // base projectile speed
+    bMR = 20f; // base max range
+    private int bP = 0; // base piercing
+
     public float generationInterval, sunTimer = 15f;
     public int sunGenerated;
     protected override void Awake()
     {
-        baseAttackDamage = 10f;
-        baseAttackSpeed = 0.5f;
-        baseAttackRange = 3f;
-        baseProjectileSpeed = 3f;
-        basePiercing = 0;
-        baseMaxRange = 6f;
+        baseAttackDamage = bAD;
+        baseAttackSpeed = bAS;
+        baseAttackRange = bAR;
+        baseProjectileSpeed = bPS;
+        baseMaxRange = bMR;
+        basePiercing = bP;
         base.Awake();
         // sun cost is set in inspector!
     }
@@ -25,8 +33,8 @@ public class Sunflower : Shooter
         // checking the passive level
         if (passiveLevel > 0)
         {
-            generationInterval = (15 - 1 * (passiveLevel -1));
-            sunGenerated = 15 + 1 * (passiveLevel -1);
+            generationInterval = (16 - 1 * (passiveLevel -1));
+            sunGenerated = 10 + 2 * (passiveLevel -1);
             sunTimer -= Time.deltaTime;
 
             if (sunTimer <= 0)
@@ -53,17 +61,20 @@ public class Sunflower : Shooter
 
     public void ReduceSunTimer()
     {
-        sunTimer = Mathf.Max(0f, sunTimer - 1f);
-        Debug.Log("Reduced timer by 1");
+        if (passiveLevel > 0)
+        {
+            sunTimer = Mathf.Max(0f, sunTimer - 1f);
+            // Debug.Log("Reduced timer by 1");
+        }
     }
     
     public override void LevelUp()
         {
             base.LevelUp();
             int perLevel = (level - 1);
-            baseAttackDamage = 10f + (perLevel * 1f);
-            baseAttackSpeed = 0.5f + (perLevel * 0.03f);
-            baseAttackRange = 3f + (perLevel * 0.2f);
-            baseProjectileSpeed = 3f + (perLevel * 0.3f);
+            baseAttackDamage = bAD + (perLevel * 1f);
+            baseAttackSpeed = bAS + (perLevel * 0.03f);
+            baseAttackRange = bAR + (perLevel * 0.2f);
+            baseProjectileSpeed = bPS + (perLevel * 0.3f);
         }
 }

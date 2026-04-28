@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1839221878583724804}
   - component: {fileID: 8037422639100695375}
-  - component: {fileID: 7460911327647547872}
-  - component: {fileID: 7476232177775528650}
+  - component: {fileID: 3849591162661420664}
+  - component: {fileID: 1851713260975089766}
   m_Layer: 0
-  m_Name: Sunflower
+  m_Name: LeafRanger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,17 +84,53 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7367808777163505026, guid: e470d82d1a72b284db0fc11d7825e607, type: 3}
+  m_Sprite: {fileID: 8714251798847170978, guid: e32f7955f2156924a9dca8632cbe022d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.015625, y: 1.40625}
+  m_Size: {x: 0.26660156, y: 0.3881836}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &7460911327647547872
+--- !u!58 &3849591162661420664
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2387982406283412628}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.56347656
+--- !u!114 &1851713260975089766
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,9 +139,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2387982406283412628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c850317862e1a45968381f35fc9cf0a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e6ccac453a5b38408cff87a80e44182, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Sunflower
+  m_EditorClassIdentifier: Assembly-CSharp::LeafRanger
   physicalShredAdder: 0
   physicalShredMultiplier: 0
   magicShredAdder: 0
@@ -197,8 +233,8 @@ MonoBehaviour:
   criticalDamage: 0
   timeAlive: 0
   totalDamageDealt: 0
-  circleRadius: {fileID: 12871179031049225}
-  sunCost: 75
+  circleRadius: {fileID: 0}
+  sunCost: 150
   exp: 0
   expToNextLevel: 52
   level: 1
@@ -210,7 +246,7 @@ MonoBehaviour:
   activeLevelCap: 5
   passiveCooldown: 0
   activeCooldown: 0
-  projectilePrefab: {fileID: 7388594979766616069, guid: 9337f1fc3f90c4293830f7c78351f8df, type: 3}
+  projectilePrefab: {fileID: 7388594979766616069, guid: 8ec7cc0b8af4fee46b8e0aeef161ba20, type: 3}
   baseProjectileSpeed: 0
   projectileSpeed: 0
   baseMaxRange: 0
@@ -218,45 +254,6 @@ MonoBehaviour:
   basePiercing: 0
   piercing: 0
   targeting: 1
-  generationInterval: 0
-  sunTimer: 15
-  sunGenerated: 0
---- !u!58 &7476232177775528650
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2387982406283412628}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0.03132218, y: 0.03132224}
-  m_Radius: 0.68066406
 --- !u!1 &7507562756265830079
 GameObject:
   m_ObjectHideFlags: 0

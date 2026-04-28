@@ -32,7 +32,7 @@ public abstract class Plant : Entity
 
     protected override void Awake()
     {
-        baseMaxHealth = 20;
+        baseMaxHealth = 100;
         base.Awake();
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.75f;

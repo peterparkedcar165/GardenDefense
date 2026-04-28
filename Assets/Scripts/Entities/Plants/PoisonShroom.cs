@@ -3,15 +3,22 @@ using System.Collections.Generic;
 
 public class PoisonShroom : Shooter
 {
+    private float 
+    bAD = 12f, // base attack damage
+    bAS = 0.6f, // base attack speed
+    bAR = 3f, // base attack range
+    bPS = 3f, // base projectile speed
+    bMR = 20f; // base max range
+    private int bP = 0; // base piercing
     protected override void Awake()
     {
         base.Awake();
-        baseAttackDamage = 3f;
-        baseAttackSpeed = 0.6f;
-        baseAttackRange = 3f;
-        baseProjectileSpeed = 3f;
-        basePiercing = 0;
-        baseMaxRange = 5f;
+        baseAttackDamage = bAD;
+        baseAttackSpeed = bAS;
+        baseAttackRange = bAR;
+        baseProjectileSpeed = bPS;
+        baseMaxRange = bMR;
+        basePiercing = bP;
     }
 
     protected override void Update()
@@ -26,6 +33,7 @@ public class PoisonShroom : Shooter
 
         if (puff != null)
         {
+            puff.SetTarget(FindTarget());
             puff.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Magic, ElementalType.Poison, this);
         }
     }
@@ -34,10 +42,10 @@ public class PoisonShroom : Shooter
     {
         base.LevelUp();
         int perLevel = (level - 1);
-        baseAttackDamage = 3f + (perLevel * 0.3f);
-        baseAttackSpeed = 0.6f + (perLevel * 0.04f);
-        baseAttackRange = 3f + (perLevel * 0.1f);
-        // baseProjectileSpeed = 8f + (perLevel * 0.2f);
+        baseAttackDamage = bAD + (perLevel * 0.3f);
+        baseAttackSpeed = bAS + (perLevel * 0.04f);
+        baseAttackRange = bAR + (perLevel * 0.1f);
+        baseProjectileSpeed = bPS + (perLevel * 0.2f);
     }
 
     protected override GameObject FindTarget()

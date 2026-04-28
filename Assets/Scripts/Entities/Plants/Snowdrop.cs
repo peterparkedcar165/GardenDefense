@@ -3,14 +3,18 @@ using System.Collections.Generic;
 
 public class Snowdrop : Aura
 {
+    private float 
+    bAD = 12f, // base attack damage
+    bAS = 0.33f, // base attack speed
+    bAR = 1.75f; // base attack range
     private float tickTimer = 0f;
-    private const float tickInterval = 0.5f;
+    private const float tickInterval = 0.25f;
     protected override void Awake()
     {
         base.Awake();
-        baseAttackDamage = 2f;
-        baseAttackSpeed = 0.33f;
-        baseAttackRange = 2f;
+        baseAttackDamage = bAD;
+        baseAttackSpeed = bAS;
+        baseAttackRange = bAR;
     }
 
 
@@ -55,9 +59,9 @@ public class Snowdrop : Aura
     {
         base.LevelUp();
         int perLevel = (level - 1);
-        baseAttackDamage = 2f + (perLevel * 0.2f);
-        baseAttackSpeed = 0.33f + (perLevel * 0.03f);
-        baseAttackRange = 3f + (perLevel * 0.2f);
+        baseAttackDamage = bAD + (perLevel * 0.8f);
+        baseAttackSpeed = bAS + (perLevel * 0.03f);
+        baseAttackRange = bAR + (perLevel * 0.2f);
     }
 
     protected override void Attack()
