@@ -9,6 +9,7 @@ public class Sunflower : Shooter
     bPS = 3f, // base projectile speed
     bMR = 20f; // base max range
     private int bP = 0; // base piercing
+    public float activeDuration = 4;
 
     public float generationInterval, sunTimer = 15f;
     public int sunGenerated;
@@ -28,22 +29,20 @@ public class Sunflower : Shooter
     {
         base.Update();
 
-
         /* SPECIAL EFFECT */
-        // checking the passive level
-        if (passiveLevel > 0)
-        {
-            generationInterval = (16 - 1 * (passiveLevel -1));
-            sunGenerated = 10 + 2 * (passiveLevel -1);
-            sunTimer -= Time.deltaTime;
+        // checking the path 2 level
 
-            if (sunTimer <= 0)
-            {
-                GameManager.instance.AddSun(sunGenerated);
-                sunTimer = generationInterval;
-                Debug.Log(this + " has generated " + sunGenerated + " sun");
-            }
+        generationInterval = (16 - 1 * (effectivePath2Level -1));
+        sunGenerated = 10 + 5 * (effectivePath2Level -1);
+        sunTimer -= Time.deltaTime;
+
+        if (sunTimer <= 0)
+        {
+            GameManager.instance.AddSun(sunGenerated);
+            sunTimer = generationInterval;
+            Debug.Log(this + " has generated " + sunGenerated + " sun");
         }
+        
         
     }
 
@@ -61,20 +60,51 @@ public class Sunflower : Shooter
 
     public void ReduceSunTimer()
     {
-        if (passiveLevel > 0)
-        {
-            sunTimer = Mathf.Max(0f, sunTimer - 1f);
-            // Debug.Log("Reduced timer by 1");
-        }
+        sunTimer = Mathf.Max(0f, sunTimer - 1f);
+        // Debug.Log("Reduced timer by 1");
     }
     
-    public override void LevelUp()
-        {
-            base.LevelUp();
-            int perLevel = (level - 1);
-            baseAttackDamage = bAD + (perLevel * 1f);
-            baseAttackSpeed = bAS + (perLevel * 0.03f);
-            baseAttackRange = bAR + (perLevel * 0.2f);
-            baseProjectileSpeed = bPS + (perLevel * 0.3f);
-        }
+    public override void OnPath1Upgrade(int level)
+    {
+        baseAttackDamage = bAD + (level * 4f);
+        baseAttackSpeed = bAS + (level * 0.05f);
+    }
+
+    public override void OnPath2Upgrade(int level)
+    {
+        // can leave empty, because already taken care of on Update()
+    }
+
+    public override void OnPath3Upgrade(int level)
+    {
+        activeDuration = 4 + 0.5f*(level -1);
+    }
+
+    
+    // DESCRIPTION
+
+    public override string GetName()
+    {
+        return "<b><color=orange>Sunflower</color></b>"; // bold, then orange, name, uncolor, unbold
+    }
+
+    public override string GetDescription()
+    {
+        return $"A cheerful guardian of the garden. The {GetName()} draws power from sunlight, converting it into both blazing attacks and precious sun for the garden's growth.";
+    }
+
+    public override string GetAttackDescription()
+    {
+        return $"The {GetName()} briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=orange>Fire</color> <color=pink>Magic </color>damage.";
+    }
+
+    public override string GetSkillDesription()
+    {
+        return $"The {GetName()} gathers a large burst of energy from the sun, calling down a blazing beam from above that deals massive <color=orange>Fire</color> <color=pink>Magic</color> damage to targets in its path.";
+    }
+
+    public override string GetPassiveDescription()
+    {
+        return $"The {GetName()} passively generates <color=yellow>Sun</color> for the garden. Each attack that hits an enemy reduces the generation cooldown.";
+    }
 }

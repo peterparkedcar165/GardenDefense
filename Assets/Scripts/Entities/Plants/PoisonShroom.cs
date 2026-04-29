@@ -10,6 +10,8 @@ public class PoisonShroom : Shooter
     bPS = 3f, // base projectile speed
     bMR = 20f; // base max range
     private int bP = 0; // base piercing
+    public int poisonLevel = 1;
+    public float poisonDuration = 6f, activeDuration = 7f, activeRadius = 2f;
     protected override void Awake()
     {
         base.Awake();
@@ -38,16 +40,6 @@ public class PoisonShroom : Shooter
         }
     }
 
-    public override void LevelUp()
-    {
-        base.LevelUp();
-        int perLevel = (level - 1);
-        baseAttackDamage = bAD + (perLevel * 0.3f);
-        baseAttackSpeed = bAS + (perLevel * 0.04f);
-        baseAttackRange = bAR + (perLevel * 0.1f);
-        baseProjectileSpeed = bPS + (perLevel * 0.2f);
-    }
-
     protected override GameObject FindTarget()
     {
         GameObject[] allInsects = GameObject.FindGameObjectsWithTag("Insect");
@@ -69,5 +61,50 @@ public class PoisonShroom : Shooter
 
         return base.FindTarget();
 
+    }
+
+    public override void OnPath1Upgrade(int level)
+    {
+        baseAttackSpeed = bAS + (level * 0.04f);
+        baseAttackRange = bAR + (level * 0.1f);
+    }
+
+    public override void OnPath2Upgrade(int level)
+    {
+        poisonLevel = 1 + (level);
+        poisonDuration = 6f + (level-1);
+    }
+
+    public override void OnPath3Upgrade(int level)
+    {
+        activeDuration = 7f + 1*(level - 1);
+        activeRadius = 2f + 0.5f*(level - 1);
+    }
+
+    // DESCRIPTION
+
+    public override string GetName()
+    {
+        return "<b><color=purple>Poison Shroom</color></b>";
+    }
+
+    public override string GetDescription()
+    {
+        return $"A fungi of few words. The {GetName()} lurks in the shadows of the garden, puffing toxic spores at any insect foolish enough to wander close.";
+    }
+
+    public override string GetAttackDescription()
+    {
+        return $"The {GetName()} blows poisonous bubbles at his target, dealing <color=purple>Poison</color> <color=pink>Magic</color> damage, and applying a mild <color=purple>Poison</color> effect.";
+    }
+
+    public override string GetSkillDesription()
+    {
+        return $"The {GetName()} releases a lingering toxic cloud that poisons the area around it, dealing <color=purple>Poison</color> <color=pink>Magic</color> damage over time, and reducing any healing towards insects caught in the cloud.";
+    }
+
+    public override string GetPassiveDescription()
+    {
+        return $"The {GetName()}'s toxin gets stronger, and spreads to nearby insects on hit.";
     }
 }

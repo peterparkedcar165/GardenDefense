@@ -233,6 +233,7 @@ MonoBehaviour:
   criticalDamage: 0
   timeAlive: 0
   totalDamageDealt: 0
+  data: {fileID: 11400000, guid: ead2b379b54dbcf40b006541a50199b2, type: 2}
   circleRadius: {fileID: 0}
   sunCost: 150
   exp: 0

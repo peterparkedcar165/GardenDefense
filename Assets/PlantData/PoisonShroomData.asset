@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f492ab58ea55a4391e898fd1fd294e, type: 3}
+  m_Name: PoisonShroomData
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantPrefab: {fileID: 1216329997766717309, guid: d08989aa5a1b0e74c84350560309b2fe, type: 3}
+  icon: {fileID: 480713740630145538, guid: 17364a63666fa6849902937eb5b3392e, type: 3}

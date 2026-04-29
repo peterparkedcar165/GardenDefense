@@ -15,8 +15,8 @@ public class AcornProjectile : Projectile
     protected override void OnHit(Insect insect) // to change for every plant
     {
         
-        if (source != null)
-            insect.RegisterAttacker(source);
+        // if (source != null)
+        //    insect.RegisterAttacker(source);
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
 
@@ -32,14 +32,14 @@ public class AcornProjectile : Projectile
         /* SPECIAL EFFECT */
         
         // checking the passive level
-        if (source != null && source.passiveLevel > 0)
+        if (source != null && source is AcornSprout acorn)
         {
-             float procChance = 0.33f * (1 + source.bonusEffectChance);
+             float procChance = acorn.stunChance * (1 + acorn.bonusEffectChance);
              if (Random.value < procChance)
              {
                  insect.ApplyEffect(new StunEffect(
                     insect /*target*/,
-                    1f/*duration in seconds*/,
+                    acorn.stunDuration/*duration in seconds*/,
                     1/*level*/,
                     source/*source*/));
              }

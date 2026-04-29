@@ -15,8 +15,8 @@ public class LeafRangerProjectile : Projectile
     protected override void OnHit(Insect insect) // to change for every plant
     {
         
-        if (source != null)
-            insect.RegisterAttacker(source);
+        //if (source != null)
+        //    insect.RegisterAttacker(source);
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
 
@@ -33,10 +33,10 @@ public class LeafRangerProjectile : Projectile
         /* SPECIAL EFFECT */
         
         // checking the passive level
-        if (source != null && source.passiveLevel > 0)
-        {
+        //if (source != null && source.passiveLevel > 0)
+        //{
             // for now, nothing
-        }
+        //}
     }
     
 }

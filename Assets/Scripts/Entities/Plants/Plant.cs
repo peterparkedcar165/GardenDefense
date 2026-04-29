@@ -11,6 +11,7 @@ public enum PlantType
 }
 public abstract class Plant : Entity
 {
+    public PlantData data;
 
     [SerializeField] private Transform circleRadius;
     protected override void UpdateStats()
@@ -25,10 +26,11 @@ public abstract class Plant : Entity
     }
 
     public int sunCost;
-    public int exp = 0, expToNextLevel = 52, level = 1, levelCap = 25;
+    public int exp = 0;
+    public int path1Level, path2Level, path3Level, path1LevelAdder, path2LevelAdder, path3LevelAdder, effectivePath1Level, effectivePath2Level, effectivePath3Level;
+    public bool path3Unlocked;
     public float expBoost;
-    public int passiveLevel, activeLevel, passiveLevelCap = 5, activeLevelCap = 5;
-    public float passiveCooldown, activeCooldown; // most of these are public for debugging purposes
+    public float activeCooldown; // most of these are public for debugging purposes
 
     protected override void Awake()
     {
@@ -61,41 +63,93 @@ public abstract class Plant : Entity
     protected override void Update()
     {
         base.Update();
-        while(exp >= expToNextLevel && level < levelCap)
-        {
-            LevelUp();
-        }
+        effectivePath1Level = path1Level + path1LevelAdder;
+        effectivePath2Level = path2Level + path2LevelAdder;
+        effectivePath3Level = path3Level + path3LevelAdder;
     }
 
     public void GainExp(float amount)
     {
         exp += (int)(amount * (1 + expBoost));
     }
-    public virtual void LevelUp() // virtual so child classes can use this
+
+    public virtual void OnPath1Upgrade(int level) {}
+    public virtual void OnPath2Upgrade(int level) {}
+    public virtual void OnPath3Unlock() {}
+    public virtual void OnPath3Upgrade(int level) {}
+
+    // UPGRADE COSTS
+    public const int pathLevelCap = 5;
+
+    private int Path1Cost() => sunCost / 2 + 25 * path1Level;
+    private int Path2Cost() => sunCost / 2 + 25 * path2Level;
+    private int Path3Cost() => Mathf.RoundToInt(sunCost * 0.75f + 25 * path3Level);
+
+    public bool UpgradePath1()
     {
-        exp -= expToNextLevel;
-        if (exp < 0) exp = 0;
-        level++;
-        expToNextLevel = (int) (52 * (1 + level*0.3f));
-        if (level % (3) == 0 && passiveLevel < passiveLevelCap)
-        {
-            UpgradePassive();
-            Debug.Log("Passive increased to: " + passiveLevel);
-        }
-        if (level % 5 == 0 && activeLevel < activeLevelCap) {
-            UpgradeActive();
-            Debug.Log("Active increased to: " + activeLevel);
-        }
-        // stat increases will be Base stats, and implemented differently for each plant
+        if (path1Level >= pathLevelCap) return false;
+        if (!GameManager.instance.SpendSun(Path1Cost())) return false;
+        path1Level++;
+        effectivePath1Level = path1Level + path1LevelAdder;
+        OnPath1Upgrade(effectivePath1Level);
+        return true;
     }
 
-    public virtual void UpgradePassive()
+    public bool UpgradePath2()
     {
-        passiveLevel += 1;
+        if (path2Level >= pathLevelCap) return false;
+        if (!GameManager.instance.SpendSun(Path2Cost())) return false;
+        path2Level++;
+        effectivePath2Level = path2Level + path2LevelAdder;
+        OnPath2Upgrade(effectivePath2Level);
+        return true;
     }
 
-    public virtual void UpgradeActive()
+    public bool UnlockPath3()
     {
-        activeLevel += 1;
+        if (path3Unlocked) return false;
+        if (!GameManager.instance.SpendSun(Path3Cost())) return false;
+        path3Unlocked = true;
+        OnPath3Unlock();
+        return true;
+    }
+
+    public bool UpgradePath3()
+    {
+        if (!path3Unlocked) return false;
+        if (path3Level >= pathLevelCap) return false;
+        if (!GameManager.instance.SpendSun(Path3Cost())) return false;
+        path3Level++;
+        effectivePath3Level = path3Level + path3LevelAdder;
+        OnPath3Upgrade(effectivePath3Level);
+        return true;
+    }
+
+
+
+    // DESCRIPTIONS
+    public virtual string GetName()
+    {
+        return "";
+    }
+
+    public virtual string GetDescription()
+    {
+        return "";
+    }
+
+    public virtual string GetAttackDescription()
+    {
+        return "";
+    }
+
+    public virtual string GetSkillDesription()
+    {
+        return "";
+    }
+
+    public virtual string GetPassiveDescription()
+    {
+        return "";
     }
 }

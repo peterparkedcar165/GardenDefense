@@ -15,8 +15,8 @@ public class PoisonShroomProjectile : Projectile
     protected override void OnHit(Insect insect) // to change for every plant
     {
         
-        if (source != null)
-            insect.RegisterAttacker(source);
+        //if (source != null)
+        //   insect.RegisterAttacker(source);
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
 
@@ -31,19 +31,9 @@ public class PoisonShroomProjectile : Projectile
 
         /* SPECIAL EFFECT */
 
-        if (source != null) 
+        if (source != null && source is PoisonShroom shooter) 
         {
-            int newPoisonLevel;
-            if(source.passiveLevel <= 0)
-            {
-                newPoisonLevel = 1;
-            } else
-            {
-                newPoisonLevel = 1 + source.passiveLevel;
-            }
-
-            insect.ApplyEffect(new PoisonEffect(insect, 8f, newPoisonLevel, source));
-
+            insect.ApplyEffect(new PoisonEffect(insect, shooter.poisonDuration, shooter.poisonLevel, source));
         } else { 
             return;
         }

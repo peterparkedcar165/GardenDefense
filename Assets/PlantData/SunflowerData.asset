@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f492ab58ea55a4391e898fd1fd294e, type: 3}
+  m_Name: SunflowerData
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantPrefab: {fileID: 7460911327647547872, guid: 530019c35e88f4345b4a1465a481b7ec, type: 3}
+  icon: {fileID: 7367808777163505026, guid: e470d82d1a72b284db0fc11d7825e607, type: 3}
