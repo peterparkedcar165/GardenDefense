@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
+    <Compile Include="Assets\Scripts\UI\PathHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Ant.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Assets\Scripts\Spawning\Level1.cs" />
     <Compile Include="Assets\Scripts\PlantData.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\UI\PlantUpgradeUI.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
   </ItemGroup>
   <ItemGroup>

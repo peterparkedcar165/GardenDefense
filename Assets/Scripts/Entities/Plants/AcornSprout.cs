@@ -3,7 +3,7 @@ using UnityEngine;
 public class AcornSprout : Shooter
 {
     private float 
-    bAD = 32f, // base attack damage
+    bAD = 33f, // base attack damage
     bAS = 0.8f, // base attack speed
     bAR = 3f, // base attack range
     bPS = 8f, // base projectile speed

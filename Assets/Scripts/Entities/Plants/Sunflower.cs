@@ -3,7 +3,7 @@ using UnityEngine;
 public class Sunflower : Shooter
 {
     private float 
-    bAD = 30f, // base attack damage
+    bAD = 35f, // base attack damage
     bAS = 0.6f, // base attack speed
     bAR = 3f, // base attack range
     bPS = 3f, // base projectile speed
@@ -66,7 +66,7 @@ public class Sunflower : Shooter
     
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = bAD + (level * 4f);
+        baseAttackDamage = bAD + (level * 5f);
         baseAttackSpeed = bAS + (level * 0.05f);
     }
 

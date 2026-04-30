@@ -27,10 +27,13 @@ public abstract class Plant : Entity
 
     public int sunCost;
     public int exp = 0;
-    public int path1Level, path2Level, path3Level, path1LevelAdder, path2LevelAdder, path3LevelAdder, effectivePath1Level, effectivePath2Level, effectivePath3Level;
-    public bool path3Unlocked;
     public float expBoost;
     public float activeCooldown; // most of these are public for debugging purposes
+
+    [Header("Paths")]
+    public int path1Level, path2Level, path3Level, path1LevelAdder, path2LevelAdder, path3LevelAdder, effectivePath1Level, effectivePath2Level, effectivePath3Level;
+    public bool path3Unlocked;
+
 
     protected override void Awake()
     {
@@ -81,14 +84,14 @@ public abstract class Plant : Entity
     // UPGRADE COSTS
     public const int pathLevelCap = 5;
 
-    private int Path1Cost() => sunCost / 2 + 25 * path1Level;
-    private int Path2Cost() => sunCost / 2 + 25 * path2Level;
-    private int Path3Cost() => Mathf.RoundToInt(sunCost * 0.75f + 25 * path3Level);
+    public int GetPath1Cost() => sunCost / 2 + 28 * path1Level;
+    public int GetPath2Cost() => sunCost / 2 + 28 * path2Level;
+    public int GetPath3Cost() => Mathf.RoundToInt(sunCost * 0.75f + 28 * path3Level);
 
     public bool UpgradePath1()
     {
         if (path1Level >= pathLevelCap) return false;
-        if (!GameManager.instance.SpendSun(Path1Cost())) return false;
+        if (!GameManager.instance.SpendSun(GetPath1Cost())) return false;
         path1Level++;
         effectivePath1Level = path1Level + path1LevelAdder;
         OnPath1Upgrade(effectivePath1Level);
@@ -98,7 +101,7 @@ public abstract class Plant : Entity
     public bool UpgradePath2()
     {
         if (path2Level >= pathLevelCap) return false;
-        if (!GameManager.instance.SpendSun(Path2Cost())) return false;
+        if (!GameManager.instance.SpendSun(GetPath2Cost())) return false;
         path2Level++;
         effectivePath2Level = path2Level + path2LevelAdder;
         OnPath2Upgrade(effectivePath2Level);
@@ -108,7 +111,7 @@ public abstract class Plant : Entity
     public bool UnlockPath3()
     {
         if (path3Unlocked) return false;
-        if (!GameManager.instance.SpendSun(Path3Cost())) return false;
+        if (!GameManager.instance.SpendSun(GetPath3Cost())) return false;
         path3Unlocked = true;
         OnPath3Unlock();
         return true;
@@ -118,7 +121,7 @@ public abstract class Plant : Entity
     {
         if (!path3Unlocked) return false;
         if (path3Level >= pathLevelCap) return false;
-        if (!GameManager.instance.SpendSun(Path3Cost())) return false;
+        if (!GameManager.instance.SpendSun(GetPath3Cost())) return false;
         path3Level++;
         effectivePath3Level = path3Level + path3LevelAdder;
         OnPath3Upgrade(effectivePath3Level);
@@ -126,6 +129,21 @@ public abstract class Plant : Entity
     }
 
 
+
+    // FIELD SELECTION
+    private void OnMouseDown()
+    {
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+        PlantUpgradeUI.instance.ShowPanel(this);
+    }
+
+    // PATH NAMES & HOVER DESCRIPTIONS
+    public virtual string GetPath1Name() => "Path 1";
+    public virtual string GetPath2Name() => "Path 2";
+    public virtual string GetPath3Name() => "Path 3";
+    public virtual string GetPath1Description() => "";
+    public virtual string GetPath2Description() => "";
+    public virtual string GetPath3Description() => "";
 
     // DESCRIPTIONS
     public virtual string GetName()

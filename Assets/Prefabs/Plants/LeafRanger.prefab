@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8037422639100695375}
   - component: {fileID: 3849591162661420664}
   - component: {fileID: 1851713260975089766}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LeafRanger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,16 +237,18 @@ MonoBehaviour:
   circleRadius: {fileID: 0}
   sunCost: 150
   exp: 0
-  expToNextLevel: 52
-  level: 1
-  levelCap: 25
   expBoost: 0
-  passiveLevel: 0
-  activeLevel: 0
-  passiveLevelCap: 5
-  activeLevelCap: 5
-  passiveCooldown: 0
   activeCooldown: 0
+  path1Level: 0
+  path2Level: 0
+  path3Level: 0
+  path1LevelAdder: 0
+  path2LevelAdder: 0
+  path3LevelAdder: 0
+  effectivePath1Level: 0
+  effectivePath2Level: 0
+  effectivePath3Level: 0
+  path3Unlocked: 0
   projectilePrefab: {fileID: 7388594979766616069, guid: 8ec7cc0b8af4fee46b8e0aeef161ba20, type: 3}
   baseProjectileSpeed: 0
   projectileSpeed: 0
@@ -255,6 +257,8 @@ MonoBehaviour:
   basePiercing: 0
   piercing: 0
   targeting: 1
+  activeDuration: 3
+  activeRadius: 2
 --- !u!1 &7507562756265830079
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +269,7 @@ GameObject:
   m_Component:
   - component: {fileID: 12871179031049225}
   - component: {fileID: 892210127317390287}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: RangeIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

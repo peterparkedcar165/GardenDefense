@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8037422639100695375}
   - component: {fileID: -1218289086641490182}
   - component: {fileID: -5525797036898548761}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Snowdrop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,16 +201,20 @@ MonoBehaviour:
   circleRadius: {fileID: 12871179031049225}
   sunCost: 150
   exp: 0
-  expToNextLevel: 52
-  level: 1
-  levelCap: 25
   expBoost: 0
-  passiveLevel: 0
-  activeLevel: 0
-  passiveLevelCap: 5
-  activeLevelCap: 5
-  passiveCooldown: 0
   activeCooldown: 0
+  path1Level: 0
+  path2Level: 0
+  path3Level: 0
+  path1LevelAdder: 0
+  path2LevelAdder: 0
+  path3LevelAdder: 0
+  effectivePath1Level: 0
+  effectivePath2Level: 0
+  effectivePath3Level: 0
+  path3Unlocked: 0
+  activeDuration: 5
+  chillLevel: 1
 --- !u!58 &-5525797036898548761
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -257,7 +261,7 @@ GameObject:
   m_Component:
   - component: {fileID: 12871179031049225}
   - component: {fileID: 892210127317390287}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: RangeIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

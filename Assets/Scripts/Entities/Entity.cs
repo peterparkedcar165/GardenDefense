@@ -331,6 +331,7 @@ public abstract class Entity : MonoBehaviour
             {
                 if (effect.level > existing.level)
                 {
+                    existing.OnExpire();
                     existing.level = effect.level;
                     existing.duration = effect.duration;
                     existing.OnApply();
