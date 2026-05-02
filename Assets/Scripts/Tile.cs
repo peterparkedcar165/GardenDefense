@@ -1,8 +1,20 @@
 using UnityEngine;
 
+public enum TileType
+{
+    Grass, Dirt, Water, Path, Potted, Cave
+    /* Nature-element plants will be able to be placed on Grass, others won't, except for Flower Pot
+    Every plant that is non-aquatic will be placeable on Dirt and Potted
+    Aquatic plants can be placed in Water, Pondplanters allow terrian plants to be placed on water
+    Water Pot will allow aquatic plants to be placed on ground
+    Cave ground requires Flower Pot and Water Pot */
+}
+
 public class Tile : MonoBehaviour
 {
-    public bool isOccupied = false;
+
+    public bool isOccupied = false, isHighground = false;
+    public TileType tileType;
     
     private void OnMouseDown()
     {
@@ -10,6 +22,7 @@ public class Tile : MonoBehaviour
 
         Debug.Log("Tile clicked");
         if (isOccupied){
+            Debug.Log("Tile is occupied, cannot place");
             return;
         }
 
@@ -23,6 +36,14 @@ public class Tile : MonoBehaviour
         if (gm == null)
         {
             Debug.Log("Gm is null");
+            return;
+        }
+
+
+        Plant selectedPlant = selector.SelectedPlant.GetComponent<Plant>();
+        if (System.Array.IndexOf(selectedPlant.allowedTiles, tileType) == -1)
+        {
+            Debug.Log("Cannot be planted here!");
             return;
         }
 

@@ -27,7 +27,7 @@ public abstract class Insect : Entity
     protected override void Awake()
     {
         base.Awake();
-        Debug.Log("SPAWNED: " + gameObject);
+        // Debug.Log("SPAWNED: " + gameObject);
     }
 
     protected virtual void Start()

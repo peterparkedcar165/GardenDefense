@@ -24,7 +24,7 @@ public abstract class Plant : Entity
             circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f);
         }
     }
-
+    public TileType[] allowedTiles;
     public int sunCost;
     public int exp = 0;
     public float expBoost;

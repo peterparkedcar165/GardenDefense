@@ -9,6 +9,7 @@ public class GridManager : MonoBehaviour
 public int rows, columns;
 public GameObject grassTilePrefab;
 public List<Vector2Int> pathCoordinates;
+public List<Vector2Int> dirtCoordinates, waterCoordinates, caveCoordinates;
 
 
 void Start()
@@ -29,9 +30,20 @@ void GenerateGrid()
                 {
                     tile.GetComponent<Tile>().isOccupied = true;
                 }
+
+                if (dirtCoordinates.Contains(new Vector2Int(x, y)))
+                {
+                    tile.GetComponent<Tile>().tileType = TileType.Dirt;
+                } else if (waterCoordinates.Contains(new Vector2Int(x, y))) {
+                    tile.GetComponent<Tile>().tileType = TileType.Water;
+                } else if (caveCoordinates.Contains(new Vector2Int(x,y)))
+                {
+                    tile.GetComponent<Tile>().tileType = TileType.Cave;
+                } else {
+                    tile.GetComponent<Tile>().tileType = TileType.Grass;
+                }
             }
         }
-
     }
 
 private void OnDrawGizmos()

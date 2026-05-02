@@ -60,7 +60,7 @@ public class Snowdrop : Aura
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = bAD + (level * 0.8f);
+        baseAttackDamage = bAD + (level * 1f);
         baseAttackRange = bAR + (level * 0.2f);
     }
 
@@ -85,7 +85,7 @@ public class Snowdrop : Aura
 
     public override string GetName()
     {
-        return "<b><color=cyan>Snowdrop</color></b>";
+        return "<b><color=#00FFFF>Snowdrop</color></b>";
     }
 
     public override string GetDescription()

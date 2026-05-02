@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class PlantButton : MonoBehaviour
 {
     
     [SerializeField] private GameObject plantPrefab;
+    [SerializeField] private Image buttonImage;
     [SerializeField] private TMP_Text costText;
     GameManager gameManager;
     Plant plant;
@@ -14,6 +16,7 @@ public class PlantButton : MonoBehaviour
         gameManager = FindAnyObjectByType<GameManager>();
 
         plant = plantPrefab.GetComponent<Plant>();
+        buttonImage.sprite = plantPrefab.GetComponent<SpriteRenderer>().sprite;
     }
 
     // Update is called once per frame

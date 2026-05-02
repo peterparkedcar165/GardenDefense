@@ -50,7 +50,7 @@ public class DamageIndicator : MonoBehaviour
             color = new Color(0.3f, 1f, 0.2f);
             break;
             case(ElementalType.Ice):
-            color = new Color(0.6f, 0.95f, 1f);
+            color = new Color(0f, 1f, 1f);
             break;
             case(ElementalType.Poison):
             color = new Color(0.6f, 0.1f, 0.8f);

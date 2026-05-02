@@ -199,7 +199,8 @@ MonoBehaviour:
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: b623d45311f00f14d83400e0398a330a, type: 2}
   circleRadius: {fileID: 12871179031049225}
-  sunCost: 150
+  allowedTiles: 0100000004000000
+  sunCost: 175
   exp: 0
   expBoost: 0
   activeCooldown: 0

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            SunCount = 125;
+            SunCount = 9999; // originally 125
             UpdateSun();
             DontDestroyOnLoad(gameObject);
             playerHealth = playerMaxHealth;
