@@ -32,8 +32,8 @@ public class Sunflower : Shooter
         /* SPECIAL EFFECT */
         // checking the path 2 level
 
-        generationInterval = (16 - 1 * (effectivePath2Level -1));
-        sunGenerated = 10 + 5 * (effectivePath2Level -1);
+        generationInterval = (18 - 1 * (effectivePath2Level -1));
+        sunGenerated = 15 + 2 * (effectivePath2Level -1);
         sunTimer -= Time.deltaTime;
 
         if (sunTimer <= 0)

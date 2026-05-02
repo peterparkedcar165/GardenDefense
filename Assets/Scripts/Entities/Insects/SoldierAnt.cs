@@ -6,8 +6,8 @@ public class SoldierAnt : Ant
     protected override void Awake() {
         baseAttackDamage = 3;
         baseMaxHealth = 160f;
-        basePhysicalResistance = 0.15f;
-        sunDrop = 35;
+        basePhysicalResistance = 0.20f;
+        sunDrop = 16;
         base.Awake();
     }
 
@@ -17,7 +17,7 @@ public class SoldierAnt : Ant
         // passive of the soldier ant, reduces physical damage taken by a flat 2
         if (damageType == DamageType.Physical)
         {
-            reducedDamage = Mathf.Max(0, damageDealt -2f);
+            reducedDamage = Mathf.Max(0, damageDealt -12f);
         }
         else // if its magic or true, ignores the reduction
         {
@@ -32,7 +32,7 @@ public class SoldierAnt : Ant
         // passive of the soldier ant, reduces physical damage taken by a flat 2
         if (damageType == DamageType.Physical)
         {
-            reducedDamage = Mathf.Max(0, damageDealt -2f);
+            reducedDamage = Mathf.Max(0, damageDealt -12f);
         }
         else // if its magic or true, ignores the reduction
         {

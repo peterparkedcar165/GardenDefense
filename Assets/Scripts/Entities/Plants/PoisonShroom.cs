@@ -4,8 +4,8 @@ using System.Collections.Generic;
 public class PoisonShroom : Shooter
 {
     private float 
-    bAD = 12f, // base attack damage
-    bAS = 0.6f, // base attack speed
+    bAD = 8f, // base attack damage
+    bAS = 0.8f, // base attack speed
     bAR = 3f, // base attack range
     bPS = 3f, // base projectile speed
     bMR = 20f; // base max range
@@ -65,7 +65,7 @@ public class PoisonShroom : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackSpeed = bAS + (level * 0.04f);
+        baseAttackSpeed = bAS + (level * 0.08f);
         baseAttackRange = bAR + (level * 0.1f);
     }
 

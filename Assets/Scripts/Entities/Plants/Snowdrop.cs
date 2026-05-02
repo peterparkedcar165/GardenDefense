@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Snowdrop : Aura
 {
     private float 
-    bAD = 12f, // base attack damage
+    bAD = 9f, // base attack damage
     bAS = 0.33f, // base attack speed
     bAR = 1.75f; // base attack range
     private float tickTimer = 0f;
@@ -60,8 +60,8 @@ public class Snowdrop : Aura
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = bAD + (level * 1f);
-        baseAttackRange = bAR + (level * 0.2f);
+        baseAttackDamage = bAD + (level * 0.5f);
+        baseAttackRange = bAR + (level * 0.1f);
     }
 
     public override void OnPath2Upgrade(int level)
