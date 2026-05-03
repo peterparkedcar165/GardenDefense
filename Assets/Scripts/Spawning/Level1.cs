@@ -21,12 +21,12 @@ public class Level1 : SpawnManager
         CancelInvoke(nameof(SpawnWorkerAnt));
 
         // wave 2 - scout ants every 1 seconds for 15 seconds
-        InvokeRepeating(nameof(SpawnScoutAnt), 0f, 1f);
-        yield return new WaitForSeconds(15f);
+        InvokeRepeating(nameof(SpawnScoutAnt), 0f, 1.5f);
+        yield return new WaitForSeconds(30f);
         CancelInvoke(nameof(SpawnScoutAnt));
 
-        InvokeRepeating(nameof(SpawnSoldierAnt), 0f, 2f);
-        yield return new WaitForSeconds(32f);
+        InvokeRepeating(nameof(SpawnSoldierAnt), 0f, 1f);
+        yield return new WaitForSeconds(36f);
         CancelInvoke(nameof(SpawnSoldierAnt));
 
         InvokeRepeating(nameof(SpawnScoutAnt), 0f, 1f);
@@ -35,6 +35,16 @@ public class Level1 : SpawnManager
 
         InvokeRepeating(nameof(SpawnSoldierAnt), 0f, 1f);
         yield return new WaitForSeconds(40f);
+        CancelInvoke(nameof(SpawnSoldierAnt));
+
+        InvokeRepeating(nameof(SpawnScoutAnt), 0f, 0.5f);
+        yield return new WaitForSeconds(90f);
+        CancelInvoke(nameof(SpawnScoutAnt));
+
+        InvokeRepeating(nameof(SpawnScoutAnt), 0f, 0.25f);
+        InvokeRepeating(nameof(SpawnSoldierAnt), 0f, 0.25f);
+        yield return new WaitForSeconds(45f);
+        CancelInvoke(nameof(SpawnScoutAnt));
         CancelInvoke(nameof(SpawnSoldierAnt));
     }
 

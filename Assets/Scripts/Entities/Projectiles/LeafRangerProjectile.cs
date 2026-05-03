@@ -20,6 +20,8 @@ public class LeafRangerProjectile : Projectile
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
 
+        PlaySound(hit);
+        
         if (piercing > 0)
         {
             trackedTarget = null;

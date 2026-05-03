@@ -25,6 +25,7 @@ public class PlantSelector : MonoBehaviour
     public void SelectPlant(GameObject plant)
     {
         SelectedPlant = plant;
+        GameManager.instance.PlaySound(GameManager.instance.plantSelect);
         Debug.Log("Selected " + plant);
     }
 

@@ -53,6 +53,7 @@ public class Tile : MonoBehaviour
         if (gm.SpendSun(cost))
         {
             GameObject placedPlant = Instantiate(selector.SelectedPlant, transform.position, Quaternion.identity);
+            GameManager.instance.PlaySound(GameManager.instance.plantPlace);
             Plant plant = placedPlant.GetComponent<Plant>();
             plant.totalSunSpent += cost;
             plant.occupiedTile = this;

@@ -2,7 +2,12 @@ using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour
 {
+    [Header("Sound")]
+    public AudioSource audioSource;
+    public AudioClip hit;
+    [SerializeField] private float minPitch = 0.9f, maxPitch = 1.1f;
 
+    [Header("Combat")]
     public float projectileDamage, projectileSpeed, maxRange;
     public int piercing;
     public DamageType damageType;
@@ -75,6 +80,24 @@ public abstract class Projectile : MonoBehaviour
 
         if (other.gameObject.CompareTag("Border"))
         Destroy(gameObject);
+    }
+
+    protected void PlaySound(AudioClip sound)
+    {
+        if (sound == null)
+        {
+            return;
+        }
+
+        GameObject tempAudio = new GameObject("TempAudio");
+        tempAudio.transform.position = transform.position;
+        AudioSource source = tempAudio.AddComponent<AudioSource>();
+        source.clip = sound;
+        source.pitch = Random.Range(minPitch, maxPitch);
+        source.spatialBlend = 0f;
+        source.volume = 0.5f;
+        source.Play();
+        Destroy(tempAudio,sound.length/source.pitch);
     }
 
 }

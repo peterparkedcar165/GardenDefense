@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public int SunCount;
     public int playerHealth, playerMaxHealth = 20;
     public float BonusSunGain;
+    public AudioSource audioSource;
+    public AudioClip buttonClick, plantPlace, plantSelect;
     
     public TextMeshProUGUI sunText;
 
@@ -69,5 +71,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Over");
         Time.timeScale = 0; // pauses game
         // show game over screen later
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
     }
 }
