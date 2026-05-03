@@ -52,7 +52,10 @@ public class Tile : MonoBehaviour
 
         if (gm.SpendSun(cost))
         {
-            Instantiate(selector.SelectedPlant, transform.position, Quaternion.identity);
+            GameObject placedPlant = Instantiate(selector.SelectedPlant, transform.position, Quaternion.identity);
+            Plant plant = placedPlant.GetComponent<Plant>();
+            plant.totalSunSpent += cost;
+            plant.occupiedTile = this;
             isOccupied = true;
             selector.ClearSelection();
             Debug.Log("Spent " + cost);

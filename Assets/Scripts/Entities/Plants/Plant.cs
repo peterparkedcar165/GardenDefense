@@ -12,6 +12,7 @@ public enum PlantType
 public abstract class Plant : Entity
 {
     public PlantData data;
+    public Tile occupiedTile;
 
     [SerializeField] private Transform circleRadius;
     protected override void UpdateStats()
@@ -25,7 +26,7 @@ public abstract class Plant : Entity
         }
     }
     public TileType[] allowedTiles;
-    public int sunCost;
+    public int sunCost, totalSunSpent = 0;
     public int exp = 0;
     public float expBoost;
     public float activeCooldown; // most of these are public for debugging purposes
@@ -71,6 +72,16 @@ public abstract class Plant : Entity
         effectivePath3Level = path3Level + path3LevelAdder;
     }
 
+    public void Uproot()
+    {
+        GameManager.instance.SunCount += (int)(totalSunSpent * 0.5);
+        Debug.Log("Uprooted " + GetName() + " and refunded " + (int)(totalSunSpent * 0.5));
+        GameManager.instance.UpdateSun();
+        // need some sound effects eventually
+        occupiedTile.isOccupied = false;
+        Destroy(gameObject);
+    }
+
     public void GainExp(float amount)
     {
         exp += (int)(amount * (1 + expBoost));
@@ -92,6 +103,7 @@ public abstract class Plant : Entity
     {
         if (path1Level >= pathLevelCap) return false;
         if (!GameManager.instance.SpendSun(GetPath1Cost())) return false;
+        totalSunSpent += GetPath1Cost();
         path1Level++;
         effectivePath1Level = path1Level + path1LevelAdder;
         OnPath1Upgrade(effectivePath1Level);
@@ -102,6 +114,7 @@ public abstract class Plant : Entity
     {
         if (path2Level >= pathLevelCap) return false;
         if (!GameManager.instance.SpendSun(GetPath2Cost())) return false;
+        totalSunSpent += GetPath2Cost();
         path2Level++;
         effectivePath2Level = path2Level + path2LevelAdder;
         OnPath2Upgrade(effectivePath2Level);
@@ -112,6 +125,7 @@ public abstract class Plant : Entity
     {
         if (path3Unlocked) return false;
         if (!GameManager.instance.SpendSun(GetPath3Cost())) return false;
+        totalSunSpent += GetPath3Cost();
         path3Unlocked = true;
         OnPath3Unlock();
         return true;
@@ -122,6 +136,7 @@ public abstract class Plant : Entity
         if (!path3Unlocked) return false;
         if (path3Level >= pathLevelCap) return false;
         if (!GameManager.instance.SpendSun(GetPath3Cost())) return false;
+        totalSunSpent += GetPath3Cost();
         path3Level++;
         effectivePath3Level = path3Level + path3LevelAdder;
         OnPath3Upgrade(effectivePath3Level);
@@ -134,6 +149,11 @@ public abstract class Plant : Entity
     private void OnMouseDown()
     {
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+        if (PlantSelector.instance.uprootMode)
+        {
+            Uproot();
+            return;
+        }
         PlantUpgradeUI.instance.ShowPanel(this);
     }
 

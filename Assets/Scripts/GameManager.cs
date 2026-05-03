@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    private void UpdateSun()
+    public void UpdateSun()
     {
         if (sunText != null)
         {

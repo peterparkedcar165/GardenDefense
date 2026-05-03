@@ -3,10 +3,23 @@ using UnityEngine.InputSystem;
 
 public class PlantSelector : MonoBehaviour
 {
+    public bool uprootMode;
+    public static PlantSelector instance;
     public GameObject SelectedPlant
     {
         get;
         private set;
+    }
+
+    private void Awake()
+    {
+        instance = this;
+    }
+    public void SetUprootMode(bool newMode)
+    {
+        ClearSelection();
+        uprootMode = newMode;
+        Debug.Log("Set uproot mode to " + uprootMode);
     }
 
     public void SelectPlant(GameObject plant)
@@ -23,8 +36,10 @@ public class PlantSelector : MonoBehaviour
 
     private void Update()
     {
-        if (Mouse.current.rightButton.wasPressedThisFrame && SelectedPlant != null)
+        if (Mouse.current.rightButton.wasPressedThisFrame) {
             ClearSelection();
+            uprootMode = false;
+        }
     }
 
 }
