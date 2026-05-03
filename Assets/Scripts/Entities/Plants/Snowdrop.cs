@@ -47,7 +47,7 @@ public class Snowdrop : Aura
 
         if (tickTimer >= tickInterval)
         {
-            insect.Damage(attackDamage * tickInterval, DamageType.Magic, ElementalType.Ice, this, false, new DamageTag [] {DamageTag.AoE, DamageTag.DoT});
+            insect.Damage(attackDamage * tickInterval, damageType, elementalType, this, false, new DamageTag [] {DamageTag.AoE, DamageTag.DoT});
         }
         }
 

@@ -198,9 +198,13 @@ MonoBehaviour:
   timeAlive: 0
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: 3ce3c12a2a0a858458a425fe5f07e28d, type: 2}
+  occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
   allowedTiles: 0100000004000000
   sunCost: 125
+  totalSunSpent: 0
+  elementalType: 3
+  damageType: 1
   exp: 0
   expBoost: 0
   activeCooldown: 0

@@ -27,6 +27,8 @@ public abstract class Plant : Entity
     }
     public TileType[] allowedTiles;
     public int sunCost, totalSunSpent = 0;
+    public ElementalType elementalType;
+    public DamageType damageType;
     public int exp = 0;
     public float expBoost;
     public float activeCooldown; // most of these are public for debugging purposes

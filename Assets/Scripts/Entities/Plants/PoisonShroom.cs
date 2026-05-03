@@ -36,7 +36,7 @@ public class PoisonShroom : Shooter
         if (puff != null)
         {
             puff.SetTarget(FindTarget());
-            puff.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Magic, ElementalType.Poison, this);
+            puff.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
     }
 

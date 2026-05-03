@@ -34,7 +34,7 @@ public class AcornSprout : Shooter
         if (acorn != null)
         {
             acorn.SetTarget(FindTarget());
-            acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical, ElementalType.Nature, this);
+            acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
     }
 

@@ -35,7 +35,7 @@ public class LeafRanger : Shooter
         if (arrow != null)
         {
             arrow.SetTarget(FindTarget());
-            arrow.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Physical, ElementalType.Nature, this);
+            arrow.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
     }
         public override void OnPath1Upgrade(int level)

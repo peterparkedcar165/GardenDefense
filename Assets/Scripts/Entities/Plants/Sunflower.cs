@@ -54,7 +54,7 @@ public class Sunflower : Shooter
         if (petal != null)
         {
             petal.SetTarget(FindTarget()); // assign the target of this plant to the projectile
-            petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, DamageType.Magic, ElementalType.Fire, this); // change elemental everytime
+            petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this); // change elemental everytime
         }
     }
 
