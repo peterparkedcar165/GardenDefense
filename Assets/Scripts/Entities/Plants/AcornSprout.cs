@@ -65,12 +65,12 @@ public class AcornSprout : Shooter
 
     public override string GetDescription()
     {
-        return "A feisty little fighter that hurls hardened acorns at enemies with surprising force.";
+        return $"The {GetName()} shoots acorns at targets, dealing damage with a chance of stunning.";
     }
 
     public override string GetAttackDescription()
     {
-        return $"Shoots acorns towards his target, dealing <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
+        return $"Shoots acorns towards his target, dealing <color=green>{attackDamage}</color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
     }
 
     public override string GetSkillDesription()
@@ -80,34 +80,20 @@ public class AcornSprout : Shooter
 
     public override string GetPassiveDescription()
     {
-        return $"The {GetName()}'s acorn shots have a chance to briefly stun his target.";
-    }
-
-    public override string GetPath1Name()
-    {
-        return "Path 1";
+        return $"Attacks have a <color=green>{stunChance*100}%</color> chance to stun targets for <color=green>{stunDuration}</color> second.";
     }
 
     public override string GetPath1Description()
     {
-        return "Path 1:\n\nIncrease Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+" + (8*effectivePath1Level) + "</b></color>]\n\n" +
-        "" +
+        return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+" + (8*effectivePath1Level) + "</b></color>]\n\n" +
         "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>"; 
-    }
-    public override string GetPath2Name()
-    {
-        return "Path 2";
     }
 
     public override string GetPath2Description()
     {
-        return "Path 2:\n\nIncrease Stun Chance by <b><color=green>5%</color></b> per level. [<b><color=green>+" + (5 * effectivePath2Level) + "%</color></b>]\n" +
-       "Increase Stun Duration by <b><color=green>0.1s</color></b> per level. [<b><color=green>+" + (0.1f * effectivePath2Level) + "s</color></b>]\n\n" +
-        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>"; ;
-    }
-    public override string GetPath3Name()
-    {
-        return "Path 3";
+        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease Stun Chance by <b><color=green>5%</color></b> per level. [<b><color=green>+" + (5 * effectivePath2Level) + "%</color></b>]\n" +
+        "Increase Stun Duration by <b><color=green>0.1s</color></b> per level. [<b><color=green>+" + (0.1f * effectivePath2Level) + "s</color></b>]\n\n" +
+        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
     }
 
     public override string GetPath3Description()

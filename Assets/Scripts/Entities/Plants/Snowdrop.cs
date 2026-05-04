@@ -91,12 +91,12 @@ public class Snowdrop : Aura
 
     public override string GetDescription()
     {
-        return $"Silence falls wherever the {GetName()} blooms. Insects that wander too close grow cold.";
+        return $"The {GetName()} emanates an aura that damages and slows insects around her.";
     }
 
     public override string GetAttackDescription()
     {
-        return $"Radiates a frosty aura continuously dealing trickling <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to insects around her";
+        return $"Radiates a frosty aura continuously dealing <color=green>{attackDamage}</color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects around her";
     }
 
     public override string GetSkillDesription()
@@ -106,33 +106,20 @@ public class Snowdrop : Aura
 
     public override string GetPassiveDescription()
     {
-        return $"The frosty aura applies a <color=#00FFFF>Chill</color> effect, slowing down insects.";
-    }
-    public override string GetPath1Name()
-    {
-      return "";  
+        return $"The frosty aura applies a <color=#00FFFF>Chill</color> effect, slowing down insects by <color=green>{24+ 6*effectivePath2Level}%</color>.";
     }
 
     public override string GetPath1Description()
     {
-        return "Path 1:\n\nIncrease Attack Damage by <b><color=green>0.5</color></b> per level. [<b><color=green>+" + (1f * path1Level) + "</color></b>]\n" +
-           "Increase Attack Range by <b><color=green>0.1</color></b> per level. [<b><color=green>+" + (0.1f * path1Level) + "</color></b>]\n\n" +
-           "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>";
-    }
-    public override string GetPath2Name()
-    {
-      return "";  
+        return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <b><color=green>0.5</color></b> per level. [<b><color=green>+" + (1f * path1Level) + "</color></b>]\n" +
+        "Increase Attack Range by <b><color=green>0.1</color></b> per level. [<b><color=green>+" + (0.1f * path1Level) + "</color></b>]\n\n" +
+        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>";
     }
 
     public override string GetPath2Description()
     {
-       return "Increase <color=#00FFFF>Chill</color> level by <color=green><b>1</b></color> per level. [<color=green><b>+" + (1*effectivePath2Level) + "</b></color>]\n\n" +
-    "<color=#00FFFF>Chill</color>\nSlow: 24% + 6% per level [<color=green><b>" + (24 + 6 * effectivePath2Level) + "%</b></color>]\nCurrent Level: [<color=green><b>" + effectivePath2Level + "</b></color>]\n\n" +
-    "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
-    }
-    public override string GetPath3Name()
-    {
-        return "";
+        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease <color=#00FFFF>Chill</color> slowing effect by <color=green><b>6%</b></color> per level. [<color=green><b>+" + (6*effectivePath2Level) + "</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
     }
 
     public override string GetPath3Description()

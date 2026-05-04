@@ -5,11 +5,11 @@ public class LeafRanger : Shooter
 {
     private float 
     bAD = 90f, // base attack damage
-    bAS = 0.3f, // base attack speed
+    bAS = 0.25f, // base attack speed
     bAR = 99f, // base attack range
     bPS = 20f, // base projectile speed
     bMR = 20f; // base max range
-    private int bP = 0; // base piercing
+    private int bP = 1; // base piercing
     public float activeDuration = 3f, activeRadius = 2f;
 
     protected override void Awake()
@@ -25,7 +25,7 @@ public class LeafRanger : Shooter
     protected override void Update()
     {
         base.Update();
-        basePiercing = bP + effectivePath1Level;
+        basePiercing = bP + effectivePath2Level;
     }
 
     protected override void Shoot(Vector3 target)
@@ -42,12 +42,12 @@ public class LeafRanger : Shooter
         public override void OnPath1Upgrade(int level)
     {
         baseCriticalChance = 0.05f + 0.05f*level;
-        // piercing taken care of in update
+        baseAttackSpeed = bAS + (0.05f*level);
     }
 
     public override void OnPath2Upgrade(int level)
     {
-        baseAttackSpeed = bAS + (0.05f*level);
+        // piercing taken care of in update
     }
 
     public override void OnPath3Upgrade(int level)
@@ -66,12 +66,12 @@ public class LeafRanger : Shooter
 
     public override string GetDescription()
     {
-        return $"No insect is out of reach. The {GetName()} has claimed the whole garden as his territory, and his arrows always find their mark.";
+        return $"The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can pierce through his target.";
     }
 
     public override string GetAttackDescription()
     {
-        return $"Shoots slow but precise and fierce arrows at his target, dealing <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
+        return $"Shoots slow but precise and fierce arrows at his target, dealing <color=green>{attackDamage}</color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
     }
 
     public override string GetSkillDesription()
@@ -81,30 +81,33 @@ public class LeafRanger : Shooter
 
     public override string GetPassiveDescription()
     {
-        return $"Shots deal increased damage the further the target is.";
+        return $"Attacks can pierce <color=green>{piercing}</color> enemy.";
     }
 
     public override string GetPath1Name()
     {
-        return "";
+        return "Attack";
     }
 
     public override string GetPath1Description()
     {
-        return "";
+        return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Critical Chance by <color=green><b>5%</b></color> per level. [<color=green><b>+" + (5*effectivePath1Level) + "%</b></color>]\n\n" +
+        "Increase Attack Speed by <color=green><b>0.05</b></color> per level. [<color=green><b>+" + (0.05*effectivePath1Level) + "</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>"; 
     }
     public override string GetPath2Name()
     {
-        return "";
+        return "Passive";
     }
 
     public override string GetPath2Description()
     {
-        return "";
+        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease Piercing by an additional <b><color=green>1</color></b> per level. [<b><color=green>+" + (1 * effectivePath2Level) + "</color></b>]\n\n" +
+        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
     }
     public override string GetPath3Name()
     {
-        return "";
+        return "Skill";
     }
 
     public override string GetPath3Description()

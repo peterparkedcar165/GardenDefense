@@ -7,12 +7,12 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     public int SunCount;
-    public int playerHealth, playerMaxHealth = 20;
+    public int playerHealth, playerMaxHealth; // originally 20
     public float BonusSunGain;
     public AudioSource audioSource;
     public AudioClip buttonClick, plantPlace, plantSelect;
     
-    public TextMeshProUGUI sunText;
+    public TextMeshProUGUI sunText, healthText;
 
     protected void Awake()
     {
@@ -22,7 +22,9 @@ public class GameManager : MonoBehaviour
             SunCount = 250; // originally 125
             UpdateSun();
             DontDestroyOnLoad(gameObject);
+            playerMaxHealth = 999;
             playerHealth = playerMaxHealth;
+            UpdateHealth();
         }
         else
         {
@@ -57,10 +59,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void UpdateHealth()
+    {
+        if (healthText != null)
+        {
+            healthText.text = "Health: " + playerHealth;
+        }
+    }
+
     public void Damage(int damage)
     {
         playerHealth -= damage;
         Debug.Log("Player health: " + playerHealth);
+        UpdateHealth();
         if (playerHealth < 0)
         {
             GameOver();

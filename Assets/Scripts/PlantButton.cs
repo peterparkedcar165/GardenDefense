@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
-public class PlantButton : MonoBehaviour
+public class PlantButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     
     [SerializeField] private GameObject plantPrefab;
@@ -33,5 +34,16 @@ public class PlantButton : MonoBehaviour
             costText.fontStyle = FontStyles.Normal;
             costText.color = Color.red;
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        string text = $"{plant.GetName()}\n\n{plant.GetDescription()}\n\n<b>Affinity</b>:\n\n{plant.GetElement()}\n{plant.GetElementDescription()}";
+        PlantUpgradeUI.instance.ShowTooltip(text);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        PlantUpgradeUI.instance.HideTooltip();
     }
 }

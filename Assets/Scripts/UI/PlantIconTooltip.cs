@@ -8,7 +8,7 @@ public class PlantIconTooltip : MonoBehaviour,IPointerEnterHandler, IPointerExit
         Plant plant = PlantUpgradeUI.instance.GetSelectedPlant();
         if (plant == null) return;
 
-        string text = $"{plant.GetName()}\n\n" + $"{plant.GetDescription()}\n\n" + $"Attack:\n{plant.GetAttackDescription()}\n\n" + $"Passive:\n{plant.GetPassiveDescription()}\n\n" + $"Skill (NOT IMPLEMENTED YET):\n{plant.GetSkillDesription()}\n\n";
+        string text = $"{plant.GetName()}\n\n" + $"{plant.GetDescription()}\n\n<b>Affinity</b>:\n\n{plant.GetElement()}\n{plant.GetElementDescription()}";
 
         PlantUpgradeUI.instance.ShowTooltip(text);
     }

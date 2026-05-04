@@ -162,12 +162,65 @@ public abstract class Plant : Entity
     }
 
     // PATH NAMES & HOVER DESCRIPTIONS
-    public virtual string GetPath1Name() => "Path 1";
-    public virtual string GetPath2Name() => "Path 2";
-    public virtual string GetPath3Name() => "Path 3";
+    public virtual string GetPath1Name() => "Attack";
+    public virtual string GetPath2Name() => "Passive";
+    public virtual string GetPath3Name() => "Skill";
     public virtual string GetPath1Description() => "";
     public virtual string GetPath2Description() => "";
     public virtual string GetPath3Description() => "";
+    public virtual string GetElement()
+    {
+        switch (elementalType)
+        {
+            case ElementalType.Fire:
+            return $"<color=orange>Fire</color>";
+
+            case ElementalType.Nature:
+            return $"<color=green>Nature</color>";
+
+            case ElementalType.Water:
+            return $"<color=#4FC3F7>Water</color>";
+
+            case ElementalType.Poison:
+            return $"<color=purple>Poison</color>";
+
+            case ElementalType.Ice:
+            return $"<color=#00FFFF>Ice</color>";
+
+            case ElementalType.Wind:
+            return $"<color=#B2EBF2>Wind</color>";
+
+            default:
+            return "";
+        }
+    }
+
+    public virtual string GetElementDescription()
+    {
+        switch (elementalType)
+        {
+            case ElementalType.Fire:
+            return $"Increase Passive tree level by <color=green>1</color> when exposed to light";
+
+            case ElementalType.Nature:
+            return $"Can be placed on <color=green>Grass</color>.";
+
+            case ElementalType.Water:
+            return $"Increase Passive tree level by <color=green>2</color> when near water";
+
+            case ElementalType.Poison:
+            return $"Deal 25% increased damage to immobilized insects";
+
+            case ElementalType.Ice:
+            return $"Increase Passive tree level by <color=green>1</color> when near cold";
+
+            case ElementalType.Wind:
+            return $"Increase Passive tree level by <color=green>1</color> when up high";
+
+            default:
+            return "";
+        }
+    }
 
     // DESCRIPTIONS
     public virtual string GetName()
