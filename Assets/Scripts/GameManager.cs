@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -77,4 +78,19 @@ public class GameManager : MonoBehaviour
     {
         audioSource.PlayOneShot(clip);
     }
+
+    private void Update()
+    {
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            if (Time.timeScale != 0)
+            {
+                Time.timeScale = 0;
+            } else
+            {
+                Time.timeScale = 1;
+            }
+        }
+    }
+
 }
