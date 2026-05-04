@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class PoisonShroom : Shooter
 {
@@ -72,7 +73,7 @@ public class PoisonShroom : Shooter
     public override void OnPath2Upgrade(int level)
     {
         poisonLevel = 1 + (level);
-        poisonDuration = 6f + (level-1);
+        poisonDuration = 6f + (level);
     }
 
     public override void OnPath3Upgrade(int level)
@@ -90,21 +91,53 @@ public class PoisonShroom : Shooter
 
     public override string GetDescription()
     {
-        return $"A fungi of few words. The {GetName()} lurks in the shadows of the garden, puffing toxic spores at any insect foolish enough to wander close.";
+        return $"A fungi of few words. The {GetName()} puffs toxic spores at any insect foolish enough to wander close.";
     }
 
     public override string GetAttackDescription()
     {
-        return $"The {GetName()} blows poisonous bubbles at his target, dealing <color=purple>Poison</color> <color=pink>Magic</color> damage, and applying a mild <color=purple>Poison</color> effect.";
+        return $"Blows poisonous bubbles at his target, dealing <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage.";
     }
 
     public override string GetSkillDesription()
     {
-        return $"The {GetName()} releases a lingering toxic cloud that poisons the area around it, dealing <color=purple>Poison</color> <color=pink>Magic</color> damage over time, and reducing any healing towards insects caught in the cloud.";
+        return $"Releases a lingering toxic cloud that poisons the area around himself, dealing <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage over time, and reducing any healing towards insects caught in the cloud.";
     }
 
     public override string GetPassiveDescription()
     {
-        return $"The {GetName()}'s toxin gets stronger, and spreads to nearby insects on hit.";
+        return $"The poisonous bubbles apply a <color=purple>Poison</color> effect on hit, dealing mild damage over time.";
+    }
+    public override string GetPath1Name()
+    {
+        return "";
+    }
+
+    public override string GetPath1Description()
+    {
+       return "Path 1:\n\nIncrease Attack Speed by <color=green><b>0.08</b></color> per level. [<color=green><b>+" + (0.08*effectivePath1Level) + "</b></color>]\n\n" +
+        "Increase Attack Range by <color=green><b>0.1</b></color> per level. [<color=green><b>+" + (0.1*effectivePath1Level) + "</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>";  
+    }
+    public override string GetPath2Name()
+    {
+        return "";
+    }
+
+    public override string GetPath2Description()
+    {
+        return "Path 2:\n\nIncrease <color=purple>Poison</color> level by <color=green><b>1</b></color> per level. [<color=green><b>+" + (1*effectivePath2Level) + "</b></color>]\n\n" +
+        "Increase <color=purple>Poison</color> duration by <color=green><b>1</b></color> second per level. [<color=green><b>+" + (1*effectivePath2Level) + "</b></color>]\n\n" +
+        "<color=purple>Poison</color>\nDamage: 6 + 3 per level per second [<b><color=green>" + (6 + 3 * poisonLevel) + "</color></b>]\nDuration: 6 + 1 per level [<b><color=green>" + poisonDuration + "</color></b>]\n\n" +
+        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
+    }
+    public override string GetPath3Name()
+    {
+        return "";
+    }
+
+    public override string GetPath3Description()
+    {
+        return "";
     }
 }

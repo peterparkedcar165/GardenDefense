@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class AcornSprout : Shooter
 {
@@ -69,16 +70,48 @@ public class AcornSprout : Shooter
 
     public override string GetAttackDescription()
     {
-        return $"The {GetName()} shoots acorns towards his target, dealing <color=green>Nature</color> <color=brown>Physical</color> damage.";
+        return $"Shoots acorns towards his target, dealing <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
     }
 
     public override string GetSkillDesription()
     {
-        return $"The {GetName()} fires a bursting acorn that breaks apart, dealing <color=green>Nature</color> <color=brown>Physical</color> damage to targets struck by it, and leaving irresistible morsels that lure insects towards it.";
+        return $"The {GetName()} fires a bursting acorn that breaks apart, dealing <color=green>Nature</color> <color=#A0522D>Physical</color> damage to targets struck by it, and leaving irresistible morsels that lure insects towards it.";
     }
 
     public override string GetPassiveDescription()
     {
         return $"The {GetName()}'s acorn shots have a chance to briefly stun his target.";
+    }
+
+    public override string GetPath1Name()
+    {
+        return "Path 1";
+    }
+
+    public override string GetPath1Description()
+    {
+        return "Path 1:\n\nIncrease Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+" + (8*effectivePath1Level) + "</b></color>]\n\n" +
+        "" +
+        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>"; 
+    }
+    public override string GetPath2Name()
+    {
+        return "Path 2";
+    }
+
+    public override string GetPath2Description()
+    {
+        return "Path 2:\n\nIncrease Stun Chance by <b><color=green>5%</color></b> per level. [<b><color=green>+" + (5 * effectivePath2Level) + "%</color></b>]\n" +
+       "Increase Stun Duration by <b><color=green>0.1s</color></b> per level. [<b><color=green>+" + (0.1f * effectivePath2Level) + "s</color></b>]\n\n" +
+        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>"; ;
+    }
+    public override string GetPath3Name()
+    {
+        return "Path 3";
+    }
+
+    public override string GetPath3Description()
+    {
+        return "";
     }
 }

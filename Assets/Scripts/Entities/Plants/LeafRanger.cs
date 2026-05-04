@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class LeafRanger : Shooter
 {
@@ -70,16 +71,44 @@ public class LeafRanger : Shooter
 
     public override string GetAttackDescription()
     {
-        return $"The {GetName()} shoots slow but precise and fierce arrows at his target, dealing <color=green>Nature</color> <color=brown>Physical</color> damage.";
+        return $"Shoots slow but precise and fierce arrows at his target, dealing <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
     }
 
     public override string GetSkillDesription()
     {
-        return $"The {GetName()} releases a trap that imprisons insects within its area, dealing <color=green>Nature</color> <color=brown>Physical</color> damage upon impact.";
+        return $"The {GetName()} releases a trap that imprisons insects within its area, dealing <color=green>Nature</color> <color=#A0522D>Physical</color> damage upon impact.";
     }
 
     public override string GetPassiveDescription()
     {
-        return $"The {GetName()}'s arrows pierce his targets, and have increased critical chance.";
+        return $"Shots deal increased damage the further the target is.";
+    }
+
+    public override string GetPath1Name()
+    {
+        return "";
+    }
+
+    public override string GetPath1Description()
+    {
+        return "";
+    }
+    public override string GetPath2Name()
+    {
+        return "";
+    }
+
+    public override string GetPath2Description()
+    {
+        return "";
+    }
+    public override string GetPath3Name()
+    {
+        return "";
+    }
+
+    public override string GetPath3Description()
+    {
+        return "";
     }
 }

@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9199ec182eb1a3f44a73bc107036b91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PathHoverTrigger
-  pathType: 0
+  pathType: 1
 --- !u!1 &100381703
 GameObject:
   m_ObjectHideFlags: 0
@@ -3883,6 +3883,7 @@ GameObject:
   - component: {fileID: 1359315674}
   - component: {fileID: 1359315673}
   - component: {fileID: 1359315672}
+  - component: {fileID: 1359315675}
   m_Layer: 5
   m_Name: PlantIcon
   m_TagString: Untagged
@@ -3947,6 +3948,18 @@ RectTransform:
   m_AnchoredPosition: {x: -150, y: 108.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1359315675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359315671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d86f50b110549242bb31bd19fe7bd29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &1401305051
 GameObject:
   m_ObjectHideFlags: 0
@@ -5687,6 +5700,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1414410949}
+  - component: {fileID: 1414410951}
+  - component: {fileID: 1414410950}
   m_Layer: 5
   m_Name: TooltipPanel
   m_TagString: Untagged
@@ -5711,9 +5726,47 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -398.1, y: -28.2}
+  m_SizeDelta: {x: 376.94, y: 437.73}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1414410950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414410948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.79607844}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -1146525703440253779, guid: 52e06a3819274704ebb50d6568e70418, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1414410951
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414410948}
+  m_CullTransparentMesh: 1
 --- !u!1 &1447000403
 GameObject:
   m_ObjectHideFlags: 0
@@ -6603,7 +6656,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9199ec182eb1a3f44a73bc107036b91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PathHoverTrigger
-  pathType: 0
+  pathType: 2
 --- !u!1 &1696437116
 GameObject:
   m_ObjectHideFlags: 0
@@ -7473,7 +7526,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 34.7, y: 193.87}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1981481183
@@ -7523,8 +7576,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 16
+  m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7562,7 +7615,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -111.76443, y: 12.907968, z: -41.10341, w: -375.39716}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

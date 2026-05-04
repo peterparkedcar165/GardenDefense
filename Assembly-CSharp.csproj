@@ -59,6 +59,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Aura.cs" />
     <Compile Include="Assets\Scripts\GridManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
+    <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
