@@ -58,6 +58,7 @@ public class Tile : MonoBehaviour
             plant.totalSunSpent += cost;
             plant.occupiedTile = this;
             isOccupied = true;
+            GetComponent<Collider2D>().enabled = false;
             selector.ClearSelection();
             Debug.Log("Spent " + cost);
         }

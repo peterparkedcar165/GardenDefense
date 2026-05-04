@@ -81,6 +81,7 @@ public abstract class Plant : Entity
         GameManager.instance.UpdateSun();
         // need some sound effects eventually
         occupiedTile.isOccupied = false;
+        occupiedTile.GetComponent<Collider2D>().enabled = true;
         PlantSelector.instance.uprootMode = false;
         Destroy(gameObject);
     }
