@@ -24,6 +24,12 @@ public class SproutEffect : ElementalDebuff
             insect.RemoveEffect<ColdEffect>();
             insect.ApplyEffect(new BrittleEffect(insect, 8f, 1, source));
         }
+        else if (insect.HasEffect<TaintedEffect>())
+        {
+            insect.RemoveEffect<SproutEffect>();
+            insect.RemoveEffect<TaintedEffect>();
+            insect.ApplyEffect(new DecayEffect(insect, 8f, 1, source));
+        }
     }
 
     public override void OnTick(float deltaTime)

@@ -10,7 +10,7 @@ public class BurnEffect : DoTEffect
 
     public override void OnApply()
     {
-        damagePerSecond = (0.03f*target.maxHealth) + (0.08f*source.attackDamage) + 4f;
+        damagePerSecond = (0.06f*target.maxHealth) + (0.08f*source.attackDamage) + 4f;
         Debug.Log($"Burn applied by {source} to {target}");
 
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);

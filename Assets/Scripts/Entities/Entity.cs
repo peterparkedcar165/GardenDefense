@@ -53,8 +53,8 @@ public abstract class Entity : MonoBehaviour
     criticalDamageAdder, criticalDamageMultiplier;
 
     public float baseMaxHealth, basePhysicalResistance, baseMagicResistance, baseAttackDamage, baseMagicDamage, baseAttackSpeed, baseAttackRange, baseHealingBonus = 0, baseHealingReceived = 0;
-    protected float maxHealthAdder, physicalResistanceAdder, magicResistanceAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
-    protected float maxHealthMultiplier, physicalResistanceMultiplier, magicResistanceMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
+    public float maxHealthAdder, physicalResistanceAdder, magicResistanceAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
+    public float maxHealthMultiplier, physicalResistanceMultiplier, magicResistanceMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
     public float maxHealth, health, physicalResistance, magicResistance, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
 
     public float baseFireResistance, fireResistance, fireResistanceAdder, fireResistanceMultiplier,
@@ -62,7 +62,9 @@ public abstract class Entity : MonoBehaviour
     baseNatureResistance, natureResistance, natureResistanceAdder, natureResistanceMultiplier,
     baseWindResistance, windResistance, windResistanceAdder, windResistanceMultiplier,
     basePoisonResistance, poisonResistance, poisonResistanceAdder, poisonResistanceMultiplier,
-    baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;    public float basePhysicalShred, physicalShred, 
+    baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;    
+    
+    public float basePhysicalShred, physicalShred, 
     baseMagicShred, magicShred, baseBonusEffectChance, bonusEffectChance,baseFireDamage, fireDamage,baseWaterDamage, waterDamage, baseNatureDamage, natureDamage,baseWindDamage, windDamage,basePoisonDamage, poisonDamage,baseIceDamage, iceDamage, baseCriticalChance, criticalChance, baseCriticalDamage, criticalDamage,
     baseDotResistance, dotResistance, dotResistanceAdder, dotResistanceMultiplier;    
     

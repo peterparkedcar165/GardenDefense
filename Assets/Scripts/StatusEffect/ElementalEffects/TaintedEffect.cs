@@ -19,6 +19,12 @@ public class TaintedEffect : ElementalDebuff
             insect.ApplyEffect(new VulnerableEffect(insect, 8f, 1, source));
 
         }
+        else if (insect.HasEffect<SproutEffect>())
+        {
+            insect.RemoveEffect<TaintedEffect>();
+            insect.RemoveEffect<SproutEffect>();
+            insect.ApplyEffect(new DecayEffect(insect, 8f, 1, source));
+        }
     }
 
     public override void OnTick(float deltaTime)
