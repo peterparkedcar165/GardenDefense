@@ -67,6 +67,7 @@ public abstract class Entity : MonoBehaviour
     
     public float timeAlive, totalDamageDealt; // leaving it public jsut so i can debug, but shgould be private
 
+    public float internalCooldown = 3f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown;
     protected virtual void UpdateStats()
     {
         maxHealth = baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier);
@@ -156,29 +157,65 @@ public abstract class Entity : MonoBehaviour
             insect.RegisterAttacker(plant); // register plant into insect's hashset of attackers for exp distribution
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 4f;
         bool isCrit = false;
 
         switch (elementalType)
         {
             case ElementalType.Fire:
             elementalMultiplier = (1 - this.fireResistance + source.fireDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.blazeInternalCooldown <= 0)
+                {
+                    blazeInternalCooldown = internalCooldown;
+                    ApplyEffect(new BlazeEffect(this, elementalDebuffDuration, 1, source));
+                }
             break;
+
             case ElementalType.Water:
             elementalMultiplier = (1 - this.waterResistance + source.waterDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.wetInternalCooldown <= 0)
+                {
+                    wetInternalCooldown = internalCooldown;
+                    ApplyEffect(new WetEffect(this, elementalDebuffDuration, 1, source));
+                }
             break;
+
             case ElementalType.Ice:
             elementalMultiplier = (1 - this.iceResistance + source.iceDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.coldInternalCooldown <= 0)
+                {
+                    coldInternalCooldown = internalCooldown;
+                    ApplyEffect(new ColdEffect(this, elementalDebuffDuration, 1, source));
+                }
             break;
+
             case ElementalType.Wind:
             elementalMultiplier = (1 - this.windResistance + source.windDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.gustInternalCooldown <= 0)
+                {
+                    gustInternalCooldown = internalCooldown;
+                    ApplyEffect(new GustEffect(this, elementalDebuffDuration, 1, source));
+                }
             break;
+
             case ElementalType.Nature:
             elementalMultiplier = (1 - this.natureResistance + source.natureDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.sproutInternalCooldown <= 0)
+                {
+                    sproutInternalCooldown = internalCooldown;
+                    ApplyEffect(new SproutEffect(this, elementalDebuffDuration, 1, source));
+                }
             break;
+
             case ElementalType.Poison:
             elementalMultiplier = (1 - this.poisonResistance + source.poisonDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.taintedInternalCooldown <= 0)
+                {
+                    taintedInternalCooldown = internalCooldown;
+                    ApplyEffect(new TaintedEffect(this, elementalDebuffDuration, 1, source));
+                }
             break;
+
             default:
             elementalMultiplier = 1;
             break;
@@ -263,6 +300,36 @@ public abstract class Entity : MonoBehaviour
         UpdateStats();
         timeAlive += Time.deltaTime;
         TickEffects();
+
+        if (blazeInternalCooldown > 0)
+        {
+            blazeInternalCooldown -= Time.deltaTime;
+        }
+
+        if (wetInternalCooldown > 0)
+        {
+            wetInternalCooldown -= Time.deltaTime;
+        }
+
+        if (sproutInternalCooldown > 0)
+        {
+            sproutInternalCooldown -= Time.deltaTime;
+        }
+
+        if (coldInternalCooldown > 0)
+        {
+            coldInternalCooldown -= Time.deltaTime;
+        }
+
+        if (gustInternalCooldown > 0)
+        {
+            gustInternalCooldown -= Time.deltaTime;
+        }
+
+        if (taintedInternalCooldown > 0)
+        {
+            taintedInternalCooldown -= Time.deltaTime;
+        }
     }
 
     // HEALTH BAR

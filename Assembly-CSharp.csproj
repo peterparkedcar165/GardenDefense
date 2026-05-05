@@ -60,6 +60,7 @@
     <Compile Include="Assets\Scripts\GridManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\BlazeEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WetEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ColdEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
@@ -85,7 +87,10 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\SproutEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\TaintedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ChillEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
@@ -94,6 +99,7 @@
     <Compile Include="Assets\Scripts\PlantData.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\UI\PlantUpgradeUI.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
   </ItemGroup>
   <ItemGroup>
