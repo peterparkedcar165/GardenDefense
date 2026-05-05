@@ -1,13 +1,11 @@
 using UnityEngine;
 
-public class PoisonEffect : StatusEffect
+public class PoisonEffect : DoTEffect
 {
-    private float tickTimer = 0f;
-    private const float tickInterval = 0.5f;
-    public float damagePerSecond;
     public PoisonEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        tickInterval = 0.5f;
     }
 
     public override void OnApply()

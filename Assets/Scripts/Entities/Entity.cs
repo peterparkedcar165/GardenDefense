@@ -157,7 +157,7 @@ public abstract class Entity : MonoBehaviour
             insect.RegisterAttacker(plant); // register plant into insect's hashset of attackers for exp distribution
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 4f;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f;
         bool isCrit = false;
 
         switch (elementalType)
