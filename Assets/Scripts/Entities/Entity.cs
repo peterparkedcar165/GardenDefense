@@ -160,6 +160,11 @@ public abstract class Entity : MonoBehaviour
         float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f;
         bool isCrit = false;
 
+        if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
+        {
+            Damage(2, damageType, ElementalType.Ice, source, false, new DamageTag [] {DamageTag.ElementalDebuff});
+        }
+
         switch (elementalType)
         {
             case ElementalType.Fire:

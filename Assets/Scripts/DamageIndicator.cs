@@ -5,6 +5,8 @@ public class DamageIndicator : MonoBehaviour
 {
     Color color;
     private TMP_Text tmpText;
+    private float horizontalDrift;
+    private float verticalSpeed;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,12 +16,14 @@ public class DamageIndicator : MonoBehaviour
     void Awake()
     {
         tmpText = GetComponent<TMP_Text>();
+        horizontalDrift = Random.Range(-0.5f, 0.5f);
+        verticalSpeed = Random.Range(0.25f, 0.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += Vector3.up * 0.1f * Time.deltaTime;
+        transform.position += new Vector3(horizontalDrift, verticalSpeed, 0f) * Time.deltaTime;
         Color c = tmpText.color;
         c.a -= 1f *Time.deltaTime;
         tmpText.color = c;
@@ -30,6 +34,7 @@ public class DamageIndicator : MonoBehaviour
         }
     }
 
+    // for damage
     public void Initialize(float damage, ElementalType elementalType, bool isCrit)
     {
         if (damage <= 0.5f)
@@ -78,5 +83,13 @@ public class DamageIndicator : MonoBehaviour
         tmpText.text = rounded.ToString();
         // Debug.Log("Damage shown: " + rounded + " at " + transform.position);
 
+    }
+
+    // elemental reactions
+    public void Initialize(string text, Color color)
+    {
+        tmpText.color = color;
+        tmpText.fontStyle = FontStyles.Bold | FontStyles.Italic;
+        tmpText.text = text;
     }
 }

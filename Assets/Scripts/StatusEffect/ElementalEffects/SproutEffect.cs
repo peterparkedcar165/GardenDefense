@@ -10,6 +10,20 @@ public class SproutEffect : ElementalDebuff
     public override void OnApply()
     {
         Debug.Log("Sprout inflicted");
+
+        Insect insect = (Insect)target;
+        if (insect.HasEffect<BlazeEffect>())
+        {
+            insect.RemoveEffect<SproutEffect>();
+            insect.RemoveEffect<BlazeEffect>();
+            insect.ApplyEffect(new BurnEffect(insect, 5f, 1, source));
+        }
+        else if (insect.HasEffect<ColdEffect>())
+        {
+            insect.RemoveEffect<SproutEffect>();
+            insect.RemoveEffect<ColdEffect>();
+            insect.ApplyEffect(new BrittleEffect(insect, 8f, 1, source));
+        }
     }
 
     public override void OnTick(float deltaTime)

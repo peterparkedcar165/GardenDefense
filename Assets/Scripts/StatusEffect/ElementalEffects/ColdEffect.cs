@@ -10,6 +10,20 @@ public class ColdEffect : ElementalDebuff
     public override void OnApply()
     {
         Debug.Log("Cold inflicted");
+
+        Insect insect = (Insect)target;
+        if (insect.HasEffect<BlazeEffect>())
+        {
+            insect.RemoveEffect<ColdEffect>();
+            insect.RemoveEffect<BlazeEffect>();
+            insect.ApplyEffect(new BurnEffect(insect, 5f, 1, source));
+        }
+        else if (insect.HasEffect<SproutEffect>())
+        {
+            insect.RemoveEffect<ColdEffect>();
+            insect.RemoveEffect<SproutEffect>();
+            insect.ApplyEffect(new BrittleEffect(insect, 8f, 1, source));
+        }
     }
 
     public override void OnTick(float deltaTime)

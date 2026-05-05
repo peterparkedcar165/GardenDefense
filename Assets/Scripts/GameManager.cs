@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public AudioClip buttonClick, plantPlace, plantSelect;
     private bool paused = false;
     public float gameSpeed = 1f;
+    private float[] speeds = { 0.5f, 1f, 2f, 4f };
+    private int speedIndex = 1; // starts at 1x
 
     [SerializeField] private TMP_Text pauseButtonText;
     [SerializeField] private TMP_Text speedButtonText;
@@ -115,15 +117,11 @@ public class GameManager : MonoBehaviour
 
     public void ToggleSpeed()
     {
-        gameSpeed = gameSpeed == 1f ? 2f : 1f;
-        if (!paused)
-        {
-            Time.timeScale = gameSpeed;
-        }
+        speedIndex = (speedIndex + 1) % speeds.Length;
+        gameSpeed = speeds[speedIndex];
+        if (!paused) Time.timeScale = gameSpeed;
         if (speedButtonText != null)
-        {
-            speedButtonText.text = gameSpeed == 1f ? "1x" : "2x";
-        }
+        speedButtonText.text = gameSpeed + "x";
     }
 
 }
