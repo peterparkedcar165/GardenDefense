@@ -7,11 +7,16 @@ public class Level1 : SpawnManager
     public float levelTime;
     public int wave, maxWave = 7;
     public GameObject workerAnt, soldierAnt, scoutAnt, carpenterAnt;
-    private bool skipRest;
     public TextMeshProUGUI waveCountText;
+
+    [Header("Spawning")]
+    public float waitTime;
+    public float spawnInterval;
+    public int spawnCount;
 
     protected override void Start()
     {
+        waveCountText.text = $"Wave: {wave}/{maxWave}";
         StartCoroutine(RunWave());
     }
     IEnumerator RunWave()
@@ -26,7 +31,7 @@ public class Level1 : SpawnManager
 
             if (wave < maxWave)
             {
-                yield return StartCoroutine(RestPeriod(5f)); // resting between waves
+                yield return StartCoroutine(RestPeriod(10f)); // resting between waves
             }
         }
 
@@ -37,39 +42,67 @@ public class Level1 : SpawnManager
     {
         if (wave == 1) // wave 1 - worker ants every 2 seconds for 40 secs
         {
-            InvokeRepeating(nameof(SpawnWorkerAnt), 2f, 2f);
-            yield return new WaitForSeconds(40f);
+            waitTime = 2f;
+            spawnInterval = 2f;
+            spawnCount = 20;
+
+            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
+            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
         } else if (wave == 2) 
         {
-            InvokeRepeating(nameof(SpawnScoutAnt), 0f, 1.5f);
-            yield return new WaitForSeconds(30f);
+            waitTime = 1f;
+            spawnInterval = 1.5f;
+            spawnCount = 15;
+
+            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
+            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnScoutAnt));
         } else if (wave == 3) 
         {
-            InvokeRepeating(nameof(SpawnSoldierAnt), 0f, 1f);
-            yield return new WaitForSeconds(36f);
+            waitTime = 1f;
+            spawnInterval = 1f;
+            spawnCount = 18;
+
+            InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
+            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnSoldierAnt));
         } else if (wave == 4) 
         {
-            InvokeRepeating(nameof(SpawnScoutAnt), 0f, 1f);
-            yield return new WaitForSeconds(45f);
+            waitTime = 1f;
+            spawnInterval = 1f;
+            spawnCount = 25;
+
+            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
+            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnScoutAnt));
         } else if (wave == 5)
         {
-            InvokeRepeating(nameof(SpawnSoldierAnt), 0f, 1f);
-            yield return new WaitForSeconds(40f);
+            waitTime = 1f;
+            spawnInterval = 1f;
+            spawnCount = 20;
+
+            InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
+            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnSoldierAnt));
         } else if (wave == 6) 
         {
-            InvokeRepeating(nameof(SpawnScoutAnt), 0f, 0.5f);
-            yield return new WaitForSeconds(90f);
+            waitTime = 1f;
+            spawnInterval = 0.75f;
+            spawnCount = 45;
+
+            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
+            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnScoutAnt));
         } else if (wave == 7)
         {
-            InvokeRepeating(nameof(SpawnScoutAnt), 0f, 0.25f);
-            InvokeRepeating(nameof(SpawnSoldierAnt), 0f, 0.25f);
-            yield return new WaitForSeconds(45f);
+            waitTime = 1f;
+            spawnInterval = 0.5f;
+            spawnCount = 25;
+
+            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
+            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
         }
@@ -77,19 +110,7 @@ public class Level1 : SpawnManager
 
     IEnumerator RestPeriod(float duration)
     {
-        float elapsed = 0f;
-        while (elapsed < duration && !skipRest)
-        {
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        skipRest = false;
-    }
-
-    public void SkipToNextWave()
-    {
-        skipRest = true;
-        Debug.Log("Wave rest skipped");
+        yield return new WaitForSeconds(duration);
     }
 
 
