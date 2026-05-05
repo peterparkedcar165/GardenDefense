@@ -33,14 +33,15 @@ void GenerateGrid()
                 
                 if (pathCoordinates.Contains(new Vector2Int(x,y)))
                 {
-                    tile.GetComponent<Tile>().isOccupied = true;
+                    tile.GetComponent<Tile>().tileType = TileType.Path;
                 }
-
-                if (dirtCoordinates.Contains(new Vector2Int(x, y)))
+                else if (dirtCoordinates.Contains(new Vector2Int(x, y)))
                 {
                     tile.GetComponent<Tile>().tileType = TileType.Dirt;
+
                 } else if (waterCoordinates.Contains(new Vector2Int(x, y))) {
                     tile.GetComponent<Tile>().tileType = TileType.Water;
+
                 } else if (caveCoordinates.Contains(new Vector2Int(x,y)))
                 {
                     tile.GetComponent<Tile>().tileType = TileType.Cave;
