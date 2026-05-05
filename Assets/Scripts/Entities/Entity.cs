@@ -63,11 +63,12 @@ public abstract class Entity : MonoBehaviour
     baseWindResistance, windResistance, windResistanceAdder, windResistanceMultiplier,
     basePoisonResistance, poisonResistance, poisonResistanceAdder, poisonResistanceMultiplier,
     baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;    public float basePhysicalShred, physicalShred, 
-    baseMagicShred, magicShred, baseBonusEffectChance, bonusEffectChance,baseFireDamage, fireDamage,baseWaterDamage, waterDamage, baseNatureDamage, natureDamage,baseWindDamage, windDamage,basePoisonDamage, poisonDamage,baseIceDamage, iceDamage, baseCriticalChance, criticalChance, baseCriticalDamage, criticalDamage;    
+    baseMagicShred, magicShred, baseBonusEffectChance, bonusEffectChance,baseFireDamage, fireDamage,baseWaterDamage, waterDamage, baseNatureDamage, natureDamage,baseWindDamage, windDamage,basePoisonDamage, poisonDamage,baseIceDamage, iceDamage, baseCriticalChance, criticalChance, baseCriticalDamage, criticalDamage,
+    baseDotResistance, dotResistance, dotResistanceAdder, dotResistanceMultiplier;    
     
     public float timeAlive, totalDamageDealt; // leaving it public jsut so i can debug, but shgould be private
 
-    public float internalCooldown = 3f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown;
+    public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown;
     protected virtual void UpdateStats()
     {
         maxHealth = baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier);
@@ -96,6 +97,7 @@ public abstract class Entity : MonoBehaviour
         iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
         criticalChance = baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier);
         criticalDamage = baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier);
+        dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
     }
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
@@ -157,7 +159,7 @@ public abstract class Entity : MonoBehaviour
             insect.RegisterAttacker(plant); // register plant into insect's hashset of attackers for exp distribution
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier;
         bool isCrit = false;
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
@@ -238,7 +240,16 @@ public abstract class Entity : MonoBehaviour
             modifiedDamage = damageDealt;
             break;
         }
-        finalDamage = (modifiedDamage * elementalMultiplier);
+
+        if (System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+        {
+            dotMultiplier = 1 - dotResistance;
+        } else
+        {
+            dotMultiplier = 1;
+        }
+
+        finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier);
 
         // if damage source can crit, then calculate if it crits or not
         if (canCrit)

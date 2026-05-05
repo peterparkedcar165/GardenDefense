@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class BrittleEffect : StatusEffect
 {
-
-    public float slowness = 0.24f;
     public BrittleEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;

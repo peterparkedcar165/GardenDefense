@@ -10,6 +10,15 @@ public class TaintedEffect : ElementalDebuff
     public override void OnApply()
     {
         Debug.Log("Tainted inflicted");
+
+        Insect insect = (Insect)target;
+        if (insect.HasEffect<BlazeEffect>())
+        {
+            insect.RemoveEffect<TaintedEffect>();
+            insect.RemoveEffect<BlazeEffect>();
+            insect.ApplyEffect(new VulnerableEffect(insect, 8f, 1, source));
+
+        }
     }
 
     public override void OnTick(float deltaTime)

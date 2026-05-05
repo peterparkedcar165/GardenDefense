@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\PlantButton.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\VulnerableEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
