@@ -18,6 +18,7 @@ public class DamageIndicator : MonoBehaviour
         tmpText = GetComponent<TMP_Text>();
         horizontalDrift = Random.Range(-0.5f, 0.5f);
         verticalSpeed = Random.Range(0.25f, 0.5f);
+        transform.position += new Vector3(Random.Range(-0.3f, 0.3f), 0f, 0f);
     }
 
     // Update is called once per frame
@@ -67,6 +68,8 @@ public class DamageIndicator : MonoBehaviour
             color = new Color(0.9f, 0.9f, 0.9f);
             break;
         }
+
+        tmpText.fontSize = Mathf.Clamp(2.5f + damage * 0.025f, 2.5f, 5.5f);
 
         if (isCrit)
         {
