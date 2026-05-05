@@ -4,12 +4,12 @@ using UnityEngine.InputSystem;
 public class Waterlily : Shooter
 {
     private float 
-    bAD = 32f, // base attack damage
-    bAS = 0.5f, // base attack speed
-    bAR = 5f, // base attack range
-    bPS = 3f, // base projectile speed
+    bAD = 18f, // base attack damage
+    bAS = 1f, // base attack speed
+    bAR = 3f, // base attack range
+    bPS = 2.3f, // base projectile speed
     bMR = 20f, // base max range
-    bAoER = 1f; // base aoe range
+    bAoER = 0.75f; // base aoe range
 
     public float AoERange, baseAoERange, AoERangeMultiplier, AoERangeAdder;
     private int bP = 0; // base piercing
@@ -48,13 +48,13 @@ public class Waterlily : Shooter
     
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackRange = bAR + (level * 0.3f);
-        baseAttackSpeed = bAS + (level * 0.06f);
+        baseAttackRange = bAR + (level * 0.5f);
+        baseAttackSpeed = bAS + (level * 0.3f);
     }
 
     public override void OnPath2Upgrade(int level)
     {
-        baseAoERange = bAoER + (level * 0.025f);
+        baseAoERange = bAoER + (level * 0.05f);
     }
 
     public override void OnPath3Upgrade(int level)
@@ -87,7 +87,7 @@ public class Waterlily : Shooter
 
     public override string GetPassiveDescription()
     {
-        return $"Attacks deal <color=green>{attackDamage}</color> <color=#3399FF>Water</color> damage to surrounding insects within a <color=green>{AoERange}</color> radius.";
+        return $"Attacks deal <color=green>{attackDamage*(0.5 + 0.05*effectivePath2Level)}</color> <color=#3399FF>Water</color> damage to surrounding insects within a <color=green>{AoERange}</color> radius.";
     }
 
 

@@ -88,7 +88,7 @@ public class Level1 : SpawnManager
         } else if (wave == 6) 
         {
             waitTime = 1f;
-            spawnInterval = 0.75f;
+            spawnInterval = 0.5f;
             spawnCount = 45;
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -97,8 +97,8 @@ public class Level1 : SpawnManager
         } else if (wave == 7)
         {
             waitTime = 1f;
-            spawnInterval = 0.5f;
-            spawnCount = 25;
+            spawnInterval = 0.25f;
+            spawnCount = 50;
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);

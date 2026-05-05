@@ -22,6 +22,18 @@ public class WaterlilyProjectile : Projectile
         
         Waterlily waterlily = source as Waterlily;
 
+        if (waterlily != null)
+        {
+            float splashDamage = projectileDamage * (0.5f + 0.05f * waterlily.effectivePath2Level);
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, waterlily.AoERange);
+
+            foreach (Collider2D hit in hits)
+            {
+                Insect splashedInsect = hit.GetComponent<Insect>();
+                if (splashedInsect != null && splashedInsect != insect)
+                    splashedInsect.Damage(splashDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile});
+            }
+        }
         if (piercing > 0)
         {
             piercing--;

@@ -50,6 +50,13 @@ public abstract class Plant : Entity
     {
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
+            
+        if (elementalType == ElementalType.Water && occupiedTile != null) // WATER BONUS
+        {
+            if (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent){
+                path2LevelAdder +=2;
+            }
+        }
     }
 
     protected override void OnHover()

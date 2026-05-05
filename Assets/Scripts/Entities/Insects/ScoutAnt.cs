@@ -8,7 +8,7 @@ public class ScoutAnt : Ant
         baseMaxHealth = 100f;
         sunDrop = 14;
         base.Awake();
-        baseMovementSpeed = 2f;
+        baseMovementSpeed = 1.8f;
     }
 
     }
