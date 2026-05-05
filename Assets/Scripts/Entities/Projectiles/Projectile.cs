@@ -32,6 +32,11 @@ public abstract class Projectile : MonoBehaviour
         this.spawnPosition = transform.position;
     }
 
+    protected virtual void Awake()
+    {
+        GetComponent<SpriteRenderer>().sortingOrder = 1;
+    }
+
     protected virtual void Update()
     {
         Move();

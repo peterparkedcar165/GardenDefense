@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4311319333377526007}
   - component: {fileID: 5323638503433831762}
-  - component: {fileID: 5268245813865976323}
   - component: {fileID: 549939264595078635}
+  - component: {fileID: 4555485136484167385}
   m_Layer: 3
-  m_Name: AcornProjectile
+  m_Name: WaterlilyProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.15, y: -1.81, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,39 +83,16 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8692600135984219313, guid: f0e97f14042ec7d4097da447787794af, type: 3}
-  m_Color: {r: 0.754717, g: 0.64007515, b: 0.3951584, a: 1}
+  m_Sprite: {fileID: -2304145347065513186, guid: b71dee94ef6ee9d46a1847aed8954073, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 5.83, y: 5.4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &5268245813865976323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7388594979766616069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bf7ad715397c4b0ea235d58547fd0ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AcornProjectile
-  audioSource: {fileID: 0}
-  hit: {fileID: 0}
-  minPitch: 0.9
-  maxPitch: 1.1
-  projectileDamage: 0
-  projectileSpeed: 0
-  maxRange: 0
-  piercing: 0
-  damageType: 0
-  elementalType: 0
-  source: {fileID: 0}
 --- !u!58 &549939264595078635
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -150,5 +127,28 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.21133332}
-  m_Radius: 0.49999997
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.15
+--- !u!114 &4555485136484167385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7388594979766616069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beda63d6c1d2a3b47a7e268615b53217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaterlilyProjectile
+  audioSource: {fileID: 0}
+  hit: {fileID: 0}
+  minPitch: 0.9
+  maxPitch: 1.1
+  projectileDamage: 0
+  projectileSpeed: 0
+  maxRange: 0
+  piercing: 0
+  damageType: 1
+  elementalType: 1
+  source: {fileID: 0}

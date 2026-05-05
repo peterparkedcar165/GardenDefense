@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5323638503433831762}
   - component: {fileID: 549939264595078635}
   - component: {fileID: -8227268841667839266}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SunflowerProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,9 +141,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c90b93d025f649b5b4f02d815f96c8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SunflowerProjectile
+  audioSource: {fileID: 0}
+  hit: {fileID: 0}
+  minPitch: 0.9
+  maxPitch: 1.1
   projectileDamage: 0
   projectileSpeed: 0
   maxRange: 0
   piercing: 0
   damageType: 0
-  owner: {fileID: 0}
+  elementalType: 0
+  source: {fileID: 0}
