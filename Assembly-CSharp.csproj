@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PathHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Ant.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BoilEffect.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\SproutEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\FreezeEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\TaintedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\WaterlilyProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\BurnEffect.cs" />

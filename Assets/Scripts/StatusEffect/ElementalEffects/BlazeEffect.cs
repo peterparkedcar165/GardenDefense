@@ -22,6 +22,11 @@ public class BlazeEffect : ElementalDebuff
             insect.RemoveEffect<BlazeEffect>();
             insect.RemoveEffect<TaintedEffect>();
             insect.ApplyEffect(new VulnerableEffect(insect, 8f, 1, source));
+
+        } else if (insect.HasEffect<WetEffect>()) {
+            insect.RemoveEffect<BlazeEffect>();
+            insect.RemoveEffect<WetEffect>();
+            insect.ApplyEffect(new BoilEffect(insect, 8f, 1, source));
         }
     }
 

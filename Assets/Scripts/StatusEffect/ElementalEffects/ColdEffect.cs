@@ -24,6 +24,17 @@ public class ColdEffect : ElementalDebuff
             insect.RemoveEffect<SproutEffect>();
             insect.ApplyEffect(new BrittleEffect(insect, 8f, 1, source));
         }
+        else if (insect.HasEffect<WetEffect>())
+        {
+            if (insect.freezeInternalCooldown <= 0)
+            {
+                insect.RemoveEffect<ColdEffect>();
+                insect.RemoveEffect<WetEffect>();
+                insect.freezeInternalCooldown = 5f;
+                insect.ApplyEffect(new FreezeEffect(insect, 2f, 1, source)); 
+            }
+            
+        }
     }
 
     public override void OnTick(float deltaTime)
