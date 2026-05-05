@@ -5,9 +5,9 @@ public class SoldierAnt : Ant
 
     protected override void Awake() {
         baseAttackDamage = 3;
-        baseMaxHealth = 160f;
+        baseMaxHealth = 220f;
         basePhysicalResistance = 0.33f;
-        sunDrop = 16;
+        sunDrop = 18;
         base.Awake();
     }
 
