@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: DayWaterRight_Animated
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 1647970507, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -1916670836, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -1771075026, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: 461113303, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: 1654638369, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: 1003715373, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -397515482, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -605774503, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -1545045942, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: 954890067, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  m_MinSpeed: 4
+  m_MaxSpeed: 4
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

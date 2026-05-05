@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: DayWaterHole_Animated
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 175762124, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: 1550628931, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -1696643345, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -929433522, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -1081641777, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -1022225580, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: 2071367833, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -1633308353, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -179146731, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  - {fileID: -249037636, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
+  m_MinSpeed: 4
+  m_MaxSpeed: 4
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

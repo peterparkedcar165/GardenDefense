@@ -19,12 +19,17 @@ void Start()
 
 void GenerateGrid()
     {
+
+        Dictionary<Vector2Int, Tile> tileMap = new Dictionary<Vector2Int, Tile>();
+
         for (int x = 0; x < columns; x++)
         {
             for (int y = 0; y < rows; y++)
             {
                 Vector3 position = new Vector3(x - (columns + 3) / 2f, y - (rows - 1) / 2f, 0) + transform.position;
                 GameObject tile = Instantiate(grassTilePrefab, position, Quaternion.identity, transform);
+                Tile t = tile.GetComponent<Tile>();
+                tileMap[new Vector2Int(x, y)] = t;
                 
                 if (pathCoordinates.Contains(new Vector2Int(x,y)))
                 {
@@ -41,6 +46,25 @@ void GenerateGrid()
                     tile.GetComponent<Tile>().tileType = TileType.Cave;
                 } else {
                     tile.GetComponent<Tile>().tileType = TileType.Grass;
+                }
+                
+            }
+        }
+
+        Vector2Int[] directions = {
+            Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right,
+            new Vector2Int(1, 1), new Vector2Int(-1, 1),
+            new Vector2Int(1, -1), new Vector2Int(-1, -1)
+        };
+
+        foreach (var kvp in tileMap)
+        {
+            foreach (var dir in directions)
+            {
+                if (tileMap.TryGetValue(kvp.Key + dir, out Tile neighbor) && neighbor.tileType == TileType.Water)
+                {
+                    kvp.Value.isWaterAdjacent = true;
+                    break;
                 }
             }
         }

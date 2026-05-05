@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour
 
     public bool isOccupied = false, isHighground = false;
     public TileType tileType;
+    public bool isWaterAdjacent = false;
 
     
     private void OnMouseDown()
