@@ -11,6 +11,11 @@ public class GameManager : MonoBehaviour
     public float BonusSunGain;
     public AudioSource audioSource;
     public AudioClip buttonClick, plantPlace, plantSelect;
+    private bool paused = false;
+    public float gameSpeed = 1f;
+
+    [SerializeField] private TMP_Text pauseButtonText;
+    [SerializeField] private TMP_Text speedButtonText;
     
     public TextMeshProUGUI sunText, healthText;
 
@@ -94,13 +99,30 @@ public class GameManager : MonoBehaviour
     {
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            if (Time.timeScale != 0)
-            {
-                Time.timeScale = 0;
-            } else
-            {
-                Time.timeScale = 1;
-            }
+            TogglePause();
+        }
+    }
+
+    public void TogglePause()
+    {
+        paused = !paused;
+        Time.timeScale = paused ? 0f: gameSpeed;
+        if (pauseButtonText != null)
+        {
+            pauseButtonText.text = paused ? "Resume" : "Pause";
+        }
+    }
+
+    public void ToggleSpeed()
+    {
+        gameSpeed = gameSpeed == 1f ? 2f : 1f;
+        if (!paused)
+        {
+            Time.timeScale = gameSpeed;
+        }
+        if (speedButtonText != null)
+        {
+            speedButtonText.text = gameSpeed == 1f ? "1x" : "2x";
         }
     }
 

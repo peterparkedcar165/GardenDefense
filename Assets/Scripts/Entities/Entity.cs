@@ -18,6 +18,7 @@ public enum DamageTag
     Melee,
     Attack,
     Skill,
+    ElementalDebuff
     // Coordinated,
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,

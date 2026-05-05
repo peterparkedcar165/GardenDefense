@@ -201,7 +201,7 @@ MonoBehaviour:
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
   allowedTiles: 0100000004000000
-  sunCost: 125
+  sunCost: 100
   totalSunSpent: 0
   elementalType: 4
   damageType: 1
