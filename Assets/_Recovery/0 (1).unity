@@ -959,7 +959,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -85.89501, y: 53.054996}
+  m_AnchoredPosition: {x: -199, y: 59.4}
   m_SizeDelta: {x: 84.41, y: 38.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &277454007
@@ -3417,8 +3417,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 124.54, y: 89.455}
-  m_SizeDelta: {x: 163.33, y: 145.09}
+  m_AnchoredPosition: {x: 173, y: 29.085}
+  m_SizeDelta: {x: 56.03, y: 58.17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1135887082
 GameObject:
@@ -4346,7 +4346,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.000049591064, y: 0, z: -0.92965317, w: -0.8982582}
+  m_margin: {x: 0.000049591064, y: 0, z: -88.79326, w: 6.6661754}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4376,7 +4376,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -92.31001, y: 20.919994}
+  m_AnchoredPosition: {x: -205.42, y: 35.9}
   m_SizeDelta: {x: 71.58, y: 25.29}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1359315671
@@ -6151,7 +6151,7 @@ Tilemap:
       - {fileID: -1633308353, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -179146731, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -249037636, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   m_TileAssetArray:
@@ -6617,7 +6617,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -5.5829544, w: 3.189021}
+  m_margin: {x: 0, y: 0, z: -49.223892, w: 12.4990635}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -6647,8 +6647,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -81.82, y: -15.11}
-  m_SizeDelta: {x: 85.3, y: 30.22}
+  m_AnchoredPosition: {x: -202.63, y: 0.092499}
+  m_SizeDelta: {x: 77.15, y: 29.055}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1508636341
 GameObject:

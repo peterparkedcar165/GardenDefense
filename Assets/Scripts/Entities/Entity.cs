@@ -192,6 +192,9 @@ public abstract class Entity : MonoBehaviour
                     blazeInternalCooldown = internalCooldown;
                     ApplyEffect(new BlazeEffect(this, elementalDebuffDuration, 1, source));
                 }
+
+                if (this.HasEffect<GerminateEffect>())
+                RemoveEffect<GerminateEffect>();
             break;
 
             case ElementalType.Water:
