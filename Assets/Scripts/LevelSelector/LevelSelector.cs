@@ -13,6 +13,8 @@ public class LevelSelector : MonoBehaviour
         level3.interactable = highestLevelUnlocked >= 3;
         level4.interactable = highestLevelUnlocked >= 4;
         level5.interactable = highestLevelUnlocked >= 5;
+        //previousPage.interactable = true;
+       // nextPage.interactable = true;
     }
 
     // Update is called once per frame
@@ -21,8 +23,20 @@ public class LevelSelector : MonoBehaviour
         
     }
 
+    private void DisableAllButtons()
+    {
+        level1.interactable = false;
+        level2.interactable = false;
+        level3.interactable = false;
+        level4.interactable = false;
+        level5.interactable = false;
+        //previousPage.interactable = false;
+        //nextPage.interactable = false;
+    }
+
     public void OnLevelSelected(int level)
     {
+        DisableAllButtons();
         LoadLevel(level);
         Debug.Log("Loading Level " + level);
     }

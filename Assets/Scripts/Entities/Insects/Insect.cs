@@ -94,12 +94,29 @@ public abstract class Insect : Entity
 
     public override void Kill(Entity source)
     {
+        foreach (StatusEffect effect in activeEffects)
+        {
+            if (effect is GerminateEffect germinate)
+            {
+                germinate.OnExpire();
+                break;
+            }
+        }
         DistributeExp();
         gameManager.AddSun(sunDrop);
         base.Kill();
     }
+
     public override void Kill()
     {
+        foreach (StatusEffect effect in activeEffects)
+        {
+            if (effect is GerminateEffect germinate)
+            {
+                germinate.OnExpire();
+                break;
+            }
+        }
         DistributeExp();
         gameManager.AddSun(sunDrop);
         base.Kill();

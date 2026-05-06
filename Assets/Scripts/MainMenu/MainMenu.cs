@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private Button[] buttons;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,9 +17,17 @@ public class MainMenu : MonoBehaviour
         
     }
 
+    private void DisableAllButtons()
+    {
+        foreach (Button b in buttons)
+        {
+            b.interactable = false;
+        }
+    }
     public void OnPlay()
     {
         Debug.Log("Play clicked");
+        DisableAllButtons();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
         transition.StartCoroutine(transition.FadeToScene("LevelSelector"));
     }
@@ -25,6 +35,7 @@ public class MainMenu : MonoBehaviour
     public void OnSettings()
     {
         Debug.Log("Settings clicked");
+        DisableAllButtons();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
         transition.StartCoroutine(transition.FadeToScene("Settings"));
     }
@@ -32,6 +43,7 @@ public class MainMenu : MonoBehaviour
     public void OnShop()
     {
         Debug.Log("Shop clicked");
+        DisableAllButtons();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
         transition.StartCoroutine(transition.FadeToScene("Shop"));
     }

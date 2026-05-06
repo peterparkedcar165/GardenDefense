@@ -1591,6 +1591,8 @@ MonoBehaviour:
   - {x: 8, y: 4}
   - {x: 9, y: 2}
   - {x: 11, y: 4}
+  - {x: 4, y: 3}
+  - {x: 7, y: 6}
   waterCoordinates:
   - {x: 3, y: 3}
   - {x: 6, y: 7}
@@ -6149,7 +6151,7 @@ Tilemap:
       - {fileID: -1633308353, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -179146731, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -249037636, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   m_TileAssetArray:

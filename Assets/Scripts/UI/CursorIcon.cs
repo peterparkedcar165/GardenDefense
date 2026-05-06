@@ -29,7 +29,7 @@ public class CursorIcon : MonoBehaviour
         {
             Plant selectedPlant = PlantSelector.instance.SelectedPlant.GetComponent<Plant>();
             Collider2D hit = Physics2D.OverlapPoint(worldPosition);
-            Debug.Log(hit != null ? hit.gameObject.name : "nothing hit");
+            // Debug.Log(hit != null ? hit.gameObject.name : "nothing hit");
 
             Tile tile = hit != null ? hit.GetComponent<Tile>() : null;
 

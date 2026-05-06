@@ -17,6 +17,7 @@ public class Level1 : SpawnManager
 
     protected override void Start()
     {
+        GameManager.instance.UpdateSun();
         waveCountText.text = $"Wave: {wave}/{maxWave}";
         StartCoroutine(RunWave());
     }
