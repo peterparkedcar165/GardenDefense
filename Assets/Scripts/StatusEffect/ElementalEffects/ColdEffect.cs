@@ -7,6 +7,8 @@ public class ColdEffect : ElementalDebuff
         
     }
 
+    public override string GetName() => "<color=#00BFFF>Cold</color>";
+
     public override void OnApply()
     {
         Debug.Log("Cold inflicted");

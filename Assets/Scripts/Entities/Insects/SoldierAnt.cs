@@ -38,7 +38,13 @@ public class SoldierAnt : Ant
         {
             reducedDamage = damageDealt;
         }
-      
+
         base.Damage(reducedDamage, damageType, elementalType, damageTag); // calls up to parent for damage reduction
     }
+
+    public override string GetName() => "<b><color=#8B4513>Soldier Ant</color></b>";
+
+    public override string GetDescription() => $"The {GetName()} is a frontline brawler with high HP and armor.";
+
+    public override string GetPassiveDescription() => "Reduces all incoming physical damage by a flat 12.";
 }

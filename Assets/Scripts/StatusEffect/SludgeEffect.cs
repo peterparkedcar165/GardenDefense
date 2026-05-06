@@ -7,6 +7,8 @@ public class SludgeEffect : StatusEffect
         effectType = Type.negative;
     }
 
+    public override string GetName() => "<color=#9400D3>Sludge</color>";
+
     public override void OnApply()
     {
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);

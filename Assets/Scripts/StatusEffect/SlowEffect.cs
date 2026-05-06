@@ -9,6 +9,8 @@ public class SlowEffect : StatusEffect
         effectType = Type.negative;
     }
 
+    public override string GetName() => "<color=#87CEEB>Slow</color>";
+
     public override void OnApply()
     {
         Insect insect = (Insect)target;

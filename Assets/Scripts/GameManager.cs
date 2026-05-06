@@ -20,22 +20,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text pauseButtonText;
     [SerializeField] private TMP_Text speedButtonText;
     
-    public TextMeshProUGUI sunText, healthText;
+    [SerializeField] private TextMeshProUGUI sunText, healthText;
 
     protected void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            playerMaxHealth = 20;
-            playerHealth = playerMaxHealth;
-            UpdateHealth();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        instance = this;
     }
 
     public void AddSun(int amount)

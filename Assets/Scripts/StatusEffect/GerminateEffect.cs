@@ -9,6 +9,8 @@ public class GerminateEffect : StatusEffect
         effectType = Type.negative;
     }
 
+    public override string GetName() => "<color=#32CD32>Germinate</color>";
+
     public override void OnApply()
     {
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);

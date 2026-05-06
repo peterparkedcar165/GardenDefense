@@ -25,6 +25,7 @@ public class PlantSelector : MonoBehaviour
     public void SelectPlant(GameObject plant)
     {
         SelectedPlant = plant;
+        CursorIcon.instance.OnSelectionChanged();
         GameManager.instance.PlaySound(GameManager.instance.plantSelect);
         Debug.Log("Selected " + plant);
     }
@@ -32,6 +33,7 @@ public class PlantSelector : MonoBehaviour
     public void ClearSelection()
     {
         SelectedPlant = null;
+        CursorIcon.instance.OnSelectionChanged();
         Debug.Log("Cleared Selection");
     }
 

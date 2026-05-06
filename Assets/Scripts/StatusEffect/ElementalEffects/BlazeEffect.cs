@@ -7,6 +7,8 @@ public class BlazeEffect : ElementalDebuff
         
     }
 
+    public override string GetName() => "<color=#FF4500>Blaze</color>";
+
     public override void OnApply()
     {
         Debug.Log("Blaze inflicted");

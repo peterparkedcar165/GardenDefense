@@ -7,6 +7,8 @@ public class GustEffect : ElementalDebuff
         
     }
 
+    public override string GetName() => "<color=#E0E0E0>Gust</color>";
+
     public override void OnApply()
     {
         Debug.Log("Gust inflicted");

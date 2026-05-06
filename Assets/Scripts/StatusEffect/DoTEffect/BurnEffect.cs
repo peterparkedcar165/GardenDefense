@@ -8,6 +8,8 @@ public class BurnEffect : DoTEffect
         tickInterval = 0.25f;
     }
 
+    public override string GetName() => "<color=#FF4500>Burn</color>";
+
     public override void OnApply()
     {
         damagePerSecond = (0.06f*target.maxHealth) + (0.08f*source.attackDamage) + 4f;

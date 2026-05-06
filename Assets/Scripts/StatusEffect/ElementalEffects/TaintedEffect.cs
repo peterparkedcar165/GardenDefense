@@ -7,6 +7,8 @@ public class TaintedEffect : ElementalDebuff
         
     }
 
+    public override string GetName() => "<color=#8B008B>Tainted</color>";
+
     public override void OnApply()
     {
         Debug.Log("Tainted inflicted");

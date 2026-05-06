@@ -9,6 +9,8 @@ public class ChillEffect : StatusEffect
         effectType = Type.negative;
     }
 
+    public override string GetName() => "<color=#87CEEB>Chill</color>";
+
     public override void OnApply()
     {
         Insect insect = (Insect)target;

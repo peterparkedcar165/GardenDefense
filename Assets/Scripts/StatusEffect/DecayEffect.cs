@@ -9,6 +9,8 @@ public class DecayEffect : StatusEffect
         effectType = Type.negative;
     }
 
+    public override string GetName() => "<color=#9400D3>Decay</color>";
+
     public override void OnApply()
     {
 

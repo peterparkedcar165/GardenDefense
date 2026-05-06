@@ -8,6 +8,8 @@ public class PoisonEffect : DoTEffect
         tickInterval = 0.5f;
     }
 
+    public override string GetName() => "<color=purple>Poison</color>";
+
     public override void OnApply()
     {
         damagePerSecond = 6 + (3* level);

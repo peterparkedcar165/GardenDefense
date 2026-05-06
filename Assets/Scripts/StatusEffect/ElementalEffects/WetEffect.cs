@@ -7,6 +7,8 @@ public class WetEffect : ElementalDebuff
         
     }
 
+    public override string GetName() => "<color=#1E90FF>Wet</color>";
+
     public override void OnApply()
     {
         Debug.Log("Wet inflicted");

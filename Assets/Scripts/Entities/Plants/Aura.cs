@@ -30,17 +30,15 @@ public abstract class Aura : Plant
     protected List<Insect> GetInsectsInRange()
     {
         List<Insect> result = new List<Insect>();
-        GameObject[] insects = GameObject.FindGameObjectsWithTag("Insect");
+        
 
-        foreach (GameObject obj in insects)
+        foreach (Insect insect in Insect.allInsects)
         {
-            if (Vector2.Distance(transform.position, obj.transform.position) <= attackRange)
+            if (Vector2.Distance(transform.position, insect.transform.position) <= attackRange)
             {
-                Insect insect = obj.GetComponent<Insect>();
-                if (insect != null)
-                {
-                    result.Add(insect);
-                }
+
+                result.Add(insect);
+
             }
         }
         return result;

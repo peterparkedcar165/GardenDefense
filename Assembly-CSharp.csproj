@@ -95,6 +95,8 @@
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\InsectStatsHoverTrigger.cs" />
+    <Compile Include="Assets\Scripts\UI\InsectInfoUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\SproutEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FreezeEffect.cs" />

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum TARGETING
 {
@@ -64,67 +65,58 @@ public abstract class Shooter : Plant
 // takes nearest, sets it to insect. target locked
     protected virtual GameObject FindTarget()
     {
-        GameObject[] insects = GameObject.FindGameObjectsWithTag("Insect");
-
-            switch (targeting)
-            {
-                case TARGETING.First:
-                return FindFirst(insects);
-                case TARGETING.Nearest:
-                return FindNearest(insects);
-                default:
-                return null;
-            }
+        switch (targeting)
+        {
+            case TARGETING.First:
+            return FindFirst(Insect.allInsects);
+            case TARGETING.Nearest: 
+            return FindNearest(Insect.allInsects);
+            default:                
+            return null;
+        }
     }
 
-// amongst all insects in the math, takes distance, between them and the plant itself.
-// then if within range, and if distance between the plant and the insect is smaller than
-// any other insect that have gotten the "nearest" will be overriden
-// return the nearest to the method caller
-    protected GameObject FindNearest(GameObject[] insects)
+    protected GameObject FindNearest(List<Insect> insects)
     {
         GameObject nearest = null;
         float nearestDistance = Mathf.Infinity;
 
-        foreach (GameObject insectObject in insects)
+        foreach (Insect insect in insects)
         {
-            float distance = Vector3.Distance(transform.position, insectObject.transform.position);
+            float distance = Vector3.Distance(transform.position, insect.transform.position);
             if (distance <= attackRange && distance < nearestDistance)
             {
                 nearestDistance = distance;
-                nearest = insectObject;
+                nearest = insect.gameObject;
             }
         }
         return nearest;
     }
 
-    protected GameObject FindFirst(GameObject[] insects)
+    protected GameObject FindFirst(List<Insect> insects)
     {
         GameObject furthest = null;
         int highestWaypointIndex = -1;
         float closestDistanceToNextWaypoint = Mathf.Infinity;
 
-        foreach (GameObject insectObject in insects)
+        foreach (Insect insect in insects)
         {
-            float distance = Vector3.Distance(transform.position, insectObject.transform.position);
+            float distance = Vector3.Distance(transform.position, insect.transform.position);
             if (distance > attackRange) continue;
-
-            Insect insect = insectObject.GetComponent<Insect>();
-            if (insect == null) continue;
 
             if (insect.currentWaypointIndex > highestWaypointIndex)
             {
                 highestWaypointIndex = insect.currentWaypointIndex;
-                closestDistanceToNextWaypoint = Vector3.Distance(insectObject.transform.position, insect.GetCurrentWaypoint().position);
-                furthest = insectObject;
+                closestDistanceToNextWaypoint = Vector3.Distance(insect.transform.position, insect.GetCurrentWaypoint().position);
+                furthest = insect.gameObject;
             }
             else if (insect.currentWaypointIndex == highestWaypointIndex)
             {
-                float distanceToNext = Vector3.Distance(insectObject.transform.position, insect.GetCurrentWaypoint().position);
+                float distanceToNext = Vector3.Distance(insect.transform.position, insect.GetCurrentWaypoint().position);
                 if (distanceToNext < closestDistanceToNextWaypoint)
                 {
                     closestDistanceToNextWaypoint = distanceToNext;
-                    furthest = insectObject;
+                    furthest = insect.gameObject;
                 }
             }
         }

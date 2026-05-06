@@ -23,6 +23,8 @@ public class StatusEffect
     }
 
 
+    public virtual string GetName() => "Unknown";
+
     public virtual void OnApply() {} // nothing because will be implemented in specific effects
     public virtual void OnTick(float deltaTime) {} // nothing because will be implemented in specific effects
     public virtual void OnExpire() {} // same

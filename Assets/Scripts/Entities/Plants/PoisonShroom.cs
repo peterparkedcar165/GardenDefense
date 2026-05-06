@@ -43,25 +43,21 @@ public class PoisonShroom : Shooter
 
     protected override GameObject FindTarget()
     {
-        GameObject[] allInsects = GameObject.FindGameObjectsWithTag("Insect");
-        List<GameObject> unpoisoned = new List<GameObject>();
-        
-        foreach (GameObject obj in allInsects)
+        List<Insect> unpoisoned = new List<Insect>();
+
+        foreach (Insect insect in Insect.allInsects)
         {
-            float distance = Vector3.Distance(transform.position, obj.transform.position);
-            if (distance <= attackRange && !obj.GetComponent<Insect>().HasEffect<PoisonEffect>())
+            float distance = Vector3.Distance(transform.position, insect.transform.position);
+            if (distance <= attackRange && !insect.HasEffect<PoisonEffect>())
             {
-                unpoisoned.Add(obj);
+                unpoisoned.Add(insect);
             }
         }
 
         if (unpoisoned.Count > 0)
-        {
-            return FindFirst(unpoisoned.ToArray());
-        }
+            return FindFirst(unpoisoned);
 
         return base.FindTarget();
-
     }
 
     public override void OnPath1Upgrade(int level)

@@ -7,6 +7,8 @@ public class SproutEffect : ElementalDebuff
         
     }
 
+    public override string GetName() => "<color=#32CD32>Sprout</color>";
+
     public override void OnApply()
     {
         Debug.Log("Sprout inflicted");

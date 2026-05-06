@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public abstract class Insect : Entity
 {
-
+    public static List<Insect> allInsects = new List<Insect>();
     public int currentWaypointIndex = 0;
     protected Transform[] waypoints;
 
@@ -27,7 +27,13 @@ public abstract class Insect : Entity
     protected override void Awake()
     {
         base.Awake();
+        allInsects.Add(this);
         // Debug.Log("SPAWNED: " + gameObject);
+    }
+
+    void OnDestroy()
+    {
+        allInsects.Remove(this);
     }
 
     protected virtual void Start()
@@ -106,6 +112,7 @@ public abstract class Insect : Entity
         base.Kill();
     }
 
+
     // EXP MANAGING
     
     public HashSet<Plant> attackerSet = new HashSet<Plant>();
@@ -129,5 +136,50 @@ public abstract class Insect : Entity
         {
             plant.GainExp(expReward);
         }
+    }
+
+    void OnMouseDown()
+    {
+        InsectInfoUI.instance?.ShowPanel(this);
+    }
+
+
+
+    // DESCRIPTIONS
+    public virtual string GetName()
+    {
+        return "";
+    }
+
+    public virtual string GetDescription()
+    {
+        return "";
+    }
+
+    public virtual string GetPassiveDescription()
+    {
+        return "";
+    }
+
+    public string GetActiveEffectsString()
+    {
+        string negative = "";
+        string positive = "";
+
+        foreach (StatusEffect effect in activeEffects)
+        {
+            int mins = Mathf.FloorToInt(effect.duration / 60);
+            int secs = Mathf.FloorToInt(effect.duration % 60);
+            string entry = $"{effect.GetName()} ({mins}:{secs:D2})\n";
+
+            if (effect.effectType == StatusEffect.Type.positive)
+                positive += entry;
+            else
+                negative += entry;
+        }
+
+        return $"<b>Active Effects:</b>\n\n" +
+               $"<b>Positive:</b>\n{(positive == "" ? "None" : positive)}\n" +
+               $"<b>Negative:</b>\n{(negative == "" ? "None" : negative)}";
     }
 }

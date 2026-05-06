@@ -8,6 +8,8 @@ public class StunEffect : HardCrowdControl
         effectType = Type.negative;
     }
 
+    public override string GetName() => "<color=#FFD700>Stun</color>";
+
     public override void OnApply()
     {
         // nothing special applies here neither

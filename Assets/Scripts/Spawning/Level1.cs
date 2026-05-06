@@ -9,7 +9,8 @@ public class Level1 : SpawnManager
     public int startSunCount = 250, startHealth = 20;
     private int maxWave = 8;
     public GameObject workerAnt, soldierAnt, scoutAnt, carpenterAnt;
-    public TextMeshProUGUI waveCountText;
+    public TextMeshProUGUI waveCountText, nextWaveTimerText;
+    public float nextWaveTimer;
 
     [Header("Spawning")]
     public float waitTime;
@@ -24,6 +25,7 @@ public class Level1 : SpawnManager
     }
     IEnumerator RunWave()
     {
+        nextWaveTimer = 10f;
         yield return new WaitForSeconds(10f); // initial setup time
 
         while (wave < maxWave)
@@ -48,6 +50,7 @@ public class Level1 : SpawnManager
             waitTime = 2f;
             spawnInterval = 2f;
             spawnCount = 20;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
@@ -57,6 +60,7 @@ public class Level1 : SpawnManager
             waitTime = 1f;
             spawnInterval = 1.5f;
             spawnCount = 15;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
@@ -66,6 +70,7 @@ public class Level1 : SpawnManager
             waitTime = 1f;
             spawnInterval = 1f;
             spawnCount = 18;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
@@ -75,6 +80,7 @@ public class Level1 : SpawnManager
             waitTime = 1f;
             spawnInterval = 1f;
             spawnCount = 25;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
@@ -84,6 +90,7 @@ public class Level1 : SpawnManager
             waitTime = 1f;
             spawnInterval = 1f;
             spawnCount = 20;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
@@ -93,6 +100,7 @@ public class Level1 : SpawnManager
             waitTime = 1f;
             spawnInterval = 0.5f;
             spawnCount = 45;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
@@ -102,6 +110,7 @@ public class Level1 : SpawnManager
             waitTime = 1f;
             spawnInterval = 0.5f;
             spawnCount = 50;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
@@ -113,6 +122,7 @@ public class Level1 : SpawnManager
             waitTime = 1f;
             spawnInterval = 0.5f;
             spawnCount = 80;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
@@ -147,9 +157,12 @@ public class Level1 : SpawnManager
         Spawn(carpenterAnt);
     }
 
-
     protected override void Update()
+{
+    if (nextWaveTimer > 0)
     {
-       
+        nextWaveTimer -= Time.deltaTime;
+        nextWaveTimerText.text = $"Next wave in {Mathf.CeilToInt(Mathf.Max(0, nextWaveTimer))}s";
     }
+}
 }
