@@ -34,6 +34,7 @@ public abstract class Plant : Entity
     public float expBoost;
     public float activeCooldown; // most of these are public for debugging purposes
 
+
     [Header("Paths")]
     public int path1Level, path2Level, path3Level, path1LevelAdder, path2LevelAdder, path3LevelAdder, effectivePath1Level, effectivePath2Level, effectivePath3Level;
     public bool path3Unlocked;

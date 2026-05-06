@@ -38,39 +38,51 @@ public abstract class Entity : MonoBehaviour
 {
     private GameObject damageIndicatorPrefab;
 
-    // STATS A BIT MESSY BUT WILL CLEAN EVENTUALLY
-    // bonus
-    public float physicalShredAdder, physicalShredMultiplier, 
-    magicShredAdder, magicShredMultiplier, 
-    bonusEffectChanceAdder, bonusEffectChanceMultiplier,
-    fireDamageAdder, fireDamageMultiplier,
-    waterDamageAdder, waterDamageMultiplier,
-    natureDamageAdder, natureDamageMultiplier,
-    windDamageAdder, windDamageMultiplier,
-    poisonDamageAdder, poisonDamageMultiplier,
-    iceDamageAdder,iceDamageMultiplier,
-    criticalChanceAdder, criticalChanceMultiplier,
-    criticalDamageAdder, criticalDamageMultiplier;
+    [Header("Base Stats")]
+    public float baseMaxHealth, baseAttackDamage, baseMagicDamage, baseAttackSpeed, baseAttackRange, baseHealingBonus, baseHealingReceived;
+    public float basePhysicalResistance, baseMagicResistance;
+    public float baseFireResistance, baseWaterResistance, baseNatureResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
+    public float basePhysicalShred, baseMagicShred, baseBonusEffectChance;
+    public float baseFireDamage, baseWaterDamage, baseNatureDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
+    public float baseCriticalChance, baseCriticalDamage;
+    public float baseDotResistance, baseDotDamage;
+    public float baseElementalPower;
 
-    public float baseMaxHealth, basePhysicalResistance, baseMagicResistance, baseAttackDamage, baseMagicDamage, baseAttackSpeed, baseAttackRange, baseHealingBonus = 0, baseHealingReceived = 0;
-    public float maxHealthAdder, physicalResistanceAdder, magicResistanceAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
-    public float maxHealthMultiplier, physicalResistanceMultiplier, magicResistanceMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
-    public float maxHealth, health, physicalResistance, magicResistance, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
+    [Header("Stats")]
+    public float maxHealth, health, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
+    public float physicalResistance, magicResistance;
+    public float fireResistance, waterResistance, natureResistance, windResistance, poisonResistance, iceResistance;
+    public float physicalShred, magicShred, bonusEffectChance;
+    public float fireDamage, waterDamage, natureDamage, windDamage, poisonDamage, iceDamage;
+    public float criticalChance, criticalDamage;
+    public float dotResistance, dotDamage;
+    public float elementalPower;
 
-    public float baseFireResistance, fireResistance, fireResistanceAdder, fireResistanceMultiplier,
-    baseWaterResistance, waterResistance, waterResistanceAdder, waterResistanceMultiplier,
-    baseNatureResistance, natureResistance, natureResistanceAdder, natureResistanceMultiplier,
-    baseWindResistance, windResistance, windResistanceAdder, windResistanceMultiplier,
-    basePoisonResistance, poisonResistance, poisonResistanceAdder, poisonResistanceMultiplier,
-    baseIceResistance, iceResistance, iceResistanceAdder, iceResistanceMultiplier;    
-    
-    public float basePhysicalShred, physicalShred, 
-    baseMagicShred, magicShred, baseBonusEffectChance, bonusEffectChance,baseFireDamage, fireDamage,baseWaterDamage, waterDamage, baseNatureDamage, natureDamage,baseWindDamage, windDamage,basePoisonDamage, poisonDamage,baseIceDamage, iceDamage, baseCriticalChance, criticalChance, baseCriticalDamage, criticalDamage,
-    baseDotResistance, dotResistance, dotResistanceAdder, dotResistanceMultiplier;    
-    
-    public float timeAlive, totalDamageDealt; // leaving it public jsut so i can debug, but shgould be private
+    [Header("Stat Adders")]
+    public float maxHealthAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
+    public float physicalResistanceAdder, magicResistanceAdder;
+    public float fireResistanceAdder, waterResistanceAdder, natureResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
+    public float physicalShredAdder, magicShredAdder, bonusEffectChanceAdder;
+    public float fireDamageAdder, waterDamageAdder, natureDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
+    public float criticalChanceAdder, criticalDamageAdder;
+    public float dotResistanceAdder, dotDamageAdder;
+    public float elementalPowerAdder;
 
+    [Header("Stat Multipliers")]
+    public float maxHealthMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
+    public float physicalResistanceMultiplier, magicResistanceMultiplier;
+    public float fireResistanceMultiplier, waterResistanceMultiplier, natureResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
+    public float physicalShredMultiplier, magicShredMultiplier, bonusEffectChanceMultiplier;
+    public float fireDamageMultiplier, waterDamageMultiplier, natureDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier;
+    public float criticalChanceMultiplier, criticalDamageMultiplier;
+    public float dotResistanceMultiplier, dotDamageMultiplier;
+    public float elementalPowerMultiplier;
+
+    [Header("Internal Cooldowns")]
     public float internalCooldown = 2f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+
+    [Header("Debug")]
+    public float timeAlive, totalDamageDealt;
     protected virtual void UpdateStats()
     {
         maxHealth = baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier);
@@ -100,6 +112,8 @@ public abstract class Entity : MonoBehaviour
         criticalChance = baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier);
         criticalDamage = baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier);
         dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
+        dotDamage = baseDotDamage + dotDamageAdder + (baseDotDamage * dotDamageMultiplier);
+        elementalPower = baseElementalPower + elementalPowerAdder + (baseElementalPower * elementalPowerMultiplier);
     }
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
@@ -161,7 +175,7 @@ public abstract class Entity : MonoBehaviour
             insect.RegisterAttacker(plant); // register plant into insect's hashset of attackers for exp distribution
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier;
         bool isCrit = false;
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
@@ -245,13 +259,21 @@ public abstract class Entity : MonoBehaviour
 
         if (System.Array.Exists(damageTag, t => t == DamageTag.DoT))
         {
-            dotMultiplier = 1 - dotResistance;
+            dotMultiplier = 1 - dotResistance + source.dotDamage;
         } else
         {
             dotMultiplier = 1;
         }
 
-        finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier);
+        if (System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
+        {
+            elementalDebuffMultiplier = 1 + source.elementalPower;
+        } else
+        {
+            elementalDebuffMultiplier = 1;
+        }
+
+        finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier * elementalDebuffMultiplier);
 
         // if damage source can crit, then calculate if it crits or not
         if (canCrit)
@@ -263,6 +285,7 @@ public abstract class Entity : MonoBehaviour
                 // Debug.Log("CRITICAL HIT");
             }
         }
+
         
         health -= finalDamage;
         source.totalDamageDealt += finalDamage; // FOR DEBUG
