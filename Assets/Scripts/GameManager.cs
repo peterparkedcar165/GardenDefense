@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,8 +27,6 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            SunCount = 9999; // originally 125
-            UpdateSun();
             DontDestroyOnLoad(gameObject);
             playerMaxHealth = 20;
             playerHealth = playerMaxHealth;
@@ -70,6 +69,11 @@ public class GameManager : MonoBehaviour
     {
         if (healthText != null)
         {
+            if (playerHealth < 0)
+            {
+                playerHealth = 0;
+            }
+
             healthText.text = "Health: " + playerHealth;
         }
     }
@@ -79,7 +83,7 @@ public class GameManager : MonoBehaviour
         playerHealth -= damage;
         Debug.Log("Player health: " + playerHealth);
         UpdateHealth();
-        if (playerHealth < 0)
+        if (playerHealth <= 0)
         {
             GameOver();
         }
@@ -122,6 +126,22 @@ public class GameManager : MonoBehaviour
         if (!paused) Time.timeScale = gameSpeed;
         if (speedButtonText != null)
         speedButtonText.text = gameSpeed + "x";
+    }
+
+    public void InitiateLevel(int sunCount, int health)
+    {
+        SunCount = sunCount;
+        playerMaxHealth = health;
+        playerHealth = playerMaxHealth;
+        UpdateSun();
+        UpdateHealth();
+    }
+
+    public void Restart()
+    {
+        Time.timeScale = 1f;
+        paused = false;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 }

@@ -241,6 +241,10 @@ public class PlantUpgradeUI : MonoBehaviour
             tooltipPanel.SetActive(true);
             tooltipText.text = text;
         }
+
+    Canvas.ForceUpdateCanvases();
+    RectTransform panelRect = tooltipPanel.GetComponent<RectTransform>();
+    panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tooltipText.preferredHeight + 40f);
     }
     public void HideTooltip()
     {

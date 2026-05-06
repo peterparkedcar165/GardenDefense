@@ -87,7 +87,7 @@ public class Waterlily : Shooter
 
     public override string GetPassiveDescription()
     {
-        return $"Attacks deal <color=green>{attackDamage*(0.5 + 0.05*effectivePath2Level)}</color> <color=#3399FF>Water</color> damage to surrounding insects within a <color=green>{AoERange}</color> radius.";
+        return $"Attacks deal <color=green>{attackDamage*(0.25 + 0.025*effectivePath2Level)}</color> <color=#3399FF>Water</color> damage to surrounding insects within a <color=green>{AoERange}</color> radius.";
     }
 
 
@@ -100,7 +100,7 @@ public class Waterlily : Shooter
 
     public override string GetPath2Description()
     {
-        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease splash damage by <color=green><b>5%</b></color> per level. [<color=green><b>+" + (5*effectivePath2Level) + "%</b></color>]\n\n" +
+        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease splash damage by <color=green><b>2.5%</b></color> per level. [<color=green><b>+" + (2.5*effectivePath2Level) + "%</b></color>]\n\n" +
         "Increase splash radius by <color=green><b>0.025</b></color> per level. [<color=green><b>" + (0.025*effectivePath2Level) + "</b></color>]\n\n" +
         "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";  
     }
