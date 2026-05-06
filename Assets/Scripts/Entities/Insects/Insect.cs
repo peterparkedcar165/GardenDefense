@@ -34,6 +34,8 @@ public abstract class Insect : Entity
     void OnDestroy()
     {
         allInsects.Remove(this);
+        if (InsectInfoUI.instance != null && InsectInfoUI.instance.GetSelectedInsect() == this)
+            InsectInfoUI.instance.HidePanel();
     }
 
     protected virtual void Start()
