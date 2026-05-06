@@ -25,12 +25,21 @@ public class WetEffect : ElementalDebuff
         } else if (insect.HasEffect<TaintedEffect>()) {
             insect.RemoveEffect<WetEffect>();
             insect.RemoveEffect<TaintedEffect>();
-            insect.ApplyEffect(new SludgeEffect(insect, 8f, 1, source));
+            insect.ApplyEffect(new SludgeEffect(insect, 4f, 1, source));
 
         } else if (insect.HasEffect<BlazeEffect>()) {
             insect.RemoveEffect<WetEffect>();
             insect.RemoveEffect<BlazeEffect>();
             insect.ApplyEffect(new BoilEffect(insect, 8f, 1, source));
+        } else if (insect.HasEffect<SproutEffect>())
+        {
+            if (insect.germinateInternalCooldown <= 0)
+            {
+                insect.RemoveEffect<WetEffect>();
+                insect.RemoveEffect<SproutEffect>();
+                insect.germinateInternalCooldown = 4f;
+                insect.ApplyEffect(new GerminateEffect(insect, 2f, 1, source));
+            }
         }
     }
 

@@ -5,7 +5,8 @@ using TMPro;
 public class Level1 : SpawnManager
 {
     public float levelTime;
-    public int wave, maxWave = 7;
+    public int wave;
+    private int maxWave = 8;
     public GameObject workerAnt, soldierAnt, scoutAnt, carpenterAnt;
     public TextMeshProUGUI waveCountText;
 
@@ -97,8 +98,19 @@ public class Level1 : SpawnManager
         } else if (wave == 7)
         {
             waitTime = 1f;
-            spawnInterval = 0.25f;
+            spawnInterval = 0.5f;
             spawnCount = 50;
+
+            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
+            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
+            CancelInvoke(nameof(SpawnScoutAnt));
+            CancelInvoke(nameof(SpawnSoldierAnt));
+        } else if (wave == 8)
+        {
+            waitTime = 1f;
+            spawnInterval = 0.5f;
+            spawnCount = 80;
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);

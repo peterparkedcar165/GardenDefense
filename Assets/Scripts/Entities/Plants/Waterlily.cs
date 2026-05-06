@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class Waterlily : Shooter
 {
     private float 
-    bAD = 18f, // base attack damage
+    bAD = 12f, // base attack damage
     bAS = 1f, // base attack speed
     bAR = 3f, // base attack range
     bPS = 2.3f, // base projectile speed
@@ -72,7 +72,7 @@ public class Waterlily : Shooter
 
     public override string GetDescription()
     {
-        return $"The {GetName()} shoots her targets with little bubbles that hurts surrounding insects, and imprisons them in larger bubbles.";
+        return $"The {GetName()} shoots her targets with little bubbles that hurts surrounding insects. She can also imprison her foes with her larger bubble.";
     }
 
     public override string GetAttackDescription()

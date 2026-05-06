@@ -17,13 +17,18 @@ public class TaintedEffect : ElementalDebuff
             insect.RemoveEffect<TaintedEffect>();
             insect.RemoveEffect<BlazeEffect>();
             insect.ApplyEffect(new VulnerableEffect(insect, 8f, 1, source));
-
         }
         else if (insect.HasEffect<SproutEffect>())
         {
             insect.RemoveEffect<TaintedEffect>();
             insect.RemoveEffect<SproutEffect>();
             insect.ApplyEffect(new DecayEffect(insect, 8f, 1, source));
+        } else if (insect.HasEffect<WetEffect>()) {
+
+            insect.RemoveEffect<TaintedEffect>();
+            insect.RemoveEffect<WetEffect>();
+            insect.ApplyEffect(new SludgeEffect(insect, 4f, 1, source));
+
         }
     }
 

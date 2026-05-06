@@ -10,4 +10,12 @@ public abstract class DoTEffect : StatusEffect
         effectType = Type.negative;
     }
 
+    public override void OnApply()
+    {
+        if (target.HasEffect<SludgeEffect>())
+        {
+            duration += 4f;
+            target.RemoveEffect<SludgeEffect>();
+        }
+    }
 }

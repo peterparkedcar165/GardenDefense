@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Assets\Scripts\PlantData.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\UI\PlantUpgradeUI.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
   </ItemGroup>

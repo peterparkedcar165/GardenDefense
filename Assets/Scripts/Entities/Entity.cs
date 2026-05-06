@@ -70,7 +70,7 @@ public abstract class Entity : MonoBehaviour
     
     public float timeAlive, totalDamageDealt; // leaving it public jsut so i can debug, but shgould be private
 
-    public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown;
+    public float internalCooldown = 2f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
     protected virtual void UpdateStats()
     {
         maxHealth = baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier);
@@ -352,6 +352,11 @@ public abstract class Entity : MonoBehaviour
         if (freezeInternalCooldown > 0)
         {
             freezeInternalCooldown -= Time.deltaTime;
+        }
+
+        if (germinateInternalCooldown > 0)
+        {
+            germinateInternalCooldown -= Time.deltaTime;
         }
     }
 

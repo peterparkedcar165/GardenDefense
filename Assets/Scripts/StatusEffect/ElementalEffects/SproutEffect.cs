@@ -29,6 +29,15 @@ public class SproutEffect : ElementalDebuff
             insect.RemoveEffect<SproutEffect>();
             insect.RemoveEffect<TaintedEffect>();
             insect.ApplyEffect(new DecayEffect(insect, 8f, 1, source));
+        } else if (insect.HasEffect<WetEffect>())
+        {
+            if (insect.germinateInternalCooldown <= 0)
+            {
+                insect.RemoveEffect<SproutEffect>();
+                insect.RemoveEffect<WetEffect>();
+                insect.germinateInternalCooldown = 4f;
+                insect.ApplyEffect(new GerminateEffect(insect, 2f, 1, source));
+            }
         }
     }
 

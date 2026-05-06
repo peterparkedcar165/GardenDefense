@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
             SunCount = 250; // originally 125
             UpdateSun();
             DontDestroyOnLoad(gameObject);
-            playerMaxHealth = 999;
+            playerMaxHealth = 20;
             playerHealth = playerMaxHealth;
             UpdateHealth();
         }

@@ -22,7 +22,8 @@ public abstract class Plant : Entity
 
         if (circleRadius != null)
         {
-            circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f);
+            circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f); // INCLUDES SPRITE
+            // circleRadius.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
         }
     }
     public TileType[] allowedTiles;
@@ -107,7 +108,7 @@ public abstract class Plant : Entity
     public const int pathLevelCap = 5;
 
     public int GetPath1Cost() => Mathf.RoundToInt((sunCost*0.75f) + (32 * path1Level));
-    public int GetPath2Cost() => Mathf.RoundToInt((sunCost*0.75f) + (32 * path1Level));
+    public int GetPath2Cost() => Mathf.RoundToInt((sunCost*0.75f) + (32 * path2Level));
     public int GetPath3Cost() => Mathf.RoundToInt((sunCost * 1f) + (36 * path3Level));
 
     public bool UpgradePath1()

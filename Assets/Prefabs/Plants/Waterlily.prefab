@@ -129,7 +129,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.03132218, y: 0.03132224}
-  m_Radius: 0.68066406
+  m_Radius: 0.35
 --- !u!114 &-3831059976541133089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,11 +262,12 @@ MonoBehaviour:
   coldInternalCooldown: 0
   gustInternalCooldown: 0
   taintedInternalCooldown: 0
+  freezeInternalCooldown: 0
   data: {fileID: 11400000, guid: 9dc317067fcfd9c42b815a9dbf99a003, type: 2}
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
-  allowedTiles: 0200000001000000
-  sunCost: 125
+  allowedTiles: 02000000
+  sunCost: 75
   totalSunSpent: 0
   elementalType: 1
   damageType: 1
