@@ -17,7 +17,8 @@ public enum DamageTag
     DoT,
     Melee,
     Attack,
-    Skill,
+    PassiveDamage,
+    SkillDamage,
     ElementalDebuff
     // Coordinated,
     // IgnoresPhysicalResistance,
@@ -47,6 +48,7 @@ public abstract class Entity : MonoBehaviour
     public float baseCriticalChance, baseCriticalDamage;
     public float baseDotResistance, baseDotDamage;
     public float baseElementalPower;
+    public float basePassiveDamage, baseSkillDamage;
 
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
@@ -57,6 +59,7 @@ public abstract class Entity : MonoBehaviour
     public float criticalChance, criticalDamage;
     public float dotResistance, dotDamage;
     public float elementalPower;
+    public float passiveDamage, skillDamage;
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -67,6 +70,7 @@ public abstract class Entity : MonoBehaviour
     public float criticalChanceAdder, criticalDamageAdder;
     public float dotResistanceAdder, dotDamageAdder;
     public float elementalPowerAdder;
+    public float passiveDamageAdder, skillDamageAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -77,6 +81,7 @@ public abstract class Entity : MonoBehaviour
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
     public float elementalPowerMultiplier;
+    public float passiveDamageMultiplier, skillDamageMultiplier;
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
@@ -114,11 +119,13 @@ public abstract class Entity : MonoBehaviour
         dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
         dotDamage = baseDotDamage + dotDamageAdder + (baseDotDamage * dotDamageMultiplier);
         elementalPower = baseElementalPower + elementalPowerAdder + (baseElementalPower * elementalPowerMultiplier);
+        passiveDamage = basePassiveDamage + passiveDamageAdder + (basePassiveDamage * passiveDamageMultiplier);
+        skillDamage = baseSkillDamage + skillDamageAdder + (baseSkillDamage * skillDamageMultiplier);
     }
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
     {
-        float modifiedDamage, elementalMultiplier, finalDamage;
+        float modifiedDamage, elementalMultiplier, finalDamage, dotMultiplier;
         switch (elementalType)
         {
             case ElementalType.Fire:
@@ -156,8 +163,16 @@ public abstract class Entity : MonoBehaviour
             modifiedDamage = damageDealt;
             break;
         }
+
+        if (System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+        {
+            dotMultiplier = 1 - dotResistance;
+        } else
+        {
+            dotMultiplier = 1;
+        }
         
-        finalDamage = (modifiedDamage * elementalMultiplier);
+        finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier);
         health -= finalDamage;
 
         UpdateHealthBar();
@@ -175,7 +190,7 @@ public abstract class Entity : MonoBehaviour
             insect.RegisterAttacker(plant); // register plant into insect's hashset of attackers for exp distribution
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult;
         bool isCrit = false;
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
@@ -276,7 +291,23 @@ public abstract class Entity : MonoBehaviour
             elementalDebuffMultiplier = 1;
         }
 
-        finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier * elementalDebuffMultiplier);
+        if (System.Array.Exists(damageTag, t => t == DamageTag.PassiveDamage))
+        {
+            passiveDamageMult = 1 + source.passiveDamage;
+        } else
+        {
+            passiveDamageMult = 1;
+        }
+
+        if (System.Array.Exists(damageTag, t => t == DamageTag.SkillDamage))
+        {
+            skillDamageMult = 1 + source.skillDamage;
+        } else
+        {
+            skillDamageMult = 1;
+        }
+
+        finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier * elementalDebuffMultiplier * passiveDamageMult * skillDamageMult);
 
         // if damage source can crit, then calculate if it crits or not
         if (canCrit)

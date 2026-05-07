@@ -7,7 +7,7 @@ public class FractureEffect : StatusEffect
         effectType = Type.negative;
     }
 
-    public override string GetName() => "<color=#00FFFF>Brittle</color>";
+    public override string GetName() => "<color=#00FFFF>Fracture</color>";
 
     public override void OnApply()
     {

@@ -37,7 +37,7 @@ public class SproutEffect : ElementalDebuff
             {
                 insect.RemoveEffect<SproutEffect>();
                 insect.RemoveEffect<WetEffect>();
-                insect.germinateInternalCooldown = 4f;
+                insect.germinateInternalCooldown = 2f;
                 insect.ApplyEffect(new GerminateEffect(insect, 2f, 1, source));
             }
         }

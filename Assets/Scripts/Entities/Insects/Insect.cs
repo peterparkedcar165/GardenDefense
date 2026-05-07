@@ -1,9 +1,17 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public abstract class Insect : Entity
 {
     public static List<Insect> allInsects = new List<Insect>();
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void Init()
+    {
+        allInsects = new List<Insect>();
+        SceneManager.sceneLoaded += (scene, mode) => allInsects.Clear();
+    }
     public int currentWaypointIndex = 0;
     protected Transform[] waypoints;
 

@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class PoisonEffect : DoTEffect
 {
+
+    private ParticleSystem poisonParticles;
+    private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.PassiveDamage };
+
     public PoisonEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
@@ -12,8 +16,14 @@ public class PoisonEffect : DoTEffect
 
     public override void OnApply()
     {
+        base.OnApply();
         damagePerSecond = 6 + (3* level);
         Debug.Log("Poison applied at level " + level);
+
+        GameObject fx = Object.Instantiate(Resources.Load<GameObject>("PoisonBubbles"), target.transform.position, Quaternion.identity);
+        fx.transform.SetParent(target.transform);
+        fx.transform.localPosition = Vector3.zero;
+        poisonParticles = fx.GetComponent<ParticleSystem>();
     }
 
     public override void OnTick(float deltaTime)
@@ -21,13 +31,21 @@ public class PoisonEffect : DoTEffect
         tickTimer += deltaTime;
         if (tickTimer >= tickInterval)
         {
-        target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Poison, source, false, new DamageTag[] {DamageTag.DoT});
-        tickTimer -= tickInterval;
+            if (source != null)
+                target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Poison, source, false, tickTags);
+            else
+                target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Poison, tickTags);
+            tickTimer -= tickInterval;
         }
     }
 
     public override void OnExpire()
     {
         Debug.Log("Poison expired");
+
+        if (poisonParticles != null)
+        {
+            Object.Destroy(poisonParticles.gameObject);
+        }
     }
 }

@@ -224,7 +224,8 @@ public class PlantUpgradeUI : MonoBehaviour
     {
         if (selectedPlant is Shooter shooter)
         {
-            shooter.targeting = shooter.targeting == TARGETING.First ? TARGETING.Nearest : TARGETING.First;
+            int count = System.Enum.GetValues(typeof(TARGETING)).Length;
+            shooter.targeting = (TARGETING)(((int)shooter.targeting + 1) % count);
             targetingModeText.text = shooter.targeting.ToString();
         }
     }

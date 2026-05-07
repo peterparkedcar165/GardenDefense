@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class LeafRanger : Shooter
 {
     private float 
-    bAD = 98f, // base attack damage
+    bAD = 122f, // base attack damage
     bAS = 0.25f, // base attack speed
     bAR = 99f, // base attack range
     bPS = 20f, // base projectile speed

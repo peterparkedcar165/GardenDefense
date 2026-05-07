@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BurnEffect : DoTEffect
 {
+    private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
+
     public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
@@ -12,6 +14,7 @@ public class BurnEffect : DoTEffect
 
     public override void OnApply()
     {
+        base.OnApply();
         damagePerSecond = (0.06f*target.maxHealth) + (0.08f*source.attackDamage) + 4f;
         Debug.Log($"Burn applied by {source} to {target}");
 
@@ -24,8 +27,11 @@ public class BurnEffect : DoTEffect
         tickTimer += deltaTime;
         if (tickTimer >= tickInterval)
         {
-        target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Fire, source, false, new DamageTag[] {DamageTag.DoT, DamageTag.ElementalDebuff});
-        tickTimer -= tickInterval;
+            if (source != null)
+                target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Fire, source, false, tickTags);
+            else
+                target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Fire, tickTags);
+            tickTimer -= tickInterval;
         }
     }
 

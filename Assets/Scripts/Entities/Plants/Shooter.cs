@@ -4,7 +4,8 @@ using System.Collections.Generic;
 public enum TARGETING
 {
     Nearest,
-    First
+    First,
+    Last
 }
 
 public abstract class Shooter : Plant
@@ -71,6 +72,8 @@ public abstract class Shooter : Plant
             return FindFirst(Insect.allInsects);
             case TARGETING.Nearest: 
             return FindNearest(Insect.allInsects);
+            case TARGETING.Last:
+            return FindLast(Insect.allInsects);
             default:                
             return null;
         }
@@ -104,15 +107,18 @@ public abstract class Shooter : Plant
             float distance = Vector3.Distance(transform.position, insect.transform.position);
             if (distance > attackRange) continue;
 
+            Transform waypoint = insect.GetCurrentWaypoint();
+            if (waypoint == null) continue;
+
             if (insect.currentWaypointIndex > highestWaypointIndex)
             {
                 highestWaypointIndex = insect.currentWaypointIndex;
-                closestDistanceToNextWaypoint = Vector3.Distance(insect.transform.position, insect.GetCurrentWaypoint().position);
+                closestDistanceToNextWaypoint = Vector3.Distance(insect.transform.position, waypoint.position);
                 furthest = insect.gameObject;
             }
             else if (insect.currentWaypointIndex == highestWaypointIndex)
             {
-                float distanceToNext = Vector3.Distance(insect.transform.position, insect.GetCurrentWaypoint().position);
+                float distanceToNext = Vector3.Distance(insect.transform.position, waypoint.position);
                 if (distanceToNext < closestDistanceToNextWaypoint)
                 {
                     closestDistanceToNextWaypoint = distanceToNext;
@@ -122,6 +128,40 @@ public abstract class Shooter : Plant
         }
         return furthest;
     }
+
+    protected GameObject FindLast(List<Insect> insects)
+    {
+        GameObject last = null;
+        int lowestWaypointIndex = int.MaxValue;
+        float furthestDistanceToNext = -1f;
+
+        foreach (Insect insect in insects)
+        {
+            float distance = Vector3.Distance(transform.position, insect.transform.position);
+            if (distance > attackRange) continue;
+
+            Transform waypoint = insect.GetCurrentWaypoint();
+            if (waypoint == null) continue;
+
+            if (insect.currentWaypointIndex < lowestWaypointIndex)
+            {
+                lowestWaypointIndex = insect.currentWaypointIndex;
+                furthestDistanceToNext = Vector3.Distance(insect.transform.position, waypoint.position);
+                last = insect.gameObject;
+            }
+            else if (insect.currentWaypointIndex == lowestWaypointIndex)
+            {
+                float distanceToNext = Vector3.Distance(insect.transform.position, waypoint.position);
+                if (distanceToNext > furthestDistanceToNext)
+                {
+                    furthestDistanceToNext = distanceToNext;
+                    last = insect.gameObject;
+                }
+            }
+        }
+        return last;
+    }
+
 
 
     // movement prediction for shooter

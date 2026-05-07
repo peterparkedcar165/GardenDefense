@@ -18,7 +18,7 @@ public class ColdEffect : ElementalDebuff
         {
             insect.RemoveEffect<ColdEffect>();
             insect.RemoveEffect<BlazeEffect>();
-            insect.ApplyEffect(new BurnEffect(insect, 5f, 1, source));
+            insect.ApplyEffect(new FractureEffect(insect, 5f, 1, source));
         }
         else if (insect.HasEffect<SproutEffect>())
         {

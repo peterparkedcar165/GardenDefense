@@ -39,4 +39,9 @@ public class StatusEffect
         duration -= deltaTime;
         OnTick(deltaTime);
     }
+
+    public virtual string Description()
+    {
+        return "";
+    }
 }
