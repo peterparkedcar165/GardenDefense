@@ -79,7 +79,7 @@ public abstract class Entity : MonoBehaviour
     public float elementalPowerMultiplier;
 
     [Header("Internal Cooldowns")]
-    public float internalCooldown = 2f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;

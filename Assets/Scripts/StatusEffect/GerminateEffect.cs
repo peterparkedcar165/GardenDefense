@@ -31,7 +31,7 @@ public class GerminateEffect : StatusEffect
             Insect insect = hit.GetComponent<Insect>();
             if (insect != null)
             {
-                insect.Damage(source.attackDamage * 0.75f, DamageType.Physical, ElementalType.Nature, source, false, new DamageTag[] {DamageTag.AoE, DamageTag.ElementalDebuff});
+                insect.Damage((source.attackDamage * 1.25f) + (20 * source.elementalPower), DamageType.Physical, ElementalType.Nature, source, false, new DamageTag[] {DamageTag.AoE, DamageTag.ElementalDebuff});
             }
         }
     }
