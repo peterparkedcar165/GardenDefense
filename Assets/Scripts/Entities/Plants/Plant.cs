@@ -25,6 +25,24 @@ public abstract class Plant : Entity
             circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f); // INCLUDES SPRITE
             // circleRadius.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
         }
+
+        // if (WeatherManager.instance != null)
+        // {
+        //     switch (WeatherManager.instance.weather)
+        //     {
+        //         case WeatherType.Sunny:
+        //         fireDamageAdder += 1.12f;
+        //         break;
+
+        //         case WeatherType.Rain:
+        //         waterDamageAdder += 1.12f;
+        //         break;
+
+        //         case WeatherType.Snow:
+        //         iceDamageAdder += 1.12f;
+        //         break;
+        //     }
+        // }
     }
     public TileType[] allowedTiles;
     public int sunCost, totalSunSpent = 0;
@@ -50,6 +68,7 @@ public abstract class Plant : Entity
 
     protected virtual void Start()
     {
+
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
             
@@ -82,6 +101,26 @@ public abstract class Plant : Entity
         effectivePath2Level = path2Level + path2LevelAdder;
         effectivePath3Level = path3Level + path3LevelAdder;
     }
+
+    // private int GetWeather2PathBonus()
+    // {
+    //     if (WeatherManager.Instance == null)
+    //     {
+    //         return 0;
+    //     }
+
+    //     switch (WeatherManager.instance.weather)
+    //     {
+    //         case WeatherType.Sunny:
+    //         if (elementalType == elementalType.Fire)
+    //             {
+    //                 return 1;
+    //             } else
+    //             {
+    //                 return 0;
+    //             }
+    //     }
+    // }
 
     public void Uproot()
     {
@@ -155,8 +194,6 @@ public abstract class Plant : Entity
         OnPath3Upgrade(effectivePath3Level);
         return true;
     }
-
-
 
     // FIELD SELECTION
     private void OnMouseDown()
