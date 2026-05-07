@@ -51,8 +51,8 @@ public class Level1 : SpawnManager
         if (wave == 1) // wave 1 - worker ants every 2 seconds for 40 secs
         {
             waitTime = 2f;
-            spawnInterval = 2f;
-            spawnCount = 20;
+            spawnInterval = 3f;
+            spawnCount = 12;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -61,8 +61,8 @@ public class Level1 : SpawnManager
         } else if (wave == 2) 
         {
             waitTime = 1f;
-            spawnInterval = 1.5f;
-            spawnCount = 15;
+            spawnInterval = 2f;
+            spawnCount = 8;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -71,8 +71,8 @@ public class Level1 : SpawnManager
         } else if (wave == 3) 
         {
             waitTime = 1f;
-            spawnInterval = 1f;
-            spawnCount = 18;
+            spawnInterval = 2f;
+            spawnCount = 10;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
@@ -81,8 +81,8 @@ public class Level1 : SpawnManager
         } else if (wave == 4) 
         {
             waitTime = 1f;
-            spawnInterval = 1f;
-            spawnCount = 25;
+            spawnInterval = 2f;
+            spawnCount = 12;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -91,8 +91,8 @@ public class Level1 : SpawnManager
         } else if (wave == 5)
         {
             waitTime = 1f;
-            spawnInterval = 1f;
-            spawnCount = 20;
+            spawnInterval = 2f;
+            spawnCount = 10;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
@@ -101,8 +101,8 @@ public class Level1 : SpawnManager
         } else if (wave == 6) 
         {
             waitTime = 1f;
-            spawnInterval = 0.5f;
-            spawnCount = 45;
+            spawnInterval = 2f;
+            spawnCount = 25;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -111,8 +111,8 @@ public class Level1 : SpawnManager
         } else if (wave == 7)
         {
             waitTime = 1f;
-            spawnInterval = 0.5f;
-            spawnCount = 50;
+            spawnInterval = 2f;
+            spawnCount = 30;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -123,8 +123,8 @@ public class Level1 : SpawnManager
         } else if (wave == 8)
         {
             waitTime = 1f;
-            spawnInterval = 0.5f;
-            spawnCount = 80;
+            spawnInterval = 2f;
+            spawnCount = 40;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
