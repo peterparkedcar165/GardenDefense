@@ -34,7 +34,7 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void Awake()
     {
-        GetComponent<SpriteRenderer>().sortingOrder = 1;
+        GetComponentInChildren<SpriteRenderer>().sortingOrder = 1;
     }
 
     protected virtual void Update()
@@ -51,7 +51,9 @@ public abstract class Projectile : MonoBehaviour
     {
         if (trackedTarget != null)
         {
-            Vector3 toTarget = trackedTarget.transform.position - transform.position;
+            Insect insect = trackedTarget.GetComponent<Insect>();
+            Vector3 aimPos = insect != null ? insect.GetAimPoint() : trackedTarget.transform.position;
+            Vector3 toTarget = aimPos - transform.position;
             if (Vector3.Dot(direction, toTarget) > 0)
                 direction = toTarget.normalized;
             else
@@ -75,12 +77,12 @@ public abstract class Projectile : MonoBehaviour
 
         if (other.CompareTag("Insect"))
         {
-            Insect insect = other.GetComponent<Insect>();
+            Insect insect = other.GetComponentInParent<Insect>();
             if (insect != null)
             {
                 OnHit(insect);
             }
-            
+
         }
 
         if (other.gameObject.CompareTag("Border"))

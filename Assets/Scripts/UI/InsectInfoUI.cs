@@ -47,7 +47,7 @@ public class InsectInfoUI : MonoBehaviour
     {
         PlantUpgradeUI.instance.HidePanel();
         selectedInsect = insect;
-        cachedRenderer = insect.GetComponent<SpriteRenderer>();
+        cachedRenderer = insect.GetComponentInChildren<SpriteRenderer>();
         panel.SetActive(true);
         insectNameText.text = insect.GetName();
         insectIcon.sprite = cachedRenderer.sprite;

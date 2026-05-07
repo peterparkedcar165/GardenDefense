@@ -2920,6 +2920,7 @@ MonoBehaviour:
   plantPlace: {fileID: 8300000, guid: ec80ddb72cd12f54ba848ec21454f43e, type: 3}
   plantSelect: {fileID: 8300000, guid: 5e6edfc0ce92ec44183cfe3f9c1cdd6c, type: 3}
   gameSpeed: 1
+  currentWave: 0
   pauseButtonText: {fileID: 125803998}
   speedButtonText: {fileID: 2099565116}
   sunText: {fileID: 572278663}

@@ -35,21 +35,16 @@ public class GerminateEffect : StatusEffect
     {
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
         indicator.GetComponent<DamageIndicator>().Initialize("Bloom", new Color(0.3f, 1f, 0.2f));
-        Collider2D[] hits = Physics2D.OverlapCircleAll(target.transform.position, aoeRadius);
         float damage = 40 + (cachedAttackDamage * 0.33f) + (24 * cachedElementalPower);
 
-        foreach (Collider2D hit in hits)
+        foreach (Insect insect in Insect.allInsects)
         {
-            Insect insect = hit.GetComponent<Insect>();
-            if (insect != null)
+            if (Vector3.Distance(target.transform.position, insect.transform.position) <= aoeRadius)
             {
-                if (source != null){
-                insect.Damage(damage, DamageType.Physical, ElementalType.Nature, source, false, damageTags);
-                }
+                if (source != null)
+                    insect.Damage(damage, DamageType.Physical, ElementalType.Nature, source, false, damageTags);
                 else
-                {
-                insect.Damage(damage, DamageType.Physical, ElementalType.Nature, damageTags);
-                }
+                    insect.Damage(damage, DamageType.Physical, ElementalType.Nature, damageTags);
             }
         }
     }

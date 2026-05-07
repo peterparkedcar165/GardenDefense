@@ -169,20 +169,15 @@ public abstract class Shooter : Plant
     protected virtual Vector3 PredictTargetPosition(GameObject target)
     {
         Insect insect = target.GetComponent<Insect>();
-        
+
         if (insect == null)
-        return target.transform.position; // fallback to current position
+        return target.transform.position;
 
-        // how far the target is away from the shooter
-        float distance = Vector3.Distance(transform.position, target.transform.position);
-
-        // how long the projectile will take to reach that distance
+        Vector3 aimPos = insect.GetAimPoint();
+        float distance = Vector3.Distance(transform.position, aimPos);
         float travelTime = distance / projectileSpeed;
+        Vector3 predictedPosition = aimPos + insect.GetVelocity() * 0.75f * travelTime;
 
-        // where the target be after that time
-        // insect moves in its current direction at its current speed
-        Vector3 predictedPosition = target.transform.position + insect.GetVelocity() * 0.75f *travelTime;
-        
         return predictedPosition;
     }
     

@@ -31,6 +31,8 @@ public abstract class Insect : Entity
     public int expDrop;
 
     private GameManager gameManager;
+    private Transform aimPoint;
+    private Transform visual;
 
     protected override void Awake()
     {
@@ -51,15 +53,32 @@ public abstract class Insect : Entity
         gameManager = FindAnyObjectByType<GameManager>();
         waypoints = PathManager.instance.waypoints;
         expDrop = sunDrop/2;
+        aimPoint = transform.Find("AimPoint");
+        visual = transform.Find("Visual");
+
+        if (visual != null && healthBarInstance != null)
+        {
+            healthBarInstance.transform.SetParent(visual);
+            healthBarInstance.transform.localPosition = new Vector3(-0.475f, 0.6f, 0);
+        }
 
         int waveNumber = GameManager.instance.currentWave;
         baseMaxHealth *= 1f + ((waveNumber-1) * 0.08f);
+        UpdateStats();
+        health = maxHealth;
     }
 
     protected override void Update()
     {
         base.Update();
         Move();
+        SyncAimPoint();
+    }
+
+    private void SyncAimPoint()
+    {
+        if (visual != null && aimPoint != null && aimPoint.localPosition != visual.localPosition)
+            aimPoint.localPosition = visual.localPosition;
     }
 
     protected virtual void Move()
@@ -85,6 +104,16 @@ public abstract class Insect : Entity
         {
             currentWaypointIndex++;
         }
+    }
+
+    protected override Vector3 GetIndicatorPosition()
+    {
+        return visual != null ? visual.position + Vector3.up * 0.25f : base.GetIndicatorPosition();
+    }
+
+    public Vector3 GetAimPoint()
+    {
+        return aimPoint != null ? aimPoint.position : transform.position;
     }
 
     public Transform GetCurrentWaypoint()

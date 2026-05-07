@@ -21,7 +21,7 @@ public class FreezeEffect : HardCrowdControl
 
         Debug.Log("Freeze applied");
 
-        spriteRenderer = target.GetComponent<SpriteRenderer>();
+        spriteRenderer = target.GetComponentInChildren<SpriteRenderer>();
         if (spriteRenderer != null)
         {
             originalColor = spriteRenderer.color;

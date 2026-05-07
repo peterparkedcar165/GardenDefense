@@ -17,7 +17,7 @@ public class PlantButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         gameManager = FindAnyObjectByType<GameManager>();
 
         plant = plantPrefab.GetComponent<Plant>();
-        buttonImage.sprite = plantPrefab.GetComponent<SpriteRenderer>().sprite;
+        buttonImage.sprite = plantPrefab.GetComponentInChildren<SpriteRenderer>().sprite;
     }
 
     // Update is called once per frame

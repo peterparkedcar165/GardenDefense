@@ -195,7 +195,7 @@ public abstract class Entity : MonoBehaviour
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
-            Damage(2, damageType, ElementalType.Ice, source, false, new DamageTag [] {DamageTag.ElementalDebuff});
+            Damage(3, damageType, ElementalType.Ice, source, false, new DamageTag [] {DamageTag.ElementalDebuff});
         }
 
         switch (elementalType)
@@ -326,7 +326,7 @@ public abstract class Entity : MonoBehaviour
 
         // damage indicator
 
-        GameObject indicator = Instantiate(damageIndicatorPrefab, this.transform.position + Vector3.up * 0.25f, Quaternion.identity);
+        GameObject indicator = Instantiate(damageIndicatorPrefab, GetIndicatorPosition(), Quaternion.identity);
         indicator.GetComponent<DamageIndicator>().Initialize(finalDamage, elementalType, isCrit);
 
 
@@ -358,6 +358,11 @@ public abstract class Entity : MonoBehaviour
     public virtual void Kill(Entity source) // death including source
     {
         Destroy(gameObject);
+    }
+
+    protected virtual Vector3 GetIndicatorPosition()
+    {
+        return transform.position + Vector3.up * 0.25f;
     }
 
 // upon spawning, occurs before Start()
@@ -420,7 +425,7 @@ public abstract class Entity : MonoBehaviour
     // HEALTH BAR
 
     private Vector3 healthBarOffset = new Vector3(0, 0.6f, 0); // OFFSET
-    private GameObject healthBarInstance;
+    protected GameObject healthBarInstance;
     private Transform healthBarFill;
 
     private void SpawnHealthBar()

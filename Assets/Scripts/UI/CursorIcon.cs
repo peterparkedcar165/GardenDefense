@@ -31,7 +31,7 @@ public class CursorIcon : MonoBehaviour
         if (PlantSelector.instance.SelectedPlant != null)
         {
             cachedPlant = PlantSelector.instance.SelectedPlant.GetComponent<Plant>();
-            cachedRenderer = cachedPlant.GetComponent<SpriteRenderer>();
+            cachedRenderer = cachedPlant.GetComponentInChildren<SpriteRenderer>();
         }
         else
         {
