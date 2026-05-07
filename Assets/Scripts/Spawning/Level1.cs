@@ -9,6 +9,7 @@ public class Level1 : SpawnManager
     public int startSunCount = 250, startHealth = 20;
     private int maxWave = 8;
     public GameObject workerAnt, soldierAnt, scoutAnt, carpenterAnt;
+    public GameObject weatherManager;
     public TextMeshProUGUI waveCountText, nextWaveTimerText;
     public float nextWaveTimer;
 
@@ -19,6 +20,8 @@ public class Level1 : SpawnManager
 
     protected override void Start()
     {
+        WeatherManager.instance.weather = WeatherType.Sunny;
+
         GameManager.instance.InitiateLevel(startSunCount, startHealth);
         waveCountText.text = $"Wave: {wave}/{maxWave}";
         StartCoroutine(RunWave());

@@ -26,7 +26,7 @@ void GenerateGrid()
         {
             for (int y = 0; y < rows; y++)
             {
-                Vector3 position = new Vector3(x - (columns + 3) / 2f, y - (rows - 1) / 2f, 0) + transform.position;
+                Vector3 position = new Vector3(x - (columns + 4) / 2f, y - (rows - 1) / 2f, 0) + transform.position;
                 GameObject tile = Instantiate(grassTilePrefab, position, Quaternion.identity, transform);
                 Tile t = tile.GetComponent<Tile>();
                 tileMap[new Vector2Int(x, y)] = t;
@@ -78,7 +78,7 @@ private void OnDrawGizmos()
     {
         for (int y = 0; y < rows; y++)
         {
-            Gizmos.DrawWireCube(new Vector3(x - (columns + 3) / 2f, y - (rows - 1) / 2f, 0) + transform.position, Vector3.one);
+            Gizmos.DrawWireCube(new Vector3(x - (columns + 4) / 2f, y - (rows - 1) / 2f, 0) + transform.position, Vector3.one);
         }
     }
 }

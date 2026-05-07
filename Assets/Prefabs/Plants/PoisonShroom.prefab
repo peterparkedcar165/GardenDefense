@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.25568, y: -0.26581, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 12871179031049225}
@@ -106,41 +106,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46f550e62ebea9b4dbe5c81ce08d2cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoisonShroom
-  physicalShredAdder: 0
-  physicalShredMultiplier: 0
-  magicShredAdder: 0
-  magicShredMultiplier: 0
-  bonusEffectChanceAdder: 0
-  bonusEffectChanceMultiplier: 0
-  fireDamageAdder: 0
-  fireDamageMultiplier: 0
-  waterDamageAdder: 0
-  waterDamageMultiplier: 0
-  natureDamageAdder: 0
-  natureDamageMultiplier: 0
-  windDamageAdder: 0
-  windDamageMultiplier: 0
-  poisonDamageAdder: 0
-  poisonDamageMultiplier: 0
-  iceDamageAdder: 0
-  iceDamageMultiplier: 0
-  criticalChanceAdder: 0
-  criticalChanceMultiplier: 0
-  criticalDamageAdder: 0
-  criticalDamageMultiplier: 0
   baseMaxHealth: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseAttackDamage: 0
   baseMagicDamage: 0
   baseAttackSpeed: 0
   baseAttackRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  basePhysicalShred: 0
+  baseMagicShred: 0
+  baseBonusEffectChance: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseNatureDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseCriticalChance: 0
+  baseCriticalDamage: 0
+  baseDotResistance: 0
+  baseDotDamage: 0
+  baseElementalPower: 0
   maxHealth: 0
   health: 0
-  physicalResistance: 0
-  magicResistance: 0
   attackDamage: 0
   magicDamage: 0
   attackSpeed: 0
@@ -149,52 +145,95 @@ MonoBehaviour:
   attackRange: 0
   healingBonus: 0
   healingReceived: 0
-  baseFireResistance: 0
+  physicalResistance: 0
+  magicResistance: 0
   fireResistance: 0
-  fireResistanceAdder: 0
-  fireResistanceMultiplier: 0
-  baseWaterResistance: 0
   waterResistance: 0
-  waterResistanceAdder: 0
-  waterResistanceMultiplier: 0
-  baseNatureResistance: 0
   natureResistance: 0
-  natureResistanceAdder: 0
-  natureResistanceMultiplier: 0
-  baseWindResistance: 0
   windResistance: 0
-  windResistanceAdder: 0
-  windResistanceMultiplier: 0
-  basePoisonResistance: 0
   poisonResistance: 0
-  poisonResistanceAdder: 0
-  poisonResistanceMultiplier: 0
-  baseIceResistance: 0
   iceResistance: 0
-  iceResistanceAdder: 0
-  iceResistanceMultiplier: 0
-  basePhysicalShred: 0
   physicalShred: 0
-  baseMagicShred: 0
   magicShred: 0
-  baseBonusEffectChance: 0
   bonusEffectChance: 0
-  baseFireDamage: 0
   fireDamage: 0
-  baseWaterDamage: 0
   waterDamage: 0
-  baseNatureDamage: 0
   natureDamage: 0
-  baseWindDamage: 0
   windDamage: 0
-  basePoisonDamage: 0
   poisonDamage: 0
-  baseIceDamage: 0
   iceDamage: 0
-  baseCriticalChance: 0
   criticalChance: 0
-  baseCriticalDamage: 0
   criticalDamage: 0
+  dotResistance: 0
+  dotDamage: 0
+  elementalPower: 0
+  maxHealthAdder: 0
+  attackDamageAdder: 0
+  magicDamageAdder: 0
+  attackSpeedAdder: 0
+  attackRangeAdder: 0
+  healingBonusAdder: 0
+  healingReceivedAdder: 0
+  physicalResistanceAdder: 0
+  magicResistanceAdder: 0
+  fireResistanceAdder: 0
+  waterResistanceAdder: 0
+  natureResistanceAdder: 0
+  windResistanceAdder: 0
+  poisonResistanceAdder: 0
+  iceResistanceAdder: 0
+  physicalShredAdder: 0
+  magicShredAdder: 0
+  bonusEffectChanceAdder: 0
+  fireDamageAdder: 0
+  waterDamageAdder: 0
+  natureDamageAdder: 0
+  windDamageAdder: 0
+  poisonDamageAdder: 0
+  iceDamageAdder: 0
+  criticalChanceAdder: 0
+  criticalDamageAdder: 0
+  dotResistanceAdder: 0
+  dotDamageAdder: 0
+  elementalPowerAdder: 0
+  maxHealthMultiplier: 0
+  attackDamageMultiplier: 0
+  magicDamageMultiplier: 0
+  attackSpeedMultiplier: 0
+  attackRangeMultiplier: 0
+  healingBonusMultiplier: 0
+  healingReceivedMultiplier: 0
+  physicalResistanceMultiplier: 0
+  magicResistanceMultiplier: 0
+  fireResistanceMultiplier: 0
+  waterResistanceMultiplier: 0
+  natureResistanceMultiplier: 0
+  windResistanceMultiplier: 0
+  poisonResistanceMultiplier: 0
+  iceResistanceMultiplier: 0
+  physicalShredMultiplier: 0
+  magicShredMultiplier: 0
+  bonusEffectChanceMultiplier: 0
+  fireDamageMultiplier: 0
+  waterDamageMultiplier: 0
+  natureDamageMultiplier: 0
+  windDamageMultiplier: 0
+  poisonDamageMultiplier: 0
+  iceDamageMultiplier: 0
+  criticalChanceMultiplier: 0
+  criticalDamageMultiplier: 0
+  dotResistanceMultiplier: 0
+  dotDamageMultiplier: 0
+  elementalPowerMultiplier: 0
+  internalCooldown: 2
+  blazeInternalCooldown: 0
+  wetInternalCooldown: 0
+  sproutInternalCooldown: 0
+  coldInternalCooldown: 0
+  gustInternalCooldown: 0
+  taintedInternalCooldown: 0
+  freezeInternalCooldown: 0
+  germinateInternalCooldown: 0
   timeAlive: 0
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: 3ce3c12a2a0a858458a425fe5f07e28d, type: 2}
@@ -265,7 +304,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.51660156
+  m_Radius: 0.5
 --- !u!1 &7507562756265830079
 GameObject:
   m_ObjectHideFlags: 0

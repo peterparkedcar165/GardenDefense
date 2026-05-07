@@ -22,27 +22,19 @@ public abstract class Plant : Entity
 
         if (circleRadius != null)
         {
-            circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f); // INCLUDES SPRITE
-            // circleRadius.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
+            // circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f); // INCLUDES SPRITE
+            circleRadius.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
         }
 
-        // if (WeatherManager.instance != null)
-        // {
-        //     switch (WeatherManager.instance.weather)
-        //     {
-        //         case WeatherType.Sunny:
-        //         fireDamageAdder += 1.12f;
-        //         break;
-
-        //         case WeatherType.Rain:
-        //         waterDamageAdder += 1.12f;
-        //         break;
-
-        //         case WeatherType.Snow:
-        //         iceDamageAdder += 1.12f;
-        //         break;
-        //     }
-        // }
+        if (WeatherManager.instance != null)
+        {
+            switch (WeatherManager.instance.weather)
+            {
+                case WeatherType.Sunny: fireDamage += 0.12f; break;
+                case WeatherType.Rain:  waterDamage += 0.12f; break;
+                case WeatherType.Snow:  iceDamage += 0.12f; break;
+            }
+        }
     }
     public TileType[] allowedTiles;
     public int sunCost, totalSunSpent = 0;
@@ -72,12 +64,6 @@ public abstract class Plant : Entity
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
             
-        if (elementalType == ElementalType.Water && occupiedTile != null) // WATER BONUS
-        {
-            if (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent){
-                path2LevelAdder +=2;
-            }
-        }
     }
 
     protected override void OnHover()
@@ -98,29 +84,27 @@ public abstract class Plant : Entity
     {
         base.Update();
         effectivePath1Level = path1Level + path1LevelAdder;
-        effectivePath2Level = path2Level + path2LevelAdder;
+        effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
         effectivePath3Level = path3Level + path3LevelAdder;
     }
 
-    // private int GetWeather2PathBonus()
-    // {
-    //     if (WeatherManager.Instance == null)
-    //     {
-    //         return 0;
-    //     }
+    private int GetWeatherPath2Bonus()
+    {
+        if (elementalType == ElementalType.Fire)
+        {
+            if (WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Sunny)
+                return 1;
+        }
 
-    //     switch (WeatherManager.instance.weather)
-    //     {
-    //         case WeatherType.Sunny:
-    //         if (elementalType == elementalType.Fire)
-    //             {
-    //                 return 1;
-    //             } else
-    //             {
-    //                 return 0;
-    //             }
-    //     }
-    // }
+        if (elementalType == ElementalType.Water)
+        {
+            bool onWater = occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent);
+            bool isRaining = WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Rain;
+            if (onWater || isRaining) return 1;
+        }
+
+        return 0;
+    }
 
     public void Uproot()
     {
@@ -168,7 +152,7 @@ public abstract class Plant : Entity
         if (!GameManager.instance.SpendSun(GetPath2Cost())) return false;
         totalSunSpent += GetPath2Cost();
         path2Level++;
-        effectivePath2Level = path2Level + path2LevelAdder;
+        effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
         OnPath2Upgrade(effectivePath2Level);
         return true;
     }
