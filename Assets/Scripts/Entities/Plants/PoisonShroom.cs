@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PoisonShroom : Shooter
 {
     private float 
-    bAD = 8f, // base attack damage
+    bAD = 24f, // base attack damage
     bAS = 0.8f, // base attack speed
     bAR = 3f, // base attack range
     bPS = 3f, // base projectile speed
@@ -102,7 +102,7 @@ public class PoisonShroom : Shooter
 
     public override string GetPassiveDescription()
     {
-        return $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green>{poisonDuration}</color> seconds, dealing <color=green>{6 + 3*poisonLevel}</color> <color=purple>Poison</color> damage per second.";
+        return $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green>{poisonDuration}</color> seconds, dealing <color=green>{12 + 4*(poisonLevel-1)}</color> <color=purple>Poison</color> damage per second.";
     }
 
     public override string GetPath1Description()
@@ -114,7 +114,7 @@ public class PoisonShroom : Shooter
 
     public override string GetPath2Description()
     {
-        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease <color=purple>Poison</color> damage by <color=green><b>3</b></color> per level. [<color=green><b>+" + (3*effectivePath2Level) + "</b></color>]\n\n" +
+        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease <color=purple>Poison</color> damage by <color=green><b>4</b></color> per level. [<color=green><b>+" + (4*effectivePath2Level) + "</b></color>]\n\n" +
         "Increase <color=purple>Poison</color> duration by <color=green><b>1</b></color> second per level. [<color=green><b>+" + (1*effectivePath2Level) + "</b></color>]\n\n" +
         "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
     }

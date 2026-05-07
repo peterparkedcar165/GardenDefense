@@ -34,6 +34,7 @@ public class Level1 : SpawnManager
         while (wave < maxWave)
         {
            wave++;
+           GameManager.instance.currentWave = wave;
            waveCountText.text = $"Wave: {wave}/{maxWave}";
             yield return StartCoroutine(Wave(wave)); 
 

@@ -12,6 +12,7 @@ public class FreezeEffect : HardCrowdControl
     }
 
     public override string GetName() => "<color=#00FFFF>Freeze</color>";
+    public override string GetDescription() => $"Target is completely frozen in place.";
 
     public override void OnApply()
     {

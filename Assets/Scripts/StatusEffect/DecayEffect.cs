@@ -10,6 +10,7 @@ public class DecayEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#9400D3>Decay</color>";
+    public override string GetDescription() => $"Cuts healing in half, and reduces Physical Resistance by <color=green>24%</color>.";
 
     public override void OnApply()
     {

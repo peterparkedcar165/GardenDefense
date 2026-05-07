@@ -9,9 +9,20 @@ public class StatusEffect
         neutral,
         negative
     }
+
+    public enum EffectTag
+    {
+        ElementalReaction,
+        DoT,
+        CrowdControl,
+        Slow,
+        Regenerative
+    }
     public Type effectType;
     public int level;
     public Entity target, source;
+
+    public EffectTag[] tags = new EffectTag[0];
 
 
     public StatusEffect(Entity target, float duration, int level, Entity source)
@@ -21,9 +32,6 @@ public class StatusEffect
         this.level = level;
         this.source = source;
     }
-
-
-    public virtual string GetName() => "Unknown";
 
     public virtual void OnApply() {} // nothing because will be implemented in specific effects
     public virtual void OnTick(float deltaTime) {} // nothing because will be implemented in specific effects
@@ -40,8 +48,23 @@ public class StatusEffect
         OnTick(deltaTime);
     }
 
-    public virtual string Description()
+    public virtual string GetDescription()
     {
         return "";
+    }
+
+    public virtual string GetName()
+    {
+        return "";
+    }
+
+    public string GetEffectTagsString()
+    {
+        return string.Join(", ", tags);
+    }
+
+    public string GetEffectType()
+    {
+        return effectType.ToString();
     }
 }

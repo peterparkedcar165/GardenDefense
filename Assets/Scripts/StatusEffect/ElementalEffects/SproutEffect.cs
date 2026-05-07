@@ -8,6 +8,7 @@ public class SproutEffect : ElementalDebuff
     }
 
     public override string GetName() => "<color=#32CD32>Sprout</color>";
+    public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()
     {

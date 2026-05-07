@@ -8,6 +8,7 @@ public class ColdEffect : ElementalDebuff
     }
 
     public override string GetName() => "<color=#00BFFF>Cold</color>";
+    public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()
     {

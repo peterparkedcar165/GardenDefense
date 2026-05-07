@@ -8,6 +8,7 @@ public class BlazeEffect : ElementalDebuff
     }
 
     public override string GetName() => "<color=#FF4500>Blaze</color>";
+    public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()
     {

@@ -9,6 +9,7 @@ public class StunEffect : HardCrowdControl
     }
 
     public override string GetName() => "<color=#FFD700>Stun</color>";
+    public override string GetDescription() => "Prevent any action.";
 
     public override void OnApply()
     {

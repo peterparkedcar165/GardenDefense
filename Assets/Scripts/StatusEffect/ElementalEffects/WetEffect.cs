@@ -8,6 +8,7 @@ public class WetEffect : ElementalDebuff
     }
 
     public override string GetName() => "<color=#1E90FF>Wet</color>";
+    public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()
     {

@@ -10,6 +10,7 @@ public class SlowEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#87CEEB>Slow</color>";
+    public override string GetDescription() => $"Reduce Movement Speed by {slowness*100}%.";
 
     public override void OnApply()
     {

@@ -8,6 +8,7 @@ public class SludgeEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#9400D3>Sludge</color>";
+    public override string GetDescription() => $"Increase duration of DoT effects by 4 seconds.";
 
     public override void OnApply()
     {

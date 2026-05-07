@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public float gameSpeed = 1f;
     private float[] speeds = { 0.5f, 1f, 2f, 4f };
     private int speedIndex = 1; // starts at 1x
+    public int currentWave = 0;
 
     [SerializeField] private TMP_Text pauseButtonText;
     [SerializeField] private TMP_Text speedButtonText;

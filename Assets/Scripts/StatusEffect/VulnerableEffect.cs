@@ -2,13 +2,14 @@ using UnityEngine;
 
 public class VulnerableEffect : StatusEffect
 {
-    public float shred = 0.24f;
+    public float shred = 0.32f;
     public VulnerableEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
     }
 
     public override string GetName() => "<color=#FF6347>Vulnerable</color>";
+    public override string GetDescription() => $"Reduce DoT Resistance by <color=green>{shred*100}%</color>.";
 
     public override void OnApply()
     {

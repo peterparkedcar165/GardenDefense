@@ -9,7 +9,8 @@ public class ChillEffect : StatusEffect
         effectType = Type.negative;
     }
 
-    public override string GetName() => "<color=#87CEEB>Chill</color>";
+    public override string GetName() => "<color=#00FFFF>Chill</color>";
+    public override string GetDescription() => $"Reduce Movement Speed by {slowness*100}%.";
 
     public override void OnApply()
     {

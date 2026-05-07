@@ -8,6 +8,7 @@ public class FractureEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#00FFFF>Fracture</color>";
+    public override string GetDescription() => "";
 
     public override void OnApply()
     {

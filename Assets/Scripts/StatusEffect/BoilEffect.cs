@@ -9,6 +9,7 @@ public class BoilEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#1E90FF>Boil</color>";
+    public override string GetDescription() => "";
 
     public override void OnApply()
     {

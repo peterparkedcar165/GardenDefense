@@ -8,6 +8,7 @@ public class TaintedEffect : ElementalDebuff
     }
 
     public override string GetName() => "<color=#8B008B>Tainted</color>";
+    public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()
     {

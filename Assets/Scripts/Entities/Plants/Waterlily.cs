@@ -7,7 +7,7 @@ public class Waterlily : Shooter
     bAD = 12f, // base attack damage
     bAS = 1f, // base attack speed
     bAR = 3f, // base attack range
-    bPS = 2.3f, // base projectile speed
+    bPS = 2.6f, // base projectile speed
     bMR = 20f, // base max range
     bAoER = 0.75f; // base aoe range
 

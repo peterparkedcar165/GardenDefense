@@ -51,6 +51,9 @@ public abstract class Insect : Entity
         gameManager = FindAnyObjectByType<GameManager>();
         waypoints = PathManager.instance.waypoints;
         expDrop = sunDrop/2;
+
+        int waveNumber = GameManager.instance.currentWave;
+        baseMaxHealth *= 1f + ((waveNumber-1) * 0.08f);
     }
 
     protected override void Update()
