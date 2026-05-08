@@ -6,7 +6,7 @@ public class ScoutAnt : Ant
     protected override void Awake() {
         baseAttackDamage = 2f;
         baseMaxHealth = 200f;
-        sunDrop = 14;
+        sunDrop = 8;
         base.Awake();
         baseMovementSpeed = 1.8f;
     }
