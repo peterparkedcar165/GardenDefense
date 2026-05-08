@@ -69,7 +69,7 @@ public class DamageIndicator : MonoBehaviour
             break;
         }
 
-        tmpText.fontSize = Mathf.Clamp(2.5f + damage * 0.01f, 2.5f, 5f);
+        tmpText.fontSize = Mathf.Clamp(4f + damage * 0.02f, 4f, 6.5f);
 
         if (isCrit)
         {
@@ -83,7 +83,16 @@ public class DamageIndicator : MonoBehaviour
         tmpText.color = color;
         int rounded = Mathf.RoundToInt(damage);
 
-        tmpText.text = rounded.ToString();
+        if (isCrit)
+        {
+            tmpText.text = rounded.ToString() + "!";
+        }
+        else
+        {
+            tmpText.text = rounded.ToString();
+        }
+
+
         // Debug.Log("Damage shown: " + rounded + " at " + transform.position);
 
     }

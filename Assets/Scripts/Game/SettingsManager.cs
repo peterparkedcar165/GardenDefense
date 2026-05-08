@@ -15,6 +15,8 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private TMP_Text masterText, musicText, gameText;
     [SerializeField] private GameObject settingsPanel;
 
+    public bool IsOpen => settingsPanel.activeSelf;
+
     private void Awake()
     {
         instance = this;

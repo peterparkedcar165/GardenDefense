@@ -95,7 +95,8 @@ public class GameManager : MonoBehaviour
     {
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            TogglePause();
+            if (SettingsManager.instance == null || !SettingsManager.instance.IsOpen)
+                TogglePause();
         }
     }
 
