@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public int SunCount;
     public int playerHealth, playerMaxHealth; // originally 20
     public float BonusSunGain;
-    public AudioSource audioSource;
+    public AudioSource audioSource, musicSource;
     public AudioClip buttonClick, plantPlace, plantSelect;
     private bool paused = false;
     public float gameSpeed = 1f;
@@ -101,12 +101,15 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause()
     {
-        paused = !paused;
-        Time.timeScale = paused ? 0f: gameSpeed;
+        SetPause(!paused);
+    }
+
+    public void SetPause(bool value)
+    {
+        paused = value;
+        Time.timeScale = paused ? 0f : gameSpeed;
         if (pauseButtonText != null)
-        {
             pauseButtonText.text = paused ? "Resume" : "Pause";
-        }
     }
 
     public void ToggleSpeed()

@@ -26,7 +26,7 @@ public class SceneTransition : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         canvasGroup.alpha = 0;
         canvasGroup.blocksRaycasts = false;
-        fadeSpeed = 2f;
+        fadeSpeed = 4f;
     }
 
     public IEnumerator FadeToScene(string sceneName)

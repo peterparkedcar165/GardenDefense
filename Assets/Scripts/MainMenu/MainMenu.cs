@@ -36,6 +36,7 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Settings clicked");
         DisableAllButtons();
+        SettingsManager.previousScene = "MainMenu";
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
         transition.StartCoroutine(transition.FadeToScene("Settings"));
     }

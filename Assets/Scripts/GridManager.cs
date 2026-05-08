@@ -31,7 +31,11 @@ void GenerateGrid()
                 Tile t = tile.GetComponent<Tile>();
                 tileMap[new Vector2Int(x, y)] = t;
                 
-                if (pathCoordinates.Contains(new Vector2Int(x,y)))
+                if (IsObstacle(x, y))
+                {
+                    tile.GetComponent<Tile>().tileType = TileType.Obstacle;
+                }
+                else if (pathCoordinates.Contains(new Vector2Int(x,y)))
                 {
                     tile.GetComponent<Tile>().tileType = TileType.Path;
                 }
@@ -70,6 +74,18 @@ void GenerateGrid()
             }
         }
     }
+
+private bool IsObstacle(int x, int y)
+{
+    if (y == 0 || y == 1 || y == 11 || y == 12 || y == 13)
+        return x >= 0 && x <= 18;
+
+    return (x, y) switch
+    {
+        (1, 4) or (6, 10) or (10, 2) or (14, 8) or (15, 10) => true,
+        _ => false
+    };
+}
 
 private void OnDrawGizmos()
 {
