@@ -16,7 +16,7 @@ public abstract class SpawnManager : MonoBehaviour
     protected void Spawn(GameObject insect)
     {
         // Debug.Log("Spawning at: " + spawnPoint.position);
-        Instantiate(insect, spawnPoint. position, Quaternion.identity);
+        Instantiate(insect, spawnPoint.position + (Vector3) new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f)), Quaternion.identity);
     }
 
 

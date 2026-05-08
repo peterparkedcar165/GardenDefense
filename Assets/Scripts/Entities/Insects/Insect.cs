@@ -14,6 +14,8 @@ public abstract class Insect : Entity
     }
     public int currentWaypointIndex = 0;
     protected Transform[] waypoints;
+    public bool isFlying = false;
+    public static float gravity = 9.8f;
 
     // base and final
     public float movementSpeed, baseMovementSpeed;
@@ -32,7 +34,8 @@ public abstract class Insect : Entity
 
     private GameManager gameManager;
     private Transform aimPoint;
-    private Transform visual;
+    protected Transform visual;
+    private Vector2 pathOffset;
 
     protected override void Awake()
     {
@@ -55,6 +58,8 @@ public abstract class Insect : Entity
         expDrop = sunDrop/2;
         aimPoint = transform.Find("AimPoint");
         visual = transform.Find("Visual");
+        pathOffset = new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
+
 
         if (visual != null && healthBarInstance != null)
         {
@@ -97,10 +102,11 @@ public abstract class Insect : Entity
         }
 
         Transform target = waypoints[currentWaypointIndex]; // maybe randomize?
-        Vector3 direction = (target.position - transform.position).normalized;
-        transform.position += direction * movementSpeed * Time.deltaTime;
+        Vector3 targetPos = target.position + new Vector3(pathOffset.x, pathOffset.y, 0);
+        Vector3 direction = (targetPos - transform.position).normalized;
+        transform.position += direction * GetMoveSpeed() * Time.deltaTime;
 
-        if (Vector3.Distance(transform.position, target.position) < 0.1f)
+        if (Vector3.Distance(transform.position, targetPos) < 0.1f)
         {
             currentWaypointIndex++;
         }
@@ -129,6 +135,8 @@ public abstract class Insect : Entity
         gameManager.Damage((int)baseAttackDamage);
         Destroy(gameObject);
     }
+    
+    protected virtual float GetMoveSpeed() => movementSpeed;
 
     public virtual Vector3 GetVelocity()
     {
@@ -136,7 +144,8 @@ public abstract class Insect : Entity
         return Vector3.zero;
 
         Transform target = waypoints[currentWaypointIndex];
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 targetPos = target.position + new Vector3(pathOffset.x, pathOffset.y, 0);
+        Vector3 direction = (targetPos - transform.position).normalized;
         return direction * movementSpeed;
     }
 

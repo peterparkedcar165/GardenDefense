@@ -6,6 +6,7 @@ public abstract class Projectile : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip hit;
     [SerializeField] private float minPitch = 0.9f, maxPitch = 1.1f;
+    private int hitCount = 0;
 
     [Header("Combat")]
     public float projectileDamage, projectileSpeed, maxRange;
@@ -77,9 +78,15 @@ public abstract class Projectile : MonoBehaviour
 
         if (other.CompareTag("Insect"))
         {
+            if (hitCount > piercing) {
+                Destroy(gameObject);
+                return;
+            }
+            
             Insect insect = other.GetComponentInParent<Insect>();
             if (insect != null)
             {
+                hitCount++;
                 OnHit(insect);
             }
 

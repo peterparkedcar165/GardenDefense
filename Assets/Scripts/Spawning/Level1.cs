@@ -8,7 +8,7 @@ public class Level1 : SpawnManager
     public int wave;
     private int startSunCount = 350, startHealth = 20;
     private int maxWave = 8;
-    public GameObject workerAnt, soldierAnt, scoutAnt, carpenterAnt;
+    public GameObject workerAnt, soldierAnt, scoutAnt, carpenterAnt, fruitFly;
     public GameObject weatherManager;
     public TextMeshProUGUI waveCountText, nextWaveTimerText;
     public float nextWaveTimer;
@@ -57,8 +57,10 @@ public class Level1 : SpawnManager
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
+            CancelInvoke(nameof(SpawnFruitFly));
         } else if (wave == 2) 
         {
             waitTime = 1f;
@@ -159,6 +161,11 @@ public class Level1 : SpawnManager
     void SpawnCarpenterAnt()
     {
         Spawn(carpenterAnt);
+    }
+
+    void SpawnFruitFly()
+    {
+        Spawn(fruitFly);
     }
 
     protected override void Update()

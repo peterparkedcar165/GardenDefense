@@ -481,7 +481,7 @@ public abstract class Entity : MonoBehaviour
 
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
 
-    public void ApplyEffect(StatusEffect effect)
+    public virtual void ApplyEffect(StatusEffect effect)
     {
         foreach (StatusEffect existing in activeEffects)
         {

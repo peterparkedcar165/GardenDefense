@@ -27,7 +27,7 @@ public class PlantButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (gameManager.SunCount >= plant.sunCost)
         {
             costText.fontStyle = FontStyles.Bold;
-            costText.color = Color.black;
+            costText.color = Color.green;
         }
         else
         {
