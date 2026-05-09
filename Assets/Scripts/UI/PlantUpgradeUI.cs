@@ -41,6 +41,10 @@ public class PlantUpgradeUI : MonoBehaviour
     [SerializeField] private Button path3Button;
     [SerializeField] private GameObject path3LockOverlay;
 
+    [Header("Skill")]
+    [SerializeField] private Button skillButton;
+    [SerializeField] private TMP_Text skillCooldownText;
+
     [Header("Tooltip")]
     [SerializeField] private GameObject tooltipPanel;
     [SerializeField] private TMP_Text tooltipText;
@@ -73,6 +77,10 @@ public class PlantUpgradeUI : MonoBehaviour
         if (selectedPlant != null)
         {
             RefreshStats();
+            RefreshSkillButton();
+
+            if (Keyboard.current.qKey.wasPressedThisFrame && selectedPlant.SkillReady)
+                selectedPlant.ActivateSkill();
         }
     }
 
@@ -173,6 +181,15 @@ public class PlantUpgradeUI : MonoBehaviour
         pips.sprite = pipSprites[level];;
     }
 
+    private void RefreshSkillButton()
+    {
+        if (skillButton == null) return;
+        bool ready = selectedPlant.SkillReady;
+        skillButton.interactable = ready;
+        if (skillCooldownText != null)
+            skillCooldownText.text = ready ? "Q - Use Skill" : $"{Mathf.CeilToInt(selectedPlant.skillCooldownTimer)}s";
+    }
+
     // Button Callbacks - wiring within inspector
     public void OnPath1UpgradeClicked()
     {
@@ -218,6 +235,12 @@ public class PlantUpgradeUI : MonoBehaviour
 
             RefreshPaths();
         }
+    }
+
+    public void OnSkillButtonClicked()
+    {
+        if (selectedPlant == null || !selectedPlant.SkillReady) return;
+        selectedPlant.ActivateSkill();
     }
 
     public void OnTargetingToggleClicked()

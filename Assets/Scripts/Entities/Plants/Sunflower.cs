@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Sunflower : Shooter
 {
@@ -14,6 +16,9 @@ public class Sunflower : Shooter
 
     public float generationInterval, sunTimer = 15f;
     public int sunGenerated;
+    public float skillAoERadius = 2.5f;
+    public float channelDuration = 1.5f;
+    [SerializeField] private GameObject sunrayPrefab;
     protected override void Awake()
     {
         baseAttackDamage = bAD;
@@ -22,6 +27,7 @@ public class Sunflower : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
+        baseSkillCooldown = 3f;
         base.Awake();
         // sun cost is set in inspector!
     }
@@ -82,6 +88,21 @@ public class Sunflower : Shooter
     }
 
     
+    public override void ActivateSkill()
+    {
+        SkillTargetingManager.instance.BeginTargeting(skillAoERadius, OnTargetConfirmed);
+    }
+
+    private void OnTargetConfirmed(Vector3 position)
+    {
+        if (sunrayPrefab == null) return;
+        GameObject obj = Instantiate(sunrayPrefab, position, Quaternion.identity);
+        Sunray sunray = obj.GetComponent<Sunray>();
+        if (sunray != null)
+            sunray.Initialize(attackDamage, skillAoERadius, activeDuration, channelDuration, this);
+        skillCooldownTimer = skillCooldown;
+    }
+
     // DESCRIPTION
 
     public override string GetName()

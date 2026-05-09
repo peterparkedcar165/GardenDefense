@@ -93,6 +93,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
+    <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Assets\Scripts\Game\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\WaterlilyProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\BurnEffect.cs" />
+    <Compile Include="Assets\Scripts\Skills\Sunray.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ChillEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
