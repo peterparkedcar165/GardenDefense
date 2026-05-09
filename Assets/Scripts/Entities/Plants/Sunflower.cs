@@ -10,14 +10,15 @@ public class Sunflower : Shooter
     bAS = 0.6f, // base attack speed
     bAR = 3f, // base attack range
     bPS = 3f, // base projectile speed
-    bMR = 20f; // base max range
+    bMR = 20f, // base max range
+    bSRD = 120f; // base sunray damage per second
     private int bP = 0; // base piercing
     public float activeDuration = 4;
 
     public float generationInterval, sunTimer = 15f;
     public int sunGenerated;
-    public float skillAoERadius = 2.5f;
-    public float channelDuration = 1.5f;
+    public float skillAoERadius, sunrayDamagePerSecond;
+    public float channelDuration = 0.5f;
     [SerializeField] private GameObject sunrayPrefab;
     protected override void Awake()
     {
@@ -28,6 +29,8 @@ public class Sunflower : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         baseSkillCooldown = 3f;
+        skillAoERadius = 1.5f;
+        sunrayDamagePerSecond = bSRD;
         base.Awake();
         // sun cost is set in inspector!
     }
@@ -84,6 +87,7 @@ public class Sunflower : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
+        sunrayDamagePerSecond = bSRD + 20f * (level-1);
         activeDuration = 4 + 0.5f*(level -1);
     }
 
@@ -96,11 +100,17 @@ public class Sunflower : Shooter
     private void OnTargetConfirmed(Vector3 position)
     {
         if (sunrayPrefab == null) return;
+        skillCooldownTimer = skillCooldown;
+        StartCoroutine(ChannelAndSpawn(position));
+    }
+
+    private IEnumerator ChannelAndSpawn(Vector3 position)
+    {
+        yield return new WaitForSeconds(channelDuration);
         GameObject obj = Instantiate(sunrayPrefab, position, Quaternion.identity);
         Sunray sunray = obj.GetComponent<Sunray>();
         if (sunray != null)
-            sunray.Initialize(attackDamage, skillAoERadius, activeDuration, channelDuration, this);
-        skillCooldownTimer = skillCooldown;
+            sunray.Initialize(sunrayDamagePerSecond, skillAoERadius, activeDuration, this);
     }
 
     // DESCRIPTION

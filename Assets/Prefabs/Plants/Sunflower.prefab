@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2387982406283412628}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.78099, y: -0.20484, z: 0}
+  m_LocalPosition: {x: -11.27384, y: 0.87051, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -196,6 +196,11 @@ MonoBehaviour:
   exp: 0
   expBoost: 0
   activeCooldown: 0
+  baseSkillCooldown: 0
+  skillCooldown: 0
+  skillCooldownAdder: 0
+  skillCooldownMultiplier: 0
+  skillCooldownTimer: 0
   path1Level: 0
   path2Level: 0
   path3Level: 0
@@ -218,6 +223,10 @@ MonoBehaviour:
   generationInterval: 0
   sunTimer: 15
   sunGenerated: 0
+  skillAoERadius: 2.5
+  sunrayDamagePerSecond: 0
+  channelDuration: 1.5
+  sunrayPrefab: {fileID: 5428018812330015411, guid: d13991fe5493d6e44a08f371ea8e20b9, type: 3}
 --- !u!58 &7476232177775528650
 CircleCollider2D:
   m_ObjectHideFlags: 0

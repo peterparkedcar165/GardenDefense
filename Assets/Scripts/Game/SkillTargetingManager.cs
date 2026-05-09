@@ -26,8 +26,6 @@ public class SkillTargetingManager : MonoBehaviour
         if (indicatorInstance != null)
             indicatorInstance.transform.position = mouseWorld;
 
-        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
-
         if (Mouse.current.leftButton.wasPressedThisFrame)
             Confirm(mouseWorld);
         else if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
