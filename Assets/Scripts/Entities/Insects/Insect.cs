@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic;
 
 public abstract class Insect : Entity
@@ -88,6 +89,7 @@ public abstract class Insect : Entity
 
     protected virtual void Move()
     {
+        if (isDying) return;
         if (waypoints == null) return;
         // IF INSECT IS HARD CC'ED
         if (HasEffect<HardCrowdControl>())
@@ -149,18 +151,53 @@ public abstract class Insect : Entity
         return direction * movementSpeed;
     }
 
+    private bool isDying = false;
+
     public override void Kill(Entity source)
     {
+        if (isDying) return;
+        isDying = true;
         DistributeExp();
         gameManager.AddSun(sunDrop);
-        base.Kill();
+        allInsects.Remove(this);
+        StartCoroutine(DeathFade());
     }
 
     public override void Kill()
     {
+        if (isDying) return;
+        isDying = true;
         DistributeExp();
         gameManager.AddSun(sunDrop);
-        base.Kill();
+        allInsects.Remove(this);
+        StartCoroutine(DeathFade());
+    }
+
+    private IEnumerator DeathFade()
+    {
+        healthBarInstance?.SetActive(false);
+
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+        Color[] startColors = new Color[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+            startColors[i] = renderers[i].color;
+
+        float duration = 0.4f;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Color c = startColors[i];
+                c.a = alpha;
+                renderers[i].color = c;
+            }
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
 
 

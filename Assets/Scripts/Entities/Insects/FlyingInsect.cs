@@ -52,7 +52,7 @@ public abstract class FlyingInsect : Insect
     protected override void Update()
     {
         base.Update();
-        if (isFlying && visual != null)
+        if (!isDying && isFlying && visual != null)
         {
             hoverPhase += Time.deltaTime * hoverSpeed;
             Vector3 pos = visual.localPosition;

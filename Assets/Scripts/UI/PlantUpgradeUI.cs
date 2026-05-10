@@ -71,7 +71,8 @@ public class PlantUpgradeUI : MonoBehaviour
     {
         if (UnityEngine.InputSystem.Mouse.current.rightButton.wasPressedThisFrame && selectedPlant != null)
         {
-            HidePanel();
+            if (!SkillTargetingManager.instance.IsTargeting && !SkillTargetingManager.instance.WasCancelledThisFrame)
+                HidePanel();
         }
 
         if (selectedPlant != null)

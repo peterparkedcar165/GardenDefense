@@ -25,7 +25,7 @@ public class SettingsManager : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !SkillTargetingManager.instance.WasCancelledThisFrame)
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);

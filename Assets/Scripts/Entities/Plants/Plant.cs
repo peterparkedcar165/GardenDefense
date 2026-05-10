@@ -202,6 +202,7 @@ public abstract class Plant : Entity
     private void OnMouseDown()
     {
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+        if (SkillTargetingManager.instance.IsTargeting) return;
         if (PlantSelector.instance.uprootMode)
         {
             Uproot();
