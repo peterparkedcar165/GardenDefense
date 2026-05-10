@@ -91,11 +91,8 @@ public abstract class Insect : Entity
     {
         if (isDying) return;
         if (waypoints == null) return;
-        // IF INSECT IS HARD CC'ED
-        if (HasEffect<HardCrowdControl>())
-        {
-            return;
-        }
+        if (HasEffect<HardCrowdControl>()) return;
+        if (HasEffect<BubblePrisonEffect>()) return;
 
         if (currentWaypointIndex >= waypoints.Length)
         {
@@ -151,7 +148,7 @@ public abstract class Insect : Entity
         return direction * movementSpeed;
     }
 
-    private bool isDying = false;
+    protected bool isDying = false;
 
     public override void Kill(Entity source)
     {

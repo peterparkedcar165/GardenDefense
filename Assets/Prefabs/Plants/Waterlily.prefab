@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2387982406283412628}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.658055, y: -5.011767, z: 0}
+  m_LocalPosition: {x: -8.8896, y: -0.52167, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -171,6 +171,8 @@ MonoBehaviour:
   baseDotResistance: 0
   baseDotDamage: 0
   baseElementalPower: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -203,6 +205,8 @@ MonoBehaviour:
   dotResistance: 0
   dotDamage: 0
   elementalPower: 0
+  passiveDamage: 0
+  skillDamage: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicDamageAdder: 0
@@ -232,6 +236,8 @@ MonoBehaviour:
   dotResistanceAdder: 0
   dotDamageAdder: 0
   elementalPowerAdder: 0
+  passiveDamageAdder: 0
+  skillDamageAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicDamageMultiplier: 0
@@ -261,6 +267,8 @@ MonoBehaviour:
   dotResistanceMultiplier: 0
   dotDamageMultiplier: 0
   elementalPowerMultiplier: 0
+  passiveDamageMultiplier: 0
+  skillDamageMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -283,6 +291,17 @@ MonoBehaviour:
   exp: 0
   expBoost: 0
   activeCooldown: 0
+  activeDuration: 4
+  basePassiveCooldown: 0
+  passiveCooldown: 0
+  passiveCooldownAdder: 0
+  passiveCooldownMultiplier: 0
+  passiveCooldownTimer: 0
+  baseSkillCooldown: 0
+  skillCooldown: 0
+  skillCooldownAdder: 0
+  skillCooldownMultiplier: 0
+  skillCooldownTimer: 0
   path1Level: 0
   path2Level: 0
   path3Level: 0
@@ -305,7 +324,9 @@ MonoBehaviour:
   baseAoERange: 0
   AoERangeMultiplier: 0
   AoERangeAdder: 0
-  activeDuration: 4
+  skillAoERadius: 1.5
+  bubbleDamagePerSecond: 20
+  bubbleTrapPrefab: {fileID: 4808428213060228786, guid: a830149e57437094eaef662cd0131b60, type: 3}
 --- !u!1 &7507562756265830079
 GameObject:
   m_ObjectHideFlags: 0
