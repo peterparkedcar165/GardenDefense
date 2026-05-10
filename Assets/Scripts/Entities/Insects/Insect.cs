@@ -68,7 +68,7 @@ public abstract class Insect : Entity
         }
 
         int waveNumber = GameManager.instance.currentWave;
-        baseMaxHealth *= 1f + ((waveNumber-1) * 0.08f);
+        baseMaxHealth *= 1f + ((waveNumber-1) * 0.04f);
         UpdateStats();
         health = maxHealth;
     }

@@ -10,10 +10,8 @@ public class Sunflower : Shooter
     bAS = 0.6f, // base attack speed
     bAR = 3f, // base attack range
     bPS = 3f, // base projectile speed
-    bMR = 20f, // base max range
-    bSRD = 120f; // base sunray damage per second
+    bMR = 20f; // base max range
     private int bP = 0; // base piercing
-    public float activeDuration = 4;
 
     public float generationInterval, sunTimer = 15f;
     public int sunGenerated;
@@ -30,8 +28,9 @@ public class Sunflower : Shooter
         basePiercing = bP;
         baseSkillCooldown = 3f;
         skillAoERadius = 1.5f;
-        sunrayDamagePerSecond = bSRD;
+        activeDuration = 6;
         base.Awake();
+        sunrayDamagePerSecond = (3f + 0.35f*path3Level) * attackDamage;
         // sun cost is set in inspector!
     }
 
@@ -50,10 +49,17 @@ public class Sunflower : Shooter
         {
             GameManager.instance.AddSun(sunGenerated);
             sunTimer = generationInterval;
-            Debug.Log(this + " has generated " + sunGenerated + " sun");
+            GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), transform.position + new Vector3(0.5f, 0.5f, 0f), Quaternion.identity);
+            indicator.GetComponent<DamageIndicator>().Initialize($"+{sunGenerated} Sun", new Color(1f, 1f, 0f));
         }
         
         
+    }
+
+    protected override void UpdateStats()
+    {
+        base.UpdateStats();
+        sunrayDamagePerSecond = (3f + 0.35f*effectivePath3Level) * attackDamage;
     }
 
     protected override void Shoot(Vector3 target)
@@ -87,8 +93,8 @@ public class Sunflower : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        sunrayDamagePerSecond = bSRD + 20f * (level-1);
-        activeDuration = 4 + 0.5f*(level -1);
+        sunrayDamagePerSecond = (3f + 0.25f*path3Level) * attackDamage;
+        activeDuration = 6 + 0.5f*(level -1);
     }
 
     
@@ -132,7 +138,7 @@ public class Sunflower : Shooter
 
     public override string GetSkillDesription()
     {
-        return $"Gathers a large burst of energy from the sun, calling down a blazing beam from above that deals massive <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage to targets in its path.";
+        return $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green>{sunrayDamagePerSecond}</color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second to insects within the designated area for <color=green>{activeDuration}</color> seconds.";
     }
 
     public override string GetPassiveDescription()
@@ -157,6 +163,8 @@ public class Sunflower : Shooter
 
     public override string GetPath3Description()
     {
-        return $"Skill:\n\n{GetSkillDesription()}";
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the Attack Damage multiplier of the Damage Per Second by <color=green><b>35%</b></color> per level. [<color=green><b>+" + (35*effectivePath3Level) + "%</b></color>]\n\n" +
+        "Increase Sunray duration by <color=green><b>0.5</b></color> second per level. [<color=green><b>" + (0.5*effectivePath3Level) + "</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }
 }

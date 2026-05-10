@@ -78,6 +78,7 @@ public class PlantUpgradeUI : MonoBehaviour
         {
             RefreshStats();
             RefreshSkillButton();
+            RefreshPaths();
 
             if (Keyboard.current.qKey.wasPressedThisFrame && selectedPlant.SkillReady)
                 selectedPlant.ActivateSkill();

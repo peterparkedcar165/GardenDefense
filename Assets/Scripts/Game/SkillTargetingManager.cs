@@ -27,13 +27,18 @@ public class SkillTargetingManager : MonoBehaviour
             indicatorInstance.transform.position = mouseWorld;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
-            Confirm(mouseWorld);
+        {
+            if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+                Confirm(mouseWorld);
+        }
         else if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
             Cancel();
     }
 
     public void BeginTargeting(float radius, Action<Vector3> onConfirm)
     {
+        if (isTargeting) Cancel();
+
         this.onConfirm = onConfirm;
         isTargeting = true;
 

@@ -9,7 +9,6 @@ public class Snowdrop : Aura
     bAS = 0.33f, // base attack speed
     bAR = 1.75f; // base attack range
     private float tickTimer = 0f;
-    public float activeDuration = 5f;
     private const float tickInterval = 0.25f;
     public int chillLevel = 1;
     protected override void Awake()
@@ -19,6 +18,7 @@ public class Snowdrop : Aura
         baseAttackSpeed = bAS;
         baseAttackRange = bAR;
         activeCooldown = 32f;
+        activeDuration = 3f;
     }
 
 

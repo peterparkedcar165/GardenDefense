@@ -12,7 +12,7 @@ public class PoisonShroom : Shooter
     bMR = 20f; // base max range
     private int bP = 0; // base piercing
     public int poisonLevel = 1;
-    public float poisonDuration = 6f, activeDuration = 7f, activeRadius = 2f;
+    public float poisonDuration = 6f, activeRadius = 2f;
     protected override void Awake()
     {
         base.Awake();
@@ -22,6 +22,7 @@ public class PoisonShroom : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
+        activeDuration = 7f;
     }
 
     protected override void Update()

@@ -10,7 +10,7 @@ public class LeafRanger : Shooter
     bPS = 20f, // base projectile speed
     bMR = 20f; // base max range
     private int bP = 1; // base piercing
-    public float activeDuration = 3f, activeRadius = 2f;
+    public float activeRadius = 2f;
 
     protected override void Awake()
     {
@@ -20,6 +20,7 @@ public class LeafRanger : Shooter
         baseAttackRange = bAR;
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
+        activeDuration = 3f;
     }
 
     protected override void Update()

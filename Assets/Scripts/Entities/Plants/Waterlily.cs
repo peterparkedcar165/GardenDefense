@@ -13,7 +13,6 @@ public class Waterlily : Shooter
 
     public float AoERange, baseAoERange, AoERangeMultiplier, AoERangeAdder;
     private int bP = 0; // base piercing
-    public float activeDuration = 2;
     protected override void Awake()
     {
         baseAttackDamage = bAD;
@@ -23,6 +22,7 @@ public class Waterlily : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         baseAoERange = bAoER;
+        activeDuration = 3f;
         base.Awake();
         // sun cost is set in inspector!
     }

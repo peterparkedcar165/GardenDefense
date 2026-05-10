@@ -44,6 +44,7 @@ public abstract class Plant : Entity
     public int exp = 0;
     public float expBoost;
     public float activeCooldown;
+    public float activeDuration;
 
     [Header("Skill")]
     public float baseSkillCooldown, skillCooldown, skillCooldownAdder, skillCooldownMultiplier;
