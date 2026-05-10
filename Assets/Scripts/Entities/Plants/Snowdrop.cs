@@ -11,6 +11,11 @@ public class Snowdrop : Aura
     private float tickTimer = 0f;
     private const float tickInterval = 0.25f;
     public int chillLevel = 1;
+    [SerializeField] private GameObject blizzardPrefab;
+    [SerializeField] private GameObject blizzardIndicatorPrefab;
+    public float blizzardWidth = 1.5f;
+    private GameObject blizzardIndicatorInstance;
+    private const float indicatorLength = 30f;
     protected override void Awake()
     {
         base.Awake();
@@ -60,6 +65,33 @@ public class Snowdrop : Aura
             tickTimer -= tickInterval;
         }
 
+        UpdateBlizzardIndicator();
+    }
+
+    private void UpdateBlizzardIndicator()
+    {
+        if (blizzardIndicatorInstance == null) return;
+
+        if (!SkillTargetingManager.instance.IsTargeting)
+        {
+            Destroy(blizzardIndicatorInstance);
+            blizzardIndicatorInstance = null;
+            return;
+        }
+
+        Vector2 mouseScreen = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+        Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, Camera.main.nearClipPlane));
+        mouseWorld.z = 0f;
+
+        Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        blizzardIndicatorInstance.transform.SetPositionAndRotation(
+            transform.position + (Vector3)(dir * indicatorLength * 0.5f),
+            Quaternion.Euler(0f, 0f, angle));
+        blizzardIndicatorInstance.transform.localScale = new Vector3(indicatorLength, blizzardWidth, 1f);
+
+        blizzardIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     public override void OnPath1Upgrade(int level)
@@ -75,8 +107,27 @@ public class Snowdrop : Aura
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDuration = 5f + 1*(level - 1);
-        activeCooldown = 32f - 2f*(level);
+        activeDuration = 5f + 1f * (level - 1);
+        activeCooldown = 32f - 2f * level;
+        blizzardWidth = 1.5f + 0.25f * level;
+    }
+
+    public override void ActivateSkill()
+    {
+        SkillTargetingManager.instance.BeginTargeting(0f, OnTargetConfirmed);
+        if (blizzardIndicatorPrefab != null)
+        {
+            blizzardIndicatorInstance = Instantiate(blizzardIndicatorPrefab, transform.position, Quaternion.identity);
+            blizzardIndicatorInstance.GetComponent<SpriteRenderer>().enabled = false;
+        }
+    }
+
+    private void OnTargetConfirmed(Vector3 targetPosition)
+    {
+        skillCooldownTimer = skillCooldown;
+        Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
+        GameObject obj = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
+        obj.GetComponent<Blizzard>()?.Initialize(transform.position, direction, blizzardWidth, activeDuration, attackDamage, chillLevel + 1, this);
     }
 
     protected override void Attack()

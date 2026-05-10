@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
+    <Compile Include="Assets\Scripts\Skills\Blizzard.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
