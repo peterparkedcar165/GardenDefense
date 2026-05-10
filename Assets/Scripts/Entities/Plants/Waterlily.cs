@@ -15,7 +15,7 @@ public class Waterlily : Shooter
     private int bP = 0; // base piercing
 
     public float skillAoERadius = 1.5f;
-    public float bubbleDamagePerSecond = 20f;
+    public float bubbleDamage = 42f;
     [SerializeField] private GameObject bubbleTrapPrefab;
 
     protected override void Awake()
@@ -65,8 +65,8 @@ public class Waterlily : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDuration = 5f + 0.5f * (level - 1);
-        bubbleDamagePerSecond = 20f + 5f * (level - 1);
+        activeDuration = 5f + 1f * (level - 1);
+        bubbleDamage = 42f + 12f * (level - 1);
     }
 
     public override void ActivateSkill()
@@ -81,7 +81,7 @@ public class Waterlily : Shooter
         GameObject obj = Instantiate(bubbleTrapPrefab, transform.position, Quaternion.identity);
         BubblePrison bubble = obj.GetComponent<BubblePrison>();
         if (bubble != null)
-            bubble.Initialize(position, skillAoERadius, activeDuration, bubbleDamagePerSecond, this);
+            bubble.Initialize(position, skillAoERadius, activeDuration, bubbleDamage, this);
     }
 
     
@@ -104,7 +104,7 @@ public class Waterlily : Shooter
 
     public override string GetSkillDesription()
     {
-        return $"Send a large bubble onto the field, trapping insects within the bubble while keeping them airborne and dealing <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact and while imprisoning.";
+        return $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green>{bubbleDamage}</color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green>{activeDuration}</color> seconds.";
     }
 
     public override string GetPassiveDescription()
@@ -129,6 +129,8 @@ public class Waterlily : Shooter
 
     public override string GetPath3Description()
     {
-        return $"Skill:\n\n{GetSkillDesription()}";
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease impact damage by <color=green><b>12</b></color> per level. [<color=green><b>+" + (12*effectivePath3Level) + "</b></color>]\n\n" +
+        "Increase duration by <color=green><b>1</b></color> seconds per level. [<color=green><b>" + (1*effectivePath3Level) + "</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }
 }
