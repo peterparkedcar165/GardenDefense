@@ -14,6 +14,7 @@ public class BubblePrison : MonoBehaviour
     private const float minTravelTime = 1f;
     private const float arcPeakHeight = 1.1f;
     private const float arcRiseEnd = 0.5f;
+    private const float spawnScaleDuration = 0.5f;
 
     public void Initialize(Vector3 target, float trapRadius, float duration, float damagePerSecond, Plant source)
     {
@@ -24,6 +25,22 @@ public class BubblePrison : MonoBehaviour
         this.source = source;
         visual = transform.Find("Visual");
         StartCoroutine(BubbleRoutine());
+        StartCoroutine(SpawnScale());
+    }
+
+    private IEnumerator SpawnScale()
+    {
+        if (visual == null) yield break;
+        Vector3 fullScale = visual.localScale;
+        visual.localScale = Vector3.zero;
+        float elapsed = 0f;
+        while (elapsed < spawnScaleDuration)
+        {
+            elapsed += Time.deltaTime;
+            visual.localScale = Vector3.Lerp(Vector3.zero, fullScale, elapsed / spawnScaleDuration);
+            yield return null;
+        }
+        visual.localScale = fullScale;
     }
 
     private IEnumerator BubbleRoutine()

@@ -4,6 +4,12 @@ public class BubblePrisonEffect : HardCrowdControl
 {
     private Transform visual;
     private float knockUpHeight;
+    private float storedVisualY;
+    private float baseY;
+    private float phase;
+    private GameObject bubbleVisual;
+    private const float bobSpeed = 2f;
+    private const float bobAmplitude = 0.08f;
 
     public BubblePrisonEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)
@@ -16,27 +22,72 @@ public class BubblePrisonEffect : HardCrowdControl
 
     public override void OnApply()
     {
-        knockUpHeight = Random.Range(0.8f, 1.2f);
         Insect insect = target as Insect;
         if (insect == null) return;
         visual = insect.transform.Find("Visual");
+
+        Sprite bubbleSprite = Resources.Load<Sprite>("bubblePrisonTrapped");
+        if (bubbleSprite != null && visual != null)
+        {
+            bubbleVisual = new GameObject("BubblePrisonVisual");
+            bubbleVisual.transform.SetParent(visual);
+            bubbleVisual.transform.localPosition = Vector3.zero;
+            bubbleVisual.transform.localScale = Vector3.one * 4f; // SIZE OF BUBBLE
+            SpriteRenderer sr = bubbleVisual.AddComponent<SpriteRenderer>();
+            sr.sprite = bubbleSprite;
+            SpriteRenderer insectSR = visual.GetComponent<SpriteRenderer>();
+            if (insectSR != null)
+            {
+                sr.sortingLayerID = insectSR.sortingLayerID;
+                sr.sortingOrder = insectSR.sortingOrder + 1;
+            }
+        }
+
+        if (target is FlyingInsect fi)
+        {
+            storedVisualY = visual != null ? visual.localPosition.y : 0f;
+            fi.SetFlight(false);
+        }
+        else
+        {
+            knockUpHeight = Random.Range(0.3f, 0.5f);
+        }
     }
 
     public override void OnTick(float deltaTime)
     {
-        if (visual != null && target is not FlyingInsect)
+        if (visual == null) return;
+
+        phase += bobSpeed * deltaTime;
+        float bob = Mathf.Sin(phase) * bobAmplitude;
+
+        Vector3 pos = visual.localPosition;
+        if (target is FlyingInsect)
+            pos.y = storedVisualY + bob;
+        else
         {
-            Vector3 pos = visual.localPosition;
-            pos.y = Mathf.MoveTowards(pos.y, knockUpHeight, 5f * deltaTime);
-            visual.localPosition = pos;
+            baseY = Mathf.MoveTowards(baseY, knockUpHeight, 8f * deltaTime);
+            pos.y = baseY + bob;
         }
+        visual.localPosition = pos;
     }
 
     public override void OnExpire()
     {
-        if (visual == null || target is FlyingInsect) return;
-        Vector3 pos = visual.localPosition;
-        pos.y = 0f;
-        visual.localPosition = pos;
+        if (bubbleVisual != null)
+            UnityEngine.Object.Destroy(bubbleVisual);
+
+        if (visual == null) return;
+
+        if (target is FlyingInsect)
+        {
+            target.ApplyEffect(new GroundedEffect(target, 5f, 1, source));
+        }
+        else
+        {
+            Vector3 pos = visual.localPosition;
+            pos.y = 0f;
+            visual.localPosition = pos;
+        }
     }
 }
