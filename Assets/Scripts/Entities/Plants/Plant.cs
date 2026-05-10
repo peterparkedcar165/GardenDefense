@@ -18,6 +18,7 @@ public abstract class Plant : Entity
     protected override void UpdateStats()
     {
         base.UpdateStats();
+        passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier);
         skillCooldown = baseSkillCooldown + skillCooldownAdder + (baseSkillCooldown * skillCooldownMultiplier);
         float plantSpriteRadius = GetComponent<CircleCollider2D>().radius*2;
 
@@ -45,6 +46,10 @@ public abstract class Plant : Entity
     public float expBoost;
     public float activeCooldown;
     public float activeDuration;
+
+    [Header("Passive")]
+    public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownMultiplier;
+    public float passiveCooldownTimer;
 
     [Header("Skill")]
     public float baseSkillCooldown, skillCooldown, skillCooldownAdder, skillCooldownMultiplier;
@@ -94,6 +99,8 @@ public abstract class Plant : Entity
         effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
         effectivePath3Level = path3Level + path3LevelAdder;
 
+        if (passiveCooldownTimer > 0)
+            passiveCooldownTimer -= Time.deltaTime;
         if (skillCooldownTimer > 0)
             skillCooldownTimer -= Time.deltaTime;
     }
