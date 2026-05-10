@@ -35,7 +35,7 @@ public abstract class Insect : Entity
 
     private GameManager gameManager;
     private Transform aimPoint;
-    protected Transform visual;
+    public Transform visual;
     private Vector2 pathOffset;
 
     protected override void Awake()

@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public enum PlantType
 {
@@ -11,16 +13,26 @@ public enum PlantType
 }
 public abstract class Plant : Entity
 {
+    public static List<Plant> allPlants = new List<Plant>();
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void Init()
+    {
+        allPlants = new List<Plant>();
+        SceneManager.sceneLoaded += (scene, mode) => allPlants.Clear();
+    }
+
     public PlantData data;
     public Tile occupiedTile;
 
     [SerializeField] private Transform circleRadius;
+    private CircleCollider2D _circleCollider;
     protected override void UpdateStats()
     {
         base.UpdateStats();
         passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier);
         skillCooldown = baseSkillCooldown + skillCooldownAdder + (baseSkillCooldown * skillCooldownMultiplier);
-        float plantSpriteRadius = GetComponent<CircleCollider2D>().radius*2;
+        float plantSpriteRadius = _circleCollider != null ? _circleCollider.radius * 2 : 0f;
 
         if (circleRadius != null)
         {
@@ -64,10 +76,19 @@ public abstract class Plant : Entity
 
     protected override void Awake()
     {
+        _circleCollider = GetComponent<CircleCollider2D>();
         baseMaxHealth = 100;
         base.Awake();
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.75f;
+        allPlants.Add(this);
+    }
+
+    void OnDestroy()
+    {
+        allPlants.Remove(this);
+        if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this)
+            PlantUpgradeUI.instance.HidePanel();
     }
 
     protected virtual void Start()
@@ -134,6 +155,7 @@ public abstract class Plant : Entity
         occupiedTile.isOccupied = false;
         occupiedTile.GetComponent<Collider2D>().enabled = true;
         PlantSelector.instance.uprootMode = false;
+        PlantUpgradeUI.instance.HidePanel();
         Destroy(gameObject);
     }
 

@@ -44,6 +44,9 @@ public class Snowdrop : Aura
         List<Insect> targets = GetInsectsInRange();
         foreach (Insect insect in targets)
         {
+
+        if (insect.visual == null || insect.visual.localPosition.y != 0f) continue;
+
         insect.ApplyEffect(new ChillEffect(insect, 0.25f, chillLevel, this));
 
         if (tickTimer >= tickInterval)
@@ -91,12 +94,12 @@ public class Snowdrop : Aura
 
     public override string GetDescription()
     {
-        return $"The {GetName()} emanates an aura that damages and slows insects around her.";
+        return $"The {GetName()}'s mere frosty presence damages and slows insects around her.";
     }
 
     public override string GetAttackDescription()
     {
-        return $"Radiates a frosty aura continuously dealing <color=green>{attackDamage}</color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects around her";
+        return $"Freezes the ground around her continuously dealing <color=green>{attackDamage}</color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects.";
     }
 
     public override string GetSkillDesription()
