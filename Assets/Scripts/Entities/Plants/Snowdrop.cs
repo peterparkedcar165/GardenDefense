@@ -26,7 +26,7 @@ public class Snowdrop : Aura
         activeCooldown = 40f;
         activeDuration = 6f;
         blizzardWidth = 1.5f;
-        blizzardDamage = 15f;
+        blizzardDamage = 25f;
     }
 
 
@@ -112,7 +112,7 @@ public class Snowdrop : Aura
     {
         activeDuration = 6f + 1f * level;
         blizzardWidth = 1.5f + 0.5f * level;
-        blizzardDamage = 15f + 5f * level;
+        blizzardDamage = 25f + 5f * level;
     }
 
     public override void ActivateSkill()
@@ -159,7 +159,7 @@ public class Snowdrop : Aura
 
     public override string GetSkillDesription()
     {
-        return $"Summon a strong blizzard, towards the targeted area. The blizzard deals <color=green><b>{blizzardDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects caught in the area.";
+        return $"Summon a strong blizzard, aiming it towards the targeted area. The blizzard deals <color=green><b>{blizzardDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects caught in the area, and applies <color=#00FFFF>Chill</color> with an additional level.";
     }
 
     public override string GetPassiveDescription()
