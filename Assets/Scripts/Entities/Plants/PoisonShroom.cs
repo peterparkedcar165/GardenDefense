@@ -93,7 +93,7 @@ public class PoisonShroom : Shooter
 
     public override string GetAttackDescription()
     {
-        return $"Blows poisonous bubbles at his target, dealing <color=green>{attackDamage}</color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage.";
+        return $"Blows poisonous bubbles at his target, dealing <color=green><b>{attackDamage}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage.";
     }
 
     public override string GetSkillDesription()
@@ -103,7 +103,7 @@ public class PoisonShroom : Shooter
 
     public override string GetPassiveDescription()
     {
-        return $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green>{poisonDuration}</color> seconds, dealing <color=green>{12 + 4*(poisonLevel-1)}</color> <color=purple>Poison</color> damage per second.";
+        return $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{12 + 4*(poisonLevel-1)}</b></color> <color=purple>Poison</color> damage per second.";
     }
 
     public override string GetPath1Description()

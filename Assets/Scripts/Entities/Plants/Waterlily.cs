@@ -99,17 +99,17 @@ public class Waterlily : Shooter
 
     public override string GetAttackDescription()
     {
-        return $"Blow little bubbles towards her target, dealing <color=green>{attackDamage}</color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic </color>damage.";
+        return $"Blow little bubbles towards her target, dealing <color=green><b>{attackDamage}</b></color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic </color>damage.";
     }
 
     public override string GetSkillDesription()
     {
-        return $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green>{bubbleDamage}</color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green>{activeDuration}</color> seconds.";
+        return $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{bubbleDamage}</b></color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green><b>{activeDuration}</b></color> seconds.";
     }
 
     public override string GetPassiveDescription()
     {
-        return $"Attacks deal <color=green>{attackDamage*(0.25 + 0.025*effectivePath2Level)}</color> <color=#3399FF>Water</color> damage to surrounding insects within a <color=green>{AoERange}</color> radius.";
+        return $"Attacks deal <color=green><b>{attackDamage*(0.25 + 0.025*effectivePath2Level)}</b></color> <color=#3399FF>Water</color> damage to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.";
     }
 
 
@@ -130,7 +130,7 @@ public class Waterlily : Shooter
     public override string GetPath3Description()
     {
         return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease impact damage by <color=green><b>12</b></color> per level. [<color=green><b>+" + (12*effectivePath3Level) + "</b></color>]\n\n" +
-        "Increase duration by <color=green><b>1</b></color> seconds per level. [<color=green><b>" + (1*effectivePath3Level) + "</b></color>]\n\n" +
+        "Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>" + (1*effectivePath3Level) + "</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }
 }

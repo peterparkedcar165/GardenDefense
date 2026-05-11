@@ -13,7 +13,8 @@ public class Snowdrop : Aura
     public int chillLevel = 1;
     [SerializeField] private GameObject blizzardPrefab;
     [SerializeField] private GameObject blizzardIndicatorPrefab;
-    public float blizzardWidth = 1.5f;
+    private float blizzardWidth;
+    public float blizzardDamage;
     private GameObject blizzardIndicatorInstance;
     private const float indicatorLength = 30f;
     protected override void Awake()
@@ -22,8 +23,10 @@ public class Snowdrop : Aura
         baseAttackDamage = bAD;
         baseAttackSpeed = bAS;
         baseAttackRange = bAR;
-        activeCooldown = 32f;
-        activeDuration = 3f;
+        activeCooldown = 40f;
+        activeDuration = 6f;
+        blizzardWidth = 1.5f;
+        blizzardDamage = 15f;
     }
 
 
@@ -107,13 +110,14 @@ public class Snowdrop : Aura
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDuration = 5f + 1f * (level - 1);
-        activeCooldown = 32f - 2f * level;
-        blizzardWidth = 1.5f + 0.25f * level;
+        activeDuration = 6f + 1f * level;
+        blizzardWidth = 1.5f + 0.5f * level;
+        blizzardDamage = 15f + 5f * level;
     }
 
     public override void ActivateSkill()
     {
+        if (blizzardIndicatorInstance != null) return;
         SkillTargetingManager.instance.BeginTargeting(0f, OnTargetConfirmed);
         if (blizzardIndicatorPrefab != null)
         {
@@ -127,7 +131,7 @@ public class Snowdrop : Aura
         skillCooldownTimer = skillCooldown;
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
         GameObject obj = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
-        obj.GetComponent<Blizzard>()?.Initialize(transform.position, direction, blizzardWidth, activeDuration, attackDamage, chillLevel + 1, this);
+        obj.GetComponent<Blizzard>()?.Initialize(transform.position, direction, blizzardWidth, activeDuration, blizzardDamage, chillLevel + 1, this);
     }
 
     protected override void Attack()
@@ -150,17 +154,17 @@ public class Snowdrop : Aura
 
     public override string GetAttackDescription()
     {
-        return $"Freezes the ground around her continuously dealing <color=green>{attackDamage}</color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects.";
+        return $"Freezes the ground around her continuously dealing <color=green><b>{attackDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects.";
     }
 
     public override string GetSkillDesription()
     {
-        return $"idk yet gang sry";
+        return $"Summon a strong blizzard, towards the targeted area. The blizzard deals <color=green><b>{blizzardDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects caught in the area.";
     }
 
     public override string GetPassiveDescription()
     {
-        return $"The frosty aura applies a <color=#00FFFF>Chill</color> effect, slowing down insects by <color=green>{24+ 6*effectivePath2Level}%</color>.";
+        return $"The frosty aura applies a <color=#00FFFF>Chill</color> effect, slowing down insects by <color=green><b>{24+ 6*effectivePath2Level}%</b></color>.";
     }
 
     public override string GetPath1Description()
@@ -178,6 +182,9 @@ public class Snowdrop : Aura
 
     public override string GetPath3Description()
     {
-      return "";  
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease Damage Per Second by <color=green><b>5</b></color> per level. [<color=green><b>+" + (5*effectivePath3Level) + "</b></color>]\n\n" +
+        "Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>" + (1*effectivePath3Level) + "</b></color>]\n\n" +
+        "Increase width by <color=green><b>0.5</b></color> units per level. [<color=green><b>" + (0.5*effectivePath3Level) + "</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";  
     }
 }

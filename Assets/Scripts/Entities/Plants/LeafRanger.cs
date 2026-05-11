@@ -72,17 +72,17 @@ public class LeafRanger : Shooter
 
     public override string GetAttackDescription()
     {
-        return $"Shoots slow but precise and fierce arrows at his target, dealing <color=green>{attackDamage}</color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
+        return $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.";
     }
 
     public override string GetSkillDesription()
     {
-        return $"The {GetName()} releases a trap that imprisons insects within its area, dealing <color=green>Nature</color> <color=#A0522D>Physical</color> damage upon impact.";
+        return $"The {GetName()} releases a trap that imprisons insects within its area, dealing <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage upon impact.";
     }
 
     public override string GetPassiveDescription()
     {
-        return $"Attacks can pierce <color=green>{piercing}</color> enemy.";
+        return $"Attacks can pierce <color=green><b>{piercing}</b></color> enemy.";
     }
 
     public override string GetPath1Name()

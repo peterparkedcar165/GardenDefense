@@ -40,7 +40,7 @@ public class Blizzard : MonoBehaviour
         foreach (Insect insect in snapshot)
         {
             if (!IsInBeam(insect.transform.position)) continue;
-            insect.ApplyEffect(new ChillEffect(insect, 0.25f, chillLevel, source));
+            insect.ApplyEffect(new ChillEffect(insect, 4f, chillLevel, source));
             if (tickTimer >= tickInterval)
                 insect.Damage(damage * tickInterval, DamageType.Magic, ElementalType.Ice, source, false, new DamageTag[] { DamageTag.AoE, DamageTag.DoT });
         }

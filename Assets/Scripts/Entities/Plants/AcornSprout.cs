@@ -70,17 +70,17 @@ public class AcornSprout : Shooter
 
     public override string GetAttackDescription()
     {
-        return $"Shoots acorns towards his target, dealing <color=green>{attackDamage}</color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
+        return $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
     }
 
     public override string GetSkillDesription()
     {
-        return $"The {GetName()} fires a bursting acorn that breaks apart, dealing <color=green>Nature</color> <color=#A0522D>Physical</color> damage to targets struck by it, and leaving irresistible morsels that lure insects towards it.";
+        return $"The {GetName()} fires a bursting acorn that breaks apart, dealing <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage to targets struck by it, and leaving irresistible morsels that lure insects towards it.";
     }
 
     public override string GetPassiveDescription()
     {
-        return $"Attacks have a <color=green>{stunChance*100}%</color> chance to stun targets for <color=green>{stunDuration}</color> second.";
+        return $"Attacks have a <color=green><b>{stunChance*100}%</b></color> chance to stun targets for <color=green><b>{stunDuration}</b></color> second.";
     }
 
     public override string GetPath1Description()

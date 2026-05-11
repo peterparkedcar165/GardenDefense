@@ -7,6 +7,7 @@ public class DamageIndicator : MonoBehaviour
     private TMP_Text tmpText;
     private float horizontalDrift;
     private float verticalSpeed;
+    private bool shrink = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,8 +27,9 @@ public class DamageIndicator : MonoBehaviour
     {
         transform.position += new Vector3(horizontalDrift, verticalSpeed, 0f) * Time.deltaTime;
         Color c = tmpText.color;
-        c.a -= 1f *Time.deltaTime;
+        c.a -= 1f * Time.deltaTime;
         tmpText.color = c;
+        if (shrink) transform.localScale = Vector3.one * c.a;
 
         if (c.a <= 0f)
         {
@@ -38,6 +40,7 @@ public class DamageIndicator : MonoBehaviour
     // for damage
     public void Initialize(float damage, ElementalType elementalType, bool isCrit)
     {
+        shrink = true;
         if (damage <= 0.5f)
         {
             Destroy(gameObject);
@@ -69,7 +72,7 @@ public class DamageIndicator : MonoBehaviour
             break;
         }
 
-        tmpText.fontSize = Mathf.Clamp(4f + damage * 0.02f, 4f, 6.5f);
+        tmpText.fontSize = Mathf.Clamp(7f + damage * 0.03f, 7f, 8.5f);
 
         if (isCrit)
         {
@@ -103,5 +106,6 @@ public class DamageIndicator : MonoBehaviour
         tmpText.color = color;
         tmpText.fontStyle = FontStyles.Bold | FontStyles.Italic;
         tmpText.text = text;
+        tmpText.fontSize += 1f;
     }
 }
