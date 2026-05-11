@@ -13,6 +13,14 @@ public class Blizzard : MonoBehaviour
 
     private float tickTimer;
     private const float tickInterval = 0.25f;
+    private const float visualLength = 30f;
+    private const float extendDuration = 0.6f;
+    private const float retractDuration = 1f;
+    private float currentLength = 0f;
+    private float beamStart = 0f;
+    private float beamEnd = 0f;
+
+    [SerializeField] private SpriteRenderer visualRenderer;
 
     public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float damage, int chillLevel, Plant source)
     {
@@ -23,6 +31,14 @@ public class Blizzard : MonoBehaviour
         this.damage = damage;
         this.chillLevel = chillLevel;
         this.source = source;
+
+        if (visualRenderer != null)
+        {
+            float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;
+            visualRenderer.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+            visualRenderer.transform.localPosition = Vector3.zero;
+            visualRenderer.transform.localScale = new Vector3(0f, width, 1f);
+        }
     }
 
     private void Update()
@@ -47,13 +63,38 @@ public class Blizzard : MonoBehaviour
 
         if (tickTimer >= tickInterval)
             tickTimer -= tickInterval;
+
+        if (visualRenderer != null)
+        {
+            if (duration > retractDuration)
+            {
+                currentLength = Mathf.MoveTowards(currentLength, visualLength, (visualLength / extendDuration) * Time.deltaTime);
+                beamStart = 0f;
+                beamEnd = currentLength;
+                visualRenderer.transform.localPosition = (Vector3)(direction * currentLength * 0.5f);
+                visualRenderer.transform.localScale = new Vector3(currentLength, width, 1f);
+            }
+            else
+            {
+                float remainingLength = (duration / retractDuration) * visualLength;
+                float nearEdge = visualLength - remainingLength;
+                beamStart = nearEdge;
+                beamEnd = visualLength;
+                visualRenderer.transform.localPosition = (Vector3)(direction * (nearEdge + remainingLength * 0.5f));
+                visualRenderer.transform.localScale = new Vector3(remainingLength, width, 1f);
+            }
+
+            Color c = visualRenderer.color;
+            c.a = duration <= retractDuration ? (duration / retractDuration) * 0.5f : 0.5f;
+            visualRenderer.color = c;
+        }
     }
 
     private bool IsInBeam(Vector2 point)
     {
         Vector2 toPoint = point - origin;
         float dot = Vector2.Dot(toPoint, direction);
-        if (dot < 0f) return false;
+        if (dot < beamStart || dot > beamEnd) return false;
         Vector2 perp = toPoint - direction * dot;
         return perp.magnitude <= width * 0.5f;
     }

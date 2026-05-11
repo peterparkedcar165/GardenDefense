@@ -87,6 +87,7 @@ private bool IsObstacle(int x, int y)
     };
 }
 
+#if UNITY_EDITOR
 private void OnDrawGizmos()
 {
     Gizmos.color = Color.green;
@@ -94,10 +95,13 @@ private void OnDrawGizmos()
     {
         for (int y = 0; y < rows; y++)
         {
-            Gizmos.DrawWireCube(new Vector3(x - (columns + 4) / 2f, y - (rows - 1) / 2f, 0) + transform.position, Vector3.one);
+            Vector3 pos = new Vector3(x - (columns + 4) / 2f, y - (rows - 1) / 2f, 0) + transform.position;
+            Gizmos.DrawWireCube(pos, Vector3.one);
+            UnityEditor.Handles.Label(pos + new Vector3(-0.4f, -0.4f, 0), $"({x},{y})");
         }
     }
 }
+#endif
 
 
 }
