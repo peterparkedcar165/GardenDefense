@@ -26,9 +26,12 @@ public class FertilizerSelectionUI : MonoBehaviour
         panel.SetActive(false);
     }
 
+    public bool IsOpen => panel.activeSelf;
+
     public void Show()
     {
         panel.SetActive(true);
+        GameManager.instance.SetPause(true);
         sharedRerolls = 3 + bonusRerolls;
         selectedCard = null;
         confirmButton.interactable = false;
@@ -73,6 +76,7 @@ public class FertilizerSelectionUI : MonoBehaviour
     private void Hide()
     {
         panel.SetActive(false);
+        GameManager.instance.SetPause(false);
         foreach (var card in activeCards)
             Destroy(card.gameObject);
         activeCards.Clear();

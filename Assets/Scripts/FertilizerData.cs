@@ -3,8 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "FertilizerData", menuName = "Scriptable Objects/FertilizerData")]
 public class FertilizerData : ScriptableObject
 {
-    // no fertilizer name for now
-    [TextArea] public string description;
     public FertilizerStat[] stats;
     public Sprite icon;
     public ElementalType targetElementalType; // can be all!
@@ -17,9 +15,7 @@ public class FertilizerData : ScriptableObject
 [System.Serializable]
 public struct FertilizerStat
 {
-    public StatType statType; // stats
-    public float minValue; // range
-    public float maxValue; // range
+    public StatType statType;
 }
 
 public enum FertilizerTier { Common, Rare, Epic }

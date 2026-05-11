@@ -28,6 +28,11 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
+    void Start()
+    {
+        FertilizerSelectionUI.instance.Show();
+    }
+
     public void AddSun(int amount)
     {
         SunCount += Mathf.RoundToInt(amount * (1 + BonusSunGain));
@@ -96,7 +101,8 @@ public class GameManager : MonoBehaviour
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             if (SettingsManager.instance == null || !SettingsManager.instance.IsOpen)
-                TogglePause();
+                if (FertilizerSelectionUI.instance == null || !FertilizerSelectionUI.instance.IsOpen)
+                    TogglePause();
         }
     }
 
@@ -129,6 +135,7 @@ public class GameManager : MonoBehaviour
         playerHealth = playerMaxHealth;
         UpdateSun();
         UpdateHealth();
+        FertilizerSelectionUI.instance.Show();
     }
 
     public void Restart()

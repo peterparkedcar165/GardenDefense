@@ -45,9 +45,8 @@ public class FertilizerManager : MonoBehaviour
         for (int i = 0; i < statCount; i++)
         {
             stats[i] = pool[i];
-            if (pool[i].minValue > pool[i].maxValue)
-                Debug.LogWarning($"FertilizerData '{fertilizer.name}': stat {i} ({pool[i].statType}) has minValue ({pool[i].minValue}) greater than maxValue ({pool[i].maxValue}).");
-            values[i] = Random.Range(pool[i].minValue, pool[i].maxValue) * multiplier;
+            var (min, max) = GetBaseRange(pool[i].statType);
+            values[i] = Random.Range(min, max) * multiplier;
         }
 
         return (stats, values);
@@ -69,10 +68,6 @@ public class FertilizerManager : MonoBehaviour
 
         for (int i = 0; i < selectedStats.Length; i++)
             ApplyStat(plant, selectedStats[i].statType, rolledValues[i]);
-
-        activeFertilizer = null;
-        selectedStats = null;
-        rolledValues = null;
     }
 
     private float GetTierMultiplier(FertilizerTier tier)
@@ -80,9 +75,33 @@ public class FertilizerManager : MonoBehaviour
         switch (tier)
         {
             case FertilizerTier.Common: return 1f;
-            case FertilizerTier.Rare:   return 1.3f;
-            case FertilizerTier.Epic:   return 1.85f;
+            case FertilizerTier.Rare:   return 2.5f;
+            case FertilizerTier.Epic:   return 4f;
             default:                    return 1f;
+        }
+    }
+
+    private (float min, float max) GetBaseRange(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.AttackDamage:    return (0.06f, 0.08f);
+            case StatType.AttackSpeed:     return (0.06f, 0.08f);
+            case StatType.AttackRange:     return (0.06f, 0.08f);
+            case StatType.FireDamage:      return (0.06f, 0.08f);
+            case StatType.IceDamage:       return (0.06f, 0.08f);
+            case StatType.WaterDamage:     return (0.06f, 0.08f);
+            case StatType.NatureDamage:    return (0.06f, 0.08f);
+            case StatType.PoisonDamage:    return (0.06f, 0.08f);
+            case StatType.WindDamage:      return (0.06f, 0.08f);
+            case StatType.CriticalChance:  return (0.04f, 0.06f);
+            case StatType.CriticalDamage:  return (0.125f,  0.15f);
+            case StatType.ElementalPower:  return (0.01f, 0.125f);
+            case StatType.PassiveDamage:   return (0.06f, 0.08f);
+            case StatType.SkillDamage:     return (0.06f, 0.08f);
+            case StatType.SkillCooldown:   return (0.06f, 0.08f);
+            case StatType.DoTDamage:       return (0.06f, 0.08f);
+            default:                       return (0f,    0f);
         }
     }
 
@@ -90,9 +109,9 @@ public class FertilizerManager : MonoBehaviour
     {
         switch (statType)
         {
-            case StatType.AttackDamage:    plant.attackDamageAdder           += value; break;
-            case StatType.AttackSpeed:     plant.attackSpeedAdder            += value; break;
-            case StatType.AttackRange:     plant.attackRangeAdder            += value; break;
+            case StatType.AttackDamage:    plant.attackDamageMultiplier           += value; break;
+            case StatType.AttackSpeed:     plant.attackSpeedMultiplier            += value; break;
+            case StatType.AttackRange:     plant.attackRangeMultiplier            += value; break;
             case StatType.FireDamage:      plant.fireDamageAdder             += value; break;
             case StatType.IceDamage:       plant.iceDamageAdder              += value; break;
             case StatType.WaterDamage:     plant.waterDamageAdder            += value; break;

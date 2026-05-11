@@ -6,7 +6,6 @@ using System.Text;
 
 public class FertilizerCard : MonoBehaviour
 {
-    [SerializeField] private TMP_Text descriptionText;
     [SerializeField] private TMP_Text statsText;
     [SerializeField] private TMP_Text tierText;
     [SerializeField] private Image icon;
@@ -31,8 +30,6 @@ public class FertilizerCard : MonoBehaviour
         canvasGroup.alpha = 1f;
         highlight.SetActive(false);
 
-        targetPosition = rectTransform.anchoredPosition;
-
         Roll();
         StartCoroutine(AnimateIn());
     }
@@ -46,14 +43,13 @@ public class FertilizerCard : MonoBehaviour
     private void RefreshDisplay()
     {
         if (icon != null) icon.sprite = data.icon;
-        if (descriptionText != null) descriptionText.text = data.description;
         if (tierText != null) tierText.text = data.tier.ToString();
 
         if (statsText != null)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < rolledStats.Length; i++)
-                sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color=green><b>+{rolledValues[i]:F1}</b></color>");
+                sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color=green><b>+{rolledValues[i] * 100f:F0}%</b></color>");
             statsText.text = sb.ToString();
         }
     }
@@ -81,6 +77,8 @@ public class FertilizerCard : MonoBehaviour
 
     private IEnumerator AnimateIn()
     {
+        yield return null; // wait one frame for layout group to settle
+        targetPosition = rectTransform.anchoredPosition;
         Vector2 startPos = targetPosition + Vector2.up * Screen.height;
         rectTransform.anchoredPosition = startPos;
 
@@ -89,7 +87,7 @@ public class FertilizerCard : MonoBehaviour
 
         while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             float t = elapsed / duration;
             t = 1f - Mathf.Pow(1f - t, 3f); // ease out cubic
             rectTransform.anchoredPosition = Vector2.Lerp(startPos, targetPosition, t);
