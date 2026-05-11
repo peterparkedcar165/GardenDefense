@@ -26,7 +26,7 @@ public class Snowdrop : Aura
         activeCooldown = 40f;
         activeDuration = 6f;
         blizzardWidth = 1.5f;
-        blizzardDamage = 25f;
+        blizzardDamage = 35f;
     }
 
 
@@ -112,7 +112,7 @@ public class Snowdrop : Aura
     {
         activeDuration = 6f + 1f * level;
         blizzardWidth = 1.5f + 0.5f * level;
-        blizzardDamage = 25f + 5f * level;
+        blizzardDamage = 35f + 15f * level;
     }
 
     public override void ActivateSkill()
@@ -182,7 +182,7 @@ public class Snowdrop : Aura
 
     public override string GetPath3Description()
     {
-        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease Damage Per Second by <color=green><b>5</b></color> per level. [<color=green><b>+" + (5*effectivePath3Level) + "</b></color>]\n\n" +
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease Damage Per Second by <color=green><b>15</b></color> per level. [<color=green><b>+" + (15*effectivePath3Level) + "</b></color>]\n\n" +
         "Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>" + (1*effectivePath3Level) + "</b></color>]\n\n" +
         "Increase width by <color=green><b>0.5</b></color> units per level. [<color=green><b>" + (0.5*effectivePath3Level) + "</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";  
