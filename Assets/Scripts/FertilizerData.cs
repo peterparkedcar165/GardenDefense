@@ -1,14 +1,15 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "FertilizerDData", menuName = "Scriptable Objects/FertilizerData")]
+[CreateAssetMenu(fileName = "FertilizerData", menuName = "Scriptable Objects/FertilizerData")]
 public class FertilizerData : ScriptableObject
 {
     // no fertilizer name for now
     [TextArea] public string description;
     public FertilizerStat[] stats;
     public Sprite icon;
-    public PlantType targetPlantType; // can be all!
-    public bool appliesToAll; // if true, ignores targetplanttype
+    public ElementalType targetElementalType; // can be all!
+    public bool appliesToAll; // if true, ignores targetelementaltype
+    public FertilizerTier tier;
 }
 
 // OUTSIDE OF MAIN CLASS
@@ -20,6 +21,8 @@ public struct FertilizerStat
     public float minValue; // range
     public float maxValue; // range
 }
+
+public enum FertilizerTier { Common, Rare, Epic }
 
 public enum StatType
 {
@@ -37,5 +40,6 @@ public enum StatType
     ElementalPower,
     PassiveDamage,
     SkillDamage,
-    SkillCooldown
+    SkillCooldown,
+    DoTDamage
 }

@@ -2,19 +2,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public enum PlantType
-{
-    Neutral,
-    Diurnal,
-    Nocturnal,
-    Arid,
-    Aquatic,
-    Lush
-}
 public abstract class Plant : Entity
 {
     public static List<Plant> allPlants = new List<Plant>();
-    public PlantType plantType;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
@@ -83,6 +73,7 @@ public abstract class Plant : Entity
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.75f;
         allPlants.Add(this);
+        FertilizerManager.instance?.ApplyTo(this);
     }
 
     void OnDestroy()
