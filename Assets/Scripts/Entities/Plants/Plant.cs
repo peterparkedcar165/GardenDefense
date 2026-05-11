@@ -14,6 +14,7 @@ public enum PlantType
 public abstract class Plant : Entity
 {
     public static List<Plant> allPlants = new List<Plant>();
+    public PlantType plantType;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
@@ -31,7 +32,7 @@ public abstract class Plant : Entity
     {
         base.UpdateStats();
         passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier);
-        skillCooldown = baseSkillCooldown + skillCooldownAdder + (baseSkillCooldown * skillCooldownMultiplier);
+        skillCooldown = baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier);
         float plantSpriteRadius = _circleCollider != null ? _circleCollider.radius * 2 : 0f;
 
         if (circleRadius != null)
@@ -64,7 +65,7 @@ public abstract class Plant : Entity
     public float passiveCooldownTimer;
 
     [Header("Skill")]
-    public float baseSkillCooldown, skillCooldown, skillCooldownAdder, skillCooldownMultiplier;
+    public float baseSkillCooldown, skillCooldown, skillCooldownReductionAdder, skillCooldownReductionMultiplier;
     public float skillCooldownTimer;
     public bool SkillReady => path3Unlocked && skillCooldownTimer <= 0;
 

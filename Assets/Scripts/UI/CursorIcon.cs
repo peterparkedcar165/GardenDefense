@@ -52,8 +52,10 @@ public class CursorIcon : MonoBehaviour
 
             if (tile != null && cachedPlant != null && System.Array.IndexOf(cachedPlant.allowedTiles, tile.tileType) != -1)
             {
-                Vector2 tileScreenPos = cam.WorldToScreenPoint(tile.transform.position);
+                Vector2 visualOffset = cachedRenderer.bounds.center - cachedPlant.transform.position;
+                Vector2 tileScreenPos = cam.WorldToScreenPoint((Vector2)tile.transform.position + visualOffset);
                 Show(cachedRenderer.sprite, tileScreenPos);
+                MatchSizeToRenderer(cachedRenderer);
             }
             else
             {
@@ -87,5 +89,15 @@ public class CursorIcon : MonoBehaviour
         icon.color = new Color(1f, 1f, 1f, alpha);
         RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRect, screenPos, canvas.worldCamera, out Vector3 worldPos);
         rectTransform.position = worldPos;
+    }
+
+    private void MatchSizeToRenderer(SpriteRenderer sr)
+    {
+        Vector2 worldSize = sr.bounds.size;
+        Vector2 screenP1 = cam.WorldToScreenPoint(Vector3.zero);
+        Vector2 screenP2 = cam.WorldToScreenPoint(new Vector3(worldSize.x, worldSize.y, 0f));
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenP1, canvas.worldCamera, out Vector2 cp1);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenP2, canvas.worldCamera, out Vector2 cp2);
+        rectTransform.sizeDelta = cp2 - cp1;
     }
 }
