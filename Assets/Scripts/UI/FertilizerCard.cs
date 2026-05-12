@@ -10,7 +10,6 @@ public class FertilizerCard : MonoBehaviour
     [SerializeField] private TMP_Text tierText;
     [SerializeField] private Image icon;
     [SerializeField] private Button selectButton;
-    [SerializeField] private Button rerollButton;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private GameObject highlight;
 
@@ -61,18 +60,8 @@ public class FertilizerCard : MonoBehaviour
 
     public void OnSelectClicked()
     {
-        ui.SelectCard(this);
-    }
-
-    public void OnRerollClicked()
-    {
-        if (!ui.TryReroll(this)) return;
-        Roll();
-    }
-
-    public void Commit()
-    {
         FertilizerManager.instance.Commit(data, rolledStats, rolledValues);
+        ui.CloseAfterSelect();
     }
 
     public void SetHighlight(bool active)
@@ -82,7 +71,7 @@ public class FertilizerCard : MonoBehaviour
 
     private IEnumerator AnimateIn()
     {
-        yield return null; // wait one frame for layout group to settle
+        yield return null;
         targetPosition = rectTransform.anchoredPosition;
         Vector2 startPos = targetPosition + Vector2.up * Screen.height;
         rectTransform.anchoredPosition = startPos;
@@ -94,7 +83,7 @@ public class FertilizerCard : MonoBehaviour
         {
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / duration;
-            t = 1f - Mathf.Pow(1f - t, 3f); // ease out cubic
+            t = 1f - Mathf.Pow(1f - t, 3f);
             rectTransform.anchoredPosition = Vector2.Lerp(startPos, targetPosition, t);
             yield return null;
         }
