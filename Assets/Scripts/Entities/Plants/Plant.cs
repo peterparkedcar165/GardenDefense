@@ -276,10 +276,10 @@ public abstract class Plant : Entity
             return $"Deal 25% increased damage to immobilized insects";
 
             case ElementalType.Ice:
-            return $"Increase Passive tree level by <color=green>1</color> when near cold";
+            return $"Increase Passive tree level by <color=green>1</color> when in cold weather";
 
             case ElementalType.Wind:
-            return $"Increase Passive tree level by <color=green>1</color> when up high";
+            return $"Increase Passive tree level by <color=green>1</color> when in high altitude";
 
             default:
             return "";

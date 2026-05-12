@@ -49,6 +49,19 @@ public class SaveManager : MonoBehaviour
             saveData.unlockedPlants.Add("AcornSprout");
         }
     }
+    void Update()
+    {
+        if (UnityEngine.InputSystem.Keyboard.current.uKey.wasPressedThisFrame)
+        {
+            if (!saveData.unlockedPlants.Contains("Sunflower"))
+            {
+                saveData.unlockedPlants.Add("Sunflower");
+                Save();
+                Debug.Log("Unlocked Sunflower");
+            }
+        }
+    }
+
     public void CompleteLevel(int level)
     {
         if (level > saveData.highestLevelUnlocked)
