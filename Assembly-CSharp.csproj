@@ -56,11 +56,11 @@
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level2\GridManager2.cs" />
     <Compile Include="Assets\Scripts\Spawning\WeatherManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aura.cs" />
     <Compile Include="Assets\Scripts\UI\PlantBar.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlot.cs" />
-    <Compile Include="Assets\Scripts\GridManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\BlazeEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WetEffect.cs" />
@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
     <Compile Include="Assets\Scripts\UI\InsectStatsHoverTrigger.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Level2.cs" />
     <Compile Include="Assets\Scripts\UI\InsectInfoUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\SproutEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level1\GridManager1.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level1.cs" />

@@ -40,7 +40,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnClicked()
     {
         if (gameManager.SunCount < plant.sunCost) return;
-        if (Time.timeScale == 0) return;
+        if (FertilizerSelectionUI.instance.IsOpen) return;
         PlantSelector.instance.SelectPlant(data.plantPrefab.gameObject);
     }
 

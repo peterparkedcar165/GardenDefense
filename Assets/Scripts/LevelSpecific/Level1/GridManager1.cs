@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 // READ NOTE AT BOTTOM FOR PATHING
 
-public class GridManager : MonoBehaviour
+public class GridManager1 : MonoBehaviour
 {
 
 public int rows, columns;

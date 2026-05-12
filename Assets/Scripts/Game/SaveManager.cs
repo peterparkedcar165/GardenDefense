@@ -53,12 +53,12 @@ public class SaveManager : MonoBehaviour
     {
         if (UnityEngine.InputSystem.Keyboard.current.uKey.wasPressedThisFrame)
         {
-            if (!saveData.unlockedPlants.Contains("Sunflower"))
-            {
-                saveData.unlockedPlants.Add("Sunflower");
-                Save();
-                Debug.Log("Unlocked Sunflower");
-            }
+            string[] all = { "AcornSprout", "Sunflower", "Waterlily", "LeafRanger", "Snowdrop" };
+            foreach (string p in all)
+                if (!saveData.unlockedPlants.Contains(p))
+                    saveData.unlockedPlants.Add(p);
+            Save();
+            Debug.Log("Unlocked all plants");
         }
     }
 

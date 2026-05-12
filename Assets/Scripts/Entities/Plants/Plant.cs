@@ -164,9 +164,9 @@ public abstract class Plant : Entity
     // UPGRADE COSTS
     public const int pathLevelCap = 5;
 
-    public int GetPath1Cost() => Mathf.RoundToInt((sunCost*0.75f) + (32 * path1Level));
-    public int GetPath2Cost() => Mathf.RoundToInt((sunCost*0.75f) + (32 * path2Level));
-    public int GetPath3Cost() => Mathf.RoundToInt((sunCost * 1f) + (36 * path3Level));
+    public int GetPath1Cost() => Mathf.RoundToInt((sunCost*0.75f) + (36 * path1Level));
+    public int GetPath2Cost() => Mathf.RoundToInt((sunCost*0.75f) + (36 * path2Level));
+    public int GetPath3Cost() => Mathf.RoundToInt((sunCost * 1f) + (35 + (37 * path3Level)));
 
     public bool UpgradePath1()
     {

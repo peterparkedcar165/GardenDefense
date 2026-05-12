@@ -38,7 +38,7 @@ public class Sunflower : Shooter
     {
         base.Update();
 
-        sunGenerated = 10 + 2 * effectivePath2Level;
+        sunGenerated = 6 + 2 * effectivePath2Level;
 
         if (passiveCooldownTimer <= 0)
         {
