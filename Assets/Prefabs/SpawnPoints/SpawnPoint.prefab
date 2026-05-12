@@ -41,11 +41,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4336965381066371071}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66c5c63efc99fe14b82d37eab2c1f98f, type: 3}
+  m_Script: {fileID: 11500000, guid: 9805fda9d6639a24ba9d167410511b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level1
-  spawnPoint: {fileID: 4069475746422670408}
+  spawnPoint: {fileID: 0}
   levelTime: 0
   wave: 0
-  workerAnt: {fileID: 2279086888993795066, guid: aed4e1644fb8f1943b81ae3753b7e240, type: 3}
-  soldierAnt: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
+  workerAnt: {fileID: 0}
+  soldierAnt: {fileID: 0}
+  scoutAnt: {fileID: 0}
+  weatherManager: {fileID: 0}
+  waveCountText: {fileID: 0}
+  nextWaveTimerText: {fileID: 0}
+  nextWaveTimer: 0
+  waitTime: 0
+  spawnInterval: 0
+  spawnCount: 0

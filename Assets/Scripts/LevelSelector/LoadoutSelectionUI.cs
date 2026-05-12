@@ -24,6 +24,15 @@ public class LoadoutSelectionUI : MonoBehaviour
         panel.SetActive(false);
     }
 
+    void Update()
+    {
+        if (panel.activeSelf && UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            panel.SetActive(false);
+            selectedLoadout.Clear();
+        }
+    }
+
     public void Show(int level)
     {
         pendingLevel = level;

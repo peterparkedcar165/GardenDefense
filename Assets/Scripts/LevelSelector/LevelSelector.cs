@@ -36,10 +36,7 @@ public class LevelSelector : MonoBehaviour
 
     public void OnLevelSelected(int level)
     {
-        DisableAllButtons();
         LoadoutSelectionUI.instance.Show(level);
-        // LoadLevel(level);
-        //Debug.Log("Loading Level " + level);
     }
 
     private void LoadLevel(int level)

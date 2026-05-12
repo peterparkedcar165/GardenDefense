@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 
-public class Level2 : SpawnManager
+public class Level3 : SpawnManager
 {
     public float levelTime;
     public int wave;
@@ -49,8 +49,8 @@ public class Level2 : SpawnManager
         // LEVEL COMPLETION
             yield return new WaitUntil(() => Insect.allInsects.Count == 0);
             yield return new WaitForSeconds(3f);
-            SaveManager.instance.CompleteLevel(2);
-            Debug.Log("Level 2 completed");
+            SaveManager.instance.CompleteLevel(3);
+            Debug.Log("Level 3 completed");
     }
 
     IEnumerator Wave(int wave)

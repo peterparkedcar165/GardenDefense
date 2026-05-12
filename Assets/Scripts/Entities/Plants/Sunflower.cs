@@ -54,7 +54,7 @@ public class Sunflower : Shooter
     protected override void UpdateStats()
     {
         base.UpdateStats();
-        sunrayDamagePerSecond = (3f + 0.35f*effectivePath3Level) * attackDamage;
+        sunrayDamagePerSecond = (2f + 0.35f*effectivePath3Level) * attackDamage;
     }
 
     protected override void Shoot(Vector3 target)

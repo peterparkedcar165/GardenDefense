@@ -41,53 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3181209020915910467}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14c47eb5118e5db4b9e40762fbff725c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cf1582e6a2782f4b84b0eb1b448e2fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridManager
-  rows: 14
-  columns: 19
-  grassTilePrefab: {fileID: 1746608376694191165, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
-  pathCoordinates:
-  - {x: 0, y: 7}
-  - {x: 1, y: 7}
-  - {x: 2, y: 7}
-  - {x: 3, y: 7}
-  - {x: 3, y: 6}
-  - {x: 3, y: 5}
-  - {x: 4, y: 5}
-  - {x: 5, y: 5}
-  - {x: 5, y: 6}
-  - {x: 5, y: 7}
-  - {x: 6, y: 7}
-  - {x: 7, y: 7}
-  - {x: 8, y: 7}
-  - {x: 9, y: 7}
-  - {x: 10, y: 7}
-  - {x: 10, y: 6}
-  - {x: 10, y: 5}
-  - {x: 11, y: 5}
-  - {x: 12, y: 5}
-  - {x: 13, y: 5}
-  - {x: 13, y: 5}
-  - {x: 14, y: 5}
-  - {x: 15, y: 5}
-  - {x: 16, y: 5}
-  - {x: 17, y: 5}
-  - {x: 18, y: 5}
-  dirtCoordinates:
-  - {x: 2, y: 6}
-  - {x: 2, y: 9}
-  - {x: 4, y: 6}
-  - {x: 6, y: 6}
-  - {x: 9, y: 6}
-  - {x: 11, y: 6}
-  - {x: 16, y: 6}
-  - {x: 8, y: 8}
-  - {x: 15, y: 4}
-  - {x: 4, y: 4}
-  waterCoordinates:
-  - {x: 5, y: 3}
-  - {x: 13, y: 3}
-  - {x: 8, y: 5}
-  - {x: 12, y: 9}
+  rows: 0
+  columns: 0
+  grassTilePrefab: {fileID: 0}
+  pathCoordinates: []
+  dirtCoordinates: []
+  waterCoordinates: []
   caveCoordinates: []

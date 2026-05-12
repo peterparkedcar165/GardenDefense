@@ -88,18 +88,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4309045686484407881}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66c5c63efc99fe14b82d37eab2c1f98f, type: 3}
+  m_Script: {fileID: 11500000, guid: 8742192cfe4f26c41a6ac7603b823991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level1
-  spawnPoint: {fileID: 4583151014946995710}
+  spawnPoint: {fileID: 0}
   levelTime: 0
   wave: 0
-  workerAnt: {fileID: 2279086888993795066, guid: aed4e1644fb8f1943b81ae3753b7e240, type: 3}
-  soldierAnt: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
-  scoutAnt: {fileID: 2279086888993795066, guid: c3349ff3828f87047a2105c4748346ef, type: 3}
-  carpenterAnt: {fileID: 0}
-  fruitFly: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
-  weatherManager: {fileID: 4108104146418644591}
+  workerAnt: {fileID: 0}
+  scoutAnt: {fileID: 0}
+  weatherManager: {fileID: 0}
   waveCountText: {fileID: 0}
   nextWaveTimerText: {fileID: 0}
   nextWaveTimer: 0
