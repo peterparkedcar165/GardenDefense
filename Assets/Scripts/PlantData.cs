@@ -5,4 +5,6 @@ public class PlantData : ScriptableObject
 {
     public Plant plantPrefab;
     public Sprite icon;
+    public string plantName;
+    public string displayName;
 }

@@ -135,6 +135,10 @@ public class Level1 : SpawnManager
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
+
+            // LEVEL COMPLETION
+            SaveManager.instance.CompleteLevel(1);
+            Debug.Log("Level 1 completed");
         }
     }
 

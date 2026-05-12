@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
 
 public class SaveManager : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class SaveManager : MonoBehaviour
     public SaveData saveData = new SaveData();
     private string savePath;
     public int selectedLevel;
+
+    [System.NonSerialized] public List<string> selectedLoadout = new List<string>();
     
     void Awake()
     {
@@ -39,6 +42,36 @@ public class SaveManager : MonoBehaviour
             string json = File.ReadAllText(savePath);
             saveData = JsonUtility.FromJson<SaveData>(json);
             Debug.Log("Loaded save data");
+        }
+
+        if (saveData.unlockedPlants.Count == 0)
+        {
+            saveData.unlockedPlants.Add("AcornSprout");
+        }
+    }
+    public void CompleteLevel(int level)
+    {
+        if (level > saveData.highestLevelUnlocked)
+        {
+            saveData.highestLevelUnlocked = level;
+            string unlock = GetPlantUnlockedByLevel(level);
+            if (unlock != null && !saveData.unlockedPlants.Contains(unlock))
+            {
+                saveData.unlockedPlants.Add(unlock);
+            }
+            Save();
+        }
+    }
+
+    private string GetPlantUnlockedByLevel(int level)
+    {
+        switch (level)
+        {
+            case 1: return "Sunflower";
+            case 2: return null; // TBD
+            case 3: return "Waterlily";
+            case 4: return "LeafRanger";
+            default: return null;
         }
     }
 }
