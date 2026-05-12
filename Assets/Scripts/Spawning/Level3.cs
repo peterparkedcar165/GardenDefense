@@ -7,7 +7,7 @@ public class Level3 : SpawnManager
     public float levelTime;
     public int wave;
     private int startSunCount = 175, startHealth = 20;
-    private int maxWave = 10;
+    private int maxWave = 12;
     public GameObject workerAnt, soldierAnt, scoutAnt;
     public GameObject weatherManager;
     public TextMeshProUGUI waveCountText, nextWaveTimerText;
@@ -49,8 +49,8 @@ public class Level3 : SpawnManager
         // LEVEL COMPLETION
             yield return new WaitUntil(() => Insect.allInsects.Count == 0);
             yield return new WaitForSeconds(3f);
-            SaveManager.instance.CompleteLevel(3);
-            Debug.Log("Level 3 completed");
+            SaveManager.instance.CompleteLevel(2);
+            Debug.Log("Level 2 completed");
     }
 
     IEnumerator Wave(int wave)
