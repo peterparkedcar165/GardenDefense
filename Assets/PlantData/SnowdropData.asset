@@ -15,3 +15,4 @@ MonoBehaviour:
   plantPrefab: {fileID: -1218289086641490182, guid: 21a1c1a83dbeb7646befb06cee88d601, type: 3}
   icon: {fileID: 3997787884886350849, guid: 66cc86ab63224114c893b2c8e527b49d, type: 3}
   plantName: Snowdrop
+  displayName: Snowdrop

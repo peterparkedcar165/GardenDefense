@@ -15,3 +15,4 @@ MonoBehaviour:
   plantPrefab: {fileID: 1851713260975089766, guid: 3584e059b79c1d14db47663813476f48, type: 3}
   icon: {fileID: 21300000, guid: e32f7955f2156924a9dca8632cbe022d, type: 3}
   plantName: LeafRanger
+  displayName: Leaf Ranger
