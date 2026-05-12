@@ -26,14 +26,14 @@ public class SceneTransition : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         canvasGroup.alpha = 0;
         canvasGroup.blocksRaycasts = false;
-        fadeSpeed = 4f;
+        fadeSpeed = 2.5f;
     }
 
     public IEnumerator FadeToScene(string sceneName)
     {
         while (canvasGroup.alpha < 1)
         {
-            canvasGroup.alpha += fadeSpeed * Time.deltaTime;
+            canvasGroup.alpha += fadeSpeed * Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -41,8 +41,8 @@ public class SceneTransition : MonoBehaviour
 
         while (canvasGroup.alpha > 0)
         {
-            canvasGroup.alpha -= fadeSpeed * Time.deltaTime;
-            yield return null;   
+            canvasGroup.alpha -= fadeSpeed * Time.unscaledDeltaTime;
+            yield return null;
         }
         
         canvasGroup.blocksRaycasts = false;

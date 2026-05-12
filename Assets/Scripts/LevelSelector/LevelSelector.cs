@@ -9,7 +9,7 @@ public class LevelSelector : MonoBehaviour
     {
         int highestLevelUnlocked = SaveManager.instance.saveData.highestLevelUnlocked;
         level1.interactable = highestLevelUnlocked >= 1;
-        level2.interactable = highestLevelUnlocked >= 2;
+        level2.interactable = highestLevelUnlocked >= 1; // change to 2 and respective numbers
         level3.interactable = highestLevelUnlocked >= 3;
         level4.interactable = highestLevelUnlocked >= 4;
         level5.interactable = highestLevelUnlocked >= 5;
