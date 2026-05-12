@@ -25,13 +25,6 @@ public class SunflowerProjectile : Projectile
         if (sunflower != null)
         sunflower.ReduceSunTimer();
 
-        if (piercing > 0)
-        {
-            piercing--;
-        } else
-        {
-            Destroy(gameObject);
-        }
     }
 
     protected override void Move()

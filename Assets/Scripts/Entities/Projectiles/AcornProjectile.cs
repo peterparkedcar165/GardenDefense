@@ -20,18 +20,6 @@ public class AcornProjectile : Projectile
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
 
-        if (piercing > 0)
-        {
-            piercing--;
-        } else
-        {
-            Destroy(gameObject);
-         }
-
-
-        /* SPECIAL EFFECT */
-        
-        // checking the passive level
         if (source != null && source is AcornSprout acorn)
         {
              float procChance = acorn.stunChance * (1 + acorn.bonusEffectChance);

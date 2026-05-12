@@ -21,7 +21,7 @@ public abstract class Plant : Entity
     protected override void UpdateStats()
     {
         base.UpdateStats();
-        passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier);
+        passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier);
         skillCooldown = baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier);
         float plantSpriteRadius = _circleCollider != null ? _circleCollider.radius * 2 : 0f;
 
@@ -51,7 +51,7 @@ public abstract class Plant : Entity
     public float activeDuration;
 
     [Header("Passive")]
-    public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownMultiplier;
+    public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownReductionMultiplier, passiveCooldownMultiplier;
     public float passiveCooldownTimer;
 
     [Header("Skill")]

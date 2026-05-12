@@ -16,38 +16,15 @@ public class FertilizerManager : MonoBehaviour
 
     public (FertilizerStat[] stats, float[] values) RollFor(FertilizerData fertilizer)
     {
-        int statCount = fertilizer.tier switch
-        {
-            FertilizerTier.Common => Random.Range(1, 3),
-            FertilizerTier.Rare   => Random.Range(1, 3),
-            FertilizerTier.Epic   => Random.Range(2, 4),
-            _                     => 1
-        };
-
-        float multiplier = GetTierMultiplier(fertilizer.tier);
-
         var seen = new HashSet<StatType>();
         var deduped = new List<FertilizerStat>();
         foreach (var stat in fertilizer.stats)
             if (seen.Add(stat.statType)) deduped.Add(stat);
 
-        FertilizerStat[] pool = deduped.ToArray();
-        statCount = Mathf.Min(statCount, pool.Length);
-
-        for (int i = pool.Length - 1; i > 0; i--)
-        {
-            int j = Random.Range(0, i + 1);
-            (pool[i], pool[j]) = (pool[j], pool[i]);
-        }
-
-        FertilizerStat[] stats = new FertilizerStat[statCount];
-        float[] values = new float[statCount];
-        for (int i = 0; i < statCount; i++)
-        {
-            stats[i] = pool[i];
-            var (min, max) = GetBaseRange(pool[i].statType);
-            values[i] = Random.Range(min, max) * multiplier;
-        }
+        FertilizerStat[] stats = deduped.ToArray();
+        float[] values = new float[stats.Length];
+        for (int i = 0; i < stats.Length; i++)
+            values[i] = stats[i].value;
 
         return (stats, values);
     }
@@ -75,8 +52,8 @@ public class FertilizerManager : MonoBehaviour
         switch (tier)
         {
             case FertilizerTier.Common: return 1f;
-            case FertilizerTier.Rare:   return 2.5f;
-            case FertilizerTier.Epic:   return 4f;
+            case FertilizerTier.Rare:   return 2f;
+            case FertilizerTier.Epic:   return 3f;
             default:                    return 1f;
         }
     }
@@ -101,6 +78,10 @@ public class FertilizerManager : MonoBehaviour
             case StatType.SkillDamage:     return (0.06f, 0.08f);
             case StatType.SkillCooldown:   return (0.06f, 0.08f);
             case StatType.DoTDamage:       return (0.06f, 0.08f);
+            case StatType.Piercing:                    return (1f,    1f);
+            case StatType.ImmobilizeDurationAdder:     return (0.5f,  1f);
+            case StatType.ImmobilizeDurationMultiplier: return (0.1f, 0.3f);
+            case StatType.PassiveCooldown:              return (0.06f, 0.08f);
             default:                       return (0f,    0f);
         }
     }
@@ -125,6 +106,10 @@ public class FertilizerManager : MonoBehaviour
             case StatType.SkillDamage:     plant.skillDamageAdder            += value; break;
             case StatType.SkillCooldown:   plant.skillCooldownReductionAdder += value; break;
             case StatType.DoTDamage:       plant.dotDamageAdder              += value; break;
+            case StatType.Piercing:                     if (plant is Shooter shooter) shooter.piercingAdder += Mathf.RoundToInt(value); break;
+            case StatType.ImmobilizeDurationAdder:      plant.immobilizeDurationAdder      += value; break;
+            case StatType.ImmobilizeDurationMultiplier: plant.immobilizeDurationMultiplier += value; break;
+            case StatType.PassiveCooldown:              plant.passiveCooldownReductionMultiplier += value; break;
         }
     }
 }

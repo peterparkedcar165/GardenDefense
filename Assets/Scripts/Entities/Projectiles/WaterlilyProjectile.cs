@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class WaterlilyProjectile : Projectile
 {
@@ -50,18 +51,11 @@ public class WaterlilyProjectile : Projectile
         if (waterlily != null)
         {
             float splashDamage = projectileDamage * (0.5f + 0.05f * waterlily.effectivePath2Level);
-            foreach (Insect splashedInsect in Insect.allInsects)
+            foreach (Insect splashedInsect in new List<Insect>(Insect.allInsects))
             {
                 if (splashedInsect != insect && Vector3.Distance(transform.position, splashedInsect.transform.position) <= waterlily.AoERange)
                     splashedInsect.Damage(splashDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile});
             }
-        }
-        if (piercing > 0)
-        {
-            piercing--;
-        } else
-        {
-            Destroy(gameObject);
         }
     }
 

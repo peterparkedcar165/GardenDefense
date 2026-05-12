@@ -16,7 +16,7 @@ public abstract class Shooter : Plant
     public int basePiercing, piercing;
     // bonuses
     protected float projectileSpeedAdder, projectileSpeedMultiplier, maxRangeAdder, maxRangeMultiplier; 
-    protected int piercingAdder;
+    public int piercingAdder;
 
 
     public TARGETING targeting = TARGETING.First;

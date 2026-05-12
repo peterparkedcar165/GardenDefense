@@ -78,16 +78,14 @@ public abstract class Projectile : MonoBehaviour
 
         if (other.CompareTag("Insect"))
         {
-            if (hitCount > piercing) {
-                Destroy(gameObject);
-                return;
-            }
-            
             Insect insect = other.GetComponentInParent<Insect>();
             if (insect != null)
             {
                 hitCount++;
                 OnHit(insect);
+                trackedTarget = null;
+                if (hitCount > piercing)
+                    Destroy(gameObject);
             }
 
         }

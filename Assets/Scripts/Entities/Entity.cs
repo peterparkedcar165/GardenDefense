@@ -49,6 +49,7 @@ public abstract class Entity : MonoBehaviour
     public float baseDotResistance, baseDotDamage;
     public float baseElementalPower;
     public float basePassiveDamage, baseSkillDamage;
+    public float baseTenacity, baseImmobilizeDuration;
 
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
@@ -60,6 +61,7 @@ public abstract class Entity : MonoBehaviour
     public float dotResistance, dotDamage;
     public float elementalPower;
     public float passiveDamage, skillDamage;
+    public float tenacity, immobilizeDuration;
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -71,6 +73,7 @@ public abstract class Entity : MonoBehaviour
     public float dotResistanceAdder, dotDamageAdder;
     public float elementalPowerAdder;
     public float passiveDamageAdder, skillDamageAdder;
+    public float tenacityAdder, immobilizeDurationAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -82,6 +85,7 @@ public abstract class Entity : MonoBehaviour
     public float dotResistanceMultiplier, dotDamageMultiplier;
     public float elementalPowerMultiplier;
     public float passiveDamageMultiplier, skillDamageMultiplier;
+    public float tenacityMultiplier, immobilizeDurationMultiplier;
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
@@ -121,6 +125,8 @@ public abstract class Entity : MonoBehaviour
         elementalPower = baseElementalPower + elementalPowerAdder + (baseElementalPower * elementalPowerMultiplier);
         passiveDamage = basePassiveDamage + passiveDamageAdder + (basePassiveDamage * passiveDamageMultiplier);
         skillDamage = baseSkillDamage + skillDamageAdder + (baseSkillDamage * skillDamageMultiplier);
+        tenacity = baseTenacity + tenacityAdder + (baseTenacity * tenacityMultiplier);
+        immobilizeDuration = baseImmobilizeDuration + immobilizeDurationAdder;
     }
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)

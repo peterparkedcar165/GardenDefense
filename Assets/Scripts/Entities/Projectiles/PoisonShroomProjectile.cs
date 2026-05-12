@@ -20,22 +20,9 @@ public class PoisonShroomProjectile : Projectile
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
 
-        if (piercing > 0)
-        {
-            piercing--;
-        } else
-        {
-            Destroy(gameObject);
-         }
-
-
-        /* SPECIAL EFFECT */
-
-        if (source != null && source is PoisonShroom shooter) 
+        if (source != null && source is PoisonShroom shooter)
         {
             insect.ApplyEffect(new PoisonEffect(insect, shooter.poisonDuration, shooter.poisonLevel, source));
-        } else { 
-            return;
         }
     }
     

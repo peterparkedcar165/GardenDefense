@@ -43,13 +43,18 @@ public class FertilizerCard : MonoBehaviour
     private void RefreshDisplay()
     {
         if (icon != null) icon.sprite = data.icon;
-        if (tierText != null) tierText.text = data.tier.ToString();
+        if (tierText != null) tierText.text = data.fertilizerName;
 
         if (statsText != null)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < rolledStats.Length; i++)
-                sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color=green><b>+{rolledValues[i] * 100f:F0}%</b></color>");
+            {
+                string valueStr = IsRawValue(rolledStats[i].statType)
+                    ? $"+{Mathf.RoundToInt(rolledValues[i])}"
+                    : $"+{rolledValues[i] * 100f:F0}%";
+                sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color=green><b>{valueStr}</b></color>");
+            }
             statsText.text = sb.ToString();
         }
     }
@@ -98,6 +103,18 @@ public class FertilizerCard : MonoBehaviour
         canvasGroup.interactable = true;
     }
 
+    private bool IsRawValue(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Piercing:
+            case StatType.ImmobilizeDurationAdder:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private string FormatStatName(StatType statType)
     {
         switch (statType)
@@ -118,6 +135,10 @@ public class FertilizerCard : MonoBehaviour
             case StatType.SkillDamage:    return "Skill Damage";
             case StatType.SkillCooldown:  return "Skill Cooldown";
             case StatType.DoTDamage:      return "DoT Damage";
+            case StatType.Piercing:                     return "Piercing";
+            case StatType.ImmobilizeDurationAdder:      return "Immobilize Duration";
+            case StatType.ImmobilizeDurationMultiplier: return "Immobilize Duration";
+            case StatType.PassiveCooldown:              return "Passive Cooldown";
             default:                      return statType.ToString();
         }
     }

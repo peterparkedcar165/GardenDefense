@@ -90,13 +90,8 @@ public class FertilizerSelectionUI : MonoBehaviour
 
     private List<FertilizerData> PickRandom(FertilizerData[] pool, int count)
     {
-        List<FertilizerData> shuffled = new List<FertilizerData>(pool);
-        for (int i = shuffled.Count - 1; i > 0; i--)
-        {
-            int j = Random.Range(0, i + 1);
-            (shuffled[i], shuffled[j]) = (shuffled[j], shuffled[i]);
-        }
-        count = Mathf.Min(count, shuffled.Count);
-        return shuffled.GetRange(0, count);
+        List<FertilizerData> ordered = new List<FertilizerData>(pool);
+        count = Mathf.Min(count, ordered.Count);
+        return ordered.GetRange(0, count);
     }
 }

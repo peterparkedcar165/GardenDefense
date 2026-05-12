@@ -28,11 +28,6 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
-    void Start()
-    {
-        FertilizerSelectionUI.instance.Show();
-    }
-
     public void AddSun(int amount)
     {
         SunCount += Mathf.RoundToInt(amount * (1 + BonusSunGain));

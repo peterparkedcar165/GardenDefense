@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "FertilizerData", menuName = "Scriptable Objects/FertilizerData")]
 public class FertilizerData : ScriptableObject
 {
+    public string fertilizerName;
     public FertilizerStat[] stats;
     public Sprite icon;
     public ElementalType targetElementalType; // can be all!
@@ -16,6 +17,7 @@ public class FertilizerData : ScriptableObject
 public struct FertilizerStat
 {
     public StatType statType;
+    public float value;
 }
 
 public enum FertilizerTier { Common, Rare, Epic }
@@ -37,5 +39,9 @@ public enum StatType
     PassiveDamage,
     SkillDamage,
     SkillCooldown,
-    DoTDamage
+    DoTDamage,
+    Piercing,
+    ImmobilizeDurationAdder,
+    ImmobilizeDurationMultiplier,
+    PassiveCooldown
 }

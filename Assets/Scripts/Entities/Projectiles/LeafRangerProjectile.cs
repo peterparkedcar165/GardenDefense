@@ -12,33 +12,11 @@ public class LeafRangerProjectile : Projectile
         base.Update();
     }
 
-    protected override void OnHit(Insect insect) // to change for every plant
+    protected override void OnHit(Insect insect)
     {
-        
-        //if (source != null)
-        //    insect.RegisterAttacker(source);
-
-        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
-
+        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
         PlaySound(hit);
-        
-        if (piercing > 0)
-        {
-            trackedTarget = null;
-            piercing--;
-        } else
-        {
-            Destroy(gameObject);
-         }
-
-
-        /* SPECIAL EFFECT */
-        
-        // checking the passive level
-        //if (source != null && source.passiveLevel > 0)
-        //{
-            // for now, nothing
-        //}
+        trackedTarget = null;
     }
     
 }
