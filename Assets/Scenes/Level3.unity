@@ -3710,9 +3710,9 @@ MonoBehaviour:
   cardPrefab: {fileID: 5982727409875557757, guid: 0a8171987b0d17a4298f6b30e44cd8a2, type: 3}
   cardContainer: {fileID: 1241174565}
   fertilizerPool:
-  - {fileID: 11400000, guid: c8613c3921154b64f86afc3c6ea94b78, type: 2}
-  - {fileID: 11400000, guid: 06970b7a93644514e96c630052df2a18, type: 2}
-  - {fileID: 11400000, guid: b41d77e0c376afd4d91b8e967d0306a4, type: 2}
+  - {fileID: 11400000, guid: 776ca88767de12d468963df682d471e8, type: 2}
+  - {fileID: 11400000, guid: 41f003a6a45d0ed48a417a0c5df050a5, type: 2}
+  - {fileID: 11400000, guid: 2aa8db829af43c94790b66f7398def79, type: 2}
   cardsToShow: 3
 --- !u!114 &1092077896
 MonoBehaviour:
@@ -7907,7 +7907,7 @@ Tilemap:
       - {fileID: -606837403, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1443172949, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 1301996377, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 3, y: -7, z: 0}
@@ -7958,7 +7958,7 @@ Tilemap:
       - {fileID: -606837403, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1443172949, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 1301996377, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6
+      m_AnimationSpeed: 6.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 6, y: -7, z: 0}
@@ -8162,7 +8162,7 @@ Tilemap:
       - {fileID: -1633308353, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -179146731, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -249037636, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -12, y: 2, z: 0}
@@ -8179,7 +8179,7 @@ Tilemap:
       - {fileID: -605774503, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1545045942, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 954890067, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -4, y: 2, z: 0}
