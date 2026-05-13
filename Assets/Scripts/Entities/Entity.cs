@@ -49,6 +49,7 @@ public abstract class Entity : MonoBehaviour
     public float baseDotResistance, baseDotDamage;
     public float baseElementalPower;
     public float basePassiveDamage, baseSkillDamage;
+    public float baseSkillDuration;
     public float baseTenacity, baseImmobilizeDuration;
 
     [Header("Stats")]
@@ -61,6 +62,7 @@ public abstract class Entity : MonoBehaviour
     public float dotResistance, dotDamage;
     public float elementalPower;
     public float passiveDamage, skillDamage;
+    public float skillDuration;
     public float tenacity, immobilizeDuration;
 
     [Header("Stat Adders")]
@@ -73,6 +75,7 @@ public abstract class Entity : MonoBehaviour
     public float dotResistanceAdder, dotDamageAdder;
     public float elementalPowerAdder;
     public float passiveDamageAdder, skillDamageAdder;
+    public float skillDurationAdder;
     public float tenacityAdder, immobilizeDurationAdder;
 
     [Header("Stat Multipliers")]
@@ -85,6 +88,7 @@ public abstract class Entity : MonoBehaviour
     public float dotResistanceMultiplier, dotDamageMultiplier;
     public float elementalPowerMultiplier;
     public float passiveDamageMultiplier, skillDamageMultiplier;
+    public float skillDurationMultiplier;
     public float tenacityMultiplier, immobilizeDurationMultiplier;
 
     [Header("Internal Cooldowns")]
@@ -125,6 +129,7 @@ public abstract class Entity : MonoBehaviour
         elementalPower = baseElementalPower + elementalPowerAdder + (baseElementalPower * elementalPowerMultiplier);
         passiveDamage = basePassiveDamage + passiveDamageAdder + (basePassiveDamage * passiveDamageMultiplier);
         skillDamage = baseSkillDamage + skillDamageAdder + (baseSkillDamage * skillDamageMultiplier);
+        skillDuration = baseSkillDuration + skillDurationAdder + (baseSkillDuration * skillDurationMultiplier);
         tenacity = baseTenacity + tenacityAdder + (baseTenacity * tenacityMultiplier);
         immobilizeDuration = baseImmobilizeDuration + immobilizeDurationAdder;
     }

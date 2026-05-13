@@ -88,14 +88,21 @@ public class PlantUpgradeUI : MonoBehaviour
 
     public void ShowPanel(Plant plant)
     {
+        if (selectedPlant != null)
+            selectedPlant.Deselect();
+
         InsectInfoUI.instance.HidePanel();
         selectedPlant = plant;
+        selectedPlant.Select();
         panel.SetActive(true);
         Refresh();
     }
 
     public void HidePanel()
     {
+        if (selectedPlant != null)
+            selectedPlant.Deselect();
+
         selectedPlant = null;
         panel.SetActive(false);
         HideTooltip();

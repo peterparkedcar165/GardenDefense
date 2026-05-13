@@ -22,7 +22,7 @@ public class PoisonShroom : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
-        activeDuration = 7f;
+        baseSkillDuration = 7f;
     }
 
     protected override void Update()
@@ -75,8 +75,8 @@ public class PoisonShroom : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDuration = 7f + 1*(level - 1);
-        activeRadius = 2f + 0.5f*(level - 1);
+        baseSkillDuration = 7f + 1f * level;
+        activeRadius = 2f + 0.5f * level;
     }
 
     // DESCRIPTION

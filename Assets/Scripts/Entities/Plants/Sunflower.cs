@@ -28,7 +28,7 @@ public class Sunflower : Shooter
         baseSkillCooldown = 3f;
         basePassiveCooldown = 12f;
         skillAoERadius = 1.5f;
-        activeDuration = 6;
+        baseSkillDuration = 6f;
         base.Awake();
         passiveCooldownTimer = passiveCooldown;
         // sun cost is set in inspector!
@@ -87,7 +87,7 @@ public class Sunflower : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDuration = 6 + 0.5f * (level - 1);
+        baseSkillDuration = 6f + 0.5f * level;
     }
 
     
@@ -109,7 +109,7 @@ public class Sunflower : Shooter
         GameObject obj = Instantiate(sunrayPrefab, position, Quaternion.identity);
         Sunray sunray = obj.GetComponent<Sunray>();
         if (sunray != null)
-            sunray.Initialize(sunrayDamagePerSecond, skillAoERadius, activeDuration, this);
+            sunray.Initialize(sunrayDamagePerSecond, skillAoERadius, skillDuration, this);
     }
 
     // DESCRIPTION
@@ -131,7 +131,7 @@ public class Sunflower : Shooter
 
     public override string GetSkillDesription()
     {
-        return $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{sunrayDamagePerSecond}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second to insects within the designated area for <color=green><b>{activeDuration}</b></color> seconds.";
+        return $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{sunrayDamagePerSecond}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.";
     }
 
     public override string GetPassiveDescription()
@@ -157,7 +157,7 @@ public class Sunflower : Shooter
     public override string GetPath3Description()
     {
         return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the Attack Damage multiplier of the Damage Per Second by <color=green><b>35%</b></color> per level. [<color=green><b>+" + (35*effectivePath3Level) + "%</b></color>]\n\n" +
-        "Increase Sunray duration by <color=green><b>0.5</b></color> second per level. [<color=green><b>" + (0.5*effectivePath3Level) + "</b></color>]\n\n" +
+        $"Increase Sunray duration by <color=green><b>0.5</b></color> second per level. [<color=green><b>{skillDuration}s</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }
 }

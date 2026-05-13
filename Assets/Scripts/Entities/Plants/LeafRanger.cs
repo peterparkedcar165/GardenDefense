@@ -20,7 +20,7 @@ public class LeafRanger : Shooter
         baseAttackRange = bAR;
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
-        activeDuration = 3f;
+        baseSkillDuration = 3f;
     }
 
     protected override void Update()
@@ -53,7 +53,7 @@ public class LeafRanger : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDuration = 3f + (level * 0.5f);
+        baseSkillDuration = 3f + (level * 0.5f);
         activeRadius = 3f + (level * 0.3f);
     }
 

@@ -18,6 +18,7 @@ public abstract class Plant : Entity
 
     [SerializeField] private Transform circleRadius;
     private CircleCollider2D _circleCollider;
+    private bool _isSelected = false;
     protected override void UpdateStats()
     {
         base.UpdateStats();
@@ -48,7 +49,6 @@ public abstract class Plant : Entity
     public int exp = 0;
     public float expBoost;
     public float activeCooldown;
-    public float activeDuration;
 
     [Header("Passive")]
     public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownReductionMultiplier, passiveCooldownMultiplier;
@@ -93,14 +93,27 @@ public abstract class Plant : Entity
 
     protected override void OnHover()
     {
-        Debug.Log("OnHover called, circleRadius is: " + circleRadius);
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(true);
     }
 
     protected override void OnHoverExit()
     {
-        Debug.Log("OnHoverExit called");
+        if (_isSelected) return;
+        if (circleRadius != null)
+            circleRadius.gameObject.SetActive(false);
+    }
+
+    public void Select()
+    {
+        _isSelected = true;
+        if (circleRadius != null)
+            circleRadius.gameObject.SetActive(true);
+    }
+
+    public void Deselect()
+    {
+        _isSelected = false;
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
     }

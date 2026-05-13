@@ -69,11 +69,13 @@
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
     <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
+    <Compile Include="Assets\Scripts\Skills\AcornBomb.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BubbleTrapEffect.cs" />
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\EatingAcornEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level3.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />

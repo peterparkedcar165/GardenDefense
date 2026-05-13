@@ -24,7 +24,7 @@ public class Snowdrop : Aura
         baseAttackSpeed = bAS;
         baseAttackRange = bAR;
         activeCooldown = 40f;
-        activeDuration = 6f;
+        baseSkillDuration = 6f;
         blizzardWidth = 1.5f;
         blizzardDamage = 35f;
     }
@@ -110,7 +110,7 @@ public class Snowdrop : Aura
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDuration = 6f + 1f * level;
+        baseSkillDuration = 6f + 1f * level;
         blizzardWidth = 1.5f + 0.5f * level;
         blizzardDamage = 35f + 15f * level;
     }
@@ -131,7 +131,7 @@ public class Snowdrop : Aura
         skillCooldownTimer = skillCooldown;
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
         GameObject obj = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
-        obj.GetComponent<Blizzard>()?.Initialize(transform.position, direction, blizzardWidth, activeDuration, blizzardDamage, chillLevel + 1, this);
+        obj.GetComponent<Blizzard>()?.Initialize(transform.position, direction, blizzardWidth, skillDuration, blizzardDamage, chillLevel + 1, this);
     }
 
     protected override void Attack()
@@ -183,7 +183,7 @@ public class Snowdrop : Aura
     public override string GetPath3Description()
     {
         return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease Damage Per Second by <color=green><b>15</b></color> per level. [<color=green><b>+" + (15*effectivePath3Level) + "</b></color>]\n\n" +
-        "Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>" + (1*effectivePath3Level) + "</b></color>]\n\n" +
+        $"Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>{skillDuration}s</b></color>]\n\n" +
         "Increase width by <color=green><b>0.5</b></color> units per level. [<color=green><b>" + (0.5*effectivePath3Level) + "</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";  
     }

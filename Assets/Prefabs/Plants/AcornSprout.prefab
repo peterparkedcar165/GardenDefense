@@ -78,6 +78,8 @@ MonoBehaviour:
   baseElementalPower: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  baseTenacity: 0
+  baseImmobilizeDuration: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -112,6 +114,8 @@ MonoBehaviour:
   elementalPower: 0
   passiveDamage: 0
   skillDamage: 0
+  tenacity: 0
+  immobilizeDuration: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicDamageAdder: 0
@@ -143,6 +147,8 @@ MonoBehaviour:
   elementalPowerAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
+  tenacityAdder: 0
+  immobilizeDurationAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicDamageMultiplier: 0
@@ -174,6 +180,8 @@ MonoBehaviour:
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
   skillDamageMultiplier: 0
+  tenacityMultiplier: 0
+  immobilizeDurationMultiplier: 0
   internalCooldown: 2
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -196,6 +204,18 @@ MonoBehaviour:
   exp: 0
   expBoost: 0
   activeCooldown: 0
+  activeDuration: 0
+  basePassiveCooldown: 0
+  passiveCooldown: 0
+  passiveCooldownAdder: 0
+  passiveCooldownReductionMultiplier: 0
+  passiveCooldownMultiplier: 0
+  passiveCooldownTimer: 0
+  baseSkillCooldown: 0
+  skillCooldown: 0
+  skillCooldownReductionAdder: 0
+  skillCooldownReductionMultiplier: 0
+  skillCooldownTimer: 0
   path1Level: 0
   path2Level: 0
   path3Level: 0
@@ -213,11 +233,13 @@ MonoBehaviour:
   maxRange: 0
   basePiercing: 0
   piercing: 0
+  piercingAdder: 0
   targeting: 1
   stunChance: 0.25
   stunDuration: 0.5
   activeRadius: 0
   activeDamageMultiplier: 1.5
+  acornBombPrefab: {fileID: 3542048050096898586, guid: 6c61b21aac776a64287215483b0370cb, type: 3}
 --- !u!58 &3849591162661420664
 CircleCollider2D:
   m_ObjectHideFlags: 0

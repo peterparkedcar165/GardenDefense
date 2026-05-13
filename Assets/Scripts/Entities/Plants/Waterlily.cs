@@ -28,7 +28,7 @@ public class Waterlily : Shooter
         basePiercing = bP;
         baseAoERange = bAoER;
         baseSkillCooldown = 1f;
-        activeDuration = 5f;
+        baseSkillDuration = 5f;
         base.Awake();
         // sun cost is set in inspector!
     }
@@ -65,8 +65,8 @@ public class Waterlily : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDuration = 5f + 1f * (level - 1);
-        bubbleDamage = 42f + 12f * (level - 1);
+        baseSkillDuration = 5f + 1f * level;
+        bubbleDamage = 42f + 12f * level;
     }
 
     public override void ActivateSkill()
@@ -81,7 +81,7 @@ public class Waterlily : Shooter
         GameObject obj = Instantiate(bubbleTrapPrefab, transform.position, Quaternion.identity);
         BubblePrison bubble = obj.GetComponent<BubblePrison>();
         if (bubble != null)
-            bubble.Initialize(position, skillAoERadius, activeDuration, bubbleDamage, this);
+            bubble.Initialize(position, skillAoERadius, skillDuration, bubbleDamage, this);
     }
 
     
@@ -104,7 +104,7 @@ public class Waterlily : Shooter
 
     public override string GetSkillDesription()
     {
-        return $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{bubbleDamage}</b></color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green><b>{activeDuration}</b></color> seconds.";
+        return $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{bubbleDamage}</b></color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green><b>{skillDuration}</b></color> seconds.";
     }
 
     public override string GetPassiveDescription()
@@ -130,7 +130,7 @@ public class Waterlily : Shooter
     public override string GetPath3Description()
     {
         return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease impact damage by <color=green><b>12</b></color> per level. [<color=green><b>+" + (12*effectivePath3Level) + "</b></color>]\n\n" +
-        "Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>" + (1*effectivePath3Level) + "</b></color>]\n\n" +
+        $"Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>{skillDuration}s</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }
 }

@@ -99,6 +99,7 @@ public abstract class Insect : Entity
         if (waypoints == null) return;
         if (HasEffect<HardCrowdControl>()) return;
         if (HasEffect<BubblePrisonEffect>()) return;
+        if (HasEffect<EatingAcornEffect>()) return;
 
         if (currentWaypointIndex >= waypoints.Length)
         {

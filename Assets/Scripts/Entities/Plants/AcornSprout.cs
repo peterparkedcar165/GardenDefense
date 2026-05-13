@@ -11,6 +11,8 @@ public class AcornSprout : Shooter
     bMR = 20f; // base max range
     private int bP = 0; // base piercing
     public float stunChance = 0.25f, stunDuration = 0.5f, activeRadius, activeDamageMultiplier = 1.5f;
+    [SerializeField] private GameObject acornBombPrefab;
+
     protected override void Awake()
     {
         base.Awake();
@@ -20,6 +22,9 @@ public class AcornSprout : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
+        activeRadius = 1f;
+        baseSkillCooldown = 1f;
+        baseSkillDuration = 20f;
     }
 
     protected override void Update()
@@ -52,7 +57,8 @@ public class AcornSprout : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDamageMultiplier = 1.5f + 0.1f*(level -1);
+        activeDamageMultiplier = 1.5f + 0.1f * level;
+        baseSkillDuration = 20f + 2f * level;
     }
 
 
@@ -73,9 +79,22 @@ public class AcornSprout : Shooter
         return $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
     }
 
+    public override void ActivateSkill()
+    {
+        SkillTargetingManager.instance.BeginTargeting(activeRadius, OnTargetConfirmed);
+    }
+
+    private void OnTargetConfirmed(Vector3 position)
+    {
+        if (acornBombPrefab == null) return;
+        skillCooldownTimer = skillCooldown;
+        GameObject obj = Instantiate(acornBombPrefab, position, Quaternion.identity);
+        obj.GetComponent<AcornBomb>()?.Initialize(activeRadius, attackDamage * activeDamageMultiplier, skillDuration, this);
+    }
+
     public override string GetSkillDesription()
     {
-        return $"The {GetName()} fires a bursting acorn that breaks apart, dealing <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage to targets struck by it, and leaving irresistible morsels that lure insects towards it.";
+        return $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. The acorn then sits on the ground for <color=green><b>30</b></color> seconds, blocking ground insects who stop to gnaw at it.";
     }
 
     public override string GetPassiveDescription()
@@ -98,6 +117,8 @@ public class AcornSprout : Shooter
 
     public override string GetPath3Description()
     {
-        return "";
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease impact damage multiplier by <color=green><b>10%</b></color> per level. [<color=green><b>x{activeDamageMultiplier:F1}</b></color>]\n\n" +
+        $"Increase acorn lifetime by <color=green><b>2</b></color> seconds per level. [<color=green><b>{skillDuration}s</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level - path3Level) + ")</b></color>";
     }
 }
