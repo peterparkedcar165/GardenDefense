@@ -123,8 +123,11 @@ public class GameManager : MonoBehaviour
         speedButtonText.text = gameSpeed + "x";
     }
 
+    public bool IsGameActive { get; private set; }
+
     public void InitiateLevel(int sunCount, int health)
     {
+        IsGameActive = true;
         SunCount = sunCount;
         playerMaxHealth = health;
         playerHealth = playerMaxHealth;

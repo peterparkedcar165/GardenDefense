@@ -18,6 +18,8 @@ public class LoadoutSelectionUI : MonoBehaviour
     private List<LoadoutSlot> unlockedSlots = new List<LoadoutSlot>();
     private List<LoadoutSlot> selectedSlots = new List<LoadoutSlot>();
 
+    public bool IsOpen => panel.activeSelf;
+
     void Awake()
     {
         instance = this;

@@ -14,6 +14,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private Slider masterSlider, musicSlider, gameSlider;
     [SerializeField] private TMP_Text masterText, musicText, gameText;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject restartButton;
 
     public bool IsOpen => settingsPanel.activeSelf;
 
@@ -23,11 +24,17 @@ public class SettingsManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
         settingsPanel.SetActive(false);
+        if (restartButton != null) restartButton.SetActive(false);
     }
 
     private void Update()
     {
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !SkillTargetingManager.instance.WasCancelledThisFrame)
+        if (restartButton != null)
+            restartButton.SetActive(GameManager.instance != null && GameManager.instance.IsGameActive);
+
+        bool skillCancelled = SkillTargetingManager.instance != null && SkillTargetingManager.instance.WasCancelledThisFrame;
+        bool loadoutOpen = LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen;
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen)
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);
@@ -35,6 +42,20 @@ public class SettingsManager : MonoBehaviour
                 GameManager.instance.SetPause(isOpen);
         }
     }
+
+    public void Open()
+    {
+        settingsPanel.SetActive(true);
+        if (GameManager.instance != null)
+            GameManager.instance.SetPause(true);
+    }
+    public void Restart()
+    {
+        if (GameManager.instance == null) return;
+        settingsPanel.SetActive(false);
+        GameManager.instance.Restart();
+    }
+
     public void GoBack()
     {
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
