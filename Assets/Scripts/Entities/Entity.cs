@@ -377,7 +377,7 @@ public abstract class Entity : MonoBehaviour
         damageIndicatorPrefab = Resources.Load<GameObject>("DamageIndicator");
         UpdateStats();
         health = maxHealth;
-        SpawnHealthBar();
+        if (this is Insect) SpawnHealthBar();
     }
 
     //every tick

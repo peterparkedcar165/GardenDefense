@@ -122,12 +122,12 @@ public class FertilizerCard : MonoBehaviour
             case StatType.ElementalPower: return "Elemental Power";
             case StatType.PassiveDamage:  return "Passive Damage";
             case StatType.SkillDamage:    return "Skill Damage";
-            case StatType.SkillCooldown:  return "Skill Cooldown";
+            case StatType.SkillCooldown:  return "Skill Cd. Reduction";
             case StatType.DoTDamage:      return "DoT Damage";
             case StatType.Piercing:                     return "Piercing";
             case StatType.ImmobilizeDurationAdder:      return "Immobilize Duration";
             case StatType.ImmobilizeDurationMultiplier: return "Immobilize Duration";
-            case StatType.PassiveCooldown:              return "Passive Cooldown";
+            case StatType.PassiveCooldown:              return "Passive Cd. Reduction";
             default:                      return statType.ToString();
         }
     }

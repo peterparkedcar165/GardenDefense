@@ -50,7 +50,7 @@ public class Level3 : SpawnManager
             yield return new WaitUntil(() => Insect.allInsects.Count == 0);
             yield return new WaitForSeconds(3f);
             SaveManager.instance.CompleteLevel(2);
-            Debug.Log("Level 2 completed");
+            Debug.Log("Level 3 completed");
     }
 
     IEnumerator Wave(int wave)
