@@ -81,6 +81,12 @@ public abstract class Insect : Entity
         SyncAimPoint();
     }
 
+    protected override void OnHoverExit()
+    {
+        if (health >= maxHealth && healthBarInstance != null)
+            healthBarInstance.SetActive(false);
+    }
+
     private void SyncAimPoint()
     {
         if (visual != null && aimPoint != null && aimPoint.localPosition != visual.localPosition)

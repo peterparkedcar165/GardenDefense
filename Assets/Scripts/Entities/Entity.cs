@@ -464,6 +464,9 @@ public abstract class Entity : MonoBehaviour
         Vector3 scale = healthBarFill.localScale;
         scale.x = ratio;
         healthBarFill.localScale = scale;
+
+        if (this is Insect && health < maxHealth && healthBarInstance != null)
+            healthBarInstance.SetActive(true);
     }
     
     void OnMouseEnter()
@@ -475,13 +478,15 @@ public abstract class Entity : MonoBehaviour
 
     void OnMouseExit()
     {
-        if (healthBarInstance != null)
-            healthBarInstance.SetActive(false);
         OnHoverExit();
     }
 
     protected virtual void OnHover() {}
-    protected virtual void OnHoverExit() {}
+    protected virtual void OnHoverExit()
+    {
+        if (healthBarInstance != null)
+            healthBarInstance.SetActive(false);
+    }
 
     // STATUS EFFECTS
 

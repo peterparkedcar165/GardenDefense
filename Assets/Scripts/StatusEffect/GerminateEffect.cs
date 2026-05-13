@@ -37,7 +37,7 @@ public class GerminateEffect : StatusEffect
         indicator.GetComponent<DamageIndicator>().Initialize("Bloom", new Color(0.3f, 1f, 0.2f));
         float damage = 40 + (cachedAttackDamage * 0.33f) + (24 * cachedElementalPower);
 
-        foreach (Insect insect in Insect.allInsects)
+        foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
         {
             if (Vector3.Distance(target.transform.position, insect.transform.position) <= aoeRadius)
             {
