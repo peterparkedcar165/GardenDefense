@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public int SunCount;
     public int playerHealth, playerMaxHealth; // originally 20
     public float BonusSunGain;
-    public AudioSource audioSource, musicSource;
+    public AudioSource audioSource;
     public AudioClip buttonClick, plantPlace, plantSelect;
     private bool paused = false;
     public float gameSpeed = 1f;

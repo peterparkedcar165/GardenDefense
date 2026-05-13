@@ -51,11 +51,11 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\DamageIndicator.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\FrostbiteEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Shooter.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSelectionUI.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level2\GridManager2.cs" />
     <Compile Include="Assets\Scripts\Spawning\WeatherManager.cs" />
@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WetEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\FreezeEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
+    <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BubbleTrapEffect.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PathHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Ant.cs" />
+    <Compile Include="Assets\Scripts\Audio\MusicManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoilEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />

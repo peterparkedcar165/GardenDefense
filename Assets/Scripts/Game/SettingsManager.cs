@@ -19,7 +19,9 @@ public class SettingsManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null) { Destroy(gameObject); return; }
         instance = this;
+        DontDestroyOnLoad(gameObject);
         settingsPanel.SetActive(false);
     }
 
@@ -29,7 +31,8 @@ public class SettingsManager : MonoBehaviour
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);
-            GameManager.instance.SetPause(isOpen);
+            if (GameManager.instance != null)
+                GameManager.instance.SetPause(isOpen);
         }
     }
     public void GoBack()
