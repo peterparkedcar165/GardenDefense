@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class LeafRanger : Shooter
 {
-    private float 
+    private float
     bAD = 122f, // base attack damage
     bAS = 0.25f, // base attack speed
     bAR = 99f, // base attack range
@@ -11,6 +11,9 @@ public class LeafRanger : Shooter
     bMR = 20f; // base max range
     private int bP = 1; // base piercing
     public float activeRadius = 2f;
+
+    private bool skillActive;
+    private float skillTimer;
 
     protected override void Awake()
     {
@@ -20,13 +23,28 @@ public class LeafRanger : Shooter
         baseAttackRange = bAR;
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
-        baseSkillDuration = 3f;
+        baseSkillDuration = 4f;
+        baseSkillCooldown = 1f;
+    }
+
+    protected override void UpdateStats()
+    {
+        base.UpdateStats();
+        if (skillActive)
+            attackSpeed += baseAttackSpeed * (3f + 0.25f * effectivePath3Level);
     }
 
     protected override void Update()
     {
         base.Update();
         basePiercing = bP + effectivePath2Level;
+
+        if (skillActive)
+        {
+            skillTimer -= Time.deltaTime;
+            if (skillTimer <= 0f)
+                skillActive = false;
+        }
     }
 
     protected override void Shoot(Vector3 target)
@@ -40,7 +58,8 @@ public class LeafRanger : Shooter
             arrow.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
     }
-        public override void OnPath1Upgrade(int level)
+
+    public override void OnPath1Upgrade(int level)
     {
         baseCriticalChance = 0.05f + 0.05f*level;
         baseAttackSpeed = bAS + (0.05f*level);
@@ -53,8 +72,14 @@ public class LeafRanger : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = 3f + (level * 0.5f);
-        activeRadius = 3f + (level * 0.3f);
+        baseSkillDuration = 4f + (level * 0.5f);
+    }
+
+    public override void ActivateSkill()
+    {
+        skillActive = true;
+        skillTimer = skillDuration;
+        skillCooldownTimer = skillCooldown;
     }
 
 
@@ -77,7 +102,7 @@ public class LeafRanger : Shooter
 
     public override string GetSkillDesription()
     {
-        return $"The {GetName()} releases a trap that imprisons insects within its area, dealing <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage upon impact.";
+        return $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{300 + 25 * effectivePath3Level}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.";
     }
 
     public override string GetPassiveDescription()
@@ -94,7 +119,7 @@ public class LeafRanger : Shooter
     {
         return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Critical Chance by <color=green><b>5%</b></color> per level. [<color=green><b>+" + (5*effectivePath1Level) + "%</b></color>]\n\n" +
         "Increase Attack Speed by <color=green><b>0.05</b></color> per level. [<color=green><b>+" + (0.05*effectivePath1Level) + "</b></color>]\n\n" +
-        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>"; 
+        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>";
     }
     public override string GetPath2Name()
     {
@@ -113,6 +138,8 @@ public class LeafRanger : Shooter
 
     public override string GetPath3Description()
     {
-        return "";
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease Attack Speed bonus by <color=green><b>25%</b></color> per level. [<color=green><b>+{25 * effectivePath3Level}%</b></color>]\n\n" +
+        $"Increase duration by <color=green><b>0.5</b></color> seconds per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }
 }

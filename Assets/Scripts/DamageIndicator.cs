@@ -72,7 +72,7 @@ public class DamageIndicator : MonoBehaviour
             break;
         }
 
-        tmpText.fontSize = Mathf.Clamp(7f + damage * 0.03f, 7f, 8.5f);
+        tmpText.fontSize = Mathf.Clamp(7f + damage * 0.04f, 7f, 11f);
 
         if (isCrit)
         {
