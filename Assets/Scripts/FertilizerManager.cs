@@ -82,6 +82,8 @@ public class FertilizerManager : MonoBehaviour
             case StatType.ImmobilizeDurationAdder:     return (0.5f,  1f);
             case StatType.ImmobilizeDurationMultiplier: return (0.1f, 0.3f);
             case StatType.PassiveCooldown:              return (0.06f, 0.08f);
+            case StatType.SkillDurationAdder:           return (1f,    2f);
+            case StatType.SkillDurationMultiplier:      return (0.06f, 0.08f);
             default:                       return (0f,    0f);
         }
     }
@@ -110,6 +112,8 @@ public class FertilizerManager : MonoBehaviour
             case StatType.ImmobilizeDurationAdder:      plant.immobilizeDurationAdder      += value; break;
             case StatType.ImmobilizeDurationMultiplier: plant.immobilizeDurationMultiplier += value; break;
             case StatType.PassiveCooldown:              plant.passiveCooldownReductionMultiplier += value; break;
+            case StatType.SkillDurationAdder:           plant.skillDurationAdder      += value; break;
+            case StatType.SkillDurationMultiplier:      plant.skillDurationMultiplier += value; break;
         }
     }
 }

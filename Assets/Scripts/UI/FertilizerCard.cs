@@ -98,6 +98,7 @@ public class FertilizerCard : MonoBehaviour
         {
             case StatType.Piercing:
             case StatType.ImmobilizeDurationAdder:
+            case StatType.SkillDurationAdder:
                 return true;
             default:
                 return false;
@@ -128,6 +129,8 @@ public class FertilizerCard : MonoBehaviour
             case StatType.ImmobilizeDurationAdder:      return "Immobilize Duration";
             case StatType.ImmobilizeDurationMultiplier: return "Immobilize Duration";
             case StatType.PassiveCooldown:              return "Passive Cd. Reduction";
+            case StatType.SkillDurationAdder:           return "Skill Duration";
+            case StatType.SkillDurationMultiplier:      return "Skill Duration";
             default:                      return statType.ToString();
         }
     }

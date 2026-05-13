@@ -43,5 +43,7 @@ public enum StatType
     Piercing,
     ImmobilizeDurationAdder,
     ImmobilizeDurationMultiplier,
-    PassiveCooldown
+    PassiveCooldown,
+    SkillDurationAdder,
+    SkillDurationMultiplier
 }
