@@ -114,6 +114,8 @@ MonoBehaviour:
   baseElementalPower: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  baseTenacity: 0
+  baseImmobilizeDuration: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -148,6 +150,8 @@ MonoBehaviour:
   elementalPower: 0
   passiveDamage: 0
   skillDamage: 0
+  tenacity: 0
+  immobilizeDuration: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicDamageAdder: 0
@@ -179,6 +183,8 @@ MonoBehaviour:
   elementalPowerAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
+  tenacityAdder: 0
+  immobilizeDurationAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicDamageMultiplier: 0
@@ -210,6 +216,8 @@ MonoBehaviour:
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
   skillDamageMultiplier: 0
+  tenacityMultiplier: 0
+  immobilizeDurationMultiplier: 0
   internalCooldown: 2
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -225,13 +233,25 @@ MonoBehaviour:
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 0}
   allowedTiles: 000000000100000004000000
-  sunCost: 150
+  sunCost: 125
   totalSunSpent: 0
   elementalType: 2
   damageType: 0
   exp: 0
   expBoost: 0
   activeCooldown: 0
+  activeDuration: 3
+  basePassiveCooldown: 0
+  passiveCooldown: 0
+  passiveCooldownAdder: 0
+  passiveCooldownReductionMultiplier: 0
+  passiveCooldownMultiplier: 0
+  passiveCooldownTimer: 0
+  baseSkillCooldown: 0
+  skillCooldown: 0
+  skillCooldownReductionAdder: 0
+  skillCooldownReductionMultiplier: 0
+  skillCooldownTimer: 0
   path1Level: 0
   path2Level: 0
   path3Level: 0
@@ -249,8 +269,8 @@ MonoBehaviour:
   maxRange: 0
   basePiercing: 0
   piercing: 0
+  piercingAdder: 0
   targeting: 1
-  activeDuration: 3
   activeRadius: 2
 --- !u!1 &7507562756265830079
 GameObject:

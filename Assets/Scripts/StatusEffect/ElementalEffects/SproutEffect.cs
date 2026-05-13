@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SproutEffect : ElementalDebuff
 {
     public SproutEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        
+
     }
 
     public override string GetName() => "<color=#32CD32>Sprout</color>";
@@ -12,9 +13,21 @@ public class SproutEffect : ElementalDebuff
 
     public override void OnApply()
     {
-        Debug.Log("Sprout inflicted");
-
         Insect insect = (Insect)target;
+
+        if (insect.HasEffect<GustEffect>())
+        {
+            Entity gustSource = insect.GetEffect<GustEffect>().source;
+            insect.RemoveEffect<GustEffect>();
+            foreach (Insect nearby in new List<Insect>(Insect.allInsects))
+            {
+                if (nearby == insect) continue;
+                if (Vector3.Distance(insect.transform.position, nearby.transform.position) <= 2f)
+                    nearby.ApplyEffect(new SproutEffect(nearby, 6f, 1, gustSource));
+            }
+            return;
+        }
+
         if (insect.HasEffect<BlazeEffect>())
         {
             insect.RemoveEffect<SproutEffect>();
@@ -32,7 +45,8 @@ public class SproutEffect : ElementalDebuff
             insect.RemoveEffect<SproutEffect>();
             insect.RemoveEffect<TaintedEffect>();
             insect.ApplyEffect(new DecayEffect(insect, 8f, 1, source));
-        } else if (insect.HasEffect<WetEffect>())
+        }
+        else if (insect.HasEffect<WetEffect>())
         {
             if (insect.germinateInternalCooldown <= 0)
             {
@@ -44,13 +58,6 @@ public class SproutEffect : ElementalDebuff
         }
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        
-    }
-
-    public override void OnExpire()
-    {
-        Debug.Log("Sprout removed");
-    }
+    public override void OnTick(float deltaTime) { }
+    public override void OnExpire() { }
 }

@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WetEffect : ElementalDebuff
 {
     public WetEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        
+
     }
 
     public override string GetName() => "<color=#1E90FF>Wet</color>";
@@ -12,9 +13,21 @@ public class WetEffect : ElementalDebuff
 
     public override void OnApply()
     {
-        Debug.Log("Wet inflicted");
-
         Insect insect = (Insect)target;
+
+        if (insect.HasEffect<GustEffect>())
+        {
+            Entity gustSource = insect.GetEffect<GustEffect>().source;
+            insect.RemoveEffect<GustEffect>();
+            foreach (Insect nearby in new List<Insect>(Insect.allInsects))
+            {
+                if (nearby == insect) continue;
+                if (Vector3.Distance(insect.transform.position, nearby.transform.position) <= 2f)
+                    nearby.ApplyEffect(new WetEffect(nearby, 6f, 1, gustSource));
+            }
+            return;
+        }
+
         if (insect.HasEffect<ColdEffect>())
         {
             if (insect.freezeInternalCooldown <= 0)
@@ -22,19 +35,22 @@ public class WetEffect : ElementalDebuff
                 insect.RemoveEffect<WetEffect>();
                 insect.RemoveEffect<ColdEffect>();
                 insect.freezeInternalCooldown = 5f;
-                insect.ApplyEffect(new FreezeEffect(insect, 2f, 1, source)); 
+                insect.ApplyEffect(new FreezeEffect(insect, 2f, 1, source));
             }
-
-        } else if (insect.HasEffect<TaintedEffect>()) {
+        }
+        else if (insect.HasEffect<TaintedEffect>())
+        {
             insect.RemoveEffect<WetEffect>();
             insect.RemoveEffect<TaintedEffect>();
             insect.ApplyEffect(new SludgeEffect(insect, 4f, 1, source));
-
-        } else if (insect.HasEffect<BlazeEffect>()) {
+        }
+        else if (insect.HasEffect<BlazeEffect>())
+        {
             insect.RemoveEffect<WetEffect>();
             insect.RemoveEffect<BlazeEffect>();
             insect.ApplyEffect(new BoilEffect(insect, 8f, 1, source));
-        } else if (insect.HasEffect<SproutEffect>())
+        }
+        else if (insect.HasEffect<SproutEffect>())
         {
             if (insect.germinateInternalCooldown <= 0)
             {
@@ -46,13 +62,6 @@ public class WetEffect : ElementalDebuff
         }
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        
-    }
-
-    public override void OnExpire()
-    {
-        Debug.Log("Wet removed");
-    }
+    public override void OnTick(float deltaTime) { }
+    public override void OnExpire() { }
 }

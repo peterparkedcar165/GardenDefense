@@ -204,6 +204,11 @@ public abstract class Entity : MonoBehaviour
             Damage(3, damageType, ElementalType.Ice, source, false, new DamageTag [] {DamageTag.ElementalDebuff});
         }
 
+        if (this.HasEffect<FractureEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
+        {
+            Damage(damageDealt * 0.25f, DamageType.Physical, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+        }
+
         switch (elementalType)
         {
             case ElementalType.Fire:
@@ -537,6 +542,16 @@ public abstract class Entity : MonoBehaviour
             }
         }
         return 0; // no effect found
+    }
+
+    public T GetEffect<T>() where T : StatusEffect
+    {
+        foreach (StatusEffect effect in activeEffects)
+        {
+            if (effect is T typedEffect)
+                return typedEffect;
+        }
+        return null;
     }
 
 // tick effects of the status effect. starts at end of the list

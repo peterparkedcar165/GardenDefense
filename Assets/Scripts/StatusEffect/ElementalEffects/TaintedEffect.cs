@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TaintedEffect : ElementalDebuff
 {
     public TaintedEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        
+
     }
 
     public override string GetName() => "<color=#8B008B>Tainted</color>";
@@ -12,10 +13,28 @@ public class TaintedEffect : ElementalDebuff
 
     public override void OnApply()
     {
-        Debug.Log("Tainted inflicted");
-
         Insect insect = (Insect)target;
-        if (insect.HasEffect<BlazeEffect>())
+
+        if (insect.HasEffect<GustEffect>())
+        {
+            Entity gustSource = insect.GetEffect<GustEffect>().source;
+            insect.RemoveEffect<GustEffect>();
+            foreach (Insect nearby in new List<Insect>(Insect.allInsects))
+            {
+                if (nearby == insect) continue;
+                if (Vector3.Distance(insect.transform.position, nearby.transform.position) <= 2f)
+                    nearby.ApplyEffect(new TaintedEffect(nearby, 6f, 1, gustSource));
+            }
+            return;
+        }
+
+        if (insect.HasEffect<ColdEffect>())
+        {
+            insect.RemoveEffect<TaintedEffect>();
+            insect.RemoveEffect<ColdEffect>();
+            insect.ApplyEffect(new FrostbiteEffect(insect, 6f, 1, source));
+        }
+        else if (insect.HasEffect<BlazeEffect>())
         {
             insect.RemoveEffect<TaintedEffect>();
             insect.RemoveEffect<BlazeEffect>();
@@ -26,22 +45,15 @@ public class TaintedEffect : ElementalDebuff
             insect.RemoveEffect<TaintedEffect>();
             insect.RemoveEffect<SproutEffect>();
             insect.ApplyEffect(new DecayEffect(insect, 8f, 1, source));
-        } else if (insect.HasEffect<WetEffect>()) {
-
+        }
+        else if (insect.HasEffect<WetEffect>())
+        {
             insect.RemoveEffect<TaintedEffect>();
             insect.RemoveEffect<WetEffect>();
             insect.ApplyEffect(new SludgeEffect(insect, 4f, 1, source));
-
         }
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        
-    }
-
-    public override void OnExpire()
-    {
-        Debug.Log("Tainted removed");
-    }
+    public override void OnTick(float deltaTime) { }
+    public override void OnExpire() { }
 }
