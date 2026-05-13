@@ -94,7 +94,7 @@ public class AcornSprout : Shooter
 
     public override string GetSkillDesription()
     {
-        return $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. The acorn then sits on the ground for <color=green><b>30</b></color> seconds, blocking ground insects who stop to gnaw at it.";
+        return $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. The acorn then sits on the ground for <color=green><b>{skillDuration}</b></color> seconds, blocking ground insects who stop to gnaw at it.";
     }
 
     public override string GetPassiveDescription()
@@ -117,8 +117,8 @@ public class AcornSprout : Shooter
 
     public override string GetPath3Description()
     {
-        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease impact damage multiplier by <color=green><b>10%</b></color> per level. [<color=green><b>x{activeDamageMultiplier:F1}</b></color>]\n\n" +
-        $"Increase acorn lifetime by <color=green><b>2</b></color> seconds per level. [<color=green><b>{skillDuration}s</b></color>]\n\n" +
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease impact damage multiplier by <color=green><b>10%</b></color> per level. [<color=green><b>+{10 * effectivePath3Level}%</b></color>]\n\n" +
+        $"Increase acorn lifetime by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level - path3Level) + ")</b></color>";
     }
 }

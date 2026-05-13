@@ -12,7 +12,8 @@ public class PoisonShroom : Shooter
     bMR = 20f; // base max range
     private int bP = 0; // base piercing
     public int poisonLevel = 1;
-    public float poisonDuration = 6f, activeRadius = 2f;
+    public float poisonDuration = 6f, activeRadius = 0.75f;
+    [SerializeField] private GameObject poisonBlobPrefab;
     protected override void Awake()
     {
         base.Awake();
@@ -22,7 +23,8 @@ public class PoisonShroom : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
-        baseSkillDuration = 7f;
+        baseSkillDuration = 5f;
+        activeRadius = 1f;
     }
 
     protected override void Update()
@@ -75,8 +77,23 @@ public class PoisonShroom : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = 7f + 1f * level;
-        activeRadius = 2f + 0.5f * level;
+        baseSkillDuration = 5f + 1f * level;
+        activeRadius = 1f + 0.2f * level;
+    }
+
+    public override void ActivateSkill()
+    {
+        SkillTargetingManager.instance.BeginTargeting(activeRadius, OnTargetConfirmed);
+    }
+
+    private void OnTargetConfirmed(Vector3 position)
+    {
+        if (poisonBlobPrefab == null) return;
+        skillCooldownTimer = skillCooldown;
+        GameObject obj = Instantiate(poisonBlobPrefab, transform.position, Quaternion.identity);
+        PoisonBlob blob = obj.GetComponent<PoisonBlob>();
+        if (blob != null)
+            blob.Initialize(position, activeRadius, skillDuration, this);
     }
 
     // DESCRIPTION
@@ -98,7 +115,7 @@ public class PoisonShroom : Shooter
 
     public override string GetSkillDesription()
     {
-        return $"Releases a lingering toxic cloud that poisons the area around himself, dealing <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage over time, and reducing any healing towards insects caught in the cloud.";
+        return $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>{activeRadius}</b></color> radius that lasts <color=green><b>{skillDuration}</b></color> seconds. Insects standing in the field take <color=green><b>12</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second, and any debuffs on them are frozen in time.";
     }
 
     public override string GetPassiveDescription()
@@ -122,6 +139,8 @@ public class PoisonShroom : Shooter
 
     public override string GetPath3Description()
     {
-        return "";
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease field duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{1 * effectivePath3Level}s</b></color>]\n\n" +
+        "Increase field radius by <color=green><b>0.2</b></color> per level. [<color=green><b>+" + (0.2 * effectivePath3Level) + "</b></color>]\n\n" +
+        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level - path3Level) + ")</b></color>";
     }
 }

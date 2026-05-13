@@ -130,7 +130,7 @@ public class Waterlily : Shooter
     public override string GetPath3Description()
     {
         return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease impact damage by <color=green><b>12</b></color> per level. [<color=green><b>+" + (12*effectivePath3Level) + "</b></color>]\n\n" +
-        $"Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>{skillDuration}s</b></color>]\n\n" +
+        $"Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{1 * effectivePath3Level}s</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }
 }

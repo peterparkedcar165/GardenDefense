@@ -169,8 +169,8 @@ public class Snowdrop : Aura
 
     public override string GetPath1Description()
     {
-        return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <b><color=green>0.5</color></b> per level. [<b><color=green>+" + (1f * path1Level) + "</color></b>]\n" +
-        "Increase Attack Range by <b><color=green>0.1</color></b> per level. [<b><color=green>+" + (0.1f * path1Level) + "</color></b>]\n\n" +
+        return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <b><color=green>1</color></b> per level. [<b><color=green>+" + (1f * effectivePath1Level) + "</color></b>]\n\n" +
+        "Increase Attack Range by <b><color=green>0.1</color></b> per level. [<b><color=green>+" + (0.1f * effectivePath1Level) + "</color></b>]\n\n" +
         "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>";
     }
 
@@ -183,7 +183,7 @@ public class Snowdrop : Aura
     public override string GetPath3Description()
     {
         return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease Damage Per Second by <color=green><b>15</b></color> per level. [<color=green><b>+" + (15*effectivePath3Level) + "</b></color>]\n\n" +
-        $"Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>{skillDuration}s</b></color>]\n\n" +
+        $"Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{1 * effectivePath3Level}s</b></color>]\n\n" +
         "Increase width by <color=green><b>0.5</b></color> units per level. [<color=green><b>" + (0.5*effectivePath3Level) + "</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";  
     }

@@ -157,7 +157,7 @@ public class Sunflower : Shooter
     public override string GetPath3Description()
     {
         return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the Attack Damage multiplier of the Damage Per Second by <color=green><b>35%</b></color> per level. [<color=green><b>+" + (35*effectivePath3Level) + "%</b></color>]\n\n" +
-        $"Increase Sunray duration by <color=green><b>0.5</b></color> second per level. [<color=green><b>{skillDuration}s</b></color>]\n\n" +
+        $"Increase Sunray duration by <color=green><b>0.5</b></color> second per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }
 }

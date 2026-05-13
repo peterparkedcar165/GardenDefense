@@ -103,7 +103,7 @@ public class AcornBomb : MonoBehaviour
             pos.y = 0f;
             visual.localPosition = pos;
             if (shadow != null)
-                shadow.localScale = new Vector3(1f, 0.5f, 1f);
+                shadow.localScale = new Vector3(0.8f, 0.4f, 1f);
             OnLand();
         }
         else
@@ -112,7 +112,7 @@ public class AcornBomb : MonoBehaviour
             if (shadow != null)
             {
                 float t = 1f - (pos.y / startHeight);
-                shadow.localScale = new Vector3(t, t * 0.5f, 1f);
+                shadow.localScale = new Vector3(t * 0.8f, t * 0.4f, 1f);
             }
         }
     }

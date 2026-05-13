@@ -64,6 +64,7 @@ public abstract class Entity : MonoBehaviour
     public float passiveDamage, skillDamage;
     public float skillDuration;
     public float tenacity, immobilizeDuration;
+    public bool debuffsFrozen;
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -566,11 +567,17 @@ public abstract class Entity : MonoBehaviour
     {
         for (int i = activeEffects.Count - 1; i >= 0; i--)
         {
-            activeEffects[i].Tick(Time.deltaTime);
-            if (activeEffects[i].IsExpired())
+            StatusEffect effect = activeEffects[i];
+            bool durationFrozen = debuffsFrozen && effect.effectType == StatusEffect.Type.negative;
+
+            effect.OnTick(Time.deltaTime);
+            if (!durationFrozen)
+                effect.duration -= Time.deltaTime;
+
+            if (effect.IsExpired())
             {
-                activeEffects[i].OnExpire();
-                activeEffects.Remove(activeEffects[i]);
+                effect.OnExpire();
+                activeEffects.RemoveAt(i);
             }
         }
     }
