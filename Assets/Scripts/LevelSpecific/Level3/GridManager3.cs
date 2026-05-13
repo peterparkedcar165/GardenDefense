@@ -57,7 +57,7 @@ private List<Vector2Int> waterCoordinates = new List<Vector2Int>
     new Vector2Int(16,0), new Vector2Int(17,0), new Vector2Int(18,0),
     // individual
     new Vector2Int(3,11), new Vector2Int(11,11),
-    new Vector2Int(7,8), new Vector2Int(7,9), new Vector2Int(8,8), new Vector2Int(8,9),
+    new Vector2Int(7,8), new Vector2Int(8,9),
     new Vector2Int(8,5), new Vector2Int(14,8)
 };
 
