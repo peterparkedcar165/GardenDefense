@@ -16,6 +16,13 @@ public class GustEffect : ElementalDebuff
     {
         Insect insect = (Insect)target;
 
+        if (insect.gustInternalCooldown > 0)
+        {
+            insect.RemoveEffect<GustEffect>();
+            return;
+        }
+        insect.gustInternalCooldown = 3f;
+
         if (insect.HasEffect<BlazeEffect>())
         {
             Entity primerSource = insect.GetEffect<BlazeEffect>().source;

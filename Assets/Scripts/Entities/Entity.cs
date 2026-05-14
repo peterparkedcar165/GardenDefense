@@ -428,15 +428,14 @@ public abstract class Entity : MonoBehaviour
             taintedInternalCooldown -= Time.deltaTime;
         }
 
+        if (gustInternalCooldown > 0)
+            gustInternalCooldown -= Time.deltaTime;
+
         if (freezeInternalCooldown > 0)
-        {
             freezeInternalCooldown -= Time.deltaTime;
-        }
 
         if (germinateInternalCooldown > 0)
-        {
             germinateInternalCooldown -= Time.deltaTime;
-        }
     }
 
     // HEALTH BAR
