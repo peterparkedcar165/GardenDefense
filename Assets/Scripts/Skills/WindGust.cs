@@ -23,7 +23,7 @@ public class WindGust : MonoBehaviour
     [SerializeField] private SpriteRenderer visualRenderer;
     [SerializeField] private LayerMask obstacleLayer;
 
-    private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.DoT };
+    private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.DoT, DamageTag.SkillDamage };
 
     public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float damage, float pushForce, Plant source)
     {

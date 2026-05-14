@@ -15,7 +15,7 @@ public class Sunray : MonoBehaviour
 
     private Vector3 targetScale;
 
-    private static readonly DamageTag[] damageTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.AoE };
+    private static readonly DamageTag[] damageTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.AoE, DamageTag.DoT };
 
     private void Awake()
     {

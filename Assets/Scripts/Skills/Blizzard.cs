@@ -58,7 +58,7 @@ public class Blizzard : MonoBehaviour
             if (!IsInBeam(insect.transform.position)) continue;
             insect.ApplyEffect(new ChillEffect(insect, 4f, chillLevel, source));
             if (tickTimer >= tickInterval)
-                insect.Damage(damage * tickInterval, DamageType.Magic, ElementalType.Ice, source, false, new DamageTag[] { DamageTag.AoE, DamageTag.DoT });
+                insect.Damage(damage * tickInterval, DamageType.Magic, ElementalType.Ice, source, false, new DamageTag[] { DamageTag.AoE, DamageTag.DoT, DamageTag.SkillDamage });
         }
 
         if (tickTimer >= tickInterval)
