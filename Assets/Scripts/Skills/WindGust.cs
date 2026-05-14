@@ -58,13 +58,13 @@ public class WindGust : MonoBehaviour
 
             Vector2 awayFromOrigin = ((Vector2)insect.transform.position - origin).normalized;
             float force = insect.isFlying ? pushForce * 1.25f : pushForce;
-            Vector3 newPos = insect.transform.position + (Vector3)(awayFromOrigin * force * Time.deltaTime);
-            if (!Physics2D.OverlapCircle(newPos, 0.3f, obstacleLayer))
-                insect.transform.position = newPos;
-            insect.ApplyEffect(new GustEffect(insect, 4f, 1, source));
+            insect.windVelocity = awayFromOrigin * force;
 
             if (tickTimer >= tickInterval)
+            {
                 insect.Damage(damage * tickInterval, DamageType.Magic, ElementalType.Wind, source, false, damageTags);
+                insect.ApplyEffect(new DisplacedEffect(insect, 0.5f, 1, source));
+            }
         }
 
         if (tickTimer >= tickInterval)

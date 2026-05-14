@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Dandelion : Shooter
 {
     private float
-    bAD = 8f,   // base attack damage
+    bAD = 10f,   // base attack damage
     bAS = 1f,   // base attack speed
     bAR = 2f,   // base attack range
     bPS = 5f,   // base projectile speed
@@ -17,7 +17,7 @@ public class Dandelion : Shooter
     private GameObject windGustIndicatorInstance;
 
     private const float indicatorLength = 30f;
-    private const float pushForce = 2f;
+    private const float pushForce = 1.5f;
 
     protected override void Awake()
     {

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GustEffect : ElementalDebuff
@@ -10,7 +9,7 @@ public class GustEffect : ElementalDebuff
     }
 
     public override string GetName() => "<color=#E0E0E0>Gust</color>";
-    public override string GetDescription() => "When another elemental primer lands, it is refreshed and spread to nearby insects. Gust is then consumed.";
+    public override string GetDescription() => "Reacts with an existing elemental primer, consuming both and dealing split Wind and elemental damage.";
 
     public override void OnApply()
     {
@@ -18,58 +17,53 @@ public class GustEffect : ElementalDebuff
 
         if (insect.HasEffect<BlazeEffect>())
         {
-            Entity primerSource = insect.GetEffect<BlazeEffect>().source;
+            insect.RemoveEffect<BlazeEffect>();
             insect.RemoveEffect<GustEffect>();
-            insect.StartCoroutine(SpreadAfterDelay(insect, source, n => n.ApplyEffect(new BlazeEffect(n, 6f, 1, primerSource))));
+            insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Fire));
             return;
         }
         if (insect.HasEffect<ColdEffect>())
         {
-            Entity primerSource = insect.GetEffect<ColdEffect>().source;
+            insect.RemoveEffect<ColdEffect>();
             insect.RemoveEffect<GustEffect>();
-            insect.StartCoroutine(SpreadAfterDelay(insect, source, n => n.ApplyEffect(new ColdEffect(n, 6f, 1, primerSource))));
+            insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Ice));
             return;
         }
         if (insect.HasEffect<WetEffect>())
         {
-            Entity primerSource = insect.GetEffect<WetEffect>().source;
+            insect.RemoveEffect<WetEffect>();
             insect.RemoveEffect<GustEffect>();
-            insect.StartCoroutine(SpreadAfterDelay(insect, source, n => n.ApplyEffect(new WetEffect(n, 6f, 1, primerSource))));
+            insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Water));
             return;
         }
         if (insect.HasEffect<TaintedEffect>())
         {
-            Entity primerSource = insect.GetEffect<TaintedEffect>().source;
+            insect.RemoveEffect<TaintedEffect>();
             insect.RemoveEffect<GustEffect>();
-            insect.StartCoroutine(SpreadAfterDelay(insect, source, n => n.ApplyEffect(new TaintedEffect(n, 6f, 1, primerSource))));
+            insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Poison));
             return;
         }
         if (insect.HasEffect<SproutEffect>())
         {
-            Entity primerSource = insect.GetEffect<SproutEffect>().source;
+            insect.RemoveEffect<SproutEffect>();
             insect.RemoveEffect<GustEffect>();
-            insect.StartCoroutine(SpreadAfterDelay(insect, source, n => n.ApplyEffect(new SproutEffect(n, 6f, 1, primerSource))));
+            insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Nature));
             return;
         }
 
         insect.RemoveEffect<GustEffect>();
     }
 
-    private static IEnumerator SpreadAfterDelay(Insect origin, Entity gustSource, System.Action<Insect> apply)
+    private static IEnumerator WindshearDelay(Insect target, Entity source, ElementalType primerElement)
     {
+        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
+        indicator.GetComponent<DamageIndicator>().Initialize("Windshear", new Color(0.85f, 1f, 0.85f));
         yield return new WaitForSeconds(0.1f);
-        float windDamage = 12f + (0.5f * gustSource.attackDamage);
-        DamageTag[] tags = new DamageTag[] { DamageTag.AoE, DamageTag.ElementalDebuff };
-        origin.Damage(windDamage, DamageType.Magic, ElementalType.Wind, gustSource, false, tags);
-        foreach (Insect nearby in new List<Insect>(Insect.allInsects))
-        {
-            if (nearby == origin) continue;
-            if (Vector3.Distance(origin.transform.position, nearby.transform.position) <= 1.5f)
-            {
-                apply(nearby);
-                nearby.Damage(windDamage, DamageType.Magic, ElementalType.Wind, gustSource, false, tags);
-            }
-        }
+        float halfDamage = 16f * (1f + 0.5f * source.elementalPower);
+        DamageTag[] tags = new DamageTag[] { DamageTag.ElementalDebuff };
+        target.Damage(halfDamage, DamageType.Magic, ElementalType.Wind, source, false, tags);
+        yield return new WaitForSeconds(0.05f);
+        target.Damage(halfDamage, DamageType.Magic, primerElement, source, false, tags);
     }
 
     public override void OnTick(float deltaTime) { }

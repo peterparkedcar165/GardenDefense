@@ -20,6 +20,8 @@ public abstract class Insect : Entity
 
     // base and final
     public float movementSpeed, baseMovementSpeed;
+    public Vector2 windVelocity;
+    public Entity lastSource;
 
     // bonus
     public float movementSpeedAdder, movementSpeedMultiplier;
@@ -97,6 +99,21 @@ public abstract class Insect : Entity
     {
         if (isDying) return;
         if (waypoints == null) return;
+
+        if (windVelocity.sqrMagnitude > 0.001f)
+        {
+            Vector3 newPos = transform.position + (Vector3)windVelocity * Time.deltaTime;
+            if (!Physics2D.OverlapCircle(newPos, 0.3f, LayerMask.GetMask("Obstacle")))
+                transform.position = newPos;
+            else
+                windVelocity = Vector2.zero;
+            windVelocity = Vector2.Lerp(windVelocity, Vector2.zero, 5f * Time.deltaTime);
+        }
+        else
+        {
+            windVelocity = Vector2.zero;
+        }
+
         if (HasEffect<HardCrowdControl>()) return;
         if (HasEffect<BubblePrisonEffect>()) return;
         if (HasEffect<EatingAcornEffect>()) return;

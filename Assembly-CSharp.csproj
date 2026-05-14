@@ -59,6 +59,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
+    <Compile Include="Assets\Scripts\Environment\WaterZone.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level2\GridManager2.cs" />
     <Compile Include="Assets\Scripts\Spawning\WeatherManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aura.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />

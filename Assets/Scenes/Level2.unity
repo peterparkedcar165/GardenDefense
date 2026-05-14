@@ -700,6 +700,93 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &484505977
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1983922117}
+    m_Modifications:
+    - target: {fileID: 62563450460017140, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 15.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 62563450460017140, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 248283656966871504, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_Name
+      value: Water
+      objectReference: {fileID: 0}
+    - target: {fileID: 1706003111457972457, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 1706003111457972457, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 1803790531895223217, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 1803790531895223217, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -13.41
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 1723847914279027996, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+--- !u!4 &484505978 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+  m_PrefabInstance: {fileID: 484505977}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &531320437
 GameObject:
   m_ObjectHideFlags: 0
@@ -4518,6 +4605,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1401305052}
+  - {fileID: 484505978}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2055858663

@@ -5,7 +5,8 @@ public enum DamageType
 {
     Physical,
     Magic,
-    True
+    True,
+    Environmental
 }
 
 public enum DamageTag
@@ -93,7 +94,7 @@ public abstract class Entity : MonoBehaviour
     public float tenacityMultiplier, immobilizeDurationMultiplier;
 
     [Header("Internal Cooldowns")]
-    public float internalCooldown = 2f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;
@@ -249,10 +250,14 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Wind:
             elementalMultiplier = (1 - this.windResistance + source.windDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.gustInternalCooldown <= 0)
+            if (this is Insect windInsect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
-                    gustInternalCooldown = internalCooldown;
-                    ApplyEffect(new GustEffect(this, elementalDebuffDuration, 1, source));
+                    if (windInsect.HasEffect<BlazeEffect>() || windInsect.HasEffect<ColdEffect>() ||
+                        windInsect.HasEffect<WetEffect>() || windInsect.HasEffect<TaintedEffect>() ||
+                        windInsect.HasEffect<SproutEffect>())
+                    {
+                        ApplyEffect(new GustEffect(this, 0.5f, 1, source));
+                    }
                 }
             break;
 
@@ -340,6 +345,7 @@ public abstract class Entity : MonoBehaviour
         
         health -= finalDamage;
         source.totalDamageDealt += finalDamage; // FOR DEBUG
+        if (this is Insect damagedInsect) damagedInsect.lastSource = source;
 
         // damage indicator
 
