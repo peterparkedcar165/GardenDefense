@@ -51,18 +51,20 @@ public class GustEffect : ElementalDebuff
             insect.StartCoroutine(SpreadAfterDelay(insect, source, n => n.ApplyEffect(new SproutEffect(n, 6f, 1, primerSource))));
             return;
         }
+
+        insect.RemoveEffect<GustEffect>();
     }
 
     private static IEnumerator SpreadAfterDelay(Insect origin, Entity gustSource, System.Action<Insect> apply)
     {
         yield return new WaitForSeconds(0.1f);
-        float windDamage = 22f * (1 + gustSource.elementalPower);
+        float windDamage = 12f + (0.5f * gustSource.attackDamage);
         DamageTag[] tags = new DamageTag[] { DamageTag.AoE, DamageTag.ElementalDebuff };
         origin.Damage(windDamage, DamageType.Magic, ElementalType.Wind, gustSource, false, tags);
         foreach (Insect nearby in new List<Insect>(Insect.allInsects))
         {
             if (nearby == origin) continue;
-            if (Vector3.Distance(origin.transform.position, nearby.transform.position) <= 2f)
+            if (Vector3.Distance(origin.transform.position, nearby.transform.position) <= 1.5f)
             {
                 apply(nearby);
                 nearby.Damage(windDamage, DamageType.Magic, ElementalType.Wind, gustSource, false, tags);

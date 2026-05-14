@@ -59,7 +59,7 @@ public class TaintedEffect : ElementalDebuff
         foreach (Insect nearby in new List<Insect>(Insect.allInsects))
         {
             if (nearby == origin) continue;
-            if (Vector3.Distance(origin.transform.position, nearby.transform.position) <= 2f)
+            if (Vector3.Distance(origin.transform.position, nearby.transform.position) <= 1.5f)
             {
                 nearby.ApplyEffect(new TaintedEffect(nearby, 6f, 1, gustSource));
                 nearby.Damage(windDamage, DamageType.Magic, ElementalType.Wind, gustSource, false, tags);

@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Name 2
   stats:
   - statType: 8
-    value: 0.36
+    value: 0.21
   - statType: 11
-    value: 0.44
+    value: 0.23
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

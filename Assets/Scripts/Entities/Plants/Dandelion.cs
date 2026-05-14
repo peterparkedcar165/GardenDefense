@@ -181,7 +181,7 @@ public class Dandelion : Shooter
         => $"The {GetName()} releases waves of seeds that ride the wind, striking multiple targets at once.";
 
     public override string GetAttackDescription()
-        => $"Fires <color=green><b>{2 + effectivePath2Level}</b></color> seeds simultaneously, each dealing <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage and applying <color=#B2EBF2>Gust</color>.";
+        => $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage and applies <color=#B2EBF2>Gust</color>.";
 
     public override string GetSkillDesription()
         => $"Blows a powerful gust of pollen wind <color=green><b>{1.5f + 0.25f * effectivePath3Level}</b></color> units wide towards the targeted direction, crossing the entire map. Insects caught in the gust take <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage over time, are pushed in the wind's direction, and have <color=#B2EBF2>Gust</color> applied for <color=green><b>{skillDuration}</b></color> seconds.";
