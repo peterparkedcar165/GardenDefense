@@ -21,6 +21,7 @@ public class WindGust : MonoBehaviour
     private float beamEnd = 0f;
 
     [SerializeField] private SpriteRenderer visualRenderer;
+    [SerializeField] private LayerMask obstacleLayer;
 
     private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.DoT };
 
@@ -57,7 +58,9 @@ public class WindGust : MonoBehaviour
 
             Vector2 awayFromOrigin = ((Vector2)insect.transform.position - origin).normalized;
             float force = insect.isFlying ? pushForce * 1.25f : pushForce;
-            insect.transform.position += (Vector3)(awayFromOrigin * force * Time.deltaTime);
+            Vector3 newPos = insect.transform.position + (Vector3)(awayFromOrigin * force * Time.deltaTime);
+            if (!Physics2D.OverlapCircle(newPos, 0.3f, obstacleLayer))
+                insect.transform.position = newPos;
             insect.ApplyEffect(new GustEffect(insect, 4f, 1, source));
 
             if (tickTimer >= tickInterval)
