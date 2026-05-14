@@ -16,13 +16,6 @@ public class GustEffect : ElementalDebuff
     {
         Insect insect = (Insect)target;
 
-        if (insect.gustInternalCooldown > 0)
-        {
-            insect.RemoveEffect<GustEffect>();
-            return;
-        }
-        insect.gustInternalCooldown = 3f;
-
         if (insect.HasEffect<BlazeEffect>())
         {
             Entity primerSource = insect.GetEffect<BlazeEffect>().source;
@@ -63,7 +56,7 @@ public class GustEffect : ElementalDebuff
     private static IEnumerator SpreadAfterDelay(Insect origin, Entity gustSource, System.Action<Insect> apply)
     {
         yield return new WaitForSeconds(0.1f);
-        float windDamage = 24f * (1 + gustSource.elementalPower);
+        float windDamage = 22f * (1 + gustSource.elementalPower);
         DamageTag[] tags = new DamageTag[] { DamageTag.AoE, DamageTag.ElementalDebuff };
         origin.Damage(windDamage, DamageType.Magic, ElementalType.Wind, gustSource, false, tags);
         foreach (Insect nearby in new List<Insect>(Insect.allInsects))

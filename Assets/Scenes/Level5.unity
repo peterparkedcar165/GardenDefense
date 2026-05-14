@@ -3285,7 +3285,7 @@ Tilemap:
       - {fileID: -529567261, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 134938649, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 611224928, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6
+      m_AnimationSpeed: 6.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 2, y: -7, z: 0}
@@ -3302,7 +3302,7 @@ Tilemap:
       - {fileID: -606837403, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1443172949, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 1301996377, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6
+      m_AnimationSpeed: 6.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 3, y: -7, z: 0}
@@ -3421,7 +3421,7 @@ Tilemap:
       - {fileID: -605774503, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1545045942, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 954890067, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6
+      m_AnimationSpeed: 6.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -12, y: -3, z: 0}
@@ -4976,9 +4976,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8866980882107167875}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7d0b4a4cddede541a2d6aaeccabf5a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 4baa15f3a02704245b6ff77b2277aa06, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Level3
+  m_EditorClassIdentifier: Assembly-CSharp::Level5
   spawnPoint: {fileID: 2102778779}
   levelTime: 0
   wave: 0
@@ -4992,7 +4992,10 @@ MonoBehaviour:
   waitTime: 0
   spawnInterval: 0
   spawnCount: 0
-  fertilizerPool: []
+  fertilizerPool:
+  - {fileID: 11400000, guid: 1d5e7cadca6602a4f881a47406b1b336, type: 2}
+  - {fileID: 11400000, guid: a9033a24de7ce134eb62cc80a581b009, type: 2}
+  - {fileID: 11400000, guid: 7fd5c97297ec7fc4d8966fa1b3134452, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
