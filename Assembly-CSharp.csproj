@@ -53,6 +53,7 @@
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
     <Compile Include="Assets\Scripts\DamageIndicator.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HardCC\Airborne.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Shooter.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSelectionUI.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />

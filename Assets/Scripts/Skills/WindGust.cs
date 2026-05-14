@@ -56,9 +56,8 @@ public class WindGust : MonoBehaviour
         {
             if (!IsInBeam(insect.transform.position)) continue;
 
-            Vector2 awayFromOrigin = ((Vector2)insect.transform.position - origin).normalized;
             float force = insect.isFlying ? pushForce * 1.25f : pushForce;
-            insect.windVelocity = awayFromOrigin * force;
+            insect.windVelocity += direction * force;
 
             if (tickTimer >= tickInterval)
             {

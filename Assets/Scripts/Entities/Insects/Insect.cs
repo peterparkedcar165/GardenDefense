@@ -21,6 +21,7 @@ public abstract class Insect : Entity
     // base and final
     public float movementSpeed, baseMovementSpeed;
     public Vector2 windVelocity;
+    public Vector2 windMomentum;
     public Entity lastSource;
 
     // bonus
@@ -102,16 +103,22 @@ public abstract class Insect : Entity
 
         if (windVelocity.sqrMagnitude > 0.001f)
         {
-            Vector3 newPos = transform.position + (Vector3)windVelocity * Time.deltaTime;
-            if (!Physics2D.OverlapCircle(newPos, 0.3f, LayerMask.GetMask("Obstacle")))
-                transform.position = newPos;
-            else
-                windVelocity = Vector2.zero;
-            windVelocity = Vector2.Lerp(windVelocity, Vector2.zero, 5f * Time.deltaTime);
+            windMomentum = windVelocity;
+            windVelocity = Vector2.zero;
         }
         else
         {
-            windVelocity = Vector2.zero;
+            windMomentum = Vector2.Lerp(windMomentum, Vector2.zero, 5f * Time.deltaTime);
+            if (windMomentum.sqrMagnitude <= 0.001f) windMomentum = Vector2.zero;
+        }
+
+        if (windMomentum.sqrMagnitude > 0.001f)
+        {
+            Vector3 newPos = transform.position + (Vector3)windMomentum * Time.deltaTime;
+            if (!Physics2D.OverlapCircle(newPos, 0.3f, LayerMask.GetMask("Obstacle")))
+                transform.position = newPos;
+            else
+                windMomentum = Vector2.zero;
         }
 
         if (HasEffect<HardCrowdControl>()) return;

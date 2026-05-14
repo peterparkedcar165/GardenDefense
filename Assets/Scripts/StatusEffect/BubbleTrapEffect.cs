@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BubblePrisonEffect : HardCrowdControl
+public class BubblePrisonEffect : Airborne
 {
     private Transform visual;
     private float knockUpHeight;
