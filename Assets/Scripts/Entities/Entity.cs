@@ -445,9 +445,13 @@ public abstract class Entity : MonoBehaviour
     protected GameObject healthBarInstance;
     private Transform healthBarFill;
 
+    private static GameObject _healthBarPrefab;
+
     private void SpawnHealthBar()
     {
-        GameObject healthBarPrefab = Resources.Load<GameObject>("HealthBar");
+        if (_healthBarPrefab == null)
+            _healthBarPrefab = Resources.Load<GameObject>("HealthBar");
+        GameObject healthBarPrefab = _healthBarPrefab;
         if (healthBarPrefab == null)
         {
             Debug.LogWarning("HealthBar prefab not found in Resources folder");
@@ -466,10 +470,7 @@ public abstract class Entity : MonoBehaviour
     
     private void UpdateHealthBar()
     {
-        if (healthBarFill == null) {
-            Debug.Log("healthBarFill is null, bailing");
-            return;
-        }
+        if (healthBarFill == null) return;
 
         float ratio = Mathf.Clamp01(health/maxHealth);
         Vector3 scale = healthBarFill.localScale;
@@ -478,6 +479,17 @@ public abstract class Entity : MonoBehaviour
 
         if (this is Insect && health < maxHealth && healthBarInstance != null)
             healthBarInstance.SetActive(true);
+    }
+
+    public void ShowHealthBar()
+    {
+        healthBarInstance?.SetActive(true);
+    }
+
+    public void RefreshHealthBarVisibility()
+    {
+        if (healthBarInstance == null) return;
+        healthBarInstance.SetActive(health < maxHealth);
     }
     
     void OnMouseEnter()

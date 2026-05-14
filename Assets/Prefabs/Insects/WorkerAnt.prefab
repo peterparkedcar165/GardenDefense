@@ -137,6 +137,9 @@ MonoBehaviour:
   baseElementalPower: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  baseSkillDuration: 0
+  baseTenacity: 0
+  baseImmobilizeDuration: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -171,6 +174,10 @@ MonoBehaviour:
   elementalPower: 0
   passiveDamage: 0
   skillDamage: 0
+  skillDuration: 0
+  tenacity: 0
+  immobilizeDuration: 0
+  debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicDamageAdder: 0
@@ -202,6 +209,9 @@ MonoBehaviour:
   elementalPowerAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
+  skillDurationAdder: 0
+  tenacityAdder: 0
+  immobilizeDurationAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicDamageMultiplier: 0
@@ -233,6 +243,9 @@ MonoBehaviour:
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
   skillDamageMultiplier: 0
+  skillDurationMultiplier: 0
+  tenacityMultiplier: 0
+  immobilizeDurationMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -252,6 +265,7 @@ MonoBehaviour:
   movementSpeedMultiplier: 0
   sunDrop: 0
   expDrop: 0
+  visual: {fileID: 0}
 --- !u!1 &3949176022732913986
 GameObject:
   m_ObjectHideFlags: 0

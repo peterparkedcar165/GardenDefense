@@ -55,7 +55,9 @@ public class WindGust : MonoBehaviour
         {
             if (!IsInBeam(insect.transform.position)) continue;
 
-            insect.transform.position += (Vector3)(direction * pushForce * Time.deltaTime);
+            Vector2 awayFromOrigin = ((Vector2)insect.transform.position - origin).normalized;
+            float force = insect.isFlying ? pushForce * 1.25f : pushForce;
+            insect.transform.position += (Vector3)(awayFromOrigin * force * Time.deltaTime);
             insect.ApplyEffect(new GustEffect(insect, 4f, 1, source));
 
             if (tickTimer >= tickInterval)

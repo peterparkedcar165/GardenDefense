@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using TMPro;
 
 public class InsectInfoUI : MonoBehaviour
@@ -32,21 +33,26 @@ public class InsectInfoUI : MonoBehaviour
 
     void Update()
     {
-        if (UnityEngine.InputSystem.Mouse.current.rightButton.wasPressedThisFrame && selectedInsect != null)
+        if (Mouse.current.leftButton.wasPressedThisFrame && selectedInsect != null && !EventSystem.current.IsPointerOverGameObject())
         {
-            HidePanel();
+            Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            Collider2D hit = Physics2D.OverlapPoint(mouseWorld);
+            if (hit == null || hit.GetComponentInParent<Insect>() == null)
+                HidePanel();
         }
 
+        if (Mouse.current.rightButton.wasPressedThisFrame && selectedInsect != null)
+            HidePanel();
+
         if (selectedInsect != null)
-        {
             RefreshStats();
-        }
     }
 
     public void ShowPanel(Insect insect)
     {
         PlantUpgradeUI.instance.HidePanel();
         selectedInsect = insect;
+        insect.ShowHealthBar();
         cachedRenderer = insect.GetComponentInChildren<SpriteRenderer>();
         panel.SetActive(true);
         insectNameText.text = insect.GetName();
@@ -56,6 +62,7 @@ public class InsectInfoUI : MonoBehaviour
 
     public void HidePanel()
     {
+        selectedInsect?.RefreshHealthBarVisibility();
         selectedInsect = null;
         cachedRenderer = null;
         panel.SetActive(false);

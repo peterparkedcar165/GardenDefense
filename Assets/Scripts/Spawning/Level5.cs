@@ -18,10 +18,13 @@ public class Level5 : SpawnManager
     public float spawnInterval;
     public int spawnCount;
 
+    [Header("Fertilizers")]
+    [SerializeField] private FertilizerData[] fertilizerPool;
+
     protected override void Start()
     {
         WeatherManager.instance.weather = WeatherType.Sunny;
-
+        FertilizerSelectionUI.instance.Configure(fertilizerPool);
         GameManager.instance.InitiateLevel(startSunCount, startHealth);
         waveCountText.text = $"Wave: {wave}/{maxWave}";
         StartCoroutine(RunWave());

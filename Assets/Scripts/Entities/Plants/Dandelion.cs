@@ -17,7 +17,7 @@ public class Dandelion : Shooter
     private GameObject windGustIndicatorInstance;
 
     private const float indicatorLength = 30f;
-    private const float pushForce = 1f;
+    private const float pushForce = 2f;
 
     protected override void Awake()
     {
@@ -111,7 +111,7 @@ public class Dandelion : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = bAD + (level * 2f);
+        baseElementalPower = level * 0.06f;
         baseAttackSpeed = bAS + (level * 0.05f);
     }
 
@@ -140,7 +140,7 @@ public class Dandelion : Shooter
     {
         skillCooldownTimer = skillCooldown;
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
-        float beamWidth = 1.5f + 2.5f * effectivePath3Level;
+        float beamWidth = 1.5f + 0.25f * effectivePath3Level;
         if (windGustPrefab == null) return;
         GameObject obj = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
         obj.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, attackDamage, pushForce, this);
@@ -161,7 +161,7 @@ public class Dandelion : Shooter
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, Camera.main.nearClipPlane));
         mouseWorld.z = 0f;
 
-        float beamWidth = 1.5f + 2.5f * effectivePath3Level;
+        float beamWidth = 1.5f + 0.25f * effectivePath3Level;
         Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
@@ -184,13 +184,13 @@ public class Dandelion : Shooter
         => $"Fires <color=green><b>{3 + effectivePath2Level}</b></color> seeds simultaneously, each dealing <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage and applying <color=#B2EBF2>Gust</color>.";
 
     public override string GetSkillDesription()
-        => $"Blows a powerful gust of pollen wind <color=green><b>{1.5f + 2.5f * effectivePath3Level}</b></color> units wide towards the targeted direction, crossing the entire map. Insects caught in the gust take <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage over time, are pushed in the wind's direction, and have <color=#B2EBF2>Gust</color> applied for <color=green><b>{skillDuration}</b></color> seconds.";
+        => $"Blows a powerful gust of pollen wind <color=green><b>{1.5f + 0.25f * effectivePath3Level}</b></color> units wide towards the targeted direction, crossing the entire map. Insects caught in the gust take <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage over time, are pushed in the wind's direction, and have <color=#B2EBF2>Gust</color> applied for <color=green><b>{skillDuration}</b></color> seconds.";
 
     public override string GetPassiveDescription()
         => $"Fires <color=green><b>{3 + effectivePath2Level}</b></color> seeds per attack, targeting the <color=green><b>{3 + effectivePath2Level}</b></color> highest-priority insects in range.";
 
     public override string GetPath1Description()
-        => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>2</b></color> per level. [<color=green><b>+{2 * effectivePath1Level}</b></color>]\n\n" +
+        => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Elemental Power by <color=green><b>6%</b></color> per level. [<color=green><b>+{6 * effectivePath1Level}%</b></color>]\n\n" +
            $"Increase Attack Speed by <color=green><b>0.05</b></color> per level. [<color=green><b>+{0.05 * effectivePath1Level}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
@@ -201,6 +201,6 @@ public class Dandelion : Shooter
 
     public override string GetPath3Description()
         => $"Skill:\n\n{GetSkillDesription()}\n\nIncrease gust duration by <color=green><b>0.5</b></color> seconds per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
-           $"Increase gust width by <color=green><b>2.5</b></color> per level. [<color=green><b>+{2.5 * effectivePath3Level}</b></color>]\n\n" +
+           $"Increase gust width by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath3Level}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

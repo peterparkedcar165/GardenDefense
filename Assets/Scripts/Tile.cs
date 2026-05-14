@@ -29,7 +29,7 @@ public class Tile : MonoBehaviour
         }
 
         PlantSelector selector = FindAnyObjectByType<PlantSelector>();
-        Debug.Log("Found Selector");
+        // Debug.Log("Found Selector");
         if (selector == null || selector.SelectedPlant == null)
         return;
 

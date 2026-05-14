@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: DandelionData
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
   plantPrefab: {fileID: 8616843614421381350, guid: 14b6b2e1b55eded4096408a60a06b44a, type: 3}
-  icon: {fileID: 2566547446135029436, guid: 53de87a7c32790349918a051a46d6a60, type: 3}
+  icon: {fileID: 21300000, guid: 53de87a7c32790349918a051a46d6a60, type: 3}
   plantName: Dandelion
   displayName: Dandelion

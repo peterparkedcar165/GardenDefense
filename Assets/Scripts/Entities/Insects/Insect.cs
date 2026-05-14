@@ -230,13 +230,14 @@ public abstract class Insect : Entity
         }
     }
 
+
+
+
     void OnMouseDown()
     {
         if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsTargeting) return;
         InsectInfoUI.instance?.ShowPanel(this);
     }
-
-
 
     // DESCRIPTIONS
     public virtual string GetName()

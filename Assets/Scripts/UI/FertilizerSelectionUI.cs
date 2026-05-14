@@ -19,6 +19,11 @@ public class FertilizerSelectionUI : MonoBehaviour
         panel.SetActive(false);
     }
 
+    public void Configure(FertilizerData[] pool)
+    {
+        fertilizerPool = pool;
+    }
+
     public bool IsOpen => panel.activeSelf;
 
     public void Show()
