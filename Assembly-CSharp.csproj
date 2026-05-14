@@ -49,6 +49,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.4.0f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
     <Compile Include="Assets\Scripts\DamageIndicator.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VulnerableEffect.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Assets\Scripts\LevelSpecific\Level5\GridManager5.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
+    <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level1.cs" />
     <Compile Include="Assets\Scripts\PlantData.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />

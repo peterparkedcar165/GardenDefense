@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f492ab58ea55a4391e898fd1fd294e, type: 3}
+  m_Name: DandelionData
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantPrefab: {fileID: 8616843614421381350, guid: 14b6b2e1b55eded4096408a60a06b44a, type: 3}
+  icon: {fileID: 2566547446135029436, guid: 53de87a7c32790349918a051a46d6a60, type: 3}
+  plantName: Dandelion
+  displayName: Dandelion
