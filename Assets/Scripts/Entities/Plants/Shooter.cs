@@ -86,6 +86,7 @@ public abstract class Shooter : Plant
 
         foreach (Insect insect in insects)
         {
+            if (insect == null || !insect.IsAlive) continue;
             float distance = Vector3.Distance(transform.position, insect.transform.position);
             if (distance <= attackRange && distance < nearestDistance && IsValidNightTarget(insect, distance))
             {
@@ -104,6 +105,7 @@ public abstract class Shooter : Plant
 
         foreach (Insect insect in insects)
         {
+            if (insect == null || !insect.IsAlive) continue;
             float distance = Vector3.Distance(transform.position, insect.transform.position);
             if (distance > attackRange) continue;
             if (!IsValidNightTarget(insect, distance)) continue;
@@ -138,6 +140,7 @@ public abstract class Shooter : Plant
 
         foreach (Insect insect in insects)
         {
+            if (insect == null || !insect.IsAlive) continue;
             float distance = Vector3.Distance(transform.position, insect.transform.position);
             if (distance > attackRange) continue;
             if (!IsValidNightTarget(insect, distance)) continue;

@@ -30,5 +30,5 @@ public class ScoutAnt : Ant
 
     public override string GetDescription() => $"The {GetName()} is quick and evasive, hard to pin down.";
 
-    public override string GetPassiveDescription() => "While alive, all non-scout ants gain 15% movement speed.";
+    public override string GetPassiveDescription() => "While alive, all non-Scout Ants gain 15% Movement Speed.";
 }

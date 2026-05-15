@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
-  m_Name: FertilizerData1
+  m_Name: FertilizerData3
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Name 1
+  fertilizerName: Name 3
   stats:
-  - statType: 3
+  - statType: 21
     value: 0.32
-  - statType: 5
-    value: 0.42
+  - statType: 14
+    value: 0.39
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

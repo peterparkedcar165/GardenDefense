@@ -185,6 +185,7 @@ public abstract class Insect : Entity, IAttackable
     {
         if (target == null) return;
         if (!target.IsAlive) { RemoveEffect<TauntEffect>(); return; }
+        if (HasEffect<HardCrowdControl>()) return;
         if (attackSpeed <= 0) return;
 
         float dist = Vector3.Distance(transform.position, target.Position);
@@ -229,6 +230,7 @@ public abstract class Insect : Entity, IAttackable
     {
         if (isDying) return;
         isDying = true;
+        if (InsectInfoUI.instance?.GetSelectedInsect() == this) InsectInfoUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);
         allInsects.Remove(this);
@@ -239,6 +241,7 @@ public abstract class Insect : Entity, IAttackable
     {
         if (isDying) return;
         isDying = true;
+        if (InsectInfoUI.instance?.GetSelectedInsect() == this) InsectInfoUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);
         allInsects.Remove(this);
@@ -312,7 +315,7 @@ public abstract class Insect : Entity, IAttackable
     {
         Damage(damage, DamageType.Physical, ElementalType.Neutral, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
     }
-    public bool IsAlive => health > 0;
+    public bool IsAlive => health > 0 && !isDying;
     public Vector3 Position => transform.position;
 
     // DESCRIPTIONS

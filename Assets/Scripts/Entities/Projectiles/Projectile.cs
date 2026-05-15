@@ -53,12 +53,16 @@ public abstract class Projectile : MonoBehaviour
         if (trackedTarget != null)
         {
             Insect insect = trackedTarget.GetComponent<Insect>();
-            Vector3 aimPos = insect != null ? insect.GetAimPoint() : trackedTarget.transform.position;
-            Vector3 toTarget = aimPos - transform.position;
-            if (Vector3.Dot(direction, toTarget) > 0)
-                direction = toTarget.normalized;
+            if (insect != null && !insect.IsAlive) { trackedTarget = null; }
             else
-                trackedTarget = null;
+            {
+                Vector3 aimPos = insect != null ? insect.GetAimPoint() : trackedTarget.transform.position;
+                Vector3 toTarget = aimPos - transform.position;
+                if (Vector3.Dot(direction, toTarget) > 0)
+                    direction = toTarget.normalized;
+                else
+                    trackedTarget = null;
+            }
         }
 
         transform.position += direction * projectileSpeed * Time.deltaTime;
@@ -79,7 +83,7 @@ public abstract class Projectile : MonoBehaviour
         if (other.CompareTag("Insect"))
         {
             Insect insect = other.GetComponentInParent<Insect>();
-            if (insect != null)
+            if (insect != null && insect.IsAlive)
             {
                 hitCount++;
                 OnHit(insect);

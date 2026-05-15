@@ -17,6 +17,7 @@ public abstract class Plant : Entity, IAttackable
     public Tile occupiedTile;
 
     [SerializeField] private Transform circleRadius;
+    private Transform darkCircleRadius;
     private CircleCollider2D _circleCollider;
     private bool _isSelected = false;
     private UnityEngine.Rendering.Universal.Light2D _light2D;
@@ -35,6 +36,8 @@ public abstract class Plant : Entity, IAttackable
             // circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f); // INCLUDES SPRITE
             circleRadius.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
         }
+        if (darkCircleRadius != null)
+            darkCircleRadius.localScale = new Vector3(attackRange, attackRange, 1f);
 
         if (lightEmissionRange > 0 && _light2D == null)
         {
@@ -114,13 +117,22 @@ public abstract class Plant : Entity, IAttackable
     protected virtual void Start()
     {
         if (circleRadius != null)
+        {
             circleRadius.gameObject.SetActive(false);
+            darkCircleRadius = Instantiate(circleRadius, circleRadius.parent);
+            darkCircleRadius.name = "DarkCircleRadius";
+            SpriteRenderer sr = darkCircleRadius.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null) sr.color = new Color(1f, 0.85f, 0f, sr.color.a);
+            darkCircleRadius.gameObject.SetActive(false);
+        }
     }
 
     protected override void OnHover()
     {
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(true);
+        if (darkCircleRadius != null && DarknessManager.instance != null && DarknessManager.instance.isDark)
+            darkCircleRadius.gameObject.SetActive(true);
     }
 
     protected override void OnHoverExit()
@@ -128,6 +140,8 @@ public abstract class Plant : Entity, IAttackable
         if (_isSelected) return;
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
+        if (darkCircleRadius != null)
+            darkCircleRadius.gameObject.SetActive(false);
     }
 
     public void Select()
@@ -135,6 +149,8 @@ public abstract class Plant : Entity, IAttackable
         _isSelected = true;
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(true);
+        if (darkCircleRadius != null && DarknessManager.instance != null && DarknessManager.instance.isDark)
+            darkCircleRadius.gameObject.SetActive(true);
     }
 
     public void Deselect()
@@ -142,6 +158,8 @@ public abstract class Plant : Entity, IAttackable
         _isSelected = false;
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
+        if (darkCircleRadius != null)
+            darkCircleRadius.gameObject.SetActive(false);
     }
 
     protected override void Update()
@@ -303,7 +321,7 @@ public abstract class Plant : Entity, IAttackable
         switch (elementalType)
         {
             case ElementalType.Fire:
-            return $"Increase Passive tree level by <color=green>1</color> when exposed to light";
+            return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight";
 
             case ElementalType.Nature:
             return $"Can be placed on <color=green>Grass</color>.";
@@ -349,6 +367,18 @@ public abstract class Plant : Entity, IAttackable
     public virtual string GetPassiveDescription()
     {
         return "";
+    }
+
+    public override void Kill()
+    {
+        if (PlantUpgradeUI.instance?.GetSelectedPlant() == this) PlantUpgradeUI.instance.HidePanel();
+        base.Kill();
+    }
+
+    public override void Kill(Entity source)
+    {
+        if (PlantUpgradeUI.instance?.GetSelectedPlant() == this) PlantUpgradeUI.instance.HidePanel();
+        base.Kill(source);
     }
 
     // IAttackable

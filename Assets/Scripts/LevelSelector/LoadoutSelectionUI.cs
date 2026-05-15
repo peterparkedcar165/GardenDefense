@@ -65,15 +65,14 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
         unlockedSlots.Clear();
 
-        foreach (string plantName in SaveManager.instance.saveData.unlockedPlants)
+        List<string> unlocked = SaveManager.instance.saveData.unlockedPlants;
+        foreach (PlantData data in allPlantData)
         {
-            PlantData data = GetPlantData(plantName);
-
-            if (data == null) continue;
+            if (!unlocked.Contains(data.plantName)) continue;
 
             LoadoutSlot slot = Instantiate(slotPrefab, unlockedContainer);
             slot.Initialize(data, OnUnlockedSlotClicked);
-            slot.SetDimmed(selectedLoadout.Contains(plantName));
+            slot.SetDimmed(selectedLoadout.Contains(data.plantName));
             unlockedSlots.Add(slot);
         }
 
