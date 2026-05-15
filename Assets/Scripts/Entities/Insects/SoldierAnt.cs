@@ -4,7 +4,7 @@ public class SoldierAnt : Ant
 {
 
     protected override void Awake() {
-        baseAttackDamage = 20;
+        baseAttackDamage = 30;
         baseMaxHealth = 320f;
         basePhysicalResistance = 0.33f;
         sunDrop = 12;

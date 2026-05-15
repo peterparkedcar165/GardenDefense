@@ -4,7 +4,7 @@ public class FruitFly : FlyingInsect
 {
 
     protected override void Awake() {
-        baseAttackDamage = 20;
+        baseAttackDamage = 10;
         baseMaxHealth = 100f;
         baseMovementSpeed = 1.4f;
         sunDrop = 6;

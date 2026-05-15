@@ -3,27 +3,27 @@ using UnityEngine.SceneManagement;
 
 public class ScoutAnt : Ant
 {
-    public static int aliveCount = 0;
+    public static int scoutAntCount = 0;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
     {
-        aliveCount = 0;
-        SceneManager.sceneLoaded += (scene, mode) => aliveCount = 0;
+        scoutAntCount = 0;
+        SceneManager.sceneLoaded += (scene, mode) => scoutAntCount = 0;
     }
 
     protected override void Awake() {
-        baseAttackDamage = 20f;
+        baseAttackDamage = 15f;
         baseMaxHealth = 200f;
         sunDrop = 8;
         base.Awake();
         baseMovementSpeed = 1.8f;
-        aliveCount++;
+        scoutAntCount++;
     }
 
     void OnDestroy()
     {
-        aliveCount--;
+        scoutAntCount--;
     }
 
     public override string GetName() => "<b><color=#8B4513>Scout Ant</color></b>";
