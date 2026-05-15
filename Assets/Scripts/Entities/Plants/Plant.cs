@@ -19,6 +19,10 @@ public abstract class Plant : Entity
     [SerializeField] private Transform circleRadius;
     private CircleCollider2D _circleCollider;
     private bool _isSelected = false;
+    private UnityEngine.Rendering.Universal.Light2D _light2D;
+    [SerializeField] private float lightIntensity = 1f;
+    [SerializeField] private float lightInnerRadius = 1.2f;
+    [SerializeField] private float lightFalloffStrength = 0.2f;
     protected override void UpdateStats()
     {
         base.UpdateStats();
@@ -30,6 +34,21 @@ public abstract class Plant : Entity
         {
             // circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f); // INCLUDES SPRITE
             circleRadius.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
+        }
+
+        if (lightEmissionRange > 0 && _light2D == null)
+        {
+            _light2D = gameObject.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+            _light2D.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
+            _light2D.intensity = lightIntensity;
+            _light2D.falloffIntensity = lightFalloffStrength;
+            _light2D.targetSortingLayers = GetAllSortingLayerIDs();
+        }
+
+        if (_light2D != null)
+        {
+            _light2D.pointLightOuterRadius = lightEmissionRange;
+            _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
         }
 
         if (WeatherManager.instance != null)
@@ -68,12 +87,21 @@ public abstract class Plant : Entity
     protected override void Awake()
     {
         _circleCollider = GetComponent<CircleCollider2D>();
-        baseMaxHealth = 100;
+        baseMaxHealth = 200;
         base.Awake();
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.75f;
         allPlants.Add(this);
         FertilizerManager.instance?.ApplyTo(this);
+    }
+
+    private int[] GetAllSortingLayerIDs()
+    {
+        var layers = UnityEngine.SortingLayer.layers;
+        int[] ids = new int[layers.Length];
+        for (int i = 0; i < layers.Length; i++)
+            ids[i] = layers[i].id;
+        return ids;
     }
 
     void OnDestroy()
@@ -85,10 +113,8 @@ public abstract class Plant : Entity
 
     protected virtual void Start()
     {
-
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
-            
     }
 
     protected override void OnHover()
@@ -323,5 +349,12 @@ public abstract class Plant : Entity
     public virtual string GetPassiveDescription()
     {
         return "";
+    }
+
+    public bool IsValidNightTarget(Insect insect, float distance)
+    {
+        if (DarknessManager.instance == null || !DarknessManager.instance.isDark) return true;
+        if (distance <= attackRange * 0.5f) return true;
+        return DarknessManager.instance.IsIlluminated(insect.transform.position);
     }
 }

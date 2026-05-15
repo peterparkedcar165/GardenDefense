@@ -162,7 +162,7 @@ public class AcornBomb : MonoBehaviour
                 eatingInsects.RemoveAt(i);
                 continue;
             }
-            hp -= insect.attackDamage;
+            hp -= insect.attackDamage * insect.eatMultiplier;
         }
 
         UpdateHealthBar();

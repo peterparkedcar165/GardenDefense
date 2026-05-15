@@ -27,10 +27,14 @@ public abstract class Insect : Entity
     // bonus
     public float movementSpeedAdder, movementSpeedMultiplier;
     
+    public virtual float eatMultiplier => 1f;
+
     protected override void UpdateStats()
     {
         base.UpdateStats();
         movementSpeed = baseMovementSpeed + movementSpeedAdder + (baseMovementSpeed * movementSpeedMultiplier);
+        if (!(this is ScoutAnt) && ScoutAnt.aliveCount > 0)
+            movementSpeed *= 1.15f;
     }
 
     public int sunDrop;

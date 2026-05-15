@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\Spawning\Level3.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
+    <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerCard.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ColdEffect.cs" />

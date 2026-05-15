@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     public int SunCount;
-    public int playerHealth, playerMaxHealth; // originally 20
+    public int playerHealth;
+    [System.NonSerialized] public int playerMaxHealth = 200;
     public float BonusSunGain;
     public AudioSource audioSource;
     public AudioClip buttonClick, plantPlace, plantSelect;

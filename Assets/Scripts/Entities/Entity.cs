@@ -52,6 +52,7 @@ public abstract class Entity : MonoBehaviour
     public float basePassiveDamage, baseSkillDamage;
     public float baseSkillDuration;
     public float baseTenacity, baseImmobilizeDuration;
+    public float baseLightEmissionRange;
 
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
@@ -64,6 +65,7 @@ public abstract class Entity : MonoBehaviour
     public float elementalPower;
     public float passiveDamage, skillDamage;
     public float skillDuration;
+    public float lightEmissionRange;
     public float tenacity, immobilizeDuration;
     public bool debuffsFrozen;
 
@@ -79,6 +81,7 @@ public abstract class Entity : MonoBehaviour
     public float passiveDamageAdder, skillDamageAdder;
     public float skillDurationAdder;
     public float tenacityAdder, immobilizeDurationAdder;
+    public float lightEmissionRangeAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -92,6 +95,7 @@ public abstract class Entity : MonoBehaviour
     public float passiveDamageMultiplier, skillDamageMultiplier;
     public float skillDurationMultiplier;
     public float tenacityMultiplier, immobilizeDurationMultiplier;
+    public float lightEmissionRangeMultiplier;
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
@@ -134,6 +138,7 @@ public abstract class Entity : MonoBehaviour
         skillDuration = baseSkillDuration + skillDurationAdder + (baseSkillDuration * skillDurationMultiplier);
         tenacity = baseTenacity + tenacityAdder + (baseTenacity * tenacityMultiplier);
         immobilizeDuration = baseImmobilizeDuration + immobilizeDurationAdder;
+        lightEmissionRange = baseLightEmissionRange + lightEmissionRangeAdder + (baseLightEmissionRange * lightEmissionRangeMultiplier);
     }
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)

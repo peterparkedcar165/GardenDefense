@@ -34,12 +34,9 @@ public abstract class Aura : Plant
 
         foreach (Insect insect in Insect.allInsects)
         {
-            if (Vector2.Distance(transform.position, insect.transform.position) <= attackRange)
-            {
-
+            float distance = Vector2.Distance(transform.position, insect.transform.position);
+            if (distance <= attackRange && IsValidNightTarget(insect, distance))
                 result.Add(insect);
-
-            }
         }
         return result;
     }

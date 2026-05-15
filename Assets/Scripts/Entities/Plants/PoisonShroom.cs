@@ -51,7 +51,7 @@ public class PoisonShroom : Shooter
         foreach (Insect insect in Insect.allInsects)
         {
             float distance = Vector3.Distance(transform.position, insect.transform.position);
-            if (distance <= attackRange && !insect.HasEffect<PoisonEffect>())
+            if (distance <= attackRange && !insect.HasEffect<PoisonEffect>() && IsValidNightTarget(insect, distance))
             {
                 unpoisoned.Add(insect);
             }
