@@ -1,8 +1,9 @@
 public class FieryInfusionEffect : StatusEffect
 {
-    private Calendula calendula;
+    private readonly Calendula calendula;
     private float HealingPerSecond => 8f + 1f * (level - 1);
     private float healTickTimer = 0f;
+    private float cachedLightRange;
 
     public FieryInfusionEffect(Entity target, float duration, int level, Entity source, Calendula calendula)
         : base(target, duration, level, source)
@@ -15,7 +16,8 @@ public class FieryInfusionEffect : StatusEffect
     {
         Plant plant = target as Plant;
         if (plant == null) return;
-        plant.lightEmissionRangeAdder += calendula?.attackRange ?? 0f;
+        cachedLightRange = calendula?.attackRange ?? 0f;
+        plant.lightEmissionRangeAdder += cachedLightRange;
     }
 
     public override void OnTick(float deltaTime)
@@ -33,7 +35,7 @@ public class FieryInfusionEffect : StatusEffect
     {
         Plant plant = target as Plant;
         if (plant == null) return;
-        plant.lightEmissionRangeAdder -= calendula?.attackRange ?? 0f;
+        plant.lightEmissionRangeAdder -= cachedLightRange;
     }
 
     public void OnProjectileHit(Insect insect)
@@ -46,7 +48,7 @@ public class FieryInfusionEffect : StatusEffect
     {
         yield return new UnityEngine.WaitForSeconds(0.1f);
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
-        insect.Damage(calendula.attackDamage * 0.25f, DamageType.Magic, ElementalType.Fire, calendula, false,
+        insect.Damage(calendula.attackDamage * 0.5f, DamageType.Magic, ElementalType.Fire, calendula, false,
             new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated });
     }
 

@@ -7,8 +7,8 @@ public class Calendula : Aura
     {
         elementalType = ElementalType.Fire;
         damageType = DamageType.Magic;
-        baseAttackDamage = 15f;
-        baseAttackSpeed = 0.33f;
+        baseAttackDamage = 10f;
+        baseAttackSpeed = 0.5f;
         baseAttackRange = 2.5f;
         baseSkillCooldown = 15f;
         baseSkillDuration = 8f;
@@ -63,7 +63,7 @@ public class Calendula : Aura
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = 15f + 5f * level;
+        baseAttackDamage = 10f + 5f * level;
         fireDamageAdder = 0.05f * level;
     }
 
@@ -94,7 +94,7 @@ public class Calendula : Aura
         => $"Illuminate the surrounding area with a radius equal to her Attack Range.";
 
     public override string GetSkillDesription()
-        => $"Target a plant anywhere on the field to grant <color=orange>Fiery Infusion</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's projectiles deal an additional <color=green><b>{attackDamage * 0.25f:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{8f + 1f * effectivePath3Level:F0}</b></color> health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
+        => $"Target a plant anywhere on the field to grant <color=orange>Fiery Infusion</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's projectiles deal an additional <color=green><b>{attackDamage * 0.5f:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{8f + 1f * effectivePath3Level:F0}</b></color> health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
 
     public override string GetPath1Description()
         => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>5</b></color> per level. [<color=green><b>+{5 * effectivePath1Level}</b></color>]\n\n" +
