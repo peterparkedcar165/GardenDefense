@@ -8,7 +8,7 @@ public class Level3 : SpawnManager
     public int wave;
     private int startSunCount = 350, startHealth = 200;
     private int maxWave = 12;
-    public GameObject workerAnt, soldierAnt, scoutAnt;
+    public GameObject workerAnt, soldierAnt, scoutAnt, fruitFly;
     public GameObject weatherManager;
     public TextMeshProUGUI waveCountText, nextWaveTimerText;
     public float nextWaveTimer;
@@ -229,6 +229,11 @@ public class Level3 : SpawnManager
     void SpawnScoutAnt()
     {
         Spawn(scoutAnt);
+    }
+
+    void SpawnFruitFly()
+    {
+        Spawn(fruitFly);
     }
 
     protected override void Update()

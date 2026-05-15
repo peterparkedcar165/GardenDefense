@@ -205,7 +205,8 @@ public abstract class Entity : MonoBehaviour
     {
         if (this is Insect insect && source is Plant plant) // if target = insect and source = plant
         {
-            insect.RegisterAttacker(plant); // register plant into insect's hashset of attackers for exp distribution
+            insect.RegisterAttacker(plant);
+            insect.NotifyDamagedByPlant(plant);
         }
 
         float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult;
@@ -451,13 +452,13 @@ public abstract class Entity : MonoBehaviour
 
     // HEALTH BAR
 
-    private Vector3 healthBarOffset = new Vector3(0, 0.6f, 0); // OFFSET
+    protected Vector3 healthBarOffset = new Vector3(0, 0.6f, 0); // OFFSET
     protected GameObject healthBarInstance;
     private Transform healthBarFill;
 
     private static GameObject _healthBarPrefab;
 
-    private void SpawnHealthBar()
+    protected void SpawnHealthBar()
     {
         if (_healthBarPrefab == null)
             _healthBarPrefab = Resources.Load<GameObject>("HealthBar");
@@ -487,7 +488,7 @@ public abstract class Entity : MonoBehaviour
         scale.x = ratio;
         healthBarFill.localScale = scale;
 
-        if (this is Insect && health < maxHealth && healthBarInstance != null)
+        if (health < maxHealth && healthBarInstance != null)
             healthBarInstance.SetActive(true);
     }
 

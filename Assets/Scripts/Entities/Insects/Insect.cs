@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
+public enum Aggressivity { Low, Medium, High }
+
 public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();
@@ -23,7 +25,29 @@ public abstract class Insect : Entity, IAttackable
     public Vector2 windVelocity;
     public Vector2 windMomentum;
     public Entity lastSource;
-    public IAttackable target => GetEffect<TauntEffect>()?.taunter;
+    public Aggressivity aggressivity = Aggressivity.Low;
+    public float targetingRange = 0f;
+    private IAttackable _aggroTarget;
+
+    public virtual IAttackable target
+    {
+        get
+        {
+            IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
+            if (taunted != null) return taunted;
+            switch (aggressivity)
+            {
+                case Aggressivity.High:
+                    return FindNearestPlantInRange();
+                case Aggressivity.Medium:
+                    if (_aggroTarget != null && !_aggroTarget.IsAlive) _aggroTarget = null;
+                    return _aggroTarget;
+                default:
+                    return null;
+            }
+        }
+    }
+
     private float attackTimer;
 
     // bonus
@@ -203,6 +227,29 @@ public abstract class Insect : Entity, IAttackable
     {
         if (target == null) return;
         target.ReceiveAttack(attackDamage, this);
+    }
+
+    private IAttackable FindNearestPlantInRange()
+    {
+        Plant nearest = null;
+        float nearestDist = Mathf.Infinity;
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive) continue;
+            float dist = Vector3.Distance(transform.position, plant.Position);
+            if (dist <= targetingRange && dist < nearestDist)
+            {
+                nearestDist = dist;
+                nearest = plant;
+            }
+        }
+        return nearest;
+    }
+
+    public void NotifyDamagedByPlant(Plant plant)
+    {
+        if (aggressivity == Aggressivity.Medium && _aggroTarget == null)
+            _aggroTarget = plant;
     }
 
     protected virtual void ReachObjective()

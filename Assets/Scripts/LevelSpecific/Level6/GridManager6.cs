@@ -91,6 +91,14 @@ public class GridManager6 : MonoBehaviour
         new Vector2Int(10,17), new Vector2Int(11,17), new Vector2Int(12,17),
     };
 
+    private List<Vector2Int> dirtCoordinates = new List<Vector2Int>
+    {
+        new Vector2Int(5,4), new Vector2Int(7,2), new Vector2Int(7,7), new Vector2Int(2,9),
+        new Vector2Int(8,11), new Vector2Int(12,5), new Vector2Int(14,3), new Vector2Int(19,3),
+        new Vector2Int(17,7), new Vector2Int(14,12), new Vector2Int(16,11), new Vector2Int(16,14),
+        new Vector2Int(2,3), new Vector2Int(2,13), new Vector2Int(19,5), new Vector2Int(17,9),
+    };
+
     private List<Vector2Int> caveCoordinates = new List<Vector2Int>();
 
     void Start()
@@ -115,6 +123,8 @@ public class GridManager6 : MonoBehaviour
                     t.tileType = TileType.Obstacle;
                 else if (pathCoordinates.Contains(new Vector2Int(x, y)))
                     t.tileType = TileType.Path;
+                else if (dirtCoordinates.Contains(new Vector2Int(x, y)))
+                    t.tileType = TileType.Dirt;
                 else if (waterCoordinates.Contains(new Vector2Int(x, y)))
                     t.tileType = TileType.Water;
                 else if (caveCoordinates.Contains(new Vector2Int(x, y)))

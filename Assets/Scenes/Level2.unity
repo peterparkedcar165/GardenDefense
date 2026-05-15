@@ -773,9 +773,17 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -2.57
       objectReference: {fileID: 0}
+    - target: {fileID: 136273644905359581, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 248283656966871504, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
       propertyPath: m_Name
       value: Water
+      objectReference: {fileID: 0}
+    - target: {fileID: 248283656966871504, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1706003111457972457, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
       propertyPath: m_LocalPosition.x
@@ -792,6 +800,14 @@ PrefabInstance:
     - target: {fileID: 1803790531895223217, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
       propertyPath: m_LocalPosition.y
       value: 3.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602967938755163490, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3100683230862549264, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
       propertyPath: m_LocalPosition.x

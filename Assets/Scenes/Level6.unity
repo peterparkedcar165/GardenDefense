@@ -545,7 +545,7 @@ GameObject:
   - component: {fileID: 145410858}
   - component: {fileID: 145410860}
   - component: {fileID: 145410859}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WaterCircle (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1193,6 +1193,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Water
       objectReference: {fileID: 0}
+    - target: {fileID: 248283656966871504, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1706003111457972457, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.91
@@ -1208,6 +1212,10 @@ PrefabInstance:
     - target: {fileID: 1803790531895223217, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
       propertyPath: m_LocalPosition.y
       value: -1.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 3100683230862549264, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5477563140128419211, guid: 65b1f97efb11c444dbce65748c1c3424, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1294,7 +1302,7 @@ GameObject:
   - component: {fileID: 385720668}
   - component: {fileID: 385720670}
   - component: {fileID: 385720669}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WaterRectangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1595,7 +1603,7 @@ GameObject:
   - component: {fileID: 451867735}
   - component: {fileID: 451867737}
   - component: {fileID: 451867736}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WaterRectangle (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1926,9 +1934,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 531320437}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fde84301f483ac46bea5ddbf1d5cd63, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ea7ee06c8334964f9f083cd78f39a92, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridManager5
+  m_EditorClassIdentifier: Assembly-CSharp::GridManager6
   rows: 20
   columns: 27
   grassTilePrefab: {fileID: 1746608376694191165, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
@@ -2363,7 +2371,7 @@ GameObject:
   - component: {fileID: 596871962}
   - component: {fileID: 596871964}
   - component: {fileID: 596871963}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WaterRectangle (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4413,7 +4421,7 @@ GameObject:
   - component: {fileID: 1268105870}
   - component: {fileID: 1268105872}
   - component: {fileID: 1268105871}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WaterCircle (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11447,7 +11455,7 @@ GameObject:
   - component: {fileID: 1611874206}
   - component: {fileID: 1611874208}
   - component: {fileID: 1611874207}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WaterRectangle (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12199,7 +12207,7 @@ GameObject:
   - component: {fileID: 1677258467}
   - component: {fileID: 1677258469}
   - component: {fileID: 1677258468}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WaterCircle (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15220,7 +15228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Intensity
-      value: 5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8495003235869979637, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Name

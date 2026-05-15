@@ -122,6 +122,7 @@
     <Compile Include="Assets\Scripts\Skills\Blizzard.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />

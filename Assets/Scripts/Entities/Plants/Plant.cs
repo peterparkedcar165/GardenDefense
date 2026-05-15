@@ -91,7 +91,9 @@ public abstract class Plant : Entity, IAttackable
     {
         _circleCollider = GetComponent<CircleCollider2D>();
         baseMaxHealth = 200;
+        healthBarOffset = new Vector3(0, 1f, 0);
         base.Awake();
+        SpawnHealthBar();
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.75f;
         allPlants.Add(this);
@@ -142,6 +144,7 @@ public abstract class Plant : Entity, IAttackable
             circleRadius.gameObject.SetActive(false);
         if (darkCircleRadius != null)
             darkCircleRadius.gameObject.SetActive(false);
+        RefreshHealthBarVisibility();
     }
 
     public void Select()
@@ -372,13 +375,22 @@ public abstract class Plant : Entity, IAttackable
     public override void Kill()
     {
         if (PlantUpgradeUI.instance?.GetSelectedPlant() == this) PlantUpgradeUI.instance.HidePanel();
+        FreeTile();
         base.Kill();
     }
 
     public override void Kill(Entity source)
     {
         if (PlantUpgradeUI.instance?.GetSelectedPlant() == this) PlantUpgradeUI.instance.HidePanel();
+        FreeTile();
         base.Kill(source);
+    }
+
+    private void FreeTile()
+    {
+        if (occupiedTile == null) return;
+        occupiedTile.isOccupied = false;
+        occupiedTile.GetComponent<Collider2D>().enabled = true;
     }
 
     // IAttackable
