@@ -13,8 +13,8 @@ public class AcornBomb : MonoBehaviour
     private bool hasLanded = false;
     private bool isDead = false;
 
-    private float hp = 25f;
-    private const float maxHp = 25f;
+    private float hp = 250f;
+    private const float maxHp = 250f;
     private float lifetime;
     private float eatTickTimer = 0f;
 
