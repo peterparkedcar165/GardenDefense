@@ -27,7 +27,7 @@ public abstract class Insect : Entity, IAttackable
     public Entity lastSource;
     public Aggressivity aggressivity = Aggressivity.Low;
     public float targetingRange = 0f;
-    private IAttackable _aggroTarget;
+    private float _plantAttackCooldown = 0f;
 
     public virtual IAttackable target
     {
@@ -40,8 +40,8 @@ public abstract class Insect : Entity, IAttackable
                 case Aggressivity.High:
                     return FindNearestPlantInRange();
                 case Aggressivity.Medium:
-                    if (_aggroTarget != null && !_aggroTarget.IsAlive) _aggroTarget = null;
-                    return _aggroTarget;
+                    if (_plantAttackCooldown > 0) return null;
+                    return FindNearestPlantInRange();
                 default:
                     return null;
             }
@@ -207,6 +207,9 @@ public abstract class Insect : Entity, IAttackable
 
     private void UpdateAttack()
     {
+        if (_plantAttackCooldown > 0)
+            _plantAttackCooldown -= Time.deltaTime;
+
         if (target == null) return;
         if (!target.IsAlive) { RemoveEffect<TauntEffect>(); return; }
         if (HasEffect<HardCrowdControl>()) return;
@@ -219,7 +222,10 @@ public abstract class Insect : Entity, IAttackable
         if (attackTimer >= 1f / attackSpeed)
         {
             attackTimer = 0f;
+            IAttackable currentTarget = target;
             Attack();
+            if (aggressivity == Aggressivity.Medium && currentTarget is Plant)
+                _plantAttackCooldown = 4f;
         }
     }
 
@@ -244,12 +250,6 @@ public abstract class Insect : Entity, IAttackable
             }
         }
         return nearest;
-    }
-
-    public void NotifyDamagedByPlant(Plant plant)
-    {
-        if (aggressivity == Aggressivity.Medium && _aggroTarget == null)
-            _aggroTarget = plant;
     }
 
     protected virtual void ReachObjective()

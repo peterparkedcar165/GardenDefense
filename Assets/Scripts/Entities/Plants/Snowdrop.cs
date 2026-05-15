@@ -53,7 +53,7 @@ public class Snowdrop : Aura
         foreach (Insect insect in targets)
         {
 
-        if (insect.visual == null || insect.visual.localPosition.y != 0f) continue;
+        if (insect.visual == null || insect.visual.localPosition.y > 0.4f) continue;
 
         insect.ApplyEffect(new ChillEffect(insect, 0.25f, chillLevel, this));
 

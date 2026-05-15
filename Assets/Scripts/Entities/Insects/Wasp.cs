@@ -9,8 +9,8 @@ public class Wasp : FlyingInsect
         baseMovementSpeed = 1.2f;
         baseAttackSpeed = 1f;
         baseAttackRange = 0.5f;
-        aggressivity = Aggressivity.High;
-        targetingRange = 2f;
+        aggressivity = Aggressivity.Medium;
+        targetingRange = 1.5f;
         sunDrop = 10;
         base.Awake();
     }

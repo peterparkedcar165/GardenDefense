@@ -20,7 +20,7 @@ public abstract class FlyingInsect : Insect
         visual = transform.Find("Visual");
         if (visual != null)
         {
-            visual.localPosition += new Vector3(0, flightHeight, 0);
+            visual.localPosition += new Vector3(0, 0.25f + flightHeight, 0);
         }
     }
 
@@ -56,7 +56,7 @@ public abstract class FlyingInsect : Insect
         {
             hoverPhase += Time.deltaTime * hoverSpeed;
             Vector3 pos = visual.localPosition;
-            pos.y = Mathf.MoveTowards(pos.y, flightHeight + Mathf.Sin(hoverPhase) * hoverAmplitude, 3f * Time.deltaTime);
+            pos.y = Mathf.MoveTowards(pos.y, 0.25f + flightHeight + Mathf.Sin(hoverPhase) * hoverAmplitude, 3f * Time.deltaTime);
             visual.localPosition = pos;
         }
     }

@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1601005531157615641}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -137,6 +137,10 @@ MonoBehaviour:
   baseElementalPower: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  baseSkillDuration: 0
+  baseTenacity: 0
+  baseImmobilizeDuration: 0
+  baseLightEmissionRange: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -171,6 +175,11 @@ MonoBehaviour:
   elementalPower: 0
   passiveDamage: 0
   skillDamage: 0
+  skillDuration: 0
+  lightEmissionRange: 0
+  tenacity: 0
+  immobilizeDuration: 0
+  debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicDamageAdder: 0
@@ -202,6 +211,10 @@ MonoBehaviour:
   elementalPowerAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
+  skillDurationAdder: 0
+  tenacityAdder: 0
+  immobilizeDurationAdder: 0
+  lightEmissionRangeAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicDamageMultiplier: 0
@@ -233,6 +246,10 @@ MonoBehaviour:
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
   skillDamageMultiplier: 0
+  skillDurationMultiplier: 0
+  tenacityMultiplier: 0
+  immobilizeDurationMultiplier: 0
+  lightEmissionRangeMultiplier: 0
   internalCooldown: 0
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -248,10 +265,16 @@ MonoBehaviour:
   isFlying: 0
   movementSpeed: 0
   baseMovementSpeed: 0
+  windVelocity: {x: 0, y: 0}
+  windMomentum: {x: 0, y: 0}
+  lastSource: {fileID: 0}
+  aggressivity: 0
+  targetingRange: 0
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
   sunDrop: 0
   expDrop: 0
+  visual: {fileID: 0}
   flightSpeed: 0
   flightHeight: 0
 --- !u!1 &3949176022732913986
@@ -280,7 +303,7 @@ Transform:
   m_GameObject: {fileID: 3949176022732913986}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -372,7 +395,7 @@ Transform:
   m_GameObject: {fileID: 8825022791058434415}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

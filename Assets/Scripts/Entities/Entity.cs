@@ -206,7 +206,6 @@ public abstract class Entity : MonoBehaviour
         if (this is Insect insect && source is Plant plant) // if target = insect and source = plant
         {
             insect.RegisterAttacker(plant);
-            insect.NotifyDamagedByPlant(plant);
         }
 
         float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult;

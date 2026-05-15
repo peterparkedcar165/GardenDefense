@@ -91,7 +91,7 @@ public abstract class Plant : Entity, IAttackable
     {
         _circleCollider = GetComponent<CircleCollider2D>();
         baseMaxHealth = 200;
-        healthBarOffset = new Vector3(0, 1f, 0);
+        healthBarOffset = new Vector3(0, 0.7f, 0);
         base.Awake();
         SpawnHealthBar();
         baseCriticalChance = 0.05f;

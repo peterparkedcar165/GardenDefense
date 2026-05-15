@@ -105,6 +105,10 @@ MonoBehaviour:
   baseElementalPower: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  baseSkillDuration: 0
+  baseTenacity: 0
+  baseImmobilizeDuration: 0
+  baseLightEmissionRange: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -139,6 +143,11 @@ MonoBehaviour:
   elementalPower: 0
   passiveDamage: 0
   skillDamage: 0
+  skillDuration: 0
+  lightEmissionRange: 0
+  tenacity: 0
+  immobilizeDuration: 0
+  debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicDamageAdder: 0
@@ -170,6 +179,10 @@ MonoBehaviour:
   elementalPowerAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
+  skillDurationAdder: 0
+  tenacityAdder: 0
+  immobilizeDurationAdder: 0
+  lightEmissionRangeAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicDamageMultiplier: 0
@@ -201,6 +214,10 @@ MonoBehaviour:
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
   skillDamageMultiplier: 0
+  skillDurationMultiplier: 0
+  tenacityMultiplier: 0
+  immobilizeDurationMultiplier: 0
+  lightEmissionRangeMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -216,10 +233,16 @@ MonoBehaviour:
   isFlying: 0
   movementSpeed: 0
   baseMovementSpeed: 0
+  windVelocity: {x: 0, y: 0}
+  windMomentum: {x: 0, y: 0}
+  lastSource: {fileID: 0}
+  aggressivity: 0
+  targetingRange: 0
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
   sunDrop: 0
   expDrop: 0
+  visual: {fileID: 0}
 --- !u!1 &4515215125339047355
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,7 +270,7 @@ Transform:
   m_GameObject: {fileID: 4515215125339047355}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 0.90909094, y: 0.90909094, z: 0.90909094}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -374,7 +397,7 @@ Transform:
   m_GameObject: {fileID: 6268732927135444423}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.36363646, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 0.90909094, y: 0.45454547, z: 0.90909094}
   m_ConstrainProportionsScale: 0
   m_Children: []

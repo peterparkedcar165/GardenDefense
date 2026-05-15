@@ -36,9 +36,9 @@ public class GroundedEffect : StatusEffect
         velocity += Insect.gravity * deltaTime;
         Vector3 pos = visual.localPosition;
         pos.y -= velocity * deltaTime;
-        if (pos.y < 0f)
+        if (pos.y < 0.25f)
         {
-            pos.y = 0f;
+            pos.y = 0.25f;
         }
         visual.localPosition = pos;
     }

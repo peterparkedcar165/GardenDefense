@@ -25,6 +25,7 @@ public class AcornBomb : MonoBehaviour, IAttackable
     private const float stunDuration = 2f;
 
     private readonly HashSet<Insect> tauntedInsects = new HashSet<Insect>();
+    private float tauntTickTimer = 0f;
     private static readonly DamageTag[] impactTags = { DamageTag.AoE, DamageTag.SkillDamage };
 
     public void Initialize(float aoeRadius, float damage, float lifetime, float health, Plant source)
@@ -131,13 +132,18 @@ public class AcornBomb : MonoBehaviour, IAttackable
     {
         tauntedInsects.RemoveWhere(i => i == null || i.gameObject == null);
 
+        tauntTickTimer -= Time.deltaTime;
+        if (tauntTickTimer > 0f) return;
+        tauntTickTimer = 0.25f;
+
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect.isFlying) continue;
-            if (insect.target != null) continue;
+            TauntEffect existing = insect.GetEffect<TauntEffect>();
+            if (existing != null && existing.taunter != (IAttackable)this) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
             {
-                insect.ApplyEffect(new TauntEffect(insect, 999f, 1, source, this));
+                insect.ApplyEffect(new TauntEffect(insect, 0.5f, 1, source, this));
                 tauntedInsects.Add(insect);
             }
         }
