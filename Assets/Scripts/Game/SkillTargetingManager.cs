@@ -15,6 +15,10 @@ public class SkillTargetingManager : MonoBehaviour
     private Action<Vector3> onConfirm;
     private GameObject indicatorInstance;
 
+    private bool isPlantTargeting = false;
+    private Action<Plant> onPlantConfirm;
+    public bool IsPlantTargeting => isPlantTargeting;
+
     private void Awake()
     {
         instance = this;
@@ -38,6 +42,12 @@ public class SkillTargetingManager : MonoBehaviour
         }
         else if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
             Cancel();
+
+        if (isPlantTargeting)
+        {
+            if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
+                CancelPlantTargeting();
+        }
     }
 
     public void BeginTargeting(float radius, Action<Vector3> onConfirm)
@@ -52,6 +62,28 @@ public class SkillTargetingManager : MonoBehaviour
             indicatorInstance = Instantiate(targetIndicatorPrefab);
             indicatorInstance.transform.localScale = Vector3.one * radius * 2f;
         }
+    }
+
+    public void BeginPlantTargeting(Action<Plant> onConfirm)
+    {
+        if (isTargeting) Cancel();
+        if (isPlantTargeting) CancelPlantTargeting();
+        this.onPlantConfirm = onConfirm;
+        isPlantTargeting = true;
+    }
+
+    public void ConfirmPlantTarget(Plant plant)
+    {
+        isPlantTargeting = false;
+        var cb = onPlantConfirm;
+        onPlantConfirm = null;
+        cb?.Invoke(plant);
+    }
+
+    public void CancelPlantTargeting()
+    {
+        isPlantTargeting = false;
+        onPlantConfirm = null;
     }
 
     private void Confirm(Vector3 worldPosition)

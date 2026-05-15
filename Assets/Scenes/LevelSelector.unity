@@ -1691,6 +1691,7 @@ MonoBehaviour:
   level3: {fileID: 164994324}
   level4: {fileID: 1872980291}
   level5: {fileID: 1521437179}
+  level6: {fileID: 695717430}
   previousPage: {fileID: 0}
   nextPage: {fileID: 0}
 --- !u!4 &1534487825
@@ -2286,7 +2287,7 @@ PrefabInstance:
       objectReference: {fileID: 5867209283828803215, guid: 2e8312dd84a408c4ba86748a0f9a96ba, type: 3}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: 'allPlantData.Array.data[0]'
@@ -2314,6 +2315,10 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 3ce3c12a2a0a858458a425fe5f07e28d, type: 2}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: 'allPlantData.Array.data[6]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d94e6d961064c924b9e18fbd7217246e, type: 2}
+    - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
+      propertyPath: 'allPlantData.Array.data[7]'
       value: 
       objectReference: {fileID: 11400000, guid: b623d45311f00f14d83400e0398a330a, type: 2}
     - target: {fileID: 8539740301995626814, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}

@@ -276,6 +276,7 @@ public abstract class Plant : Entity, IAttackable
     private void OnMouseDown()
     {
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+        if (SkillTargetingManager.instance.IsPlantTargeting) { SkillTargetingManager.instance.ConfirmPlantTarget(this); return; }
         if (SkillTargetingManager.instance.IsTargeting) return;
         if (PlantSelector.instance.uprootMode)
         {

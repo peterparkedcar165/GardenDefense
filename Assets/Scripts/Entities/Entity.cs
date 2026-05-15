@@ -20,8 +20,8 @@ public enum DamageTag
     Attack,
     PassiveDamage,
     SkillDamage,
-    ElementalDebuff
-    // Coordinated,
+    ElementalDebuff,
+    Coordinated
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -49,7 +49,7 @@ public abstract class Entity : MonoBehaviour
     public float baseCriticalChance, baseCriticalDamage;
     public float baseDotResistance, baseDotDamage;
     public float baseElementalPower;
-    public float basePassiveDamage, baseSkillDamage;
+    public float basePassiveDamage, baseSkillDamage, baseCoordinatedDamage;
     public float baseSkillDuration;
     public float baseTenacity, baseImmobilizeDuration;
     public float baseLightEmissionRange;
@@ -63,7 +63,7 @@ public abstract class Entity : MonoBehaviour
     public float criticalChance, criticalDamage;
     public float dotResistance, dotDamage;
     public float elementalPower;
-    public float passiveDamage, skillDamage;
+    public float passiveDamage, skillDamage, coordinatedDamage;
     public float skillDuration;
     public float lightEmissionRange;
     public float tenacity, immobilizeDuration;
@@ -78,7 +78,7 @@ public abstract class Entity : MonoBehaviour
     public float criticalChanceAdder, criticalDamageAdder;
     public float dotResistanceAdder, dotDamageAdder;
     public float elementalPowerAdder;
-    public float passiveDamageAdder, skillDamageAdder;
+    public float passiveDamageAdder, skillDamageAdder, coordinatedDamageAdder;
     public float skillDurationAdder;
     public float tenacityAdder, immobilizeDurationAdder;
     public float lightEmissionRangeAdder;
@@ -92,7 +92,7 @@ public abstract class Entity : MonoBehaviour
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
     public float elementalPowerMultiplier;
-    public float passiveDamageMultiplier, skillDamageMultiplier;
+    public float passiveDamageMultiplier, skillDamageMultiplier, coordinatedDamageMultiplier;
     public float skillDurationMultiplier;
     public float tenacityMultiplier, immobilizeDurationMultiplier;
     public float lightEmissionRangeMultiplier;
@@ -135,6 +135,7 @@ public abstract class Entity : MonoBehaviour
         elementalPower = baseElementalPower + elementalPowerAdder + (baseElementalPower * elementalPowerMultiplier);
         passiveDamage = basePassiveDamage + passiveDamageAdder + (basePassiveDamage * passiveDamageMultiplier);
         skillDamage = baseSkillDamage + skillDamageAdder + (baseSkillDamage * skillDamageMultiplier);
+        coordinatedDamage = baseCoordinatedDamage + coordinatedDamageAdder + (baseCoordinatedDamage * coordinatedDamageMultiplier);
         skillDuration = baseSkillDuration + skillDurationAdder + (baseSkillDuration * skillDurationMultiplier);
         tenacity = baseTenacity + tenacityAdder + (baseTenacity * tenacityMultiplier);
         immobilizeDuration = baseImmobilizeDuration + immobilizeDurationAdder;
@@ -208,7 +209,7 @@ public abstract class Entity : MonoBehaviour
             insect.RegisterAttacker(plant);
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult;
         bool isCrit = false;
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
@@ -334,7 +335,15 @@ public abstract class Entity : MonoBehaviour
             skillDamageMult = 1;
         }
 
-        finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier * elementalDebuffMultiplier * passiveDamageMult * skillDamageMult);
+        if (System.Array.Exists(damageTag, t => t == DamageTag.Coordinated))
+        {
+            coordinatedDamageMult = 1 + source.coordinatedDamage;
+        } else
+        {
+            coordinatedDamageMult = 1;
+        }
+
+        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * elementalDebuffMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult;
 
         // if damage source can crit, then calculate if it crits or not
         if (canCrit)
@@ -369,12 +378,12 @@ public abstract class Entity : MonoBehaviour
 // method for healing
     public virtual void Heal(float healingAmount)
     {
-        health += healingAmount * healingReceived;
-        if (health >= maxHealth)
-        {
-            health = maxHealth;
-        }
+        float actual = Mathf.Min(healingAmount * (1f + healingReceived), maxHealth - health);
+        if (actual <= 0f) return;
+        health += actual;
         UpdateHealthBar();
+        GameObject indicator = Instantiate(damageIndicatorPrefab, GetIndicatorPosition(), Quaternion.identity);
+        indicator.GetComponent<DamageIndicator>()?.Initialize($"+{actual:F0}", new Color(0.2f, 1f, 0.2f));
     }
 
 // method for death

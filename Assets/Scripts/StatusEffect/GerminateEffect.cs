@@ -33,13 +33,15 @@ public class GerminateEffect : StatusEffect
     readonly DamageTag[] damageTags = new DamageTag[] { DamageTag.AoE, DamageTag.ElementalDebuff };
     public override void OnExpire()
     {
+        if (target == null) return;
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
         indicator.GetComponent<DamageIndicator>().Initialize("Bloom", new Color(0.3f, 1f, 0.2f));
         float damage = 40 + (cachedAttackDamage * 0.33f) + (24 * cachedElementalPower);
 
+        Vector3 origin = target.transform.position;
         foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
         {
-            if (Vector3.Distance(target.transform.position, insect.transform.position) <= aoeRadius)
+            if (Vector3.Distance(origin, insect.transform.position) <= aoeRadius)
             {
                 if (source != null)
                     insect.Damage(damage, DamageType.Physical, ElementalType.Nature, source, false, damageTags);

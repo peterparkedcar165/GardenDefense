@@ -1,0 +1,4407 @@
+fileFormatVersion: 2
+guid: e03661c495ef09249a4c5cef07bf5a92
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7862189733800015049
+    second: calendula_0
+  - first:
+      213: 9081882189695892913
+    second: calendula_1
+  - first:
+      213: 1640657112216267867
+    second: calendula_2
+  - first:
+      213: 6260588697532666720
+    second: calendula_3
+  - first:
+      213: -4912372684381128175
+    second: calendula_4
+  - first:
+      213: -1644615160955805890
+    second: calendula_5
+  - first:
+      213: -7092781640812085267
+    second: calendula_6
+  - first:
+      213: 2876896215784190635
+    second: calendula_7
+  - first:
+      213: 7896424774480256967
+    second: calendula_8
+  - first:
+      213: 7324001737044948179
+    second: calendula_9
+  - first:
+      213: -2783225450439294992
+    second: calendula_10
+  - first:
+      213: 7584294246055543986
+    second: calendula_11
+  - first:
+      213: -6803147285257893855
+    second: calendula_12
+  - first:
+      213: 5824792625149447514
+    second: calendula_13
+  - first:
+      213: 625863539859276606
+    second: calendula_14
+  - first:
+      213: -8540544985186434119
+    second: calendula_15
+  - first:
+      213: 1822231719494841563
+    second: calendula_16
+  - first:
+      213: 7735287126451047727
+    second: calendula_17
+  - first:
+      213: 8358739086958953624
+    second: calendula_18
+  - first:
+      213: 7074540623268795458
+    second: calendula_19
+  - first:
+      213: -6454590080305147582
+    second: calendula_20
+  - first:
+      213: -2074798914067911101
+    second: calendula_21
+  - first:
+      213: -8621773988807827129
+    second: calendula_22
+  - first:
+      213: -1637478256417450050
+    second: calendula_23
+  - first:
+      213: -4497659032413848504
+    second: calendula_24
+  - first:
+      213: 4959234620792667206
+    second: calendula_25
+  - first:
+      213: 7834914042780374311
+    second: calendula_26
+  - first:
+      213: 1733695805606117566
+    second: calendula_27
+  - first:
+      213: 8258895543726870325
+    second: calendula_28
+  - first:
+      213: -4360353519874117530
+    second: calendula_29
+  - first:
+      213: 4695046924095387957
+    second: calendula_30
+  - first:
+      213: -8790106543559292508
+    second: calendula_31
+  - first:
+      213: -4006957541452813102
+    second: calendula_32
+  - first:
+      213: 6443085241778858757
+    second: calendula_33
+  - first:
+      213: -6431626180752225219
+    second: calendula_34
+  - first:
+      213: -1680402279554654259
+    second: calendula_35
+  - first:
+      213: 5715475833043393410
+    second: calendula_36
+  - first:
+      213: 4877972617205732036
+    second: calendula_37
+  - first:
+      213: 5155167991131283533
+    second: calendula_38
+  - first:
+      213: -5151990361596327891
+    second: calendula_39
+  - first:
+      213: -1948266486724340462
+    second: calendula_40
+  - first:
+      213: -8183641210771579990
+    second: calendula_41
+  - first:
+      213: -5902458599084855492
+    second: calendula_42
+  - first:
+      213: 7249359388255964053
+    second: calendula_43
+  - first:
+      213: -2860001982604415285
+    second: calendula_44
+  - first:
+      213: -3822189448871459368
+    second: calendula_45
+  - first:
+      213: 8519465310796185375
+    second: calendula_46
+  - first:
+      213: 7751556589932485756
+    second: calendula_47
+  - first:
+      213: -3131924656101137270
+    second: calendula_48
+  - first:
+      213: -3867205604353751560
+    second: calendula_49
+  - first:
+      213: 8569018696779587850
+    second: calendula_50
+  - first:
+      213: -8215142343934893701
+    second: calendula_51
+  - first:
+      213: 7130522412825653973
+    second: calendula_52
+  - first:
+      213: -127845046392765218
+    second: calendula_53
+  - first:
+      213: -2661864050126933596
+    second: calendula_54
+  - first:
+      213: 5271724703495842352
+    second: calendula_55
+  - first:
+      213: 6569793783187767526
+    second: calendula_56
+  - first:
+      213: 328073196567196960
+    second: calendula_57
+  - first:
+      213: 6670017662243177699
+    second: calendula_58
+  - first:
+      213: -7716188304685245785
+    second: calendula_59
+  - first:
+      213: 186840526754859989
+    second: calendula_60
+  - first:
+      213: 3426660075268294666
+    second: calendula_61
+  - first:
+      213: -2812670100340695213
+    second: calendula_62
+  - first:
+      213: 1242913206154004516
+    second: calendula_63
+  - first:
+      213: -8696555183665378511
+    second: calendula_64
+  - first:
+      213: 5927611939178081174
+    second: calendula_65
+  - first:
+      213: -238554187264929898
+    second: calendula_66
+  - first:
+      213: 7246504977566744902
+    second: calendula_67
+  - first:
+      213: -1508340479412064747
+    second: calendula_68
+  - first:
+      213: -8928369111538358716
+    second: calendula_69
+  - first:
+      213: -8774835316275361153
+    second: calendula_70
+  - first:
+      213: -6883121264414749947
+    second: calendula_71
+  - first:
+      213: 8361465873210520405
+    second: calendula_72
+  - first:
+      213: 6013471427183035136
+    second: calendula_73
+  - first:
+      213: 1282385497635141702
+    second: calendula_74
+  - first:
+      213: -3749353050493153190
+    second: calendula_75
+  - first:
+      213: -8209981446187351390
+    second: calendula_76
+  - first:
+      213: 8428534269847078449
+    second: calendula_77
+  - first:
+      213: -7418646795743317904
+    second: calendula_78
+  - first:
+      213: 2218415366478183364
+    second: calendula_79
+  - first:
+      213: 8895224534029434088
+    second: calendula_80
+  - first:
+      213: 8700761973585606307
+    second: calendula_81
+  - first:
+      213: -8745120945708896992
+    second: calendula_82
+  - first:
+      213: 9218456203476495551
+    second: calendula_83
+  - first:
+      213: 8282410315298501371
+    second: calendula_84
+  - first:
+      213: -6255375706575752437
+    second: calendula_85
+  - first:
+      213: 2102672610089619678
+    second: calendula_86
+  - first:
+      213: -4203432757795394212
+    second: calendula_87
+  - first:
+      213: -8246744298746915239
+    second: calendula_88
+  - first:
+      213: 8254309039584403004
+    second: calendula_89
+  - first:
+      213: -4146854483514550268
+    second: calendula_90
+  - first:
+      213: -2960383530961072169
+    second: calendula_91
+  - first:
+      213: -4330009513067217721
+    second: calendula_92
+  - first:
+      213: 6412521878524286303
+    second: calendula_93
+  - first:
+      213: -8720911958716589450
+    second: calendula_94
+  - first:
+      213: 7666227016581547098
+    second: calendula_95
+  - first:
+      213: 2113025634553804466
+    second: calendula_96
+  - first:
+      213: 1837606000896121904
+    second: calendula_97
+  - first:
+      213: -6963375823514801692
+    second: calendula_98
+  - first:
+      213: -3270879432325664918
+    second: calendula_99
+  - first:
+      213: 8821102577648629390
+    second: calendula_100
+  - first:
+      213: 7476348160161873991
+    second: calendula_101
+  - first:
+      213: 3130030132442333577
+    second: calendula_102
+  - first:
+      213: 3533182934832343170
+    second: calendula_103
+  - first:
+      213: -3216366060433658966
+    second: calendula_104
+  - first:
+      213: -7335137950612391890
+    second: calendula_105
+  - first:
+      213: 8354630268224725797
+    second: calendula_106
+  - first:
+      213: -783700797594447156
+    second: calendula_107
+  - first:
+      213: 1365837647453078549
+    second: calendula_108
+  - first:
+      213: -1866806297207437036
+    second: calendula_109
+  - first:
+      213: 5393196810991913143
+    second: calendula_110
+  - first:
+      213: 4218108942490302831
+    second: calendula_111
+  - first:
+      213: -3798006408992612741
+    second: calendula_112
+  - first:
+      213: 8408177194681588720
+    second: calendula_113
+  - first:
+      213: 6962781073829587173
+    second: calendula_114
+  - first:
+      213: -383503805620451036
+    second: calendula_115
+  - first:
+      213: -7041957301885839190
+    second: calendula_116
+  - first:
+      213: 8967209508974544974
+    second: calendula_117
+  - first:
+      213: 5280564025787998791
+    second: calendula_118
+  - first:
+      213: -2137239674155689940
+    second: calendula_119
+  - first:
+      213: 4537124488925148235
+    second: calendula_120
+  - first:
+      213: 6526093612455189687
+    second: calendula_121
+  - first:
+      213: 7394670837660586951
+    second: calendula_122
+  - first:
+      213: -4193371499722837455
+    second: calendula_123
+  - first:
+      213: 707436703073433765
+    second: calendula_124
+  - first:
+      213: -2723396979564814477
+    second: calendula_125
+  - first:
+      213: 3775063621704603128
+    second: calendula_126
+  - first:
+      213: 6548322899344447723
+    second: calendula_127
+  - first:
+      213: 325417126019092340
+    second: calendula_128
+  - first:
+      213: 3285500916630937509
+    second: calendula_129
+  - first:
+      213: 1283401879942030964
+    second: calendula_130
+  - first:
+      213: 2555373470425852162
+    second: calendula_131
+  - first:
+      213: -1828539463610201033
+    second: calendula_132
+  - first:
+      213: 5268207664916767542
+    second: calendula_133
+  - first:
+      213: 4571795935631247885
+    second: calendula_134
+  - first:
+      213: 7734647762313528161
+    second: calendula_135
+  - first:
+      213: -4852203788888728412
+    second: calendula_136
+  - first:
+      213: -3003953146385510885
+    second: calendula_137
+  - first:
+      213: -35678975794539330
+    second: calendula_138
+  - first:
+      213: 388596714136742449
+    second: calendula_139
+  - first:
+      213: 3131515266862262590
+    second: calendula_140
+  - first:
+      213: 4545411979014104039
+    second: calendula_141
+  - first:
+      213: -2431326897808836193
+    second: calendula_142
+  - first:
+      213: 1749170326164679102
+    second: calendula_143
+  - first:
+      213: 8928713918709182502
+    second: calendula_144
+  - first:
+      213: -8615663820761548257
+    second: calendula_145
+  - first:
+      213: 8599040761976707199
+    second: calendula_146
+  - first:
+      213: 2352594623005717098
+    second: calendula_147
+  - first:
+      213: -5507790192880017445
+    second: calendula_148
+  - first:
+      213: 361211669938882495
+    second: calendula_149
+  - first:
+      213: -938401248527701151
+    second: calendula_150
+  - first:
+      213: 3884402956544115952
+    second: calendula_151
+  - first:
+      213: 4226575996021568487
+    second: calendula_152
+  - first:
+      213: 7078535385928416920
+    second: calendula_153
+  - first:
+      213: -6490822657033460046
+    second: calendula_154
+  - first:
+      213: -4782482626153580710
+    second: calendula_155
+  - first:
+      213: 199885489798515263
+    second: calendula_156
+  - first:
+      213: 9131513143122492019
+    second: calendula_157
+  - first:
+      213: 5993457904573834437
+    second: calendula_158
+  - first:
+      213: -4483562414144095081
+    second: calendula_159
+  - first:
+      213: -8456576769332580692
+    second: calendula_160
+  - first:
+      213: 1845049490751628174
+    second: calendula_161
+  - first:
+      213: 1703929186090835086
+    second: calendula_162
+  - first:
+      213: -4157169161015948338
+    second: calendula_163
+  - first:
+      213: 5778896259131740265
+    second: calendula_164
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 640
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: calendula_0
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 871
+        width: 106
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c47fdf38eb1c1d60800000000000000
+      internalID: 7862189733800015049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_1
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 927
+        width: 27
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bd35c0dbb3590e70800000000000000
+      internalID: 9081882189695892913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_2
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 850
+        width: 79
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5c6ed373f8c4c610800000000000000
+      internalID: 1640657112216267867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_3
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 1
+        width: 738
+        height: 868
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0639249104412e650800000000000000
+      internalID: 6260588697532666720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_4
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 855
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11a7127021fb3dbb0800000000000000
+      internalID: -4912372684381128175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_5
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 863
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3fd10389372d29e0800000000000000
+      internalID: -1644615160955805890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_6
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 867
+        width: 80
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: defbbf54da0619d90800000000000000
+      internalID: -7092781640812085267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_7
+      rect:
+        serializedVersion: 2
+        x: 710
+        y: 863
+        width: 25
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba27b75add9cce720800000000000000
+      internalID: 2876896215784190635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_8
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 903
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cf5d7ece7cb59d60800000000000000
+      internalID: 7896424774480256967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_9
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 858
+        width: 27
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d478ee86c414a560800000000000000
+      internalID: 7324001737044948179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_10
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 897
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ff3db0f23fff59d0800000000000000
+      internalID: -2783225450439294992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_11
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 858
+        width: 29
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b40e28fe63d04960800000000000000
+      internalID: 7584294246055543986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_12
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 905
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1284a83b69d5691a0800000000000000
+      internalID: -6803147285257893855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_13
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 871
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5d09501802d5d050800000000000000
+      internalID: 5824792625149447514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_14
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 842
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e334e23d2938fa800800000000000000
+      internalID: 625863539859276606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_15
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 815
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b308b1f593e97980800000000000000
+      internalID: -8540544985186434119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_16
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 779
+        width: 43
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd470f2281ed94910800000000000000
+      internalID: 1822231719494841563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_17
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 801
+        width: 46
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2d44cf78a2495b60800000000000000
+      internalID: 7735287126451047727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_18
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 816
+        width: 22
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8948c50c9e4300470800000000000000
+      internalID: 8358739086958953624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_19
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 815
+        width: 44
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 244d10fd631dd2260800000000000000
+      internalID: 7074540623268795458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_20
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 709
+        width: 120
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 241d6a41580bc66a0800000000000000
+      internalID: -6454590080305147582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_21
+      rect:
+        serializedVersion: 2
+        x: 823
+        y: 775
+        width: 13
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34ead926165d433e0800000000000000
+      internalID: -2074798914067911101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_22
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 753
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 741286fbc3e495880800000000000000
+      internalID: -8621773988807827129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_23
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 736
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb7dfc693328649e0800000000000000
+      internalID: -1637478256417450050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_24
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 703
+        width: 63
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84c352c80fa1591c0800000000000000
+      internalID: -4497659032413848504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_25
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 686
+        width: 42
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64c7a2acc9db2d440800000000000000
+      internalID: 4959234620792667206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_26
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 654
+        width: 50
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 725d4ad8fc43bbc60800000000000000
+      internalID: 7834914042780374311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_27
+      rect:
+        serializedVersion: 2
+        x: 839
+        y: 661
+        width: 68
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb0ccb156235f0810800000000000000
+      internalID: 1733695805606117566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_28
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 667
+        width: 30
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53f85e05dbd7d9270800000000000000
+      internalID: 8258895543726870325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_29
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 663
+        width: 18
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66077c86399ec73c0800000000000000
+      internalID: -4360353519874117530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_30
+      rect:
+        serializedVersion: 2
+        x: 898
+        y: 403
+        width: 126
+        height: 270
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 539fe725d48282140800000000000000
+      internalID: 4695046924095387957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_31
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 637
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a9cf4daba4430680800000000000000
+      internalID: -8790106543559292508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_32
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 647
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2dce1a7885d6468c0800000000000000
+      internalID: -4006957541452813102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_33
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 605
+        width: 32
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50b6ac5f3ef6a6950800000000000000
+      internalID: 6443085241778858757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_34
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 567
+        width: 47
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3c492890164eb6a0800000000000000
+      internalID: -6431626180752225219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_35
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 571
+        width: 60
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcf5367a7030ea8e0800000000000000
+      internalID: -1680402279554654259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_36
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 600
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28b91eefcf2715f40800000000000000
+      internalID: 5715475833043393410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_37
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 613
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c251a0304a02b340800000000000000
+      internalID: 4877972617205732036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_38
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 564
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4028d489f5da8740800000000000000
+      internalID: 5155167991131283533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_39
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 520
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2880d200147088b0800000000000000
+      internalID: -5151990361596327891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_40
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 535
+        width: 44
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2155ff2e3fd56f4e0800000000000000
+      internalID: -1948266486724340462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_41
+      rect:
+        serializedVersion: 2
+        x: 859
+        y: 575
+        width: 41
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aab56b67daddd6e80800000000000000
+      internalID: -8183641210771579990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_42
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 557
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3fe81c3d21461ea0800000000000000
+      internalID: -5902458599084855492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_43
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 527
+        width: 19
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59bc32274f5ea9460800000000000000
+      internalID: 7249359388255964053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_44
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 506
+        width: 38
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bce63f9895b3f48d0800000000000000
+      internalID: -2860001982604415285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_45
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 159
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d545c372fad4fac0800000000000000
+      internalID: -3822189448871459368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_46
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 168
+        width: 18
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1ff446ef883b3670800000000000000
+      internalID: 8519465310796185375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_47
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 159
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7c934726af039b60800000000000000
+      internalID: 7751556589932485756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_48
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 162
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a84edc17e1b2984d0800000000000000
+      internalID: -3131924656101137270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_49
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 157
+        width: 37
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f5481ffdfce45ac0800000000000000
+      internalID: -3867205604353751560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_50
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 171
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a016a37aa154be670800000000000000
+      internalID: 8569018696779587850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_51
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 164
+        width: 48
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b71ad7a5093fdfd80800000000000000
+      internalID: -8215142343934893701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_52
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 167
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d23f67fa54b4f260800000000000000
+      internalID: 7130522412825653973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_53
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 159
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed4477f8b9dc93ef0800000000000000
+      internalID: -127845046392765218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_54
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 167
+        width: 14
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a13dc3efb82f0bd0800000000000000
+      internalID: -2661864050126933596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_55
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 159
+        width: 26
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03a6581efade82940800000000000000
+      internalID: 5271724703495842352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_56
+      rect:
+        serializedVersion: 2
+        x: 932
+        y: 119
+        width: 77
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e00a7633a89c2b50800000000000000
+      internalID: 6569793783187767526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_57
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 131
+        width: 45
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 025f6b585dc8d8400800000000000000
+      internalID: 328073196567196960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_58
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 151
+        width: 17
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e4069b79b9a09c50800000000000000
+      internalID: 6670017662243177699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_59
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 149
+        width: 40
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7aa56377e979ae490800000000000000
+      internalID: -7716188304685245785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_60
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 151
+        width: 30
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dbceda187ac79200800000000000000
+      internalID: 186840526754859989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_61
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 150
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a084168ee21fd8f20800000000000000
+      internalID: 3426660075268294666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_62
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 112
+        width: 51
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35f94d6227367f8d0800000000000000
+      internalID: -2812670100340695213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_63
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 144
+        width: 18
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 428837bc9f6bf3110800000000000000
+      internalID: 1242913206154004516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_64
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 143
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13b0b040321af4780800000000000000
+      internalID: -8696555183665378511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_65
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 135
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69be21127ab134250800000000000000
+      internalID: 5927611939178081174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_66
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 127
+        width: 42
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69f44680b3c70bcf0800000000000000
+      internalID: -238554187264929898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_67
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 131
+        width: 22
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64147fa22e1c09460800000000000000
+      internalID: 7246504977566744902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_68
+      rect:
+        serializedVersion: 2
+        x: 838
+        y: 142
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51e2d44535c411be0800000000000000
+      internalID: -1508340479412064747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_69
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 85
+        width: 73
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 446af2bf89f081480800000000000000
+      internalID: -8928369111538358716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_70
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 115
+        width: 28
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7acada55c5893680800000000000000
+      internalID: -8774835316275361153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_71
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 135
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50b0f98adad3a70a0800000000000000
+      internalID: -6883121264414749947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_72
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 125
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 553b34629e4e90470800000000000000
+      internalID: 8361465873210520405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_73
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 127
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 003c43cf664247350800000000000000
+      internalID: 6013471427183035136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_74
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 43
+        width: 111
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 648b7a3d0d2fbc110800000000000000
+      internalID: 1282385497635141702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_75
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 110
+        width: 43
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5014d7f34f97fbc0800000000000000
+      internalID: -3749353050493153190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_76
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 116
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a2847f7f59401e80800000000000000
+      internalID: -8209981446187351390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_77
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 119
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 136017b134b28f470800000000000000
+      internalID: 8428534269847078449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_78
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 127
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07031a18b0cab0990800000000000000
+      internalID: -7418646795743317904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_79
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 111
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cb333ba50569ce10800000000000000
+      internalID: 2218415366478183364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_80
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 111
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ecf924b59f227b70800000000000000
+      internalID: 8895224534029434088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_81
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 95
+        width: 29
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a6fbc69ae05fb870800000000000000
+      internalID: 8700761973585606307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_82
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 95
+        width: 34
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02d613165d613a680800000000000000
+      internalID: -8745120945708896992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_83
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 79
+        width: 71
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbc66b953198eef70800000000000000
+      internalID: 9218456203476495551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_84
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 102
+        width: 18
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf2f567bc4801f270800000000000000
+      internalID: 8282410315298501371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_85
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 111
+        width: 13
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b03b1f0ffe07039a0800000000000000
+      internalID: -6255375706575752437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_86
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 106
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed0d55339913e2d10800000000000000
+      internalID: 2102672610089619678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_87
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 106
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5d6d527d286aa5c0800000000000000
+      internalID: -4203432757795394212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_88
+      rect:
+        serializedVersion: 2
+        x: 738
+        y: 62
+        width: 77
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95656bfd0cdad8d80800000000000000
+      internalID: -8246744298746915239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_89
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 93
+        width: 41
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3e59ba96523d8270800000000000000
+      internalID: 8254309039584403004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_90
+      rect:
+        serializedVersion: 2
+        x: 838
+        y: 104
+        width: 19
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40811e671d96376c0800000000000000
+      internalID: -4146854483514550268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_91
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 103
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7df06260dda9ae6d0800000000000000
+      internalID: -2960383530961072169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_92
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 107
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ccf09b0a47b8e3c0800000000000000
+      internalID: -4330009513067217721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_93
+      rect:
+        serializedVersion: 2
+        x: 937
+        y: 111
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f555cdb6caaddf850800000000000000
+      internalID: 6412521878524286303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_94
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 106
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67add3767c819f680800000000000000
+      internalID: -8720911958716589450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_95
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 87
+        width: 21
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5488daaad8e36a60800000000000000
+      internalID: 7666227016581547098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_96
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 93
+        width: 46
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b6bfdc8e99f25d10800000000000000
+      internalID: 2113025634553804466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_97
+      rect:
+        serializedVersion: 2
+        x: 606
+        y: 94
+        width: 20
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03c1a88fbec708910800000000000000
+      internalID: 1837606000896121904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_98
+      rect:
+        serializedVersion: 2
+        x: 735
+        y: 103
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e96bd1059e1d5f90800000000000000
+      internalID: -6963375823514801692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_99
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 103
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6fe8157c708b92d0800000000000000
+      internalID: -3270879432325664918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_100
+      rect:
+        serializedVersion: 2
+        x: 823
+        y: 101
+        width: 18
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e867704ee0ada6a70800000000000000
+      internalID: 8821102577648629390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_101
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 95
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 740089f4a0351c760800000000000000
+      internalID: 7476348160161873991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_102
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 93
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9818e7462d9107b20800000000000000
+      internalID: 3130030132442333577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_103
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 88
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 288672dd823680130800000000000000
+      internalID: 3533182934832343170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_104
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 0
+        width: 126
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aabaa3ceb1c2d53d0800000000000000
+      internalID: -3216366060433658966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_105
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 95
+        width: 18
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e28f24ba5ea543a90800000000000000
+      internalID: -7335137950612391890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_106
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 79
+        width: 33
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 523e247d6fb91f370800000000000000
+      internalID: 8354630268224725797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_107
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 59
+        width: 72
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc2513dd64cbf15f0800000000000000
+      internalID: -783700797594447156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_108
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 87
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 514cb459a1e64f210800000000000000
+      internalID: 1365837647453078549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_109
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 87
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4190d7e3095c716e0800000000000000
+      internalID: -1866806297207437036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_110
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 84
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b841fadceb78da40800000000000000
+      internalID: 5393196810991913143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_111
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 75
+        width: 18
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6978051cbbb98a30800000000000000
+      internalID: 4218108942490302831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_112
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 83
+        width: 13
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7e96513b45ca4bc0800000000000000
+      internalID: -3798006408992612741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_113
+      rect:
+        serializedVersion: 2
+        x: 827
+        y: 87
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fb59813c98dfa470800000000000000
+      internalID: 8408177194681588720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_114
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 83
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e8ec6a0f74c0a060800000000000000
+      internalID: 6962781073829587173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_115
+      rect:
+        serializedVersion: 2
+        x: 839
+        y: 85
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4298bf712558daaf0800000000000000
+      internalID: -383503805620451036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_116
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 73
+        width: 27
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa850a1d421f54e90800000000000000
+      internalID: -7041957301885839190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_117
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 80
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e48cee0c98de17c70800000000000000
+      internalID: 8967209508974544974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_118
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 71
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 742eccaf005584940800000000000000
+      internalID: 5280564025787998791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_119
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 79
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c28141607dff652e0800000000000000
+      internalID: -2137239674155689940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_120
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 59
+        width: 27
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b44fb181faa17fe30800000000000000
+      internalID: 4537124488925148235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_121
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 47
+        width: 74
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bc56555097519a50800000000000000
+      internalID: 6526093612455189687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_122
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 71
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c313bdb2f52f9660800000000000000
+      internalID: 7394670837660586951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_123
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 31
+        width: 64
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 132f5c3a6d62ec5c0800000000000000
+      internalID: -4193371499722837455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_124
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 75
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a8f3cbeee151d900800000000000000
+      internalID: 707436703073433765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_125
+      rect:
+        serializedVersion: 2
+        x: 845
+        y: 54
+        width: 36
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37fdaa250ec843ad0800000000000000
+      internalID: -2723396979564814477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_126
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 74
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f5d330ec58b36430800000000000000
+      internalID: 3775063621704603128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_127
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 49
+        width: 21
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be85bf18bf050ea50800000000000000
+      internalID: 6548322899344447723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_128
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 63
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47f4238e62d148400800000000000000
+      internalID: 325417126019092340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_129
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 51
+        width: 28
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5afd1052da1789d20800000000000000
+      internalID: 3285500916630937509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_130
+      rect:
+        serializedVersion: 2
+        x: 612
+        y: 37
+        width: 54
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4766306c53f8fc110800000000000000
+      internalID: 1283401879942030964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_131
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 64
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 209a035e1a2867320800000000000000
+      internalID: 2555373470425852162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_132
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 63
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73c0bbdbb09bf96e0800000000000000
+      internalID: -1828539463610201033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_133
+      rect:
+        serializedVersion: 2
+        x: 703
+        y: 24
+        width: 46
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 633aa5685fe6c1940800000000000000
+      internalID: 5268207664916767542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_134
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 63
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0a00e85e28427f30800000000000000
+      internalID: 4571795935631247885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_135
+      rect:
+        serializedVersion: 2
+        x: 825
+        y: 48
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 163c77fe82df65b60800000000000000
+      internalID: 7734647762313528161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_136
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 53
+        width: 36
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ac9b71bc5289acb0800000000000000
+      internalID: -4852203788888728412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_137
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 55
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1e46cb6780df46d0800000000000000
+      internalID: -3003953146385510885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_138
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 50
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb411d9192e318ff0800000000000000
+      internalID: -35678975794539330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_139
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 52
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13a210317a2946500800000000000000
+      internalID: 388596714136742449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_140
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 50
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e39a9023b80657b20800000000000000
+      internalID: 3131515266862262590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_141
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 43
+        width: 21
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e3e0febc1c841f30800000000000000
+      internalID: 4545411979014104039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_142
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 49
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9970437111324ed0800000000000000
+      internalID: -2431326897808836193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_143
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 47
+        width: 23
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb923b6e42d464810800000000000000
+      internalID: 1749170326164679102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_144
+      rect:
+        serializedVersion: 2
+        x: 961
+        y: 55
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6203fb1b00a29eb70800000000000000
+      internalID: 8928713918709182502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_145
+      rect:
+        serializedVersion: 2
+        x: 190
+        y: 41
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1ab25b17630f6880800000000000000
+      internalID: -8615663820761548257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_146
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 47
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f78d9ba630ee55770800000000000000
+      internalID: 8599040761976707199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_147
+      rect:
+        serializedVersion: 2
+        x: 547
+        y: 39
+        width: 34
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a62ffb4585816a020800000000000000
+      internalID: 2352594623005717098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_148
+      rect:
+        serializedVersion: 2
+        x: 751
+        y: 15
+        width: 45
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdf910840066093b0800000000000000
+      internalID: -5507790192880017445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_149
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 40
+        width: 17
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb7ce6b9918430500800000000000000
+      internalID: 361211669938882495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_150
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 32
+        width: 13
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16b29bc49012af2f0800000000000000
+      internalID: -938401248527701151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_151
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 39
+        width: 15
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f40a4598eb28e530800000000000000
+      internalID: 3884402956544115952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_152
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 39
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e3fe0b9970d7aa30800000000000000
+      internalID: 4226575996021568487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_153
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 38
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89ebb480e620c3260800000000000000
+      internalID: 7078535385928416920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_154
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 36
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b6a67bee27fbe5a0800000000000000
+      internalID: -6490822657033460046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_155
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 36
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5773a3e36531adb0800000000000000
+      internalID: -4782482626153580710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_156
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 34
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3a023f3bc226c200800000000000000
+      internalID: 199885489798515263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_157
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 31
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37a70a5a2d6a9be70800000000000000
+      internalID: 9131513143122492019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_158
+      rect:
+        serializedVersion: 2
+        x: 702
+        y: 15
+        width: 22
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c46162a53a0d2350800000000000000
+      internalID: 5993457904573834437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_159
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 24
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79cf5a04dbf27c1c0800000000000000
+      internalID: -4483562414144095081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_160
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 19
+        width: 17
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cae6c10bb3434aa80800000000000000
+      internalID: -8456576769332580692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_161
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 21
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8324418cbeea9910800000000000000
+      internalID: 1845049490751628174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_162
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 5
+        width: 34
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8c5d53219295a710800000000000000
+      internalID: 1703929186090835086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_163
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 15
+        width: 23
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecb8f667ca4ce46c0800000000000000
+      internalID: -4157169161015948338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: calendula_164
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 23
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 960916f9783c23050800000000000000
+      internalID: 5778896259131740265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      calendula_0: 7862189733800015049
+      calendula_1: 9081882189695892913
+      calendula_10: -2783225450439294992
+      calendula_100: 8821102577648629390
+      calendula_101: 7476348160161873991
+      calendula_102: 3130030132442333577
+      calendula_103: 3533182934832343170
+      calendula_104: -3216366060433658966
+      calendula_105: -7335137950612391890
+      calendula_106: 8354630268224725797
+      calendula_107: -783700797594447156
+      calendula_108: 1365837647453078549
+      calendula_109: -1866806297207437036
+      calendula_11: 7584294246055543986
+      calendula_110: 5393196810991913143
+      calendula_111: 4218108942490302831
+      calendula_112: -3798006408992612741
+      calendula_113: 8408177194681588720
+      calendula_114: 6962781073829587173
+      calendula_115: -383503805620451036
+      calendula_116: -7041957301885839190
+      calendula_117: 8967209508974544974
+      calendula_118: 5280564025787998791
+      calendula_119: -2137239674155689940
+      calendula_12: -6803147285257893855
+      calendula_120: 4537124488925148235
+      calendula_121: 6526093612455189687
+      calendula_122: 7394670837660586951
+      calendula_123: -4193371499722837455
+      calendula_124: 707436703073433765
+      calendula_125: -2723396979564814477
+      calendula_126: 3775063621704603128
+      calendula_127: 6548322899344447723
+      calendula_128: 325417126019092340
+      calendula_129: 3285500916630937509
+      calendula_13: 5824792625149447514
+      calendula_130: 1283401879942030964
+      calendula_131: 2555373470425852162
+      calendula_132: -1828539463610201033
+      calendula_133: 5268207664916767542
+      calendula_134: 4571795935631247885
+      calendula_135: 7734647762313528161
+      calendula_136: -4852203788888728412
+      calendula_137: -3003953146385510885
+      calendula_138: -35678975794539330
+      calendula_139: 388596714136742449
+      calendula_14: 625863539859276606
+      calendula_140: 3131515266862262590
+      calendula_141: 4545411979014104039
+      calendula_142: -2431326897808836193
+      calendula_143: 1749170326164679102
+      calendula_144: 8928713918709182502
+      calendula_145: -8615663820761548257
+      calendula_146: 8599040761976707199
+      calendula_147: 2352594623005717098
+      calendula_148: -5507790192880017445
+      calendula_149: 361211669938882495
+      calendula_15: -8540544985186434119
+      calendula_150: -938401248527701151
+      calendula_151: 3884402956544115952
+      calendula_152: 4226575996021568487
+      calendula_153: 7078535385928416920
+      calendula_154: -6490822657033460046
+      calendula_155: -4782482626153580710
+      calendula_156: 199885489798515263
+      calendula_157: 9131513143122492019
+      calendula_158: 5993457904573834437
+      calendula_159: -4483562414144095081
+      calendula_16: 1822231719494841563
+      calendula_160: -8456576769332580692
+      calendula_161: 1845049490751628174
+      calendula_162: 1703929186090835086
+      calendula_163: -4157169161015948338
+      calendula_164: 5778896259131740265
+      calendula_17: 7735287126451047727
+      calendula_18: 8358739086958953624
+      calendula_19: 7074540623268795458
+      calendula_2: 1640657112216267867
+      calendula_20: -6454590080305147582
+      calendula_21: -2074798914067911101
+      calendula_22: -8621773988807827129
+      calendula_23: -1637478256417450050
+      calendula_24: -4497659032413848504
+      calendula_25: 4959234620792667206
+      calendula_26: 7834914042780374311
+      calendula_27: 1733695805606117566
+      calendula_28: 8258895543726870325
+      calendula_29: -4360353519874117530
+      calendula_3: 6260588697532666720
+      calendula_30: 4695046924095387957
+      calendula_31: -8790106543559292508
+      calendula_32: -4006957541452813102
+      calendula_33: 6443085241778858757
+      calendula_34: -6431626180752225219
+      calendula_35: -1680402279554654259
+      calendula_36: 5715475833043393410
+      calendula_37: 4877972617205732036
+      calendula_38: 5155167991131283533
+      calendula_39: -5151990361596327891
+      calendula_4: -4912372684381128175
+      calendula_40: -1948266486724340462
+      calendula_41: -8183641210771579990
+      calendula_42: -5902458599084855492
+      calendula_43: 7249359388255964053
+      calendula_44: -2860001982604415285
+      calendula_45: -3822189448871459368
+      calendula_46: 8519465310796185375
+      calendula_47: 7751556589932485756
+      calendula_48: -3131924656101137270
+      calendula_49: -3867205604353751560
+      calendula_5: -1644615160955805890
+      calendula_50: 8569018696779587850
+      calendula_51: -8215142343934893701
+      calendula_52: 7130522412825653973
+      calendula_53: -127845046392765218
+      calendula_54: -2661864050126933596
+      calendula_55: 5271724703495842352
+      calendula_56: 6569793783187767526
+      calendula_57: 328073196567196960
+      calendula_58: 6670017662243177699
+      calendula_59: -7716188304685245785
+      calendula_6: -7092781640812085267
+      calendula_60: 186840526754859989
+      calendula_61: 3426660075268294666
+      calendula_62: -2812670100340695213
+      calendula_63: 1242913206154004516
+      calendula_64: -8696555183665378511
+      calendula_65: 5927611939178081174
+      calendula_66: -238554187264929898
+      calendula_67: 7246504977566744902
+      calendula_68: -1508340479412064747
+      calendula_69: -8928369111538358716
+      calendula_7: 2876896215784190635
+      calendula_70: -8774835316275361153
+      calendula_71: -6883121264414749947
+      calendula_72: 8361465873210520405
+      calendula_73: 6013471427183035136
+      calendula_74: 1282385497635141702
+      calendula_75: -3749353050493153190
+      calendula_76: -8209981446187351390
+      calendula_77: 8428534269847078449
+      calendula_78: -7418646795743317904
+      calendula_79: 2218415366478183364
+      calendula_8: 7896424774480256967
+      calendula_80: 8895224534029434088
+      calendula_81: 8700761973585606307
+      calendula_82: -8745120945708896992
+      calendula_83: 9218456203476495551
+      calendula_84: 8282410315298501371
+      calendula_85: -6255375706575752437
+      calendula_86: 2102672610089619678
+      calendula_87: -4203432757795394212
+      calendula_88: -8246744298746915239
+      calendula_89: 8254309039584403004
+      calendula_9: 7324001737044948179
+      calendula_90: -4146854483514550268
+      calendula_91: -2960383530961072169
+      calendula_92: -4330009513067217721
+      calendula_93: 6412521878524286303
+      calendula_94: -8720911958716589450
+      calendula_95: 7666227016581547098
+      calendula_96: 2113025634553804466
+      calendula_97: 1837606000896121904
+      calendula_98: -6963375823514801692
+      calendula_99: -3270879432325664918
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

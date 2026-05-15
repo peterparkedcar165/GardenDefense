@@ -45,5 +45,7 @@ public enum StatType
     ImmobilizeDurationMultiplier,
     PassiveCooldown,
     SkillDurationAdder,
-    SkillDurationMultiplier
+    SkillDurationMultiplier,
+    CoordinatedDamage,
+    HealingBonus
 }
