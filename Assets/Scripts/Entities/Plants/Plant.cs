@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public abstract class Plant : Entity
+public abstract class Plant : Entity, IAttackable
 {
     public static List<Plant> allPlants = new List<Plant>();
 
@@ -350,6 +350,14 @@ public abstract class Plant : Entity
     {
         return "";
     }
+
+    // IAttackable
+    public void ReceiveAttack(float damage, Insect attacker)
+    {
+        Damage(damage, DamageType.Physical, ElementalType.Neutral, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+    }
+    public bool IsAlive => health > 0;
+    public Vector3 Position => transform.position;
 
     public bool IsValidNightTarget(Insect insect, float distance)
     {

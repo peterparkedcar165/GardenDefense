@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class AcornBomb : MonoBehaviour
+public class AcornBomb : MonoBehaviour, IAttackable
 {
     private float aoeRadius;
     private float damage;
@@ -13,33 +13,35 @@ public class AcornBomb : MonoBehaviour
     private bool hasLanded = false;
     private bool isDead = false;
 
-    private float hp = 250f;
-    private const float maxHp = 250f;
+    private float hp;
+    private float maxHp;
     private float lifetime;
-    private float eatTickTimer = 0f;
 
     private GameObject healthBarInstance;
     private Transform healthBarFill;
 
-    private const float blockRadius = 0.5f;
     private const float startHeight = 20f;
     private const float gravityAccel = 9.8f;
-    private const float eatTickInterval = 1f;
     private const float stunDuration = 2f;
 
-    private readonly List<Insect> eatingInsects = new List<Insect>();
+    private readonly HashSet<Insect> tauntedInsects = new HashSet<Insect>();
     private static readonly DamageTag[] impactTags = { DamageTag.AoE, DamageTag.SkillDamage };
 
-    public void Initialize(float aoeRadius, float damage, float lifetime, Plant source)
+    public void Initialize(float aoeRadius, float damage, float lifetime, float health, Plant source)
     {
         this.aoeRadius = aoeRadius;
         this.damage = damage;
         this.lifetime = lifetime;
         this.source = source;
+        hp = health;
+        maxHp = health;
 
         visual = transform.Find("Visual");
         if (visual != null)
+        {
             visual.localPosition = new Vector3(0f, startHeight, 0f);
+            visual.localScale = new Vector3(aoeRadius, aoeRadius, 1f);
+        }
 
         shadow = transform.Find("Shadow");
         if (shadow != null)
@@ -82,14 +84,7 @@ public class AcornBomb : MonoBehaviour
         lifetime -= Time.deltaTime;
         if (lifetime <= 0f) { Die(); return; }
 
-        UpdateEatingInsects();
-
-        eatTickTimer += Time.deltaTime;
-        if (eatTickTimer >= eatTickInterval)
-        {
-            eatTickTimer -= eatTickInterval;
-            DamageFromInsects();
-        }
+        UpdateTaunt();
     }
 
     private void Fall()
@@ -103,7 +98,7 @@ public class AcornBomb : MonoBehaviour
             pos.y = 0f;
             visual.localPosition = pos;
             if (shadow != null)
-                shadow.localScale = new Vector3(0.8f, 0.4f, 1f);
+                shadow.localScale = new Vector3(0.8f * aoeRadius, 0.4f * aoeRadius, 1f);
             OnLand();
         }
         else
@@ -112,7 +107,7 @@ public class AcornBomb : MonoBehaviour
             if (shadow != null)
             {
                 float t = 1f - (pos.y / startHeight);
-                shadow.localScale = new Vector3(t * 0.8f, t * 0.4f, 1f);
+                shadow.localScale = new Vector3(t * 0.8f * aoeRadius, t * 0.4f * aoeRadius, 1f);
             }
         }
     }
@@ -132,42 +127,32 @@ public class AcornBomb : MonoBehaviour
         }
     }
 
-    private void UpdateEatingInsects()
+    private void UpdateTaunt()
     {
-        for (int i = eatingInsects.Count - 1; i >= 0; i--)
-        {
-            if (eatingInsects[i] == null || eatingInsects[i].gameObject == null)
-                eatingInsects.RemoveAt(i);
-        }
+        tauntedInsects.RemoveWhere(i => i == null || i.gameObject == null);
 
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect.isFlying) continue;
-            if (eatingInsects.Contains(insect)) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) <= blockRadius)
+            if (insect.target != null) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
             {
-                eatingInsects.Add(insect);
-                insect.ApplyEffect(new EatingAcornEffect(insect, 999f, 1, source));
+                insect.ApplyEffect(new TauntEffect(insect, 999f, 1, source, this));
+                tauntedInsects.Add(insect);
             }
         }
     }
 
-    private void DamageFromInsects()
+    // IAttackable
+    public void ReceiveAttack(float damage, Insect attacker)
     {
-        for (int i = eatingInsects.Count - 1; i >= 0; i--)
-        {
-            Insect insect = eatingInsects[i];
-            if (insect == null || insect.gameObject == null)
-            {
-                eatingInsects.RemoveAt(i);
-                continue;
-            }
-            hp -= insect.attackDamage * insect.eatMultiplier;
-        }
-
+        if (isDead) return;
+        hp -= damage * attacker.eatMultiplier;
         UpdateHealthBar();
         if (hp <= 0f) Die();
     }
+    public bool IsAlive => !isDead;
+    public Vector3 Position => transform.position;
 
     private void OnMouseEnter()
     {
@@ -184,12 +169,12 @@ public class AcornBomb : MonoBehaviour
     private void Die()
     {
         isDead = true;
-        for (int i = eatingInsects.Count - 1; i >= 0; i--)
+        foreach (Insect insect in tauntedInsects)
         {
-            if (eatingInsects[i] != null)
-                eatingInsects[i].RemoveEffect<EatingAcornEffect>();
+            if (insect != null && insect.GetEffect<TauntEffect>()?.taunter == (IAttackable)this)
+                insect.RemoveEffect<TauntEffect>();
         }
-        eatingInsects.Clear();
+        tauntedInsects.Clear();
         Destroy(gameObject);
     }
 }

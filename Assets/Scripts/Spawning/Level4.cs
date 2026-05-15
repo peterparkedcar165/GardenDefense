@@ -6,7 +6,7 @@ public class Level4 : SpawnManager
 {
     public float levelTime;
     public int wave;
-    private int startSunCount = 350, startHealth = 20;
+    private int startSunCount = 350, startHealth = 200;
     private int maxWave = 12;
     public GameObject workerAnt, soldierAnt, scoutAnt;
     public GameObject weatherManager;

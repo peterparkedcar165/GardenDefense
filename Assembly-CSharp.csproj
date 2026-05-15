@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
+    <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
     <Compile Include="Assets\Scripts\Skills\Blizzard.cs" />

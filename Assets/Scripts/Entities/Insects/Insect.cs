@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class Insect : Entity
+public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();
 
@@ -23,6 +23,8 @@ public abstract class Insect : Entity
     public Vector2 windVelocity;
     public Vector2 windMomentum;
     public Entity lastSource;
+    public IAttackable target => GetEffect<TauntEffect>()?.taunter;
+    private float attackTimer;
 
     // bonus
     public float movementSpeedAdder, movementSpeedMultiplier;
@@ -86,6 +88,7 @@ public abstract class Insect : Entity
         base.Update();
         Move();
         SyncAimPoint();
+        UpdateAttack();
     }
 
     protected override void OnHoverExit()
@@ -127,7 +130,21 @@ public abstract class Insect : Entity
 
         if (HasEffect<HardCrowdControl>()) return;
         if (HasEffect<BubblePrisonEffect>()) return;
-        if (HasEffect<EatingAcornEffect>()) return;
+
+        if (target != null)
+        {
+            if (!target.IsAlive) { RemoveEffect<TauntEffect>(); }
+            else
+            {
+                float dist = Vector3.Distance(transform.position, target.Position);
+                if (dist > attackRange)
+                {
+                    Vector3 dir = (target.Position - transform.position).normalized;
+                    transform.position += dir * GetMoveSpeed() * Time.deltaTime;
+                }
+                return;
+            }
+        }
 
         if (currentWaypointIndex >= waypoints.Length)
         {
@@ -135,8 +152,8 @@ public abstract class Insect : Entity
             return;
         }
 
-        Transform target = waypoints[currentWaypointIndex]; // maybe randomize?
-        Vector3 targetPos = target.position + new Vector3(pathOffset.x, pathOffset.y, 0);
+        Transform waypoint = waypoints[currentWaypointIndex];
+        Vector3 targetPos = waypoint.position + new Vector3(pathOffset.x, pathOffset.y, 0);
         Vector3 direction = (targetPos - transform.position).normalized;
         transform.position += direction * GetMoveSpeed() * Time.deltaTime;
 
@@ -162,6 +179,29 @@ public abstract class Insect : Entity
         return null;
 
         return waypoints[currentWaypointIndex];
+    }
+
+    private void UpdateAttack()
+    {
+        if (target == null) return;
+        if (!target.IsAlive) { RemoveEffect<TauntEffect>(); return; }
+        if (attackSpeed <= 0) return;
+
+        float dist = Vector3.Distance(transform.position, target.Position);
+        if (dist > attackRange) return;
+
+        attackTimer += Time.deltaTime;
+        if (attackTimer >= 1f / attackSpeed)
+        {
+            attackTimer = 0f;
+            Attack();
+        }
+    }
+
+    public virtual void Attack()
+    {
+        if (target == null) return;
+        target.ReceiveAttack(attackDamage, this);
     }
 
     protected virtual void ReachObjective()
@@ -266,6 +306,14 @@ public abstract class Insect : Entity
         if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsTargeting) return;
         InsectInfoUI.instance?.ShowPanel(this);
     }
+
+    // IAttackable
+    public void ReceiveAttack(float damage, Insect attacker)
+    {
+        Damage(damage, DamageType.Physical, ElementalType.Neutral, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+    }
+    public bool IsAlive => health > 0;
+    public Vector3 Position => transform.position;
 
     // DESCRIPTIONS
     public virtual string GetName()

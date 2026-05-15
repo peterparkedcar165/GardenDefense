@@ -7,6 +7,8 @@ public abstract class Ant : Insect
     {
         base.Awake();
         baseMovementSpeed = 1f;
+        baseAttackSpeed = 1f;
+        baseAttackRange = 0.5f;
     }
 
     
