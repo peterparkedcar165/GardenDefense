@@ -93,6 +93,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level4.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level6\GridManager6.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level3\GridManager3.cs" />
     <Compile Include="Assets\Scripts\FertilizerManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />

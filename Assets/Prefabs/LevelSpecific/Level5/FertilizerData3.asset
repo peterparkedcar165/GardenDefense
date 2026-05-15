@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Name 3
   stats:
-  - statType: 13
+  - statType: 21
     value: 0.56
   - statType: 14
     value: 0.43

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Dandelion : Shooter
 {
     private float
-    bAD = 10f,   // base attack damage
+    bAD = 8f,   // base attack damage
     bAS = 1f,   // base attack speed
     bAR = 2f,   // base attack range
     bPS = 5f,   // base projectile speed
@@ -40,7 +40,7 @@ public class Dandelion : Shooter
 
     protected override void Shoot(Vector3 _)
     {
-        int count = 2 + effectivePath2Level;
+        int count = 3 + effectivePath2Level;
         List<Insect> targets = FindMultipleTargets(count);
         if (targets.Count == 0) return;
 
@@ -112,12 +112,11 @@ public class Dandelion : Shooter
     public override void OnPath1Upgrade(int level)
     {
         baseElementalPower = level * 0.04f;
-        baseAttackSpeed = bAS + (level * 0.05f);
+        baseAttackRange = bAR + (level * 0.25f);
     }
 
     public override void OnPath2Upgrade(int level)
     {
-        baseAttackRange = bAR + (level * 0.25f);
     }
 
     public override void OnPath3Upgrade(int level)
@@ -187,16 +186,15 @@ public class Dandelion : Shooter
         => $"Blows a powerful gust of pollen wind <color=green><b>{1.5f + 0.25f * effectivePath3Level}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";
 
     public override string GetPassiveDescription()
-        => $"Fires <color=green><b>{2 + effectivePath2Level}</b></color> seeds per attack, targeting the <color=green><b>{2 + effectivePath2Level}</b></color> highest-priority insects in range.";
+        => $"Fires <color=green><b>{3 + effectivePath2Level}</b></color> seeds per attack, targeting the <color=green><b>{3 + effectivePath2Level}</b></color> highest-priority insects in range.";
 
     public override string GetPath1Description()
         => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Elemental Power by <color=green><b>4%</b></color> per level. [<color=green><b>+{4 * effectivePath1Level}%</b></color>]\n\n" +
-           $"Increase Attack Speed by <color=green><b>0.05</b></color> per level. [<color=green><b>+{0.05 * effectivePath1Level}</b></color>]\n\n" +
+           $"Increase Attack Range by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath1Level}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
     public override string GetPath2Description()
         => $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-           $"Increase Attack Range by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath2Level}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
     public override string GetPath3Description()

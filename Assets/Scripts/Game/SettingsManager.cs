@@ -15,6 +15,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private TMP_Text masterText, musicText, gameText;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject restartButton;
+    [SerializeField] private GameObject mainMenuButton;
 
     public bool IsOpen => settingsPanel.activeSelf;
 
@@ -25,12 +26,15 @@ public class SettingsManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         settingsPanel.SetActive(false);
         if (restartButton != null) restartButton.SetActive(false);
+        if (mainMenuButton != null) mainMenuButton.SetActive(false);
     }
 
     private void Update()
     {
         if (restartButton != null)
             restartButton.SetActive(GameManager.instance != null && GameManager.instance.IsGameActive);
+        if (mainMenuButton != null)
+            mainMenuButton.SetActive(GameManager.instance != null && GameManager.instance.IsGameActive);
 
         bool skillCancelled = SkillTargetingManager.instance != null && SkillTargetingManager.instance.WasCancelledThisFrame;
         bool loadoutOpen = LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen;
@@ -54,6 +58,14 @@ public class SettingsManager : MonoBehaviour
         if (GameManager.instance == null) return;
         settingsPanel.SetActive(false);
         GameManager.instance.Restart();
+    }
+
+    public void GoToMainMenu()
+    {
+        Time.timeScale = 1f;
+        settingsPanel.SetActive(false);
+        SceneTransition transition = FindAnyObjectByType<SceneTransition>();
+        transition.StartCoroutine(transition.FadeToScene("MainMenu"));
     }
 
     public void GoBack()

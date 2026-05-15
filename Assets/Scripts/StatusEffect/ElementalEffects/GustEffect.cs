@@ -59,7 +59,7 @@ public class GustEffect : ElementalDebuff
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
         indicator.GetComponent<DamageIndicator>().Initialize("Windshear", new Color(0.85f, 1f, 0.85f));
         yield return new WaitForSeconds(0.1f);
-        float halfDamage = 16f * (1f + 0.5f * source.elementalPower);
+        float halfDamage = 32f * (1f + 0.5f * source.elementalPower);
         DamageTag[] tags = new DamageTag[] { DamageTag.ElementalDebuff };
         target.Damage(halfDamage, DamageType.Magic, ElementalType.Wind, source, false, tags);
         yield return new WaitForSeconds(0.05f);

@@ -143,4 +143,11 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void GoToMainMenu()
+    {
+        Time.timeScale = 1f;
+        paused = false;
+        SceneManager.LoadScene("MainMenu");
+    }
+
 }

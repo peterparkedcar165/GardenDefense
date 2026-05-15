@@ -41,7 +41,8 @@ private List<Vector2Int> pathCoordinates = new List<Vector2Int>
 
 private List<Vector2Int> dirtCoordinates = new List<Vector2Int>
 {
-    new Vector2Int(6,5), new Vector2Int(7,1), new Vector2Int(17,3), new Vector2Int(16,10)
+    new Vector2Int(6,5), new Vector2Int(7,1), new Vector2Int(17,3), new Vector2Int(16,10),
+    new Vector2Int(7,3), new Vector2Int(15,3)
 };
 
 private List<Vector2Int> waterCoordinates = new List<Vector2Int>
@@ -57,7 +58,8 @@ private List<Vector2Int> waterCoordinates = new List<Vector2Int>
     // (14,4)-(15,5)
     new Vector2Int(14,4), new Vector2Int(15,4), new Vector2Int(14,5), new Vector2Int(15,5),
     // (17,0)-(18,1)
-    new Vector2Int(17,0), new Vector2Int(18,0), new Vector2Int(17,1), new Vector2Int(18,1)
+    new Vector2Int(17,0), new Vector2Int(18,0), new Vector2Int(17,1), new Vector2Int(18,1),
+    new Vector2Int(8,5)
 };
 
 private List<Vector2Int> caveCoordinates = new List<Vector2Int>();

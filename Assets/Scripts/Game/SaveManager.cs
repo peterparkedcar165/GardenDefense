@@ -81,9 +81,10 @@ public class SaveManager : MonoBehaviour
         switch (level)
         {
             case 1: return "Sunflower";
-            case 2: return null; // TBD
-            case 3: return "Waterlily";
-            case 4: return "LeafRanger";
+            case 2: return "Waterlily"; // TBD
+            case 3: return "LeafRanger";
+            case 4: return "Dandelion";
+            case 5: return "PoisonShroom";
             default: return null;
         }
     }
