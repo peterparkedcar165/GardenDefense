@@ -10,6 +10,7 @@ public class PlantSelector : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null) return;
         instance = this;
     }
 

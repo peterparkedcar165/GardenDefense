@@ -43,7 +43,7 @@ public class CursorIcon : MonoBehaviour
 
     void Update()
     {
-        cam ??= Camera.main;
+        if (cam == null) cam = Camera.main;
         if (cam == null) return;
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Vector2 worldPosition = cam.ScreenToWorldPoint(mousePosition);
