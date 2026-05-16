@@ -1046,7 +1046,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 70733413}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1254964884
+--- !u!1001 &1293641660
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1138,97 +1138,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2934264989970425561, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 4583671890769550236}
-    - target: {fileID: 2934264989970425561, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: TogglePause
-      objectReference: {fileID: 0}
-    - target: {fileID: 5042272714862419391, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 1709538197}
-    - target: {fileID: 7107944978376145021, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 4583671890769550236}
-    - target: {fileID: 7107944978376145021, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ToggleSpeed
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
---- !u!114 &1254964885 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7016816793259125237, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-  m_PrefabInstance: {fileID: 1254964884}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &1254964886 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7782359122233547824, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-  m_PrefabInstance: {fileID: 1254964884}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &1254964887 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8405560332327630541, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-  m_PrefabInstance: {fileID: 1254964884}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &1254964888 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6298381239694544244, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-  m_PrefabInstance: {fileID: 1254964884}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &1254964889 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 326904534898346072, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-  m_PrefabInstance: {fileID: 1254964884}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &1254964890 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7062758443742321943, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
-  m_PrefabInstance: {fileID: 1254964884}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1401305051
 GameObject:
   m_ObjectHideFlags: 0
@@ -4728,19 +4642,19 @@ PrefabInstance:
     - target: {fileID: 3000528765117518302, guid: 1051daebaccce0b40a7a4f757286df5d, type: 3}
       propertyPath: sunText
       value: 
-      objectReference: {fileID: 1254964890}
+      objectReference: {fileID: 0}
     - target: {fileID: 3000528765117518302, guid: 1051daebaccce0b40a7a4f757286df5d, type: 3}
       propertyPath: healthText
       value: 
-      objectReference: {fileID: 1254964889}
+      objectReference: {fileID: 0}
     - target: {fileID: 3000528765117518302, guid: 1051daebaccce0b40a7a4f757286df5d, type: 3}
       propertyPath: pauseButtonText
       value: 
-      objectReference: {fileID: 1254964888}
+      objectReference: {fileID: 0}
     - target: {fileID: 3000528765117518302, guid: 1051daebaccce0b40a7a4f757286df5d, type: 3}
       propertyPath: speedButtonText
       value: 
-      objectReference: {fileID: 1254964887}
+      objectReference: {fileID: 0}
     - target: {fileID: 3834202315587589253, guid: 1051daebaccce0b40a7a4f757286df5d, type: 3}
       propertyPath: m_Resource
       value: 
@@ -4791,17 +4705,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1051daebaccce0b40a7a4f757286df5d, type: 3}
---- !u!114 &4583671890769550236 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3000528765117518302, guid: 1051daebaccce0b40a7a4f757286df5d, type: 3}
-  m_PrefabInstance: {fileID: 4583671890769550235}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06faecefb7fae2b409d254fd1fe8daf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1001 &4842476870424576460
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5152,8 +5055,6 @@ MonoBehaviour:
   fruitFly: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
   wasp: {fileID: 2279086888993795066, guid: 726ce60c28034764084f54c3c199e9c1, type: 3}
   weatherManager: {fileID: 29017235}
-  waveCountText: {fileID: 1254964886}
-  nextWaveTimerText: {fileID: 1254964885}
   nextWaveTimer: 0
   waitTime: 0
   spawnInterval: 0
@@ -5167,7 +5068,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1709538198}
-  - {fileID: 1254964884}
+  - {fileID: 1293641660}
   - {fileID: 531320439}
   - {fileID: 4583671890769550235}
   - {fileID: 1983922117}

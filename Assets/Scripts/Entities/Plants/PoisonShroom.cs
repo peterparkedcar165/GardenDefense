@@ -23,6 +23,7 @@ public class PoisonShroom : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
+        baseSkillCooldown = 25f;
         baseSkillDuration = 5f;
         activeRadius = 1f;
     }

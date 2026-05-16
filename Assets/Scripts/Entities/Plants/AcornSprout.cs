@@ -23,7 +23,7 @@ public class AcornSprout : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         activeRadius = 1f;
-        baseSkillCooldown = 1f;
+        baseSkillCooldown = 25f;
         baseSkillDuration = 20f;
     }
 

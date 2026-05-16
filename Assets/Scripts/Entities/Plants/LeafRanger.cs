@@ -24,7 +24,7 @@ public class LeafRanger : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         baseSkillDuration = 4f;
-        baseSkillCooldown = 1f;
+        baseSkillCooldown = 20f;
     }
 
     protected override void UpdateStats()

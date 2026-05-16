@@ -2312,11 +2312,11 @@ PrefabInstance:
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: 'allPlantData.Array.data[5]'
       value: 
-      objectReference: {fileID: 11400000, guid: 3ce3c12a2a0a858458a425fe5f07e28d, type: 2}
+      objectReference: {fileID: 11400000, guid: d94e6d961064c924b9e18fbd7217246e, type: 2}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: 'allPlantData.Array.data[6]'
       value: 
-      objectReference: {fileID: 11400000, guid: d94e6d961064c924b9e18fbd7217246e, type: 2}
+      objectReference: {fileID: 11400000, guid: 3ce3c12a2a0a858458a425fe5f07e28d, type: 2}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: 'allPlantData.Array.data[7]'
       value: 

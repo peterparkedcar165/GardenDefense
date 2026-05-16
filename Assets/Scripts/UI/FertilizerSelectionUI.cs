@@ -29,6 +29,7 @@ public class FertilizerSelectionUI : MonoBehaviour
 
     public void Show()
     {
+        Debug.Log("[Restart] Fertilizer window opened");
         panel.SetActive(true);
         GameManager.instance.SetPause(true);
 

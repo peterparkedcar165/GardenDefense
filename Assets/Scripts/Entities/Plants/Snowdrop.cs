@@ -24,6 +24,7 @@ public class Snowdrop : Aura
         baseAttackSpeed = bAS;
         baseAttackRange = bAR;
         activeCooldown = 40f;
+        baseSkillCooldown = 30f;
         baseSkillDuration = 6f;
         blizzardWidth = 1.5f;
         blizzardDamage = 35f;

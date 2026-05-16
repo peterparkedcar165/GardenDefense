@@ -131,6 +131,8 @@ public class FertilizerCard : MonoBehaviour
             case StatType.PassiveCooldown:              return "Passive Cd. Reduction";
             case StatType.SkillDurationAdder:           return "Skill Duration";
             case StatType.SkillDurationMultiplier:      return "Skill Duration";
+            case StatType.CoordinatedDamage:            return "Coordinated Damage";
+            case StatType.HealingBonus:                 return "Healing Bonus";
             default:                      return statType.ToString();
         }
     }

@@ -26,6 +26,8 @@ public class Level2 : SpawnManager
         FertilizerSelectionUI.instance.Configure(fertilizerPool);
         GameManager.instance.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
+        SaveManager.instance.saveData.highestLevelUnlocked = 1;
+        SaveManager.instance.CompleteLevel(2);
         StartCoroutine(RunWave());
     }
     IEnumerator RunWave()

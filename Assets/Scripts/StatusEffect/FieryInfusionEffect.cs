@@ -48,7 +48,7 @@ public class FieryInfusionEffect : StatusEffect
     {
         yield return new UnityEngine.WaitForSeconds(0.1f);
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
-        insect.Damage(calendula.attackDamage * 0.5f, DamageType.Magic, ElementalType.Fire, calendula, false,
+        insect.Damage(calendula.attackDamage, DamageType.Magic, ElementalType.Fire, calendula, false,
             new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated });
     }
 

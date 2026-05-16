@@ -18,6 +18,8 @@ public class SkillTargetingManager : MonoBehaviour
     private bool isPlantTargeting = false;
     private Action<Plant> onPlantConfirm;
     public bool IsPlantTargeting => isPlantTargeting;
+    private bool cancelledPlantThisFrame = false;
+    public bool WasPlantCancelledThisFrame => cancelledPlantThisFrame;
 
     private void Awake()
     {
@@ -26,6 +28,15 @@ public class SkillTargetingManager : MonoBehaviour
 
     private void Update()
     {
+        if (isPlantTargeting)
+        {
+            if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                CancelPlantTargeting();
+                return;
+            }
+        }
+
         if (!isTargeting) return;
 
         Vector3 mouseWorld = GetMouseWorldPosition();
@@ -42,12 +53,6 @@ public class SkillTargetingManager : MonoBehaviour
         }
         else if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
             Cancel();
-
-        if (isPlantTargeting)
-        {
-            if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
-                CancelPlantTargeting();
-        }
     }
 
     public void BeginTargeting(float radius, Action<Vector3> onConfirm)
@@ -84,6 +89,7 @@ public class SkillTargetingManager : MonoBehaviour
     {
         isPlantTargeting = false;
         onPlantConfirm = null;
+        cancelledPlantThisFrame = true;
     }
 
     private void Confirm(Vector3 worldPosition)
@@ -107,6 +113,7 @@ public class SkillTargetingManager : MonoBehaviour
     private void LateUpdate()
     {
         cancelledThisFrame = false;
+        cancelledPlantThisFrame = false;
     }
 
     private Vector3 GetMouseWorldPosition()

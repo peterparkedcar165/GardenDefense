@@ -24,14 +24,24 @@ public class SaveManager : MonoBehaviour
         Debug.Log("SaveManager instance initialized");
         DontDestroyOnLoad(gameObject);
         savePath = Application.persistentDataPath + "/save.json";
+        saveData = new SaveData { highestLevelUnlocked = 0 };
         Load();
+        Save();
     }
 
     public void Save()
     {
-        string json = JsonUtility.ToJson(saveData);
-        File.WriteAllText(savePath, json);
-        Debug.Log("Saved data");
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+            string json = JsonUtility.ToJson(saveData);
+            File.WriteAllText(savePath, json);
+            Debug.Log("Saved to: " + savePath);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Save failed: " + e.Message);
+        }
     }
 
     public void Load()
@@ -64,6 +74,7 @@ public class SaveManager : MonoBehaviour
 
     public void CompleteLevel(int level)
     {
+        Debug.Log($"CompleteLevel({level}) called. highestLevelUnlocked={saveData.highestLevelUnlocked}");
         if (level > saveData.highestLevelUnlocked)
         {
             saveData.highestLevelUnlocked = level;
@@ -84,8 +95,8 @@ public class SaveManager : MonoBehaviour
             case 2: return "Waterlily"; // TBD
             case 3: return "LeafRanger";
             case 4: return "Dandelion";
-            case 5: return "PoisonShroom";
-            case 6: return "Calendula";
+            case 5: return "Calendula";
+            case 6: return "PoisonShroom";
             default: return null;
         }
     }

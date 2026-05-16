@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
+        Debug.Log($"[Restart] Sun: {SunCount} | Health: {playerHealth}");
         Time.timeScale = 1f;
         paused = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

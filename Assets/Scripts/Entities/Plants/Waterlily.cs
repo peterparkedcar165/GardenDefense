@@ -27,7 +27,7 @@ public class Waterlily : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         baseAoERange = bAoER;
-        baseSkillCooldown = 1f;
+        baseSkillCooldown = 20f;
         baseSkillDuration = 5f;
         base.Awake();
         // sun cost is set in inspector!

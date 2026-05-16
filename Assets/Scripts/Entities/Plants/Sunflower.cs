@@ -25,7 +25,7 @@ public class Sunflower : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
-        baseSkillCooldown = 3f;
+        baseSkillCooldown = 35f;
         basePassiveCooldown = 12f;
         skillAoERadius = 1.5f;
         baseSkillDuration = 6f;
