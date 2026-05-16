@@ -29,8 +29,10 @@ public class PoisonField : MonoBehaviour
         duration -= Time.deltaTime;
         if (duration <= 0f) { Die(); return; }
 
-        foreach (Insect insect in Insect.allInsects)
+        List<Insect> snapshot = new List<Insect>(Insect.allInsects);
+        foreach (Insect insect in snapshot)
         {
+            if (insect == null || !insect.IsAlive) continue;
             bool inside = Vector3.Distance(transform.position, insect.transform.position) <= radius;
             bool tracked = affectedInsects.Contains(insect);
 

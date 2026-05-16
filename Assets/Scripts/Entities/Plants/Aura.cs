@@ -34,6 +34,7 @@ public abstract class Aura : Plant
 
         foreach (Insect insect in Insect.allInsects)
         {
+            if (insect == null || !insect.IsAlive) continue;
             float distance = Vector2.Distance(transform.position, insect.transform.position);
             if (distance <= attackRange && IsValidNightTarget(insect, distance))
                 result.Add(insect);

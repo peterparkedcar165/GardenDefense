@@ -53,6 +53,7 @@ public class WaterlilyProjectile : Projectile
             float splashDamage = projectileDamage * (0.5f + 0.05f * waterlily.effectivePath2Level);
             foreach (Insect splashedInsect in new List<Insect>(Insect.allInsects))
             {
+                if (splashedInsect == null || !splashedInsect.IsAlive) continue;
                 if (splashedInsect != insect && Vector3.Distance(transform.position, splashedInsect.transform.position) <= waterlily.AoERange)
                     splashedInsect.Damage(splashDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile});
             }

@@ -8,7 +8,7 @@ public class LeafRanger : Shooter
     bAS = 0.25f, // base attack speed
     bAR = 99f, // base attack range
     bPS = 20f, // base projectile speed
-    bMR = 20f; // base max range
+    bMR = 60f; // base max range
     private int bP = 1; // base piercing
     public float activeRadius = 2f;
 

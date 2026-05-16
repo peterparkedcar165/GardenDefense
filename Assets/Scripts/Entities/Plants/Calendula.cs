@@ -16,6 +16,8 @@ public class Calendula : Aura
         base.Awake();
     }
 
+    protected override bool ShowLight => DarknessManager.instance != null && DarknessManager.instance.isDark;
+
     protected override void UpdateStats()
     {
         baseLightEmissionRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);

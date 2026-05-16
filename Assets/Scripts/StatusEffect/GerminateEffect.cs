@@ -41,6 +41,7 @@ public class GerminateEffect : StatusEffect
         Vector3 origin = target.transform.position;
         foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
         {
+            if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(origin, insect.transform.position) <= aoeRadius)
             {
                 if (source != null)

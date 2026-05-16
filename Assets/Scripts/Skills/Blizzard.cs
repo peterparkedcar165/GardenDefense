@@ -55,6 +55,7 @@ public class Blizzard : MonoBehaviour
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
         foreach (Insect insect in snapshot)
         {
+            if (insect == null || !insect.IsAlive) continue;
             if (!IsInBeam(insect.transform.position)) continue;
             insect.ApplyEffect(new ChillEffect(insect, 4f, chillLevel, source));
             if (tickTimer >= tickInterval)

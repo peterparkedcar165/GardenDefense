@@ -24,6 +24,8 @@ public abstract class Plant : Entity, IAttackable
     [SerializeField] private float lightIntensity = 1f;
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
+    protected virtual bool ShowLight => true;
+
     protected override void UpdateStats()
     {
         base.UpdateStats();
@@ -50,6 +52,7 @@ public abstract class Plant : Entity, IAttackable
 
         if (_light2D != null)
         {
+            _light2D.enabled = ShowLight;
             _light2D.pointLightOuterRadius = lightEmissionRange;
             _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
         }

@@ -120,6 +120,7 @@ public class AcornBomb : MonoBehaviour, IAttackable
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
         foreach (Insect insect in snapshot)
         {
+            if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
             {
                 insect.Damage(damage, DamageType.Physical, ElementalType.Nature, source, false, impactTags);
@@ -138,6 +139,7 @@ public class AcornBomb : MonoBehaviour, IAttackable
 
         foreach (Insect insect in Insect.allInsects)
         {
+            if (insect == null || !insect.IsAlive) continue;
             if (insect.isFlying) continue;
             TauntEffect existing = insect.GetEffect<TauntEffect>();
             if (existing != null && existing.taunter != (IAttackable)this) continue;

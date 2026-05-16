@@ -86,6 +86,7 @@ public class BubblePrison : MonoBehaviour
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
         foreach (Insect insect in snapshot)
         {
+            if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(center.position, insect.transform.position) <= trapRadius)
             {
                 insect.Damage(damagePerSecond, DamageType.Magic, ElementalType.Water, source, true,

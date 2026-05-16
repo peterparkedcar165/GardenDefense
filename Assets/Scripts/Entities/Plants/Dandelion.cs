@@ -69,6 +69,7 @@ public class Dandelion : Shooter
         List<Insect> inRange = new List<Insect>();
         foreach (Insect insect in Insect.allInsects)
         {
+            if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= attackRange)
                 inRange.Add(insect);
         }

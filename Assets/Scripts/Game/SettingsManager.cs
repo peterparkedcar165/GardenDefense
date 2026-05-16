@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
@@ -55,9 +56,12 @@ public class SettingsManager : MonoBehaviour
     }
     public void Restart()
     {
-        if (GameManager.instance == null) return;
+        Time.timeScale = 1f;
         settingsPanel.SetActive(false);
-        GameManager.instance.Restart();
+        if (GameManager.instance != null)
+            GameManager.instance.Restart();
+        else
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GoToMainMenu()
@@ -65,7 +69,10 @@ public class SettingsManager : MonoBehaviour
         Time.timeScale = 1f;
         settingsPanel.SetActive(false);
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
-        transition.StartCoroutine(transition.FadeToScene("MainMenu"));
+        if (transition != null)
+            transition.StartCoroutine(transition.FadeToScene("MainMenu"));
+        else
+            SceneManager.LoadScene("MainMenu");
     }
 
     public void GoBack()

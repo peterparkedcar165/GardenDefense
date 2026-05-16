@@ -13,9 +13,9 @@ public class Sunflower : Shooter
     bMR = 20f; // base max range
     private int bP = 0; // base piercing
 
+    public float channelDuration = 2f;
     public int sunGenerated;
     public float skillAoERadius, sunrayDamagePerSecond;
-    public float channelDuration = 0.5f;
     [SerializeField] private GameObject sunrayPrefab;
     protected override void Awake()
     {
@@ -55,6 +55,7 @@ public class Sunflower : Shooter
     {
         base.UpdateStats();
         sunrayDamagePerSecond = (2f + 0.35f*effectivePath3Level) * attackDamage;
+        channelDuration = (WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Sunny) ? 1f : 2f;
     }
 
     protected override void Shoot(Vector3 target)
