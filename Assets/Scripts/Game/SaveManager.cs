@@ -75,16 +75,12 @@ public class SaveManager : MonoBehaviour
     public void CompleteLevel(int level)
     {
         Debug.Log($"CompleteLevel({level}) called. highestLevelUnlocked={saveData.highestLevelUnlocked}");
-        if (level > saveData.highestLevelUnlocked)
-        {
-            saveData.highestLevelUnlocked = level;
-            string unlock = GetPlantUnlockedByLevel(level);
-            if (unlock != null && !saveData.unlockedPlants.Contains(unlock))
-            {
-                saveData.unlockedPlants.Add(unlock);
-            }
-            Save();
-        }
+        if (level <= saveData.highestLevelUnlocked) return;
+        saveData.highestLevelUnlocked = level;
+        string unlock = GetPlantUnlockedByLevel(level);
+        if (unlock != null && !saveData.unlockedPlants.Contains(unlock))
+            saveData.unlockedPlants.Add(unlock);
+        Save();
     }
 
     private string GetPlantUnlockedByLevel(int level)

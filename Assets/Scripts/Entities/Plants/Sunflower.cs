@@ -54,7 +54,7 @@ public class Sunflower : Shooter
     protected override void UpdateStats()
     {
         base.UpdateStats();
-        sunrayDamagePerSecond = (2f + 0.35f*effectivePath3Level) * attackDamage;
+        sunrayDamagePerSecond = (1.5f + 0.25f * effectivePath3Level) * attackDamage;
         channelDuration = (WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Sunny) ? 1f : 2f;
     }
 
@@ -157,7 +157,7 @@ public class Sunflower : Shooter
 
     public override string GetPath3Description()
     {
-        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the Attack Damage multiplier of the Damage Per Second by <color=green><b>35%</b></color> per level. [<color=green><b>+" + (35*effectivePath3Level) + "%</b></color>]\n\n" +
+        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the Attack Damage multiplier of the Damage Per Second by <color=green><b>25%</b></color> per level. [<color=green><b>+" + (25*effectivePath3Level) + "%</b></color>]\n\n" +
         $"Increase Sunray duration by <color=green><b>0.5</b></color> second per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
         "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
     }

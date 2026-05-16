@@ -109,7 +109,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.ElementalPower:  plant.elementalPowerAdder         += value; break;
             case StatType.PassiveDamage:   plant.passiveDamageAdder          += value; break;
             case StatType.SkillDamage:     plant.skillDamageAdder            += value; break;
-            case StatType.SkillCooldown:   plant.skillCooldownReductionAdder += value; break;
+            case StatType.SkillCooldown:   plant.skillCooldownReductionMultiplier += value; break;
             case StatType.DoTDamage:       plant.dotDamageAdder              += value; break;
             case StatType.Piercing:                     if (plant is Shooter shooter) shooter.piercingAdder += Mathf.RoundToInt(value); break;
             case StatType.ImmobilizeDurationAdder:      plant.immobilizeDurationAdder      += value; break;

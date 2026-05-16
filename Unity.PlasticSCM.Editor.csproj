@@ -213,8 +213,8 @@
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\UI\Errors\ErrorListViewItem.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Configuration\EncryptionConfigurationDialog.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\EnumExtensions.cs" />
-    <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\UnityObjectInstance.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\UVCSToolbar\PopupWindow\ToolbarMouseBoundary.cs" />
+    <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\UnityObjectInstance.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\Diff\DiffSelection.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\Changesets\ChangesetsListHeaderState.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Gluon\UpdateReport\ErrorListViewItem.cs" />

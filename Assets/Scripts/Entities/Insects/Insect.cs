@@ -145,11 +145,31 @@ public abstract class Insect : Entity, IAttackable
 
         if (windMomentum.sqrMagnitude > 0.001f)
         {
-            Vector3 newPos = transform.position + (Vector3)windMomentum * Time.deltaTime;
+            Vector3 delta = (Vector3)windMomentum * Time.deltaTime;
+            Vector3 newPos = transform.position + delta;
             if (!Physics2D.OverlapCircle(newPos, 0.3f, LayerMask.GetMask("Obstacle")))
+            {
                 transform.position = newPos;
+            }
             else
-                windMomentum = Vector2.zero;
+            {
+                Vector3 newPosX = transform.position + new Vector3(delta.x, 0f, 0f);
+                Vector3 newPosY = transform.position + new Vector3(0f, delta.y, 0f);
+                if (!Physics2D.OverlapCircle(newPosX, 0.3f, LayerMask.GetMask("Obstacle")))
+                {
+                    transform.position = newPosX;
+                    windMomentum.y = 0f;
+                }
+                else if (!Physics2D.OverlapCircle(newPosY, 0.3f, LayerMask.GetMask("Obstacle")))
+                {
+                    transform.position = newPosY;
+                    windMomentum.x = 0f;
+                }
+                else
+                {
+                    windMomentum = Vector2.zero;
+                }
+            }
         }
 
         if (HasEffect<HardCrowdControl>()) return;

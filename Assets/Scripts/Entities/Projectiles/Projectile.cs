@@ -36,6 +36,7 @@ public abstract class Projectile : MonoBehaviour
     protected virtual void Awake()
     {
         GetComponentInChildren<SpriteRenderer>().sortingOrder = 1;
+        gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
     }
 
     protected virtual void Update()

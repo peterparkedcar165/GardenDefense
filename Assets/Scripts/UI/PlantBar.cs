@@ -3,12 +3,28 @@ using System.Collections.Generic;
 
 public class PlantBar : MonoBehaviour
 {
+    public static PlantBar instance;
+
     [SerializeField] private PlantSlotButton slotPrefab;
     [SerializeField] private Transform container;
     [SerializeField] private PlantData[] allPlantData;
 
+    void Awake()
+    {
+        if (instance != null) return;
+        instance = this;
+    }
+
     void Start()
     {
+        Build();
+    }
+
+    public void Build()
+    {
+        foreach (Transform child in container)
+            Destroy(child.gameObject);
+
         foreach (string plantName in SaveManager.instance.selectedLoadout)
         {
             PlantData data = GetPlantData(plantName);

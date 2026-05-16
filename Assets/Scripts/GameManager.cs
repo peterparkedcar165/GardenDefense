@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour
         UpdateSun();
         UpdateHealth();
         PersistentCanvas.instance?.Show();
+        PlantBar.instance?.Build();
         FertilizerSelectionUI.instance.Show();
     }
 
