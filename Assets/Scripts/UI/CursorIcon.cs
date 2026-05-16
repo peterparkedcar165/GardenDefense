@@ -19,6 +19,7 @@ public class CursorIcon : MonoBehaviour
 
     void Awake()
     {
+        if (instance != null) return;
         instance = this;
         rectTransform = icon.GetComponent<RectTransform>();
         canvasRect = canvas.GetComponent<RectTransform>();

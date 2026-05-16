@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -18,11 +17,6 @@ public class GameManager : MonoBehaviour
     private float[] speeds = { 0.5f, 1f, 2f, 4f };
     private int speedIndex = 1; // starts at 1x
     public int currentWave = 0;
-
-    [SerializeField] private TMP_Text pauseButtonText;
-    [SerializeField] private TMP_Text speedButtonText;
-    
-    [SerializeField] private TextMeshProUGUI sunText, healthText;
 
     protected void Awake()
     {
@@ -48,25 +42,12 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public void UpdateSun()
-    {
-        if (sunText != null)
-        {
-            sunText.text = "Sun: " + SunCount;
-        }
-    }
+    public void UpdateSun() => GameHUD.instance?.SetSun(SunCount);
 
     public void UpdateHealth()
     {
-        if (healthText != null)
-        {
-            if (playerHealth < 0)
-            {
-                playerHealth = 0;
-            }
-
-            healthText.text = "Health: " + playerHealth;
-        }
+        if (playerHealth < 0) playerHealth = 0;
+        GameHUD.instance?.SetHealth(playerHealth);
     }
 
     public void Damage(int damage)
@@ -111,8 +92,7 @@ public class GameManager : MonoBehaviour
     {
         paused = value;
         Time.timeScale = paused ? 0f : gameSpeed;
-        if (pauseButtonText != null)
-            pauseButtonText.text = paused ? "Resume" : "Pause";
+        GameHUD.instance?.SetPauseButton(paused);
     }
 
     public void ToggleSpeed()
@@ -120,8 +100,7 @@ public class GameManager : MonoBehaviour
         speedIndex = (speedIndex + 1) % speeds.Length;
         gameSpeed = speeds[speedIndex];
         if (!paused) Time.timeScale = gameSpeed;
-        if (speedButtonText != null)
-        speedButtonText.text = gameSpeed + "x";
+        GameHUD.instance?.SetSpeedButton(gameSpeed);
     }
 
     public bool IsGameActive { get; private set; }
@@ -134,6 +113,7 @@ public class GameManager : MonoBehaviour
         playerHealth = playerMaxHealth;
         UpdateSun();
         UpdateHealth();
+        PersistentCanvas.instance?.Show();
         FertilizerSelectionUI.instance.Show();
     }
 

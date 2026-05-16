@@ -10,7 +10,6 @@ public class Level5 : SpawnManager
     private int maxWave = 12;
     public GameObject workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt;
     public GameObject weatherManager;
-    public TextMeshProUGUI waveCountText, nextWaveTimerText;
     public float nextWaveTimer;
 
     [Header("Spawning")]
@@ -26,7 +25,7 @@ public class Level5 : SpawnManager
         WeatherManager.instance.weather = WeatherType.Sunny;
         FertilizerSelectionUI.instance.Configure(fertilizerPool);
         GameManager.instance.InitiateLevel(startSunCount, startHealth);
-        waveCountText.text = $"Wave: {wave}/{maxWave}";
+        GameHUD.instance?.SetWaveCount(wave, maxWave);
         StartCoroutine(RunWave());
     }
     IEnumerator RunWave()
@@ -38,7 +37,7 @@ public class Level5 : SpawnManager
         {
            wave++;
            GameManager.instance.currentWave = wave;
-           waveCountText.text = $"Wave: {wave}/{maxWave}";
+           GameHUD.instance?.SetWaveCount(wave, maxWave);
             yield return StartCoroutine(Wave(wave)); 
 
             if (wave < maxWave)
@@ -252,7 +251,7 @@ public class Level5 : SpawnManager
     if (nextWaveTimer > 0)
     {
         nextWaveTimer -= Time.deltaTime;
-        nextWaveTimerText.text = $"Next wave in {Mathf.CeilToInt(Mathf.Max(0, nextWaveTimer))}s";
+        GameHUD.instance?.SetNextWaveTimer(nextWaveTimer);
     }
 }
 }

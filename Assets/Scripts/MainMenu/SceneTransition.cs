@@ -21,8 +21,12 @@ public class SceneTransition : MonoBehaviour
         
     }
     
+    static SceneTransition instance;
+
     void Awake()
     {
+        if (instance != null) { Destroy(gameObject); return; }
+        instance = this;
         DontDestroyOnLoad(gameObject);
         canvasGroup.alpha = 0;
         canvasGroup.blocksRaycasts = false;

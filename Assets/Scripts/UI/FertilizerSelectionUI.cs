@@ -15,6 +15,7 @@ public class FertilizerSelectionUI : MonoBehaviour
 
     void Awake()
     {
+        if (instance != null) return;
         instance = this;
         panel.SetActive(false);
     }

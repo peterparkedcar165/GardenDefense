@@ -398,6 +398,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6987175691629099696}
+    - target: {fileID: 1276033132962525355, guid: c80fde38c35f208498f7779cbfff9bda, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToMainMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 5964385715566563295, guid: c80fde38c35f208498f7779cbfff9bda, type: 3}
       propertyPath: m_Name
       value: MainMenuButton

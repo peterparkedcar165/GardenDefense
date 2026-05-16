@@ -59,6 +59,7 @@ public class PlantUpgradeUI : MonoBehaviour
     private Plant selectedPlant;
     void Awake()
     {
+      if (instance != null) return;
       instance = this;
       panel.SetActive(false);
       if (tooltipPanel != null)

@@ -27,6 +27,7 @@ public class InsectInfoUI : MonoBehaviour
 
     void Awake()
     {
+        if (instance != null) return;
         instance = this;
         panel.SetActive(false);
     }

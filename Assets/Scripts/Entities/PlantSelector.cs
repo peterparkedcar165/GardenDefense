@@ -22,14 +22,14 @@ public class PlantSelector : MonoBehaviour
     public void SelectPlant(GameObject plant)
     {
         SelectedPlant = plant;
-        CursorIcon.instance.OnSelectionChanged();
-        GameManager.instance.PlaySound(GameManager.instance.plantSelect);
+        CursorIcon.instance?.OnSelectionChanged();
+        GameManager.instance?.PlaySound(GameManager.instance.plantSelect);
     }
 
     public void ClearSelection()
     {
         SelectedPlant = null;
-        CursorIcon.instance.OnSelectionChanged();
+        CursorIcon.instance?.OnSelectionChanged();
     }
 
     private void Update()

@@ -11,6 +11,7 @@ public class FertilizerManager : MonoBehaviour
 
     void Awake()
     {
+        if (instance != null) return;
         instance = this;
     }
 
