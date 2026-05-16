@@ -335,7 +335,7 @@ public abstract class Plant : Entity, IAttackable
             return $"Can be placed on <color=green>Grass</color>.";
 
             case ElementalType.Water:
-            return $"Increase Passive tree level by <color=green>2</color> when near water";
+            return $"Increase Passive tree level by <color=green>1</color> when near water";
 
             case ElementalType.Poison:
             return $"Deal 25% increased damage to immobilized insects";

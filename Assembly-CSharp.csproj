@@ -117,7 +117,6 @@
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\HardCC\GeyserKnockEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
@@ -157,6 +156,7 @@
     <Compile Include="Assets\Scripts\LevelSpecific\Level1\GridManager1.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level5\GridManager5.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HardCC\KnockUpEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level1.cs" />

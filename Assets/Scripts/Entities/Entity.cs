@@ -536,21 +536,13 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
-        foreach (StatusEffect existing in activeEffects)
+        for (int i = activeEffects.Count - 1; i >= 0; i--)
         {
-            if (existing.GetType() == effect.GetType())
+            if (activeEffects[i].GetType() == effect.GetType())
             {
-                if (effect.level > existing.level)
-                {
-                    existing.OnExpire();
-                    existing.level = effect.level;
-                    existing.duration = effect.duration;
-                    existing.OnApply();
-                } else if (effect.duration > existing.duration) 
-                {
-                    existing.duration = effect.duration;
-                }
-                return;
+                activeEffects[i].OnExpire();
+                activeEffects.RemoveAt(i);
+                break;
             }
         }
         activeEffects.Add(effect);

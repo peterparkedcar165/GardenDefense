@@ -19,6 +19,9 @@ public abstract class Insect : Entity, IAttackable
     protected Transform[] waypoints;
     public bool isFlying = false;
     public static float gravity = 9.8f;
+    public float verticalVelocity = 0f;
+    public bool affectedByGravity => !isFlying && !HasEffect<BubblePrisonEffect>();
+    public bool isOnGround => visual != null && visual.localPosition.y <= 0.4f;
 
     // base and final
     public float movementSpeed, baseMovementSpeed;
@@ -110,9 +113,27 @@ public abstract class Insect : Entity, IAttackable
     protected override void Update()
     {
         base.Update();
+        ApplyGravity();
         Move();
         SyncAimPoint();
         UpdateAttack();
+    }
+
+    private void ApplyGravity()
+    {
+        if (visual == null || !affectedByGravity) return;
+        if (!isOnGround || verticalVelocity < 0f)
+        {
+            verticalVelocity += gravity * Time.deltaTime;
+            Vector3 pos = visual.localPosition;
+            pos.y -= verticalVelocity * Time.deltaTime;
+            if (pos.y <= 0.4f) { pos.y = 0.4f; verticalVelocity = 0f; }
+            visual.localPosition = pos;
+        }
+        else
+        {
+            verticalVelocity = 0f;
+        }
     }
 
     protected override void OnHoverExit()

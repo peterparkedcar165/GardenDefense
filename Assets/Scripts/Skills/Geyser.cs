@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 public class Geyser : MonoBehaviour
 {
-    public void Initialize(Vector3 position, float radius, float knockDuration, float damage, float knockUpHeight, Plant source)
+    public void Initialize(Vector3 position, float radius, float knockDuration, float damage, float knockUpForce, Plant source)
     {
+        transform.localScale = new Vector3(radius * 2f, radius * 2f, 1f);
+
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
         foreach (Insect insect in snapshot)
         {
@@ -13,7 +15,7 @@ public class Geyser : MonoBehaviour
 
             insect.Damage(damage, DamageType.Magic, ElementalType.Water, source, true,
                 new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
-            insect.ApplyEffect(new GeyserKnockEffect(insect, knockDuration, 1, source, knockUpHeight));
+            insect.ApplyEffect(new KnockUpEffect(insect, 30f, 1, source, knockUpForce));
         }
 
         Destroy(gameObject, knockDuration + 0.5f);

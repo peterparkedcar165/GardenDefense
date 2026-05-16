@@ -24,9 +24,10 @@ public class BogIris : Shooter
     private float SunInterval => 2f * (passiveCooldown / basePassiveCooldown);
     private float OpenDuration => 8f + 2f * effectivePath2Level;
     private int SunGenerated => 3 + effectivePath2Level;
-    private float GeyserRadius => 1.5f + 0.25f * effectivePath3Level;
-    private float KnockUpHeight => 0.5f + 0.15f * effectivePath3Level;
-    private float GeyserDamage => 105f + 25f * effectivePath3Level;
+    private float GeyserRadius => 1.25f + 0.15f * effectivePath3Level;
+    private float KnockUpHeight => 3f + 1f * effectivePath3Level;
+    private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * (KnockUpHeight));
+    private float GeyserDamage => 65f + 15f * effectivePath3Level;
 
     protected override void Awake()
     {
@@ -39,9 +40,8 @@ public class BogIris : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         basePassiveCooldown = 8f;
-        baseSkillCooldown = 18f;
+        baseSkillCooldown = 1f;
         baseSkillDuration = 1.5f;
-        sunCost = 150;
         base.Awake();
         SetVisualState(false);
     }
@@ -97,8 +97,8 @@ public class BogIris : Shooter
 
     private void SetVisualState(bool open)
     {
-        if (closedVisual != null) closedVisual.enabled = !open;
-        if (openVisual != null) openVisual.enabled = open;
+        if (closedVisual != null) closedVisual.gameObject.SetActive(!open);
+        if (openVisual != null) openVisual.gameObject.SetActive(open);
     }
 
     protected override void Shoot(Vector3 target)
@@ -126,16 +126,17 @@ public class BogIris : Shooter
 
     private IEnumerator SpawnGeyser(Vector3 position)
     {
-        yield return new WaitForSeconds(0.75f);
+        bool isRaining = WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Rain;
+        yield return new WaitForSeconds(isRaining ? 1f : 2f);
         if (geyserPrefab == null) yield break;
         GameObject obj = Instantiate(geyserPrefab, position, Quaternion.identity);
-        obj.GetComponent<Geyser>()?.Initialize(position, GeyserRadius, skillDuration, GeyserDamage, KnockUpHeight, this);
+        obj.GetComponent<Geyser>()?.Initialize(position, GeyserRadius, skillDuration, GeyserDamage, KnockUpForce, this);
     }
 
     public override void OnPath1Upgrade(int level)
     {
         baseAttackDamage = bAD + 6f * level;
-        baseAttackSpeed = bAS + 0.06f * level;
+        baseAttackSpeed = bAS + 0.04f * level;
     }
 
     public override void OnPath2Upgrade(int level) { }
@@ -155,11 +156,11 @@ public class BogIris : Shooter
            $"In <b><color=#4FC3F7>closed</color></b> form, she regenerates <color=green><b>{totalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.";
 
     public override string GetSkillDesription()
-        => $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{GeyserDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage and knocking all insects airborne for <color=green><b>{skillDuration:F1}s</b></color>.";
+        => $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{GeyserDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.";
 
     public override string GetPath1Description()
         => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>6</b></color> per level. [<color=green><b>+{6 * effectivePath1Level}</b></color>]\n\n" +
-           $"Increase Attack Speed by <color=green><b>0.06</b></color> per level. [<color=green><b>+{0.06f * effectivePath1Level:F2}</b></color>]\n\n" +
+           $"Increase Attack Speed by <color=green><b>0.04</b></color> per level. [<color=green><b>+{0.04f * effectivePath1Level:F2}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
     public override string GetPath2Description()
@@ -168,8 +169,8 @@ public class BogIris : Shooter
            $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
     public override string GetPath3Description()
-        => $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the base damage of the geyser by <color=green><b>25</b></color> per level. [<color=green><b>+{25 * effectivePath3Level}</b></color>]\n\n" +
-           $"Increase the knock-up height by <color=green><b>0.15</b></color> per level. [<color=green><b>+{0.15f * effectivePath3Level:F2}</b></color>]\n\n" +
-           $"Increase the radius of the geyser by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25f * effectivePath3Level:F2}</b></color>]\n\n" +
+        => $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the base damage of the geyser by <color=green><b>15</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}</b></color>]\n\n" +
+           $"Increase the knock-up height by <color=green><b>1</b></color> unit per level. [<color=green><b>+{effectivePath3Level}</b></color>]\n\n" +
+           $"Increase the radius of the geyser by <color=green><b>0.15</b></color> per level. [<color=green><b>+{0.15f * effectivePath3Level:F2}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

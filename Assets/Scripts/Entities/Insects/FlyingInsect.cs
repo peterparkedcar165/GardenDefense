@@ -20,7 +20,7 @@ public abstract class FlyingInsect : Insect
         visual = transform.Find("Visual");
         if (visual != null)
         {
-            visual.localPosition += new Vector3(0, 0.25f + flightHeight, 0);
+            visual.localPosition += new Vector3(0, 0.4f + flightHeight, 0);
         }
     }
 
@@ -41,12 +41,12 @@ public abstract class FlyingInsect : Insect
 
     public override void ApplyEffect(StatusEffect effect)
     {
-        base.ApplyEffect(effect);
-
-        if (effect is HardCrowdControl and not BubblePrisonEffect and not GeyserKnockEffect)
+        if (effect is HardCrowdControl and not BubblePrisonEffect)
         {
-            base.ApplyEffect(new GroundedEffect(this, effect.duration + 4f, 1, effect.source));
+            float groundDuration = effect is KnockUpEffect ? 5f : effect.duration + 4f;
+            base.ApplyEffect(new GroundedEffect(this, groundDuration, 1, effect.source));
         }
+        base.ApplyEffect(effect);
     }
 
     protected override void Update()
@@ -56,7 +56,7 @@ public abstract class FlyingInsect : Insect
         {
             hoverPhase += Time.deltaTime * hoverSpeed;
             Vector3 pos = visual.localPosition;
-            pos.y = Mathf.MoveTowards(pos.y, 0.25f + flightHeight + Mathf.Sin(hoverPhase) * hoverAmplitude, 3f * Time.deltaTime);
+            pos.y = Mathf.MoveTowards(pos.y, 0.4f + flightHeight + Mathf.Sin(hoverPhase) * hoverAmplitude, 3f * Time.deltaTime);
             visual.localPosition = pos;
         }
     }
