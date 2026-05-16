@@ -87,6 +87,8 @@ public class FertilizerManager : MonoBehaviour
             case StatType.SkillDurationMultiplier:      return (0.06f, 0.08f);
             case StatType.CoordinatedDamage:            return (0.06f, 0.08f);
             case StatType.HealingBonus:                 return (0.06f, 0.08f);
+            case StatType.IlluminationRangeAdder:       return (0.5f,  1f);
+            case StatType.IlluminationRangeMultiplier:  return (0.06f, 0.08f);
             default:                       return (0f,    0f);
         }
     }
@@ -119,6 +121,8 @@ public class FertilizerManager : MonoBehaviour
             case StatType.SkillDurationMultiplier:      plant.skillDurationMultiplier      += value; break;
             case StatType.CoordinatedDamage:            plant.coordinatedDamageAdder       += value; break;
             case StatType.HealingBonus:                 plant.healingBonusAdder            += value; break;
+            case StatType.IlluminationRangeAdder:       plant.lightEmissionRangeAdder      += value; break;
+            case StatType.IlluminationRangeMultiplier:  plant.lightEmissionRangeMultiplier += value; break;
         }
     }
 }

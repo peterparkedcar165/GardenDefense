@@ -16,7 +16,7 @@ public class FieryInfusionEffect : StatusEffect
     {
         Plant plant = target as Plant;
         if (plant == null) return;
-        cachedLightRange = calendula?.attackRange ?? 0f;
+        cachedLightRange = calendula?.lightEmissionRange ?? 0f;
         plant.lightEmissionRangeAdder += cachedLightRange;
     }
 

@@ -99,6 +99,7 @@ public class FertilizerCard : MonoBehaviour
             case StatType.Piercing:
             case StatType.ImmobilizeDurationAdder:
             case StatType.SkillDurationAdder:
+            case StatType.IlluminationRangeAdder:
                 return true;
             default:
                 return false;
@@ -133,6 +134,8 @@ public class FertilizerCard : MonoBehaviour
             case StatType.SkillDurationMultiplier:      return "Skill Duration";
             case StatType.CoordinatedDamage:            return "Coordinated Damage";
             case StatType.HealingBonus:                 return "Healing Bonus";
+            case StatType.IlluminationRangeAdder:       return "Illumination Range";
+            case StatType.IlluminationRangeMultiplier:  return "Illumination Range";
             default:                      return statType.ToString();
         }
     }

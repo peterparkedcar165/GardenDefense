@@ -63,7 +63,7 @@ public class SaveManager : MonoBehaviour
     {
         if (UnityEngine.InputSystem.Keyboard.current.uKey.wasPressedThisFrame)
         {
-            string[] all = { "AcornSprout", "Sunflower", "Waterlily", "LeafRanger", "Dandelion", "Snowdrop", "PoisonShroom", "Calendula" };
+            string[] all = { "AcornSprout", "Sunflower", "Waterlily", "LeafRanger", "Dandelion", "Snowdrop", "PoisonShroom", "Calendula", "BogIris" };
             foreach (string p in all)
                 if (!saveData.unlockedPlants.Contains(p))
                     saveData.unlockedPlants.Add(p);
@@ -92,7 +92,8 @@ public class SaveManager : MonoBehaviour
             case 3: return "LeafRanger";
             case 4: return "Dandelion";
             case 5: return "Calendula";
-            case 6: return "PoisonShroom";
+            case 6: return "BogIris";
+            case 7: return "PoisonShroom";
             default: return null;
         }
     }

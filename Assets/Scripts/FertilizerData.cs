@@ -47,5 +47,7 @@ public enum StatType
     SkillDurationAdder,
     SkillDurationMultiplier,
     CoordinatedDamage,
-    HealingBonus
+    HealingBonus,
+    IlluminationRangeAdder,
+    IlluminationRangeMultiplier
 }

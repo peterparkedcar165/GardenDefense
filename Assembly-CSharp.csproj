@@ -86,12 +86,14 @@
     <Compile Include="Assets\Scripts\Spawning\Level3.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\BogIrisProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerCard.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ColdEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BrittleEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\BubblePrison.cs" />
+    <Compile Include="Assets\Scripts\Skills\Geyser.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level4.cs" />
@@ -115,8 +117,10 @@
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HardCC\GeyserKnockEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VulnerableEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />

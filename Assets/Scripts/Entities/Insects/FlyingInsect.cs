@@ -43,9 +43,9 @@ public abstract class FlyingInsect : Insect
     {
         base.ApplyEffect(effect);
 
-        if (effect is HardCrowdControl and not BubblePrisonEffect)
+        if (effect is HardCrowdControl and not BubblePrisonEffect and not GeyserKnockEffect)
         {
-            base.ApplyEffect(new GroundedEffect(this, effect.duration + 2f, 1, effect.source));
+            base.ApplyEffect(new GroundedEffect(this, effect.duration + 4f, 1, effect.source));
         }
     }
 
