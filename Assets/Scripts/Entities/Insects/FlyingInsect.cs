@@ -2,6 +2,8 @@ using UnityEngine;
 
 public abstract class FlyingInsect : Insect
 {
+    [SerializeField] private Sprite spriteFlyRight;
+    [SerializeField] private Sprite spriteFlyLeft;
 
     public float flightSpeed; // flight speed is ALWAYS 2x of movementSpeed
     public float flightHeight;
@@ -37,6 +39,15 @@ public abstract class FlyingInsect : Insect
     public virtual void SetFlight(bool newState)
     {
         isFlying = newState;
+    }
+
+    protected override void UpdateFacingSprite()
+    {
+        if (_spriteRenderer == null) return;
+        Sprite s = isFlying
+            ? (_facingRight ? spriteFlyRight  : spriteFlyLeft)
+            : (_facingRight ? spriteRight     : spriteLeft);
+        if (s != null) _spriteRenderer.sprite = s;
     }
 
     public override void ApplyEffect(StatusEffect effect)

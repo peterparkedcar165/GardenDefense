@@ -108,6 +108,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\DandelionData.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level7.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\Moth.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FieryInfusionEffect.cs" />
     <Compile Include="Assets\Scripts\FertilizerManager.cs" />
     <Compile Include="Assets\Scripts\UI\GameButtons.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />

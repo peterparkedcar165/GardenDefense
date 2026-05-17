@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: 688c29bb34e4d4245804f525946d40f0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6886600473767012043
+    second: wasp_ground_right_0
+  - first:
+      213: 8598282440004468137
+    second: wasp_ground_right_1
+  - first:
+      213: 2714090840340381717
+    second: wasp_ground_right_2
+  - first:
+      213: 6814832449485173740
+    second: wasp_ground_right_3
+  - first:
+      213: -6863453961573041064
+    second: wasp_ground_right_4
+  - first:
+      213: 4005658532351624657
+    second: wasp_ground_right_5
+  - first:
+      213: -9070171134275921269
+    second: wasp_ground_right_6
+  - first:
+      213: 2968379957293781953
+    second: wasp_ground_right_7
+  - first:
+      213: -349282700284063164
+    second: wasp_ground_right_8
+  - first:
+      213: 6462639751638492116
+    second: wasp_ground_right_9
+  - first:
+      213: -1067402238191341941
+    second: wasp_ground_right_10
+  - first:
+      213: 159983294537918150
+    second: wasp_ground_right_11
+  - first:
+      213: -3618114603796041568
+    second: wasp_ground_right_12
+  - first:
+      213: 1531585910797807171
+    second: wasp_ground_right_13
+  - first:
+      213: -4223098726429072086
+    second: wasp_ground_right_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: wasp_ground_right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1024
+        height: 1024
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc66be4e4ae129f50800000000000000
+      internalID: 6886600473767012043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 7
+        width: 9
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9adf1f2d25c335770800000000000000
+      internalID: 8598282440004468137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_2
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 23
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51041aa4d336aa520800000000000000
+      internalID: 2714090840340381717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_3
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 31
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce37e5b9106239e50800000000000000
+      internalID: 6814832449485173740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_4
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 47
+        width: 71
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85cf0307cfc10c0a0800000000000000
+      internalID: -6863453961573041064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_5
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 18
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d5c4585635f69730800000000000000
+      internalID: 4005658532351624657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_6
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 47
+        width: 98
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8a5b71c867402280800000000000000
+      internalID: -9070171134275921269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_7
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 47
+        width: 28
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c392e018ddc13920800000000000000
+      internalID: 2968379957293781953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_8
+      rect:
+        serializedVersion: 2
+        x: 773
+        y: 7
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44211631c39172bf0800000000000000
+      internalID: -349282700284063164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_9
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 47
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d32bb31d98efa950800000000000000
+      internalID: 6462639751638492116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_10
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 69
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8ee528d153df21f0800000000000000
+      internalID: -1067402238191341941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_11
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 63
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c6ede075ff583200800000000000000
+      internalID: 159983294537918150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_12
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 53
+        width: 28
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a0751cffefd9cdc0800000000000000
+      internalID: -3618114603796041568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_13
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 0
+        width: 90
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34ea81c6549414510800000000000000
+      internalID: 1531585910797807171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wasp_ground_right_14
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 23
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a256acf451a8465c0800000000000000
+      internalID: -4223098726429072086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      wasp_ground_right_0: 6886600473767012043
+      wasp_ground_right_1: 8598282440004468137
+      wasp_ground_right_10: -1067402238191341941
+      wasp_ground_right_11: 159983294537918150
+      wasp_ground_right_12: -3618114603796041568
+      wasp_ground_right_13: 1531585910797807171
+      wasp_ground_right_14: -4223098726429072086
+      wasp_ground_right_2: 2714090840340381717
+      wasp_ground_right_3: 6814832449485173740
+      wasp_ground_right_4: -6863453961573041064
+      wasp_ground_right_5: 4005658532351624657
+      wasp_ground_right_6: -9070171134275921269
+      wasp_ground_right_7: 2968379957293781953
+      wasp_ground_right_8: -349282700284063164
+      wasp_ground_right_9: 6462639751638492116
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: 86e03e6413fbb824fbe7b74c0a584f70
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6488992218185201971
+    second: moth_fly_right_0
+  - first:
+      213: 6932541820693672642
+    second: moth_fly_right_1
+  - first:
+      213: 1536036131260868882
+    second: moth_fly_right_2
+  - first:
+      213: -5629087793171740393
+    second: moth_fly_right_3
+  - first:
+      213: -3675349119821445457
+    second: moth_fly_right_4
+  - first:
+      213: -2664477074522308798
+    second: moth_fly_right_5
+  - first:
+      213: -2542944074517669757
+    second: moth_fly_right_6
+  - first:
+      213: -7100851822258868349
+    second: moth_fly_right_7
+  - first:
+      213: -1602276868807804045
+    second: moth_fly_right_8
+  - first:
+      213: -962340758618869134
+    second: moth_fly_right_9
+  - first:
+      213: 4863796266306572421
+    second: moth_fly_right_10
+  - first:
+      213: 6578245641979408398
+    second: moth_fly_right_11
+  - first:
+      213: -8229518801182542730
+    second: moth_fly_right_12
+  - first:
+      213: -9033751872650574614
+    second: moth_fly_right_13
+  - first:
+      213: 7783049558946815941
+    second: moth_fly_right_14
+  - first:
+      213: -5836925762615355374
+    second: moth_fly_right_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: moth_fly_right_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 0
+        width: 527
+        height: 526
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 339f333da088d0a50800000000000000
+      internalID: 6488992218185201971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_1
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 471
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c27cf44e06553060800000000000000
+      internalID: 6932541820693672642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_2
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 468
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21928fd19b8115510800000000000000
+      internalID: 1536036131260868882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_3
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 468
+        width: 12
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 719c28ee97671e1b0800000000000000
+      internalID: -5629087793171740393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_4
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 68
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa68f77c2798efcc0800000000000000
+      internalID: -3675349119821445457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_5
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 68
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24ffcecb730e50bd0800000000000000
+      internalID: -2664477074522308798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_6
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 68
+        width: 42
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38890ba56d5a5bcd0800000000000000
+      internalID: -2542944074517669757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_7
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 58
+        width: 50
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38f239bb3e4b47d90800000000000000
+      internalID: -7100851822258868349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_8
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 66
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37bb2e25da193c9e0800000000000000
+      internalID: -1602276868807804045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_9
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 71
+        width: 18
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27274a1cd2415a2f0800000000000000
+      internalID: -962340758618869134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_10
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 34
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58013194fecaf7340800000000000000
+      internalID: 4863796266306572421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_11
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 36
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e00b17fee8f9a4b50800000000000000
+      internalID: 6578245641979408398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_12
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 31
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 674bd1f8040eacd80800000000000000
+      internalID: -8229518801182542730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_13
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 28
+        width: 26
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae484a1e88aa1a280800000000000000
+      internalID: -9033751872650574614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_14
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 28
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cf19466652f20c60800000000000000
+      internalID: 7783049558946815941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_fly_right_15
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 28
+        width: 15
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2185cfab1f21ffea0800000000000000
+      internalID: -5836925762615355374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      moth_fly_right_0: 6488992218185201971
+      moth_fly_right_1: 6932541820693672642
+      moth_fly_right_10: 4863796266306572421
+      moth_fly_right_11: 6578245641979408398
+      moth_fly_right_12: -8229518801182542730
+      moth_fly_right_13: -9033751872650574614
+      moth_fly_right_14: 7783049558946815941
+      moth_fly_right_15: -5836925762615355374
+      moth_fly_right_2: 1536036131260868882
+      moth_fly_right_3: -5629087793171740393
+      moth_fly_right_4: -3675349119821445457
+      moth_fly_right_5: -2664477074522308798
+      moth_fly_right_6: -2542944074517669757
+      moth_fly_right_7: -7100851822258868349
+      moth_fly_right_8: -1602276868807804045
+      moth_fly_right_9: -962340758618869134
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

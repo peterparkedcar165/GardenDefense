@@ -1,0 +1,2743 @@
+fileFormatVersion: 2
+guid: 25a80c51a59e2e64d9710810120027b2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6784353751504212632
+    second: moth_ground_left_0
+  - first:
+      213: 3021174457770198750
+    second: moth_ground_left_1
+  - first:
+      213: 9074535417180933987
+    second: moth_ground_left_2
+  - first:
+      213: 3977893814699862785
+    second: moth_ground_left_3
+  - first:
+      213: -4279075082526530265
+    second: moth_ground_left_4
+  - first:
+      213: 6693297083293958411
+    second: moth_ground_left_5
+  - first:
+      213: -4326910030540760729
+    second: moth_ground_left_6
+  - first:
+      213: 8586433466586223889
+    second: moth_ground_left_7
+  - first:
+      213: 5522825535071775262
+    second: moth_ground_left_8
+  - first:
+      213: 7613302958037780805
+    second: moth_ground_left_9
+  - first:
+      213: -6134502891307825541
+    second: moth_ground_left_10
+  - first:
+      213: -8465017584138654270
+    second: moth_ground_left_11
+  - first:
+      213: -6882193992367064332
+    second: moth_ground_left_12
+  - first:
+      213: 7151900049909456604
+    second: moth_ground_left_13
+  - first:
+      213: -5337206851649684769
+    second: moth_ground_left_14
+  - first:
+      213: 2499242507153623385
+    second: moth_ground_left_15
+  - first:
+      213: 4861803929145734533
+    second: moth_ground_left_16
+  - first:
+      213: -1637868001035328024
+    second: moth_ground_left_17
+  - first:
+      213: -6488171050820422248
+    second: moth_ground_left_18
+  - first:
+      213: 5300950391129350246
+    second: moth_ground_left_19
+  - first:
+      213: 3790690800653318627
+    second: moth_ground_left_20
+  - first:
+      213: -6630100282894546007
+    second: moth_ground_left_21
+  - first:
+      213: 149136584824461391
+    second: moth_ground_left_22
+  - first:
+      213: -5246845804652131416
+    second: moth_ground_left_23
+  - first:
+      213: -6605618504293156671
+    second: moth_ground_left_24
+  - first:
+      213: -1648638648055745928
+    second: moth_ground_left_25
+  - first:
+      213: 5123420689647248849
+    second: moth_ground_left_26
+  - first:
+      213: 7924733994138901644
+    second: moth_ground_left_27
+  - first:
+      213: 4964172839737820401
+    second: moth_ground_left_28
+  - first:
+      213: 7754510190032794021
+    second: moth_ground_left_29
+  - first:
+      213: -8013275513847178226
+    second: moth_ground_left_30
+  - first:
+      213: 9210565709855913038
+    second: moth_ground_left_31
+  - first:
+      213: 691658611374111385
+    second: moth_ground_left_32
+  - first:
+      213: -7793750248128421813
+    second: moth_ground_left_33
+  - first:
+      213: -8315117814949937670
+    second: moth_ground_left_34
+  - first:
+      213: 8398805664378638565
+    second: moth_ground_left_35
+  - first:
+      213: 2771248829827928170
+    second: moth_ground_left_36
+  - first:
+      213: -2214639154557607161
+    second: moth_ground_left_37
+  - first:
+      213: 6515099889514401998
+    second: moth_ground_left_38
+  - first:
+      213: 8122594765261424841
+    second: moth_ground_left_39
+  - first:
+      213: 3367937700123585348
+    second: moth_ground_left_40
+  - first:
+      213: 2897219867575439779
+    second: moth_ground_left_41
+  - first:
+      213: -6543343555608154085
+    second: moth_ground_left_42
+  - first:
+      213: -3079083205889968529
+    second: moth_ground_left_43
+  - first:
+      213: 7673714198630525263
+    second: moth_ground_left_44
+  - first:
+      213: -8803314255525562031
+    second: moth_ground_left_45
+  - first:
+      213: -4817684161211581733
+    second: moth_ground_left_46
+  - first:
+      213: -5830279149397797784
+    second: moth_ground_left_47
+  - first:
+      213: 118263774740581467
+    second: moth_ground_left_48
+  - first:
+      213: 5423763709809695248
+    second: moth_ground_left_49
+  - first:
+      213: -5027895766174086704
+    second: moth_ground_left_50
+  - first:
+      213: 2182577096333154602
+    second: moth_ground_left_51
+  - first:
+      213: -6873002025932432409
+    second: moth_ground_left_52
+  - first:
+      213: 6078738390601335071
+    second: moth_ground_left_53
+  - first:
+      213: 5233529584006082477
+    second: moth_ground_left_54
+  - first:
+      213: -3764020583036119639
+    second: moth_ground_left_55
+  - first:
+      213: -2336709585259812112
+    second: moth_ground_left_56
+  - first:
+      213: -9166851988643036232
+    second: moth_ground_left_57
+  - first:
+      213: 5278389746331064999
+    second: moth_ground_left_58
+  - first:
+      213: -1129275282673055024
+    second: moth_ground_left_59
+  - first:
+      213: -3794347606907784237
+    second: moth_ground_left_60
+  - first:
+      213: 2987149108464436970
+    second: moth_ground_left_61
+  - first:
+      213: -9080587414395422543
+    second: moth_ground_left_62
+  - first:
+      213: -1507260037921268470
+    second: moth_ground_left_63
+  - first:
+      213: 5588335231125148688
+    second: moth_ground_left_64
+  - first:
+      213: 733117467053445087
+    second: moth_ground_left_65
+  - first:
+      213: 4720110439406837467
+    second: moth_ground_left_66
+  - first:
+      213: 8878710917998741943
+    second: moth_ground_left_67
+  - first:
+      213: -1275453417877881047
+    second: moth_ground_left_68
+  - first:
+      213: 3837948403186520191
+    second: moth_ground_left_69
+  - first:
+      213: -2232893077369529858
+    second: moth_ground_left_70
+  - first:
+      213: 2609552766250446101
+    second: moth_ground_left_71
+  - first:
+      213: -7517615745128198423
+    second: moth_ground_left_72
+  - first:
+      213: -537041927061351814
+    second: moth_ground_left_73
+  - first:
+      213: -6855161323542162843
+    second: moth_ground_left_74
+  - first:
+      213: -9022257787978862961
+    second: moth_ground_left_75
+  - first:
+      213: 1575453409932909870
+    second: moth_ground_left_76
+  - first:
+      213: -6668542285954362028
+    second: moth_ground_left_77
+  - first:
+      213: -1206609129590857569
+    second: moth_ground_left_78
+  - first:
+      213: -5028537997363015802
+    second: moth_ground_left_79
+  - first:
+      213: -6270109550047493679
+    second: moth_ground_left_80
+  - first:
+      213: -523978026678491438
+    second: moth_ground_left_81
+  - first:
+      213: -4457582189591678453
+    second: moth_ground_left_82
+  - first:
+      213: 4207157218765540406
+    second: moth_ground_left_83
+  - first:
+      213: -2695892711573134736
+    second: moth_ground_left_84
+  - first:
+      213: 3179734142141811466
+    second: moth_ground_left_85
+  - first:
+      213: -3595667465570215470
+    second: moth_ground_left_86
+  - first:
+      213: -5109558846307090372
+    second: moth_ground_left_87
+  - first:
+      213: -5189981122067908800
+    second: moth_ground_left_88
+  - first:
+      213: 7017194632023144882
+    second: moth_ground_left_89
+  - first:
+      213: 6970835935363469167
+    second: moth_ground_left_90
+  - first:
+      213: 2330714508086495739
+    second: moth_ground_left_91
+  - first:
+      213: -4103466652083710842
+    second: moth_ground_left_92
+  - first:
+      213: 3359775574737371185
+    second: moth_ground_left_93
+  - first:
+      213: -2789788644314975629
+    second: moth_ground_left_94
+  - first:
+      213: -4641722253623907147
+    second: moth_ground_left_95
+  - first:
+      213: 2311150484985416279
+    second: moth_ground_left_96
+  - first:
+      213: 8608365567542658636
+    second: moth_ground_left_97
+  - first:
+      213: 1558918336690957848
+    second: moth_ground_left_98
+  - first:
+      213: -7934119481392749978
+    second: moth_ground_left_99
+  - first:
+      213: -3449024373431783401
+    second: moth_ground_left_100
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: moth_ground_left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1017
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8925ffcbacdd62e50800000000000000
+      internalID: 6784353751504212632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_1
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 959
+        width: 114
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed640e7992e5de920800000000000000
+      internalID: 3021174457770198750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_2
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 911
+        width: 178
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36f45ca02e93fed70800000000000000
+      internalID: 9074535417180933987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_3
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 957
+        width: 82
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10ba8634951543730800000000000000
+      internalID: 3977893814699862785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_4
+      rect:
+        serializedVersion: 2
+        x: 461
+        y: 983
+        width: 44
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 725e7ca42ebad94c0800000000000000
+      internalID: -4279075082526530265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_5
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 965
+        width: 66
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0105e11c3e53ec50800000000000000
+      internalID: 6693297083293958411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_6
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 973
+        width: 114
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7691b8e804ab3f3c0800000000000000
+      internalID: -4326910030540760729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_7
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 927
+        width: 49
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 115d567beb3292770800000000000000
+      internalID: 8586433466586223889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_8
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 983
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1ae86e109405ac40800000000000000
+      internalID: 5522825535071775262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_9
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 973
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 549c54d04b2e7a960800000000000000
+      internalID: 7613302958037780805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_10
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 959
+        width: 36
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b768df15f1edddaa0800000000000000
+      internalID: -6134502891307825541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_11
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 967
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2cdeaf75b57368a80800000000000000
+      internalID: -8465017584138654270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_12
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 965
+        width: 34
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fa32a107098d70a0800000000000000
+      internalID: -6882193992367064332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_13
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 959
+        width: 28
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cde93f7f337a04360800000000000000
+      internalID: 7151900049909456604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_14
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 957
+        width: 26
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdab3aa65ae6ee5b0800000000000000
+      internalID: -5337206851649684769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_15
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 965
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 959c27691d71fa220800000000000000
+      internalID: 2499242507153623385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_16
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 919
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58574542ae8987340800000000000000
+      internalID: 4861803929145734533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_17
+      rect:
+        serializedVersion: 2
+        x: 471
+        y: 893
+        width: 50
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e56f491bbf1549e0800000000000000
+      internalID: -1637868001035328024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_18
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 903
+        width: 14
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89530e91ec265f5a0800000000000000
+      internalID: -6488171050820422248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_19
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 901
+        width: 90
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 660ab3b8b42c09940800000000000000
+      internalID: 5300950391129350246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_20
+      rect:
+        serializedVersion: 2
+        x: 909
+        y: 927
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e93842033d3b9430800000000000000
+      internalID: 3790690800653318627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_21
+      rect:
+        serializedVersion: 2
+        x: 989
+        y: 831
+        width: 35
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ab8ad4abe62df3a0800000000000000
+      internalID: -6630100282894546007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_22
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 890
+        width: 36
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f481a790fe6d11200800000000000000
+      internalID: 149136584824461391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_23
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 911
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ab06762a857f27b0800000000000000
+      internalID: -5246845804652131416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_24
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 911
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c8fbd9e7f02454a0800000000000000
+      internalID: -6605618504293156671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_25
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 903
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87238ab62ebde19e0800000000000000
+      internalID: -1648638648055745928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_26
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 901
+        width: 42
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d5af41e8fb0a1740800000000000000
+      internalID: 5123420689647248849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_27
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 911
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8c9c14a49f4afd60800000000000000
+      internalID: 7924733994138901644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_28
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 917
+        width: 26
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f4073c75e844e440800000000000000
+      internalID: 4964172839737820401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_29
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 898
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a13d04ceed8d9b60800000000000000
+      internalID: 7754510190032794021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_30
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 893
+        width: 47
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0c9dc550602bc090800000000000000
+      internalID: -8013275513847178226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_31
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 901
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e44fa54a6b082df70800000000000000
+      internalID: 9210565709855913038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_32
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 898
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99a3bcca7d3499900800000000000000
+      internalID: 691658611374111385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_33
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 892
+        width: 42
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b406130417907d390800000000000000
+      internalID: -7793750248128421813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_34
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 893
+        width: 42
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afdf2661764ca9c80800000000000000
+      internalID: -8315117814949937670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_35
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 879
+        width: 42
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e0d3d2c04d8e8470800000000000000
+      internalID: 8398805664378638565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_36
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 898
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a605c16c024757620800000000000000
+      internalID: 2771248829827928170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_37
+      rect:
+        serializedVersion: 2
+        x: 839
+        y: 901
+        width: 42
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7032cee2c650441e0800000000000000
+      internalID: -2214639154557607161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_38
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 887
+        width: 33
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec051beb4d84a6a50800000000000000
+      internalID: 6515099889514401998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_39
+      rect:
+        serializedVersion: 2
+        x: 925
+        y: 887
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c8cad557e049b070800000000000000
+      internalID: 8122594765261424841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_40
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 887
+        width: 34
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44b23818e715dbe20800000000000000
+      internalID: 3367937700123585348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_41
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 890
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a1d9039e1ef43820800000000000000
+      internalID: 2897219867575439779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_42
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 887
+        width: 28
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1072ac44bf5135a0800000000000000
+      internalID: -6543343555608154085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_43
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 882
+        width: 34
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f66be0f4326e445d0800000000000000
+      internalID: -3079083205889968529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_44
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 890
+        width: 34
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f496e3518628e7a60800000000000000
+      internalID: 7673714198630525263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1024
+        height: 889
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1593449935854d580800000000000000
+      internalID: -8803314255525562031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_46
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 877
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bda35f2d7c5242db0800000000000000
+      internalID: -4817684161211581733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_47
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 879
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86417c6f000b61fa0800000000000000
+      internalID: -5830279149397797784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_48
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 135
+        width: 33
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5c853bc64824a100800000000000000
+      internalID: 118263774740581467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_49
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 151
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01a9cd49b54154b40800000000000000
+      internalID: 5423763709809695248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_50
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 143
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d9c0898073593ab0800000000000000
+      internalID: -5027895766174086704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_51
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 151
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2957d92e421a4e10800000000000000
+      internalID: 2182577096333154602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_52
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 143
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ebd1c772113e90a0800000000000000
+      internalID: -6873002025932432409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_53
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 127
+        width: 50
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1182561c540c5450800000000000000
+      internalID: 6078738390601335071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_54
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 130
+        width: 47
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daf2e20ad6b31a840800000000000000
+      internalID: 5233529584006082477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_55
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 151
+        width: 12
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a59fdce83383cbc0800000000000000
+      internalID: -3764020583036119639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_56
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 130
+        width: 39
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0faa65b3307529fd0800000000000000
+      internalID: -2336709585259812112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_57
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 130
+        width: 50
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b349543facc8c080800000000000000
+      internalID: -9166851988643036232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_58
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 127
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7aa9028128b904940800000000000000
+      internalID: 5278389746331064999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_59
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 133
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dac4a21d120450f0800000000000000
+      internalID: -1129275282673055024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_60
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 95
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d378ef64f4c75bc0800000000000000
+      internalID: -3794347606907784237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_61
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 111
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae6c52d994c747920800000000000000
+      internalID: 2987149108464436970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_62
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 103
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b8f31d8bd54bf180800000000000000
+      internalID: -9080587414395422543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_63
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 87
+        width: 52
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0d9f873bf2251be0800000000000000
+      internalID: -1507260037921268470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_64
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 79
+        width: 44
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 014d301d841cd8d40800000000000000
+      internalID: 5588335231125148688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_65
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 111
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdfca5ab37e8c2a00800000000000000
+      internalID: 733117467053445087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_66
+      rect:
+        serializedVersion: 2
+        x: 485
+        y: 111
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bde1579bf63318140800000000000000
+      internalID: 4720110439406837467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_67
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 111
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b982bad984873b70800000000000000
+      internalID: 8878710917998741943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_68
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 103
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92fb4d3cfddac4ee0800000000000000
+      internalID: -1275453417877881047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_69
+      rect:
+        serializedVersion: 2
+        x: 621
+        y: 87
+        width: 12
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f70d5360db1234530800000000000000
+      internalID: 3837948403186520191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_70
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 87
+        width: 34
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef9d5f5939b2301e0800000000000000
+      internalID: -2232893077369529858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_71
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 114
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51deef63a6ef63420800000000000000
+      internalID: 2609552766250446101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_72
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 103
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ee00c15f401ca790800000000000000
+      internalID: -7517615745128198423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_73
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 95
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a725404763b0c88f0800000000000000
+      internalID: -537041927061351814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_74
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 95
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 562d540b8139dd0a0800000000000000
+      internalID: -6855161323542162843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_75
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 103
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8ea48308508ac280800000000000000
+      internalID: -9022257787978862961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_76
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 79
+        width: 12
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2d9a3b77822dd510800000000000000
+      internalID: 1575453409932909870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_77
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 79
+        width: 34
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 455d4045f149473a0800000000000000
+      internalID: -6668542285954362028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_78
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 87
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f906ef7b363414fe0800000000000000
+      internalID: -1206609129590857569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_79
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 87
+        width: 10
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68f8f9f655b073ab0800000000000000
+      internalID: -5028537997363015802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_80
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 55
+        width: 47
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d182aea5981cf8a0800000000000000
+      internalID: -6270109550047493679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_81
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 87
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d6e7b9c2c47ab8f0800000000000000
+      internalID: -523978026678491438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_82
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 87
+        width: 20
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b02b748ad9c7322c0800000000000000
+      internalID: -4457582189591678453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_83
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 71
+        width: 12
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63c8db23333d26a30800000000000000
+      internalID: 4207157218765540406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_84
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 85
+        width: 42
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0726e1ebcd3469ad0800000000000000
+      internalID: -2695892711573134736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_85
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 87
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0b4b86fa5fa02c20800000000000000
+      internalID: 3179734142141811466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_86
+      rect:
+        serializedVersion: 2
+        x: 882
+        y: 87
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d91240ad7f991ec0800000000000000
+      internalID: -3595667465570215470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_87
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 85
+        width: 26
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3049e60d433719b0800000000000000
+      internalID: -5109558846307090372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_88
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 87
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 047b82ccaab79f7b0800000000000000
+      internalID: -5189981122067908800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_89
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 55
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b97481d655126160800000000000000
+      internalID: 7017194632023144882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_90
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 55
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6f0ed2a9526db060800000000000000
+      internalID: 6970835935363469167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_91
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 55
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf948571f7c585020800000000000000
+      internalID: 2330714508086495739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_92
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 53
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68493ee22de8d07c0800000000000000
+      internalID: -4103466652083710842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_93
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 55
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1304149951250ae20800000000000000
+      internalID: 3359775574737371185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_94
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 53
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 372ff29420ea849d0800000000000000
+      internalID: -2789788644314975629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_95
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 69
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bca8b6043a459fb0800000000000000
+      internalID: -4641722253623907147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_96
+      rect:
+        serializedVersion: 2
+        x: 986
+        y: 55
+        width: 12
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75a07000f1bd21020800000000000000
+      internalID: 2311150484985416279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_97
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 23
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c468516efde077770800000000000000
+      internalID: 8608365567542658636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_98
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 18
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81eae4cb7f362a510800000000000000
+      internalID: 1558918336690957848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_99
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 145
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66224125e5854e190800000000000000
+      internalID: -7934119481392749978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: moth_ground_left_100
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 0
+        width: 137
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7103fe72b9a9220d0800000000000000
+      internalID: -3449024373431783401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      moth_ground_left_0: 6784353751504212632
+      moth_ground_left_1: 3021174457770198750
+      moth_ground_left_10: -6134502891307825541
+      moth_ground_left_100: -3449024373431783401
+      moth_ground_left_11: -8465017584138654270
+      moth_ground_left_12: -6882193992367064332
+      moth_ground_left_13: 7151900049909456604
+      moth_ground_left_14: -5337206851649684769
+      moth_ground_left_15: 2499242507153623385
+      moth_ground_left_16: 4861803929145734533
+      moth_ground_left_17: -1637868001035328024
+      moth_ground_left_18: -6488171050820422248
+      moth_ground_left_19: 5300950391129350246
+      moth_ground_left_2: 9074535417180933987
+      moth_ground_left_20: 3790690800653318627
+      moth_ground_left_21: -6630100282894546007
+      moth_ground_left_22: 149136584824461391
+      moth_ground_left_23: -5246845804652131416
+      moth_ground_left_24: -6605618504293156671
+      moth_ground_left_25: -1648638648055745928
+      moth_ground_left_26: 5123420689647248849
+      moth_ground_left_27: 7924733994138901644
+      moth_ground_left_28: 4964172839737820401
+      moth_ground_left_29: 7754510190032794021
+      moth_ground_left_3: 3977893814699862785
+      moth_ground_left_30: -8013275513847178226
+      moth_ground_left_31: 9210565709855913038
+      moth_ground_left_32: 691658611374111385
+      moth_ground_left_33: -7793750248128421813
+      moth_ground_left_34: -8315117814949937670
+      moth_ground_left_35: 8398805664378638565
+      moth_ground_left_36: 2771248829827928170
+      moth_ground_left_37: -2214639154557607161
+      moth_ground_left_38: 6515099889514401998
+      moth_ground_left_39: 8122594765261424841
+      moth_ground_left_4: -4279075082526530265
+      moth_ground_left_40: 3367937700123585348
+      moth_ground_left_41: 2897219867575439779
+      moth_ground_left_42: -6543343555608154085
+      moth_ground_left_43: -3079083205889968529
+      moth_ground_left_44: 7673714198630525263
+      moth_ground_left_45: -8803314255525562031
+      moth_ground_left_46: -4817684161211581733
+      moth_ground_left_47: -5830279149397797784
+      moth_ground_left_48: 118263774740581467
+      moth_ground_left_49: 5423763709809695248
+      moth_ground_left_5: 6693297083293958411
+      moth_ground_left_50: -5027895766174086704
+      moth_ground_left_51: 2182577096333154602
+      moth_ground_left_52: -6873002025932432409
+      moth_ground_left_53: 6078738390601335071
+      moth_ground_left_54: 5233529584006082477
+      moth_ground_left_55: -3764020583036119639
+      moth_ground_left_56: -2336709585259812112
+      moth_ground_left_57: -9166851988643036232
+      moth_ground_left_58: 5278389746331064999
+      moth_ground_left_59: -1129275282673055024
+      moth_ground_left_6: -4326910030540760729
+      moth_ground_left_60: -3794347606907784237
+      moth_ground_left_61: 2987149108464436970
+      moth_ground_left_62: -9080587414395422543
+      moth_ground_left_63: -1507260037921268470
+      moth_ground_left_64: 5588335231125148688
+      moth_ground_left_65: 733117467053445087
+      moth_ground_left_66: 4720110439406837467
+      moth_ground_left_67: 8878710917998741943
+      moth_ground_left_68: -1275453417877881047
+      moth_ground_left_69: 3837948403186520191
+      moth_ground_left_7: 8586433466586223889
+      moth_ground_left_70: -2232893077369529858
+      moth_ground_left_71: 2609552766250446101
+      moth_ground_left_72: -7517615745128198423
+      moth_ground_left_73: -537041927061351814
+      moth_ground_left_74: -6855161323542162843
+      moth_ground_left_75: -9022257787978862961
+      moth_ground_left_76: 1575453409932909870
+      moth_ground_left_77: -6668542285954362028
+      moth_ground_left_78: -1206609129590857569
+      moth_ground_left_79: -5028537997363015802
+      moth_ground_left_8: 5522825535071775262
+      moth_ground_left_80: -6270109550047493679
+      moth_ground_left_81: -523978026678491438
+      moth_ground_left_82: -4457582189591678453
+      moth_ground_left_83: 4207157218765540406
+      moth_ground_left_84: -2695892711573134736
+      moth_ground_left_85: 3179734142141811466
+      moth_ground_left_86: -3595667465570215470
+      moth_ground_left_87: -5109558846307090372
+      moth_ground_left_88: -5189981122067908800
+      moth_ground_left_89: 7017194632023144882
+      moth_ground_left_9: 7613302958037780805
+      moth_ground_left_90: 6970835935363469167
+      moth_ground_left_91: 2330714508086495739
+      moth_ground_left_92: -4103466652083710842
+      moth_ground_left_93: 3359775574737371185
+      moth_ground_left_94: -2789788644314975629
+      moth_ground_left_95: -4641722253623907147
+      moth_ground_left_96: 2311150484985416279
+      moth_ground_left_97: 8608365567542658636
+      moth_ground_left_98: 1558918336690957848
+      moth_ground_left_99: -7934119481392749978
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -4,7 +4,7 @@ public class BurnEffect : DoTEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.06f, adPerSecond = 0.08f;
+    public float healthPerSecond = 0.03f, adPerSecond = 0.18f;
     public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;

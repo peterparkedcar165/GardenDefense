@@ -35,6 +35,12 @@ public abstract class Insect : Entity, IAttackable
     public float targetingRange = 0f;
     private float _plantAttackCooldown = 0f;
 
+    [SerializeField] protected Sprite spriteRight;
+    [SerializeField] protected Sprite spriteLeft;
+    protected SpriteRenderer _spriteRenderer;
+    protected bool _facingRight = true;
+    private Vector3 _prevPosition;
+
     public virtual IAttackable target
     {
         get
@@ -98,6 +104,8 @@ public abstract class Insect : Entity, IAttackable
         expDrop = sunDrop/2;
         aimPoint = transform.Find("AimPoint");
         visual = transform.Find("Visual");
+        _spriteRenderer = visual?.GetComponent<SpriteRenderer>();
+        _prevPosition = transform.position;
         pathOffset = new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
 
 
@@ -120,6 +128,23 @@ public abstract class Insect : Entity, IAttackable
         Move();
         SyncAimPoint();
         UpdateAttack();
+        TrackFacing();
+        UpdateFacingSprite();
+    }
+
+    private void TrackFacing()
+    {
+        float deltaX = transform.position.x - _prevPosition.x;
+        if (Mathf.Abs(deltaX) > 0.001f)
+            _facingRight = deltaX > 0;
+        _prevPosition = transform.position;
+    }
+
+    protected virtual void UpdateFacingSprite()
+    {
+        if (_spriteRenderer == null) return;
+        Sprite s = _facingRight ? spriteRight : spriteLeft;
+        if (s != null) _spriteRenderer.sprite = s;
     }
 
     private void ApplyGravity()
