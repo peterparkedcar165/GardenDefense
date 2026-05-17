@@ -26,7 +26,7 @@ public class Level2 : SpawnManager
         FertilizerSelectionUI.instance.Configure(fertilizerPool);
         GameManager.instance.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
-        SaveManager.instance.saveData.highestLevelUnlocked = 1;
+        SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 1);
         SaveManager.instance.CompleteLevel(2);
         StartCoroutine(RunWave());
     }
@@ -150,7 +150,7 @@ public class Level2 : SpawnManager
         {
             waitTime = 1f;
             spawnInterval = 1f;
-            spawnCount = 75;
+            spawnCount = 45;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
@@ -161,7 +161,7 @@ public class Level2 : SpawnManager
         {
             waitTime = 1f;
             spawnInterval = 1f;
-            spawnCount = 35;
+            spawnCount = 55;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -172,8 +172,8 @@ public class Level2 : SpawnManager
         } else if (wave == 10)
         {
             waitTime = 1f;
-            spawnInterval = 1f;
-            spawnCount = 45;
+            spawnInterval = 0.75f;
+            spawnCount = 65;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);

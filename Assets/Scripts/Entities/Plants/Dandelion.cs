@@ -173,6 +173,13 @@ public class Dandelion : Shooter
     }
 
 
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
+        skillCooldown = 25f, skillDuration = 4f,
+        seedCount = 3, beamWidth = 1.5f,
+    };
+
     // DESCRIPTION
 
     public override string GetName() => "<b><color=#B2EBF2>Dandelion</color></b>";
@@ -181,7 +188,7 @@ public class Dandelion : Shooter
         => $"The {GetName()} releases waves of seeds that ride the wind, striking multiple targets at once.";
 
     public override string GetAttackDescription()
-        => $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage and applies <color=#B2EBF2>Gust</color>.";
+        => $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.";
 
     public override string GetSkillDesription()
         => $"Blows a powerful gust of pollen wind <color=green><b>{1.5f + 0.25f * effectivePath3Level}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";

@@ -84,6 +84,13 @@ public class Calendula : Aura
         baseSkillDuration = 10f + 2f * level;
     }
 
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = 20f, attackSpeed = 0.5f, attackRange = 2.5f,
+        skillCooldown = 15f, skillDuration = 10f,
+        fieryInfusionHeal = 8f,
+    };
+
     public override string GetName() => "<b><color=orange>Calendula</color></b>";
     public override string GetDescription() => $"The {GetName()} periodically releases waves of flaming petals and can infuse allies with fire energy.";
     public override string GetPath1Name() => "Petals";

@@ -1,0 +1,23 @@
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "DandelionData", menuName = "Scriptable Objects/PlantData/Dandelion")]
+public class DandelionData : PlantData
+{
+    public override string GetAttackDescription()
+    {
+        var s = plantPrefab.GetBaseStats();
+        return $"Each seed deals <color=green><b>{s.attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.";
+    }
+
+    public override string GetPassiveDescription()
+    {
+        var s = plantPrefab.GetBaseStats();
+        return $"Fires <color=green><b>{s.seedCount}</b></color> seeds per attack, targeting the <color=green><b>{s.seedCount}</b></color> highest-priority insects in range.";
+    }
+
+    public override string GetSkillDescription()
+    {
+        var s = plantPrefab.GetBaseStats();
+        return $"Blows a powerful gust of pollen wind <color=green><b>{s.beamWidth}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{s.skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{s.attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";
+    }
+}

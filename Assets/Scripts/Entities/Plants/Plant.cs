@@ -2,6 +2,32 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
+public struct PlantBaseStats
+{
+    // Common
+    public float attackDamage, attackSpeed, attackRange, skillCooldown, passiveCooldown, skillDuration;
+    public int piercing;
+    // AcornSprout
+    public float stunChance, stunDuration, skillDamageMultiplier;
+    // Sunflower / BogIris
+    public float sunGenerated, sunInterval, openDuration;
+    // BogIris skill
+    public float geyserDamage, knockUpHeight;
+    // Dandelion
+    public int seedCount;
+    public float beamWidth;
+    // LeafRanger
+    public float skillAttackSpeedBonus;
+    // Waterlily
+    public float splashRadius, bubbleDamage;
+    // PoisonShroom
+    public float poisonDuration, poisonDamagePerSecond;
+    // Snowdrop
+    public float slowPercent, blizzardDamage;
+    // Calendula
+    public float fieryInfusionHeal;
+}
+
 public abstract class Plant : Entity, IAttackable
 {
     public static List<Plant> allPlants = new List<Plant>();
@@ -292,6 +318,8 @@ public abstract class Plant : Entity, IAttackable
     }
 
     // PATH NAMES & HOVER DESCRIPTIONS
+    public virtual PlantBaseStats GetBaseStats() => default;
+
     public virtual string GetPath1Name() => "Attack";
     public virtual string GetPath2Name() => "Passive";
     public virtual string GetPath3Name() => "Skill";

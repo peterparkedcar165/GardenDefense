@@ -83,6 +83,14 @@ public class LeafRanger : Shooter
     }
 
 
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
+        skillCooldown = 20f, skillDuration = 4f,
+        piercing = bP,
+        skillAttackSpeedBonus = 300f,
+    };
+
     // DESCRIPTION
 
     public override string GetName()

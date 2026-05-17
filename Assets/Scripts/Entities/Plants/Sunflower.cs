@@ -115,6 +115,13 @@ public class Sunflower : Shooter
 
     // DESCRIPTION
 
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
+        skillCooldown = 35f, passiveCooldown = 16f, skillDuration = 6f,
+        sunGenerated = 6f, sunInterval = 16f,
+    };
+
     public override string GetName()
     {
         return "<b><color=orange>Sunflower</color></b>"; // bold, then orange, name, uncolor, unbold

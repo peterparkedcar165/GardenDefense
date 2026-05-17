@@ -66,6 +66,13 @@ public class AcornSprout : Shooter
 
     // DESCRIPTION
 
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
+        skillCooldown = 25f, skillDuration = 20f,
+        stunChance = 0.35f, stunDuration = 0.5f, skillDamageMultiplier = 1.5f,
+    };
+
     public override string GetName()
     {
         return "<b><color=green>Acorn Sprout</color></b>";

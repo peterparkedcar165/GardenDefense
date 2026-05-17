@@ -85,6 +85,13 @@ public class Waterlily : Shooter
     }
 
     
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
+        skillCooldown = 20f, skillDuration = 5f,
+        splashRadius = bAoER, bubbleDamage = 42f,
+    };
+
     // DESCRIPTION
 
     public override string GetName()

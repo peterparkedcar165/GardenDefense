@@ -135,7 +135,10 @@ public abstract class Insect : Entity, IAttackable
                 if (verticalVelocity >= 3f)
                 {
                     Entity src = fallDamageSource != null ? fallDamageSource : lastSource;
-                    Damage(verticalVelocity * fallDamageMultiplier, DamageType.Physical, ElementalType.Neutral, src, false, new DamageTag[0]);
+                    if (src != null)
+                        Damage(verticalVelocity * fallDamageMultiplier, DamageType.Physical, ElementalType.Neutral, src, false, new DamageTag[0]);
+                    else
+                        Damage(verticalVelocity * fallDamageMultiplier, DamageType.Physical, ElementalType.Neutral, new DamageTag[0]);
                 }
                 verticalVelocity = 0f;
             }

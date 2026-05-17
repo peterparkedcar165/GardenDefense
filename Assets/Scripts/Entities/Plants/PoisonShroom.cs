@@ -98,6 +98,13 @@ public class PoisonShroom : Shooter
             blob.Initialize(position, activeRadius, skillDuration, this);
     }
 
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
+        skillCooldown = 25f, skillDuration = 5f,
+        poisonDuration = 6f, poisonDamagePerSecond = 12f,
+    };
+
     // DESCRIPTION
 
     public override string GetName()

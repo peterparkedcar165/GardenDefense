@@ -141,6 +141,13 @@ public class Snowdrop : Aura
         base.Attack();
     }
 
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
+        skillCooldown = 30f, skillDuration = 6f,
+        slowPercent = 24f, blizzardDamage = 35f,
+    };
+
     // DESCRIPTION
 
     public override string GetName()

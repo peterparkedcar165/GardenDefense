@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec552fbae2ffaf143ab77f80c752010f, type: 3}
+  m_Name: SnowdropData
+  m_EditorClassIdentifier: Assembly-CSharp::SnowdropData
+  plantPrefab: {fileID: -1218289086641490182, guid: 21a1c1a83dbeb7646befb06cee88d601, type: 3}
+  icon: {fileID: 3997787884886350849, guid: 66cc86ab63224114c893b2c8e527b49d, type: 3}
+  plantName: Snowdrop
+  displayName: Snowdrop
+  elementalType: 4
+  damageType: 1

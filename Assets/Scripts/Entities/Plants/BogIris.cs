@@ -141,6 +141,14 @@ public class BogIris : Shooter
     public override void OnPath2Upgrade(int level) { }
     public override void OnPath3Upgrade(int level) { }
 
+    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
+    {
+        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
+        skillCooldown = 18f, passiveCooldown = 8f, skillDuration = 1.5f,
+        sunGenerated = 2f, sunInterval = 2f, openDuration = 8f,
+        geyserDamage = 65f, knockUpHeight = 3f,
+    };
+
     public override string GetName() => "<b><color=#4FC3F7>Bog Iris</color></b>";
 
     public override string GetDescription()
