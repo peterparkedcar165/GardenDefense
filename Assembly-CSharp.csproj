@@ -106,6 +106,7 @@
     <Compile Include="Assets\Scripts\LevelSpecific\Level6\GridManager6.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level3\GridManager3.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\DandelionData.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Level7.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FieryInfusionEffect.cs" />
     <Compile Include="Assets\Scripts\FertilizerManager.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\StunEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\UI\PlantUpgradeUI.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level7\GridManager7.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
