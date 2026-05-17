@@ -317,6 +317,8 @@ public abstract class Plant : Entity, IAttackable
         PlantUpgradeUI.instance.ShowPanel(this);
     }
 
+    public float ScaleCC(float baseDuration) => baseDuration + immobilizeDurationAdder + baseDuration * immobilizeDurationMultiplier;
+
     // PATH NAMES & HOVER DESCRIPTIONS
     public virtual PlantBaseStats GetBaseStats() => default;
 

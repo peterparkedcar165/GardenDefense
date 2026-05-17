@@ -26,10 +26,10 @@ public class AcornProjectile : Projectile
              if (Random.value < procChance)
              {
                  insect.ApplyEffect(new StunEffect(
-                    insect /*target*/,
-                    acorn.stunDuration/*duration in seconds*/,
-                    1/*level*/,
-                    source/*source*/));
+                    insect,
+                    acorn.stunDuration,
+                    1,
+                    source));
              }
         }
     }

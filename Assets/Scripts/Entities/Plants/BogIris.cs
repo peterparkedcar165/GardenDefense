@@ -24,7 +24,7 @@ public class BogIris : Shooter
     private float OpenDuration => 8f + 2f * effectivePath2Level;
     private int SunGenerated => 1 + effectivePath2Level;
     private float GeyserRadius => 1.25f + 0.15f * effectivePath3Level;
-    private float KnockUpHeight => (3f + 1f * effectivePath3Level) * skillDuration;
+    private float KnockUpHeight => ScaleCC((3f + 1f * effectivePath3Level) * skillDuration);
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * (KnockUpHeight)); // knock up height dictates force
     private float GeyserDamage => 65f + 15f * effectivePath3Level;
 

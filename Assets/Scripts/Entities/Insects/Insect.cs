@@ -136,7 +136,10 @@ public abstract class Insect : Entity, IAttackable
                 {
                     Entity src = fallDamageSource != null ? fallDamageSource : lastSource;
                     if (src != null)
+                    {
                         Damage(verticalVelocity * fallDamageMultiplier, DamageType.Physical, ElementalType.Neutral, src, false, new DamageTag[0]);
+                        ApplyEffect(new StunEffect(this, 2f, 1, src));
+                    }
                     else
                         Damage(verticalVelocity * fallDamageMultiplier, DamageType.Physical, ElementalType.Neutral, new DamageTag[0]);
                 }

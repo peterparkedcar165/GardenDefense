@@ -91,7 +91,7 @@ public class BubblePrison : MonoBehaviour
             {
                 insect.Damage(damagePerSecond, DamageType.Magic, ElementalType.Water, source, true,
                     new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
-                insect.ApplyEffect(new BubblePrisonEffect(insect, duration, 1, source));
+                insect.ApplyEffect(new BubblePrisonEffect(insect, source.ScaleCC(duration), 1, source));
             }
         }
     }

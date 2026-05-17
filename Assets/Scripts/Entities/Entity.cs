@@ -51,7 +51,7 @@ public abstract class Entity : MonoBehaviour
     public float baseElementalPower;
     public float basePassiveDamage, baseSkillDamage, baseCoordinatedDamage;
     public float baseSkillDuration;
-    public float baseTenacity, baseImmobilizeDuration;
+    public float baseTenacity;
     public float baseLightEmissionRange;
 
     [Header("Stats")]
@@ -66,7 +66,7 @@ public abstract class Entity : MonoBehaviour
     public float passiveDamage, skillDamage, coordinatedDamage;
     public float skillDuration;
     public float lightEmissionRange;
-    public float tenacity, immobilizeDuration;
+    public float tenacity;
     public bool debuffsFrozen;
 
     [Header("Stat Adders")]
@@ -138,7 +138,6 @@ public abstract class Entity : MonoBehaviour
         coordinatedDamage = baseCoordinatedDamage + coordinatedDamageAdder + (baseCoordinatedDamage * coordinatedDamageMultiplier);
         skillDuration = baseSkillDuration + skillDurationAdder + (baseSkillDuration * skillDurationMultiplier);
         tenacity = baseTenacity + tenacityAdder + (baseTenacity * tenacityMultiplier);
-        immobilizeDuration = baseImmobilizeDuration + immobilizeDurationAdder;
         lightEmissionRange = baseLightEmissionRange + lightEmissionRangeAdder + (baseLightEmissionRange * lightEmissionRangeMultiplier);
     }
 
