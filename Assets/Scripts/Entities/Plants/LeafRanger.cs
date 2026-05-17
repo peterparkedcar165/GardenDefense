@@ -27,7 +27,7 @@ public class LeafRanger : Shooter
         baseSkillCooldown = 20f;
     }
 
-    protected override void UpdateStats()
+    public override void UpdateStats()
     {
         base.UpdateStats();
         if (skillActive)

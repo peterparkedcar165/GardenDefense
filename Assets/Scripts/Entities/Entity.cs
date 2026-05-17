@@ -98,11 +98,11 @@ public abstract class Entity : MonoBehaviour
     public float lightEmissionRangeMultiplier;
 
     [Header("Internal Cooldowns")]
-    public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, gustInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;
-    protected virtual void UpdateStats()
+    public virtual void UpdateStats()
     {
         maxHealth = baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier);
         physicalResistance = basePhysicalResistance + physicalResistanceAdder + (basePhysicalResistance * physicalResistanceMultiplier);
@@ -437,18 +437,10 @@ public abstract class Entity : MonoBehaviour
             coldInternalCooldown -= Time.deltaTime;
         }
 
-        if (gustInternalCooldown > 0)
-        {
-            gustInternalCooldown -= Time.deltaTime;
-        }
-
         if (taintedInternalCooldown > 0)
         {
             taintedInternalCooldown -= Time.deltaTime;
         }
-
-        if (gustInternalCooldown > 0)
-            gustInternalCooldown -= Time.deltaTime;
 
         if (freezeInternalCooldown > 0)
             freezeInternalCooldown -= Time.deltaTime;

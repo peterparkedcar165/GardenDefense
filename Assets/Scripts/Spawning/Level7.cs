@@ -8,7 +8,7 @@ public class Level7 : SpawnManager
     public int wave;
     private int startSunCount = 750, startHealth = 200;
     private int maxWave = 18;
-    public GameObject workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt;
+    public GameObject workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt, snail;
     public GameObject weatherManager;
     public float nextWaveTimer;
 
@@ -44,7 +44,7 @@ public class Level7 : SpawnManager
             yield return StartCoroutine(Wave(wave));
 
             if (wave < maxWave)
-                yield return StartCoroutine(RestPeriod(10f));
+                yield return StartCoroutine(RestPeriod(15f));
         }
 
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
@@ -109,9 +109,11 @@ public class Level7 : SpawnManager
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 10f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnWasp));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 5)
         {
@@ -124,11 +126,13 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 9f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 6)
         {
@@ -142,12 +146,14 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnSoldierAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 9f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 7)
         {
@@ -161,12 +167,14 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 3f, 12f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 8f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 8)
         {
@@ -181,6 +189,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 2f, 10f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 8f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -188,6 +197,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 9)
         {
@@ -202,6 +212,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 2f, 8f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 7f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -209,6 +220,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 10)
         {
@@ -223,6 +235,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 2f, 6f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 7f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -230,6 +243,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 11)
         {
@@ -244,6 +258,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 1f, 5f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 6f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -251,6 +266,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 12)
         {
@@ -265,6 +281,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 1f, 4f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 6f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -272,6 +289,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 13)
         {
@@ -286,6 +304,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 1f, 3.5f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 5f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -293,6 +312,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 14)
         {
@@ -307,6 +327,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 1f, 3.5f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 5f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -314,6 +335,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 15)
         {
@@ -328,6 +350,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 1f, 3f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 5f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -335,6 +358,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 16)
         {
@@ -349,6 +373,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 1f, 3f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 4f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -356,6 +381,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
 
         } else if (wave == 17)
         {
@@ -391,6 +417,7 @@ public class Level7 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp), waitTime, spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnQueenAnt), 1f, 3f);
+            InvokeRepeating(nameof(SpawnSnail), waitTime, 4f);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -398,6 +425,7 @@ public class Level7 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
+            CancelInvoke(nameof(SpawnSnail));
         }
     }
 
@@ -412,6 +440,7 @@ public class Level7 : SpawnManager
     void SpawnFruitFly()   { Spawn(fruitFly); }
     void SpawnWasp()       { Spawn(wasp); }
     void SpawnQueenAnt()   { Spawn(queenAnt); }
+    void SpawnSnail()      { Spawn(snail); }
 
     protected override void Update()
     {

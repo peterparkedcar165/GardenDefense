@@ -18,6 +18,7 @@ public abstract class Projectile : MonoBehaviour
     public Plant source; // will be set by the plant who fires this projectile
 
     protected GameObject trackedTarget; // keeps reference to the tracked target
+    protected Insect trackedInsect;     // cached component, set alongside trackedTarget
 
     // spawns the projectile, and assigns basic stats to it
     public virtual void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
@@ -47,22 +48,21 @@ public abstract class Projectile : MonoBehaviour
     public void SetTarget(GameObject target)
     {
         trackedTarget = target;
-
+        trackedInsect = target != null ? target.GetComponent<Insect>() : null;
     }
     protected virtual void Move()
     {
         if (trackedTarget != null)
         {
-            Insect insect = trackedTarget.GetComponent<Insect>();
-            if (insect != null && !insect.IsAlive) { trackedTarget = null; }
+            if (trackedInsect != null && !trackedInsect.IsAlive) { trackedTarget = null; trackedInsect = null; }
             else
             {
-                Vector3 aimPos = insect != null ? insect.GetAimPoint() : trackedTarget.transform.position;
+                Vector3 aimPos = trackedInsect != null ? trackedInsect.GetAimPoint() : trackedTarget.transform.position;
                 Vector3 toTarget = aimPos - transform.position;
                 if (Vector3.Dot(direction, toTarget) > 0)
                     direction = toTarget.normalized;
                 else
-                    trackedTarget = null;
+                    { trackedTarget = null; trackedInsect = null; }
             }
         }
 
@@ -90,6 +90,7 @@ public abstract class Projectile : MonoBehaviour
                 OnHit(insect);
                 source?.GetEffect<FieryInfusionEffect>()?.OnProjectileHit(insect);
                 trackedTarget = null;
+                trackedInsect = null;
                 if (hitCount > piercing)
                     Destroy(gameObject);
             }

@@ -36,6 +36,7 @@ public class FieryInfusionEffect : StatusEffect
         Plant plant = target as Plant;
         if (plant == null) return;
         plant.lightEmissionRangeAdder -= cachedLightRange;
+        plant.UpdateStats();
     }
 
     public void OnProjectileHit(Insect insect)

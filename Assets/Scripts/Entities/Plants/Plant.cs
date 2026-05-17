@@ -51,8 +51,9 @@ public abstract class Plant : Entity, IAttackable
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
     protected virtual bool ShowLight => true;
+    protected virtual bool ShowDarkCircle => true;
 
-    protected override void UpdateStats()
+    public override void UpdateStats()
     {
         base.UpdateStats();
         passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier);
@@ -150,6 +151,7 @@ public abstract class Plant : Entity, IAttackable
         if (circleRadius != null)
         {
             circleRadius.gameObject.SetActive(false);
+            if (!ShowDarkCircle) return;
             darkCircleRadius = Instantiate(circleRadius, circleRadius.parent);
             darkCircleRadius.name = "DarkCircleRadius";
             SpriteRenderer sr = darkCircleRadius.GetComponentInChildren<SpriteRenderer>();

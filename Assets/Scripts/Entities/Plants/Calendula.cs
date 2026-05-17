@@ -9,7 +9,7 @@ public class Calendula : Aura
         damageType = DamageType.Magic;
         baseAttackDamage = 20f;
         baseAttackSpeed = 0.5f;
-        baseAttackRange = 2.5f;
+        baseAttackRange = 1.75f;
         baseSkillCooldown = 15f;
         baseSkillDuration = 10f;
         sunCost = 125;
@@ -17,10 +17,11 @@ public class Calendula : Aura
     }
 
     protected override bool ShowLight => DarknessManager.instance != null && DarknessManager.instance.isDark;
+    protected override bool ShowDarkCircle => false;
 
-    protected override void UpdateStats()
+    public override void UpdateStats()
     {
-        baseLightEmissionRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
+        baseLightEmissionRange = 1.5f * (baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier));
         base.UpdateStats();
     }
 
@@ -71,7 +72,7 @@ public class Calendula : Aura
 
     public override void OnPath2Upgrade(int level)
     {
-        baseAttackRange = 2.5f + 0.3f * level;
+        baseAttackRange = 1.75f + 0.175f * level;
     }
 
     public override void OnPath3Unlock()
@@ -86,7 +87,7 @@ public class Calendula : Aura
 
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
     {
-        attackDamage = 20f, attackSpeed = 0.5f, attackRange = 2.5f,
+        attackDamage = 20f, attackSpeed = 0.5f, attackRange = 1.75f,
         skillCooldown = 15f, skillDuration = 10f,
         fieryInfusionHeal = 8f,
     };
@@ -100,7 +101,7 @@ public class Calendula : Aura
         => $"Releases flaming petals dealing <color=green><b>{attackDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
 
     public override string GetPassiveDescription()
-        => $"Illuminate the surrounding area with a radius equal to her Attack Range.";
+        => $"Illuminate the surrounding area with a radius equal to <color=green><b>1.5×</b></color> her Attack Range.";
 
     public override string GetSkillDesription()
         => $"Target a plant anywhere on the field to grant <color=orange>Fiery Infusion</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's projectiles deal an additional <color=green><b>{attackDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{8f + 1f * effectivePath3Level:F0}</b></color> health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
@@ -111,7 +112,7 @@ public class Calendula : Aura
            $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
     public override string GetPath2Description()
-        => $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease Attack Range by <color=green><b>0.3</b></color> per level. [<color=green><b>+{0.3 * effectivePath2Level}</b></color>]\n\n" +
+        => $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease Attack Range by <color=green><b>0.175</b></color> per level. [<color=green><b>+{0.175 * effectivePath2Level}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
     public override string GetPath3Description()

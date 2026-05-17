@@ -11,7 +11,7 @@ public class CalendulaData : PlantData
 
     public override string GetPassiveDescription()
     {
-        return "Illuminate the surrounding area with a radius equal to her Attack Range.";
+        return "Illuminate the surrounding area with a radius equal to <color=green><b>1.5×</b></color> her Attack Range.";
     }
 
     public override string GetSkillDescription()

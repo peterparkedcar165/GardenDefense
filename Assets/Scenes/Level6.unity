@@ -15370,6 +15370,7 @@ MonoBehaviour:
   fruitFly: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
   wasp: {fileID: 2279086888993795066, guid: 726ce60c28034764084f54c3c199e9c1, type: 3}
   queenAnt: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
+  snail: {fileID: 2279086888993795066, guid: d0a925c758eadd44eb3532b9a2eeee0f, type: 3}
   weatherManager: {fileID: 29017235}
   nextWaveTimer: 0
   waitTime: 0

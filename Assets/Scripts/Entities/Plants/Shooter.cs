@@ -21,7 +21,7 @@ public abstract class Shooter : Plant
 
     public TARGETING targeting = TARGETING.First;
 
-    protected override void UpdateStats()
+    public override void UpdateStats()
     {
         base.UpdateStats();
         projectileSpeed = baseProjectileSpeed + projectileSpeedAdder + (baseProjectileSpeed * projectileSpeedMultiplier);

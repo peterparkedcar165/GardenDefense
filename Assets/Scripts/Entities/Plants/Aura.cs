@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public abstract class Aura : Plant
 {
-    protected override void UpdateStats()
+    public override void UpdateStats()
     {
         base.UpdateStats();
         

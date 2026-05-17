@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class KnockUpEffect : Airborne
 {
     private Insect insect;
@@ -18,7 +20,8 @@ public class KnockUpEffect : Airborne
         insect = target as Insect;
         if (insect == null) return;
         insect.fallDamageSource = source;
-        insect.verticalVelocity = -knockUpForce;
+        float tenacityScale = Mathf.Sqrt(Mathf.Max(0f, 1f - insect.tenacity));
+        insect.verticalVelocity = -knockUpForce * tenacityScale;
     }
 
     public override void OnTick(float deltaTime)

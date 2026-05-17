@@ -4,10 +4,10 @@ using System.Collections;
 public class BogIris : Shooter
 {
     private float
-    bAD = 40f,
+    bAD = 70f,
     bAS = 0.8f,
     bAR = 3f,
-    bPS = 5f,
+    bPS = 3f,
     bMR = 20f;
     private int bP = 0;
 
@@ -19,10 +19,11 @@ public class BogIris : Shooter
     private float cycleTimer = 0f;
     private float sunTickTimer = 0f;
     private float healTickTimer = 0f;
-    private const float totalHeal = 140f;
+    private GameObject _indicatorPrefab;
+    private const float totalHeal = 200f;
     private float SunInterval => 2f * (passiveCooldown / basePassiveCooldown);
-    private float OpenDuration => 8f + 2f * effectivePath2Level;
-    private int SunGenerated => 1 + effectivePath2Level;
+    private float OpenDuration => 6f + 2f * effectivePath2Level;
+    private int SunGenerated => 2 + effectivePath2Level;
     private float GeyserRadius => 1.25f + 0.15f * effectivePath3Level;
     private float KnockUpHeight => ScaleCC((3f + 1f * effectivePath3Level) * skillDuration);
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * (KnockUpHeight)); // knock up height dictates force
@@ -38,10 +39,11 @@ public class BogIris : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
-        basePassiveCooldown = 8f;
+        basePassiveCooldown = 12f;
         baseSkillCooldown = 18f;
         baseSkillDuration = 1f;
         base.Awake();
+        _indicatorPrefab = Resources.Load<GameObject>("DamageIndicator");
         SetVisualState(false);
     }
 
@@ -79,7 +81,7 @@ public class BogIris : Shooter
                 sunTickTimer -= SunInterval;
                 GameManager.instance.AddSun(SunGenerated);
                 GameObject indicator = Object.Instantiate(
-                    Resources.Load<GameObject>("DamageIndicator"),
+                    _indicatorPrefab,
                     transform.position + new Vector3(0.25f, 0.5f, 0f),
                     Quaternion.identity);
                 indicator.GetComponent<DamageIndicator>().Initialize($"+{SunGenerated} Sun", new Color(1f, 1f, 0f));
@@ -134,8 +136,7 @@ public class BogIris : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = bAD + 6f * level;
-        baseAttackSpeed = bAS + 0.04f * level;
+        baseAttackDamage = bAD + 8f * level;
     }
 
     public override void OnPath2Upgrade(int level) { }
@@ -144,8 +145,8 @@ public class BogIris : Shooter
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
     {
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 18f, passiveCooldown = 8f, skillDuration = 1.5f,
-        sunGenerated = 1f, sunInterval = 2f, openDuration = 8f,
+        skillCooldown = 18f, passiveCooldown = 12f, skillDuration = 1f,
+        sunGenerated = 2f, sunInterval = 2f, openDuration = 6f,
         geyserDamage = 65f, knockUpHeight = 3f,
     };
 
@@ -166,13 +167,12 @@ public class BogIris : Shooter
         => $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{GeyserDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.";
 
     public override string GetPath1Description()
-        => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>6</b></color> per level. [<color=green><b>+{6 * effectivePath1Level}</b></color>]\n\n" +
-           $"Increase Attack Speed by <color=green><b>0.04</b></color> per level. [<color=green><b>+{0.04f * effectivePath1Level:F2}</b></color>]\n\n" +
+        => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+{8 * effectivePath1Level}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
     public override string GetPath2Description()
         => $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath2Level}s</b></color>]\n\n" +
-           $"Increase Sun generated per tick by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+           $"Increase Sun generated per tick by <color=green><b>1</b></color> per level. [<color=green><b>+{1 * effectivePath2Level}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
     public override string GetPath3Description()

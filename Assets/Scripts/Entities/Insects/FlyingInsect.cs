@@ -24,7 +24,7 @@ public abstract class FlyingInsect : Insect
         }
     }
 
-    protected override void UpdateStats()
+    public override void UpdateStats()
     {
         base.UpdateStats();
         {

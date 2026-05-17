@@ -8,6 +8,7 @@ public enum Aggressivity { Low, Medium, High }
 public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();
+    private static readonly int ObstacleLayer = ObstacleLayer;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
@@ -60,7 +61,7 @@ public abstract class Insect : Entity, IAttackable
     
     public virtual float eatMultiplier => 1f;
 
-    protected override void UpdateStats()
+    public override void UpdateStats()
     {
         base.UpdateStats();
         movementSpeed = baseMovementSpeed + movementSpeedAdder + (baseMovementSpeed * movementSpeedMultiplier);
@@ -185,7 +186,7 @@ public abstract class Insect : Entity, IAttackable
         {
             Vector3 delta = (Vector3)windMomentum * Time.deltaTime;
             Vector3 newPos = transform.position + delta;
-            if (!Physics2D.OverlapCircle(newPos, 0.3f, LayerMask.GetMask("Obstacle")))
+            if (!Physics2D.OverlapCircle(newPos, 0.3f, ObstacleLayer))
             {
                 transform.position = newPos;
             }
@@ -193,12 +194,12 @@ public abstract class Insect : Entity, IAttackable
             {
                 Vector3 newPosX = transform.position + new Vector3(delta.x, 0f, 0f);
                 Vector3 newPosY = transform.position + new Vector3(0f, delta.y, 0f);
-                if (!Physics2D.OverlapCircle(newPosX, 0.3f, LayerMask.GetMask("Obstacle")))
+                if (!Physics2D.OverlapCircle(newPosX, 0.3f, ObstacleLayer))
                 {
                     transform.position = newPosX;
                     windMomentum.y = 0f;
                 }
-                else if (!Physics2D.OverlapCircle(newPosY, 0.3f, LayerMask.GetMask("Obstacle")))
+                else if (!Physics2D.OverlapCircle(newPosY, 0.3f, ObstacleLayer))
                 {
                     transform.position = newPosY;
                     windMomentum.x = 0f;

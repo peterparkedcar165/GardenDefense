@@ -5,7 +5,7 @@ public class QueenAnt : Ant
 {
     [SerializeField] private GameObject[] antPrefabs;
     public float spawnInterval = 12f;
-    public int antsPerSpawn = 3;
+    public int antsPerSpawn = 5;
 
     private float spawnTimer;
     private bool isSpawning;
@@ -46,7 +46,7 @@ public class QueenAnt : Ant
     private IEnumerator SpawnRoutine()
     {
         isSpawning = true;
-        float interval = 2f / antsPerSpawn;
+        float interval = 1f / antsPerSpawn;
         for (int i = 0; i < antsPerSpawn; i++)
         {
             SpawnRandomAnt();
