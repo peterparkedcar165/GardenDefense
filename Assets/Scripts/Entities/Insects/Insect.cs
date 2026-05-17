@@ -368,6 +368,7 @@ public abstract class Insect : Entity, IAttackable
             float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
             for (int i = 0; i < renderers.Length; i++)
             {
+                if (renderers[i] == null) continue;
                 Color c = startColors[i];
                 c.a = alpha;
                 renderers[i].color = c;

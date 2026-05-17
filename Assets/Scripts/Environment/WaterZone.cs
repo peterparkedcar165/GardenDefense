@@ -9,6 +9,7 @@ public class WaterZone : MonoBehaviour
     {
         Insect insect = other.GetComponentInParent<Insect>();
         if (insect == null || insect.isFlying || insect.HasEffect<Airborne>()) return;
+        if (insect.visual != null && insect.visual.localPosition.y > 0.4f) return;
 
         insect.Kill(insect.lastSource);
     }

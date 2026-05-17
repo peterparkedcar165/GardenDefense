@@ -22,7 +22,7 @@ public class BogIris : Shooter
     private const float totalHeal = 140f;
     private float SunInterval => 2f * (passiveCooldown / basePassiveCooldown);
     private float OpenDuration => 8f + 2f * effectivePath2Level;
-    private int SunGenerated => 2 + effectivePath2Level;
+    private int SunGenerated => 1 + effectivePath2Level;
     private float GeyserRadius => 1.25f + 0.15f * effectivePath3Level;
     private float KnockUpHeight => (3f + 1f * effectivePath3Level) * skillDuration;
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * (KnockUpHeight)); // knock up height dictates force
@@ -145,7 +145,7 @@ public class BogIris : Shooter
     {
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
         skillCooldown = 18f, passiveCooldown = 8f, skillDuration = 1.5f,
-        sunGenerated = 2f, sunInterval = 2f, openDuration = 8f,
+        sunGenerated = 1f, sunInterval = 2f, openDuration = 8f,
         geyserDamage = 65f, knockUpHeight = 3f,
     };
 

@@ -100,9 +100,7 @@ public class BubblePrisonEffect : Airborne
         }
         else
         {
-            Vector3 pos = visual.localPosition;
-            pos.y = 0f;
-            visual.localPosition = pos;
+            // gravity takes over naturally from current visual height
         }
     }
 }
