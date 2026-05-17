@@ -69,7 +69,8 @@ public class BubblePrisonEffect : Airborne
                 knockUpHeight = visual.localPosition.y;
             }
 
-            if (insect.affectedByGravity) return; // still mid-flight: let ApplyGravity control Y
+            if (insect.HasEffect<KnockUpEffect>()) return; // geyser overrides — let ApplyGravity control Y
+            if (insect.affectedByGravity) return;
             insect.verticalVelocity = 0f;          // bubble caught at apex: snap vV so bob runs
         }
 
