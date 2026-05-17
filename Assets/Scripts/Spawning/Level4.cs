@@ -6,7 +6,7 @@ public class Level4 : SpawnManager
 {
     public float levelTime;
     public int wave;
-    private int startSunCount = 350, startHealth = 200;
+    private int startSunCount = 550, startHealth = 200;
     private int maxWave = 12;
     public GameObject workerAnt, soldierAnt, scoutAnt, fruitFly, wasp;
     public GameObject weatherManager;
@@ -67,6 +67,7 @@ public class Level4 : SpawnManager
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnFruitFly), 1f, 3f); // DEBUG
 
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));

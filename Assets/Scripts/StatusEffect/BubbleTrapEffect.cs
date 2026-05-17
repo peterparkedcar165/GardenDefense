@@ -58,6 +58,21 @@ public class BubblePrisonEffect : Airborne
     {
         if (visual == null) return;
 
+        Insect insect = target as Insect;
+        if (insect != null && insect.verticalVelocity != 0f)
+        {
+            if (target is FlyingInsect)
+                storedVisualY = visual.localPosition.y;
+            else
+            {
+                baseY = visual.localPosition.y;
+                knockUpHeight = visual.localPosition.y;
+            }
+
+            if (insect.affectedByGravity) return; // still mid-flight: let ApplyGravity control Y
+            insect.verticalVelocity = 0f;          // bubble caught at apex: snap vV so bob runs
+        }
+
         phase += bobSpeed * deltaTime;
         float bob = Mathf.Sin(phase) * bobAmplitude;
 

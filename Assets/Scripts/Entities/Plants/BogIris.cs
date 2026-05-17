@@ -19,14 +19,13 @@ public class BogIris : Shooter
     private float cycleTimer = 0f;
     private float sunTickTimer = 0f;
     private float healTickTimer = 0f;
-
     private const float totalHeal = 140f;
     private float SunInterval => 2f * (passiveCooldown / basePassiveCooldown);
     private float OpenDuration => 8f + 2f * effectivePath2Level;
-    private int SunGenerated => 3 + effectivePath2Level;
+    private int SunGenerated => 2 + effectivePath2Level;
     private float GeyserRadius => 1.25f + 0.15f * effectivePath3Level;
     private float KnockUpHeight => 3f + 1f * effectivePath3Level;
-    private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * (KnockUpHeight));
+    private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * (KnockUpHeight)); // knock up height dictates force
     private float GeyserDamage => 65f + 15f * effectivePath3Level;
 
     protected override void Awake()
@@ -40,7 +39,7 @@ public class BogIris : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         basePassiveCooldown = 8f;
-        baseSkillCooldown = 1f;
+        baseSkillCooldown = 18f;
         baseSkillDuration = 1.5f;
         base.Awake();
         SetVisualState(false);

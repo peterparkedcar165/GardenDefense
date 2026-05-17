@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Name 1
   stats:
-  - statType: 3
-    value: 0.17
+  - statType: 14
+    value: 0.33
   - statType: 13
-    value: 0.23
+    value: 0.33
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

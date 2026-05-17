@@ -114,6 +114,7 @@ MonoBehaviour:
   baseElementalPower: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  baseCoordinatedDamage: 0
   baseSkillDuration: 0
   baseTenacity: 0
   baseImmobilizeDuration: 0
@@ -152,6 +153,7 @@ MonoBehaviour:
   elementalPower: 0
   passiveDamage: 0
   skillDamage: 0
+  coordinatedDamage: 0
   skillDuration: 0
   lightEmissionRange: 0
   tenacity: 0
@@ -188,6 +190,7 @@ MonoBehaviour:
   elementalPowerAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
+  coordinatedDamageAdder: 0
   skillDurationAdder: 0
   tenacityAdder: 0
   immobilizeDurationAdder: 0
@@ -223,6 +226,7 @@ MonoBehaviour:
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
   skillDamageMultiplier: 0
+  coordinatedDamageMultiplier: 0
   skillDurationMultiplier: 0
   tenacityMultiplier: 0
   immobilizeDurationMultiplier: 0
@@ -245,7 +249,7 @@ MonoBehaviour:
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 01000000
-  sunCost: 100
+  sunCost: 125
   totalSunSpent: 0
   elementalType: 0
   damageType: 1

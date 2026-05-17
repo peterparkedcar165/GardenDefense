@@ -7,7 +7,7 @@ public class FruitFly : FlyingInsect
         baseAttackDamage = 10;
         baseMaxHealth = 100f;
         baseMovementSpeed = 1.4f;
-        sunDrop = 6;
+        sunDrop = 4;
         base.Awake();
     }
 

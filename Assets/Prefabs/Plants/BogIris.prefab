@@ -249,7 +249,7 @@ MonoBehaviour:
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 01000000
-  sunCost: 100
+  sunCost: 125
   totalSunSpent: 0
   elementalType: 1
   damageType: 1

@@ -19,8 +19,10 @@ public abstract class Insect : Entity, IAttackable
     protected Transform[] waypoints;
     public bool isFlying = false;
     public static float gravity = 9.8f;
+    public static float fallDamageMultiplier = 8f; // TUNING KNOB — damage = verticalVelocity * this
     public float verticalVelocity = 0f;
-    public bool affectedByGravity => !isFlying && !HasEffect<BubblePrisonEffect>();
+    public Entity fallDamageSource;
+    public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f);
     public bool isOnGround => visual != null && visual.localPosition.y <= 0.4f;
 
     // base and final
@@ -127,7 +129,16 @@ public abstract class Insect : Entity, IAttackable
             verticalVelocity += gravity * Time.deltaTime;
             Vector3 pos = visual.localPosition;
             pos.y -= verticalVelocity * Time.deltaTime;
-            if (pos.y <= 0.4f) { pos.y = 0.4f; verticalVelocity = 0f; }
+            if (pos.y <= 0.4f)
+            {
+                pos.y = 0.4f;
+                if (verticalVelocity >= 3f)
+                {
+                    Entity src = fallDamageSource != null ? fallDamageSource : lastSource;
+                    Damage(verticalVelocity * fallDamageMultiplier, DamageType.Physical, ElementalType.Neutral, src, false, new DamageTag[0]);
+                }
+                verticalVelocity = 0f;
+            }
             visual.localPosition = pos;
         }
         else
@@ -195,6 +206,7 @@ public abstract class Insect : Entity, IAttackable
 
         if (HasEffect<HardCrowdControl>()) return;
         if (HasEffect<BubblePrisonEffect>()) return;
+        if (affectedByGravity && !isOnGround) return;
 
         if (target != null)
         {

@@ -173,6 +173,11 @@ MonoBehaviour:
   baseElementalPower: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  baseCoordinatedDamage: 0
+  baseSkillDuration: 0
+  baseTenacity: 0
+  baseImmobilizeDuration: 0
+  baseLightEmissionRange: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -207,6 +212,12 @@ MonoBehaviour:
   elementalPower: 0
   passiveDamage: 0
   skillDamage: 0
+  coordinatedDamage: 0
+  skillDuration: 0
+  lightEmissionRange: 0
+  tenacity: 0
+  immobilizeDuration: 0
+  debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicDamageAdder: 0
@@ -238,6 +249,11 @@ MonoBehaviour:
   elementalPowerAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
+  coordinatedDamageAdder: 0
+  skillDurationAdder: 0
+  tenacityAdder: 0
+  immobilizeDurationAdder: 0
+  lightEmissionRangeAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicDamageMultiplier: 0
@@ -269,6 +285,11 @@ MonoBehaviour:
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
   skillDamageMultiplier: 0
+  coordinatedDamageMultiplier: 0
+  skillDurationMultiplier: 0
+  tenacityMultiplier: 0
+  immobilizeDurationMultiplier: 0
+  lightEmissionRangeMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -283,24 +304,27 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 9dc317067fcfd9c42b815a9dbf99a003, type: 2}
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
+  lightIntensity: 1
+  lightInnerRadius: 1.2
+  lightFalloffStrength: 0.2
   allowedTiles: 02000000
-  sunCost: 75
+  sunCost: 100
   totalSunSpent: 0
   elementalType: 1
   damageType: 1
   exp: 0
   expBoost: 0
   activeCooldown: 0
-  activeDuration: 4
   basePassiveCooldown: 0
   passiveCooldown: 0
   passiveCooldownAdder: 0
+  passiveCooldownReductionMultiplier: 0
   passiveCooldownMultiplier: 0
   passiveCooldownTimer: 0
   baseSkillCooldown: 0
   skillCooldown: 0
-  skillCooldownAdder: 0
-  skillCooldownMultiplier: 0
+  skillCooldownReductionAdder: 0
+  skillCooldownReductionMultiplier: 0
   skillCooldownTimer: 0
   path1Level: 0
   path2Level: 0
@@ -319,13 +343,14 @@ MonoBehaviour:
   maxRange: 0
   basePiercing: 0
   piercing: 0
+  piercingAdder: 0
   targeting: 1
   AoERange: 0
   baseAoERange: 0
   AoERangeMultiplier: 0
   AoERangeAdder: 0
   skillAoERadius: 1.5
-  bubbleDamagePerSecond: 20
+  bubbleDamage: 42
   bubbleTrapPrefab: {fileID: 4808428213060228786, guid: a830149e57437094eaef662cd0131b60, type: 3}
 --- !u!1 &7507562756265830079
 GameObject:

@@ -6,7 +6,7 @@ public class WorkerAnt : Ant
     protected override void Awake() {
         baseAttackDamage = 20;
         baseMaxHealth = 220f;
-        sunDrop = 6;
+        sunDrop = 4;
         base.Awake();
     }
 

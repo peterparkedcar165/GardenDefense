@@ -4,13 +4,13 @@ using UnityEngine.InputSystem;
 public class AcornSprout : Shooter
 {
     private float 
-    bAD = 33f, // base attack damage
+    bAD = 42f, // base attack damage
     bAS = 0.8f, // base attack speed
     bAR = 3f, // base attack range
     bPS = 8f, // base projectile speed
     bMR = 20f; // base max range
     private int bP = 0; // base piercing
-    public float stunChance = 0.25f, stunDuration = 0.5f, activeRadius, activeDamageMultiplier = 1.5f, acornBombHealth = 250f;
+    public float stunChance = 0.35f, stunDuration = 0.5f, activeRadius, activeDamageMultiplier = 1.5f, acornBombHealth = 250f;
     [SerializeField] private GameObject acornBombPrefab;
 
     protected override void Awake()
@@ -51,7 +51,7 @@ public class AcornSprout : Shooter
 
     public override void OnPath2Upgrade(int level)
     {
-        stunChance = 0.25f + (0.05f * level);
+        stunChance = 0.35f + (0.05f * level);
         stunDuration = 0.5f + (0.1f * level);
     }
 

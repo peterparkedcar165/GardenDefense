@@ -166,6 +166,7 @@ public abstract class Plant : Entity, IAttackable
             circleRadius.gameObject.SetActive(false);
         if (darkCircleRadius != null)
             darkCircleRadius.gameObject.SetActive(false);
+        RefreshHealthBarVisibility();
     }
 
     protected override void Update()
@@ -227,9 +228,9 @@ public abstract class Plant : Entity, IAttackable
     // UPGRADE COSTS
     public const int pathLevelCap = 5;
 
-    public int GetPath1Cost() => Mathf.RoundToInt((sunCost*0.75f) + (36 * path1Level));
-    public int GetPath2Cost() => Mathf.RoundToInt((sunCost*0.75f) + (36 * path2Level));
-    public int GetPath3Cost() => Mathf.RoundToInt((sunCost * 1f) + (35 + (37 * path3Level)));
+    public int GetPath1Cost() => Mathf.RoundToInt((sunCost*0.25f) + (44 * path1Level));
+    public int GetPath2Cost() => Mathf.RoundToInt((sunCost*0.25f) + (44 * path2Level));
+    public int GetPath3Cost() => Mathf.RoundToInt((sunCost * 0.25f) + (31 + (32 * path3Level)));
 
     public bool UpgradePath1()
     {

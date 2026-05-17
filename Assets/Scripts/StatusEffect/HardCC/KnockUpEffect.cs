@@ -17,13 +17,14 @@ public class KnockUpEffect : Airborne
     {
         insect = target as Insect;
         if (insect == null) return;
+        insect.fallDamageSource = source;
         insect.verticalVelocity = -knockUpForce;
     }
 
     public override void OnTick(float deltaTime)
     {
         if (insect == null) return;
-        if (insect.isOnGround && insect.verticalVelocity >= 0f)
-            duration = 0f;
+        if (insect.isOnGround && insect.verticalVelocity >= 0f) { duration = 0f; return; }
+        if (insect.HasEffect<BubblePrisonEffect>() && insect.verticalVelocity >= 0f) { duration = 0f; return; }
     }
 }

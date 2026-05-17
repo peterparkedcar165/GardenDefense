@@ -113,6 +113,7 @@ public class GameManager : MonoBehaviour
         playerHealth = playerMaxHealth;
         UpdateSun();
         UpdateHealth();
+        GameHUD.instance?.SetSpeedButton(gameSpeed);
         PersistentCanvas.instance?.Show();
         PlantBar.instance?.Build();
         FertilizerSelectionUI.instance.Show();

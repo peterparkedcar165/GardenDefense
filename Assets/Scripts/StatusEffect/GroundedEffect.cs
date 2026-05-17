@@ -12,7 +12,11 @@ public class GroundedEffect : StatusEffect
 
     public override void OnApply()
     {
-        if (target is Insect i) i.verticalVelocity = 0f;
+        if (target is Insect i)
+        {
+            i.verticalVelocity = 0f;
+            i.fallDamageSource = source;
+        }
         flyingInsect = target as FlyingInsect;
         flyingInsect?.SetFlight(false);
     }
