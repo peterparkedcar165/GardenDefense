@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: 391555e3e3050d74188d6c6c908b1045
+guid: f1901fcfcdedfe44a9982814b2eb01f2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6855020952559917468
-    second: fruitfly_ground_left_0
+      213: -3305362597931506698
+    second: fruitfly_fly_right_0
+  - first:
+      213: -1728869823471807693
+    second: fruitfly_fly_right_1
+  - first:
+      213: 7356574585851570610
+    second: fruitfly_fly_right_2
+  - first:
+      213: 7744294048057989914
+    second: fruitfly_fly_right_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +109,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: fruitfly_ground_left_0
+      name: fruitfly_fly_right_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 1024
-        height: 559
+        y: 126
+        width: 780
+        height: 561
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +124,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4666eca53c21ed0a0800000000000000
-      internalID: -6855020952559917468
+      spriteID: 6f32e60da3ef022d0800000000000000
+      internalID: -3305362597931506698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fruitfly_fly_right_1
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 341
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33312153e02d108e0800000000000000
+      internalID: -1728869823471807693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fruitfly_fly_right_2
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 179
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b96959eb9dc71660800000000000000
+      internalID: 7356574585851570610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fruitfly_fly_right_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 126
+        width: 558
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1b1baad762497b60800000000000000
+      internalID: 7744294048057989914
       vertices: []
       indices: 
       edges: []
@@ -135,7 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      fruitfly_ground_left_0: -6855020952559917468
+      fruitfly_fly_right_0: -3305362597931506698
+      fruitfly_fly_right_1: -1728869823471807693
+      fruitfly_fly_right_2: 7356574585851570610
+      fruitfly_fly_right_3: 7744294048057989914
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

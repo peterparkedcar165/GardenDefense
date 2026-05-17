@@ -1,55 +1,67 @@
 fileFormatVersion: 2
-guid: 86e03e6413fbb824fbe7b74c0a584f70
+guid: a17dc413014bc9a46b9c5bef245506c4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6488992218185201971
-    second: moth_fly_right_0
+      213: 3729328749405547472
+    second: scoutant_left_0
   - first:
-      213: 6932541820693672642
-    second: moth_fly_right_1
+      213: 5227163487038506004
+    second: scoutant_left_1
   - first:
-      213: 1536036131260868882
-    second: moth_fly_right_2
+      213: 1419384161621408217
+    second: scoutant_left_2
   - first:
-      213: -5629087793171740393
-    second: moth_fly_right_3
+      213: -8148655708327942433
+    second: scoutant_left_3
   - first:
-      213: -3675349119821445457
-    second: moth_fly_right_4
+      213: -4208410093876714516
+    second: scoutant_left_4
   - first:
-      213: -2664477074522308798
-    second: moth_fly_right_5
+      213: 1661396300434254227
+    second: scoutant_left_5
   - first:
-      213: -2542944074517669757
-    second: moth_fly_right_6
+      213: -622572368400508747
+    second: scoutant_left_6
   - first:
-      213: -7100851822258868349
-    second: moth_fly_right_7
+      213: 838387679338665307
+    second: scoutant_left_7
   - first:
-      213: -1602276868807804045
-    second: moth_fly_right_8
+      213: -2036684744488165551
+    second: scoutant_left_8
   - first:
-      213: -962340758618869134
-    second: moth_fly_right_9
+      213: -4862095968275978432
+    second: scoutant_left_9
   - first:
-      213: 4863796266306572421
-    second: moth_fly_right_10
+      213: -9113712392648006270
+    second: scoutant_left_10
   - first:
-      213: 6578245641979408398
-    second: moth_fly_right_11
+      213: 3383857839762623849
+    second: scoutant_left_11
   - first:
-      213: -8229518801182542730
-    second: moth_fly_right_12
+      213: 136927205927349324
+    second: scoutant_left_12
   - first:
-      213: -9033751872650574614
-    second: moth_fly_right_13
+      213: 7586846378111628572
+    second: scoutant_left_13
   - first:
-      213: 7783049558946815941
-    second: moth_fly_right_14
+      213: 7946293598471834843
+    second: scoutant_left_14
   - first:
-      213: -5836925762615355374
-    second: moth_fly_right_15
+      213: -1249950844000625307
+    second: scoutant_left_15
+  - first:
+      213: 1213485996658712162
+    second: scoutant_left_16
+  - first:
+      213: 6132871586455487673
+    second: scoutant_left_17
+  - first:
+      213: -1240252946365509742
+    second: scoutant_left_18
+  - first:
+      213: 7649241306537062420
+    second: scoutant_left_19
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,7 +108,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 440
+  spritePixelsToUnits: 800
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -145,13 +157,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: moth_fly_right_0
+      name: scoutant_left_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 0
-        width: 527
-        height: 526
+        x: 0
+        y: 162
+        width: 800
+        height: 548
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,20 +172,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 339f333da088d0a50800000000000000
-      internalID: 6488992218185201971
+      spriteID: 0db28fe1dbc31c330800000000000000
+      internalID: 3729328749405547472
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: moth_fly_right_1
+      name: scoutant_left_1
       rect:
         serializedVersion: 2
-        x: 115
-        y: 471
-        width: 10
-        height: 15
+        x: 344
+        y: 703
+        width: 7
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -182,283 +194,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2c27cf44e06553060800000000000000
-      internalID: 6932541820693672642
+      spriteID: 41482db2f7d9a8840800000000000000
+      internalID: 5227163487038506004
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: moth_fly_right_2
+      name: scoutant_left_2
       rect:
         serializedVersion: 2
-        x: 315
-        y: 468
-        width: 18
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 21928fd19b8115510800000000000000
-      internalID: 1536036131260868882
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_3
-      rect:
-        serializedVersion: 2
-        x: 393
-        y: 468
+        x: 437
+        y: 700
         width: 12
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 719c28ee97671e1b0800000000000000
-      internalID: -5629087793171740393
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_4
-      rect:
-        serializedVersion: 2
-        x: 19
-        y: 68
-        width: 34
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fa68f77c2798efcc0800000000000000
-      internalID: -3675349119821445457
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_5
-      rect:
-        serializedVersion: 2
-        x: 83
-        y: 68
-        width: 26
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 24ffcecb730e50bd0800000000000000
-      internalID: -2664477074522308798
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_6
-      rect:
-        serializedVersion: 2
-        x: 163
-        y: 68
-        width: 42
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 38890ba56d5a5bcd0800000000000000
-      internalID: -2542944074517669757
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_7
-      rect:
-        serializedVersion: 2
-        x: 227
-        y: 58
-        width: 50
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 38f239bb3e4b47d90800000000000000
-      internalID: -7100851822258868349
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_8
-      rect:
-        serializedVersion: 2
-        x: 315
-        y: 66
-        width: 18
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 37bb2e25da193c9e0800000000000000
-      internalID: -1602276868807804045
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_9
-      rect:
-        serializedVersion: 2
-        x: 395
-        y: 71
-        width: 18
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 27274a1cd2415a2f0800000000000000
-      internalID: -962340758618869134
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_10
-      rect:
-        serializedVersion: 2
-        x: 35
-        y: 34
-        width: 10
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 58013194fecaf7340800000000000000
-      internalID: 4863796266306572421
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_11
-      rect:
-        serializedVersion: 2
-        x: 43
-        y: 36
-        width: 20
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e00b17fee8f9a4b50800000000000000
-      internalID: 6578245641979408398
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_12
-      rect:
-        serializedVersion: 2
-        x: 99
-        y: 31
-        width: 10
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 674bd1f8040eacd80800000000000000
-      internalID: -8229518801182542730
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_13
-      rect:
-        serializedVersion: 2
-        x: 243
-        y: 28
-        width: 26
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ae484a1e88aa1a280800000000000000
-      internalID: -9033751872650574614
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: moth_fly_right_14
-      rect:
-        serializedVersion: 2
-        x: 323
-        y: 28
-        width: 10
         height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -468,18 +216,150 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5cf19466652f20c60800000000000000
-      internalID: 7783049558946815941
+      spriteID: 9d97241ff5aa2b310800000000000000
+      internalID: 1419384161621408217
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: moth_fly_right_15
+      name: scoutant_left_3
       rect:
         serializedVersion: 2
-        x: 390
-        y: 28
+        x: 573
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd667248ec82aee80800000000000000
+      internalID: -8148655708327942433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_4
+      rect:
+        serializedVersion: 2
+        x: 653
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce36f451159b895c0800000000000000
+      internalID: -4208410093876714516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_5
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 399288ef1277e0710800000000000000
+      internalID: 1661396300434254227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_6
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b8938ebabd2c57f0800000000000000
+      internalID: -622572368400508747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 596
+        width: 23
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b559b03072d82ab00800000000000000
+      internalID: 838387679338665307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_8
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 516
+        width: 26
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15f5355040e3cb3e0800000000000000
+      internalID: -2036684744488165551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_9
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 476
         width: 15
         height: 10
       alignment: 0
@@ -490,8 +370,228 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2185cfab1f21ffea0800000000000000
-      internalID: -5836925762615355374
+      spriteID: 0472d033a7d568cb0800000000000000
+      internalID: -4862095968275978432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_10
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 482
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 285e32b8dd6958180800000000000000
+      internalID: -9113712392648006270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_11
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 436
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96dc87dd6c0e5fe20800000000000000
+      internalID: 3383857839762623849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_12
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 396
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4ce26d719676e100800000000000000
+      internalID: 136927205927349324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_13
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 356
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c157dc48594e94960800000000000000
+      internalID: 7586846378111628572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_14
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 316
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdccfd13de7e64e60800000000000000
+      internalID: 7946293598471834843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_15
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 276
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56d94a4745847aee0800000000000000
+      internalID: -1249950844000625307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_16
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 242
+        width: 36
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26ed0caa51b27d010800000000000000
+      internalID: 1213485996658712162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_17
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 196
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b404cbe6365c1550800000000000000
+      internalID: 6132871586455487673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 149
+        width: 800
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29f8044348cb9cee0800000000000000
+      internalID: -1240252946365509742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_left_19
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 153
+        width: 98
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 410f26dd070972a60800000000000000
+      internalID: 7649241306537062420
       vertices: []
       indices: 
       edges: []
@@ -510,22 +610,26 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      moth_fly_right_0: 6488992218185201971
-      moth_fly_right_1: 6932541820693672642
-      moth_fly_right_10: 4863796266306572421
-      moth_fly_right_11: 6578245641979408398
-      moth_fly_right_12: -8229518801182542730
-      moth_fly_right_13: -9033751872650574614
-      moth_fly_right_14: 7783049558946815941
-      moth_fly_right_15: -5836925762615355374
-      moth_fly_right_2: 1536036131260868882
-      moth_fly_right_3: -5629087793171740393
-      moth_fly_right_4: -3675349119821445457
-      moth_fly_right_5: -2664477074522308798
-      moth_fly_right_6: -2542944074517669757
-      moth_fly_right_7: -7100851822258868349
-      moth_fly_right_8: -1602276868807804045
-      moth_fly_right_9: -962340758618869134
+      scoutant_left_0: 3729328749405547472
+      scoutant_left_1: 5227163487038506004
+      scoutant_left_10: -9113712392648006270
+      scoutant_left_11: 3383857839762623849
+      scoutant_left_12: 136927205927349324
+      scoutant_left_13: 7586846378111628572
+      scoutant_left_14: 7946293598471834843
+      scoutant_left_15: -1249950844000625307
+      scoutant_left_16: 1213485996658712162
+      scoutant_left_17: 6132871586455487673
+      scoutant_left_18: -1240252946365509742
+      scoutant_left_19: 7649241306537062420
+      scoutant_left_2: 1419384161621408217
+      scoutant_left_3: -8148655708327942433
+      scoutant_left_4: -4208410093876714516
+      scoutant_left_5: 1661396300434254227
+      scoutant_left_6: -622572368400508747
+      scoutant_left_7: 838387679338665307
+      scoutant_left_8: -2036684744488165551
+      scoutant_left_9: -4862095968275978432
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

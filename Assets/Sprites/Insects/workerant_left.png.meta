@@ -1,0 +1,1027 @@
+fileFormatVersion: 2
+guid: bcc11f24c9fdf9c49affc351efa2ec12
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2831347220508698271
+    second: workerant_left_0
+  - first:
+      213: -7499058359721041746
+    second: workerant_left_1
+  - first:
+      213: 4114084121575852718
+    second: workerant_left_2
+  - first:
+      213: 5633684179221247760
+    second: workerant_left_3
+  - first:
+      213: -9154612094306542625
+    second: workerant_left_4
+  - first:
+      213: -6081767054895897616
+    second: workerant_left_5
+  - first:
+      213: -4106659861600985996
+    second: workerant_left_6
+  - first:
+      213: 5556060626149431097
+    second: workerant_left_7
+  - first:
+      213: -6693301249795256026
+    second: workerant_left_8
+  - first:
+      213: 542134838258190788
+    second: workerant_left_9
+  - first:
+      213: -3274970098670725969
+    second: workerant_left_10
+  - first:
+      213: -4493762424622827426
+    second: workerant_left_11
+  - first:
+      213: -5109363679700092941
+    second: workerant_left_12
+  - first:
+      213: -5338968384555332579
+    second: workerant_left_13
+  - first:
+      213: -96003099580005819
+    second: workerant_left_14
+  - first:
+      213: 2123245214392619045
+    second: workerant_left_15
+  - first:
+      213: -3931256783674872557
+    second: workerant_left_16
+  - first:
+      213: -2763339340187861541
+    second: workerant_left_17
+  - first:
+      213: 2028869639253708988
+    second: workerant_left_18
+  - first:
+      213: 3025720577177829914
+    second: workerant_left_19
+  - first:
+      213: -3522075213836689316
+    second: workerant_left_20
+  - first:
+      213: -9034167071601762720
+    second: workerant_left_21
+  - first:
+      213: -1375535947006443642
+    second: workerant_left_22
+  - first:
+      213: -8959258196815833906
+    second: workerant_left_23
+  - first:
+      213: 8262831376941112005
+    second: workerant_left_24
+  - first:
+      213: 912889831280827914
+    second: workerant_left_25
+  - first:
+      213: 5022755118314939751
+    second: workerant_left_26
+  - first:
+      213: -4955108024761716061
+    second: workerant_left_27
+  - first:
+      213: -7985240722988486073
+    second: workerant_left_28
+  - first:
+      213: 8125532806915833788
+    second: workerant_left_29
+  - first:
+      213: -2551615484132353148
+    second: workerant_left_30
+  - first:
+      213: -5231885277174381363
+    second: workerant_left_31
+  - first:
+      213: -3916165400519719711
+    second: workerant_left_32
+  - first:
+      213: -6608212765626250230
+    second: workerant_left_33
+  - first:
+      213: 573789093073415197
+    second: workerant_left_34
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 640
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: workerant_left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 199
+        height: 559
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1691acd34b805b8d0800000000000000
+      internalID: -2831347220508698271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_1
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 22
+        width: 754
+        height: 537
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea067ee472efde790800000000000000
+      internalID: -7499058359721041746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_2
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 553
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eaa8a9216b9281930800000000000000
+      internalID: 4114084121575852718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_3
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 553
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 017783799edde2e40800000000000000
+      internalID: 5633684179221247760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_4
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 553
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdb1d5eadc844f080800000000000000
+      internalID: -9154612094306542625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_5
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 550
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f3a14e0619399ba0800000000000000
+      internalID: -6081767054895897616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_6
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 553
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47c1be72d963207c0800000000000000
+      internalID: -4106659861600985996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_7
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 553
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 937db24c3b71b1d40800000000000000
+      internalID: 5556060626149431097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_8
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 553
+        width: 15
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6219647d9fd9c13a0800000000000000
+      internalID: -6693301249795256026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_9
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 553
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c94eb653cc068700800000000000000
+      internalID: 542134838258190788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_10
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 550
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa494bafb08fc82d0800000000000000
+      internalID: -3274970098670725969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_11
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 553
+        width: 23
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e58bb5f32e2f2a1c0800000000000000
+      internalID: -4493762424622827426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_12
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 553
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f7713bcdc4e719b0800000000000000
+      internalID: -5109363679700092941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_13
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 550
+        width: 31
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1cc9839a8c28e5b0800000000000000
+      internalID: -5338968384555332579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_14
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 553
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 542823880bdeaaef0800000000000000
+      internalID: -96003099580005819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_15
+      rect:
+        serializedVersion: 2
+        x: 738
+        y: 553
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5209be6e548477d10800000000000000
+      internalID: 2123245214392619045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_16
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 550
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31de630b8ce5179c0800000000000000
+      internalID: -3931256783674872557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_17
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 553
+        width: 31
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdd7d3ac285a6a9d0800000000000000
+      internalID: -2763339340187861541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_18
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 550
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb0da4fff2ef72c10800000000000000
+      internalID: 2028869639253708988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_19
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 550
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a12464085d48df920800000000000000
+      internalID: 3025720577177829914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_20
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 486
+        width: 52
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c506e07f0431f1fc0800000000000000
+      internalID: -3522075213836689316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_21
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 553
+        width: 34
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06e55a7d9e030a280800000000000000
+      internalID: -9034167071601762720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_22
+      rect:
+        serializedVersion: 2
+        x: 1013
+        y: 550
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68f76e6185d19ece0800000000000000
+      internalID: -1375535947006443642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_23
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 538
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec419cf53225aa380800000000000000
+      internalID: -8959258196815833906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_24
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 446
+        width: 26
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cad685eb597ba270800000000000000
+      internalID: 8262831376941112005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_25
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 366
+        width: 81
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0e5f80077c3bac00800000000000000
+      internalID: 912889831280827914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_26
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 260
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 765efec1b2964b540800000000000000
+      internalID: 5022755118314939751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_27
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 252
+        width: 83
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a2f368318beb3bb0800000000000000
+      internalID: -4955108024761716061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_28
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 166
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 742b94cbed9be2190800000000000000
+      internalID: -7985240722988486073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_29
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 142
+        width: 44
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbf30077901b3c070800000000000000
+      internalID: 8125532806915833788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_30
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 86
+        width: 34
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48b97e87c37d69cd0800000000000000
+      internalID: -2551615484132353148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_31
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 86
+        width: 36
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc4cc646f0c9467b0800000000000000
+      internalID: -5231885277174381363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_32
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 54
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e4c854215cf6a9c0800000000000000
+      internalID: -3916165400519719711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_33
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 46
+        width: 38
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0c45a06089ea44a0800000000000000
+      internalID: -6608212765626250230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: workerant_left_34
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 0
+        width: 828
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1c62acd32286f700800000000000000
+      internalID: 573789093073415197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      workerant_left_0: -2831347220508698271
+      workerant_left_1: -7499058359721041746
+      workerant_left_10: -3274970098670725969
+      workerant_left_11: -4493762424622827426
+      workerant_left_12: -5109363679700092941
+      workerant_left_13: -5338968384555332579
+      workerant_left_14: -96003099580005819
+      workerant_left_15: 2123245214392619045
+      workerant_left_16: -3931256783674872557
+      workerant_left_17: -2763339340187861541
+      workerant_left_18: 2028869639253708988
+      workerant_left_19: 3025720577177829914
+      workerant_left_2: 4114084121575852718
+      workerant_left_20: -3522075213836689316
+      workerant_left_21: -9034167071601762720
+      workerant_left_22: -1375535947006443642
+      workerant_left_23: -8959258196815833906
+      workerant_left_24: 8262831376941112005
+      workerant_left_25: 912889831280827914
+      workerant_left_26: 5022755118314939751
+      workerant_left_27: -4955108024761716061
+      workerant_left_28: -7985240722988486073
+      workerant_left_29: 8125532806915833788
+      workerant_left_3: 5633684179221247760
+      workerant_left_30: -2551615484132353148
+      workerant_left_31: -5231885277174381363
+      workerant_left_32: -3916165400519719711
+      workerant_left_33: -6608212765626250230
+      workerant_left_34: 573789093073415197
+      workerant_left_4: -9154612094306542625
+      workerant_left_5: -6081767054895897616
+      workerant_left_6: -4106659861600985996
+      workerant_left_7: 5556060626149431097
+      workerant_left_8: -6693301249795256026
+      workerant_left_9: 542134838258190788
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

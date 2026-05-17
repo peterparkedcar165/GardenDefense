@@ -1,0 +1,793 @@
+fileFormatVersion: 2
+guid: f3e61fc78903c504d92449fac31f25da
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4996648902941869636
+    second: scoutant_right_0
+  - first:
+      213: 4556117040198509334
+    second: scoutant_right_1
+  - first:
+      213: -5878417254333637220
+    second: scoutant_right_2
+  - first:
+      213: 8951687614437552781
+    second: scoutant_right_3
+  - first:
+      213: -3908498556003446999
+    second: scoutant_right_4
+  - first:
+      213: 4892713675169287795
+    second: scoutant_right_5
+  - first:
+      213: -6064022742097375874
+    second: scoutant_right_6
+  - first:
+      213: 5956131616938543682
+    second: scoutant_right_7
+  - first:
+      213: -612568171157011704
+    second: scoutant_right_8
+  - first:
+      213: 5939861395793708526
+    second: scoutant_right_9
+  - first:
+      213: -9137854016709966914
+    second: scoutant_right_10
+  - first:
+      213: 2514671461453037780
+    second: scoutant_right_11
+  - first:
+      213: -5850719691093144087
+    second: scoutant_right_12
+  - first:
+      213: -319957866899192046
+    second: scoutant_right_13
+  - first:
+      213: -4861241504823612115
+    second: scoutant_right_14
+  - first:
+      213: -4000990054009052209
+    second: scoutant_right_15
+  - first:
+      213: 3375236050836753021
+    second: scoutant_right_16
+  - first:
+      213: 52517639834816877
+    second: scoutant_right_17
+  - first:
+      213: -4647177888120095977
+    second: scoutant_right_18
+  - first:
+      213: -4804037560396714423
+    second: scoutant_right_19
+  - first:
+      213: -490774711707171251
+    second: scoutant_right_20
+  - first:
+      213: 4493111497201402954
+    second: scoutant_right_21
+  - first:
+      213: -2609506362610472422
+    second: scoutant_right_22
+  - first:
+      213: 806571248550502080
+    second: scoutant_right_23
+  - first:
+      213: 1955010961133553562
+    second: scoutant_right_24
+  - first:
+      213: -7865842974321521357
+    second: scoutant_right_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 800
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: scoutant_right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 162
+        width: 800
+        height: 548
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 446023f24b9a75540800000000000000
+      internalID: 4996648902941869636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 613e2280f449a3f30800000000000000
+      internalID: 4556117040198509334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_2
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9d9ae107aaab6ea0800000000000000
+      internalID: -5878417254333637220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_3
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8270de0578ca3c70800000000000000
+      internalID: 8951687614437552781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_4
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92f894c754932c9c0800000000000000
+      internalID: -3908498556003446999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_5
+      rect:
+        serializedVersion: 2
+        x: 299
+        y: 700
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37e49243a2966e340800000000000000
+      internalID: 4892713675169287795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_6
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 703
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7d4563d17348dba0800000000000000
+      internalID: -6064022742097375874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_7
+      rect:
+        serializedVersion: 2
+        x: 781
+        y: 703
+        width: 18
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24a481f062e68a250800000000000000
+      internalID: 5956131616938543682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_8
+      rect:
+        serializedVersion: 2
+        x: 781
+        y: 612
+        width: 19
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 803c97d6e78bf77f0800000000000000
+      internalID: -612568171157011704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_9
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 596
+        width: 26
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee5075ff770ae6250800000000000000
+      internalID: 5939861395793708526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_10
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 516
+        width: 26
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb340acaf22df2180800000000000000
+      internalID: -9137854016709966914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_11
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 482
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d088b2fe58e5e220800000000000000
+      internalID: 2514671461453037780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_12
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 476
+        width: 15
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ed820c70711ecea0800000000000000
+      internalID: -5850719691093144087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_13
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 436
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 217c168e3084f8bf0800000000000000
+      internalID: -319957866899192046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_14
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 396
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2d6a997b96698cb0800000000000000
+      internalID: -4861241504823612115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_15
+      rect:
+        serializedVersion: 2
+        x: 781
+        y: 402
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc36be87eb0a978c0800000000000000
+      internalID: -4000990054009052209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_16
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 356
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7a87333e4f37de20800000000000000
+      internalID: 3375236050836753021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_17
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 348
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d61dbc2e3849ab000800000000000000
+      internalID: 52517639834816877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_18
+      rect:
+        serializedVersion: 2
+        x: 733
+        y: 316
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71b3d822558e18fb0800000000000000
+      internalID: -4647177888120095977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_19
+      rect:
+        serializedVersion: 2
+        x: 709
+        y: 276
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94e6becaa41a45db0800000000000000
+      internalID: -4804037560396714423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_20
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 242
+        width: 36
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4603fbfffa6039f0800000000000000
+      internalID: -490774711707171251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_21
+      rect:
+        serializedVersion: 2
+        x: 787
+        y: 242
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a44c9e6e91dba5e30800000000000000
+      internalID: 4493111497201402954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_22
+      rect:
+        serializedVersion: 2
+        x: 781
+        y: 210
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1a2b79f9cb29cbd0800000000000000
+      internalID: -2609506362610472422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_23
+      rect:
+        serializedVersion: 2
+        x: 733
+        y: 196
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ce55e3f644813b00800000000000000
+      internalID: 806571248550502080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 149
+        width: 800
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a974c5e6c18912b10800000000000000
+      internalID: 1955010961133553562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scoutant_right_25
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 153
+        width: 98
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33d40986d79e6d290800000000000000
+      internalID: -7865842974321521357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      scoutant_right_0: 4996648902941869636
+      scoutant_right_1: 4556117040198509334
+      scoutant_right_10: -9137854016709966914
+      scoutant_right_11: 2514671461453037780
+      scoutant_right_12: -5850719691093144087
+      scoutant_right_13: -319957866899192046
+      scoutant_right_14: -4861241504823612115
+      scoutant_right_15: -4000990054009052209
+      scoutant_right_16: 3375236050836753021
+      scoutant_right_17: 52517639834816877
+      scoutant_right_18: -4647177888120095977
+      scoutant_right_19: -4804037560396714423
+      scoutant_right_2: -5878417254333637220
+      scoutant_right_20: -490774711707171251
+      scoutant_right_21: 4493111497201402954
+      scoutant_right_22: -2609506362610472422
+      scoutant_right_23: 806571248550502080
+      scoutant_right_24: 1955010961133553562
+      scoutant_right_25: -7865842974321521357
+      scoutant_right_3: 8951687614437552781
+      scoutant_right_4: -3908498556003446999
+      scoutant_right_5: 4892713675169287795
+      scoutant_right_6: -6064022742097375874
+      scoutant_right_7: 5956131616938543682
+      scoutant_right_8: -612568171157011704
+      scoutant_right_9: 5939861395793708526
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
