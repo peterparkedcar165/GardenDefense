@@ -21,7 +21,8 @@ public enum DamageTag
     PassiveDamage,
     SkillDamage,
     ElementalDebuff,
-    Coordinated
+    Coordinated,
+    Counter
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -53,6 +54,8 @@ public abstract class Entity : MonoBehaviour
     public float baseSkillDuration;
     public float baseTenacity;
     public float baseLightEmissionRange;
+    public float baseLifesteal;
+    public float baseCounterDamage;
 
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
@@ -66,6 +69,8 @@ public abstract class Entity : MonoBehaviour
     public float passiveDamage, skillDamage, coordinatedDamage;
     public float skillDuration;
     public float lightEmissionRange;
+    public float lifesteal;
+    public float counterDamage;
     public float tenacity;
     public bool debuffsFrozen;
 
@@ -82,6 +87,8 @@ public abstract class Entity : MonoBehaviour
     public float skillDurationAdder;
     public float tenacityAdder, immobilizeDurationAdder;
     public float lightEmissionRangeAdder;
+    public float lifestealAdder;
+    public float counterDamageAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -96,6 +103,8 @@ public abstract class Entity : MonoBehaviour
     public float skillDurationMultiplier;
     public float tenacityMultiplier, immobilizeDurationMultiplier;
     public float lightEmissionRangeMultiplier;
+    public float lifestealMultiplier;
+    public float counterDamageMultiplier;
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
@@ -139,6 +148,8 @@ public abstract class Entity : MonoBehaviour
         skillDuration = baseSkillDuration + skillDurationAdder + (baseSkillDuration * skillDurationMultiplier);
         tenacity = baseTenacity + tenacityAdder + (baseTenacity * tenacityMultiplier);
         lightEmissionRange = baseLightEmissionRange + lightEmissionRangeAdder + (baseLightEmissionRange * lightEmissionRangeMultiplier);
+        lifesteal = baseLifesteal + lifestealAdder + (baseLifesteal * lifestealMultiplier);
+        counterDamage = baseCounterDamage + counterDamageAdder + (baseCounterDamage * counterDamageMultiplier);
     }
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
@@ -208,7 +219,7 @@ public abstract class Entity : MonoBehaviour
             insect.RegisterAttacker(plant);
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
         bool isCrit = false;
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
@@ -342,7 +353,15 @@ public abstract class Entity : MonoBehaviour
             coordinatedDamageMult = 1;
         }
 
-        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * elementalDebuffMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult;
+        if (System.Array.Exists(damageTag, t => t == DamageTag.Counter))
+        {
+            counterDamageMult = 1 + source.counterDamage;
+        } else
+        {
+            counterDamageMult = 1;
+        }
+
+        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * elementalDebuffMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult;
 
         // if damage source can crit, then calculate if it crits or not
         if (canCrit)
@@ -359,6 +378,12 @@ public abstract class Entity : MonoBehaviour
         health -= finalDamage;
         source.totalDamageDealt += finalDamage; // FOR DEBUG
         if (this is Insect damagedInsect) damagedInsect.lastSource = source;
+        if (source.lifesteal > 0f) source.Heal(finalDamage * source.lifesteal);
+        if (this is Plant poisonPlant && poisonPlant.elementalType == ElementalType.Poison
+            && System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+        {
+            source.Damage(damageDealt * 2f, DamageType.Physical, ElementalType.Poison, poisonPlant, false, new DamageTag[] { DamageTag.Counter });
+        }
 
         // damage indicator
 

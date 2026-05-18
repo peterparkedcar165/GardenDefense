@@ -121,6 +121,7 @@
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level8\GridManager8.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Calendula.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Level8.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
@@ -183,6 +185,7 @@
     <Compile Include="Assets\Scripts\LevelSpecific\Level4\GridManager4.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FruitFly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\Mosquito.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\WaterlilyData.cs" />
   </ItemGroup>

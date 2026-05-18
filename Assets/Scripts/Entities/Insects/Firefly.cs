@@ -10,7 +10,7 @@ public class Firefly : FlyingInsect
         baseAttackSpeed    = 1f;
         baseAttackRange    = 0.5f;
         baseMovementSpeed  = 1.3f;
-        baseLightEmissionRange = 0.75f;
+        baseLightEmissionRange = 1f;
         sunDrop            = 5;
         aggressivity       = Aggressivity.Low;
     }
@@ -19,9 +19,9 @@ public class Firefly : FlyingInsect
     {
         base.UpdateStats();
 
-        if (lightEmissionRange > 0f && _light2D == null)
+        if (lightEmissionRange > 0f && _light2D == null && visual != null)
         {
-            _light2D = gameObject.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+            _light2D = visual.gameObject.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
             _light2D.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
             _light2D.intensity = 0.8f;
             _light2D.falloffIntensity = 0.5f;

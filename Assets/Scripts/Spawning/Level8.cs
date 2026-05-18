@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 
-public class Level7 : SpawnManager
+public class Level8 : SpawnManager
 {
     public float levelTime;
     public int wave;
@@ -26,8 +26,8 @@ public class Level7 : SpawnManager
         FertilizerSelectionUI.instance.Configure(fertilizerPool);
         GameManager.instance.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
-        SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 6);
-        SaveManager.instance.CompleteLevel(7);
+        SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 7);
+        SaveManager.instance.CompleteLevel(8);
         StartCoroutine(RunWave());
     }
 
@@ -49,8 +49,8 @@ public class Level7 : SpawnManager
 
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
         yield return new WaitForSeconds(3f);
-        SaveManager.instance.CompleteLevel(7);
-        Debug.Log("Level 7 completed");
+        SaveManager.instance.CompleteLevel(8);
+        Debug.Log("Level 8 completed");
     }
 
     IEnumerator Wave(int wave)

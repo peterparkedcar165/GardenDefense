@@ -5,7 +5,7 @@ public class Wasp : FlyingInsect
     protected override void Awake()
     {
         baseAttackDamage = 20f;
-        baseMaxHealth = 150f;
+        baseMaxHealth = 400f;
         baseMovementSpeed = 1.2f;
         baseAttackSpeed = 1f;
         baseAttackRange = 0.5f;

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelSelector : MonoBehaviour
 {
-    [SerializeField] private Button level1, level2, level3, level4, level5, level6, level7, previousPage, nextPage;
+    [SerializeField] private Button level1, level2, level3, level4, level5, level6, level7, level8, level9, level10, previousPage, nextPage;
     void Start()
     {
         int highestLevelUnlocked = SaveManager.instance.saveData.highestLevelUnlocked;
@@ -15,6 +15,9 @@ public class LevelSelector : MonoBehaviour
         level5.interactable = highestLevelUnlocked >= 4;
         level6.interactable = highestLevelUnlocked >= 5;
         level7.interactable = highestLevelUnlocked >= 6;
+        if (level8 != null) level8.interactable = highestLevelUnlocked >= 7;
+        if (level9 != null) level9.interactable = highestLevelUnlocked >= 8;
+        if (level10 != null) level10.interactable = highestLevelUnlocked >= 9;
         //previousPage.interactable = true;
        // nextPage.interactable = true;
     }
@@ -34,6 +37,9 @@ public class LevelSelector : MonoBehaviour
         level5.interactable = false;
         level6.interactable = false;
         level7.interactable = false;
+        if (level8  != null) level8.interactable  = false;
+        if (level9  != null) level9.interactable  = false;
+        if (level10 != null) level10.interactable = false;
         //previousPage.interactable = false;
         //nextPage.interactable = false;
     }

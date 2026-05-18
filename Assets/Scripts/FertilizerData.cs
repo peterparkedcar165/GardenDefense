@@ -49,5 +49,10 @@ public enum StatType
     CoordinatedDamage,
     HealingBonus,
     IlluminationRangeAdder,
-    IlluminationRangeMultiplier
+    IlluminationRangeMultiplier,
+    CounterDamage,
+    PhysicalDamage,
+    MagicDamage,
+    PhysicalResistance,
+    MagicResistance
 }

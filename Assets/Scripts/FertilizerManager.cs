@@ -89,6 +89,11 @@ public class FertilizerManager : MonoBehaviour
             case StatType.HealingBonus:                 return (0.06f, 0.08f);
             case StatType.IlluminationRangeAdder:       return (0.5f,  1f);
             case StatType.IlluminationRangeMultiplier:  return (0.06f, 0.08f);
+            case StatType.CounterDamage:                return (0.06f, 0.08f);
+            case StatType.PhysicalDamage:               return (0.06f, 0.08f);
+            case StatType.MagicDamage:                  return (0.06f, 0.08f);
+            case StatType.PhysicalResistance:           return (0.04f, 0.06f);
+            case StatType.MagicResistance:              return (0.04f, 0.06f);
             default:                       return (0f,    0f);
         }
     }
@@ -123,6 +128,11 @@ public class FertilizerManager : MonoBehaviour
             case StatType.HealingBonus:                 plant.healingBonusAdder            += value; break;
             case StatType.IlluminationRangeAdder:       plant.lightEmissionRangeAdder      += value; break;
             case StatType.IlluminationRangeMultiplier:  plant.lightEmissionRangeMultiplier += value; break;
+            case StatType.CounterDamage:                plant.counterDamageAdder           += value; break;
+            case StatType.PhysicalDamage:               plant.physicalShredAdder           += value; break;
+            case StatType.MagicDamage:                  plant.magicShredAdder              += value; break;
+            case StatType.PhysicalResistance:           plant.physicalResistanceAdder      += value; break;
+            case StatType.MagicResistance:              plant.magicResistanceAdder         += value; break;
         }
     }
 }

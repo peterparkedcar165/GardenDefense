@@ -371,7 +371,7 @@ public abstract class Plant : Entity, IAttackable
             return $"Increase Passive tree level by <color=green>1</color> when near water";
 
             case ElementalType.Poison:
-            return $"Deal 25% increased damage to immobilized insects";
+            return $"Taking damage returns <color=purple>Poison</color> damage equal to <color=purple><b>200%</b></color> of the hit to the attacker.";
 
             case ElementalType.Ice:
             return $"Increase Passive tree level by <color=green>1</color> when in cold weather";

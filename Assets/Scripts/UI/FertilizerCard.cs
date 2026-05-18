@@ -136,6 +136,11 @@ public class FertilizerCard : MonoBehaviour
             case StatType.HealingBonus:                 return "Healing Bonus";
             case StatType.IlluminationRangeAdder:       return "Illumination Range";
             case StatType.IlluminationRangeMultiplier:  return "Illumination Range";
+            case StatType.CounterDamage:                return "Counter Damage";
+            case StatType.PhysicalDamage:               return "Physical Damage";
+            case StatType.MagicDamage:                  return "Magic Damage";
+            case StatType.PhysicalResistance:           return "Physical Resistance";
+            case StatType.MagicResistance:              return "Magic Resistance";
             default:                      return statType.ToString();
         }
     }

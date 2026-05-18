@@ -26,6 +26,7 @@ public class LoadoutSelectionUI : MonoBehaviour
     [SerializeField] private TMP_Text tooltipSkillTitle;
     [SerializeField] private TMP_Text tooltipSkillDescription;
     [SerializeField] private TMP_Text tooltipElementalType;
+    [SerializeField] private TMP_Text tooltipElementalBonus;
     [SerializeField] private TMP_Text tooltipDamageType;
     [SerializeField] private TMP_Text tooltipStats;
 
@@ -160,6 +161,8 @@ public class LoadoutSelectionUI : MonoBehaviour
             tooltipSkillDescription.text = data.GetSkillDescription();
         if (tooltipElementalType != null)
             tooltipElementalType.text = ColoredElemental(data.elementalType);
+        if (tooltipElementalBonus != null)
+            tooltipElementalBonus.text = prefab != null ? prefab.GetElementDescription() : "";
         if (tooltipDamageType != null)
             tooltipDamageType.text = ColoredDamage(data.damageType);
         if (tooltipStats != null && data.plantPrefab != null)
