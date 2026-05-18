@@ -107,7 +107,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 4)
         {
-            waitTime = 1f;
+            waitTime = 2f;
             spawnInterval = 2.25f;
             spawnCount = 25;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -125,7 +125,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 5)
         {
-            waitTime = 1f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 25;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -147,7 +147,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 6)
         {
-            waitTime = 1f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 27;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -171,7 +171,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 7)
         {
-            waitTime = 1f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 27;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -195,7 +195,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 8)
         {
-            waitTime = 1f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 28;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -221,7 +221,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 9)
         {
-            waitTime = 1f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 26;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -247,7 +247,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 10)
         {
-            waitTime = 1f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 23;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -273,7 +273,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 11)
         {
-            waitTime = 1f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 22;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -299,7 +299,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 12)
         {
-            waitTime = 0.5f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 21;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -325,7 +325,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 13)
         {
-            waitTime = 0.5f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 20;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -351,7 +351,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 14)
         {
-            waitTime = 0.5f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 19;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -377,7 +377,7 @@ public class Level6 : SpawnManager
 
         } else if (wave == 15)
         {
-            waitTime = 0.5f;
+            waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 18;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;

@@ -44,7 +44,7 @@ public class Level2 : SpawnManager
 
             if (wave < maxWave)
             {
-                yield return StartCoroutine(RestPeriod(10f)); // resting between waves
+                yield return StartCoroutine(RestPeriod(20f)); // resting between waves
             }
         }
 
@@ -61,7 +61,7 @@ public class Level2 : SpawnManager
     {
         if (wave == 1) // wave 1 - worker ants every 2 seconds for 40 secs
         {
-            waitTime = 12f;
+            waitTime = 3f;
             spawnInterval = 3f;
             spawnCount = 30;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
@@ -71,7 +71,7 @@ public class Level2 : SpawnManager
             CancelInvoke(nameof(SpawnWorkerAnt));
         } else if (wave == 2)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 2.5f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
@@ -81,7 +81,7 @@ public class Level2 : SpawnManager
             CancelInvoke(nameof(SpawnWorkerAnt));
         } else if (wave == 3)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 3f;
             spawnCount = 23;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
@@ -91,7 +91,7 @@ public class Level2 : SpawnManager
             CancelInvoke(nameof(SpawnSoldierAnt));
         } else if (wave == 4)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 2.5f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -107,7 +107,7 @@ public class Level2 : SpawnManager
 
         } else if (wave == 5)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 2.25f;
             spawnCount = 45;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -122,7 +122,7 @@ public class Level2 : SpawnManager
             CancelInvoke(nameof(SpawnSoldierAnt));
         } else if (wave == 6)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 2f;
             spawnCount = 45;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -137,7 +137,7 @@ public class Level2 : SpawnManager
             CancelInvoke(nameof(SpawnSoldierAnt));
         } else if (wave == 7)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 2f;
             spawnCount = 53;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -152,7 +152,7 @@ public class Level2 : SpawnManager
             CancelInvoke(nameof(SpawnSoldierAnt));
         } else if (wave == 8)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 2.0f;
             spawnCount = 68;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
@@ -163,7 +163,7 @@ public class Level2 : SpawnManager
 
         } else if (wave == 9)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 2.0f;
             spawnCount = 83;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -176,7 +176,7 @@ public class Level2 : SpawnManager
             CancelInvoke(nameof(SpawnSoldierAnt));
         } else if (wave == 10)
         {
-            waitTime = 11f;
+            waitTime = 3f;
             spawnInterval = 2.0f;
             spawnCount = 98;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;

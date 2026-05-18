@@ -44,7 +44,7 @@ public class Level5 : SpawnManager
 
             if (wave < maxWave)
             {
-                yield return StartCoroutine(RestPeriod(10f)); // resting between waves
+                yield return StartCoroutine(RestPeriod(20f)); // resting between waves
             }
         }
 
@@ -61,7 +61,7 @@ public class Level5 : SpawnManager
     {
         if (wave == 1) // wave 1 - worker ants every 2 seconds for 40 secs
         {
-            waitTime = 12f;
+            waitTime = 2f;
             spawnInterval = 2f;
             spawnCount = 30;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
@@ -71,7 +71,7 @@ public class Level5 : SpawnManager
             CancelInvoke(nameof(SpawnWorkerAnt));
         } else if (wave == 2)
         {
-            waitTime = 12f;
+            waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
@@ -81,7 +81,7 @@ public class Level5 : SpawnManager
             CancelInvoke(nameof(SpawnWorkerAnt));
         } else if (wave == 3)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2f;
             spawnCount = 30;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
@@ -91,7 +91,7 @@ public class Level5 : SpawnManager
             CancelInvoke(nameof(SpawnScoutAnt));
         } else if (wave == 4)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
@@ -102,7 +102,7 @@ public class Level5 : SpawnManager
 
         } else if (wave == 5)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2.5f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -118,7 +118,7 @@ public class Level5 : SpawnManager
 
         } else if (wave == 6)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 3f;
             spawnCount = 30;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -135,7 +135,7 @@ public class Level5 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
         } else if (wave == 7)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2.75f;
             spawnCount = 23;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -152,7 +152,7 @@ public class Level5 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
         } else if (wave == 8)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -168,7 +168,7 @@ public class Level5 : SpawnManager
 
         } else if (wave == 9)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -183,7 +183,7 @@ public class Level5 : SpawnManager
             CancelInvoke(nameof(SpawnFruitFly));
         } else if (wave == 10)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 30;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -201,7 +201,7 @@ public class Level5 : SpawnManager
 
         } else if (wave == 11)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
@@ -218,7 +218,7 @@ public class Level5 : SpawnManager
             CancelInvoke(nameof(SpawnQueenAnt));
         } else if (wave == 12)
         {
-            waitTime = 11f;
+            waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
