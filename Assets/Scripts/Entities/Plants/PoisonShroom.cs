@@ -23,8 +23,8 @@ public class PoisonShroom : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
-        baseSkillCooldown = 25f;
-        baseSkillDuration = 5f;
+        baseSkillCooldown = 30f;
+        baseSkillDuration = 7f;
         activeRadius = 1f;
     }
 
@@ -101,7 +101,7 @@ public class PoisonShroom : Shooter
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
     {
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 25f, skillDuration = 5f,
+        skillCooldown = 30f, skillDuration = 7f,
         poisonDuration = 6f, poisonDamagePerSecond = 12f,
     };
 

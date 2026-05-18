@@ -24,7 +24,7 @@ public class Snowdrop : Aura
         baseAttackSpeed = bAS;
         baseAttackRange = bAR;
         activeCooldown = 40f;
-        baseSkillCooldown = 30f;
+        baseSkillCooldown = 35f;
         baseSkillDuration = 6f;
         blizzardWidth = 1.5f;
         blizzardDamage = 35f;
@@ -144,7 +144,7 @@ public class Snowdrop : Aura
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
     {
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 30f, skillDuration = 6f,
+        skillCooldown = 35f, skillDuration = 6f,
         slowPercent = 24f, blizzardDamage = 35f,
     };
 

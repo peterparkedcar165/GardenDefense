@@ -23,7 +23,7 @@ public class AcornSprout : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         activeRadius = 1f;
-        baseSkillCooldown = 25f;
+        baseSkillCooldown = 35f;
         baseSkillDuration = 20f;
     }
 
@@ -69,7 +69,7 @@ public class AcornSprout : Shooter
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
     {
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 25f, skillDuration = 20f,
+        skillCooldown = 35f, skillDuration = 20f,
         stunChance = 0.35f, stunDuration = 0.5f, skillDamageMultiplier = 1.5f,
     };
 

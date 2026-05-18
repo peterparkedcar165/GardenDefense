@@ -40,7 +40,7 @@ public class BogIris : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         basePassiveCooldown = 12f;
-        baseSkillCooldown = 18f;
+        baseSkillCooldown = 30f;
         baseSkillDuration = 1f;
         base.Awake();
         _indicatorPrefab = Resources.Load<GameObject>("DamageIndicator");
@@ -145,7 +145,7 @@ public class BogIris : Shooter
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
     {
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 18f, passiveCooldown = 12f, skillDuration = 1f,
+        skillCooldown = 30f, passiveCooldown = 12f, skillDuration = 1f,
         sunGenerated = 2f, sunInterval = 2f, openDuration = 6f,
         geyserDamage = 75f + 1.33f * bAD, knockUpHeight = 3f,
     };

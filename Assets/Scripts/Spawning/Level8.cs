@@ -16,6 +16,7 @@ public class Level8 : SpawnManager
     public float waitTime;
     public float spawnInterval;
     public int spawnCount;
+    public float restInterval = 25f;
 
     [Header("Fertilizers")]
     [SerializeField] private FertilizerData[] fertilizerPool;
@@ -44,7 +45,7 @@ public class Level8 : SpawnManager
             yield return StartCoroutine(Wave(wave));
 
             if (wave < maxWave)
-                yield return StartCoroutine(RestPeriod(25f));
+                yield return StartCoroutine(RestPeriod(restInterval));
         }
 
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
@@ -60,7 +61,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 18;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = 2f * (waitTime + ((spawnCount - 1) * spawnInterval)) + restInterval;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
@@ -75,7 +76,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 22;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd2 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -93,7 +94,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 18;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = 2f * (waitTime + ((spawnCount - 1) * spawnInterval)) + restInterval;
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount - 1) * spawnInterval));
@@ -114,7 +115,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 2.0f;
             spawnCount = 22;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd4 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -134,7 +135,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 19;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd5 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -158,7 +159,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 20;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd6 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -184,7 +185,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 20;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd7 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -210,7 +211,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 21;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd8 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -238,7 +239,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 18;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd9 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -266,7 +267,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 16;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd10 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -294,7 +295,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 14;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd11 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -304,7 +305,7 @@ public class Level8 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp), wd11 / 3f, 4.25f);
             InvokeRepeating(nameof(SpawnFirefly), wd11 / 3f, 4.75f);
             InvokeRepeating(nameof(SpawnQueenAnt), wd11 * 2f / 3f, 5.25f);
-            InvokeRepeating(nameof(SpawnSnail), wd11 * 2f / 3f, 6.25f);
+            InvokeRepeating(nameof(SpawnSnail), wd11 * 2f / 3f, 4.25f);
             InvokeRepeating(nameof(SpawnMoth), wd11 * 2f / 3f, 6.25f);
             yield return new WaitForSeconds(wd11);
             CancelInvoke(nameof(SpawnWorkerAnt));
@@ -322,7 +323,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 13;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd12 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -332,7 +333,7 @@ public class Level8 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp), wd12 / 3f, 3.75f);
             InvokeRepeating(nameof(SpawnFirefly), wd12 / 3f, 4.0f);
             InvokeRepeating(nameof(SpawnQueenAnt), wd12 * 2f / 3f, 4.25f);
-            InvokeRepeating(nameof(SpawnSnail), wd12 * 2f / 3f, 6.25f);
+            InvokeRepeating(nameof(SpawnSnail), wd12 * 2f / 3f, 5.25f);
             InvokeRepeating(nameof(SpawnMoth), wd12 * 2f / 3f, 5.5f);
             yield return new WaitForSeconds(wd12);
             CancelInvoke(nameof(SpawnWorkerAnt));
@@ -350,7 +351,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 12;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd13 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -360,7 +361,7 @@ public class Level8 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp), wd13 / 3f, 3.25f);
             InvokeRepeating(nameof(SpawnFirefly), wd13 / 3f, 4.0f);
             InvokeRepeating(nameof(SpawnQueenAnt), wd13 * 2f / 3f, 3.75f);
-            InvokeRepeating(nameof(SpawnSnail), wd13 * 2f / 3f, 5.25f);
+            InvokeRepeating(nameof(SpawnSnail), wd13 * 2f / 3f, 4.25f);
             InvokeRepeating(nameof(SpawnMoth), wd13 * 2f / 3f, 5.5f);
             yield return new WaitForSeconds(wd13);
             CancelInvoke(nameof(SpawnWorkerAnt));
@@ -378,7 +379,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 11;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd14 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -388,7 +389,7 @@ public class Level8 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp), wd14 / 3f, 3.0f);
             InvokeRepeating(nameof(SpawnFirefly), wd14 / 3f, 3.25f);
             InvokeRepeating(nameof(SpawnQueenAnt), wd14 * 2f / 3f, 3.75f);
-            InvokeRepeating(nameof(SpawnSnail), wd14 * 2f / 3f, 5.25f);
+            InvokeRepeating(nameof(SpawnSnail), wd14 * 2f / 3f, 4.25f);
             InvokeRepeating(nameof(SpawnMoth), wd14 * 2f / 3f, 4.75f);
             yield return new WaitForSeconds(wd14);
             CancelInvoke(nameof(SpawnWorkerAnt));
@@ -406,7 +407,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 11;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd15 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -416,7 +417,7 @@ public class Level8 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp), wd15 / 3f, 3.0f);
             InvokeRepeating(nameof(SpawnFirefly), wd15 / 3f, 3.25f);
             InvokeRepeating(nameof(SpawnQueenAnt), wd15 * 2f / 3f, 3.25f);
-            InvokeRepeating(nameof(SpawnSnail), wd15 * 2f / 3f, 5.25f);
+            InvokeRepeating(nameof(SpawnSnail), wd15 * 2f / 3f, 4f);
             InvokeRepeating(nameof(SpawnMoth), wd15 * 2f / 3f, 4.75f);
             yield return new WaitForSeconds(wd15);
             CancelInvoke(nameof(SpawnWorkerAnt));
@@ -434,7 +435,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 10;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd16 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -444,8 +445,8 @@ public class Level8 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp), wd16 / 3f, 3.0f);
             InvokeRepeating(nameof(SpawnFirefly), wd16 / 3f, 2.5f);
             InvokeRepeating(nameof(SpawnQueenAnt), wd16 * 2f / 3f, 3.25f);
-            InvokeRepeating(nameof(SpawnSnail), wd16 * 2f / 3f, 4.25f);
-            InvokeRepeating(nameof(SpawnMoth), wd16 * 2f / 3f, 4.0f);
+            InvokeRepeating(nameof(SpawnSnail), wd16 * 2f / 3f, 2f);
+            InvokeRepeating(nameof(SpawnMoth), wd16 * 2f / 3f, 3.0f);
             yield return new WaitForSeconds(wd16);
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -462,7 +463,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 10;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd17 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -472,7 +473,7 @@ public class Level8 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp), wd17 / 3f, 3.0f);
             InvokeRepeating(nameof(SpawnFirefly), wd17 / 3f, 2.5f);
             InvokeRepeating(nameof(SpawnQueenAnt), wd17 * 2f / 3f, 3.25f);
-            InvokeRepeating(nameof(SpawnMoth), wd17 * 2f / 3f, 4.0f);
+            InvokeRepeating(nameof(SpawnMoth), wd17 * 2f / 3f, 3.0f);
             yield return new WaitForSeconds(wd17);
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -488,7 +489,7 @@ public class Level8 : SpawnManager
             waitTime = 2f;
             spawnInterval = 3.0f;
             spawnCount = 10;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd18 = waitTime + ((spawnCount - 1) * spawnInterval);
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -498,8 +499,8 @@ public class Level8 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp), wd18 / 3f, 3.0f);
             InvokeRepeating(nameof(SpawnFirefly), wd18 / 3f, 2.125f);
             InvokeRepeating(nameof(SpawnQueenAnt), wd18 * 2f / 3f, 3.25f);
-            InvokeRepeating(nameof(SpawnSnail), wd18 * 2f / 3f, 4.25f);
-            InvokeRepeating(nameof(SpawnMoth), wd18 * 2f / 3f, 4.0f);
+            InvokeRepeating(nameof(SpawnSnail), wd18 * 2f / 3f, 2f);
+            InvokeRepeating(nameof(SpawnMoth), wd18 * 2f / 3f, 3.0f);
             yield return new WaitForSeconds(wd18);
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));

@@ -27,7 +27,7 @@ public class Waterlily : Shooter
         baseMaxRange = bMR;
         basePiercing = bP;
         baseAoERange = bAoER;
-        baseSkillCooldown = 20f;
+        baseSkillCooldown = 25f;
         baseSkillDuration = 5f;
         base.Awake();
         // sun cost is set in inspector!
@@ -88,7 +88,7 @@ public class Waterlily : Shooter
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
     {
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 20f, skillDuration = 5f,
+        skillCooldown = 25f, skillDuration = 5f,
         splashRadius = bAoER, bubbleDamage = 42f,
     };
 

@@ -28,7 +28,7 @@ public class Dandelion : Shooter
         baseProjectileSpeed = bPS;
         baseMaxRange = bMR;
         basePiercing = bP;
-        baseSkillCooldown = 25f;
+        baseSkillCooldown = 30f;
         baseSkillDuration = 4f;
     }
 
@@ -176,7 +176,7 @@ public class Dandelion : Shooter
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
     {
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 25f, skillDuration = 4f,
+        skillCooldown = 30f, skillDuration = 4f,
         seedCount = 3, beamWidth = 1.5f,
     };
 
