@@ -53,39 +53,39 @@ public class Level1 : SpawnManager
     {
         if (wave == 1) // wave 1 - worker ants every 2 seconds for 40 secs
         {
-            waitTime = 2f;
+            waitTime = 12f;
             spawnInterval = 3f;
-            spawnCount = 15;
+            spawnCount = 23;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
-        } else if (wave == 2) 
+        } else if (wave == 2)
         {
-            waitTime = 1f;
+            waitTime = 11f;
             spawnInterval = 2f;
-            spawnCount = 25;
+            spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
-        } else if (wave == 3) 
+        } else if (wave == 3)
         {
-            waitTime = 1f;
-            spawnInterval = 1.5f;
-            spawnCount = 25;
+            waitTime = 11f;
+            spawnInterval = 2.0f;
+            spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnWorkerAnt));
-        } else if (wave == 4) 
+        } else if (wave == 4)
         {
-            waitTime = 1f;
-            spawnInterval = 1f;
-            spawnCount = 35;
+            waitTime = 11f;
+            spawnInterval = 2.0f;
+            spawnCount = 53;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -93,19 +93,19 @@ public class Level1 : SpawnManager
             CancelInvoke(nameof(SpawnWorkerAnt));
         } else if (wave == 5)
         {
-            waitTime = 1f;
-            spawnInterval = 1.5f;
-            spawnCount = 30;
+            waitTime = 11f;
+            spawnInterval = 2.0f;
+            spawnCount = 45;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
             CancelInvoke(nameof(SpawnScoutAnt));
-        } else if (wave == 6) 
+        } else if (wave == 6)
         {
-            waitTime = 1f;
-            spawnInterval = 1f;
-            spawnCount = 25;
+            waitTime = 11f;
+            spawnInterval = 1.5f;
+            spawnCount = 38;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -113,28 +113,30 @@ public class Level1 : SpawnManager
             CancelInvoke(nameof(SpawnScoutAnt));
         } else if (wave == 7)
         {
-            waitTime = 1f;
+            waitTime = 11f;
             spawnInterval = 1.5f;
-            spawnCount = 35;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
+            spawnCount = 53;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            float waveDuration7 = waitTime + ((spawnCount - 1) * spawnInterval);
 
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
-            CancelInvoke(nameof(SpawnScoutAnt));
+            InvokeRepeating(nameof(SpawnScoutAnt), waveDuration7 / 3f, spawnInterval);
+            yield return new WaitForSeconds(waveDuration7);
             CancelInvoke(nameof(SpawnWorkerAnt));
+            CancelInvoke(nameof(SpawnScoutAnt));
         } else if (wave == 8)
         {
-            waitTime = 1f;
-            spawnInterval = 1f;
-            spawnCount = 45;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f; // wave + rest
+            waitTime = 11f;
+            spawnInterval = 1.5f;
+            spawnCount = 68;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
+            float waveDuration8 = waitTime + ((spawnCount - 1) * spawnInterval);
 
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
-            CancelInvoke(nameof(SpawnScoutAnt));
+            InvokeRepeating(nameof(SpawnScoutAnt), waveDuration8 / 3f, spawnInterval);
+            yield return new WaitForSeconds(waveDuration8);
             CancelInvoke(nameof(SpawnWorkerAnt));
+            CancelInvoke(nameof(SpawnScoutAnt));
 
             // LEVEL COMPLETION
             yield return new WaitUntil(() => Insect.allInsects.Count == 0);
