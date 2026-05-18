@@ -27,7 +27,7 @@ public class BogIris : Shooter
     private float GeyserRadius => 1.25f + 0.15f * effectivePath3Level;
     private float KnockUpHeight => ScaleCC((3f + 1f * effectivePath3Level) * skillDuration);
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * (KnockUpHeight)); // knock up height dictates force
-    private float GeyserDamage => 65f + 15f * effectivePath3Level;
+    private float GeyserDamage => (75f + 15f * effectivePath3Level) + 1.33f * attackDamage;
 
     protected override void Awake()
     {
@@ -147,7 +147,7 @@ public class BogIris : Shooter
         attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
         skillCooldown = 18f, passiveCooldown = 12f, skillDuration = 1f,
         sunGenerated = 2f, sunInterval = 2f, openDuration = 6f,
-        geyserDamage = 65f, knockUpHeight = 3f,
+        geyserDamage = 75f + 1.33f * bAD, knockUpHeight = 3f,
     };
 
     public override string GetName() => "<b><color=#4FC3F7>Bog Iris</color></b>";
@@ -176,7 +176,7 @@ public class BogIris : Shooter
            $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
     public override string GetPath3Description()
-        => $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the base damage of the geyser by <color=green><b>15</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}</b></color>]\n\n" +
+        => $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the flat component of geyser damage by <color=green><b>15</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}</b></color>]\n\n" +
            $"Increase the knock-up height by <color=green><b>1</b></color> unit per level. [<color=green><b>+{effectivePath3Level}</b></color>]\n\n" +
            $"Increase the radius of the geyser by <color=green><b>0.15</b></color> per level. [<color=green><b>+{0.15f * effectivePath3Level:F2}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";

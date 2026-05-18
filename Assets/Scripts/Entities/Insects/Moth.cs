@@ -7,9 +7,9 @@ public class Moth : FlyingInsect
     protected override void Awake()
     {
         base.Awake();
-        baseMaxHealth     = 400f;
+        baseMaxHealth     = 300f;
         baseAttackDamage  = 10f;
-        baseAttackSpeed   = 1.3f;
+        baseAttackSpeed   = 1.0f;
         baseAttackRange   = 0.5f;
         baseMovementSpeed = 1.1f;
         targetingRange    = 2.5f;

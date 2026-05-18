@@ -27,6 +27,18 @@ public class WindGust : MonoBehaviour
 
     public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float damage, float pushForce, Plant source)
     {
+        if (obstacleLayer == 0)
+        {
+            foreach (Tile t in FindObjectsByType<Tile>(FindObjectsSortMode.None))
+            {
+                if (t.tileType == TileType.Obstacle)
+                {
+                    obstacleLayer = 1 << t.gameObject.layer;
+                    break;
+                }
+            }
+        }
+
         this.origin = origin;
         this.direction = direction.normalized;
         this.width = width;
@@ -102,6 +114,7 @@ public class WindGust : MonoBehaviour
         float dot = Vector2.Dot(toPoint, direction);
         if (dot < beamStart || dot > beamEnd) return false;
         Vector2 perp = toPoint - direction * dot;
-        return perp.magnitude <= width * 0.5f;
+        if (perp.magnitude > width * 0.5f) return false;
+        return Physics2D.Linecast(origin, point, obstacleLayer).collider == null;
     }
 }

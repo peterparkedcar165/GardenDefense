@@ -67,17 +67,22 @@ public class GridManager8 : MonoBehaviour
 
     private List<Vector2Int> waterCoordinates = new List<Vector2Int>
     {
+        new Vector2Int(7,1),
         new Vector2Int(7,2),
         new Vector2Int(7,7),
         new Vector2Int(6,13),
+        new Vector2Int(12,13),
         new Vector2Int(15,9),
     };
 
     private List<Vector2Int> dirtCoordinates = new List<Vector2Int>
     {
-        new Vector2Int(7,16), new Vector2Int(7,14), new Vector2Int(9,14), new Vector2Int(12,14),
-        new Vector2Int(7,9),  new Vector2Int(6,7),  new Vector2Int(10,4), new Vector2Int(12,4),
-        new Vector2Int(14,3), new Vector2Int(14,9), new Vector2Int(16,9), new Vector2Int(20,6),
+        new Vector2Int(7,16),  new Vector2Int(7,14),  new Vector2Int(9,14),  new Vector2Int(12,14),
+        new Vector2Int(7,9),   new Vector2Int(6,7),   new Vector2Int(10,4),  new Vector2Int(12,4),
+        new Vector2Int(14,3),  new Vector2Int(14,9),  new Vector2Int(16,9),  new Vector2Int(20,6),
+        new Vector2Int(12,9),  new Vector2Int(14,11), new Vector2Int(12,11), new Vector2Int(9,9),
+        new Vector2Int(8,4),   new Vector2Int(7,13),  new Vector2Int(22,11),
+        new Vector2Int(19,4),  new Vector2Int(17,3),
     };
 
     private List<Vector2Int> caveCoordinates = new List<Vector2Int>();
@@ -136,6 +141,7 @@ public class GridManager8 : MonoBehaviour
 
     private bool IsObstacle(int x, int y)
     {
+        if (x == 7 && y == 1) return false; // water cell within obstacle zone
         if (x == 7 && y == 2) return false; // water cell within obstacle zone
         if (x >= 0  && x <= 2  && y >= 0  && y <= 16) return true; // 0,0-2,16
         if (x >= 0  && x <= 26 && y >= 18 && y <= 19) return true; // 0,18-26,19

@@ -44,7 +44,7 @@ public class Level8 : SpawnManager
             yield return StartCoroutine(Wave(wave));
 
             if (wave < maxWave)
-                yield return StartCoroutine(RestPeriod(15f));
+                yield return StartCoroutine(RestPeriod(25f));
         }
 
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
@@ -130,8 +130,8 @@ public class Level8 : SpawnManager
         } else if (wave == 5)
         {
             waitTime = 1f;
-            spawnInterval = 2.5f;
-            spawnCount = 22;
+            spawnInterval = 3.0f;
+            spawnCount = 19;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -153,8 +153,8 @@ public class Level8 : SpawnManager
         } else if (wave == 6)
         {
             waitTime = 1f;
-            spawnInterval = 2.25f;
-            spawnCount = 26;
+            spawnInterval = 3.0f;
+            spawnCount = 20;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -178,8 +178,8 @@ public class Level8 : SpawnManager
         } else if (wave == 7)
         {
             waitTime = 1f;
-            spawnInterval = 2.25f;
-            spawnCount = 26;
+            spawnInterval = 3.0f;
+            spawnCount = 20;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
@@ -203,8 +203,8 @@ public class Level8 : SpawnManager
         } else if (wave == 8)
         {
             waitTime = 1f;
-            spawnInterval = 2.0f;
-            spawnCount = 30;
+            spawnInterval = 3.0f;
+            spawnCount = 21;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -230,8 +230,8 @@ public class Level8 : SpawnManager
         } else if (wave == 9)
         {
             waitTime = 1f;
-            spawnInterval = 1.5f;
-            spawnCount = 34;
+            spawnInterval = 3.0f;
+            spawnCount = 18;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -257,8 +257,8 @@ public class Level8 : SpawnManager
         } else if (wave == 10)
         {
             waitTime = 1f;
-            spawnInterval = 1.25f;
-            spawnCount = 36;
+            spawnInterval = 3.0f;
+            spawnCount = 16;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -284,8 +284,8 @@ public class Level8 : SpawnManager
         } else if (wave == 11)
         {
             waitTime = 0.5f;
-            spawnInterval = 1.0f;
-            spawnCount = 38;
+            spawnInterval = 3.0f;
+            spawnCount = 14;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -311,8 +311,8 @@ public class Level8 : SpawnManager
         } else if (wave == 12)
         {
             waitTime = 0.5f;
-            spawnInterval = 0.85f;
-            spawnCount = 42;
+            spawnInterval = 3.0f;
+            spawnCount = 13;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -338,8 +338,8 @@ public class Level8 : SpawnManager
         } else if (wave == 13)
         {
             waitTime = 0.5f;
-            spawnInterval = 0.75f;
-            spawnCount = 44;
+            spawnInterval = 3.0f;
+            spawnCount = 12;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -365,8 +365,8 @@ public class Level8 : SpawnManager
         } else if (wave == 14)
         {
             waitTime = 0.5f;
-            spawnInterval = 0.65f;
-            spawnCount = 46;
+            spawnInterval = 3.0f;
+            spawnCount = 11;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -392,8 +392,8 @@ public class Level8 : SpawnManager
         } else if (wave == 15)
         {
             waitTime = 0.5f;
-            spawnInterval = 0.6f;
-            spawnCount = 48;
+            spawnInterval = 3.0f;
+            spawnCount = 11;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -419,8 +419,8 @@ public class Level8 : SpawnManager
         } else if (wave == 16)
         {
             waitTime = 0.5f;
-            spawnInterval = 0.55f;
-            spawnCount = 50;
+            spawnInterval = 3.0f;
+            spawnCount = 10;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -446,8 +446,8 @@ public class Level8 : SpawnManager
         } else if (wave == 17)
         {
             waitTime = 0.5f;
-            spawnInterval = 0.5f;
-            spawnCount = 52;
+            spawnInterval = 3.0f;
+            spawnCount = 10;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
@@ -471,8 +471,8 @@ public class Level8 : SpawnManager
         } else if (wave == 18)
         {
             waitTime = 0.5f;
-            spawnInterval = 0.45f;
-            spawnCount = 56;
+            spawnInterval = 3.0f;
+            spawnCount = 10;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + 10f;
 
             InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);

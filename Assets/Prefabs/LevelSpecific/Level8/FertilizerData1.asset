@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData1
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Name 1
+  fertilizerName: Taunting
   stats:
   - statType: 26
-    value: 0.42
+    value: 0.56
   - statType: 29
-    value: 0.32
+    value: 0.42
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

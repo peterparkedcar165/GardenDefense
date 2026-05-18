@@ -30,6 +30,7 @@ public abstract class Insect : Entity, IAttackable
     public float movementSpeed, baseMovementSpeed;
     public Vector2 windVelocity;
     public Vector2 windMomentum;
+    private Vector2 windBlockMask = Vector2.one;
     public Entity lastSource;
     public Aggressivity aggressivity = Aggressivity.Low;
     public float targetingRange = 0f;
@@ -198,14 +199,17 @@ public abstract class Insect : Entity, IAttackable
 
         if (windVelocity.sqrMagnitude > 0.001f)
         {
-            windMomentum = windVelocity;
+            windMomentum = new Vector2(windVelocity.x * windBlockMask.x, windVelocity.y * windBlockMask.y);
             windVelocity = Vector2.zero;
         }
         else
         {
+            windBlockMask = Vector2.one;
             windMomentum = Vector2.Lerp(windMomentum, Vector2.zero, 5f * Time.deltaTime);
             if (windMomentum.sqrMagnitude <= 0.001f) windMomentum = Vector2.zero;
         }
+
+        windBlockMask = Vector2.one;
 
         if (windMomentum.sqrMagnitude > 0.001f)
         {
@@ -223,15 +227,18 @@ public abstract class Insect : Entity, IAttackable
                 {
                     transform.position = newPosX;
                     windMomentum.y = 0f;
+                    windBlockMask.y = 0f;
                 }
                 else if (!Physics2D.OverlapCircle(newPosY, 0.3f, ObstacleLayer))
                 {
                     transform.position = newPosY;
                     windMomentum.x = 0f;
+                    windBlockMask.x = 0f;
                 }
                 else
                 {
                     windMomentum = Vector2.zero;
+                    windBlockMask = Vector2.zero;
                 }
             }
         }
