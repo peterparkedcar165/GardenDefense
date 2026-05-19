@@ -17,7 +17,7 @@ public class LeafRanger : Shooter
     {
         base.UpdateStats();
         if (skillActive)
-            attackSpeed += baseAttackSpeed * ((LRData?.baseSkillAttackSpeedBonus ?? 3f) + 0.25f * effectivePath3Level + magicPower * 0.01f);
+            attackSpeed += baseAttackSpeed * ((LRData?.baseSkillAttackSpeedBonus ?? 3f) + 0.25f * effectivePath3Level + skillDamageMultiplier * magicPower);
     }
 
     protected override void Update()
@@ -86,8 +86,8 @@ public class LeafRanger : Shooter
 
     public override string GetPath3Description() =>
         $"Skill:\n\n" +
-        $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{(LRData?.baseSkillAttackSpeedBonus ?? 3f) * 100f + 25f * effectivePath3Level + magicPower:F0}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.\n\n" +
-        $"Scaling: <color=#FFB6C1><b>+1%</b></color> bonus per <color=#FFB6C1>Magic Power</color>. [<color=#FFB6C1><b>+{magicPower:F0}%</b></color>]\n\n" +
+        $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{(LRData?.baseSkillAttackSpeedBonus ?? 3f) * 100f + 25f * effectivePath3Level + skillDamageMultiplier * magicPower * 100f:F0}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.\n\n" +
+        $"Scaling: <color=#FFB6C1><b>+{skillDamageMultiplier * 100f:F0}%</b></color> bonus per <color=#FFB6C1>Magic Power</color>. [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower * 100f:F0}%</b></color>]\n\n" +
         $"Increase Attack Speed bonus by <color=green><b>25%</b></color> per level. [<color=green><b>+{25 * effectivePath3Level}%</b></color>]\n\n" +
         $"Increase duration by <color=green><b>0.5</b></color> seconds per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
         $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";

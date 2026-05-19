@@ -22,7 +22,7 @@ public class PoisonShroomProjectile : Projectile
 
         if (source != null && source is PoisonShroom shooter)
         {
-            insect.ApplyEffect(new PoisonEffect(insect, shooter.poisonDuration, shooter.poisonLevel, source, shooter.magicPower * 0.06f));
+            insect.ApplyEffect(new PoisonEffect(insect, shooter.poisonDuration, shooter.poisonLevel, source, shooter.skillDamageMultiplier * shooter.magicPower));
         }
     }
     

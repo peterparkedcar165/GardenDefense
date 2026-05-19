@@ -28,7 +28,7 @@ public class Waterlily : Shooter
     public override void UpdateStats()
     {
         base.UpdateStats();
-        splashDamage = data.basePassiveDamage + attackDamage * 0.05f * effectivePath2Level + magicPower * 0.06f;
+        splashDamage = data.basePassiveDamage + attackDamage * 0.05f * effectivePath2Level + skillDamageMultiplier * magicPower;
         bubbleDamage = data.baseSkillDamage + 12f * effectivePath3Level + skillDamageMultiplier * magicPower;
     }
 
@@ -86,7 +86,7 @@ public class Waterlily : Shooter
         $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{data.baseSkillDamage + 12f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green><b>{skillDuration}</b></color> seconds.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks deal <color=green><b>{data.basePassiveDamage + attackDamage * 0.05f * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.06f:F1}</b></color>] <color=#3399FF>Water</color> damage to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.";
+        $"Attacks deal <color=green><b>{data.basePassiveDamage + attackDamage * 0.05f * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] <color=#3399FF>Water</color> damage to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.";
 
     public override string GetPath1Description() =>
         $"Attack:\n\n{GetAttackDescription()}\n\n" +
@@ -96,7 +96,7 @@ public class Waterlily : Shooter
 
     public override string GetPath2Description() =>
         $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-        $"Scaling: <color=#FFB6C1><b>6%</b></color> Magic Power\n\n" +
+        $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
         $"Increase splash damage by <color=green><b>5%</b></color> of Attack Damage per level. [<color=green><b>+{attackDamage * 0.05f * effectivePath2Level:F1}</b></color>]\n\n" +
         $"Increase splash radius by <color=green><b>0.05</b></color> per level. [<color=green><b>+{0.05 * effectivePath2Level}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";

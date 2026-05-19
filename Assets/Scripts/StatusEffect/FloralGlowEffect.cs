@@ -1,7 +1,7 @@
 public class FloralGlowEffect : StatusEffect
 {
     private readonly Calendula calendula;
-    private float HealingPerSecond => 8f + (level - 1) + 0.03f * (calendula?.magicPower ?? 0f);
+    private float HealingPerSecond => 8f + (level - 1) + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f);
     private float healTickTimer = 0f;
     private float cachedLightRange;
 

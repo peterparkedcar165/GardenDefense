@@ -74,7 +74,7 @@ public class PoisonShroom : Shooter
     {
         if (poisonBlobPrefab == null) return;
         skillCooldownTimer = skillCooldown;
-        float fieldDPS = data.basePassiveDamage + magicPower * 0.09f;
+        float fieldDPS = data.basePassiveDamage + skillDamageMultiplier * magicPower;
         GameObject obj = Instantiate(poisonBlobPrefab, transform.position, Quaternion.identity);
         PoisonBlob blob = obj.GetComponent<PoisonBlob>();
         if (blob != null)
@@ -93,16 +93,16 @@ public class PoisonShroom : Shooter
 
     public override string GetPath2Description() =>
         $"Passive:\n\n" +
-        $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{data.basePassiveDamage + 4 * (poisonLevel - 1)}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.06f:F0}</b></color>] <color=purple>Poison</color> damage per second.\n\n" +
-        $"Scaling: <color=#FFB6C1><b>6%</b></color> Magic Power\n\n" +
+        $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{data.basePassiveDamage + 4 * (poisonLevel - 1)}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=purple>Poison</color> damage per second.\n\n" +
+        $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
         $"Increase <color=purple>Poison</color> damage by <color=green><b>4</b></color> per level. [<color=green><b>+{4 * effectivePath2Level}</b></color>]\n\n" +
         $"Increase <color=purple>Poison</color> duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
     public override string GetPath3Description() =>
         $"Skill:\n\n" +
-        $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>{activeRadius}</b></color> radius that lasts <color=green><b>{skillDuration}</b></color> seconds. Insects standing in the field take <color=green><b>{data.basePassiveDamage}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.09f:F0}</b></color>] <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second, and any debuffs on them are frozen in time.\n\n" +
-        $"Scaling: <color=#FFB6C1><b>9%</b></color> Magic Power\n\n" +
+        $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>{activeRadius}</b></color> radius that lasts <color=green><b>{skillDuration}</b></color> seconds. Insects standing in the field take <color=green><b>{data.basePassiveDamage}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second, and any debuffs on them are frozen in time.\n\n" +
+        $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
         $"Increase field duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{effectivePath3Level}s</b></color>]\n\n" +
         $"Increase field radius by <color=green><b>0.2</b></color> per level. [<color=green><b>+{0.2 * effectivePath3Level}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
