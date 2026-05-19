@@ -76,7 +76,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::QueenAnt
   baseMaxHealth: 0
   baseAttackDamage: 0
-  baseMagicDamage: 0
+  baseMagicPower: 0
   baseAttackSpeed: 0
   baseAttackRange: 0
   baseHealingBonus: 0
@@ -114,7 +114,7 @@ MonoBehaviour:
   maxHealth: 0
   health: 0
   attackDamage: 0
-  magicDamage: 0
+  magicPower: 0
   attackSpeed: 0
   attackCooldown: 0
   attackCooldownTimer: 0
@@ -154,7 +154,7 @@ MonoBehaviour:
   debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
-  magicDamageAdder: 0
+  magicPowerAdder: 0
   attackSpeedAdder: 0
   attackRangeAdder: 0
   healingBonusAdder: 0
@@ -192,7 +192,7 @@ MonoBehaviour:
   counterDamageAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
-  magicDamageMultiplier: 0
+  magicPowerMultiplier: 0
   attackSpeedMultiplier: 0
   attackRangeMultiplier: 0
   healingBonusMultiplier: 0
@@ -220,7 +220,6 @@ MonoBehaviour:
   dotDamageMultiplier: 0
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
-  skillDamageMultiplier: 0
   coordinatedDamageMultiplier: 0
   skillDurationMultiplier: 0
   tenacityMultiplier: 0

@@ -47,7 +47,7 @@ public abstract class Plant : Entity, IAttackable
     private CircleCollider2D _circleCollider;
     private bool _isSelected = false;
     private UnityEngine.Rendering.Universal.Light2D _light2D;
-    [SerializeField] private float lightIntensity = 1f;
+    private const float lightIntensity = 0.65f;
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
     protected virtual bool ShowLight => true;
@@ -82,6 +82,7 @@ public abstract class Plant : Entity, IAttackable
         if (_light2D != null)
         {
             _light2D.enabled = ShowLight;
+            _light2D.intensity = lightIntensity;
             _light2D.pointLightOuterRadius = lightEmissionRange;
             _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
         }

@@ -41,7 +41,8 @@ public class FertilizerCard : MonoBehaviour
 
     private void RefreshDisplay()
     {
-        if (icon != null) icon.sprite = data.icon;
+        // TODO: uncomment when FertilizerData icons are assigned
+        // if (icon != null) icon.sprite = data.icon;
         if (tierText != null) tierText.text = data.fertilizerName;
 
         if (statsText != null)

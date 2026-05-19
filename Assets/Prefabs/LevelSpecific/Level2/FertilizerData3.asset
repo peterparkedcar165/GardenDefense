@@ -18,7 +18,7 @@ MonoBehaviour:
     value: 0.27
   - statType: 19
     value: 0.24
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   targetElementalType: 0
   appliesToAll: 1
   tier: 0

@@ -7503,7 +7503,7 @@ Transform:
   m_GameObject: {fileID: 1677258466}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.89, y: 3.44, z: 0}
+  m_LocalPosition: {x: 3.921, y: 3.538, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8755,7 +8755,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Intensity
-      value: 1.5
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8495003235869979637, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Name
@@ -8941,6 +8941,7 @@ MonoBehaviour:
   waitTime: 0
   spawnInterval: 0
   spawnCount: 0
+  restInterval: 25
   fertilizerPool:
   - {fileID: 11400000, guid: 9a8f457390b39184187be407123d9e48, type: 2}
   - {fileID: 11400000, guid: 93904acc0a236f945b9da61ab1749fd8, type: 2}
