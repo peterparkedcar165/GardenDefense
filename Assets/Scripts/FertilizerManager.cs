@@ -94,6 +94,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.MagicDamage:                  return (0.06f, 0.08f);
             case StatType.PhysicalResistance:           return (0.04f, 0.06f);
             case StatType.MagicResistance:              return (0.04f, 0.06f);
+            case StatType.MagicPower:                   return (5f,   10f);
             default:                       return (0f,    0f);
         }
     }
@@ -133,6 +134,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.MagicDamage:                  plant.magicShredAdder              += value; break;
             case StatType.PhysicalResistance:           plant.physicalResistanceAdder      += value; break;
             case StatType.MagicResistance:              plant.magicResistanceAdder         += value; break;
+            case StatType.MagicPower:                   plant.magicPowerAdder              += value; break;
         }
     }
 }

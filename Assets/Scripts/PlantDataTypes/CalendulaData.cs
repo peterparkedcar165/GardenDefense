@@ -4,6 +4,7 @@ using UnityEngine;
 public class CalendulaData : PlantData
 {
     public float baseFloralGlowHeal;
+    public float baseSkillHealingMultiplier;
 
     public override string GetAttackDescription() =>
         $"Releases flaming petals dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";

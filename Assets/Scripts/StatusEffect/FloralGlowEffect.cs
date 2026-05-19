@@ -1,7 +1,7 @@
 public class FloralGlowEffect : StatusEffect
 {
     private readonly Calendula calendula;
-    private float HealingPerSecond => 8f + (level - 1) + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f);
+    private float HealingPerSecond => 8f + (level - 1) + (calendula?.skillHealingMultiplier ?? 0f) * (calendula?.magicPower ?? 0f);
     private float healTickTimer = 0f;
     private float cachedLightRange;
 
@@ -49,7 +49,8 @@ public class FloralGlowEffect : StatusEffect
     {
         yield return new UnityEngine.WaitForSeconds(0.1f);
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
-        insect.Damage(calendula.attackDamage, DamageType.Magic, ElementalType.Fire, calendula, false,
+        float hitDamage = calendula.attackDamage + calendula.skillDamageMultiplier * calendula.magicPower;
+        insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false,
             new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated });
     }
 

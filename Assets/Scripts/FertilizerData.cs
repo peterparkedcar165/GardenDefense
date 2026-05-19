@@ -54,5 +54,6 @@ public enum StatType
     PhysicalDamage,
     MagicDamage,
     PhysicalResistance,
-    MagicResistance
+    MagicResistance,
+    MagicPower
 }

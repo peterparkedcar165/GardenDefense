@@ -61,8 +61,9 @@ MonoBehaviour:
   baseSkillCooldown: 15
   baseSkillDuration: 10
   baseSkillRadius: 0
-  baseSkillDamageMultiplier: 0.03
+  baseSkillDamageMultiplier: 0.35
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseFloralGlowHeal: 7
+  baseSkillHealingMultiplier: 0.03

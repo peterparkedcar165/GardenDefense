@@ -100,6 +100,7 @@ public class FertilizerCard : MonoBehaviour
             case StatType.ImmobilizeDurationAdder:
             case StatType.SkillDurationAdder:
             case StatType.IlluminationRangeAdder:
+            case StatType.MagicPower:
                 return true;
             default:
                 return false;
@@ -141,6 +142,7 @@ public class FertilizerCard : MonoBehaviour
             case StatType.MagicDamage:                  return "Magic Damage";
             case StatType.PhysicalResistance:           return "Physical Resistance";
             case StatType.MagicResistance:              return "Magic Resistance";
+            case StatType.MagicPower:                   return "Magic Power";
             default:                      return statType.ToString();
         }
     }

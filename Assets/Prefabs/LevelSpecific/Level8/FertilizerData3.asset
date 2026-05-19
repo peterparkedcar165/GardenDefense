@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Filthy
   stats:
-  - statType: 14
-    value: 0.33
-  - statType: 21
-    value: 0.37
+  - statType: 31
+    value: 100
+  - statType: 13
+    value: 0.52
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

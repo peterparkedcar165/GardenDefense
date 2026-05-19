@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 public class Calendula : Aura
 {
+    public float skillHealingMultiplier;
+
+    private CalendulaData CData => data as CalendulaData;
+
     protected override void Awake()
     {
         elementalType = ElementalType.Fire;
@@ -14,6 +18,8 @@ public class Calendula : Aura
         baseSkillDuration = 10f;
         sunCost = 125;
         base.Awake();
+        baseSkillDamageMultiplier = data?.baseSkillDamageMultiplier ?? 0f;
+        skillHealingMultiplier = CData?.baseSkillHealingMultiplier ?? 0f;
     }
 
     protected override bool ShowLight => DarknessManager.instance != null && DarknessManager.instance.isDark;
@@ -104,7 +110,7 @@ public class Calendula : Aura
         => $"Illuminate the surrounding area with a radius equal to <color=green><b>1.5×</b></color> her Attack Range.";
 
     public override string GetSkillDesription()
-        => $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's projectiles deal an additional <color=green><b>{attackDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{8f + 1f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
+        => $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's projectiles deal an additional <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{8f + 1f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillHealingMultiplier * magicPower:F0}</b></color>] health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
 
     public override string GetPath1Description()
         => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>5</b></color> per level. [<color=green><b>+{5 * effectivePath1Level}</b></color>]\n\n" +
@@ -116,7 +122,7 @@ public class Calendula : Aura
            $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
     public override string GetPath3Description()
-        => $"Skill:\n\n{GetSkillDesription()}\n\nScaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power (Healing)\n\nIncrease duration by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
+        => $"Skill:\n\n{GetSkillDesription()}\n\nScaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power (Damage)\n\nScaling: <color=#FFB6C1><b>{skillHealingMultiplier * 100f:F0}%</b></color> Magic Power (Healing)\n\nIncrease duration by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
            $"Increase Healing per second by <color=green><b>1</b></color> per level. [<color=green><b>+{1 * effectivePath3Level}</b></color>]\n\n" +
            $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }
