@@ -9,16 +9,8 @@ public class Calendula : Aura
 
     protected override void Awake()
     {
-        elementalType = ElementalType.Fire;
-        damageType = DamageType.Magic;
-        baseAttackDamage = 20f;
-        baseAttackSpeed = 0.5f;
-        baseAttackRange = 1.75f;
-        baseSkillCooldown = 15f;
-        baseSkillDuration = 10f;
-        sunCost = 125;
         base.Awake();
-        baseSkillDamageMultiplier = data?.baseSkillDamageMultiplier ?? 0f;
+        LoadData();
         skillHealingMultiplier = CData?.baseSkillHealingMultiplier ?? 0f;
     }
 
@@ -72,13 +64,13 @@ public class Calendula : Aura
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = 20f + 5f * level;
+        baseAttackDamage = data.baseAttackDamage + 5f * level;
         baseFireDamage = 0.05f * level;
     }
 
     public override void OnPath2Upgrade(int level)
     {
-        baseAttackRange = 1.75f + 0.175f * level;
+        baseAttackRange = data.baseAttackRange + 0.175f * level;
     }
 
     public override void OnPath3Unlock()
@@ -88,7 +80,7 @@ public class Calendula : Aura
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = 10f + 2f * level;
+        baseSkillDuration = data.baseSkillDuration + 2f * level;
     }
 
     public override PlantBaseStats GetBaseStats() => new PlantBaseStats
