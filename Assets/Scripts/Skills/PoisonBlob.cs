@@ -8,6 +8,7 @@ public class PoisonBlob : MonoBehaviour
     private Vector3 target;
     private float activeRadius;
     private float fieldDuration;
+    private float damagePerSecond;
     private Plant source;
     private Transform visual;
 
@@ -17,11 +18,12 @@ public class PoisonBlob : MonoBehaviour
     private const float arcRiseEnd = 0.5f;
     private const float spawnScaleDuration = 0.3f;
 
-    public void Initialize(Vector3 target, float activeRadius, float fieldDuration, Plant source)
+    public void Initialize(Vector3 target, float activeRadius, float fieldDuration, Plant source, float damagePerSecond)
     {
         this.target = target;
         this.activeRadius = activeRadius;
         this.fieldDuration = fieldDuration;
+        this.damagePerSecond = damagePerSecond;
         this.source = source;
         float s = activeRadius;
         transform.localScale = new Vector3(s, s, 1f);
@@ -85,7 +87,7 @@ public class PoisonBlob : MonoBehaviour
             GameObject obj = Instantiate(poisonFieldPrefab, transform.position, Quaternion.identity);
             PoisonField field = obj.GetComponent<PoisonField>();
             if (field != null)
-                field.Initialize(activeRadius, fieldDuration, source);
+                field.Initialize(activeRadius, fieldDuration, source, damagePerSecond);
         }
         Destroy(gameObject);
     }

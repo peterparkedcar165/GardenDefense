@@ -88,7 +88,7 @@ public abstract class Projectile : MonoBehaviour
             {
                 hitCount++;
                 OnHit(insect);
-                source?.GetEffect<FieryInfusionEffect>()?.OnProjectileHit(insect);
+                source?.GetEffect<FloralGlowEffect>()?.OnProjectileHit(insect);
                 trackedTarget = null;
                 trackedInsect = null;
                 if (hitCount > piercing)

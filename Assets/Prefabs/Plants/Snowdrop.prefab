@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Snowdrop
   baseMaxHealth: 0
   baseAttackDamage: 0
-  baseMagicDamage: 0
+  baseMagicPower: 0
   baseAttackSpeed: 0
   baseAttackRange: 0
   baseHealingBonus: 0
@@ -81,12 +81,13 @@ MonoBehaviour:
   baseCoordinatedDamage: 0
   baseSkillDuration: 0
   baseTenacity: 0
-  baseImmobilizeDuration: 0
   baseLightEmissionRange: 0
+  baseLifesteal: 0
+  baseCounterDamage: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
-  magicDamage: 0
+  magicPower: 0
   attackSpeed: 0
   attackCooldown: 0
   attackCooldownTimer: 0
@@ -120,12 +121,13 @@ MonoBehaviour:
   coordinatedDamage: 0
   skillDuration: 0
   lightEmissionRange: 0
+  lifesteal: 0
+  counterDamage: 0
   tenacity: 0
-  immobilizeDuration: 0
   debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
-  magicDamageAdder: 0
+  magicPowerAdder: 0
   attackSpeedAdder: 0
   attackRangeAdder: 0
   healingBonusAdder: 0
@@ -159,9 +161,11 @@ MonoBehaviour:
   tenacityAdder: 0
   immobilizeDurationAdder: 0
   lightEmissionRangeAdder: 0
+  lifestealAdder: 0
+  counterDamageAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
-  magicDamageMultiplier: 0
+  magicPowerMultiplier: 0
   attackSpeedMultiplier: 0
   attackRangeMultiplier: 0
   healingBonusMultiplier: 0
@@ -189,24 +193,24 @@ MonoBehaviour:
   dotDamageMultiplier: 0
   elementalPowerMultiplier: 0
   passiveDamageMultiplier: 0
-  skillDamageMultiplier: 0
   coordinatedDamageMultiplier: 0
   skillDurationMultiplier: 0
   tenacityMultiplier: 0
   immobilizeDurationMultiplier: 0
   lightEmissionRangeMultiplier: 0
+  lifestealMultiplier: 0
+  counterDamageMultiplier: 0
   internalCooldown: 2
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
   sproutInternalCooldown: 0
   coldInternalCooldown: 0
-  gustInternalCooldown: 0
   taintedInternalCooldown: 0
   freezeInternalCooldown: 0
   germinateInternalCooldown: 0
   timeAlive: 0
   totalDamageDealt: 0
-  data: {fileID: 11400000, guid: b623d45311f00f14d83400e0398a330a, type: 2}
+  data: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
   lightIntensity: 1
@@ -226,11 +230,20 @@ MonoBehaviour:
   passiveCooldownReductionMultiplier: 0
   passiveCooldownMultiplier: 0
   passiveCooldownTimer: 0
+  basePassiveDuration: 0
+  passiveDuration: 0
   baseSkillCooldown: 0
   skillCooldown: 0
   skillCooldownReductionAdder: 0
   skillCooldownReductionMultiplier: 0
   skillCooldownTimer: 0
+  baseSkillRadius: 0
+  skillRadius: 0
+  baseSkillDamageMultiplier: 0
+  skillDamageMultiplier: 0
+  skillDamageMultiplierAdder: 0
+  baseSkillHealth: 0
+  skillHealth: 0
   path1Level: 0
   path2Level: 0
   path3Level: 0

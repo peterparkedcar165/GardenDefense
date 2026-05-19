@@ -1,43 +1,29 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class LeafRanger : Shooter
 {
-    private float
-    bAD = 122f, // base attack damage
-    bAS = 0.25f, // base attack speed
-    bAR = 99f, // base attack range
-    bPS = 20f, // base projectile speed
-    bMR = 60f; // base max range
-    private int bP = 1; // base piercing
-    public float activeRadius = 2f;
-
     private bool skillActive;
     private float skillTimer;
+
+    private LeafRangerData LRData => data as LeafRangerData;
 
     protected override void Awake()
     {
         base.Awake();
-        baseAttackDamage = bAD;
-        baseAttackSpeed = bAS;
-        baseAttackRange = bAR;
-        baseProjectileSpeed = bPS;
-        baseMaxRange = bMR;
-        baseSkillDuration = 4f;
-        baseSkillCooldown = 25f;
+        LoadData();
     }
 
     public override void UpdateStats()
     {
         base.UpdateStats();
         if (skillActive)
-            attackSpeed += baseAttackSpeed * (3f + 0.25f * effectivePath3Level);
+            attackSpeed += baseAttackSpeed * ((LRData?.baseSkillAttackSpeedBonus ?? 3f) + 0.25f * effectivePath3Level + magicPower * 0.01f);
     }
 
     protected override void Update()
     {
         base.Update();
-        basePiercing = bP + effectivePath2Level;
+        basePiercing = data.basePiercing + effectivePath2Level;
 
         if (skillActive)
         {
@@ -51,7 +37,6 @@ public class LeafRanger : Shooter
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         LeafRangerProjectile arrow = projectile.GetComponent<LeafRangerProjectile>();
-
         if (arrow != null)
         {
             arrow.SetTarget(FindTarget());
@@ -61,18 +46,15 @@ public class LeafRanger : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseCriticalChance = 0.05f + 0.05f*level;
-        baseAttackSpeed = bAS + (0.05f*level);
+        baseCriticalChance = data.baseCriticalChance + 0.05f * level;
+        baseAttackSpeed    = data.baseAttackSpeed    + 0.05f * level;
     }
 
-    public override void OnPath2Upgrade(int level)
-    {
-        // piercing taken care of in update
-    }
+    public override void OnPath2Upgrade(int level) { }
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = 4f + (level * 0.5f);
+        baseSkillDuration = data.baseSkillDuration + level * 0.5f;
     }
 
     public override void ActivateSkill()
@@ -82,72 +64,31 @@ public class LeafRanger : Shooter
         skillCooldownTimer = skillCooldown;
     }
 
+    public override string GetDescription() =>
+        $"The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can pierce through his target.";
 
-    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
-    {
-        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 25f, skillDuration = 4f,
-        piercing = bP,
-        skillAttackSpeedBonus = 300f,
-    };
+    public override string GetPath1Name() => "Attack";
+    public override string GetPath2Name() => "Passive";
+    public override string GetPath3Name() => "Skill";
 
-    // DESCRIPTION
+    public override string GetPath1Description() =>
+        $"Attack:\n\n" +
+        $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.\n\n" +
+        $"Increase Critical Chance by <color=green><b>5%</b></color> per level. [<color=green><b>+{5 * effectivePath1Level}%</b></color>]\n\n" +
+        $"Increase Attack Speed by <color=green><b>0.05</b></color> per level. [<color=green><b>+{0.05 * effectivePath1Level}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
-    public override string GetName()
-    {
-        return "<b><color=green>Leaf Ranger</color></b>";
-    }
+    public override string GetPath2Description() =>
+        $"Passive:\n\n" +
+        $"Attacks can pierce <color=green><b>{piercing}</b></color> enemy.\n\n" +
+        $"Increase Piercing by an additional <b><color=green>1</color></b> per level. [<b><color=green>+{effectivePath2Level}</color></b>]\n\n" +
+        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
-    public override string GetDescription()
-    {
-        return $"The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can pierce through his target.";
-    }
-
-    public override string GetAttackDescription()
-    {
-        return $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.";
-    }
-
-    public override string GetSkillDesription()
-    {
-        return $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{300 + 25 * effectivePath3Level}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.";
-    }
-
-    public override string GetPassiveDescription()
-    {
-        return $"Attacks can pierce <color=green><b>{piercing}</b></color> enemy.";
-    }
-
-    public override string GetPath1Name()
-    {
-        return "Attack";
-    }
-
-    public override string GetPath1Description()
-    {
-        return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Critical Chance by <color=green><b>5%</b></color> per level. [<color=green><b>+" + (5*effectivePath1Level) + "%</b></color>]\n\n" +
-        "Increase Attack Speed by <color=green><b>0.05</b></color> per level. [<color=green><b>+" + (0.05*effectivePath1Level) + "</b></color>]\n\n" +
-        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>";
-    }
-    public override string GetPath2Name()
-    {
-        return "Passive";
-    }
-
-    public override string GetPath2Description()
-    {
-        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease Piercing by an additional <b><color=green>1</color></b> per level. [<b><color=green>+" + (1 * effectivePath2Level) + "</color></b>]\n\n" +
-        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
-    }
-    public override string GetPath3Name()
-    {
-        return "Skill";
-    }
-
-    public override string GetPath3Description()
-    {
-        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease Attack Speed bonus by <color=green><b>25%</b></color> per level. [<color=green><b>+{25 * effectivePath3Level}%</b></color>]\n\n" +
+    public override string GetPath3Description() =>
+        $"Skill:\n\n" +
+        $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{(LRData?.baseSkillAttackSpeedBonus ?? 3f) * 100f + 25f * effectivePath3Level + magicPower:F0}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.\n\n" +
+        $"Scaling: <color=#FFB6C1><b>+1%</b></color> bonus per <color=#FFB6C1>Magic Power</color>. [<color=#FFB6C1><b>+{magicPower:F0}%</b></color>]\n\n" +
+        $"Increase Attack Speed bonus by <color=green><b>25%</b></color> per level. [<color=green><b>+{25 * effectivePath3Level}%</b></color>]\n\n" +
         $"Increase duration by <color=green><b>0.5</b></color> seconds per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
-        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";
-    }
+        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

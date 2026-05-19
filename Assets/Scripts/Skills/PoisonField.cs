@@ -7,7 +7,7 @@ public class PoisonField : MonoBehaviour
     private float duration;
     private Plant source;
 
-    private const float damagePerSecond = 12f;
+    private float damagePerSecond;
     private const float tickInterval = 0.5f;
     private float tickTimer = 0f;
 
@@ -15,11 +15,12 @@ public class PoisonField : MonoBehaviour
 
     private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.SkillDamage, DamageTag.DoT };
 
-    public void Initialize(float radius, float duration, Plant source)
+    public void Initialize(float radius, float duration, Plant source, float damagePerSecond)
     {
         this.radius = radius;
         this.duration = duration;
         this.source = source;
+        this.damagePerSecond = damagePerSecond;
         float s = radius * 2f;
         transform.localScale = new Vector3(s, s, 1f);
     }

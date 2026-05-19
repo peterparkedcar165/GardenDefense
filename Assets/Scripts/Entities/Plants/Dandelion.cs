@@ -4,14 +4,6 @@ using System.Collections.Generic;
 
 public class Dandelion : Shooter
 {
-    private float
-    bAD = 12f,  // base attack damage
-    bAS = 1f,   // base attack speed
-    bAR = 2f,   // base attack range
-    bPS = 5f,   // base projectile speed
-    bMR = 20f;  // base max range
-    private int bP = 0; // base piercing
-
     [SerializeField] private GameObject windGustPrefab;
     [SerializeField] private GameObject windGustIndicatorPrefab;
     private GameObject windGustIndicatorInstance;
@@ -19,17 +11,12 @@ public class Dandelion : Shooter
     private const float indicatorLength = 30f;
     private const float pushForce = 1.5f;
 
+    private float WindGustDamage => data.baseSkillDamage + attackDamage + skillDamageMultiplier * magicPower;
+
     protected override void Awake()
     {
         base.Awake();
-        baseAttackDamage = bAD;
-        baseAttackSpeed = bAS;
-        baseAttackRange = bAR;
-        baseProjectileSpeed = bPS;
-        baseMaxRange = bMR;
-        basePiercing = bP;
-        baseSkillCooldown = 30f;
-        baseSkillDuration = 4f;
+        LoadData();
     }
 
     protected override void Update()
@@ -40,7 +27,7 @@ public class Dandelion : Shooter
 
     protected override void Shoot(Vector3 _)
     {
-        int count = 3 + effectivePath2Level;
+        int count = ((DandelionData)data).baseSeedCount + effectivePath2Level;
         List<Insect> targets = FindMultipleTargets(count);
         if (targets.Count == 0) return;
 
@@ -113,16 +100,14 @@ public class Dandelion : Shooter
     public override void OnPath1Upgrade(int level)
     {
         baseElementalPower = level * 0.06f;
-        baseAttackRange = bAR + (level * 0.25f);
+        baseAttackRange = data.baseAttackRange + (level * 0.25f);
     }
 
-    public override void OnPath2Upgrade(int level)
-    {
-    }
+    public override void OnPath2Upgrade(int level) { }
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = 4f + (level * 0.5f);
+        baseSkillDuration = data.baseSkillDuration + (level * 0.5f);
     }
 
     public override void ActivateSkill()
@@ -140,10 +125,10 @@ public class Dandelion : Shooter
     {
         skillCooldownTimer = skillCooldown;
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
-        float beamWidth = 1.5f + 0.25f * effectivePath3Level;
+        float beamWidth = ((DandelionData)data).baseBeamWidth + 0.25f * effectivePath3Level;
         if (windGustPrefab == null) return;
         GameObject obj = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
-        obj.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, attackDamage, pushForce, this);
+        obj.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, pushForce, this);
     }
 
     private void UpdateWindGustIndicator()
@@ -161,7 +146,7 @@ public class Dandelion : Shooter
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, Camera.main.nearClipPlane));
         mouseWorld.z = 0f;
 
-        float beamWidth = 1.5f + 0.25f * effectivePath3Level;
+        float beamWidth = ((DandelionData)data).baseBeamWidth + 0.25f * effectivePath3Level;
         Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
@@ -172,41 +157,28 @@ public class Dandelion : Shooter
         windGustIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
     }
 
+    public override string GetDescription() =>
+        $"The {GetName()} releases waves of seeds that ride the wind, striking multiple targets at once.";
 
-    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
-    {
-        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 30f, skillDuration = 4f,
-        seedCount = 3, beamWidth = 1.5f,
-    };
+    public override string GetPath1Description() =>
+        $"Attack:\n\n" +
+        $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.\n\n" +
+        $"Increase Elemental Power by <color=green><b>6%</b></color> per level. [<color=green><b>+{6 * effectivePath1Level}%</b></color>]\n\n" +
+        $"Increase Attack Range by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath1Level}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
-    // DESCRIPTION
+    public override string GetPath2Description() =>
+        $"Passive:\n\n" +
+        $"Fires <color=green><b>{((DandelionData)data).baseSeedCount + effectivePath2Level}</b></color> seeds per attack, targeting the <color=green><b>{((DandelionData)data).baseSeedCount + effectivePath2Level}</b></color> highest-priority insects in range.\n\n" +
+        $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
-    public override string GetName() => "<b><color=#B2EBF2>Dandelion</color></b>";
-
-    public override string GetDescription()
-        => $"The {GetName()} releases waves of seeds that ride the wind, striking multiple targets at once.";
-
-    public override string GetAttackDescription()
-        => $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.";
-
-    public override string GetSkillDesription()
-        => $"Blows a powerful gust of pollen wind <color=green><b>{1.5f + 0.25f * effectivePath3Level}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";
-
-    public override string GetPassiveDescription()
-        => $"Fires <color=green><b>{3 + effectivePath2Level}</b></color> seeds per attack, targeting the <color=green><b>{3 + effectivePath2Level}</b></color> highest-priority insects in range.";
-
-    public override string GetPath1Description()
-        => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Elemental Power by <color=green><b>6%</b></color> per level. [<color=green><b>+{6 * effectivePath1Level}%</b></color>]\n\n" +
-           $"Increase Attack Range by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath1Level}</b></color>]\n\n" +
-           $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
-
-    public override string GetPath2Description()
-        => $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-           $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
-
-    public override string GetPath3Description()
-        => $"Skill:\n\n{GetSkillDesription()}\n\nIncrease skill duration by <color=green><b>0.5</b></color> seconds per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
-           $"Increase gust width by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath3Level}</b></color>]\n\n" +
-           $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    public override string GetPath3Description() =>
+        $"Skill:\n\n" +
+        $"Blows a powerful gust of pollen wind <color=green><b>{((DandelionData)data).baseBeamWidth + 0.25f * effectivePath3Level}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.\n\n" +
+        $"Scaling: <color=green><b>100%</b></color> Attack Damage\n\n" +
+        $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
+        $"Increase skill duration by <color=green><b>0.5</b></color> seconds per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
+        $"Increase gust width by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath3Level}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

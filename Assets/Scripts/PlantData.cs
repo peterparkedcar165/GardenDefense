@@ -43,8 +43,6 @@ public class PlantData : ScriptableObject
     public float baseCriticalDamage = 1.75f;
     public float baseDotDamage;
     public float baseElementalPower;
-    public float basePassiveDamage;
-    public float baseSkillDamage;
     public float baseCoordinatedDamage;
     public float baseCounterDamage;
 
@@ -59,6 +57,11 @@ public class PlantData : ScriptableObject
     [Header("Misc")]
     public float baseLightEmissionRange;
 
+    [Header("Shooter")]
+    public float baseProjectileSpeed;
+    public float baseMaxRange;
+    public int basePiercing;
+
     [Header("Specific")]
     public float basePassiveCooldown;
     public float basePassiveDuration;
@@ -67,11 +70,8 @@ public class PlantData : ScriptableObject
     public float baseSkillRadius;
     public float baseSkillDamageMultiplier;
     public float baseSkillHealth;
-
-    [Header("Shooter")]
-    public float baseProjectileSpeed;
-    public float baseMaxRange;
-    public int basePiercing;
+    public float basePassiveDamage;
+    public float baseSkillDamage;
 
     public virtual string GetAttackDescription() => "";
     public virtual string GetPassiveDescription() => "";

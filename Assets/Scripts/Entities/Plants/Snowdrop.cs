@@ -4,10 +4,6 @@ using UnityEngine.InputSystem;
 
 public class Snowdrop : Aura
 {
-    private float 
-    bAD = 9f, // base attack damage
-    bAS = 0.33f, // base attack speed
-    bAR = 1.75f; // base attack range
     private float tickTimer = 0f;
     private const float tickInterval = 0.25f;
     public int chillLevel = 1;
@@ -17,57 +13,37 @@ public class Snowdrop : Aura
     public float blizzardDamage;
     private GameObject blizzardIndicatorInstance;
     private const float indicatorLength = 30f;
+
     protected override void Awake()
     {
         base.Awake();
-        baseAttackDamage = bAD;
-        baseAttackSpeed = bAS;
-        baseAttackRange = bAR;
+        LoadData();
         activeCooldown = 40f;
-        baseSkillCooldown = 35f;
-        baseSkillDuration = 6f;
-        blizzardWidth = 1.5f;
-        blizzardDamage = 35f;
+        blizzardWidth  = data.baseSkillRadius;
     }
-
 
     protected override void Update()
     {
         base.Update();
-        
-        if (attackCooldownTimer < attackCooldown)
-        {
-            attackCooldownTimer += Time.deltaTime;
-        }
-        else
-        {
-           // if there is at least one insect within range, attack.
-           // ONLY WHEN PASSIVE IS UNLOCKED
-           // Attack(GetInsectsInRange());
-        }
-        
 
-        // passive damage tick
+        if (attackCooldownTimer < attackCooldown)
+            attackCooldownTimer += Time.deltaTime;
+
         tickTimer += Time.deltaTime;
 
         List<Insect> targets = GetInsectsInRange();
         foreach (Insect insect in targets)
         {
+            if (insect.visual == null || insect.visual.localPosition.y > 0.4f) continue;
 
-        if (insect.visual == null || insect.visual.localPosition.y > 0.4f) continue;
+            insect.ApplyEffect(new ChillEffect(insect, 0.25f, chillLevel, this));
 
-        insect.ApplyEffect(new ChillEffect(insect, 0.25f, chillLevel, this));
-
-        if (tickTimer >= tickInterval)
-        {
-            insect.Damage(attackDamage * tickInterval, damageType, elementalType, this, false, new DamageTag [] {DamageTag.AoE, DamageTag.DoT});
-        }
+            if (tickTimer >= tickInterval)
+                insect.Damage(attackDamage * tickInterval, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.DoT });
         }
 
         if (tickTimer >= tickInterval)
-        {
             tickTimer -= tickInterval;
-        }
 
         UpdateBlizzardIndicator();
     }
@@ -83,7 +59,7 @@ public class Snowdrop : Aura
             return;
         }
 
-        Vector2 mouseScreen = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+        Vector2 mouseScreen = Mouse.current.position.ReadValue();
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, Camera.main.nearClipPlane));
         mouseWorld.z = 0f;
 
@@ -100,20 +76,25 @@ public class Snowdrop : Aura
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = bAD + (level * 1f);
-        baseAttackRange = bAR + (level * 0.1f);
+        baseAttackDamage = data.baseAttackDamage + level * 1f;
+        baseAttackRange  = data.baseAttackRange  + level * 0.1f;
     }
 
     public override void OnPath2Upgrade(int level)
     {
-        chillLevel = 1 + (level);
+        chillLevel = 1 + level;
+    }
+
+    public override void UpdateStats()
+    {
+        base.UpdateStats();
+        blizzardDamage = data.baseSkillDamage + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
     }
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = 6f + 1f * level;
-        blizzardWidth = 1.5f + 0.5f * level;
-        blizzardDamage = 35f + 15f * level;
+        baseSkillDuration = data.baseSkillDuration + 1f   * level;
+        blizzardWidth     = data.baseSkillRadius   + 0.5f * level;
     }
 
     public override void ActivateSkill()
@@ -137,62 +118,39 @@ public class Snowdrop : Aura
 
     protected override void Attack()
     {
-
         base.Attack();
     }
 
-    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
-    {
-        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 35f, skillDuration = 6f,
-        slowPercent = 24f, blizzardDamage = 35f,
-    };
+    public override string GetName() => "<b><color=#00FFFF>Snowdrop</color></b>";
 
-    // DESCRIPTION
+    public override string GetDescription() =>
+        $"The {GetName()}'s mere frosty presence damages and slows insects around her.";
 
-    public override string GetName()
-    {
-        return "<b><color=#00FFFF>Snowdrop</color></b>";
-    }
+    public override string GetAttackDescription() =>
+        $"Freezes the ground around her continuously dealing <color=green><b>{attackDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects.";
 
-    public override string GetDescription()
-    {
-        return $"The {GetName()}'s mere frosty presence damages and slows insects around her.";
-    }
+    public override string GetSkillDesription() =>
+        $"Summon a strong blizzard, aiming it towards the targeted area. The blizzard deals <color=green><b>{data.baseSkillDamage + 15f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects caught in the area, and applies <color=#00FFFF>Chill</color> with an additional level.";
 
-    public override string GetAttackDescription()
-    {
-        return $"Freezes the ground around her continuously dealing <color=green><b>{attackDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects.";
-    }
+    public override string GetPassiveDescription() =>
+        $"The frosty aura applies a <color=#00FFFF>Chill</color> effect, slowing down insects by <color=green><b>{24 + 6 * effectivePath2Level}%</b></color>.";
 
-    public override string GetSkillDesription()
-    {
-        return $"Summon a strong blizzard, aiming it towards the targeted area. The blizzard deals <color=green><b>{blizzardDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects caught in the area, and applies <color=#00FFFF>Chill</color> with an additional level.";
-    }
+    public override string GetPath1Description() =>
+        $"Attack:\n\n{GetAttackDescription()}\n\n" +
+        $"Increase Attack Damage by <b><color=green>1</color></b> per level. [<b><color=green>+{1f * effectivePath1Level}</color></b>]\n\n" +
+        $"Increase Attack Range by <b><color=green>0.1</color></b> per level. [<b><color=green>+{0.1f * effectivePath1Level}</color></b>]\n\n" +
+        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
-    public override string GetPassiveDescription()
-    {
-        return $"The frosty aura applies a <color=#00FFFF>Chill</color> effect, slowing down insects by <color=green><b>{24+ 6*effectivePath2Level}%</b></color>.";
-    }
+    public override string GetPath2Description() =>
+        $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+        $"Increase <color=#00FFFF>Chill</color> slowing effect by <color=green><b>6%</b></color> per level. [<color=green><b>+{6 * effectivePath2Level}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
-    public override string GetPath1Description()
-    {
-        return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <b><color=green>1</color></b> per level. [<b><color=green>+" + (1f * effectivePath1Level) + "</color></b>]\n\n" +
-        "Increase Attack Range by <b><color=green>0.1</color></b> per level. [<b><color=green>+" + (0.1f * effectivePath1Level) + "</color></b>]\n\n" +
-        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>";
-    }
-
-    public override string GetPath2Description()
-    {
-        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease <color=#00FFFF>Chill</color> slowing effect by <color=green><b>6%</b></color> per level. [<color=green><b>+" + (6*effectivePath2Level) + "</b></color>]\n\n" +
-        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
-    }
-
-    public override string GetPath3Description()
-    {
-        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease Damage Per Second by <color=green><b>15</b></color> per level. [<color=green><b>+" + (15*effectivePath3Level) + "</b></color>]\n\n" +
+    public override string GetPath3Description() =>
+        $"Skill:\n\n{GetSkillDesription()}\n\n" +
+        $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
+        $"Increase Damage Per Second by <color=green><b>15</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}</b></color>]\n\n" +
         $"Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{1 * effectivePath3Level}s</b></color>]\n\n" +
-        "Increase width by <color=green><b>0.5</b></color> units per level. [<color=green><b>" + (0.5*effectivePath3Level) + "</b></color>]\n\n" +
-        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level-path3Level) + ")</b></color>";  
-    }
+        $"Increase width by <color=green><b>0.5</b></color> units per level. [<color=green><b>+{0.5 * effectivePath3Level}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

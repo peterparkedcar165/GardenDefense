@@ -6885,17 +6885,41 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 31d7460f463c7bc42a1ef517bd104f7b, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 092e0c61ed58c854fa604766eb0b0886, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 5a6009b0c99008a47a4c7a1a7269fec9, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d5b75fcbecb395344be6df9fc46c0bbe, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 3136cd9ead67e954ba68bad08ded7d11, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[5]'
+      value: 
+      objectReference: {fileID: 11400000, guid: a87b905f63edb5f44940e6bc0460922c, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[6]'
       value: 
-      objectReference: {fileID: 11400000, guid: 927931ea787d2744e907fc5864bbb9cb, type: 2}
+      objectReference: {fileID: 11400000, guid: 4b98c4a2c9a2fe94e8c59cb56e95bc0c, type: 2}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[7]'
       value: 
-      objectReference: {fileID: 11400000, guid: d94e6d961064c924b9e18fbd7217246e, type: 2}
+      objectReference: {fileID: 11400000, guid: 09b2bc1040250e142ae01848263b0ab0, type: 2}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[8]'
       value: 
-      objectReference: {fileID: 11400000, guid: 83951a7b7fc976543b199f11ee37d8ca, type: 2}
+      objectReference: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

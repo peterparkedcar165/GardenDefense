@@ -1,11 +1,11 @@
-public class FieryInfusionEffect : StatusEffect
+public class FloralGlowEffect : StatusEffect
 {
     private readonly Calendula calendula;
-    private float HealingPerSecond => 8f + 1f * (level - 1);
+    private float HealingPerSecond => 8f + (level - 1) + 0.03f * (calendula?.magicPower ?? 0f);
     private float healTickTimer = 0f;
     private float cachedLightRange;
 
-    public FieryInfusionEffect(Entity target, float duration, int level, Entity source, Calendula calendula)
+    public FloralGlowEffect(Entity target, float duration, int level, Entity source, Calendula calendula)
         : base(target, duration, level, source)
     {
         this.calendula = calendula;
@@ -53,6 +53,6 @@ public class FieryInfusionEffect : StatusEffect
             new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated });
     }
 
-    public override string GetName() => "<color=orange>Fiery Infusion</color>";
+    public override string GetName() => "<color=orange>Floral Glow</color>";
     public override string GetDescription() => $"Healing <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Projectile attacks deal bonus fire magic damage.";
 }

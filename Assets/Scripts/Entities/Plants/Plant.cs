@@ -25,7 +25,7 @@ public struct PlantBaseStats
     // Snowdrop
     public float slowPercent, blizzardDamage;
     // Calendula
-    public float fieryInfusionHeal;
+    public float floralGlowHeal;
 }
 
 public abstract class Plant : Entity, IAttackable

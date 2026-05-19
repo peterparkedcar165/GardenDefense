@@ -3,14 +3,6 @@ using System.Collections;
 
 public class BogIris : Shooter
 {
-    private float
-    bAD = 70f,
-    bAS = 0.8f,
-    bAR = 3f,
-    bPS = 3f,
-    bMR = 20f;
-    private int bP = 0;
-
     [SerializeField] private GameObject geyserPrefab;
     [SerializeField] private SpriteRenderer closedVisual;
     [SerializeField] private SpriteRenderer openVisual;
@@ -21,28 +13,21 @@ public class BogIris : Shooter
     private float healTickTimer = 0f;
     private GameObject _indicatorPrefab;
     private const float totalHeal = 200f;
+
+    private BogIrisData BogData => data as BogIrisData;
+
     private float SunInterval => 2f * (passiveCooldown / basePassiveCooldown);
-    private float OpenDuration => 6f + 2f * effectivePath2Level;
-    private int SunGenerated => 2 + effectivePath2Level;
-    private float GeyserRadius => 1.25f + 0.15f * effectivePath3Level;
-    private float KnockUpHeight => ScaleCC((3f + 1f * effectivePath3Level) * skillDuration);
-    private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * (KnockUpHeight)); // knock up height dictates force
-    private float GeyserDamage => (75f + 15f * effectivePath3Level) + 1.33f * attackDamage;
+    private float OpenDuration => basePassiveDuration + 2f * effectivePath2Level;
+    private int SunGenerated => (BogData?.baseSunGenerated ?? 0) + effectivePath2Level;
+    private float GeyserRadius => baseSkillRadius + 0.15f * effectivePath3Level;
+    private float KnockUpHeight => ScaleCC(((BogData?.baseKnockUpHeight ?? 0f) + 1f * effectivePath3Level) * skillDuration);
+    private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * KnockUpHeight);
+    private float GeyserDamage => baseSkillDamage + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
 
     protected override void Awake()
     {
-        elementalType = ElementalType.Water;
-        damageType = DamageType.Magic;
-        baseAttackDamage = bAD;
-        baseAttackSpeed = bAS;
-        baseAttackRange = bAR;
-        baseProjectileSpeed = bPS;
-        baseMaxRange = bMR;
-        basePiercing = bP;
-        basePassiveCooldown = 12f;
-        baseSkillCooldown = 30f;
-        baseSkillDuration = 1f;
         base.Awake();
+        LoadData();
         _indicatorPrefab = Resources.Load<GameObject>("DamageIndicator");
         SetVisualState(false);
     }
@@ -136,48 +121,36 @@ public class BogIris : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = bAD + 8f * level;
+        baseAttackDamage = data.baseAttackDamage + 8f * level;
     }
 
     public override void OnPath2Upgrade(int level) { }
     public override void OnPath3Upgrade(int level) { }
 
-    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
-    {
-        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 30f, passiveCooldown = 12f, skillDuration = 1f,
-        sunGenerated = 2f, sunInterval = 2f, openDuration = 6f,
-        geyserDamage = 75f + 1.33f * bAD, knockUpHeight = 3f,
-    };
+    public override string GetDescription() =>
+        $"The {GetName()} is self-sufficient, providing herself with regeneration as well as generating sun for the garden.";
 
-    public override string GetName() => "<b><color=#4FC3F7>Bog Iris</color></b>";
+    public override string GetPath1Description() =>
+        $"Attack:\n\n" +
+        $"Fires a water bolt at a single target dealing <color=green><b>{attackDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage.\n\n" +
+        $"Increase Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+{8 * effectivePath1Level}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
-    public override string GetDescription()
-        => $"The {GetName()} is self-sufficient, providing herself with regeneration as well as generating sun for the garden.";
+    public override string GetPath2Description() =>
+        $"Passive:\n\n" +
+        $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>{OpenDuration:F0}s</b></color>) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}s</b></color>) state.\n\n" +
+        $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>{SunGenerated}</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds.\n\n" +
+        $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>{totalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.\n\n" +
+        $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath2Level}s</b></color>]\n\n" +
+        $"Increase Sun generated per tick by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
-    public override string GetAttackDescription()
-        => $"Fires a water bolt at a single target dealing <color=green><b>{attackDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage.";
-
-    public override string GetPassiveDescription()
-        => $"The {GetName()} cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>{OpenDuration:F0}s</b></color>) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}s</b></color>) state.\n\n" +
-           $"In <b><color=#4FC3F7>open</color></b> form, she generates <color=green><b>{SunGenerated}</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds.\n\n" +
-           $"In <b><color=#4FC3F7>closed</color></b> form, she regenerates <color=green><b>{totalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.";
-
-    public override string GetSkillDesription()
-        => $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{GeyserDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.";
-
-    public override string GetPath1Description()
-        => $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+{8 * effectivePath1Level}</b></color>]\n\n" +
-           $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
-
-    public override string GetPath2Description()
-        => $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath2Level}s</b></color>]\n\n" +
-           $"Increase Sun generated per tick by <color=green><b>1</b></color> per level. [<color=green><b>+{1 * effectivePath2Level}</b></color>]\n\n" +
-           $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
-
-    public override string GetPath3Description()
-        => $"Skill:\n\n{GetSkillDesription()}\n\nIncrease the flat component of geyser damage by <color=green><b>15</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}</b></color>]\n\n" +
-           $"Increase the knock-up height by <color=green><b>1</b></color> unit per level. [<color=green><b>+{effectivePath3Level}</b></color>]\n\n" +
-           $"Increase the radius of the geyser by <color=green><b>0.15</b></color> per level. [<color=green><b>+{0.15f * effectivePath3Level:F2}</b></color>]\n\n" +
-           $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    public override string GetPath3Description() =>
+        $"Skill:\n\n" +
+        $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{baseSkillDamage + 15f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.\n\n" +
+        $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
+        $"Increase the flat component of geyser damage by <color=green><b>15</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}</b></color>]\n\n" +
+        $"Increase the knock-up height by <color=green><b>1</b></color> unit per level. [<color=green><b>+{effectivePath3Level}</b></color>]\n\n" +
+        $"Increase the radius of the geyser by <color=green><b>0.15</b></color> per level. [<color=green><b>+{0.15f * effectivePath3Level:F2}</b></color>]\n\n" +
+        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

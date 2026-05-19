@@ -110,7 +110,6 @@
     <Compile Include="Assets\Scripts\InsectData.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Moth.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\FieryInfusionEffect.cs" />
     <Compile Include="Assets\Scripts\FertilizerManager.cs" />
     <Compile Include="Assets\Scripts\UI\GameButtons.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
@@ -166,6 +165,7 @@
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level1\GridManager1.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level5\GridManager5.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\KnockUpEffect.cs" />
