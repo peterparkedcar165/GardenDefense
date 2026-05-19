@@ -63,5 +63,6 @@ MonoBehaviour:
   baseSkillRadius: 1
   baseSkillDamageMultiplier: 0.11
   baseSkillHealth: 0
-  basePassiveDamage: 12
+  basePassiveDamage: 0
   baseSkillDamage: 0
+  basePoisonDPS: 12

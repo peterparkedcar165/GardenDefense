@@ -21,7 +21,7 @@ public class PoisonEffect : DoTEffect
     public override void OnApply()
     {
         base.OnApply();
-        damagePerSecond = 12 + (4 * (level - 1)) + additionalDPS;
+        damagePerSecond = additionalDPS;
         Debug.Log("Poison applied at level " + level);
 
         GameObject fx = Object.Instantiate(Resources.Load<GameObject>("PoisonBubbles"), target.transform.position, Quaternion.identity);

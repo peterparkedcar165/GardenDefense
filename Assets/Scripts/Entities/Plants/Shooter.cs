@@ -32,6 +32,12 @@ public abstract class Shooter : Plant
     protected override void Awake()
     {
         base.Awake();
+        if (data != null)
+        {
+            baseProjectileSpeed = data.baseProjectileSpeed;
+            baseMaxRange        = data.baseMaxRange;
+            basePiercing        = data.basePiercing;
+        }
     }
 
     protected override void Update()

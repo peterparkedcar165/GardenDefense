@@ -379,7 +379,15 @@ public abstract class Plant : Entity, IAttackable
     public float ScaleCC(float baseDuration) => baseDuration + immobilizeDurationAdder + baseDuration * immobilizeDurationMultiplier;
 
     // PATH NAMES & HOVER DESCRIPTIONS
-    public virtual PlantBaseStats GetBaseStats() => default;
+    public virtual PlantBaseStats GetBaseStats() => data == null ? default : new PlantBaseStats
+    {
+        attackDamage    = data.baseAttackDamage,
+        attackSpeed     = data.baseAttackSpeed,
+        attackRange     = data.baseAttackRange,
+        skillCooldown   = data.baseSkillCooldown,
+        passiveCooldown = data.basePassiveCooldown,
+        piercing        = data.basePiercing,
+    };
 
     public virtual string GetPath1Name() => "Attack";
     public virtual string GetPath2Name() => "Passive";
