@@ -1,0 +1,741 @@
+fileFormatVersion: 2
+guid: f9a8ddf5ac1a97f4385d499e8835c462
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6540971589246231054
+    second: begoniaprojectile_0
+  - first:
+      213: 2732297638053665794
+    second: begoniaprojectile_1
+  - first:
+      213: -9108988534608265401
+    second: begoniaprojectile_2
+  - first:
+      213: 7213301150008666421
+    second: begoniaprojectile_3
+  - first:
+      213: -2068207104150413757
+    second: begoniaprojectile_4
+  - first:
+      213: 2631259270955573696
+    second: begoniaprojectile_5
+  - first:
+      213: 9220108711957896125
+    second: begoniaprojectile_6
+  - first:
+      213: -4205740541633963877
+    second: begoniaprojectile_7
+  - first:
+      213: 4558654100011684756
+    second: begoniaprojectile_8
+  - first:
+      213: 3855156510937689007
+    second: begoniaprojectile_9
+  - first:
+      213: 5049198441159234411
+    second: begoniaprojectile_10
+  - first:
+      213: 3594451562084828679
+    second: begoniaprojectile_11
+  - first:
+      213: 6832229900973954047
+    second: begoniaprojectile_12
+  - first:
+      213: -3577144768665535360
+    second: begoniaprojectile_13
+  - first:
+      213: 7155904303711401010
+    second: begoniaprojectile_14
+  - first:
+      213: -1409824468758971632
+    second: begoniaprojectile_15
+  - first:
+      213: 1787872693636771880
+    second: begoniaprojectile_16
+  - first:
+      213: 1722913405482931587
+    second: begoniaprojectile_17
+  - first:
+      213: -7550676483958627054
+    second: begoniaprojectile_18
+  - first:
+      213: 8609663011730285320
+    second: begoniaprojectile_19
+  - first:
+      213: 6479526803935803197
+    second: begoniaprojectile_20
+  - first:
+      213: -6288507757733848434
+    second: begoniaprojectile_21
+  - first:
+      213: -6427824795810823602
+    second: begoniaprojectile_22
+  - first:
+      213: -8508386073087852025
+    second: begoniaprojectile_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.49485987, y: 0.5274136}
+  spritePixelsToUnits: 440
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: begoniaprojectile_0
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 465
+        width: 19
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fd5e01cefcc935a0800000000000000
+      internalID: -6540971589246231054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_1
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 488
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20cd3d8b9321be520800000000000000
+      internalID: 2732297638053665794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_2
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 478
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74f7193703f569180800000000000000
+      internalID: -9108988534608265401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_3
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 478
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 539ee20ad2bca1460800000000000000
+      internalID: 7213301150008666421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 494
+        height: 487
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34edc2bb8904c43e0800000000000000
+      internalID: -2068207104150413757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_5
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 467
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c1a24dad5c148420800000000000000
+      internalID: 2631259270955573696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_6
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 457
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbb1cb6f50864ff70800000000000000
+      internalID: 9220108711957896125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_7
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 468
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b98d276a24532a5c0800000000000000
+      internalID: -4205740541633963877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_8
+      rect:
+        serializedVersion: 2
+        x: 452
+        y: 359
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 493131d40c7934f30800000000000000
+      internalID: 4558654100011684756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_9
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 278
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: faba9f3db64408530800000000000000
+      internalID: 3855156510937689007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_10
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 261
+        width: 13
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6390cdfa3b521640800000000000000
+      internalID: 5049198441159234411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_11
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 267
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7060a68c6ae02e130800000000000000
+      internalID: 3594451562084828679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_12
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 259
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff3da5f65e4f0de50800000000000000
+      internalID: 6832229900973954047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_13
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 251
+        width: 7
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08c3b8119cd6b5ec0800000000000000
+      internalID: -3577144768665535360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_14
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 251
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2343865fc01ee4360800000000000000
+      internalID: 7155904303711401010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_15
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 249
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01bb7ff7d1c4f6ce0800000000000000
+      internalID: -1409824468758971632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_16
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 197
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82037d70ebccfc810800000000000000
+      internalID: 1787872693636771880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_17
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 170
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38591982d9409e710800000000000000
+      internalID: 1722913405482931587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_18
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 158
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21520c73ebb963790800000000000000
+      internalID: -7550676483958627054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_19
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 147
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 803e00aa4eaab7770800000000000000
+      internalID: 8609663011730285320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_20
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 108
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3737355c47ebe950800000000000000
+      internalID: 6479526803935803197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_21
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 23
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8a5cf4238bbab8a0800000000000000
+      internalID: -6288507757733848434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_22
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 27
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e428f3f7767cbc6a0800000000000000
+      internalID: -6427824795810823602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: begoniaprojectile_23
+      rect:
+        serializedVersion: 2
+        x: 245
+        y: 12
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 702c7b522f32ce980800000000000000
+      internalID: -8508386073087852025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      begoniaprojectile_0: -6540971589246231054
+      begoniaprojectile_1: 2732297638053665794
+      begoniaprojectile_10: 5049198441159234411
+      begoniaprojectile_11: 3594451562084828679
+      begoniaprojectile_12: 6832229900973954047
+      begoniaprojectile_13: -3577144768665535360
+      begoniaprojectile_14: 7155904303711401010
+      begoniaprojectile_15: -1409824468758971632
+      begoniaprojectile_16: 1787872693636771880
+      begoniaprojectile_17: 1722913405482931587
+      begoniaprojectile_18: -7550676483958627054
+      begoniaprojectile_19: 8609663011730285320
+      begoniaprojectile_2: -9108988534608265401
+      begoniaprojectile_20: 6479526803935803197
+      begoniaprojectile_21: -6288507757733848434
+      begoniaprojectile_22: -6427824795810823602
+      begoniaprojectile_23: -8508386073087852025
+      begoniaprojectile_3: 7213301150008666421
+      begoniaprojectile_4: -2068207104150413757
+      begoniaprojectile_5: 2631259270955573696
+      begoniaprojectile_6: 9220108711957896125
+      begoniaprojectile_7: -4205740541633963877
+      begoniaprojectile_8: 4558654100011684756
+      begoniaprojectile_9: 3855156510937689007
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

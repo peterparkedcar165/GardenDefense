@@ -249,7 +249,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 4b98c4a2c9a2fe94e8c59cb56e95bc0c, type: 2}
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
-  lightIntensity: 1
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 01000000
@@ -290,6 +289,7 @@ MonoBehaviour:
   effectivePath2Level: 0
   effectivePath3Level: 0
   path3Unlocked: 0
+  mainRenderer: {fileID: 7028219029107938175}
   projectilePrefab: {fileID: 7388594979766616069, guid: 724e0828f41d13a489c71283173ee42c, type: 3}
   baseProjectileSpeed: 0
   projectileSpeed: 0

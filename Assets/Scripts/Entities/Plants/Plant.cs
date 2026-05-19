@@ -197,15 +197,79 @@ public abstract class Plant : Entity, IAttackable
         return ids;
     }
 
-    void OnDestroy()
+    protected virtual void OnDestroy()
     {
         allPlants.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this)
             PlantUpgradeUI.instance.HidePanel();
     }
 
+    [SerializeField] private SpriteRenderer mainRenderer;
+    private SpriteRenderer _cachedRenderer;
+    private SpriteRenderer[] _outlineRenderers;
+    private bool _isHighlighted;
+    private const int OutlineCount = 8;
+    private const float OutlineWidth = 0.05f;
+
+    private SpriteRenderer GetMainRenderer()
+    {
+        if (_cachedRenderer != null) return _cachedRenderer;
+        _cachedRenderer = mainRenderer ?? GetComponentInChildren<SpriteRenderer>();
+        return _cachedRenderer;
+    }
+
+    private void EnsureOutlineRenderers()
+    {
+        if (_outlineRenderers != null) return;
+        SpriteRenderer sr = GetMainRenderer();
+        if (sr == null) return;
+
+        _outlineRenderers = new SpriteRenderer[OutlineCount];
+        for (int i = 0; i < OutlineCount; i++)
+        {
+            float angle = i * (360f / OutlineCount) * Mathf.Deg2Rad;
+            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * OutlineWidth;
+
+            GameObject obj = new GameObject("Outline");
+            obj.transform.SetParent(sr.transform);
+            obj.transform.localPosition = offset;
+            obj.transform.localScale = Vector3.one;
+            obj.transform.localRotation = Quaternion.identity;
+            obj.layer = gameObject.layer;
+
+            SpriteRenderer outlineSR = obj.AddComponent<SpriteRenderer>();
+            outlineSR.sortingLayerID = sr.sortingLayerID;
+            outlineSR.sortingOrder = sr.sortingOrder - 1;
+            outlineSR.enabled = false;
+            _outlineRenderers[i] = outlineSR;
+        }
+    }
+
+    public void SetHighlight(Color color)
+    {
+        EnsureOutlineRenderers();
+        if (_outlineRenderers == null) return;
+        SpriteRenderer sr = GetMainRenderer();
+        foreach (SpriteRenderer outline in _outlineRenderers)
+        {
+            if (sr != null) outline.sprite = sr.sprite;
+            outline.color = color;
+            outline.enabled = true;
+        }
+        _isHighlighted = true;
+    }
+
+    public void ClearHighlight()
+    {
+        if (!_isHighlighted || _outlineRenderers == null) return;
+        foreach (SpriteRenderer outline in _outlineRenderers)
+            outline.enabled = false;
+        _isHighlighted = false;
+    }
+
     protected virtual void Start()
     {
+        GetMainRenderer();
         if (circleRadius != null)
         {
             circleRadius.gameObject.SetActive(false);
@@ -224,6 +288,8 @@ public abstract class Plant : Entity, IAttackable
             circleRadius.gameObject.SetActive(true);
         if (darkCircleRadius != null && DarknessManager.instance != null && DarknessManager.instance.isDark)
             darkCircleRadius.gameObject.SetActive(true);
+        if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsPlantTargeting)
+            SetHighlight(Color.yellow);
     }
 
     protected override void OnHoverExit()
@@ -234,6 +300,7 @@ public abstract class Plant : Entity, IAttackable
         if (darkCircleRadius != null)
             darkCircleRadius.gameObject.SetActive(false);
         RefreshHealthBarVisibility();
+        ClearHighlight();
     }
 
     public void Select()

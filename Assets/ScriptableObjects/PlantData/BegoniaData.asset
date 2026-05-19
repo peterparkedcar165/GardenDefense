@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21a96f36c3aff7842b3329d73a095180, type: 3}
+  m_Name: BegoniaData
+  m_EditorClassIdentifier: Assembly-CSharp::BegoniaData
+  plantPrefab: {fileID: -3248773622810050089, guid: 63eb5dc8f809acf4a84718b08a9a7eea, type: 3}
+  icon: {fileID: 21300000, guid: adc730a06fd32d1449e86eb5219c00bf, type: 3}
+  plantName: Begonia
+  displayName: Begonia
+  elementalType: 2
+  damageType: 1
+  sunCost: 100
+  baseMaxHealth: 200
+  baseAttackDamage: 32
+  baseMagicPower: 0
+  baseAttackSpeed: 0.8
+  baseAttackRange: 2
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  basePhysicalShred: 0
+  baseMagicShred: 0
+  baseLifesteal: 0
+  baseBonusEffectChance: 0
+  baseCriticalChance: 0.05
+  baseCriticalDamage: 1.75
+  baseDotDamage: 0
+  baseElementalPower: 0
+  baseCoordinatedDamage: 0
+  baseCounterDamage: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseNatureDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseLightEmissionRange: 0
+  baseProjectileSpeed: 2
+  baseMaxRange: 20
+  basePiercing: 0
+  basePassiveCooldown: 0
+  basePassiveDuration: 0
+  baseSkillCooldown: 35
+  baseSkillDuration: 12
+  baseSkillRadius: 2
+  baseSkillDamageMultiplier: 0
+  baseSkillHealth: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
+  baseElementalPowerBonus: 0.16
+  baseNatureDamageBonus: 0.12
+  baseAttackSpeedBonus: 0.12
+  basePassiveMultiplier: 0.24
+  baseSkillMultiplier: 0.16

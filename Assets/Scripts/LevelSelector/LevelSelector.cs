@@ -25,7 +25,8 @@ public class LevelSelector : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !SceneTransition.IsTransitioning)
+        bool loadoutOpen = LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen;
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !loadoutOpen && !SceneTransition.IsTransitioning)
             GoToMainMenu();
     }
 

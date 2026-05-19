@@ -249,7 +249,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: a87b905f63edb5f44940e6bc0460922c, type: 2}
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
-  lightIntensity: 1
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 01000000
@@ -290,6 +289,8 @@ MonoBehaviour:
   effectivePath2Level: 0
   effectivePath3Level: 0
   path3Unlocked: 0
+  mainRenderer: {fileID: 7028219029107938175}
+  skillHealingMultiplier: 0
 --- !u!1 &6784474226973136681
 GameObject:
   m_ObjectHideFlags: 0

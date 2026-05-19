@@ -99,6 +99,7 @@ public class PlantsPanelUI : MonoBehaviour
         {
             PlantBaseStats s = data.plantPrefab != null ? data.plantPrefab.GetBaseStats() : default;
             detailStatsDescription.text =
+                $"HEALTH: <color=green><b>{data.baseMaxHealth}</b></color>\n" +
                 $"ATTACK DAMAGE: <color=green><b>{s.attackDamage}</b></color>\n" +
                 $"ATTACK SPEED: <color=green><b>{s.attackSpeed}</b></color>\n" +
                 $"ATTACK RANGE: <color=green><b>{s.attackRange}</b></color>\n" +

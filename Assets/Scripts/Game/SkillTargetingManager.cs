@@ -116,7 +116,7 @@ public class SkillTargetingManager : MonoBehaviour
         cancelledPlantThisFrame = false;
     }
 
-    private Vector3 GetMouseWorldPosition()
+    public Vector3 GetMouseWorldPosition()
     {
         Vector2 mouseScreen = Mouse.current.position.ReadValue();
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, Camera.main.nearClipPlane));

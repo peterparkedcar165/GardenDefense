@@ -17,9 +17,13 @@ public class EncyclopediaManager : MonoBehaviour
     [SerializeField] private TMP_Text titleText;
 
     private GameObject currentPanel;
+    private bool isOnSubPanel = false;
 
     void Start()
     {
+        if (plantsPanel)  plantsPanel.SetActive(false);
+        if (insectsPanel) insectsPanel.SetActive(false);
+        if (miscPanel)    miscPanel.SetActive(false);
         ShowPanel(mainPanel, "Encyclopedia");
     }
 
@@ -32,16 +36,19 @@ public class EncyclopediaManager : MonoBehaviour
     public void OnPlants()
     {
         ShowPanel(plantsPanel, "Plants");
+        isOnSubPanel = true;
     }
 
     public void OnInsects()
     {
         ShowPanel(insectsPanel, "Insects");
+        isOnSubPanel = true;
     }
 
     public void OnMiscellaneous()
     {
         ShowPanel(miscPanel, "Miscellaneous");
+        isOnSubPanel = true;
     }
 
     public void OnBack()
@@ -49,10 +56,15 @@ public class EncyclopediaManager : MonoBehaviour
         if (plantsPanelUI != null && plantsPanelUI.TryUnpin())
             return;
 
-        if (currentPanel != mainPanel)
+        if (isOnSubPanel)
+        {
             ShowPanel(mainPanel, "Encyclopedia");
+            isOnSubPanel = false;
+        }
         else
+        {
             GoToMainMenu();
+        }
     }
 
     private void ShowPanel(GameObject panel, string title = "")

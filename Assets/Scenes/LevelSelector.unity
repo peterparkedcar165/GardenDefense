@@ -4470,7 +4470,7 @@ PrefabInstance:
       objectReference: {fileID: 1240570703}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: tooltipPath1Description
@@ -4531,11 +4531,11 @@ PrefabInstance:
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: 'allPlantData.Array.data[8]'
       value: 
-      objectReference: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
+      objectReference: {fileID: 11400000, guid: 683709562bf012d4f967e6d5eac56f2e, type: 2}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: 'allPlantData.Array.data[9]'
       value: 
-      objectReference: {fileID: 11400000, guid: b623d45311f00f14d83400e0398a330a, type: 2}
+      objectReference: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

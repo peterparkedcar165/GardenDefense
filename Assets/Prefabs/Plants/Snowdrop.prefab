@@ -213,7 +213,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
-  lightIntensity: 1
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 0100000004000000
@@ -254,6 +253,7 @@ MonoBehaviour:
   effectivePath2Level: 0
   effectivePath3Level: 0
   path3Unlocked: 0
+  mainRenderer: {fileID: 3701729662317188319}
   chillLevel: 1
   blizzardPrefab: {fileID: 2201209173165394238, guid: 763451afad4dea34682acc02c93b0cd1, type: 3}
   blizzardIndicatorPrefab: {fileID: 2096060468615343360, guid: 1718677659ce4b24da690f0eb188b557, type: 3}

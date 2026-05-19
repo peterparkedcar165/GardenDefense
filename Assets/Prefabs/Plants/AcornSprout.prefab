@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AcornSprout
   baseMaxHealth: 0
   baseAttackDamage: 0
-  baseMagicDamage: 0
+  baseMagicPower: 0
   baseAttackSpeed: 0
   baseAttackRange: 0
   baseHealingBonus: 0
@@ -87,7 +87,7 @@ MonoBehaviour:
   maxHealth: 0
   health: 0
   attackDamage: 0
-  magicDamage: 0
+  magicPower: 0
   attackSpeed: 0
   attackCooldown: 0
   attackCooldownTimer: 0
@@ -127,7 +127,7 @@ MonoBehaviour:
   debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
-  magicDamageAdder: 0
+  magicPowerAdder: 0
   attackSpeedAdder: 0
   attackRangeAdder: 0
   healingBonusAdder: 0
@@ -165,7 +165,7 @@ MonoBehaviour:
   counterDamageAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
-  magicDamageMultiplier: 0
+  magicPowerMultiplier: 0
   attackSpeedMultiplier: 0
   attackRangeMultiplier: 0
   healingBonusMultiplier: 0
@@ -213,7 +213,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 31d7460f463c7bc42a1ef517bd104f7b, type: 2}
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
-  lightIntensity: 1
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 000000000100000004000000
@@ -254,6 +253,7 @@ MonoBehaviour:
   effectivePath2Level: 0
   effectivePath3Level: 0
   path3Unlocked: 0
+  mainRenderer: {fileID: 5898074862566098166}
   projectilePrefab: {fileID: 7388594979766616069, guid: 03a502cc3f8834f848d54eaba677c39f, type: 3}
   baseProjectileSpeed: 0
   projectileSpeed: 0

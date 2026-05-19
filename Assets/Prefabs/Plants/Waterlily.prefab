@@ -308,7 +308,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 5a6009b0c99008a47a4c7a1a7269fec9, type: 2}
   occupiedTile: {fileID: 0}
   circleRadius: {fileID: 12871179031049225}
-  lightIntensity: 1
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 02000000
@@ -349,6 +348,7 @@ MonoBehaviour:
   effectivePath2Level: 0
   effectivePath3Level: 0
   path3Unlocked: 0
+  mainRenderer: {fileID: 8037422639100695375}
   projectilePrefab: {fileID: 7388594979766616069, guid: e152e85da1fef914fa0f61bc0b12b49e, type: 3}
   baseProjectileSpeed: 0
   projectileSpeed: 0
@@ -364,6 +364,7 @@ MonoBehaviour:
   AoERangeAdder: 0
   skillAoERadius: 1.5
   bubbleDamage: 42
+  splashDamage: 0
   bubbleTrapPrefab: {fileID: 4808428213060228786, guid: a830149e57437094eaef662cd0131b60, type: 3}
 --- !u!1 &7507562756265830079
 GameObject:
