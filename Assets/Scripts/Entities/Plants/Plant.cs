@@ -58,6 +58,8 @@ public abstract class Plant : Entity, IAttackable
         base.UpdateStats();
         passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier);
         skillCooldown = baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier);
+        skillDamageMultiplier = baseSkillDamageMultiplier + skillDamageMultiplierAdder;
+        skillDamage += baseSkillDamage * skillDamageMultiplier;
         float plantSpriteRadius = _circleCollider != null ? _circleCollider.radius * 2 : 0f;
 
         if (circleRadius != null)
@@ -105,10 +107,14 @@ public abstract class Plant : Entity, IAttackable
     [Header("Passive")]
     public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownReductionMultiplier, passiveCooldownMultiplier;
     public float passiveCooldownTimer;
+    public float basePassiveDuration, passiveDuration;
 
     [Header("Skill")]
     public float baseSkillCooldown, skillCooldown, skillCooldownReductionAdder, skillCooldownReductionMultiplier;
     public float skillCooldownTimer;
+    public float baseSkillRadius, skillRadius;
+    public float baseSkillDamageMultiplier, skillDamageMultiplier, skillDamageMultiplierAdder;
+    public float baseSkillHealth, skillHealth;
     public bool SkillReady => path3Unlocked && skillCooldownTimer <= 0;
 
 
@@ -128,6 +134,57 @@ public abstract class Plant : Entity, IAttackable
         baseCriticalDamage = 1.75f;
         allPlants.Add(this);
         FertilizerManager.instance?.ApplyTo(this);
+    }
+
+    protected void LoadData()
+    {
+        if (data == null) return;
+        baseMaxHealth          = data.baseMaxHealth;
+        baseAttackDamage       = data.baseAttackDamage;
+        baseMagicPower        = data.baseMagicPower;
+        baseAttackSpeed        = data.baseAttackSpeed;
+        baseAttackRange        = data.baseAttackRange;
+        baseHealingBonus       = data.baseHealingBonus;
+        baseHealingReceived    = data.baseHealingReceived;
+        baseTenacity           = data.baseTenacity;
+        basePhysicalResistance = data.basePhysicalResistance;
+        baseMagicResistance    = data.baseMagicResistance;
+        baseFireResistance     = data.baseFireResistance;
+        baseWaterResistance    = data.baseWaterResistance;
+        basePoisonResistance   = data.basePoisonResistance;
+        baseIceResistance      = data.baseIceResistance;
+        baseNatureResistance   = data.baseNatureResistance;
+        baseWindResistance     = data.baseWindResistance;
+        baseDotResistance      = data.baseDotResistance;
+        basePhysicalShred      = data.basePhysicalShred;
+        baseMagicShred         = data.baseMagicShred;
+        baseLifesteal          = data.baseLifesteal;
+        baseBonusEffectChance  = data.baseBonusEffectChance;
+        baseFireDamage         = data.baseFireDamage;
+        baseWaterDamage        = data.baseWaterDamage;
+        baseNatureDamage       = data.baseNatureDamage;
+        baseWindDamage         = data.baseWindDamage;
+        basePoisonDamage       = data.basePoisonDamage;
+        baseIceDamage          = data.baseIceDamage;
+        baseCriticalChance     = data.baseCriticalChance;
+        baseCriticalDamage     = data.baseCriticalDamage;
+        baseDotDamage          = data.baseDotDamage;
+        baseElementalPower     = data.baseElementalPower;
+        basePassiveDamage      = data.basePassiveDamage;
+        baseSkillDamage        = data.baseSkillDamage;
+        baseCoordinatedDamage  = data.baseCoordinatedDamage;
+        baseLightEmissionRange        = data.baseLightEmissionRange;
+        baseCounterDamage             = data.baseCounterDamage;
+        sunCost                       = data.sunCost;
+        basePassiveCooldown           = data.basePassiveCooldown;
+        basePassiveDuration           = data.basePassiveDuration;
+        baseSkillCooldown             = data.baseSkillCooldown;
+        baseSkillDuration             = data.baseSkillDuration;
+        baseSkillRadius               = data.baseSkillRadius;
+        baseSkillDamageMultiplier     = data.baseSkillDamageMultiplier;
+        baseSkillHealth               = data.baseSkillHealth;
+        elementalType                 = data.elementalType;
+        damageType                    = data.damageType;
     }
 
     private int[] GetAllSortingLayerIDs()
@@ -385,10 +442,7 @@ public abstract class Plant : Entity, IAttackable
     }
 
     // DESCRIPTIONS
-    public virtual string GetName()
-    {
-        return "";
-    }
+    public virtual string GetName() => data != null ? data.displayName : "";
 
     public virtual string GetDescription()
     {

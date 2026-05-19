@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c16a88b325c9274c946ebb892ee0933, type: 3}
+  m_Name: AcornSproutData
+  m_EditorClassIdentifier: Assembly-CSharp::AcornSproutData
+  plantPrefab: {fileID: 5277549953005779376, guid: 5b9d0894a6ad0cc458e0f317dbf13a44, type: 3}
+  icon: {fileID: 5622665880769766919, guid: 61ed802b81b693c4fba4309505d4eaaf, type: 3}
+  plantName: AcornSprout
+  displayName: Acorn Sprout
+  elementalType: 2
+  damageType: 0
+  sunCost: 100
+  baseMaxHealth: 200
+  baseAttackDamage: 42
+  baseMagicDamage: 0
+  baseAttackSpeed: 0.8
+  baseAttackRange: 3
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  basePhysicalShred: 0
+  baseMagicShred: 0
+  baseLifesteal: 0
+  baseBonusEffectChance: 0
+  baseCriticalChance: 0.05
+  baseCriticalDamage: 1.75
+  baseDotDamage: 0
+  baseElementalPower: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
+  baseCoordinatedDamage: 0
+  baseCounterDamage: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseNatureDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseLightEmissionRange: 0
+  basePassiveCooldown: 0
+  basePassiveDuration: 0
+  baseSkillCooldown: 35
+  baseSkillDuration: 20
+  baseSkillRadius: 1
+  baseSkillDamageMultiplier: 1.5
+  baseSkillHealth: 250
+  baseProjectileSpeed: 8
+  baseMaxRange: 20
+  basePiercing: 0
+  stunChance: 0.35
+  stunDuration: 0.5

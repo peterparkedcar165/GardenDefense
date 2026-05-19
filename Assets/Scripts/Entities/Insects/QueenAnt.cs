@@ -12,14 +12,8 @@ public class QueenAnt : Ant
 
     protected override void Awake()
     {
-        baseAttackDamage = 30f;
-        baseMaxHealth = 1000f;
-        baseMovementSpeed = 0.45f;
-        baseTenacity = 0.5f;
-        basePhysicalResistance = 0.15f;
-        baseMagicResistance = 0.15f;
-        sunDrop = 30;
         base.Awake();
+        LoadData();
         transform.localScale = Vector3.one * 1f;
     }
 
@@ -94,7 +88,4 @@ public class QueenAnt : Ant
             antVisual.localPosition = endLocal;
     }
 
-    public override string GetName() => "<b><color=#8B0000>Queen Ant</color></b>";
-    public override string GetDescription() => $"The {GetName()} is a formidable matriarch who periodically halts to spawn ants from her body.";
-    public override string GetPassiveDescription() => $"Every {spawnInterval}s, stops for 2 seconds and spawns {antsPerSpawn} ants. 15% physical and magic resistance.";
 }

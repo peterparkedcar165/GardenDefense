@@ -200,6 +200,8 @@ MonoBehaviour:
   baseSkillDuration: 0
   baseTenacity: 0
   baseLightEmissionRange: 0
+  baseLifesteal: 0
+  baseCounterDamage: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -237,6 +239,8 @@ MonoBehaviour:
   coordinatedDamage: 0
   skillDuration: 0
   lightEmissionRange: 0
+  lifesteal: 0
+  counterDamage: 0
   tenacity: 0
   debuffsFrozen: 0
   maxHealthAdder: 0
@@ -275,6 +279,8 @@ MonoBehaviour:
   tenacityAdder: 0
   immobilizeDurationAdder: 0
   lightEmissionRangeAdder: 0
+  lifestealAdder: 0
+  counterDamageAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicDamageMultiplier: 0
@@ -311,6 +317,8 @@ MonoBehaviour:
   tenacityMultiplier: 0
   immobilizeDurationMultiplier: 0
   lightEmissionRangeMultiplier: 0
+  lifestealMultiplier: 0
+  counterDamageMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -325,6 +333,7 @@ MonoBehaviour:
   isFlying: 0
   verticalVelocity: 0
   fallDamageSource: {fileID: 0}
+  data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
   movementSpeed: 0
   baseMovementSpeed: 0
   windVelocity: {x: 0, y: 0}

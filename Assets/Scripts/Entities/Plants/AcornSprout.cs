@@ -1,42 +1,30 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class AcornSprout : Shooter
 {
-    private float 
-    bAD = 42f, // base attack damage
-    bAS = 0.8f, // base attack speed
-    bAR = 3f, // base attack range
-    bPS = 8f, // base projectile speed
-    bMR = 20f; // base max range
-    private int bP = 0; // base piercing
-    public float stunChance = 0.35f, stunDuration = 0.5f, activeRadius, activeDamageMultiplier = 1.5f, acornBombHealth = 250f;
+    public float stunChance, stunDuration, activeRadius, activeDamageMultiplier, acornBombHealth;
     [SerializeField] private GameObject acornBombPrefab;
+
+    private AcornSproutData AcornData => data as AcornSproutData;
 
     protected override void Awake()
     {
         base.Awake();
-        baseAttackDamage = bAD;
-        baseAttackSpeed = bAS;
-        baseAttackRange = bAR;
-        baseProjectileSpeed = bPS;
-        baseMaxRange = bMR;
-        basePiercing = bP;
-        activeRadius = 1f;
-        baseSkillCooldown = 35f;
-        baseSkillDuration = 20f;
-    }
-
-    protected override void Update()
-    {
-        base.Update();
+        LoadData();
+        if (AcornData != null)
+        {
+            stunChance = AcornData.stunChance;
+            stunDuration = AcornData.stunDuration;
+        }
+        activeDamageMultiplier = data.baseSkillDamageMultiplier;
+        acornBombHealth        = data.baseSkillHealth;
+        activeRadius           = data.baseSkillRadius;
     }
 
     protected override void Shoot(Vector3 target)
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         AcornProjectile acorn = projectile.GetComponent<AcornProjectile>();
-
         if (acorn != null)
         {
             acorn.SetTarget(FindTarget());
@@ -46,46 +34,22 @@ public class AcornSprout : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = bAD + (level * 8f);
+        baseAttackDamage = data.baseAttackDamage + (level * 8f);
     }
 
     public override void OnPath2Upgrade(int level)
     {
-        stunChance = 0.35f + (0.05f * level);
-        stunDuration = 0.5f + (0.1f * level);
+        if (AcornData == null) return;
+        stunChance   = AcornData.stunChance   + (0.05f * level);
+        stunDuration = AcornData.stunDuration + (0.1f  * level);
     }
 
     public override void OnPath3Upgrade(int level)
     {
-        activeDamageMultiplier = 1.5f + 0.25f * level;
-        baseSkillDuration = 20f + 2f * level;
-        acornBombHealth = 250f + 50f * level;
-        activeRadius = 1f * (1f + 0.15f * level);
-    }
-
-
-    // DESCRIPTION
-
-    public override PlantBaseStats GetBaseStats() => new PlantBaseStats
-    {
-        attackDamage = bAD, attackSpeed = bAS, attackRange = bAR,
-        skillCooldown = 35f, skillDuration = 20f,
-        stunChance = 0.35f, stunDuration = 0.5f, skillDamageMultiplier = 1.5f,
-    };
-
-    public override string GetName()
-    {
-        return "<b><color=green>Acorn Sprout</color></b>";
-    }
-
-    public override string GetDescription()
-    {
-        return $"The {GetName()} shoots acorns at targets, dealing damage with a chance of stunning.";
-    }
-
-    public override string GetAttackDescription()
-    {
-        return $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
+        activeDamageMultiplier = data.baseSkillDamageMultiplier + 0.25f * level;
+        baseSkillDuration      = data.baseSkillDuration         + 2f    * level;
+        acornBombHealth        = data.baseSkillHealth           + 50f   * level;
+        activeRadius           = data.baseSkillRadius           * (1f + 0.15f * level);
     }
 
     public override void ActivateSkill()
@@ -101,35 +65,37 @@ public class AcornSprout : Shooter
         obj.GetComponent<AcornBomb>()?.Initialize(activeRadius, attackDamage * activeDamageMultiplier, skillDuration, acornBombHealth, this);
     }
 
-    public override string GetSkillDesription()
+    public override string GetDescription()
     {
-        return $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. The acorn then sits on the ground for <color=green><b>{skillDuration}</b></color> seconds, blocking ground insects who stop to gnaw at it. The acorn can sustain <color=green><b>{acornBombHealth:F0}</b></color> damage.";
-    }
-
-    public override string GetPassiveDescription()
-    {
-        return $"Attacks have a <color=green><b>{stunChance*100}%</b></color> chance to stun targets for <color=green><b>{stunDuration}</b></color> second.";
+        return $"The {GetName()} shoots acorns at targets, dealing damage with a chance of stunning.";
     }
 
     public override string GetPath1Description()
     {
-        return $"Attack:\n\n{GetAttackDescription()}\n\nIncrease Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+" + (8*effectivePath1Level) + "</b></color>]\n\n" +
-        "Level: [<color=green><b>" + path1Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath1Level-path1Level) + ")</b></color>"; 
+        return $"Attack:\n\n" +
+               $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.\n\n" +
+               $"Increase Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+{8 * effectivePath1Level}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }
 
     public override string GetPath2Description()
     {
-        return $"Passive:\n\n{GetPassiveDescription()}\n\nIncrease Stun Chance by <b><color=green>5%</color></b> per level. [<b><color=green>+" + (5 * effectivePath2Level) + "%</color></b>]\n" +
-        "Increase Stun Duration by <b><color=green>0.1s</color></b> per level. [<b><color=green>+" + (0.1f * effectivePath2Level) + "s</color></b>]\n\n" +
-        "Level: [<color=green><b>" + path2Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath2Level-path2Level) + ")</b></color>";
+        return $"Passive:\n\n" +
+               $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{stunDuration}</b></color> second.\n\n" +
+               $"Increase Stun Chance by <b><color=green>5%</color></b> per level. [<b><color=green>+{5 * effectivePath2Level}%</color></b>]\n" +
+               $"Increase Stun Duration by <b><color=green>0.1s</color></b> per level. [<b><color=green>+{0.1f * effectivePath2Level}s</color></b>]\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
     }
 
     public override string GetPath3Description()
     {
-        return $"Skill:\n\n{GetSkillDesription()}\n\nIncrease impact damage multiplier by <color=green><b>25%</b></color> per level. [<color=green><b>+{25 * effectivePath3Level}%</b></color>]\n\n" +
-        $"Increase acorn lifetime by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
-        $"Increase acorn health by <color=green><b>50</b></color> per level. [<color=green><b>+{50 * effectivePath3Level}</b></color>]\n\n" +
-        $"Increase acorn size and impact radius by <color=green><b>15%</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}%</b></color>]\n\n" +
-        "Level: [<color=green><b>" + path3Level + "/" + pathLevelCap + "</b></color>] <color=green><b>(+" + (effectivePath3Level - path3Level) + ")</b></color>";
+        return $"Skill:\n\n" +
+               $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
+               $"The acorn then sits on the ground for <color=green><b>{skillDuration}</b></color> seconds, blocking ground insects who stop to gnaw at it. The acorn can sustain <color=green><b>{acornBombHealth:F0}</b></color> damage.\n\n" +
+               $"Increase impact damage multiplier by <color=green><b>25%</b></color> per level. [<color=green><b>+{25 * effectivePath3Level}%</b></color>]\n\n" +
+               $"Increase acorn lifetime by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
+               $"Increase acorn health by <color=green><b>50</b></color> per level. [<color=green><b>+{50 * effectivePath3Level}</b></color>]\n\n" +
+               $"Increase acorn size and impact radius by <color=green><b>15%</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}%</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
     }
 }

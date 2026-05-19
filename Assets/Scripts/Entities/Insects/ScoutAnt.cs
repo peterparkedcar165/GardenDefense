@@ -12,12 +12,10 @@ public class ScoutAnt : Ant
         SceneManager.sceneLoaded += (scene, mode) => scoutAntCount = 0;
     }
 
-    protected override void Awake() {
-        baseAttackDamage = 15f;
-        baseMaxHealth = 200f;
-        sunDrop = 6;
+    protected override void Awake()
+    {
         base.Awake();
-        baseMovementSpeed = 1.8f;
+        LoadData();
         scoutAntCount++;
     }
 
@@ -25,10 +23,4 @@ public class ScoutAnt : Ant
     {
         scoutAntCount--;
     }
-
-    public override string GetName() => "<b><color=#8B4513>Scout Ant</color></b>";
-
-    public override string GetDescription() => $"The {GetName()} is quick and evasive, hard to pin down.";
-
-    public override string GetPassiveDescription() => "While alive, all non-Scout Ants gain 15% Movement Speed.";
 }

@@ -42,7 +42,7 @@ public abstract class Entity : MonoBehaviour
     private GameObject damageIndicatorPrefab;
 
     [Header("Base Stats")]
-    public float baseMaxHealth, baseAttackDamage, baseMagicDamage, baseAttackSpeed, baseAttackRange, baseHealingBonus, baseHealingReceived;
+    public float baseMaxHealth, baseAttackDamage, baseMagicPower, baseAttackSpeed, baseAttackRange, baseHealingBonus, baseHealingReceived;
     public float basePhysicalResistance, baseMagicResistance;
     public float baseFireResistance, baseWaterResistance, baseNatureResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
     public float basePhysicalShred, baseMagicShred, baseBonusEffectChance;
@@ -58,7 +58,7 @@ public abstract class Entity : MonoBehaviour
     public float baseCounterDamage;
 
     [Header("Stats")]
-    public float maxHealth, health, attackDamage, magicDamage, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
+    public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
     public float physicalResistance, magicResistance;
     public float fireResistance, waterResistance, natureResistance, windResistance, poisonResistance, iceResistance;
     public float physicalShred, magicShred, bonusEffectChance;
@@ -75,7 +75,7 @@ public abstract class Entity : MonoBehaviour
     public bool debuffsFrozen;
 
     [Header("Stat Adders")]
-    public float maxHealthAdder, attackDamageAdder, magicDamageAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
+    public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
     public float physicalResistanceAdder, magicResistanceAdder;
     public float fireResistanceAdder, waterResistanceAdder, natureResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
     public float physicalShredAdder, magicShredAdder, bonusEffectChanceAdder;
@@ -91,7 +91,7 @@ public abstract class Entity : MonoBehaviour
     public float counterDamageAdder;
 
     [Header("Stat Multipliers")]
-    public float maxHealthMultiplier, attackDamageMultiplier, magicDamageMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
+    public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
     public float physicalResistanceMultiplier, magicResistanceMultiplier;
     public float fireResistanceMultiplier, waterResistanceMultiplier, natureResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
     public float physicalShredMultiplier, magicShredMultiplier, bonusEffectChanceMultiplier;
@@ -99,7 +99,7 @@ public abstract class Entity : MonoBehaviour
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
     public float elementalPowerMultiplier;
-    public float passiveDamageMultiplier, skillDamageMultiplier, coordinatedDamageMultiplier;
+    public float passiveDamageMultiplier, coordinatedDamageMultiplier;
     public float skillDurationMultiplier;
     public float tenacityMultiplier, immobilizeDurationMultiplier;
     public float lightEmissionRangeMultiplier;
@@ -117,7 +117,7 @@ public abstract class Entity : MonoBehaviour
         physicalResistance = basePhysicalResistance + physicalResistanceAdder + (basePhysicalResistance * physicalResistanceMultiplier);
         magicResistance = baseMagicResistance + magicResistanceAdder + (baseMagicResistance * magicResistanceMultiplier);
         attackDamage = baseAttackDamage + attackDamageAdder + (baseAttackDamage * attackDamageMultiplier);
-        magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
+        magicPower = baseMagicPower + magicPowerAdder + (baseMagicPower * magicPowerMultiplier);
         attackSpeed = baseAttackSpeed + attackSpeedAdder + (baseAttackSpeed * attackSpeedMultiplier);
         attackRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
         healingBonus = baseHealingBonus + healingBonusAdder + (baseHealingBonus * healingBonusMultiplier);
@@ -143,7 +143,7 @@ public abstract class Entity : MonoBehaviour
         dotDamage = baseDotDamage + dotDamageAdder + (baseDotDamage * dotDamageMultiplier);
         elementalPower = baseElementalPower + elementalPowerAdder + (baseElementalPower * elementalPowerMultiplier);
         passiveDamage = basePassiveDamage + passiveDamageAdder + (basePassiveDamage * passiveDamageMultiplier);
-        skillDamage = baseSkillDamage + skillDamageAdder + (baseSkillDamage * skillDamageMultiplier);
+        skillDamage = baseSkillDamage + skillDamageAdder;
         coordinatedDamage = baseCoordinatedDamage + coordinatedDamageAdder + (baseCoordinatedDamage * coordinatedDamageMultiplier);
         skillDuration = baseSkillDuration + skillDurationAdder + (baseSkillDuration * skillDurationMultiplier);
         tenacity = baseTenacity + tenacityAdder + (baseTenacity * tenacityMultiplier);

@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\LevelSpecific\Level3\GridManager3.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\DandelionData.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level7.cs" />
+    <Compile Include="Assets\Scripts\InsectData.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Moth.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FieryInfusionEffect.cs" />

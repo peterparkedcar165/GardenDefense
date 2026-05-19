@@ -7,14 +7,8 @@ public class Moth : FlyingInsect
     protected override void Awake()
     {
         base.Awake();
-        baseMaxHealth     = 300f;
-        baseAttackDamage  = 10f;
-        baseAttackSpeed   = 1.0f;
-        baseAttackRange   = 0.5f;
-        baseMovementSpeed = 1.1f;
-        targetingRange    = 2.5f;
-        sunDrop           = 8;
-
+        LoadData();
+        targetingRange = 2.5f;
     }
 
     public override IAttackable target
@@ -80,12 +74,4 @@ public class Moth : FlyingInsect
             flightSpeed = 2f * movementSpeed;
         }
     }
-
-    public override string GetName() => "<b><color=#C8A2C8>Moth</color></b>";
-
-    public override string GetDescription()
-        => $"The {GetName()} is passive and docile — until it spots a light source. It will then relentlessly pursue the nearest illuminated plant.";
-
-    public override string GetPassiveDescription()
-        => $"The {GetName()} is drawn to light. Gains <color=green><b>+0.4</b></color> movement speed while inside any plant's light radius. Provoked by any plant emitting light within range.";
 }

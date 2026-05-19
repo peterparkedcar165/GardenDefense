@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7583304469d80404c865070d0ca44501, type: 3}
+  m_Name: MosquitoData
+  m_EditorClassIdentifier: Assembly-CSharp::InsectData
+  displayName: Mosquito
+  nameColor: {r: 0.509434, g: 0.28180173, b: 0.12255251, a: 1}
+  description: Latches onto plants and drains their health
+  passiveDescription: Aggressively targets nearest plants. Heals while attacking
+    plants.
+  sprite: {fileID: 21300000, guid: 64e952f1628f39d4281c0f3b34c4c909, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: aff6fd1b40eab2342bb9ae072042625a, type: 3}
+  baseMaxHealth: 300
+  baseAttackDamage: 12
+  baseMagicDamage: 0
+  baseAttackSpeed: 1.5
+  baseAttackRange: 0.5
+  baseMovementSpeed: 1.4
+  baseLifesteal: 0.35
+  basePhysicalShred: 0
+  baseMagicShred: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: -0.3
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  sunDrop: 7
+  aggressivity: 0
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0

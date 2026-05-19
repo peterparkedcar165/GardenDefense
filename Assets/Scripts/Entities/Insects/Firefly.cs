@@ -5,14 +5,7 @@ public class Firefly : FlyingInsect
     protected override void Awake()
     {
         base.Awake();
-        baseMaxHealth      = 250f;
-        baseAttackDamage   = 15f;
-        baseAttackSpeed    = 1f;
-        baseAttackRange    = 0.5f;
-        baseMovementSpeed  = 1.3f;
-        baseLightEmissionRange = 1f;
-        sunDrop            = 5;
-        aggressivity       = Aggressivity.Low;
+        LoadData();
     }
 
     public override void UpdateStats()
@@ -33,12 +26,4 @@ public class Firefly : FlyingInsect
             _light2D.pointLightInnerRadius = lightEmissionRange * 0.3f;
         }
     }
-
-    public override string GetName() => "<b><color=#FFE066>Firefly</color></b>";
-
-    public override string GetDescription()
-        => $"The {GetName()} is a fragile insect that glows faintly. Alone it is harmless, but its light empowers nearby Moths.";
-
-    public override string GetPassiveDescription()
-        => $"Emits a small light radius of <color=green><b>{lightEmissionRange:F1}</b></color> units, boosting the speed of nearby <b><color=#C8A2C8>Moths</color></b>.";
 }

@@ -26,6 +26,8 @@ public abstract class Insect : Entity, IAttackable
     public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f);
     public bool isOnGround => visual != null && visual.localPosition.y <= 0.4f;
 
+    [SerializeField] public InsectData data;
+
     // base and final
     public float movementSpeed, baseMovementSpeed;
     public Vector2 windVelocity;
@@ -459,19 +461,48 @@ public abstract class Insect : Entity, IAttackable
     public Vector3 Position => transform.position;
 
     // DESCRIPTIONS
+    protected void LoadData()
+    {
+        if (data == null) return;
+        baseMaxHealth          = data.baseMaxHealth;
+        baseAttackDamage       = data.baseAttackDamage;
+        baseMagicPower        = data.baseMagicPower;
+        baseAttackSpeed        = data.baseAttackSpeed;
+        baseAttackRange        = data.baseAttackRange;
+        baseMovementSpeed      = data.baseMovementSpeed;
+        baseLifesteal          = data.baseLifesteal;
+        basePhysicalShred      = data.basePhysicalShred;
+        baseMagicShred         = data.baseMagicShred;
+        baseTenacity           = data.baseTenacity;
+        basePhysicalResistance = data.basePhysicalResistance;
+        baseMagicResistance    = data.baseMagicResistance;
+        baseFireResistance     = data.baseFireResistance;
+        baseWaterResistance    = data.baseWaterResistance;
+        baseNatureResistance   = data.baseNatureResistance;
+        baseWindResistance     = data.baseWindResistance;
+        basePoisonResistance   = data.basePoisonResistance;
+        baseIceResistance      = data.baseIceResistance;
+        baseDotResistance      = data.baseDotResistance;
+        sunDrop                = data.sunDrop;
+        aggressivity           = data.aggressivity;
+        baseLightEmissionRange = data.baseLightEmissionRange;
+        baseHealingBonus       = data.baseHealingBonus;
+        baseHealingReceived    = data.baseHealingReceived;
+    }
+
     public virtual string GetName()
     {
-        return "";
+        return data != null ? data.displayName : "";
     }
 
     public virtual string GetDescription()
     {
-        return "";
+        return data != null ? data.description : "";
     }
 
     public virtual string GetPassiveDescription()
     {
-        return "";
+        return data != null ? data.passiveDescription : "";
     }
 
     public string GetActiveEffectsString()
