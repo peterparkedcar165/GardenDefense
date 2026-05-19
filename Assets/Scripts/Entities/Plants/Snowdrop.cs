@@ -88,7 +88,7 @@ public class Snowdrop : Aura
     public override void UpdateStats()
     {
         base.UpdateStats();
-        blizzardDamage = data.baseSkillDamage + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
+        blizzardDamage = ((data as SnowdropData)?.baseBlizzardDamage ?? 0f) + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
     }
 
     public override void OnPath3Upgrade(int level)
@@ -130,7 +130,7 @@ public class Snowdrop : Aura
         $"Freezes the ground around her continuously dealing <color=green><b>{attackDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects.";
 
     public override string GetSkillDesription() =>
-        $"Summon a strong blizzard, aiming it towards the targeted area. The blizzard deals <color=green><b>{data.baseSkillDamage + 15f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects caught in the area, and applies <color=#00FFFF>Chill</color> with an additional level.";
+        $"Summon a strong blizzard, aiming it towards the targeted area. The blizzard deals <color=green><b>{((data as SnowdropData)?.baseBlizzardDamage ?? 0f) + 15f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second to insects caught in the area, and applies <color=#00FFFF>Chill</color> with an additional level.";
 
     public override string GetPassiveDescription() =>
         $"The frosty aura applies a <color=#00FFFF>Chill</color> effect, slowing down insects by <color=green><b>{24 + 6 * effectivePath2Level}%</b></color>.";

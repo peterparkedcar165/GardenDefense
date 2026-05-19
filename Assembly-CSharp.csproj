@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
+    <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
     <Compile Include="Assets\Scripts\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\Airborne.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\UI\PlantUpgradeUI.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level7\GridManager7.cs" />
+    <Compile Include="Assets\Scripts\Encyclopedia\EncyclopediaManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
     <Compile Include="Assets\Scripts\FertilizerData.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="Assets\Scripts\LevelSpecific\Level4\GridManager4.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FruitFly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
+    <Compile Include="Assets\Scripts\Encyclopedia\PlantEntry.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Mosquito.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\WaterlilyData.cs" />

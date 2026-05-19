@@ -33,8 +33,16 @@ public class SceneTransition : MonoBehaviour
         fadeSpeed = 2.5f;
     }
 
+    public static bool IsTransitioning { get; private set; }
+    private bool isTransitioning = false;
+
     public IEnumerator FadeToScene(string sceneName)
     {
+        if (isTransitioning) yield break;
+        isTransitioning = true;
+        IsTransitioning = true;
+        canvasGroup.blocksRaycasts = true;
+
         while (canvasGroup.alpha < 1)
         {
             canvasGroup.alpha += fadeSpeed * Time.unscaledDeltaTime;
@@ -48,7 +56,9 @@ public class SceneTransition : MonoBehaviour
             canvasGroup.alpha -= fadeSpeed * Time.unscaledDeltaTime;
             yield return null;
         }
-        
+
         canvasGroup.blocksRaycasts = false;
+        isTransitioning = false;
+        IsTransitioning = false;
     }
 }

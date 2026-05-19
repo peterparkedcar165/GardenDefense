@@ -9,7 +9,7 @@ public class Dandelion : Shooter
     private GameObject windGustIndicatorInstance;
 
     private const float indicatorLength = 30f;
-    private const float pushForce = 1.5f;
+    private float PushPower => ((DandelionData)data)?.basePushPower ?? 1.5f;
 
     private float WindGustDamage => data.baseSkillDamage + attackDamage + skillDamageMultiplier * magicPower;
 
@@ -128,7 +128,7 @@ public class Dandelion : Shooter
         float beamWidth = ((DandelionData)data).baseBeamWidth + 0.25f * effectivePath3Level;
         if (windGustPrefab == null) return;
         GameObject obj = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
-        obj.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, pushForce, this);
+        obj.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this);
     }
 
     private void UpdateWindGustIndicator()

@@ -4,6 +4,7 @@ using UnityEngine;
 public class SunflowerData : PlantData
 {
     public int baseSunGenerated;
+    public float baseSunrayDPS;
 
     public override string GetAttackDescription() =>
         $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=green><b>{baseAttackDamage}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic </color>damage.";
@@ -12,5 +13,5 @@ public class SunflowerData : PlantData
         $"Passively generates <color=green><b>{baseSunGenerated}</b></color> <color=yellow>Sun</color> for the garden every <color=green><b>{basePassiveCooldown}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>1</b></color> second.";
 
     public override string GetSkillDescription() =>
-        $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{baseSkillDamage}</b></color> (+{baseSkillDamageMultiplier * 100f:F0}% <color=#FFB6C1>Magic Power</color>) <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second to insects within the designated area for <color=green><b>{baseSkillDuration}</b></color> seconds.";
+        $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{baseSunrayDPS}</b></color> (+{baseSkillDamageMultiplier * 100f:F0}% <color=#FFB6C1>Magic Power</color>) <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second to insects within the designated area for <color=green><b>{baseSkillDuration}</b></color> seconds.";
 }

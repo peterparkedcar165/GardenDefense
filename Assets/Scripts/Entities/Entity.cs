@@ -500,6 +500,9 @@ public abstract class Entity : MonoBehaviour
         healthBarInstance.transform.localPosition = offset;
 
         healthBarFill = healthBarInstance.transform.Find("Fill");
+        SpriteRenderer fillRenderer = healthBarFill?.GetComponent<SpriteRenderer>();
+        if (fillRenderer)
+            fillRenderer.color = this is Plant ? Color.green : Color.red;
         healthBarInstance.SetActive(false);
     }
     

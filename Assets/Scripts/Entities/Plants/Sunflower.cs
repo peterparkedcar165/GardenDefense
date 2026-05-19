@@ -38,7 +38,7 @@ public class Sunflower : Shooter
     public override void UpdateStats()
     {
         base.UpdateStats();
-        sunrayDamagePerSecond = data.baseSkillDamage + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
+        sunrayDamagePerSecond = (SFData?.baseSunrayDPS ?? 0f) + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
         channelDuration = (WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Sunny) ? 1f : 2f;
     }
 
@@ -104,7 +104,7 @@ public class Sunflower : Shooter
         $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=green><b>{attackDamage}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic </color>damage.";
 
     public override string GetSkillDesription() =>
-        $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{data.baseSkillDamage + 15f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.";
+        $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{(SFData?.baseSunrayDPS ?? 0f) + 15f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.";
 
     public override string GetPassiveDescription() =>
         $"Passively generates <color=green><b>{sunGenerated}</b></color> <color=yellow>Sun</color> for the garden every <color=green><b>{passiveCooldown}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>1</b></color> second.";

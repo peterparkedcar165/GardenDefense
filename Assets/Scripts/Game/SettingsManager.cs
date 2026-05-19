@@ -39,7 +39,9 @@ public class SettingsManager : MonoBehaviour
 
         bool skillCancelled = SkillTargetingManager.instance != null && SkillTargetingManager.instance.WasCancelledThisFrame;
         bool loadoutOpen = LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen;
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen)
+        bool inEncyclopedia = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Encyclopedia";
+        bool inLevelSelector = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "LevelSelector";
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !inEncyclopedia && !inLevelSelector && !SceneTransition.IsTransitioning)
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class LevelSelector : MonoBehaviour
 {
@@ -22,10 +23,17 @@ public class LevelSelector : MonoBehaviour
        // nextPage.interactable = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !SceneTransition.IsTransitioning)
+            GoToMainMenu();
+    }
+
+    private void GoToMainMenu()
+    {
+        DisableAllButtons();
+        SceneTransition transition = FindAnyObjectByType<SceneTransition>();
+        transition.StartCoroutine(transition.FadeToScene("MainMenu"));
     }
 
     private void DisableAllButtons()

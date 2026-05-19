@@ -58,10 +58,11 @@ MonoBehaviour:
   basePiercing: 0
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 35
+  baseSkillCooldown: 45
   baseSkillDuration: 6
   baseSkillRadius: 1.5
   baseSkillDamageMultiplier: 0.35
   baseSkillHealth: 0
   basePassiveDamage: 0
-  baseSkillDamage: 35
+  baseSkillDamage: 0
+  baseBlizzardDamage: 35

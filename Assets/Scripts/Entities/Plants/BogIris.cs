@@ -22,7 +22,7 @@ public class BogIris : Shooter
     private float GeyserRadius => baseSkillRadius + 0.15f * effectivePath3Level;
     private float KnockUpHeight => ScaleCC(((BogData?.baseKnockUpHeight ?? 0f) + 1f * effectivePath3Level) * skillDuration);
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * KnockUpHeight);
-    private float GeyserDamage => baseSkillDamage + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
+    private float GeyserDamage => (BogData?.baseGeyserDamage ?? 0f) + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
 
     protected override void Awake()
     {
@@ -147,7 +147,7 @@ public class BogIris : Shooter
 
     public override string GetPath3Description() =>
         $"Skill:\n\n" +
-        $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{baseSkillDamage + 15f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.\n\n" +
+        $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{(BogData?.baseGeyserDamage ?? 0f) + 15f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.\n\n" +
         $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
         $"Increase the flat component of geyser damage by <color=green><b>15</b></color> per level. [<color=green><b>+{15 * effectivePath3Level}</b></color>]\n\n" +
         $"Increase the knock-up height by <color=green><b>1</b></color> unit per level. [<color=green><b>+{effectivePath3Level}</b></color>]\n\n" +

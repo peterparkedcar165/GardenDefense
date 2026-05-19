@@ -69,7 +69,8 @@ public class WindGust : MonoBehaviour
             if (insect == null || !insect.IsAlive) continue;
             if (!IsInBeam(insect.transform.position)) continue;
 
-            float force = insect.isFlying ? pushForce * 1.25f : pushForce;
+            float tenacityScale = Mathf.Sqrt(Mathf.Max(0f, 1f - insect.tenacity));
+            float force = (insect.isFlying ? pushForce * 1.25f : pushForce) * tenacityScale;
             insect.windVelocity += direction * force;
 
             if (tickTimer >= tickInterval)

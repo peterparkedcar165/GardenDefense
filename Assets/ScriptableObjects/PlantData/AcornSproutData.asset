@@ -21,7 +21,7 @@ MonoBehaviour:
   sunCost: 100
   baseMaxHealth: 200
   baseAttackDamage: 42
-  baseMagicDamage: 0
+  baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 3
   baseHealingBonus: 0
@@ -44,8 +44,6 @@ MonoBehaviour:
   baseCriticalDamage: 1.75
   baseDotDamage: 0
   baseElementalPower: 0
-  basePassiveDamage: 0
-  baseSkillDamage: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
@@ -55,15 +53,17 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseProjectileSpeed: 8
+  baseMaxRange: 20
+  basePiercing: 0
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 35
+  baseSkillCooldown: 40
   baseSkillDuration: 20
   baseSkillRadius: 1
   baseSkillDamageMultiplier: 1.5
   baseSkillHealth: 250
-  baseProjectileSpeed: 8
-  baseMaxRange: 20
-  basePiercing: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
   stunChance: 0.35
   stunDuration: 0.5

@@ -8,45 +8,44 @@ public class MainMenu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        foreach (Button b in buttons)
+            b.interactable = true;
     }
 
     private void DisableAllButtons()
     {
         foreach (Button b in buttons)
-        {
             b.interactable = false;
-        }
     }
-    public void OnPlay()
+
+    private bool TryStartTransition(string scene)
     {
-        Debug.Log("Play clicked");
+        if (SceneTransition.IsTransitioning) return false;
         DisableAllButtons();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
-        transition.StartCoroutine(transition.FadeToScene("LevelSelector"));
+        transition.StartCoroutine(transition.FadeToScene(scene));
+        return true;
+    }
+
+    public void OnPlay()
+    {
+        TryStartTransition("LevelSelector");
     }
 
     public void OnSettings()
     {
-        Debug.Log("Settings clicked");
-        DisableAllButtons();
-        SettingsManager.previousScene = "MainMenu";
-        SceneTransition transition = FindAnyObjectByType<SceneTransition>();
-        transition.StartCoroutine(transition.FadeToScene("Settings"));
+        if (TryStartTransition("Settings"))
+            SettingsManager.previousScene = "MainMenu";
     }
 
     public void OnShop()
     {
-        Debug.Log("Shop clicked");
-        DisableAllButtons();
-        SceneTransition transition = FindAnyObjectByType<SceneTransition>();
-        transition.StartCoroutine(transition.FadeToScene("Shop"));
+        TryStartTransition("Shop");
+    }
+
+    public void OnEncyclopedia()
+    {
+        TryStartTransition("Encyclopedia");
     }
 
     public void OnQuit()

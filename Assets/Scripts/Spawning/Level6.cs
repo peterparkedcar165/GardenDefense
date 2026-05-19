@@ -16,7 +16,7 @@ public class Level6 : SpawnManager
     public float waitTime;
     public float spawnInterval;
     public int spawnCount;
-    public float restInterval = 20f;
+    public float restInterval = 18f;
 
     [Header("Fertilizers")]
     [SerializeField] private FertilizerData[] fertilizerPool;

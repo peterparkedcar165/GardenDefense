@@ -18,6 +18,14 @@ public class LeafRanger : Shooter
         base.UpdateStats();
         if (skillActive)
             attackSpeed += baseAttackSpeed * ((LRData?.baseSkillAttackSpeedBonus ?? 3f) + 0.25f * effectivePath3Level + skillDamageMultiplier * magicPower);
+
+        if (DarknessManager.instance != null && DarknessManager.instance.isDark)
+        {
+            GameObject targetObj = FindTarget();
+            Insect insect = targetObj?.GetComponent<Insect>();
+            if (insect != null && !DarknessManager.instance.IsIlluminated(insect.transform.position))
+                attackSpeed *= 0.5f;
+        }
     }
 
     protected override void Update()

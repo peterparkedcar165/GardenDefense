@@ -29,7 +29,7 @@ public class Waterlily : Shooter
     {
         base.UpdateStats();
         splashDamage = data.basePassiveDamage + attackDamage * 0.05f * effectivePath2Level + skillDamageMultiplier * magicPower;
-        bubbleDamage = data.baseSkillDamage + 12f * effectivePath3Level + skillDamageMultiplier * magicPower;
+        bubbleDamage = (WLData?.baseBubblePrisonImpactDamage ?? 0f) + 12f * effectivePath3Level + skillDamageMultiplier * magicPower;
     }
 
     protected override void Shoot(Vector3 target)
@@ -83,7 +83,7 @@ public class Waterlily : Shooter
         $"Blow little bubbles towards her target, dealing <color=green><b>{attackDamage}</b></color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic </color>damage.";
 
     public override string GetSkillDesription() =>
-        $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{data.baseSkillDamage + 12f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green><b>{skillDuration}</b></color> seconds.";
+        $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{(WLData?.baseBubblePrisonImpactDamage ?? 0f) + 12f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green><b>{skillDuration}</b></color> seconds.";
 
     public override string GetPassiveDescription() =>
         $"Attacks deal <color=green><b>{data.basePassiveDamage + attackDamage * 0.05f * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] <color=#3399FF>Water</color> damage to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.";

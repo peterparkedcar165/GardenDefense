@@ -11,7 +11,7 @@ public class Level5 : SpawnManager
     public GameObject workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt;
     public GameObject weatherManager;
     public float nextWaveTimer;
-    public float restInterval = 20f;
+    public float restInterval = 15f;
 
     [Header("Spawning")]
     public float waitTime;

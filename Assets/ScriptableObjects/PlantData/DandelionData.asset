@@ -23,7 +23,7 @@ MonoBehaviour:
   baseAttackDamage: 12
   baseMagicPower: 0
   baseAttackSpeed: 1
-  baseAttackRange: 1.2
+  baseAttackRange: 2
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
   basePiercing: 0
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 30
+  baseSkillCooldown: 40
   baseSkillDuration: 4
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0.25
@@ -67,3 +67,4 @@ MonoBehaviour:
   baseSkillDamage: 0
   baseSeedCount: 3
   baseBeamWidth: 1.5
+  basePushPower: 1.25

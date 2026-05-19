@@ -5,6 +5,7 @@ public class DandelionData : PlantData
 {
     public int baseSeedCount;
     public float baseBeamWidth;
+    public float basePushPower;
 
     public override string GetAttackDescription() =>
         $"Each seed deals <color=green><b>{baseAttackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.";
