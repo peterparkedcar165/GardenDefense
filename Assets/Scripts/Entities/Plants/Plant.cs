@@ -208,8 +208,18 @@ public abstract class Plant : Entity, IAttackable
     private SpriteRenderer _cachedRenderer;
     private SpriteRenderer[] _outlineRenderers;
     private bool _isHighlighted;
+    private bool _hoverHighlighted;
     private const int OutlineCount = 8;
     private const float OutlineWidth = 0.05f;
+
+    private static Material _outlineMaterial;
+    private static Material GetOutlineMaterial()
+    {
+        if (_outlineMaterial != null) return _outlineMaterial;
+        Shader shader = Shader.Find("Custom/SpriteSilhouette");
+        if (shader != null) _outlineMaterial = new Material(shader);
+        return _outlineMaterial;
+    }
 
     private SpriteRenderer GetMainRenderer()
     {
@@ -241,6 +251,8 @@ public abstract class Plant : Entity, IAttackable
             outlineSR.sortingLayerID = sr.sortingLayerID;
             outlineSR.sortingOrder = sr.sortingOrder - 1;
             outlineSR.enabled = false;
+            Material mat = GetOutlineMaterial();
+            if (mat != null) outlineSR.material = mat;
             _outlineRenderers[i] = outlineSR;
         }
     }
@@ -289,18 +301,22 @@ public abstract class Plant : Entity, IAttackable
         if (darkCircleRadius != null && DarknessManager.instance != null && DarknessManager.instance.isDark)
             darkCircleRadius.gameObject.SetActive(true);
         if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsPlantTargeting)
+        {
             SetHighlight(Color.yellow);
+            _hoverHighlighted = true;
+        }
     }
 
     protected override void OnHoverExit()
     {
+        ClearHighlight();
+        _hoverHighlighted = false;
         if (_isSelected) return;
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
         if (darkCircleRadius != null)
             darkCircleRadius.gameObject.SetActive(false);
         RefreshHealthBarVisibility();
-        ClearHighlight();
     }
 
     public void Select()
@@ -333,6 +349,12 @@ public abstract class Plant : Entity, IAttackable
             passiveCooldownTimer -= Time.deltaTime;
         if (skillCooldownTimer > 0)
             skillCooldownTimer -= Time.deltaTime;
+
+        if (_hoverHighlighted && (SkillTargetingManager.instance == null || !SkillTargetingManager.instance.IsPlantTargeting))
+        {
+            ClearHighlight();
+            _hoverHighlighted = false;
+        }
     }
 
     public virtual void ActivateSkill() {}

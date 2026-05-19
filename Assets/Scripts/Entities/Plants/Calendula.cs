@@ -45,7 +45,7 @@ public class Calendula : Aura
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
-        SkillTargetingManager.instance.BeginPlantTargeting(OnTargetConfirmed);
+        SkillTargetingManager.instance.BeginPlantTargeting(OnTargetConfirmed, this);
     }
 
     private void OnTargetConfirmed(Plant targetPlant)
@@ -55,7 +55,7 @@ public class Calendula : Aura
         FloralGlowEffect existing = targetPlant.GetEffect<FloralGlowEffect>();
         if (existing != null && existing.level > myLevel)
         {
-            SkillTargetingManager.instance.BeginPlantTargeting(OnTargetConfirmed);
+            SkillTargetingManager.instance.BeginPlantTargeting(OnTargetConfirmed, this);
             return;
         }
         skillCooldownTimer = skillCooldown;

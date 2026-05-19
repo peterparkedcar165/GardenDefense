@@ -99,7 +99,7 @@ public class Begonia : Shooter
             Vector3 mousePos = SkillTargetingManager.instance.GetMouseWorldPosition();
             foreach (Plant plant in Plant.allPlants)
             {
-                if (plant == null || plant == this) continue;
+                if (plant == null) continue;
                 if (Vector2.Distance(mousePos, plant.transform.position) <= BlossomRadius)
                     desired.Add(plant);
             }

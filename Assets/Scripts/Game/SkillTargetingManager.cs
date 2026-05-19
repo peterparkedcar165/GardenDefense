@@ -20,6 +20,7 @@ public class SkillTargetingManager : MonoBehaviour
     public bool IsPlantTargeting => isPlantTargeting;
     private bool cancelledPlantThisFrame = false;
     public bool WasPlantCancelledThisFrame => cancelledPlantThisFrame;
+    public Plant PlantTargetingSource { get; private set; }
 
     private void Awake()
     {
@@ -69,17 +70,19 @@ public class SkillTargetingManager : MonoBehaviour
         }
     }
 
-    public void BeginPlantTargeting(Action<Plant> onConfirm)
+    public void BeginPlantTargeting(Action<Plant> onConfirm, Plant source = null)
     {
         if (isTargeting) Cancel();
         if (isPlantTargeting) CancelPlantTargeting();
         this.onPlantConfirm = onConfirm;
+        PlantTargetingSource = source;
         isPlantTargeting = true;
     }
 
     public void ConfirmPlantTarget(Plant plant)
     {
         isPlantTargeting = false;
+        PlantTargetingSource = null;
         var cb = onPlantConfirm;
         onPlantConfirm = null;
         cb?.Invoke(plant);
@@ -88,6 +91,7 @@ public class SkillTargetingManager : MonoBehaviour
     public void CancelPlantTargeting()
     {
         isPlantTargeting = false;
+        PlantTargetingSource = null;
         onPlantConfirm = null;
         cancelledPlantThisFrame = true;
     }
