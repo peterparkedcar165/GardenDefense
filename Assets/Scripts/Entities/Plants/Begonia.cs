@@ -46,7 +46,7 @@ public class Begonia : Shooter
 
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
-            if (plant == null || !plant.IsAlive || plant == this) continue;
+            if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             ElementalPowerBoostEffect existing = plant.GetEffect<ElementalPowerBoostEffect>();
             if (existing != null && existing.bonus > ElementalPowerBonus) continue;
@@ -109,7 +109,7 @@ public class Begonia : Shooter
         {
             foreach (Plant plant in Plant.allPlants)
             {
-                if (plant == null || plant == this) continue;
+                if (plant == null) continue;
                 if (Vector2.Distance(transform.position, plant.transform.position) <= attackRange)
                     desired.Add(plant);
             }

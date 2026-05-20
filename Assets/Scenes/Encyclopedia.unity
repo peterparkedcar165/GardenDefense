@@ -2532,7 +2532,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1636942272707002615, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0010048695
+      value: 0.00007574022
       objectReference: {fileID: 0}
     - target: {fileID: 1865476856580230889, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2965,11 +2965,11 @@ PrefabInstance:
     - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: 'allPlantData.Array.data[8]'
       value: 
-      objectReference: {fileID: 11400000, guid: 683709562bf012d4f967e6d5eac56f2e, type: 2}
+      objectReference: {fileID: 11400000, guid: e9b4fa183be7cd043a1d74ef113aa8de, type: 2}
     - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: 'allPlantData.Array.data[9]'
       value: 
-      objectReference: {fileID: 11400000, guid: e9b4fa183be7cd043a1d74ef113aa8de, type: 2}
+      objectReference: {fileID: 11400000, guid: 683709562bf012d4f967e6d5eac56f2e, type: 2}
     - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: 'allPlantData.Array.data[10]'
       value: 
