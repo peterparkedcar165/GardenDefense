@@ -155,6 +155,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level10\GridManager10.cs" />
     <Compile Include="Assets\Scripts\UI\InsectStatsHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level2.cs" />
     <Compile Include="Assets\Scripts\UI\InsectInfoUI.cs" />

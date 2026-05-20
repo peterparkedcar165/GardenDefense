@@ -20,7 +20,7 @@ public class PlantEntry : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         onHover = onHoverCallback;
         onHoverExit = onHoverExitCallback;
         onClick = onClickCallback;
-        if (nameText) nameText.text = plantData.plantName;
+        if (nameText) nameText.text = plantData.displayName;
         if (icon && plantData.icon) icon.sprite = plantData.icon;
     }
 

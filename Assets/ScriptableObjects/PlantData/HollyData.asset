@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HollyData
   m_EditorClassIdentifier: Assembly-CSharp::HollyData
   plantPrefab: {fileID: 5000121148441657890, guid: 27bf59135d14d06498ddba5faa271858, type: 3}
-  icon: {fileID: 3997787884886350849, guid: 66cc86ab63224114c893b2c8e527b49d, type: 3}
+  icon: {fileID: 21300000, guid: c9a6d2fc74c3fe04cb9bc4d5721d7c53, type: 3}
   plantName: Holly
   displayName: Holly
   elementalType: 4
