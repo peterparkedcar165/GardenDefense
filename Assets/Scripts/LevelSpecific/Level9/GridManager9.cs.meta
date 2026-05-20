@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 603bd21ee24be9f43b5d44ad89102b5d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - grassTilePrefab: {fileID: 1746608376694191165, guid: eb6e0b05e28606541bffc83add47cd61,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

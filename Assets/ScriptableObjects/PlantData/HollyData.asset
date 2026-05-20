@@ -18,16 +18,16 @@ MonoBehaviour:
   displayName: Holly
   elementalType: 4
   damageType: 0
-  sunCost: 0
-  baseMaxHealth: 300
+  sunCost: 100
+  baseMaxHealth: 400
   baseAttackDamage: 25
   baseMagicPower: 0
   baseAttackSpeed: 0.5
-  baseAttackRange: 1
+  baseAttackRange: 1.5
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
+  basePhysicalResistance: 0.3
   baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0

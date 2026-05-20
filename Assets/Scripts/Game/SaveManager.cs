@@ -94,7 +94,8 @@ public class SaveManager : MonoBehaviour
             case 5: return "Calendula";
             case 6: return "BogIris";
             case 7: return "PoisonShroom";
-            case 8: return "Begonia";
+            case 8: return "Holly";
+            case 9: return "Begonia";
             default: return null;
         }
     }

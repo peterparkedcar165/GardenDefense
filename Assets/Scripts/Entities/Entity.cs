@@ -150,6 +150,7 @@ public abstract class Entity : MonoBehaviour
         lightEmissionRange = baseLightEmissionRange + lightEmissionRangeAdder + (baseLightEmissionRange * lightEmissionRangeMultiplier);
         lifesteal = baseLifesteal + lifestealAdder + (baseLifesteal * lifestealMultiplier);
         counterDamage = baseCounterDamage + counterDamageAdder + (baseCounterDamage * counterDamageMultiplier);
+        UpdateHealthBar();
     }
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
@@ -506,7 +507,7 @@ public abstract class Entity : MonoBehaviour
         healthBarInstance.SetActive(false);
     }
     
-    private void UpdateHealthBar()
+    protected void UpdateHealthBar()
     {
         if (healthBarFill == null) return;
 

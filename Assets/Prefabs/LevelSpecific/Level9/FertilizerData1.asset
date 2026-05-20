@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Taunting
   stats:
-  - statType: 1
+  - statType: 26
+    value: 0.62
+  - statType: 29
     value: 0.52
-  - statType: 11
-    value: 0.42
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   targetElementalType: 0
-  appliesToAll: 1
+  appliesToAll: 0
   tier: 0

@@ -6919,11 +6919,11 @@ PrefabInstance:
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[8]'
       value: 
-      objectReference: {fileID: 11400000, guid: 683709562bf012d4f967e6d5eac56f2e, type: 2}
+      objectReference: {fileID: 11400000, guid: e9b4fa183be7cd043a1d74ef113aa8de, type: 2}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[9]'
       value: 
-      objectReference: {fileID: 11400000, guid: e9b4fa183be7cd043a1d74ef113aa8de, type: 2}
+      objectReference: {fileID: 11400000, guid: 683709562bf012d4f967e6d5eac56f2e, type: 2}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[10]'
       value: 

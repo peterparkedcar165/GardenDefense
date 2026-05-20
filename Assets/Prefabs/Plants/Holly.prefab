@@ -248,7 +248,7 @@ MonoBehaviour:
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: e9b4fa183be7cd043a1d74ef113aa8de, type: 2}
   occupiedTile: {fileID: 0}
-  circleRadius: {fileID: 3304212838967152807}
+  circleRadius: {fileID: 12871179031049225}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 0100000004000000

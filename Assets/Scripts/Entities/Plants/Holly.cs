@@ -68,7 +68,7 @@ public class Holly : Aura
     {
         if (!IsAlive || !attacker.IsAlive) return;
         float retaliationDamage = RetaliationHollyPct * attackDamage + RetaliationInsectPct * attacker.attackDamage;
-        attacker.Damage(retaliationDamage, DamageType.Physical, ElementalType.Ice, this, false, new DamageTag[] { DamageTag.PassiveDamage });
+        attacker.Damage(retaliationDamage, DamageType.Physical, ElementalType.Ice, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Counter, DamageTag.PassiveDamage });
     }
 
     public override void ActivateSkill()
@@ -91,14 +91,18 @@ public class Holly : Aura
         basePhysicalResistance = data.basePhysicalResistance + 0.04f * level;
     }
 
-    public override void OnPath2Upgrade(int level) { }
+    public override void OnPath2Upgrade(int level)
+    {
+        health += 40f;
+        UpdateHealthBar();
+    }
 
     public override void OnPath3Upgrade(int level)
     {
         baseSkillDuration = data.baseSkillDuration + 2f * level;
     }
 
-    public override string GetName() => "<b><color=green>Holly</color></b>";
+    public override string GetName() => "<b><color=#00FFFF>Holly</color></b>";
 
     public override string GetDescription() =>
         $"The {GetName()} is a resilient ice tank that retaliates against attackers and can taunt insects into targeting her.";

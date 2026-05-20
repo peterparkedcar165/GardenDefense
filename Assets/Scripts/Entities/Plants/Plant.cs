@@ -186,6 +186,9 @@ public abstract class Plant : Entity, IAttackable
         baseSkillHealth               = data.baseSkillHealth;
         elementalType                 = data.elementalType;
         damageType                    = data.damageType;
+        UpdateStats();
+        health = maxHealth;
+        UpdateHealthBar();
     }
 
     private int[] GetAllSortingLayerIDs()

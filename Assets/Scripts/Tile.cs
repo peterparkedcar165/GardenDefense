@@ -49,7 +49,7 @@ public class Tile : MonoBehaviour
             return;
         }
 
-        int cost = selector.SelectedPlant.GetComponent<Plant>().sunCost;
+        int cost = selector.SelectedPlant.GetComponent<Plant>().data.sunCost;
         Debug.Log("Cost of selected plant is: " + cost);
 
         if (gm.SpendSun(cost))

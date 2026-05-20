@@ -16,14 +16,14 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         data = plantData;
         plant = plantData.plantPrefab;
         if (icon != null) icon.sprite = plantData.icon;
-        if (sunCostText != null) sunCostText.text = plant.sunCost.ToString();
+        if (sunCostText != null) sunCostText.text = data.sunCost.ToString();
     }
 
     void Update()
     {
-        if (plant == null || sunCostText == null || GameManager.instance == null) return;
-        sunCostText.text = plant.sunCost.ToString();
-        if (GameManager.instance.SunCount >= plant.sunCost)
+        if (data == null || sunCostText == null || GameManager.instance == null) return;
+        sunCostText.text = data.sunCost.ToString();
+        if (GameManager.instance.SunCount >= data.sunCost)
         {
             sunCostText.fontStyle = FontStyles.Bold;
             sunCostText.color = Color.green;
@@ -37,7 +37,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnClicked()
     {
-        if (GameManager.instance == null || GameManager.instance.SunCount < plant.sunCost) return;
+        if (GameManager.instance == null || GameManager.instance.SunCount < data.sunCost) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
         if (PlantSelector.instance == null) return;
         PlantSelector.instance.SelectPlant(data.plantPrefab.gameObject);
