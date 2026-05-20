@@ -61,9 +61,9 @@ MonoBehaviour:
   baseSkillCooldown: 30
   baseSkillDuration: 5
   baseSkillRadius: 1.5
-  baseSkillDamageMultiplier: 0.65
+  baseSkillDamageMultiplier: 0.04
   baseSkillHealth: 0
   basePassiveDamage: 6
   baseSkillDamage: 0
-  baseAoERange: 0.75
+  baseAoERange: 1
   baseBubblePrisonImpactDamage: 42

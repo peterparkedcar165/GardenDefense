@@ -44,14 +44,11 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (tooltipPanel != null) tooltipPanel.SetActive(false);
     }
 
-    void Update()
+    public void Hide()
     {
-        if (panel.activeSelf && UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame)
-        {
-            panel.SetActive(false);
-            selectedLoadout.Clear();
-            HideTooltip();
-        }
+        panel.SetActive(false);
+        selectedLoadout.Clear();
+        HideTooltip();
     }
 
     public void Show(int level)

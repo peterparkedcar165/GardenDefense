@@ -59,7 +59,7 @@ public class GridManager9 : MonoBehaviour
         new Vector2Int(2,8),   new Vector2Int(3,11),  new Vector2Int(5,12),  new Vector2Int(7,11),
         new Vector2Int(9,5),   new Vector2Int(13,6),  new Vector2Int(14,8),  new Vector2Int(13,15),
         new Vector2Int(17,7),  new Vector2Int(18,4),  new Vector2Int(20,13), new Vector2Int(21,10),
-        new Vector2Int(23,8),
+        new Vector2Int(23,8),  new Vector2Int(5,8),   new Vector2Int(10,9),
     };
 
     private List<Vector2Int> caveCoordinates = new List<Vector2Int>();
