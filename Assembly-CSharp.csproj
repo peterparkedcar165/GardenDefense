@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BogIrisProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Level11.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerCard.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ColdEffect.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level11\GridManager11.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
