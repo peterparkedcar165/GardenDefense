@@ -251,7 +251,7 @@ MonoBehaviour:
   circleRadius: {fileID: 12871179031049225}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
-  allowedTiles: 01000000
+  allowedTiles: 0100000004000000
   sunCost: 125
   totalSunSpent: 0
   elementalType: 1

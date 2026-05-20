@@ -36,7 +36,7 @@ public abstract class Aura : Plant
         {
             if (insect == null || !insect.IsAlive) continue;
             float distance = Vector2.Distance(transform.position, insect.transform.position);
-            if (distance <= attackRange && IsValidNightTarget(insect, distance))
+            if (distance <= attackRange)
                 result.Add(insect);
         }
         return result;

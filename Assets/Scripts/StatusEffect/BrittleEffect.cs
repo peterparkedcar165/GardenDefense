@@ -7,13 +7,13 @@ public class BrittleEffect : StatusEffect
         effectType = Type.negative;
     }
 
-    public override string GetName() => "<color=#00FFFF>Brittle</color>";
-    public override string GetDescription() => $"Inflict <color=#00FFFF>3</color> additional damage upon being hurt";
+    public override string GetName() => "<color=green>Brittle</color>";
+    public override string GetDescription() => $"Inflict <color=green>3</color> additional damage upon being hurt";
 
     public override void OnApply()
     {
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Brittle", new Color(0f, 1f, 1f));
+        indicator.GetComponent<DamageIndicator>().Initialize("Brittle", Color.green);
     }
 
     public override void OnTick(float deltaTime)

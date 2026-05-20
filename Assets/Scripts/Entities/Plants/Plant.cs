@@ -587,7 +587,10 @@ public abstract class Plant : Entity, IAttackable
     public void ReceiveAttack(float damage, Insect attacker)
     {
         Damage(damage, DamageType.Physical, ElementalType.Neutral, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        OnHitByInsect(attacker);
     }
+
+    protected virtual void OnHitByInsect(Insect attacker) {}
     public bool IsAlive => health > 0;
     public Vector3 Position => transform.position;
 

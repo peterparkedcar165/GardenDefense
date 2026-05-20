@@ -224,7 +224,7 @@ public abstract class Entity : MonoBehaviour
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
-            Damage(3, damageType, ElementalType.Ice, source, false, new DamageTag [] {DamageTag.ElementalDebuff});
+            Damage(3, damageType, ElementalType.Nature, source, false, new DamageTag [] {DamageTag.ElementalDebuff});
         }
 
         if (this.HasEffect<FractureEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))

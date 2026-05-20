@@ -9,21 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21a96f36c3aff7842b3329d73a095180, type: 3}
-  m_Name: BegoniaData
-  m_EditorClassIdentifier: Assembly-CSharp::BegoniaData
-  plantPrefab: {fileID: -3248773622810050089, guid: 63eb5dc8f809acf4a84718b08a9a7eea, type: 3}
-  icon: {fileID: 21300000, guid: adc730a06fd32d1449e86eb5219c00bf, type: 3}
-  plantName: Begonia
-  displayName: Begonia
-  elementalType: 2
-  damageType: 1
-  sunCost: 100
-  baseMaxHealth: 200
-  baseAttackDamage: 32
+  m_Script: {fileID: 11500000, guid: e1321aab959c2864786fe2dc3d9796a6, type: 3}
+  m_Name: HollyData
+  m_EditorClassIdentifier: Assembly-CSharp::HollyData
+  plantPrefab: {fileID: 5000121148441657890, guid: 27bf59135d14d06498ddba5faa271858, type: 3}
+  icon: {fileID: 3997787884886350849, guid: 66cc86ab63224114c893b2c8e527b49d, type: 3}
+  plantName: Holly
+  displayName: Holly
+  elementalType: 4
+  damageType: 0
+  sunCost: 0
+  baseMaxHealth: 300
+  baseAttackDamage: 25
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
-  baseAttackRange: 2
+  baseAttackSpeed: 0.5
+  baseAttackRange: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0
@@ -53,20 +53,20 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
-  baseProjectileSpeed: 2
-  baseMaxRange: 20
+  baseProjectileSpeed: 0
+  baseMaxRange: 0
   basePiercing: 0
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 35
+  baseSkillCooldown: 25
   baseSkillDuration: 12
-  baseSkillRadius: 2
+  baseSkillRadius: 0
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseElementalPowerBonus: 0.22
-  baseNatureDamageBonus: 0.16
-  baseAttackSpeedBonus: 0.16
-  basePassiveMultiplier: 0.24
-  baseSkillMultiplier: 0.16
+  baseRetaliationHollyPercent: 0.75
+  baseRetaliationInsectPercent: 0.75
+  baseHealthBonusMP: 0.3
+  baseFrozenRageReduction: 0.12
+  baseFrozenRageReductionMP: 0.08
