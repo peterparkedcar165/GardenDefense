@@ -56,6 +56,10 @@ public abstract class Plant : Entity, IAttackable
     public override void UpdateStats()
     {
         base.UpdateStats();
+        comfortMin = baseComfortMin + comfortMinAdder;
+        comfortMax = baseComfortMax + comfortMaxAdder;
+        temperatureMin = baseTemperatureMin + temperatureMinAdder;
+        temperatureMax = baseTemperatureMax + temperatureMaxAdder;
         passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier);
         skillCooldown = baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier);
         skillDamageMultiplier = baseSkillDamageMultiplier + skillDamageMultiplierAdder;
@@ -104,6 +108,13 @@ public abstract class Plant : Entity, IAttackable
     public int exp = 0;
     public float expBoost;
     public float activeCooldown;
+
+    [Header("Temperature")]
+    public float temperature = 10f;
+    public float baseComfortMin = 0f,    comfortMinAdder,    comfortMin;
+    public float baseComfortMax = 20f,   comfortMaxAdder,    comfortMax;
+    public float baseTemperatureMin = -10f, temperatureMinAdder, temperatureMin;
+    public float baseTemperatureMax = 30f,  temperatureMaxAdder, temperatureMax;
 
     [Header("Passive")]
     public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownReductionMultiplier, passiveCooldownMultiplier;
@@ -186,6 +197,8 @@ public abstract class Plant : Entity, IAttackable
         baseSkillHealth               = data.baseSkillHealth;
         elementalType                 = data.elementalType;
         damageType                    = data.damageType;
+        if (elementalType == ElementalType.Ice)  comfortMinAdder = -5f;
+        if (elementalType == ElementalType.Fire) comfortMaxAdder =  5f;
         UpdateStats();
         health = maxHealth;
         UpdateHealthBar();
@@ -358,6 +371,28 @@ public abstract class Plant : Entity, IAttackable
             ClearHighlight();
             _hoverHighlighted = false;
         }
+
+        UpdateTemperature();
+    }
+
+    private static readonly DamageTag[] temperatureDamageTags = { DamageTag.Weather };
+
+    private void UpdateTemperature()
+    {
+        if (WeatherManager.instance != null)
+        {
+            switch (WeatherManager.instance.temperature)
+            {
+                case TemperatureType.Hot:  temperature += 2f * Time.deltaTime; break;
+                case TemperatureType.Cold: temperature -= 2f * Time.deltaTime; break;
+            }
+        }
+        temperature = Mathf.Clamp(temperature, temperatureMin, temperatureMax);
+
+        if (temperature < comfortMin)
+            Damage(maxHealth * 0.025f * Time.deltaTime, DamageType.Environmental, ElementalType.Ice, temperatureDamageTags);
+        else if (temperature > comfortMax)
+            Damage(maxHealth * 0.025f * Time.deltaTime, DamageType.Environmental, ElementalType.Fire, temperatureDamageTags);
     }
 
     public virtual void ActivateSkill() {}
@@ -525,7 +560,7 @@ public abstract class Plant : Entity, IAttackable
         switch (elementalType)
         {
             case ElementalType.Fire:
-            return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight";
+            return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight\nIncrease comfort in <color=orange>hot</color> weather";
 
             case ElementalType.Nature:
             return $"Can be placed on <color=green>Grass</color>.";
@@ -537,7 +572,7 @@ public abstract class Plant : Entity, IAttackable
             return $"Taking damage returns <color=purple>Poison</color> damage equal to <color=purple><b>200%</b></color> of the hit to the attacker.";
 
             case ElementalType.Ice:
-            return $"Increase Passive tree level by <color=green>1</color> when in cold weather";
+            return $"Increase Passive tree level by <color=green>1</color> when in cold weather\nIncrease comfort in <color=#00FFFF>cold</color> weather";
 
             case ElementalType.Wind:
             return $"Increase Passive tree level by <color=green>1</color> when in high altitude";

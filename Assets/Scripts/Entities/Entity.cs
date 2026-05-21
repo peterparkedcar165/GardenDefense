@@ -22,7 +22,8 @@ public enum DamageTag
     SkillDamage,
     ElementalDebuff,
     Coordinated,
-    Counter
+    Counter,
+    Weather
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
