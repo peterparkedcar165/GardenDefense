@@ -13,7 +13,8 @@ public class CursorIcon : MonoBehaviour
     [SerializeField] private Sprite shovelSprite;
     [SerializeField] private float alpha = 0.5f;
     [SerializeField] private Canvas canvas;
-    [SerializeField] private Transform rangePreviewCircle;
+    [SerializeField] private GameObject rangePreviewPrefab;
+    private Transform rangePreviewCircle;
     private Camera  cam;
 
     private RectTransform rectTransform;
@@ -27,6 +28,13 @@ public class CursorIcon : MonoBehaviour
         canvasRect = canvas.GetComponent<RectTransform>();
         icon.enabled = false;
         cam = Camera.main;
+        if (rangePreviewPrefab != null)
+        {
+            GameObject obj = Instantiate(rangePreviewPrefab);
+            DontDestroyOnLoad(obj);
+            rangePreviewCircle = obj.transform;
+            rangePreviewCircle.gameObject.SetActive(false);
+        }
     }
 
     public void OnSelectionChanged()

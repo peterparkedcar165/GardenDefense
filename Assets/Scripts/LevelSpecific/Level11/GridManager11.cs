@@ -123,6 +123,7 @@ public class GridManager11 : MonoBehaviour
     };
 
     private List<Vector2Int> waterCoordinates;
+    private List<Vector2Int> obstacleCoordinates;
 
     private List<Vector2Int> highgroundCoordinates = new List<Vector2Int>();
 
@@ -130,32 +131,34 @@ public class GridManager11 : MonoBehaviour
 
     void Start()
     {
+        InitObstacleCoordinates();
         InitWaterCoordinates();
         InitHighgroundCoordinates();
         GenerateGrid();
     }
 
+    private void InitObstacleCoordinates()
+    {
+        obstacleCoordinates = new List<Vector2Int>();
+        AddObstacleRange(0,19,  26,19);
+        AddObstacleRange(23,15, 25,17);
+        AddObstacleRange(23,8,  25,10);
+        AddObstacleRange(12,3,  14,5);
+        AddObstacleRange(0,0,   2,2);
+        AddObstacleRange(9,12,  9,16);
+        AddObstacleRange(13,12, 13,16);
+        obstacleCoordinates.Add(new Vector2Int(6,0));
+        obstacleCoordinates.Add(new Vector2Int(6,1));
+        obstacleCoordinates.Add(new Vector2Int(12,0));
+        obstacleCoordinates.Add(new Vector2Int(12,1));
+    }
+
     private void InitWaterCoordinates()
     {
         waterCoordinates = new List<Vector2Int>();
-
-        // Obstacles
-        AddWaterRange(0,19,  26,19);
-        AddWaterRange(23,15, 25,17);
-        AddWaterRange(23,8,  25,10);
-        AddWaterRange(12,3,  14,5);
-        AddWaterRange(0,0,   2,2);
-        AddWaterRange(9,12,  9,16);
-        AddWaterRange(13,12, 13,16);
-        waterCoordinates.Add(new Vector2Int(6,0));
-        waterCoordinates.Add(new Vector2Int(6,1));
-        waterCoordinates.Add(new Vector2Int(12,0));
-        waterCoordinates.Add(new Vector2Int(12,1));
-
-        // Water
         AddWaterRange(3,6, 5,7);
         AddWaterRange(4,8, 5,8);
-        // Pool: (10,13)→(12,13)→(12,15)→(10,15)→(10,14)
+        // Pool
         waterCoordinates.Add(new Vector2Int(10,13));
         waterCoordinates.Add(new Vector2Int(11,13));
         waterCoordinates.Add(new Vector2Int(12,13));
@@ -177,6 +180,13 @@ public class GridManager11 : MonoBehaviour
         for (int x = Mathf.Min(x1, x2); x <= Mathf.Max(x1, x2); x++)
             for (int y = Mathf.Min(y1, y2); y <= Mathf.Max(y1, y2); y++)
                 highgroundCoordinates.Add(new Vector2Int(x, y));
+    }
+
+    private void AddObstacleRange(int x1, int y1, int x2, int y2)
+    {
+        for (int x = Mathf.Min(x1, x2); x <= Mathf.Max(x1, x2); x++)
+            for (int y = Mathf.Min(y1, y2); y <= Mathf.Max(y1, y2); y++)
+                obstacleCoordinates.Add(new Vector2Int(x, y));
     }
 
     private void AddWaterRange(int x1, int y1, int x2, int y2)
@@ -201,6 +211,8 @@ public class GridManager11 : MonoBehaviour
 
                 if (pathCoordinates.Contains(new Vector2Int(x, y)))
                     t.tileType = TileType.Path;
+                else if (obstacleCoordinates.Contains(new Vector2Int(x, y)))
+                    t.tileType = TileType.Obstacle;
                 else if (waterCoordinates.Contains(new Vector2Int(x, y)))
                     t.tileType = TileType.Water;
                 else if (caveCoordinates.Contains(new Vector2Int(x, y)))
