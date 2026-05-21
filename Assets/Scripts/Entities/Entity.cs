@@ -402,9 +402,10 @@ public abstract class Entity : MonoBehaviour
     }
 
 // method for healing
-    public virtual void Heal(float healingAmount)
+    public virtual void Heal(float healingAmount, Entity source = null)
     {
-        float actual = Mathf.Min(healingAmount * (1f + healingReceived), maxHealth - health);
+        float bonus = source != null ? source.healingBonus : 0f;
+        float actual = Mathf.Min(healingAmount * (1f + healingReceived) * (1f + bonus), maxHealth - health);
         if (actual <= 0f) return;
         health += actual;
         UpdateHealthBar();

@@ -27,8 +27,7 @@ public class FloralGlowEffect : StatusEffect
         healTickTimer += deltaTime;
         if (healTickTimer < 0.5f) return;
         healTickTimer -= 0.5f;
-        float heal = HealingPerSecond * 0.5f * (1f + (calendula?.healingBonus ?? 0f));
-        plant.Heal(heal);
+        plant.Heal(HealingPerSecond * 0.5f, calendula);
     }
 
     public override void OnExpire()

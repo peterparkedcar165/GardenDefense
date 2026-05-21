@@ -8,7 +8,7 @@ public enum Aggressivity { Low, Medium, High }
 public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();
-    private static readonly int ObstacleLayer = LayerMask.NameToLayer("Obstacle");
+    private static int ObstacleLayer => LayerMask.GetMask("Obstacle");
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()

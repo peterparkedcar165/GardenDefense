@@ -86,27 +86,22 @@ public class AloeVeraProjectile : MonoBehaviour
 
     private void Explode()
     {
-        if (isHealMode)
+        foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
-            foreach (Plant plant in new List<Plant>(Plant.allPlants))
+            if (plant == null || !plant.IsAlive) continue;
+            if (Vector3.Distance(transform.position, plant.transform.position) <= aoERadius)
             {
-                if (plant == null || !plant.IsAlive) continue;
-                if (Vector3.Distance(transform.position, plant.transform.position) <= aoERadius)
-                {
-                    plant.Heal(healAmount);
-                    plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
-                }
+                plant.Heal(healAmount, source);
+                plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
             }
         }
-        else
+
+        foreach (Insect insect in new List<Insect>(Insect.allInsects))
         {
-            foreach (Insect insect in new List<Insect>(Insect.allInsects))
-            {
-                if (insect == null || !insect.IsAlive) continue;
-                if (Vector3.Distance(transform.position, insect.transform.position) <= aoERadius)
-                    insect.Damage(damage, damageType, elementalType, source, true,
-                        new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile });
-            }
+            if (insect == null || !insect.IsAlive) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) <= aoERadius)
+                insect.Damage(damage, damageType, elementalType, source, true,
+                    new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile });
         }
     }
 }

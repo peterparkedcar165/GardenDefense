@@ -58,7 +58,7 @@ public class AloeVera : Lobber
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackSpeed = data.baseAttackSpeed + level * 0.05f;
+        baseAttackSpeed = data.baseAttackSpeed + level * 0.03f;
         baseAttackRange = data.baseAttackRange + level * 0.2f;
     }
 
@@ -71,17 +71,16 @@ public class AloeVera : Lobber
         $"Lob a water droplet that bursts on landing, dealing <color=green><b>{attackDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage to all insects within <color=green><b>{aoERadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
-        $"If an injured plant is within range, switch targetting to the one with the lowest Health. Water droplets become healing bursts, restoring <color=green><b>{healAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.12f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{tempReduction:F1}</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius.";
+        $"Water droplets also heal plants, restoring <color=green><b>{healAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.12f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{tempReduction:F1}</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius. If an injured plant is within range, switch targetting to the one with the lowest Health.";
 
     public override string GetPath1Description() =>
         $"Attack:\n\n{GetAttackDescription()}\n\n" +
-        $"Increase Attack Speed by <color=green><b>0.05</b></color> per level. [<color=green><b>+{0.05f * effectivePath1Level:F2}</b></color>]\n\n" +
+        $"Increase Attack Speed by <color=green><b>0.03</b></color> per level. [<color=green><b>+{0.03f * effectivePath1Level:F2}</b></color>]\n\n" +
         $"Increase Attack Range by <color=green><b>0.2</b></color> per level. [<color=green><b>+{0.2f * effectivePath1Level:F1}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
     public override string GetPath2Description() =>
         $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-        $"Scaling: <color=#FFB6C1><b>12%</b></color> Magic Power\n\n" +
         $"Increase base healing by <color=green><b>4</b></color> per level. [<color=green><b>+{4 * effectivePath2Level}</b></color>]\n\n" +
         $"Increase temperature reduction by <color=green><b>0.5</b></color> per level. [<color=green><b>+{0.5f * effectivePath2Level:F1}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";

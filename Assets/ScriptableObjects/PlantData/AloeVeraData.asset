@@ -22,7 +22,7 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 52
   baseMagicPower: 0
-  baseAttackSpeed: 0.25
+  baseAttackSpeed: 0.2
   baseAttackRange: 4
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -56,9 +56,9 @@ MonoBehaviour:
   baseProjectileSpeed: 3
   baseMaxRange: 20
   basePiercing: 0
-  baseAoERadius: 1.25
-  minFlightDuration: 2
-  projectileHeight: 2
+  baseAoERadius: 1.5
+  minFlightDuration: 1.5
+  projectileHeight: 3
   basePassiveCooldown: 0
   basePassiveDuration: 0
   baseSkillCooldown: 0
@@ -68,5 +68,5 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseHealAmount: 24
-  baseTempReduction: 4.5
+  baseHealAmount: 16
+  baseTempReduction: 4
