@@ -4,161 +4,179 @@ using System.Collections.Generic;
 public class GridManager11 : MonoBehaviour
 {
     public int rows, columns;
-    public GameObject grassTilePrefab;
+    public GameObject sandTilePrefab;
 
     private List<Vector2Int> pathCoordinates = new List<Vector2Int>
     {
-        // Seg 1: (0,15)→(4,15)
-        new Vector2Int(0,15), new Vector2Int(1,15), new Vector2Int(2,15), new Vector2Int(3,15), new Vector2Int(4,15),
-        // Seg 2: (4,15)→(4,17)
-        new Vector2Int(4,16), new Vector2Int(4,17),
-        // Seg 3: (4,17)→(6,17)
-        new Vector2Int(5,17), new Vector2Int(6,17),
-        // Seg 4: (6,17)→(6,10)
-        new Vector2Int(6,16), new Vector2Int(6,15), new Vector2Int(6,14), new Vector2Int(6,13),
-        new Vector2Int(6,12), new Vector2Int(6,11), new Vector2Int(6,10),
-        // Seg 5: (6,10)→(7,10)
-        new Vector2Int(7,10),
-        // Seg 6: (7,10)→(7,9)
-        new Vector2Int(7,9),
-        // Seg 7: (7,9)→(8,9)
-        new Vector2Int(8,9),
-        // Seg 8: (8,9)→(8,10)
-        new Vector2Int(8,10),
-        // Seg 9: (8,10)→(9,10)
-        new Vector2Int(9,10),
-        // Seg 10: (9,10)→(9,13)
-        new Vector2Int(9,11), new Vector2Int(9,12), new Vector2Int(9,13),
-        // Seg 11: (9,13)→(2,13)
-        new Vector2Int(8,13), new Vector2Int(7,13), new Vector2Int(6,13), new Vector2Int(5,13),
-        new Vector2Int(4,13), new Vector2Int(3,13), new Vector2Int(2,13),
-        // Seg 12: (2,13)→(2,8)
-        new Vector2Int(2,12), new Vector2Int(2,11), new Vector2Int(2,10), new Vector2Int(2,9), new Vector2Int(2,8),
-        // Seg 13: (2,8)→(3,8)
-        new Vector2Int(3,8),
-        // Seg 14: (3,8)→(3,7)
-        new Vector2Int(3,7),
-        // Seg 15: (3,7)→(4,7)
-        new Vector2Int(4,7),
-        // Seg 16: (4,7)→(4,6)
-        new Vector2Int(4,6),
-        // Seg 17: (4,6)→(6,6)
-        new Vector2Int(5,6), new Vector2Int(6,6),
-        // Seg 18: (6,6)→(6,1)
-        new Vector2Int(6,5), new Vector2Int(6,4), new Vector2Int(6,3), new Vector2Int(6,2), new Vector2Int(6,1),
-        // Seg 19: (6,1)→(2,1)
-        new Vector2Int(5,1), new Vector2Int(4,1), new Vector2Int(3,1), new Vector2Int(2,1),
-        // Seg 20: (2,1)→(2,4)
-        new Vector2Int(2,2), new Vector2Int(2,3), new Vector2Int(2,4),
-        // Seg 21: (2,4)→(11,4)
-        new Vector2Int(3,4), new Vector2Int(4,4), new Vector2Int(5,4), new Vector2Int(6,4),
-        new Vector2Int(7,4), new Vector2Int(8,4), new Vector2Int(9,4), new Vector2Int(10,4), new Vector2Int(11,4),
-        // Seg 22: (11,4)→(11,5)
-        new Vector2Int(11,5),
-        // Seg 23: (11,5)→(12,5)
-        new Vector2Int(12,5),
-        // Seg 24: (12,5)→(12,15)
-        new Vector2Int(12,6), new Vector2Int(12,7), new Vector2Int(12,8), new Vector2Int(12,9), new Vector2Int(12,10),
-        new Vector2Int(12,11), new Vector2Int(12,12), new Vector2Int(12,13), new Vector2Int(12,14), new Vector2Int(12,15),
-        // Seg 25: (12,15)→(11,15)
-        new Vector2Int(11,15),
-        // Seg 26: (11,15)→(11,18)
-        new Vector2Int(11,16), new Vector2Int(11,17), new Vector2Int(11,18),
-        // Seg 27: (11,18)→(14,18)
-        new Vector2Int(12,18), new Vector2Int(13,18), new Vector2Int(14,18),
-        // Seg 28: (14,18)→(14,17)
-        new Vector2Int(14,17),
-        // Seg 29: (14,17)→(15,17)
-        new Vector2Int(15,17),
-        // Seg 30: (15,17)→(15,15)
-        new Vector2Int(15,16), new Vector2Int(15,15),
-        // Seg 31: (15,15)→(14,15)
-        new Vector2Int(14,15),
-        // Seg 32: (14,15)→(14,12)
-        new Vector2Int(14,14), new Vector2Int(14,13), new Vector2Int(14,12),
-        // Seg 33: (14,12)→(15,12)
-        new Vector2Int(15,12),
-        // Seg 34: (15,12)→(15,11)
-        new Vector2Int(15,11),
-        // Seg 35: (15,11)→(16,11)
-        new Vector2Int(16,11),
-        // Seg 36: (16,11)→(16,6)
-        new Vector2Int(16,10), new Vector2Int(16,9), new Vector2Int(16,8), new Vector2Int(16,7), new Vector2Int(16,6),
-        // Seg 37: (16,6)→(15,6)
-        new Vector2Int(15,6),
-        // Seg 38: (15,6)→(15,5)
-        new Vector2Int(15,5),
-        // Seg 39: (15,5)→(14,5)
-        new Vector2Int(14,5),
-        // Seg 40: (14,5)→(14,2)
-        new Vector2Int(14,4), new Vector2Int(14,3), new Vector2Int(14,2),
-        // Seg 41: (14,2)→(15,2)
-        new Vector2Int(15,2),
-        // Seg 42: (15,2)→(15,1)
-        new Vector2Int(15,1),
-        // Seg 43: (15,1)→(18,1)
-        new Vector2Int(16,1), new Vector2Int(17,1), new Vector2Int(18,1),
-        // Seg 44: (18,1)→(18,2)
-        new Vector2Int(18,2),
-        // Seg 45: (18,2)→(19,2)
-        new Vector2Int(19,2),
-        // Seg 46: (19,2)→(19,5)
-        new Vector2Int(19,3), new Vector2Int(19,4), new Vector2Int(19,5),
-        // Seg 47: (19,5)→(18,5)
-        new Vector2Int(18,5),
-        // Seg 48: (18,5)→(18,6)
-        new Vector2Int(18,6),
-        // Seg 49: (18,6)→(17,6)
+        // Seg 1: (0,15)→(3,15)
+        new Vector2Int(0,15), new Vector2Int(1,15), new Vector2Int(2,15), new Vector2Int(3,15),
+        // Seg 2: (3,15)→(3,16)
+        new Vector2Int(3,16),
+        // Seg 3: (3,16)→(4,16)
+        new Vector2Int(4,16),
+        // Seg 4: (4,16)→(4,17)
+        new Vector2Int(4,17),
+        // Seg 5: (4,17)→(7,17)
+        new Vector2Int(5,17), new Vector2Int(6,17), new Vector2Int(7,17),
+        // Seg 6: (7,17)→(7,16)
+        new Vector2Int(7,16),
+        // Seg 7: (7,16)→(8,16)
+        new Vector2Int(8,16),
+        // Seg 8: (8,16)→(8,13)
+        new Vector2Int(8,15), new Vector2Int(8,14), new Vector2Int(8,13),
+        // Seg 9: (8,13)→(7,13)
+        new Vector2Int(7,13),
+        // Seg 10: (7,13)→(7,12)
+        new Vector2Int(7,12),
+        // Seg 11: (7,12)→(4,12)
+        new Vector2Int(6,12), new Vector2Int(5,12), new Vector2Int(4,12),
+        // Seg 12: (4,12)→(4,11)
+        new Vector2Int(4,11),
+        // Seg 13: (4,11)→(3,11)
+        new Vector2Int(3,11),
+        // Seg 14: (3,11)→(3,10)
+        new Vector2Int(3,10),
+        // Seg 15: (3,10)→(2,10)
+        new Vector2Int(2,10),
+        // Seg 16: (2,10)→(2,9)
+        new Vector2Int(2,9),
+        // Seg 17: (2,9)→(1,9)
+        new Vector2Int(1,9),
+        // Seg 18: (1,9)→(1,5)
+        new Vector2Int(1,8), new Vector2Int(1,7), new Vector2Int(1,6), new Vector2Int(1,5),
+        // Seg 19: (1,5)→(2,5)
+        new Vector2Int(2,5),
+        // Seg 20: (2,5)→(2,4)
+        new Vector2Int(2,4),
+        // Seg 21: (2,4)→(3,4)
+        new Vector2Int(3,4),
+        // Seg 22: (3,4)→(3,3)
+        new Vector2Int(3,3),
+        // Seg 23: (3,3)→(8,3)
+        new Vector2Int(4,3), new Vector2Int(5,3), new Vector2Int(6,3), new Vector2Int(7,3), new Vector2Int(8,3),
+        // Seg 24: (8,3)→(8,5)
+        new Vector2Int(8,4), new Vector2Int(8,5),
+        // Seg 25: (8,5)→(10,5)
+        new Vector2Int(9,5), new Vector2Int(10,5),
+        // Seg 26: (10,5)→(10,7)
+        new Vector2Int(10,6), new Vector2Int(10,7),
+        // Seg 27: (10,7)→(7,7)
+        new Vector2Int(9,7), new Vector2Int(8,7), new Vector2Int(7,7),
+        // Seg 28: (7,7)→(7,10)
+        new Vector2Int(7,8), new Vector2Int(7,9), new Vector2Int(7,10),
+        // Seg 29: (7,10)→(12,10)
+        new Vector2Int(8,10), new Vector2Int(9,10), new Vector2Int(10,10), new Vector2Int(11,10), new Vector2Int(12,10),
+        // Seg 30: (12,10)→(12,9)
+        new Vector2Int(12,9),
+        // Seg 31: (12,9)→(13,9)
+        new Vector2Int(13,9),
+        // Seg 32: (13,9)→(13,8)
+        new Vector2Int(13,8),
+        // Seg 33: (13,8)→(14,9) diagonal — endpoints only
+        new Vector2Int(14,9),
+        // Seg 34: (14,9)→(15,9)
+        new Vector2Int(15,9),
+        // Seg 35: (15,9)→(15,13)
+        new Vector2Int(15,10), new Vector2Int(15,11), new Vector2Int(15,12), new Vector2Int(15,13),
+        // Seg 36: (15,13)→(14,13)
+        new Vector2Int(14,13),
+        // Seg 37: (14,13)→(14,17)
+        new Vector2Int(14,14), new Vector2Int(14,15), new Vector2Int(14,16), new Vector2Int(14,17),
+        // Seg 38: (14,17)→(19,17)
+        new Vector2Int(15,17), new Vector2Int(16,17), new Vector2Int(17,17), new Vector2Int(18,17), new Vector2Int(19,17),
+        // Seg 39: (19,17)→(19,15)
+        new Vector2Int(19,16), new Vector2Int(19,15),
+        // Seg 40: (19,15)→(20,15)
+        new Vector2Int(20,15),
+        // Seg 41: (20,15)→(20,10)
+        new Vector2Int(20,14), new Vector2Int(20,13), new Vector2Int(20,12), new Vector2Int(20,11), new Vector2Int(20,10),
+        // Seg 42: (20,10)→(19,10)
+        new Vector2Int(19,10),
+        // Seg 43: (19,10)→(19,8)
+        new Vector2Int(19,9), new Vector2Int(19,8),
+        // Seg 44: (19,8)→(18,8)
+        new Vector2Int(18,8),
+        // Seg 45: (18,8)→(18,7)
+        new Vector2Int(18,7),
+        // Seg 46: (18,7)→(17,7)
+        new Vector2Int(17,7),
+        // Seg 47: (17,7)→(17,6)
         new Vector2Int(17,6),
-        // Seg 50: (17,6)→(17,14)
-        new Vector2Int(17,7), new Vector2Int(17,8), new Vector2Int(17,9), new Vector2Int(17,10),
-        new Vector2Int(17,11), new Vector2Int(17,12), new Vector2Int(17,13), new Vector2Int(17,14),
-        // Seg 51: (17,14)→(22,14)
-        new Vector2Int(18,14), new Vector2Int(19,14), new Vector2Int(20,14), new Vector2Int(21,14), new Vector2Int(22,14),
-        // Seg 52: (22,14)→(22,9)
-        new Vector2Int(22,13), new Vector2Int(22,12), new Vector2Int(22,11), new Vector2Int(22,10), new Vector2Int(22,9),
-        // Seg 53: (22,9)→(26,9)
-        new Vector2Int(23,9), new Vector2Int(24,9), new Vector2Int(25,9), new Vector2Int(26,9),
+        // Seg 48: (17,6)→(16,6)
+        new Vector2Int(16,6),
+        // Seg 49: (16,6)→(16,2)
+        new Vector2Int(16,5), new Vector2Int(16,4), new Vector2Int(16,3), new Vector2Int(16,2),
+        // Seg 50: (16,2)→(20,2)
+        new Vector2Int(17,2), new Vector2Int(18,2), new Vector2Int(19,2), new Vector2Int(20,2),
+        // Seg 51: (20,2)→(20,4)
+        new Vector2Int(20,3), new Vector2Int(20,4),
+        // Seg 52: (20,4)→(23,4)
+        new Vector2Int(21,4), new Vector2Int(22,4), new Vector2Int(23,4),
+        // Seg 53: (23,4)→(23,5)
+        new Vector2Int(23,5),
+        // Seg 54: (23,5)→(25,5)
+        new Vector2Int(24,5), new Vector2Int(25,5),
+        // Seg 55: (25,5)→(25,4)
+        new Vector2Int(25,4),
+        // Seg 56: (25,4)→(26,4)
+        new Vector2Int(26,4),
     };
 
     private List<Vector2Int> waterCoordinates;
 
-    private List<Vector2Int> dirtCoordinates = new List<Vector2Int>
-    {
-        new Vector2Int(5,16),  new Vector2Int(5,14),  new Vector2Int(3,12),  new Vector2Int(5,12),
-        new Vector2Int(7,12),  new Vector2Int(8,11),  new Vector2Int(4,8),   new Vector2Int(5,7),
-        new Vector2Int(5,5),   new Vector2Int(11,6),  new Vector2Int(3,3),   new Vector2Int(5,2),
-        new Vector2Int(11,14), new Vector2Int(12,16), new Vector2Int(13,17), new Vector2Int(14,16),
-        new Vector2Int(15,10), new Vector2Int(15,7),  new Vector2Int(15,4),  new Vector2Int(16,2),
-        new Vector2Int(18,4),  new Vector2Int(17,5),  new Vector2Int(18,13), new Vector2Int(20,13),
-        new Vector2Int(23,8),
-    };
+    private List<Vector2Int> highgroundCoordinates = new List<Vector2Int>();
 
     private List<Vector2Int> caveCoordinates = new List<Vector2Int>();
 
     void Start()
     {
         InitWaterCoordinates();
+        InitHighgroundCoordinates();
         GenerateGrid();
     }
 
     private void InitWaterCoordinates()
     {
         waterCoordinates = new List<Vector2Int>();
-        // Obstacles (borders)
-        AddWaterRange(0,0,  26,0);
-        AddWaterRange(26,0, 26,7);
-        AddWaterRange(0,19, 26,19);
+
+        // Obstacles
+        AddWaterRange(0,19,  26,19);
+        AddWaterRange(23,15, 25,17);
+        AddWaterRange(23,8,  25,10);
+        AddWaterRange(12,3,  14,5);
+        AddWaterRange(0,0,   2,2);
+        AddWaterRange(9,12,  9,16);
+        AddWaterRange(13,12, 13,16);
+        waterCoordinates.Add(new Vector2Int(6,0));
+        waterCoordinates.Add(new Vector2Int(6,1));
+        waterCoordinates.Add(new Vector2Int(12,0));
+        waterCoordinates.Add(new Vector2Int(12,1));
+
         // Water
-        AddWaterRange(26,13, 26,18);
-        // Individual
-        waterCoordinates.Add(new Vector2Int(4,11));
-        waterCoordinates.Add(new Vector2Int(4,3));
-        waterCoordinates.Add(new Vector2Int(8,7));
-        waterCoordinates.Add(new Vector2Int(7,11));
-        waterCoordinates.Add(new Vector2Int(13,16));
-        waterCoordinates.Add(new Vector2Int(17,4));
-        waterCoordinates.Add(new Vector2Int(21,12));
+        AddWaterRange(3,6, 5,7);
+        AddWaterRange(4,8, 5,8);
+        // Pool: (10,13)→(12,13)→(12,15)→(10,15)→(10,14)
+        waterCoordinates.Add(new Vector2Int(10,13));
+        waterCoordinates.Add(new Vector2Int(11,13));
+        waterCoordinates.Add(new Vector2Int(12,13));
+        waterCoordinates.Add(new Vector2Int(12,14));
+        waterCoordinates.Add(new Vector2Int(12,15));
+        waterCoordinates.Add(new Vector2Int(11,15));
+        waterCoordinates.Add(new Vector2Int(10,15));
+        waterCoordinates.Add(new Vector2Int(10,14));
+    }
+
+    private void InitHighgroundCoordinates()
+    {
+        AddHighgroundRange(10, 6, 12, 13);
+        AddHighgroundRange(7, 0, 11, 1);
+    }
+
+    private void AddHighgroundRange(int x1, int y1, int x2, int y2)
+    {
+        for (int x = Mathf.Min(x1, x2); x <= Mathf.Max(x1, x2); x++)
+            for (int y = Mathf.Min(y1, y2); y <= Mathf.Max(y1, y2); y++)
+                highgroundCoordinates.Add(new Vector2Int(x, y));
     }
 
     private void AddWaterRange(int x1, int y1, int x2, int y2)
@@ -177,20 +195,21 @@ public class GridManager11 : MonoBehaviour
             for (int y = 0; y < rows; y++)
             {
                 Vector3 position = new Vector3(x - (columns + 4) / 2f, y - (rows - 1) / 2f, 0) + transform.position;
-                GameObject tile = Instantiate(grassTilePrefab, position, Quaternion.identity, transform);
+                GameObject tile = Instantiate(sandTilePrefab, position, Quaternion.identity, transform);
                 Tile t = tile.GetComponent<Tile>();
                 tileMap[new Vector2Int(x, y)] = t;
 
                 if (pathCoordinates.Contains(new Vector2Int(x, y)))
                     t.tileType = TileType.Path;
-                else if (dirtCoordinates.Contains(new Vector2Int(x, y)))
-                    t.tileType = TileType.Dirt;
                 else if (waterCoordinates.Contains(new Vector2Int(x, y)))
                     t.tileType = TileType.Water;
                 else if (caveCoordinates.Contains(new Vector2Int(x, y)))
                     t.tileType = TileType.Cave;
                 else
-                    t.tileType = TileType.Grass;
+                    t.tileType = TileType.Sand;
+
+                if (highgroundCoordinates.Contains(new Vector2Int(x, y)))
+                    t.isHighground = true;
             }
         }
 
@@ -216,14 +235,16 @@ public class GridManager11 : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.blue;
+        GUIStyle labelStyle = new GUIStyle();
+        labelStyle.normal.textColor = Color.black;
         for (int x = 0; x < columns; x++)
         {
             for (int y = 0; y < rows; y++)
             {
                 Vector3 pos = new Vector3(x - (columns + 4) / 2f, y - (rows - 1) / 2f, 0) + transform.position;
                 Gizmos.DrawWireCube(pos, Vector3.one);
-                UnityEditor.Handles.Label(pos + new Vector3(-0.4f, -0.4f, 0), $"({x},{y})");
+                UnityEditor.Handles.Label(pos + new Vector3(-0.4f, -0.2f, 0), $"({x},{y})", labelStyle);
             }
         }
     }

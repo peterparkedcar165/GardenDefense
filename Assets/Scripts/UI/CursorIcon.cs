@@ -7,6 +7,7 @@ public class CursorIcon : MonoBehaviour
     public static CursorIcon instance;
     private Plant cachedPlant;
     private SpriteRenderer cachedRenderer;
+    private SpriteRenderer cachedPotRenderer;
 
     [SerializeField] private Image icon;
     [SerializeField] private Sprite shovelSprite;
@@ -39,6 +40,7 @@ public class CursorIcon : MonoBehaviour
             cachedPlant = null;
             cachedRenderer = null;
         }
+        cachedPotRenderer = null;
     }
 
     void Update()
@@ -59,6 +61,25 @@ public class CursorIcon : MonoBehaviour
                 Vector2 tileScreenPos = cam.WorldToScreenPoint((Vector2)tile.transform.position + visualOffset);
                 Show(cachedRenderer.sprite, tileScreenPos);
                 MatchSizeToRenderer(cachedRenderer);
+            }
+            else
+            {
+                icon.enabled = false;
+            }
+        }
+        else if (PlantSelector.instance.flowerPotMode)
+        {
+            if (cachedPotRenderer == null && PlantSelector.instance.flowerPotPrefab != null)
+                cachedPotRenderer = PlantSelector.instance.flowerPotPrefab.GetComponentInChildren<SpriteRenderer>();
+
+            Collider2D hit = Physics2D.OverlapPoint(worldPosition);
+            Tile tile = hit != null ? hit.GetComponent<Tile>() : null;
+
+            if (tile != null && tile.tileType != TileType.Water && tile.tileType != TileType.Path && tile.tileType != TileType.Potted && cachedPotRenderer != null)
+            {
+                Vector2 tileScreenPos = cam.WorldToScreenPoint(tile.transform.position);
+                Show(cachedPotRenderer.sprite, tileScreenPos);
+                MatchSizeToRenderer(cachedPotRenderer);
             }
             else
             {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum TileType
 {
-    Grass, Dirt, Water, Path, Potted, Cave, Obstacle
+    Grass, Dirt, Water, Path, Potted, Cave, Obstacle, Sand
     /* Nature-element plants will be able to be placed on Grass, others won't, except for Flower Pot
     Every plant that is non-aquatic will be placeable on Dirt and Potted
     Aquatic plants can be placed in Water, Pondplanters allow terrian plants to be placed on water
@@ -16,6 +16,7 @@ public class Tile : MonoBehaviour
     public bool isOccupied = false, isHighground = false;
     public TileType tileType;
     public bool isWaterAdjacent = false;
+    public FlowerPot flowerPot;
 
     
     private void OnMouseDown()
@@ -29,8 +30,31 @@ public class Tile : MonoBehaviour
         }
 
         PlantSelector selector = FindAnyObjectByType<PlantSelector>();
-        // Debug.Log("Found Selector");
-        if (selector == null || selector.SelectedPlant == null)
+        if (selector == null) return;
+
+        if (selector.uprootMode && tileType == TileType.Potted && flowerPot != null)
+        {
+            tileType = flowerPot.originalTileType;
+            Destroy(flowerPot.gameObject);
+            flowerPot = null;
+            return;
+        }
+
+        if (selector.flowerPotMode)
+        {
+            if (tileType == TileType.Water || tileType == TileType.Path || tileType == TileType.Potted) return;
+            if (selector.flowerPotPrefab == null || GameManager.instance == null) return;
+            if (GameManager.instance.SpendSun(FlowerPot.SunCost))
+            {
+                GameObject potObj = Instantiate(selector.flowerPotPrefab, transform.position, Quaternion.identity);
+                flowerPot = potObj.GetComponent<FlowerPot>();
+                flowerPot.originalTileType = tileType;
+                tileType = TileType.Potted;
+            }
+            return;
+        }
+
+        if (selector.SelectedPlant == null)
         return;
 
         GameManager gm = FindAnyObjectByType<GameManager>();

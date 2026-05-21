@@ -4,7 +4,10 @@ using UnityEngine.InputSystem;
 public class PlantSelector : MonoBehaviour
 {
     public bool uprootMode;
+    public bool flowerPotMode;
     public static PlantSelector instance;
+
+    public GameObject flowerPotPrefab;
 
     public GameObject SelectedPlant { get; private set; }
 
@@ -17,11 +20,21 @@ public class PlantSelector : MonoBehaviour
     public void SetUprootMode(bool newMode)
     {
         ClearSelection();
+        flowerPotMode = false;
         uprootMode = newMode;
+    }
+
+    public void SetFlowerPotMode(bool newMode)
+    {
+        ClearSelection();
+        uprootMode = false;
+        flowerPotMode = newMode;
     }
 
     public void SelectPlant(GameObject plant)
     {
+        uprootMode = false;
+        flowerPotMode = false;
         SelectedPlant = plant;
         CursorIcon.instance?.OnSelectionChanged();
         GameManager.instance?.PlaySound(GameManager.instance.plantSelect);
@@ -39,6 +52,7 @@ public class PlantSelector : MonoBehaviour
         {
             ClearSelection();
             uprootMode = false;
+            flowerPotMode = false;
         }
     }
 }

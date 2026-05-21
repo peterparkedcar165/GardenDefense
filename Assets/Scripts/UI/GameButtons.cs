@@ -10,4 +10,10 @@ public class GameButtons : MonoBehaviour
         if (PlantSelector.instance == null) return;
         PlantSelector.instance.SetUprootMode(!PlantSelector.instance.uprootMode);
     }
+
+    public void ToggleFlowerPot()
+    {
+        if (PlantSelector.instance == null) return;
+        PlantSelector.instance.SetFlowerPotMode(!PlantSelector.instance.flowerPotMode);
+    }
 }
