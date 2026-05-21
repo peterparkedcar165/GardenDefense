@@ -168,7 +168,7 @@ public class GridManager11 : MonoBehaviour
 
     private void InitHighgroundCoordinates()
     {
-        AddHighgroundRange(10, 6, 12, 13);
+        AddHighgroundRange(10, 13, 12, 16);
         AddHighgroundRange(7, 0, 11, 1);
     }
 

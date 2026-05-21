@@ -377,6 +377,11 @@ public abstract class Plant : Entity, IAttackable
             if (onWater || isRaining) return 1;
         }
 
+        if (elementalType == ElementalType.Wind)
+        {
+            if (occupiedTile != null && occupiedTile.isHighground) return 1;
+        }
+
         return 0;
     }
 

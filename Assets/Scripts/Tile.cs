@@ -83,6 +83,7 @@ public class Tile : MonoBehaviour
             Plant plant = placedPlant.GetComponent<Plant>();
             plant.totalSunSpent += cost;
             plant.occupiedTile = this;
+            if (isHighground) plant.attackRangeMultiplier += 1f;
             isOccupied = true;
             GetComponent<Collider2D>().enabled = false;
             selector.ClearSelection();

@@ -13,6 +13,7 @@ public class CursorIcon : MonoBehaviour
     [SerializeField] private Sprite shovelSprite;
     [SerializeField] private float alpha = 0.5f;
     [SerializeField] private Canvas canvas;
+    [SerializeField] private Transform rangePreviewCircle;
     private Camera  cam;
 
     private RectTransform rectTransform;
@@ -61,10 +62,12 @@ public class CursorIcon : MonoBehaviour
                 Vector2 tileScreenPos = cam.WorldToScreenPoint((Vector2)tile.transform.position + visualOffset);
                 Show(cachedRenderer.sprite, tileScreenPos);
                 MatchSizeToRenderer(cachedRenderer);
+                ShowRangePreview(tile);
             }
             else
             {
                 icon.enabled = false;
+                HideRangePreview();
             }
         }
         else if (PlantSelector.instance.flowerPotMode)
@@ -85,6 +88,7 @@ public class CursorIcon : MonoBehaviour
             {
                 icon.enabled = false;
             }
+            HideRangePreview();
         }
         else if (PlantSelector.instance.uprootMode)
         {
@@ -99,11 +103,28 @@ public class CursorIcon : MonoBehaviour
             {
                 icon.enabled = false;
             }
+            HideRangePreview();
         }
         else
         {
             icon.enabled = false;
+            HideRangePreview();
         }
+    }
+
+    private void ShowRangePreview(Tile tile)
+    {
+        if (rangePreviewCircle == null || cachedPlant == null) return;
+        float range = cachedPlant.baseAttackRange;
+        if (tile.isHighground) range *= 2f;
+        rangePreviewCircle.gameObject.SetActive(true);
+        rangePreviewCircle.position = new Vector3(tile.transform.position.x, tile.transform.position.y, rangePreviewCircle.position.z);
+        rangePreviewCircle.localScale = new Vector3(range * 2f, range * 2f, 1f);
+    }
+
+    private void HideRangePreview()
+    {
+        if (rangePreviewCircle != null) rangePreviewCircle.gameObject.SetActive(false);
     }
 
     private void Show(Sprite sprite, Vector2 screenPos)
