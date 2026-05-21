@@ -62,6 +62,11 @@ public class PlantData : ScriptableObject
     public float baseMaxRange;
     public int basePiercing;
 
+    [Header("Lobber")]
+    public float baseAoERadius;
+    public float minFlightDuration = 0.5f;
+    public float projectileHeight = 1.2f;
+
     [Header("Specific")]
     public float basePassiveCooldown;
     public float basePassiveDuration;

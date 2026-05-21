@@ -11,8 +11,9 @@ public class FertilizerManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance != null) return;
+        if (instance != null) { Destroy(gameObject); return; }
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public (FertilizerStat[] stats, float[] values) RollFor(FertilizerData fertilizer)

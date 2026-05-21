@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\BlazeEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WetEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\FreezeEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\AloeVera.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BegoniaData.cs" />
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
     <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\HollyData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Lobber.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level4.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level11\GridManager11.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
@@ -186,6 +189,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level1.cs" />
+    <Compile Include="Assets\Scripts\Environment\ObstacleMarker.cs" />
     <Compile Include="Assets\Scripts\PlantData.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\StunEffect.cs" />
@@ -197,6 +201,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
     <Compile Include="Assets\Scripts\FertilizerData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level4\GridManager4.cs" />

@@ -147,6 +147,7 @@ public class GridManager11 : MonoBehaviour
         AddObstacleRange(0,0,   2,2);
         AddObstacleRange(9,12,  9,16);
         AddObstacleRange(13,12, 13,16);
+        AddObstacleRange(9,12,  13,12);
         obstacleCoordinates.Add(new Vector2Int(6,0));
         obstacleCoordinates.Add(new Vector2Int(6,1));
         obstacleCoordinates.Add(new Vector2Int(12,0));

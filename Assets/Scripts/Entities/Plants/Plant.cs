@@ -28,6 +28,8 @@ public struct PlantBaseStats
     public float floralGlowHeal;
 }
 
+public enum TARGETING { Nearest, First, Last }
+
 public abstract class Plant : Entity, IAttackable
 {
     public static List<Plant> allPlants = new List<Plant>();
@@ -102,6 +104,8 @@ public abstract class Plant : Entity, IAttackable
         }
     }
     public TileType[] allowedTiles;
+    public TARGETING targeting = TARGETING.First;
+    public virtual bool UsesTargeting => false;
     public int sunCost, totalSunSpent = 0;
     public ElementalType elementalType;
     public DamageType damageType;
@@ -145,7 +149,6 @@ public abstract class Plant : Entity, IAttackable
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.75f;
         allPlants.Add(this);
-        FertilizerManager.instance?.ApplyTo(this);
     }
 
     protected void LoadData()
@@ -199,6 +202,7 @@ public abstract class Plant : Entity, IAttackable
         damageType                    = data.damageType;
         if (elementalType == ElementalType.Ice)  comfortMinAdder = -5f;
         if (elementalType == ElementalType.Fire) comfortMaxAdder =  5f;
+        FertilizerManager.instance?.ApplyTo(this);
         UpdateStats();
         health = maxHealth;
         UpdateHealthBar();
@@ -403,7 +407,7 @@ public abstract class Plant : Entity, IAttackable
             if (temperatureDamageTimer >= 2f)
             {
                 temperatureDamageTimer = 0f;
-                float dmg = maxHealth * 0.02f * 2f;
+                float dmg = maxHealth * 0.03f * 2f;
                 ElementalType dmgElement = tooCold ? ElementalType.Ice : ElementalType.Fire;
                 Damage(dmg, DamageType.True, dmgElement, temperatureDamageTags);
                 if (damageIndicatorPrefab != null)
@@ -660,6 +664,77 @@ public abstract class Plant : Entity, IAttackable
     protected virtual void OnHitByInsect(Insect attacker) {}
     public bool IsAlive => health > 0;
     public Vector3 Position => transform.position;
+
+    protected GameObject FindNearest(System.Collections.Generic.List<Insect> insects)
+    {
+        GameObject nearest = null;
+        float nearestDist = Mathf.Infinity;
+        foreach (Insect insect in insects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            float dist = Vector3.Distance(transform.position, insect.transform.position);
+            if (dist <= attackRange && dist < nearestDist && IsValidNightTarget(insect, dist))
+            {
+                nearestDist = dist;
+                nearest = insect.gameObject;
+            }
+        }
+        return nearest;
+    }
+
+    protected GameObject FindFirst(System.Collections.Generic.List<Insect> insects)
+    {
+        GameObject furthest = null;
+        int highestWaypointIndex = -1;
+        float closestDistToNext = Mathf.Infinity;
+        foreach (Insect insect in insects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            float dist = Vector3.Distance(transform.position, insect.transform.position);
+            if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
+            Transform waypoint = insect.GetCurrentWaypoint();
+            if (waypoint == null) continue;
+            if (insect.currentWaypointIndex > highestWaypointIndex)
+            {
+                highestWaypointIndex = insect.currentWaypointIndex;
+                closestDistToNext = Vector3.Distance(insect.transform.position, waypoint.position);
+                furthest = insect.gameObject;
+            }
+            else if (insect.currentWaypointIndex == highestWaypointIndex)
+            {
+                float d = Vector3.Distance(insect.transform.position, waypoint.position);
+                if (d < closestDistToNext) { closestDistToNext = d; furthest = insect.gameObject; }
+            }
+        }
+        return furthest;
+    }
+
+    protected GameObject FindLast(System.Collections.Generic.List<Insect> insects)
+    {
+        GameObject last = null;
+        int lowestWaypointIndex = int.MaxValue;
+        float furthestDistToNext = -1f;
+        foreach (Insect insect in insects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            float dist = Vector3.Distance(transform.position, insect.transform.position);
+            if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
+            Transform waypoint = insect.GetCurrentWaypoint();
+            if (waypoint == null) continue;
+            if (insect.currentWaypointIndex < lowestWaypointIndex)
+            {
+                lowestWaypointIndex = insect.currentWaypointIndex;
+                furthestDistToNext = Vector3.Distance(insect.transform.position, waypoint.position);
+                last = insect.gameObject;
+            }
+            else if (insect.currentWaypointIndex == lowestWaypointIndex)
+            {
+                float d = Vector3.Distance(insect.transform.position, waypoint.position);
+                if (d > furthestDistToNext) { furthestDistToNext = d; last = insect.gameObject; }
+            }
+        }
+        return last;
+    }
 
     public bool IsValidNightTarget(Insect insect, float distance)
     {

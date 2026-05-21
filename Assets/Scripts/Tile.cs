@@ -50,6 +50,7 @@ public class Tile : MonoBehaviour
                 flowerPot = potObj.GetComponent<FlowerPot>();
                 flowerPot.originalTileType = tileType;
                 tileType = TileType.Potted;
+                selector.flowerPotMode = false;
             }
             return;
         }

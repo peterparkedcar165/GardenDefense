@@ -128,15 +128,10 @@ public class PlantUpgradeUI : MonoBehaviour
             plantIcon.sprite = selectedPlant.data.icon;
         }
 
-        if(selectedPlant is Shooter shooter)
-        {
-            targetingModeText.text = shooter.targeting.ToString();
-            targetingToggleButton.gameObject.SetActive(true);
-        }
-        else
-        {
-            targetingToggleButton.gameObject.SetActive(false);
-        }
+        bool usesTargeting = selectedPlant.UsesTargeting;
+        targetingToggleButton.gameObject.SetActive(usesTargeting);
+        if (usesTargeting)
+            targetingModeText.text = selectedPlant.targeting.ToString();
 
         RefreshStats();
         RefreshPaths();
@@ -255,12 +250,10 @@ public class PlantUpgradeUI : MonoBehaviour
 
     public void OnTargetingToggleClicked()
     {
-        if (selectedPlant is Shooter shooter)
-        {
-            int count = System.Enum.GetValues(typeof(TARGETING)).Length;
-            shooter.targeting = (TARGETING)(((int)shooter.targeting + 1) % count);
-            targetingModeText.text = shooter.targeting.ToString();
-        }
+        if (selectedPlant == null || !selectedPlant.UsesTargeting) return;
+        int count = System.Enum.GetValues(typeof(TARGETING)).Length;
+        selectedPlant.targeting = (TARGETING)(((int)selectedPlant.targeting + 1) % count);
+        targetingModeText.text = selectedPlant.targeting.ToString();
     }
 
     // TOOPTIPS

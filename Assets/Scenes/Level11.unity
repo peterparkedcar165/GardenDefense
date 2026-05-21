@@ -9351,7 +9351,7 @@ GameObject:
   - component: {fileID: 2051820605}
   m_Layer: 6
   m_Name: Obstacle
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10496,9 +10496,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4336965381066371071, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8866980882107167876}
-    - targetCorrespondingSourceObject: {fileID: 4336965381066371071, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 8866980882107167877}
   m_SourcePrefab: {fileID: 100100000, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
 --- !u!1 &8866980882107167875 stripped
@@ -10506,40 +10503,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4336965381066371071, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
   m_PrefabInstance: {fileID: 8866980882107167874}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8866980882107167876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8866980882107167875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fd7b426e9b44e24ab2e3edad47c4e6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Level10
-  spawnPoint: {fileID: 2102778779}
-  levelTime: 0
-  wave: 0
-  soldierAnt: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
-  scoutAnt: {fileID: 2279086888993795066, guid: c3349ff3828f87047a2105c4748346ef, type: 3}
-  fruitFly: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
-  wasp: {fileID: 2279086888993795066, guid: 726ce60c28034764084f54c3c199e9c1, type: 3}
-  queenAnt: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
-  snail: {fileID: 2279086888993795066, guid: d0a925c758eadd44eb3532b9a2eeee0f, type: 3}
-  moth: {fileID: 2279086888993795066, guid: ee01b098ec878574e9fe75ef5aa9fd22, type: 3}
-  firefly: {fileID: 2279086888993795066, guid: d7a6800c607f5f146a2134c6f2bca15d, type: 3}
-  mosquito: {fileID: 2279086888993795066, guid: aff6fd1b40eab2342bb9ae072042625a, type: 3}
-  weatherManager: {fileID: 29017235}
-  nextWaveTimer: 0
-  waitTime: 0
-  spawnInterval: 0
-  spawnCount: 0
-  restInterval: 25
-  fertilizerPool:
-  - {fileID: 11400000, guid: 193b3643c86fdce4cacc09775f4190eb, type: 2}
-  - {fileID: 11400000, guid: a844e3e1f18bb844ea388353436bf88e, type: 2}
-  - {fileID: 11400000, guid: a6f42b4c9f233c340843d335a28bd870, type: 2}
 --- !u!114 &8866980882107167877
 MonoBehaviour:
   m_ObjectHideFlags: 0

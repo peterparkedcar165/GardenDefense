@@ -86,7 +86,7 @@ public class CursorIcon : MonoBehaviour
             Collider2D hit = Physics2D.OverlapPoint(worldPosition);
             Tile tile = hit != null ? hit.GetComponent<Tile>() : null;
 
-            if (tile != null && tile.tileType != TileType.Water && tile.tileType != TileType.Path && tile.tileType != TileType.Potted && cachedPotRenderer != null)
+            if (tile != null && tile.tileType != TileType.Water && tile.tileType != TileType.Path && tile.tileType != TileType.Potted && tile.tileType != TileType.Obstacle && cachedPotRenderer != null)
             {
                 Vector2 tileScreenPos = cam.WorldToScreenPoint(tile.transform.position);
                 Show(cachedPotRenderer.sprite, tileScreenPos);

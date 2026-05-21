@@ -29,7 +29,7 @@ public class WindGust : MonoBehaviour
     {
         if (obstacleLayer == 0)
         {
-            foreach (Tile t in FindObjectsByType<Tile>(FindObjectsSortMode.None))
+            foreach (Tile t in FindObjectsByType<Tile>(FindObjectsInactive.Exclude))
             {
                 if (t.tileType == TileType.Obstacle)
                 {
