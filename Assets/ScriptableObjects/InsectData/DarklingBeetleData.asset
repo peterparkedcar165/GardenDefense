@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982c1844b70a12542972e89ed60e38d4, type: 3}
+  m_Name: DarklingBeetleData
+  m_EditorClassIdentifier: Assembly-CSharp::DarklingBeetleData
+  displayName: Darkling Beetle
+  nameColor: {r: 0.24528301, g: 0.06594873, b: 0.06594873, a: 1}
+  description: Slow and armored, can reach further
+  passiveDescription: None
+  sprite: {fileID: -2001639675669158682, guid: e31122e50668b2d42afb0fdfbff8a40e, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: af2c6674e6ccba140a62522caacce5fc, type: 3}
+  baseMaxHealth: 800
+  baseAttackDamage: 36
+  baseMagicPower: 0
+  baseAttackSpeed: 0.7
+  baseAttackRange: 1
+  baseMovementSpeed: 0.7
+  baseLifesteal: 0
+  basePhysicalShred: 0
+  baseMagicShred: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0.5
+  baseMagicResistance: 0.3
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0.3
+  baseWindResistance: 0.3
+  baseDotResistance: 0
+  sunDrop: 12
+  aggressivity: 1
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0

@@ -61,12 +61,15 @@ MonoBehaviour:
   projectileHeight: 3
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 0
-  baseSkillDuration: 0
-  baseSkillRadius: 0
+  baseSkillCooldown: 45
+  baseSkillDuration: 15
+  baseSkillRadius: 2
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseHealAmount: 20
   baseTempReduction: 4
+  baseSkillHealPerTick: 6
+  baseSkillHealInterval: 0.5
+  baseSkillTempReduction: 1

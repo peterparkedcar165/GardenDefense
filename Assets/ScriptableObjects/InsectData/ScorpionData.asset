@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7890ddf60cf36f4d8964ff28b27730f, type: 3}
+  m_Name: ScorpionData
+  m_EditorClassIdentifier: Assembly-CSharp::ScorpionData
+  displayName: Scorpion
+  nameColor: {r: 0.33962262, g: 0.043253824, b: 0.33063844, a: 1}
+  description: Tough and deadly, can reach further
+  passiveDescription: Attacks inflict Venom on the plant, dealing damage over time
+  sprite: {fileID: 0}
+  insectPrefab: {fileID: 0}
+  baseMaxHealth: 600
+  baseAttackDamage: 32
+  baseMagicPower: 0
+  baseAttackSpeed: 0.8
+  baseAttackRange: 1.25
+  baseMovementSpeed: 0.8
+  baseLifesteal: 0
+  basePhysicalShred: 0
+  baseMagicShred: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0.3
+  baseFireResistance: -0.1
+  baseWaterResistance: 0.3
+  basePoisonResistance: 0.3
+  baseIceResistance: 0
+  baseNatureResistance: 0.3
+  baseWindResistance: 0
+  baseDotResistance: 0
+  sunDrop: 12
+  aggressivity: 0
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  venomDPS: 8
+  venomDuration: 4

@@ -17,6 +17,18 @@ public class PlantUpgradeUI : MonoBehaviour
     [SerializeField] private TMP_Text targetingModeText;
     [SerializeField] private Button targetingToggleButton;
 
+    [Header("Health & Temperature")]
+    [SerializeField] private Image healthBarFill;
+    [SerializeField] private TMP_Text healthText;
+    [SerializeField] private Image tempBarBackground;
+    [SerializeField] private TMP_Text tempText;
+    [SerializeField] private TMP_Text tempStateText;
+    [SerializeField] private RectTransform tempCurrentIndicator;
+    [SerializeField] private RectTransform tempComfortMinIndicator;
+    [SerializeField] private RectTransform tempComfortMaxIndicator;
+    [SerializeField] private RectTransform tempMinIndicator;
+    [SerializeField] private RectTransform tempMaxIndicator;
+
     [Header("Stats")]
     [SerializeField] private TMP_Text attackDamageText;
     [SerializeField] private TMP_Text attackSpeedText;
@@ -140,9 +152,24 @@ public class PlantUpgradeUI : MonoBehaviour
     private void RefreshStats()
     {
         attackDamageText.text = $"ATK: {selectedPlant.attackDamage:F0}";
-        attackSpeedText.text = $"SPD: {selectedPlant.attackSpeed:F2}";
-        attackRangeText.text = $"RNG: {selectedPlant.attackRange:F1}";
-        // dear claude, please explain what this method does
+        attackSpeedText.text  = $"SPD: {selectedPlant.attackSpeed:F2}";
+        attackRangeText.text  = $"RNG: {selectedPlant.attackRange:F1}";
+
+        if (healthBarFill != null)
+        {
+            float healthPct = selectedPlant.maxHealth > 0f
+                ? Mathf.Clamp01(selectedPlant.health / selectedPlant.maxHealth)
+                : 0f;
+            healthBarFill.fillAmount = healthPct;
+            healthBarFill.color = healthPct <= 0.25f ? Color.red
+                                : healthPct <= 0.50f ? Color.yellow
+                                : Color.green;
+        }
+
+        if (healthText != null)
+            healthText.text = $"{selectedPlant.health:F0}/{selectedPlant.maxHealth:F0}";
+
+        RefreshTemperatureBar(selectedPlant);
     }
 
     private void RefreshPaths()
@@ -254,6 +281,67 @@ public class PlantUpgradeUI : MonoBehaviour
         int count = System.Enum.GetValues(typeof(TARGETING)).Length;
         selectedPlant.targeting = (TARGETING)(((int)selectedPlant.targeting + 1) % count);
         targetingModeText.text = selectedPlant.targeting.ToString();
+    }
+
+    // TEMPERATURE BAR
+
+    private void RefreshTemperatureBar(Plant plant)
+    {
+        float min  = plant.temperatureMin;
+        float max  = plant.temperatureMax;
+        float temp = plant.temperature;
+
+        Color tempColor = GetTempColor(plant);
+
+        if (tempBarBackground != null)
+            tempBarBackground.color = tempColor;
+
+        if (tempText != null)
+        {
+            tempText.text  = $"{plant.temperature:F1}°";
+            tempText.color = tempColor;
+        }
+
+        if (tempStateText != null)
+        {
+            if (plant.temperature < plant.comfortMin)
+                tempStateText.text = "Cold";
+            else if (plant.temperature > plant.comfortMax)
+                tempStateText.text = "Hot";
+            else
+                tempStateText.text = "Comfort";
+        }
+
+        SetTempIndicator(tempCurrentIndicator,    temp,              min, max);
+        SetTempIndicator(tempComfortMinIndicator, plant.comfortMin,  min, max);
+        SetTempIndicator(tempComfortMaxIndicator, plant.comfortMax,  min, max);
+        SetTempIndicator(tempMinIndicator,        min,               min, max);
+        SetTempIndicator(tempMaxIndicator,        max,               min, max);
+    }
+
+    private static void SetTempIndicator(RectTransform indicator, float value, float min, float max)
+    {
+        if (indicator == null) return;
+        float t = max > min ? Mathf.Clamp01((value - min) / (max - min)) : 0f;
+        indicator.anchorMin = new Vector2(t, indicator.anchorMin.y);
+        indicator.anchorMax = new Vector2(t, indicator.anchorMax.y);
+        indicator.anchoredPosition = Vector2.zero;
+    }
+
+    private static Color GetTempColor(Plant plant)
+    {
+        float temp = plant.temperature;
+        if (temp >= plant.comfortMin && temp <= plant.comfortMax)
+            return Color.green;
+
+        if (temp < plant.comfortMin)
+        {
+            float t = Mathf.Clamp01((plant.comfortMin - temp) / (plant.comfortMin - plant.temperatureMin));
+            return Color.Lerp(Color.green, Color.blue, t);
+        }
+
+        float u = Mathf.Clamp01((temp - plant.comfortMax) / (plant.temperatureMax - plant.comfortMax));
+        return Color.Lerp(Color.green, Color.red, u);
     }
 
     // TOOPTIPS

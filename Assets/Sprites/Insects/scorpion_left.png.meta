@@ -1,0 +1,2067 @@
+fileFormatVersion: 2
+guid: 364631215e177ed4685913033db57462
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6303009773958068944
+    second: scorpion_left_0
+  - first:
+      213: 1366429249054854197
+    second: scorpion_left_1
+  - first:
+      213: 4222771564280794236
+    second: scorpion_left_2
+  - first:
+      213: -5147072480066949987
+    second: scorpion_left_3
+  - first:
+      213: -7850610133965184249
+    second: scorpion_left_4
+  - first:
+      213: -596514534281752060
+    second: scorpion_left_5
+  - first:
+      213: -76903748625180034
+    second: scorpion_left_6
+  - first:
+      213: 3177267522706019904
+    second: scorpion_left_7
+  - first:
+      213: -3244219120718659845
+    second: scorpion_left_8
+  - first:
+      213: -8746916972382056860
+    second: scorpion_left_9
+  - first:
+      213: 7450204076156039471
+    second: scorpion_left_10
+  - first:
+      213: -5832547044756480624
+    second: scorpion_left_11
+  - first:
+      213: -5157636128559658059
+    second: scorpion_left_12
+  - first:
+      213: 8899639616030913993
+    second: scorpion_left_13
+  - first:
+      213: 5247662649772022528
+    second: scorpion_left_14
+  - first:
+      213: -5992546374874646107
+    second: scorpion_left_15
+  - first:
+      213: 5247805986503294221
+    second: scorpion_left_16
+  - first:
+      213: -2211828064554042741
+    second: scorpion_left_17
+  - first:
+      213: -2925117777720506098
+    second: scorpion_left_18
+  - first:
+      213: -7815061166816732528
+    second: scorpion_left_19
+  - first:
+      213: 8252235054281555465
+    second: scorpion_left_20
+  - first:
+      213: -5365097680273804286
+    second: scorpion_left_21
+  - first:
+      213: -82352822559278365
+    second: scorpion_left_22
+  - first:
+      213: 5876628912907315597
+    second: scorpion_left_23
+  - first:
+      213: 5537153512405539431
+    second: scorpion_left_24
+  - first:
+      213: 3207772755030664283
+    second: scorpion_left_25
+  - first:
+      213: 8545627924343659272
+    second: scorpion_left_26
+  - first:
+      213: 836333045785096067
+    second: scorpion_left_27
+  - first:
+      213: 7186483688834495550
+    second: scorpion_left_28
+  - first:
+      213: -9166388486553633392
+    second: scorpion_left_29
+  - first:
+      213: 2032433215166208707
+    second: scorpion_left_30
+  - first:
+      213: 4362175881335867464
+    second: scorpion_left_31
+  - first:
+      213: -744071039426991944
+    second: scorpion_left_32
+  - first:
+      213: 3002836565584871769
+    second: scorpion_left_33
+  - first:
+      213: -1960691387068226761
+    second: scorpion_left_34
+  - first:
+      213: 1337397835781995050
+    second: scorpion_left_35
+  - first:
+      213: -4494037487501356691
+    second: scorpion_left_36
+  - first:
+      213: 2094222938133607223
+    second: scorpion_left_37
+  - first:
+      213: 7094754373841352146
+    second: scorpion_left_38
+  - first:
+      213: -1545882950603073876
+    second: scorpion_left_39
+  - first:
+      213: 3958110946561665748
+    second: scorpion_left_40
+  - first:
+      213: 3127651065996969877
+    second: scorpion_left_41
+  - first:
+      213: -1677876003548083720
+    second: scorpion_left_42
+  - first:
+      213: 7069036589379158901
+    second: scorpion_left_43
+  - first:
+      213: 2634540661821288357
+    second: scorpion_left_44
+  - first:
+      213: 1315987416732432470
+    second: scorpion_left_45
+  - first:
+      213: -2689408058184554711
+    second: scorpion_left_46
+  - first:
+      213: 385229148881906391
+    second: scorpion_left_47
+  - first:
+      213: -562150093131881202
+    second: scorpion_left_48
+  - first:
+      213: -8255643039815409119
+    second: scorpion_left_49
+  - first:
+      213: 1576309108183706735
+    second: scorpion_left_50
+  - first:
+      213: -2058790035950828723
+    second: scorpion_left_51
+  - first:
+      213: -1154158829639501614
+    second: scorpion_left_52
+  - first:
+      213: -1235994758311682392
+    second: scorpion_left_53
+  - first:
+      213: -1931333904892430293
+    second: scorpion_left_54
+  - first:
+      213: -8712413788092623400
+    second: scorpion_left_55
+  - first:
+      213: 5068203889124704910
+    second: scorpion_left_56
+  - first:
+      213: 5868247986267333191
+    second: scorpion_left_57
+  - first:
+      213: 8282408075908226312
+    second: scorpion_left_58
+  - first:
+      213: -6272545240954877845
+    second: scorpion_left_59
+  - first:
+      213: -8542234759379133620
+    second: scorpion_left_60
+  - first:
+      213: 8735392352891193779
+    second: scorpion_left_61
+  - first:
+      213: 3901241932392917365
+    second: scorpion_left_62
+  - first:
+      213: 4803186745506315543
+    second: scorpion_left_63
+  - first:
+      213: -8800255908471977939
+    second: scorpion_left_64
+  - first:
+      213: 4637719953006985520
+    second: scorpion_left_65
+  - first:
+      213: 85695230451672547
+    second: scorpion_left_66
+  - first:
+      213: -3660096698328625217
+    second: scorpion_left_67
+  - first:
+      213: -1806185207315419759
+    second: scorpion_left_68
+  - first:
+      213: 1105755747582256779
+    second: scorpion_left_69
+  - first:
+      213: 5594234341244621835
+    second: scorpion_left_70
+  - first:
+      213: -3394277671348650564
+    second: scorpion_left_71
+  - first:
+      213: -6955247377171901384
+    second: scorpion_left_72
+  - first:
+      213: 6487545146438975708
+    second: scorpion_left_73
+  - first:
+      213: -7920688701358273512
+    second: scorpion_left_74
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: scorpion_left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1015
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0350a6f51063788a0800000000000000
+      internalID: -6303009773958068944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_1
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 999
+        width: 39
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53c4e90992886f210800000000000000
+      internalID: 1366429249054854197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_2
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 1015
+        width: 58
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7cc3905d5c4a9a30800000000000000
+      internalID: 4222771564280794236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_3
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 1018
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9cab6889dce198b0800000000000000
+      internalID: -5147072480066949987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_4
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 1015
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7036cee6da70d0390800000000000000
+      internalID: -7850610133965184249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_5
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 1013
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40257c80131c8b7f0800000000000000
+      internalID: -596514534281752060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_6
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 1015
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7adc45b278ceeef0800000000000000
+      internalID: -76903748625180034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_7
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 999
+        width: 50
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 046174f5afbe71c20800000000000000
+      internalID: 3177267522706019904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_8
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 1018
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfeb808f5e73af2d0800000000000000
+      internalID: -3244219120718659845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_9
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 1015
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46e05555b55bc9680800000000000000
+      internalID: -8746916972382056860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_10
+      rect:
+        serializedVersion: 2
+        x: 461
+        y: 983
+        width: 60
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f21b2776221746760800000000000000
+      internalID: 7450204076156039471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_11
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 1015
+        width: 36
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09d198d6d51ae0fa0800000000000000
+      internalID: -5832547044756480624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_12
+      rect:
+        serializedVersion: 2
+        x: 634
+        y: 1015
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bb0b7474456c68b0800000000000000
+      internalID: -5157636128559658059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_13
+      rect:
+        serializedVersion: 2
+        x: 655
+        y: 1015
+        width: 58
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c53486141fd18b70800000000000000
+      internalID: 8899639616030913993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_14
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 1015
+        width: 74
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00b1fbc606173d840800000000000000
+      internalID: 5247662649772022528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_15
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 1015
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a9ba8962d236dca0800000000000000
+      internalID: -5992546374874646107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_16
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 1015
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0d72bb9db3f3d840800000000000000
+      internalID: 5247805986503294221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_17
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 1015
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8a340418120e41e0800000000000000
+      internalID: -2211828064554042741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_18
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 1015
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e090acc01e4e767d0800000000000000
+      internalID: -2925117777720506098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_19
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 999
+        width: 26
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09a50f556435b8390800000000000000
+      internalID: -7815061166816732528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_20
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 1015
+        width: 26
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90e7a754f04d58270800000000000000
+      internalID: 8252235054281555465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_21
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 1015
+        width: 31
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 204f106d5185b85b0800000000000000
+      internalID: -5365097680273804286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_22
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 1015
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ea7a115b8c6bdef0800000000000000
+      internalID: -82352822559278365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_23
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 1015
+        width: 14
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8961ae4cdafd8150800000000000000
+      internalID: 5876628912907315597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 31
+        width: 977
+        height: 956
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76a1dbd48cbe7dc40800000000000000
+      internalID: 5537153512405539431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_25
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 983
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5467cf335c448c20800000000000000
+      internalID: 3207772755030664283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_26
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 973
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80b992d025b289670800000000000000
+      internalID: 8545627924343659272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_27
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 975
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38fe0fb59704b9b00800000000000000
+      internalID: 836333045785096067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_28
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 983
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e347e11e6d48bb360800000000000000
+      internalID: 7186483688834495550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_29
+      rect:
+        serializedVersion: 2
+        x: 703
+        y: 981
+        width: 26
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09d7db1bc327ac080800000000000000
+      internalID: -9166388486553633392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_30
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 973
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cadfabad37a43c10800000000000000
+      internalID: 2032433215166208707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_31
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 975
+        width: 17
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8480dce2adf898c30800000000000000
+      internalID: 4362175881335867464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_32
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 967
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b86c47f4578ca5f0800000000000000
+      internalID: -744071039426991944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_33
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 965
+        width: 26
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9518d3a52f73ca920800000000000000
+      internalID: 3002836565584871769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_34
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 965
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73361a752993ac4e0800000000000000
+      internalID: -1960691387068226761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_35
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 965
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2a792dee346f8210800000000000000
+      internalID: 1337397835781995050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_36
+      rect:
+        serializedVersion: 2
+        x: 999
+        y: 903
+        width: 25
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d61513e27b8f1a1c0800000000000000
+      internalID: -4494037487501356691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_37
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 898
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 733bde3aaac201d10800000000000000
+      internalID: 2094222938133607223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_38
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 5
+        width: 89
+        height: 897
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d5767d6381a57260800000000000000
+      internalID: 7094754373841352146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_39
+      rect:
+        serializedVersion: 2
+        x: 978
+        y: 714
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca698f895abeb8ae0800000000000000
+      internalID: -1545882950603073876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_40
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 447
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4daa4675fe80ee630800000000000000
+      internalID: 3958110946561665748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_41
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 389
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5970f12d216a76b20800000000000000
+      internalID: 3127651065996969877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_42
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 229
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f94d5f1aacf6b8e0800000000000000
+      internalID: -1677876003548083720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_43
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 146
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5730f2e13534a1260800000000000000
+      internalID: 7069036589379158901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_44
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 143
+        width: 26
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5af2e2606c4cf8420800000000000000
+      internalID: 2634540661821288357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_45
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 138
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65878374593534210800000000000000
+      internalID: 1315987416732432470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_46
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 149
+        width: 30
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92726d3ce9d4daad0800000000000000
+      internalID: -2689408058184554711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_47
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 111
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7da6b30bedb985500800000000000000
+      internalID: 385229148881906391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_48
+      rect:
+        serializedVersion: 2
+        x: 429
+        y: 127
+        width: 6
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e05eb6cf777d238f0800000000000000
+      internalID: -562150093131881202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_49
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 114
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 122606345601e6d80800000000000000
+      internalID: -8255643039815409119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_50
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 95
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6ca08148cc20e510800000000000000
+      internalID: 1576309108183706735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_51
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 103
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d438908ce55bd63e0800000000000000
+      internalID: -2058790035950828723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_52
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 87
+        width: 52
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d8f4f0d8aa9bffe0800000000000000
+      internalID: -1154158829639501614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_53
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 79
+        width: 44
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ae569ed05dd8dee0800000000000000
+      internalID: -1235994758311682392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_54
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 111
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b28f730db068235e0800000000000000
+      internalID: -1931333904892430293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_55
+      rect:
+        serializedVersion: 2
+        x: 485
+        y: 111
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d51680f1d9471780800000000000000
+      internalID: -8712413788092623400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_56
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 103
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e82088ca590e55640800000000000000
+      internalID: 5068203889124704910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_57
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 77
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 742ad53c374307150800000000000000
+      internalID: 5868247986267333191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_58
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 103
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80d1651534601f270800000000000000
+      internalID: 8282408075908226312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_59
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 95
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b684153365173f8a0800000000000000
+      internalID: -6272545240954877845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_60
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 95
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4b563bbeb2e37980800000000000000
+      internalID: -8542234759379133620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_61
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 79
+        width: 34
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b94eb710195a3970800000000000000
+      internalID: 8735392352891193779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_62
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 87
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 579632b2edef32630800000000000000
+      internalID: 3901241932392917365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_63
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 87
+        width: 10
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71db4cb85e858a240800000000000000
+      internalID: 4803186745506315543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_64
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 79
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d28cef280e53fd580800000000000000
+      internalID: -8800255908471977939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_65
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 79
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03109beb9bd7c5040800000000000000
+      internalID: 4637719953006985520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_66
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 87
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e5640aab53703100800000000000000
+      internalID: 85695230451672547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_67
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 71
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbfca84e179b43dc0800000000000000
+      internalID: -3660096698328625217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_68
+      rect:
+        serializedVersion: 2
+        x: 789
+        y: 87
+        width: 36
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19d266f9f142fe6e0800000000000000
+      internalID: -1806185207315419759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_69
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 87
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b86acfe6efe685f00800000000000000
+      internalID: 1105755747582256779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_70
+      rect:
+        serializedVersion: 2
+        x: 882
+        y: 79
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b045d2c6e76b2ad40800000000000000
+      internalID: 5594234341244621835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_71
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 87
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbd393a017a15e0d0800000000000000
+      internalID: -3394277671348650564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_72
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 71
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83493b66c5ff97f90800000000000000
+      internalID: -6955247377171901384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_73
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1024
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd00ecd20f3680a50800000000000000
+      internalID: 6487545146438975708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scorpion_left_74
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 23
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81c071b779f041290800000000000000
+      internalID: -7920688701358273512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      scorpion_left_0: -6303009773958068944
+      scorpion_left_1: 1366429249054854197
+      scorpion_left_10: 7450204076156039471
+      scorpion_left_11: -5832547044756480624
+      scorpion_left_12: -5157636128559658059
+      scorpion_left_13: 8899639616030913993
+      scorpion_left_14: 5247662649772022528
+      scorpion_left_15: -5992546374874646107
+      scorpion_left_16: 5247805986503294221
+      scorpion_left_17: -2211828064554042741
+      scorpion_left_18: -2925117777720506098
+      scorpion_left_19: -7815061166816732528
+      scorpion_left_2: 4222771564280794236
+      scorpion_left_20: 8252235054281555465
+      scorpion_left_21: -5365097680273804286
+      scorpion_left_22: -82352822559278365
+      scorpion_left_23: 5876628912907315597
+      scorpion_left_24: 5537153512405539431
+      scorpion_left_25: 3207772755030664283
+      scorpion_left_26: 8545627924343659272
+      scorpion_left_27: 836333045785096067
+      scorpion_left_28: 7186483688834495550
+      scorpion_left_29: -9166388486553633392
+      scorpion_left_3: -5147072480066949987
+      scorpion_left_30: 2032433215166208707
+      scorpion_left_31: 4362175881335867464
+      scorpion_left_32: -744071039426991944
+      scorpion_left_33: 3002836565584871769
+      scorpion_left_34: -1960691387068226761
+      scorpion_left_35: 1337397835781995050
+      scorpion_left_36: -4494037487501356691
+      scorpion_left_37: 2094222938133607223
+      scorpion_left_38: 7094754373841352146
+      scorpion_left_39: -1545882950603073876
+      scorpion_left_4: -7850610133965184249
+      scorpion_left_40: 3958110946561665748
+      scorpion_left_41: 3127651065996969877
+      scorpion_left_42: -1677876003548083720
+      scorpion_left_43: 7069036589379158901
+      scorpion_left_44: 2634540661821288357
+      scorpion_left_45: 1315987416732432470
+      scorpion_left_46: -2689408058184554711
+      scorpion_left_47: 385229148881906391
+      scorpion_left_48: -562150093131881202
+      scorpion_left_49: -8255643039815409119
+      scorpion_left_5: -596514534281752060
+      scorpion_left_50: 1576309108183706735
+      scorpion_left_51: -2058790035950828723
+      scorpion_left_52: -1154158829639501614
+      scorpion_left_53: -1235994758311682392
+      scorpion_left_54: -1931333904892430293
+      scorpion_left_55: -8712413788092623400
+      scorpion_left_56: 5068203889124704910
+      scorpion_left_57: 5868247986267333191
+      scorpion_left_58: 8282408075908226312
+      scorpion_left_59: -6272545240954877845
+      scorpion_left_6: -76903748625180034
+      scorpion_left_60: -8542234759379133620
+      scorpion_left_61: 8735392352891193779
+      scorpion_left_62: 3901241932392917365
+      scorpion_left_63: 4803186745506315543
+      scorpion_left_64: -8800255908471977939
+      scorpion_left_65: 4637719953006985520
+      scorpion_left_66: 85695230451672547
+      scorpion_left_67: -3660096698328625217
+      scorpion_left_68: -1806185207315419759
+      scorpion_left_69: 1105755747582256779
+      scorpion_left_7: 3177267522706019904
+      scorpion_left_70: 5594234341244621835
+      scorpion_left_71: -3394277671348650564
+      scorpion_left_72: -6955247377171901384
+      scorpion_left_73: 6487545146438975708
+      scorpion_left_74: -7920688701358273512
+      scorpion_left_8: -3244219120718659845
+      scorpion_left_9: -8746916972382056860
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

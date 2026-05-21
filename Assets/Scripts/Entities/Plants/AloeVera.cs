@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class AloeVera : Lobber
 {
@@ -7,6 +8,12 @@ public class AloeVera : Lobber
     public float baseTempReduction = 4.5f;
     public float healAmount;
     public float tempReduction;
+    public float baseSkillHealPerTick = 10f;
+    public float baseSkillHealInterval = 1f;
+    public float baseSkillTempReduction = 2f;
+    public float skillHealPerTick;
+    public float channelDuration = 1.5f;
+    [SerializeField] private GameObject soothingRainPrefab;
 
     private AloeVeraData AVData => data as AloeVeraData;
 
@@ -16,16 +23,20 @@ public class AloeVera : Lobber
         LoadData();
         if (AVData != null)
         {
-            baseHealAmount    = AVData.baseHealAmount;
-            baseTempReduction = AVData.baseTempReduction;
+            baseHealAmount        = AVData.baseHealAmount;
+            baseTempReduction     = AVData.baseTempReduction;
+            baseSkillHealPerTick   = AVData.baseSkillHealPerTick;
+            baseSkillHealInterval  = AVData.baseSkillHealInterval;
+            baseSkillTempReduction = AVData.baseSkillTempReduction;
         }
     }
 
     public override void UpdateStats()
     {
         base.UpdateStats();
-        healAmount    = baseHealAmount + 4f * effectivePath2Level + magicPower * 0.12f;
-        tempReduction = baseTempReduction + 0.5f * effectivePath2Level;
+        healAmount       = baseHealAmount + 4f * effectivePath2Level + magicPower * 0.12f;
+        tempReduction    = baseTempReduction + 0.5f * effectivePath2Level;
+        skillHealPerTick = baseSkillHealPerTick + 1f * effectivePath3Level + magicPower * 0.03f;
     }
 
     protected override GameObject FindLobberTarget()
@@ -62,6 +73,32 @@ public class AloeVera : Lobber
         baseAttackRange = data.baseAttackRange + level * 0.2f;
     }
 
+    public override void OnPath3Upgrade(int level)
+    {
+        baseSkillDuration = data.baseSkillDuration + 1f * level;
+        baseSkillRadius   = data.baseSkillRadius   + 0.3f * level;
+    }
+
+    public override void ActivateSkill()
+    {
+        if (!SkillReady) return;
+        SkillTargetingManager.instance.BeginTargeting(baseSkillRadius, OnTargetConfirmed);
+    }
+
+    private void OnTargetConfirmed(Vector3 position)
+    {
+        skillCooldownTimer = skillCooldown;
+        StartCoroutine(ChannelAndSpawn(position));
+    }
+
+    private IEnumerator ChannelAndSpawn(Vector3 position)
+    {
+        yield return new WaitForSeconds(channelDuration);
+        if (soothingRainPrefab == null) yield break;
+        GameObject obj = Instantiate(soothingRainPrefab, position, Quaternion.identity);
+        obj.GetComponent<SoothingRain>()?.Initialize(baseSkillRadius, skillDuration, skillHealPerTick, baseSkillHealInterval, baseSkillTempReduction, this);
+    }
+
     public override string GetName() => "<b><color=#4FC3F7>Aloe Vera</color></b>";
 
     public override string GetDescription() =>
@@ -84,4 +121,22 @@ public class AloeVera : Lobber
         $"Increase base healing by <color=green><b>4</b></color> per level. [<color=green><b>+{4 * effectivePath2Level}</b></color>]\n\n" +
         $"Increase temperature reduction by <color=green><b>0.5</b></color> per level. [<color=green><b>+{0.5f * effectivePath2Level:F1}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+
+    public override string GetSkillDesription()
+    {
+        float totalHealing = skillHealPerTick * Mathf.Floor(skillDuration / baseSkillHealInterval);
+        return $"Channels for <color=green><b>{channelDuration:F1}s</b></color>, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>{baseSkillRadius:F1}</b></color> radius for <color=green><b>{skillHealPerTick:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.03f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}s</b></color> over <color=green><b>{skillDuration:F0}</b></color> seconds. " +
+               $"For a total of <color=green><b>{totalHealing:F0}</b></color> Health.";
+    }
+
+    public override string GetPath3Description()
+    {
+        float totalHealing = skillHealPerTick * Mathf.Floor(skillDuration / baseSkillHealInterval);
+        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
+               $"Scaling: <color=#FFB6C1><b>3%</b></color> <color=#FFB6C1>Magic Power</color>\n\n" +
+               $"Increase healing by <color=green><b>1</b></color> per tick per level. [<color=green><b>+{1 * effectivePath3Level}</b></color>]\n\n" +
+               $"Increase rain duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{1 * effectivePath3Level}s</b></color>]\n\n" +
+               $"Increase rain radius by <color=green><b>0.3</b></color> per level. [<color=green><b>+{0.3f * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    }
 }

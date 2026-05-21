@@ -1,0 +1,4823 @@
+fileFormatVersion: 2
+guid: 7da9676eef904ab4a93274e71a88d6eb
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3522089859083797499
+    second: fireant_right_0
+  - first:
+      213: -348014295710093461
+    second: fireant_right_1
+  - first:
+      213: -4860693565746422449
+    second: fireant_right_2
+  - first:
+      213: 1255888976180681924
+    second: fireant_right_3
+  - first:
+      213: -7708425963839441248
+    second: fireant_right_4
+  - first:
+      213: 8626412061510248631
+    second: fireant_right_5
+  - first:
+      213: -7753581808918950271
+    second: fireant_right_6
+  - first:
+      213: 6049261418305999137
+    second: fireant_right_7
+  - first:
+      213: 1521701229862920557
+    second: fireant_right_8
+  - first:
+      213: 3569223804521500616
+    second: fireant_right_9
+  - first:
+      213: -4272457051888478307
+    second: fireant_right_10
+  - first:
+      213: -622940136885823717
+    second: fireant_right_11
+  - first:
+      213: -2877328438031359442
+    second: fireant_right_12
+  - first:
+      213: 2671122566454780829
+    second: fireant_right_13
+  - first:
+      213: 901966810535089390
+    second: fireant_right_14
+  - first:
+      213: 1666796522450059232
+    second: fireant_right_15
+  - first:
+      213: -8322872190746803414
+    second: fireant_right_16
+  - first:
+      213: 1463400397104662187
+    second: fireant_right_17
+  - first:
+      213: -3224086464316955695
+    second: fireant_right_18
+  - first:
+      213: -3425890137018338086
+    second: fireant_right_19
+  - first:
+      213: -740993272661330324
+    second: fireant_right_20
+  - first:
+      213: 5519899883737956643
+    second: fireant_right_21
+  - first:
+      213: -3779337169233214057
+    second: fireant_right_22
+  - first:
+      213: 7008501931933567249
+    second: fireant_right_23
+  - first:
+      213: -5370611485492513726
+    second: fireant_right_24
+  - first:
+      213: -5985555918772802936
+    second: fireant_right_25
+  - first:
+      213: -2685857115542843594
+    second: fireant_right_26
+  - first:
+      213: -7911016945719585795
+    second: fireant_right_27
+  - first:
+      213: -4675197167404423231
+    second: fireant_right_28
+  - first:
+      213: -7794867557285342417
+    second: fireant_right_29
+  - first:
+      213: -1513526620851197875
+    second: fireant_right_30
+  - first:
+      213: 9018395510200984942
+    second: fireant_right_31
+  - first:
+      213: 2903554521744709517
+    second: fireant_right_32
+  - first:
+      213: 1936893505641832059
+    second: fireant_right_33
+  - first:
+      213: -1120672839424642844
+    second: fireant_right_34
+  - first:
+      213: 2121758607112690914
+    second: fireant_right_35
+  - first:
+      213: -7894548715825759389
+    second: fireant_right_36
+  - first:
+      213: -4743684480162316184
+    second: fireant_right_37
+  - first:
+      213: 5411872412360913829
+    second: fireant_right_38
+  - first:
+      213: -2603033127183748828
+    second: fireant_right_39
+  - first:
+      213: -5751643654346413880
+    second: fireant_right_40
+  - first:
+      213: 1505579663437619453
+    second: fireant_right_41
+  - first:
+      213: -1475908752375311751
+    second: fireant_right_42
+  - first:
+      213: -2084942416195802952
+    second: fireant_right_43
+  - first:
+      213: -5706203443907832129
+    second: fireant_right_44
+  - first:
+      213: -2923739946893104073
+    second: fireant_right_45
+  - first:
+      213: 5864361235615516113
+    second: fireant_right_46
+  - first:
+      213: 1453438340433317133
+    second: fireant_right_47
+  - first:
+      213: 4058968694546799898
+    second: fireant_right_48
+  - first:
+      213: 3636089722780561135
+    second: fireant_right_49
+  - first:
+      213: 7728087597381283839
+    second: fireant_right_50
+  - first:
+      213: 218877786168790120
+    second: fireant_right_51
+  - first:
+      213: 5363158784950087387
+    second: fireant_right_52
+  - first:
+      213: -7629409976798603635
+    second: fireant_right_53
+  - first:
+      213: 825736765413780815
+    second: fireant_right_54
+  - first:
+      213: -8101331948056965374
+    second: fireant_right_55
+  - first:
+      213: -8728281770183948037
+    second: fireant_right_56
+  - first:
+      213: 4559853134102870163
+    second: fireant_right_57
+  - first:
+      213: -2692898601255362727
+    second: fireant_right_58
+  - first:
+      213: -1478257353449596355
+    second: fireant_right_59
+  - first:
+      213: 3497261954843282890
+    second: fireant_right_60
+  - first:
+      213: -7455018347232088158
+    second: fireant_right_61
+  - first:
+      213: -6336084395278871168
+    second: fireant_right_62
+  - first:
+      213: 7205045366170220882
+    second: fireant_right_63
+  - first:
+      213: -6853757123163601989
+    second: fireant_right_64
+  - first:
+      213: -1030089486887481494
+    second: fireant_right_65
+  - first:
+      213: -6120654639106015607
+    second: fireant_right_66
+  - first:
+      213: -1270293592603092967
+    second: fireant_right_67
+  - first:
+      213: 5929581526676998564
+    second: fireant_right_68
+  - first:
+      213: 6921877658389397258
+    second: fireant_right_69
+  - first:
+      213: 6640349130332567710
+    second: fireant_right_70
+  - first:
+      213: 1268958455729885583
+    second: fireant_right_71
+  - first:
+      213: 3013207289916683922
+    second: fireant_right_72
+  - first:
+      213: -9211753523501947775
+    second: fireant_right_73
+  - first:
+      213: 2593443040776776977
+    second: fireant_right_74
+  - first:
+      213: -5013344632147265193
+    second: fireant_right_75
+  - first:
+      213: -410715453267811667
+    second: fireant_right_76
+  - first:
+      213: -151010094159947801
+    second: fireant_right_77
+  - first:
+      213: -4269119486195452465
+    second: fireant_right_78
+  - first:
+      213: 6626911189165424845
+    second: fireant_right_79
+  - first:
+      213: 3741051092769754035
+    second: fireant_right_80
+  - first:
+      213: -6092076264270479951
+    second: fireant_right_81
+  - first:
+      213: 6259491103874919024
+    second: fireant_right_82
+  - first:
+      213: -7514534765286436182
+    second: fireant_right_83
+  - first:
+      213: -4106816820389899758
+    second: fireant_right_84
+  - first:
+      213: 7007478134177315243
+    second: fireant_right_85
+  - first:
+      213: -1847167776556612631
+    second: fireant_right_86
+  - first:
+      213: -1544252818425573897
+    second: fireant_right_87
+  - first:
+      213: -1815453317769492182
+    second: fireant_right_88
+  - first:
+      213: 6757873555153895512
+    second: fireant_right_89
+  - first:
+      213: 4498810075599798539
+    second: fireant_right_90
+  - first:
+      213: -1866470724099936117
+    second: fireant_right_91
+  - first:
+      213: 2573451582560402074
+    second: fireant_right_92
+  - first:
+      213: -8169855771765025398
+    second: fireant_right_93
+  - first:
+      213: 4351036384314723578
+    second: fireant_right_94
+  - first:
+      213: 3215757281989462930
+    second: fireant_right_95
+  - first:
+      213: -2123033865219225359
+    second: fireant_right_96
+  - first:
+      213: -3763320229763719593
+    second: fireant_right_97
+  - first:
+      213: -6828933004944726209
+    second: fireant_right_98
+  - first:
+      213: 2803062120380505756
+    second: fireant_right_99
+  - first:
+      213: -2493184618484770679
+    second: fireant_right_100
+  - first:
+      213: -4121703266639387694
+    second: fireant_right_101
+  - first:
+      213: 4414329912124648082
+    second: fireant_right_102
+  - first:
+      213: -2242036244955391371
+    second: fireant_right_103
+  - first:
+      213: 4889174302962867497
+    second: fireant_right_104
+  - first:
+      213: 3573435987109277640
+    second: fireant_right_105
+  - first:
+      213: 4969395961121562397
+    second: fireant_right_106
+  - first:
+      213: -3927000023933272448
+    second: fireant_right_107
+  - first:
+      213: -3251535267976120398
+    second: fireant_right_108
+  - first:
+      213: -7059752691361222941
+    second: fireant_right_109
+  - first:
+      213: 1937465177289899726
+    second: fireant_right_110
+  - first:
+      213: -7713361454622271203
+    second: fireant_right_111
+  - first:
+      213: -7710684131829426441
+    second: fireant_right_112
+  - first:
+      213: 7774117872393574441
+    second: fireant_right_113
+  - first:
+      213: 7093578608198066358
+    second: fireant_right_114
+  - first:
+      213: 4642789303038823155
+    second: fireant_right_115
+  - first:
+      213: -6005149849498048299
+    second: fireant_right_116
+  - first:
+      213: 4353553484704326873
+    second: fireant_right_117
+  - first:
+      213: -5159458433198718035
+    second: fireant_right_118
+  - first:
+      213: 6772750890234053125
+    second: fireant_right_119
+  - first:
+      213: -6070080267371324240
+    second: fireant_right_120
+  - first:
+      213: 6026611808198955452
+    second: fireant_right_121
+  - first:
+      213: -3593177318065178945
+    second: fireant_right_122
+  - first:
+      213: -8418536590165299801
+    second: fireant_right_123
+  - first:
+      213: -7268492764525552555
+    second: fireant_right_124
+  - first:
+      213: 3604182161230665066
+    second: fireant_right_125
+  - first:
+      213: -1181061856030566074
+    second: fireant_right_126
+  - first:
+      213: 3081191422117266610
+    second: fireant_right_127
+  - first:
+      213: 6112733853162685087
+    second: fireant_right_128
+  - first:
+      213: -92560165499234758
+    second: fireant_right_129
+  - first:
+      213: -7250706576700526942
+    second: fireant_right_130
+  - first:
+      213: -1855453612250033059
+    second: fireant_right_131
+  - first:
+      213: -5681177905170007179
+    second: fireant_right_132
+  - first:
+      213: -2860463464476817445
+    second: fireant_right_133
+  - first:
+      213: 5404337057210273299
+    second: fireant_right_134
+  - first:
+      213: -1147269347048630644
+    second: fireant_right_135
+  - first:
+      213: 5900977236546650813
+    second: fireant_right_136
+  - first:
+      213: -8286505420732872350
+    second: fireant_right_137
+  - first:
+      213: 8060505776417837727
+    second: fireant_right_138
+  - first:
+      213: 6220026267154158686
+    second: fireant_right_139
+  - first:
+      213: 6807889891389391283
+    second: fireant_right_140
+  - first:
+      213: 2718393525391120451
+    second: fireant_right_141
+  - first:
+      213: 2640636156073112678
+    second: fireant_right_142
+  - first:
+      213: -9964997933870095
+    second: fireant_right_143
+  - first:
+      213: -4909332570161857333
+    second: fireant_right_144
+  - first:
+      213: -3993365509242588257
+    second: fireant_right_145
+  - first:
+      213: 5679865553536811125
+    second: fireant_right_146
+  - first:
+      213: 3041621118423676363
+    second: fireant_right_147
+  - first:
+      213: 8992588384771240934
+    second: fireant_right_148
+  - first:
+      213: 1869322140542219441
+    second: fireant_right_149
+  - first:
+      213: -4280863391904661841
+    second: fireant_right_150
+  - first:
+      213: 5680411488074206252
+    second: fireant_right_151
+  - first:
+      213: -4734322388700826556
+    second: fireant_right_152
+  - first:
+      213: 1888961981388719320
+    second: fireant_right_153
+  - first:
+      213: -7592053018410668601
+    second: fireant_right_154
+  - first:
+      213: 8546859078272949056
+    second: fireant_right_155
+  - first:
+      213: -5452100399747210689
+    second: fireant_right_156
+  - first:
+      213: 6536892568643231343
+    second: fireant_right_157
+  - first:
+      213: 2582266842463745471
+    second: fireant_right_158
+  - first:
+      213: 3889253562303572511
+    second: fireant_right_159
+  - first:
+      213: -7419697882650160927
+    second: fireant_right_160
+  - first:
+      213: -4642631539810222578
+    second: fireant_right_161
+  - first:
+      213: -286031802245398024
+    second: fireant_right_162
+  - first:
+      213: 1844913413952537696
+    second: fireant_right_163
+  - first:
+      213: 4270969885109353055
+    second: fireant_right_164
+  - first:
+      213: -8634547091596627045
+    second: fireant_right_165
+  - first:
+      213: -8739903007125036608
+    second: fireant_right_166
+  - first:
+      213: -7911940247595740065
+    second: fireant_right_167
+  - first:
+      213: 4469257090327584752
+    second: fireant_right_168
+  - first:
+      213: -87316802950976529
+    second: fireant_right_169
+  - first:
+      213: 927067404633180085
+    second: fireant_right_170
+  - first:
+      213: 3092540266929773519
+    second: fireant_right_171
+  - first:
+      213: -8464194821195440759
+    second: fireant_right_172
+  - first:
+      213: 2802989247720419314
+    second: fireant_right_173
+  - first:
+      213: 2124061776361435810
+    second: fireant_right_174
+  - first:
+      213: -9001127512531596066
+    second: fireant_right_175
+  - first:
+      213: -841496795439007074
+    second: fireant_right_176
+  - first:
+      213: -1911529917211951568
+    second: fireant_right_177
+  - first:
+      213: -9036344850000381333
+    second: fireant_right_178
+  - first:
+      213: -6651991441432641239
+    second: fireant_right_179
+  - first:
+      213: -1386148345184479768
+    second: fireant_right_180
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 540
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: fireant_right_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 989
+        width: 17
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50cfd4a1fe50f1fc0800000000000000
+      internalID: -3522089859083797499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 959
+        width: 17
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6f217787da9b2bf0800000000000000
+      internalID: -348014295710093461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_2
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 957
+        width: 138
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4d58ab74f85b8cb0800000000000000
+      internalID: -4860693565746422449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_3
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 965
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cc149eae50dd6110800000000000000
+      internalID: 1255888976180681924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_4
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 933
+        width: 42
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a6b3f74d6b260590800000000000000
+      internalID: -7708425963839441248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_5
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 965
+        width: 98
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b8a674b01c27b770800000000000000
+      internalID: 8626412061510248631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_6
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 959
+        width: 28
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18e847ecc6eb56490800000000000000
+      internalID: -7753581808918950271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_7
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 983
+        width: 52
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 121da97a53b43f350800000000000000
+      internalID: 6049261418305999137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_8
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 957
+        width: 74
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d61214cc43b2e1510800000000000000
+      internalID: 1521701229862920557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_9
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 957
+        width: 34
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cf4f50c32e688130800000000000000
+      internalID: 3569223804521500616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_10
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 911
+        width: 220
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d971310a2fe25b4c0800000000000000
+      internalID: -4272457051888478307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_11
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 973
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b175698fe3fda57f0800000000000000
+      internalID: -622940136885823717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_12
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 967
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e22e205c70da118d0800000000000000
+      internalID: -2877328438031359442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_13
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 959
+        width: 73
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d93211d62dbb11520800000000000000
+      internalID: 2671122566454780829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 943
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee4d22d090e648c00800000000000000
+      internalID: 901966810535089390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 911
+        width: 9
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0effd792b96a12710800000000000000
+      internalID: 1666796522450059232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 677
+        width: 57
+        height: 244
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a234f87c6d73f7c80800000000000000
+      internalID: -8322872190746803414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_17
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 821
+        width: 106
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba6c69168ea0f4410800000000000000
+      internalID: 1463400397104662187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_18
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 901
+        width: 50
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d32e31517eb143d0800000000000000
+      internalID: -3224086464316955695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_19
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 903
+        width: 14
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad4f18f421bc470d0800000000000000
+      internalID: -3425890137018338086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_20
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 901
+        width: 42
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6631126b8677b5f0800000000000000
+      internalID: -740993272661330324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_21
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 893
+        width: 50
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 321cbe5d2bf9a9c40800000000000000
+      internalID: 5519899883737956643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_22
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 919
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7958c6d4ed81d8bc0800000000000000
+      internalID: -3779337169233214057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_23
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 911
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1190a8cdf53334160800000000000000
+      internalID: 7008501931933567249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_24
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 877
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 244f5940f41c775b0800000000000000
+      internalID: -5370611485492513726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_25
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 901
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88a6f4eca980feca0800000000000000
+      internalID: -5985555918772802936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_26
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 893
+        width: 42
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63f0d960f2be9bad0800000000000000
+      internalID: -2685857115542843594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_27
+      rect:
+        serializedVersion: 2
+        x: 343
+        y: 877
+        width: 42
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df3d942900c663290800000000000000
+      internalID: -7911016945719585795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_28
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 893
+        width: 42
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c762fd42fc5e1fb0800000000000000
+      internalID: -4675197167404423231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_29
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 877
+        width: 58
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f235ac0714113d390800000000000000
+      internalID: -7794867557285342417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_30
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 898
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d48211eae8fdefae0800000000000000
+      internalID: -1513526620851197875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_31
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 901
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e65e18d5fe6c72d70800000000000000
+      internalID: 9018395510200984942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_32
+      rect:
+        serializedVersion: 2
+        x: 818
+        y: 911
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d87929e247f7b4820800000000000000
+      internalID: 2903554521744709517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_33
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 871
+        width: 47
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7eda8b916a31ea10800000000000000
+      internalID: 1936893505641832059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_34
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 898
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e07aa87df19270f0800000000000000
+      internalID: -1120672839424642844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_35
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 885
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ec541c2630027d10800000000000000
+      internalID: 2121758607112690914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_36
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 879
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36b703325cde07290800000000000000
+      internalID: -7894548715825759389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_37
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 890
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8604461391c0b2eb0800000000000000
+      internalID: -4743684480162316184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_38
+      rect:
+        serializedVersion: 2
+        x: 767
+        y: 871
+        width: 58
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a332842945da1b40800000000000000
+      internalID: 5411872412360913829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_39
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 877
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42173ab892b20ebd0800000000000000
+      internalID: -2603033127183748828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_40
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 845
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c86d04e19e0e20b0800000000000000
+      internalID: -5751643654346413880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_41
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 807
+        width: 66
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df0604c1ab4e4e410800000000000000
+      internalID: 1505579663437619453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_42
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 826
+        width: 36
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97297c53fc4848be0800000000000000
+      internalID: -1475908752375311751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_43
+      rect:
+        serializedVersion: 2
+        x: 357
+        y: 807
+        width: 68
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b821814bebc013e0800000000000000
+      internalID: -2084942416195802952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_44
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 834
+        width: 10
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb653c5533e7fc0b0800000000000000
+      internalID: -5706203443907832129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_45
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 845
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73c21d9420acc67d0800000000000000
+      internalID: -2923739946893104073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_46
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 826
+        width: 42
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d50f6b1975626150800000000000000
+      internalID: 5864361235615516113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_47
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 799
+        width: 58
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0d06705876ab2410800000000000000
+      internalID: 1453438340433317133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_48
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 847
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1d94e8b58a545830800000000000000
+      internalID: 4058968694546799898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_49
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 818
+        width: 44
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: feea8c9865cf57230800000000000000
+      internalID: 3636089722780561135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_50
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 807
+        width: 52
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fff630389beaf3b60800000000000000
+      internalID: 7728087597381283839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_51
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 834
+        width: 42
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86c80d5df2c990300800000000000000
+      internalID: 218877786168790120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_52
+      rect:
+        serializedVersion: 2
+        x: 437
+        y: 815
+        width: 20
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bde27faef74cd6a40800000000000000
+      internalID: 5363158784950087387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_53
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 834
+        width: 18
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8619176c04ee1690800000000000000
+      internalID: -7629409976798603635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_54
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 834
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4de774963b957b00800000000000000
+      internalID: 825736765413780815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_55
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 815
+        width: 58
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20f8a841489429f80800000000000000
+      internalID: -8101331948056965374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_56
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 751
+        width: 89
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf80ba479f9eed680800000000000000
+      internalID: -8728281770183948037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_57
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 834
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 398372e244ad74f30800000000000000
+      internalID: 4559853134102870163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_58
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 821
+        width: 26
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95f17006df6e0aad0800000000000000
+      internalID: -2692898601255362727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_59
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 805
+        width: 26
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3a1709e4cc2c7be0800000000000000
+      internalID: -1478257353449596355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_60
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 821
+        width: 42
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acd0ce8f735c88030800000000000000
+      internalID: 3497261954843282890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_61
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 783
+        width: 52
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2af2633cf447a8890800000000000000
+      internalID: -7455018347232088158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_62
+      rect:
+        serializedVersion: 2
+        x: 767
+        y: 823
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 085d18000d4b118a0800000000000000
+      internalID: -6336084395278871168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_63
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 823
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 259762926967df360800000000000000
+      internalID: 7205045366170220882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_64
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 807
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb3c701953092e0a0800000000000000
+      internalID: -6853757123163601989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_65
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 751
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6f053fb11364b1f0800000000000000
+      internalID: -1030089486887481494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_66
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 767
+        width: 20
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98e3d3bc8011f0ba0800000000000000
+      internalID: -6120654639106015607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_67
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 757
+        width: 36
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 918107435b20f5ee0800000000000000
+      internalID: -1270293592603092967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_68
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 751
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a90d447bfa1a4250800000000000000
+      internalID: 5929581526676998564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_69
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 759
+        width: 36
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0f330f7e037f0060800000000000000
+      internalID: 6921877658389397258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_70
+      rect:
+        serializedVersion: 2
+        x: 365
+        y: 751
+        width: 46
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e98fb0a1a52472c50800000000000000
+      internalID: 6640349130332567710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_71
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 735
+        width: 44
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8112840efe3c9110800000000000000
+      internalID: 1268958455729885583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_72
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 735
+        width: 58
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 296f916c01011d920800000000000000
+      internalID: 3013207289916683922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_73
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 743
+        width: 55
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 184a631f9f6492080800000000000000
+      internalID: -9211753523501947775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_74
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 727
+        width: 58
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11d65b674b2cdf320800000000000000
+      internalID: 2593443040776776977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_75
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 727
+        width: 82
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75930407e950d6ab0800000000000000
+      internalID: -5013344632147265193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_76
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 743
+        width: 44
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da26538a878dc4af0800000000000000
+      internalID: -410715453267811667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_77
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 762
+        width: 42
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e719149e1187edf0800000000000000
+      internalID: -151010094159947801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_78
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 743
+        width: 47
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc53f91327a01c4c0800000000000000
+      internalID: -4269119486195452465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_79
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 743
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc0444c9d9487fb50800000000000000
+      internalID: 6626911189165424845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_80
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 751
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bbc02fd522eae330800000000000000
+      internalID: 3741051092769754035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_81
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 743
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bdb1933ae8947ba0800000000000000
+      internalID: -6092076264270479951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_82
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 727
+        width: 14
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07aae29aefd2ed650800000000000000
+      internalID: 6259491103874919024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_83
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 733
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa257c6d17207b790800000000000000
+      internalID: -7514534765286436182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_84
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 0
+        width: 977
+        height: 737
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2129f075cd7a107c0800000000000000
+      internalID: -4106816820389899758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_85
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 727
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba9b4fe5c309f3160800000000000000
+      internalID: 7007478134177315243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_86
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 733
+        width: 18
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e38bc5a1ba8d56e0800000000000000
+      internalID: -1847167776556612631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_87
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 714
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fd09525e36b19ae0800000000000000
+      internalID: -1544252818425573897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_88
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 647
+        width: 66
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a298b0083d63ec6e0800000000000000
+      internalID: -1815453317769492182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_89
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 615
+        width: 43
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85044f3913ac8cd50800000000000000
+      internalID: 6757873555153895512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_90
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 671
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0103149debfe6e30800000000000000
+      internalID: 4498810075599798539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_91
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 615
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b807b52f3c6f816e0800000000000000
+      internalID: -1866470724099936117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_92
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 589
+        width: 42
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9afd21649cb6b320800000000000000
+      internalID: 2573451582560402074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_93
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 543
+        width: 14
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8555c91677de9e80800000000000000
+      internalID: -8169855771765025398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_94
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 591
+        width: 34
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afc01ebe98cf16c30800000000000000
+      internalID: 4351036384314723578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_95
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 527
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29b8bdcc53aa0ac20800000000000000
+      internalID: 3215757281989462930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_96
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 493
+        width: 76
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f8cb79a2f77982e0800000000000000
+      internalID: -2123033865219225359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_97
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 543
+        width: 28
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75e54e0a03006cbc0800000000000000
+      internalID: -3763320229763719593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_98
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 519
+        width: 9
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f37245dfc91ca31a0800000000000000
+      internalID: -6828933004944726209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_99
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 479
+        width: 9
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9e12a0b52a76e620800000000000000
+      internalID: 2803062120380505756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_100
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 493
+        width: 26
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9885fb78ccd666dd0800000000000000
+      internalID: -2493184618484770679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_101
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 263
+        width: 33
+        height: 215
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d3646a77b4ccc6c0800000000000000
+      internalID: -4121703266639387694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_102
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 447
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29a229dbaa9d24d30800000000000000
+      internalID: 4414329912124648082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_103
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 415
+        width: 82
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57a12edf9efa2e0e0800000000000000
+      internalID: -2242036244955391371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_104
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 453
+        width: 34
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92dd115ef16d9d340800000000000000
+      internalID: 4889174302962867497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_105
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 381
+        width: 60
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cfee3fe815679130800000000000000
+      internalID: 3573435987109277640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_106
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 389
+        width: 42
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1f59e23c47d6f440800000000000000
+      internalID: 4969395961121562397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_107
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 399
+        width: 10
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08eb18cc84e7089c0800000000000000
+      internalID: -3927000023933272448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_108
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 295
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b7f0a1b6e930e2d0800000000000000
+      internalID: -3251535267976120398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_109
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 325
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ee6e45d458b60e90800000000000000
+      internalID: -7059752691361222941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_110
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 322
+        width: 18
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecebd09405243ea10800000000000000
+      internalID: 1937465177289899726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_111
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 319
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d199c09cf92a4f490800000000000000
+      internalID: -7713361454622271203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_112
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 309
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f6d01392a52ef490800000000000000
+      internalID: -7710684131829426441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_113
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 314
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 928d802140733eb60800000000000000
+      internalID: 7774117872393574441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_114
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 231
+        width: 17
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b0a4f72924717260800000000000000
+      internalID: 7093578608198066358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_115
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 255
+        width: 12
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3facc96c5408e6040800000000000000
+      internalID: 4642789303038823155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_116
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 261
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d8adad470c69aca0800000000000000
+      internalID: -6005149849498048299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_117
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 231
+        width: 46
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d4277604ddea6c30800000000000000
+      internalID: 4353553484704326873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_118
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 239
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da30cc714ebe568b0800000000000000
+      internalID: -5159458433198718035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_119
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 223
+        width: 28
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5028c941d05adfd50800000000000000
+      internalID: 6772750890234053125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_120
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 239
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bc5931582eb2cba0800000000000000
+      internalID: -6070080267371324240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_121
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 229
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb19fda5283d2a350800000000000000
+      internalID: 6026611808198955452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_122
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 215
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb6fbb54448722ec0800000000000000
+      internalID: -3593177318065178945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_123
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 33
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ada19613995b2b80800000000000000
+      internalID: -8418536590165299801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_124
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 194
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55c15fd3750212b90800000000000000
+      internalID: -7268492764525552555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_125
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 183
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6514f17490a40230800000000000000
+      internalID: 3604182161230665066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_126
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 167
+        width: 28
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 649d88ddf760c9fe0800000000000000
+      internalID: -1181061856030566074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_127
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 181
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b4c748064792ca20800000000000000
+      internalID: 3081191422117266610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_128
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 175
+        width: 6
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9244448d0bc4d450800000000000000
+      internalID: 6112733853162685087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_129
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 167
+        width: 39
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a361117150927bef0800000000000000
+      internalID: -92560165499234758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_130
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 167
+        width: 42
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ae2d2dc8c0506b90800000000000000
+      internalID: -7250706576700526942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_131
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 181
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d541f9035ca1046e0800000000000000
+      internalID: -1855453612250033059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_132
+      rect:
+        serializedVersion: 2
+        x: 479
+        y: 186
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57b3b80abc66821b0800000000000000
+      internalID: -5681177905170007179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_133
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 167
+        width: 36
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd740ea62a79d48d0800000000000000
+      internalID: -2860463464476817445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_134
+      rect:
+        serializedVersion: 2
+        x: 607
+        y: 181
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31e8f7d8bef000b40800000000000000
+      internalID: 5404337057210273299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_135
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 167
+        width: 39
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c86d87b7b941410f0800000000000000
+      internalID: -1147269347048630644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_136
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 175
+        width: 28
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db2870c288b74e150800000000000000
+      internalID: 5900977236546650813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_137
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 175
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2694edf393b600d80800000000000000
+      internalID: -8286505420732872350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_138
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 186
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f929e591c4bacdf60800000000000000
+      internalID: 8060505776417837727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_139
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 178
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5492535fe8f15650800000000000000
+      internalID: 6220026267154158686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_140
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 167
+        width: 42
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b1cc3659cb7a7e50800000000000000
+      internalID: 6807889891389391283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_141
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 178
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 348d8a8328ca9b520800000000000000
+      internalID: 2718393525391120451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_142
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 167
+        width: 28
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6647acfd79c65a420800000000000000
+      internalID: 2640636156073112678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_143
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 167
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f3d6fd13e89cdff0800000000000000
+      internalID: -9964997933870095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_144
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 167
+        width: 36
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcc3f37c90c8edbb0800000000000000
+      internalID: -4909332570161857333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_145
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 167
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f937c432a37b498c0800000000000000
+      internalID: -3993365509242588257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_146
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 159
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5700a82b0afe2de40800000000000000
+      internalID: 5679865553536811125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_147
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 151
+        width: 12
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc538f0ca42063a20800000000000000
+      internalID: 3041621118423676363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_148
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 167
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e3f79dbd771ccc70800000000000000
+      internalID: 8992588384771240934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_149
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 167
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b4bacd259a21f910800000000000000
+      internalID: 1869322140542219441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_150
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 159
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fae7c811d615794c0800000000000000
+      internalID: -4280863391904661841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_151
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 157
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2c06bcf620e4de40800000000000000
+      internalID: 5680411488074206252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_152
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 151
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 444fe49fede4c4eb0800000000000000
+      internalID: -4734322388700826556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_153
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 95
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d484e6f9e0f63a10800000000000000
+      internalID: 1888961981388719320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_154
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 95
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cd23b1110c93a690800000000000000
+      internalID: -7592053018410668601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_155
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 103
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04b18c96c0b8c9670800000000000000
+      internalID: 8546859078272949056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_156
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 114
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f326d49a29f3654b0800000000000000
+      internalID: -5452100399747210689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_157
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 95
+        width: 26
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6eded04825b7ba50800000000000000
+      internalID: 6536892568643231343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_158
+      rect:
+        serializedVersion: 2
+        x: 437
+        y: 103
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb53254030e06d320800000000000000
+      internalID: 2582266842463745471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_159
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 111
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1ae68e328769f530800000000000000
+      internalID: 3889253562303572511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_160
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 111
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e05be34610f70990800000000000000
+      internalID: -7419697882650160927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_161
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 79
+        width: 44
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0e3696563f029fb0800000000000000
+      internalID: -4642631539810222578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_162
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 87
+        width: 52
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f1c2b0679fc70cf0800000000000000
+      internalID: -286031802245398024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_163
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 103
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0648ef7a9f27a9910800000000000000
+      internalID: 1844913413952537696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_164
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 111
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5a75506b78854b30800000000000000
+      internalID: 4270969885109353055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_165
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 95
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9330010b2deb2880800000000000000
+      internalID: -8634547091596627045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_166
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 55
+        width: 42
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c1a1f06580a5b680800000000000000
+      internalID: -8739903007125036608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_167
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 79
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5490f99344233290800000000000000
+      internalID: -7911940247595740065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_168
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 87
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ff1fdef4adf50e30800000000000000
+      internalID: 4469257090327584752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_169
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 87
+        width: 36
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: feb2f2194d9c9cef0800000000000000
+      internalID: -87316802950976529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_170
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 87
+        width: 20
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b7010884ea9ddc00800000000000000
+      internalID: 927067404633180085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_171
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 87
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcbd0ffdcf8eaea20800000000000000
+      internalID: 3092540266929773519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_172
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 79
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98dd1f4c7a3298a80800000000000000
+      internalID: -8464194821195440759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_173
+      rect:
+        serializedVersion: 2
+        x: 509
+        y: 79
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ff6d93bed736e620800000000000000
+      internalID: 2802989247720419314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_174
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 87
+        width: 10
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a2320d8eee2a7d10800000000000000
+      internalID: 2124061776361435810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_175
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 87
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edc0f85a732951380800000000000000
+      internalID: -9001127512531596066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_176
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 79
+        width: 34
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9a7a3c7f176254f0800000000000000
+      internalID: -841496795439007074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_177
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 71
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03ebc030ba1e875e0800000000000000
+      internalID: -1911529917211951568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_178
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 18
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6afbcb4c34789280800000000000000
+      internalID: -9036344850000381333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_179
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 23
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 921087c17016fa3a0800000000000000
+      internalID: -6651991441432641239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fireant_right_180
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 0
+        width: 73
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e598479c6963cce0800000000000000
+      internalID: -1386148345184479768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      fireant_right_0: -3522089859083797499
+      fireant_right_1: -348014295710093461
+      fireant_right_10: -4272457051888478307
+      fireant_right_100: -2493184618484770679
+      fireant_right_101: -4121703266639387694
+      fireant_right_102: 4414329912124648082
+      fireant_right_103: -2242036244955391371
+      fireant_right_104: 4889174302962867497
+      fireant_right_105: 3573435987109277640
+      fireant_right_106: 4969395961121562397
+      fireant_right_107: -3927000023933272448
+      fireant_right_108: -3251535267976120398
+      fireant_right_109: -7059752691361222941
+      fireant_right_11: -622940136885823717
+      fireant_right_110: 1937465177289899726
+      fireant_right_111: -7713361454622271203
+      fireant_right_112: -7710684131829426441
+      fireant_right_113: 7774117872393574441
+      fireant_right_114: 7093578608198066358
+      fireant_right_115: 4642789303038823155
+      fireant_right_116: -6005149849498048299
+      fireant_right_117: 4353553484704326873
+      fireant_right_118: -5159458433198718035
+      fireant_right_119: 6772750890234053125
+      fireant_right_12: -2877328438031359442
+      fireant_right_120: -6070080267371324240
+      fireant_right_121: 6026611808198955452
+      fireant_right_122: -3593177318065178945
+      fireant_right_123: -8418536590165299801
+      fireant_right_124: -7268492764525552555
+      fireant_right_125: 3604182161230665066
+      fireant_right_126: -1181061856030566074
+      fireant_right_127: 3081191422117266610
+      fireant_right_128: 6112733853162685087
+      fireant_right_129: -92560165499234758
+      fireant_right_13: 2671122566454780829
+      fireant_right_130: -7250706576700526942
+      fireant_right_131: -1855453612250033059
+      fireant_right_132: -5681177905170007179
+      fireant_right_133: -2860463464476817445
+      fireant_right_134: 5404337057210273299
+      fireant_right_135: -1147269347048630644
+      fireant_right_136: 5900977236546650813
+      fireant_right_137: -8286505420732872350
+      fireant_right_138: 8060505776417837727
+      fireant_right_139: 6220026267154158686
+      fireant_right_14: 901966810535089390
+      fireant_right_140: 6807889891389391283
+      fireant_right_141: 2718393525391120451
+      fireant_right_142: 2640636156073112678
+      fireant_right_143: -9964997933870095
+      fireant_right_144: -4909332570161857333
+      fireant_right_145: -3993365509242588257
+      fireant_right_146: 5679865553536811125
+      fireant_right_147: 3041621118423676363
+      fireant_right_148: 8992588384771240934
+      fireant_right_149: 1869322140542219441
+      fireant_right_15: 1666796522450059232
+      fireant_right_150: -4280863391904661841
+      fireant_right_151: 5680411488074206252
+      fireant_right_152: -4734322388700826556
+      fireant_right_153: 1888961981388719320
+      fireant_right_154: -7592053018410668601
+      fireant_right_155: 8546859078272949056
+      fireant_right_156: -5452100399747210689
+      fireant_right_157: 6536892568643231343
+      fireant_right_158: 2582266842463745471
+      fireant_right_159: 3889253562303572511
+      fireant_right_16: -8322872190746803414
+      fireant_right_160: -7419697882650160927
+      fireant_right_161: -4642631539810222578
+      fireant_right_162: -286031802245398024
+      fireant_right_163: 1844913413952537696
+      fireant_right_164: 4270969885109353055
+      fireant_right_165: -8634547091596627045
+      fireant_right_166: -8739903007125036608
+      fireant_right_167: -7911940247595740065
+      fireant_right_168: 4469257090327584752
+      fireant_right_169: -87316802950976529
+      fireant_right_17: 1463400397104662187
+      fireant_right_170: 927067404633180085
+      fireant_right_171: 3092540266929773519
+      fireant_right_172: -8464194821195440759
+      fireant_right_173: 2802989247720419314
+      fireant_right_174: 2124061776361435810
+      fireant_right_175: -9001127512531596066
+      fireant_right_176: -841496795439007074
+      fireant_right_177: -1911529917211951568
+      fireant_right_178: -9036344850000381333
+      fireant_right_179: -6651991441432641239
+      fireant_right_18: -3224086464316955695
+      fireant_right_180: -1386148345184479768
+      fireant_right_19: -3425890137018338086
+      fireant_right_2: -4860693565746422449
+      fireant_right_20: -740993272661330324
+      fireant_right_21: 5519899883737956643
+      fireant_right_22: -3779337169233214057
+      fireant_right_23: 7008501931933567249
+      fireant_right_24: -5370611485492513726
+      fireant_right_25: -5985555918772802936
+      fireant_right_26: -2685857115542843594
+      fireant_right_27: -7911016945719585795
+      fireant_right_28: -4675197167404423231
+      fireant_right_29: -7794867557285342417
+      fireant_right_3: 1255888976180681924
+      fireant_right_30: -1513526620851197875
+      fireant_right_31: 9018395510200984942
+      fireant_right_32: 2903554521744709517
+      fireant_right_33: 1936893505641832059
+      fireant_right_34: -1120672839424642844
+      fireant_right_35: 2121758607112690914
+      fireant_right_36: -7894548715825759389
+      fireant_right_37: -4743684480162316184
+      fireant_right_38: 5411872412360913829
+      fireant_right_39: -2603033127183748828
+      fireant_right_4: -7708425963839441248
+      fireant_right_40: -5751643654346413880
+      fireant_right_41: 1505579663437619453
+      fireant_right_42: -1475908752375311751
+      fireant_right_43: -2084942416195802952
+      fireant_right_44: -5706203443907832129
+      fireant_right_45: -2923739946893104073
+      fireant_right_46: 5864361235615516113
+      fireant_right_47: 1453438340433317133
+      fireant_right_48: 4058968694546799898
+      fireant_right_49: 3636089722780561135
+      fireant_right_5: 8626412061510248631
+      fireant_right_50: 7728087597381283839
+      fireant_right_51: 218877786168790120
+      fireant_right_52: 5363158784950087387
+      fireant_right_53: -7629409976798603635
+      fireant_right_54: 825736765413780815
+      fireant_right_55: -8101331948056965374
+      fireant_right_56: -8728281770183948037
+      fireant_right_57: 4559853134102870163
+      fireant_right_58: -2692898601255362727
+      fireant_right_59: -1478257353449596355
+      fireant_right_6: -7753581808918950271
+      fireant_right_60: 3497261954843282890
+      fireant_right_61: -7455018347232088158
+      fireant_right_62: -6336084395278871168
+      fireant_right_63: 7205045366170220882
+      fireant_right_64: -6853757123163601989
+      fireant_right_65: -1030089486887481494
+      fireant_right_66: -6120654639106015607
+      fireant_right_67: -1270293592603092967
+      fireant_right_68: 5929581526676998564
+      fireant_right_69: 6921877658389397258
+      fireant_right_7: 6049261418305999137
+      fireant_right_70: 6640349130332567710
+      fireant_right_71: 1268958455729885583
+      fireant_right_72: 3013207289916683922
+      fireant_right_73: -9211753523501947775
+      fireant_right_74: 2593443040776776977
+      fireant_right_75: -5013344632147265193
+      fireant_right_76: -410715453267811667
+      fireant_right_77: -151010094159947801
+      fireant_right_78: -4269119486195452465
+      fireant_right_79: 6626911189165424845
+      fireant_right_8: 1521701229862920557
+      fireant_right_80: 3741051092769754035
+      fireant_right_81: -6092076264270479951
+      fireant_right_82: 6259491103874919024
+      fireant_right_83: -7514534765286436182
+      fireant_right_84: -4106816820389899758
+      fireant_right_85: 7007478134177315243
+      fireant_right_86: -1847167776556612631
+      fireant_right_87: -1544252818425573897
+      fireant_right_88: -1815453317769492182
+      fireant_right_89: 6757873555153895512
+      fireant_right_9: 3569223804521500616
+      fireant_right_90: 4498810075599798539
+      fireant_right_91: -1866470724099936117
+      fireant_right_92: 2573451582560402074
+      fireant_right_93: -8169855771765025398
+      fireant_right_94: 4351036384314723578
+      fireant_right_95: 3215757281989462930
+      fireant_right_96: -2123033865219225359
+      fireant_right_97: -3763320229763719593
+      fireant_right_98: -6828933004944726209
+      fireant_right_99: 2803062120380505756
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
