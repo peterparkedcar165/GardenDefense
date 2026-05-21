@@ -40,7 +40,7 @@ public enum ElementalType
 
 public abstract class Entity : MonoBehaviour
 {
-    private GameObject damageIndicatorPrefab;
+    protected GameObject damageIndicatorPrefab;
 
     [Header("Base Stats")]
     public float baseMaxHealth, baseAttackDamage, baseMagicPower, baseAttackSpeed, baseAttackRange, baseHealingBonus, baseHealingReceived;

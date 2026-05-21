@@ -42,7 +42,7 @@ public class Tile : MonoBehaviour
 
         if (selector.flowerPotMode)
         {
-            if (tileType == TileType.Water || tileType == TileType.Path || tileType == TileType.Potted) return;
+            if (tileType == TileType.Water || tileType == TileType.Path || tileType == TileType.Potted || tileType == TileType.Obstacle) return;
             if (selector.flowerPotPrefab == null || GameManager.instance == null) return;
             if (GameManager.instance.SpendSun(FlowerPot.SunCost))
             {

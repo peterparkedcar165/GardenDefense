@@ -376,6 +376,7 @@ public abstract class Plant : Entity, IAttackable
     }
 
     private static readonly DamageTag[] temperatureDamageTags = { DamageTag.Weather };
+    private float temperatureDamageTimer;
 
     private void UpdateTemperature()
     {
@@ -383,16 +384,39 @@ public abstract class Plant : Entity, IAttackable
         {
             switch (WeatherManager.instance.temperature)
             {
-                case TemperatureType.Hot:  temperature += 2f * Time.deltaTime; break;
-                case TemperatureType.Cold: temperature -= 2f * Time.deltaTime; break;
+                case TemperatureType.Hot:  temperature += 1f * Time.deltaTime; break;
+                case TemperatureType.Cold: temperature -= 1f * Time.deltaTime; break;
             }
         }
         temperature = Mathf.Clamp(temperature, temperatureMin, temperatureMax);
 
-        if (temperature < comfortMin)
-            Damage(maxHealth * 0.025f * Time.deltaTime, DamageType.Environmental, ElementalType.Ice, temperatureDamageTags);
-        else if (temperature > comfortMax)
-            Damage(maxHealth * 0.025f * Time.deltaTime, DamageType.Environmental, ElementalType.Fire, temperatureDamageTags);
+        if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Hot
+            && occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent))
+            temperature = Mathf.Min(temperature, comfortMax);
+
+        bool tooCold = temperature < comfortMin;
+        bool tooHot  = temperature > comfortMax;
+
+        if (tooCold || tooHot)
+        {
+            temperatureDamageTimer += Time.deltaTime;
+            if (temperatureDamageTimer >= 2f)
+            {
+                temperatureDamageTimer = 0f;
+                float dmg = maxHealth * 0.02f * 2f;
+                ElementalType dmgElement = tooCold ? ElementalType.Ice : ElementalType.Fire;
+                Damage(dmg, DamageType.True, dmgElement, temperatureDamageTags);
+                if (damageIndicatorPrefab != null)
+                {
+                    GameObject indicator = Instantiate(damageIndicatorPrefab, GetIndicatorPosition(), Quaternion.identity);
+                    indicator.GetComponent<DamageIndicator>().Initialize(dmg, dmgElement, false);
+                }
+            }
+        }
+        else
+        {
+            temperatureDamageTimer = 0f;
+        }
     }
 
     public virtual void ActivateSkill() {}
