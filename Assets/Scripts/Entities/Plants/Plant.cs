@@ -407,7 +407,7 @@ public abstract class Plant : Entity, IAttackable
             if (temperatureDamageTimer >= 2f)
             {
                 temperatureDamageTimer = 0f;
-                float dmg = maxHealth * 0.02f * 2f;
+                float dmg = maxHealth * 0.03f * 2f;
                 ElementalType dmgElement = tooCold ? ElementalType.Ice : ElementalType.Fire;
                 Damage(dmg, DamageType.True, dmgElement, temperatureDamageTags);
                 if (damageIndicatorPrefab != null)

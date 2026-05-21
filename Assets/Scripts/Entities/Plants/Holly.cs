@@ -111,13 +111,13 @@ public class Holly : Aura
         $"Releases icy thorns dealing <color=green><b>{attackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
 
     public override string GetPassiveDescription() =>
-        $"Insects that attack Holly retaliate for <color=green><b>{RetaliationHollyPct * 100f:F0}%</b></color> of Holly's Attack Damage + " +
+        $"Insects that attack {GetName()} retaliate for <color=green><b>{RetaliationHollyPct * 100f:F0}%</b></color> of {GetName()}'s Attack Damage + " +
         $"<color=green><b>{RetaliationInsectPct * 100f:F0}%</b></color> of the attacker's Attack Damage. " +
         $"Increases Max Health by [<color=#FFB6C1><b>+{(HData?.baseHealthBonusMP ?? 0f) * magicPower:F0}</b></color>].";
 
     public override string GetSkillDesription() =>
         $"Enter a taunting state for <color=green><b>{skillDuration:F0}s</b></color>. Insects within range are afflicted with " +
-        $"<color=#00FFFF><b>Frozen Rage</b></color>, forcing them to target Holly and reducing their Physical Resistance by " +
+        $"<color=#00FFFF><b>Frozen Rage</b></color>, forcing them to target {GetName()} and reducing their Physical Resistance by " +
         $"<color=green><b>{FrozenRageReductionBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f:F0}%</b></color>].";
 
     public override string GetPath1Description() =>

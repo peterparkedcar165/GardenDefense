@@ -68,5 +68,5 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseHealAmount: 16
+  baseHealAmount: 20
   baseTempReduction: 4
