@@ -122,8 +122,8 @@ public class CursorIcon : MonoBehaviour
 
     private void ShowRangePreview(Tile tile)
     {
-        if (rangePreviewCircle == null || cachedPlant == null) return;
-        float range = cachedPlant.baseAttackRange;
+        if (rangePreviewCircle == null || cachedPlant == null || cachedPlant.data == null) return;
+        float range = cachedPlant.data.baseAttackRange;
         if (tile.isHighground) range *= 2f;
         rangePreviewCircle.gameObject.SetActive(true);
         rangePreviewCircle.position = new Vector3(tile.transform.position.x, tile.transform.position.y, rangePreviewCircle.position.z);
