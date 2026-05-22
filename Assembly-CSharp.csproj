@@ -72,12 +72,14 @@
     <Compile Include="Assets\Scripts\Spawning\Level6.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level10.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\QueenAnt.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level12\GridManager12.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\BlazeEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WetEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\FreezeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AloeVera.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BegoniaData.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Level12.cs" />
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
     <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\PoisonShroomData.cs" />
