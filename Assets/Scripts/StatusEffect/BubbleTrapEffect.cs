@@ -18,7 +18,7 @@ public class BubblePrisonEffect : Airborne
     }
 
     public override string GetName() => "<color=#3399FF>Bubble Prison</color>";
-    public override string GetDescription() => "Imprisoned inside a bubble.";
+    public override string GetDescription() => "Hanging in the air, imprisoned within a bubble.";
 
     public override void OnApply()
     {

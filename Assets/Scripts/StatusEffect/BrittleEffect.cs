@@ -8,7 +8,7 @@ public class BrittleEffect : StatusEffect
     }
 
     public override string GetName() => "<color=green>Brittle</color>";
-    public override string GetDescription() => $"Inflict <color=green>3</color> additional damage upon being hurt. Reduces Shield Toughness by <color=green>25%</color>.";
+    public override string GetDescription() => $"Inflict <color=green>3</color> additional damage upon being hurt. Reduce Shield Toughness by <color=green>25%</color>.";
 
     public override void OnApply()
     {

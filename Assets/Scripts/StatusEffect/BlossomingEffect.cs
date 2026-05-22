@@ -25,6 +25,5 @@ public class BlossomingEffect : StatusEffect
 
     public override string GetName() => "<color=green>Blossoming</color>";
     public override string GetDescription() =>
-        $"Nature Power increased by <color=green><b>{natureDamageBonus * 100f:F0}%</b></color>. " +
-        $"Attack Speed increased by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color>.";
+        $"Increase Nature Power by <color=green><b>{natureDamageBonus * 100f:F0}%</b></color>, and Attack Speed by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color>.";
 }

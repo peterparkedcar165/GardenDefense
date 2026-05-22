@@ -60,6 +60,9 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private Button skillButton;
     [SerializeField] private TMP_Text skillCooldownText;
 
+    [Header("Status Effects")]
+    [SerializeField] private StatusEffectPanel statusEffectPanel;
+
     [Header("Tooltip")]
     [SerializeField] private GameObject tooltipPanel;
     [SerializeField] private TMP_Text tooltipText;
@@ -126,6 +129,8 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
         if (targetingToggleButton != null)
             targetingToggleButton.gameObject.SetActive(plant.UsesTargeting);
+        if (targetingModeText != null)
+            targetingModeText.text = plant.targeting.ToString();
 
         panel.SetActive(true);
 
@@ -133,6 +138,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (entityIcon != null && plant.data != null)
             entityIcon.sprite = plant.data.icon;
 
+        statusEffectPanel?.Show(plant);
         RefreshStats();
         RefreshPaths();
     }
@@ -158,6 +164,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (entityIcon != null && cachedInsectRenderer != null)
             entityIcon.sprite = cachedInsectRenderer.sprite;
 
+        statusEffectPanel?.Show(insect);
         RefreshStats();
     }
 
@@ -168,6 +175,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         selectedPlant = null;
         selectedInsect = null;
         cachedInsectRenderer = null;
+        statusEffectPanel?.Hide();
         base.HidePanel();
         HideTooltip();
     }
@@ -179,6 +187,8 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     protected override void RefreshStats()
     {
+        statusEffectPanel?.Refresh();
+
         if (selectedPlant != null)
         {
             stat1Text.text = $"ATK: {selectedPlant.attackDamage:F0}";
@@ -394,7 +404,20 @@ public class PlantUpgradeUI : EntityInfoPanel
         tooltipText.text = text;
         Canvas.ForceUpdateCanvases();
         RectTransform panelRect = tooltipPanel.GetComponent<RectTransform>();
-        panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tooltipText.preferredHeight + 40f);
+
+        float maxHeight = Screen.height * 0.85f;
+        float height = Mathf.Min(tooltipText.preferredHeight + 40f, maxHeight);
+        panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+        Canvas.ForceUpdateCanvases();
+        Vector3[] corners = new Vector3[4];
+        panelRect.GetWorldCorners(corners);
+        float topY    = corners[1].y;
+        float bottomY = corners[0].y;
+        if (topY > Screen.height)
+            panelRect.anchoredPosition += Vector2.down * (topY - Screen.height);
+        else if (bottomY < 0f)
+            panelRect.anchoredPosition += Vector2.up * -bottomY;
     }
 
     public void HideTooltip()

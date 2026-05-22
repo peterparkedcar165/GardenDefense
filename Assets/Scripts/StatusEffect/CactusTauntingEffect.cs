@@ -22,5 +22,5 @@ public class CactusTauntingEffect : StatusEffect
     }
 
     public override string GetName() => "<color=green>Cactus Taunt</color>";
-    public override string GetDescription() => $"Taunting nearby insects. Healing received increased by {healingBonus * 100f:F0}%.";
+    public override string GetDescription() => $"Forces nearby insects to target it. Returns <color=green><b>150%</b></color> of the attacker's ATK as <color=green>Nature</color> Physical damage.";
 }

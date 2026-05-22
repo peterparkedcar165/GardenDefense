@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: MAGIC!
   stats:
-  - statType: 31
+  - statType: 32
     value: 70
   - statType: 13
     value: 0.52

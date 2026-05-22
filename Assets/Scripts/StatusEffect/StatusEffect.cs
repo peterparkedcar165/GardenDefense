@@ -7,7 +7,8 @@ public class StatusEffect
     {
         positive,
         neutral,
-        negative
+        negative,
+        primer
     }
 
     public enum EffectTag
@@ -49,6 +50,11 @@ public class StatusEffect
     }
 
     public virtual string GetDescription()
+    {
+        return "";
+    }
+
+    public virtual string GetGeneralDescription()
     {
         return "";
     }

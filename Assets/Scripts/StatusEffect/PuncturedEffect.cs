@@ -19,5 +19,5 @@ public class PuncturedEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#A0522D>Punctured</color>";
-    public override string GetDescription() => $"Physical Resistance reduced by {level * 0.5f:F1}%.";
+    public override string GetDescription() => $"Reduce Physical Resistance by <color=green><b>{level * 0.5f:F1}%</b></color>.";
 }

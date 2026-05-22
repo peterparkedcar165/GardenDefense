@@ -20,5 +20,5 @@ public class ElementalPowerBoostEffect : StatusEffect
     }
 
     public override string GetName() => "<color=green><b>Begonia's Blessing</b></color>";
-    public override string GetDescription() => $"Elemental Power increased by <color=green><b>{bonus * 100f:F0}%</b></color>.";
+    public override string GetDescription() => $"Increase Elemental Power by <color=green><b>{bonus * 100f:F0}%</b></color>.";
 }

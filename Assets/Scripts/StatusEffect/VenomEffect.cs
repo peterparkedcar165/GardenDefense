@@ -35,5 +35,5 @@ public class VenomEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#9B30D0>Venom</color>";
-    public override string GetDescription() => $"Taking <color=green><b>{damagePerSecond:F0}</b></color> Poison Magic damage per second.";
+    public override string GetDescription() => $"Inflicts <color=green><b>{damagePerSecond:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.";
 }

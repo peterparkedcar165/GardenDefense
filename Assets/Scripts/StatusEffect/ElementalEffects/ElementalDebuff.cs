@@ -4,7 +4,7 @@ public abstract class ElementalDebuff : StatusEffect
 { 
     public ElementalDebuff(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        effectType = Type.negative;
+        effectType = Type.primer;
     }
 
     public override void OnApply()

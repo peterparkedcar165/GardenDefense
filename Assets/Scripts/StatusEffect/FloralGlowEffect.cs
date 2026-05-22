@@ -53,6 +53,8 @@ public class FloralGlowEffect : StatusEffect
             new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated });
     }
 
+    private float CoordinatedDamage => (calendula?.attackDamage ?? 0f) + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f);
+
     public override string GetName() => "<color=orange>Floral Glow</color>";
-    public override string GetDescription() => $"Healing <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Projectile attacks deal bonus fire magic damage.";
+    public override string GetDescription() => $"Regenerates <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Projectile attacks inflict a Coordinated <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage from the Calendula.";
 }

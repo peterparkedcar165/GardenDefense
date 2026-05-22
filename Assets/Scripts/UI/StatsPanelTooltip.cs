@@ -97,26 +97,6 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         ElemLine(sb, Poison, "Poison Resistance:", $"{e.poisonResistance * 100:F0}%", e.poisonResistance, e.basePoisonResistance);
         ElemLine(sb, Wind,   "Wind Resistance:",   $"{e.windResistance * 100:F0}%",   e.windResistance,   e.baseWindResistance);
 
-        // --- Buffs / Debuffs ---
-        var buffs   = e.activeEffects.FindAll(ef => ef.effectType == StatusEffect.Type.positive);
-        var debuffs = e.activeEffects.FindAll(ef => ef.effectType == StatusEffect.Type.negative);
-
-        if (buffs.Count > 0)
-        {
-            sb.AppendLine();
-            sb.AppendLine("<size=+8><color=white><b><u>Buffs</u></b></color></size>");
-            foreach (var ef in buffs)
-                sb.AppendLine($"({FormatDuration(ef.duration)}) <b>{ef.GetName()}</b> [<color=green><b>{ef.level}</b></color>]");
-        }
-
-        if (debuffs.Count > 0)
-        {
-            sb.AppendLine();
-            sb.AppendLine("<size=+8><color=white><b><u>Debuffs</u></b></color></size>");
-            foreach (var ef in debuffs)
-                sb.AppendLine($"({FormatDuration(ef.duration)}) <b>{ef.GetName()}</b> [<color=green><b>{ef.level}</b></color>]");
-        }
-
         return sb.ToString().TrimEnd();
     }
 
@@ -131,10 +111,4 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         sb.AppendLine($"{colorTag}{label}{End}{new string('.', dots)}<b>{Col(current, baseVal, plain)}</b>");
     }
 
-    private static string FormatDuration(float seconds)
-    {
-        if (seconds >= float.MaxValue / 2f) return "--:--";
-        int total = Mathf.FloorToInt(seconds);
-        return $"{total / 60:D2}:{total % 60:D2}";
-    }
 }

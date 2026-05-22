@@ -13,8 +13,8 @@ public class Holly : Aura
         (HData?.baseHealthBonusMP ?? 0f) * magicPower +
         40f * effectivePath2Level;
 
-    private float RetaliationHollyPct  => (HData?.baseRetaliationHollyPercent  ?? 0.75f) + 0.05f * effectivePath2Level;
-    private float RetaliationInsectPct => (HData?.baseRetaliationInsectPercent ?? 0.75f) + 0.05f * effectivePath2Level;
+    public float RetaliationHollyPct  => (HData?.baseRetaliationHollyPercent  ?? 0.75f) + 0.05f * effectivePath2Level;
+    public float RetaliationInsectPct => (HData?.baseRetaliationInsectPercent ?? 0.75f) + 0.05f * effectivePath2Level;
 
     private float FrozenRageReductionBase => (HData?.baseFrozenRageReduction   ?? 0.12f) + 0.04f * effectivePath3Level;
     private float FrozenRageReductionMP   => (HData?.baseFrozenRageReductionMP ?? 0f)    * magicPower / 100f;
@@ -71,7 +71,7 @@ public class Holly : Aura
     {
         if (!SkillReady) return;
         skillCooldownTimer = skillCooldown;
-        ApplyEffect(new TauntingEffect(this, skillDuration, 1, this));
+        ApplyEffect(new HollyTauntingEffect(this, skillDuration, 1, this));
         if (ShieldAmount > 0f)
             ApplyEffect(new HollyShieldEffect(this, skillDuration, 1, this, ShieldAmount));
     }
