@@ -62,10 +62,11 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 3
+  baseSkillCooldown: 24
   baseSkillDuration: 12
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  baseShieldAmount: 80

@@ -7,6 +7,7 @@ public class BogIris : Shooter
     [SerializeField] private SpriteRenderer closedVisual;
     [SerializeField] private SpriteRenderer openVisual;
 
+    private SpriteRenderer _rootRenderer;
     private bool isOpen = false;
     private float cycleTimer = 0f;
     private float sunTickTimer = 0f;
@@ -28,6 +29,7 @@ public class BogIris : Shooter
     {
         base.Awake();
         LoadData();
+        _rootRenderer = GetComponent<SpriteRenderer>();
         _indicatorPrefab = Resources.Load<GameObject>("DamageIndicator");
         SetVisualState(false);
     }
@@ -83,6 +85,7 @@ public class BogIris : Shooter
 
     private void SetVisualState(bool open)
     {
+        if (_rootRenderer != null) _rootRenderer.enabled = !open;
         if (closedVisual != null) closedVisual.gameObject.SetActive(!open);
         if (openVisual != null) openVisual.gameObject.SetActive(open);
     }

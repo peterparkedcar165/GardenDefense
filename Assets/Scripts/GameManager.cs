@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public AudioClip buttonClick, plantPlace, plantSelect;
     private bool paused = false;
     public float gameSpeed = 1f;
-    private float[] speeds = { 0.5f, 1f, 2f };
+    private float[] speeds = { 0.5f, 1f, 2f, 4f };
     private int speedIndex = 1; // starts at 1x
     public int currentWave = 0;
 

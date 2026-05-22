@@ -18,12 +18,13 @@ MonoBehaviour:
   displayName: Sunflower
   elementalType: 0
   damageType: 1
-  sunCost: 125
+  sunCost: 105
   baseMaxHealth: 200
   baseAttackDamage: 35
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 3
+  startingShield: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0
@@ -56,6 +57,9 @@ MonoBehaviour:
   baseProjectileSpeed: 3
   baseMaxRange: 20
   basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
   basePassiveCooldown: 16
   basePassiveDuration: 0
   baseSkillCooldown: 45

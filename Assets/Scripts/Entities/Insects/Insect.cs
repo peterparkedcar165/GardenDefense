@@ -311,7 +311,7 @@ public abstract class Insect : Entity, IAttackable
         if (HasEffect<HardCrowdControl>()) return;
         if (attackSpeed <= 0) return;
 
-        float dist = Vector3.Distance(transform.position, target.Position);
+        float dist = Vector3.Distance(transform.position, target.GetApproachPoint(transform.position));
         if (dist > attackRange) return;
 
         attackTimer += Time.deltaTime;

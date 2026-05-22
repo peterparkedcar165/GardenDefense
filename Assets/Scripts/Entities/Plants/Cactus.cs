@@ -9,7 +9,8 @@ public class Cactus : Shooter
 
     private readonly HashSet<Insect> _volleyHit = new HashSet<Insect>();
 
-    private float ShieldAmount   => 100f + 20f * effectivePath3Level;
+    private CactusData CactData => data as CactusData;
+    private float ShieldAmount   => (CactData?.baseShieldAmount ?? 100f) + 10f * effectivePath3Level;
     private float SkillDuration  => 12f  +  2f * effectivePath3Level;
     private float SkillHealBonus => 0.16f + 0.04f * effectivePath3Level;
 
@@ -147,7 +148,7 @@ public class Cactus : Shooter
 
     public override string GetPath3Description() =>
         $"Skill:\n\n{GetSkillDesription()}\n\n" +
-        $"Increase shield by <color=green><b>20</b></color> per level. [<color=grey><b>+{20 * effectivePath3Level}</b></color>]\n\n" +
+        $"Increase shield by <color=green><b>10</b></color> per level. [<color=grey><b>+{10 * effectivePath3Level}</b></color>]\n\n" +
         $"Increase duration by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
         $"Increase healing received by <color=green><b>4%</b></color> per level. [<color=green><b>+{4 * effectivePath3Level}%</b></color>]\n\n" +
         $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
