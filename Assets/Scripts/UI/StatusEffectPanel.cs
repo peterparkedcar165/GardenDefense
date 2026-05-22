@@ -83,6 +83,9 @@ public class StatusEffectPanel : MonoBehaviour
             string desc = ef.GetDescription();
             if (!string.IsNullOrEmpty(desc))
                 sb.AppendLine($"<size=-2>{desc}</size>");
+            string sourceName = ef.source is Plant p ? p.GetName() : ef.source is Insect ins ? ins.GetName() : null;
+            if (!string.IsNullOrEmpty(sourceName))
+                sb.AppendLine($"<size=-2><color=#888888>Source: [</color>{sourceName}<color=#888888>]</color></size>");
             sb.AppendLine();
         }
     }

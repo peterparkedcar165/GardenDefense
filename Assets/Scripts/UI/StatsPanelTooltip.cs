@@ -17,6 +17,7 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private const string Magic    = "<color=#FFB6C1>";
     private const string Physical = "<color=#A0522D>";
     private const string Gold     = "<color=white>";
+    private const string HealCol  = "<color=#FF6B81>";
     private const string End      = "</color>";
 
     // Dot leader: label left, dots fill gap, value right
@@ -75,6 +76,10 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
             ElemLine(sb, Nature, "Piercing:", $"{shooter.piercing}", shooter.piercing, shooter.basePiercing);
 
         sb.AppendLine();
+        Line(sb, "Skill Damage:",   $"{e.skillDamage * 100:F0}%",   e.skillDamage,   e.baseSkillDamage);
+        Line(sb, "Passive Damage:", $"{e.passiveDamage * 100:F0}%", e.passiveDamage, e.basePassiveDamage);
+
+        sb.AppendLine();
         ElemLine(sb, Physical, "Physical Damage:", $"{e.physicalDamage * 100:F0}%", e.physicalDamage, e.basePhysicalDamage);
         ElemLine(sb, Magic,    "Magic Damage:",    $"{e.magicDamage * 100:F0}%",    e.magicDamage,    e.baseMagicDamage);
         ElemLine(sb, Fire,   "Fire Damage:",   $"{e.fireDamage * 100:F0}%",   e.fireDamage,   e.baseFireDamage);
@@ -96,6 +101,12 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         ElemLine(sb, Ice,    "Ice Resistance:",    $"{e.iceResistance * 100:F0}%",    e.iceResistance,    e.baseIceResistance);
         ElemLine(sb, Poison, "Poison Resistance:", $"{e.poisonResistance * 100:F0}%", e.poisonResistance, e.basePoisonResistance);
         ElemLine(sb, Wind,   "Wind Resistance:",   $"{e.windResistance * 100:F0}%",   e.windResistance,   e.baseWindResistance);
+
+        // --- Miscellaneous ---
+        sb.AppendLine();
+        sb.AppendLine("<size=+8><color=white><b><u>Miscellaneous</u></b></color></size>");
+        ElemLine(sb, HealCol, "Healing Bonus:",    $"{e.healingBonus * 100:F0}%",    e.healingBonus,    e.baseHealingBonus);
+        ElemLine(sb, HealCol, "Healing Received:", $"{e.healingReceived * 100:F0}%", e.healingReceived, e.baseHealingReceived);
 
         return sb.ToString().TrimEnd();
     }

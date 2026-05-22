@@ -13,7 +13,13 @@ public class GerminateEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#32CD32>Germinate</color>";
-    public override string GetDescription() => $"Detonates <color=green>{delay}</color> second after acquiring. Dealing (<color=green>40</color> + <color=green>33%</color> Attack Damage) + (<color=green>2400%</color> Elemental Power) to nearby insects.";
+    public override string GetDescription()
+    {
+        float ad = source?.attackDamage ?? 0f;
+        float ep = source?.elementalPower ?? 0f;
+        float total = 40f + ad * 0.33f + 24f * ep;
+        return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{total:F0}</b></color> <color=green>Nature</color> Physical damage to nearby insects. (<color=green>33% Attack Damage</color> + <color=#FFD700>24× Elemental Power</color> + 40)";
+    }
 
     public override void OnApply()
     {

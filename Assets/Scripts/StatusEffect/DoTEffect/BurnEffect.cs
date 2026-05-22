@@ -4,7 +4,10 @@ public class BurnEffect : DoTEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.03f, adPerSecond = 0.18f;
+    public float healthPerSecond = 0.03f, mpPerSecond = 0.36f;
+    private float cachedMaxHealth;
+    private float cachedMagicPower;
+
     public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
@@ -12,12 +15,20 @@ public class BurnEffect : DoTEffect
     }
 
     public override string GetName() => "<color=orange>Burn</color>";
-    public override string GetDescription() => $"Deal (<color=green>{healthPerSecond*100}%</color> Max Health) + (<color=green>{adPerSecond*100}%</color> Attack Damage) <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second.";
+    public override string GetDescription()
+    {
+        float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
+        float mp = cachedMagicPower > 0 ? cachedMagicPower : (source?.magicPower ?? 0f);
+        float total = (healthPerSecond * hp) + (mpPerSecond * mp) + 4f;
+        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second. (<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#FFB6C1>{mpPerSecond * 100:F0}% Magic Power</color> + 4)";
+    }
 
     public override void OnApply()
     {
         base.OnApply();
-        damagePerSecond = (healthPerSecond*target.maxHealth) + (adPerSecond*source.attackDamage) + 4f;
+        cachedMaxHealth = target.maxHealth;
+        cachedMagicPower = source?.magicPower ?? 0f;
+        damagePerSecond = (healthPerSecond * cachedMaxHealth) + (mpPerSecond * cachedMagicPower) + 4f;
         Debug.Log($"Burn applied by {source} to {target}");
 
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
