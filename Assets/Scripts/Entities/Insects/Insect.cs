@@ -255,10 +255,11 @@ public abstract class Insect : Entity, IAttackable
             if (!target.IsAlive) { RemoveEffect<TauntEffect>(); }
             else
             {
-                float dist = Vector3.Distance(transform.position, target.Position);
+                Vector3 approachPoint = target.GetApproachPoint(transform.position);
+                float dist = Vector3.Distance(transform.position, approachPoint);
                 if (dist > attackRange)
                 {
-                    Vector3 dir = (target.Position - transform.position).normalized;
+                    Vector3 dir = (approachPoint - transform.position).normalized;
                     transform.position += dir * GetMoveSpeed() * Time.deltaTime;
                 }
                 return;
@@ -460,6 +461,7 @@ public abstract class Insect : Entity, IAttackable
     }
     public bool IsAlive => health > 0 && !isDying;
     public Vector3 Position => transform.position;
+    public Vector3 GetApproachPoint(Vector3 _) => transform.position;
 
     // DESCRIPTIONS
     protected void LoadData()

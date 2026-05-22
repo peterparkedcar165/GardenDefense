@@ -657,6 +657,13 @@ public abstract class Plant : Entity, IAttackable
     }
 
     // IAttackable
+    public Vector3 GetApproachPoint(Vector3 from)
+    {
+        if (_circleCollider != null)
+            return Physics2D.ClosestPoint(from, _circleCollider);
+        return transform.position;
+    }
+
     public void ReceiveAttack(float damage, Insect attacker)
     {
         Damage(damage, DamageType.Physical, ElementalType.Neutral, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });

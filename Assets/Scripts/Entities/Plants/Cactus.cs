@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Cactus : Shooter
 {
@@ -6,11 +7,11 @@ public class Cactus : Shooter
     private const float TauntTickInterval  = 0.25f;
     private const float TauntEffectDuration = 0.35f;
 
+    private readonly HashSet<Insect> _volleyHit = new HashSet<Insect>();
+
     private float ShieldAmount   => 100f + 20f * effectivePath3Level;
     private float SkillDuration  => 12f  +  2f * effectivePath3Level;
     private float SkillHealBonus => 0.16f + 0.04f * effectivePath3Level;
-
-    private int PassivePunctureStacks => 1 + effectivePath2Level;
 
     protected override void Awake()
     {
@@ -40,6 +41,7 @@ public class Cactus : Shooter
     protected override void Shoot(Vector3 target)
     {
         if (projectilePrefab == null) return;
+        _volleyHit.Clear();
         int needleCount = 8 + 3 * effectivePath1Level;
         float angleStep = 360f / needleCount;
 
@@ -59,19 +61,25 @@ public class Cactus : Shooter
     {
         if (!IsAlive || !attacker.IsAlive) return;
         attacker.Damage(attacker.attackDamage * 1.5f, DamageType.Physical, ElementalType.Nature, this, false, new DamageTag[] { DamageTag.PassiveDamage, DamageTag.Counter });
-        ApplyPunctured(attacker, PassivePunctureStacks);
+        ApplyPunctured(attacker, 1 + effectivePath2Level);
     }
 
-    public void OnNeedleHit(Insect insect)
+    public void OnNeedleHit(Insect insect, float baseDamage)
     {
-        ApplyPunctured(insect, 1);
+        if (!insect.IsAlive) return;
+        float dmg = _volleyHit.Contains(insect) ? baseDamage * 0.5f : baseDamage;
+        _volleyHit.Add(insect);
+        insect.Damage(dmg, damageType, elementalType, this, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
+        ApplyPunctured(insect, 1 + effectivePath2Level);
     }
 
     private void ApplyPunctured(Insect insect, int stacks)
     {
         if (!insect.IsAlive) return;
         int current = insect.GetEffect<PuncturedEffect>()?.level ?? 0;
-        insect.ApplyEffect(new PuncturedEffect(insect, 8f, current + stacks, this));
+        int total = Mathf.Min(current + stacks, 100);
+        if (total <= current) return;
+        insect.ApplyEffect(new PuncturedEffect(insect, 8f, total, this));
     }
 
     private void ApplyTauntInRange()
@@ -113,12 +121,12 @@ public class Cactus : Shooter
         $"Fires <color=green><b>{8 + 3 * effectivePath1Level}</b></color> needles in equal angles around itself, dealing " +
         $"<color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage per needle. " +
         $"Each hit applies <color=#A0522D><b>Punctured</b></color>.\n" +
-        $"At Effective Level 5, <color=green><b>+1</b></color> Piercing.";
+        $"At Level <color=green><b>5</b></color>, <color=green><b>+1</b></color> Piercing.";
 
     public override string GetPassiveDescription() =>
         $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as " +
         $"<color=green>Nature</color> <color=#A0522D>Physical</color> damage, and receive " +
-        $"<color=green><b>{PassivePunctureStacks}</b></color> <color=#A0522D>Punctured</color> stack(s).";
+        $"<color=green><b>{1 + effectivePath2Level}</b></color> <color=#A0522D>Punctured</color> stack(s).";
 
     public override string GetSkillDesription() =>
         $"Gains a <color=grey><b>{ShieldAmount:F0}</b></color> shield and taunts insects within range for " +
@@ -127,13 +135,13 @@ public class Cactus : Shooter
 
     public override string GetPath1Description() =>
         $"Attack:\n\n{GetAttackDescription()}\n\n" +
-        $"Increase needle count by <color=green><b>3</b></color> per level. [<color=green><b>{8 + 3 * effectivePath1Level}</b></color> needles]\n\n" +
+        $"Increase needle count by <color=green><b>3</b></color> per level. [<color=green><b>+{3 * effectivePath1Level}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
 
     public override string GetPath2Description() =>
         $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-        $"<color=#A0522D>Punctured</color>: reduces Physical Resistance by <color=green><b>2%</b></color> per stack, lasts 8 seconds.\n\n" +
-        $"Increase <color=#A0522D>Punctured</color> stacks per passive hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+        $"<color=#A0522D>Punctured</color>: reduces Physical Resistance by <color=green><b>0.5%</b></color> per stack, lasts 8 seconds.\n\n" +
+        $"Increase <color=#A0522D>Punctured</color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
         $"Increase Max Health by <color=green><b>60</b></color> per level. [<color=green><b>+{60 * effectivePath2Level}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 

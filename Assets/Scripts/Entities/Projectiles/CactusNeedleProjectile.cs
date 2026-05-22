@@ -7,7 +7,9 @@ public class CactusNeedleProjectile : Projectile
 
     protected override void OnHit(Insect insect)
     {
-        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
-        (source as Cactus)?.OnNeedleHit(insect);
+        if (source is Cactus cactus)
+            cactus.OnNeedleHit(insect, projectileDamage);
+        else
+            insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
     }
 }

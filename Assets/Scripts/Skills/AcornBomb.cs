@@ -161,6 +161,7 @@ public class AcornBomb : MonoBehaviour, IAttackable
     }
     public bool IsAlive => !isDead;
     public Vector3 Position => transform.position;
+    public Vector3 GetApproachPoint(Vector3 _) => transform.position;
 
     private void OnMouseEnter()
     {

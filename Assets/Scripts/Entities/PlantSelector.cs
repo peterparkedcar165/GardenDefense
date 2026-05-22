@@ -54,5 +54,8 @@ public class PlantSelector : MonoBehaviour
             uprootMode = false;
             flowerPotMode = false;
         }
+
+        if (Keyboard.current.fKey.wasPressedThisFrame)
+            SetFlowerPotMode(!flowerPotMode);
     }
 }

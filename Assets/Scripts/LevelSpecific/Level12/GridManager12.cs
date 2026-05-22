@@ -145,7 +145,7 @@ public class GridManager12 : MonoBehaviour
     {
         waterCoordinates = new List<Vector2Int>();
         AddWaterRange(0,19,  6,19);
-        AddWaterRange(2,10,  4,11);
+        AddWaterRange(3,10,  4,11);
         AddWaterRange(16,0,  17,0);
         AddWaterRange(19,7,  20,8);
         AddWaterRange(15,10, 16,13);

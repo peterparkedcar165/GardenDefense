@@ -8,16 +8,16 @@ public class PuncturedEffect : StatusEffect
 
     public override void OnApply()
     {
-        target.physicalResistanceAdder -= 0.02f * level;
+        target.physicalResistanceAdder -= 0.005f * level;
     }
 
     public override void OnTick(float deltaTime) { }
 
     public override void OnExpire()
     {
-        target.physicalResistanceAdder += 0.02f * level;
+        target.physicalResistanceAdder += 0.005f * level;
     }
 
     public override string GetName() => "<color=#A0522D>Punctured</color>";
-    public override string GetDescription() => $"Physical Resistance reduced by {level * 2f:F0}%.";
+    public override string GetDescription() => $"Physical Resistance reduced by {level * 0.5f:F1}%.";
 }
