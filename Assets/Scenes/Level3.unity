@@ -929,6 +929,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 571ffda3b4a7e1b42a1ebf6117868c7f, type: 3}
+--- !u!1001 &480972033
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4419851789628059358, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_Name
+      value: MusicPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6865798682381169647, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: music
+      value: 
+      objectReference: {fileID: 8300000, guid: 99f090b50e55cf2478c1462333c59eda, type: 3}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.29313
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.76333
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
 --- !u!1 &531320437
 GameObject:
   m_ObjectHideFlags: 0
@@ -4359,7 +4420,7 @@ Tilemap:
       - {fileID: -606837403, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1443172949, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 1301996377, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 3, y: -7, z: 0}
@@ -4427,7 +4488,7 @@ Tilemap:
       - {fileID: -606837403, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1443172949, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 1301996377, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -12, y: -6, z: 0}
@@ -4444,7 +4505,7 @@ Tilemap:
       - {fileID: -605774503, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1545045942, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 954890067, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -12, y: -5, z: 0}
@@ -5852,6 +5913,7 @@ MonoBehaviour:
   fruitFly: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
   weatherManager: {fileID: 29017235}
   nextWaveTimer: 0
+  restInterval: 15
   waitTime: 0
   spawnInterval: 0
   spawnCount: 0
@@ -5875,3 +5937,4 @@ SceneRoots:
   - {fileID: 120701942}
   - {fileID: 148502550}
   - {fileID: 170002395}
+  - {fileID: 480972033}

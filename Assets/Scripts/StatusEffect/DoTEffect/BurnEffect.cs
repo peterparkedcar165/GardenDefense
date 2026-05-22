@@ -8,7 +8,7 @@ public class BurnEffect : DoTEffect
     public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
-        tickInterval = 0.25f;
+        tickInterval = 0.5f;
     }
 
     public override string GetName() => "<color=orange>Burn</color>";

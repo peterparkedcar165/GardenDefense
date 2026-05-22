@@ -10523,10 +10523,9 @@ MonoBehaviour:
   fruitFly: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
   wasp: {fileID: 2279086888993795066, guid: 726ce60c28034764084f54c3c199e9c1, type: 3}
   queenAnt: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
-  snail: {fileID: 0}
-  moth: {fileID: 0}
-  firefly: {fileID: 0}
   mosquito: {fileID: 2279086888993795066, guid: aff6fd1b40eab2342bb9ae072042625a, type: 3}
+  fireAnt: {fileID: 2279086888993795066, guid: 8237841c21078424da97084f1f33ae04, type: 3}
+  termite: {fileID: 2279086888993795066, guid: 6a2d82503dc53a8468881f14bee007fc, type: 3}
   weatherManager: {fileID: 29017235}
   nextWaveTimer: 0
   waitTime: 0

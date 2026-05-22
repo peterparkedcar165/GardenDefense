@@ -486,7 +486,7 @@ PrefabInstance:
     - target: {fileID: 6865798682381169647, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
       propertyPath: music
       value: 
-      objectReference: {fileID: 8300000, guid: c3ecb43501e92bf4d8f72cb4f3298d4a, type: 3}
+      objectReference: {fileID: 8300000, guid: 99f090b50e55cf2478c1462333c59eda, type: 3}
     - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.0016

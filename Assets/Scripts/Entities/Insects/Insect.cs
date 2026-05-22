@@ -40,7 +40,7 @@ public abstract class Insect : Entity, IAttackable
 
     [SerializeField] protected Sprite spriteRight;
     [SerializeField] protected Sprite spriteLeft;
-    protected SpriteRenderer _spriteRenderer;
+    [System.NonSerialized] protected SpriteRenderer _spriteRenderer;
     protected bool _facingRight = true;
     private Vector3 _prevPosition;
 
@@ -100,8 +100,9 @@ public abstract class Insect : Entity, IAttackable
             InsectInfoUI.instance.HidePanel();
     }
 
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
         gameManager = FindAnyObjectByType<GameManager>();
         waypoints = PathManager.instance.waypoints;
         expDrop = sunDrop/2;
@@ -184,7 +185,7 @@ public abstract class Insect : Entity, IAttackable
 
     protected override void OnHoverExit()
     {
-        if (health >= maxHealth && healthBarInstance != null)
+        if (health >= maxHealth && !HasShield() && healthBarInstance != null)
             healthBarInstance.SetActive(false);
     }
 
@@ -488,6 +489,7 @@ public abstract class Insect : Entity, IAttackable
         baseLightEmissionRange = data.baseLightEmissionRange;
         baseHealingBonus       = data.baseHealingBonus;
         baseHealingReceived    = data.baseHealingReceived;
+        startingShield         = data.startingShield;
     }
 
     public virtual string GetName()

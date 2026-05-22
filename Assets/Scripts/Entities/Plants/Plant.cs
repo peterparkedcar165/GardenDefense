@@ -190,6 +190,7 @@ public abstract class Plant : Entity, IAttackable
         baseCoordinatedDamage  = data.baseCoordinatedDamage;
         baseLightEmissionRange        = data.baseLightEmissionRange;
         baseCounterDamage             = data.baseCounterDamage;
+        startingShield                = data.startingShield;
         sunCost                       = data.sunCost;
         basePassiveCooldown           = data.basePassiveCooldown;
         basePassiveDuration           = data.basePassiveDuration;
@@ -299,8 +300,9 @@ public abstract class Plant : Entity, IAttackable
         _isHighlighted = false;
     }
 
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
         GetMainRenderer();
         if (circleRadius != null)
         {

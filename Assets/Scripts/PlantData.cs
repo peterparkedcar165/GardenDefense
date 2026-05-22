@@ -17,6 +17,7 @@ public class PlantData : ScriptableObject
     public float baseMagicPower;
     public float baseAttackSpeed;
     public float baseAttackRange;
+    public float startingShield;
 
     [Header("Healing")]
     public float baseHealingBonus;

@@ -22,6 +22,10 @@ public class Holly : Aura
     private float FrozenRageReductionMP   => (HData?.baseFrozenRageReductionMP ?? 0f)    * magicPower / 100f;
     private float FrozenRageReduction     => FrozenRageReductionBase + FrozenRageReductionMP;
 
+    private float ShieldAmountBase => (HData?.baseSkillShield ?? 0f) + 20f * effectivePath3Level;
+    private float ShieldAmountMP   => (HData?.baseSkillShieldMP ?? 0f) * magicPower;
+    private float ShieldAmount     => ShieldAmountBase + ShieldAmountMP;
+
     protected override void Awake()
     {
         base.Awake();
@@ -77,6 +81,8 @@ public class Holly : Aura
         _isTaunting = true;
         _tauntTimer = skillDuration;
         skillCooldownTimer = skillCooldown;
+        if (ShieldAmount > 0f)
+            ApplyEffect(new HollyShieldEffect(this, skillDuration, 1, this, ShieldAmount));
     }
 
     private void ApplyFrozenRageInRange()
@@ -116,8 +122,8 @@ public class Holly : Aura
         $"Increases Max Health by [<color=#FFB6C1><b>+{(HData?.baseHealthBonusMP ?? 0f) * magicPower:F0}</b></color>].";
 
     public override string GetSkillDesription() =>
-        $"Enter a taunting state for <color=green><b>{skillDuration:F0}s</b></color>. Insects within range are afflicted with " +
-        $"<color=#00FFFF><b>Frozen Rage</b></color>, forcing them to target {GetName()} and reducing their Physical Resistance by " +
+        $"Enter a taunting state for <color=green><b>{skillDuration:F0}s</b></color>. Gains a <color=grey><b>{ShieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{ShieldAmountMP:F0}</b></color>] shield for the duration. " +
+        $"Insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, forcing them to target {GetName()} and reducing their Physical Resistance by " +
         $"<color=green><b>{FrozenRageReductionBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f:F0}%</b></color>].";
 
     public override string GetPath1Description() =>
@@ -134,8 +140,9 @@ public class Holly : Aura
 
     public override string GetPath3Description() =>
         $"Skill:\n\n{GetSkillDesription()}\n\n" +
-        $"Scaling: <color=#FFB6C1><b>{(HData?.baseFrozenRageReductionMP ?? 0f) * 100f:F0}%</b></color> Magic Power\n\n" +
+        $"Scaling: <color=#FFB6C1><b>{(HData?.baseFrozenRageReductionMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Frozen Rage)\n\n<color=#FFB6C1><b>{(HData?.baseSkillShieldMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Shield)\n\n" +
         $"Increase Physical Resistance reduction by <color=green><b>4%</b></color> per level. [<color=green><b>+{4 * effectivePath3Level}%</b></color>]\n\n" +
         $"Increase duration by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
+        $"Increase shield by <color=green><b>20</b></color> per level. [<color=green><b>+{20 * effectivePath3Level}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

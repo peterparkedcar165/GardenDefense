@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AloeVera : Lobber
 {
@@ -14,6 +15,9 @@ public class AloeVera : Lobber
     public float skillHealPerTick;
     public float channelDuration = 1.5f;
     [SerializeField] private GameObject soothingRainPrefab;
+
+    private bool _isSkillTargeting = false;
+    private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
     private AloeVeraData AVData => data as AloeVeraData;
 
@@ -37,6 +41,12 @@ public class AloeVera : Lobber
         healAmount       = baseHealAmount + 4f * effectivePath2Level + magicPower * 0.12f;
         tempReduction    = baseTempReduction + 0.5f * effectivePath2Level;
         skillHealPerTick = baseSkillHealPerTick + 1f * effectivePath3Level + magicPower * 0.03f;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        UpdateHighlights();
     }
 
     protected override GameObject FindLobberTarget()
@@ -82,13 +92,64 @@ public class AloeVera : Lobber
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
+        _isSkillTargeting = true;
         SkillTargetingManager.instance.BeginTargeting(baseSkillRadius, OnTargetConfirmed);
     }
 
     private void OnTargetConfirmed(Vector3 position)
     {
+        _isSkillTargeting = false;
         skillCooldownTimer = skillCooldown;
         StartCoroutine(ChannelAndSpawn(position));
+    }
+
+    private void UpdateHighlights()
+    {
+        if (!SkillTargetingManager.instance.IsTargeting) _isSkillTargeting = false;
+
+        bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
+
+        var desired = new HashSet<Plant>();
+        Color highlightColor = Color.cyan;
+
+        if (_isSkillTargeting)
+        {
+            Vector3 mousePos = SkillTargetingManager.instance.GetMouseWorldPosition();
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == null) continue;
+                if (Vector2.Distance(mousePos, plant.transform.position) <= baseSkillRadius)
+                    desired.Add(plant);
+            }
+            highlightColor = Color.cyan;
+        }
+        else if (isSelected)
+        {
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == null) continue;
+                if (Vector2.Distance(transform.position, plant.transform.position) <= attackRange)
+                    desired.Add(plant);
+            }
+            highlightColor = Color.cyan;
+        }
+
+        foreach (Plant p in _highlightedPlants)
+            if (p != null && !desired.Contains(p)) p.ClearHighlight();
+
+        foreach (Plant p in desired)
+            p.SetHighlight(highlightColor);
+
+        _highlightedPlants.Clear();
+        foreach (Plant p in desired)
+            _highlightedPlants.Add(p);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        foreach (Plant p in _highlightedPlants)
+            if (p != null) p.ClearHighlight();
     }
 
     private IEnumerator ChannelAndSpawn(Vector3 position)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public enum DamageType
@@ -42,6 +43,11 @@ public abstract class Entity : MonoBehaviour
 {
     protected GameObject damageIndicatorPrefab;
 
+    private SpriteRenderer _flashRenderer;
+    private Material _originalMaterial;
+    private Material _flashMaterial;
+    private Coroutine _flashCoroutine;
+
     [Header("Base Stats")]
     public float baseMaxHealth, baseAttackDamage, baseMagicPower, baseAttackSpeed, baseAttackRange, baseHealingBonus, baseHealingReceived;
     public float basePhysicalResistance, baseMagicResistance;
@@ -73,6 +79,8 @@ public abstract class Entity : MonoBehaviour
     public float lifesteal;
     public float counterDamage;
     public float tenacity;
+    public float shieldBonusDamage, shieldToughness;
+    public float startingShield;
     public bool debuffsFrozen;
 
     [Header("Stat Adders")]
@@ -87,6 +95,7 @@ public abstract class Entity : MonoBehaviour
     public float passiveDamageAdder, skillDamageAdder, coordinatedDamageAdder;
     public float skillDurationAdder;
     public float tenacityAdder, immobilizeDurationAdder;
+    public float shieldBonusDamageAdder, shieldToughnessAdder;
     public float lightEmissionRangeAdder;
     public float lifestealAdder;
     public float counterDamageAdder;
@@ -148,6 +157,8 @@ public abstract class Entity : MonoBehaviour
         coordinatedDamage = baseCoordinatedDamage + coordinatedDamageAdder + (baseCoordinatedDamage * coordinatedDamageMultiplier);
         skillDuration = baseSkillDuration + skillDurationAdder + (baseSkillDuration * skillDurationMultiplier);
         tenacity = baseTenacity + tenacityAdder + (baseTenacity * tenacityMultiplier);
+        shieldBonusDamage = shieldBonusDamageAdder;
+        shieldToughness   = shieldToughnessAdder;
         lightEmissionRange = baseLightEmissionRange + lightEmissionRangeAdder + (baseLightEmissionRange * lightEmissionRangeMultiplier);
         lifesteal = baseLifesteal + lifestealAdder + (baseLifesteal * lifestealMultiplier);
         counterDamage = baseCounterDamage + counterDamageAdder + (baseCounterDamage * counterDamageMultiplier);
@@ -204,8 +215,8 @@ public abstract class Entity : MonoBehaviour
         }
         
         finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier);
-        health -= finalDamage;
-
+        health -= HasShield() ? DrainShields(finalDamage, 0f) : finalDamage;
+        TriggerHitFlash();
         UpdateHealthBar();
 
         if (health <= 0)
@@ -377,7 +388,8 @@ public abstract class Entity : MonoBehaviour
         }
 
         
-        health -= finalDamage;
+        health -= HasShield() ? DrainShields(finalDamage, source.shieldBonusDamage) : finalDamage;
+        TriggerHitFlash();
         source.totalDamageDealt += finalDamage; // FOR DEBUG
         if (this is Insect damagedInsect) damagedInsect.lastSource = source;
         if (source.lifesteal > 0f) source.Heal(finalDamage * source.lifesteal);
@@ -436,6 +448,20 @@ public abstract class Entity : MonoBehaviour
         UpdateStats();
         health = maxHealth;
         if (this is Insect) SpawnHealthBar();
+
+        _flashRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (_flashRenderer != null)
+        {
+            _originalMaterial = _flashRenderer.sharedMaterial;
+            _flashMaterial = new Material(Shader.Find("Custom/SpriteHitFlash"));
+            _flashMaterial.SetColor("_FlashColor", Color.red);
+        }
+    }
+
+    protected virtual void Start()
+    {
+        if (startingShield > 0f)
+            ApplyEffect(new StartingShieldEffect(this, this, startingShield));
     }
 
     //every tick
@@ -482,6 +508,7 @@ public abstract class Entity : MonoBehaviour
     protected Vector3 healthBarOffset = new Vector3(0, 0.6f, 0); // OFFSET
     protected GameObject healthBarInstance;
     private Transform healthBarFill;
+    private Transform shieldFill;
 
     private static GameObject _healthBarPrefab;
 
@@ -506,6 +533,28 @@ public abstract class Entity : MonoBehaviour
         SpriteRenderer fillRenderer = healthBarFill?.GetComponent<SpriteRenderer>();
         if (fillRenderer)
             fillRenderer.color = this is Plant ? Color.green : Color.red;
+
+        if (healthBarFill != null)
+        {
+            GameObject shieldFillObj = new GameObject("ShieldFill");
+            shieldFillObj.transform.SetParent(healthBarInstance.transform, false);
+            shieldFillObj.transform.localPosition = healthBarFill.localPosition;
+            shieldFillObj.transform.localScale    = healthBarFill.localScale;
+            shieldFillObj.transform.localRotation = Quaternion.identity;
+
+            SpriteRenderer shieldSR = shieldFillObj.AddComponent<SpriteRenderer>();
+            if (fillRenderer != null)
+            {
+                shieldSR.sprite         = fillRenderer.sprite;
+                shieldSR.sortingLayerID = fillRenderer.sortingLayerID;
+                shieldSR.sortingOrder   = fillRenderer.sortingOrder;
+                fillRenderer.sortingOrder += 1;
+            }
+            shieldSR.color   = new Color(0.55f, 0.55f, 0.55f, 1f);
+            shieldSR.enabled = false;
+            shieldFill = shieldFillObj.transform;
+        }
+
         healthBarInstance.SetActive(false);
     }
     
@@ -513,18 +562,88 @@ public abstract class Entity : MonoBehaviour
     {
         if (healthBarFill == null) return;
 
-        float ratio = Mathf.Clamp01(health/maxHealth);
-        Vector3 scale = healthBarFill.localScale;
-        scale.x = ratio;
-        healthBarFill.localScale = scale;
+        float totalShieldAmount = TotalShield;
+        float totalDisplay      = maxHealth + totalShieldAmount;
 
-        if (health < maxHealth && healthBarInstance != null)
+        Vector3 hScale = healthBarFill.localScale;
+        hScale.x = Mathf.Clamp01(health / totalDisplay);
+        healthBarFill.localScale = hScale;
+
+        if (shieldFill != null)
+        {
+            SpriteRenderer shieldSR = shieldFill.GetComponent<SpriteRenderer>();
+            if (totalShieldAmount > 0f)
+            {
+                Vector3 sScale = shieldFill.localScale;
+                sScale.x = Mathf.Clamp01((health + totalShieldAmount) / totalDisplay);
+                shieldFill.localScale = sScale;
+                if (shieldSR != null) shieldSR.enabled = true;
+            }
+            else if (shieldSR != null)
+            {
+                shieldSR.enabled = false;
+            }
+        }
+
+        if ((health < maxHealth || totalShieldAmount > 0f) && healthBarInstance != null)
             healthBarInstance.SetActive(true);
+    }
+
+    private void TriggerHitFlash()
+    {
+        if (_flashRenderer == null)
+            _flashRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (_flashRenderer == null || _flashMaterial == null) return;
+        if (_flashCoroutine != null) StopCoroutine(_flashCoroutine);
+        _flashCoroutine = StartCoroutine(HitFlash());
+    }
+
+    private IEnumerator HitFlash()
+    {
+        _flashMaterial.SetFloat("_FlashAmount", 0.15f);
+        _flashRenderer.material = _flashMaterial;
+
+        float elapsed = 0f;
+        while (elapsed < 0.3f)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            _flashMaterial.SetFloat("_FlashAmount", Mathf.Lerp(0.15f, 0f, elapsed / 0.3f));
+            yield return null;
+        }
+
+        _flashRenderer.material = _originalMaterial;
+        _flashCoroutine = null;
     }
 
     public void ShowHealthBar()
     {
         healthBarInstance?.SetActive(true);
+    }
+
+    [ContextMenu("Debug Shield")]
+    public void DebugShield()
+    {
+        Debug.Log($"[Shield] {gameObject.name} | startingShield={startingShield} | TotalShield={TotalShield} | HasShield={HasShield()}");
+        Debug.Log($"[Shield] health={health:F0}/{maxHealth:F0} | activeEffects={activeEffects.Count}");
+        foreach (StatusEffect e in activeEffects)
+            if (e is ShieldEffect s)
+                Debug.Log($"[Shield]   {e.GetType().Name}: amount={s.amount:F0} duration={s.duration:F2} infinite={s.IsInfinite}");
+        Debug.Log($"[Shield] healthBarInstance={(healthBarInstance != null ? healthBarInstance.activeInHierarchy.ToString() : "null")}");
+        Debug.Log($"[Shield] healthBarFill={(healthBarFill != null ? healthBarFill.localScale.ToString() : "null")}");
+        if (shieldFill != null)
+        {
+            SpriteRenderer sr = shieldFill.GetComponent<SpriteRenderer>();
+            Debug.Log($"[Shield] shieldFill scale={shieldFill.localScale} | SR enabled={sr?.enabled} | sortingOrder={sr?.sortingOrder}");
+        }
+        else
+        {
+            Debug.Log("[Shield] shieldFill is NULL");
+        }
+        if (healthBarFill != null)
+        {
+            SpriteRenderer sr = healthBarFill.GetComponent<SpriteRenderer>();
+            Debug.Log($"[Shield] healthFill scale={healthBarFill.localScale} | sortingOrder={sr?.sortingOrder}");
+        }
     }
 
     public void RefreshHealthBarVisibility()
@@ -552,19 +671,93 @@ public abstract class Entity : MonoBehaviour
             healthBarInstance.SetActive(false);
     }
 
+    // SHIELD
+
+    public float TotalShield
+    {
+        get
+        {
+            float total = 0f;
+            foreach (StatusEffect e in activeEffects)
+                if (e is ShieldEffect s) total += s.amount;
+            return total;
+        }
+    }
+
+    public bool HasShield() => TotalShield > 0f;
+
+    public virtual void OnShieldBreak(ShieldEffect shield) { }
+
+    private float DrainShields(float damage, float attackerShieldBonus)
+    {
+        float multiplier = (1f + attackerShieldBonus) * (1f - shieldToughness);
+        float remaining  = damage;
+
+        // Pass 1: finite shields first
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            if (!(activeEffects[i] is ShieldEffect shield) || shield.IsInfinite) continue;
+            remaining = DrainSingleShield(shield, i, remaining, multiplier);
+            if (activeEffects.Count <= i || activeEffects[i] != shield) i--;
+            if (remaining <= 0f) return 0f;
+        }
+
+        // Pass 2: infinite shields last
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            if (!(activeEffects[i] is ShieldEffect shield) || !shield.IsInfinite) continue;
+            remaining = DrainSingleShield(shield, i, remaining, multiplier);
+            if (activeEffects.Count <= i || activeEffects[i] != shield) i--;
+            if (remaining <= 0f) return 0f;
+        }
+
+        return remaining;
+    }
+
+    private float DrainSingleShield(ShieldEffect shield, int index, float remaining, float multiplier)
+    {
+        float origToDeplete = multiplier > 0f ? shield.amount / multiplier : float.MaxValue;
+        if (remaining >= origToDeplete)
+        {
+            remaining -= origToDeplete;
+            OnShieldBreak(shield);
+            shield.OnExpire();
+            activeEffects.RemoveAt(index);
+            return remaining;
+        }
+        shield.amount -= remaining * multiplier;
+        return 0f;
+    }
+
     // STATUS EFFECTS
 
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
-        for (int i = activeEffects.Count - 1; i >= 0; i--)
+        if (effect is ShieldEffect newShield)
         {
-            if (activeEffects[i].GetType() == effect.GetType())
+            for (int i = activeEffects.Count - 1; i >= 0; i--)
             {
-                activeEffects[i].OnExpire();
-                activeEffects.RemoveAt(i);
-                break;
+                if (activeEffects[i].GetType() == effect.GetType() && activeEffects[i] is ShieldEffect existing)
+                {
+                    if (newShield.amount <= existing.amount) return;
+                    existing.OnExpire();
+                    activeEffects.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (int i = activeEffects.Count - 1; i >= 0; i--)
+            {
+                if (activeEffects[i].GetType() == effect.GetType())
+                {
+                    activeEffects[i].OnExpire();
+                    activeEffects.RemoveAt(i);
+                    break;
+                }
             }
         }
         activeEffects.Add(effect);

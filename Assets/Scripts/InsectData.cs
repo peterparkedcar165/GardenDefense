@@ -18,6 +18,7 @@ public class InsectData : ScriptableObject
     public float baseAttackSpeed;
     public float baseAttackRange;
     public float baseMovementSpeed;
+    public float startingShield;
 
     [Header("Offensive")]
     public float baseLifesteal;

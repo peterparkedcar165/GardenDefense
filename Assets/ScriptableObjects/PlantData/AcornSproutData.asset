@@ -18,12 +18,13 @@ MonoBehaviour:
   displayName: Acorn Sprout
   elementalType: 2
   damageType: 0
-  sunCost: 100
+  sunCost: 0
   baseMaxHealth: 200
   baseAttackDamage: 42
   baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 3
+  startingShield: 100
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0
@@ -56,6 +57,9 @@ MonoBehaviour:
   baseProjectileSpeed: 8
   baseMaxRange: 20
   basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
   baseSkillCooldown: 40

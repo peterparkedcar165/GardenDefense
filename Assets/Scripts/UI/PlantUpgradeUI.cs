@@ -167,7 +167,11 @@ public class PlantUpgradeUI : MonoBehaviour
         }
 
         if (healthText != null)
-            healthText.text = $"{selectedPlant.health:F0}/{selectedPlant.maxHealth:F0}";
+        {
+            float shield = selectedPlant.TotalShield;
+            string shieldSuffix = shield > 0f ? $" <b><color=#888888>(+{shield:F0})</color></b>" : "";
+            healthText.text = $"{selectedPlant.health:F0}/{selectedPlant.maxHealth:F0}{shieldSuffix}";
+        }
 
         RefreshTemperatureBar(selectedPlant);
     }

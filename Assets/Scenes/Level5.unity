@@ -3875,7 +3875,7 @@ Tilemap:
       - {fileID: -529567261, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 134938649, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 611224928, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 6, y: -6, z: 0}
@@ -3943,7 +3943,7 @@ Tilemap:
       - {fileID: 1974603525, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -31109308, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 138786123, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6
+      m_AnimationSpeed: 6.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 3, y: -3, z: 0}
@@ -4028,7 +4028,7 @@ Tilemap:
       - {fileID: -809250983, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 1946602900, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 961770911, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6
+      m_AnimationSpeed: 6.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -12, y: 3, z: 0}
@@ -4524,6 +4524,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b73095a0fad17e49a0cbf63bc076ff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaterZone
+--- !u!1001 &1531032462
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4419851789628059358, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_Name
+      value: MusicPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6865798682381169647, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: music
+      value: 
+      objectReference: {fileID: 8300000, guid: 99f090b50e55cf2478c1462333c59eda, type: 3}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.29313
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.76333
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329535900162910789, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d983f3e2e672a0d42990740cada21db1, type: 3}
 --- !u!1 &1598841479
 GameObject:
   m_ObjectHideFlags: 0
@@ -5712,6 +5773,7 @@ MonoBehaviour:
   queenAnt: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
   weatherManager: {fileID: 29017235}
   nextWaveTimer: 0
+  restInterval: 15
   waitTime: 0
   spawnInterval: 0
   spawnCount: 0
@@ -5735,3 +5797,4 @@ SceneRoots:
   - {fileID: 120701942}
   - {fileID: 2051820603}
   - {fileID: 543531369}
+  - {fileID: 1531032462}
