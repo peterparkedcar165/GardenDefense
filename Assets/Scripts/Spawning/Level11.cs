@@ -100,7 +100,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnSoldierAnt),     wd3 / 3f,       spawnInterval);
             InvokeRepeating(nameof(SpawnFruitFly),       wd3 / 3f,       spawnInterval * 1.8f);
             InvokeRepeating(nameof(SpawnMosquito),       wd3 * 2f / 3f,  28f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd3 / 2f,       8f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd3 / 2f,       6.5f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd3 / 2f,       60f);
             yield return new WaitForSeconds(wd3);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -123,7 +123,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnFruitFly),       wd4 / 3f,      spawnInterval * 2f);
             InvokeRepeating(nameof(SpawnWasp),           wd4 * 0.5f,    14f);
             InvokeRepeating(nameof(SpawnMosquito),       wd4 * 0.5f,    19f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd4 / 3f,      8f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd4 / 3f,      6.5f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd4 / 3f,      22f);
             yield return new WaitForSeconds(wd4);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -148,7 +148,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd5 * 0.5f,    11f);
             InvokeRepeating(nameof(SpawnMosquito),       wd5 * 0.5f,    16f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd5 * 2f / 3f, 11f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd5 / 3f,      7f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd5 / 3f,      5.75f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd5 / 3f,      19f);
             yield return new WaitForSeconds(wd5);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -174,7 +174,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd6 * 0.5f,    10f);
             InvokeRepeating(nameof(SpawnMosquito),       wd6 * 0.5f,    13.5f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd6 * 2f / 3f, 9.5f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd6 / 3f,      7f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd6 / 3f,      5.75f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd6 / 3f,      18f);
             yield return new WaitForSeconds(wd6);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -200,7 +200,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd7 * 0.5f,    8.5f);
             InvokeRepeating(nameof(SpawnMosquito),       wd7 * 0.5f,    11.5f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd7 * 2f / 3f, 8.5f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd7 / 3f,      6.5f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd7 / 3f,      5.25f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd7 / 3f,      16f);
             yield return new WaitForSeconds(wd7);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -226,7 +226,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd8 / 3f,      6.5f);
             InvokeRepeating(nameof(SpawnMosquito),       wd8 / 3f,      10f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd8 * 2f / 3f, 8.5f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd8 / 3f,      6f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd8 / 3f,      5f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd8 / 3f,      14f);
             yield return new WaitForSeconds(wd8);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -252,7 +252,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd9 / 3f,      6f);
             InvokeRepeating(nameof(SpawnMosquito),       wd9 / 3f,      9.5f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd9 * 2f / 3f, 7.75f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd9 / 3f,      5.5f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd9 / 3f,      4.5f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd9 / 3f,      13f);
             yield return new WaitForSeconds(wd9);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -278,7 +278,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd10 / 3f,      5.25f);
             InvokeRepeating(nameof(SpawnMosquito),       wd10 / 3f,      9f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd10 * 2f / 3f, 7f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd10 / 3f,      5f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd10 / 3f,      4.25f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd10 / 3f,      12f);
             yield return new WaitForSeconds(wd10);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -304,7 +304,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd11 / 3f,      4.5f);
             InvokeRepeating(nameof(SpawnMosquito),       wd11 / 3f,      8.5f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd11 * 2f / 3f, 5.25f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd11 / 3f,      4.75f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd11 / 3f,      4f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd11 / 3f,      11f);
             yield return new WaitForSeconds(wd11);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -330,7 +330,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd12 / 3f,      3.75f);
             InvokeRepeating(nameof(SpawnMosquito),       wd12 / 3f,      7.5f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd12 * 2f / 3f, 4.5f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd12 / 3f,      4.5f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd12 / 3f,      3.75f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd12 / 3f,      10f);
             yield return new WaitForSeconds(wd12);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -356,7 +356,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd13 / 3f,      3.25f);
             InvokeRepeating(nameof(SpawnMosquito),       wd13 / 3f,      7f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd13 * 2f / 3f, 4f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd13 / 3f,      4.25f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd13 / 3f,      3.5f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd13 / 3f,      9.5f);
             yield return new WaitForSeconds(wd13);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -382,7 +382,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd14 / 3f,      3.0f);
             InvokeRepeating(nameof(SpawnMosquito),       wd14 / 3f,      6.5f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd14 * 2f / 3f, 3.75f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd14 / 3f,      4f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd14 / 3f,      3.25f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd14 / 3f,      9f);
             yield return new WaitForSeconds(wd14);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -408,7 +408,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd15 / 3f,      2.75f);
             InvokeRepeating(nameof(SpawnMosquito),       wd15 / 3f,      6f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd15 * 2f / 3f, 3.25f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd15 / 3f,      3.75f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd15 / 3f,      3.25f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd15 / 3f,      8.5f);
             yield return new WaitForSeconds(wd15);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -434,7 +434,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd16 / 3f,      2.75f);
             InvokeRepeating(nameof(SpawnMosquito),       wd16 / 3f,      5.75f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd16 * 2f / 3f, 3f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd16 / 3f,      3.5f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd16 / 3f,      3f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd16 / 3f,      8f);
             yield return new WaitForSeconds(wd16);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -460,7 +460,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd17 / 3f,      2.75f);
             InvokeRepeating(nameof(SpawnMosquito),       wd17 / 3f,      5.25f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd17 * 2f / 3f, 3f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd17 / 3f,      3.25f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd17 / 3f,      2.75f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd17 / 3f,      7.5f);
             yield return new WaitForSeconds(wd17);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -486,7 +486,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd18 / 3f,      2.75f);
             InvokeRepeating(nameof(SpawnMosquito),       wd18 / 3f,      4.75f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd18 * 2f / 3f, 3f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd18 / 3f,      3.25f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd18 / 3f,      2.75f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd18 / 3f,      7f);
             yield return new WaitForSeconds(wd18);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -512,7 +512,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd19 / 3f,      2.75f);
             InvokeRepeating(nameof(SpawnMosquito),       wd19 / 3f,      4.25f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd19 * 2f / 3f, 2.75f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd19 / 3f,      3f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd19 / 3f,      2.5f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd19 / 3f,      6.5f);
             yield return new WaitForSeconds(wd19);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -538,7 +538,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd20 / 3f,      2.5f);
             InvokeRepeating(nameof(SpawnMosquito),       wd20 / 3f,      4f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd20 * 2f / 3f, 2.75f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd20 / 3f,      3f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd20 / 3f,      2.5f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd20 / 3f,      6f);
             yield return new WaitForSeconds(wd20);
             CancelInvoke(nameof(SpawnScoutAnt));
@@ -564,7 +564,7 @@ public class Level11 : SpawnManager
             InvokeRepeating(nameof(SpawnWasp),           wd21 / 3f,      2.25f);
             InvokeRepeating(nameof(SpawnMosquito),       wd21 / 3f,      3.75f);
             InvokeRepeating(nameof(SpawnQueenAnt),       wd21 * 2f / 3f, 2.5f);
-            InvokeRepeating(nameof(SpawnFireAnt),        wd21 / 3f,      3f);
+            InvokeRepeating(nameof(SpawnFireAnt),        wd21 / 3f,      2.5f);
             InvokeRepeating(nameof(SpawnTermiteCluster), wd21 / 3f,      5.5f);
             yield return new WaitForSeconds(wd21);
             CancelInvoke(nameof(SpawnScoutAnt));

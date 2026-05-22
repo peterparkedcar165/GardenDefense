@@ -20,7 +20,7 @@ public class HollyData : PlantData
         $"Increases Max Health by <color=#FFB6C1><b>{baseHealthBonusMP * 100f:F0}%</b></color> Magic Power.";
 
     public override string GetSkillDescription() =>
-        $"Enter a taunting state for <color=green><b>{baseSkillDuration:F0}s</b></color>. Gains a <color=grey><b>{baseSkillShield:F0}</b></color> <color=#FFB6C1><b>+{baseSkillShieldMP * 100f:F0}% Magic Power</b></color> shield for the duration. " +
+        $"Enter a taunting state for <color=green><b>{baseSkillDuration:F0}s</b></color>. Gains a <color=grey><b>{baseSkillShield:F0}</b></color> + <color=#FFB6C1><b>{baseSkillShieldMP * 100f:F0}% Magic Power</b></color> shield for the duration. " +
         $"Insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, forcing them to target <b><color=#00FFFF>Holly</color></b> and reducing their Physical Resistance by " +
         $"<color=green><b>{baseFrozenRageReduction * 100f:F0}%</b></color> + <color=#FFB6C1><b>{baseFrozenRageReductionMP * 100f:F0}%</b></color> Magic Power.";
 }

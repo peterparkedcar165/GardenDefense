@@ -20,6 +20,7 @@ public class PlantUpgradeUI : MonoBehaviour
     [Header("Health & Temperature")]
     [SerializeField] private Image healthBarFill;
     [SerializeField] private TMP_Text healthText;
+    [SerializeField] private GameObject tempBarRoot;
     [SerializeField] private Image tempBarBackground;
     [SerializeField] private TMP_Text tempText;
     [SerializeField] private TMP_Text tempStateText;
@@ -291,6 +292,15 @@ public class PlantUpgradeUI : MonoBehaviour
 
     private void RefreshTemperatureBar(Plant plant)
     {
+        bool isTempLevel = WeatherManager.instance != null &&
+            (WeatherManager.instance.temperature == TemperatureType.Hot ||
+             WeatherManager.instance.temperature == TemperatureType.Cold);
+
+        if (tempBarRoot != null)
+            tempBarRoot.SetActive(isTempLevel);
+
+        if (!isTempLevel) return;
+
         float min  = plant.temperatureMin;
         float max  = plant.temperatureMax;
         float temp = plant.temperature;

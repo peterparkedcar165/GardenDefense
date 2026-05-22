@@ -567,8 +567,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 44.97, y: 150.15}
-  m_SizeDelta: {x: 322.34, y: 16.7}
+  m_AnchoredPosition: {x: 12.5, y: 149.16}
+  m_SizeDelta: {x: 219.7799, y: 18.6723}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4497805464372489874
 CanvasRenderer:
@@ -704,8 +704,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -92.31001, y: 20.919994}
-  m_SizeDelta: {x: 71.58, y: 25.29}
+  m_AnchoredPosition: {x: -58.632, y: 19.0398}
+  m_SizeDelta: {x: 138.94, y: 29.0505}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4938725296509477858
 CanvasRenderer:
@@ -1413,8 +1413,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -81.82, y: -15.11}
-  m_SizeDelta: {x: 85.3, y: 30.22}
+  m_AnchoredPosition: {x: -58.632, y: -7.9089}
+  m_SizeDelta: {x: 138.94, y: 24.8479}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &503586549873428180
 CanvasRenderer:
@@ -1510,7 +1510,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -5.5829544, w: 3.189021}
+  m_margin: {x: 0, y: 0, z: 0.59500885, w: -0.034308437}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4306,8 +4306,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -85.89501, y: 53.054996}
-  m_SizeDelta: {x: 84.41, y: 38.98}
+  m_AnchoredPosition: {x: -58.63138, y: 53.054996}
+  m_SizeDelta: {x: 138.9371, y: 38.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4706568927847692415
 CanvasRenderer:
@@ -4403,7 +4403,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -76.93951, w: 0}
+  m_margin: {x: 0, y: 0, z: 0.15062714, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4795,6 +4795,7 @@ MonoBehaviour:
   targetingToggleButton: {fileID: 5353340068674388774}
   healthBarFill: {fileID: 8469426304748405252}
   healthText: {fileID: 7721469866329139027}
+  tempBarRoot: {fileID: 1532884867776683629}
   tempBarBackground: {fileID: 6848487516112407231}
   tempText: {fileID: 8419928434436389791}
   tempStateText: {fileID: 3796006519133125154}
@@ -5558,7 +5559,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.143}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -150.02, y: 12.1}
+  m_AnchoredPosition: {x: -158.45, y: 11.2}
   m_SizeDelta: {x: 100.04, y: 33.02}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5870253148879661306

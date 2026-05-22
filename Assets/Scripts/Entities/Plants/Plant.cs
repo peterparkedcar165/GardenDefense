@@ -52,7 +52,7 @@ public abstract class Plant : Entity, IAttackable
     private const float lightIntensity = 0.65f;
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
-    protected virtual bool ShowLight => true;
+    protected virtual bool ShowLight => DarknessManager.instance != null;
     protected virtual bool ShowDarkCircle => true;
 
     public override void UpdateStats()

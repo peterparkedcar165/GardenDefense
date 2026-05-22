@@ -5,8 +5,6 @@ public class Holly : Aura
 {
     private HollyData HData => data as HollyData;
 
-    private bool _isTaunting;
-    private float _tauntTimer;
     private float _tickTimer;
     private const float TickInterval = 0.25f;
     private const float EffectDuration = 0.35f;
@@ -51,13 +49,7 @@ public class Holly : Aura
         if (_tickTimer >= TickInterval)
         {
             _tickTimer -= TickInterval;
-            if (_isTaunting) ApplyFrozenRageInRange();
-        }
-
-        if (_isTaunting)
-        {
-            _tauntTimer -= Time.deltaTime;
-            if (_tauntTimer <= 0f) _isTaunting = false;
+            if (HasEffect<TauntingEffect>()) ApplyFrozenRageInRange();
         }
     }
 
@@ -78,9 +70,8 @@ public class Holly : Aura
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
-        _isTaunting = true;
-        _tauntTimer = skillDuration;
         skillCooldownTimer = skillCooldown;
+        ApplyEffect(new TauntingEffect(this, skillDuration, 1, this));
         if (ShieldAmount > 0f)
             ApplyEffect(new HollyShieldEffect(this, skillDuration, 1, this, ShieldAmount));
     }

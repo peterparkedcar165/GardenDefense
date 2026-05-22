@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Begonia.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SnowdropData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\TauntingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BogIrisProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />

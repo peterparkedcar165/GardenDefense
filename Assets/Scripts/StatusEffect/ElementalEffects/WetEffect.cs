@@ -21,7 +21,7 @@ public class WetEffect : ElementalDebuff
                 insect.RemoveEffect<WetEffect>();
                 insect.RemoveEffect<ColdEffect>();
                 insect.freezeInternalCooldown = 5f;
-                insect.ApplyEffect(new FreezeEffect(insect, 4f, 1, source));
+                insect.ApplyEffect(new FreezeEffect(insect, 4f + source.elementalPower * 0.5f, 1, source));
             }
         }
         else if (insect.HasEffect<TaintedEffect>())
