@@ -63,6 +63,7 @@ public abstract class Plant : Entity, IAttackable
         temperatureMin = baseTemperatureMin + temperatureMinAdder;
         temperatureMax = baseTemperatureMax + temperatureMaxAdder;
         passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier);
+        passiveDuration = basePassiveDuration + passiveDurationAdder;
         skillCooldown = baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier);
         skillDamageMultiplier = baseSkillDamageMultiplier + skillDamageMultiplierAdder;
         skillDamage += baseSkillDamage * skillDamageMultiplier;
@@ -123,7 +124,7 @@ public abstract class Plant : Entity, IAttackable
     [Header("Passive")]
     public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownReductionMultiplier, passiveCooldownMultiplier;
     public float passiveCooldownTimer;
-    public float basePassiveDuration, passiveDuration;
+    public float basePassiveDuration, passiveDuration, passiveDurationAdder;
 
     [Header("Skill")]
     public float baseSkillCooldown, skillCooldown, skillCooldownReductionAdder, skillCooldownReductionMultiplier;
@@ -171,8 +172,8 @@ public abstract class Plant : Entity, IAttackable
         baseNatureResistance   = data.baseNatureResistance;
         baseWindResistance     = data.baseWindResistance;
         baseDotResistance      = data.baseDotResistance;
-        basePhysicalShred      = data.basePhysicalShred;
-        baseMagicShred         = data.baseMagicShred;
+        basePhysicalDamage     = data.basePhysicalDamage;
+        baseMagicDamage        = data.baseMagicDamage;
         baseLifesteal          = data.baseLifesteal;
         baseBonusEffectChance  = data.baseBonusEffectChance;
         baseFireDamage         = data.baseFireDamage;
@@ -242,11 +243,23 @@ public abstract class Plant : Entity, IAttackable
         return _outlineMaterial;
     }
 
-    private SpriteRenderer GetMainRenderer()
+    protected virtual SpriteRenderer GetMainRenderer()
     {
         if (_cachedRenderer != null) return _cachedRenderer;
         _cachedRenderer = mainRenderer ?? GetComponentInChildren<SpriteRenderer>();
         return _cachedRenderer;
+    }
+
+    protected void ResetOutlineRenderers()
+    {
+        if (_outlineRenderers != null)
+        {
+            foreach (var r in _outlineRenderers)
+                if (r != null) Destroy(r.gameObject);
+            _outlineRenderers = null;
+        }
+        _cachedRenderer = null;
+        _isHighlighted = false;
     }
 
     private void EnsureOutlineRenderers()
@@ -283,6 +296,11 @@ public abstract class Plant : Entity, IAttackable
         EnsureOutlineRenderers();
         if (_outlineRenderers == null) return;
         SpriteRenderer sr = GetMainRenderer();
+        bool targeting = SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsPlantTargeting;
+        if (_isSelected || (_hoverHighlighted && !targeting))
+            color = Color.white;
+        else if (_hoverHighlighted && targeting)
+            color = Color.yellow;
         foreach (SpriteRenderer outline in _outlineRenderers)
         {
             if (sr != null) outline.sprite = sr.sprite;
@@ -294,6 +312,7 @@ public abstract class Plant : Entity, IAttackable
 
     public void ClearHighlight()
     {
+        if (_isSelected || _hoverHighlighted) return;
         if (!_isHighlighted || _outlineRenderers == null) return;
         foreach (SpriteRenderer outline in _outlineRenderers)
             outline.enabled = false;
@@ -322,17 +341,14 @@ public abstract class Plant : Entity, IAttackable
             circleRadius.gameObject.SetActive(true);
         if (darkCircleRadius != null && DarknessManager.instance != null && DarknessManager.instance.isDark)
             darkCircleRadius.gameObject.SetActive(true);
-        if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsPlantTargeting)
-        {
-            SetHighlight(Color.yellow);
-            _hoverHighlighted = true;
-        }
+        _hoverHighlighted = true;
+        SetHighlight(Color.white);
     }
 
     protected override void OnHoverExit()
     {
-        ClearHighlight();
         _hoverHighlighted = false;
+        ClearHighlight();
         if (_isSelected) return;
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
@@ -344,6 +360,7 @@ public abstract class Plant : Entity, IAttackable
     public void Select()
     {
         _isSelected = true;
+        SetHighlight(Color.white);
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(true);
         if (darkCircleRadius != null && DarknessManager.instance != null && DarknessManager.instance.isDark)
@@ -353,6 +370,7 @@ public abstract class Plant : Entity, IAttackable
     public void Deselect()
     {
         _isSelected = false;
+        ClearHighlight();
         if (circleRadius != null)
             circleRadius.gameObject.SetActive(false);
         if (darkCircleRadius != null)
@@ -372,11 +390,8 @@ public abstract class Plant : Entity, IAttackable
         if (skillCooldownTimer > 0)
             skillCooldownTimer -= Time.deltaTime;
 
-        if (_hoverHighlighted && (SkillTargetingManager.instance == null || !SkillTargetingManager.instance.IsPlantTargeting))
-        {
-            ClearHighlight();
-            _hoverHighlighted = false;
-        }
+        if (_hoverHighlighted)
+            SetHighlight(Color.white);
 
         UpdateTemperature();
     }

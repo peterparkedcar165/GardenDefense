@@ -175,9 +175,7 @@
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level10\GridManager10.cs" />
-    <Compile Include="Assets\Scripts\UI\InsectStatsHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level2.cs" />
-    <Compile Include="Assets\Scripts\UI\InsectInfoUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\SproutEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\TaintedEffect.cs" />
@@ -224,6 +222,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
+    <Compile Include="Assets\Scripts\UI\EntityInfoPanel.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level4\GridManager4.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FruitFly.cs" />

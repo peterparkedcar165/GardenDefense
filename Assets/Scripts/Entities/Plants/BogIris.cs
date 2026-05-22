@@ -18,7 +18,7 @@ public class BogIris : Shooter
     private BogIrisData BogData => data as BogIrisData;
 
     private float SunInterval => 2f * (passiveCooldown / basePassiveCooldown);
-    private float OpenDuration => basePassiveDuration + 2f * effectivePath2Level;
+    private float OpenDuration => ((BogData?.baseOpenDuration ?? 0f) + 2f * effectivePath2Level) * (1 + passiveDuration);
     private int SunGenerated => (BogData?.baseSunGenerated ?? 0) + effectivePath2Level;
     private float GeyserRadius => baseSkillRadius + 0.15f * effectivePath3Level;
     private float KnockUpHeight => ScaleCC(((BogData?.baseKnockUpHeight ?? 0f) + 1f * effectivePath3Level) * skillDuration);
@@ -83,8 +83,14 @@ public class BogIris : Shooter
         }
     }
 
+    protected override SpriteRenderer GetMainRenderer()
+    {
+        return isOpen ? openVisual : closedVisual;
+    }
+
     private void SetVisualState(bool open)
     {
+        ResetOutlineRenderers();
         if (_rootRenderer != null) _rootRenderer.enabled = !open;
         if (closedVisual != null) closedVisual.gameObject.SetActive(!open);
         if (openVisual != null) openVisual.gameObject.SetActive(open);

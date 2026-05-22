@@ -36,8 +36,8 @@ public class PlantData : ScriptableObject
     public float baseDotResistance;
 
     [Header("Offensive")]
-    public float basePhysicalShred;
-    public float baseMagicShred;
+    public float basePhysicalDamage;
+    public float baseMagicDamage;
     public float baseLifesteal;
     public float baseBonusEffectChance;
     public float baseCriticalChance = 0.05f;

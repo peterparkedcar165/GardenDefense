@@ -84,6 +84,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.ImmobilizeDurationAdder:     return (0.5f,  1f);
             case StatType.ImmobilizeDurationMultiplier: return (0.1f, 0.3f);
             case StatType.PassiveCooldown:              return (0.06f, 0.08f);
+            case StatType.PassiveDurationMultiplier:    return (0.06f, 0.10f);
             case StatType.SkillDurationAdder:           return (1f,    2f);
             case StatType.SkillDurationMultiplier:      return (0.06f, 0.08f);
             case StatType.CoordinatedDamage:            return (0.06f, 0.08f);
@@ -124,6 +125,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.ImmobilizeDurationAdder:      plant.immobilizeDurationAdder      += value; break;
             case StatType.ImmobilizeDurationMultiplier: plant.immobilizeDurationMultiplier += value; break;
             case StatType.PassiveCooldown:              plant.passiveCooldownReductionMultiplier += value; break;
+            case StatType.PassiveDurationMultiplier:    plant.passiveDurationAdder               += value; break;
             case StatType.SkillDurationAdder:           plant.skillDurationAdder      += value; break;
             case StatType.SkillDurationMultiplier:      plant.skillDurationMultiplier      += value; break;
             case StatType.CoordinatedDamage:            plant.coordinatedDamageAdder       += value; break;
@@ -131,8 +133,8 @@ public class FertilizerManager : MonoBehaviour
             case StatType.IlluminationRangeAdder:       plant.lightEmissionRangeAdder      += value; break;
             case StatType.IlluminationRangeMultiplier:  plant.lightEmissionRangeMultiplier += value; break;
             case StatType.CounterDamage:                plant.counterDamageAdder           += value; break;
-            case StatType.PhysicalDamage:               plant.physicalShredAdder           += value; break;
-            case StatType.MagicDamage:                  plant.magicShredAdder              += value; break;
+            case StatType.PhysicalDamage:               plant.physicalDamageAdder          += value; break;
+            case StatType.MagicDamage:                  plant.magicDamageAdder             += value; break;
             case StatType.PhysicalResistance:           plant.physicalResistanceAdder      += value; break;
             case StatType.MagicResistance:              plant.magicResistanceAdder         += value; break;
             case StatType.MagicPower:                   plant.magicPowerAdder              += value; break;

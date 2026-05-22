@@ -27,7 +27,7 @@ public class AcornProjectile : Projectile
              {
                  insect.ApplyEffect(new StunEffect(
                     insect,
-                    acorn.stunDuration,
+                    acorn.stunDuration * (1 + acorn.passiveDuration),
                     1,
                     source));
              }

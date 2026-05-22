@@ -15,8 +15,7 @@ public class PoisonShroom : Shooter
     {
         base.Awake();
         LoadData();
-        poisonDuration = data.basePassiveDuration;
-        activeRadius   = data.baseSkillRadius;
+        activeRadius = data.baseSkillRadius;
     }
 
     protected override void Update()
@@ -56,10 +55,13 @@ public class PoisonShroom : Shooter
         baseAttackRange = data.baseAttackRange + (level * 0.1f);
     }
 
-    public override void OnPath2Upgrade(int level)
+    public override void OnPath2Upgrade(int level) { }
+
+    public override void UpdateStats()
     {
-        poisonLevel    = 1 + level;
-        poisonDuration = data.basePassiveDuration + level;
+        base.UpdateStats();
+        poisonLevel    = 1 + path2Level;
+        poisonDuration = ((PSData?.basePoisonDuration ?? 0f) + path2Level) * (1 + passiveDuration);
     }
 
     public override void OnPath3Upgrade(int level)

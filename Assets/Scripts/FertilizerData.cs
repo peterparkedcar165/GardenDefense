@@ -44,6 +44,7 @@ public enum StatType
     ImmobilizeDurationAdder,
     ImmobilizeDurationMultiplier,
     PassiveCooldown,
+    PassiveDurationMultiplier,
     SkillDurationAdder,
     SkillDurationMultiplier,
     CoordinatedDamage,

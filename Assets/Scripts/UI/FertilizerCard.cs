@@ -50,10 +50,7 @@ public class FertilizerCard : MonoBehaviour
             var sb = new StringBuilder();
             for (int i = 0; i < rolledStats.Length; i++)
             {
-                string valueStr = IsRawValue(rolledStats[i].statType)
-                    ? $"+{Mathf.RoundToInt(rolledValues[i])}"
-                    : $"+{rolledValues[i] * 100f:F0}%";
-                sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color=green><b>{valueStr}</b></color>");
+                sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color=green><b>{FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color>");
             }
             statsText.text = sb.ToString();
         }
@@ -93,18 +90,19 @@ public class FertilizerCard : MonoBehaviour
         canvasGroup.interactable = true;
     }
 
-    private bool IsRawValue(StatType statType)
+    private string FormatValue(StatType statType, float value)
     {
         switch (statType)
         {
-            case StatType.Piercing:
             case StatType.ImmobilizeDurationAdder:
             case StatType.SkillDurationAdder:
             case StatType.IlluminationRangeAdder:
+                return $"+{value:F1}s";
+            case StatType.Piercing:
             case StatType.MagicPower:
-                return true;
+                return $"+{Mathf.RoundToInt(value)}";
             default:
-                return false;
+                return $"+{value * 100f:F0}%";
         }
     }
 
@@ -132,6 +130,7 @@ public class FertilizerCard : MonoBehaviour
             case StatType.ImmobilizeDurationAdder:      return "Immobilize Duration";
             case StatType.ImmobilizeDurationMultiplier: return "Immobilize Duration";
             case StatType.PassiveCooldown:              return "Passive Cd. Reduction";
+            case StatType.PassiveDurationMultiplier:    return "Passive Duration";
             case StatType.SkillDurationAdder:           return "Skill Duration";
             case StatType.SkillDurationMultiplier:      return "Skill Duration";
             case StatType.CoordinatedDamage:            return "Coordinated Damage";

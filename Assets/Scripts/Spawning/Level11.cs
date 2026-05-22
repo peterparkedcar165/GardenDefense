@@ -29,6 +29,7 @@ public class Level11 : SpawnManager
         GameManager.instance.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
         SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 10);
+        SaveManager.instance.CompleteLevel(11);
         StartCoroutine(RunWave());
     }
 

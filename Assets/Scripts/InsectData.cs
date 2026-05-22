@@ -22,8 +22,8 @@ public class InsectData : ScriptableObject
 
     [Header("Offensive")]
     public float baseLifesteal;
-    public float basePhysicalShred;
-    public float baseMagicShred;
+    public float basePhysicalDamage;
+    public float baseMagicDamage;
 
     [Header("Resistances")]
     public float baseTenacity;

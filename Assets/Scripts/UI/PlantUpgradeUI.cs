@@ -1,25 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using TMPro;
 
-public class PlantUpgradeUI : MonoBehaviour
+public class PlantUpgradeUI : EntityInfoPanel
 {
     public static PlantUpgradeUI instance;
 
-    [Header("Panel")]
-
-    [SerializeField] private GameObject panel;
-
-    [Header("Header")]
-    [SerializeField] private Image plantIcon;
-    [SerializeField] private TMP_Text plantNameText;
+    [Header("Targeting")]
     [SerializeField] private TMP_Text targetingModeText;
     [SerializeField] private Button targetingToggleButton;
 
-    [Header("Health & Temperature")]
+    [Header("Health Bar")]
+    [SerializeField] private GameObject healthBarRoot;
     [SerializeField] private Image healthBarFill;
     [SerializeField] private TMP_Text healthText;
+
+    [Header("Temperature Bar")]
     [SerializeField] private GameObject tempBarRoot;
     [SerializeField] private Image tempBarBackground;
     [SerializeField] private TMP_Text tempText;
@@ -30,10 +28,14 @@ public class PlantUpgradeUI : MonoBehaviour
     [SerializeField] private RectTransform tempMinIndicator;
     [SerializeField] private RectTransform tempMaxIndicator;
 
-    [Header("Stats")]
-    [SerializeField] private TMP_Text attackDamageText;
-    [SerializeField] private TMP_Text attackSpeedText;
-    [SerializeField] private TMP_Text attackRangeText;
+    [Header("Stats (shared)")]
+    [SerializeField] private TMP_Text stat1Text;
+    [SerializeField] private TMP_Text stat2Text;
+    [SerializeField] private TMP_Text stat3Text;
+    [SerializeField] private TMP_Text stat4Text;
+
+    [Header("Upgrades Section")]
+    [SerializeField] private GameObject upgradesSection;
 
     [Header("Path 1")]
     [SerializeField] private TMP_Text path1NameText;
@@ -62,7 +64,6 @@ public class PlantUpgradeUI : MonoBehaviour
     [SerializeField] private GameObject tooltipPanel;
     [SerializeField] private TMP_Text tooltipText;
 
-
     [Header("Pip Sprites")]
     [SerializeField] private Sprite[] pipSprites;
     [Header("Colors")]
@@ -70,112 +71,165 @@ public class PlantUpgradeUI : MonoBehaviour
     [SerializeField] private Color pipEmpty = Color.black;
 
     private Plant selectedPlant;
-    void Awake()
+    private Insect selectedInsect;
+    private SpriteRenderer cachedInsectRenderer;
+
+    protected override void Awake()
     {
-      if (instance != null) return;
-      instance = this;
-      panel.SetActive(false);
-      if (tooltipPanel != null)
-        {
+        if (instance != null) return;
+        instance = this;
+        base.Awake();
+        if (tooltipPanel != null)
             tooltipPanel.SetActive(false);
-        }  
     }
 
-    void Update()
+    protected override void Update()
     {
-        if (UnityEngine.InputSystem.Mouse.current.rightButton.wasPressedThisFrame && selectedPlant != null)
+        base.Update();
+
+        if (selectedInsect != null && Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
         {
-            if (!SkillTargetingManager.instance.IsTargeting && !SkillTargetingManager.instance.WasCancelledThisFrame)
+            Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            Collider2D hit = Physics2D.OverlapPoint(mouseWorld);
+            if (hit == null || hit.GetComponentInParent<Insect>() == null)
                 HidePanel();
         }
 
         if (selectedPlant != null)
         {
-            RefreshStats();
             RefreshSkillButton();
             RefreshPaths();
-
             if (Keyboard.current.qKey.wasPressedThisFrame && selectedPlant.SkillReady)
                 selectedPlant.ActivateSkill();
         }
     }
 
+    protected override bool ShouldBlockRightClickClose()
+    {
+        return SkillTargetingManager.instance.IsTargeting || SkillTargetingManager.instance.WasCancelledThisFrame;
+    }
+
+    // --- Show / Hide ---
+
     public void ShowPanel(Plant plant)
     {
-        if (selectedPlant != null)
-            selectedPlant.Deselect();
+        if (selectedPlant != null) selectedPlant.Deselect();
+        selectedInsect?.RefreshHealthBarVisibility();
+        selectedInsect = null;
+        cachedInsectRenderer = null;
 
-        InsectInfoUI.instance.HidePanel();
         selectedPlant = plant;
         selectedPlant.Select();
+
+        if (upgradesSection != null) upgradesSection.SetActive(true);
+        if (healthBarRoot != null)   healthBarRoot.SetActive(true);
+        if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
+        if (targetingToggleButton != null)
+            targetingToggleButton.gameObject.SetActive(plant.UsesTargeting);
+
         panel.SetActive(true);
-        Refresh();
-    }
 
-    public void HidePanel()
-    {
-        if (selectedPlant != null)
-            selectedPlant.Deselect();
-
-        selectedPlant = null;
-        panel.SetActive(false);
-        HideTooltip();
-    }
-
-    public Plant GetSelectedPlant()
-    {
-        return selectedPlant;
-    }
-
-    private void Refresh()
-    {
-        if(selectedPlant == null)
-        {
-            return;
-        }
-
-        plantNameText.text = selectedPlant.GetName();
-
-        if(plantIcon != null && selectedPlant.data != null)
-        {
-            plantIcon.sprite = selectedPlant.data.icon;
-        }
-
-        bool usesTargeting = selectedPlant.UsesTargeting;
-        targetingToggleButton.gameObject.SetActive(usesTargeting);
-        if (usesTargeting)
-            targetingModeText.text = selectedPlant.targeting.ToString();
+        entityNameText.text = plant.GetName();
+        if (entityIcon != null && plant.data != null)
+            entityIcon.sprite = plant.data.icon;
 
         RefreshStats();
         RefreshPaths();
     }
 
-    private void RefreshStats()
+    public void ShowPanel(Insect insect)
     {
-        attackDamageText.text = $"ATK: {selectedPlant.attackDamage:F0}";
-        attackSpeedText.text  = $"SPD: {selectedPlant.attackSpeed:F2}";
-        attackRangeText.text  = $"RNG: {selectedPlant.attackRange:F1}";
+        if (selectedPlant != null) selectedPlant.Deselect();
+        selectedPlant = null;
+
+        selectedInsect = insect;
+        insect.ShowHealthBar();
+        cachedInsectRenderer = insect.GetComponentInChildren<SpriteRenderer>();
+
+        if (upgradesSection != null) upgradesSection.SetActive(false);
+        if (tempBarRoot != null)     tempBarRoot.SetActive(false);
+        if (targetingToggleButton != null)
+            targetingToggleButton.gameObject.SetActive(false);
+        if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
+
+        panel.SetActive(true);
+
+        entityNameText.text = insect.GetName();
+        if (entityIcon != null && cachedInsectRenderer != null)
+            entityIcon.sprite = cachedInsectRenderer.sprite;
+
+        RefreshStats();
+    }
+
+    public override void HidePanel()
+    {
+        if (selectedPlant != null) selectedPlant.Deselect();
+        selectedInsect?.RefreshHealthBarVisibility();
+        selectedPlant = null;
+        selectedInsect = null;
+        cachedInsectRenderer = null;
+        base.HidePanel();
+        HideTooltip();
+    }
+
+    public Plant  GetSelectedPlant()  => selectedPlant;
+    public Insect GetSelectedInsect() => selectedInsect;
+
+    // --- Stats ---
+
+    protected override void RefreshStats()
+    {
+        if (selectedPlant != null)
+        {
+            stat1Text.text = $"ATK: {selectedPlant.attackDamage:F0}";
+            stat2Text.text = $"SPD: {selectedPlant.attackSpeed:F2}";
+            stat3Text.text = $"RNG: {selectedPlant.attackRange:F1}";
+            RefreshHealthBar();
+            RefreshTemperatureBar(selectedPlant);
+        }
+        else if (selectedInsect != null)
+        {
+            stat1Text.text = $"ATK: {selectedInsect.attackDamage:F0}";
+            stat2Text.text = $"SPD: {selectedInsect.movementSpeed:F2}";
+            stat3Text.text = $"SUN: {selectedInsect.sunDrop}";
+            RefreshHealthBar();
+        }
+    }
+
+    private void RefreshHealthBar()
+    {
+        float health, maxHealth, shield = 0f;
+
+        if (selectedPlant != null)
+        {
+            health    = selectedPlant.health;
+            maxHealth = selectedPlant.maxHealth;
+            shield    = selectedPlant.TotalShield;
+        }
+        else if (selectedInsect != null)
+        {
+            health    = selectedInsect.health;
+            maxHealth = selectedInsect.maxHealth;
+            shield    = selectedInsect.TotalShield;
+        }
+        else return;
 
         if (healthBarFill != null)
         {
-            float healthPct = selectedPlant.maxHealth > 0f
-                ? Mathf.Clamp01(selectedPlant.health / selectedPlant.maxHealth)
-                : 0f;
-            healthBarFill.fillAmount = healthPct;
-            healthBarFill.color = healthPct <= 0.25f ? Color.red
-                                : healthPct <= 0.50f ? Color.yellow
+            float pct = maxHealth > 0f ? Mathf.Clamp01(health / maxHealth) : 0f;
+            healthBarFill.fillAmount = pct;
+            healthBarFill.color = pct <= 0.25f ? Color.red
+                                : pct <= 0.50f ? Color.yellow
                                 : Color.green;
         }
-
         if (healthText != null)
         {
-            float shield = selectedPlant.TotalShield;
             string shieldSuffix = shield > 0f ? $" <b><color=#888888>(+{shield:F0})</color></b>" : "";
-            healthText.text = $"{selectedPlant.health:F0}/{selectedPlant.maxHealth:F0}{shieldSuffix}";
+            healthText.text = $"{health:F0}/{maxHealth:F0}{shieldSuffix}";
         }
-
-        RefreshTemperatureBar(selectedPlant);
     }
+
+    // --- Paths ---
 
     private void RefreshPaths()
     {
@@ -203,7 +257,7 @@ public class PlantUpgradeUI : MonoBehaviour
             path3CostText.text = $"{selectedPlant.GetPath3Cost()} Sun to unlock.";
             path3Button.interactable = true;
             RefreshPips(path3Pips, selectedPlant.path3Level);
-        } 
+        }
         else
         {
             RefreshPips(path3Pips, selectedPlant.path3Level);
@@ -215,7 +269,7 @@ public class PlantUpgradeUI : MonoBehaviour
 
     private void RefreshPips(Image pips, int level)
     {
-        pips.sprite = pipSprites[level];;
+        pips.sprite = pipSprites[level];
     }
 
     private void RefreshSkillButton()
@@ -227,51 +281,29 @@ public class PlantUpgradeUI : MonoBehaviour
             skillCooldownText.text = ready ? "Q - Use Skill" : $"{Mathf.CeilToInt(selectedPlant.skillCooldownTimer)}s";
     }
 
-    // Button Callbacks - wiring within inspector
+    // Button callbacks — wired in Inspector
     public void OnPath1UpgradeClicked()
     {
-        if (selectedPlant == null)
-        {
-            return;
-        }
-        else
-        {
-            selectedPlant.UpgradePath1();
-            RefreshPaths();
-        }
+        if (selectedPlant == null) return;
+        selectedPlant.UpgradePath1();
+        RefreshPaths();
     }
 
     public void OnPath2UpgradeClicked()
     {
-        if (selectedPlant == null)
-        {
-            return;
-        }
-        else
-        {
-            selectedPlant.UpgradePath2();
-            RefreshPaths();
-        }
+        if (selectedPlant == null) return;
+        selectedPlant.UpgradePath2();
+        RefreshPaths();
     }
 
     public void OnPath3UpgradeClicked()
     {
-        if (selectedPlant == null)
-        {
-            return;
-        }
+        if (selectedPlant == null) return;
+        if (!selectedPlant.path3Unlocked)
+            selectedPlant.UnlockPath3();
         else
-        {
-            if (!selectedPlant.path3Unlocked)
-            {
-                selectedPlant.UnlockPath3();
-            } else
-            {
-                selectedPlant.UpgradePath3();
-            }
-
-            RefreshPaths();
-        }
+            selectedPlant.UpgradePath3();
+        RefreshPaths();
     }
 
     public void OnSkillButtonClicked()
@@ -288,7 +320,7 @@ public class PlantUpgradeUI : MonoBehaviour
         targetingModeText.text = selectedPlant.targeting.ToString();
     }
 
-    // TEMPERATURE BAR
+    // --- Temperature Bar ---
 
     private void RefreshTemperatureBar(Plant plant)
     {
@@ -300,10 +332,6 @@ public class PlantUpgradeUI : MonoBehaviour
             tempBarRoot.SetActive(isTempLevel);
 
         if (!isTempLevel) return;
-
-        float min  = plant.temperatureMin;
-        float max  = plant.temperatureMax;
-        float temp = plant.temperature;
 
         Color tempColor = GetTempColor(plant);
 
@@ -326,7 +354,8 @@ public class PlantUpgradeUI : MonoBehaviour
                 tempStateText.text = "Comfort";
         }
 
-        SetTempIndicator(tempCurrentIndicator,    temp,              min, max);
+        float min = plant.temperatureMin, max = plant.temperatureMax;
+        SetTempIndicator(tempCurrentIndicator,    plant.temperature, min, max);
         SetTempIndicator(tempComfortMinIndicator, plant.comfortMin,  min, max);
         SetTempIndicator(tempComfortMaxIndicator, plant.comfortMax,  min, max);
         SetTempIndicator(tempMinIndicator,        min,               min, max);
@@ -347,40 +376,30 @@ public class PlantUpgradeUI : MonoBehaviour
         float temp = plant.temperature;
         if (temp >= plant.comfortMin && temp <= plant.comfortMax)
             return Color.green;
-
         if (temp < plant.comfortMin)
         {
             float t = Mathf.Clamp01((plant.comfortMin - temp) / (plant.comfortMin - plant.temperatureMin));
             return Color.Lerp(Color.green, Color.blue, t);
         }
-
         float u = Mathf.Clamp01((temp - plant.comfortMax) / (plant.temperatureMax - plant.comfortMax));
         return Color.Lerp(Color.green, Color.red, u);
     }
 
-    // TOOPTIPS
+    // --- Tooltips ---
 
     public void ShowTooltip(string text)
     {
-        if (tooltipPanel == null)
-        {
-            return;
-        } 
-        else
-        {
-            tooltipPanel.SetActive(true);
-            tooltipText.text = text;
-        }
-
-    Canvas.ForceUpdateCanvases();
-    RectTransform panelRect = tooltipPanel.GetComponent<RectTransform>();
-    panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tooltipText.preferredHeight + 40f);
+        if (tooltipPanel == null) return;
+        tooltipPanel.SetActive(true);
+        tooltipText.text = text;
+        Canvas.ForceUpdateCanvases();
+        RectTransform panelRect = tooltipPanel.GetComponent<RectTransform>();
+        panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tooltipText.preferredHeight + 40f);
     }
+
     public void HideTooltip()
     {
         if (tooltipPanel != null)
-        {
             tooltipPanel.SetActive(false);
-        }
     }
 }

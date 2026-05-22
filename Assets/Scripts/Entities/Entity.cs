@@ -52,7 +52,7 @@ public abstract class Entity : MonoBehaviour
     public float baseMaxHealth, baseAttackDamage, baseMagicPower, baseAttackSpeed, baseAttackRange, baseHealingBonus, baseHealingReceived;
     public float basePhysicalResistance, baseMagicResistance;
     public float baseFireResistance, baseWaterResistance, baseNatureResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
-    public float basePhysicalShred, baseMagicShred, baseBonusEffectChance;
+    public float basePhysicalDamage, baseMagicDamage, baseBonusEffectChance;
     public float baseFireDamage, baseWaterDamage, baseNatureDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseDotResistance, baseDotDamage;
@@ -68,7 +68,7 @@ public abstract class Entity : MonoBehaviour
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
     public float physicalResistance, magicResistance;
     public float fireResistance, waterResistance, natureResistance, windResistance, poisonResistance, iceResistance;
-    public float physicalShred, magicShred, bonusEffectChance;
+    public float physicalDamage, magicDamage, bonusEffectChance;
     public float fireDamage, waterDamage, natureDamage, windDamage, poisonDamage, iceDamage;
     public float criticalChance, criticalDamage;
     public float dotResistance, dotDamage;
@@ -87,7 +87,7 @@ public abstract class Entity : MonoBehaviour
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
     public float physicalResistanceAdder, magicResistanceAdder;
     public float fireResistanceAdder, waterResistanceAdder, natureResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
-    public float physicalShredAdder, magicShredAdder, bonusEffectChanceAdder;
+    public float physicalDamageAdder, magicDamageAdder, bonusEffectChanceAdder;
     public float fireDamageAdder, waterDamageAdder, natureDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
     public float dotResistanceAdder, dotDamageAdder;
@@ -104,7 +104,7 @@ public abstract class Entity : MonoBehaviour
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
     public float physicalResistanceMultiplier, magicResistanceMultiplier;
     public float fireResistanceMultiplier, waterResistanceMultiplier, natureResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
-    public float physicalShredMultiplier, magicShredMultiplier, bonusEffectChanceMultiplier;
+    public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier;
     public float fireDamageMultiplier, waterDamageMultiplier, natureDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier;
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
@@ -138,8 +138,8 @@ public abstract class Entity : MonoBehaviour
         windResistance = baseWindResistance + windResistanceAdder + (baseWindResistance * windResistanceMultiplier);
         poisonResistance = basePoisonResistance + poisonResistanceAdder + (basePoisonResistance * poisonResistanceMultiplier);
         iceResistance = baseIceResistance + iceResistanceAdder + (baseIceResistance * iceResistanceMultiplier);
-        physicalShred = basePhysicalShred + physicalShredAdder + (basePhysicalShred * physicalShredMultiplier);
-        magicShred = baseMagicShred + magicShredAdder + (baseMagicShred * magicShredMultiplier);
+        physicalDamage = basePhysicalDamage + physicalDamageAdder + (basePhysicalDamage * physicalDamageMultiplier);
+        magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
         bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
         fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
         waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
@@ -316,10 +316,10 @@ public abstract class Entity : MonoBehaviour
         switch (damageType)
         {
             case DamageType.Physical:
-            modifiedDamage = damageDealt * (1 - physicalResistance + source.physicalShred);
+            modifiedDamage = damageDealt * (1 - physicalResistance + source.physicalDamage);
             break;
             case DamageType.Magic:
-            modifiedDamage = damageDealt * (1 - magicResistance + source.magicShred);
+            modifiedDamage = damageDealt * (1 - magicResistance + source.magicDamage);
             break;
             default:
             modifiedDamage = damageDealt;

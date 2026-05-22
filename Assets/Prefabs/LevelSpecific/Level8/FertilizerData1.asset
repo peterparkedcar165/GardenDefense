@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Taunting
   stats:
-  - statType: 1
+  - statType: 20
     value: 0.52
   - statType: 11
     value: 0.42

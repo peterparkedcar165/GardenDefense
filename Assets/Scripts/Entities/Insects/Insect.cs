@@ -96,8 +96,8 @@ public abstract class Insect : Entity, IAttackable
     void OnDestroy()
     {
         allInsects.Remove(this);
-        if (InsectInfoUI.instance != null && InsectInfoUI.instance.GetSelectedInsect() == this)
-            InsectInfoUI.instance.HidePanel();
+        if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedInsect() == this)
+            PlantUpgradeUI.instance.HidePanel();
     }
 
     protected override void Start()
@@ -373,7 +373,7 @@ public abstract class Insect : Entity, IAttackable
     {
         if (isDying) return;
         isDying = true;
-        if (InsectInfoUI.instance?.GetSelectedInsect() == this) InsectInfoUI.instance.HidePanel();
+        if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);
         allInsects.Remove(this);
@@ -384,7 +384,7 @@ public abstract class Insect : Entity, IAttackable
     {
         if (isDying) return;
         isDying = true;
-        if (InsectInfoUI.instance?.GetSelectedInsect() == this) InsectInfoUI.instance.HidePanel();
+        if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);
         allInsects.Remove(this);
@@ -451,7 +451,7 @@ public abstract class Insect : Entity, IAttackable
     void OnMouseDown()
     {
         if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsTargeting) return;
-        InsectInfoUI.instance?.ShowPanel(this);
+        PlantUpgradeUI.instance?.ShowPanel(this);
     }
 
     // IAttackable
@@ -474,8 +474,8 @@ public abstract class Insect : Entity, IAttackable
         baseAttackRange        = data.baseAttackRange;
         baseMovementSpeed      = data.baseMovementSpeed;
         baseLifesteal          = data.baseLifesteal;
-        basePhysicalShred      = data.basePhysicalShred;
-        baseMagicShred         = data.baseMagicShred;
+        basePhysicalDamage     = data.basePhysicalDamage;
+        baseMagicDamage        = data.baseMagicDamage;
         baseTenacity           = data.baseTenacity;
         basePhysicalResistance = data.basePhysicalResistance;
         baseMagicResistance    = data.baseMagicResistance;
