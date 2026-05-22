@@ -39,7 +39,7 @@ public class Calendula : Aura
         List<Insect> insects = GetInsectsInRange();
         foreach (Insect insect in insects)
             insect.Damage(attackDamage, DamageType.Magic, ElementalType.Fire, this, true,
-                new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage });
+                new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
     }
 
     public override void ActivateSkill()

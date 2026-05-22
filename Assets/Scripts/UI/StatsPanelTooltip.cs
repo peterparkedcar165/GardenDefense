@@ -41,6 +41,8 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         sb.AppendLine($"Attack Damage:   <b>{Color(plant.attackDamage, plant.baseAttackDamage, $"{plant.attackDamage:F0}")}</b>");
         sb.AppendLine($"Attack Speed:    <b>{Color(plant.attackSpeed, plant.baseAttackSpeed, $"{plant.attackSpeed:F2}")}</b>");
         sb.AppendLine($"Attack Range:    <b>{Color(plant.attackRange, plant.baseAttackRange, $"{plant.attackRange:F1}")}</b>");
+        if (plant is Shooter shooter)
+            sb.AppendLine($"Piercing:        <b>{Color(shooter.piercing, shooter.basePiercing, $"{shooter.piercing}")}</b>");
         sb.AppendLine($"Crit Chance:     <b>{Color(plant.criticalChance, plant.baseCriticalChance, $"{plant.criticalChance * 100:F1}%")}</b>");
         sb.AppendLine($"Crit Damage:     <b>{Color(plant.criticalDamage, plant.baseCriticalDamage, $"{plant.criticalDamage * 100:F0}%")}</b>");
         sb.AppendLine($"Magic Power:     <b>{Color(plant.magicPower, plant.baseMagicPower, $"{plant.magicPower * 100:F0}%")}</b>");
@@ -75,7 +77,7 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
             sb.AppendLine();
             sb.AppendLine("<b>Buffs</b>\n");
             foreach (var e in buffs)
-                sb.AppendLine($"({FormatDuration(e.duration)}) <b>{e.GetName()}</b>");
+                sb.AppendLine($"({FormatDuration(e.duration)}) <b>{e.GetName()}</b> [<color=green><b>{e.level}</b></color>]");
         }
 
         if (debuffs.Count > 0)
@@ -83,7 +85,7 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
             sb.AppendLine();
             sb.AppendLine("<b>Debuffs</b>\n");
             foreach (var e in debuffs)
-                sb.AppendLine($"({FormatDuration(e.duration)}) <b>{e.GetName()}</b>");
+                sb.AppendLine($"({FormatDuration(e.duration)}) <b>{e.GetName()}</b> [<color=green><b>{e.level}</b></color>]");
         }
 
         return sb.ToString().TrimEnd();

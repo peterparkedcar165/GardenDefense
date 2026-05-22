@@ -59,6 +59,8 @@
     <Compile Include="Assets\Scripts\Spawning\Level9.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSelectionUI.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\CactusData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\PuncturedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DarklingBeetleData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\HollyData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Lobber.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level4.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level6\GridManager6.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\DandelionData.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level7.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HollyShieldEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\CactusNeedleProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DarklingBeetle.cs" />
     <Compile Include="Assets\Scripts\InsectData.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
@@ -206,6 +210,7 @@
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleMarker.cs" />
     <Compile Include="Assets\Scripts\PlantData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\CactusTauntingEffect.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\StunEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\HardCrowdControl.cs" />
@@ -217,6 +222,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
     <Compile Include="Assets\Scripts\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level4\GridManager4.cs" />

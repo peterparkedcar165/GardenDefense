@@ -57,7 +57,7 @@ public class Holly : Aura
     {
         base.Attack();
         foreach (Insect insect in GetInsectsInRange())
-            insect.Damage(attackDamage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage });
+            insect.Damage(attackDamage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
     }
 
     protected override void OnHitByInsect(Insect attacker)

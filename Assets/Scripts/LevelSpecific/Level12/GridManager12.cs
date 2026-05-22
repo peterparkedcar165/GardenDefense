@@ -135,8 +135,10 @@ public class GridManager12 : MonoBehaviour
         AddObstacleRange(24,13, 26,15);
         AddObstacleRange(17,11, 19,13);
         AddObstacleRange(21,8,  23,10);
-        // Rectangle: corners (13,3)-(15,5)
-        AddObstacleRange(13,3,  15,5);
+        // Rectangle: corners (13,3)-(15,5), excluding (14,4)-(14,5) which are sand highground
+        AddObstacleRange(13,3, 15,3);
+        AddObstacleRange(13,4, 13,5);
+        AddObstacleRange(15,4, 15,5);
     }
 
     private void InitWaterCoordinates()

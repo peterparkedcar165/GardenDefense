@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1233bd25f3a76b14fa4e3b8881a7477b, type: 3}
+  m_Name: CactusData
+  m_EditorClassIdentifier: Assembly-CSharp::CactusData
+  plantPrefab: {fileID: 6786905282681172855, guid: 08d298b084132b74c84b6b7c61005f06, type: 3}
+  icon: {fileID: 21300000, guid: 3b781c891ce3af945a263882517b3b80, type: 3}
+  plantName: Cactus
+  displayName: Cactus
+  elementalType: 2
+  damageType: 0
+  sunCost: 125
+  baseMaxHealth: 300
+  baseAttackDamage: 12
+  baseMagicPower: 0
+  baseAttackSpeed: 0.7
+  baseAttackRange: 2
+  startingShield: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  basePhysicalShred: 0
+  baseMagicShred: 0
+  baseLifesteal: 0
+  baseBonusEffectChance: 0
+  baseCriticalChance: 0.05
+  baseCriticalDamage: 1.75
+  baseDotDamage: 0
+  baseElementalPower: 0
+  baseCoordinatedDamage: 0
+  baseCounterDamage: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseNatureDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseLightEmissionRange: 0
+  baseProjectileSpeed: 7
+  baseMaxRange: 6
+  basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
+  basePassiveCooldown: 0
+  basePassiveDuration: 0
+  baseSkillCooldown: 3
+  baseSkillDuration: 12
+  baseSkillRadius: 0
+  baseSkillDamageMultiplier: 0
+  baseSkillHealth: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
