@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Burner
   stats:
-  - statType: 22
+  - statType: 11
     value: 0.42
   - statType: 3
     value: 0.32

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Resisting
   stats:
-  - statType: 23
+  - statType: 24
     value: 0.62
-  - statType: 29
+  - statType: 30
     value: 0.36
   icon: {fileID: 0}
   targetElementalType: 0
