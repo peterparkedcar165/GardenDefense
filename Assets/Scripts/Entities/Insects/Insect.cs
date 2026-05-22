@@ -338,7 +338,7 @@ public abstract class Insect : Entity, IAttackable
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
-            float dist = Vector3.Distance(transform.position, plant.Position);
+            float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
             if (dist <= targetingRange && dist < nearestDist)
             {
                 nearestDist = dist;
