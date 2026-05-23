@@ -28,7 +28,7 @@ public class Level2 : SpawnManager
         GameManager.instance?.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
         SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 1);
-        SaveManager.instance.CompleteLevel(2);
+                SaveManager.instance.CompleteLevel(2);
         StartCoroutine(RunWave());
     }
     IEnumerator RunWave()
@@ -54,7 +54,7 @@ public class Level2 : SpawnManager
         // LEVEL COMPLETION
             yield return new WaitUntil(() => Insect.allInsects.Count == 0);
             yield return new WaitForSeconds(3f);
-            SaveManager.instance.CompleteLevel(2);
+                        SaveManager.instance.CompleteLevel(2);
             Debug.Log("Level 2 completed");
     }
 

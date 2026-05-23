@@ -9,6 +9,7 @@ public class Dandelion : Shooter
     private GameObject windGustIndicatorInstance;
 
     private const float indicatorLength = 30f;
+    private GameObject _windGustInstance;
     private float PushPower => ((DandelionData)data)?.basePushPower ?? 1.5f;
 
     private float WindGustDamage => data.baseSkillDamage + attackDamage + skillDamageMultiplier * magicPower;
@@ -57,7 +58,7 @@ public class Dandelion : Shooter
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) <= attackRange)
+            if (Vector3.Distance(transform.position, insect.GetAimPoint()) <= attackRange)
                 inRange.Add(insect);
         }
 
@@ -127,8 +128,8 @@ public class Dandelion : Shooter
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
         float beamWidth = ((DandelionData)data).baseBeamWidth + 0.25f * effectivePath3Level;
         if (windGustPrefab == null) return;
-        GameObject obj = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
-        obj.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this);
+        _windGustInstance = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
+        _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this);
     }
 
     private void UpdateWindGustIndicator()
@@ -155,6 +156,12 @@ public class Dandelion : Shooter
             Quaternion.Euler(0f, 0f, angle));
         windGustIndicatorInstance.transform.localScale = new Vector3(indicatorLength, beamWidth, 1f);
         windGustIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (_windGustInstance != null) Destroy(_windGustInstance);
     }
 
     public override string GetDescription() =>

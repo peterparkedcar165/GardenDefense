@@ -71,6 +71,6 @@ MonoBehaviour:
   baseSkillDamage: 0
   baseHealAmount: 20
   baseTempReduction: 4
-  baseSkillHealPerTick: 9
+  baseSkillHealPerTick: 11
   baseSkillHealInterval: 0.5
   baseSkillTempReduction: 1.3

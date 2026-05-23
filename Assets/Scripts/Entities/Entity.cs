@@ -536,8 +536,13 @@ public abstract class Entity : MonoBehaviour
         healthBarInstance = Instantiate(healthBarPrefab, transform);
 
         Vector3 offset = healthBarOffset;
-        offset.x -= 0.475f;
+        offset.x -= 0.35625f;
         healthBarInstance.transform.localPosition = offset;
+
+        Vector3 hbScale = healthBarInstance.transform.localScale;
+        hbScale.x *= 0.75f;
+        hbScale.y *= 0.75f;
+        healthBarInstance.transform.localScale = hbScale;
 
         healthBarFill = healthBarInstance.transform.Find("Fill");
         SpriteRenderer fillRenderer = healthBarFill?.GetComponent<SpriteRenderer>();

@@ -28,7 +28,7 @@ public class Level4 : SpawnManager
         GameManager.instance?.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
         SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 3);
-        SaveManager.instance.CompleteLevel(4);
+                SaveManager.instance.CompleteLevel(4);
         StartCoroutine(RunWave());
     }
     IEnumerator RunWave()
@@ -54,7 +54,7 @@ public class Level4 : SpawnManager
         // LEVEL COMPLETION
             yield return new WaitUntil(() => Insect.allInsects.Count == 0);
             yield return new WaitForSeconds(3f);
-            SaveManager.instance.CompleteLevel(4);
+                        SaveManager.instance.CompleteLevel(4);
             Debug.Log("Level 4 completed");
     }
 
@@ -104,9 +104,11 @@ public class Level4 : SpawnManager
 
             InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
             InvokeRepeating(nameof(SpawnFruitFly), wd4 / 3f, spawnInterval);
+            InvokeRepeating(nameof(SpawnWasp), wd4 / 2f, spawnInterval * 4f);
             yield return new WaitForSeconds(wd4);
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnFruitFly));
+            CancelInvoke(nameof(SpawnWasp));
 
         } else if (wave == 5)
         {

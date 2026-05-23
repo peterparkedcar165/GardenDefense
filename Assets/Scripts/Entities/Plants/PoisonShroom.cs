@@ -98,9 +98,9 @@ public class PoisonShroom : Shooter
 
     public override string GetPath2Description() =>
         $"Passive:\n\n" +
-        $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{PoisonBaseDPS + 4f * effectivePath2Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=purple>Poison</color> damage per second.\n\n" +
+        $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{PoisonBaseDPS + 6f * effectivePath2Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=purple>Poison</color> damage per second.\n\n" +
         $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-        $"Increase <color=purple>Poison</color> damage by <color=green><b>4</b></color> per level. [<color=green><b>+{4 * effectivePath2Level}</b></color>]\n\n" +
+        $"Increase <color=purple>Poison</color> damage by <color=green><b>6</b></color> per level. [<color=green><b>+{6 * effectivePath2Level}</b></color>]\n\n" +
         $"Increase <color=purple>Poison</color> duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 

@@ -21,13 +21,14 @@ MonoBehaviour:
   insectPrefab: {fileID: 2279086888993795066, guid: c3349ff3828f87047a2105c4748346ef, type: 3}
   baseMaxHealth: 200
   baseAttackDamage: 15
-  baseMagicDamage: 0
+  baseMagicPower: 0
   baseAttackSpeed: 1
-  baseAttackRange: 0.5
+  baseAttackRange: 0.3
   baseMovementSpeed: 1.8
+  startingShield: 0
   baseLifesteal: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseTenacity: 0
   basePhysicalResistance: 0
   baseMagicResistance: 0

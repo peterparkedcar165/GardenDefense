@@ -22,6 +22,8 @@ public abstract class Aura : Plant
 
     }
     
+    protected override bool GetAttackBarVisible() => attackCooldown > 0f;
+
     protected virtual void Attack()
     {
         attackCooldownTimer = 0; // reset attack timer

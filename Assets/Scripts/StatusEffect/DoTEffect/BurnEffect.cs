@@ -47,7 +47,9 @@ public class BurnEffect : DoTEffect
 
     private LightFader GetOrCreateBurnFader()
     {
-        Transform existing = target.transform.Find("BurnLight");
+        Transform visualRoot = target.transform.Find("Visual") ?? target.transform;
+
+        Transform existing = visualRoot.Find("BurnLight");
         if (existing != null)
         {
             var fader = existing.GetComponent<LightFader>();
@@ -55,7 +57,7 @@ public class BurnEffect : DoTEffect
         }
 
         GameObject lightObj = new GameObject("BurnLight");
-        lightObj.transform.SetParent(target.transform);
+        lightObj.transform.SetParent(visualRoot);
         lightObj.transform.localPosition = Vector3.zero;
 
         var light = lightObj.AddComponent<UnityEngine.Rendering.Universal.Light2D>();

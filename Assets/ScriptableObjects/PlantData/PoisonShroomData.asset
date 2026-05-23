@@ -62,12 +62,12 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 35
-  baseSkillDuration: 7
-  baseSkillRadius: 1
+  baseSkillCooldown: 90
+  baseSkillDuration: 12
+  baseSkillRadius: 2
   baseSkillDamageMultiplier: 0.11
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  basePoisonDuration: 6
-  basePoisonDPS: 12
+  basePoisonDuration: 8
+  basePoisonDPS: 18

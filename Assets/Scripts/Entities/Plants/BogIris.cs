@@ -20,7 +20,7 @@ public class BogIris : Shooter
     private float SunInterval => 2f * (passiveCooldown / basePassiveCooldown);
     private float OpenDuration => ((BogData?.baseOpenDuration ?? 0f) + 2f * effectivePath2Level) * (1 + passiveDuration);
     private int SunGenerated => (BogData?.baseSunGenerated ?? 0) + effectivePath2Level;
-    private float GeyserRadius => baseSkillRadius + 0.15f * effectivePath3Level;
+    private float GeyserRadius => skillRadius + 0.15f * effectivePath3Level;
     private float KnockUpHeight => ScaleCC(((BogData?.baseKnockUpHeight ?? 0f) + 1f * effectivePath3Level) * skillDuration);
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * KnockUpHeight);
     private float GeyserDamage => (BogData?.baseGeyserDamage ?? 0f) + 15f * effectivePath3Level + skillDamageMultiplier * magicPower;
@@ -130,7 +130,7 @@ public class BogIris : Shooter
     private IEnumerator SpawnGeyser(Vector3 position)
     {
         bool isRaining = WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Rain;
-        yield return new WaitForSeconds(isRaining ? 1f : 2f);
+        yield return new WaitForSeconds(isRaining ? 0.5f : 1f);
         if (geyserPrefab == null) yield break;
         GameObject obj = Instantiate(geyserPrefab, position, Quaternion.identity);
         obj.GetComponent<Geyser>()?.Initialize(position, GeyserRadius, skillDuration, GeyserDamage, KnockUpForce, this);

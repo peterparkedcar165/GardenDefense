@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2387982406283412628}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.27384, y: 0.87051, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -98,8 +98,8 @@ MonoBehaviour:
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
@@ -138,8 +138,8 @@ MonoBehaviour:
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
-  physicalShred: 0
-  magicShred: 0
+  physicalDamage: 0
+  magicDamage: 0
   bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
@@ -160,6 +160,9 @@ MonoBehaviour:
   lifesteal: 0
   counterDamage: 0
   tenacity: 0
+  shieldBonusDamage: 0
+  shieldToughness: 0
+  startingShield: 0
   debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
@@ -176,8 +179,8 @@ MonoBehaviour:
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
-  physicalShredAdder: 0
-  magicShredAdder: 0
+  physicalDamageAdder: 0
+  magicDamageAdder: 0
   bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
@@ -196,6 +199,8 @@ MonoBehaviour:
   skillDurationAdder: 0
   tenacityAdder: 0
   immobilizeDurationAdder: 0
+  shieldBonusDamageAdder: 0
+  shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
   counterDamageAdder: 0
@@ -214,8 +219,8 @@ MonoBehaviour:
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
-  physicalShredMultiplier: 0
-  magicShredMultiplier: 0
+  physicalDamageMultiplier: 0
+  magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
@@ -252,6 +257,7 @@ MonoBehaviour:
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 0100000004000000
+  targeting: 1
   sunCost: 125
   totalSunSpent: 0
   elementalType: 1
@@ -259,6 +265,19 @@ MonoBehaviour:
   exp: 0
   expBoost: 0
   activeCooldown: 0
+  temperature: 10
+  baseComfortMin: 0
+  comfortMinAdder: 0
+  comfortMin: 0
+  baseComfortMax: 20
+  comfortMaxAdder: 0
+  comfortMax: 0
+  baseTemperatureMin: -10
+  temperatureMinAdder: 0
+  temperatureMin: 0
+  baseTemperatureMax: 30
+  temperatureMaxAdder: 0
+  temperatureMax: 0
   basePassiveCooldown: 0
   passiveCooldown: 0
   passiveCooldownAdder: 0
@@ -267,6 +286,7 @@ MonoBehaviour:
   passiveCooldownTimer: 0
   basePassiveDuration: 0
   passiveDuration: 0
+  passiveDurationAdder: 0
   baseSkillCooldown: 0
   skillCooldown: 0
   skillCooldownReductionAdder: 0
@@ -298,7 +318,6 @@ MonoBehaviour:
   basePiercing: 0
   piercing: 0
   piercingAdder: 0
-  targeting: 1
   geyserPrefab: {fileID: 8482905087334200380, guid: f716f0f9eae20d94987e2e9a85f89368, type: 3}
   closedVisual: {fileID: 4152951338259676602}
   openVisual: {fileID: 7927066365788262014}

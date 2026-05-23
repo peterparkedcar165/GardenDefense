@@ -22,7 +22,7 @@ public class PoisonShroomProjectile : Projectile
 
         if (source != null && source is PoisonShroom shooter)
         {
-            float additionalDPS = shooter.PoisonBaseDPS + (4f * shooter.effectivePath2Level) + shooter.skillDamageMultiplier * shooter.magicPower;
+            float additionalDPS = shooter.PoisonBaseDPS + (6f * shooter.effectivePath2Level) + shooter.skillDamageMultiplier * shooter.magicPower;
             insect.ApplyEffect(new PoisonEffect(insect, shooter.poisonDuration, shooter.poisonLevel, source, additionalDPS));
         }
     }

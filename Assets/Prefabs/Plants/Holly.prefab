@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2387982406283412628}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.4983, y: 1.53117, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -310,7 +310,6 @@ MonoBehaviour:
   effectivePath3Level: 0
   path3Unlocked: 0
   mainRenderer: {fileID: 3701729662317188319}
-  attackFlashCircle: {fileID: 892210127317390287}
 --- !u!1 &4898805426075004991
 GameObject:
   m_ObjectHideFlags: 0

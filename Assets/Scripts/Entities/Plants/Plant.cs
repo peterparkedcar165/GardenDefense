@@ -47,6 +47,8 @@ public abstract class Plant : Entity, IAttackable
     public virtual bool ShowRangeCircle => true;
     protected virtual bool GetPassiveBarVisible() => passiveCooldown > 0f && passiveCooldownTimer > 0f;
     protected virtual float GetPassiveBarFill() => passiveCooldown > 0f ? Mathf.Clamp01(1f - passiveCooldownTimer / passiveCooldown) : 1f;
+    protected virtual bool GetAttackBarVisible() => false;
+    protected virtual float GetAttackBarFill() => attackCooldown > 0f ? Mathf.Clamp01(attackCooldownTimer / attackCooldown) : 0f;
     [SerializeField] private Transform circleRadius;
     private Transform darkCircleRadius;
     private CircleCollider2D _circleCollider;
@@ -59,6 +61,8 @@ public abstract class Plant : Entity, IAttackable
     private Transform _skillBarFill;
     private GameObject _passiveBarInstance;
     private Transform _passiveBarFill;
+    private GameObject _attackBarInstance;
+    private Transform _attackBarFill;
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
     protected virtual bool ShowLight => DarknessManager.instance != null;
@@ -74,6 +78,7 @@ public abstract class Plant : Entity, IAttackable
         passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier);
         passiveDuration = basePassiveDuration + passiveDurationAdder;
         skillCooldown = baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier);
+        skillRadius = baseSkillRadius + skillRadiusAdder + (baseSkillRadius * skillRadiusMultiplier);
         skillDamageMultiplier = baseSkillDamageMultiplier + skillDamageMultiplierAdder;
         skillDamage += baseSkillDamage * skillDamageMultiplier;
         float plantSpriteRadius = _circleCollider != null ? _circleCollider.radius * 2 : 0f;
@@ -138,7 +143,7 @@ public abstract class Plant : Entity, IAttackable
     [Header("Skill")]
     public float baseSkillCooldown, skillCooldown, skillCooldownReductionAdder, skillCooldownReductionMultiplier;
     public float skillCooldownTimer;
-    public float baseSkillRadius, skillRadius;
+    public float baseSkillRadius, skillRadius, skillRadiusAdder, skillRadiusMultiplier;
     public float baseSkillDamageMultiplier, skillDamageMultiplier, skillDamageMultiplierAdder;
     public float baseSkillHealth, skillHealth;
     public bool SkillReady => path3Unlocked && skillCooldownTimer <= 0;
@@ -156,6 +161,7 @@ public abstract class Plant : Entity, IAttackable
         healthBarOffset = new Vector3(0, 0.7f, 0);
         base.Awake();
         SpawnHealthBar();
+        SpawnAttackBar();
         SpawnSkillBar();
         SpawnPassiveBar();
         baseCriticalChance = 0.05f;
@@ -237,6 +243,36 @@ public abstract class Plant : Entity, IAttackable
             PlantUpgradeUI.instance.HidePanel();
     }
 
+    private void SpawnAttackBar()
+    {
+        GameObject prefab = Resources.Load<GameObject>("HealthBar");
+        if (prefab == null) return;
+
+        _attackBarInstance = Instantiate(prefab, transform);
+
+        Vector3 pos = healthBarOffset;
+        pos.x -= 0.35625f;
+        pos.y -= 0.084375f;
+        _attackBarInstance.transform.localPosition = pos;
+
+        Vector3 scale = _attackBarInstance.transform.localScale;
+        scale.x *= 0.75f;
+        scale.y *= 0.35f;
+        _attackBarInstance.transform.localScale = scale;
+
+        _attackBarFill = _attackBarInstance.transform.Find("Fill");
+        if (_attackBarFill != null)
+        {
+            SpriteRenderer sr = _attackBarFill.GetComponent<SpriteRenderer>();
+            if (sr != null) sr.color = Color.cyan;
+        }
+
+        Transform shieldChild = _attackBarInstance.transform.Find("ShieldFill");
+        if (shieldChild != null) Destroy(shieldChild.gameObject);
+
+        _attackBarInstance.SetActive(false);
+    }
+
     private void SpawnPassiveBar()
     {
         GameObject prefab = Resources.Load<GameObject>("HealthBar");
@@ -245,11 +281,12 @@ public abstract class Plant : Entity, IAttackable
         _passiveBarInstance = Instantiate(prefab, transform);
 
         Vector3 pos = healthBarOffset;
-        pos.x -= 0.475f;
-        pos.y -= 0.08f;
+        pos.x -= 0.35625f;
+        pos.y -= 0.128125f;
         _passiveBarInstance.transform.localPosition = pos;
 
         Vector3 scale = _passiveBarInstance.transform.localScale;
+        scale.x *= 0.75f;
         scale.y *= 0.35f;
         _passiveBarInstance.transform.localScale = scale;
 
@@ -274,11 +311,12 @@ public abstract class Plant : Entity, IAttackable
         _skillBarInstance = Instantiate(prefab, transform);
 
         Vector3 pos = healthBarOffset;
-        pos.x -= 0.475f;
-        pos.y -= 0.1f;
+        pos.x -= 0.35625f;
+        pos.y -= 0.171875f;
         _skillBarInstance.transform.localPosition = pos;
 
         Vector3 scale = _skillBarInstance.transform.localScale;
+        scale.x *= 0.75f;
         scale.y *= 0.35f;
         _skillBarInstance.transform.localScale = scale;
 
@@ -476,28 +514,65 @@ public abstract class Plant : Entity, IAttackable
         if (skillCooldownTimer > 0)
             skillCooldownTimer -= Time.deltaTime;
 
-        if (_skillBarInstance != null)
         {
-            bool onCooldown = path3Unlocked && skillCooldownTimer > 0f;
-            _skillBarInstance.SetActive(onCooldown);
-            if (onCooldown && _skillBarFill != null)
-            {
-                float fill = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;
-                Vector3 s = _skillBarFill.localScale;
-                s.x = fill;
-                _skillBarFill.localScale = s;
-            }
-        }
+            float stackY = healthBarOffset.y - 0.046875f;
+            const float barHalfH = 0.021875f;
 
-        if (_passiveBarInstance != null)
-        {
-            bool show = GetPassiveBarVisible();
-            _passiveBarInstance.SetActive(show);
-            if (show && _passiveBarFill != null)
+            bool attackShow = GetAttackBarVisible() && (_isSelected || _hoverHighlighted);
+            if (_attackBarInstance != null)
             {
-                Vector3 s = _passiveBarFill.localScale;
-                s.x = GetPassiveBarFill();
-                _passiveBarFill.localScale = s;
+                _attackBarInstance.SetActive(attackShow);
+                if (attackShow)
+                {
+                    Vector3 p = _attackBarInstance.transform.localPosition;
+                    p.y = stackY - barHalfH;
+                    _attackBarInstance.transform.localPosition = p;
+                    stackY -= barHalfH * 2f;
+                    if (_attackBarFill != null)
+                    {
+                        Vector3 s = _attackBarFill.localScale;
+                        s.x = GetAttackBarFill();
+                        _attackBarFill.localScale = s;
+                    }
+                }
+            }
+
+            bool passiveShow = GetPassiveBarVisible() && (_isSelected || _hoverHighlighted);
+            if (_passiveBarInstance != null)
+            {
+                _passiveBarInstance.SetActive(passiveShow);
+                if (passiveShow)
+                {
+                    Vector3 p = _passiveBarInstance.transform.localPosition;
+                    p.y = stackY - barHalfH;
+                    _passiveBarInstance.transform.localPosition = p;
+                    stackY -= barHalfH * 2f;
+                    if (_passiveBarFill != null)
+                    {
+                        Vector3 s = _passiveBarFill.localScale;
+                        s.x = GetPassiveBarFill();
+                        _passiveBarFill.localScale = s;
+                    }
+                }
+            }
+
+            bool skillShow = path3Unlocked;
+            if (_skillBarInstance != null)
+            {
+                _skillBarInstance.SetActive(skillShow);
+                if (skillShow)
+                {
+                    Vector3 p = _skillBarInstance.transform.localPosition;
+                    p.y = stackY - barHalfH;
+                    _skillBarInstance.transform.localPosition = p;
+                    if (_skillBarFill != null)
+                    {
+                        float fill = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;
+                        Vector3 s = _skillBarFill.localScale;
+                        s.x = fill;
+                        _skillBarFill.localScale = s;
+                    }
+                }
             }
         }
 
@@ -819,7 +894,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            float dist = Vector3.Distance(transform.position, insect.transform.position);
+            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
             if (dist <= attackRange && dist < nearestDist && IsValidNightTarget(insect, dist))
             {
                 nearestDist = dist;
@@ -837,7 +912,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            float dist = Vector3.Distance(transform.position, insect.transform.position);
+            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
             if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
@@ -864,7 +939,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            float dist = Vector3.Distance(transform.position, insect.transform.position);
+            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
             if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;

@@ -12,6 +12,7 @@ public class Snowdrop : Aura
     private float blizzardWidth;
     public float blizzardDamage;
     private GameObject blizzardIndicatorInstance;
+    private GameObject _blizzardInstance;
     private const float indicatorLength = 30f;
 
     protected override void Awake()
@@ -112,13 +113,19 @@ public class Snowdrop : Aura
     {
         skillCooldownTimer = skillCooldown;
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
-        GameObject obj = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
-        obj.GetComponent<Blizzard>()?.Initialize(transform.position, direction, blizzardWidth, skillDuration, blizzardDamage, chillLevel + 1, this);
+        _blizzardInstance = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
+        _blizzardInstance.GetComponent<Blizzard>()?.Initialize(transform.position, direction, blizzardWidth, skillDuration, blizzardDamage, chillLevel + 1, this);
     }
 
     protected override void Attack()
     {
         base.Attack();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (_blizzardInstance != null) Destroy(_blizzardInstance);
     }
 
     public override string GetName() => "<b><color=#00FFFF>Snowdrop</color></b>";

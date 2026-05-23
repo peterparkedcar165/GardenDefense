@@ -161,7 +161,7 @@ public class Aeonium : Aura
         baseSkillDuration = data.baseSkillDuration;
     }
 
-    public override string GetName() => "<b><color=green>Aeonium Sunburst</color></b>";
+    public override string GetName() => $"<b><color=green>{(data != null ? data.displayName : "Aeonium")}</color></b>";
 
     public override string GetDescription() =>
         $"The {GetName()} is a radiant succulent that nurtures the garden. She heals and empowers nearby plants, and blesses the ground to yield extra sun from fallen insects.";
