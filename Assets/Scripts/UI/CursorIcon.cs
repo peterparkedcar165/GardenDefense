@@ -125,6 +125,8 @@ public class CursorIcon : MonoBehaviour
         if (rangePreviewCircle == null || cachedPlant == null || cachedPlant.data == null) return;
         if (!cachedPlant.ShowRangeCircle) { HideRangePreview(); return; }
         float range = cachedPlant.data.baseAttackRange;
+        float fertMult = FertilizerManager.instance?.GetPreviewRangeMultiplier(cachedPlant.data.elementalType) ?? 0f;
+        range *= 1f + fertMult;
         if (tile.isHighground) range *= 2f;
         rangePreviewCircle.gameObject.SetActive(true);
         rangePreviewCircle.position = new Vector3(tile.transform.position.x, tile.transform.position.y, rangePreviewCircle.position.z);

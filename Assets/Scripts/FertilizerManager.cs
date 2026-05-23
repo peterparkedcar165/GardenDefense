@@ -38,6 +38,17 @@ public class FertilizerManager : MonoBehaviour
         rolledValues = values;
     }
 
+    public float GetPreviewRangeMultiplier(ElementalType elementalType)
+    {
+        if (activeFertilizer == null || selectedStats == null) return 0f;
+        if (!activeFertilizer.appliesToAll && elementalType != activeFertilizer.targetElementalType) return 0f;
+        float multiplier = 0f;
+        for (int i = 0; i < selectedStats.Length; i++)
+            if (selectedStats[i].statType == StatType.AttackRange)
+                multiplier += rolledValues[i];
+        return multiplier;
+    }
+
     public void ApplyTo(Plant plant)
     {
         if (activeFertilizer == null) return;
