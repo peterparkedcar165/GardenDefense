@@ -428,11 +428,13 @@ public abstract class Entity : MonoBehaviour
 // method for death
     public virtual void Kill()
     {
+        foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         Destroy(gameObject);
     }
 
     public virtual void Kill(Entity source) // death including source
     {
+        foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         Destroy(gameObject);
     }
 

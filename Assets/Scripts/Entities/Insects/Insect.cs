@@ -373,6 +373,7 @@ public abstract class Insect : Entity, IAttackable
     {
         if (isDying) return;
         isDying = true;
+        foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);
@@ -384,6 +385,7 @@ public abstract class Insect : Entity, IAttackable
     {
         if (isDying) return;
         isDying = true;
+        foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);

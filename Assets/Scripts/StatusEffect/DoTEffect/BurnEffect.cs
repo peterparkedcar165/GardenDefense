@@ -7,6 +7,8 @@ public class BurnEffect : DoTEffect
     public float healthPerSecond = 0.03f, mpPerSecond = 0.36f;
     private float cachedMaxHealth;
     private float cachedMagicPower;
+    private LightFader _burnFader;
+    private const float BurnLightRadius = 1.25f;
 
     public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
@@ -33,6 +35,36 @@ public class BurnEffect : DoTEffect
 
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
         indicator.GetComponent<DamageIndicator>().Initialize("Burn", new Color(1f, 0.4f, 0f));
+
+        _burnFader = GetOrCreateBurnFader();
+        _burnFader.FadeIn(0.05f);
+        DarknessManager.UnregisterLightSource(_burnFader.transform);
+        DarknessManager.RegisterLightSource(_burnFader.transform, BurnLightRadius);
+    }
+
+    private LightFader GetOrCreateBurnFader()
+    {
+        Transform existing = target.transform.Find("BurnLight");
+        if (existing != null)
+        {
+            var fader = existing.GetComponent<LightFader>();
+            if (fader != null) return fader;
+        }
+
+        GameObject lightObj = new GameObject("BurnLight");
+        lightObj.transform.SetParent(target.transform);
+        lightObj.transform.localPosition = Vector3.zero;
+
+        var light = lightObj.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+        light.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
+        light.color = Color.white;
+        light.falloffIntensity = 0.5f;
+        light.pointLightOuterRadius = BurnLightRadius;
+        light.pointLightInnerRadius = BurnLightRadius * 0.3f;
+
+        var newFader = lightObj.AddComponent<LightFader>();
+        newFader.Setup(light, 0.4f);
+        return newFader;
     }
 
     public override void OnTick(float deltaTime)
@@ -50,6 +82,20 @@ public class BurnEffect : DoTEffect
 
     public override void OnExpire()
     {
+        if (_burnFader != null)
+        {
+            DarknessManager.UnregisterLightSource(_burnFader.transform);
+            _burnFader.FadeOut(3f);
+        }
         Debug.Log("Burn expired");
+    }
+
+    public override void OnTargetDied()
+    {
+        if (_burnFader == null) return;
+        DarknessManager.UnregisterLightSource(_burnFader.transform);
+        _burnFader.transform.SetParent(null);
+        _burnFader.FadeOut(3f, destroyOnComplete: true);
+        _burnFader = null;
     }
 }

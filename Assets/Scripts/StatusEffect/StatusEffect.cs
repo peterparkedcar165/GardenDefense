@@ -37,6 +37,7 @@ public class StatusEffect
     public virtual void OnApply() {} // nothing because will be implemented in specific effects
     public virtual void OnTick(float deltaTime) {} // nothing because will be implemented in specific effects
     public virtual void OnExpire() {} // same
+    public virtual void OnTargetDied() {}
 
     public bool IsExpired()
     {

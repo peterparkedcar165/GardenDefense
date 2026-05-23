@@ -49,7 +49,9 @@ public abstract class Plant : Entity, IAttackable
     private CircleCollider2D _circleCollider;
     private bool _isSelected = false;
     private UnityEngine.Rendering.Universal.Light2D _light2D;
+    private float _lastLightEmissionRange;
     private const float lightIntensity = 0.65f;
+    private const float lightFadeSpeed = 1.5f;
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
     protected virtual bool ShowLight => DarknessManager.instance != null;
@@ -79,20 +81,20 @@ public abstract class Plant : Entity, IAttackable
 
         if (lightEmissionRange > 0 && _light2D == null)
         {
-            _light2D = gameObject.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+            GameObject lightObj = new GameObject("PlantLight");
+            lightObj.transform.SetParent(transform);
+            lightObj.transform.localPosition = Vector3.zero;
+
+            _light2D = lightObj.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
             _light2D.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
-            _light2D.intensity = lightIntensity;
+            _light2D.intensity = 0f;
             _light2D.falloffIntensity = lightFalloffStrength;
             _light2D.targetSortingLayers = GetAllSortingLayerIDs();
+
         }
 
         if (_light2D != null)
-        {
             _light2D.enabled = ShowLight;
-            _light2D.intensity = lightIntensity;
-            _light2D.pointLightOuterRadius = lightEmissionRange;
-            _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
-        }
 
         if (WeatherManager.instance != null)
         {
@@ -385,6 +387,23 @@ public abstract class Plant : Entity, IAttackable
         effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
         effectivePath3Level = path3Level + path3LevelAdder;
 
+        if (_light2D != null)
+        {
+            if (lightEmissionRange != _lastLightEmissionRange)
+            {
+                if (lightEmissionRange > 0f)
+                {
+                    _light2D.pointLightOuterRadius = lightEmissionRange;
+                    _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
+                }
+                if (lightEmissionRange > _lastLightEmissionRange)
+                    _light2D.intensity = 0f;
+                _lastLightEmissionRange = lightEmissionRange;
+            }
+            float targetIntensity = lightEmissionRange > 0f ? lightIntensity : 0f;
+            _light2D.intensity = Mathf.Lerp(_light2D.intensity, targetIntensity, Time.unscaledDeltaTime * lightFadeSpeed);
+        }
+
         if (passiveCooldownTimer > 0)
             passiveCooldownTimer -= Time.deltaTime;
         if (skillCooldownTimer > 0)
@@ -475,6 +494,7 @@ public abstract class Plant : Entity, IAttackable
         occupiedTile.GetComponent<Collider2D>().enabled = true;
         PlantSelector.instance.uprootMode = false;
         PlantUpgradeUI.instance.HidePanel();
+        DetachAndFadeLight();
         Destroy(gameObject);
     }
 
@@ -650,17 +670,28 @@ public abstract class Plant : Entity, IAttackable
         return "";
     }
 
+    private void DetachAndFadeLight()
+    {
+        if (_light2D == null) return;
+        GameObject lightObj = _light2D.gameObject;
+        lightObj.transform.SetParent(null);
+        var fader = lightObj.AddComponent<LightFader>();
+        fader.SetupForFadeOut(_light2D);
+        fader.FadeOut(0.4f, destroyOnComplete: true);
+        _light2D = null;
+    }
+
     public override void Kill()
     {
-        if (PlantUpgradeUI.instance?.GetSelectedPlant() == this) PlantUpgradeUI.instance.HidePanel();
         FreeTile();
+        DetachAndFadeLight();
         base.Kill();
     }
 
     public override void Kill(Entity source)
     {
-        if (PlantUpgradeUI.instance?.GetSelectedPlant() == this) PlantUpgradeUI.instance.HidePanel();
         FreeTile();
+        DetachAndFadeLight();
         base.Kill(source);
     }
 

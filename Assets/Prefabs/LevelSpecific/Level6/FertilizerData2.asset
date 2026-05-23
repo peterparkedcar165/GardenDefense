@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Helper
   stats:
-  - statType: 25
+  - statType: 26
     value: 1.04
   - statType: 24
     value: 0.53
