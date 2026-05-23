@@ -56,7 +56,7 @@ public class Waterlily : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = data.baseSkillDuration + 1f * level;
+        baseSkillDuration = data.baseSkillDuration + 2f * level;
     }
 
     public override void ActivateSkill()
@@ -105,6 +105,6 @@ public class Waterlily : Shooter
         $"Skill:\n\n{GetSkillDesription()}\n\n" +
         $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
         $"Increase impact damage by <color=green><b>12</b></color> per level. [<color=green><b>+{12 * effectivePath3Level}</b></color>]\n\n" +
-        $"Increase duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{1 * effectivePath3Level}s</b></color>]\n\n" +
+        $"Increase duration by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
         $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

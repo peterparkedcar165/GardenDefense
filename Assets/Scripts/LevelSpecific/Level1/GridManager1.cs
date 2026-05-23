@@ -113,7 +113,7 @@ private bool IsObstacle(int x, int y)
 
     return (x, y) switch
     {
-        (10, 2) or (1, 4) or (14, 6) or (6, 10) or (15, 10) => true,
+        (10, 2) or (1, 4) or (6, 10) or (15, 10) => true,
         _ => false
     };
 }

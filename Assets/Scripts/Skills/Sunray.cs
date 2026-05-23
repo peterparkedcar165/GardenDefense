@@ -29,19 +29,22 @@ public class Sunray : MonoBehaviour
         this.duration = duration;
         this.source = source;
 
-        var light = gameObject.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
-        light.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
-        light.color = Color.white;
-        light.intensity = 0f;
-        light.falloffIntensity = 0.5f;
-        light.pointLightOuterRadius = 5f;
-        light.pointLightInnerRadius = 5f * 0.3f;
+        if (DarknessManager.instance != null)
+        {
+            var light = gameObject.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+            light.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
+            light.color = Color.white;
+            light.intensity = 0f;
+            light.falloffIntensity = 0.5f;
+            light.pointLightOuterRadius = 5f;
+            light.pointLightInnerRadius = 5f * 0.3f;
 
-        var fader = gameObject.AddComponent<LightFader>();
-        fader.Setup(light, 1f);
-        fader.FadeIn(0.3f);
+            var fader = gameObject.AddComponent<LightFader>();
+            fader.Setup(light, 1f);
+            fader.FadeIn(0.3f);
 
-        DarknessManager.RegisterLightSource(transform, 5f);
+            DarknessManager.RegisterLightSource(transform, 5f);
+        }
         StartCoroutine(SunrayRoutine());
     }
 

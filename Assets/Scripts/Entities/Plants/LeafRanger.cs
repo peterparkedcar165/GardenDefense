@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class LeafRanger : Shooter
 {
     private bool skillActive;
     private float skillTimer;
 
+    public override bool ShowRangeCircle => false;
     private LeafRangerData LRData => data as LeafRangerData;
 
     protected override void Awake()
@@ -19,13 +21,6 @@ public class LeafRanger : Shooter
         if (skillActive)
             attackSpeed += baseAttackSpeed * ((LRData?.baseSkillAttackSpeedBonus ?? 3f) + 0.25f * effectivePath3Level + skillDamageMultiplier * magicPower);
 
-        if (DarknessManager.instance != null && DarknessManager.instance.isDark)
-        {
-            GameObject targetObj = FindTarget();
-            Insect insect = targetObj?.GetComponent<Insect>();
-            if (insect != null && !DarknessManager.instance.IsIlluminated(insect.transform.position))
-                attackSpeed *= 0.5f;
-        }
     }
 
     protected override void Update()
@@ -39,6 +34,28 @@ public class LeafRanger : Shooter
             if (skillTimer <= 0f)
                 skillActive = false;
         }
+    }
+
+    protected override GameObject FindTarget()
+    {
+        if (DarknessManager.instance == null || !DarknessManager.instance.isDark)
+            return base.FindTarget();
+
+        List<Insect> illuminated = new List<Insect>();
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            if (DarknessManager.instance.IsIlluminated(insect.transform.position))
+                illuminated.Add(insect);
+        }
+
+        return targeting switch
+        {
+            TARGETING.First   => FindFirst(illuminated),
+            TARGETING.Nearest => FindNearest(illuminated),
+            TARGETING.Last    => FindLast(illuminated),
+            _                 => null,
+        };
     }
 
     protected override void Shoot(Vector3 target)

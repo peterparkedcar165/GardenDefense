@@ -24,6 +24,7 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 1
   baseAttackRange: 2
+  startingShield: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0
@@ -36,8 +37,8 @@ MonoBehaviour:
   baseNatureResistance: 0
   baseWindResistance: 0
   baseDotResistance: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -56,15 +57,18 @@ MonoBehaviour:
   baseProjectileSpeed: 3
   baseMaxRange: 20
   basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 40
-  baseSkillDuration: 4
+  baseSkillCooldown: 90
+  baseSkillDuration: 8
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseSeedCount: 3
-  baseBeamWidth: 1.5
-  basePushPower: 1.25
+  baseBeamWidth: 1.6
+  basePushPower: 1.35

@@ -37,8 +37,8 @@ MonoBehaviour:
   baseNatureResistance: 0
   baseWindResistance: 0
   baseDotResistance: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -62,7 +62,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 40
+  baseSkillCooldown: 90
   baseSkillDuration: 20
   baseSkillRadius: 1
   baseSkillDamageMultiplier: 1.5

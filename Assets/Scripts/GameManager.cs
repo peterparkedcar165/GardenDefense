@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
         GameHUD.instance?.SetSpeedButton(gameSpeed);
         PersistentCanvas.instance?.Show();
         PlantBar.instance?.Build();
-        FertilizerSelectionUI.instance.Show();
+        FertilizerSelectionUI.instance?.Show();
     }
 
     public void Restart()

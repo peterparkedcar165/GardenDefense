@@ -36,10 +36,13 @@ public class BurnEffect : DoTEffect
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
         indicator.GetComponent<DamageIndicator>().Initialize("Burn", new Color(1f, 0.4f, 0f));
 
-        _burnFader = GetOrCreateBurnFader();
-        _burnFader.FadeIn(0.05f);
-        DarknessManager.UnregisterLightSource(_burnFader.transform);
-        DarknessManager.RegisterLightSource(_burnFader.transform, BurnLightRadius);
+        if (DarknessManager.instance != null)
+        {
+            _burnFader = GetOrCreateBurnFader();
+            _burnFader.FadeIn(0.05f);
+            DarknessManager.UnregisterLightSource(_burnFader.transform);
+            DarknessManager.RegisterLightSource(_burnFader.transform, BurnLightRadius);
+        }
     }
 
     private LightFader GetOrCreateBurnFader()
@@ -73,9 +76,9 @@ public class BurnEffect : DoTEffect
         if (tickTimer >= tickInterval)
         {
             if (source != null)
-                target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Fire, source, false, tickTags);
+                target.Damage(damagePerSecond * tickInterval, DamageType.Magic, ElementalType.Fire, source, false, tickTags);
             else
-                target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Fire, tickTags);
+                target.Damage(damagePerSecond * tickInterval, DamageType.Magic, ElementalType.Fire, tickTags);
             tickTimer -= tickInterval;
         }
     }
@@ -85,7 +88,7 @@ public class BurnEffect : DoTEffect
         if (_burnFader != null)
         {
             DarknessManager.UnregisterLightSource(_burnFader.transform);
-            _burnFader.FadeOut(3f);
+            _burnFader.FadeOut(2.5f);
         }
         Debug.Log("Burn expired");
     }

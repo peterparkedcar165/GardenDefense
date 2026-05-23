@@ -37,8 +37,8 @@ MonoBehaviour:
   baseNatureResistance: 0
   baseWindResistance: 0
   baseDotResistance: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -62,12 +62,12 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 16
   basePassiveDuration: 0
-  baseSkillCooldown: 45
-  baseSkillDuration: 6
+  baseSkillCooldown: 90
+  baseSkillDuration: 8
   baseSkillRadius: 1.5
   baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseSunGenerated: 6
-  baseSunrayDPS: 35
+  baseSunrayDPS: 75

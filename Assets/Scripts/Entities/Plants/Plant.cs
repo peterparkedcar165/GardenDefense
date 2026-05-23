@@ -44,6 +44,7 @@ public abstract class Plant : Entity, IAttackable
     public PlantData data;
     public Tile occupiedTile;
 
+    public virtual bool ShowRangeCircle => true;
     [SerializeField] private Transform circleRadius;
     private Transform darkCircleRadius;
     private CircleCollider2D _circleCollider;
@@ -51,7 +52,9 @@ public abstract class Plant : Entity, IAttackable
     private UnityEngine.Rendering.Universal.Light2D _light2D;
     private float _lastLightEmissionRange;
     private const float lightIntensity = 0.65f;
-    private const float lightFadeSpeed = 1.5f;
+    private const float lightFadeSpeed = 2f;
+    private GameObject _skillBarInstance;
+    private Transform _skillBarFill;
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
     protected virtual bool ShowLight => DarknessManager.instance != null;
@@ -71,7 +74,7 @@ public abstract class Plant : Entity, IAttackable
         skillDamage += baseSkillDamage * skillDamageMultiplier;
         float plantSpriteRadius = _circleCollider != null ? _circleCollider.radius * 2 : 0f;
 
-        if (circleRadius != null)
+        if (ShowRangeCircle && circleRadius != null)
         {
             // circleRadius.localScale = new Vector3((attackRange * 2f)  + plantSpriteRadius, (attackRange * 2f) + plantSpriteRadius, 1f); // INCLUDES SPRITE
             circleRadius.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
@@ -149,6 +152,7 @@ public abstract class Plant : Entity, IAttackable
         healthBarOffset = new Vector3(0, 0.7f, 0);
         base.Awake();
         SpawnHealthBar();
+        SpawnSkillBar();
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.75f;
         allPlants.Add(this);
@@ -226,6 +230,35 @@ public abstract class Plant : Entity, IAttackable
         allPlants.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this)
             PlantUpgradeUI.instance.HidePanel();
+    }
+
+    private void SpawnSkillBar()
+    {
+        GameObject prefab = Resources.Load<GameObject>("HealthBar");
+        if (prefab == null) return;
+
+        _skillBarInstance = Instantiate(prefab, transform);
+
+        Vector3 pos = healthBarOffset;
+        pos.x -= 0.475f;
+        pos.y -= 0.08f;
+        _skillBarInstance.transform.localPosition = pos;
+
+        Vector3 scale = _skillBarInstance.transform.localScale;
+        scale.y *= 0.6f;
+        _skillBarInstance.transform.localScale = scale;
+
+        _skillBarFill = _skillBarInstance.transform.Find("Fill");
+        if (_skillBarFill != null)
+        {
+            SpriteRenderer sr = _skillBarFill.GetComponent<SpriteRenderer>();
+            if (sr != null) sr.color = new Color(0.8f, 0.8f, 0.8f);
+        }
+
+        Transform shieldChild = _skillBarInstance.transform.Find("ShieldFill");
+        if (shieldChild != null) Destroy(shieldChild.gameObject);
+
+        _skillBarInstance.SetActive(false);
     }
 
     [SerializeField] private SpriteRenderer mainRenderer;
@@ -325,7 +358,7 @@ public abstract class Plant : Entity, IAttackable
     {
         base.Start();
         GetMainRenderer();
-        if (circleRadius != null)
+        if (ShowRangeCircle && circleRadius != null)
         {
             circleRadius.gameObject.SetActive(false);
             if (!ShowDarkCircle) return;
@@ -339,7 +372,7 @@ public abstract class Plant : Entity, IAttackable
 
     protected override void OnHover()
     {
-        if (circleRadius != null)
+        if (ShowRangeCircle && circleRadius != null)
             circleRadius.gameObject.SetActive(true);
         if (darkCircleRadius != null && DarknessManager.instance != null && DarknessManager.instance.isDark)
             darkCircleRadius.gameObject.SetActive(true);
@@ -352,7 +385,7 @@ public abstract class Plant : Entity, IAttackable
         _hoverHighlighted = false;
         ClearHighlight();
         if (_isSelected) return;
-        if (circleRadius != null)
+        if (ShowRangeCircle && circleRadius != null)
             circleRadius.gameObject.SetActive(false);
         if (darkCircleRadius != null)
             darkCircleRadius.gameObject.SetActive(false);
@@ -363,7 +396,7 @@ public abstract class Plant : Entity, IAttackable
     {
         _isSelected = true;
         SetHighlight(Color.white);
-        if (circleRadius != null)
+        if (ShowRangeCircle && circleRadius != null)
             circleRadius.gameObject.SetActive(true);
         if (darkCircleRadius != null && DarknessManager.instance != null && DarknessManager.instance.isDark)
             darkCircleRadius.gameObject.SetActive(true);
@@ -373,7 +406,7 @@ public abstract class Plant : Entity, IAttackable
     {
         _isSelected = false;
         ClearHighlight();
-        if (circleRadius != null)
+        if (ShowRangeCircle && circleRadius != null)
             circleRadius.gameObject.SetActive(false);
         if (darkCircleRadius != null)
             darkCircleRadius.gameObject.SetActive(false);
@@ -408,6 +441,19 @@ public abstract class Plant : Entity, IAttackable
             passiveCooldownTimer -= Time.deltaTime;
         if (skillCooldownTimer > 0)
             skillCooldownTimer -= Time.deltaTime;
+
+        if (_skillBarInstance != null)
+        {
+            bool onCooldown = path3Unlocked && skillCooldownTimer > 0f;
+            _skillBarInstance.SetActive(onCooldown);
+            if (onCooldown && _skillBarFill != null)
+            {
+                float fill = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;
+                Vector3 s = _skillBarFill.localScale;
+                s.x = fill;
+                _skillBarFill.localScale = s;
+            }
+        }
 
         if (_hoverHighlighted)
             SetHighlight(Color.white);
@@ -677,7 +723,7 @@ public abstract class Plant : Entity, IAttackable
         lightObj.transform.SetParent(null);
         var fader = lightObj.AddComponent<LightFader>();
         fader.SetupForFadeOut(_light2D);
-        fader.FadeOut(0.4f, destroyOnComplete: true);
+        fader.FadeOut(0.3f, destroyOnComplete: true);
         _light2D = null;
     }
 

@@ -8,6 +8,7 @@ public enum Aggressivity { Low, Medium, High }
 public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();
+    public static event System.Action<Vector3> OnInsectKilled;
     private static int ObstacleLayer => LayerMask.GetMask("Obstacle");
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -374,6 +375,7 @@ public abstract class Insect : Entity, IAttackable
         if (isDying) return;
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
+        OnInsectKilled?.Invoke(transform.position);
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);
@@ -386,6 +388,7 @@ public abstract class Insect : Entity, IAttackable
         if (isDying) return;
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
+        OnInsectKilled?.Invoke(transform.position);
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);

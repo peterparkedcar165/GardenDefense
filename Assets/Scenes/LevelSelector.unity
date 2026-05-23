@@ -5211,7 +5211,7 @@ GameObject:
   - component: {fileID: 1534487825}
   - component: {fileID: 1534487824}
   m_Layer: 0
-  m_Name: LeverlSelectorManager
+  m_Name: LevelSelectorManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6372,7 +6372,7 @@ PrefabInstance:
       objectReference: {fileID: 1240570703}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: tooltipPath1Description
@@ -6448,6 +6448,10 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 93c952ec7eca7e447b235cf9708b4ac8, type: 2}
     - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
       propertyPath: 'allPlantData.Array.data[12]'
+      value: 
+      objectReference: {fileID: 11400000, guid: a4e448e3b4114b84a88c73d9caca8e96, type: 2}
+    - target: {fileID: 8378169699724609105, guid: cf84d5d10b6535e4a8a20c4be3000d27, type: 3}
+      propertyPath: 'allPlantData.Array.data[13]'
       value: 
       objectReference: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
     m_RemovedComponents: []

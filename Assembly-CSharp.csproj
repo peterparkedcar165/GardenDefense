@@ -145,6 +145,7 @@
     <Compile Include="Assets\Scripts\LevelSpecific\Level8\GridManager8.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Calendula.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\AeoniumBlessedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level8.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\AeoniumBloomEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HollyTauntingEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StartingShieldEffect.cs" />
@@ -198,6 +200,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level1\GridManager1.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\AeoniumData.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\FireAntData.cs" />
@@ -208,6 +211,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level1.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Aeonium.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleMarker.cs" />
     <Compile Include="Assets\Scripts\PlantData.cs" />

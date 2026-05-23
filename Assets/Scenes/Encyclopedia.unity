@@ -2532,7 +2532,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1636942272707002615, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00017344179
+      value: 0.0004947098
       objectReference: {fileID: 0}
     - target: {fileID: 1865476856580230889, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2940,7 +2940,7 @@ PrefabInstance:
       objectReference: {fileID: 881032879}
     - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 12
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: 'allPlantData.Array.data[3]'
@@ -2976,6 +2976,14 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: af9a14076b54ba042bb17f9558910deb, type: 2}
     - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: 'allPlantData.Array.data[11]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 93c952ec7eca7e447b235cf9708b4ac8, type: 2}
+    - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
+      propertyPath: 'allPlantData.Array.data[12]'
+      value: 
+      objectReference: {fileID: 11400000, guid: a4e448e3b4114b84a88c73d9caca8e96, type: 2}
+    - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
+      propertyPath: 'allPlantData.Array.data[13]'
       value: 
       objectReference: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
     m_RemovedComponents: []

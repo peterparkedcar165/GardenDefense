@@ -64,6 +64,8 @@ public abstract class Entity : MonoBehaviour
     public float baseLifesteal;
     public float baseCounterDamage;
 
+    public static event System.Action<Plant> OnPlantAttackHit;
+
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
     public float physicalResistance, magicResistance;
@@ -230,6 +232,8 @@ public abstract class Entity : MonoBehaviour
         if (this is Insect insect && source is Plant plant) // if target = insect and source = plant
         {
             insect.RegisterAttacker(plant);
+            if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+                OnPlantAttackHit?.Invoke(plant);
         }
 
         float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
@@ -455,8 +459,12 @@ public abstract class Entity : MonoBehaviour
         if (_flashRenderer != null)
         {
             _originalMaterial = _flashRenderer.sharedMaterial;
-            _flashMaterial = new Material(Shader.Find("Custom/SpriteHitFlash"));
-            _flashMaterial.SetColor("_FlashColor", Color.red);
+            Shader hitFlashShader = Shader.Find("Custom/SpriteHitFlash");
+            if (hitFlashShader != null)
+            {
+                _flashMaterial = new Material(hitFlashShader);
+                _flashMaterial.SetColor("_FlashColor", Color.red);
+            }
         }
     }
 

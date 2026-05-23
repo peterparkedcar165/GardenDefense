@@ -23,9 +23,9 @@ public class Level8 : SpawnManager
 
     protected override void Start()
     {
-        WeatherManager.instance.weather = WeatherType.Clear;
-        FertilizerSelectionUI.instance.Configure(fertilizerPool);
-        GameManager.instance.InitiateLevel(startSunCount, startHealth);
+        if (WeatherManager.instance) WeatherManager.instance.weather = WeatherType.Clear;
+        FertilizerSelectionUI.instance?.Configure(fertilizerPool);
+        GameManager.instance?.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
         SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 7);
         SaveManager.instance.CompleteLevel(8);

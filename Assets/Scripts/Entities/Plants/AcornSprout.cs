@@ -74,7 +74,7 @@ public class AcornSprout : Shooter
     {
         return $"Attack:\n\n" +
                $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.\n\n" +
-               $"Increase Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+{8 * effectivePath1Level}</b></color>]\n\n" +
+               $"Increase Base Attack Damage by <color=green><b>8</b></color> per level. [<color=green><b>+{8 * effectivePath1Level}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }
 

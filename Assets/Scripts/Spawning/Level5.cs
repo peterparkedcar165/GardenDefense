@@ -7,7 +7,7 @@ public class Level5 : SpawnManager
     public float levelTime;
     public int wave;
     private int startSunCount = 550, startHealth = 200;
-    private int maxWave = 12;
+    private int maxWave = 15;
     public GameObject workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt;
     public GameObject weatherManager;
     public float nextWaveTimer;
@@ -23,9 +23,9 @@ public class Level5 : SpawnManager
 
     protected override void Start()
     {
-        WeatherManager.instance.weather = WeatherType.Sunny;
-        FertilizerSelectionUI.instance.Configure(fertilizerPool);
-        GameManager.instance.InitiateLevel(startSunCount, startHealth);
+        if (WeatherManager.instance) WeatherManager.instance.weather = WeatherType.Sunny;
+        FertilizerSelectionUI.instance?.Configure(fertilizerPool);
+        GameManager.instance?.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
         SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 4);
         SaveManager.instance.CompleteLevel(5);
@@ -233,6 +233,63 @@ public class Level5 : SpawnManager
             CancelInvoke(nameof(SpawnWorkerAnt));
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
+            CancelInvoke(nameof(SpawnQueenAnt));
+        } else if (wave == 13)
+        {
+            waitTime = 2f;
+            spawnInterval = 1.75f;
+            spawnCount = 45;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            float wd13 = waitTime + ((spawnCount - 1) * spawnInterval);
+
+            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnWasp), wd13 / 3f, spawnInterval * 1.5f);
+            InvokeRepeating(nameof(SpawnFruitFly), wd13 / 3f, spawnInterval);
+            yield return new WaitForSeconds(wd13);
+            CancelInvoke(nameof(SpawnWorkerAnt));
+            CancelInvoke(nameof(SpawnScoutAnt));
+            CancelInvoke(nameof(SpawnWasp));
+            CancelInvoke(nameof(SpawnFruitFly));
+        } else if (wave == 14)
+        {
+            waitTime = 2f;
+            spawnInterval = 1.5f;
+            spawnCount = 45;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            float wd14 = waitTime + ((spawnCount - 1) * spawnInterval);
+
+            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnSoldierAnt), wd14 / 4f, spawnInterval);
+            InvokeRepeating(nameof(SpawnWasp), wd14 / 2f, spawnInterval * 2f);
+            InvokeRepeating(nameof(SpawnQueenAnt), wd14 * 2f / 3f, 20f);
+            yield return new WaitForSeconds(wd14);
+            CancelInvoke(nameof(SpawnWorkerAnt));
+            CancelInvoke(nameof(SpawnScoutAnt));
+            CancelInvoke(nameof(SpawnSoldierAnt));
+            CancelInvoke(nameof(SpawnWasp));
+            CancelInvoke(nameof(SpawnQueenAnt));
+        } else if (wave == 15)
+        {
+            waitTime = 2f;
+            spawnInterval = 1.5f;
+            spawnCount = 53;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            float wd15 = waitTime + ((spawnCount - 1) * spawnInterval);
+
+            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
+            InvokeRepeating(nameof(SpawnSoldierAnt), wd15 / 4f, spawnInterval);
+            InvokeRepeating(nameof(SpawnFruitFly), wd15 / 3f, spawnInterval);
+            InvokeRepeating(nameof(SpawnWasp), wd15 / 2f, spawnInterval * 2f);
+            InvokeRepeating(nameof(SpawnQueenAnt), wd15 * 2f / 3f, 15f);
+            yield return new WaitForSeconds(wd15);
+            CancelInvoke(nameof(SpawnWorkerAnt));
+            CancelInvoke(nameof(SpawnScoutAnt));
+            CancelInvoke(nameof(SpawnSoldierAnt));
+            CancelInvoke(nameof(SpawnFruitFly));
+            CancelInvoke(nameof(SpawnWasp));
             CancelInvoke(nameof(SpawnQueenAnt));
         }
     }

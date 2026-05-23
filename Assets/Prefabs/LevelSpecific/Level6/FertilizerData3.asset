@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Omnipresence
   stats:
-  - statType: 21
+  - statType: 22
     value: 0.33
   - statType: 14
     value: 0.39

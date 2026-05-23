@@ -16,16 +16,16 @@ public class Level1 : SpawnManager
     public float waitTime;
     public float spawnInterval;
     public int spawnCount;
-    public float restInterval = 15f;
+    public float restInterval = 5f;
 
     [Header("Fertilizers")]
     [SerializeField] private FertilizerData[] fertilizerPool;
 
     protected override void Start()
     {
-        WeatherManager.instance.weather = WeatherType.Sunny;
-        FertilizerSelectionUI.instance.Configure(fertilizerPool);
-        GameManager.instance.InitiateLevel(startSunCount, startHealth);
+        if (WeatherManager.instance) WeatherManager.instance.weather = WeatherType.Sunny;
+        FertilizerSelectionUI.instance?.Configure(fertilizerPool);
+        GameManager.instance?.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
         StartCoroutine(RunWave());
     }

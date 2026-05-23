@@ -87,6 +87,7 @@ public abstract class Projectile : MonoBehaviour
             if (insect != null && insect.IsAlive)
             {
                 hitCount++;
+                if (hitCount == 2) projectileDamage *= 0.5f;
                 OnHit(insect);
                 source?.GetEffect<FloralGlowEffect>()?.OnProjectileHit(insect);
                 trackedTarget = null;

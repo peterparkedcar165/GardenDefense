@@ -24,6 +24,9 @@ public class BubblePrison : MonoBehaviour
         this.damagePerSecond = damagePerSecond;
         this.source = source;
         visual = transform.Find("Visual");
+        int ignoreLayer = LayerMask.NameToLayer("Ignore Raycast");
+        foreach (Transform t in GetComponentsInChildren<Transform>(true))
+            t.gameObject.layer = ignoreLayer;
         StartCoroutine(BubbleRoutine());
         StartCoroutine(SpawnScale());
     }

@@ -123,6 +123,7 @@ public class CursorIcon : MonoBehaviour
     private void ShowRangePreview(Tile tile)
     {
         if (rangePreviewCircle == null || cachedPlant == null || cachedPlant.data == null) return;
+        if (!cachedPlant.ShowRangeCircle) { HideRangePreview(); return; }
         float range = cachedPlant.data.baseAttackRange;
         if (tile.isHighground) range *= 2f;
         rangePreviewCircle.gameObject.SetActive(true);
