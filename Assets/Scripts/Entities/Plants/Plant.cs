@@ -45,6 +45,8 @@ public abstract class Plant : Entity, IAttackable
     public Tile occupiedTile;
 
     public virtual bool ShowRangeCircle => true;
+    protected virtual bool GetPassiveBarVisible() => passiveCooldown > 0f && passiveCooldownTimer > 0f;
+    protected virtual float GetPassiveBarFill() => passiveCooldown > 0f ? Mathf.Clamp01(1f - passiveCooldownTimer / passiveCooldown) : 1f;
     [SerializeField] private Transform circleRadius;
     private Transform darkCircleRadius;
     private CircleCollider2D _circleCollider;
@@ -55,6 +57,8 @@ public abstract class Plant : Entity, IAttackable
     private const float lightFadeSpeed = 2f;
     private GameObject _skillBarInstance;
     private Transform _skillBarFill;
+    private GameObject _passiveBarInstance;
+    private Transform _passiveBarFill;
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
     protected virtual bool ShowLight => DarknessManager.instance != null;
@@ -153,6 +157,7 @@ public abstract class Plant : Entity, IAttackable
         base.Awake();
         SpawnHealthBar();
         SpawnSkillBar();
+        SpawnPassiveBar();
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.75f;
         allPlants.Add(this);
@@ -232,6 +237,35 @@ public abstract class Plant : Entity, IAttackable
             PlantUpgradeUI.instance.HidePanel();
     }
 
+    private void SpawnPassiveBar()
+    {
+        GameObject prefab = Resources.Load<GameObject>("HealthBar");
+        if (prefab == null) return;
+
+        _passiveBarInstance = Instantiate(prefab, transform);
+
+        Vector3 pos = healthBarOffset;
+        pos.x -= 0.475f;
+        pos.y -= 0.08f;
+        _passiveBarInstance.transform.localPosition = pos;
+
+        Vector3 scale = _passiveBarInstance.transform.localScale;
+        scale.y *= 0.35f;
+        _passiveBarInstance.transform.localScale = scale;
+
+        _passiveBarFill = _passiveBarInstance.transform.Find("Fill");
+        if (_passiveBarFill != null)
+        {
+            SpriteRenderer sr = _passiveBarFill.GetComponent<SpriteRenderer>();
+            if (sr != null) sr.color = new Color(1f, 0.85f, 0f);
+        }
+
+        Transform shieldChild = _passiveBarInstance.transform.Find("ShieldFill");
+        if (shieldChild != null) Destroy(shieldChild.gameObject);
+
+        _passiveBarInstance.SetActive(false);
+    }
+
     private void SpawnSkillBar()
     {
         GameObject prefab = Resources.Load<GameObject>("HealthBar");
@@ -241,11 +275,11 @@ public abstract class Plant : Entity, IAttackable
 
         Vector3 pos = healthBarOffset;
         pos.x -= 0.475f;
-        pos.y -= 0.08f;
+        pos.y -= 0.1f;
         _skillBarInstance.transform.localPosition = pos;
 
         Vector3 scale = _skillBarInstance.transform.localScale;
-        scale.y *= 0.6f;
+        scale.y *= 0.35f;
         _skillBarInstance.transform.localScale = scale;
 
         _skillBarFill = _skillBarInstance.transform.Find("Fill");
@@ -452,6 +486,18 @@ public abstract class Plant : Entity, IAttackable
                 Vector3 s = _skillBarFill.localScale;
                 s.x = fill;
                 _skillBarFill.localScale = s;
+            }
+        }
+
+        if (_passiveBarInstance != null)
+        {
+            bool show = GetPassiveBarVisible();
+            _passiveBarInstance.SetActive(show);
+            if (show && _passiveBarFill != null)
+            {
+                Vector3 s = _passiveBarFill.localScale;
+                s.x = GetPassiveBarFill();
+                _passiveBarFill.localScale = s;
             }
         }
 

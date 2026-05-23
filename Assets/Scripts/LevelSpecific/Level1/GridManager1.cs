@@ -32,7 +32,7 @@ private List<Vector2Int> dirtCoordinates = new List<Vector2Int>
 {
     new Vector2Int(2,6), new Vector2Int(4,6), new Vector2Int(6,6),
     new Vector2Int(4,4), new Vector2Int(8,8), new Vector2Int(11,6),
-    new Vector2Int(16,6), new Vector2Int(15,4)
+    new Vector2Int(16,6), new Vector2Int(15,4), new Vector2Int(9,6)
 };
 
 private List<Vector2Int> waterCoordinates = new List<Vector2Int>

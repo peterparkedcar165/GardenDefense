@@ -1,10 +1,8 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class Holly : Aura
 {
-    [SerializeField] private SpriteRenderer attackFlashCircle;
     private HollyData HData => data as HollyData;
 
     private float _tickTimer;
@@ -58,19 +56,8 @@ public class Holly : Aura
     protected override void Attack()
     {
         base.Attack();
-        StartCoroutine(FlashAttackCircle());
         foreach (Insect insect in GetInsectsInRange())
             insect.Damage(attackDamage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
-    }
-
-    private IEnumerator FlashAttackCircle()
-    {
-        if (attackFlashCircle == null) yield break;
-        attackFlashCircle.transform.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
-        attackFlashCircle.color = new Color(0f, 1f, 0f, 0.4f);
-        attackFlashCircle.enabled = true;
-        yield return new WaitForSeconds(0.3f);
-        attackFlashCircle.enabled = false;
     }
 
     protected override void OnHitByInsect(Insect attacker)

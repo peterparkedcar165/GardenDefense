@@ -40,6 +40,14 @@ public class BogIris : Shooter
         UpdatePassive();
     }
 
+    protected override bool GetPassiveBarVisible() => true;
+    protected override float GetPassiveBarFill()
+    {
+        if (isOpen)
+            return SunInterval > 0f ? Mathf.Clamp01(sunTickTimer / SunInterval) : 0f;
+        return passiveCooldown > 0f ? Mathf.Clamp01(cycleTimer / passiveCooldown) : 0f;
+    }
+
     private void UpdatePassive()
     {
         cycleTimer += Time.deltaTime;

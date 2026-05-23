@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class Aeonium : Aura
@@ -7,8 +6,6 @@ public class Aeonium : Aura
     private AeoniumData AData => data as AeoniumData;
 
     [SerializeField] private Transform skillRangeIndicator;
-    [SerializeField] private SpriteRenderer attackFlashCircle;
-
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
     private int _sunGenerated;
     private float _sunTimerReductionBase;
@@ -85,7 +82,6 @@ public class Aeonium : Aura
     protected override void Attack()
     {
         base.Attack();
-        StartCoroutine(FlashAttackCircle());
 
         foreach (Plant plant in Plant.allPlants)
         {
@@ -105,16 +101,6 @@ public class Aeonium : Aura
         if (plant == this) return;
         if (Vector3.Distance(transform.position, plant.transform.position) <= attackRange)
             passiveCooldownTimer = Mathf.Max(0f, passiveCooldownTimer - _sunTimerReduction);
-    }
-
-    private IEnumerator FlashAttackCircle()
-    {
-        if (attackFlashCircle == null) yield break;
-        attackFlashCircle.transform.localScale = new Vector3(baseAttackRange * 2f, baseAttackRange * 2f, 1f);
-        attackFlashCircle.color = new Color(0f, 1f, 0f, 0.4f);
-        attackFlashCircle.enabled = true;
-        yield return new WaitForSeconds(0.3f);
-        attackFlashCircle.enabled = false;
     }
 
     private void UpdateHighlights()

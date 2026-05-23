@@ -1,12 +1,9 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class Calendula : Aura
 {
     public float skillHealingMultiplier;
-    [SerializeField] private SpriteRenderer attackFlashCircle;
-
     private CalendulaData CData => data as CalendulaData;
 
     protected override void Awake()
@@ -38,21 +35,10 @@ public class Calendula : Aura
     protected override void Attack()
     {
         base.Attack();
-        StartCoroutine(FlashAttackCircle());
         List<Insect> insects = GetInsectsInRange();
         foreach (Insect insect in insects)
             insect.Damage(attackDamage, DamageType.Magic, ElementalType.Fire, this, true,
                 new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
-    }
-
-    private IEnumerator FlashAttackCircle()
-    {
-        if (attackFlashCircle == null) yield break;
-        attackFlashCircle.transform.localScale = new Vector3(attackRange * 2f, attackRange * 2f, 1f);
-        attackFlashCircle.color = new Color(0f, 1f, 0f, 0.4f);
-        attackFlashCircle.enabled = true;
-        yield return new WaitForSeconds(0.3f);
-        attackFlashCircle.enabled = false;
     }
 
     public override void ActivateSkill()

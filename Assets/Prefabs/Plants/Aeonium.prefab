@@ -403,7 +403,7 @@ MonoBehaviour:
   path3Unlocked: 0
   mainRenderer: {fileID: 5898074862566098166}
   skillRangeIndicator: {fileID: 1462711380963721723}
-  attackFlashCircle: {fileID: 892210127317390287}
+  attackFlashCircle: {fileID: 0}
 --- !u!1 &5717149755680190109
 GameObject:
   m_ObjectHideFlags: 0
