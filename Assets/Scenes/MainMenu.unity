@@ -2209,6 +2209,7 @@ MonoBehaviour:
   saveData:
     highestLevelUnlocked: 1
     unlockedPlants: []
+    maxLoadoutSize: 5
   selectedLevel: 0
 --- !u!4 &1900346993
 Transform:

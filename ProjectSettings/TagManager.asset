@@ -48,11 +48,17 @@ TagManager:
   - name: Background
     uniqueID: 1439254913
     locked: 0
+  - name: Colliders
+    uniqueID: 353902831
+    locked: 0
   - name: Insects
     uniqueID: 2604637171
     locked: 0
   - name: Plants
     uniqueID: 3276214163
+    locked: 0
+  - name: Non-colliders
+    uniqueID: 2312670813
     locked: 0
   - name: UI
     uniqueID: 4108659377
