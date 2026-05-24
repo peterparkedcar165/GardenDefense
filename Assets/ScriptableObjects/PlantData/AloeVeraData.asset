@@ -22,7 +22,7 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 52
   baseMagicPower: 0
-  baseAttackSpeed: 0.2
+  baseAttackSpeed: 0.12
   baseAttackRange: 4
   startingShield: 0
   baseHealingBonus: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
   basePoisonResistance: 0
   baseIceResistance: 0
   baseNatureResistance: 0
-  baseWindResistance: 0
+  baseWindResistance: 1
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -54,12 +54,12 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
-  baseProjectileSpeed: 3
+  baseProjectileSpeed: 4
   baseMaxRange: 20
   basePiercing: 0
   baseAoERadius: 1.5
   minFlightDuration: 1.5
-  projectileHeight: 3
+  projectileHeight: 4
   basePassiveCooldown: 0
   basePassiveDuration: 0
   baseSkillCooldown: 90
@@ -69,8 +69,8 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseHealAmount: 20
-  baseTempReduction: 4
+  baseHealAmount: 32
+  baseTempReduction: 5.5
   baseSkillHealPerTick: 11
   baseSkillHealInterval: 0.5
-  baseSkillTempReduction: 1.3
+  baseSkillTempReduction: 1.6

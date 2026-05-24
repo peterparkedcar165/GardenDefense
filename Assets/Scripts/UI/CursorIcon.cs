@@ -127,7 +127,7 @@ public class CursorIcon : MonoBehaviour
         float range = cachedPlant.data.baseAttackRange;
         float fertMult = FertilizerManager.instance?.GetPreviewRangeMultiplier(cachedPlant.data.elementalType) ?? 0f;
         range *= 1f + fertMult;
-        if (tile.isHighground) range *= 2f;
+        if (tile.isHighground) range *= 1.5f;
         rangePreviewCircle.gameObject.SetActive(true);
         rangePreviewCircle.position = new Vector3(tile.transform.position.x, tile.transform.position.y, rangePreviewCircle.position.z);
         rangePreviewCircle.localScale = new Vector3(range * 2f, range * 2f, 1f);

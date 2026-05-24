@@ -5,7 +5,9 @@ using System.Collections.Generic;
 public class AloeVeraProjectile : MonoBehaviour
 {
     private Transform visual;
-    private Vector3 targetPosition;
+    private Transform trackedTarget;
+    private Vector3 lastKnownPosition; // updated every frame; used as destination once target dies
+
     private float speed;
     private float aoERadius;
     private float healAmount;
@@ -16,32 +18,46 @@ public class AloeVeraProjectile : MonoBehaviour
     private ElementalType elementalType;
     private AloeVera source;
 
-    public float minFlightDuration = 0.5f;
+    private float bobDuration; // set by AloeVera based on attack speed
 
-    public float arcPeakHeight = 1.2f;
-    private const float arcRiseEnd = 0.5f;
+    [Header("Arc Timing")]
+    public float fallTime = 0.28f;   // seconds for the visual to fall from peak to 0
+
+    [Header("Arc Shape")]
+    public float arcPeakHeight = 1.5f;
+
+    [Header("Bob Shape")]
+    public float bobAmplitude = 0.10f;  // height of the hover oscillation
+    public float bobFrequency = 8f;     // oscillations per second
 
     private void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
     }
 
-    public void Initialize(Vector3 target, float damage, float speed, float aoERadius,
+    /// <param name="trackTarget">The transform to home toward (may be a moving insect or plant).</param>
+    /// <param name="fallbackPos">Fallback world position if trackTarget is already null at spawn.</param>
+    /// <param name="bobDuration">How long the projectile bobs at peak; set by caller based on attack speed.</param>
+    public void Initialize(Transform trackTarget, Vector3 fallbackPos,
+                           float damage, float speed, float aoERadius,
                            float healAmount, float tempReduction, bool isHealMode,
+                           float bobDuration,
                            DamageType damageType, ElementalType elementalType, AloeVera source)
     {
-        this.targetPosition = target;
-        this.damage         = damage;
-        this.speed          = speed;
-        this.aoERadius      = aoERadius;
-        this.healAmount     = healAmount;
-        this.tempReduction  = tempReduction;
-        this.isHealMode     = isHealMode;
-        this.damageType     = damageType;
-        this.elementalType  = elementalType;
-        this.source         = source;
-        visual = transform.Find("Visual");
+        this.trackedTarget     = trackTarget;
+        this.lastKnownPosition = trackTarget != null ? trackTarget.position : fallbackPos;
+        this.damage            = damage;
+        this.speed             = speed;
+        this.aoERadius         = aoERadius;
+        this.healAmount        = healAmount;
+        this.tempReduction     = tempReduction;
+        this.isHealMode        = isHealMode;
+        this.bobDuration       = bobDuration;
+        this.damageType        = damageType;
+        this.elementalType     = elementalType;
+        this.source            = source;
 
+        visual = transform.Find("Visual");
         if (visual != null)
         {
             SpriteRenderer sr = visual.GetComponent<SpriteRenderer>();
@@ -51,34 +67,86 @@ public class AloeVeraProjectile : MonoBehaviour
         StartCoroutine(FlyRoutine());
     }
 
+    // Returns the target's current position; caches it so we keep heading there after death.
+    private Vector3 GetTargetPosition()
+    {
+        if (trackedTarget != null && trackedTarget.gameObject.activeInHierarchy)
+            lastKnownPosition = trackedTarget.position;
+        return lastKnownPosition;
+    }
+
+    private void HomeTowardTarget()
+    {
+        transform.position = Vector3.MoveTowards(
+            transform.position, GetTargetPosition(), speed * Time.deltaTime);
+    }
+
+    private void SetVisualY(float y)
+    {
+        if (visual != null)
+            visual.localPosition = new Vector3(0f, y, 0f);
+    }
+
     private IEnumerator FlyRoutine()
     {
-        float totalDistance = Mathf.Max(Vector3.Distance(transform.position, targetPosition), 0.01f);
-        float actualSpeed = Mathf.Min(speed, totalDistance / Mathf.Max(minFlightDuration, 0.01f));
+        float elapsed;
 
-        while (Vector3.Distance(transform.position, targetPosition) > 0.05f)
+        // ── Phase 1: Rise ──────────────────────────────────────────────────────────
+        // Root homes at full speed. Visual rises 0 → arcPeakHeight.
+        // DISTANCE-BASED: phase does not end until root actually reaches the target,
+        // so the bob can only start once we're sitting on top of it.
+        float initialDistance = Mathf.Max(Vector3.Distance(transform.position, lastKnownPosition), 0.01f);
+
+        while (true)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, actualSpeed * Time.deltaTime);
+            float remaining = Vector3.Distance(transform.position, GetTargetPosition());
+            if (remaining <= 0.05f) break;
 
-            if (visual != null)
-            {
-                float progress = 1f - (Vector3.Distance(transform.position, targetPosition) / totalDistance);
-                float arcY;
-                if (progress < arcRiseEnd)
-                    arcY = Mathf.Sin(progress / arcRiseEnd * Mathf.PI * 0.5f) * arcPeakHeight;
-                else
-                    arcY = Mathf.Cos((progress - arcRiseEnd) / (1f - arcRiseEnd) * Mathf.PI * 0.5f) * arcPeakHeight;
-                Vector3 pos = visual.localPosition;
-                pos.y = arcY;
-                visual.localPosition = pos;
-            }
+            HomeTowardTarget();
+
+            // t = how far along the journey we are (0 at spawn, 1 at target)
+            float progress = 1f - Mathf.Clamp01(remaining / initialDistance);
+            SetVisualY(Mathf.Sin(progress * Mathf.PI * 0.5f) * arcPeakHeight);
 
             yield return null;
         }
 
-        transform.position = targetPosition;
-        if (visual != null)
-            visual.localPosition = Vector3.zero;
+        // Snap root exactly onto the target and lock the visual at peak.
+        transform.position = GetTargetPosition();
+        SetVisualY(arcPeakHeight);
+
+        // ── Phase 2: Bob ───────────────────────────────────────────────────────────
+        // Root continues tracking in case the target is still alive and moving.
+        // Visual hovers and bobs gently at arcPeakHeight.
+        elapsed = 0f;
+        while (elapsed < bobDuration)
+        {
+            elapsed += Time.deltaTime;
+
+            HomeTowardTarget();
+            SetVisualY(arcPeakHeight + Mathf.Sin(elapsed * bobFrequency) * bobAmplitude);
+
+            yield return null;
+        }
+
+        // ── Phase 3: Fall ──────────────────────────────────────────────────────────
+        // Root homes to last known position (target may already be dead).
+        // Visual falls arcPeakHeight → 0.
+        elapsed = 0f;
+        while (elapsed < fallTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / fallTime);
+
+            HomeTowardTarget();
+            SetVisualY(Mathf.Cos(t * Mathf.PI * 0.5f) * arcPeakHeight);
+
+            yield return null;
+        }
+
+        // Snap exactly onto final target position and reset the visual offset.
+        transform.position = GetTargetPosition();
+        SetVisualY(0f);
 
         Explode();
         Destroy(gameObject);
