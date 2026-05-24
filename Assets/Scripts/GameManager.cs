@@ -79,7 +79,8 @@ public class GameManager : MonoBehaviour
         {
             if (SettingsManager.instance == null || !SettingsManager.instance.IsOpen)
                 if (FertilizerSelectionUI.instance == null || !FertilizerSelectionUI.instance.IsOpen)
-                    TogglePause();
+                    if (LoadoutSelectionUI.instance == null || !LoadoutSelectionUI.instance.IsOpen)
+                        TogglePause();
         }
     }
 
@@ -115,6 +116,13 @@ public class GameManager : MonoBehaviour
         UpdateHealth();
         GameHUD.instance?.SetSpeedButton(gameSpeed);
         PersistentCanvas.instance?.Show();
+        PlantBar.instance?.Clear();
+        SetPause(true);
+        LoadoutSelectionUI.instance?.Show();
+    }
+
+    public void OnLoadoutConfirmed()
+    {
         PlantBar.instance?.Build();
         FertilizerSelectionUI.instance?.Show();
     }

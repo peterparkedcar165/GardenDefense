@@ -58,6 +58,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Shooter.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level9.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSelectionUI.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Level13.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CactusData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PuncturedEffect.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
+    <Compile Include="Assets\Scripts\LevelSpecific\Level13\GridManager13.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
@@ -167,6 +169,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\FlowerPot.cs" />
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
+    <Compile Include="Assets\Scripts\LevelSelector\InsectPreviewSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level8.cs" />

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 public class FertilizerSelectionUI : MonoBehaviour
@@ -44,6 +45,21 @@ public class FertilizerSelectionUI : MonoBehaviour
             card.Initialize(picks[i], this);
             activeCards.Add(card);
         }
+    }
+
+    void Update()
+    {
+        if (IsOpen && Keyboard.current.escapeKey.wasPressedThisFrame)
+            BackToLoadout();
+    }
+
+    private void BackToLoadout()
+    {
+        panel.SetActive(false);
+        foreach (var card in activeCards)
+            Destroy(card.gameObject);
+        activeCards.Clear();
+        LoadoutSelectionUI.instance?.ShowWithCurrentSelection();
     }
 
     public void CloseAfterSelect()

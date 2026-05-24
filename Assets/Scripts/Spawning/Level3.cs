@@ -227,6 +227,8 @@ public class Level3 : SpawnManager
     }
 
 
+public override GameObject[] GetInsectPrefabs() => new[] { workerAnt, soldierAnt, scoutAnt, fruitFly };
+
 // SPAWNING OF SPECIFIC TYPES
     void SpawnWorkerAnt() {
         Spawn(workerAnt);

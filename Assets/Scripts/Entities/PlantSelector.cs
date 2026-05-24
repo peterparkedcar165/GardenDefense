@@ -48,6 +48,10 @@ public class PlantSelector : MonoBehaviour
 
     private void Update()
     {
+        bool uiOpen = (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen)
+                   || (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen);
+        if (uiOpen) return;
+
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
             ClearSelection();

@@ -7928,7 +7928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 200
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7960,11 +7960,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 717.46
+      value: 739.04
       objectReference: {fileID: 0}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 345
+      value: 305.38504
       objectReference: {fileID: 0}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8022,7 +8022,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 0, y: 0}
+  m_Spacing: {x: 0, y: 25}
   m_Constraint: 1
   m_ConstraintCount: 4
 --- !u!1001 &1237655414437346824

@@ -14,6 +14,13 @@ public class LoadoutSelectionUI : MonoBehaviour
     [SerializeField] private LoadoutSlot slotPrefab;
     [SerializeField] private Button confirmButton;
 
+    [Header("Insect Preview")]
+    [SerializeField] private Transform insectContainer;
+    [SerializeField] private InsectPreviewSlot insectSlotPrefab;
+    [SerializeField] private GameObject insectTooltipPanel;
+    [SerializeField] private TMP_Text insectTooltipDescription;
+    [SerializeField] private TMP_Text insectTooltipPassiveDescription;
+
     [Header("Tooltip")]
     [SerializeField] private GameObject tooltipPanel;
     [SerializeField] private TMP_Text tooltipName;
@@ -30,18 +37,34 @@ public class LoadoutSelectionUI : MonoBehaviour
     [SerializeField] private TMP_Text tooltipDamageType;
     [SerializeField] private TMP_Text tooltipStats;
 
-    private int pendingLevel;
     private List<string> selectedLoadout = new List<string>();
     private List<LoadoutSlot> unlockedSlots = new List<LoadoutSlot>();
     private List<LoadoutSlot> selectedSlots = new List<LoadoutSlot>();
+    private readonly List<InsectPreviewSlot> insectSlots = new List<InsectPreviewSlot>();
 
     public bool IsOpen => panel.activeSelf;
 
     void Awake()
     {
+        if (instance != null) { Destroy(gameObject); return; }
         instance = this;
+        DontDestroyOnLoad(transform.root.gameObject);
+        Canvas rootCanvas = transform.root.GetComponent<Canvas>();
+        if (rootCanvas != null) rootCanvas.sortingOrder = 50;
         panel.SetActive(false);
         if (tooltipPanel != null) tooltipPanel.SetActive(false);
+        if (insectTooltipPanel != null) insectTooltipPanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (!IsOpen || SceneTransition.IsTransitioning) return;
+        if (!UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame) return;
+
+        if (SettingsManager.instance != null && SettingsManager.instance.IsOpen)
+            SettingsManager.instance.Close();
+        else
+            SettingsManager.instance?.Open();
     }
 
     public void Hide()
@@ -51,23 +74,86 @@ public class LoadoutSelectionUI : MonoBehaviour
         HideTooltip();
     }
 
-    public void Show(int level)
+    // Re-opens the loadout with the previously confirmed selection still in the slots.
+    public void ShowWithCurrentSelection()
     {
-        pendingLevel = level;
-        List<string> unlocked = SaveManager.instance.saveData.unlockedPlants;
+        selectedLoadout = new List<string>(SaveManager.instance.selectedLoadout);
 
-        // if less than 4 unlocked, skip the screen
+        List<string> unlocked = SaveManager.instance.saveData.unlockedPlants;
         if (unlocked.Count < 1)
         {
-            SaveManager.instance.selectedLoadout = new List<string>(unlocked);
-            LoadLevel();
+            GameManager.instance?.OnLoadoutConfirmed();
             return;
         }
 
         panel.SetActive(true);
-        selectedLoadout.Clear();
+        PopulateInsectPanel();
         RefreshUI();
-        
+    }
+
+    public void Show()
+    {
+        SaveManager.instance.selectedLoadout.Clear();
+        selectedLoadout.Clear();
+
+        List<string> unlocked = SaveManager.instance.saveData.unlockedPlants;
+
+        // if no plants unlocked, skip straight to fertilizers
+        if (unlocked.Count < 1)
+        {
+            GameManager.instance?.OnLoadoutConfirmed();
+            return;
+        }
+
+        panel.SetActive(true);
+        PopulateInsectPanel();
+        RefreshUI();
+    }
+
+    private void PopulateInsectPanel()
+    {
+        if (insectContainer == null || insectSlotPrefab == null) return;
+
+        foreach (var slot in insectSlots)
+            if (slot != null) Destroy(slot.gameObject);
+        insectSlots.Clear();
+
+        SpawnManager spawner = FindAnyObjectByType<SpawnManager>();
+        if (spawner == null) return;
+
+        var seen = new HashSet<InsectData>();
+        foreach (GameObject prefab in spawner.GetInsectPrefabs())
+        {
+            if (prefab == null) continue;
+            Insect insect = prefab.GetComponent<Insect>();
+            if (insect == null || insect.data == null) continue;
+            if (!seen.Add(insect.data)) continue;
+
+            InsectPreviewSlot slot = Instantiate(insectSlotPrefab, insectContainer);
+            slot.Initialize(insect.data, ShowInsectTooltip, HideInsectTooltip);
+            insectSlots.Add(slot);
+        }
+    }
+
+    private void ShowInsectTooltip(InsectData data)
+    {
+        if (insectTooltipPanel == null) return;
+        insectTooltipPanel.SetActive(true);
+
+        if (insectTooltipDescription != null)
+            insectTooltipDescription.text = data.description;
+
+        bool hasPassive = !string.IsNullOrWhiteSpace(data.passiveDescription);
+        if (insectTooltipPassiveDescription != null)
+        {
+            insectTooltipPassiveDescription.gameObject.SetActive(hasPassive);
+            insectTooltipPassiveDescription.text = data.passiveDescription;
+        }
+    }
+
+    private void HideInsectTooltip()
+    {
+        if (insectTooltipPanel != null) insectTooltipPanel.SetActive(false);
     }
 
     private void RefreshUI()
@@ -124,13 +210,8 @@ public class LoadoutSelectionUI : MonoBehaviour
     {
         SaveManager.instance.selectedLoadout = new List<string>(selectedLoadout);
         panel.SetActive(false);
-        LoadLevel();
-    }
-
-    private void LoadLevel()
-    {
-        SceneTransition transition = FindAnyObjectByType<SceneTransition>();
-        transition.StartCoroutine(transition.FadeToScene("Level"+pendingLevel));
+        HideTooltip();
+        GameManager.instance?.OnLoadoutConfirmed();
     }
 
     private void ShowTooltip(PlantData data)

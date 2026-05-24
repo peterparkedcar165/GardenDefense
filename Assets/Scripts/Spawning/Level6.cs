@@ -409,6 +409,8 @@ public class Level6 : SpawnManager
         yield return new WaitForSeconds(duration);
     }
 
+    public override GameObject[] GetInsectPrefabs() => new[] { workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt, snail, moth };
+
     void SpawnWorkerAnt()  { Spawn(workerAnt); }
     void SpawnSoldierAnt() { Spawn(soldierAnt); }
     void SpawnScoutAnt()   { Spawn(scoutAnt); }

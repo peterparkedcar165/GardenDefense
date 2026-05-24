@@ -5,8 +5,10 @@ public abstract class SpawnManager : MonoBehaviour
     public Transform spawnPoint;
     protected virtual void Start()
     {
-    
+
     }
+
+    public virtual GameObject[] GetInsectPrefabs() => System.Array.Empty<GameObject>();
 
     protected void StopAllSpawning()
     {

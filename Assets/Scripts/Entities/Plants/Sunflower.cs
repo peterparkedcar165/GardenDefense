@@ -29,7 +29,7 @@ public class Sunflower : Shooter
         if (passiveCooldownTimer <= 0)
         {
             GameManager.instance.AddSun(sunGenerated);
-            passiveCooldownTimer = passiveCooldown;
+            passiveCooldownTimer += passiveCooldown;
             GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), transform.position + new Vector3(0.25f, 0.5f, 0f), Quaternion.identity);
             indicator.GetComponent<DamageIndicator>().Initialize($"+{sunGenerated} Sun", new Color(1f, 1f, 0f));
         }
@@ -55,7 +55,7 @@ public class Sunflower : Shooter
 
     public void ReduceSunTimer()
     {
-        passiveCooldownTimer = Mathf.Max(0f, passiveCooldownTimer - 1f);
+        passiveCooldownTimer -= 1f;
     }
 
     public override void OnPath1Upgrade(int level)

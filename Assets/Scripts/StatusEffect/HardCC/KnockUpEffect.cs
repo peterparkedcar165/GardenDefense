@@ -21,7 +21,13 @@ public class KnockUpEffect : Airborne
         if (insect == null) return;
         insect.fallDamageSource = source;
         float tenacityScale = Mathf.Sqrt(Mathf.Max(0f, 1f - insect.tenacity));
-        insect.verticalVelocity = -knockUpForce * tenacityScale;
+        float force = -knockUpForce * tenacityScale;
+        // If already airborne from a prior knock-up, compound the forces so
+        // multiple simultaneous geysers send the insect proportionally higher.
+        if (!insect.isOnGround && insect.verticalVelocity < 0f)
+            insect.verticalVelocity += force;
+        else
+            insect.verticalVelocity = force;
     }
 
     public override void OnTick(float deltaTime)

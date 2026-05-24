@@ -28,12 +28,7 @@ public class LevelSelector : MonoBehaviour
     void Update()
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame && !SceneTransition.IsTransitioning)
-        {
-            if (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen)
-                LoadoutSelectionUI.instance.Hide();
-            else
-                GoToMainMenu();
-        }
+            GoToMainMenu();
     }
 
     private void GoToMainMenu()
@@ -63,14 +58,9 @@ public class LevelSelector : MonoBehaviour
 
     public void OnLevelSelected(int level)
     {
-        LoadoutSelectionUI.instance.Show(level);
-    }
-
-    private void LoadLevel(int level)
-    {
+        DisableAllButtons();
         SaveManager.instance.selectedLevel = level;
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
-        transition.StartCoroutine(transition.FadeToScene("Level"+level));
-        Debug.Log("Loaded Level " + level);
+        transition.StartCoroutine(transition.FadeToScene("Level" + level));
     }
 }

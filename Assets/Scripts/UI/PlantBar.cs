@@ -26,16 +26,30 @@ public class PlantBar : MonoBehaviour
 
     void Start()
     {
-        Build();
+        // Clear any stale slots from a previous run.
+        // Build() is called by GameManager.OnLoadoutConfirmed() once the player confirms.
+        foreach (Transform child in container)
+            Destroy(child.gameObject);
+        slots.Clear();
     }
 
     void Update()
     {
+        if (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen) return;
+        if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
+
         for (int i = 0; i < slots.Count && i < digitKeys.Length; i++)
         {
             if (Keyboard.current[digitKeys[i]].wasPressedThisFrame)
                 slots[i].OnClicked();
         }
+    }
+
+    public void Clear()
+    {
+        foreach (Transform child in container)
+            Destroy(child.gameObject);
+        slots.Clear();
     }
 
     public void Build()

@@ -25,6 +25,8 @@ public class SettingsManager : MonoBehaviour
         if (instance != null) { Destroy(gameObject); return; }
         instance = this;
         DontDestroyOnLoad(gameObject);
+        Canvas rootCanvas = settingsPanel.GetComponentInParent<Canvas>(true);
+        if (rootCanvas != null) rootCanvas.sortingOrder = 100;
         settingsPanel.SetActive(false);
         if (restartButton != null) restartButton.SetActive(false);
         if (mainMenuButton != null) mainMenuButton.SetActive(false);
@@ -39,9 +41,10 @@ public class SettingsManager : MonoBehaviour
 
         bool skillCancelled = SkillTargetingManager.instance != null && SkillTargetingManager.instance.WasCancelledThisFrame;
         bool loadoutOpen = LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen;
+        bool fertilizerOpen = FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen;
         bool inEncyclopedia = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Encyclopedia";
         bool inLevelSelector = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "LevelSelector";
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !inEncyclopedia && !inLevelSelector && !SceneTransition.IsTransitioning)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !fertilizerOpen && !inEncyclopedia && !inLevelSelector && !SceneTransition.IsTransitioning)
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);
@@ -55,6 +58,13 @@ public class SettingsManager : MonoBehaviour
         settingsPanel.SetActive(true);
         if (GameManager.instance != null)
             GameManager.instance.SetPause(true);
+    }
+
+    public void Close()
+    {
+        settingsPanel.SetActive(false);
+        // Don't touch pause state here — caller is responsible
+        // (e.g. loadout/fertilizer screens manage pause themselves)
     }
     public void Restart()
     {
