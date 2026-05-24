@@ -18,12 +18,13 @@ MonoBehaviour:
   displayName: Snowdrop
   elementalType: 4
   damageType: 1
-  sunCost: 125
+  sunCost: 115
   baseMaxHealth: 200
-  baseAttackDamage: 9
+  baseAttackDamage: 14
   baseMagicPower: 0
-  baseAttackSpeed: 0.33
-  baseAttackRange: 1.75
+  baseAttackSpeed: 2
+  baseAttackRange: 2
+  startingShield: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0
@@ -36,8 +37,8 @@ MonoBehaviour:
   baseNatureResistance: 0
   baseWindResistance: 0
   baseDotResistance: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -56,13 +57,24 @@ MonoBehaviour:
   baseProjectileSpeed: 0
   baseMaxRange: 0
   basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 45
+  baseSkillCooldown: 90
   baseSkillDuration: 6
   baseSkillRadius: 1.5
   baseSkillDamageMultiplier: 0.35
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseBlizzardDamage: 35
+  baseSlow: 0.22
+  scalingSlow: 0.04
+  coolingPerSecond: 1.25
+  baseBlizzardDamage: 30
+  blizzardDamagePerLevel: 5
+  baseBlizzardDuration: 5
+  blizzardDurationPerLevel: 1
+  blizzardChillMultiplier: 1.5
+  blizzardCoolingMultiplier: 2

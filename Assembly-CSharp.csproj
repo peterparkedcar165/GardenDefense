@@ -103,6 +103,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\SnowdropData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
+    <Compile Include="Assets\Scripts\UI\WaveStartArrow.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BogIrisProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level11.cs" />
@@ -159,8 +160,9 @@
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
-    <Compile Include="Assets\Scripts\LevelSpecific\Level13\GridManager13.cs" />
+    <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />

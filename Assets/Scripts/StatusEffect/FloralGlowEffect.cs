@@ -16,7 +16,7 @@ public class FloralGlowEffect : StatusEffect
     {
         Plant plant = target as Plant;
         if (plant == null) return;
-        cachedLightRange = calendula?.lightEmissionRange ?? 0f;
+        cachedLightRange = calendula?.baseLightEmissionRange ?? 0f;
         plant.lightEmissionRangeAdder += cachedLightRange;
     }
 

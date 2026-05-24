@@ -4,7 +4,7 @@ public class BurnEffect : DoTEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.03f, mpPerSecond = 0.36f;
+    public float healthPerSecond = 0.05f, mpPerSecond = 0.36f;
     private float cachedMaxHealth;
     private float cachedMagicPower;
     private LightFader _burnFader;
@@ -21,8 +21,8 @@ public class BurnEffect : DoTEffect
     {
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
         float mp = cachedMagicPower > 0 ? cachedMagicPower : (source?.magicPower ?? 0f);
-        float total = (healthPerSecond * hp) + (mpPerSecond * mp) + 4f;
-        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second. (<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#FFB6C1>{mpPerSecond * 100:F0}% Magic Power</color> + 4)";
+        float total = (healthPerSecond * hp) + (mpPerSecond * mp) + 6f;
+        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second. (<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#FFB6C1>{mpPerSecond * 100:F0}% Magic Power</color> + 6)";
     }
 
     public override void OnApply()
@@ -30,7 +30,7 @@ public class BurnEffect : DoTEffect
         base.OnApply();
         cachedMaxHealth = target.maxHealth;
         cachedMagicPower = source?.magicPower ?? 0f;
-        damagePerSecond = (healthPerSecond * cachedMaxHealth) + (mpPerSecond * cachedMagicPower) + 4f;
+        damagePerSecond = (healthPerSecond * cachedMaxHealth) + (mpPerSecond * cachedMagicPower) + 6f;
         Debug.Log($"Burn applied by {source} to {target}");
 
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);

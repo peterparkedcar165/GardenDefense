@@ -112,9 +112,9 @@ public abstract class Plant : Entity, IAttackable
         {
             switch (WeatherManager.instance.weather)
             {
-                case WeatherType.Sunny: fireDamage += 0.12f; break;
-                case WeatherType.Rain:  waterDamage += 0.12f; break;
-                case WeatherType.Snow:  iceDamage += 0.12f; break;
+                case WeatherType.Sunny: fireDamage += 0.24f; break;
+                case WeatherType.Rain:  waterDamage += 0.24f; break;
+                case WeatherType.Snow:  iceDamage += 0.24f; break;
             }
         }
     }
@@ -219,8 +219,8 @@ public abstract class Plant : Entity, IAttackable
         baseSkillHealth               = data.baseSkillHealth;
         elementalType                 = data.elementalType;
         damageType                    = data.damageType;
-        if (elementalType == ElementalType.Ice)  comfortMinAdder = -5f;
-        if (elementalType == ElementalType.Fire) comfortMaxAdder =  5f;
+        if (elementalType == ElementalType.Ice)  temperatureMaxAdder = 10f - baseTemperatureMax; // cap temperature at 10
+        if (elementalType == ElementalType.Fire) temperatureMinAdder = 10f - baseTemperatureMin; // floor temperature at 10
         FertilizerManager.instance?.ApplyTo(this);
         UpdateStats();
         health = maxHealth;
@@ -762,7 +762,7 @@ public abstract class Plant : Entity, IAttackable
     public virtual string GetPath3Description() => "";
     public virtual string GetElement()
     {
-        switch (elementalType)
+        switch (data != null ? data.elementalType : elementalType)
         {
             case ElementalType.Fire:
             return $"<color=orange>Fire</color>";
@@ -789,10 +789,10 @@ public abstract class Plant : Entity, IAttackable
 
     public virtual string GetElementDescription()
     {
-        switch (elementalType)
+        switch (data != null ? data.elementalType : elementalType)
         {
             case ElementalType.Fire:
-            return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight\nIncrease comfort in <color=orange>hot</color> weather";
+            return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight\nImmune to cold temperatures";
 
             case ElementalType.Nature:
             return $"Can be placed on <color=green>Grass</color>.";
@@ -804,7 +804,7 @@ public abstract class Plant : Entity, IAttackable
             return $"Taking damage returns <color=purple>Poison</color> damage equal to <color=purple><b>200%</b></color> of the hit to the attacker.";
 
             case ElementalType.Ice:
-            return $"Increase Passive tree level by <color=green>1</color> when in cold weather\nIncrease comfort in <color=#00FFFF>cold</color> weather";
+            return $"Increase Passive tree level by <color=green>1</color> when in cold weather\nImmune to hot temperatures";
 
             case ElementalType.Wind:
             return $"Increase Passive tree level by <color=green>1</color> when in high altitude";
