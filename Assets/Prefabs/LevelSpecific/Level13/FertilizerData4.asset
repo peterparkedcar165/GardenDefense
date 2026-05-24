@@ -10,16 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
-  m_Name: FertilizerData3
+  m_Name: FertilizerData4
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Regenerator
+  fertilizerName: Spellweaver
   stats:
-  - statType: 1
+  - statType: 14
     value: 0.52
-  - statType: 24
-    value: 0.54
   - statType: 22
-    value: 0.54
+    value: 0.34
+  - statType: 32
+    value: 160
+  - statType: 13
+    value: 0.34
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

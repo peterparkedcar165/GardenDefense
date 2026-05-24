@@ -102,6 +102,9 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         ElemLine(sb, Poison, "Poison Resistance:", $"{e.poisonResistance * 100:F0}%", e.poisonResistance, e.basePoisonResistance);
         ElemLine(sb, Wind,   "Wind Resistance:",   $"{e.windResistance * 100:F0}%",   e.windResistance,   e.baseWindResistance);
 
+        sb.AppendLine();
+        Line(sb, "<color=grey>Tenacity:</color>", $"{e.tenacity * 100:F0}%", e.tenacity, e.baseTenacity);
+
         // --- Miscellaneous ---
         sb.AppendLine();
         sb.AppendLine("<size=+8><color=white><b><u>Miscellaneous</u></b></color></size>");

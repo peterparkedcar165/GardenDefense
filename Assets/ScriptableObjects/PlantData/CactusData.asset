@@ -23,7 +23,7 @@ MonoBehaviour:
   baseAttackDamage: 12
   baseMagicPower: 0
   baseAttackSpeed: 0.7
-  baseAttackRange: 2
+  baseAttackRange: 3
   startingShield: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
   baseIceDamage: 0
   baseLightEmissionRange: 0
   baseProjectileSpeed: 7
-  baseMaxRange: 6
+  baseMaxRange: 8
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5

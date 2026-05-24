@@ -80,6 +80,8 @@ public class SettingsManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         settingsPanel.SetActive(false);
+        LoadoutSelectionUI.instance?.Hide();
+        FertilizerSelectionUI.instance?.CloseAfterSelect();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
         if (transition != null)
             transition.StartCoroutine(transition.FadeToScene("MainMenu"));

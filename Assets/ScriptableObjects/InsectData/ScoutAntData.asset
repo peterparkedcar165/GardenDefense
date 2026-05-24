@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InsectData
   displayName: Scout Ant
   nameColor: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
-  description: he's just like kinda fast
+  description: Faster than other Ants
   passiveDescription: All non-Scout Ants gain a non-stackable 15% Movement Speed
     bonus.
   sprite: {fileID: 21300000, guid: f3e61fc78903c504d92449fac31f25da, type: 3}

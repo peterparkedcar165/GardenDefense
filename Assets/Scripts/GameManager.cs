@@ -139,6 +139,8 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         paused = false;
+        LoadoutSelectionUI.instance?.Hide();
+        FertilizerSelectionUI.instance?.CloseAfterSelect();
         SceneManager.LoadScene("MainMenu");
     }
 

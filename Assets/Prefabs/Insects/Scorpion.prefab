@@ -89,8 +89,8 @@ MonoBehaviour:
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
@@ -129,8 +129,8 @@ MonoBehaviour:
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
-  physicalShred: 0
-  magicShred: 0
+  physicalDamage: 0
+  magicDamage: 0
   bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
@@ -151,6 +151,9 @@ MonoBehaviour:
   lifesteal: 0
   counterDamage: 0
   tenacity: 0
+  shieldBonusDamage: 0
+  shieldToughness: 0
+  startingShield: 0
   debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
@@ -167,8 +170,8 @@ MonoBehaviour:
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
-  physicalShredAdder: 0
-  magicShredAdder: 0
+  physicalDamageAdder: 0
+  magicDamageAdder: 0
   bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
@@ -187,6 +190,8 @@ MonoBehaviour:
   skillDurationAdder: 0
   tenacityAdder: 0
   immobilizeDurationAdder: 0
+  shieldBonusDamageAdder: 0
+  shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
   counterDamageAdder: 0
@@ -205,8 +210,8 @@ MonoBehaviour:
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
-  physicalShredMultiplier: 0
-  magicShredMultiplier: 0
+  physicalDamageMultiplier: 0
+  magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
@@ -285,7 +290,7 @@ Transform:
   m_GameObject: {fileID: 4515215125339047355}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.4, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.90909094, y: 0.90909094, z: 0.90909094}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -412,8 +417,8 @@ Transform:
   m_GameObject: {fileID: 6268732927135444423}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0212, y: -0.1, z: 0}
-  m_LocalScale: {x: 1.6893896, y: 0.45454547, z: 0.90909094}
+  m_LocalPosition: {x: -0.0075, y: 0, z: 0}
+  m_LocalScale: {x: 3.1091943, y: 0.9044546, z: 0.90909094}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8391850788492431864}

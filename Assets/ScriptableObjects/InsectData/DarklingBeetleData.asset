@@ -14,19 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarklingBeetleData
   displayName: Darkling Beetle
   nameColor: {r: 0.24528301, g: 0.06594873, b: 0.06594873, a: 1}
-  description: Slow and armored, can reach further
-  passiveDescription: None
+  description: Slow and heavily armored
+  passiveDescription: Has a longer reach of attack
   sprite: {fileID: -2001639675669158682, guid: e31122e50668b2d42afb0fdfbff8a40e, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: af2c6674e6ccba140a62522caacce5fc, type: 3}
-  baseMaxHealth: 800
-  baseAttackDamage: 36
+  baseMaxHealth: 1400
+  baseAttackDamage: 42
   baseMagicPower: 0
   baseAttackSpeed: 0.7
   baseAttackRange: 1
   baseMovementSpeed: 0.7
+  startingShield: 400
   baseLifesteal: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseTenacity: 0
   basePhysicalResistance: 0.5
   baseMagicResistance: 0.3

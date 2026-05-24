@@ -50,7 +50,8 @@ public class FertilizerCard : MonoBehaviour
             var sb = new StringBuilder();
             for (int i = 0; i < rolledStats.Length; i++)
             {
-                sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color=green><b>{FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color>");
+                string color = rolledValues[i] < 0f ? "red" : "green";
+                sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color={color}><b>{FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color>");
             }
             statsText.text = sb.ToString();
         }
@@ -92,17 +93,18 @@ public class FertilizerCard : MonoBehaviour
 
     private string FormatValue(StatType statType, float value)
     {
+        string sign = value >= 0f ? "+" : "";
         switch (statType)
         {
             case StatType.ImmobilizeDurationAdder:
             case StatType.SkillDurationAdder:
             case StatType.IlluminationRangeAdder:
-                return $"+{value:F1}s";
+                return $"{sign}{value:F1}s";
             case StatType.Piercing:
             case StatType.MagicPower:
-                return $"+{Mathf.RoundToInt(value)}";
+                return $"{sign}{Mathf.RoundToInt(value)}";
             default:
-                return $"+{value * 100f:F0}%";
+                return $"{sign}{value * 100f:F0}%";
         }
     }
 
@@ -125,7 +127,7 @@ public class FertilizerCard : MonoBehaviour
             case StatType.PassiveDamage:  return "Passive Damage";
             case StatType.SkillDamage:    return "Skill Damage";
             case StatType.SkillCooldown:  return "Skill Cd. Reduction";
-            case StatType.DoTDamage:      return "DoT Damage";
+            case StatType.DoTDamage:      return "Damage Over Time";
             case StatType.Piercing:                     return "Piercing";
             case StatType.ImmobilizeDurationAdder:      return "Immobilize Duration";
             case StatType.ImmobilizeDurationMultiplier: return "Immobilize Duration";

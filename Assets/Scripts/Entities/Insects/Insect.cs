@@ -9,6 +9,7 @@ public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();
     public static event System.Action<Vector3> OnInsectKilled;
+    public static event System.Action<Insect> OnInsectDied;
     private static int ObstacleLayer => LayerMask.GetMask("Obstacle");
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -376,6 +377,7 @@ public abstract class Insect : Entity, IAttackable
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         OnInsectKilled?.Invoke(transform.position);
+        OnInsectDied?.Invoke(this);
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);
@@ -389,6 +391,7 @@ public abstract class Insect : Entity, IAttackable
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         OnInsectKilled?.Invoke(transform.position);
+        OnInsectDied?.Invoke(this);
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);

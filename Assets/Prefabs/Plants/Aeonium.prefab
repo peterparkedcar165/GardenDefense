@@ -261,8 +261,8 @@ MonoBehaviour:
   targeting: 1
   sunCost: 0
   totalSunSpent: 0
-  elementalType: 0
-  damageType: 0
+  elementalType: 2
+  damageType: 1
   exp: 0
   expBoost: 0
   activeCooldown: 0

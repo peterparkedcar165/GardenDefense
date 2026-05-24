@@ -133,6 +133,7 @@ public class LoadoutSelectionUI : MonoBehaviour
             slot.Initialize(insect.data, ShowInsectTooltip, HideInsectTooltip);
             insectSlots.Add(slot);
         }
+
     }
 
     private void ShowInsectTooltip(InsectData data)

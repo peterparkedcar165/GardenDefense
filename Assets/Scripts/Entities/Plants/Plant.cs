@@ -122,8 +122,8 @@ public abstract class Plant : Entity, IAttackable
     public TARGETING targeting = TARGETING.First;
     public virtual bool UsesTargeting => false;
     public int sunCost, totalSunSpent = 0;
-    public ElementalType elementalType;
-    public DamageType damageType;
+    [System.NonSerialized] public ElementalType elementalType;
+    [System.NonSerialized] public DamageType damageType;
     public int exp = 0;
     public float expBoost;
     public float activeCooldown;

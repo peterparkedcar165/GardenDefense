@@ -18,8 +18,8 @@ MonoBehaviour:
   passiveDescription: Attacks inflict Venom on the plant, dealing damage over time
   sprite: {fileID: 21300000, guid: 5718fdb702b2cf1408aa3af255f89f80, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 3f24b5768444f7844b72d80407813b09, type: 3}
-  baseMaxHealth: 600
-  baseAttackDamage: 32
+  baseMaxHealth: 1200
+  baseAttackDamage: 58
   baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 1
@@ -30,18 +30,18 @@ MonoBehaviour:
   baseMagicDamage: 0
   baseTenacity: 0
   basePhysicalResistance: 0
-  baseMagicResistance: 0.3
+  baseMagicResistance: 0.45
   baseFireResistance: -0.1
   baseWaterResistance: 0.3
-  basePoisonResistance: 0.3
+  basePoisonResistance: 0.66
   baseIceResistance: 0
   baseNatureResistance: 0.3
   baseWindResistance: 0
   baseDotResistance: 0
-  sunDrop: 12
+  sunDrop: 16
   aggressivity: 0
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
-  venomDPS: 8
-  venomDuration: 4
+  venomDPS: 12
+  venomDuration: 6

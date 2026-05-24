@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe25a532237cad447ab16e5798aa0c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
-  weather: 2
+  weather: 0
   temperature: 0
 --- !u!4 &29017237
 Transform:
@@ -10312,6 +10312,9 @@ MonoBehaviour:
   darklingBeetle: {fileID: 2279086888993795066, guid: af2c6674e6ccba140a62522caacce5fc, type: 3}
   fireAnt: {fileID: 2279086888993795066, guid: 8237841c21078424da97084f1f33ae04, type: 3}
   termite: {fileID: 2279086888993795066, guid: 6a2d82503dc53a8468881f14bee007fc, type: 3}
+  scorpion: {fileID: 2279086888993795066, guid: 3f24b5768444f7844b72d80407813b09, type: 3}
+  moth: {fileID: 2279086888993795066, guid: ee01b098ec878574e9fe75ef5aa9fd22, type: 3}
+  firefly: {fileID: 2279086888993795066, guid: d7a6800c607f5f146a2134c6f2bca15d, type: 3}
   weatherManager: {fileID: 29017235}
   nextWaveTimer: 0
   waitTime: 0
@@ -10322,6 +10325,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4dc4f348ed7b93d4191821c8fb87b514, type: 2}
   - {fileID: 11400000, guid: 783cb2f7aa157f543891bccc42d6d4d9, type: 2}
   - {fileID: 11400000, guid: ceb1b9106171e534483418f667587d75, type: 2}
+  - {fileID: 11400000, guid: e49d1e80e7085294aadd27c61dc20cf9, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

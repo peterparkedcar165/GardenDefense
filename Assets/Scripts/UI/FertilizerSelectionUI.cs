@@ -10,7 +10,6 @@ public class FertilizerSelectionUI : MonoBehaviour
     [SerializeField] private FertilizerCard cardPrefab;
     [SerializeField] private Transform cardContainer;
     [SerializeField] private FertilizerData[] fertilizerPool;
-    [SerializeField] private int cardsToShow = 3;
 
     private List<FertilizerCard> activeCards = new List<FertilizerCard>();
 
@@ -38,7 +37,7 @@ public class FertilizerSelectionUI : MonoBehaviour
             Destroy(card.gameObject);
         activeCards.Clear();
 
-        List<FertilizerData> picks = PickRandom(fertilizerPool, cardsToShow);
+        List<FertilizerData> picks = PickRandom(fertilizerPool, fertilizerPool.Length);
         for (int i = 0; i < picks.Count; i++)
         {
             FertilizerCard card = Instantiate(cardPrefab, cardContainer);

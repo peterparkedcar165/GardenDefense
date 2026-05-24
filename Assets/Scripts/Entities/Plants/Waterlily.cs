@@ -57,6 +57,7 @@ public class Waterlily : Shooter
     public override void OnPath3Upgrade(int level)
     {
         baseSkillDuration = data.baseSkillDuration + 2f * level;
+        skillAoERadius    = data.baseSkillRadius   + 0.2f * level;
     }
 
     public override void ActivateSkill()
@@ -83,7 +84,7 @@ public class Waterlily : Shooter
         $"Blow little bubbles towards her target, dealing <color=green><b>{attackDamage}</b></color> <color=#3399FF>Water</color> <color=#FFB6C1>Magic </color>damage.";
 
     public override string GetSkillDesription() =>
-        $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{(WLData?.baseBubblePrisonImpactDamage ?? 0f) + 12f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green><b>{skillDuration}</b></color> seconds.";
+        $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{(WLData?.baseBubblePrisonImpactDamage ?? 0f) + 12f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#3399FF>Water</color> <color=#FFB6C1>Magic</color> damage upon impact, and keeping them airborne for <color=green><b>{skillDuration}</b></color> seconds within a <color=green><b>{skillAoERadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
         $"Attacks deal <color=green><b>{data.basePassiveDamage + attackDamage * 0.05f * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] <color=#3399FF>Water</color> damage to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.";
@@ -106,5 +107,6 @@ public class Waterlily : Shooter
         $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
         $"Increase impact damage by <color=green><b>12</b></color> per level. [<color=green><b>+{12 * effectivePath3Level}</b></color>]\n\n" +
         $"Increase duration by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
+        $"Increase bubble radius by <color=green><b>0.2</b></color> per level. [<color=green><b>+{0.2f * effectivePath3Level:F1}</b></color>]\n\n" +
         $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
 }

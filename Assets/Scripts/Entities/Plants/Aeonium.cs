@@ -32,11 +32,13 @@ public class Aeonium : Aura
     private void OnEnable()
     {
         Entity.OnPlantAttackHit += HandleNearbyAttack;
+        Insect.OnInsectDied    += HandleInsectDied;
     }
 
     private void OnDisable()
     {
         Entity.OnPlantAttackHit -= HandleNearbyAttack;
+        Insect.OnInsectDied    -= HandleInsectDied;
     }
 
     public override void UpdateStats()
@@ -101,6 +103,18 @@ public class Aeonium : Aura
         if (plant == this) return;
         if (Vector3.Distance(transform.position, plant.transform.position) <= attackRange)
             passiveCooldownTimer -= _sunTimerReduction;
+    }
+
+    private void HandleInsectDied(Insect insect)
+    {
+        if (!HasEffect<AeoniumBloomEffect>()) return;
+        if (Vector3.Distance(transform.position, insect.transform.position) > attackRange) return;
+
+        GameObject indicator = Object.Instantiate(
+            Resources.Load<GameObject>("DamageIndicator"),
+            insect.transform.position + new Vector3(0f, 0.75f, 0f),
+            Quaternion.identity);
+        indicator.GetComponent<DamageIndicator>()?.Initialize($"+{insect.sunDrop} Bonus Sun", new Color(1f, 0.84f, 0f));
     }
 
     private void UpdateHighlights()
