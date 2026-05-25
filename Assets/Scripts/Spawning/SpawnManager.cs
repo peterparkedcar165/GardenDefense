@@ -11,6 +11,32 @@ public abstract class SpawnManager : MonoBehaviour
 {
     public SpawnEntry[] spawnEntries;
 
+    private Transform[][] _cachedAllPaths;
+
+    private Transform[][] GetAllPaths()
+    {
+        if (_cachedAllPaths != null) return _cachedAllPaths;
+
+        Transform[] main = PathManager.instance != null ? PathManager.instance.waypoints : System.Array.Empty<Transform>();
+
+        if (spawnEntries == null || spawnEntries.Length == 0)
+        {
+            _cachedAllPaths = new Transform[][] { main };
+            return _cachedAllPaths;
+        }
+
+        _cachedAllPaths = new Transform[spawnEntries.Length][];
+        for (int i = 0; i < spawnEntries.Length; i++)
+        {
+            Transform[] leadIn = spawnEntries[i].leadInWaypoints ?? System.Array.Empty<Transform>();
+            Transform[] full   = new Transform[leadIn.Length + main.Length];
+            leadIn.CopyTo(full, 0);
+            main.CopyTo(full, leadIn.Length);
+            _cachedAllPaths[i] = full;
+        }
+        return _cachedAllPaths;
+    }
+
     protected virtual void Start() { }
 
     public virtual GameObject[] GetInsectPrefabs() => System.Array.Empty<GameObject>();
@@ -61,7 +87,7 @@ public abstract class SpawnManager : MonoBehaviour
 
         Insect insect = go.GetComponent<Insect>();
         if (insect != null)
-            insect.SetPath(fullPath);
+            insect.SetPath(fullPath, GetAllPaths());
     }
 
     protected virtual void Update() { }

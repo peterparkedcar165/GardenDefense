@@ -39,7 +39,7 @@ public class ColdEffect : ElementalDebuff
                 insect.RemoveEffect<ColdEffect>();
                 insect.RemoveEffect<WetEffect>();
                 insect.freezeInternalCooldown = 5f;
-                insect.ApplyEffect(new FreezeEffect(insect, 4f + source.elementalPower * 1.25f, 1, source));
+                insect.ApplyEffect(new FreezeEffect(insect, 3f + source.elementalPower * 1.25f, 1, source));
             }
         }
     }

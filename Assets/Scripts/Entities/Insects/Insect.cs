@@ -102,19 +102,23 @@ public abstract class Insect : Entity, IAttackable
             PlantUpgradeUI.instance.HidePanel();
     }
 
-    private Transform[] _pendingPath;
+    private Transform[]   _pendingPath;
+    private Transform[][] _pendingAllPaths;
+    private Transform[][] _allPaths;
 
     /// <summary>Called by SpawnManager immediately after Instantiate, before Start runs.</summary>
-    public void SetPath(Transform[] path)
+    public void SetPath(Transform[] path, Transform[][] allPaths = null)
     {
-        _pendingPath = path;
+        _pendingPath     = path;
+        _pendingAllPaths = allPaths;
     }
 
     protected override void Start()
     {
         base.Start();
         gameManager = FindAnyObjectByType<GameManager>();
-        waypoints = _pendingPath ?? PathManager.instance.waypoints;
+        waypoints  = _pendingPath ?? PathManager.instance.waypoints;
+        _allPaths  = _pendingAllPaths;
         expDrop = sunDrop/2;
         aimPoint = transform.Find("AimPoint");
         visual = transform.Find("Visual");
@@ -303,20 +307,33 @@ public abstract class Insect : Entity, IAttackable
     {
         if (waypoints == null || waypoints.Length == 0) return;
 
-        float nearestDist  = float.MaxValue;
-        int   nearestIndex = currentWaypointIndex;
+        float       nearestDist  = float.MaxValue;
+        int         nearestIndex = currentWaypointIndex;
+        Transform[] nearestPath  = waypoints;
 
-        for (int i = 0; i < waypoints.Length; i++)
+        // Search every known path (own + other spawn entries)
+        Transform[][] searchPaths = (_allPaths != null && _allPaths.Length > 0)
+            ? _allPaths
+            : new Transform[][] { waypoints };
+
+        foreach (Transform[] path in searchPaths)
         {
-            float dist = Vector3.Distance(transform.position, waypoints[i].position);
-            if (dist < nearestDist)
+            if (path == null) continue;
+            for (int i = 0; i < path.Length; i++)
             {
-                nearestDist  = dist;
-                nearestIndex = i;
+                if (path[i] == null) continue;
+                float dist = Vector3.Distance(transform.position, path[i].position);
+                if (dist < nearestDist)
+                {
+                    nearestDist  = dist;
+                    nearestIndex = i;
+                    nearestPath  = path;
+                }
             }
         }
 
-        // Target the waypoint after the nearest so the insect never walks backwards
+        // Switch to whichever path had the closest waypoint, targeting the one after it
+        waypoints            = nearestPath;
         currentWaypointIndex = Mathf.Min(nearestIndex + 1, waypoints.Length - 1);
     }
 

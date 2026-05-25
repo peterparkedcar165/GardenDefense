@@ -39,7 +39,6 @@ public class Snowdrop : Aura
         List<Insect> inRange = GetInsectsInRange();
         foreach (Insect insect in inRange)
         {
-            if (insect.visual == null || insect.visual.localPosition.y > 0.4f) continue;
             insect.ApplyEffect(new ChillEffect(insect, 0.5f, chillLevel, this, baseSlow, scalingSlow));
         }
 
@@ -138,7 +137,6 @@ public class Snowdrop : Aura
         List<Insect> inRange = GetInsectsInRange();
         foreach (Insect insect in inRange)
         {
-            if (insect.visual == null || insect.visual.localPosition.y > 0.4f) continue;
             insect.Damage(attackDamage, damageType, elementalType, this, false,
                 new DamageTag[] { DamageTag.Attack, DamageTag.DoT, DamageTag.AoE });
         }
@@ -158,7 +156,7 @@ public class Snowdrop : Aura
         $"The {GetName()} is a frosty flower whose icy presence continuously damages and chills nearby insects, while cooling the plants around her.";
 
     public override string GetAttackDescription() =>
-        $"Continuously deals <color=green><b>{attackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all ground-level insects within range.";
+        $"Continuously deals <color=green><b>{attackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
 
     public override string GetPassiveDescription() =>
         $"Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement by <color=green><b>{baseSlow * 100f:F0}%</b></color>.\n\n" +
