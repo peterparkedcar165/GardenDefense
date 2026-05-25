@@ -18,7 +18,7 @@ MonoBehaviour:
   displayName: Cactus
   elementalType: 2
   damageType: 0
-  sunCost: 125
+  sunCost: 105
   baseMaxHealth: 200
   baseAttackDamage: 12
   baseMagicPower: 0
@@ -69,4 +69,11 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseShieldAmount: 120
+  baseShieldAmount: 100
+  path1NeedlesBase: 8
+  path1NeedlesPerLevel: 4
+  path2HealthPerLevel: 70
+  path3ShieldPerLevel: 20
+  path3SkillDurationPerLevel: 2
+  baseSkillHealBonus: 0.12
+  path3HealBonusPerLevel: 0.08

@@ -18,9 +18,9 @@ public class LeafRanger : Shooter
     public override void UpdateStats()
     {
         base.UpdateStats();
+        float aspl = LRData?.path3AttackSpeedBonusPerLevel ?? 0.25f;
         if (skillActive)
-            attackSpeed += baseAttackSpeed * ((LRData?.baseSkillAttackSpeedBonus ?? 3f) + 0.25f * effectivePath3Level + skillDamageMultiplier * magicPower);
-
+            attackSpeed += baseAttackSpeed * ((LRData?.baseSkillAttackSpeedBonus ?? 3f) + aspl * effectivePath3Level + skillDamageMultiplier * magicPower);
     }
 
     protected override void Update()
@@ -71,15 +71,15 @@ public class LeafRanger : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseCriticalChance = data.baseCriticalChance + 0.05f * level;
-        baseAttackSpeed    = data.baseAttackSpeed    + 0.05f * level;
+        baseCriticalChance = data.baseCriticalChance + (LRData?.path1CritChancePerLevel   ?? 0.05f) * level;
+        baseAttackSpeed    = data.baseAttackSpeed    + (LRData?.path1AttackSpeedPerLevel   ?? 0.05f) * level;
     }
 
     public override void OnPath2Upgrade(int level) { }
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = data.baseSkillDuration + level * 0.5f;
+        baseSkillDuration = data.baseSkillDuration + (LRData?.path3SkillDurationPerLevel ?? 0.5f) * level;
     }
 
     public override void ActivateSkill()
@@ -96,12 +96,16 @@ public class LeafRanger : Shooter
     public override string GetPath2Name() => "Passive";
     public override string GetPath3Name() => "Skill";
 
-    public override string GetPath1Description() =>
-        $"Attack:\n\n" +
-        $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.\n\n" +
-        $"Increase Critical Chance by <color=green><b>5%</b></color> per level. [<color=green><b>+{5 * effectivePath1Level}%</b></color>]\n\n" +
-        $"Increase Attack Speed by <color=green><b>0.05</b></color> per level. [<color=green><b>+{0.05 * effectivePath1Level}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    public override string GetPath1Description()
+    {
+        float critpl = LRData?.path1CritChancePerLevel ?? 0.05f;
+        float aspl   = LRData?.path1AttackSpeedPerLevel ?? 0.05f;
+        return $"Attack:\n\n" +
+               $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.\n\n" +
+               $"Increase Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    }
 
     public override string GetPath2Description() =>
         $"Passive:\n\n" +
@@ -109,11 +113,15 @@ public class LeafRanger : Shooter
         $"Increase Piercing by an additional <b><color=green>1</color></b> per level. [<b><color=green>+{effectivePath2Level}</color></b>]\n\n" +
         $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
 
-    public override string GetPath3Description() =>
-        $"Skill:\n\n" +
-        $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{(LRData?.baseSkillAttackSpeedBonus ?? 3f) * 100f + 25f * effectivePath3Level + skillDamageMultiplier * magicPower * 100f:F0}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.\n\n" +
-        $"Scaling: <color=#FFB6C1><b>+{skillDamageMultiplier * 100f:F0}%</b></color> bonus per <color=#FFB6C1>Magic Power</color>. [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower * 100f:F0}%</b></color>]\n\n" +
-        $"Increase Attack Speed bonus by <color=green><b>25%</b></color> per level. [<color=green><b>+{25 * effectivePath3Level}%</b></color>]\n\n" +
-        $"Increase duration by <color=green><b>0.5</b></color> seconds per level. [<color=green><b>+{0.5 * effectivePath3Level}s</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    public override string GetPath3Description()
+    {
+        float aspl  = LRData?.path3AttackSpeedBonusPerLevel ?? 0.25f;
+        float durpl = LRData?.path3SkillDurationPerLevel    ?? 0.5f;
+        return $"Skill:\n\n" +
+               $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{(LRData?.baseSkillAttackSpeedBonus ?? 3f) * 100f + aspl * effectivePath3Level * 100f + skillDamageMultiplier * magicPower * 100f:F0}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.\n\n" +
+               $"Scaling: <color=#FFB6C1><b>+{skillDamageMultiplier * 100f:F0}%</b></color> bonus per <color=#FFB6C1>Magic Power</color>. [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}s</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    }
 }

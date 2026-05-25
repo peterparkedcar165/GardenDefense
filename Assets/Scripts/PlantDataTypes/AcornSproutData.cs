@@ -6,6 +6,19 @@ public class AcornSproutData : PlantData
     public float stunChance;
     public float stunDuration;
 
+    [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 8f;
+
+    [Header("Path 2 Scaling")]
+    public float path2StunChancePerLevel = 0.05f;
+    public float path2StunDurationPerLevel = 0.1f;
+
+    [Header("Path 3 Scaling")]
+    public float path3DamageMultiplierPerLevel = 0.25f;
+    public float path3SkillDurationPerLevel = 2f;
+    public float path3HealthPerLevel = 50f;
+    public float path3RadiusPerLevel = 0.15f;
+
     public override string GetAttackDescription() =>
         $"Shoots acorns towards his target, dealing <color=green><b>{baseAttackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.";
 

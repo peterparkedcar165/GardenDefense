@@ -11,6 +11,19 @@ public class HollyData : PlantData
     public float baseSkillShield;
     public float baseSkillShieldMP;
 
+    [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 4f;
+    public float path1PhysicalResistancePerLevel = 0.04f;
+
+    [Header("Path 2 Scaling")]
+    public float path2HealthPerLevel = 40f;
+    public float path2RetaliationPerLevel = 0.05f;
+
+    [Header("Path 3 Scaling")]
+    public float path3ShieldPerLevel = 20f;
+    public float path3FrozenRagePerLevel = 0.04f;
+    public float path3SkillDurationPerLevel = 2f;
+
     public override string GetAttackDescription() =>
         $"Releases icy thorns dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
 

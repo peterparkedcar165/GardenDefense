@@ -72,3 +72,7 @@ MonoBehaviour:
   baseSeedCount: 3
   baseBeamWidth: 1.6
   basePushPower: 1.35
+  path1ElementalPowerPerLevel: 0.08
+  path1AttackRangePerLevel: 0.2
+  path3BeamWidthPerLevel: 0.25
+  path3SkillDurationPerLevel: 1

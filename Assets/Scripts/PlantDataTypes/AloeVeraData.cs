@@ -12,6 +12,19 @@ public class AloeVeraData : PlantData
     public float baseSkillHealInterval = 1f;
     public float baseSkillTempReduction = 2f;
 
+    [Header("Path 1 Scaling")]
+    public float path1AttackSpeedPerLevel = 0.02f;
+    public float path1AttackRangePerLevel = 0.2f;
+
+    [Header("Path 2 Scaling")]
+    public float path2HealPerLevel = 8f;
+    public float path2TempReductionPerLevel = 0.5f;
+
+    [Header("Path 3 Scaling")]
+    public float path3SkillHealPerLevel = 2f;
+    public float path3SkillDurationPerLevel = 1f;
+    public float path3RadiusPerLevel = 0.3f;
+
     public override string GetAttackDescription() =>
         $"Lob a water droplet that bursts on landing, dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage in an area.";
 

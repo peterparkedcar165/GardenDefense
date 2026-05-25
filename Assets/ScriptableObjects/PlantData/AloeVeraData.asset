@@ -20,7 +20,7 @@ MonoBehaviour:
   damageType: 1
   sunCost: 75
   baseMaxHealth: 200
-  baseAttackDamage: 52
+  baseAttackDamage: 46
   baseMagicPower: 0
   baseAttackSpeed: 0.12
   baseAttackRange: 4
@@ -69,8 +69,15 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseHealAmount: 32
-  baseTempReduction: 5.5
-  baseSkillHealPerTick: 11
+  baseHealAmount: 26
+  baseTempReduction: 4
+  baseSkillHealPerTick: 9
   baseSkillHealInterval: 0.5
-  baseSkillTempReduction: 1.6
+  baseSkillTempReduction: 1.4
+  path1AttackSpeedPerLevel: 0.02
+  path1AttackRangePerLevel: 0.2
+  path2HealPerLevel: 12
+  path2TempReductionPerLevel: 0.9
+  path3SkillHealPerLevel: 4
+  path3SkillDurationPerLevel: 2
+  path3RadiusPerLevel: 0.3

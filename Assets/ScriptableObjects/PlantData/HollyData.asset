@@ -19,7 +19,7 @@ MonoBehaviour:
   elementalType: 4
   damageType: 0
   sunCost: 100
-  baseMaxHealth: 400
+  baseMaxHealth: 300
   baseAttackDamage: 25
   baseMagicPower: 0
   baseAttackSpeed: 1
@@ -69,10 +69,17 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseRetaliationHollyPercent: 0.75
-  baseRetaliationInsectPercent: 0.75
+  baseRetaliationHollyPercent: 0.5
+  baseRetaliationInsectPercent: 0.5
   baseHealthBonusMP: 0.3
   baseFrozenRageReduction: 0.12
   baseFrozenRageReductionMP: 0.08
   baseSkillShield: 120
   baseSkillShieldMP: 0.5
+  path1AttackDamagePerLevel: 4
+  path1PhysicalResistancePerLevel: 0.04
+  path2HealthPerLevel: 45
+  path2RetaliationPerLevel: 0.1
+  path3ShieldPerLevel: 30
+  path3FrozenRagePerLevel: 0.04
+  path3SkillDurationPerLevel: 2

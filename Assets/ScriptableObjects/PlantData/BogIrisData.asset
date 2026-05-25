@@ -73,3 +73,9 @@ MonoBehaviour:
   baseSunGenerated: 2
   baseKnockUpHeight: 3.5
   baseGeyserDamage: 105
+  path1AttackDamagePerLevel: 8
+  path2OpenDurationPerLevel: 2
+  path2SunPerLevel: 1
+  path3GeyserDamagePerLevel: 15
+  path3KnockUpPerLevel: 1
+  path3GeyserRadiusPerLevel: 0.15

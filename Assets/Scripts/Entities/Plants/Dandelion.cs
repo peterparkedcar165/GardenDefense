@@ -14,6 +14,8 @@ public class Dandelion : Shooter
 
     private float WindGustDamage => data.baseSkillDamage + attackDamage + skillDamageMultiplier * magicPower;
 
+    private DandelionData DData => data as DandelionData;
+
     protected override void Awake()
     {
         base.Awake();
@@ -28,7 +30,7 @@ public class Dandelion : Shooter
 
     protected override void Shoot(Vector3 _)
     {
-        int count = ((DandelionData)data).baseSeedCount + effectivePath2Level;
+        int count = (DData?.baseSeedCount ?? 2) + effectivePath2Level;
         List<Insect> targets = FindMultipleTargets(count);
         if (targets.Count == 0) return;
 
@@ -100,15 +102,15 @@ public class Dandelion : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseElementalPower = level * 0.06f;
-        baseAttackRange = data.baseAttackRange + (level * 0.25f);
+        baseElementalPower = level * (DData?.path1ElementalPowerPerLevel ?? 0.06f);
+        baseAttackRange    = data.baseAttackRange + level * (DData?.path1AttackRangePerLevel ?? 0.25f);
     }
 
     public override void OnPath2Upgrade(int level) { }
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = data.baseSkillDuration + (level * 1f);
+        baseSkillDuration = data.baseSkillDuration + level * (DData?.path3SkillDurationPerLevel ?? 1f);
     }
 
     public override void ActivateSkill()
@@ -126,7 +128,7 @@ public class Dandelion : Shooter
     {
         skillCooldownTimer = skillCooldown;
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
-        float beamWidth = ((DandelionData)data).baseBeamWidth + 0.25f * effectivePath3Level;
+        float beamWidth = (DData?.baseBeamWidth ?? 1f) + (DData?.path3BeamWidthPerLevel ?? 0.25f) * effectivePath3Level;
         if (windGustPrefab == null) return;
         _windGustInstance = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
         _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this);
@@ -147,7 +149,7 @@ public class Dandelion : Shooter
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, Camera.main.nearClipPlane));
         mouseWorld.z = 0f;
 
-        float beamWidth = ((DandelionData)data).baseBeamWidth + 0.25f * effectivePath3Level;
+        float beamWidth = (DData?.baseBeamWidth ?? 1f) + (DData?.path3BeamWidthPerLevel ?? 0.25f) * effectivePath3Level;
         Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
@@ -167,25 +169,37 @@ public class Dandelion : Shooter
     public override string GetDescription() =>
         $"The {GetName()} releases waves of seeds that ride the wind, striking multiple targets at once.";
 
-    public override string GetPath1Description() =>
-        $"Attack:\n\n" +
-        $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.\n\n" +
-        $"Increase Elemental Power by <color=green><b>6%</b></color> per level. [<color=green><b>+{6 * effectivePath1Level}%</b></color>]\n\n" +
-        $"Increase Attack Range by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath1Level}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    public override string GetPath1Description()
+    {
+        float eppl    = DData?.path1ElementalPowerPerLevel ?? 0.06f;
+        float rangepl = DData?.path1AttackRangePerLevel    ?? 0.25f;
+        return $"Attack:\n\n" +
+               $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.\n\n" +
+               $"Increase Elemental Power by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    }
 
-    public override string GetPath2Description() =>
-        $"Passive:\n\n" +
-        $"Fires <color=green><b>{((DandelionData)data).baseSeedCount + effectivePath2Level}</b></color> seeds per attack, targeting the <color=green><b>{((DandelionData)data).baseSeedCount + effectivePath2Level}</b></color> highest-priority insects in range.\n\n" +
-        $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    public override string GetPath2Description()
+    {
+        int seeds = (DData?.baseSeedCount ?? 2) + effectivePath2Level;
+        return $"Passive:\n\n" +
+               $"Fires <color=green><b>{seeds}</b></color> seeds per attack, targeting the <color=green><b>{seeds}</b></color> highest-priority insects in range.\n\n" +
+               $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    }
 
-    public override string GetPath3Description() =>
-        $"Skill:\n\n" +
-        $"Blows a powerful gust of pollen wind <color=green><b>{((DandelionData)data).baseBeamWidth + 0.25f * effectivePath3Level}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.\n\n" +
-        $"Scaling: <color=green><b>100%</b></color> Attack Damage\n\n" +
-        $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-        $"Increase skill duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{1 * effectivePath3Level}s</b></color>]\n\n" +
-        $"Increase gust width by <color=green><b>0.25</b></color> per level. [<color=green><b>+{0.25 * effectivePath3Level}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    public override string GetPath3Description()
+    {
+        float beampl = DData?.path3BeamWidthPerLevel    ?? 0.25f;
+        float durpl  = DData?.path3SkillDurationPerLevel ?? 1f;
+        float currentWidth = (DData?.baseBeamWidth ?? 1f) + beampl * effectivePath3Level;
+        return $"Skill:\n\n" +
+               $"Blows a powerful gust of pollen wind <color=green><b>{currentWidth:F2}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.\n\n" +
+               $"Scaling: <color=green><b>100%</b></color> Attack Damage\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
+               $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+               $"Increase gust width by <color=green><b>{beampl:F2}</b></color> per level. [<color=green><b>+{beampl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    }
 }

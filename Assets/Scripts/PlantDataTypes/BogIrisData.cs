@@ -8,6 +8,18 @@ public class BogIrisData : PlantData
     public float baseKnockUpHeight;
     public float baseGeyserDamage;
 
+    [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 8f;
+
+    [Header("Path 2 Scaling")]
+    public float path2OpenDurationPerLevel = 2f;
+    public int path2SunPerLevel = 1;
+
+    [Header("Path 3 Scaling")]
+    public float path3GeyserDamagePerLevel = 15f;
+    public float path3KnockUpPerLevel = 1f;
+    public float path3GeyserRadiusPerLevel = 0.15f;
+
     public override string GetAttackDescription() =>
         $"Fires a water bolt at a single target dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage.";
 

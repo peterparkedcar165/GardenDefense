@@ -6,6 +6,18 @@ public class PoisonShroomData : PlantData
     public float basePoisonDuration;
     public float basePoisonDPS;
 
+    [Header("Path 1 Scaling")]
+    public float path1AttackSpeedPerLevel = 0.08f;
+    public float path1AttackRangePerLevel = 0.1f;
+
+    [Header("Path 2 Scaling")]
+    public float path2PoisonDurationPerLevel = 1f;
+    public float path2PoisonDPSPerLevel = 6f;
+
+    [Header("Path 3 Scaling")]
+    public float path3SkillDurationPerLevel = 1f;
+    public float path3RadiusPerLevel = 0.2f;
+
     public override string GetAttackDescription() =>
         $"Blows poisonous bubbles at his target, dealing <color=green><b>{baseAttackDamage}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage.";
 

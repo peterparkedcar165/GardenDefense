@@ -20,7 +20,7 @@ MonoBehaviour:
   damageType: 0
   sunCost: 85
   baseMaxHealth: 200
-  baseAttackDamage: 42
+  baseAttackDamage: 34
   baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 3
@@ -66,8 +66,15 @@ MonoBehaviour:
   baseSkillDuration: 20
   baseSkillRadius: 1
   baseSkillDamageMultiplier: 1.5
-  baseSkillHealth: 250
+  baseSkillHealth: 300
   basePassiveDamage: 0
   baseSkillDamage: 0
-  stunChance: 0.35
+  stunChance: 0.4
   stunDuration: 0.5
+  path1AttackDamagePerLevel: 12
+  path2StunChancePerLevel: 0.06
+  path2StunDurationPerLevel: 0.2
+  path3DamageMultiplierPerLevel: 0.25
+  path3SkillDurationPerLevel: 2
+  path3HealthPerLevel: 60
+  path3RadiusPerLevel: 0.15

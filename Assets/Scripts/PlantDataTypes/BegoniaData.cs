@@ -9,6 +9,18 @@ public class BegoniaData : PlantData
     public float basePassiveMultiplier;
     public float baseSkillMultiplier;
 
+    [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 4f;
+    public float path1AttackRangePerLevel = 0.2f;
+
+    [Header("Path 2 Scaling")]
+    public float path2ElementalPowerPerLevel = 0.06f;
+
+    [Header("Path 3 Scaling")]
+    public float path3NatureDamageBonusPerLevel = 0.04f;
+    public float path3AttackSpeedBonusPerLevel = 0.04f;
+    public float path3RadiusPerLevel = 0.15f;
+
     public override string GetAttackDescription() =>
         $"Fire a magical bolt dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage.";
 

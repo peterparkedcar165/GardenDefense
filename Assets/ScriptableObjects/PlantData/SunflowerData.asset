@@ -20,7 +20,7 @@ MonoBehaviour:
   damageType: 1
   sunCost: 95
   baseMaxHealth: 200
-  baseAttackDamage: 35
+  baseAttackDamage: 32
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 3
@@ -71,3 +71,8 @@ MonoBehaviour:
   baseSkillDamage: 0
   baseSunGenerated: 6
   baseSunrayDPS: 75
+  path1AttackDamagePerLevel: 4
+  path1AttackSpeedPerLevel: 0.03
+  path2SunPerLevel: 2
+  path3SunrayDPSPerLevel: 15
+  path3SkillDurationPerLevel: 0.5

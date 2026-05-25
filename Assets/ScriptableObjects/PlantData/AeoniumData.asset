@@ -69,10 +69,10 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseSunGenerated: 5
+  baseSunGenerated: 3
   baseSunTimerReduction: 0.2
-  baseHealAmount: 8
-  baseSkillCooldownReduction: 0.75
+  baseHealAmount: 6
+  baseSkillCooldownReduction: 0.5
   baseSkillRangeBonus: 0.75
   skillRangeBonusPerLevel: 0.1
   baseSkillSpeedBonus: 1
@@ -80,3 +80,10 @@ MonoBehaviour:
   healMPMultiplier: 0.16
   sunTimerMPMultiplier: 0.005
   skillSpeedMPMultiplier: 0.7
+  path1AttackRangePerLevel: 0.2
+  path1HealPerLevel: 4
+  path1CDRPerLevel: 0.25
+  path2SunPerLevel: 2
+  path2SunTimerReductionPerLevel: 0.1
+  path3BonusSunBase: 4
+  path3BonusSunPerLevel: 2

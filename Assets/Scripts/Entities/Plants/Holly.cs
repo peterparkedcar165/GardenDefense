@@ -11,16 +11,16 @@ public class Holly : Aura
 
     private float PassiveHealthBonus =>
         (HData?.baseHealthBonusMP ?? 0f) * magicPower +
-        40f * effectivePath2Level;
+        (HData?.path2HealthPerLevel ?? 40f) * effectivePath2Level;
 
-    public float RetaliationHollyPct  => (HData?.baseRetaliationHollyPercent  ?? 0.75f) + 0.05f * effectivePath2Level;
-    public float RetaliationInsectPct => (HData?.baseRetaliationInsectPercent ?? 0.75f) + 0.05f * effectivePath2Level;
+    public float RetaliationHollyPct  => (HData?.baseRetaliationHollyPercent  ?? 0.75f) + (HData?.path2RetaliationPerLevel ?? 0.05f) * effectivePath2Level;
+    public float RetaliationInsectPct => (HData?.baseRetaliationInsectPercent ?? 0.75f) + (HData?.path2RetaliationPerLevel ?? 0.05f) * effectivePath2Level;
 
-    private float FrozenRageReductionBase => (HData?.baseFrozenRageReduction   ?? 0.12f) + 0.04f * effectivePath3Level;
+    private float FrozenRageReductionBase => (HData?.baseFrozenRageReduction   ?? 0.12f) + (HData?.path3FrozenRagePerLevel ?? 0.04f) * effectivePath3Level;
     private float FrozenRageReductionMP   => (HData?.baseFrozenRageReductionMP ?? 0f)    * magicPower / 100f;
     private float FrozenRageReduction     => FrozenRageReductionBase + FrozenRageReductionMP;
 
-    private float ShieldAmountBase => (HData?.baseSkillShield ?? 0f) + 20f * effectivePath3Level;
+    private float ShieldAmountBase => (HData?.baseSkillShield ?? 0f) + (HData?.path3ShieldPerLevel ?? 20f) * effectivePath3Level;
     private float ShieldAmountMP   => (HData?.baseSkillShieldMP ?? 0f) * magicPower;
     private float ShieldAmount     => ShieldAmountBase + ShieldAmountMP;
 
@@ -84,19 +84,20 @@ public class Holly : Aura
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage      = data.baseAttackDamage      + 4f    * level;
-        basePhysicalResistance = data.basePhysicalResistance + 0.04f * level;
+        baseAttackDamage      = data.baseAttackDamage       + (HData?.path1AttackDamagePerLevel          ?? 4f)    * level;
+        basePhysicalResistance = data.basePhysicalResistance + (HData?.path1PhysicalResistancePerLevel ?? 0.04f) * level;
     }
 
     public override void OnPath2Upgrade(int level)
     {
-        health += 40f;
+        float hppl = HData?.path2HealthPerLevel ?? 40f;
+        health += hppl;
         UpdateHealthBar();
     }
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = data.baseSkillDuration + 2f * level;
+        baseSkillDuration = data.baseSkillDuration + (HData?.path3SkillDurationPerLevel ?? 2f) * level;
     }
 
     public override string GetName() => "<b><color=#00FFFF>Holly</color></b>";
@@ -117,23 +118,36 @@ public class Holly : Aura
         $"Insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, forcing them to target {GetName()} and reducing their Physical Resistance by " +
         $"<color=green><b>{FrozenRageReductionBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f:F0}%</b></color>].";
 
-    public override string GetPath1Description() =>
-        $"Attack:\n\n{GetAttackDescription()}\n\n" +
-        $"Increase Attack Damage by <color=green><b>4</b></color> per level. [<color=green><b>+{4 * effectivePath1Level}</b></color>]\n\n" +
-        $"Increase Physical Resistance by <color=green><b>4%</b></color> per level. [<color=green><b>+{4 * effectivePath1Level}%</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    public override string GetPath1Description()
+    {
+        float adpl     = HData?.path1AttackDamagePerLevel          ?? 4f;
+        float resistpl = HData?.path1PhysicalResistancePerLevel ?? 0.04f;
+        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
+               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase Physical Resistance by <color=green><b>{resistpl * 100f:F0}%</b></color> per level. [<color=green><b>+{resistpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    }
 
-    public override string GetPath2Description() =>
-        $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-        $"Increase retaliation percentages by <color=green><b>5%</b></color> per level for both. [<color=green><b>+{5 * effectivePath2Level}%</b></color>]\n\n" +
-        $"Increase Max Health by <color=green><b>40</b></color> per level. [<color=green><b>+{40 * effectivePath2Level}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    public override string GetPath2Description()
+    {
+        float retalipl = HData?.path2RetaliationPerLevel ?? 0.05f;
+        float hppl     = HData?.path2HealthPerLevel      ?? 40f;
+        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+               $"Increase retaliation percentages by <color=green><b>{retalipl * 100f:F0}%</b></color> per level for both. [<color=green><b>+{retalipl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Max Health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    }
 
-    public override string GetPath3Description() =>
-        $"Skill:\n\n{GetSkillDesription()}\n\n" +
-        $"Scaling: <color=#FFB6C1><b>{(HData?.baseFrozenRageReductionMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Frozen Rage)\n\n<color=#FFB6C1><b>{(HData?.baseSkillShieldMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Shield)\n\n" +
-        $"Increase Physical Resistance reduction by <color=green><b>4%</b></color> per level. [<color=green><b>+{4 * effectivePath3Level}%</b></color>]\n\n" +
-        $"Increase duration by <color=green><b>2</b></color> seconds per level. [<color=green><b>+{2 * effectivePath3Level}s</b></color>]\n\n" +
-        $"Increase shield by <color=green><b>20</b></color> per level. [<color=green><b>+{20 * effectivePath3Level}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    public override string GetPath3Description()
+    {
+        float shieldpl = HData?.path3ShieldPerLevel       ?? 20f;
+        float ragepl   = HData?.path3FrozenRagePerLevel   ?? 0.04f;
+        float durpl    = HData?.path3SkillDurationPerLevel ?? 2f;
+        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{(HData?.baseFrozenRageReductionMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Frozen Rage)\n\n<color=#FFB6C1><b>{(HData?.baseSkillShieldMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Shield)\n\n" +
+               $"Increase Physical Resistance reduction by <color=green><b>{ragepl * 100f:F0}%</b></color> per level. [<color=green><b>+{ragepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+               $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    }
 }

@@ -65,8 +65,12 @@ MonoBehaviour:
   baseSkillCooldown: 90
   baseSkillDuration: 8
   baseSkillRadius: 0
-  baseSkillDamageMultiplier: 0.01
+  baseSkillDamageMultiplier: 0.02
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseSkillAttackSpeedBonus: 3
+  path1CritChancePerLevel: 0.08
+  path1AttackSpeedPerLevel: 0.08
+  path3AttackSpeedBonusPerLevel: 0.3
+  path3SkillDurationPerLevel: 1

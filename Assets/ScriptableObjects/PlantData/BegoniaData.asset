@@ -69,8 +69,14 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseElementalPowerBonus: 0.28
-  baseNatureDamageBonus: 0.24
-  baseAttackSpeedBonus: 0.24
+  baseElementalPowerBonus: 0.18
+  baseNatureDamageBonus: 0.16
+  baseAttackSpeedBonus: 0.16
   basePassiveMultiplier: 0.24
   baseSkillMultiplier: 0.16
+  path1AttackDamagePerLevel: 4
+  path1AttackRangePerLevel: 0.2
+  path2ElementalPowerPerLevel: 0.09
+  path3NatureDamageBonusPerLevel: 0.08
+  path3AttackSpeedBonusPerLevel: 0.08
+  path3RadiusPerLevel: 0.15

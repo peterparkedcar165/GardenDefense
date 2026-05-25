@@ -5,6 +5,14 @@ public class LeafRangerData : PlantData
 {
     public float baseSkillAttackSpeedBonus;
 
+    [Header("Path 1 Scaling")]
+    public float path1CritChancePerLevel = 0.05f;
+    public float path1AttackSpeedPerLevel = 0.05f;
+
+    [Header("Path 3 Scaling")]
+    public float path3AttackSpeedBonusPerLevel = 0.25f;
+    public float path3SkillDurationPerLevel = 0.5f;
+
     public override string GetAttackDescription() =>
         $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{baseAttackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.";
 

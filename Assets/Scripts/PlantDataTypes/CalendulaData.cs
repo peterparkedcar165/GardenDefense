@@ -6,6 +6,17 @@ public class CalendulaData : PlantData
     public float baseFloralGlowHeal;
     public float baseSkillHealingMultiplier;
 
+    [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 5f;
+    public float path1FireDamagePerLevel = 0.05f;
+
+    [Header("Path 2 Scaling")]
+    public float path2AttackRangePerLevel = 0.175f;
+
+    [Header("Path 3 Scaling")]
+    public float path3SkillDurationPerLevel = 2f;
+    public float path3HealPerLevel = 1f;
+
     public override string GetAttackDescription() =>
         $"Releases flaming petals dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
 

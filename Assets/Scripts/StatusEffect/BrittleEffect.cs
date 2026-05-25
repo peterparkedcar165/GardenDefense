@@ -11,7 +11,7 @@ public class BrittleEffect : StatusEffect
     }
 
     public override string GetName() => "<color=green>Brittle</color>";
-    public override string GetDescription() => $"Inflict <color=green><b>{bonusDamage:F0}</b></color> additional damage upon being hurt. Reduce Shield Toughness by <color=green>25%</color>. (3 × (1 + <color=#FFD700>{source.elementalPower * 100:F0}% EP</color>))";
+    public override string GetDescription() => $"Inflict <color=green><b>{bonusDamage:F0}</b></color> additional damage upon being hurt. Reduce Shield Toughness by <color=green>25%</color>. (3 × (1 + <color=#FFD700>{source.elementalPower * 100:F0}% Elemental Power</color>))";
 
     public override void OnApply()
     {

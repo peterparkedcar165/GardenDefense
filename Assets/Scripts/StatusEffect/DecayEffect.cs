@@ -13,7 +13,7 @@ public class DecayEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#9400D3>Decay</color>";
-    public override string GetDescription() => $"Reduce Attack Speed by <color=green><b>{attackSpeedReduction * 100f:F0}%</b></color> and Attack Damage by <color=green><b>{attackDamageReduction * 100f:F0}%</b></color>. (22% / 15% × (1 + <color=#FFD700>{source.elementalPower * 100:F0}% EP</color>))";
+    public override string GetDescription() => $"Reduce Attack Speed by <color=green><b>{attackSpeedReduction * 100f:F0}%</b></color> and Attack Damage by <color=green><b>{attackDamageReduction * 100f:F0}%</b></color>. (22% / 15% × (1 + <color=#FFD700>{source.elementalPower * 100:F0}% Elemental Power</color>))";
 
     public override void OnApply()
     {

@@ -69,5 +69,10 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseFloralGlowHeal: 9
+  baseFloralGlowHeal: 6
   baseSkillHealingMultiplier: 0.03
+  path1AttackDamagePerLevel: 7
+  path1FireDamagePerLevel: 0.1
+  path2AttackRangePerLevel: 0.175
+  path3SkillDurationPerLevel: 3
+  path3HealPerLevel: 2

@@ -3,20 +3,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SnowdropData", menuName = "Scriptable Objects/PlantData/Snowdrop")]
 public class SnowdropData : PlantData
 {
-    [Header("Passive – Chill")]
-    public float baseSlow    = 0.24f;   // base movement slow (fraction, e.g. 0.24 = 24%)
-    public float scalingSlow = 0.06f;   // additional slow per Chill level above 1
+    [Header("Passive Chill")]
+    public float baseSlow    = 0.24f;
+    public float scalingSlow = 0.06f;
 
-    [Header("Passive – Cooling (plants in range)")]
-    public float coolingPerSecond = 2f; // temperature reduced per second
+    [Header("Passive Cooling")]
+    public float coolingPerSecond = 2f;
 
-    [Header("Skill – Blizzard")]
-    public float baseBlizzardDamage       = 0f;
-    public float blizzardDamagePerLevel   = 15f;  // DPS added per Path 3 level
-    public float baseBlizzardDuration     = 5f;   // base duration in seconds
-    public float blizzardDurationPerLevel = 1f;   // seconds added per Path 3 level
-    public float blizzardChillMultiplier  = 1.5f; // how much stronger Blizzard Chill is vs passive
-    public float blizzardCoolingMultiplier = 2f;  // how many times stronger the Blizzard Cooling is vs passive
+    [Header("Skill Blizzard")]
+    public float baseBlizzardDamage        = 0f;
+    public float blizzardDamagePerLevel    = 15f;
+    public float baseBlizzardDuration      = 5f;
+    public float blizzardDurationPerLevel  = 1f;
+    public float blizzardChillMultiplier   = 1.5f;
+    public float blizzardCoolingMultiplier = 2f;
+
+    [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 1f;
+    public float path1AttackRangePerLevel  = 0.1f;
+
+    [Header("Path 3 Scaling")]
+    public float path3BlizzardWidthPerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
         $"Continuously deals <color=green><b>{baseAttackDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all ground-level insects within range.";

@@ -22,8 +22,8 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
-  baseAttackRange: 3
+  baseAttackSpeed: 0.7
+  baseAttackRange: 2.5
   startingShield: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -69,5 +69,11 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  basePoisonDuration: 8
-  basePoisonDPS: 18
+  basePoisonDuration: 6
+  basePoisonDPS: 15
+  path1AttackSpeedPerLevel: 0.11
+  path1AttackRangePerLevel: 0.13
+  path2PoisonDurationPerLevel: 2
+  path2PoisonDPSPerLevel: 6
+  path3SkillDurationPerLevel: 2
+  path3RadiusPerLevel: 0.2

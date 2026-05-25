@@ -12,18 +12,18 @@ public class Begonia : Shooter
 
     private BegoniaData BData => data as BegoniaData;
 
-    private float ElementalPowerBonusBase => (BData?.baseElementalPowerBonus ?? 0f) + 0.06f * effectivePath2Level;
+    private float ElementalPowerBonusBase => (BData?.baseElementalPowerBonus ?? 0f) + (BData?.path2ElementalPowerPerLevel ?? 0.06f) * effectivePath2Level;
     private float ElementalPowerBonusMP   => (BData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
     private float ElementalPowerBonus     => ElementalPowerBonusBase + ElementalPowerBonusMP;
 
-    private float NatureDamageBonusBase => (BData?.baseNatureDamageBonus ?? 0f) + 0.04f * effectivePath3Level;
+    private float NatureDamageBonusBase => (BData?.baseNatureDamageBonus ?? 0f) + (BData?.path3NatureDamageBonusPerLevel ?? 0.04f) * effectivePath3Level;
     private float NatureDamageBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
     private float NatureDamageBonus     => NatureDamageBonusBase + NatureDamageBonusMP;
 
-    private float AttackSpeedBonusBase => (BData?.baseAttackSpeedBonus ?? 0f) + 0.04f * effectivePath3Level;
+    private float AttackSpeedBonusBase => (BData?.baseAttackSpeedBonus ?? 0f) + (BData?.path3AttackSpeedBonusPerLevel ?? 0.04f) * effectivePath3Level;
     private float AttackSpeedBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
     private float AttackSpeedBonus     => AttackSpeedBonusBase + AttackSpeedBonusMP;
-    private float BlossomRadius       => baseSkillRadius + 0.15f * effectivePath3Level;
+    private float BlossomRadius        => baseSkillRadius + (BData?.path3RadiusPerLevel ?? 0.15f) * effectivePath3Level;
 
     protected override void Awake()
     {
@@ -136,8 +136,8 @@ public class Begonia : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = data.baseAttackDamage + 4f * level;
-        baseAttackRange  = data.baseAttackRange  + 0.2f * level;
+        baseAttackDamage = data.baseAttackDamage + (BData?.path1AttackDamagePerLevel ?? 4f)  * level;
+        baseAttackRange  = data.baseAttackRange  + (BData?.path1AttackRangePerLevel  ?? 0.2f) * level;
     }
 
     public override void OnPath2Upgrade(int level) { }
@@ -148,30 +148,42 @@ public class Begonia : Shooter
     public override string GetDescription() =>
         $"The {GetName()} infuses nearby allies with elemental power and can bless them with the power of nature.";
 
-    public override string GetPath1Description() =>
-        $"Attack:\n\n" +
-        $"Fire a magical bolt dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage.\n\n" +
-        $"Increase Attack Damage by <color=green><b>4</b></color> per level. [<color=green><b>+{4 * effectivePath1Level}</b></color>]\n\n" +
-        $"Increase Attack Range by <color=green><b>0.2</b></color> per level. [<color=green><b>+{0.2f * effectivePath1Level:F1}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    public override string GetPath1Description()
+    {
+        float adpl    = BData?.path1AttackDamagePerLevel ?? 4f;
+        float rangepl = BData?.path1AttackRangePerLevel  ?? 0.2f;
+        return $"Attack:\n\n" +
+               $"Fire a magical bolt dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage.\n\n" +
+               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    }
 
-    public override string GetPath2Description() =>
-        $"Passive:\n\n" +
-        $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, increasing Elemental Power by <color=green><b>{ElementalPowerBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ElementalPowerBonusMP * 100f:F0}%</b></color>].\n\n" +
-        $"Scaling: <color=#FFB6C1><b>{(BData?.basePassiveMultiplier ?? 0f) * 100f:F0}%</b></color> Magic Power\n\n" +
-        $"Increase Elemental Power bonus by <color=green><b>6%</b></color> per level. [<color=green><b>+{6 * effectivePath2Level}%</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    public override string GetPath2Description()
+    {
+        float eppl = BData?.path2ElementalPowerPerLevel ?? 0.06f;
+        return $"Passive:\n\n" +
+               $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, increasing Elemental Power by <color=green><b>{ElementalPowerBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ElementalPowerBonusMP * 100f:F0}%</b></color>].\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{(BData?.basePassiveMultiplier ?? 0f) * 100f:F0}%</b></color> Magic Power\n\n" +
+               $"Increase Elemental Power bonus by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    }
 
-    public override string GetPath3Description() =>
-        $"Skill:\n\n" +
-        $"Target an area on the field (radius <color=green><b>{BlossomRadius:F2}</b></color>). Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +
-        $"increasing Nature Power by <color=green><b>{NatureDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{NatureDamageBonusMP * 100f:F0}%</b></color>] " +
-        $"and Attack Speed by <color=green><b>{AttackSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{AttackSpeedBonusMP * 100f:F0}%</b></color>].\n\n" +
-        $"Scaling: <color=#FFB6C1><b>{(BData?.baseSkillMultiplier ?? 0f) * 100f:F0}%</b></color> Magic Power\n\n" +
-        $"Increase Nature Power bonus by <color=green><b>4%</b></color> per level. [<color=green><b>+{4 * effectivePath3Level}%</b></color>]\n\n" +
-        $"Increase Attack Speed bonus by <color=green><b>4%</b></color> per level. [<color=green><b>+{4 * effectivePath3Level}%</b></color>]\n\n" +
-        $"Increase radius by <color=green><b>0.15</b></color> per level. [<color=green><b>+{0.15f * effectivePath3Level:F2}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    public override string GetPath3Description()
+    {
+        float naturepl = BData?.path3NatureDamageBonusPerLevel ?? 0.04f;
+        float aspl     = BData?.path3AttackSpeedBonusPerLevel  ?? 0.04f;
+        float radiuspl = BData?.path3RadiusPerLevel            ?? 0.15f;
+        return $"Skill:\n\n" +
+               $"Target an area on the field (radius <color=green><b>{BlossomRadius:F2}</b></color>). Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +
+               $"increasing Nature Power by <color=green><b>{NatureDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{NatureDamageBonusMP * 100f:F0}%</b></color>] " +
+               $"and Attack Speed by <color=green><b>{AttackSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{AttackSpeedBonusMP * 100f:F0}%</b></color>].\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{(BData?.baseSkillMultiplier ?? 0f) * 100f:F0}%</b></color> Magic Power\n\n" +
+               $"Increase Nature Power bonus by <color=green><b>{naturepl * 100f:F0}%</b></color> per level. [<color=green><b>+{naturepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    }
 
     public override string GetAttackDescription() =>
         $"Fire a magical bolt dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage.";

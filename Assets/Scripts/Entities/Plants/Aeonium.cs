@@ -44,16 +44,23 @@ public class Aeonium : Aura
     public override void UpdateStats()
     {
         base.UpdateStats();
-        _sunGenerated          = (AData?.baseSunGenerated ?? 3) + effectivePath2Level;
-        _sunTimerReductionBase = (AData?.baseSunTimerReduction ?? 0.3f) + 0.1f * effectivePath2Level;
+        int sunpl    = AData?.path2SunPerLevel                ?? 1;
+        float sunTimerpl = AData?.path2SunTimerReductionPerLevel ?? 0.1f;
+        float healpl     = AData?.path1HealPerLevel              ?? 4f;
+        float cdrpl      = AData?.path1CDRPerLevel               ?? 0.2f;
+        int bonusSunBase = AData?.path3BonusSunBase              ?? 4;
+        int bonusSunpl   = AData?.path3BonusSunPerLevel          ?? 2;
+
+        _sunGenerated          = (AData?.baseSunGenerated ?? 3) + sunpl * effectivePath2Level;
+        _sunTimerReductionBase = (AData?.baseSunTimerReduction ?? 0.3f) + sunTimerpl * effectivePath2Level;
         _sunTimerReductionMP   = (AData?.sunTimerMPMultiplier ?? 0.003f) * magicPower;
-        _healAmountBase        = (AData?.baseHealAmount ?? 8f) + 4f * effectivePath1Level;
+        _healAmountBase        = (AData?.baseHealAmount ?? 8f) + healpl * effectivePath1Level;
         _healAmountMP          = (AData?.healMPMultiplier ?? 0.24f) * magicPower;
-        _cdrReduction          = (AData?.baseSkillCooldownReduction ?? 1f) + 0.2f * effectivePath1Level;
+        _cdrReduction          = (AData?.baseSkillCooldownReduction ?? 1f) + cdrpl * effectivePath1Level;
         _skillRangeBonus       = (AData?.baseSkillRangeBonus ?? 0.15f) + (AData?.skillRangeBonusPerLevel ?? 0.05f) * effectivePath3Level;
         _skillSpeedBonusBase   = (AData?.baseSkillSpeedBonus ?? 0.30f) + (AData?.skillSpeedBonusPerLevel ?? 0.10f) * effectivePath3Level;
         _skillSpeedBonusMP     = (AData?.skillSpeedMPMultiplier ?? 0.80f) * magicPower / 100f;
-        _bonusSunPerKill       = 4 + 2 * effectivePath3Level;
+        _bonusSunPerKill       = bonusSunBase + bonusSunpl * effectivePath3Level;
     }
 
     protected override void Update()
@@ -61,7 +68,6 @@ public class Aeonium : Aura
         base.Update();
         UpdateHighlights();
 
-        // Sun generation — passiveCooldownTimer is counted down by Plant.Update()
         if (passiveCooldownTimer <= 0)
         {
             GameManager.instance.AddSun(_sunGenerated);
@@ -70,13 +76,11 @@ public class Aeonium : Aura
             indicator.GetComponent<DamageIndicator>().Initialize($"+{_sunGenerated} Sun", new Color(1f, 1f, 0f));
         }
 
-        // Heal + CDR aura pulse
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
         else
             Attack();
 
-        // Keep skill indicator scaled to base (non-skill-boosted) range
         if (skillRangeIndicator != null)
             skillRangeIndicator.localScale = new Vector3(baseAttackRange * 2f, baseAttackRange * 2f, 1f);
     }
@@ -167,7 +171,7 @@ public class Aeonium : Aura
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackRange = data.baseAttackRange + 0.2f * level;
+        baseAttackRange = data.baseAttackRange + (AData?.path1AttackRangePerLevel ?? 0.2f) * level;
     }
 
     public override void OnPath3Upgrade(int level)
@@ -189,26 +193,39 @@ public class Aeonium : Aura
     public override string GetSkillDesription() =>
         $"The Aeonium blesses the ground around her, growing flowers that empower her presence. Increases her own Attack Range by <color=green><b>{(_skillRangeBonus * 100f):F0}%</b></color> and Attack Speed by <color=green><b>{(_skillSpeedBonusBase * 100f):F0}%</b></color> [<color=#FFB6C1><b>+{(_skillSpeedBonusMP * 100f):F0}%</b></color>] for <color=green><b>{skillDuration:F0}s</b></color>. Insects that die within her range during this time yield <color=yellow><b>+{_bonusSunPerKill}</b></color> bonus <color=yellow>Sun</color>.";
 
-    public override string GetPath1Description() =>
-        $"Attack:\n\n{GetAttackDescription()}\n\n" +
-        $"Increase Attack Range by <color=green><b>0.2</b></color> per level. [<color=green><b>+{0.2f * effectivePath1Level:F1}</b></color>]\n\n" +
-        $"Increase Heal by <color=green><b>4</b></color> per level. [<color=green><b>+{4 * effectivePath1Level}</b></color>]\n\n" +
-        $"Scaling: <color=#FFB6C1><b>{(AData?.healMPMultiplier ?? 0.24f) * 100f:F0}%</b></color> Magic Power\n\n" +
-        $"Increase Skill Cooldown Reduction by <color=green><b>0.2s</b></color> per level. [<color=green><b>+{0.2f * effectivePath1Level:F1}s</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    public override string GetPath1Description()
+    {
+        float rangepl = AData?.path1AttackRangePerLevel ?? 0.2f;
+        float healpl  = AData?.path1HealPerLevel        ?? 4f;
+        float cdrpl   = AData?.path1CDRPerLevel         ?? 0.2f;
+        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
+               $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"Increase Heal by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{(AData?.healMPMultiplier ?? 0.24f) * 100f:F0}%</b></color> Magic Power\n\n" +
+               $"Increase Skill Cooldown Reduction by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath1Level:F1}s</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    }
 
-    public override string GetPath2Description() =>
-        $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-        $"Increase Sun Generated by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-        $"Increase On-Hit Timer Reduction by <color=green><b>0.1s</b></color> per level. [<color=green><b>+{0.1f * effectivePath2Level:F1}s</b></color>]\n\n" +
-        $"Scaling: <color=#FFB6C1><b>{(AData?.sunTimerMPMultiplier ?? 0.003f) * 100f:F1}%</b></color> Magic Power\n\n" +
-        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    public override string GetPath2Description()
+    {
+        int sunpl        = AData?.path2SunPerLevel                ?? 1;
+        float sunTimerpl = AData?.path2SunTimerReductionPerLevel  ?? 0.1f;
+        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+               $"Increase Sun Generated by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
+               $"Increase On-Hit Timer Reduction by <color=green><b>{sunTimerpl:F1}s</b></color> per level. [<color=green><b>+{sunTimerpl * effectivePath2Level:F1}s</b></color>]\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{(AData?.sunTimerMPMultiplier ?? 0.003f) * 100f:F1}%</b></color> Magic Power\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    }
 
-    public override string GetPath3Description() =>
-        $"Skill:\n\n{GetSkillDesription()}\n\n" +
-        $"Range Bonus: <color=green><b>{(AData?.baseSkillRangeBonus ?? 0.15f) * 100f:F0}% + {(AData?.skillRangeBonusPerLevel ?? 0.05f) * 100f:F0}%</b></color> per level. [<color=green><b>+{(AData?.skillRangeBonusPerLevel ?? 0.05f) * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-        $"Speed Bonus: <color=green><b>{(AData?.baseSkillSpeedBonus ?? 0.30f) * 100f:F0}% + {(AData?.skillSpeedBonusPerLevel ?? 0.10f) * 100f:F0}%</b></color> per level. [<color=green><b>+{(AData?.skillSpeedBonusPerLevel ?? 0.10f) * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-        $"Scaling: <color=#FFB6C1><b>{(AData?.skillSpeedMPMultiplier ?? 0.80f) * 100f:F0}%</b></color> Magic Power\n\n" +
-        $"Bonus Sun per Kill: <color=green><b>4 + 2</b></color> per level. [<color=yellow><b>+{_bonusSunPerKill}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    public override string GetPath3Description()
+    {
+        int bonusSunBase = AData?.path3BonusSunBase    ?? 4;
+        int bonusSunpl   = AData?.path3BonusSunPerLevel ?? 2;
+        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
+               $"Range Bonus: <color=green><b>{(AData?.baseSkillRangeBonus ?? 0.15f) * 100f:F0}% + {(AData?.skillRangeBonusPerLevel ?? 0.05f) * 100f:F0}%</b></color> per level. [<color=green><b>+{(AData?.skillRangeBonusPerLevel ?? 0.05f) * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Speed Bonus: <color=green><b>{(AData?.baseSkillSpeedBonus ?? 0.30f) * 100f:F0}% + {(AData?.skillSpeedBonusPerLevel ?? 0.10f) * 100f:F0}%</b></color> per level. [<color=green><b>+{(AData?.skillSpeedBonusPerLevel ?? 0.10f) * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{(AData?.skillSpeedMPMultiplier ?? 0.80f) * 100f:F0}%</b></color> Magic Power\n\n" +
+               $"Bonus Sun per Kill: <color=green><b>{bonusSunBase} + {bonusSunpl}</b></color> per level. [<color=yellow><b>+{_bonusSunPerKill}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+    }
 }

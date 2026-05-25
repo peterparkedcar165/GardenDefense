@@ -38,9 +38,12 @@ public class AloeVera : Lobber
     public override void UpdateStats()
     {
         base.UpdateStats();
-        healAmount       = baseHealAmount + 8f * effectivePath2Level + magicPower * 0.22f;
-        tempReduction    = baseTempReduction + 0.5f * effectivePath2Level;
-        skillHealPerTick = baseSkillHealPerTick + 2f * effectivePath3Level + magicPower * 0.06f;
+        float healpl  = AVData?.path2HealPerLevel           ?? 8f;
+        float temppl  = AVData?.path2TempReductionPerLevel  ?? 0.5f;
+        float healpl3 = AVData?.path3SkillHealPerLevel      ?? 2f;
+        healAmount       = baseHealAmount       + healpl  * effectivePath2Level + magicPower * 0.22f;
+        tempReduction    = baseTempReduction    + temppl  * effectivePath2Level;
+        skillHealPerTick = baseSkillHealPerTick + healpl3 * effectivePath3Level + magicPower * 0.06f;
     }
 
     protected override void Update()
@@ -69,7 +72,6 @@ public class AloeVera : Lobber
         if (projectilePrefab == null) return;
         bool isHealMode = target.GetComponent<Plant>() != null;
 
-        // Faster attack speed → shorter bob (more snappy). Slower → longer hover.
         float bobDuration = Mathf.Clamp(0.4f / Mathf.Max(attackSpeed, 0.01f), 0.1f, 0.8f);
 
         GameObject obj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
@@ -84,14 +86,14 @@ public class AloeVera : Lobber
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackSpeed = data.baseAttackSpeed + level * 0.02f;
-        baseAttackRange = data.baseAttackRange + level * 0.2f;
+        baseAttackSpeed = data.baseAttackSpeed + level * (AVData?.path1AttackSpeedPerLevel ?? 0.02f);
+        baseAttackRange = data.baseAttackRange + level * (AVData?.path1AttackRangePerLevel ?? 0.2f);
     }
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = data.baseSkillDuration + 1f * level;
-        baseSkillRadius   = data.baseSkillRadius   + 0.3f * level;
+        baseSkillDuration = data.baseSkillDuration + (AVData?.path3SkillDurationPerLevel ?? 1f) * level;
+        baseSkillRadius   = data.baseSkillRadius   + (AVData?.path3RadiusPerLevel        ?? 0.3f) * level;
     }
 
     public override void ActivateSkill()
@@ -176,17 +178,25 @@ public class AloeVera : Lobber
     public override string GetPassiveDescription() =>
         $"Water droplets also heal plants, restoring <color=green><b>{healAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.22f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{tempReduction:F1}</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius. If an injured plant is within range, switch targetting to the one with the lowest Health.";
 
-    public override string GetPath1Description() =>
-        $"Attack:\n\n{GetAttackDescription()}\n\n" +
-        $"Increase Base Attack Speed by <color=green><b>0.02</b></color> per level. [<color=green><b>+{0.02f * effectivePath1Level:F2}</b></color>]\n\n" +
-        $"Increase Base Attack Range by <color=green><b>0.2</b></color> per level. [<color=green><b>+{0.2f * effectivePath1Level:F1}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    public override string GetPath1Description()
+    {
+        float aspl    = AVData?.path1AttackSpeedPerLevel ?? 0.02f;
+        float rangepl = AVData?.path1AttackRangePerLevel ?? 0.2f;
+        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
+               $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase Base Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+    }
 
-    public override string GetPath2Description() =>
-        $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-        $"Increase base healing by <color=green><b>8</b></color> per level. [<color=green><b>+{8 * effectivePath2Level}</b></color>]\n\n" +
-        $"Increase temperature reduction by <color=green><b>0.5</b></color> per level. [<color=green><b>+{0.5f * effectivePath2Level:F1}</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    public override string GetPath2Description()
+    {
+        float healpl = AVData?.path2HealPerLevel          ?? 8f;
+        float temppl = AVData?.path2TempReductionPerLevel ?? 0.5f;
+        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+               $"Increase base healing by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"Increase temperature reduction by <color=green><b>{temppl:F1}</b></color> per level. [<color=green><b>+{temppl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    }
 
     public override string GetSkillDesription()
     {
@@ -197,12 +207,15 @@ public class AloeVera : Lobber
 
     public override string GetPath3Description()
     {
+        float healpl3  = AVData?.path3SkillHealPerLevel    ?? 2f;
+        float durpl    = AVData?.path3SkillDurationPerLevel ?? 1f;
+        float radiuspl = AVData?.path3RadiusPerLevel        ?? 0.3f;
         float totalHealing = skillHealPerTick * Mathf.Floor(skillDuration / baseSkillHealInterval);
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
                $"Scaling: <color=#FFB6C1><b>6%</b></color> <color=#FFB6C1>Magic Power</color>\n\n" +
-               $"Increase healing by <color=green><b>2</b></color> per tick per level. [<color=green><b>+{2 * effectivePath3Level}</b></color>]\n\n" +
-               $"Increase rain duration by <color=green><b>1</b></color> second per level. [<color=green><b>+{1 * effectivePath3Level}s</b></color>]\n\n" +
-               $"Increase rain radius by <color=green><b>0.3</b></color> per level. [<color=green><b>+{0.3f * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase healing by <color=green><b>{healpl3:F0}</b></color> per tick per level. [<color=green><b>+{healpl3 * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase rain duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+               $"Increase rain radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
     }
 }

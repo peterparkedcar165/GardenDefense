@@ -25,7 +25,7 @@ public class BurnEffect : DoTEffect
         float mp = cachedMagicPower > 0 ? cachedMagicPower : (source?.magicPower ?? 0f);
         float ep = cachedElementalPower;
         float total = ((healthPerSecond * hp) + (mpPerSecond * mp) + 6f) * (1f + ep);
-        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second. (<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#FFB6C1>{mpPerSecond * 100:F0}% Magic Power</color> + 6) × (1 + <color=#FFD700>{ep * 100:F0}% EP</color>)";
+        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second. (<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#FFB6C1>{mpPerSecond * 100:F0}% Magic Power</color> + 6) × (1 + <color=#FFD700>{ep * 100:F0}% Elemental Power</color>)";
     }
 
     public override void OnApply()

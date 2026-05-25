@@ -12,7 +12,7 @@ public class GustEffect : ElementalDebuff
     public override string GetDescription()
     {
         float halfDamage = 32f * (1f + 1.5f * source.elementalPower);
-        return $"Reacts with an existing primer, dealing <color=#E0E0E0><b>{halfDamage:F0}</b></color> Wind + <color=#E0E0E0><b>{halfDamage:F0}</b></color> elemental Magic damage. (32 × (1 + 1.5× <color=#FFD700>{source.elementalPower * 100:F0}% EP</color>))";
+        return $"Reacts with an existing primer, dealing <color=#E0E0E0><b>{halfDamage:F0}</b></color> Wind + <color=#E0E0E0><b>{halfDamage:F0}</b></color> elemental Magic damage. (32 × (1 + 1.5× <color=#FFD700>{source.elementalPower * 100:F0}% Elemental Power</color>))";
     }
 
     public override void OnApply()

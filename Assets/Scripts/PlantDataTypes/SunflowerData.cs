@@ -6,6 +6,17 @@ public class SunflowerData : PlantData
     public int baseSunGenerated;
     public float baseSunrayDPS;
 
+    [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 5f;
+    public float path1AttackSpeedPerLevel = 0.05f;
+
+    [Header("Path 2 Scaling")]
+    public int path2SunPerLevel = 2;
+
+    [Header("Path 3 Scaling")]
+    public float path3SunrayDPSPerLevel = 15f;
+    public float path3SkillDurationPerLevel = 0.5f;
+
     public override string GetAttackDescription() =>
         $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=green><b>{baseAttackDamage}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic </color>damage.";
 

@@ -19,7 +19,7 @@ public class FrostbiteEffect : DoTEffect
     public override string GetDescription()
     {
         float ep = cachedElementalPower;
-        return $"Deal (<color=green>{healthPerSecond * 100}%</color> Max Health + <color=green>{adPerSecond * 100}%</color> Attack Damage) × (1 + <color=#FFD700>{ep * 100:F0}% EP</color>) <color=#00BFFF>Ice</color> Physical damage per second. Reduces Tenacity by <color=green>{tenacityReduction * 100}%</color>.";
+        return $"Deal (<color=green>{healthPerSecond * 100}%</color> Max Health + <color=green>{adPerSecond * 100}%</color> Attack Damage) × (1 + <color=#FFD700>{ep * 100:F0}% Elemental Power</color>) <color=#00BFFF>Ice</color> Physical damage per second. Reduces Tenacity by <color=green>{tenacityReduction * 100}%</color>.";
     }
 
     public override void OnApply()
