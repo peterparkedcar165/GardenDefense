@@ -18,7 +18,7 @@ MonoBehaviour:
   displayName: Dandelion
   elementalType: 5
   damageType: 0
-  sunCost: 125
+  sunCost: 105
   baseMaxHealth: 200
   baseAttackDamage: 12
   baseMagicPower: 0

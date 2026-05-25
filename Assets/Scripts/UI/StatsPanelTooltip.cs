@@ -20,10 +20,19 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private const string HealCol  = "<color=#FF6B81>";
     private const string End      = "</color>";
 
-    // Dot leader: label left, dots fill gap, value right
+    // dot leader: label left, dots fill gap, value right
+    // strips rich text tags before measuring so color-wrapped labels align correctly
     private static string D(string label, string plain, string formatted)
     {
-        int dots = Mathf.Max(2, Width - label.Length - plain.Length);
+        int visibleLen = 0;
+        bool inTag = false;
+        foreach (char c in label)
+        {
+            if      (c == '<') inTag = true;
+            else if (c == '>') inTag = false;
+            else if (!inTag)   visibleLen++;
+        }
+        int dots = Mathf.Max(2, Width - visibleLen - plain.Length);
         return $"{label}{new string('.', dots)}{formatted}";
     }
 

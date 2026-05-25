@@ -52,7 +52,7 @@ public class PlantSelector : MonoBehaviour
                    || (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen);
         if (uiOpen) return;
 
-        if (Mouse.current.rightButton.wasPressedThisFrame)
+        if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             ClearSelection();
             uprootMode = false;

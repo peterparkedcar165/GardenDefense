@@ -2,13 +2,16 @@ using UnityEngine;
 
 public class SludgeEffect : StatusEffect
 {
+    private float bonusDuration;
+
     public SludgeEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
+        bonusDuration = 4f * (1f + source.elementalPower);
         effectType = Type.negative;
     }
 
     public override string GetName() => "<color=#9400D3>Sludge</color>";
-    public override string GetDescription() => $"Increase duration of DoT effects by 4 seconds.";
+    public override string GetDescription() => $"Increase duration of DoT effects by <color=green><b>{bonusDuration:F1}s</b></color>.";
 
     public override void OnApply()
     {
@@ -20,7 +23,7 @@ public class SludgeEffect : StatusEffect
         {
             if (effect is DoTEffect)
             {
-                effect.duration += 4f;
+                effect.duration += bonusDuration;
                 hasDoT = true;
             }
         }
@@ -31,13 +34,6 @@ public class SludgeEffect : StatusEffect
         }
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        
-    }
-
-    public override void OnExpire()
-    {
-        
-    }
+    public override void OnTick(float deltaTime) { }
+    public override void OnExpire() { }
 }

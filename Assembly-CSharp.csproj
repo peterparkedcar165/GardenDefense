@@ -140,6 +140,7 @@
     <Compile Include="Assets\Scripts\Audio\MusicManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoilEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
+    <Compile Include="Assets\Scripts\GridManagers\DaytimeGridManager.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level9\GridManager9.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\DisplacedEffect.cs" />

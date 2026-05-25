@@ -2,14 +2,15 @@ using UnityEngine;
 
 public class VulnerableEffect : StatusEffect
 {
-    public float shred = 0.32f;
+    public float shred;
     public VulnerableEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
+        shred = 0.32f * (1f + source.elementalPower);
         effectType = Type.negative;
     }
 
     public override string GetName() => "<color=#FF6347>Vulnerable</color>";
-    public override string GetDescription() => $"Reduce DoT Resistance by <color=green>{shred*100}%</color>.";
+    public override string GetDescription() => $"Reduce DoT Resistance by <color=green><b>{shred * 100f:F0}%</b></color>.";
 
     public override void OnApply()
     {
@@ -20,10 +21,7 @@ public class VulnerableEffect : StatusEffect
         insect.dotResistanceAdder -= shred;
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        
-    }
+    public override void OnTick(float deltaTime) { }
 
     public override void OnExpire()
     {
