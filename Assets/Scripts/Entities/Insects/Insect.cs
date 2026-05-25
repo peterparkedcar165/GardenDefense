@@ -210,6 +210,8 @@ public abstract class Insect : Entity, IAttackable
         if (isDying) return;
         if (waypoints == null) return;
 
+        bool wasDisplaced = windMomentum.sqrMagnitude > 0.001f;
+
         if (windVelocity.sqrMagnitude > 0.001f)
         {
             windMomentum = new Vector2(windVelocity.x * windBlockMask.x, windVelocity.y * windBlockMask.y);
@@ -256,6 +258,10 @@ public abstract class Insect : Entity, IAttackable
             }
         }
 
+        // Displacement just ended this frame — re-orient to the nearest forward waypoint
+        if (wasDisplaced && windMomentum.sqrMagnitude <= 0.001f)
+            SnapToNearestWaypoint();
+
         if (HasEffect<HardCrowdControl>()) return;
         if (HasEffect<BubblePrisonEffect>()) return;
         if (affectedByGravity && !isOnGround) return;
@@ -291,6 +297,27 @@ public abstract class Insect : Entity, IAttackable
         {
             currentWaypointIndex++;
         }
+    }
+
+    private void SnapToNearestWaypoint()
+    {
+        if (waypoints == null || waypoints.Length == 0) return;
+
+        float nearestDist  = float.MaxValue;
+        int   nearestIndex = currentWaypointIndex;
+
+        for (int i = 0; i < waypoints.Length; i++)
+        {
+            float dist = Vector3.Distance(transform.position, waypoints[i].position);
+            if (dist < nearestDist)
+            {
+                nearestDist  = dist;
+                nearestIndex = i;
+            }
+        }
+
+        // Target the waypoint after the nearest so the insect never walks backwards
+        currentWaypointIndex = Mathf.Min(nearestIndex + 1, waypoints.Length - 1);
     }
 
     protected override Vector3 GetIndicatorPosition()
