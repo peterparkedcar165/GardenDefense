@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum TileType
 {
@@ -12,11 +13,45 @@ public enum TileType
 
 public class Tile : MonoBehaviour
 {
+    // Global position → tile lookup so WaterZone can find neighbours at runtime
+    public static readonly Dictionary<Vector2Int, Tile> allTiles = new Dictionary<Vector2Int, Tile>();
+    public static Vector2Int TileKey(Vector3 pos) =>
+        new Vector2Int(Mathf.RoundToInt(pos.x * 2), Mathf.RoundToInt(pos.y * 2));
+
+    private void Awake()  => allTiles[TileKey(transform.position)] = this;
+    private void OnDestroy() => allTiles.Remove(TileKey(transform.position));
 
     public bool isOccupied = false, isHighground = false;
-    public TileType tileType;
     public bool isWaterAdjacent = false;
     public FlowerPot flowerPot;
+
+    private TileType _tileType;
+    public TileType tileType
+    {
+        get => _tileType;
+        set
+        {
+            _tileType = value;
+            if (value == TileType.Water)
+                SpawnWaterZone();
+        }
+    }
+
+    private void SpawnWaterZone()
+    {
+        if (GetComponentInChildren<WaterZone>() != null) return;
+
+        GameObject zone = new GameObject("WaterZone");
+        zone.transform.SetParent(transform);
+        zone.transform.localPosition = Vector3.zero;
+        zone.layer = gameObject.layer;
+
+        BoxCollider2D col = zone.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(0.7f, 0.7f);
+
+        zone.AddComponent<WaterZone>();
+    }
 
     
     private void OnMouseDown()

@@ -72,8 +72,8 @@ MonoBehaviour:
   baseSlow: 0.22
   scalingSlow: 0.04
   coolingPerSecond: 1.25
-  baseBlizzardDamage: 30
-  blizzardDamagePerLevel: 5
+  baseBlizzardDamage: 35
+  blizzardDamagePerLevel: 10
   baseBlizzardDuration: 5
   blizzardDurationPerLevel: 1
   blizzardChillMultiplier: 1.5

@@ -102,11 +102,19 @@ public abstract class Insect : Entity, IAttackable
             PlantUpgradeUI.instance.HidePanel();
     }
 
+    private Transform[] _pendingPath;
+
+    /// <summary>Called by SpawnManager immediately after Instantiate, before Start runs.</summary>
+    public void SetPath(Transform[] path)
+    {
+        _pendingPath = path;
+    }
+
     protected override void Start()
     {
         base.Start();
         gameManager = FindAnyObjectByType<GameManager>();
-        waypoints = PathManager.instance.waypoints;
+        waypoints = _pendingPath ?? PathManager.instance.waypoints;
         expDrop = sunDrop/2;
         aimPoint = transform.Find("AimPoint");
         visual = transform.Find("Visual");
@@ -340,6 +348,7 @@ public abstract class Insect : Entity, IAttackable
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
+            if (isOnGround && plant.occupiedTile != null && plant.occupiedTile.isHighground) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
             if (dist <= targetingRange && dist < nearestDist)
             {

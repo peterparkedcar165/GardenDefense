@@ -21,6 +21,8 @@ public class LevelSelector : MonoBehaviour
         if (level10 != null) level10.interactable = highestLevelUnlocked >= 9;
         if (level11 != null) level11.interactable = highestLevelUnlocked >= 10;
         if (level12 != null) level12.interactable = highestLevelUnlocked >= 11;
+        if (level13 != null) level13.interactable = highestLevelUnlocked >= 12;
+        if (level14 != null) level14.interactable = highestLevelUnlocked >= 13;
         //previousPage.interactable = true;
        // nextPage.interactable = true;
     }
@@ -52,6 +54,8 @@ public class LevelSelector : MonoBehaviour
         if (level10 != null) level10.interactable = false;
         if (level11 != null) level11.interactable = false;
         if (level12 != null) level12.interactable = false;
+        if (level13 != null) level13.interactable = false;
+        if (level14 != null) level14.interactable = false;
         //previousPage.interactable = false;
         //nextPage.interactable = false;
     }

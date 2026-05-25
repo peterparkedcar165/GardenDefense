@@ -14282,7 +14282,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a02aa9c617e61478e5d2e5c6e1745e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level7
-  spawnPoint: {fileID: 2102778779}
+  spawnEntries:
+  - spawnPoint: {fileID: 2102778779}
+    leadInWaypoints: []
   levelTime: 0
   wave: 0
   workerAnt: {fileID: 2279086888993795066, guid: aed4e1644fb8f1943b81ae3753b7e240, type: 3}

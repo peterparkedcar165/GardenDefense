@@ -1,12 +1,11 @@
 using UnityEngine;
 using System.Collections;
-using TMPro;
 
-public class Level13 : SpawnManager
+public class Level14 : SpawnManager
 {
     public float levelTime;
     public int wave;
-    private int startSunCount = 1250, startHealth = 200;
+    private int startSunCount = 1500, startHealth = 200;
     private int maxWave = 24;
     public GameObject soldierAnt, scoutAnt, fruitFly, wasp, queenAnt, mosquito, darklingBeetle;
     public GameObject fireAnt, termite, scorpion, moth, firefly;
@@ -22,13 +21,17 @@ public class Level13 : SpawnManager
     [Header("Fertilizers")]
     [SerializeField] private FertilizerData[] fertilizerPool;
 
+    // -1 = alternate between entries, 0 = SpawnA only, 1 = SpawnB only
+    private int activeEntry = -1;
+    private int _spawnCounter = 0;
+
     protected override void Start()
     {
         if (WeatherManager.instance) WeatherManager.instance.weather = WeatherType.Clear;
         FertilizerSelectionUI.instance?.Configure(fertilizerPool);
         GameManager.instance?.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
-        SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 12);
+        SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 14);
         SaveManager.instance.CompleteLevel(13);
         StartCoroutine(RunWave());
     }
@@ -51,130 +54,107 @@ public class Level13 : SpawnManager
 
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
         yield return new WaitForSeconds(3f);
-        SaveManager.instance.CompleteLevel(13);
-        Debug.Log("Level 13 completed");
+        SaveManager.instance.CompleteLevel(14);
+        Debug.Log("Level 14 completed");
     }
 
     IEnumerator Wave(int wave)
     {
+        // ── Wave 1: SpawnA only, half density ─────────────────────────────────
         if (wave == 1)
         {
+            activeEntry = 0;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 13;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd1 = waitTime + ((spawnCount - 1) * spawnInterval);
 
-            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    9.41f);
-            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    5.47f);
-            InvokeRepeating(nameof(SpawnTermiteCluster), wd1 / 2f,   25.29f);
-            InvokeRepeating(nameof(SpawnMoth),           wd1 / 2f,   21.18f);
-            InvokeRepeating(nameof(SpawnFirefly),        wd1 / 2f,   23.53f);
+            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    16.0f);
+            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    9.5f);
+            InvokeRepeating(nameof(SpawnTermiteCluster), wd1 / 2f,   44.0f);
             yield return new WaitForSeconds(wd1);
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnFireAnt));
             CancelInvoke(nameof(SpawnTermiteCluster));
-            CancelInvoke(nameof(SpawnMoth));
-            CancelInvoke(nameof(SpawnFirefly));
 
+        // ── Wave 2: SpawnB only, half density ─────────────────────────────────
         } else if (wave == 2)
         {
+            activeEntry = 1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 14;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd2 = waitTime + ((spawnCount - 1) * spawnInterval);
 
-            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    9.41f);
-            InvokeRepeating(nameof(SpawnSoldierAnt),     wd2 / 3f,   11.76f);
-            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    4.88f);
-            InvokeRepeating(nameof(SpawnTermiteCluster), wd2 / 3f,   17.06f);
-            InvokeRepeating(nameof(SpawnMoth),           wd2 / 2f,   18.82f);
-            InvokeRepeating(nameof(SpawnFirefly),        wd2 / 2f,   21.18f);
+            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    16.0f);
+            InvokeRepeating(nameof(SpawnSoldierAnt),     wd2 / 3f,   20.0f);
+            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    8.5f);
+            InvokeRepeating(nameof(SpawnTermiteCluster), wd2 / 3f,   30.0f);
             yield return new WaitForSeconds(wd2);
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
             CancelInvoke(nameof(SpawnFireAnt));
             CancelInvoke(nameof(SpawnTermiteCluster));
-            CancelInvoke(nameof(SpawnMoth));
-            CancelInvoke(nameof(SpawnFirefly));
 
+        // ── Wave 3+: both spawns, full density ────────────────────────────────
         } else if (wave == 3)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 15;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd3 = waitTime + ((spawnCount - 1) * spawnInterval);
 
-            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    10.59f);
-            InvokeRepeating(nameof(SpawnSoldierAnt),     wd3 / 3f,   12.94f);
-            InvokeRepeating(nameof(SpawnFruitFly),       wd3 / 3f,   11.76f);
-            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    4.29f);
-            InvokeRepeating(nameof(SpawnTermiteCluster), wd3 / 3f,   12.35f);
+            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    9.5f);
+            InvokeRepeating(nameof(SpawnSoldierAnt),     wd3 / 3f,   11.5f);
+            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    3.8f);
+            InvokeRepeating(nameof(SpawnTermiteCluster), wd3 / 3f,   11.0f);
             InvokeRepeating(nameof(SpawnScorpion),       waitTime,    wd3 / 1.87f);
-            InvokeRepeating(nameof(SpawnMoth),           wd3 / 2f,   16.47f);
-            InvokeRepeating(nameof(SpawnFirefly),        wd3 / 2f,   18.82f);
             yield return new WaitForSeconds(wd3);
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnFruitFly));
             CancelInvoke(nameof(SpawnFireAnt));
             CancelInvoke(nameof(SpawnTermiteCluster));
             CancelInvoke(nameof(SpawnScorpion));
-            CancelInvoke(nameof(SpawnMoth));
-            CancelInvoke(nameof(SpawnFirefly));
 
         } else if (wave == 4)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 15;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd4 = waitTime + ((spawnCount - 1) * spawnInterval);
 
-            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    11.76f);
-            InvokeRepeating(nameof(SpawnSoldierAnt),     wd4 / 3f,   14.12f);
-            InvokeRepeating(nameof(SpawnFruitFly),       wd4 / 3f,   11.76f);
-            InvokeRepeating(nameof(SpawnMosquito),       wd4 / 2f,   15.88f);
-            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    4.0f);
-            InvokeRepeating(nameof(SpawnTermiteCluster), wd4 / 4f,   10.59f);
-            InvokeRepeating(nameof(SpawnScorpion),       waitTime,    17.65f);
-            InvokeRepeating(nameof(SpawnMoth),           wd4 / 2f,   14.12f);
-            InvokeRepeating(nameof(SpawnFirefly),        wd4 / 2f,   16.47f);
+            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    10.5f);
+            InvokeRepeating(nameof(SpawnSoldierAnt),     wd4 / 3f,   12.5f);
+            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    3.6f);
+            InvokeRepeating(nameof(SpawnTermiteCluster), wd4 / 4f,   9.5f);
+            InvokeRepeating(nameof(SpawnScorpion),       waitTime,    15.0f);
             yield return new WaitForSeconds(wd4);
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnFruitFly));
-            CancelInvoke(nameof(SpawnMosquito));
             CancelInvoke(nameof(SpawnFireAnt));
             CancelInvoke(nameof(SpawnTermiteCluster));
             CancelInvoke(nameof(SpawnScorpion));
-            CancelInvoke(nameof(SpawnMoth));
-            CancelInvoke(nameof(SpawnFirefly));
 
         } else if (wave == 5)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 16;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd5 = waitTime + ((spawnCount - 1) * spawnInterval);
 
-            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    12.94f);
-            InvokeRepeating(nameof(SpawnSoldierAnt),     wd5 / 3f,   15.29f);
-            InvokeRepeating(nameof(SpawnFruitFly),       wd5 / 3f,   11.76f);
-            InvokeRepeating(nameof(SpawnWasp),           wd5 / 2f,   13.53f);
-            InvokeRepeating(nameof(SpawnMosquito),       wd5 / 2f,   14.71f);
-            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    3.71f);
-            InvokeRepeating(nameof(SpawnTermiteCluster), wd5 / 4f,   9.41f);
-            InvokeRepeating(nameof(SpawnScorpion),       waitTime,    14.12f);
-            InvokeRepeating(nameof(SpawnMoth),           wd5 / 2f,   12.35f);
-            InvokeRepeating(nameof(SpawnFirefly),        wd5 / 2f,   14.12f);
+            InvokeRepeating(nameof(SpawnScoutAnt),       waitTime,    11.5f);
+            InvokeRepeating(nameof(SpawnSoldierAnt),     wd5 / 3f,   13.5f);
+            InvokeRepeating(nameof(SpawnFireAnt),        waitTime,    3.3f);
+            InvokeRepeating(nameof(SpawnTermiteCluster), wd5 / 4f,   8.5f);
+            InvokeRepeating(nameof(SpawnScorpion),       waitTime,    12.5f);
             yield return new WaitForSeconds(wd5);
             CancelInvoke(nameof(SpawnScoutAnt));
             CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnFruitFly));
-            CancelInvoke(nameof(SpawnWasp));
-            CancelInvoke(nameof(SpawnMosquito));
             CancelInvoke(nameof(SpawnFireAnt));
             CancelInvoke(nameof(SpawnTermiteCluster));
             CancelInvoke(nameof(SpawnScorpion));
-            CancelInvoke(nameof(SpawnMoth));
-            CancelInvoke(nameof(SpawnFirefly));
 
         } else if (wave == 6)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 16;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd6 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -201,6 +181,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 7)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 17;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd7 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -231,6 +212,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 8)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 17;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd8 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -259,6 +241,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 9)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 17;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd9 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -287,6 +270,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 10)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 17;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd10 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -315,6 +299,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 11)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 16;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd11 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -343,6 +328,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 12)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 16;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd12 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -371,6 +357,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 13)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 15;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd13 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -397,6 +384,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 14)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 15;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd14 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -423,6 +411,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 15)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 15;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd15 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -449,6 +438,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 16)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 14;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd16 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -475,6 +465,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 17)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 14;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd17 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -501,6 +492,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 18)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 14;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd18 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -527,6 +519,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 19)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 13;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd19 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -553,6 +546,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 20)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 13;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd20 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -579,6 +573,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 21)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 13;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd21 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -605,6 +600,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 22)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 13;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd22 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -631,6 +627,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 23)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 13;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd23 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -657,6 +654,7 @@ public class Level13 : SpawnManager
 
         } else if (wave == 24)
         {
+            activeEntry = -1;
             waitTime = 2f; spawnInterval = 3f; spawnCount = 13;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
             float wd24 = waitTime + ((spawnCount - 1) * spawnInterval);
@@ -690,24 +688,41 @@ public class Level13 : SpawnManager
 
     public override GameObject[] GetInsectPrefabs() => new[] { soldierAnt, scoutAnt, fruitFly, wasp, queenAnt, mosquito, darklingBeetle, fireAnt, termite, scorpion, moth, firefly };
 
-    void SpawnScorpion()        { Spawn(scorpion); }
-    void SpawnDarklingBeetle()  { Spawn(darklingBeetle); }
-    void SpawnSoldierAnt()      { Spawn(soldierAnt); }
-    void SpawnScoutAnt()        { Spawn(scoutAnt); }
-    void SpawnFruitFly()        { Spawn(fruitFly); }
-    void SpawnWasp()            { Spawn(wasp); }
-    void SpawnQueenAnt()        { Spawn(queenAnt); }
-    void SpawnMosquito()        { Spawn(mosquito); }
-    void SpawnFireAnt()         { Spawn(fireAnt); }
-    void SpawnMoth()            { Spawn(moth); }
-    void SpawnFirefly()         { Spawn(firefly); }
+    // ── Spawn helpers ──────────────────────────────────────────────────────────
+    // All go through SpawnForWave so activeEntry is respected automatically.
+
+    void SpawnForWave(GameObject prefab)
+    {
+        if (activeEntry < 0)
+        {
+            // alternate: even spawns → entry 0, odd spawns → entry 1
+            SpawnAt(prefab, _spawnCounter % 2);
+            _spawnCounter++;
+        }
+        else
+        {
+            SpawnAt(prefab, activeEntry);
+        }
+    }
+
+    void SpawnScorpion()        { SpawnForWave(scorpion); }
+    void SpawnDarklingBeetle()  { SpawnForWave(darklingBeetle); }
+    void SpawnSoldierAnt()      { SpawnForWave(soldierAnt); }
+    void SpawnScoutAnt()        { SpawnForWave(scoutAnt); }
+    void SpawnFruitFly()        { SpawnForWave(fruitFly); }
+    void SpawnWasp()            { SpawnForWave(wasp); }
+    void SpawnQueenAnt()        { SpawnForWave(queenAnt); }
+    void SpawnMosquito()        { SpawnForWave(mosquito); }
+    void SpawnFireAnt()         { SpawnForWave(fireAnt); }
+    void SpawnMoth()            { SpawnForWave(moth); }
+    void SpawnFirefly()         { SpawnForWave(firefly); }
     void SpawnTermiteCluster()  { StartCoroutine(TermiteCluster(4)); }
 
     IEnumerator TermiteCluster(int count)
     {
         for (int i = 0; i < count; i++)
         {
-            Spawn(termite);
+            SpawnForWave(termite);
             yield return new WaitForSeconds(0.3f);
         }
     }

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Burner
+  fertilizerName: Freezer
   stats:
-  - statType: 11
+  - statType: 18
     value: 0.55
-  - statType: 15
+  - statType: 11
     value: 0.52
   icon: {fileID: 0}
   targetElementalType: 0

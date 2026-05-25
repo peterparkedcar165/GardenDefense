@@ -18,7 +18,7 @@ MonoBehaviour:
   displayName: Aeonium
   elementalType: 2
   damageType: 1
-  sunCost: 75
+  sunCost: 85
   baseMaxHealth: 200
   baseAttackDamage: 10
   baseMagicPower: 0

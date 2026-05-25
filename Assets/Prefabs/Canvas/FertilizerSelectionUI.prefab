@@ -201,7 +201,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 100
+  m_Spacing: 120
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -317,4 +317,3 @@ MonoBehaviour:
   cardPrefab: {fileID: 5982727409875557757, guid: 0a8171987b0d17a4298f6b30e44cd8a2, type: 3}
   cardContainer: {fileID: 5718429814137436227}
   fertilizerPool: []
-  cardsToShow: 3

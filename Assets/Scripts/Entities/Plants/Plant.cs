@@ -653,8 +653,9 @@ public abstract class Plant : Entity, IAttackable
 
     public void Uproot()
     {
-        GameManager.instance.SunCount += (int)(totalSunSpent * 0.5);
-        Debug.Log("Uprooted " + GetName() + " and refunded " + (int)(totalSunSpent * 0.5));
+        float refundRate = GameManager.instance.currentWave == 0 ? 1f : 0.5f;
+        GameManager.instance.SunCount += (int)(totalSunSpent * refundRate);
+        Debug.Log("Uprooted " + GetName() + " and refunded " + (int)(totalSunSpent * refundRate));
         GameManager.instance.UpdateSun();
         // need some sound effects eventually
         occupiedTile.isOccupied = false;

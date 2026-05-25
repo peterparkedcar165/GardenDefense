@@ -2,17 +2,18 @@ using UnityEngine;
 
 public class FreezeEffect : HardCrowdControl
 {
-
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
+    private float magicResistShred;
+
     public FreezeEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        // for stun, nothing occurs.
+        magicResistShred = 0.32f * (1f + source.elementalPower);
         effectType = Type.negative;
     }
 
     public override string GetName() => "<color=#00FFFF>Freeze</color>";
-    public override string GetDescription() => $"Target is completely frozen in place.";
+    public override string GetDescription() => $"Target is completely frozen in place. Reduces Magic Resistance by <color=green><b>{magicResistShred * 100f:F0}%</b></color>.";
 
     public override void OnApply()
     {
@@ -27,14 +28,18 @@ public class FreezeEffect : HardCrowdControl
             originalColor = spriteRenderer.color;
             spriteRenderer.color = new Color(0f, 1f, 1f, 1f);
         }
+
+        Insect insect = (Insect)target;
+        insect.magicResistanceAdder -= magicResistShred;
     }
 
     public override void OnExpire()
     {
         Debug.Log("Freeze expired");
         if (spriteRenderer != null)
-        {
             spriteRenderer.color = originalColor;
-        }
+
+        Insect insect = (Insect)target;
+        insect.magicResistanceAdder += magicResistShred;
     }
 }

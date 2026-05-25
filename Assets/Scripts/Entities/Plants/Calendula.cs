@@ -18,7 +18,7 @@ public class Calendula : Aura
 
     public override void UpdateStats()
     {
-        baseLightEmissionRange = 1.5f * (baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier));
+        baseLightEmissionRange = 2f * (baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier));
         base.UpdateStats();
     }
 
@@ -91,7 +91,7 @@ public class Calendula : Aura
         => $"Releases flaming petals dealing <color=green><b>{attackDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
 
     public override string GetPassiveDescription()
-        => $"Illuminate the surrounding area with a radius equal to <color=green><b>1.5×</b></color> her Attack Range.";
+        => $"Illuminate the surrounding area with a radius equal to <color=green><b>2×</b></color> her Attack Range.";
 
     public override string GetSkillDesription()
         => $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's projectiles deal an additional <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{8f + 1f * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillHealingMultiplier * magicPower:F0}</b></color>] health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s Base Illumination range.";
