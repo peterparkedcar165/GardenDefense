@@ -236,17 +236,17 @@ public abstract class Entity : MonoBehaviour
                 OnPlantAttackHit?.Invoke(plant);
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, elementalDebuffMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
         bool isCrit = false;
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
-            Damage(3, damageType, ElementalType.Nature, source, false, new DamageTag [] {DamageTag.ElementalDebuff});
+            Damage(GetEffect<BrittleEffect>().bonusDamage, damageType, ElementalType.Nature, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
         if (this.HasEffect<FractureEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
-            Damage(damageDealt * 0.25f, DamageType.Physical, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+            Damage(damageDealt * GetEffect<FractureEffect>().bonusMultiplier, DamageType.Physical, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
         switch (elementalType)
@@ -338,14 +338,6 @@ public abstract class Entity : MonoBehaviour
             dotMultiplier = 1;
         }
 
-        if (System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
-        {
-            elementalDebuffMultiplier = 1 + source.elementalPower;
-        } else
-        {
-            elementalDebuffMultiplier = 1;
-        }
-
         if (System.Array.Exists(damageTag, t => t == DamageTag.PassiveDamage))
         {
             passiveDamageMult = 1 + source.passiveDamage;
@@ -378,7 +370,7 @@ public abstract class Entity : MonoBehaviour
             counterDamageMult = 1;
         }
 
-        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * elementalDebuffMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult;
+        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult;
 
         // if damage source can crit, then calculate if it crits or not
         if (canCrit)
