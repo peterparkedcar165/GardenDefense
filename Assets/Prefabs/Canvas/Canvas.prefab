@@ -1764,8 +1764,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -39.999996, y: -40}
+  m_AnchoredPosition: {x: 5.9270935, y: 0}
+  m_SizeDelta: {x: -28.1458, y: -40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1531420506845427537
 CanvasRenderer:
@@ -6743,7 +6743,6 @@ MonoBehaviour:
   cardPrefab: {fileID: 5982727409875557757, guid: 0a8171987b0d17a4298f6b30e44cd8a2, type: 3}
   cardContainer: {fileID: 8834488389505230084}
   fertilizerPool: []
-  cardsToShow: 3
 --- !u!1 &7793955847423206075
 GameObject:
   m_ObjectHideFlags: 0
@@ -7840,7 +7839,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 14
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[0]'
@@ -7898,6 +7897,10 @@ PrefabInstance:
       propertyPath: 'allPlantData.Array.data[13]'
       value: 
       objectReference: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[14]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 54cad904a44c6344888faaed9dda3b63, type: 2}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

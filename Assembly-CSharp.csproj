@@ -61,6 +61,7 @@
     <Compile Include="Assets\Scripts\Spawning\Level13.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CactusData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HardCC\EntrappedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PuncturedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DarklingBeetleData.cs" />
@@ -164,9 +165,11 @@
     <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\NeriumOleanderData.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\NeriumOleander.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlossomingEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\Blizzard.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
@@ -177,6 +180,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level8.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AeoniumBloomEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\NeriumOleanderProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HollyTauntingEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StartingShieldEffect.cs" />
@@ -186,6 +190,7 @@
     <Compile Include="Assets\Scripts\LevelSpecific\Level10\GridManager10.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level2.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\SproutEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\LightFader.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\TaintedEffect.cs" />
@@ -227,27 +232,34 @@
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\StunEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\UI\PlantUpgradeUI.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\DevourEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level7\GridManager7.cs" />
     <Compile Include="Assets\Scripts\UI\FlowerPotButton.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\EncyclopediaManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\OleandicToxinEffect.cs" />
     <Compile Include="Assets\Scripts\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
     <Compile Include="Assets\Scripts\UI\EntityInfoPanel.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\TermiteSwarmEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level4\GridManager4.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FruitFly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Level15.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ScoutsEncouragementEffect.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantEntry.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalPowerBoostEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\DesertLocust.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VenomEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Mosquito.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Holly.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\WaterlilyData.cs" />
+    <Compile Include="Assets\Scripts\InsectDataTypes\DesertLocustData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -125,13 +125,13 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     private void Line(System.Text.StringBuilder sb, string label, string plain, float current, float baseVal)
     {
-        sb.AppendLine(D(label, plain, $"<b>{Col(current, baseVal, plain)}</b>"));
+        sb.AppendLine(D(label, plain, Col(current, baseVal, $"<b>{plain}</b>")));
     }
 
     private void ElemLine(System.Text.StringBuilder sb, string colorTag, string label, string plain, float current, float baseVal)
     {
         int dots = Mathf.Max(2, Width - label.Length - plain.Length);
-        sb.AppendLine($"{colorTag}{label}{End}{new string('.', dots)}<b>{Col(current, baseVal, plain)}</b>");
+        sb.AppendLine($"{colorTag}{label}{End}{new string('.', dots)}{Col(current, baseVal, $"<b>{plain}</b>")}");
     }
 
 }

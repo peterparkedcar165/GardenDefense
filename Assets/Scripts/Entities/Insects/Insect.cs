@@ -76,12 +76,12 @@ public abstract class Insect : Entity, IAttackable
     {
         base.UpdateStats();
         movementSpeed = baseMovementSpeed + movementSpeedAdder + (baseMovementSpeed * movementSpeedMultiplier);
-        if (!(this is ScoutAnt) && ScoutAnt.scoutAntCount > 0)
-            movementSpeed *= 1.15f;
     }
 
     public int sunDrop;
     public int expDrop;
+    public DamageType attackDamageType = DamageType.Physical;
+    public ElementalType attackElementalType = ElementalType.Neutral;
 
     private GameManager gameManager;
     private Transform aimPoint;
@@ -518,7 +518,7 @@ public abstract class Insect : Entity, IAttackable
     // IAttackable
     public void ReceiveAttack(float damage, Insect attacker)
     {
-        Damage(damage, DamageType.Physical, ElementalType.Neutral, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        Damage(damage, attacker.attackDamageType, attacker.attackElementalType, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
     }
     public bool IsAlive => health > 0 && !isDying;
     public Vector3 Position => transform.position;
@@ -549,6 +549,8 @@ public abstract class Insect : Entity, IAttackable
         baseDotResistance      = data.baseDotResistance;
         sunDrop                = data.sunDrop;
         aggressivity           = data.aggressivity;
+        attackDamageType       = data.attackDamageType;
+        attackElementalType    = data.attackElementalType;
         baseLightEmissionRange = data.baseLightEmissionRange;
         baseHealingBonus       = data.baseHealingBonus;
         baseHealingReceived    = data.baseHealingReceived;

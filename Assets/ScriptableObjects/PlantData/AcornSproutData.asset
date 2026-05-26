@@ -22,7 +22,7 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 34
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
+  baseAttackSpeed: 0.7
   baseAttackRange: 3
   startingShield: 0
   baseHealingBonus: 0
@@ -72,6 +72,7 @@ MonoBehaviour:
   stunChance: 0.4
   stunDuration: 0.5
   path1AttackDamagePerLevel: 12
+  path1AttackSpeedPerLevel: 0.07
   path2StunChancePerLevel: 0.06
   path2StunDurationPerLevel: 0.2
   path3DamageMultiplierPerLevel: 0.25

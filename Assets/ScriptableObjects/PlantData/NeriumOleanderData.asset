@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26061b46ccc321940be88c6f9220c618, type: 3}
+  m_Name: NeriumOleanderData
+  m_EditorClassIdentifier: Assembly-CSharp::NeriumOleanderData
+  plantPrefab: {fileID: 89636851632264772, guid: 3df43c35804a85e45a7590850b7a3706, type: 3}
+  icon: {fileID: 21300000, guid: 7a5cb8d87f859974fbd7eb9e4b83c117, type: 3}
+  plantName: NeriumOleander
+  displayName: Oleander
+  elementalType: 3
+  damageType: 1
+  sunCost: 95
+  baseMaxHealth: 200
+  baseAttackDamage: 22
+  baseMagicPower: 0
+  baseAttackSpeed: 0.8
+  baseAttackRange: 3
+  startingShield: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseLifesteal: 0
+  baseBonusEffectChance: 0
+  baseCriticalChance: 0.05
+  baseCriticalDamage: 1.75
+  baseDotDamage: 0
+  baseElementalPower: 0
+  baseCoordinatedDamage: 0
+  baseCounterDamage: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseNatureDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseLightEmissionRange: 0
+  baseProjectileSpeed: 3.3
+  baseMaxRange: 99
+  basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
+  basePassiveCooldown: 0
+  basePassiveDuration: 0
+  baseSkillCooldown: 4
+  baseSkillDuration: 3
+  baseSkillRadius: 1.5
+  baseSkillDamageMultiplier: 0.43
+  baseSkillHealth: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
+  baseBounceCount: 2
+  baseToxinDuration: 6
+  baseSkillFlatDamage: 33
+  bounceSearchRadius: 4
+  bounceDamageReduction: 0.1
+  path1AttackDamagePerLevel: 11
+  path1BouncePerLevel: 1
+  path2ToxinDurationPerLevel: 2
+  path3SkillDamagePerLevel: 17
+  path3RootDurationPerLevel: 1.5
+  path3SkillRadiusPerLevel: 0.2

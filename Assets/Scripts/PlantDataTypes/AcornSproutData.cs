@@ -8,6 +8,7 @@ public class AcornSproutData : PlantData
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 8f;
+    public float path1AttackSpeedPerLevel = 0.05f;
 
     [Header("Path 2 Scaling")]
     public float path2StunChancePerLevel = 0.05f;

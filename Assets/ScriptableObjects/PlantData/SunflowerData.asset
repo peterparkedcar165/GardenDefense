@@ -69,10 +69,10 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseSunGenerated: 6
+  baseSunGenerated: 3
   baseSunrayDPS: 75
   path1AttackDamagePerLevel: 4
   path1AttackSpeedPerLevel: 0.03
-  path2SunPerLevel: 2
+  path2SunPerLevel: 1
   path3SunrayDPSPerLevel: 15
   path3SkillDurationPerLevel: 0.5

@@ -35,6 +35,7 @@ public class AcornSprout : Shooter
     public override void OnPath1Upgrade(int level)
     {
         baseAttackDamage = data.baseAttackDamage + level * (AcornData?.path1AttackDamagePerLevel ?? 8f);
+        baseAttackSpeed  = data.baseAttackSpeed  + level * (AcornData?.path1AttackSpeedPerLevel  ?? 0.05f);
     }
 
     public override void OnPath2Upgrade(int level)
@@ -77,9 +78,11 @@ public class AcornSprout : Shooter
     public override string GetPath1Description()
     {
         float adpl = AcornData?.path1AttackDamagePerLevel ?? 8f;
+        float aspl = AcornData?.path1AttackSpeedPerLevel  ?? 0.05f;
         return $"Attack:\n\n" +
                $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.\n\n" +
                $"Increase Base Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }
 

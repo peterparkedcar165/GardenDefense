@@ -21,6 +21,8 @@ public class InsectData : ScriptableObject
     public float startingShield;
 
     [Header("Offensive")]
+    public DamageType attackDamageType = DamageType.Physical;
+    public ElementalType attackElementalType = ElementalType.Neutral;
     public float baseLifesteal;
     public float basePhysicalDamage;
     public float baseMagicDamage;

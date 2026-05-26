@@ -56,8 +56,15 @@ public class SkillTargetingManager : MonoBehaviour
             Cancel();
     }
 
+    public void CancelAll()
+    {
+        if (isTargeting) Cancel();
+        if (isPlantTargeting) CancelPlantTargeting();
+    }
+
     public void BeginTargeting(float radius, Action<Vector3> onConfirm)
     {
+        PlantSelector.instance?.ClearAll();
         if (isTargeting) Cancel();
 
         this.onConfirm = onConfirm;
@@ -72,6 +79,7 @@ public class SkillTargetingManager : MonoBehaviour
 
     public void BeginPlantTargeting(Action<Plant> onConfirm, Plant source = null)
     {
+        PlantSelector.instance?.ClearAll();
         if (isTargeting) Cancel();
         if (isPlantTargeting) CancelPlantTargeting();
         this.onPlantConfirm = onConfirm;

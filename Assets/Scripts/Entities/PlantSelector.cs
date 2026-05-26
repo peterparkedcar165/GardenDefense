@@ -19,6 +19,7 @@ public class PlantSelector : MonoBehaviour
 
     public void SetUprootMode(bool newMode)
     {
+        if (newMode) SkillTargetingManager.instance?.CancelAll();
         ClearSelection();
         flowerPotMode = false;
         uprootMode = newMode;
@@ -26,6 +27,7 @@ public class PlantSelector : MonoBehaviour
 
     public void SetFlowerPotMode(bool newMode)
     {
+        if (newMode) SkillTargetingManager.instance?.CancelAll();
         ClearSelection();
         uprootMode = false;
         flowerPotMode = newMode;
@@ -33,6 +35,7 @@ public class PlantSelector : MonoBehaviour
 
     public void SelectPlant(GameObject plant)
     {
+        SkillTargetingManager.instance?.CancelAll();
         uprootMode = false;
         flowerPotMode = false;
         SelectedPlant = plant;
@@ -43,6 +46,14 @@ public class PlantSelector : MonoBehaviour
     public void ClearSelection()
     {
         SelectedPlant = null;
+        CursorIcon.instance?.OnSelectionChanged();
+    }
+
+    public void ClearAll()
+    {
+        SelectedPlant = null;
+        uprootMode = false;
+        flowerPotMode = false;
         CursorIcon.instance?.OnSelectionChanged();
     }
 

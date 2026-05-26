@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d151c8d8011ad74bb0de21dc098223f, type: 3}
+  m_Name: DesertLocustData
+  m_EditorClassIdentifier: Assembly-CSharp::DesertLocustData
+  displayName: Desert Locust
+  nameColor: {r: 0.7924528, g: 0.6403576, b: 0.3700605, a: 1}
+  description: Deadly to plants
+  passiveDescription: Attacks inflict Devour on the target, reducing Max Health by
+    50% of the original damage
+  sprite: {fileID: 21300000, guid: a61ee61892e251048b0fb5752020d103, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: 1cc03d1bb5c0ee1449b80df99f4f73b3, type: 3}
+  baseMaxHealth: 350
+  baseAttackDamage: 32
+  baseMagicPower: 0
+  baseAttackSpeed: 1
+  baseAttackRange: 1
+  baseMovementSpeed: 0.9
+  startingShield: 0
+  attackDamageType: 0
+  attackElementalType: 0
+  baseLifesteal: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0.33
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  sunDrop: 16
+  aggressivity: 0
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  devourReductionPercent: 0.5

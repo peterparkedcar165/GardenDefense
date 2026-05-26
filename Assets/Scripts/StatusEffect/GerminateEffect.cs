@@ -19,8 +19,8 @@ public class GerminateEffect : StatusEffect
     {
         float ad = cachedAttackDamage;
         float ep = cachedElementalPower;
-        float total = (42f + ad * 0.33f) * (1f + 1.42f * ep);
-        return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{total:F0}</b></color> <color=green>Nature</color> Physical damage to nearby insects. (42 + <color=green>33% Attack Damage</color>) × (1 + 1.42 × <color=#FFD700>{ep * 100:F0}% Elemental Power</color>)";
+        float total = (42f + ad * 0.33f) * (1f + 1.43f * ep);
+        return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{total:F0}</b></color> <color=green>Nature</color> Physical damage to nearby insects. (42 + <color=green>33% Attack Damage</color>) × (1 + <color=#FFD700>143% Elemental Power</color>)";
     }
 
     public override void OnApply()
@@ -38,7 +38,7 @@ public class GerminateEffect : StatusEffect
         GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
         indicator.GetComponent<DamageIndicator>().Initialize("Bloom", new Color(0.3f, 1f, 0.2f));
 
-        float damage = (42f + cachedAttackDamage * 0.33f) * (1f + 1.42f * cachedElementalPower);
+        float damage = (42f + cachedAttackDamage * 0.33f) * (1f + 1.43f * cachedElementalPower);
 
         Vector3 origin = target.transform.position;
         foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))

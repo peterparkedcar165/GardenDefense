@@ -880,7 +880,7 @@ public abstract class Plant : Entity, IAttackable
 
     public void ReceiveAttack(float damage, Insect attacker)
     {
-        Damage(damage, DamageType.Physical, ElementalType.Neutral, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        Damage(damage, attacker.attackDamageType, attacker.attackElementalType, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
         OnHitByInsect(attacker);
     }
 

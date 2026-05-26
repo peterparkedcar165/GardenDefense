@@ -1,17 +1,16 @@
 using UnityEngine;
 using System.Collections;
-using TMPro;
 
 public class Level5 : SpawnManager
 {
     public float levelTime;
     public int wave;
-    private int startSunCount = 550, startHealth = 200;
-    private int maxWave = 15;
+    private int startSunCount = 500, startHealth = 200;
+    private int maxWave = 28;
     public GameObject workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt;
     public GameObject weatherManager;
     public float nextWaveTimer;
-    public float restInterval = 15f;
+    public float restInterval = 1.5f;
 
     [Header("Spawning")]
     public float waitTime;
@@ -28,269 +27,228 @@ public class Level5 : SpawnManager
         GameManager.instance?.InitiateLevel(startSunCount, startHealth);
         GameHUD.instance?.SetWaveCount(wave, maxWave);
         SaveManager.instance.saveData.highestLevelUnlocked = Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, 4);
-                SaveManager.instance.CompleteLevel(5);
+        SaveManager.instance.CompleteLevel(5);
         StartCoroutine(RunWave());
     }
+
     IEnumerator RunWave()
     {
         nextWaveTimer = 10f;
-        yield return new WaitForSeconds(10f); // initial setup time
+        yield return new WaitForSeconds(10f);
 
         while (wave < maxWave)
         {
-           wave++;
-           GameManager.instance.currentWave = wave;
-           GameHUD.instance?.SetWaveCount(wave, maxWave);
-            yield return StartCoroutine(Wave(wave)); 
+            wave++;
+            GameManager.instance.currentWave = wave;
+            GameHUD.instance?.SetWaveCount(wave, maxWave);
+            yield return StartCoroutine(Wave(wave));
 
             if (wave < maxWave)
-            {
-                yield return StartCoroutine(RestPeriod(restInterval)); // resting between waves
-            }
+                yield return StartCoroutine(RestPeriod(restInterval));
         }
 
-        // Level finishes after loop is finished
+        yield return new WaitUntil(() => Insect.allInsects.Count == 0);
+        yield return new WaitForSeconds(3f);
+        SaveManager.instance.CompleteLevel(5);
+        Debug.Log("Level 5 completed");
+    }
 
-        // LEVEL COMPLETION
-            yield return new WaitUntil(() => Insect.allInsects.Count == 0);
-            yield return new WaitForSeconds(3f);
-                        SaveManager.instance.CompleteLevel(5);
-            Debug.Log("Level 5 completed");
+    // spawns exactly spawnCount bugs, cycling through the provided pool in order
+    IEnumerator SpawnWave(params System.Action[] pool)
+    {
+        yield return new WaitForSeconds(waitTime);
+        for (int i = 0; i < spawnCount; i++)
+        {
+            pool[i % pool.Length]();
+            if (i < spawnCount - 1)
+                yield return new WaitForSeconds(spawnInterval);
+        }
     }
 
     IEnumerator Wave(int wave)
     {
-        if (wave == 1) // wave 1 - worker ants every 2 seconds for 40 secs
-        {
-            waitTime = 2f;
-            spawnInterval = 2f;
-            spawnCount = 30;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval; // wave + rest
+        // phase 1 waves 1 to 6 setup
+        // worker ant only, soldier ant joins wave 3, scout ant joins wave 5, fruit fly joins wave 6
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
-            CancelInvoke(nameof(SpawnWorkerAnt));
+        if (wave == 1)
+        {
+            waitTime = 2f; spawnInterval = 3f; spawnCount = 10;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt));
+
         } else if (wave == 2)
         {
-            waitTime = 2f;
-            spawnInterval = 2.0f;
-            spawnCount = 38;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval; // wave + rest
+            waitTime = 2f; spawnInterval = 3f; spawnCount = 11;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
-            CancelInvoke(nameof(SpawnWorkerAnt));
         } else if (wave == 3)
         {
-            waitTime = 2f;
-            spawnInterval = 2f;
-            spawnCount = 30;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval; // wave + rest
+            // soldier ant joins
+            waitTime = 2f; spawnInterval = 3f; spawnCount = 12;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt));
 
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
-            CancelInvoke(nameof(SpawnScoutAnt));
         } else if (wave == 4)
         {
-            waitTime = 2f;
-            spawnInterval = 2.0f;
-            spawnCount = 38;
-            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval; // wave + rest
-
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            yield return new WaitForSeconds(waitTime + ((spawnCount -1)  * spawnInterval));
-            CancelInvoke(nameof(SpawnScoutAnt));
+            waitTime = 2f; spawnInterval = 3f; spawnCount = 13;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt));
 
         } else if (wave == 5)
         {
-            waitTime = 2f;
-            spawnInterval = 2.5f;
-            spawnCount = 38;
+            // scout ant joins
+            waitTime = 2f; spawnInterval = 2.5f; spawnCount = 14;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd5 = waitTime + ((spawnCount - 1) * spawnInterval);
-
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnQueenAnt), wd5 * 2f / 3f, 15f);
-            yield return new WaitForSeconds(wd5);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnQueenAnt));
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt));
 
         } else if (wave == 6)
         {
-            waitTime = 2f;
-            spawnInterval = 3f;
-            spawnCount = 30;
+            // fruit fly joins
+            waitTime = 2f; spawnInterval = 2.5f; spawnCount = 15;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd6 = waitTime + ((spawnCount - 1) * spawnInterval);
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnSoldierAnt), wd6 / 3f, spawnInterval);
-            InvokeRepeating(nameof(SpawnFruitFly), wd6 / 3f, spawnInterval);
-            yield return new WaitForSeconds(wd6);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnFruitFly));
+        // phase 2 waves 7 to 17 rising pressure
+        // wasp joins wave 7, queen ant joins wave 11
+
         } else if (wave == 7)
         {
-            waitTime = 2f;
-            spawnInterval = 2.75f;
-            spawnCount = 23;
+            // wasp joins
+            waitTime = 2f; spawnInterval = 2.2f; spawnCount = 16;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd7 = waitTime + ((spawnCount - 1) * spawnInterval);
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnWasp));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnSoldierAnt), wd7 / 3f, spawnInterval);
-            InvokeRepeating(nameof(SpawnFruitFly), wd7 / 3f, spawnInterval);
-            yield return new WaitForSeconds(wd7);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnFruitFly));
         } else if (wave == 8)
         {
-            waitTime = 2f;
-            spawnInterval = 2.0f;
-            spawnCount = 38;
+            waitTime = 2f; spawnInterval = 2f; spawnCount = 17;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd8 = waitTime + ((spawnCount - 1) * spawnInterval);
-
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnWasp), wd8 * 2f / 3f, spawnInterval * 2f);
-            yield return new WaitForSeconds(wd8);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnWasp));
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnWasp));
 
         } else if (wave == 9)
         {
-            waitTime = 2f;
-            spawnInterval = 2.0f;
-            spawnCount = 38;
+            waitTime = 2f; spawnInterval = 1.8f; spawnCount = 18;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd9 = waitTime + ((spawnCount - 1) * spawnInterval);
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnFruitFly), wd9 / 3f, spawnInterval);
-            yield return new WaitForSeconds(wd9);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnFruitFly));
         } else if (wave == 10)
         {
-            waitTime = 2f;
-            spawnInterval = 2.0f;
-            spawnCount = 30;
+            waitTime = 2f; spawnInterval = 1.6f; spawnCount = 20;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd10 = waitTime + ((spawnCount - 1) * spawnInterval);
-
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnSoldierAnt), wd10 / 3f, spawnInterval);
-            InvokeRepeating(nameof(SpawnWasp), wd10 * 2f / 3f, spawnInterval * 2f);
-            yield return new WaitForSeconds(wd10);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnWasp));
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp));
 
         } else if (wave == 11)
         {
-            waitTime = 2f;
-            spawnInterval = 2.0f;
-            spawnCount = 38;
+            // queen ant joins
+            waitTime = 2f; spawnInterval = 1.4f; spawnCount = 21;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd11 = waitTime + ((spawnCount - 1) * spawnInterval);
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnSoldierAnt), wd11 / 3f, spawnInterval);
-            InvokeRepeating(nameof(SpawnQueenAnt), wd11 * 2f / 3f, 20f);
-            yield return new WaitForSeconds(wd11);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnQueenAnt));
         } else if (wave == 12)
         {
-            waitTime = 2f;
-            spawnInterval = 2.0f;
-            spawnCount = 38;
+            waitTime = 2f; spawnInterval = 1.2f; spawnCount = 22;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd12 = waitTime + ((spawnCount - 1) * spawnInterval);
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnSoldierAnt), wd12 / 3f, spawnInterval);
-            InvokeRepeating(nameof(SpawnQueenAnt), wd12 * 2f / 3f, 15f);
-            yield return new WaitForSeconds(wd12);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnQueenAnt));
         } else if (wave == 13)
         {
-            waitTime = 2f;
-            spawnInterval = 1.75f;
-            spawnCount = 45;
+            waitTime = 2f; spawnInterval = 1f; spawnCount = 23;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd13 = waitTime + ((spawnCount - 1) * spawnInterval);
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnWasp), wd13 / 3f, spawnInterval * 1.5f);
-            InvokeRepeating(nameof(SpawnFruitFly), wd13 / 3f, spawnInterval);
-            yield return new WaitForSeconds(wd13);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnWasp));
-            CancelInvoke(nameof(SpawnFruitFly));
         } else if (wave == 14)
         {
-            waitTime = 2f;
-            spawnInterval = 1.5f;
-            spawnCount = 45;
+            waitTime = 2f; spawnInterval = 0.95f; spawnCount = 24;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd14 = waitTime + ((spawnCount - 1) * spawnInterval);
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnSoldierAnt), wd14 / 4f, spawnInterval);
-            InvokeRepeating(nameof(SpawnWasp), wd14 / 2f, spawnInterval * 2f);
-            InvokeRepeating(nameof(SpawnQueenAnt), wd14 * 2f / 3f, 20f);
-            yield return new WaitForSeconds(wd14);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnWasp));
-            CancelInvoke(nameof(SpawnQueenAnt));
         } else if (wave == 15)
         {
-            waitTime = 2f;
-            spawnInterval = 1.5f;
-            spawnCount = 53;
+            waitTime = 2f; spawnInterval = 0.9f; spawnCount = 26;
             nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
-            float wd15 = waitTime + ((spawnCount - 1) * spawnInterval);
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
 
-            InvokeRepeating(nameof(SpawnWorkerAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnScoutAnt), waitTime, spawnInterval);
-            InvokeRepeating(nameof(SpawnSoldierAnt), wd15 / 4f, spawnInterval);
-            InvokeRepeating(nameof(SpawnFruitFly), wd15 / 3f, spawnInterval);
-            InvokeRepeating(nameof(SpawnWasp), wd15 / 2f, spawnInterval * 2f);
-            InvokeRepeating(nameof(SpawnQueenAnt), wd15 * 2f / 3f, 15f);
-            yield return new WaitForSeconds(wd15);
-            CancelInvoke(nameof(SpawnWorkerAnt));
-            CancelInvoke(nameof(SpawnScoutAnt));
-            CancelInvoke(nameof(SpawnSoldierAnt));
-            CancelInvoke(nameof(SpawnFruitFly));
-            CancelInvoke(nameof(SpawnWasp));
-            CancelInvoke(nameof(SpawnQueenAnt));
+        } else if (wave == 16)
+        {
+            waitTime = 2f; spawnInterval = 0.85f; spawnCount = 28;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 17)
+        {
+            waitTime = 2f; spawnInterval = 0.8f; spawnCount = 30;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        // phase 3 waves 18 to 28 tough
+        // faster intervals, all six types, counts ramp steeply
+
+        } else if (wave == 18)
+        {
+            waitTime = 2f; spawnInterval = 0.75f; spawnCount = 33;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 19)
+        {
+            waitTime = 2f; spawnInterval = 0.7f; spawnCount = 36;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 20)
+        {
+            waitTime = 2f; spawnInterval = 0.65f; spawnCount = 39;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 21)
+        {
+            waitTime = 2f; spawnInterval = 0.6f; spawnCount = 43;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 22)
+        {
+            waitTime = 2f; spawnInterval = 0.55f; spawnCount = 47;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 23)
+        {
+            waitTime = 2f; spawnInterval = 0.5f; spawnCount = 51;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 24)
+        {
+            waitTime = 2f; spawnInterval = 0.5f; spawnCount = 56;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 25)
+        {
+            waitTime = 2f; spawnInterval = 0.45f; spawnCount = 63;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 26)
+        {
+            waitTime = 2f; spawnInterval = 0.4f; spawnCount = 72;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 27)
+        {
+            waitTime = 2f; spawnInterval = 0.3f; spawnCount = 85;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
+
+        } else if (wave == 28)
+        {
+            // final wave
+            waitTime = 2f; spawnInterval = 0.25f; spawnCount = 100;
+            nextWaveTimer = waitTime + ((spawnCount - 1) * spawnInterval) + restInterval;
+            yield return StartCoroutine(SpawnWave(SpawnWorkerAnt, SpawnWorkerAnt, SpawnWorkerAnt, SpawnSoldierAnt, SpawnScoutAnt, SpawnFruitFly, SpawnWasp, SpawnQueenAnt));
         }
     }
 
@@ -299,44 +257,21 @@ public class Level5 : SpawnManager
         yield return new WaitForSeconds(duration);
     }
 
+    public override GameObject[] GetInsectPrefabs() => new[] { workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt };
 
-public override GameObject[] GetInsectPrefabs() => new[] { workerAnt, soldierAnt, scoutAnt, fruitFly, wasp, queenAnt };
-
-// SPAWNING OF SPECIFIC TYPES
-    void SpawnWorkerAnt() {
-        Spawn(workerAnt);
-    }
-
-    void SpawnSoldierAnt() {
-        Spawn(soldierAnt);
-    }
-    
-    void SpawnScoutAnt()
-    {
-        Spawn(scoutAnt);
-    }
-
-    void SpawnFruitFly()
-    {
-        Spawn(fruitFly);
-    }
-
-    void SpawnWasp()
-    {
-        Spawn(wasp);
-    }
-
-    void SpawnQueenAnt()
-    {
-        Spawn(queenAnt);
-    }
+    void SpawnWorkerAnt()  { Spawn(workerAnt); }
+    void SpawnSoldierAnt() { Spawn(soldierAnt); }
+    void SpawnScoutAnt()   { Spawn(scoutAnt); }
+    void SpawnFruitFly()   { Spawn(fruitFly); }
+    void SpawnWasp()       { Spawn(wasp); }
+    void SpawnQueenAnt()   { Spawn(queenAnt); }
 
     protected override void Update()
-{
-    if (nextWaveTimer > 0)
     {
-        nextWaveTimer -= Time.deltaTime;
-        GameHUD.instance?.SetNextWaveTimer(nextWaveTimer);
+        if (nextWaveTimer > 0)
+        {
+            nextWaveTimer -= Time.deltaTime;
+            GameHUD.instance?.SetNextWaveTimer(nextWaveTimer);
+        }
     }
-}
 }

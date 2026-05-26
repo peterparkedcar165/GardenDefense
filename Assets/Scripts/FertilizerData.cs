@@ -56,5 +56,9 @@ public enum StatType
     MagicDamage,
     PhysicalResistance,
     MagicResistance,
-    MagicPower
+    MagicPower,
+    DebuffGivenDuration,
+    BuffGivenDuration,
+    BuffReceivedDuration,
+    DebuffReceivedDuration
 }

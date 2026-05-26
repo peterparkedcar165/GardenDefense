@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class Moth : FlyingInsect
 {
-    private bool isExposedToLight;
+    private float scanTimer = 0f;
+    private const float scanInterval = 0.1f;
+    private const float buffDuration = 0.15f;
 
     protected override void Awake()
     {
@@ -21,6 +23,46 @@ public class Moth : FlyingInsect
         }
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        scanTimer += Time.deltaTime;
+        if (scanTimer >= scanInterval)
+        {
+            scanTimer = 0f;
+            UpdateLightCheck();
+        }
+    }
+
+    private void UpdateLightCheck()
+    {
+        if (IsNearLight())
+        {
+            IlluminativeHasteEffect existing = GetEffect<IlluminativeHasteEffect>();
+            if (existing != null)
+                existing.duration = buffDuration;
+            else
+                ApplyEffect(new IlluminativeHasteEffect(this, buffDuration, 1, this));
+        }
+    }
+
+    private bool IsNearLight()
+    {
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive || plant.lightEmissionRange <= 0f) continue;
+            if (Vector3.Distance(transform.position, plant.transform.position) <= plant.lightEmissionRange)
+                return true;
+        }
+        foreach (Insect insect in allInsects)
+        {
+            if (insect == null || insect == this || !insect.IsAlive || insect.lightEmissionRange <= 0f) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) <= insect.lightEmissionRange)
+                return true;
+        }
+        return false;
+    }
+
     private Plant FindNearestLightPlantInRange()
     {
         Plant nearest = null;
@@ -37,41 +79,5 @@ public class Moth : FlyingInsect
             }
         }
         return nearest;
-    }
-
-    public override void UpdateStats()
-    {
-        base.UpdateStats();
-
-        isExposedToLight = false;
-        foreach (Plant plant in Plant.allPlants)
-        {
-            if (plant == null || !plant.IsAlive) continue;
-            if (plant.lightEmissionRange <= 0f) continue;
-            if (Vector3.Distance(transform.position, plant.transform.position) <= plant.lightEmissionRange)
-            {
-                isExposedToLight = true;
-                break;
-            }
-        }
-        if (!isExposedToLight)
-        {
-            foreach (Insect insect in allInsects)
-            {
-                if (insect == null || insect == this || !insect.IsAlive) continue;
-                if (insect.lightEmissionRange <= 0f) continue;
-                if (Vector3.Distance(transform.position, insect.transform.position) <= insect.lightEmissionRange)
-                {
-                    isExposedToLight = true;
-                    break;
-                }
-            }
-        }
-
-        if (isExposedToLight)
-        {
-            movementSpeed += 0.4f;
-            flightSpeed = 2f * movementSpeed;
-        }
     }
 }

@@ -63,6 +63,7 @@ public abstract class Entity : MonoBehaviour
     public float baseLightEmissionRange;
     public float baseLifesteal;
     public float baseCounterDamage;
+    public float baseDebuffGivenDuration, baseBuffGivenDuration, baseBuffReceivedDuration, baseDebuffReceivedDuration;
 
     public static event System.Action<Plant> OnPlantAttackHit;
 
@@ -81,6 +82,7 @@ public abstract class Entity : MonoBehaviour
     public float lifesteal;
     public float counterDamage;
     public float tenacity;
+    public float debuffGivenDuration, buffGivenDuration, buffReceivedDuration, debuffReceivedDuration;
     public float shieldBonusDamage, shieldToughness;
     public float startingShield;
     public bool debuffsFrozen;
@@ -101,6 +103,7 @@ public abstract class Entity : MonoBehaviour
     public float lightEmissionRangeAdder;
     public float lifestealAdder;
     public float counterDamageAdder;
+    public float debuffGivenDurationAdder, buffGivenDurationAdder, buffReceivedDurationAdder, debuffReceivedDurationAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -117,6 +120,7 @@ public abstract class Entity : MonoBehaviour
     public float lightEmissionRangeMultiplier;
     public float lifestealMultiplier;
     public float counterDamageMultiplier;
+    public float debuffGivenDurationMultiplier, buffGivenDurationMultiplier, buffReceivedDurationMultiplier, debuffReceivedDurationMultiplier;
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
@@ -164,6 +168,10 @@ public abstract class Entity : MonoBehaviour
         lightEmissionRange = baseLightEmissionRange + lightEmissionRangeAdder + (baseLightEmissionRange * lightEmissionRangeMultiplier);
         lifesteal = baseLifesteal + lifestealAdder + (baseLifesteal * lifestealMultiplier);
         counterDamage = baseCounterDamage + counterDamageAdder + (baseCounterDamage * counterDamageMultiplier);
+        debuffGivenDuration    = baseDebuffGivenDuration    + debuffGivenDurationAdder    + (baseDebuffGivenDuration    * debuffGivenDurationMultiplier);
+        buffGivenDuration      = baseBuffGivenDuration      + buffGivenDurationAdder      + (baseBuffGivenDuration      * buffGivenDurationMultiplier);
+        buffReceivedDuration   = baseBuffReceivedDuration   + buffReceivedDurationAdder   + (baseBuffReceivedDuration   * buffReceivedDurationMultiplier);
+        debuffReceivedDuration = baseDebuffReceivedDuration + debuffReceivedDurationAdder + (baseDebuffReceivedDuration * debuffReceivedDurationMultiplier);
         UpdateHealthBar();
     }
 
@@ -742,6 +750,14 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
+        // OleandicToxin intercept: positive effects applied to a toxin-afflicted entity are captured and blocked
+        if (effect.effectType == StatusEffect.Type.positive)
+        {
+            OleandicToxinEffect toxin = GetEffect<OleandicToxinEffect>();
+            if (toxin != null && toxin.TryCapture(effect))
+                return;
+        }
+
         if (effect is ShieldEffect newShield)
         {
             for (int i = activeEffects.Count - 1; i >= 0; i--)
@@ -767,6 +783,18 @@ public abstract class Entity : MonoBehaviour
                 }
             }
         }
+        // scale duration by source's given-duration stat and this entity's received-duration stat
+        if (effect.effectType == StatusEffect.Type.positive)
+        {
+            if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.buffGivenDuration);
+            effect.duration *= Mathf.Max(0f, 1f + buffReceivedDuration);
+        }
+        else if (effect.effectType == StatusEffect.Type.negative)
+        {
+            if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.debuffGivenDuration);
+            effect.duration *= Mathf.Max(0f, 1f + debuffReceivedDuration);
+        }
+
         activeEffects.Add(effect);
         effect.OnApply();
     }

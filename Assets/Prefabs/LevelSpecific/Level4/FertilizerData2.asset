@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Bloomer
   stats:
   - statType: 6
-    value: 0.62
+    value: 0.52
   - statType: 11
-    value: 0.56
+    value: 0.48
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

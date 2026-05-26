@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Brute Force
   stats:
-  - statType: 0
-    value: 0.56
+  - statType: 9
+    value: 0.32
   - statType: 10
-    value: 0.72
+    value: 0.44
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

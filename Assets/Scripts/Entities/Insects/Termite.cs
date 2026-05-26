@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class Termite : Insect
 {
-    public float bonusPerTermite = 3f;
-    public float swarmRange = 3f;
-
     private TermiteData TData => data as TermiteData;
+
+    private float scanTimer = 0f;
+    private const float scanInterval = 0.3f;
+    private const float buffDuration = 0.35f;
 
     protected override void Awake()
     {
@@ -13,23 +14,36 @@ public class Termite : Insect
         LoadData();
         aggressivity   = Aggressivity.High;
         targetingRange = 1f;
-        if (TData != null)
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        scanTimer += Time.deltaTime;
+        if (scanTimer >= scanInterval)
         {
-            bonusPerTermite = TData.bonusPerTermite;
-            swarmRange      = TData.swarmRange;
+            scanTimer = 0f;
+            UpdateSwarm();
         }
     }
 
-    public override void UpdateStats()
+    private void UpdateSwarm()
     {
+        float range = TData?.swarmRange ?? 3f;
         int nearbyCount = 0;
         foreach (Insect insect in Insect.allInsects)
         {
-            if (insect == null || insect == this) continue;
-            if (insect is Termite && Vector3.Distance(transform.position, insect.transform.position) <= swarmRange)
+            if (insect == null || insect == this || !insect.IsAlive) continue;
+            if (insect is Termite && Vector3.Distance(transform.position, insect.transform.position) <= range)
                 nearbyCount++;
         }
-        attackDamageAdder = nearbyCount * bonusPerTermite;
-        base.UpdateStats();
+
+        if (nearbyCount == 0) return;
+
+        TermiteSwarmEffect existing = GetEffect<TermiteSwarmEffect>();
+        if (existing != null)
+            existing.Refresh(nearbyCount, this);
+        else
+            ApplyEffect(new TermiteSwarmEffect(this, buffDuration, nearbyCount, this));
     }
 }
