@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 
-public class GridManager13 : MonoBehaviour
+public class DesertGridManager : MonoBehaviour
 {
     public int rows, columns;
     public GameObject sandTilePrefab;
@@ -51,6 +51,7 @@ public class GridManager13 : MonoBehaviour
                 else                          t.tileType = TileType.Sand;
 
                 if (hasHighgroundGround || hasHighgroundWater) t.isHighground = true;
+
             }
         }
 

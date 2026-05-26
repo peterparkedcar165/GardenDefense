@@ -130,7 +130,7 @@ public class Aeonium : Aura
         {
             foreach (Plant plant in Plant.allPlants)
             {
-                if (plant == null) continue;
+                if (plant == null || !plant.IsAlive) continue;
                 if (Vector2.Distance(transform.position, plant.transform.position) <= attackRange)
                     desired.Add(plant);
             }

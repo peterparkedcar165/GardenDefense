@@ -410,6 +410,7 @@ public abstract class Plant : Entity, IAttackable
             color = Color.yellow;
         foreach (SpriteRenderer outline in _outlineRenderers)
         {
+            if (outline == null) continue;
             if (sr != null) outline.sprite = sr.sprite;
             outline.color = color;
             outline.enabled = true;

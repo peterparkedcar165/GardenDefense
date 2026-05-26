@@ -16,6 +16,7 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private const string Wind   = "<color=#B2EBF2>";
     private const string Magic    = "<color=#FFB6C1>";
     private const string Physical = "<color=#A0522D>";
+    private const string DoT = "<color=grey>";
     private const string Gold     = "<color=white>";
     private const string HealCol  = "<color=#FF6B81>";
     private const string End      = "</color>";
@@ -103,6 +104,8 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         sb.AppendLine("<size=+8><color=white><b><u>Defenses</u></b></color></size>");
         ElemLine(sb, Physical, "Physical Resistance:", $"{e.physicalResistance * 100:F0}%", e.physicalResistance, e.basePhysicalResistance);
         ElemLine(sb, Magic,    "Magic Resistance:",    $"{e.magicResistance * 100:F0}%",    e.magicResistance,    e.baseMagicResistance);
+        sb.AppendLine();
+        ElemLine(sb, DoT,    "DoT Resistance:",    $"{e.dotResistance * 100:F0}%",    e.dotResistance,    e.baseDotResistance);
         sb.AppendLine();
         ElemLine(sb, Fire,   "Fire Resistance:",   $"{e.fireResistance * 100:F0}%",   e.fireResistance,   e.baseFireResistance);
         ElemLine(sb, Water,  "Water Resistance:",  $"{e.waterResistance * 100:F0}%",  e.waterResistance,  e.baseWaterResistance);

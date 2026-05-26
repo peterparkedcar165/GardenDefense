@@ -22,7 +22,7 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 22
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
+  baseAttackSpeed: 0.6
   baseAttackRange: 3
   startingShield: 0
   baseHealingBonus: 0

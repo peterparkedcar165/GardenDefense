@@ -50,7 +50,9 @@ public class FertilizerCard : MonoBehaviour
             var sb = new StringBuilder();
             for (int i = 0; i < rolledStats.Length; i++)
             {
-                string color = rolledValues[i] < 0f ? "red" : "green";
+                bool isGood = rolledValues[i] >= 0f;
+                if (IsInvertedStat(rolledStats[i].statType)) isGood = !isGood;
+                string color = isGood ? "green" : "red";
                 sb.AppendLine($"{FormatStatName(rolledStats[i].statType)}: <color={color}><b>{FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color>");
             }
             statsText.text = sb.ToString();
@@ -89,6 +91,15 @@ public class FertilizerCard : MonoBehaviour
 
         rectTransform.anchoredPosition = targetPosition;
         canvasGroup.interactable = true;
+    }
+
+    private bool IsInvertedStat(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.DebuffReceivedDuration: return true;
+            default: return false;
+        }
     }
 
     private string FormatValue(StatType statType, float value)
@@ -145,6 +156,10 @@ public class FertilizerCard : MonoBehaviour
             case StatType.PhysicalResistance:           return "Physical Resistance";
             case StatType.MagicResistance:              return "Magic Resistance";
             case StatType.MagicPower:                   return "Magic Power";
+            case StatType.DebuffGivenDuration:          return "Debuff Given Duration";
+            case StatType.BuffGivenDuration:            return "Buff Given Duration";
+            case StatType.BuffReceivedDuration:         return "Buff Received Duration";
+            case StatType.DebuffReceivedDuration:       return "Debuff Received Duration";
             default:                      return statType.ToString();
         }
     }
