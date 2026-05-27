@@ -12,7 +12,6 @@ public class BogIris : Shooter
     private float cycleTimer = 0f;
     private float sunTickTimer = 0f;
     private float healTickTimer = 0f;
-    private GameObject _indicatorPrefab;
     private const float totalHeal = 200f;
 
     private BogIrisData BogData => data as BogIrisData;
@@ -30,7 +29,6 @@ public class BogIris : Shooter
         base.Awake();
         LoadData();
         _rootRenderer = GetComponent<SpriteRenderer>();
-        _indicatorPrefab = Resources.Load<GameObject>("DamageIndicator");
         SetVisualState(false);
     }
 
@@ -75,11 +73,7 @@ public class BogIris : Shooter
             {
                 sunTickTimer -= SunInterval;
                 GameManager.instance.AddSun(SunGenerated);
-                GameObject indicator = Object.Instantiate(
-                    _indicatorPrefab,
-                    transform.position + new Vector3(0.25f, 0.5f, 0f),
-                    Quaternion.identity);
-                indicator.GetComponent<DamageIndicator>().Initialize($"+{SunGenerated} Sun", new Color(1f, 1f, 0f));
+                SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), SunGenerated);
             }
             if (cycleTimer >= OpenDuration)
             {

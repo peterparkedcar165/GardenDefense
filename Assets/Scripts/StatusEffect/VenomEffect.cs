@@ -16,11 +16,7 @@ public class VenomEffect : StatusEffect
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(
-            Resources.Load<GameObject>("DamageIndicator"),
-            target.transform.position + new Vector3(0.4f, 0f, 0f),
-            Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>()?.Initialize("Venom", new Color(0.6f, 0.2f, 0.8f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Venom", new Color(0.6f, 0.2f, 0.8f));
     }
 
     public override void OnTick(float deltaTime)

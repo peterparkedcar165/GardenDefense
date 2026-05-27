@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class BlossomingEffect : StatusEffect
 {
     private readonly float natureDamageBonus;
@@ -13,6 +15,7 @@ public class BlossomingEffect : StatusEffect
 
     public override void OnApply()
     {
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Blossoming", new Color(0.3f, 1f, 0.2f));
         target.natureDamageAdder += natureDamageBonus;
         target.attackSpeedMultiplier += attackSpeedBonus;
     }

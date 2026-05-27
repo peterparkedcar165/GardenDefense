@@ -15,8 +15,7 @@ public class FractureEffect : StatusEffect
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Fracture", new Color(0f, 1f, 1f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Fracture", new Color(0f, 1f, 1f));
     }
 
     public override void OnTick(float deltaTime) { }

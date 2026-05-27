@@ -25,6 +25,8 @@ MonoBehaviour:
   baseAttackRange: 0.3
   baseMovementSpeed: 0.5
   startingShield: 600
+  attackDamageType: 0
+  attackElementalType: 6
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -38,6 +40,8 @@ MonoBehaviour:
   baseNatureResistance: 0
   baseWindResistance: 0
   baseDotResistance: 0
+  threatValue: 1.7
+  threatType: 1
   sunDrop: 10
   aggressivity: 0
   baseLightEmissionRange: 1

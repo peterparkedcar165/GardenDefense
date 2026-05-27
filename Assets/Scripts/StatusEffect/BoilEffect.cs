@@ -15,8 +15,7 @@ public class BoilEffect : StatusEffect
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Boil", new Color(0.25f, 0.75f, 1f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Boil", new Color(0.25f, 0.75f, 1f));
 
         Insect insect = (Insect)target;
         insect.fireResistanceAdder  -= resistShred;

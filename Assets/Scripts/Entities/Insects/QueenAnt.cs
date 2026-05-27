@@ -57,6 +57,9 @@ public class QueenAnt : Ant
         Insect ant = antGO.GetComponent<Insect>();
         if (ant != null)
         {
+            // give the spawned ant the queen's full path (including any lead-in waypoints)
+            // so it follows the correct route regardless of which spawn lane the queen came from
+            ant.SetPath(waypoints);
             ant.currentWaypointIndex = currentWaypointIndex;
             StartCoroutine(LaunchAnt(antGO));
         }

@@ -15,8 +15,7 @@ public class SludgeEffect : StatusEffect
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Sludge", new Color(0.6f, 0.1f, 0.8f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Sludge", new Color(0.6f, 0.1f, 0.8f));
 
         bool hasDoT = false;
         foreach (StatusEffect effect in target.activeEffects)

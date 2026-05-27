@@ -31,8 +31,7 @@ public class Sunflower : Shooter
         {
             GameManager.instance.AddSun(sunGenerated);
             passiveCooldownTimer += passiveCooldown;
-            GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), transform.position + new Vector3(0.25f, 0.5f, 0f), Quaternion.identity);
-            indicator.GetComponent<DamageIndicator>().Initialize($"+{sunGenerated} Sun", new Color(1f, 1f, 0f));
+            SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), sunGenerated);
         }
     }
 

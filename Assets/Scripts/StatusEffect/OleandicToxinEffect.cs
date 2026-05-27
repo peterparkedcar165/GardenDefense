@@ -73,11 +73,7 @@ public class OleandicToxinEffect : StatusEffect
 
     private void SpawnCaptureIndicator(string buffName, float yOffset)
     {
-        GameObject indicator = Object.Instantiate(
-            Resources.Load<GameObject>("DamageIndicator"),
-            target.transform.position + new Vector3(0.4f, yOffset, 0f),
-            Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>()?.Initialize($"Captured: {buffName}", new Color(0.6f, 0.2f, 0.8f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, yOffset, 0f), $"Captured: {buffName}", new Color(0.6f, 0.2f, 0.8f));
     }
 
     public override void OnTick(float deltaTime) { }

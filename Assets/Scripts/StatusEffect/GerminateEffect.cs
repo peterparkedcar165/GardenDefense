@@ -25,8 +25,7 @@ public class GerminateEffect : StatusEffect
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Germinate", new Color(0.3f, 1f, 0.2f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Germinate", new Color(0.3f, 1f, 0.2f));
     }
 
     public override void OnTick(float deltaTime) { }
@@ -35,8 +34,7 @@ public class GerminateEffect : StatusEffect
     public override void OnExpire()
     {
         if (target == null) return;
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Bloom", new Color(0.3f, 1f, 0.2f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Bloom", new Color(0.3f, 1f, 0.2f));
 
         float damage = (42f + cachedAttackDamage * 0.33f) * (1f + 1.43f * cachedElementalPower);
 

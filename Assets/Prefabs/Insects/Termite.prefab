@@ -121,8 +121,8 @@ MonoBehaviour:
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
@@ -143,6 +143,10 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseLifesteal: 0
   baseCounterDamage: 0
+  baseDebuffGivenDuration: 0
+  baseBuffGivenDuration: 0
+  baseBuffReceivedDuration: 0
+  baseDebuffReceivedDuration: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -161,8 +165,8 @@ MonoBehaviour:
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
-  physicalShred: 0
-  magicShred: 0
+  physicalDamage: 0
+  magicDamage: 0
   bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
@@ -183,6 +187,13 @@ MonoBehaviour:
   lifesteal: 0
   counterDamage: 0
   tenacity: 0
+  debuffGivenDuration: 0
+  buffGivenDuration: 0
+  buffReceivedDuration: 0
+  debuffReceivedDuration: 0
+  shieldBonusDamage: 0
+  shieldToughness: 0
+  startingShield: 0
   debuffsFrozen: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
@@ -199,8 +210,8 @@ MonoBehaviour:
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
-  physicalShredAdder: 0
-  magicShredAdder: 0
+  physicalDamageAdder: 0
+  magicDamageAdder: 0
   bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
@@ -219,9 +230,15 @@ MonoBehaviour:
   skillDurationAdder: 0
   tenacityAdder: 0
   immobilizeDurationAdder: 0
+  shieldBonusDamageAdder: 0
+  shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
   counterDamageAdder: 0
+  debuffGivenDurationAdder: 0
+  buffGivenDurationAdder: 0
+  buffReceivedDurationAdder: 0
+  debuffReceivedDurationAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -237,8 +254,8 @@ MonoBehaviour:
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
-  physicalShredMultiplier: 0
-  magicShredMultiplier: 0
+  physicalDamageMultiplier: 0
+  magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
@@ -259,6 +276,10 @@ MonoBehaviour:
   lightEmissionRangeMultiplier: 0
   lifestealMultiplier: 0
   counterDamageMultiplier: 0
+  debuffGivenDurationMultiplier: 0
+  buffGivenDurationMultiplier: 0
+  buffReceivedDurationMultiplier: 0
+  debuffReceivedDurationMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -287,9 +308,11 @@ MonoBehaviour:
   movementSpeedMultiplier: 0
   sunDrop: 0
   expDrop: 0
+  attackDamageType: 0
+  attackElementalType: 6
   visual: {fileID: 3774765596699175811}
-  bonusPerTermite: 3
-  swarmRange: 3
+  termitePrefab: {fileID: 2279086888993795066}
+  isCompanion: 0
 --- !u!1 &3949176022732913986
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,7 +391,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1690330125
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: d852e9b01c514a1498e3348a6b17926f, type: 3}
@@ -460,7 +483,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1018753133
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: d9079daa460826e4ebb66fb8af445649, type: 3}

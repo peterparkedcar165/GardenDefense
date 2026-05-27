@@ -6,4 +6,5 @@ public class TermiteData : InsectData
     [Header("Termite")]
     public float bonusPerTermite = 3f;
     public float swarmRange = 3f;
+    [Min(0)] public int companionCount = 2;
 }

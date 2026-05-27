@@ -17,8 +17,7 @@ public class FreezeEffect : HardCrowdControl
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Freeze", new Color(0f, 1f, 1f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Freeze", new Color(0f, 1f, 1f));
 
         Debug.Log("Freeze applied");
 

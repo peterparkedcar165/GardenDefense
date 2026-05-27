@@ -53,7 +53,6 @@
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
-    <Compile Include="Assets\Scripts\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\Airborne.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Shooter.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level9.cs" />
@@ -87,6 +86,7 @@
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
     <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\PoisonShroomData.cs" />
+    <Compile Include="Assets\Scripts\TextIndicators\SunIndicator.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\Skills\AcornBomb.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\ScorpionData.cs" />
@@ -123,6 +123,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
+    <Compile Include="Assets\Scripts\TextIndicators\TextIndicator.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level6\GridManager6.cs" />
     <Compile Include="Assets\Scripts\LevelSpecific\Level3\GridManager3.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\DandelionData.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Assets\Scripts\UI\GameButtons.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PathHoverTrigger.cs" />
+    <Compile Include="Assets\Scripts\Spawning\ProceduralLevel.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Ant.cs" />
     <Compile Include="Assets\Scripts\Audio\MusicManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoilEffect.cs" />
@@ -159,7 +161,9 @@
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
     <Compile Include="Assets\Scripts\GridManagers\CaveGridManager.cs" />
+    <Compile Include="Assets\Scripts\Spawning\ThreatType.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VulnerableEffect.cs" />
+    <Compile Include="Assets\Scripts\Spawning\LevelInsectEntry.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
@@ -194,6 +198,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\LightFader.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
+    <Compile Include="Assets\Scripts\TextIndicators\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\TaintedEffect.cs" />
     <Compile Include="Assets\Scripts\Game\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\WaterlilyProjectile.cs" />
@@ -207,6 +212,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ChillEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
+    <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BegoniaProjectile.cs" />
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
@@ -222,6 +228,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\KnockUpEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
+    <Compile Include="Assets\Scripts\TextIndicators\HealIndicator.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level1.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aeonium.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level14.cs" />
@@ -260,6 +267,8 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Holly.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\WaterlilyData.cs" />
+    <Compile Include="Assets\Scripts\TextIndicators\StatusIndicator.cs" />
+    <Compile Include="Assets\Scripts\DoTAggregator.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DesertLocustData.cs" />
   </ItemGroup>
   <ItemGroup>

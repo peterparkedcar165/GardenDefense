@@ -35,8 +35,7 @@ public class BurnEffect : DoTEffect
         cachedMagicPower = source?.magicPower ?? 0f;
         damagePerSecond = ((healthPerSecond * cachedMaxHealth) + (mpPerSecond * cachedMagicPower) + 6f) * (1f + cachedElementalPower);
 
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Burn", new Color(1f, 0.4f, 0f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Burn", new Color(1f, 0.4f, 0f));
 
         if (DarknessManager.instance != null)
         {

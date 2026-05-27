@@ -41,8 +41,6 @@ public enum ElementalType
 
 public abstract class Entity : MonoBehaviour
 {
-    protected GameObject damageIndicatorPrefab;
-
     private SpriteRenderer _flashRenderer;
     private Material _originalMaterial;
     private Material _flashMaterial;
@@ -405,8 +403,9 @@ public abstract class Entity : MonoBehaviour
 
         // damage indicator
 
-        GameObject indicator = Instantiate(damageIndicatorPrefab, GetIndicatorPosition(), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize(finalDamage, elementalType, isCrit);
+        DamageIndicator.Spawn(GetIndicatorPosition(), finalDamage, elementalType, isCrit);
+        if (System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+            DoTAggregator.AddDamage(this, finalDamage, elementalType);
 
 
         UpdateHealthBar();
@@ -425,8 +424,7 @@ public abstract class Entity : MonoBehaviour
         if (actual <= 0f) return;
         health += actual;
         UpdateHealthBar();
-        GameObject indicator = Instantiate(damageIndicatorPrefab, GetIndicatorPosition(), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>()?.Initialize($"+{actual:F0}", new Color(0.2f, 1f, 0.2f));
+        HealIndicator.Spawn(GetIndicatorPosition(), actual);
     }
 
 // method for death
@@ -450,7 +448,6 @@ public abstract class Entity : MonoBehaviour
 // upon spawning, occurs before Start()
     protected virtual void Awake()
     {
-        damageIndicatorPrefab = Resources.Load<GameObject>("DamageIndicator");
         UpdateStats();
         health = maxHealth;
         if (this is Insect) SpawnHealthBar();

@@ -72,8 +72,7 @@ public class Aeonium : Aura
         {
             GameManager.instance.AddSun(_sunGenerated);
             passiveCooldownTimer += passiveCooldown;
-            GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), transform.position + new Vector3(0.25f, 0.5f, 0f), Quaternion.identity);
-            indicator.GetComponent<DamageIndicator>().Initialize($"+{_sunGenerated} Sun", new Color(1f, 1f, 0f));
+            SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), _sunGenerated);
         }
 
         if (attackCooldownTimer < attackCooldown)
@@ -114,11 +113,7 @@ public class Aeonium : Aura
         if (!HasEffect<AeoniumBloomEffect>()) return;
         if (Vector3.Distance(transform.position, insect.transform.position) > attackRange) return;
 
-        GameObject indicator = Object.Instantiate(
-            Resources.Load<GameObject>("DamageIndicator"),
-            insect.transform.position + new Vector3(0f, 0.75f, 0f),
-            Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>()?.Initialize($"+{insect.sunDrop} Bonus Sun", new Color(1f, 0.84f, 0f));
+        SunIndicator.SpawnBonus(insect.transform.position + new Vector3(0f, 0.75f, 0f), insect.sunDrop);
     }
 
     private void UpdateHighlights()

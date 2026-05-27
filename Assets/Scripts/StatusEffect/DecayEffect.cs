@@ -17,8 +17,7 @@ public class DecayEffect : StatusEffect
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Decay", new Color(0.6f, 0.1f, 0.8f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Decay", new Color(0.6f, 0.1f, 0.8f));
 
         target.attackSpeedMultiplier  -= attackSpeedReduction;
         target.attackDamageMultiplier -= attackDamageReduction;

@@ -15,8 +15,7 @@ public class BrittleEffect : StatusEffect
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Brittle", Color.green);
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Brittle", Color.green);
         target.shieldToughnessAdder -= 0.25f;
     }
 

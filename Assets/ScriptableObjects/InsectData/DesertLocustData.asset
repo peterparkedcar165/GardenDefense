@@ -41,6 +41,8 @@ MonoBehaviour:
   baseNatureResistance: 0
   baseWindResistance: 0
   baseDotResistance: 0
+  threatValue: 7
+  threatType: 1
   sunDrop: 16
   aggressivity: 0
   baseLightEmissionRange: 0

@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
   weather: 0
-  temperature: 0
+  temperature: 2
 --- !u!4 &29017237
 Transform:
   m_ObjectHideFlags: 0

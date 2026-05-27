@@ -14,8 +14,7 @@ public class VulnerableEffect : StatusEffect
 
     public override void OnApply()
     {
-        GameObject indicator = Object.Instantiate(Resources.Load<GameObject>("DamageIndicator"), target.transform.position + new Vector3(0.4f, 0f, 0f), Quaternion.identity);
-        indicator.GetComponent<DamageIndicator>().Initialize("Vulnerable", new Color(0.6f, 0.1f, 0.8f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Vulnerable", new Color(0.6f, 0.1f, 0.8f));
 
         Insect insect = (Insect)target;
         insect.dotResistanceAdder -= shred;

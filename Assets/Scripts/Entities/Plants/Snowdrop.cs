@@ -154,7 +154,7 @@ public class Snowdrop : Aura
         $"Continuously deals <color=green><b>{attackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
 
     public override string GetPassiveDescription() =>
-        $"Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement by <color=green><b>{baseSlow * 100f:F0}%</b></color>.\n\n" +
+        $"Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement by <color=green><b>{(baseSlow + scalingSlow * effectivePath2Level) * 100f:F0}%</b></color>.\n\n" +
         $"Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature by <color=green><b>{coolingPerSecond:F1}</b></color> per second, until comfort.";
 
     public override string GetSkillDesription() =>
