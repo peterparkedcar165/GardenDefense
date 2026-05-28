@@ -103,6 +103,12 @@ public class Cactus : Shooter
         ApplyEffect(new CactusTauntingEffect(this, SkillDuration, 1, this, SkillHealBonus));
     }
 
+    public override void UpdateStats()
+    {
+        base.UpdateStats();
+        temperatureMax = comfortMax;
+    }
+
     public override void OnPath1Upgrade(int level)
     {
         piercingAdder = level >= 5 ? 1 : 0;

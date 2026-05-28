@@ -112,7 +112,7 @@ MonoBehaviour:
   baseCriticalDamage: 0
   baseDotResistance: 0
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseCoordinatedDamage: 0
@@ -121,6 +121,10 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseLifesteal: 0
   baseCounterDamage: 0
+  baseDebuffGivenDuration: 0
+  baseBuffGivenDuration: 0
+  baseBuffReceivedDuration: 0
+  baseDebuffReceivedDuration: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -152,7 +156,7 @@ MonoBehaviour:
   criticalDamage: 0
   dotResistance: 0
   dotDamage: 0
-  elementalPower: 0
+  elementalAffinity: 0
   passiveDamage: 0
   skillDamage: 0
   coordinatedDamage: 0
@@ -161,10 +165,15 @@ MonoBehaviour:
   lifesteal: 0
   counterDamage: 0
   tenacity: 0
+  debuffGivenDuration: 0
+  buffGivenDuration: 0
+  buffReceivedDuration: 0
+  debuffReceivedDuration: 0
   shieldBonusDamage: 0
   shieldToughness: 0
   startingShield: 0
   debuffsFrozen: 0
+  bypassShields: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicPowerAdder: 0
@@ -193,7 +202,7 @@ MonoBehaviour:
   criticalDamageAdder: 0
   dotResistanceAdder: 0
   dotDamageAdder: 0
-  elementalPowerAdder: 0
+  elementalAffinityAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
   coordinatedDamageAdder: 0
@@ -205,6 +214,10 @@ MonoBehaviour:
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
   counterDamageAdder: 0
+  debuffGivenDurationAdder: 0
+  buffGivenDurationAdder: 0
+  buffReceivedDurationAdder: 0
+  debuffReceivedDurationAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -233,7 +246,7 @@ MonoBehaviour:
   criticalDamageMultiplier: 0
   dotResistanceMultiplier: 0
   dotDamageMultiplier: 0
-  elementalPowerMultiplier: 0
+  elementalAffinityMultiplier: 0
   passiveDamageMultiplier: 0
   coordinatedDamageMultiplier: 0
   skillDurationMultiplier: 0
@@ -242,6 +255,10 @@ MonoBehaviour:
   lightEmissionRangeMultiplier: 0
   lifestealMultiplier: 0
   counterDamageMultiplier: 0
+  debuffGivenDurationMultiplier: 0
+  buffGivenDurationMultiplier: 0
+  buffReceivedDurationMultiplier: 0
+  debuffReceivedDurationMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -257,7 +274,7 @@ MonoBehaviour:
   circleRadius: {fileID: 5644347511344771682}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
-  allowedTiles: 0100000004000000
+  allowedTiles: 010000000400000007000000
   targeting: 1
   sunCost: 0
   totalSunSpent: 0

@@ -38,6 +38,7 @@ public class AloeVera : Lobber
     public override void UpdateStats()
     {
         base.UpdateStats();
+        temperatureMax = comfortMax;
         float healpl  = AVData?.path2HealPerLevel           ?? 8f;
         float temppl  = AVData?.path2TempReductionPerLevel  ?? 0.5f;
         float healpl3 = AVData?.path3SkillHealPerLevel      ?? 2f;

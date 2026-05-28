@@ -44,7 +44,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
@@ -69,11 +69,11 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  basePoisonDuration: 6
-  basePoisonDPS: 15
+  basePoisonDuration: 5
+  basePoisonDPS: 13
   path1AttackSpeedPerLevel: 0.11
   path1AttackRangePerLevel: 0.13
-  path2PoisonDurationPerLevel: 2
-  path2PoisonDPSPerLevel: 6
+  path2PoisonDurationPerLevel: 3
+  path2PoisonDPSPerLevel: 7
   path3SkillDurationPerLevel: 2
   path3RadiusPerLevel: 0.2
