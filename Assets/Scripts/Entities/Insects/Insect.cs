@@ -344,8 +344,11 @@ public abstract class Insect : Entity, IAttackable
             return;
         }
 
+        Vector3 snapped = new Vector3(
+            Mathf.RoundToInt(transform.position.x),
+            Mathf.RoundToInt(transform.position.y), 0f);
         bool onPath = false;
-        if (Tile.allTiles.TryGetValue(Tile.TileKey(transform.position), out Tile t))
+        if (Tile.allTiles.TryGetValue(Tile.TileKey(snapped), out Tile t))
             onPath = t.tileType == TileType.Path;
 
         bool shouldSlow = isOnGround && !onPath;
