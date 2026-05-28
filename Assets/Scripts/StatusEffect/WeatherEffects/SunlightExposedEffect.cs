@@ -16,7 +16,7 @@ public class SunlightExposedEffect : StatusEffect
     public override void OnExpire()  => target.fireDamageAdder  -= bonus;
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=orange>Exposed: Sunlight</color>";
+    public override string GetName() => "<color=orange>[Weather]: Sunny</color>";
     public override string GetDescription() =>
-        $"Increase <color=orange>Fire</color> Damage by <color=orange><b>{bonus * 100f:F0}%</b></color>.";
+        $"Increase <color=orange><b>Fire Damage</b></color> by <color=orange><b>{bonus * 100f:F0}%</b></color>.";
 }

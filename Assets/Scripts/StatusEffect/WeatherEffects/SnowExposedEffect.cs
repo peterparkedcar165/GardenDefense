@@ -16,7 +16,7 @@ public class SnowExposedEffect : StatusEffect
     public override void OnExpire() => target.iceDamageAdder -= bonus;
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=#88DDFF>Exposed: Snow</color>";
+    public override string GetName() => "<color=#88DDFF>[Weather]: Snow</color>";
     public override string GetDescription() =>
-        $"Increase <color=#88DDFF>Ice</color> Damage by <color=#88DDFF><b>{bonus * 100f:F0}%</b></color>.";
+        $"Increase <color=#88DDFF><b>Ice Damage</b></color> by <color=#88DDFF><b>{bonus * 100f:F0}%</b></color>.";
 }

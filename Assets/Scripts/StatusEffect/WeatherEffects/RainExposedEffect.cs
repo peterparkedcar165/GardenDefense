@@ -16,7 +16,7 @@ public class RainExposedEffect : StatusEffect
     public override void OnExpire() => target.waterDamageAdder -= bonus;
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=#4488FF>Exposed: Rain</color>";
+    public override string GetName() => "<color=#4488FF>[Weather]: Rain</color>";
     public override string GetDescription() =>
-        $"Increase <color=#4488FF>Water</color> Damage by <color=#4488FF><b>{bonus * 100f:F0}%</b></color>.";
+        $"Increase <color=#4488FF><b>Water Damage</b></color> by <color=#4488FF><b>{bonus * 100f:F0}%</b></color>.";
 }

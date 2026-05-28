@@ -15,5 +15,5 @@ public class OffPathSlownessEffect : StatusEffect
     public override void OnTick(float deltaTime) { }
 
     public override string GetName() => "Off-Path Slowness";
-    public override string GetDescription() => "Moving off the path reduces movement speed by 25%.";
+    public override string GetDescription() => $"Moving off the path reduces Movement Speed by {slowAmount*100:F0}%.";
 }

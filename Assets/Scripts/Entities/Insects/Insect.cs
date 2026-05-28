@@ -290,7 +290,6 @@ public abstract class Insect : Entity, IAttackable
             if (dist < 0.1f)
             {
                 _returningToPath = false;
-                SnapToNearestWaypoint();
             }
             else
             {
