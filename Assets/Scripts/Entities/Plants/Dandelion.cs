@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
@@ -102,7 +102,7 @@ public class Dandelion : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseElementalPower = level * (DData?.path1ElementalPowerPerLevel ?? 0.06f);
+        baseelementalAffinity = level * (DData?.path1elementalAffinityPerLevel ?? 0.06f);
         baseAttackRange    = data.baseAttackRange + level * (DData?.path1AttackRangePerLevel ?? 0.25f);
     }
 
@@ -171,11 +171,11 @@ public class Dandelion : Shooter
 
     public override string GetPath1Description()
     {
-        float eppl    = DData?.path1ElementalPowerPerLevel ?? 0.06f;
+        float eppl    = DData?.path1elementalAffinityPerLevel ?? 0.06f;
         float rangepl = DData?.path1AttackRangePerLevel    ?? 0.25f;
         return $"Attack:\n\n" +
                $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.\n\n" +
-               $"Increase Elemental Power by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Elemental Affinity by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }

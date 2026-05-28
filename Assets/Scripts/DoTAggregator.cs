@@ -115,7 +115,7 @@ public class DoTAggregator : MonoBehaviour
         }
 
         // fade: starts immediately, quadratic ease-in, resets to 0 on each new tick
-        fadeTimer += Time.unscaledDeltaTime;
+        fadeTimer += Time.deltaTime;
         float t = Mathf.Clamp01(fadeTimer / fadeDuration);
         float alpha = 1f - (t * t);
 

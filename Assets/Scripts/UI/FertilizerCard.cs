@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
@@ -134,7 +134,7 @@ public class FertilizerCard : MonoBehaviour
             case StatType.WindDamage:     return "Wind Damage";
             case StatType.CriticalChance: return "Critical Chance";
             case StatType.CriticalDamage: return "Critical Damage";
-            case StatType.ElementalPower: return "Elemental Power";
+            case StatType.elementalAffinity: return "Elemental Affinity";
             case StatType.PassiveDamage:  return "Passive Damage";
             case StatType.SkillDamage:    return "Skill Damage";
             case StatType.SkillCooldown:  return "Skill Cd. Reduction";

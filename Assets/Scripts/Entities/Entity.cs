@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -24,7 +24,8 @@ public enum DamageTag
     ElementalDebuff,
     Coordinated,
     Counter,
-    Weather
+    Weather,
+    BypassShield
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -54,7 +55,7 @@ public abstract class Entity : MonoBehaviour
     public float baseFireDamage, baseWaterDamage, baseNatureDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseDotResistance, baseDotDamage;
-    public float baseElementalPower;
+    public float baseelementalAffinity;
     public float basePassiveDamage, baseSkillDamage, baseCoordinatedDamage;
     public float baseSkillDuration;
     public float baseTenacity;
@@ -73,7 +74,7 @@ public abstract class Entity : MonoBehaviour
     public float fireDamage, waterDamage, natureDamage, windDamage, poisonDamage, iceDamage;
     public float criticalChance, criticalDamage;
     public float dotResistance, dotDamage;
-    public float elementalPower;
+    public float elementalAffinity;
     public float passiveDamage, skillDamage, coordinatedDamage;
     public float skillDuration;
     public float lightEmissionRange;
@@ -84,6 +85,7 @@ public abstract class Entity : MonoBehaviour
     public float shieldBonusDamage, shieldToughness;
     public float startingShield;
     public bool debuffsFrozen;
+    public bool bypassShields;
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -93,7 +95,7 @@ public abstract class Entity : MonoBehaviour
     public float fireDamageAdder, waterDamageAdder, natureDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
     public float dotResistanceAdder, dotDamageAdder;
-    public float elementalPowerAdder;
+    public float elementalAffinityAdder;
     public float passiveDamageAdder, skillDamageAdder, coordinatedDamageAdder;
     public float skillDurationAdder;
     public float tenacityAdder, immobilizeDurationAdder;
@@ -111,7 +113,7 @@ public abstract class Entity : MonoBehaviour
     public float fireDamageMultiplier, waterDamageMultiplier, natureDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier;
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
-    public float elementalPowerMultiplier;
+    public float elementalAffinityMultiplier;
     public float passiveDamageMultiplier, coordinatedDamageMultiplier;
     public float skillDurationMultiplier;
     public float tenacityMultiplier, immobilizeDurationMultiplier;
@@ -155,7 +157,7 @@ public abstract class Entity : MonoBehaviour
         criticalDamage = baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier);
         dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
         dotDamage = baseDotDamage + dotDamageAdder + (baseDotDamage * dotDamageMultiplier);
-        elementalPower = baseElementalPower + elementalPowerAdder + (baseElementalPower * elementalPowerMultiplier);
+        elementalAffinity = baseelementalAffinity + elementalAffinityAdder + (baseelementalAffinity * elementalAffinityMultiplier);
         passiveDamage = basePassiveDamage + passiveDamageAdder + (basePassiveDamage * passiveDamageMultiplier);
         skillDamage = baseSkillDamage + skillDamageAdder;
         coordinatedDamage = baseCoordinatedDamage + coordinatedDamageAdder + (baseCoordinatedDamage * coordinatedDamageMultiplier);
@@ -223,7 +225,8 @@ public abstract class Entity : MonoBehaviour
         }
         
         finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier);
-        health -= HasShield() ? DrainShields(finalDamage, 0f) : finalDamage;
+        bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield);
+        health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, 0f) : finalDamage;
         TriggerHitFlash();
         UpdateHealthBar();
 
@@ -390,7 +393,8 @@ public abstract class Entity : MonoBehaviour
         }
 
         
-        health -= HasShield() ? DrainShields(finalDamage, source.shieldBonusDamage) : finalDamage;
+        bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield) || source.bypassShields;
+        health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, source.shieldBonusDamage) : finalDamage;
         TriggerHitFlash();
         source.totalDamageDealt += finalDamage; // FOR DEBUG
         if (this is Insect damagedInsect) damagedInsect.lastSource = source;

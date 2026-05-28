@@ -1,0 +1,22 @@
+public class FrostExposedEffect : StatusEffect
+{
+    private const float baseBonus     = 0.24f;
+    private const float bonusPerLevel = 0.12f;
+
+    private readonly float bonus;
+
+    public FrostExposedEffect(Entity target, Entity source, int intensity)
+        : base(target, float.MaxValue, intensity, source)
+    {
+        effectType = Type.neutral;
+        bonus = baseBonus + bonusPerLevel * (intensity - 1);
+    }
+
+    public override void OnApply()  => target.iceDamageAdder += bonus;
+    public override void OnExpire() => target.iceDamageAdder -= bonus;
+    public override void OnTick(float deltaTime) { }
+
+    public override string GetName() => "<color=#88DDFF>Exposed: Frost</color>";
+    public override string GetDescription() =>
+        $"Snowy weather (intensity {level}) empowers Ice damage by <color=#88DDFF><b>{bonus * 100f:F0}%</b></color>.";
+}

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FractureEffect : StatusEffect
 {
@@ -6,7 +6,7 @@ public class FractureEffect : StatusEffect
 
     public FractureEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        bonusMultiplier = 0.25f * (1f + source.elementalPower);
+        bonusMultiplier = 0.25f * (1f + source.elementalAffinity);
         effectType = Type.negative;
     }
 

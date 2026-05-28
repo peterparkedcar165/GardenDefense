@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BrittleEffect : StatusEffect
 {
@@ -6,12 +6,12 @@ public class BrittleEffect : StatusEffect
 
     public BrittleEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        bonusDamage = 3f * (1f + source.elementalPower);
+        bonusDamage = 3f * (1f + source.elementalAffinity);
         effectType = Type.negative;
     }
 
     public override string GetName() => "<color=green>Brittle</color>";
-    public override string GetDescription() => $"Inflict <color=green><b>{bonusDamage:F0}</b></color> additional damage upon being hurt. Reduce Shield Toughness by <color=green>25%</color>. (3 × (1 + <color=#FFD700>{source.elementalPower * 100:F0}% Elemental Power</color>))";
+    public override string GetDescription() => $"Inflict <color=green><b>{bonusDamage:F0}</b></color> additional damage upon being hurt. Reduce Shield Toughness by <color=green>25%</color>. (3 × (1 + <color=#FFD700>{source.elementalAffinity * 100:F0}% Elemental Affinity</color>))";
 
     public override void OnApply()
     {

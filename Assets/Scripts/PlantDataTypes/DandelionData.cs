@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "DandelionData", menuName = "Scriptable Objects/PlantData/Dandelion")]
 public class DandelionData : PlantData
@@ -8,7 +8,7 @@ public class DandelionData : PlantData
     public float basePushPower;
 
     [Header("Path 1 Scaling")]
-    public float path1ElementalPowerPerLevel = 0.06f;
+    public float path1elementalAffinityPerLevel = 0.06f;
     public float path1AttackRangePerLevel = 0.25f;
 
     [Header("Path 3 Scaling")]

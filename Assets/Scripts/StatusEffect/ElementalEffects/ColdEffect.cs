@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ColdEffect : ElementalDebuff
 {
@@ -39,7 +39,7 @@ public class ColdEffect : ElementalDebuff
                 insect.RemoveEffect<ColdEffect>();
                 insect.RemoveEffect<WetEffect>();
                 insect.freezeInternalCooldown = 5f;
-                insect.ApplyEffect(new FreezeEffect(insect, 3f * (1f + source.elementalPower), 1, source));
+                insect.ApplyEffect(new FreezeEffect(insect, 3f * (1f + source.elementalAffinity), 1, source));
             }
         }
     }

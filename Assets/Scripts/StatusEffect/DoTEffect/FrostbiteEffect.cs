@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FrostbiteEffect : DoTEffect
 {
@@ -6,13 +6,13 @@ public class FrostbiteEffect : DoTEffect
 
     public float healthPerSecond = 0.04f, adPerSecond = 0.06f;
     private float tenacityReduction = 0.66f;
-    private float cachedElementalPower;
+    private float cachedelementalAffinity;
     private float cachedMaxHealth;
     private float cachedAttackDamage;
 
     public FrostbiteEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        cachedElementalPower = source?.elementalPower ?? 0f;
+        cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
         tickInterval = 0.25f;
     }
@@ -22,11 +22,11 @@ public class FrostbiteEffect : DoTEffect
     {
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
         float ad = cachedAttackDamage > 0 ? cachedAttackDamage : (source?.attackDamage ?? 0f);
-        float ep = cachedElementalPower;
+        float ep = cachedelementalAffinity;
         float total = ((healthPerSecond * hp) + (adPerSecond * ad) + 2f) * (1f + ep);
         return $"Deal <color=#00BFFF><b>{total:F0}</b></color> <color=#00BFFF>Ice</color> Physical damage per second. " +
                $"(<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#B0B0FF>{adPerSecond * 100:F0}% Attack Damage</color> + 2) × " +
-               $"(1 + <color=#FFD700>{ep * 100:F0}% Elemental Power</color>). " +
+               $"(1 + <color=#FFD700>{ep * 100:F0}% Elemental Affinity</color>). " +
                $"Reduces Tenacity by <color=green>{tenacityReduction * 100:F0}%</color>.";
     }
 
@@ -35,7 +35,7 @@ public class FrostbiteEffect : DoTEffect
         base.OnApply();
         cachedMaxHealth    = target.maxHealth;
         cachedAttackDamage = source?.attackDamage ?? 0f;
-        damagePerSecond = ((healthPerSecond * cachedMaxHealth) + (adPerSecond * cachedAttackDamage) + 2f) * (1f + cachedElementalPower);
+        damagePerSecond = ((healthPerSecond * cachedMaxHealth) + (adPerSecond * cachedAttackDamage) + 2f) * (1f + cachedelementalAffinity);
 
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Frostbite", new Color(0f, 1f, 1f));
 

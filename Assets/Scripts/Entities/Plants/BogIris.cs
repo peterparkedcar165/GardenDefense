@@ -123,7 +123,7 @@ public class BogIris : Shooter
 
     private IEnumerator SpawnGeyser(Vector3 position)
     {
-        bool isRaining = WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Rain;
+        bool isRaining = WeatherManager.instance != null && WeatherManager.instance.HasWeather(WeatherType.Rain);
         yield return new WaitForSeconds(isRaining ? 0.5f : 1f);
         if (geyserPrefab == null) yield break;
         GameObject obj = Instantiate(geyserPrefab, position, Quaternion.identity);

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -80,7 +80,7 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         sb.AppendLine("<size=+8><color=white><b><u>Offense</u></b></color></size>");
         ElemLine(sb, Gold, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
         ElemLine(sb, Gold, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
-        Line(sb, "Elemental Power:",  $"{e.elementalPower * 100:F0}%", e.elementalPower,  e.baseElementalPower);
+        Line(sb, "Elemental Affinity:",  $"{e.elementalAffinity * 100:F0}%", e.elementalAffinity,  e.baseelementalAffinity);
         Line(sb, "Damage Over Time:", $"{e.dotDamage * 100:F0}%",      e.dotDamage,       e.baseDotDamage);
         if (e is Shooter shooter)
             ElemLine(sb, Nature, "Piercing:", $"{shooter.piercing}", shooter.piercing, shooter.basePiercing);

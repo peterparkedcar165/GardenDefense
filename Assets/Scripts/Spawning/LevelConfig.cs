@@ -6,7 +6,7 @@ public class LevelConfig : ScriptableObject
     [Header("level settings")]
     [Tooltip("used for save data (CompleteLevel calls)")]
     public int levelNumber;
-    public WeatherType weather = WeatherType.Clear;
+    public WeatherEntry[] weather;
     public TemperatureType temperature = TemperatureType.Normal;
     public int maxWaves = 40;
     public int startSunCount = 350;

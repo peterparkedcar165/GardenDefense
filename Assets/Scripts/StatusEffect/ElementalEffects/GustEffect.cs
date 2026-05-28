@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class GustEffect : ElementalDebuff
@@ -11,8 +11,8 @@ public class GustEffect : ElementalDebuff
     public override string GetName() => "<color=#E0E0E0>Gust</color>";
     public override string GetDescription()
     {
-        float halfDamage = 32f * (1f + 1.5f * source.elementalPower);
-        return $"Reacts with an existing primer, dealing <color=#E0E0E0><b>{halfDamage:F0}</b></color> Wind + <color=#E0E0E0><b>{halfDamage:F0}</b></color> elemental Magic damage. (32 × (1 + 1.5× <color=#FFD700>{source.elementalPower * 100:F0}% Elemental Power</color>))";
+        float halfDamage = 32f * (1f + 1.5f * source.elementalAffinity);
+        return $"Reacts with an existing primer, dealing <color=#E0E0E0><b>{halfDamage:F0}</b></color> Wind + <color=#E0E0E0><b>{halfDamage:F0}</b></color> elemental Magic damage. (32 × (1 + 1.5× <color=#FFD700>{source.elementalAffinity * 100:F0}% Elemental Affinity</color>))";
     }
 
     public override void OnApply()
@@ -62,7 +62,7 @@ public class GustEffect : ElementalDebuff
     {
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Windshear", new Color(0.85f, 1f, 0.85f));
         yield return new WaitForSeconds(0.1f);
-        float halfDamage = 32f * (1f + 1.5f*(source.elementalPower));
+        float halfDamage = 32f * (1f + 1.5f*(source.elementalAffinity));
         DamageTag[] tags = new DamageTag[] { DamageTag.ElementalDebuff };
         target.Damage(halfDamage, DamageType.Magic, ElementalType.Wind, source, false, tags);
         yield return new WaitForSeconds(0.05f);

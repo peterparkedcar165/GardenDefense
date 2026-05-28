@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SludgeEffect : StatusEffect
 {
@@ -6,7 +6,7 @@ public class SludgeEffect : StatusEffect
 
     public SludgeEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        bonusDuration = 4f * (1f + source.elementalPower);
+        bonusDuration = 4f * (1f + source.elementalAffinity);
         effectType = Type.negative;
     }
 

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BoilEffect : StatusEffect
 {
@@ -6,7 +6,7 @@ public class BoilEffect : StatusEffect
 
     public BoilEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        resistShred = 0.32f * (1f + source.elementalPower);
+        resistShred = 0.32f * (1f + source.elementalAffinity);
         effectType = Type.negative;
     }
 

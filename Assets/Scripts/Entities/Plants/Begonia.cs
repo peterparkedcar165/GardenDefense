@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class Begonia : Shooter
@@ -12,9 +12,9 @@ public class Begonia : Shooter
 
     private BegoniaData BData => data as BegoniaData;
 
-    private float ElementalPowerBonusBase => (BData?.baseElementalPowerBonus ?? 0f) + (BData?.path2ElementalPowerPerLevel ?? 0.06f) * effectivePath2Level;
-    private float ElementalPowerBonusMP   => (BData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
-    private float ElementalPowerBonus     => ElementalPowerBonusBase + ElementalPowerBonusMP;
+    private float elementalAffinityBonusBase => (BData?.baseelementalAffinityBonus ?? 0f) + (BData?.path2elementalAffinityPerLevel ?? 0.06f) * effectivePath2Level;
+    private float elementalAffinityBonusMP   => (BData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
+    private float elementalAffinityBonus     => elementalAffinityBonusBase + elementalAffinityBonusMP;
 
     private float NatureDamageBonusBase => (BData?.baseNatureDamageBonus ?? 0f) + (BData?.path3NatureDamageBonusPerLevel ?? 0.04f) * effectivePath3Level;
     private float NatureDamageBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
@@ -48,9 +48,9 @@ public class Begonia : Shooter
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            ElementalPowerBoostEffect existing = plant.GetEffect<ElementalPowerBoostEffect>();
-            if (existing != null && existing.bonus > ElementalPowerBonus) continue;
-            plant.ApplyEffect(new ElementalPowerBoostEffect(plant, auraEffectDuration, 1, this, ElementalPowerBonus));
+            elementalAffinityBoostEffect existing = plant.GetEffect<elementalAffinityBoostEffect>();
+            if (existing != null && existing.bonus > elementalAffinityBonus) continue;
+            plant.ApplyEffect(new elementalAffinityBoostEffect(plant, auraEffectDuration, 1, this, elementalAffinityBonus));
         }
     }
 
@@ -146,7 +146,7 @@ public class Begonia : Shooter
 
     public override string GetName() => "<b><color=green>Begonia</color></b>";
     public override string GetDescription() =>
-        $"The {GetName()} infuses nearby allies with elemental power and can bless them with the power of nature.";
+        $"The {GetName()} infuses nearby allies with Elemental Affinity and can bless them with the power of nature.";
 
     public override string GetPath1Description()
     {
@@ -161,11 +161,11 @@ public class Begonia : Shooter
 
     public override string GetPath2Description()
     {
-        float eppl = BData?.path2ElementalPowerPerLevel ?? 0.06f;
+        float eppl = BData?.path2elementalAffinityPerLevel ?? 0.06f;
         return $"Passive:\n\n" +
-               $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, increasing Elemental Power by <color=green><b>{ElementalPowerBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ElementalPowerBonusMP * 100f:F0}%</b></color>].\n\n" +
+               $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, increasing Elemental Affinity by <color=green><b>{elementalAffinityBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{elementalAffinityBonusMP * 100f:F0}%</b></color>].\n\n" +
                $"Scaling: <color=#FFB6C1><b>{(BData?.basePassiveMultiplier ?? 0f) * 100f:F0}%</b></color> Magic Power\n\n" +
-               $"Increase Elemental Power bonus by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Elemental Affinity bonus by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
     }
 
@@ -190,7 +190,7 @@ public class Begonia : Shooter
 
     public override string GetPassiveDescription() =>
         $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, " +
-        $"increasing Elemental Power by <color=green><b>{ElementalPowerBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ElementalPowerBonusMP * 100f:F0}%</b></color>].";
+        $"increasing Elemental Affinity by <color=green><b>{elementalAffinityBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{elementalAffinityBonusMP * 100f:F0}%</b></color>].";
 
     public override string GetSkillDesription() =>
         $"Target an area on the field. Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +

@@ -1,11 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class VulnerableEffect : StatusEffect
 {
     public float shred;
     public VulnerableEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        shred = 0.32f * (1f + source.elementalPower);
+        shred = 0.32f * (1f + source.elementalAffinity);
         effectType = Type.negative;
     }
 

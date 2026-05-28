@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "FertilizerData", menuName = "Scriptable Objects/FertilizerData")]
 public class FertilizerData : ScriptableObject
@@ -35,7 +35,7 @@ public enum StatType
     WindDamage,
     CriticalChance,
     CriticalDamage,
-    ElementalPower,
+    elementalAffinity,
     PassiveDamage,
     SkillDamage,
     SkillCooldown,

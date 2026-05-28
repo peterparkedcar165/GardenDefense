@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
@@ -108,15 +108,8 @@ public abstract class Plant : Entity, IAttackable
         if (_light2D != null)
             _light2D.enabled = ShowLight;
 
-        if (WeatherManager.instance != null)
-        {
-            switch (WeatherManager.instance.weather)
-            {
-                case WeatherType.Sunny: fireDamage += 0.24f; break;
-                case WeatherType.Rain:  waterDamage += 0.24f; break;
-                case WeatherType.Snow:  iceDamage += 0.24f; break;
-            }
-        }
+        // weather bonuses are now applied via SunlightExposedEffect, RainExposedEffect, FrostExposedEffect
+        // which modify the adder fields directly, so nothing extra needed here
     }
     public TileType[] allowedTiles;
     public TARGETING targeting = TARGETING.First;
@@ -202,7 +195,7 @@ public abstract class Plant : Entity, IAttackable
         baseCriticalChance     = data.baseCriticalChance;
         baseCriticalDamage     = data.baseCriticalDamage;
         baseDotDamage          = data.baseDotDamage;
-        baseElementalPower     = data.baseElementalPower;
+        baseelementalAffinity     = data.baseelementalAffinity;
         basePassiveDamage      = data.basePassiveDamage;
         baseSkillDamage        = data.baseSkillDamage;
         baseCoordinatedDamage  = data.baseCoordinatedDamage;
@@ -238,6 +231,8 @@ public abstract class Plant : Entity, IAttackable
 
     protected virtual void OnDestroy()
     {
+        WeatherManager.OnWeatherAdded   -= HandleWeatherAdded;
+        WeatherManager.OnWeatherRemoved -= HandleWeatherRemoved;
         allPlants.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this)
             PlantUpgradeUI.instance.HidePanel();
@@ -431,6 +426,14 @@ public abstract class Plant : Entity, IAttackable
     {
         base.Start();
         GetMainRenderer();
+
+        // subscribe to weather changes and apply all currently active weather effects
+        WeatherManager.OnWeatherAdded   += HandleWeatherAdded;
+        WeatherManager.OnWeatherRemoved += HandleWeatherRemoved;
+        if (WeatherManager.instance != null)
+            foreach (WeatherEntry entry in WeatherManager.instance.GetActiveWeather())
+                ApplyWeatherEffect(entry.type, entry.intensity);
+
         if (ShowRangeCircle && circleRadius != null)
         {
             circleRadius.gameObject.SetActive(false);
@@ -440,6 +443,38 @@ public abstract class Plant : Entity, IAttackable
             SpriteRenderer sr = darkCircleRadius.GetComponentInChildren<SpriteRenderer>();
             if (sr != null) sr.color = new Color(1f, 0.85f, 0f, sr.color.a);
             darkCircleRadius.gameObject.SetActive(false);
+        }
+    }
+
+    private void HandleWeatherAdded(WeatherType type, int intensity)
+    {
+        // remove any existing effect for this type first (intensity may have changed)
+        RemoveWeatherEffect(type);
+        ApplyWeatherEffect(type, intensity);
+    }
+
+    private void HandleWeatherRemoved(WeatherType type)
+    {
+        RemoveWeatherEffect(type);
+    }
+
+    private void ApplyWeatherEffect(WeatherType w, int intensity)
+    {
+        switch (w)
+        {
+            case WeatherType.Sunny: ApplyEffect(new SunlightExposedEffect(this, this, intensity)); break;
+            case WeatherType.Rain:  ApplyEffect(new RainExposedEffect(this, this, intensity));     break;
+            case WeatherType.Snow:  ApplyEffect(new FrostExposedEffect(this, this, intensity));    break;
+        }
+    }
+
+    private void RemoveWeatherEffect(WeatherType w)
+    {
+        switch (w)
+        {
+            case WeatherType.Sunny: RemoveEffect<SunlightExposedEffect>(); break;
+            case WeatherType.Rain:  RemoveEffect<RainExposedEffect>();     break;
+            case WeatherType.Snow:  RemoveEffect<FrostExposedEffect>();    break;
         }
     }
 
@@ -627,23 +662,17 @@ public abstract class Plant : Entity, IAttackable
 
     private int GetWeatherPath2Bonus()
     {
-        if (elementalType == ElementalType.Fire)
-        {
-            if (WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Sunny)
-                return 1;
-        }
+        if (elementalType == ElementalType.Fire && HasEffect<SunlightExposedEffect>())
+            return 1;
 
         if (elementalType == ElementalType.Water)
         {
             bool onWater = occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent);
-            bool isRaining = WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Rain;
-            if (onWater || isRaining) return 1;
+            if (onWater || HasEffect<RainExposedEffect>()) return 1;
         }
 
-        if (elementalType == ElementalType.Wind)
-        {
-            if (occupiedTile != null && occupiedTile.isHighground) return 1;
-        }
+        if (elementalType == ElementalType.Wind && occupiedTile != null && occupiedTile.isHighground)
+            return 1;
 
         return 0;
     }

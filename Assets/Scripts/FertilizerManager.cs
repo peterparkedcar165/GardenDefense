@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class FertilizerManager : MonoBehaviour
@@ -86,7 +86,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.WindDamage:      return (0.06f, 0.08f);
             case StatType.CriticalChance:  return (0.04f, 0.06f);
             case StatType.CriticalDamage:  return (0.125f,  0.15f);
-            case StatType.ElementalPower:  return (0.01f, 0.125f);
+            case StatType.elementalAffinity:  return (0.01f, 0.125f);
             case StatType.PassiveDamage:   return (0.06f, 0.08f);
             case StatType.SkillDamage:     return (0.06f, 0.08f);
             case StatType.SkillCooldown:   return (0.06f, 0.08f);
@@ -131,7 +131,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.WindDamage:      plant.windDamageAdder             += value; break;
             case StatType.CriticalChance:  plant.criticalChanceAdder         += value; break;
             case StatType.CriticalDamage:  plant.criticalDamageAdder         += value; break;
-            case StatType.ElementalPower:  plant.elementalPowerAdder         += value; break;
+            case StatType.elementalAffinity:  plant.elementalAffinityAdder         += value; break;
             case StatType.PassiveDamage:   plant.passiveDamageAdder          += value; break;
             case StatType.SkillDamage:     plant.skillDamageAdder            += value; break;
             case StatType.SkillCooldown:   plant.skillCooldownReductionMultiplier += value; break;

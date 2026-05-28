@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlantData : ScriptableObject
 {
@@ -43,7 +43,7 @@ public class PlantData : ScriptableObject
     public float baseCriticalChance = 0.05f;
     public float baseCriticalDamage = 1.75f;
     public float baseDotDamage;
-    public float baseElementalPower;
+    public float baseelementalAffinity;
     public float baseCoordinatedDamage;
     public float baseCounterDamage;
 

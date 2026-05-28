@@ -40,7 +40,7 @@ public class Sunflower : Shooter
         base.UpdateStats();
         float dpspl = SFData?.path3SunrayDPSPerLevel ?? 15f;
         sunrayDamagePerSecond = (SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level + skillDamageMultiplier * magicPower;
-        channelDuration = (WeatherManager.instance != null && WeatherManager.instance.weather == WeatherType.Sunny) ? 1f : 2f;
+        channelDuration = HasEffect<SunlightExposedEffect>() ? 1f : 2f;
     }
 
     protected override void Shoot(Vector3 target)

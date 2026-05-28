@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DecayEffect : StatusEffect
 {
@@ -7,13 +7,13 @@ public class DecayEffect : StatusEffect
 
     public DecayEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        attackSpeedReduction  = 0.22f * (1f + source.elementalPower);
-        attackDamageReduction = 0.15f * (1f + source.elementalPower);
+        attackSpeedReduction  = 0.22f * (1f + source.elementalAffinity);
+        attackDamageReduction = 0.15f * (1f + source.elementalAffinity);
         effectType = Type.negative;
     }
 
     public override string GetName() => "<color=#9400D3>Decay</color>";
-    public override string GetDescription() => $"Reduce Attack Speed by <color=green><b>{attackSpeedReduction * 100f:F0}%</b></color> and Attack Damage by <color=green><b>{attackDamageReduction * 100f:F0}%</b></color>. (22% / 15% × (1 + <color=#FFD700>{source.elementalPower * 100:F0}% Elemental Power</color>))";
+    public override string GetDescription() => $"Reduce Attack Speed by <color=green><b>{attackSpeedReduction * 100f:F0}%</b></color> and Attack Damage by <color=green><b>{attackDamageReduction * 100f:F0}%</b></color>. (22% / 15% × (1 + <color=#FFD700>{source.elementalAffinity * 100:F0}% Elemental Affinity</color>))";
 
     public override void OnApply()
     {
