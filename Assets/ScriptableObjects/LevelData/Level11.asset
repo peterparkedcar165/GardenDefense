@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fed5c857faeea5443822e86a9723d554, type: 3}
-  m_Name: Level13
+  m_Name: Level11
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
-  levelNumber: 13
+  levelNumber: 11
   weather:
-  - type: 0
+  - type: 2
     intensity: 0
   temperature: 0
-  maxWaves: 32
+  maxWaves: 28
   startSunCount: 750
   startHealth: 200
   minWaveDuration: 20
@@ -74,6 +74,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   insects:
+  - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+    unlockWave: 6
+    budgetWeight: 0.4
+    startDelay: 8
+    minSpawnCount: 1
+    maxSpawnCount: 1
   - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
     unlockWave: 0
     budgetWeight: 0.4
@@ -86,45 +92,27 @@ MonoBehaviour:
     startDelay: 0
     minSpawnCount: 1
     maxSpawnCount: 1
-  - data: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
-    unlockWave: 6
-    budgetWeight: 0.1
-    startDelay: 3
-    minSpawnCount: 1
-    maxSpawnCount: 1
-  - data: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
-    unlockWave: 11
-    budgetWeight: 0.1
-    startDelay: 4
-    minSpawnCount: 1
-    maxSpawnCount: 1
   - data: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
     unlockWave: 3
     budgetWeight: 0.2
     startDelay: 6
     minSpawnCount: 1
     maxSpawnCount: 1
-  - data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
-    unlockWave: 6
-    budgetWeight: 0.537
-    startDelay: 8
+  - data: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+    unlockWave: 4
+    budgetWeight: 0.2
+    startDelay: 6
     minSpawnCount: 1
     maxSpawnCount: 1
-  eliteWaveInterval: 4
+  eliteWaveInterval: 3
   eliteInsects:
-  - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}
-    unlockWave: 4
-    budgetWeight: 0.534
-    startDelay: 3
-    minSpawnCount: 3
-    maxSpawnCount: 12
   - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
-    unlockWave: 3
-    budgetWeight: 0.144
+    unlockWave: 4
+    budgetWeight: 0.193
     startDelay: 2
     minSpawnCount: 3
     maxSpawnCount: 12
   fertilizerPool:
-  - {fileID: 11400000, guid: 4dc4f348ed7b93d4191821c8fb87b514, type: 2}
-  - {fileID: 11400000, guid: 783cb2f7aa157f543891bccc42d6d4d9, type: 2}
-  - {fileID: 11400000, guid: ceb1b9106171e534483418f667587d75, type: 2}
+  - {fileID: 11400000, guid: e3858c40a5803d34c922f3e3029df1af, type: 2}
+  - {fileID: 11400000, guid: e8f56bf8e138eb64d8aec57ee894e687, type: 2}
+  - {fileID: 11400000, guid: 755f3150c2751ab4aa09e743ba42ace7, type: 2}

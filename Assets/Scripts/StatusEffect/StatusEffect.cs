@@ -34,10 +34,11 @@ public class StatusEffect
         this.source = source;
     }
 
-    public virtual void OnApply() {} // nothing because will be implemented in specific effects
-    public virtual void OnTick(float deltaTime) {} // nothing because will be implemented in specific effects
-    public virtual void OnExpire() {} // same
+    public virtual void OnApply() {}
+    public virtual void OnTick(float deltaTime) {}
+    public virtual void OnExpire() {}
     public virtual void OnTargetDied() {}
+    public virtual void OnDamageReceived(ElementalType elementalType, Entity damageSource) {}
 
     public bool IsExpired()
     {

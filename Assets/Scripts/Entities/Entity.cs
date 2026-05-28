@@ -63,6 +63,7 @@ public abstract class Entity : MonoBehaviour
     public float baseLifesteal;
     public float baseCounterDamage;
     public float baseDebuffGivenDuration, baseBuffGivenDuration, baseBuffReceivedDuration, baseDebuffReceivedDuration;
+    public float baseEvasion, baseAccuracy;
 
     public static event System.Action<Plant, DamageTag[]> OnPlantAttackHit;
 
@@ -86,6 +87,7 @@ public abstract class Entity : MonoBehaviour
     public float startingShield;
     public bool debuffsFrozen;
     public bool bypassShields;
+    public float evasion, accuracy;
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -104,6 +106,7 @@ public abstract class Entity : MonoBehaviour
     public float lifestealAdder;
     public float counterDamageAdder;
     public float debuffGivenDurationAdder, buffGivenDurationAdder, buffReceivedDurationAdder, debuffReceivedDurationAdder;
+    public float evasionAdder, accuracyAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -121,6 +124,7 @@ public abstract class Entity : MonoBehaviour
     public float lifestealMultiplier;
     public float counterDamageMultiplier;
     public float debuffGivenDurationMultiplier, buffGivenDurationMultiplier, buffReceivedDurationMultiplier, debuffReceivedDurationMultiplier;
+    public float evasionMultiplier, accuracyMultiplier;
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
@@ -172,6 +176,8 @@ public abstract class Entity : MonoBehaviour
         buffGivenDuration      = baseBuffGivenDuration      + buffGivenDurationAdder      + (baseBuffGivenDuration      * buffGivenDurationMultiplier);
         buffReceivedDuration   = baseBuffReceivedDuration   + buffReceivedDurationAdder   + (baseBuffReceivedDuration   * buffReceivedDurationMultiplier);
         debuffReceivedDuration = baseDebuffReceivedDuration + debuffReceivedDurationAdder + (baseDebuffReceivedDuration * debuffReceivedDurationMultiplier);
+        evasion  = baseEvasion  + evasionAdder  + (baseEvasion  * evasionMultiplier);
+        accuracy = baseAccuracy + accuracyAdder + (baseAccuracy * accuracyMultiplier);
         UpdateHealthBar();
     }
 
@@ -229,6 +235,8 @@ public abstract class Entity : MonoBehaviour
         health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, 0f) : finalDamage;
         TriggerHitFlash();
         UpdateHealthBar();
+        foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
+            e.OnDamageReceived(elementalType, null);
 
         if (health <= 0)
         {
@@ -242,6 +250,12 @@ public abstract class Entity : MonoBehaviour
         {
             Damage(damageDealt, damageType, elementalType, damageTag);
             return;
+        }
+
+        if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+        {
+            float missChance = Mathf.Clamp01(evasion - source.accuracy);
+            if (UnityEngine.Random.value < missChance) return;
         }
 
         if (this is Insect insect && source is Plant plant) // if target = insect and source = plant
@@ -417,8 +431,9 @@ public abstract class Entity : MonoBehaviour
         if (System.Array.Exists(damageTag, t => t == DamageTag.DoT))
             DoTAggregator.AddDamage(this, finalDamage, elementalType);
 
-
         UpdateHealthBar();
+        foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
+            e.OnDamageReceived(elementalType, source);
 
         if (health <= 0)
         {

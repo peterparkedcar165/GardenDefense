@@ -58,6 +58,7 @@ public abstract class Insect : Entity, IAttackable
         {
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
             if (taunted != null) return taunted;
+            if (HasEffect<BlindEffect>() && aggressivity != Aggressivity.Low) return null;
             switch (aggressivity)
             {
                 case Aggressivity.High:

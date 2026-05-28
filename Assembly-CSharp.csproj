@@ -102,6 +102,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Begonia.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SnowdropData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\FungalGlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
     <Compile Include="Assets\Scripts\UI\WaveStartArrow.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\BrittleEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\LeafRangerData.cs" />
     <Compile Include="Assets\Scripts\Skills\BubblePrison.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\GlowingMushroom.cs" />
     <Compile Include="Assets\Scripts\Skills\Geyser.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ChillEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\GlowingMushroomData.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BegoniaProjectile.cs" />
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
@@ -217,6 +220,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\FireAntData.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FireAnt.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\GlowingMushroomProjectile.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\KnockUpEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
@@ -231,6 +235,7 @@
     <Compile Include="Assets\Scripts\PlantData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SnowExposedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusTauntingEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BlindEffect.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\StunEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\HardCrowdControl.cs" />
