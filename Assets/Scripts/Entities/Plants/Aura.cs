@@ -32,7 +32,6 @@ public abstract class Aura : Plant
     protected List<Insect> GetInsectsInRange()
     {
         List<Insect> result = new List<Insect>();
-        
 
         foreach (Insect insect in Insect.allInsects)
         {
@@ -42,5 +41,16 @@ public abstract class Aura : Plant
                 result.Add(insect);
         }
         return result;
+    }
+
+    protected bool HasInsectsInRange()
+    {
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            if (Vector2.Distance(transform.position, insect.transform.position) <= attackRange)
+                return true;
+        }
+        return false;
     }
 }

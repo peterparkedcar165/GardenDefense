@@ -9,8 +9,7 @@ public class SunlightExposedEffect : StatusEffect
         : base(target, float.MaxValue, intensity, source)
     {
         effectType = Type.neutral;
-        // intensity 1 = 24%, intensity 2 = 36%, intensity 3 = 48%, etc.
-        bonus = baseBonus + bonusPerLevel * (intensity - 1);
+        bonus = baseBonus + bonusPerLevel * (level - 1);
     }
 
     public override void OnApply()   => target.fireDamageAdder  += bonus;
@@ -19,5 +18,5 @@ public class SunlightExposedEffect : StatusEffect
 
     public override string GetName() => "<color=orange>Exposed: Sunlight</color>";
     public override string GetDescription() =>
-        $"Sunny weather (intensity {level}) empowers Fire damage by <color=orange><b>{bonus * 100f:F0}%</b></color>.";
+        $"Increase <color=orange>Fire</color> Damage by <color=orange><b>{bonus * 100f:F0}%</b></color>.";
 }

@@ -1,6 +1,6 @@
 public class OffPathSlownessEffect : StatusEffect
 {
-    private const float slowAmount = 0.25f;
+    private const float slowAmount = 0.33f;
     private readonly Insect insect;
 
     public OffPathSlownessEffect(Entity target)

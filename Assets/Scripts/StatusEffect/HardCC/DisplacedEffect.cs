@@ -8,7 +8,7 @@ public class DisplacedEffect : HardCrowdControl
     }
 
     public override string GetName() => "<color=#E0E0E0>Displaced</color>";
-    public override string GetDescription() => "Knocked away — recovering balance.";
+    public override string GetDescription() => "Currently being displaced against its will. When the effect ends, the insect returns to its original location.";
 
     public override void OnApply()
     {

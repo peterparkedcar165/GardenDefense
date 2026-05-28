@@ -43,7 +43,7 @@ public class Snowdrop : Aura
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else
+        else if (HasInsectsInRange())
             Attack();
 
         foreach (Plant plant in Plant.allPlants)

@@ -19,7 +19,7 @@ MonoBehaviour:
   elementalType: 2
   damageType: 0
   sunCost: 85
-  baseMaxHealth: 200
+  baseMaxHealth: 250
   baseAttackDamage: 34
   baseMagicPower: 0
   baseAttackSpeed: 0.7
@@ -28,7 +28,7 @@ MonoBehaviour:
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
+  basePhysicalResistance: 0.33
   baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
