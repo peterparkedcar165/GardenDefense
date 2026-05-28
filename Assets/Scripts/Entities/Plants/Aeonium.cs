@@ -101,9 +101,11 @@ public class Aeonium : Aura
         }
     }
 
-    private void HandleNearbyAttack(Plant plant)
+    private void HandleNearbyAttack(Plant plant, DamageTag[] tags)
     {
         if (plant == this) return;
+        if (!System.Array.Exists(tags, t => t == DamageTag.Attack)) return;
+        if (!System.Array.Exists(tags, t => t == DamageTag.Projectile)) return;
         if (Vector3.Distance(transform.position, plant.transform.position) <= attackRange)
             passiveCooldownTimer -= _sunTimerReduction;
     }
@@ -183,7 +185,7 @@ public class Aeonium : Aura
         $"Every <color=green><b>{attackCooldown:F1}s</b></color>, pulses restorative energy to all plants within range, healing them for <color=green><b>{_healAmountBase:F0}</b></color> [<color=#FFB6C1><b>+{_healAmountMP:F0}</b></color>] health (<color=green><b>{_healAmount * 0.5f:F0}</b></color> to herself), and reducing their Skill cooldown by <color=green><b>{_cdrReduction:F1}s</b></color>.";
 
     public override string GetPassiveDescription() =>
-        $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{passiveCooldown:F0}s</b></color>. Each Attack-tagged hit by a plant within range reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";
+        $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{passiveCooldown:F0}s</b></color>. Each projectile attack hit by a plant within her radius reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";
 
     public override string GetSkillDesription() =>
         $"The Aeonium blesses the ground around her, growing flowers that empower her presence. Increases her own Attack Range by <color=green><b>{(_skillRangeBonus * 100f):F0}%</b></color> and Attack Speed by <color=green><b>{(_skillSpeedBonusBase * 100f):F0}%</b></color> [<color=#FFB6C1><b>+{(_skillSpeedBonusMP * 100f):F0}%</b></color>] for <color=green><b>{skillDuration:F0}s</b></color>. Insects that die within her range during this time yield <color=yellow><b>+{_bonusSunPerKill}</b></color> bonus <color=yellow>Sun</color>.";

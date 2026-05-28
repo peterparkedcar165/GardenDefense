@@ -405,7 +405,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         Canvas.ForceUpdateCanvases();
         RectTransform panelRect = tooltipPanel.GetComponent<RectTransform>();
 
-        float maxHeight = Screen.height * 0.85f;
+        float maxHeight = Screen.height * 0.975f;
         float height = Mathf.Min(tooltipText.preferredHeight + 40f, maxHeight);
         panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
 

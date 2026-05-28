@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Tank
   stats:
   - statType: 22
-    value: 0.52
+    value: 0.36
   - statType: 30
-    value: 0.33
+    value: 0.31
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

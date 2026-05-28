@@ -43,6 +43,7 @@ public abstract class Insect : Entity, IAttackable
     private Vector3 _preDisplacePosition;
     private bool _isDisplaced = false;
     private bool _returningToPath = false;
+    private bool _debugOnPath = false;
     private bool _offPathSlownessActive = false;
 
     [SerializeField] protected Sprite spriteRight;
@@ -142,6 +143,7 @@ public abstract class Insect : Entity, IAttackable
         baseMaxHealth *= 1f + ((waveNumber-1) * 0.04f);
         UpdateStats();
         health = maxHealth;
+        RefreshHealthBarVisibility();
     }
 
     protected override void Update()
@@ -153,7 +155,7 @@ public abstract class Insect : Entity, IAttackable
         UpdateAttack();
         TrackFacing();
         UpdateFacingSprite();
-        UpdateOffPathSlowness();
+        DebugPathTile();
     }
 
     private void TrackFacing()
@@ -332,58 +334,36 @@ public abstract class Insect : Entity, IAttackable
         }
     }
 
-    private void UpdateOffPathSlowness()
+    private void DebugPathTile()
     {
-        if (isFlying || isDying)
+        bool onPath = false;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0f);
+        foreach (Collider2D c in hits)
         {
+            Tile tile = c.GetComponent<Tile>();
+            if (tile != null && tile.tileType == TileType.Path) { onPath = true; break; }
+        }
+
+        if (onPath && !_debugOnPath)
+        {
+            Debug.Log($"[{gameObject.name}] entered path tile at {transform.position}");
             if (_offPathSlownessActive)
             {
                 _offPathSlownessActive = false;
                 RemoveEffect<OffPathSlownessEffect>();
             }
-            return;
         }
-
-        Vector3 snapped = new Vector3(
-            Mathf.RoundToInt(transform.position.x),
-            Mathf.RoundToInt(transform.position.y), 0f);
-        bool onPath = false;
-        if (Tile.allTiles.TryGetValue(Tile.TileKey(snapped), out Tile t))
-            onPath = t.tileType == TileType.Path;
-
-        bool nearPath = false;
-        if (!onPath)
+        else if (!onPath && _debugOnPath)
         {
-            Vector3[] neighbours = {
-                snapped + Vector3.right, snapped + Vector3.left,
-                snapped + Vector3.up,    snapped + Vector3.down
-            };
-            foreach (Vector3 n in neighbours)
+            Debug.Log($"[{gameObject.name}] left path tile at {transform.position}");
+            if (!isFlying && !isDying && !_offPathSlownessActive)
             {
-                if (Tile.allTiles.TryGetValue(Tile.TileKey(n), out Tile nt) && nt.tileType == TileType.Path)
-                {
-                    // distance from insect to nearest edge of that path tile (center dist minus half-tile)
-                    if (Vector2.Distance(transform.position, n) <= 0.5f + 0.2f)
-                    {
-                        nearPath = true;
-                        break;
-                    }
-                }
+                _offPathSlownessActive = true;
+                ApplyEffect(new OffPathSlownessEffect(this));
             }
         }
 
-        bool shouldSlow = isOnGround && !onPath && !nearPath;
-
-        if (shouldSlow && !_offPathSlownessActive)
-        {
-            _offPathSlownessActive = true;
-            ApplyEffect(new OffPathSlownessEffect(this));
-        }
-        else if (!shouldSlow && _offPathSlownessActive)
-        {
-            _offPathSlownessActive = false;
-            RemoveEffect<OffPathSlownessEffect>();
-        }
+        _debugOnPath = onPath;
     }
 
     private void SnapToNearestWaypoint()

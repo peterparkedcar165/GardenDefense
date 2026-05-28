@@ -64,7 +64,7 @@ public abstract class Entity : MonoBehaviour
     public float baseCounterDamage;
     public float baseDebuffGivenDuration, baseBuffGivenDuration, baseBuffReceivedDuration, baseDebuffReceivedDuration;
 
-    public static event System.Action<Plant> OnPlantAttackHit;
+    public static event System.Action<Plant, DamageTag[]> OnPlantAttackHit;
 
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
@@ -248,7 +248,7 @@ public abstract class Entity : MonoBehaviour
         {
             insect.RegisterAttacker(plant);
             if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
-                OnPlantAttackHit?.Invoke(plant);
+                OnPlantAttackHit?.Invoke(plant, damageTag);
         }
 
         float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;

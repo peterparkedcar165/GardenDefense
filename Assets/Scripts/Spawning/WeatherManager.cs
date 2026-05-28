@@ -20,8 +20,8 @@ public class WeatherManager : MonoBehaviour
     // fires with (type) when a weather condition is removed
     public static event System.Action<WeatherType>      OnWeatherRemoved;
 
-    [SerializeField] private WeatherEntry[] initialWeather;
-    [SerializeField] private TemperatureType _temperature;
+    private WeatherEntry[] initialWeather;
+    private TemperatureType _temperature;
 
     private readonly Dictionary<WeatherType, int> activeWeather = new();
 

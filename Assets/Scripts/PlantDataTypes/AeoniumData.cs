@@ -36,7 +36,7 @@ public class AeoniumData : PlantData
 
     public override string GetPassiveDescription() =>
         $"Generates <color=yellow><b>{baseSunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{basePassiveCooldown:F0}s</b></color>. " +
-        $"Each attack hit by a plant within her radius reduces the timer by <color=green><b>{baseSunTimerReduction:F1}s</b></color>.";
+        $"Each projectile attack hit by a plant within her radius reduces the timer by <color=green><b>{baseSunTimerReduction:F1}s</b></color>.";
 
     public override string GetSkillDescription() =>
         $"Increases her own Attack Range by <color=green><b>{baseSkillRangeBonus * 100f:F0}%</b></color> and Attack Speed by <color=green><b>{baseSkillSpeedBonus * 100f:F0}%</b></color> " +
