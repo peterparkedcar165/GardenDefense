@@ -47,5 +47,6 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
-  bonusPerTermite: 2
+  bonusPerTermite: 3
   swarmRange: 2
+  companionCount: 1

@@ -7,8 +7,9 @@ public class Dandelion : Shooter
     [SerializeField] private GameObject windGustPrefab;
     [SerializeField] private GameObject windGustIndicatorPrefab;
     private GameObject windGustIndicatorInstance;
-
     private GameObject _windGustInstance;
+    private const int IndicatorSlices = 15;
+    private int _obstacleMask;
     private float PushPower => ((DandelionData)data)?.basePushPower ?? 1.5f;
 
     private float WindGustDamage => data.baseSkillDamage + attackDamage + skillDamageMultiplier * magicPower;
@@ -20,6 +21,7 @@ public class Dandelion : Shooter
     {
         base.Awake();
         LoadData();
+        _obstacleMask = LayerMask.GetMask("Obstacle");
     }
 
     protected override void Update()
@@ -150,14 +152,58 @@ public class Dandelion : Shooter
         mouseWorld.z = 0f;
 
         float beamWidth = (DData?.baseBeamWidth ?? 1f) + (DData?.path3BeamWidthPerLevel ?? 0.25f) * effectivePath3Level;
-        Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        Vector2 dir  = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
+        float   angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         windGustIndicatorInstance.transform.SetPositionAndRotation(
             transform.position + (Vector3)(dir * WindGustRange * 0.5f),
             Quaternion.Euler(0f, 0f, angle));
         windGustIndicatorInstance.transform.localScale = new Vector3(WindGustRange, beamWidth, 1f);
         windGustIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
+
+        /* multi-slice obstacle clipping — re-enable when ready
+        Vector2 perp = new Vector2(-dir.y, dir.x);
+        EnsureSlices(windGustIndicatorInstance, IndicatorSlices);
+        float sliceWidth = beamWidth / IndicatorSlices;
+        for (int i = 0; i < IndicatorSlices; i++)
+        {
+            float offset = (i + 0.5f - IndicatorSlices * 0.5f) * sliceWidth;
+            Vector2 origin = (Vector2)transform.position + perp * offset;
+            RaycastHit2D hit = Physics2D.Raycast(origin, dir, WindGustRange, _obstacleMask);
+            float len = hit.collider != null ? hit.distance : WindGustRange;
+            Transform slice = windGustIndicatorInstance.transform.GetChild(i);
+            slice.position   = (Vector3)(origin + dir * len * 0.5f);
+            slice.rotation   = Quaternion.Euler(0f, 0f, angle);
+            slice.localScale = new Vector3(len, sliceWidth, 1f);
+            slice.GetComponent<SpriteRenderer>().enabled = len > 0.05f;
+        }
+        */
+    }
+
+    private void EnsureSlices(GameObject indicator, int count)
+    {
+        if (indicator.transform.childCount == count) return;
+
+        for (int i = indicator.transform.childCount - 1; i >= 0; i--)
+            Destroy(indicator.transform.GetChild(i).gameObject);
+
+        SpriteRenderer root = indicator.GetComponent<SpriteRenderer>();
+        if (root != null) root.enabled = false;
+
+        for (int i = 0; i < count; i++)
+        {
+            GameObject slice = new GameObject($"Slice_{i}");
+            slice.transform.SetParent(indicator.transform);
+            SpriteRenderer sr = slice.AddComponent<SpriteRenderer>();
+            if (root != null)
+            {
+                sr.sprite         = root.sprite;
+                sr.color          = root.color;
+                sr.sortingLayerID = root.sortingLayerID;
+                sr.sortingOrder   = root.sortingOrder;
+            }
+            sr.enabled = false;
+        }
     }
 
     protected override void OnDestroy()

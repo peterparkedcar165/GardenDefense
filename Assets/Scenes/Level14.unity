@@ -164,9 +164,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 330753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f966803f572194047b9570029b1c51bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 77c36cf0c13eae2478cbc437d08ed272, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Level14
+  m_EditorClassIdentifier: Assembly-CSharp::ProceduralLevel
   spawnEntries:
   - spawnPoint: {fileID: 836844669}
     leadInWaypoints:
@@ -194,30 +194,7 @@ MonoBehaviour:
     - {fileID: 851974234}
     - {fileID: 1311977921}
     - {fileID: 1038486732}
-  levelTime: 0
-  wave: 0
-  soldierAnt: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
-  scoutAnt: {fileID: 2279086888993795066, guid: c3349ff3828f87047a2105c4748346ef, type: 3}
-  fruitFly: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
-  wasp: {fileID: 2279086888993795066, guid: 726ce60c28034764084f54c3c199e9c1, type: 3}
-  queenAnt: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
-  mosquito: {fileID: 2279086888993795066, guid: aff6fd1b40eab2342bb9ae072042625a, type: 3}
-  darklingBeetle: {fileID: 2279086888993795066, guid: af2c6674e6ccba140a62522caacce5fc, type: 3}
-  fireAnt: {fileID: 2279086888993795066, guid: 8237841c21078424da97084f1f33ae04, type: 3}
-  termite: {fileID: 2279086888993795066, guid: 6a2d82503dc53a8468881f14bee007fc, type: 3}
-  scorpion: {fileID: 2279086888993795066, guid: 3f24b5768444f7844b72d80407813b09, type: 3}
-  moth: {fileID: 2279086888993795066, guid: ee01b098ec878574e9fe75ef5aa9fd22, type: 3}
-  firefly: {fileID: 2279086888993795066, guid: d7a6800c607f5f146a2134c6f2bca15d, type: 3}
-  weatherManager: {fileID: 29017235}
-  nextWaveTimer: 0
-  waitTime: 0
-  spawnInterval: 0
-  spawnCount: 0
-  restInterval: 18
-  fertilizerPool:
-  - {fileID: 11400000, guid: 49742aa28258d5b48a2597303e9f594d, type: 2}
-  - {fileID: 11400000, guid: 837966cac67aa914eb3c89a9b6e676c0, type: 2}
-  - {fileID: 11400000, guid: c4528a2f89197a142aa4a75ad4d9aebe, type: 2}
+  config: {fileID: 11400000, guid: b3e08fa6fc77a1541b1e5efe3610dd01, type: 2}
 --- !u!1 &29017235
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,8 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe25a532237cad447ab16e5798aa0c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
-  weather: 0
-  temperature: 0
+  initialWeather: []
+  _temperature: 0
 --- !u!4 &29017237
 Transform:
   m_ObjectHideFlags: 0

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fed5c857faeea5443822e86a9723d554, type: 3}
-  m_Name: Level15
+  m_Name: Level14
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
-  levelNumber: 15
+  levelNumber: 14
   weather:
   - type: 0
     intensity: 0
   temperature: 0
-  maxWaves: 40
-  startSunCount: 850
+  maxWaves: 36
+  startSunCount: 750
   startHealth: 200
   minWaveDuration: 20
   maxWaveDuration: 70
@@ -48,7 +48,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 15
   minThreatBudget: 15
-  maxThreatBudget: 150
+  maxThreatBudget: 140
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -110,17 +110,11 @@ MonoBehaviour:
     startDelay: 8
     minSpawnCount: 1
     maxSpawnCount: 1
-  - data: {fileID: 11400000, guid: c0cd54e6f33f68d4a891a984ef059bda, type: 2}
-    unlockWave: 3
-    budgetWeight: 0.3
-    startDelay: 8
-    minSpawnCount: 1
-    maxSpawnCount: 1
   eliteWaveInterval: 5
   eliteInsects:
   - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}
     unlockWave: 5
-    budgetWeight: 0.2
+    budgetWeight: 0.4
     startDelay: 3
     minSpawnCount: 3
     maxSpawnCount: 12
@@ -131,6 +125,6 @@ MonoBehaviour:
     minSpawnCount: 3
     maxSpawnCount: 12
   fertilizerPool:
-  - {fileID: 11400000, guid: bcb5810a18b62334d94597949f18f9d1, type: 2}
-  - {fileID: 11400000, guid: 6dd3bd78e59d3804b8cb99705c8b6ef9, type: 2}
-  - {fileID: 11400000, guid: a41a71ca40b1e7447aea8846e2f2ebda, type: 2}
+  - {fileID: 11400000, guid: 49742aa28258d5b48a2597303e9f594d, type: 2}
+  - {fileID: 11400000, guid: 837966cac67aa914eb3c89a9b6e676c0, type: 2}
+  - {fileID: 11400000, guid: c4528a2f89197a142aa4a75ad4d9aebe, type: 2}

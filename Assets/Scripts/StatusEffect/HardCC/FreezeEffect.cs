@@ -19,25 +19,12 @@ public class FreezeEffect : HardCrowdControl
     {
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Freeze", new Color(0f, 1f, 1f));
 
-        Debug.Log("Freeze applied");
-
-        spriteRenderer = target.GetComponentInChildren<SpriteRenderer>();
-        if (spriteRenderer != null)
-        {
-            originalColor = spriteRenderer.color;
-            spriteRenderer.color = new Color(0f, 1f, 1f, 1f);
-        }
-
         Insect insect = (Insect)target;
         insect.magicResistanceAdder -= magicResistShred;
     }
 
     public override void OnExpire()
     {
-        Debug.Log("Freeze expired");
-        if (spriteRenderer != null)
-            spriteRenderer.color = originalColor;
-
         Insect insect = (Insect)target;
         insect.magicResistanceAdder += magicResistShred;
     }

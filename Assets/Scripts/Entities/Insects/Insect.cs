@@ -351,7 +351,28 @@ public abstract class Insect : Entity, IAttackable
         if (Tile.allTiles.TryGetValue(Tile.TileKey(snapped), out Tile t))
             onPath = t.tileType == TileType.Path;
 
-        bool shouldSlow = isOnGround && !onPath;
+        bool nearPath = false;
+        if (!onPath)
+        {
+            Vector3[] neighbours = {
+                snapped + Vector3.right, snapped + Vector3.left,
+                snapped + Vector3.up,    snapped + Vector3.down
+            };
+            foreach (Vector3 n in neighbours)
+            {
+                if (Tile.allTiles.TryGetValue(Tile.TileKey(n), out Tile nt) && nt.tileType == TileType.Path)
+                {
+                    // distance from insect to nearest edge of that path tile (center dist minus half-tile)
+                    if (Vector2.Distance(transform.position, n) <= 0.5f + 0.2f)
+                    {
+                        nearPath = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        bool shouldSlow = isOnGround && !onPath && !nearPath;
 
         if (shouldSlow && !_offPathSlownessActive)
         {

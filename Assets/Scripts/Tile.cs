@@ -34,6 +34,8 @@ public class Tile : MonoBehaviour
             _tileType = value;
             if (value == TileType.Water)
                 SpawnWaterZone();
+            if (value == TileType.Obstacle)
+                SpawnObstacleZone();
         }
     }
 
@@ -44,7 +46,7 @@ public class Tile : MonoBehaviour
         GameObject zone = new GameObject("WaterZone");
         zone.transform.SetParent(transform);
         zone.transform.localPosition = Vector3.zero;
-        zone.layer = gameObject.layer;
+        zone.layer = LayerMask.NameToLayer("Ignore Raycast");
 
         BoxCollider2D col = zone.AddComponent<BoxCollider2D>();
         col.isTrigger = true;
@@ -53,7 +55,22 @@ public class Tile : MonoBehaviour
         zone.AddComponent<WaterZone>();
     }
 
-    
+    private void SpawnObstacleZone()
+    {
+        if (GetComponentInChildren<ObstacleZone>() != null) return;
+
+        GameObject zone = new GameObject("ObstacleZone");
+        zone.transform.SetParent(transform);
+        zone.transform.localPosition = Vector3.zero;
+        zone.layer = LayerMask.NameToLayer("Obstacle");
+
+        BoxCollider2D col = zone.AddComponent<BoxCollider2D>();
+        col.isTrigger = false;
+        col.size = new Vector2(0.9f, 0.9f);
+
+        zone.AddComponent<ObstacleZone>();
+    }
+
     private void OnMouseDown()
     {
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;

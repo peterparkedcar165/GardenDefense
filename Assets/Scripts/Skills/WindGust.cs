@@ -116,7 +116,6 @@ public class WindGust : MonoBehaviour
         float dot = Vector2.Dot(toPoint, direction);
         if (dot < beamStart || dot > beamEnd) return false;
         Vector2 perp = toPoint - direction * dot;
-        if (perp.magnitude > width * 0.5f) return false;
-        return Physics2D.Linecast(origin, point, obstacleLayer).collider == null;
+        return perp.magnitude <= width * 0.5f;
     }
 }
