@@ -20,7 +20,7 @@ MonoBehaviour:
   damageType: 1
   sunCost: 115
   baseMaxHealth: 200
-  baseAttackDamage: 10
+  baseAttackDamage: 6
   baseMagicPower: 0
   baseAttackSpeed: 2
   baseAttackRange: 2
@@ -44,7 +44,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
@@ -69,8 +69,8 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseSlow: 0.16
-  scalingSlow: 0.08
+  baseSlow: 0.12
+  scalingSlow: 0.06
   coolingPerSecond: 1.25
   baseBlizzardDamage: 25
   blizzardDamagePerLevel: 10
@@ -78,6 +78,8 @@ MonoBehaviour:
   blizzardDurationPerLevel: 1
   blizzardChillMultiplier: 1.5
   blizzardCoolingMultiplier: 2
-  path1AttackDamagePerLevel: 3
+  baseBlizzardRange: 10
+  path1AttackDamagePerLevel: 4
   path1AttackRangePerLevel: 0.1
   path3BlizzardWidthPerLevel: 0.5
+  path3BlizzardRangePerLevel: 0.5

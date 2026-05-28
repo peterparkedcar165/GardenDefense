@@ -80,7 +80,7 @@ public abstract class Insect : Entity, IAttackable
     public override void UpdateStats()
     {
         base.UpdateStats();
-        movementSpeed = baseMovementSpeed + movementSpeedAdder + (baseMovementSpeed * movementSpeedMultiplier);
+        movementSpeed = Mathf.Max(0f, baseMovementSpeed + movementSpeedAdder + (baseMovementSpeed * movementSpeedMultiplier));
     }
 
     public int sunDrop;

@@ -108,7 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Firefly
   baseMaxHealth: 0
   baseAttackDamage: 0
-  baseMagicDamage: 0
+  baseMagicPower: 0
   baseAttackSpeed: 0
   baseAttackRange: 0
   baseHealingBonus: 0
@@ -121,8 +121,8 @@ MonoBehaviour:
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  basePhysicalShred: 0
-  baseMagicShred: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
   baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
@@ -134,7 +134,7 @@ MonoBehaviour:
   baseCriticalDamage: 0
   baseDotResistance: 0
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseCoordinatedDamage: 0
@@ -143,10 +143,14 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseLifesteal: 0
   baseCounterDamage: 0
+  baseDebuffGivenDuration: 0
+  baseBuffGivenDuration: 0
+  baseBuffReceivedDuration: 0
+  baseDebuffReceivedDuration: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
-  magicDamage: 0
+  magicPower: 0
   attackSpeed: 0
   attackCooldown: 0
   attackCooldownTimer: 0
@@ -161,8 +165,8 @@ MonoBehaviour:
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
-  physicalShred: 0
-  magicShred: 0
+  physicalDamage: 0
+  magicDamage: 0
   bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
@@ -174,7 +178,7 @@ MonoBehaviour:
   criticalDamage: 0
   dotResistance: 0
   dotDamage: 0
-  elementalPower: 0
+  elementalAffinity: 0
   passiveDamage: 0
   skillDamage: 0
   coordinatedDamage: 0
@@ -183,10 +187,18 @@ MonoBehaviour:
   lifesteal: 0
   counterDamage: 0
   tenacity: 0
+  debuffGivenDuration: 0
+  buffGivenDuration: 0
+  buffReceivedDuration: 0
+  debuffReceivedDuration: 0
+  shieldBonusDamage: 0
+  shieldToughness: 0
+  startingShield: 0
   debuffsFrozen: 0
+  bypassShields: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
-  magicDamageAdder: 0
+  magicPowerAdder: 0
   attackSpeedAdder: 0
   attackRangeAdder: 0
   healingBonusAdder: 0
@@ -199,8 +211,8 @@ MonoBehaviour:
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
-  physicalShredAdder: 0
-  magicShredAdder: 0
+  physicalDamageAdder: 0
+  magicDamageAdder: 0
   bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
@@ -212,19 +224,25 @@ MonoBehaviour:
   criticalDamageAdder: 0
   dotResistanceAdder: 0
   dotDamageAdder: 0
-  elementalPowerAdder: 0
+  elementalAffinityAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
   coordinatedDamageAdder: 0
   skillDurationAdder: 0
   tenacityAdder: 0
   immobilizeDurationAdder: 0
+  shieldBonusDamageAdder: 0
+  shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
   counterDamageAdder: 0
+  debuffGivenDurationAdder: 0
+  buffGivenDurationAdder: 0
+  buffReceivedDurationAdder: 0
+  debuffReceivedDurationAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
-  magicDamageMultiplier: 0
+  magicPowerMultiplier: 0
   attackSpeedMultiplier: 0
   attackRangeMultiplier: 0
   healingBonusMultiplier: 0
@@ -237,8 +255,8 @@ MonoBehaviour:
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
-  physicalShredMultiplier: 0
-  magicShredMultiplier: 0
+  physicalDamageMultiplier: 0
+  magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
@@ -250,9 +268,8 @@ MonoBehaviour:
   criticalDamageMultiplier: 0
   dotResistanceMultiplier: 0
   dotDamageMultiplier: 0
-  elementalPowerMultiplier: 0
+  elementalAffinityMultiplier: 0
   passiveDamageMultiplier: 0
-  skillDamageMultiplier: 0
   coordinatedDamageMultiplier: 0
   skillDurationMultiplier: 0
   tenacityMultiplier: 0
@@ -260,6 +277,10 @@ MonoBehaviour:
   lightEmissionRangeMultiplier: 0
   lifestealMultiplier: 0
   counterDamageMultiplier: 0
+  debuffGivenDurationMultiplier: 0
+  buffGivenDurationMultiplier: 0
+  buffReceivedDurationMultiplier: 0
+  debuffReceivedDurationMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -282,15 +303,17 @@ MonoBehaviour:
   lastSource: {fileID: 0}
   aggressivity: 0
   targetingRange: 0
-  spriteRight: {fileID: -8351640217943677878, guid: 5b4c9f0a20f1be342b25832783196261, type: 3}
-  spriteLeft: {fileID: 7671185116690870701, guid: 2f9f15be6db25c445b6eabf72c4aacad, type: 3}
+  spriteRight: {fileID: 21300000, guid: 5b4c9f0a20f1be342b25832783196261, type: 3}
+  spriteLeft: {fileID: 21300000, guid: 2f9f15be6db25c445b6eabf72c4aacad, type: 3}
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
   sunDrop: 0
   expDrop: 0
-  visual: {fileID: 0}
+  attackDamageType: 0
+  attackElementalType: 6
+  visual: {fileID: 3774765596699175811}
   spriteFlyRight: {fileID: 8760434079162307657, guid: 9addbd6f45f48d046bd5a3e6058abae1, type: 3}
-  spriteFlyLeft: {fileID: 3476085555288637519, guid: 39a96eff103848d45a1e36b5c4e85f6c, type: 3}
+  spriteFlyLeft: {fileID: 21300000, guid: 39a96eff103848d45a1e36b5c4e85f6c, type: 3}
   flightSpeed: 0
   flightHeight: 0
 --- !u!1 &3949176022732913986
@@ -371,7 +394,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1690330125
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: d852e9b01c514a1498e3348a6b17926f, type: 3}
@@ -463,7 +486,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1018753133
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 8760434079162307657, guid: 9addbd6f45f48d046bd5a3e6058abae1, type: 3}
