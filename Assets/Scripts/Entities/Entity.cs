@@ -238,6 +238,12 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag) // damage with source
     {
+        if (source == null)
+        {
+            Damage(damageDealt, damageType, elementalType, damageTag);
+            return;
+        }
+
         if (this is Insect insect && source is Plant plant) // if target = insect and source = plant
         {
             insect.RegisterAttacker(plant);
