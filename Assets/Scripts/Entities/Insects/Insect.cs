@@ -40,6 +40,11 @@ public abstract class Insect : Entity, IAttackable
     public float targetingRange = 0f;
     private float _plantAttackCooldown = 0f;
 
+    private Vector3 _preDisplacePosition;
+    private bool _isDisplaced = false;
+    private bool _returningToPath = false;
+    private bool _offPathSlownessActive = false;
+
     [SerializeField] protected Sprite spriteRight;
     [SerializeField] protected Sprite spriteLeft;
     [System.NonSerialized] protected SpriteRenderer _spriteRenderer;
@@ -148,6 +153,7 @@ public abstract class Insect : Entity, IAttackable
         UpdateAttack();
         TrackFacing();
         UpdateFacingSprite();
+        UpdateOffPathSlowness();
     }
 
     private void TrackFacing()
@@ -218,6 +224,11 @@ public abstract class Insect : Entity, IAttackable
 
         if (windVelocity.sqrMagnitude > 0.001f)
         {
+            if (!_isDisplaced && !_returningToPath)
+            {
+                _preDisplacePosition = transform.position;
+                _isDisplaced = true;
+            }
             windMomentum = new Vector2(windVelocity.x * windBlockMask.x, windVelocity.y * windBlockMask.y);
             windVelocity = Vector2.zero;
         }
@@ -262,13 +273,32 @@ public abstract class Insect : Entity, IAttackable
             }
         }
 
-        // Displacement just ended this frame — re-orient to the nearest forward waypoint
+        // displacement just ended this frame — begin walking back to the pre-displace position
         if (wasDisplaced && windMomentum.sqrMagnitude <= 0.001f)
-            SnapToNearestWaypoint();
+        {
+            _isDisplaced = false;
+            _returningToPath = true;
+        }
 
         if (HasEffect<HardCrowdControl>()) return;
         if (HasEffect<BubblePrisonEffect>()) return;
         if (affectedByGravity && !isOnGround) return;
+
+        if (_returningToPath)
+        {
+            float dist = Vector3.Distance(transform.position, _preDisplacePosition);
+            if (dist < 0.1f)
+            {
+                _returningToPath = false;
+                SnapToNearestWaypoint();
+            }
+            else
+            {
+                Vector3 dir = (_preDisplacePosition - transform.position).normalized;
+                transform.position += dir * GetMoveSpeed() * Time.deltaTime;
+            }
+            return;
+        }
 
         if (target != null)
         {
@@ -300,6 +330,36 @@ public abstract class Insect : Entity, IAttackable
         if (Vector3.Distance(transform.position, targetPos) < 0.1f)
         {
             currentWaypointIndex++;
+        }
+    }
+
+    private void UpdateOffPathSlowness()
+    {
+        if (isFlying || isDying)
+        {
+            if (_offPathSlownessActive)
+            {
+                _offPathSlownessActive = false;
+                RemoveEffect<OffPathSlownessEffect>();
+            }
+            return;
+        }
+
+        bool onPath = false;
+        if (Tile.allTiles.TryGetValue(Tile.TileKey(transform.position), out Tile t))
+            onPath = t.tileType == TileType.Path;
+
+        bool shouldSlow = isOnGround && !onPath;
+
+        if (shouldSlow && !_offPathSlownessActive)
+        {
+            _offPathSlownessActive = true;
+            ApplyEffect(new OffPathSlownessEffect(this));
+        }
+        else if (!shouldSlow && _offPathSlownessActive)
+        {
+            _offPathSlownessActive = false;
+            RemoveEffect<OffPathSlownessEffect>();
         }
     }
 

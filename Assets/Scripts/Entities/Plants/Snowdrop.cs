@@ -11,7 +11,6 @@ public class Snowdrop : Aura
     public float blizzardDamage;
     private GameObject blizzardIndicatorInstance;
     private GameObject _blizzardInstance;
-    private const float indicatorLength = 30f;
 
     private SnowdropData SData => data as SnowdropData;
 
@@ -22,6 +21,7 @@ public class Snowdrop : Aura
     private float blizzardDamagePerLevel    => SData?.blizzardDamagePerLevel    ?? 15f;
     private float blizzardDurationPerLevel  => SData?.blizzardDurationPerLevel  ?? 1f;
     private float blizzardCoolingMultiplier => SData?.blizzardCoolingMultiplier ?? 2f;
+    private float BlizzardRange => (SData?.baseBlizzardRange ?? 10f) + (SData?.path3BlizzardRangePerLevel ?? 0.5f) * effectivePath3Level;
 
     protected override void Awake()
     {
@@ -75,9 +75,9 @@ public class Snowdrop : Aura
         float   angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         blizzardIndicatorInstance.transform.SetPositionAndRotation(
-            transform.position + (Vector3)(dir * indicatorLength * 0.5f),
+            transform.position + (Vector3)(dir * BlizzardRange * 0.5f),
             Quaternion.Euler(0f, 0f, angle));
-        blizzardIndicatorInstance.transform.localScale = new Vector3(indicatorLength, blizzardWidth, 1f);
+        blizzardIndicatorInstance.transform.localScale = new Vector3(BlizzardRange, blizzardWidth, 1f);
         blizzardIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
     }
 
@@ -125,7 +125,8 @@ public class Snowdrop : Aura
             chillLevel + 1, this,
             baseSlow    * blizzardChillMultiplier,
             scalingSlow * blizzardChillMultiplier,
-            coolingPerSecond * blizzardCoolingMultiplier);
+            coolingPerSecond * blizzardCoolingMultiplier,
+            BlizzardRange);
     }
 
     protected override void Attack()
@@ -182,11 +183,14 @@ public class Snowdrop : Aura
     public override string GetPath3Description()
     {
         float widthpl = SData?.path3BlizzardWidthPerLevel ?? 0.5f;
+        float rangepl = SData?.path3BlizzardRangePerLevel ?? 0.5f;
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
                $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
+               $"Range: <color=green><b>{BlizzardRange:F1}</b></color> units\n\n" +
                $"Increase Blizzard Damage by <color=green><b>{blizzardDamagePerLevel:F0}</b></color> per second per level. [<color=green><b>+{blizzardDamagePerLevel * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase Blizzard Duration by <color=green><b>{blizzardDurationPerLevel:F1}s</b></color> per level. [<color=green><b>+{blizzardDurationPerLevel * effectivePath3Level:F1}s</b></color>]\n\n" +
                $"Increase Blizzard Width by <color=green><b>{widthpl:F1}</b></color> per level. [<color=green><b>+{widthpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase Blizzard Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
     }
 }

@@ -13,7 +13,7 @@ public class WindGust : MonoBehaviour
 
     private float tickTimer;
     private const float tickInterval = 0.25f;
-    private const float visualLength = 30f;
+    private float maxRange;
     private const float extendDuration = 0.6f;
     private const float retractDuration = 1f;
     private float currentLength = 0f;
@@ -25,7 +25,7 @@ public class WindGust : MonoBehaviour
 
     private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.DoT, DamageTag.SkillDamage };
 
-    public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float damage, float pushForce, Plant source)
+    public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float damage, float pushForce, Plant source, float maxRange)
     {
         if (obstacleLayer == 0)
         {
@@ -46,6 +46,7 @@ public class WindGust : MonoBehaviour
         this.damage = damage;
         this.pushForce = pushForce;
         this.source = source;
+        this.maxRange = maxRange;
 
         if (visualRenderer != null)
         {
@@ -87,7 +88,7 @@ public class WindGust : MonoBehaviour
         {
             if (duration > retractDuration)
             {
-                currentLength = Mathf.MoveTowards(currentLength, visualLength, (visualLength / extendDuration) * Time.deltaTime);
+                currentLength = Mathf.MoveTowards(currentLength, maxRange, (maxRange / extendDuration) * Time.deltaTime);
                 beamStart = 0f;
                 beamEnd = currentLength;
                 visualRenderer.transform.localPosition = (Vector3)(direction * currentLength * 0.5f);
@@ -95,10 +96,10 @@ public class WindGust : MonoBehaviour
             }
             else
             {
-                float remainingLength = (duration / retractDuration) * visualLength;
-                float nearEdge = visualLength - remainingLength;
+                float remainingLength = (duration / retractDuration) * maxRange;
+                float nearEdge = maxRange - remainingLength;
                 beamStart = nearEdge;
-                beamEnd = visualLength;
+                beamEnd = maxRange;
                 visualRenderer.transform.localPosition = (Vector3)(direction * (nearEdge + remainingLength * 0.5f));
                 visualRenderer.transform.localScale = new Vector3(remainingLength, width, 1f);
             }

@@ -16,7 +16,7 @@ public class Blizzard : MonoBehaviour
 
     private float tickTimer;
     private const float tickInterval    = 0.25f;
-    private const float visualLength    = 30f;
+    private float maxRange;
     private const float extendDuration  = 0.6f;
     private const float retractDuration = 1f;
     private float currentLength = 0f;
@@ -27,7 +27,7 @@ public class Blizzard : MonoBehaviour
 
     public void Initialize(Vector2 origin, Vector2 direction, float width, float duration,
                            float damage, int chillLevel, Plant source,
-                           float baseSlow, float slowPerLevel, float coolingPerSecond)
+                           float baseSlow, float slowPerLevel, float coolingPerSecond, float maxRange)
     {
         this.origin           = origin;
         this.direction        = direction.normalized;
@@ -39,6 +39,7 @@ public class Blizzard : MonoBehaviour
         this.baseSlow         = baseSlow;
         this.slowPerLevel     = slowPerLevel;
         this.coolingPerSecond = coolingPerSecond;
+        this.maxRange         = maxRange;
 
         if (visualRenderer != null)
         {
@@ -92,7 +93,7 @@ public class Blizzard : MonoBehaviour
         {
             if (duration > retractDuration)
             {
-                currentLength = Mathf.MoveTowards(currentLength, visualLength, (visualLength / extendDuration) * Time.deltaTime);
+                currentLength = Mathf.MoveTowards(currentLength, maxRange, (maxRange / extendDuration) * Time.deltaTime);
                 beamStart = 0f;
                 beamEnd   = currentLength;
                 visualRenderer.transform.localPosition = (Vector3)(direction * currentLength * 0.5f);
@@ -100,10 +101,10 @@ public class Blizzard : MonoBehaviour
             }
             else
             {
-                float remainingLength = (duration / retractDuration) * visualLength;
-                float nearEdge = visualLength - remainingLength;
+                float remainingLength = (duration / retractDuration) * maxRange;
+                float nearEdge = maxRange - remainingLength;
                 beamStart = nearEdge;
-                beamEnd   = visualLength;
+                beamEnd   = maxRange;
                 visualRenderer.transform.localPosition = (Vector3)(direction * (nearEdge + remainingLength * 0.5f));
                 visualRenderer.transform.localScale    = new Vector3(remainingLength, width, 1f);
             }

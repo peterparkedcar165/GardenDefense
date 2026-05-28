@@ -8,11 +8,11 @@ public class Dandelion : Shooter
     [SerializeField] private GameObject windGustIndicatorPrefab;
     private GameObject windGustIndicatorInstance;
 
-    private const float indicatorLength = 30f;
     private GameObject _windGustInstance;
     private float PushPower => ((DandelionData)data)?.basePushPower ?? 1.5f;
 
     private float WindGustDamage => data.baseSkillDamage + attackDamage + skillDamageMultiplier * magicPower;
+    private float WindGustRange  => (DData?.baseWindGustRange ?? 10f) + (DData?.path3WindGustRangePerLevel ?? 0.5f) * effectivePath3Level;
 
     private DandelionData DData => data as DandelionData;
 
@@ -131,7 +131,7 @@ public class Dandelion : Shooter
         float beamWidth = (DData?.baseBeamWidth ?? 1f) + (DData?.path3BeamWidthPerLevel ?? 0.25f) * effectivePath3Level;
         if (windGustPrefab == null) return;
         _windGustInstance = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
-        _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this);
+        _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this, WindGustRange);
     }
 
     private void UpdateWindGustIndicator()
@@ -154,9 +154,9 @@ public class Dandelion : Shooter
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         windGustIndicatorInstance.transform.SetPositionAndRotation(
-            transform.position + (Vector3)(dir * indicatorLength * 0.5f),
+            transform.position + (Vector3)(dir * WindGustRange * 0.5f),
             Quaternion.Euler(0f, 0f, angle));
-        windGustIndicatorInstance.transform.localScale = new Vector3(indicatorLength, beamWidth, 1f);
+        windGustIndicatorInstance.transform.localScale = new Vector3(WindGustRange, beamWidth, 1f);
         windGustIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
     }
 
@@ -191,15 +191,17 @@ public class Dandelion : Shooter
 
     public override string GetPath3Description()
     {
-        float beampl = DData?.path3BeamWidthPerLevel    ?? 0.25f;
-        float durpl  = DData?.path3SkillDurationPerLevel ?? 1f;
+        float beampl  = DData?.path3BeamWidthPerLevel     ?? 0.25f;
+        float durpl   = DData?.path3SkillDurationPerLevel ?? 1f;
+        float rangepl = DData?.path3WindGustRangePerLevel ?? 0.5f;
         float currentWidth = (DData?.baseBeamWidth ?? 1f) + beampl * effectivePath3Level;
         return $"Skill:\n\n" +
-               $"Blows a powerful gust of pollen wind <color=green><b>{currentWidth:F2}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.\n\n" +
+               $"Blows a powerful gust of pollen wind <color=green><b>{currentWidth:F2}</b></color> units wide towards the targeted direction, reaching <color=green><b>{WindGustRange:F1}</b></color> units, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.\n\n" +
                $"Scaling: <color=green><b>100%</b></color> Attack Damage\n\n" +
                $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
                $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
                $"Increase gust width by <color=green><b>{beampl:F2}</b></color> per level. [<color=green><b>+{beampl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"Increase gust range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
     }
 }

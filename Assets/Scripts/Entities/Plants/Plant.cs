@@ -108,7 +108,7 @@ public abstract class Plant : Entity, IAttackable
         if (_light2D != null)
             _light2D.enabled = ShowLight;
 
-        // weather bonuses are now applied via SunlightExposedEffect, RainExposedEffect, FrostExposedEffect
+        // weather bonuses are now applied via SunlightExposedEffect, RainExposedEffect, SnowExposedEffect
         // which modify the adder fields directly, so nothing extra needed here
     }
     public TileType[] allowedTiles;
@@ -464,7 +464,7 @@ public abstract class Plant : Entity, IAttackable
         {
             case WeatherType.Sunny: ApplyEffect(new SunlightExposedEffect(this, this, intensity)); break;
             case WeatherType.Rain:  ApplyEffect(new RainExposedEffect(this, this, intensity));     break;
-            case WeatherType.Snow:  ApplyEffect(new FrostExposedEffect(this, this, intensity));    break;
+            case WeatherType.Snow:  ApplyEffect(new SnowExposedEffect(this, this, intensity));    break;
         }
     }
 
@@ -474,7 +474,7 @@ public abstract class Plant : Entity, IAttackable
         {
             case WeatherType.Sunny: RemoveEffect<SunlightExposedEffect>(); break;
             case WeatherType.Rain:  RemoveEffect<RainExposedEffect>();     break;
-            case WeatherType.Snow:  RemoveEffect<FrostExposedEffect>();    break;
+            case WeatherType.Snow:  RemoveEffect<SnowExposedEffect>();    break;
         }
     }
 

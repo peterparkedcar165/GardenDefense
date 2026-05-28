@@ -11,9 +11,12 @@ public class DandelionData : PlantData
     public float path1elementalAffinityPerLevel = 0.06f;
     public float path1AttackRangePerLevel = 0.25f;
 
+    public float baseWindGustRange = 10f;
+
     [Header("Path 3 Scaling")]
     public float path3BeamWidthPerLevel = 0.25f;
     public float path3SkillDurationPerLevel = 1f;
+    public float path3WindGustRangePerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
         $"Each seed deals <color=green><b>{baseAttackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.";

@@ -17,6 +17,7 @@ public class SnowdropData : PlantData
     public float blizzardDurationPerLevel  = 1f;
     public float blizzardChillMultiplier   = 1.5f;
     public float blizzardCoolingMultiplier = 2f;
+    public float baseBlizzardRange         = 10f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 1f;
@@ -24,6 +25,7 @@ public class SnowdropData : PlantData
 
     [Header("Path 3 Scaling")]
     public float path3BlizzardWidthPerLevel = 0.5f;
+    public float path3BlizzardRangePerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
         $"Continuously deals <color=green><b>{baseAttackDamage}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all ground-level insects within range.";
