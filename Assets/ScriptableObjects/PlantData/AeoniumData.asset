@@ -44,7 +44,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseSunGenerated: 3
-  baseSunTimerReduction: 0.2
+  baseSunTimerReduction: 0.1
   baseHealAmount: 6
   baseSkillCooldownReduction: 0.5
   baseSkillRangeBonus: 0.75
@@ -83,7 +83,7 @@ MonoBehaviour:
   path1AttackRangePerLevel: 0.2
   path1HealPerLevel: 4
   path1CDRPerLevel: 0.25
-  path2SunPerLevel: 2
-  path2SunTimerReductionPerLevel: 0.1
+  path2SunPerLevel: 1
+  path2SunTimerReductionPerLevel: 0.05
   path3BonusSunBase: 4
   path3BonusSunPerLevel: 2

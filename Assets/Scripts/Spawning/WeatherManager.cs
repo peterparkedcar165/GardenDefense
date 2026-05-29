@@ -20,7 +20,6 @@ public class WeatherManager : MonoBehaviour
     // fires with (type) when a weather condition is removed
     public static event System.Action<WeatherType>      OnWeatherRemoved;
 
-    private WeatherEntry[] initialWeather;
     private TemperatureType _temperature;
 
     private readonly Dictionary<WeatherType, int> activeWeather = new();
@@ -47,8 +46,6 @@ public class WeatherManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        foreach (WeatherEntry entry in initialWeather)
-            activeWeather[entry.type] = Mathf.Max(1, entry.intensity);
     }
 
     // add or update a weather type; fires OnWeatherAdded
@@ -81,13 +78,13 @@ public class WeatherManager : MonoBehaviour
     {
         switch (type)
         {
-            case WeatherType.Clear:     return "Clear";
-            case WeatherType.Cloudy:    return "Cloudy";
-            case WeatherType.Sunny:     return "Sunny";
-            case WeatherType.Rain:      return "Rain";
-            case WeatherType.Windy:     return "Windy";
-            case WeatherType.Snow:      return "Snow";
-            case WeatherType.Sandstorm: return "Sandstorm";
+            case WeatherType.Clear:     return "<color=white>Clear</color>";
+            case WeatherType.Cloudy:    return "<color=#B0B0B0>Cloudy</color>";
+            case WeatherType.Sunny:     return "<color=orange>Sunny</color>";
+            case WeatherType.Rain:      return "<color=#4FC3F7>Rain</color>";
+            case WeatherType.Windy:     return "<color=#B2EBF2>Windy</color>";
+            case WeatherType.Snow:      return "<color=#00FFFF>Snow</color>";
+            case WeatherType.Sandstorm: return "<color=#E8D9A8>Sandstorm</color>";
             default:                    return type.ToString();
         }
     }
@@ -98,10 +95,10 @@ public class WeatherManager : MonoBehaviour
         int bonus = Mathf.RoundToInt((0.24f + 0.12f * (intensity - 1)) * 100f);
         switch (type)
         {
-            case WeatherType.Clear:     return "Clear skies. No elemental influence on plants.";
-            case WeatherType.Cloudy:    return "Overcast skies. No elemental influence on plants.";
-            case WeatherType.Sunny:     return $"Sunlight empowers the <color=orange>Fire</color> damage of all plants by <color=green><b>{bonus}%</b></color>.";
-            case WeatherType.Rain:      return $"Rainfall empowers the <color=#4FC3F7>Water</color> damage of all plants by <color=green><b>{bonus}%</b></color>.";
+            case WeatherType.Clear:     return "No effect.";
+            case WeatherType.Cloudy:    return "No effect.";
+            case WeatherType.Sunny:     return $"Sunlight empowers the <color=orange>Fire</color> damage of all plants by <color=green><b>{bonus}%</b></color>, and raises the Passive level of <color=orange>Fire</color> plants by <color=green><b>1</b></color>.";
+            case WeatherType.Rain:      return $"Rainfall empowers the <color=#4FC3F7>Water</color> damage of all plants by <color=green><b>{bonus}%</b></color>, and raises the Passive level of <color=#4FC3F7>Water</color> plants by <color=green><b>1</b></color>.";
             case WeatherType.Windy:     return "Strong winds sweep across the battlefield.";
             case WeatherType.Snow:      return $"Snowfall empowers the <color=#00FFFF>Ice</color> damage of all plants by <color=green><b>{bonus}%</b></color>.";
             case WeatherType.Sandstorm: return "A harsh sandstorm blankets the area.";
@@ -113,11 +110,11 @@ public class WeatherManager : MonoBehaviour
     {
         switch (type)
         {
-            case TemperatureType.Hot:    return "Hot";
-            case TemperatureType.Warm:   return "Warm";
+            case TemperatureType.Hot:    return "<color=orange>Hot</color>";
+            case TemperatureType.Warm:   return "<color=yellow>Warm</color>";
             case TemperatureType.Normal: return "Normal";
-            case TemperatureType.Chill:  return "Chill";
-            case TemperatureType.Cold:   return "Cold";
+            case TemperatureType.Chill:  return "<color=#40E0D0>Chill</color>";
+            case TemperatureType.Cold:   return "<color=#00FFFF>Cold</color>";
             default:                     return type.ToString();
         }
     }
@@ -128,7 +125,7 @@ public class WeatherManager : MonoBehaviour
         {
             case TemperatureType.Hot:    return "The heat steadily raises plant temperature. Plants that exceed their comfort range take damage.";
             case TemperatureType.Warm:   return "Pleasantly warm. No significant effect on plants.";
-            case TemperatureType.Normal: return "Temperate conditions. No effect on plants.";
+            case TemperatureType.Normal: return "Conditions normal";
             case TemperatureType.Chill:  return "Pleasantly cool. No significant effect on plants.";
             case TemperatureType.Cold:   return "The cold steadily lowers plant temperature. Plants that fall below their comfort range take damage.";
             default:                     return "";

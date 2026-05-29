@@ -4,12 +4,21 @@ using TMPro;
 using System.Text;
 
 // lives inside the settings panel; refreshes when the panel opens (OnEnable).
-// shows active weather, temperature, and fertilizer during a match, and stays
-// blank outside of a level (e.g. the main menu settings).
+// shows active weather, temperature, and fertilizer during a match, and hides
+// every section outside of a level (e.g. the main menu settings).
 // NOTE: never disables its own GameObject, or OnEnable could never fire again
 public class GameInfoPanel : MonoBehaviour
 {
-    [SerializeField] private TMP_Text infoText;
+    [Header("Section wrappers (title + text)")]
+    [SerializeField] private GameObject weatherSection;
+    [SerializeField] private GameObject temperatureSection;
+    [SerializeField] private GameObject fertilizerSection;
+
+    [Header("Description texts")]
+    [SerializeField] private TMP_Text weatherText;
+    [SerializeField] private TMP_Text temperatureText;
+    [SerializeField] private TMP_Text fertilizerText;
+
     [SerializeField] private Image background; // optional; hidden outside a level
 
     private void Awake()
@@ -22,57 +31,58 @@ public class GameInfoPanel : MonoBehaviour
     private void OnEnable()
     {
         bool inLevel = GameManager.instance != null && GameManager.instance.IsGameActive;
+
         if (background != null) background.enabled = inLevel;
-        if (infoText != null) infoText.gameObject.SetActive(inLevel);
+        SetActive(weatherSection, inLevel);
+        SetActive(temperatureSection, inLevel);
+        SetActive(fertilizerSection, inLevel);
+
         if (inLevel) Refresh();
+    }
+
+    private static void SetActive(GameObject go, bool active)
+    {
+        if (go != null) go.SetActive(active);
     }
 
     private void Refresh()
     {
-        if (infoText == null) return;
+        if (weatherText != null)     weatherText.text     = BuildWeather();
+        if (temperatureText != null) temperatureText.text = BuildTemperature();
+        if (fertilizerText != null)  fertilizerText.text  = BuildFertilizer();
+    }
+
+    private string BuildWeather()
+    {
+        if (WeatherManager.instance == null) return "None.";
 
         var sb = new StringBuilder();
+        bool any = false;
+        foreach (WeatherEntry entry in WeatherManager.instance.GetActiveWeather())
+        {
+            any = true;
+            sb.AppendLine($"<b>{WeatherManager.GetWeatherName(entry.type)}</b> <color=#FFD700>(Lv {entry.intensity})</color>");
+            sb.AppendLine($"<size=85%>{WeatherManager.GetWeatherDescription(entry.type, entry.intensity)}</size>");
+        }
+        if (!any) return "Clear. No active weather.";
 
-        // weather
-        sb.AppendLine("<size=120%><b>Weather</b></size>");
-        if (WeatherManager.instance == null)
-        {
-            sb.AppendLine("None.");
-        }
-        else
-        {
-            bool any = false;
-            foreach (WeatherEntry entry in WeatherManager.instance.GetActiveWeather())
-            {
-                any = true;
-                sb.AppendLine($"<b>{WeatherManager.GetWeatherName(entry.type)}</b> <color=#FFD700>(Lv {entry.intensity})</color>");
-                sb.AppendLine($"<size=85%>{WeatherManager.GetWeatherDescription(entry.type, entry.intensity)}</size>");
-            }
-            if (!any) sb.AppendLine("Clear. No active weather.");
-        }
+        return sb.ToString().TrimEnd();
+    }
 
-        // temperature
-        sb.AppendLine();
-        sb.AppendLine("<size=120%><b>Temperature</b></size>");
-        if (WeatherManager.instance != null)
-        {
-            TemperatureType temp = WeatherManager.instance.temperature;
-            sb.AppendLine($"<b>{WeatherManager.GetTemperatureName(temp)}</b>");
-            sb.AppendLine($"<size=85%>{WeatherManager.GetTemperatureDescription(temp)}</size>");
-        }
-        else
-        {
-            sb.AppendLine("Normal.");
-        }
+    private string BuildTemperature()
+    {
+        if (WeatherManager.instance == null) return "Normal.";
 
-        // fertilizer
-        sb.AppendLine();
-        sb.AppendLine("<size=120%><b>Fertilizer</b></size>");
+        TemperatureType temp = WeatherManager.instance.temperature;
+        return $"<b>{WeatherManager.GetTemperatureName(temp)}</b>\n" +
+               $"<size=85%>{WeatherManager.GetTemperatureDescription(temp)}</size>";
+    }
+
+    private string BuildFertilizer()
+    {
         string fertilizer = FertilizerManager.instance != null
             ? FertilizerManager.instance.GetActiveSummary()
             : null;
-        sb.Append(string.IsNullOrEmpty(fertilizer) ? "No fertilizer selected." : fertilizer);
-
-        infoText.text = sb.ToString();
+        return string.IsNullOrEmpty(fertilizer) ? "No fertilizer selected." : fertilizer;
     }
 }
