@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fed5c857faeea5443822e86a9723d554, type: 3}
-  m_Name: Level9
+  m_Name: Level6
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
-  levelNumber: 9
+  levelNumber: 6
   weather:
   - type: 0
     intensity: 0
   temperature: 2
-  maxWaves: 28
+  maxWaves: 24
   startSunCount: 750
   startHealth: 200
   minWaveDuration: 20
@@ -46,9 +46,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restDuration: 14
+  restDuration: 11
   minThreatBudget: 10
-  maxThreatBudget: 100
+  maxThreatBudget: 85
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -86,14 +86,6 @@ MonoBehaviour:
     unlockWave: 0
     budgetWeight: 0.3
     startDelay: 2
-  - data: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
-    unlockWave: 1
-    budgetWeight: 0.3
-    startDelay: 2
-  - data: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
-    unlockWave: 3
-    budgetWeight: 0.1
-    startDelay: 5
   - data: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
     unlockWave: 2
     budgetWeight: 0.1
@@ -102,21 +94,15 @@ MonoBehaviour:
     unlockWave: 3
     budgetWeight: 0.25
     startDelay: 6
-  eliteWaveInterval: 3
+  eliteWaveInterval: 4
   eliteInsects:
   - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
-    unlockWave: 3
+    unlockWave: 5
     budgetWeight: 0.193
     startDelay: 2
-    minSpawnCount: 6
-    maxSpawnCount: 18
-  - data: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
-    unlockWave: 3
-    budgetWeight: 0.193
-    startDelay: 2
-    minSpawnCount: 4
-    maxSpawnCount: 12
+    minSpawnCount: 5
+    maxSpawnCount: 15
   fertilizerPool:
-  - {fileID: 11400000, guid: 7f029c4d5f2a9aa428657749cc004134, type: 2}
-  - {fileID: 11400000, guid: 7a63b0be52209304d884ae38049d32e1, type: 2}
-  - {fileID: 11400000, guid: ea6e435240e2ee046bd0290ef777153c, type: 2}
+  - {fileID: 11400000, guid: a459790abe9b4a1419001264f87b5ec7, type: 2}
+  - {fileID: 11400000, guid: c20fa75212e0fab4e90ca3185c294d52, type: 2}
+  - {fileID: 11400000, guid: 08ca7efbce2cf594895fa6419120af9f, type: 2}
