@@ -58,7 +58,7 @@ public abstract class Insect : Entity, IAttackable
         {
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
             if (taunted != null) return taunted;
-            if (HasEffect<BlindEffect>() && aggressivity != Aggressivity.Low) return null;
+            if (HasEffect<ObliviousEffect>() && aggressivity != Aggressivity.Low) return null;
             switch (aggressivity)
             {
                 case Aggressivity.High:
@@ -582,6 +582,12 @@ public abstract class Insect : Entity, IAttackable
     // IAttackable
     public void ReceiveAttack(float damage, Insect attacker)
     {
+        float missChance = Mathf.Clamp01(evasion - attacker.accuracy);
+        if (UnityEngine.Random.value < missChance)
+        {
+            StatusIndicator.Spawn(GetIndicatorPosition(), "Miss", new Color(0.55f, 0.6f, 0.75f));
+            return;
+        }
         Damage(damage, attacker.attackDamageType, attacker.attackElementalType, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
     }
     public bool IsAlive => health > 0 && !isDying;

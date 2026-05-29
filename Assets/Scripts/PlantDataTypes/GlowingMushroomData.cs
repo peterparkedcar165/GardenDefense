@@ -33,7 +33,7 @@ public class GlowingMushroomData : PlantData
         $"Fires a fungal bolt dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage, splashing to nearby insects.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks inflict <color=#88FF88>Fungal Glow</color> on the target. Water damage spreads the glow to nearby insects.";
+        $"Attacks inflict <color=#88FF88>Fungal Glow</color> on the target. <color=#4FC3F7><b>Water</b></color> damage refreshes and spreads the glow to nearby insects.";
 
     public override string GetSkillDescription() =>
         $"Releases a blinding flash, tripling the illumination radius and <color=#DDDDDD>Blinding</color> all insects caught in the expanded area.";

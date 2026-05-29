@@ -55,7 +55,7 @@ public abstract class Plant : Entity, IAttackable
     private bool _isSelected = false;
     private UnityEngine.Rendering.Universal.Light2D _light2D;
     private float _lastLightEmissionRange;
-    private const float lightIntensity = 0.65f;
+    protected virtual float LightIntensity => 0.65f;
     private const float lightFadeSpeed = 2f;
     private GameObject _skillBarInstance;
     private Transform _skillBarFill;
@@ -541,7 +541,7 @@ public abstract class Plant : Entity, IAttackable
                     _light2D.intensity = 0f;
                 _lastLightEmissionRange = lightEmissionRange;
             }
-            float targetIntensity = lightEmissionRange > 0f ? lightIntensity : 0f;
+            float targetIntensity = lightEmissionRange > 0f ? LightIntensity : 0f;
             _light2D.intensity = Mathf.Lerp(_light2D.intensity, targetIntensity, Time.unscaledDeltaTime * lightFadeSpeed);
         }
 
@@ -906,6 +906,12 @@ public abstract class Plant : Entity, IAttackable
 
     public void ReceiveAttack(float damage, Insect attacker)
     {
+        float missChance = Mathf.Clamp01(evasion - attacker.accuracy);
+        if (UnityEngine.Random.value < missChance)
+        {
+            StatusIndicator.Spawn(GetIndicatorPosition(), "Miss", new Color(0.55f, 0.6f, 0.75f));
+            return;
+        }
         Damage(damage, attacker.attackDamageType, attacker.attackElementalType, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
         OnHitByInsect(attacker);
     }

@@ -252,10 +252,17 @@ public abstract class Entity : MonoBehaviour
             return;
         }
 
-        if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+        // melee attacks roll their miss check upstream in ReceiveAttack (so the counter
+        // can be gated on the same result); here we only handle non-melee attacks
+        if (System.Array.Exists(damageTag, t => t == DamageTag.Attack)
+            && !System.Array.Exists(damageTag, t => t == DamageTag.Melee))
         {
             float missChance = Mathf.Clamp01(evasion - source.accuracy);
-            if (UnityEngine.Random.value < missChance) return;
+            if (UnityEngine.Random.value < missChance)
+            {
+                StatusIndicator.Spawn(GetIndicatorPosition(), "Miss", new Color(0.55f, 0.6f, 0.75f));
+                return;
+            }
         }
 
         if (this is Insect insect && source is Plant plant) // if target = insect and source = plant

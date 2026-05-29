@@ -6,15 +6,14 @@ using System.Collections.Generic;
 public class GlowingMushroom : Shooter
 {
     private GlowingMushroomData GMData => data as GlowingMushroomData;
+    protected override float LightIntensity => 1f;
 
-    private float _passiveCooldownTimer = 0f;
     private bool _lightColored = false;
 
     private float SplashRadius       => GMData?.splashRadius              ?? 1.5f;
     private float SplashMult         => GMData?.splashDamageMultiplier    ?? 0.5f;
     private float FungalGlowDuration => (GMData?.fungalGlowDuration       ?? 6f) + (GMData?.path2FungalGlowDurationPerLevel ?? 1f) * effectivePath2Level;
     private float SpreadRadius       => (GMData?.fungalGlowSpreadRadius    ?? 2f) + (GMData?.path2SpreadRadiusPerLevel       ?? 0.25f) * effectivePath2Level;
-    private float PassiveCooldown    => GMData?.passiveCooldown            ?? 4f;
     private float LightMult          => GMData?.lightRadiusMultiplier      ?? 3f;
     private float BlindDuration      => (GMData?.blindDuration             ?? 3f) + (GMData?.path3BlindDurationPerLevel     ?? 0.5f) * effectivePath3Level;
     private float BlindPenalty       => GMData?.blindAccuracyPenalty       ?? 1f;
@@ -28,8 +27,6 @@ public class GlowingMushroom : Shooter
     protected override void Update()
     {
         base.Update();
-        if (_passiveCooldownTimer > 0f)
-            _passiveCooldownTimer -= Time.deltaTime;
     }
 
     protected override void Shoot(Vector3 target)
@@ -50,11 +47,8 @@ public class GlowingMushroom : Shooter
     public void OnBoltHit(Vector3 hitPosition, Insect mainTarget)
     {
         // apply Fungal Glow to main target
-        if (_passiveCooldownTimer <= 0f && mainTarget != null && mainTarget.IsAlive)
-        {
+        if (mainTarget != null && mainTarget.IsAlive)
             mainTarget.ApplyEffect(new FungalGlowEffect(mainTarget, FungalGlowDuration, 1, this, SpreadRadius));
-            _passiveCooldownTimer = PassiveCooldown;
-        }
 
         // splash damage to nearby insects
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
@@ -130,7 +124,7 @@ public class GlowingMushroom : Shooter
         $"Fires a fungal bolt dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage to the target, splashing <color=green><b>{SplashMult * 100f:F0}%</b></color> of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks inflict <color=#88FF88>Fungal Glow</color> on the target (cooldown: <color=green><b>{PassiveCooldown:F0}s</b></color>), causing it to emit a faint green light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7>Water</color> damage, the glow spreads to all insects within <color=green><b>{SpreadRadius:F1}</b></color> radius.";
+        $"Every attack inflicts <color=#88FF88>Fungal Glow</color> on the target, causing it to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed and the glow spreads to all insects within <color=green><b>{SpreadRadius:F1}</b></color> radius.";
 
     public override string GetSkillDesription() =>
         $"Unleashes a blinding flash, tripling the illumination radius to <color=green><b>{lightEmissionRange * LightMult:F1}</b></color> for <color=green><b>{skillDuration:F0}s</b></color>. All insects caught in the expanded radius are <color=#DDDDDD><b>Blinded</b></color> for <color=green><b>{BlindDuration:F1}s</b></color>, causing their attacks to miss.";

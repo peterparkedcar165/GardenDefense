@@ -243,6 +243,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DevourEffect.cs" />
     <Compile Include="Assets\Scripts\UI\FlowerPotButton.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\EncyclopediaManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ObliviousEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OleandicToxinEffect.cs" />

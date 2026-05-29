@@ -23,7 +23,7 @@ MonoBehaviour:
   baseAttackDamage: 20
   baseMagicPower: 0
   baseAttackSpeed: 0.5
-  baseAttackRange: 2
+  baseAttackRange: 3
   startingShield: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -54,16 +54,16 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
-  baseProjectileSpeed: 3
+  baseProjectileSpeed: 4
   baseMaxRange: 20
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
-  basePassiveCooldown: 5
+  basePassiveCooldown: 0
   basePassiveDuration: 6
   baseSkillCooldown: 15
-  baseSkillDuration: 10
+  baseSkillDuration: 6
   baseSkillRadius: 3
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
@@ -74,12 +74,12 @@ MonoBehaviour:
   fungalGlowDuration: 4
   fungalGlowSpreadRadius: 2
   passiveCooldown: 4
-  lightRadiusMultiplier: 3
-  blindDuration: 3
+  lightRadiusMultiplier: 2
+  blindDuration: 4
   blindAccuracyPenalty: 1
   path1AttackDamagePerLevel: 12
   path1AttackRangePerLevel: 0.15
   path2FungalGlowDurationPerLevel: 3
-  path2SpreadRadiusPerLevel: 0.25
-  path3BlindDurationPerLevel: 0.5
+  path2SpreadRadiusPerLevel: 0.15
+  path3BlindDurationPerLevel: 3
   path3SkillDurationPerLevel: 3

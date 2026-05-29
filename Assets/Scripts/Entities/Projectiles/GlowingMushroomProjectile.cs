@@ -20,7 +20,7 @@ public class GlowingMushroomProjectile : Projectile
         Light2D light = gameObject.AddComponent<Light2D>();
         light.lightType              = Light2D.LightType.Point;
         light.color                  = new Color(0.05f, 0.65f, 1f);
-        light.intensity              = 1.2f;
+        light.intensity              = 1f;
         light.pointLightOuterRadius  = 0.6f;
         light.pointLightInnerRadius  = 0.1f;
     }

@@ -4,6 +4,7 @@ using UnityEngine.Rendering.Universal;
 public class FungalGlowEffect : StatusEffect
 {
     private readonly float spreadRadius;
+    private readonly float originalDuration;
     private LightFader _fader;
 
     public FungalGlowEffect(Entity target, float duration, int level, Entity source, float spreadRadius = 2f)
@@ -11,6 +12,7 @@ public class FungalGlowEffect : StatusEffect
     {
         effectType = Type.negative;
         this.spreadRadius = spreadRadius;
+        this.originalDuration = duration;
     }
 
     public override void OnApply()
@@ -42,7 +44,7 @@ public class FungalGlowEffect : StatusEffect
         light.pointLightInnerRadius  = 0.24f;
 
         LightFader newFader = lightObj.AddComponent<LightFader>();
-        newFader.Setup(light, 0.8f);
+        newFader.Setup(light, 1f);
         return newFader;
     }
 
@@ -66,16 +68,18 @@ public class FungalGlowEffect : StatusEffect
     {
         if (elementalType != ElementalType.Water) return;
 
+        duration = originalDuration;
+
         foreach (Insect nearby in new System.Collections.Generic.List<Insect>(Insect.allInsects))
         {
             if (nearby == null || !nearby.IsAlive) continue;
             if (nearby == (Insect)target) continue;
             if (Vector3.Distance(target.transform.position, nearby.transform.position) <= spreadRadius)
-                nearby.ApplyEffect(new FungalGlowEffect(nearby, duration, level, source, spreadRadius));
+                nearby.ApplyEffect(new FungalGlowEffect(nearby, originalDuration, level, source, spreadRadius));
         }
     }
 
     public override string GetName() => "<color=#88FF88>Fungal Glow</color>";
     public override string GetDescription() =>
-        $"Emitting a faint fungal light. Water damage will spread this effect to nearby insects within <color=green><b>{spreadRadius:F1}</b></color> radius.";
+        $"Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration and spreads this effect to nearby insects within <color=green><b>{spreadRadius:F1}</b></color> radius.";
 }
