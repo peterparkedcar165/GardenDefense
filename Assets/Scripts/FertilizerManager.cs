@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Text;
 
 public class FertilizerManager : MonoBehaviour
 {
@@ -36,6 +37,33 @@ public class FertilizerManager : MonoBehaviour
         activeFertilizer = fertilizer;
         selectedStats = stats;
         rolledValues = values;
+    }
+
+    public FertilizerData ActiveFertilizer => activeFertilizer;
+    public bool HasActiveFertilizer => activeFertilizer != null && selectedStats != null;
+
+    // builds the formatted reminder text shown by the in game info tooltip
+    public string GetActiveSummary()
+    {
+        if (!HasActiveFertilizer) return null;
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"<b>{activeFertilizer.fertilizerName}</b>");
+        string target = activeFertilizer.appliesToAll
+            ? "All Plants"
+            : $"{activeFertilizer.targetElementalType} Plants";
+        sb.AppendLine($"<size=85%>Applies to: <color=#FFD700>{target}</color></size>");
+        sb.AppendLine();
+
+        for (int i = 0; i < selectedStats.Length; i++)
+        {
+            bool isGood = rolledValues[i] >= 0f;
+            if (FertilizerFormat.IsInvertedStat(selectedStats[i].statType)) isGood = !isGood;
+            string color = isGood ? "green" : "red";
+            sb.AppendLine($"{FertilizerFormat.FormatStatName(selectedStats[i].statType)}: <color={color}><b>{FertilizerFormat.FormatValue(selectedStats[i].statType, rolledValues[i])}</b></color>");
+        }
+
+        return sb.ToString().TrimEnd();
     }
 
     public float GetPreviewRangeMultiplier(ElementalType elementalType)

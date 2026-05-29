@@ -71,7 +71,8 @@ public class GlowingMushroom : Shooter
 
     private IEnumerator FlashSkill()
     {
-        lightEmissionRangeMultiplier += LightMult - 1f;
+        float bonus = LightMult - 1f;
+        lightEmissionRangeMultiplier += bonus;
 
         float expandedRange = lightEmissionRange * LightMult;
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
@@ -83,7 +84,20 @@ public class GlowingMushroom : Shooter
         }
 
         yield return new WaitForSeconds(skillDuration);
-        lightEmissionRangeMultiplier -= LightMult - 1f;
+
+        // ramp the bonus back down so the light radius shrinks smoothly instead of snapping
+        float fadeDuration = 1f;
+        float applied = bonus;
+        float t = 0f;
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            float target = Mathf.Lerp(bonus, 0f, t / fadeDuration);
+            lightEmissionRangeMultiplier += target - applied;
+            applied = target;
+            yield return null;
+        }
+        lightEmissionRangeMultiplier -= applied;
     }
 
     public override void UpdateStats()

@@ -44,7 +44,7 @@ MonoBehaviour:
   threatValue: 7
   threatType: 1
   sunDrop: 16
-  aggressivity: 0
+  aggressivity: 2
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0

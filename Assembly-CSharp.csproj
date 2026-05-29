@@ -52,6 +52,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
+    <Compile Include="Assets\Scripts\UI\FertilizerFormat.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\Airborne.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Shooter.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DaytimeGridManager.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\GameInfoPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Calendula.cs" />
