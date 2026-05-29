@@ -5,7 +5,7 @@ public class FrostbiteEffect : DoTEffect
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
     public float healthPerSecond = 0.04f, adPerSecond = 0.06f;
-    private float tenacityReduction = 0.66f;
+    private float tenacityReduction = 0.33f;
     private float cachedelementalAffinity;
     private float cachedMaxHealth;
     private float cachedAttackDamage;

@@ -87,6 +87,8 @@ public class PoisonShroom : Shooter
             blob.Initialize(position, activeRadius, skillDuration, this, fieldDPS);
     }
 
+    public override string GetName() => $"<b><color=purple>{(data != null ? data.displayName : "Poison Shroom")}</color></b>";
+
     public override string GetDescription() =>
         $"The {GetName()} shoots toxic spores dealing damage and applying <color=purple>Poison</color>.";
 

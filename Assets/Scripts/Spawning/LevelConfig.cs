@@ -39,7 +39,7 @@ public class LevelConfig : ScriptableObject
     [Tooltip("a bonus elite insect spawns every N waves (set to 0 to disable)")]
     public int eliteWaveInterval = 5;
     [Tooltip("which insect(s) spawn as the elite bonus. startDelay controls when in the wave they appear")]
-    public LevelInsectEntry[] eliteInsects;
+    public LevelEliteEntry[] eliteInsects;
 
     [Header("fertilizers")]
     public FertilizerData[] fertilizerPool;

@@ -17,12 +17,18 @@ public class LevelInsectEntry
 
     [Tooltip("seconds into the wave before this type starts spawning")]
     public float startDelay = 0f;
+}
 
-    [Tooltip("for elite entries only: how many spawn on the first elite wave this is eligible for")]
+// elite entries add a spawn count that scales with level progress.
+// kept as a subclass so these fields only appear on the elite roster, not the normal one
+[System.Serializable]
+public class LevelEliteEntry : LevelInsectEntry
+{
+    [Tooltip("how many spawn on the first elite wave this is eligible for")]
     [Min(1)]
     public int minSpawnCount = 1;
 
-    [Tooltip("for elite entries only: how many spawn on the final wave. count scales linearly between min and max as the level progresses")]
+    [Tooltip("how many spawn on the final wave. count scales linearly between min and max as the level progresses")]
     [Min(1)]
     public int maxSpawnCount = 1;
 }

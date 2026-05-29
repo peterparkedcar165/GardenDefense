@@ -510,6 +510,13 @@ public abstract class Entity : MonoBehaviour
         timeAlive += Time.deltaTime;
         TickEffects();
 
+        // keep the health bar fill proportion in sync when maxHealth changes (buffs, effects, etc.)
+        if (maxHealth != _lastMaxHealth)
+        {
+            _lastMaxHealth = maxHealth;
+            UpdateHealthBar();
+        }
+
         if (blazeInternalCooldown > 0)
         {
             blazeInternalCooldown -= Time.deltaTime;
@@ -548,6 +555,7 @@ public abstract class Entity : MonoBehaviour
     protected GameObject healthBarInstance;
     private Transform healthBarFill;
     private Transform shieldFill;
+    private float _lastMaxHealth = -1f;
 
     private static GameObject _healthBarPrefab;
 
@@ -867,19 +875,23 @@ public abstract class Entity : MonoBehaviour
 // and then removes it from the list
     private void TickEffects()
     {
-        for (int i = activeEffects.Count - 1; i >= 0; i--)
+        // snapshot so effects that add/remove other effects during OnTick/OnExpire
+        // can't corrupt the iteration (indices shifting out of range)
+        StatusEffect[] snapshot = activeEffects.ToArray();
+        foreach (StatusEffect effect in snapshot)
         {
-            StatusEffect effect = activeEffects[i];
+            if (!activeEffects.Contains(effect)) continue; // already removed this frame
+
             bool durationFrozen = debuffsFrozen && effect.effectType == StatusEffect.Type.negative;
 
             effect.OnTick(Time.deltaTime);
             if (!durationFrozen)
                 effect.duration -= Time.deltaTime;
 
-            if (effect.IsExpired())
+            if (effect.IsExpired() && activeEffects.Contains(effect))
             {
                 effect.OnExpire();
-                activeEffects.RemoveAt(i);
+                activeEffects.Remove(effect);
             }
         }
     }

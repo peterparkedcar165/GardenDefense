@@ -11,7 +11,8 @@ public class DesertGridManager : MonoBehaviour
     [SerializeField] private Tilemap groundTilemap;
     [SerializeField] private Tilemap pathTilemap;
     [SerializeField] private Tilemap colliderTilemap;
-    [SerializeField] private Tilemap nonColliderTilemap;
+    [SerializeField] private Tilemap nonColliderGroundTilemap;
+    [SerializeField] private Tilemap nonColliderAirTilemap;
     [SerializeField] private Tilemap waterTilemap;
     [SerializeField] private Tilemap highgroundGroundTilemap;
     [SerializeField] private Tilemap highgroundWaterTilemap;

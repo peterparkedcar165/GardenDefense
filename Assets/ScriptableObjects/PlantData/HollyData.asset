@@ -44,7 +44,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
@@ -74,12 +74,12 @@ MonoBehaviour:
   baseHealthBonusMP: 0.3
   baseFrozenRageReduction: 0.12
   baseFrozenRageReductionMP: 0.08
-  baseSkillShield: 120
+  baseSkillShield: 100
   baseSkillShieldMP: 0.5
-  path1AttackDamagePerLevel: 4
-  path1PhysicalResistancePerLevel: 0.04
-  path2HealthPerLevel: 45
-  path2RetaliationPerLevel: 0.1
-  path3ShieldPerLevel: 30
+  path1AttackDamagePerLevel: 7
+  path1PhysicalResistancePerLevel: 0.06
+  path2HealthPerLevel: 55
+  path2RetaliationPerLevel: 0.15
+  path3ShieldPerLevel: 50
   path3FrozenRagePerLevel: 0.04
   path3SkillDurationPerLevel: 2

@@ -58,7 +58,7 @@ public class GlowingMushroom : Shooter
             if (insect == mainTarget) continue;
             if (Vector3.Distance(hitPosition, insect.transform.position) <= SplashRadius)
                 insect.Damage(attackDamage * SplashMult, damageType, elementalType, this, false,
-                    new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+                    new DamageTag[] { DamageTag.AoE });
         }
     }
 
@@ -129,7 +129,7 @@ public class GlowingMushroom : Shooter
         baseSkillDuration = data.baseSkillDuration + (GMData?.path3SkillDurationPerLevel ?? 1f) * level;
     }
 
-    public override string GetName() => "<b><color=#88FF88>Glowing Mushroom</color></b>";
+    public override string GetName() => "<b><color=green>Glowing Mushroom</color></b>";
 
     public override string GetDescription() =>
         $"The {GetName()} is a bioluminescent cave fungus that illuminates the darkness, infects insects with a spreading glow, and blinds them with a sudden flash of light.";

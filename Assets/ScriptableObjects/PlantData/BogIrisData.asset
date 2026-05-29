@@ -44,7 +44,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
@@ -75,7 +75,7 @@ MonoBehaviour:
   baseGeyserDamage: 105
   path1AttackDamagePerLevel: 8
   path2OpenDurationPerLevel: 2
-  path2SunPerLevel: 1
+  path2SunPerLevel: 2
   path3GeyserDamagePerLevel: 15
   path3KnockUpPerLevel: 1
   path3GeyserRadiusPerLevel: 0.15

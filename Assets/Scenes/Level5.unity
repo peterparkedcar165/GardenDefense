@@ -148,8 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe25a532237cad447ab16e5798aa0c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
-  weather: 0
-  temperature: 2
 --- !u!4 &29017237
 Transform:
   m_ObjectHideFlags: 0
@@ -770,6 +768,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2473620843044869097, guid: 7447be04750537f4f8740435138199e4, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2473620843044869097, guid: 7447be04750537f4f8740435138199e4, type: 3}
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[4]'
+      value: 1439254913
+      objectReference: {fileID: 0}
+    - target: {fileID: 2473620843044869097, guid: 7447be04750537f4f8740435138199e4, type: 3}
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[5]'
+      value: 353902831
+      objectReference: {fileID: 0}
+    - target: {fileID: 2473620843044869097, guid: 7447be04750537f4f8740435138199e4, type: 3}
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[6]'
+      value: 238937029
+      objectReference: {fileID: 0}
     - target: {fileID: 8495003235869979637, guid: 7447be04750537f4f8740435138199e4, type: 3}
       propertyPath: m_Name
       value: DayLight
@@ -3926,7 +3940,7 @@ Tilemap:
       - {fileID: 1416192986, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 1344363533, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -669985891, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 2, y: -3, z: 0}

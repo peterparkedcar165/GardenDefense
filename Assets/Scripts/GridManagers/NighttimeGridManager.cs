@@ -11,8 +11,10 @@ public class NighttimeGridManager : MonoBehaviour
     [SerializeField] private Tilemap groundTilemap;
     [SerializeField] private Tilemap pathTilemap;
     [SerializeField] private Tilemap colliderTilemap;
-    [SerializeField] private Tilemap nonColliderTilemap;
+    [SerializeField] private Tilemap nonColliderGroundTilemap;
+    [SerializeField] private Tilemap nonColliderAirTilemap;
     [SerializeField] private Tilemap waterTilemap;
+    [SerializeField] private Tilemap dirtTilemap;
     [SerializeField] private Tilemap highgroundGroundTilemap;
     [SerializeField] private Tilemap highgroundWaterTilemap;
 
@@ -40,6 +42,7 @@ public class NighttimeGridManager : MonoBehaviour
                 bool hasCollider         = colliderTilemap         != null && colliderTilemap.HasTile(cell);
                 bool hasPath             = pathTilemap             != null && pathTilemap.HasTile(cell);
                 bool hasWater            = waterTilemap            != null && waterTilemap.HasTile(cell);
+                bool hasDirt             = dirtTilemap             != null && dirtTilemap.HasTile(cell);
                 bool hasHighgroundGround = highgroundGroundTilemap != null && highgroundGroundTilemap.HasTile(cell);
                 bool hasHighgroundWater  = highgroundWaterTilemap  != null && highgroundWaterTilemap.HasTile(cell);
 
@@ -48,6 +51,7 @@ public class NighttimeGridManager : MonoBehaviour
                 else if (hasPath)             t.tileType = TileType.Path;
                 else if (hasWater)            t.tileType = TileType.Water;
                 else if (hasHighgroundWater)  t.tileType = TileType.Water;
+                else if (hasDirt)             t.tileType = TileType.Dirt;
                 else                          t.tileType = TileType.Grass;
 
                 if (hasHighgroundGround || hasHighgroundWater) t.isHighground = true;

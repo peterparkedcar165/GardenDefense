@@ -9,7 +9,8 @@ public class ProceduralLevel : SpawnManager
     public LevelConfig config;
 
     private int wave = 0;
-    private float nextWaveTimer = 0f;
+    // absolute (scaled) time at which the next wave begins; negative = no next wave
+    private float nextWaveTime = -1f;
 
     protected override void Start()
     {
@@ -38,7 +39,7 @@ public class ProceduralLevel : SpawnManager
 
     IEnumerator RunWaves()
     {
-        nextWaveTimer = 10f;
+        nextWaveTime = Time.time + 10f;
         yield return new WaitForSeconds(10f);
 
         while (wave < config.maxWaves)
@@ -52,6 +53,7 @@ public class ProceduralLevel : SpawnManager
                 yield return StartCoroutine(RestPeriod(config.restDuration));
         }
 
+        nextWaveTime = -1f;
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
         yield return new WaitForSeconds(3f);
         SaveManager.instance.CompleteLevel(config.levelNumber);
@@ -110,13 +112,17 @@ public class ProceduralLevel : SpawnManager
                         && waveNumber % config.eliteWaveInterval == 0;
         if (isEliteWave && config.eliteInsects != null)
         {
-            LevelInsectEntry chosenElite = PickWeightedElite(waveNumber);
+            LevelEliteEntry chosenElite = PickWeightedElite(waveNumber);
             if (chosenElite != null)
                 streams.Add(StartCoroutine(
                     SpawnEliteGroup(chosenElite, waveDuration, t)));
         }
 
-        nextWaveTimer = waveDuration + config.restDuration;
+        // schedule the next wave: this wave's remaining spawn time plus the rest after it.
+        // the final wave has no successor, so clear the countdown
+        nextWaveTime = waveNumber < config.maxWaves
+            ? Time.time + waveDuration + config.restDuration
+            : -1f;
         yield return new WaitForSeconds(waveDuration);
 
         // stop any streams still running (they self-terminate via elapsed check but
@@ -129,10 +135,10 @@ public class ProceduralLevel : SpawnManager
 
     // picks one elite entry by weighted random from those unlocked by this wave
     // higher budgetWeight = more likely to be chosen
-    LevelInsectEntry PickWeightedElite(int waveNumber)
+    LevelEliteEntry PickWeightedElite(int waveNumber)
     {
         // build eligible pool
-        var pool = new List<LevelInsectEntry>();
+        var pool = new List<LevelEliteEntry>();
         float total = 0f;
         foreach (var e in config.eliteInsects)
         {
@@ -177,7 +183,7 @@ public class ProceduralLevel : SpawnManager
     // spawns the elite group for an elite wave
     // count scales between minSpawnCount and maxSpawnCount based on wave progress (t = 0 to 1)
     // if count > 1, spreads the spawns evenly across the remaining wave time
-    IEnumerator SpawnEliteGroup(LevelInsectEntry entry, float waveDuration, float t)
+    IEnumerator SpawnEliteGroup(LevelEliteEntry entry, float waveDuration, float t)
     {
         int count = Mathf.RoundToInt(Mathf.Lerp(entry.minSpawnCount, entry.maxSpawnCount, t));
         count = Mathf.Max(1, count);
@@ -230,10 +236,7 @@ public class ProceduralLevel : SpawnManager
 
     protected override void Update()
     {
-        if (nextWaveTimer > 0f)
-        {
-            nextWaveTimer -= Time.deltaTime;
-            GameHUD.instance?.SetNextWaveTimer(nextWaveTimer);
-        }
+        float remaining = nextWaveTime < 0f ? -1f : nextWaveTime - Time.time;
+        GameHUD.instance?.SetNextWaveTimer(remaining);
     }
 }

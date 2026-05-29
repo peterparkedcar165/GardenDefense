@@ -44,7 +44,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
@@ -69,10 +69,10 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseFloralGlowHeal: 6
+  baseFloralGlowHeal: 5
   baseSkillHealingMultiplier: 0.03
   path1AttackDamagePerLevel: 7
   path1FireDamagePerLevel: 0.1
   path2AttackRangePerLevel: 0.175
-  path3SkillDurationPerLevel: 3
-  path3HealPerLevel: 2
+  path3SkillDurationPerLevel: 5
+  path3HealPerLevel: 4

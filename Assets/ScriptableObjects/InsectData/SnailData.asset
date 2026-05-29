@@ -15,7 +15,8 @@ MonoBehaviour:
   displayName: Snail
   nameColor: {r: 0.5188679, g: 0.5188679, b: 0.40383586, a: 1}
   description: Slow, armored, and moist.
-  passiveDescription: Starts shielded, then gains speed when the shield breaks.
+  passiveDescription: Starts shielded. Whenever the Snail is shielded, it gains 60%
+    Physical Resistance. Otherwise, increases Movement Speed
   sprite: {fileID: 21300000, guid: 6e83769186f25154dab65705b4a8e62c, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d0a925c758eadd44eb3532b9a2eeee0f, type: 3}
   baseMaxHealth: 1200
@@ -23,15 +24,15 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.5
   baseAttackRange: 0.3
-  baseMovementSpeed: 0.5
-  startingShield: 600
+  baseMovementSpeed: 0.7
+  startingShield: 800
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseTenacity: 0.5
-  basePhysicalResistance: 0.6
+  basePhysicalResistance: 0
   baseMagicResistance: 0
   baseFireResistance: 0.5
   baseWaterResistance: 0.5

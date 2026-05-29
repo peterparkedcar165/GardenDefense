@@ -70,6 +70,8 @@ public class AcornSprout : Shooter
         obj.GetComponent<AcornBomb>()?.Initialize(activeRadius, attackDamage * activeDamageMultiplier, skillDuration, acornBombHealth, this);
     }
 
+    public override string GetName() => $"<b><color=green>{(data != null ? data.displayName : "Acorn Sprout")}</color></b>";
+
     public override string GetDescription()
     {
         return $"The {GetName()} shoots acorns at targets, dealing damage with a chance of stunning.";

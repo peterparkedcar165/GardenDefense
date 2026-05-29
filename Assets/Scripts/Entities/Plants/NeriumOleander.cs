@@ -90,6 +90,8 @@ public class NeriumOleander : Shooter
     public override void OnPath2Upgrade(int level) { }
     public override void OnPath3Upgrade(int level) { }
 
+    public override string GetName() => $"<b><color=purple>{(data != null ? data.displayName : "Nerium Oleander")}</color></b>";
+
     public override string GetDescription() =>
         $"The {GetName()} fires toxic petals that bounce between insects, applying <color=#9B59B6>Oleandic Toxin</color> which strips and immunizes them to their own buffs.";
 

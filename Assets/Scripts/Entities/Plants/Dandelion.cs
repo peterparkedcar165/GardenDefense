@@ -212,6 +212,8 @@ public class Dandelion : Shooter
         if (_windGustInstance != null) Destroy(_windGustInstance);
     }
 
+    public override string GetName() => $"<b><color=#B2EBF2>{(data != null ? data.displayName : "Dandelion")}</color></b>";
+
     public override string GetDescription() =>
         $"The {GetName()} releases waves of seeds that ride the wind, striking multiple targets at once.";
 
