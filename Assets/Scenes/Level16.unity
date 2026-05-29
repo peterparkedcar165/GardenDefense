@@ -613,6 +613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarknessManager
   isDark: 1
+  pitchBlack: 1
 --- !u!4 &316370015
 Transform:
   m_ObjectHideFlags: 0

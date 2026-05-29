@@ -6,6 +6,7 @@ public class FungalGlowEffect : StatusEffect
     private readonly float spreadRadius;
     private readonly float originalDuration;
     private LightFader _fader;
+    private const float LightRadius = 1.2f;
 
     public FungalGlowEffect(Entity target, float duration, int level, Entity source, float spreadRadius = 2f)
         : base(target, duration, level, source)
@@ -19,6 +20,14 @@ public class FungalGlowEffect : StatusEffect
     {
         _fader = GetOrCreateFader();
         _fader.FadeIn(0.3f);
+
+        // register as a light source so the lit insect (and any insect in its glow)
+        // is treated as illuminated in pitch black cave levels
+        if (DarknessManager.instance != null)
+        {
+            DarknessManager.UnregisterLightSource(_fader.transform);
+            DarknessManager.RegisterLightSource(_fader.transform, LightRadius);
+        }
     }
 
     private LightFader GetOrCreateFader()
@@ -51,12 +60,16 @@ public class FungalGlowEffect : StatusEffect
     public override void OnExpire()
     {
         if (_fader != null)
+        {
+            DarknessManager.UnregisterLightSource(_fader.transform);
             _fader.FadeOut(0.5f);
+        }
     }
 
     public override void OnTargetDied()
     {
         if (_fader == null) return;
+        DarknessManager.UnregisterLightSource(_fader.transform);
         _fader.transform.SetParent(null);
         _fader.FadeOut(1f, destroyOnComplete: true);
         _fader = null;

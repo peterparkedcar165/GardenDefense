@@ -157,6 +157,36 @@ public abstract class Insect : Entity, IAttackable
         TrackFacing();
         UpdateFacingSprite();
         DebugPathTile();
+        UpdateDarknessVisibility();
+    }
+
+    // in dark (cave) levels, hide the entire insect (body, health bar, shield, etc.)
+    // while it stands outside any emitted light, so the player only sees insects in
+    // illuminated areas. uses forceRenderingOff so it never fights enabled/SetActive
+    // logic elsewhere. visual only — movement, attacks, and targeting are unaffected
+    private float _darknessCheckTimer;
+    private const float darknessCheckInterval = 0.15f;
+    private Renderer[] _cachedRenderers;
+    private bool _renderersHidden;
+
+    private void UpdateDarknessVisibility()
+    {
+        if (isDying) return;
+
+        _darknessCheckTimer -= Time.deltaTime;
+        if (_darknessCheckTimer > 0f) return;
+        _darknessCheckTimer = darknessCheckInterval;
+
+        // only cave levels (pitchBlack) hide insects in shadow; other dark levels keep them visible
+        bool pitchBlack = DarknessManager.instance != null && DarknessManager.instance.pitchBlack;
+        bool shouldHide = pitchBlack && !DarknessManager.instance.IsIlluminated(transform.position);
+        if (shouldHide == _renderersHidden && _cachedRenderers != null) return;
+        _renderersHidden = shouldHide;
+
+        if (_cachedRenderers == null)
+            _cachedRenderers = GetComponentsInChildren<Renderer>(true);
+        foreach (Renderer r in _cachedRenderers)
+            if (r != null) r.forceRenderingOff = shouldHide;
     }
 
     private void TrackFacing()

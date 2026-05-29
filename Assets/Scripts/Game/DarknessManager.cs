@@ -6,6 +6,9 @@ public class DarknessManager : MonoBehaviour
 {
     public static DarknessManager instance;
     public bool isDark = false;
+    // true only for cave levels: insects standing outside any light are not rendered.
+    // leave false for nighttime/desert-night, where insects stay visible in shadow
+    public bool pitchBlack = false;
 
     private static readonly List<(Transform t, float radius)> _dynamicSources = new List<(Transform, float)>();
 
