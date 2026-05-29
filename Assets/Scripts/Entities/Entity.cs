@@ -550,6 +550,15 @@ public abstract class Entity : MonoBehaviour
     private Transform shieldFill;
 
     private static GameObject _healthBarPrefab;
+    private static Material _unlitHealthBarMat;
+
+    // built in unlit sprite material so plant health bars ignore 2D lighting
+    private static Material GetUnlitHealthBarMaterial()
+    {
+        if (_unlitHealthBarMat == null)
+            _unlitHealthBarMat = new Material(Shader.Find("Sprites/Default"));
+        return _unlitHealthBarMat;
+    }
 
     protected void SpawnHealthBar()
     {
@@ -598,6 +607,15 @@ public abstract class Entity : MonoBehaviour
             shieldSR.enabled = false;
             shieldFill = shieldFillObj.transform;
         }
+
+        // insects use the lit material so their bars fade in darkness; plants stay unlit
+        // so their bars are always visible. covers every renderer including the runtime ShieldFill
+        Material targetMat = this is Insect
+            ? (fillRenderer != null ? fillRenderer.sharedMaterial : null)
+            : GetUnlitHealthBarMaterial();
+        if (targetMat != null)
+            foreach (SpriteRenderer sr in healthBarInstance.GetComponentsInChildren<SpriteRenderer>(true))
+                sr.sharedMaterial = targetMat;
 
         healthBarInstance.SetActive(false);
     }
