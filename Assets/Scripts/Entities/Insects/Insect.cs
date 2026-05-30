@@ -438,6 +438,9 @@ public abstract class Insect : Entity, IAttackable
 
     public Vector3 GetAimPoint()
     {
+        // aim at the visual's world position, which follows vertical displacement (e.g. levitation);
+        // falls back to the AimPoint child or the root if there's no visual
+        if (visual != null) return visual.position;
         return aimPoint != null ? aimPoint.position : transform.position;
     }
 

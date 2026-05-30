@@ -2532,7 +2532,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1636942272707002615, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000723817
+      value: 0.0010042331
       objectReference: {fileID: 0}
     - target: {fileID: 1865476856580230889, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2940,7 +2940,7 @@ PrefabInstance:
       objectReference: {fileID: 881032879}
     - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
       propertyPath: 'allPlantData.Array.data[3]'
@@ -2994,6 +2994,10 @@ PrefabInstance:
       propertyPath: 'allPlantData.Array.data[15]'
       value: 
       objectReference: {fileID: 11400000, guid: 473796e09f4adde4a84b387d0c2448dc, type: 2}
+    - target: {fileID: 8921175689060877200, guid: e46f7e083e7171947b0b687ac290aba1, type: 3}
+      propertyPath: 'allPlantData.Array.data[16]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0fc6bff944cf898499d4b1a4f5f59b8e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

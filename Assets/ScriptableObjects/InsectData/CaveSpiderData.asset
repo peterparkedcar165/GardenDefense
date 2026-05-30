@@ -22,7 +22,7 @@ MonoBehaviour:
   baseAttackDamage: 20
   baseMagicPower: 0
   baseAttackSpeed: 1
-  baseAttackRange: 1
+  baseAttackRange: 0.5
   baseMovementSpeed: 1.3
   baseTargetingRange: 1.5
   startingShield: 0

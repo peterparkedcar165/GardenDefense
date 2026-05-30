@@ -6,6 +6,7 @@ public class GlowshroomData : PlantData
     [Header("Attack Splash")]
     public float splashRadius = 1.5f;
     public float splashDamageMultiplier = 0.5f;
+    public float splashDamageMPMultiplier = 0.5f;   // +50% splash multiplier per 100 Magic Power
 
     [Header("Passive Fungal Glow")]
     public float fungalGlowDuration = 6f;
@@ -15,6 +16,7 @@ public class GlowshroomData : PlantData
     [Header("Skill Flash")]
     public float lightRadiusMultiplier = 3f;
     public float blindDuration = 3f;
+    public float blindDurationMPMultiplier = 0.04f;   // +4s blind per 100 Magic Power
     public float blindAccuracyPenalty = 1f;
 
     [Header("Path 1 Scaling")]

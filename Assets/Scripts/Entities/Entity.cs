@@ -64,6 +64,7 @@ public abstract class Entity : MonoBehaviour
     public float baseCounterDamage;
     public float baseDebuffGivenDuration, baseBuffGivenDuration, baseBuffReceivedDuration, baseDebuffReceivedDuration;
     public float baseEvasion, baseAccuracy;
+    public float baseBonusCritChanceReceived, baseProjectileSpeed;
 
     public static event System.Action<Plant, DamageTag[]> OnPlantAttackHit;
 
@@ -88,6 +89,7 @@ public abstract class Entity : MonoBehaviour
     public bool debuffsFrozen;
     public bool bypassShields;
     public float evasion, accuracy;
+    public float bonusCritChanceReceived, projectileSpeed;
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -107,6 +109,7 @@ public abstract class Entity : MonoBehaviour
     public float counterDamageAdder;
     public float debuffGivenDurationAdder, buffGivenDurationAdder, buffReceivedDurationAdder, debuffReceivedDurationAdder;
     public float evasionAdder, accuracyAdder;
+    public float bonusCritChanceReceivedAdder, projectileSpeedAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -125,6 +128,7 @@ public abstract class Entity : MonoBehaviour
     public float counterDamageMultiplier;
     public float debuffGivenDurationMultiplier, buffGivenDurationMultiplier, buffReceivedDurationMultiplier, debuffReceivedDurationMultiplier;
     public float evasionMultiplier, accuracyMultiplier;
+    public float bonusCritChanceReceivedMultiplier, projectileSpeedMultiplier;
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
@@ -159,6 +163,8 @@ public abstract class Entity : MonoBehaviour
         iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
         criticalChance = baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier);
         criticalDamage = baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier);
+        bonusCritChanceReceived = baseBonusCritChanceReceived + bonusCritChanceReceivedAdder + (baseBonusCritChanceReceived * bonusCritChanceReceivedMultiplier);
+        projectileSpeed = baseProjectileSpeed + projectileSpeedAdder + (baseProjectileSpeed * projectileSpeedMultiplier);
         dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
         dotDamage = baseDotDamage + dotDamageAdder + (baseDotDamage * dotDamageMultiplier);
         elementalAffinity = baseelementalAffinity + elementalAffinityAdder + (baseelementalAffinity * elementalAffinityMultiplier);
@@ -411,7 +417,8 @@ public abstract class Entity : MonoBehaviour
         // if damage source can crit, then calculate if it crits or not
         if (canCrit)
         {
-            if (Random.value < source.criticalChance)
+            // the target can add to the attacker's crit chance (e.g. Levitating)
+            if (Random.value < source.criticalChance + bonusCritChanceReceived)
             {
                 finalDamage *= source.criticalDamage;
                 isCrit = true; // important for the damage indicator

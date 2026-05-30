@@ -53,7 +53,9 @@ public class QueenAnt : Ant
     {
         if (antPrefabs == null || antPrefabs.Length == 0) return;
         GameObject prefab = antPrefabs[Random.Range(0, antPrefabs.Length)];
-        GameObject antGO = Instantiate(prefab, transform.position, Quaternion.identity);
+        // spawn from where the queen visually is, not her root/prefab transform
+        Vector3 spawnPos = visual != null ? visual.position : transform.position;
+        GameObject antGO = Instantiate(prefab, spawnPos, Quaternion.identity);
         Insect ant = antGO.GetComponent<Insect>();
         if (ant != null)
         {

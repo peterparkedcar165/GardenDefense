@@ -1,0 +1,1989 @@
+fileFormatVersion: 2
+guid: 759a442b381ad244cb1e2e0741b05c12
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5983827663833873798
+    second: morningglory_0
+  - first:
+      213: 1737894442219721556
+    second: morningglory_1
+  - first:
+      213: -8176735074770093192
+    second: morningglory_2
+  - first:
+      213: -8811046639910320103
+    second: morningglory_3
+  - first:
+      213: 1280643039776165542
+    second: morningglory_4
+  - first:
+      213: 1131979962035489782
+    second: morningglory_5
+  - first:
+      213: -258970279466546523
+    second: morningglory_6
+  - first:
+      213: 3201329110936998758
+    second: morningglory_7
+  - first:
+      213: 6535398722603484953
+    second: morningglory_8
+  - first:
+      213: -7958387686303736380
+    second: morningglory_9
+  - first:
+      213: 2863554388308957876
+    second: morningglory_10
+  - first:
+      213: -8692515782467494479
+    second: morningglory_11
+  - first:
+      213: 3700047397803236798
+    second: morningglory_12
+  - first:
+      213: 1208355015747001009
+    second: morningglory_13
+  - first:
+      213: -624022229020460287
+    second: morningglory_14
+  - first:
+      213: -7216156218664256011
+    second: morningglory_15
+  - first:
+      213: -6717228195440080781
+    second: morningglory_16
+  - first:
+      213: 8139536717498777107
+    second: morningglory_17
+  - first:
+      213: 8992792120952405958
+    second: morningglory_18
+  - first:
+      213: -4252413832453766816
+    second: morningglory_19
+  - first:
+      213: 1899920208065901512
+    second: morningglory_20
+  - first:
+      213: -3730050443576582434
+    second: morningglory_21
+  - first:
+      213: 8220015228779944735
+    second: morningglory_22
+  - first:
+      213: -6658353720994823878
+    second: morningglory_23
+  - first:
+      213: -625930993142199467
+    second: morningglory_24
+  - first:
+      213: 2372011513069368170
+    second: morningglory_25
+  - first:
+      213: 267884009491212329
+    second: morningglory_26
+  - first:
+      213: -4265397048085049889
+    second: morningglory_27
+  - first:
+      213: -8960983743019504641
+    second: morningglory_28
+  - first:
+      213: 5341116200170785217
+    second: morningglory_29
+  - first:
+      213: 5293603065976122492
+    second: morningglory_30
+  - first:
+      213: -790948830279796860
+    second: morningglory_31
+  - first:
+      213: 3402959167476054200
+    second: morningglory_32
+  - first:
+      213: -5457585218896515350
+    second: morningglory_33
+  - first:
+      213: 1492572550548741964
+    second: morningglory_34
+  - first:
+      213: 3711928068786708929
+    second: morningglory_35
+  - first:
+      213: -5825770596895719888
+    second: morningglory_36
+  - first:
+      213: 2754331517785924646
+    second: morningglory_37
+  - first:
+      213: -5190180361230912058
+    second: morningglory_38
+  - first:
+      213: -2925638029242380259
+    second: morningglory_39
+  - first:
+      213: 3507830322044240122
+    second: morningglory_40
+  - first:
+      213: -2344491514377920515
+    second: morningglory_41
+  - first:
+      213: -5838094208696061295
+    second: morningglory_42
+  - first:
+      213: -1246746782547889640
+    second: morningglory_43
+  - first:
+      213: 3122786042890639679
+    second: morningglory_44
+  - first:
+      213: -8681267480627967168
+    second: morningglory_45
+  - first:
+      213: 1124079687191238591
+    second: morningglory_46
+  - first:
+      213: 3016345379735189702
+    second: morningglory_47
+  - first:
+      213: 2441610210171428218
+    second: morningglory_48
+  - first:
+      213: -1751813476265493817
+    second: morningglory_49
+  - first:
+      213: -674024146403108450
+    second: morningglory_50
+  - first:
+      213: 386107401828481540
+    second: morningglory_51
+  - first:
+      213: -3054993208676633230
+    second: morningglory_52
+  - first:
+      213: -5748472378526379984
+    second: morningglory_53
+  - first:
+      213: -6953488962322974045
+    second: morningglory_54
+  - first:
+      213: 8549807322183000958
+    second: morningglory_55
+  - first:
+      213: -5098824619663512707
+    second: morningglory_56
+  - first:
+      213: -2221583620926309590
+    second: morningglory_57
+  - first:
+      213: 7374154637370262276
+    second: morningglory_58
+  - first:
+      213: 6489963225090554891
+    second: morningglory_59
+  - first:
+      213: -5060820295557507441
+    second: morningglory_60
+  - first:
+      213: 1757044404135122382
+    second: morningglory_61
+  - first:
+      213: 1820383389181955087
+    second: morningglory_62
+  - first:
+      213: -756758639816208293
+    second: morningglory_63
+  - first:
+      213: 8882249042642145335
+    second: morningglory_64
+  - first:
+      213: -4954456947958232715
+    second: morningglory_65
+  - first:
+      213: 2409471871998955436
+    second: morningglory_66
+  - first:
+      213: 7330905859898217382
+    second: morningglory_67
+  - first:
+      213: -1025703082698538234
+    second: morningglory_68
+  - first:
+      213: -8378003033187384781
+    second: morningglory_69
+  - first:
+      213: -8935546267455361129
+    second: morningglory_70
+  - first:
+      213: -3333852745555930159
+    second: morningglory_71
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 900
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: morningglory_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 959
+        width: 33
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a72c604817c25fca0800000000000000
+      internalID: -5983827663833873798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_1
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 0
+        width: 1001
+        height: 1024
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 453d1a599cd3e1810800000000000000
+      internalID: 1737894442219721556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_2
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 1015
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87bf9dd85c6668e80800000000000000
+      internalID: -8176735074770093192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_3
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 983
+        width: 172
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9180fb093cfd8b580800000000000000
+      internalID: -8811046639910320103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_4
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 967
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ae4fed3f02c5c110800000000000000
+      internalID: 1280643039776165542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_5
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 959
+        width: 73
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fb4cf927c995bf00800000000000000
+      internalID: 1131979962035489782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 885
+        width: 17
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5aa430527e3f76cf0800000000000000
+      internalID: -258970279466546523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_7
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 898
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66354827dd76d6c20800000000000000
+      internalID: 3201329110936998758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_8
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 911
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 917825e138662ba50800000000000000
+      internalID: 6535398722603484953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_9
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 877
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cdd50d80902e8190800000000000000
+      internalID: -7958387686303736380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_10
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 898
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ba9a2e5b836db720800000000000000
+      internalID: 2863554388308957876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 837
+        width: 17
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bd5c8563fafd5780800000000000000
+      internalID: -8692515782467494479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_12
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 877
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebd9b2e2185395330800000000000000
+      internalID: 3700047397803236798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_13
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 826
+        width: 44
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ba59241c70f4c010800000000000000
+      internalID: 1208355015747001009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_14
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 751
+        width: 89
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10bb943c6170757f0800000000000000
+      internalID: -624022229020460287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_15
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 834
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fd7ac6e6201bdb90800000000000000
+      internalID: -7216156218664256011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 815
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3784e8fab8c97c2a0800000000000000
+      internalID: -6717228195440080781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_17
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 823
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31e73caf48175f070800000000000000
+      internalID: 8139536717498777107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 791
+        width: 17
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cfbc44c9c0dccc70800000000000000
+      internalID: 8992792120952405958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_19
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 719
+        width: 17
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 061c2ae46246cf4c0800000000000000
+      internalID: -4252413832453766816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_20
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 767
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c3ba5fec5fdd5a10800000000000000
+      internalID: 1899920208065901512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_21
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 762
+        width: 34
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ede545c52e23c3cc0800000000000000
+      internalID: -3730050443576582434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_22
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 751
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1bdabf8c4c531270800000000000000
+      internalID: 8220015228779944735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_23
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 714
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3104377196c893a0800000000000000
+      internalID: -6658353720994823878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 639
+        width: 17
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55b0adbf31f3057f0800000000000000
+      internalID: -625930993142199467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_25
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 690
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a63f2a757e31be020800000000000000
+      internalID: 2372011513069368170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_26
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 679
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9282bba5617b7b300800000000000000
+      internalID: 267884009491212329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_27
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 647
+        width: 66
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdd04eadbf34ec4c0800000000000000
+      internalID: -4265397048085049889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 575
+        width: 17
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffba54753c034a380800000000000000
+      internalID: -8960983743019504641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_29
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 615
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c98347b2e47f1a40800000000000000
+      internalID: 5341116200170785217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_30
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 599
+        width: 44
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7cec6911f7a67940800000000000000
+      internalID: 5293603065976122492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_31
+      rect:
+        serializedVersion: 2
+        x: 962
+        y: 615
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48779afba3cf505f0800000000000000
+      internalID: -790948830279796860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_32
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 607
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b8b19a455db93f20800000000000000
+      internalID: 3402959167476054200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_33
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 599
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aee2040b823c244b0800000000000000
+      internalID: -5457585218896515350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_34
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 301
+        width: 17
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4fd4f4a3dea6b410800000000000000
+      internalID: 1492572550548741964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_35
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 551
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c165d379ea638330800000000000000
+      internalID: 3711928068786708929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_36
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 535
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03e7d152284b62fa0800000000000000
+      internalID: -5825770596895719888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_37
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 447
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 624ea4f1ce9593620800000000000000
+      internalID: 2754331517785924646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_38
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 471
+        width: 28
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c57f90d576c8f7b0800000000000000
+      internalID: -5190180361230912058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_39
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 463
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1052ad86bb0667d0800000000000000
+      internalID: -2925638029242380259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_40
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 453
+        width: 60
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af08ac5b7115ea030800000000000000
+      internalID: 3507830322044240122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_41
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 453
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dff169aa361b67fd0800000000000000
+      internalID: -2344491514377920515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_42
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 389
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 192f76daf3ceafea0800000000000000
+      internalID: -5838094208696061295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_43
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 375
+        width: 41
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8123f55286aa2bee0800000000000000
+      internalID: -1246746782547889640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_44
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 335
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f395b0c5c5d565b20800000000000000
+      internalID: 3122786042890639679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_45
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 314
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04b0501c831f58780800000000000000
+      internalID: -8681267480627967168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_46
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 325
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb714461588899f00800000000000000
+      internalID: 1124079687191238591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_47
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 314
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c8b10f34263cd920800000000000000
+      internalID: 3016345379735189702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_48
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 314
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7d1c39cc8752e120800000000000000
+      internalID: 2441610210171428218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_49
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 319
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7caf372ccee40b7e0800000000000000
+      internalID: -1751813476265493817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_50
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 309
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e995b972c9265a6f0800000000000000
+      internalID: -674024146403108450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_51
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 303
+        width: 18
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40ab223e2aabb5500800000000000000
+      internalID: 386107401828481540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 221
+        width: 17
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 275399ddcdb7a95d0800000000000000
+      internalID: -3054993208676633230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_53
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 271
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0305ac414d25930b0800000000000000
+      internalID: -5748472378526379984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_54
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 261
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3aab32341ae308f90800000000000000
+      internalID: -6953488962322974045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_55
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 247
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7360c0f57407a670800000000000000
+      internalID: 8549807322183000958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_56
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 255
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7ba0fce5065d39b0800000000000000
+      internalID: -5098824619663512707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_57
+      rect:
+        serializedVersion: 2
+        x: 882
+        y: 239
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2b7cdb97795b21e0800000000000000
+      internalID: -2221583620926309590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_58
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 247
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 403014f9292465660800000000000000
+      internalID: 7374154637370262276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_59
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 239
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0cfedcfa2bf01a50800000000000000
+      internalID: 6489963225090554891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_60
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 229
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f86153b21ca54c9b0800000000000000
+      internalID: -5060820295557507441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_61
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 159
+        width: 17
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec5df0b8396426810800000000000000
+      internalID: 1757044404135122382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_62
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 186
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0c46333c0d434910800000000000000
+      internalID: 1820383389181955087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_63
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 178
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b501c0dc6047f75f0800000000000000
+      internalID: -756758639816208293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_64
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 167
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7301d31b176144b70800000000000000
+      internalID: 8882249042642145335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_65
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 167
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 579cbf9d7ab3e3bb0800000000000000
+      internalID: -4954456947958232715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_66
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 17
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caf0bc2d6e9207120800000000000000
+      internalID: 2409471871998955436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_67
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 95
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a3101de90c9cb560800000000000000
+      internalID: 7330905859898217382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_68
+      rect:
+        serializedVersion: 2
+        x: 892
+        y: 102
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6030bbe0b78f3c1f0800000000000000
+      internalID: -1025703082698538234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_69
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 87
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33288bf31aa5bbb80800000000000000
+      internalID: -8378003033187384781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_70
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 23
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79f614623009ef380800000000000000
+      internalID: -8935546267455361129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: morningglory_71
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 0
+        width: 111
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d39da76796cbb1d0800000000000000
+      internalID: -3333852745555930159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      morningglory_0: -5983827663833873798
+      morningglory_1: 1737894442219721556
+      morningglory_10: 2863554388308957876
+      morningglory_11: -8692515782467494479
+      morningglory_12: 3700047397803236798
+      morningglory_13: 1208355015747001009
+      morningglory_14: -624022229020460287
+      morningglory_15: -7216156218664256011
+      morningglory_16: -6717228195440080781
+      morningglory_17: 8139536717498777107
+      morningglory_18: 8992792120952405958
+      morningglory_19: -4252413832453766816
+      morningglory_2: -8176735074770093192
+      morningglory_20: 1899920208065901512
+      morningglory_21: -3730050443576582434
+      morningglory_22: 8220015228779944735
+      morningglory_23: -6658353720994823878
+      morningglory_24: -625930993142199467
+      morningglory_25: 2372011513069368170
+      morningglory_26: 267884009491212329
+      morningglory_27: -4265397048085049889
+      morningglory_28: -8960983743019504641
+      morningglory_29: 5341116200170785217
+      morningglory_3: -8811046639910320103
+      morningglory_30: 5293603065976122492
+      morningglory_31: -790948830279796860
+      morningglory_32: 3402959167476054200
+      morningglory_33: -5457585218896515350
+      morningglory_34: 1492572550548741964
+      morningglory_35: 3711928068786708929
+      morningglory_36: -5825770596895719888
+      morningglory_37: 2754331517785924646
+      morningglory_38: -5190180361230912058
+      morningglory_39: -2925638029242380259
+      morningglory_4: 1280643039776165542
+      morningglory_40: 3507830322044240122
+      morningglory_41: -2344491514377920515
+      morningglory_42: -5838094208696061295
+      morningglory_43: -1246746782547889640
+      morningglory_44: 3122786042890639679
+      morningglory_45: -8681267480627967168
+      morningglory_46: 1124079687191238591
+      morningglory_47: 3016345379735189702
+      morningglory_48: 2441610210171428218
+      morningglory_49: -1751813476265493817
+      morningglory_5: 1131979962035489782
+      morningglory_50: -674024146403108450
+      morningglory_51: 386107401828481540
+      morningglory_52: -3054993208676633230
+      morningglory_53: -5748472378526379984
+      morningglory_54: -6953488962322974045
+      morningglory_55: 8549807322183000958
+      morningglory_56: -5098824619663512707
+      morningglory_57: -2221583620926309590
+      morningglory_58: 7374154637370262276
+      morningglory_59: 6489963225090554891
+      morningglory_6: -258970279466546523
+      morningglory_60: -5060820295557507441
+      morningglory_61: 1757044404135122382
+      morningglory_62: 1820383389181955087
+      morningglory_63: -756758639816208293
+      morningglory_64: 8882249042642145335
+      morningglory_65: -4954456947958232715
+      morningglory_66: 2409471871998955436
+      morningglory_67: 7330905859898217382
+      morningglory_68: -1025703082698538234
+      morningglory_69: -8378003033187384781
+      morningglory_7: 3201329110936998758
+      morningglory_70: -8935546267455361129
+      morningglory_71: -3333852745555930159
+      morningglory_8: 6535398722603484953
+      morningglory_9: -7958387686303736380
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

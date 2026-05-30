@@ -6,14 +6,11 @@ public abstract class Lobber : Plant
     public GameObject projectilePrefab;
 
     [Header("Lobber")]
-    public float baseProjectileSpeed = 4f;
-    public float projectileSpeed;
     public float baseAoERadius = 1.5f;
     public float aoERadius;
     public float minFlightDuration = 0.5f;
     public float projectileHeight = 1.2f;
 
-    protected float projectileSpeedAdder;
     protected float aoERadiusAdder;
 
     protected override void Awake()
@@ -31,7 +28,6 @@ public abstract class Lobber : Plant
     public override void UpdateStats()
     {
         base.UpdateStats();
-        projectileSpeed = baseProjectileSpeed + projectileSpeedAdder;
         aoERadius = baseAoERadius + aoERadiusAdder;
     }
 

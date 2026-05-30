@@ -5,17 +5,16 @@ public abstract class Shooter : Plant
 {
     public override bool UsesTargeting => true;
     public GameObject projectilePrefab;
-    // base and final
-    public float baseProjectileSpeed, projectileSpeed, baseMaxRange, maxRange;
+    // base and final (projectileSpeed lives on Entity now)
+    public float baseMaxRange, maxRange;
     public int basePiercing, piercing;
     // bonuses
-    protected float projectileSpeedAdder, projectileSpeedMultiplier, maxRangeAdder, maxRangeMultiplier;
+    protected float maxRangeAdder, maxRangeMultiplier;
     public int piercingAdder;
 
     public override void UpdateStats()
     {
         base.UpdateStats();
-        projectileSpeed = baseProjectileSpeed + projectileSpeedAdder + (baseProjectileSpeed * projectileSpeedMultiplier);
         maxRange = Mathf.Max(baseMaxRange + maxRangeAdder + (baseMaxRange * maxRangeMultiplier), attackRange);
         piercing = basePiercing + piercingAdder;
     }

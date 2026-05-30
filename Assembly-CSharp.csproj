@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\Scripts\Environment\WaterZone.cs" />
+    <Compile Include="Assets\Scripts\Skills\UpdraftField.cs" />
     <Compile Include="Assets\Scripts\Spawning\WeatherManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aura.cs" />
     <Compile Include="Assets\Scripts\UI\PlantBar.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\TailwindEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\EatingAcornEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\WebbedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\Projectile.cs" />
@@ -167,6 +169,7 @@
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HardCC\LevitatingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
@@ -195,6 +198,7 @@
     <Compile Include="Assets\Scripts\Skills\SoothingRain.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level2.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\SproutEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />
@@ -220,6 +224,7 @@
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AeoniumData.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
@@ -237,6 +242,7 @@
     <Compile Include="Assets\Scripts\Environment\ObstacleMarker.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OffPathSlownessEffect.cs" />
     <Compile Include="Assets\Scripts\PlantData.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\MorningGloryData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SnowExposedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusTauntingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlindEffect.cs" />

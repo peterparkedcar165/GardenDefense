@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Dazzling
+  fertilizerName: Airplayer
   stats:
-  - statType: 33
+  - statType: 22
     value: 0.43
   - statType: 14
     value: 0.42
-  - statType: 32
-    value: 100
+  - statType: 33
+    value: 0.47
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

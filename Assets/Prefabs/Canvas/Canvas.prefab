@@ -3617,8 +3617,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Select a Fertilizer
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fda35cd0a343e284480d9962ec2c84f5, type: 2}
+  m_sharedMaterial: {fileID: -2742453356671287368, guid: fda35cd0a343e284480d9962ec2c84f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7839,7 +7839,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[0]'
@@ -7905,6 +7905,10 @@ PrefabInstance:
       propertyPath: 'allPlantData.Array.data[15]'
       value: 
       objectReference: {fileID: 11400000, guid: 473796e09f4adde4a84b387d0c2448dc, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[16]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0fc6bff944cf898499d4b1a4f5f59b8e, type: 2}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

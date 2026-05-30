@@ -9,21 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bc344446b9f39642a17623f9659b655, type: 3}
-  m_Name: GlowshroomData
-  m_EditorClassIdentifier: Assembly-CSharp::GlowshroomData
-  plantPrefab: {fileID: 8268152863519944884, guid: 3499293a2aa479e4bbf5458984017e38, type: 3}
-  icon: {fileID: 21300000, guid: ce6df9bd969316d46958cdba3d27e509, type: 3}
-  plantName: Glowshroom
-  displayName: Glowshroom
-  elementalType: 2
+  m_Script: {fileID: 11500000, guid: a4fad45f657b61b4a9d5e13f27169085, type: 3}
+  m_Name: MorningGloryData
+  m_EditorClassIdentifier: Assembly-CSharp::MorningGloryData
+  plantPrefab: {fileID: 2585263713049020851, guid: 022e2b9af12fa484da4ec76a34e7f2c7, type: 3}
+  icon: {fileID: 21300000, guid: 759a442b381ad244cb1e2e0741b05c12, type: 3}
+  plantName: MorningGlory
+  displayName: Morning Glory
+  elementalType: 5
   damageType: 1
-  sunCost: 65
+  sunCost: 110
   baseMaxHealth: 200
-  baseAttackDamage: 20
+  baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 0.5
-  baseAttackRange: 3
+  baseAttackSpeed: 0.7
+  baseAttackRange: 3.5
   startingShield: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -54,32 +54,33 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
-  baseProjectileSpeed: 4
-  baseMaxRange: 20
+  baseProjectileSpeed: 20
+  baseMaxRange: 99
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
-  basePassiveDuration: 6
+  basePassiveDuration: 0
   baseSkillCooldown: 15
-  baseSkillDuration: 6
-  baseSkillRadius: 3
+  baseSkillDuration: 0
+  baseSkillRadius: 1
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  splashRadius: 2
-  splashDamageMultiplier: 0.5
-  fungalGlowDuration: 4
-  fungalGlowSpreadRadius: 2
-  passiveCooldown: 4
-  lightRadiusMultiplier: 2
-  blindDuration: 4
-  blindAccuracyPenalty: 1
+  projectileSpeedDamageScale: 2.5
   path1AttackDamagePerLevel: 12
-  path1AttackRangePerLevel: 0.15
-  path2FungalGlowDurationPerLevel: 3
-  path2SpreadRadiusPerLevel: 0.15
-  path3BlindDurationPerLevel: 3
-  path3SkillDurationPerLevel: 3
+  path1AttackRangePerLevel: 0.2
+  baseAttackSpeedBonus: 0.16
+  baseProjectileSpeedBonus: 0.1
+  path2AttackSpeedBonusPerLevel: 0.12
+  path2ProjectileSpeedBonusPerLevel: 0.075
+  baseFieldDuration: 8
+  path3FieldDurationPerLevel: 1
+  fieldRadius: 2
+  path3RadiusPerLevel: 0.2
+  liftForce: 3
+  liftMaxHeight: 3
+  baseLevitateCritBonus: 0.15
+  path3CritBonusPerLevel: 0.075
