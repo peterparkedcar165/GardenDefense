@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class GlowingMushroomProjectile : Projectile
+public class GlowshroomProjectile : Projectile
 {
-    private GlowingMushroom _mushroom;
+    private Glowshroom _mushroom;
     private float _splashRadius;
     private float _splashMult;
     private Insect _target;
 
     public void Initialize(Vector3 target, float damage, float speed, float maxRange, int piercing,
-                           DamageType damageType, ElementalType elementalType, GlowingMushroom source,
+                           DamageType damageType, ElementalType elementalType, Glowshroom source,
                            float splashRadius, float splashMult)
     {
         base.Initialize(target, damage, speed, maxRange, piercing, damageType, elementalType, source);

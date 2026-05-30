@@ -6,6 +6,5 @@ public class Wasp : FlyingInsect
     {
         base.Awake();
         LoadData();
-        targetingRange = 1.5f;
     }
 }

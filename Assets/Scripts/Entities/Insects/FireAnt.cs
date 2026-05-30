@@ -11,7 +11,6 @@ public class FireAnt : Ant
         base.Awake();
         LoadData();
         aggressivity   = Aggressivity.Medium;
-        targetingRange = 1.5f;
         if (FAData != null)
             tempIncreasePerHit = FAData.tempIncreasePerHit;
     }

@@ -98,6 +98,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\EatingAcornEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HardCC\WebbedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level3.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Begonia.cs" />
@@ -116,7 +117,6 @@
     <Compile Include="Assets\Scripts\StatusEffect\BrittleEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\LeafRangerData.cs" />
     <Compile Include="Assets\Scripts\Skills\BubblePrison.cs" />
-    <Compile Include="Assets\Scripts\Entities\Plants\GlowingMushroom.cs" />
     <Compile Include="Assets\Scripts\Skills\Geyser.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
@@ -158,6 +158,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\GlowshroomProjectile.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
     <Compile Include="Assets\Scripts\GridManagers\CaveGridManager.cs" />
     <Compile Include="Assets\Scripts\Spawning\ThreatType.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\SilenceEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\NeriumOleanderData.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
@@ -212,7 +214,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ChillEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
-    <Compile Include="Assets\Scripts\PlantDataTypes\GlowingMushroomData.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BegoniaProjectile.cs" />
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
@@ -223,7 +225,6 @@
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\FireAntData.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FireAnt.cs" />
-    <Compile Include="Assets\Scripts\Entities\Projectiles\GlowingMushroomProjectile.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\KnockUpEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
@@ -252,6 +253,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\OleandicToxinEffect.cs" />
     <Compile Include="Assets\Scripts\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\CaveSpider.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
     <Compile Include="Assets\Scripts\UI\EntityInfoPanel.cs" />
@@ -269,6 +271,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Holly.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\WaterlilyData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Glowshroom.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\StatusIndicator.cs" />
     <Compile Include="Assets\Scripts\DoTAggregator.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DesertLocustData.cs" />

@@ -17,13 +17,15 @@ public class CaveGridManager : MonoBehaviour
     [SerializeField] private Tilemap waterTilemap;
     [SerializeField] private Tilemap highgroundGroundTilemap;
     [SerializeField] private Tilemap highgroundWaterTilemap;
-    [SerializeField] private Tilemap lightTilemap;
+    [SerializeField] private Tilemap lightGroundTilemap;
+    [SerializeField] private Tilemap lightAirTilemap;
+    [SerializeField] private Tilemap lightColliderTilemap;
 
     [Header("Cave Lights")]
-    [SerializeField] private float lightRadius       = 3f;
-    [SerializeField] private float lightInnerRadius  = 1.2f;
-    [SerializeField] private float lightIntensity    = 0.65f;
-    [SerializeField] private float lightFalloff      = 0.2f;
+    private float lightRadius = 2f;
+    private float lightInnerRadius  = 1.2f;
+    private float lightIntensity    = 0.35f;
+    private float lightFalloff      = 0.2f;
 
     void Start()
     {
@@ -87,10 +89,17 @@ public class CaveGridManager : MonoBehaviour
 
     private void SpawnLightTilemapLights()
     {
+        int[] sortingLayerIDs = GetAllSortingLayerIDs();
+        SpawnLightsFrom(lightGroundTilemap, sortingLayerIDs);
+        SpawnLightsFrom(lightAirTilemap, sortingLayerIDs);
+        SpawnLightsFrom(lightColliderTilemap, sortingLayerIDs);
+    }
+
+    private void SpawnLightsFrom(Tilemap lightTilemap, int[] sortingLayerIDs)
+    {
         if (lightTilemap == null) return;
 
         BoundsInt bounds = lightTilemap.cellBounds;
-        int[] sortingLayerIDs = GetAllSortingLayerIDs();
 
         foreach (Vector3Int cell in bounds.allPositionsWithin)
         {

@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GlowingMushroomData", menuName = "Scriptable Objects/PlantData/GlowingMushroom")]
-public class GlowingMushroomData : PlantData
+[CreateAssetMenu(fileName = "GlowshroomData", menuName = "Scriptable Objects/PlantData/Glowshroom")]
+public class GlowshroomData : PlantData
 {
     [Header("Attack Splash")]
     public float splashRadius = 1.5f;

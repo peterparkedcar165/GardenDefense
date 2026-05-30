@@ -44,7 +44,7 @@ public abstract class Lobber : Plant
         {
             attackCooldownTimer += Time.deltaTime;
         }
-        else
+        else if (!IsStunned)
         {
             GameObject target = FindLobberTarget();
             if (target != null)

@@ -68,6 +68,13 @@ public abstract class Plant : Entity, IAttackable
     protected virtual bool ShowLight => DarknessManager.instance != null;
     protected virtual bool ShowDarkCircle => true;
 
+    // stunned plants (e.g. Webbed by a Cave Spider) cannot attack
+    public bool IsStunned => HasEffect<HardCrowdControl>();
+
+    // silenced plants cannot cast their Skill. any HardCrowdControl also silences,
+    // without the plant carrying the Silence effect itself
+    public bool IsSilenced => HasEffect<SilenceEffect>() || HasEffect<HardCrowdControl>();
+
     public override void UpdateStats()
     {
         base.UpdateStats();
@@ -139,7 +146,7 @@ public abstract class Plant : Entity, IAttackable
     public float baseSkillRadius, skillRadius, skillRadiusAdder, skillRadiusMultiplier;
     public float baseSkillDamageMultiplier, skillDamageMultiplier, skillDamageMultiplierAdder;
     public float baseSkillHealth, skillHealth;
-    public bool SkillReady => path3Unlocked && skillCooldownTimer <= 0;
+    public bool SkillReady => path3Unlocked && skillCooldownTimer <= 0 && !IsSilenced;
 
 
     [Header("Paths")]

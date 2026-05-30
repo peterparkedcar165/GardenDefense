@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7583304469d80404c865070d0ca44501, type: 3}
-  m_Name: FruitFlyData
+  m_Name: CaveSpiderData
   m_EditorClassIdentifier: Assembly-CSharp::InsectData
-  displayName: Fruit Fly
-  nameColor: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
-  description: Fast but vulnerable
-  passiveDescription: Flies at very high speed, but gets knocked out easily
-  sprite: {fileID: 21300000, guid: f1901fcfcdedfe44a9982814b2eb01f2, type: 3}
-  insectPrefab: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
-  baseMaxHealth: 100
-  baseAttackDamage: 10
+  displayName: Cave Spider
+  nameColor: {r: 0.33962262, g: 0.13937344, b: 0.13937344, a: 1}
+  description: Fast traveler that webs plants
+  passiveDescription: 'Attacks against plants inflict Webbed, restricting attacks. '
+  sprite: {fileID: 21300000, guid: 251fe8e3774b8284f8432e99f7ee7e40, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: 7392a9b745c16b548b662ff70c43da6b, type: 3}
+  baseMaxHealth: 250
+  baseAttackDamage: 20
   baseMagicPower: 0
   baseAttackSpeed: 1
-  baseAttackRange: 0.3
-  baseMovementSpeed: 1.4
+  baseAttackRange: 1
+  baseMovementSpeed: 1.3
   baseTargetingRange: 1.5
   startingShield: 0
   attackDamageType: 0
-  attackElementalType: 6
+  attackElementalType: 3
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -36,15 +36,15 @@ MonoBehaviour:
   baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
-  basePoisonResistance: 0
+  basePoisonResistance: 0.33
   baseIceResistance: 0
   baseNatureResistance: 0
   baseWindResistance: 0
-  baseDotResistance: 0
-  threatValue: 1
+  baseDotResistance: 0.1
+  threatValue: 1.2
   threatType: 0
-  sunDrop: 4
-  aggressivity: 0
+  sunDrop: 7
+  aggressivity: 1
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0

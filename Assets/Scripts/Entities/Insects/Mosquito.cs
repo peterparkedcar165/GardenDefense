@@ -4,6 +4,5 @@ public class Mosquito : FlyingInsect
     {
         base.Awake();
         LoadData();
-        targetingRange = 2.5f;
     }
 }

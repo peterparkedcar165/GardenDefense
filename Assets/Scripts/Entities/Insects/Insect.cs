@@ -634,6 +634,7 @@ public abstract class Insect : Entity, IAttackable
         baseAttackSpeed        = data.baseAttackSpeed;
         baseAttackRange        = data.baseAttackRange;
         baseMovementSpeed      = data.baseMovementSpeed;
+        targetingRange         = data.baseTargetingRange;
         baseLifesteal          = data.baseLifesteal;
         basePhysicalDamage     = data.basePhysicalDamage;
         baseMagicDamage        = data.baseMagicDamage;

@@ -24,6 +24,7 @@ MonoBehaviour:
   baseAttackSpeed: 0.8
   baseAttackRange: 1
   baseMovementSpeed: 0.8
+  baseTargetingRange: 2
   startingShield: 0
   attackDamageType: 0
   attackElementalType: 3

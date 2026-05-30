@@ -3,9 +3,9 @@ using UnityEngine.Rendering.Universal;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GlowingMushroom : Shooter
+public class Glowshroom : Shooter
 {
-    private GlowingMushroomData GMData => data as GlowingMushroomData;
+    private GlowshroomData GMData => data as GlowshroomData;
     protected override float LightIntensity => 1f;
 
     private bool _lightColored = false;
@@ -35,7 +35,7 @@ public class GlowingMushroom : Shooter
 
         GameObject targetGO = FindTarget();
         GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        GlowingMushroomProjectile bolt = proj.GetComponent<GlowingMushroomProjectile>();
+        GlowshroomProjectile bolt = proj.GetComponent<GlowshroomProjectile>();
         if (bolt != null)
         {
             bolt.SetTarget(targetGO);
@@ -129,7 +129,7 @@ public class GlowingMushroom : Shooter
         baseSkillDuration = data.baseSkillDuration + (GMData?.path3SkillDurationPerLevel ?? 1f) * level;
     }
 
-    public override string GetName() => "<b><color=green>Glowing Mushroom</color></b>";
+    public override string GetName() => "<b><color=green>Glowshroom</color></b>";
 
     public override string GetDescription() =>
         $"The {GetName()} is a bioluminescent cave fungus that illuminates the darkness, infects insects with a spreading glow, and blinds them with a sudden flash of light.";

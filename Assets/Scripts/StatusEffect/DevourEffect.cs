@@ -18,7 +18,9 @@ public class DevourEffect : StatusEffect
     public void AddStack(float amount)
     {
         totalReduction += amount;
-        target.maxHealth -= amount;
+        // modify the adder so UpdateStats keeps the reduction every frame instead of overwriting it
+        target.maxHealthAdder -= amount;
+        target.UpdateStats();
         target.health = Mathf.Min(target.health, target.maxHealth);
         duration = baseDuration;
     }
@@ -27,7 +29,7 @@ public class DevourEffect : StatusEffect
 
     public override void OnExpire()
     {
-        target.maxHealth += totalReduction;
+        target.maxHealthAdder += totalReduction;
         totalReduction = 0f;
     }
 

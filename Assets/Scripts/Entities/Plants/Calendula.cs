@@ -28,7 +28,7 @@ public class Calendula : Aura
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else if (HasInsectsInRange())
+        else if (!IsStunned && HasInsectsInRange())
             Attack();
     }
 

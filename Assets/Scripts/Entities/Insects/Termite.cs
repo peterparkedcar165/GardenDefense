@@ -17,7 +17,6 @@ public class Termite : Insect
         base.Awake();
         LoadData();
         aggressivity   = Aggressivity.High;
-        targetingRange = 1f;
     }
 
     protected override void Start()

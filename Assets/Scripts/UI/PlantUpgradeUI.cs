@@ -288,7 +288,12 @@ public class PlantUpgradeUI : EntityInfoPanel
         bool ready = selectedPlant.SkillReady;
         skillButton.interactable = ready;
         if (skillCooldownText != null)
-            skillCooldownText.text = ready ? "Q - Use Skill" : $"{Mathf.CeilToInt(selectedPlant.skillCooldownTimer)}s";
+        {
+            if (selectedPlant.IsSilenced)
+                skillCooldownText.text = "SILENCED";
+            else
+                skillCooldownText.text = ready ? "Skill (Q)" : $"{Mathf.CeilToInt(selectedPlant.skillCooldownTimer)}s";
+        }
     }
 
     // Button callbacks — wired in Inspector

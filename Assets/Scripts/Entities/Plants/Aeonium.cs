@@ -77,7 +77,7 @@ public class Aeonium : Aura
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else
+        else if (!IsStunned)
             Attack();
 
         if (skillRangeIndicator != null)

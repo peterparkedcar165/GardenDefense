@@ -7,6 +7,5 @@ public class DarklingBeetle : Insect
         base.Awake();
         LoadData();
         aggressivity   = Aggressivity.Medium;
-        targetingRange = 2f;
     }
 }

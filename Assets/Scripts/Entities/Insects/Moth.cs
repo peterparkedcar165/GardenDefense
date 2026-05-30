@@ -10,7 +10,6 @@ public class Moth : FlyingInsect
     {
         base.Awake();
         LoadData();
-        targetingRange = 2.5f;
     }
 
     public override IAttackable target

@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 549939264595078635}
   - component: {fileID: 2473813828596248707}
   m_Layer: 3
-  m_Name: GlowingMushroomProjectile
+  m_Name: GlowshroomProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59d062195ab0faf479268be48ad794dc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GlowingMushroomProjectile
+  m_EditorClassIdentifier: Assembly-CSharp::GlowshroomProjectile
   audioSource: {fileID: 0}
   hit: {fileID: 0}
   minPitch: 0.9

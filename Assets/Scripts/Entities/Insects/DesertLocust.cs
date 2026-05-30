@@ -17,7 +17,8 @@ public class DesertLocust : Insect
         IAttackable currentTarget = target;
         base.Attack();
 
-        if (currentTarget is Plant plant && plant.IsAlive)
+        // a blinded locust can't latch on to devour
+        if (currentTarget is Plant plant && plant.IsAlive && !HasEffect<BlindEffect>())
             ApplyDevour(plant);
     }
 
