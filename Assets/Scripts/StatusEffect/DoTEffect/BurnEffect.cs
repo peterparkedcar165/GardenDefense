@@ -80,10 +80,13 @@ public class BurnEffect : DoTEffect
         tickTimer += deltaTime;
         if (tickTimer >= tickInterval)
         {
+            // Flammable (from the Stargazer) amplifies Burn damage per stack
+            float flammable = target.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
+            float tick = damagePerSecond * tickInterval * flammable;
             if (source != null)
-                target.Damage(damagePerSecond * tickInterval, DamageType.Magic, ElementalType.Fire, source, false, tickTags);
+                target.Damage(tick, DamageType.Magic, ElementalType.Fire, source, false, tickTags);
             else
-                target.Damage(damagePerSecond * tickInterval, DamageType.Magic, ElementalType.Fire, tickTags);
+                target.Damage(tick, DamageType.Magic, ElementalType.Fire, tickTags);
             tickTimer -= tickInterval;
         }
     }
