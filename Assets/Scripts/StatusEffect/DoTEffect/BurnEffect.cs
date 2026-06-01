@@ -4,7 +4,7 @@ public class BurnEffect : DoTEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.05f, mpPerSecond = 0.36f;
+    public float healthPerSecond = 0.03f, mpPerSecond = 0.12f, flatPerSecond = 4f;
     private float cachedMaxHealth;
     private float cachedMagicPower;
     private float cachedelementalAffinity;
@@ -16,6 +16,8 @@ public class BurnEffect : DoTEffect
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
         tickInterval = 0.5f;
+        // the source can extend the Burns it causes (Stargazer passive)
+        if (source != null) this.duration *= 1f + source.burnDurationBonus;
     }
 
     public override string GetName() => "<color=orange>Burn</color>";
@@ -24,8 +26,8 @@ public class BurnEffect : DoTEffect
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
         float mp = cachedMagicPower > 0 ? cachedMagicPower : (source?.magicPower ?? 0f);
         float ep = cachedelementalAffinity;
-        float total = ((healthPerSecond * hp) + (mpPerSecond * mp) + 6f) * (1f + ep);
-        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second. (<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#FFB6C1>{mpPerSecond * 100:F0}% Magic Power</color> + 6) × (1 + <color=#FFD700>{ep * 100:F0}% Elemental Affinity</color>)";
+        float total = ((healthPerSecond * hp) + (mpPerSecond * mp) + flatPerSecond) * (1f + ep);
+        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second. (<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#FFB6C1>{mpPerSecond * 100:F0}% Magic Power</color> + {flatPerSecond:F0}) × (1 + <color=#FFD700>{ep * 100:F0}% Elemental Affinity</color>)";
     }
 
     public override void OnApply()
@@ -33,7 +35,7 @@ public class BurnEffect : DoTEffect
         base.OnApply();
         cachedMaxHealth = target.maxHealth;
         cachedMagicPower = source?.magicPower ?? 0f;
-        damagePerSecond = ((healthPerSecond * cachedMaxHealth) + (mpPerSecond * cachedMagicPower) + 6f) * (1f + cachedelementalAffinity);
+        damagePerSecond = ((healthPerSecond * cachedMaxHealth) + (mpPerSecond * cachedMagicPower) + flatPerSecond) * (1f + cachedelementalAffinity);
 
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Burn", new Color(1f, 0.4f, 0f));
 

@@ -18,7 +18,7 @@ MonoBehaviour:
   passiveDescription: Reduces all incoming physical damage by a flat 12
   sprite: {fileID: 21300000, guid: 69195ff41f6e5d54c85073e3b72d4501, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
-  baseMaxHealth: 320
+  baseMaxHealth: 640
   baseAttackDamage: 30
   baseMagicPower: 0
   baseAttackSpeed: 1

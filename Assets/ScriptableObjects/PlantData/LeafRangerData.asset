@@ -18,7 +18,7 @@ MonoBehaviour:
   displayName: Leaf Ranger
   elementalType: 2
   damageType: 0
-  sunCost: 105
+  sunCost: 145
   baseMaxHealth: 200
   baseAttackDamage: 108
   baseMagicPower: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0

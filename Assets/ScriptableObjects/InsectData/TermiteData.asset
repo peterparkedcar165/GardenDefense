@@ -18,7 +18,7 @@ MonoBehaviour:
   passiveDescription: When near other Termites, increase Attack Damage by 4
   sprite: {fileID: 21300000, guid: d9079daa460826e4ebb66fb8af445649, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 6a2d82503dc53a8468881f14bee007fc, type: 3}
-  baseMaxHealth: 150
+  baseMaxHealth: 300
   baseAttackDamage: 8
   baseMagicPower: 0
   baseAttackSpeed: 1.5

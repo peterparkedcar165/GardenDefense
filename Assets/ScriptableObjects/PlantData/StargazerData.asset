@@ -9,20 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21a96f36c3aff7842b3329d73a095180, type: 3}
-  m_Name: BegoniaData
-  m_EditorClassIdentifier: Assembly-CSharp::BegoniaData
-  plantPrefab: {fileID: -3248773622810050089, guid: 63eb5dc8f809acf4a84718b08a9a7eea, type: 3}
-  icon: {fileID: 21300000, guid: adc730a06fd32d1449e86eb5219c00bf, type: 3}
-  plantName: Begonia
-  displayName: Begonia
-  elementalType: 2
+  m_Script: {fileID: 11500000, guid: 6353f8c064664944d867536040ce01f0, type: 3}
+  m_Name: StargazerData
+  m_EditorClassIdentifier: Assembly-CSharp::StargazerData
+  plantPrefab: {fileID: 4181586897878530692, guid: 68d1e1c572289a9428b4df0761a25e6a, type: 3}
+  icon: {fileID: 21300000, guid: 4da87bb8db86c30418da3e4fc87aec3d, type: 3}
+  plantName: Stargazer
+  displayName: Stargazer
+  elementalType: 0
   damageType: 1
-  sunCost: 95
+  sunCost: 145
   baseMaxHealth: 200
-  baseAttackDamage: 32
+  baseAttackDamage: 8
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
+  baseAttackSpeed: 5
   baseAttackRange: 2
   startingShield: 0
   baseHealingBonus: 0
@@ -54,29 +54,41 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
-  baseProjectileSpeed: 2
-  baseMaxRange: 20
+  baseProjectileSpeed: 0
+  baseMaxRange: 0
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 60
-  baseSkillDuration: 18
-  baseSkillRadius: 2
-  baseSkillDamageMultiplier: 0
+  baseSkillCooldown: 0
+  baseSkillDuration: 0
+  baseSkillRadius: 0
+  baseSkillDamageMultiplier: 1
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseelementalAffinityBonus: 0.24
-  baseNatureDamageBonus: 0.16
-  baseAttackSpeedBonus: 0.16
-  basePassiveMultiplier: 0.24
-  baseSkillMultiplier: 0.16
-  path1AttackDamagePerLevel: 4
-  path1AttackRangePerLevel: 0.2
-  path2elementalAffinityPerLevel: 0.06
-  path3NatureDamageBonusPerLevel: 0.08
-  path3AttackSpeedBonusPerLevel: 0.08
-  path3RadiusPerLevel: 0.15
+  coneAngle: 45
+  flammableBonusPerStack: 0.02
+  flammableMaxStacks: 500
+  flammableDuration: 12
+  baseStacksPerHit: 1
+  baseBurnDurationBonus: 0.5
+  skillBaseDamage: 70
+  skillWaveSpeed: 12
+  skillLength: 60
+  skillWaveWidth: 4
+  skillThickness: 1.5
+  skillDelay: 0.25
+  skillBurnMultiplier: 1.5
+  skillFlammableStacks: 10
+  path1AttackDamagePerLevel: 1
+  path1ConeAnglePerLevel: 8
+  path1AttackRangePerLevel: 0.3
+  path2StacksPerLevel: 1
+  path2BurnDurationPerLevel: 0.2
+  path3SkillDamagePerLevel: 10
+  path3WaveWidthPerLevel: 1
+  path3BurnMultiplierPerLevel: 0.5
+  path3FlammableStacksPerLevel: 5

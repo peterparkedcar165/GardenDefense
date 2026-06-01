@@ -18,7 +18,7 @@ MonoBehaviour:
   displayName: Glowshroom
   elementalType: 2
   damageType: 1
-  sunCost: 65
+  sunCost: 55
   baseMaxHealth: 200
   baseAttackDamage: 20
   baseMagicPower: 0
@@ -71,11 +71,13 @@ MonoBehaviour:
   baseSkillDamage: 0
   splashRadius: 2
   splashDamageMultiplier: 0.5
+  splashDamageMPMultiplier: 0.5
   fungalGlowDuration: 4
   fungalGlowSpreadRadius: 2
   passiveCooldown: 4
   lightRadiusMultiplier: 2
   blindDuration: 4
+  blindDurationMPMultiplier: 0.04
   blindAccuracyPenalty: 1
   path1AttackDamagePerLevel: 12
   path1AttackRangePerLevel: 0.15

@@ -84,6 +84,7 @@ public abstract class Entity : MonoBehaviour
     public float counterDamage;
     public float tenacity;
     public float debuffGivenDuration, buffGivenDuration, buffReceivedDuration, debuffReceivedDuration;
+    public float burnDurationBonus;   // multiplies the duration of Burns this entity causes (e.g. Stargazer)
     public float shieldBonusDamage, shieldToughness;
     public float startingShield;
     public bool debuffsFrozen;

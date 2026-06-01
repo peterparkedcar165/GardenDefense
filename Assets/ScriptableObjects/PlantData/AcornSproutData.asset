@@ -18,7 +18,7 @@ MonoBehaviour:
   displayName: Acorn Sprout
   elementalType: 2
   damageType: 0
-  sunCost: 85
+  sunCost: 95
   baseMaxHealth: 250
   baseAttackDamage: 31
   baseMagicPower: 0

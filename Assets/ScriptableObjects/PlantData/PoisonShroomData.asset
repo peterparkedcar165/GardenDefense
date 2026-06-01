@@ -18,7 +18,7 @@ MonoBehaviour:
   displayName: Poison Shroom
   elementalType: 3
   damageType: 1
-  sunCost: 105
+  sunCost: 115
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0

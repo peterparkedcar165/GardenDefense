@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\PuncturedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DarklingBeetleData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\FlammableEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\Scripts\Environment\WaterZone.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\BogIrisData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BubbleTrapEffect.cs" />
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
+    <Compile Include="Assets\Scripts\Skills\FireWave.cs" />
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DaytimeGridManager.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\StargazerData.cs" />
     <Compile Include="Assets\Scripts\UI\GameInfoPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
@@ -261,6 +264,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\CaveSpider.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Stargazer.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
     <Compile Include="Assets\Scripts\UI\EntityInfoPanel.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
