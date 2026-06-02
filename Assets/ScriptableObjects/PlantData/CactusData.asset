@@ -16,6 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 3b781c891ce3af945a263882517b3b80, type: 3}
   plantName: Cactus
   displayName: Cactus
+  cultivar: 3
   elementalType: 2
   damageType: 0
   sunCost: 105
@@ -44,7 +45,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0

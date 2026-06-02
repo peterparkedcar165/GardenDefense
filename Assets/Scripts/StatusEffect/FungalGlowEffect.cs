@@ -18,13 +18,14 @@ public class FungalGlowEffect : StatusEffect
 
     public override void OnApply()
     {
-        _fader = GetOrCreateFader();
-        _fader.FadeIn(0.3f);
-
-        // register as a light source so the lit insect (and any insect in its glow)
-        // is treated as illuminated in pitch black cave levels
+        // only emit light in dark biomes (mirrors BurnEffect) — never in lit levels
         if (DarknessManager.instance != null)
         {
+            _fader = GetOrCreateFader();
+            _fader.FadeIn(0.3f);
+
+            // register as a light source so the lit insect (and any insect in its glow)
+            // is treated as illuminated in pitch black cave levels
             DarknessManager.UnregisterLightSource(_fader.transform);
             DarknessManager.RegisterLightSource(_fader.transform, LightRadius);
         }

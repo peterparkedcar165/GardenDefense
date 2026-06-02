@@ -85,6 +85,7 @@ public abstract class Entity : MonoBehaviour
     public float tenacity;
     public float debuffGivenDuration, buffGivenDuration, buffReceivedDuration, debuffReceivedDuration;
     public float burnDurationBonus;   // multiplies the duration of Burns this entity causes (e.g. Stargazer)
+    public float sunYieldBonus;       // increases sun this entity generates and the sun its kills drop (Aeonium's Blessing)
     public float shieldBonusDamage, shieldToughness;
     public float startingShield;
     public bool debuffsFrozen;

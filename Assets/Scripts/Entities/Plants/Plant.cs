@@ -30,6 +30,18 @@ public struct PlantBaseStats
 
 public enum TARGETING { Nearest, First, Last }
 
+// a plant's cultivar defines its archetype/role in the garden
+public enum PlantCultivar
+{
+    Chlorophyll,    // sun generator
+    Verdance,       // healer
+    Companionship,  // buffer
+    Shelter,        // tank/shield
+    Thorn,          // single target dps
+    Wither,         // debuff/nihility
+    Burgeon,        // summoning
+}
+
 public abstract class Plant : Entity, IAttackable
 {
     public static List<Plant> allPlants = new List<Plant>();
@@ -926,6 +938,15 @@ public abstract class Plant : Entity, IAttackable
     protected virtual void OnHitByInsect(Insect attacker) {}
     public bool IsAlive => health > 0;
     public Vector3 Position => transform.position;
+
+    // generates sun scaled by this plant's sunYieldBonus, rounded up (sun can't be decimal).
+    // returns the total granted so callers can show the right indicator amount
+    protected int GenerateSun(int amount)
+    {
+        int total = Mathf.CeilToInt(amount * (1f + sunYieldBonus));
+        GameManager.instance?.AddSun(total);
+        return total;
+    }
 
     protected GameObject FindNearest(System.Collections.Generic.List<Insect> insects)
     {

@@ -16,6 +16,7 @@ MonoBehaviour:
   icon: {fileID: 480713740630145538, guid: 17364a63666fa6849902937eb5b3392e, type: 3}
   plantName: PoisonShroom
   displayName: Poison Shroom
+  cultivar: 5
   elementalType: 3
   damageType: 1
   sunCost: 115

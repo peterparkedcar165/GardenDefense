@@ -56,7 +56,7 @@ public static class FertilizerFormat
             case StatType.SkillDurationAdder:           return "Skill Duration";
             case StatType.SkillDurationMultiplier:      return "Skill Duration";
             case StatType.CoordinatedDamage:            return "Coordinated Damage";
-            case StatType.HealingBonus:                 return "Healing Bonus";
+            case StatType.HealingBonus:                 return "Heals & Shield Bonus";
             case StatType.IlluminationRangeAdder:       return "Illumination Range";
             case StatType.IlluminationRangeMultiplier:  return "Illumination Range";
             case StatType.CounterDamage:                return "Counter Damage";

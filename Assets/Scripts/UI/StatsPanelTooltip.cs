@@ -111,8 +111,8 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         // --- Miscellaneous ---
         sb.AppendLine("<size=+8><color=white><b><u>Miscellaneous</u></b></color></size>");
-        ElemLine(sb, HealCol, "Healing Bonus:",    $"{e.healingBonus * 100:F0}%",    e.healingBonus,    e.baseHealingBonus);
-        ElemLine(sb, HealCol, "Healing Received:", $"{e.healingReceived * 100:F0}%", e.healingReceived, e.baseHealingReceived);
+        ElemLine(sb, HealCol, "Heals & Shield Bonus:",    $"{e.healingBonus * 100:F0}%",    e.healingBonus,    e.baseHealingBonus);
+        ElemLine(sb, HealCol, "Heals & Shield Received:", $"{e.healingReceived * 100:F0}%", e.healingReceived, e.baseHealingReceived);
 
         return sb.ToString().TrimEnd();
     }

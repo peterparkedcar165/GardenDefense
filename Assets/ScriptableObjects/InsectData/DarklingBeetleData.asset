@@ -43,7 +43,7 @@ MonoBehaviour:
   baseDotResistance: 0
   threatValue: 4
   threatType: 1
-  sunDrop: 16
+  sunDrop: 27
   aggressivity: 1
   baseLightEmissionRange: 0
   baseHealingBonus: 0

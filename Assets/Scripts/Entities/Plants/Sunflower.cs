@@ -29,9 +29,9 @@ public class Sunflower : Shooter
 
         if (passiveCooldownTimer <= 0)
         {
-            GameManager.instance.AddSun(sunGenerated);
+            int granted = GenerateSun(sunGenerated);
             passiveCooldownTimer += passiveCooldown;
-            SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), sunGenerated);
+            SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), granted);
         }
     }
 

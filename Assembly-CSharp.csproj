@@ -190,6 +190,7 @@
     <Compile Include="Assets\Scripts\Environment\ObstacleZone.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\InsectPreviewSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BlessingOfTheSunEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\NighttimeGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level8.cs" />
@@ -278,6 +279,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\DesertLocust.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VenomEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Mosquito.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\AeoniumProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Holly.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\WaterlilyData.cs" />

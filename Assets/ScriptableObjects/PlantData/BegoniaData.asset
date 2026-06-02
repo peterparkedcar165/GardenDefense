@@ -16,9 +16,10 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: adc730a06fd32d1449e86eb5219c00bf, type: 3}
   plantName: Begonia
   displayName: Begonia
+  cultivar: 2
   elementalType: 2
   damageType: 1
-  sunCost: 95
+  sunCost: 85
   baseMaxHealth: 200
   baseAttackDamage: 32
   baseMagicPower: 0
@@ -54,7 +55,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
-  baseProjectileSpeed: 2
+  baseProjectileSpeed: 4
   baseMaxRange: 20
   basePiercing: 0
   baseAoERadius: 0

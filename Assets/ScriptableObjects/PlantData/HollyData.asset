@@ -16,6 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: c9a6d2fc74c3fe04cb9bc4d5721d7c53, type: 3}
   plantName: Holly
   displayName: Holly
+  cultivar: 3
   elementalType: 4
   damageType: 0
   sunCost: 100

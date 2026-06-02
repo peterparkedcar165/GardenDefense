@@ -16,6 +16,7 @@ MonoBehaviour:
   icon: {fileID: 3997787884886350849, guid: 66cc86ab63224114c893b2c8e527b49d, type: 3}
   plantName: Snowdrop
   displayName: Snowdrop
+  cultivar: 5
   elementalType: 4
   damageType: 1
   sunCost: 115

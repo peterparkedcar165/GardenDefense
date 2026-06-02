@@ -7,6 +7,7 @@ public class PlantData : ScriptableObject
     public Sprite icon;
     public string plantName;
     public string displayName;
+    public PlantCultivar cultivar;
     public ElementalType elementalType;
     public DamageType damageType;
     public int sunCost;

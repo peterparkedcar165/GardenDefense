@@ -530,7 +530,8 @@ public abstract class Insect : Entity, IAttackable
         OnInsectDied?.Invoke(this);
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
-        gameManager.AddSun(sunDrop);
+        // the killer's sunYieldBonus (e.g. Aeonium's Blessing) increases sun dropped, rounded up
+        gameManager.AddSun(Mathf.CeilToInt(sunDrop * (1f + (source != null ? source.sunYieldBonus : 0f))));
         allInsects.Remove(this);
         StartCoroutine(DeathFade());
     }

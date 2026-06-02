@@ -72,8 +72,8 @@ public class BogIris : Shooter
             if (sunTickTimer >= SunInterval)
             {
                 sunTickTimer -= SunInterval;
-                GameManager.instance.AddSun(SunGenerated);
-                SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), SunGenerated);
+                int granted = GenerateSun(SunGenerated);
+                SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), granted);
             }
             if (cycleTimer >= OpenDuration)
             {

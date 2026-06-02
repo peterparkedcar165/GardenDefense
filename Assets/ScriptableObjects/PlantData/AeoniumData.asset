@@ -20,9 +20,9 @@ MonoBehaviour:
   damageType: 1
   sunCost: 85
   baseMaxHealth: 200
-  baseAttackDamage: 10
+  baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 0.5
+  baseAttackSpeed: 0.7
   baseAttackRange: 2
   startingShield: 0
   baseHealingBonus: 0
@@ -54,8 +54,8 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
-  baseProjectileSpeed: 0
-  baseMaxRange: 0
+  baseProjectileSpeed: 4
+  baseMaxRange: 99
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -71,19 +71,11 @@ MonoBehaviour:
   baseSkillDamage: 0
   baseSunGenerated: 3
   baseSunTimerReduction: 0.1
-  baseHealAmount: 6
-  baseSkillCooldownReduction: 0.5
-  baseSkillRangeBonus: 0.75
-  skillRangeBonusPerLevel: 0.1
-  baseSkillSpeedBonus: 1
-  skillSpeedBonusPerLevel: 0.1
-  healMPMultiplier: 0.16
   sunTimerMPMultiplier: 0.005
-  skillSpeedMPMultiplier: 0.7
-  path1AttackRangePerLevel: 0.2
-  path1HealPerLevel: 4
-  path1CDRPerLevel: 0.25
+  baseSunYieldBonus: 0.25
+  path3SunYieldPerLevel: 0.05
+  path1AttackDamagePerLevel: 9
+  path1AttackSpeedPerLevel: 0.08
+  path1AttackRangePerLevel: 0.25
   path2SunPerLevel: 1
   path2SunTimerReductionPerLevel: 0.05
-  path3BonusSunBase: 4
-  path3BonusSunPerLevel: 2

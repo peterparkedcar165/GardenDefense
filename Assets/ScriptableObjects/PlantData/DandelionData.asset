@@ -16,6 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 53de87a7c32790349918a051a46d6a60, type: 3}
   plantName: Dandelion
   displayName: Dandelion
+  cultivar: 4
   elementalType: 5
   damageType: 0
   sunCost: 105
@@ -44,7 +45,7 @@ MonoBehaviour:
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.75
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseelementalAffinity: 0
   baseCoordinatedDamage: 0
   baseCounterDamage: 0
   baseFireDamage: 0
@@ -72,7 +73,9 @@ MonoBehaviour:
   baseSeedCount: 3
   baseBeamWidth: 1.6
   basePushPower: 1.35
-  path1ElementalPowerPerLevel: 0.08
+  path1elementalAffinityPerLevel: 0.06
   path1AttackRangePerLevel: 0.2
+  baseWindGustRange: 10
   path3BeamWidthPerLevel: 0.25
   path3SkillDurationPerLevel: 1
+  path3WindGustRangePerLevel: 0.5

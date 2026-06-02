@@ -16,6 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: e32f7955f2156924a9dca8632cbe022d, type: 3}
   plantName: LeafRanger
   displayName: Leaf Ranger
+  cultivar: 4
   elementalType: 2
   damageType: 0
   sunCost: 145
