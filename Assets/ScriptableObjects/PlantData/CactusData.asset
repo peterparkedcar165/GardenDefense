@@ -20,7 +20,7 @@ MonoBehaviour:
   elementalType: 2
   damageType: 0
   sunCost: 115
-  baseMaxHealth: 200
+  baseMaxHealth: 300
   baseAttackDamage: 12
   baseMagicPower: 0
   baseAttackSpeed: 0.7
