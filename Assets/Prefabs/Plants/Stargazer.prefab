@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1654591569336382130}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.013, y: -0.281, z: 0}
+  m_LocalPosition: {x: 0, y: -0.281, z: 0}
   m_LocalScale: {x: 0.7543614, y: 0.26332998, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -122,6 +122,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4123678659049028108}
   - {fileID: 737382446543302184}
   - {fileID: 8186928953751881792}
   - {fileID: 6890100682179669267}
@@ -267,6 +268,7 @@ MonoBehaviour:
   buffReceivedDuration: 0
   debuffReceivedDuration: 0
   burnDurationBonus: 0
+  sunYieldBonus: 0
   shieldBonusDamage: 0
   shieldToughness: 0
   startingShield: 0
@@ -442,6 +444,8 @@ MonoBehaviour:
   facingLineRight: {fileID: 705017791963297774}
   fireWavePrefab: {fileID: 2201209173165394238, guid: db438476721010a4987db0d938f5968b, type: 3}
   skillIndicatorPrefab: {fileID: 2096060468615343360, guid: b747054e520ce3b49a0f727e58d6beb2, type: 3}
+  fireConeParticles: {fileID: 8088844491786990218}
+  fireConeTravelTime: 0.35
 --- !u!1 &3165806218753833404
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,7 +472,7 @@ Transform:
   m_GameObject: {fileID: 3165806218753833404}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.4971, y: 0.081, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.0059, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -559,7 +563,7 @@ Transform:
   m_GameObject: {fileID: 5717149755680190109}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.018, y: 0.226, z: 0}
+  m_LocalPosition: {x: 0, y: 0.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -650,7 +654,7 @@ Transform:
   m_GameObject: {fileID: 7022214469762572678}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.499, y: 0.081, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -715,6 +719,73 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1001 &2775278256207211592
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1839221878583724804}
+    m_Modifications:
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3685499691179430935, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+      propertyPath: m_Name
+      value: StargazerAttackParticles
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+--- !u!4 &4123678659049028108 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2286134516124833348, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+  m_PrefabInstance: {fileID: 2775278256207211592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8088844491786990218 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6251732868713553602, guid: 3525434ee77d9874f9526d4422ff496c, type: 3}
+  m_PrefabInstance: {fileID: 2775278256207211592}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6895912991125051674
 PrefabInstance:
   m_ObjectHideFlags: 0

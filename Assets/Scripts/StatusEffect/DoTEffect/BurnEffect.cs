@@ -10,6 +10,7 @@ public class BurnEffect : DoTEffect
     private float cachedelementalAffinity;
     private LightFader _burnFader;
     private const float BurnLightRadius = 1.25f;
+    private ParticleSystem _burnParticles;
 
     public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
@@ -46,6 +47,55 @@ public class BurnEffect : DoTEffect
             DarknessManager.UnregisterLightSource(_burnFader.transform);
             DarknessManager.RegisterLightSource(_burnFader.transform, BurnLightRadius);
         }
+
+        SpawnBurnParticles();
+    }
+
+    private void SpawnBurnParticles()
+    {
+        Transform visualRoot = target.transform.Find("Visual") ?? target.transform;
+
+        // reuse the existing system on a Burn refresh so we never stack plumes
+        Transform existing = visualRoot.Find("BurnParticles");
+        if (existing != null)
+        {
+            _burnParticles = existing.GetComponent<ParticleSystem>();
+            if (_burnParticles != null) { _burnParticles.Play(); return; }
+        }
+
+        GameObject prefab = Resources.Load<GameObject>("BurnParticles");
+        if (prefab == null) return;
+
+        GameObject fx = Object.Instantiate(prefab, visualRoot.position, Quaternion.identity);
+        fx.name = "BurnParticles";   // named so a refresh can find and reuse it
+        fx.transform.SetParent(visualRoot);
+        fx.transform.localPosition = Vector3.zero;
+        // keep its own scale at 1 so the insect's scale can't distort particle size or speed
+        fx.transform.localScale = Vector3.one;
+        _burnParticles = fx.GetComponent<ParticleSystem>();
+    }
+
+    // burn ended: stop emitting and let the embers fade. kept parented and idle so the
+    // next Burn reuses it instead of spawning a second system
+    private void StopBurnParticles()
+    {
+        if (_burnParticles == null) return;
+        _burnParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        _burnParticles = null;
+    }
+
+    // target died: unparent so the embers outlive it, then stop and clean up
+    private void ReleaseBurnParticles()
+    {
+        if (_burnParticles == null) return;
+        _burnParticles.transform.SetParent(null);
+        // unparenting rewrites localScale to preserve world size; force it back to 1
+        // so Local scaling mode keeps the embers at full size (no shrink pop)
+        _burnParticles.transform.localScale = Vector3.one;
+        _burnParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        float life = _burnParticles.main.startLifetime.constantMax;
+        Object.Destroy(_burnParticles.gameObject, life);
+        _burnParticles = null;
     }
 
     private LightFader GetOrCreateBurnFader()
@@ -93,6 +143,8 @@ public class BurnEffect : DoTEffect
 
     public override void OnExpire()
     {
+        StopBurnParticles();
+
         if (_burnFader != null)
         {
             DarknessManager.UnregisterLightSource(_burnFader.transform);
@@ -102,6 +154,8 @@ public class BurnEffect : DoTEffect
 
     public override void OnTargetDied()
     {
+        ReleaseBurnParticles();
+
         if (_burnFader == null) return;
         DarknessManager.UnregisterLightSource(_burnFader.transform);
         _burnFader.transform.SetParent(null);

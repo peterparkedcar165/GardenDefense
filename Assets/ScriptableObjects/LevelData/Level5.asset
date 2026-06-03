@@ -20,7 +20,7 @@ MonoBehaviour:
   maxWaves: 22
   startSunCount: 750
   startHealth: 200
-  minWaveDuration: 20
+  minWaveDuration: 25
   maxWaveDuration: 70
   waveDurationCurve:
     serializedVersion: 2
@@ -48,7 +48,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 11
   minThreatBudget: 5
-  maxThreatBudget: 50
+  maxThreatBudget: 40
   budgetCurve:
     serializedVersion: 2
     m_Curve:

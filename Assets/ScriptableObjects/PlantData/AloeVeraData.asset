@@ -21,7 +21,7 @@ MonoBehaviour:
   damageType: 1
   sunCost: 95
   baseMaxHealth: 200
-  baseAttackDamage: 46
+  baseAttackDamage: 82
   baseMagicPower: 0
   baseAttackSpeed: 0.12
   baseAttackRange: 4

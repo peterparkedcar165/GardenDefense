@@ -19,7 +19,7 @@ MonoBehaviour:
   cultivar: 3
   elementalType: 4
   damageType: 0
-  sunCost: 100
+  sunCost: 105
   baseMaxHealth: 300
   baseAttackDamage: 25
   baseMagicPower: 0

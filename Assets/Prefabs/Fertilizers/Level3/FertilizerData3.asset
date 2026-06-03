@@ -15,7 +15,7 @@ MonoBehaviour:
   fertilizerName: Blooming
   stats:
   - statType: 6
-    value: 0.24
+    value: 0.34
   - statType: 11
     value: 0.32
   icon: {fileID: 0}

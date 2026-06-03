@@ -20,7 +20,7 @@ MonoBehaviour:
   maxWaves: 26
   startSunCount: 750
   startHealth: 200
-  minWaveDuration: 20
+  minWaveDuration: 25
   maxWaveDuration: 70
   waveDurationCurve:
     serializedVersion: 2

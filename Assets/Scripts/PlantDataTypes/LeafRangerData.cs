@@ -6,8 +6,12 @@ public class LeafRangerData : PlantData
     public float baseSkillAttackSpeedBonus;
 
     [Header("Path 1 Scaling")]
-    public float path1CritChancePerLevel = 0.05f;
+    public float path1AttackDamagePerLevel = 5f;
     public float path1AttackSpeedPerLevel = 0.05f;
+
+    [Header("Path 2 Scaling")]
+    public float baseCritChanceBonus = 0.1f;       // bonus crit chance granted at level 0 before upgrades
+    public float path2CritChancePerLevel = 0.05f;  // additional crit chance per passive level
 
     [Header("Path 3 Scaling")]
     public float path3AttackSpeedBonusPerLevel = 0.25f;

@@ -25,7 +25,6 @@ public class StargazerData : PlantData
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 3f;
-    public float path1ConeAnglePerLevel    = 4f;
     public float path1AttackRangePerLevel  = 0.2f;
 
     [Header("Path 2 Scaling")]

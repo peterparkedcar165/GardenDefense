@@ -17,6 +17,12 @@ public class LeafRanger : Shooter
 
     public override void UpdateStats()
     {
+        // passive grants a flat base crit bonus at level 0 plus per level scaling.
+        // set before base.UpdateStats so the derived criticalChance picks it up
+        baseCriticalChance = data.baseCriticalChance
+            + (LRData?.baseCritChanceBonus ?? 0.1f)
+            + (LRData?.path2CritChancePerLevel ?? 0.05f) * effectivePath2Level;
+
         base.UpdateStats();
         float aspl = LRData?.path3AttackSpeedBonusPerLevel ?? 0.25f;
         if (skillActive)
@@ -71,7 +77,7 @@ public class LeafRanger : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseCriticalChance = data.baseCriticalChance + (LRData?.path1CritChancePerLevel   ?? 0.05f) * level;
+        baseAttackDamage   = data.baseAttackDamage   + (LRData?.path1AttackDamagePerLevel  ?? 5f)    * level;
         baseAttackSpeed    = data.baseAttackSpeed    + (LRData?.path1AttackSpeedPerLevel   ?? 0.05f) * level;
     }
 
@@ -98,20 +104,26 @@ public class LeafRanger : Shooter
 
     public override string GetPath1Description()
     {
-        float critpl = LRData?.path1CritChancePerLevel ?? 0.05f;
+        float adpl   = LRData?.path1AttackDamagePerLevel ?? 5f;
         float aspl   = LRData?.path1AttackSpeedPerLevel ?? 0.05f;
         return $"Attack:\n\n" +
                $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.\n\n" +
-               $"Increase Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }
 
-    public override string GetPath2Description() =>
-        $"Passive:\n\n" +
-        $"Attacks can pierce <color=green><b>{piercing}</b></color> enemy.\n\n" +
-        $"Increase Piercing by an additional <b><color=green>1</color></b> per level. [<b><color=green>+{effectivePath2Level}</color></b>]\n\n" +
-        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    public override string GetPath2Description()
+    {
+        float baseCrit  = LRData?.baseCritChanceBonus ?? 0.1f;
+        float critpl    = LRData?.path2CritChancePerLevel ?? 0.05f;
+        float totalCrit = baseCrit + critpl * effectivePath2Level;
+        return $"Passive:\n\n" +
+               $"Gains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.\n\n" +
+               $"Increase <color=green>Piercing</color> by an additional <b><color=green>1</color></b> per level. [<b><color=green>+{effectivePath2Level}</color></b>]\n\n" +
+               $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    }
 
     public override string GetPath3Description()
     {

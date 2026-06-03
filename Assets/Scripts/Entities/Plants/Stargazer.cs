@@ -9,12 +9,14 @@ public class Stargazer : Aura
     [SerializeField] private SpriteRenderer facingLineRight;
     [SerializeField] private GameObject fireWavePrefab;
     [SerializeField] private GameObject skillIndicatorPrefab; // beam aim indicator for the ultimate
+    [SerializeField] private ParticleSystem fireConeParticles; // continuous cone of fire while attacking
+    [SerializeField] private float fireConeTravelTime = 0.25f; // seconds for a particle to cross the attack range (lower = faster, shorter)
 
     private StargazerData SData => data as StargazerData;
     private Vector2 _facingDir = Vector2.right;
     private GameObject _skillIndicatorInstance;
 
-    private float ConeAngle              => (SData?.coneAngle ?? 60f) + (SData?.path1ConeAnglePerLevel ?? 4f) * effectivePath1Level;
+    private float ConeAngle              => SData?.coneAngle ?? 60f;
     private float FlammableBonusPerStack => SData?.flammableBonusPerStack ?? 0.08f;
     private int   FlammableMaxStacks     => SData?.flammableMaxStacks ?? 5;
     private float FlammableDuration       => SData?.flammableDuration ?? 4f;
@@ -50,9 +52,12 @@ public class Stargazer : Aura
         UpdateFacing();
         UpdateSkillIndicator();
 
+        bool hasTarget = FacingTarget() != null;
+        UpdateFireCone(hasTarget);   // stream fire while a target is in the cone
+
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else if (FacingTarget() != null)   // only fires when there's a visible target in range (respects darkness)
+        else if (hasTarget)   // only fires when there's a visible target in range (respects darkness)
             Attack();
     }
 
@@ -117,6 +122,51 @@ public class Stargazer : Aura
             insect.Damage(attackDamage, damageType, elementalType, this, false,
                 new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
             ApplyFlammable(insect);
+        }
+    }
+
+    private const float FireConeRate = 175f;   // particles per second while firing
+    private float _fireEmitAccumulator;
+
+    // emits the fire cone directly in 2D: each particle gets a velocity at a random angle within
+    // the cone around the target direction. this sidesteps the 3D Shape entirely, so the fan is
+    // always flat, symmetric, evenly spread, and centered on the target. the prefab's Shape/Arc/
+    // rotation no longer matter; Emission Rate over Time should be 0 (we emit manually here)
+    private void UpdateFireCone(bool active)
+    {
+        if (fireConeParticles == null) return;
+
+        // disable automatic emission so the shape never spawns stationary particles on the plant.
+        // all fire comes from the manual Emit() calls below, which ignore this module
+        ParticleSystem.EmissionModule emission = fireConeParticles.emission;
+        emission.enabled = false;
+
+        // reach: a particle crosses attackRange (plus 15% overshoot so it fades past the edge) in
+        // fireConeTravelTime seconds. drive lifetime and speed from it
+        float travel = fireConeTravelTime > 0f ? fireConeTravelTime : 0.25f;
+        ParticleSystem.MainModule main = fireConeParticles.main;
+        main.startLifetime = travel;
+        main.startSpeed    = 0f;   // velocity is assigned per particle below
+        float speed = attackRange * 1.15f / travel;
+
+        if (!active) { _fireEmitAccumulator = 0f; return; }
+
+        // accumulate fractional emissions so the rate is smooth across frames
+        _fireEmitAccumulator += FireConeRate * Time.deltaTime;
+        int count = Mathf.FloorToInt(_fireEmitAccumulator);
+        _fireEmitAccumulator -= count;
+
+        float baseAngle = Mathf.Atan2(_facingDir.y, _facingDir.x);
+        float half      = ConeAngle * 0.5f * Mathf.Deg2Rad;
+
+        for (int i = 0; i < count; i++)
+        {
+            float a = baseAngle + Random.Range(-half, half);
+            ParticleSystem.EmitParams ep = new ParticleSystem.EmitParams
+            {
+                velocity = new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f) * speed
+            };
+            fireConeParticles.Emit(ep, 1);
         }
     }
 
@@ -226,11 +276,9 @@ public class Stargazer : Aura
     public override string GetPath1Description()
     {
         float adpl   = SData?.path1AttackDamagePerLevel ?? 3f;
-        float angpl  = SData?.path1ConeAnglePerLevel    ?? 4f;
         float rngpl  = SData?.path1AttackRangePerLevel  ?? 0.2f;
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
                $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase cone angle by <color=green><b>{angpl:F0}°</b></color> per level. [<color=green><b>+{angpl * effectivePath1Level:F0}°</b></color>]\n\n" +
                $"Increase Attack Range by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }
