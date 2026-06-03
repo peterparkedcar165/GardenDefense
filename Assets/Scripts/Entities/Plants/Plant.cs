@@ -35,11 +35,12 @@ public enum PlantCultivar
 {
     Chlorophyll,    // sun generator
     Verdance,       // healer
-    Companionship,  // buffer
+    Symbiosis,      // buffer
     Shelter,        // tank/shield
     Thorn,          // single target dps
     Wither,         // debuff/nihility
     Burgeon,        // summoning
+    Kinship,        // coordinated attacks (e.g. Calendula's skill)
 }
 
 public abstract class Plant : Entity, IAttackable

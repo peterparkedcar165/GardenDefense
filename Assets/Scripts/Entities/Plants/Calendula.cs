@@ -6,6 +6,11 @@ public class Calendula : Aura
     public float skillHealingMultiplier;
     private CalendulaData CData => data as CalendulaData;
 
+    // total Floral Glow heal per second: base + per level + magic power scaling
+    public float FloralGlowHealPerSecond =>
+        (CData?.baseFloralGlowHeal ?? 8f) + (CData?.path3HealPerLevel ?? 1f) * effectivePath3Level
+        + skillHealingMultiplier * magicPower;
+
     protected override void Awake()
     {
         base.Awake();

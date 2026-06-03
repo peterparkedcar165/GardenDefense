@@ -94,7 +94,7 @@ public class AcornSprout : Shooter
         float durpl    = AcornData?.path2StunDurationPerLevel ?? 0.1f;
         return $"Passive:\n\n" +
                $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{stunDuration}</b></color> second.\n\n" +
-               $"Increase Stun Chance by <b><color=green>{chancepl * 100f:F0}%</color></b> per level. [<b><color=green>+{chancepl * effectivePath2Level * 100f:F0}%</color></b>]\n" +
+               $"Increase Stun Chance by <b><color=green>{chancepl * 100f:F0}%</color></b> per level. [<b><color=green>+{chancepl * effectivePath2Level * 100f:F0}%</color></b>]\n\n" +
                $"Increase Stun Duration by <b><color=green>{durpl:F2}s</color></b> per level. [<b><color=green>+{durpl * effectivePath2Level:F2}s</color></b>]\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
     }

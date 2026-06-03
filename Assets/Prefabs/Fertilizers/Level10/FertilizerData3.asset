@@ -18,6 +18,8 @@ MonoBehaviour:
     value: 0.52
   - statType: 32
     value: 112
+  - statType: 34
+    value: 0.35
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

@@ -3,7 +3,7 @@ using UnityEngine;
 public class FloralGlowEffect : StatusEffect
 {
     private readonly Calendula calendula;
-    private float HealingPerSecond => 8f + (level - 1) + (calendula?.skillHealingMultiplier ?? 0f) * (calendula?.magicPower ?? 0f);
+    private float HealingPerSecond => calendula?.FloralGlowHealPerSecond ?? 0f;
     private float healTickTimer = 0f;
     private float cachedLightRange;
 

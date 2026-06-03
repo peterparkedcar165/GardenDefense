@@ -46,7 +46,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restDuration: 8
+  restDuration: 5
   minThreatBudget: 3
   maxThreatBudget: 25
   budgetCurve:
