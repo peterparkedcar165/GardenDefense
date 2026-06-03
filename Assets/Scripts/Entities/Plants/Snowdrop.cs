@@ -183,7 +183,7 @@ public class Snowdrop : Aura
         foreach (Insect insect in inRange)
         {
             insect.Damage(attackDamage, damageType, elementalType, this, false,
-                new DamageTag[] { DamageTag.Attack, DamageTag.DoT, DamageTag.AoE });
+                new DamageTag[] { DamageTag.Attack, DamageTag.AoE });
         }
     }
 

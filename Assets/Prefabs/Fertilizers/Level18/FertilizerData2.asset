@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
-  m_Name: FertilizerData3
+  m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Survival
+  fertilizerName: Arsonist
   stats:
-  - statType: 30
-    value: 0.36
-  - statType: 24
-    value: 0.32
-  - statType: 36
-    value: -0.36
+  - statType: 3
+    value: 0.47
+  - statType: 11
+    value: 0.52
+  - statType: 33
+    value: 0.53
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

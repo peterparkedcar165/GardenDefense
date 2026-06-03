@@ -119,13 +119,13 @@ public class Stargazer : Aura
             if (to.magnitude > attackRange) continue;
             if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
 
-            insect.Damage(attackDamage, damageType, elementalType, this, false,
+            insect.Damage(attackDamage, damageType, elementalType, this, true,
                 new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
             ApplyFlammable(insect);
         }
     }
 
-    private const float FireConeRate = 175f;   // particles per second while firing
+    private const float FireConeRate = 250f;   // particles per second while firing
     private float _fireEmitAccumulator;
 
     // emits the fire cone directly in 2D: each particle gets a velocity at a random angle within

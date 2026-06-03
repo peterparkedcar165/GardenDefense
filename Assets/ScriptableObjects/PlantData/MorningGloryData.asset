@@ -21,7 +21,7 @@ MonoBehaviour:
   damageType: 1
   sunCost: 110
   baseMaxHealth: 200
-  baseAttackDamage: 24
+  baseAttackDamage: 18
   baseMagicPower: 0
   baseAttackSpeed: 0.7
   baseAttackRange: 3.5
@@ -55,7 +55,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
-  baseProjectileSpeed: 20
+  baseProjectileSpeed: 12
   baseMaxRange: 99
   basePiercing: 0
   baseAoERadius: 0
@@ -71,12 +71,12 @@ MonoBehaviour:
   basePassiveDamage: 0
   baseSkillDamage: 0
   projectileSpeedDamageScale: 2.5
-  path1AttackDamagePerLevel: 12
+  path1AttackDamagePerLevel: 6
   path1AttackRangePerLevel: 0.2
   baseAttackSpeedBonus: 0.16
-  baseProjectileSpeedBonus: 0.1
+  baseProjectileSpeedBonus: 0.08
   path2AttackSpeedBonusPerLevel: 0.12
-  path2ProjectileSpeedBonusPerLevel: 0.075
+  path2ProjectileSpeedBonusPerLevel: 0.06
   attackSpeedBonusMPMultiplier: 0.16
   projectileSpeedBonusMPMultiplier: 0.12
   baseFieldDuration: 8

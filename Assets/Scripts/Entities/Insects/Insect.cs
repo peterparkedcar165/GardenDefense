@@ -490,6 +490,8 @@ public abstract class Insect : Entity, IAttackable
         {
             if (plant == null || !plant.IsAlive) continue;
             if (isOnGround && plant.occupiedTile != null && plant.occupiedTile.isHighground) continue;
+            // non-flying insects cannot reach plants sitting on water
+            if (!isFlying && plant.occupiedTile != null && plant.occupiedTile.tileType == TileType.Water) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
             if (dist <= targetingRange && dist < nearestDist)
             {

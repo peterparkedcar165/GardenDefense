@@ -46,7 +46,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restDuration: 15
+  restDuration: 8
   minThreatBudget: 9
   maxThreatBudget: 65
   budgetCurve:
@@ -74,44 +74,44 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   insects:
-  - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
-    unlockWave: 0
-    budgetWeight: 0.4
-    startDelay: 0
   - data: {fileID: 11400000, guid: 972f93f4d1bdccd46bde44c77d2d71ed, type: 2}
     unlockWave: 0
     budgetWeight: 0.4
     startDelay: 0
+  - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
+    unlockWave: 2
+    budgetWeight: 0.4
+    startDelay: 0
+  - data: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+    unlockWave: 4
+    budgetWeight: 0.2
+    startDelay: 4
   - data: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
     unlockWave: 6
     budgetWeight: 0.1
-    startDelay: 3
-  - data: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
-    unlockWave: 11
-    budgetWeight: 0.1
     startDelay: 4
-  - data: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
-    unlockWave: 3
-    budgetWeight: 0.2
-    startDelay: 6
-  - data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
+  - data: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
     unlockWave: 6
-    budgetWeight: 0.3
-    startDelay: 8
+    budgetWeight: 0.1
+    startDelay: 2
+  - data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
+    unlockWave: 8
+    budgetWeight: 0.166
+    startDelay: 5
   eliteWaveInterval: 5
   eliteInsects:
   - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}
     unlockWave: 5
     budgetWeight: 0.4
     startDelay: 3
-    minSpawnCount: 3
-    maxSpawnCount: 12
+    minSpawnCount: 4
+    maxSpawnCount: 8
   - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
     unlockWave: 3
     budgetWeight: 0.2
     startDelay: 2
-    minSpawnCount: 3
-    maxSpawnCount: 12
+    minSpawnCount: 4
+    maxSpawnCount: 8
   fertilizerPool:
   - {fileID: 11400000, guid: 49742aa28258d5b48a2597303e9f594d, type: 2}
   - {fileID: 11400000, guid: 837966cac67aa914eb3c89a9b6e676c0, type: 2}

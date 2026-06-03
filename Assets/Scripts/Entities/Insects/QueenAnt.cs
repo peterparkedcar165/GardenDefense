@@ -53,9 +53,10 @@ public class QueenAnt : Ant
     {
         if (antPrefabs == null || antPrefabs.Length == 0) return;
         GameObject prefab = antPrefabs[Random.Range(0, antPrefabs.Length)];
-        // spawn from where the queen visually is, not her root/prefab transform
-        Vector3 spawnPos = visual != null ? visual.position : transform.position;
-        GameObject antGO = Instantiate(prefab, spawnPos, Quaternion.identity);
+        // spawn the baby's root where the queen's root is (on the path), not at her visual.
+        // when she is knocked up her visual is raised, but the root must stay grounded so the
+        // baby pathfinds correctly. LaunchAnt then starts the baby's visual at the queen's visual
+        GameObject antGO = Instantiate(prefab, transform.position, Quaternion.identity);
         Insect ant = antGO.GetComponent<Insect>();
         if (ant != null)
         {
@@ -76,7 +77,10 @@ public class QueenAnt : Ant
         if (antVisual == null) yield break;
 
         Vector3 endLocal = antVisual.localPosition;
-        Vector3 startLocal = endLocal + new Vector3(Random.Range(-0.5f, 0.5f), 1.5f, 0f);
+        // start the baby's visual at the queen's visual position (raised when she is knocked up),
+        // then settle it down to its resting local position. scatter horizontally a little
+        Vector3 queenVisualWorld = visual != null ? visual.position : transform.position;
+        Vector3 startLocal = queenVisualWorld - antGO.transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0f, 0f);
         antVisual.localPosition = startLocal;
 
         float duration = 0.6f;

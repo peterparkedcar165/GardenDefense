@@ -46,8 +46,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restDuration: 15
-  minThreatBudget: 6
+  restDuration: 6
+  minThreatBudget: 7
   maxThreatBudget: 55
   budgetCurve:
     serializedVersion: 2
@@ -74,43 +74,43 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   insects:
-  - data: {fileID: 11400000, guid: b4796f9368fb88046bc95900367bf356, type: 2}
-    unlockWave: 0
-    budgetWeight: 0.1
-    startDelay: 8
   - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
     unlockWave: 0
     budgetWeight: 0.4
     startDelay: 0
+  - data: {fileID: 11400000, guid: b4796f9368fb88046bc95900367bf356, type: 2}
+    unlockWave: 0
+    budgetWeight: 0.208
+    startDelay: 8
   - data: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
-    unlockWave: 1
+    unlockWave: 2
     budgetWeight: 0.3
     startDelay: 8
   - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
-    unlockWave: 2
+    unlockWave: 4
     budgetWeight: 0.4
     startDelay: 0
+  - data: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+    unlockWave: 5
+    budgetWeight: 0.2
+    startDelay: 6
   - data: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
     unlockWave: 6
     budgetWeight: 0.1
     startDelay: 3
   - data: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
-    unlockWave: 11
+    unlockWave: 8
     budgetWeight: 0.1
     startDelay: 4
-  - data: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
-    unlockWave: 3
-    budgetWeight: 0.2
-    startDelay: 6
   - data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
-    unlockWave: 6
+    unlockWave: 9
     budgetWeight: 0.3
     startDelay: 8
   - data: {fileID: 11400000, guid: c0cd54e6f33f68d4a891a984ef059bda, type: 2}
-    unlockWave: 3
+    unlockWave: 12
     budgetWeight: 0.3
     startDelay: 8
-  eliteWaveInterval: 5
+  eliteWaveInterval: 4
   eliteInsects:
   - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}
     unlockWave: 5
@@ -125,6 +125,6 @@ MonoBehaviour:
     minSpawnCount: 4
     maxSpawnCount: 8
   fertilizerPool:
-  - {fileID: 11400000, guid: dd0b25132e557424aaafc57683f18d40, type: 2}
-  - {fileID: 11400000, guid: dc8e08c028ddeb240ad857659b4bdecc, type: 2}
-  - {fileID: 11400000, guid: 3534c88ed63c3784db2603b272c2005f, type: 2}
+  - {fileID: 11400000, guid: 0c38c5a016b0ce842860c1f5440fe371, type: 2}
+  - {fileID: 11400000, guid: 4076b26003a02ef44b4442c0d76c4af8, type: 2}
+  - {fileID: 11400000, guid: 403f7412059d428429a978a97c2bff6b, type: 2}
