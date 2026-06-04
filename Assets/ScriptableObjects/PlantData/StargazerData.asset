@@ -71,7 +71,7 @@ MonoBehaviour:
   basePassiveDamage: 0
   baseSkillDamage: 0
   coneAngle: 45
-  flammableBonusPerStack: 0.02
+  flammableBonusPerStack: 0.01
   flammableMaxStacks: 500
   flammableDuration: 12
   baseStacksPerHit: 1
@@ -85,7 +85,6 @@ MonoBehaviour:
   skillBurnMultiplier: 1.5
   skillFlammableStacks: 10
   path1AttackDamagePerLevel: 1
-  path1ConeAnglePerLevel: 8
   path1AttackRangePerLevel: 0.3
   path2StacksPerLevel: 1
   path2BurnDurationPerLevel: 0.2

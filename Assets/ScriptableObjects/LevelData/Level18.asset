@@ -47,8 +47,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 6
-  minThreatBudget: 8
-  maxThreatBudget: 65
+  minThreatBudget: 10
+  maxThreatBudget: 75
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -104,26 +104,26 @@ MonoBehaviour:
     startDelay: 4
   - data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
     unlockWave: 9
-    budgetWeight: 0.3
-    startDelay: 8
+    budgetWeight: 0.4
+    startDelay: 3
   - data: {fileID: 11400000, guid: c0cd54e6f33f68d4a891a984ef059bda, type: 2}
     unlockWave: 12
-    budgetWeight: 0.3
-    startDelay: 8
+    budgetWeight: 0.4
+    startDelay: 3
   eliteWaveInterval: 4
   eliteInsects:
   - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}
     unlockWave: 5
     budgetWeight: 0.353
     startDelay: 5
-    minSpawnCount: 2
-    maxSpawnCount: 4
+    minSpawnCount: 5
+    maxSpawnCount: 8
   - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
     unlockWave: 3
     budgetWeight: 0.2
     startDelay: 2
-    minSpawnCount: 4
-    maxSpawnCount: 8
+    minSpawnCount: 7
+    maxSpawnCount: 12
   fertilizerPool:
   - {fileID: 11400000, guid: 1140bcb5fed8e904497782cedf837345, type: 2}
   - {fileID: 11400000, guid: b4401fd70145c544a9a251d483743ab7, type: 2}

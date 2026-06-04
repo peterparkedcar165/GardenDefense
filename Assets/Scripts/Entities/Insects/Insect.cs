@@ -7,7 +7,8 @@ public enum Aggressivity { Low, Medium, High }
 
 public abstract class Insect : Entity, IAttackable
 {
-    public static List<Insect> allInsects = new List<Insect>();
+    public static List<Insect> allInsects = new List<Insect>();          // enemies only (the wave)
+    public static List<Insect> friendlyInsects = new List<Insect>();     // minions + hypnotized insects
     public static event System.Action<Vector3> OnInsectKilled;
     public static event System.Action<Insect> OnInsectDied;
     private static int ObstacleLayer => LayerMask.GetMask("Obstacle");
@@ -16,7 +17,8 @@ public abstract class Insect : Entity, IAttackable
     static void Init()
     {
         allInsects = new List<Insect>();
-        SceneManager.sceneLoaded += (scene, mode) => allInsects.Clear();
+        friendlyInsects = new List<Insect>();
+        SceneManager.sceneLoaded += (scene, mode) => { allInsects.Clear(); friendlyInsects.Clear(); };
     }
     public int currentWaypointIndex = 0;
     protected Transform[] waypoints;
@@ -40,6 +42,14 @@ public abstract class Insect : Entity, IAttackable
     public float targetingRange = 0f;
     private float _plantAttackCooldown = 0f;
 
+    // combat side. Friendly = minion / hypnotized: seeks enemy insects, holds or walks back.
+    public Team team = Team.Enemy;
+    public bool movingBackward = false;                 // friendlies that retreat to find a fight
+    protected virtual bool ChasesTarget => true;        // false = hold position, let the target come
+    protected virtual bool ScalesWithWave => true;      // false = health is not scaled by wave number
+    private const float EngageHold = 0.4f;              // engagement is refreshed each frame while in range
+    protected float EngageRange => Mathf.Max(attackRange, targetingRange);
+
     private Vector3 _preDisplacePosition;
     private bool _isDisplaced = false;
     private bool _returningToPath = false;
@@ -56,6 +66,8 @@ public abstract class Insect : Entity, IAttackable
     {
         get
         {
+            // friendlies (minions, hypnotized) fight enemy insects and ignore taunts (which aim at plants)
+            if (team == Team.Friendly) return FindNearestEnemyInRange();
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
             if (taunted != null) return taunted;
             if (HasEffect<ObliviousEffect>() && aggressivity != Aggressivity.Low) return null;
@@ -90,6 +102,12 @@ public abstract class Insect : Entity, IAttackable
     public DamageType attackDamageType = DamageType.Physical;
     public ElementalType attackElementalType = ElementalType.Neutral;
 
+    // Fungal Hypnosis hooks: when a hypnotized insect attacks, credit the damage to this entity
+    // (the plant) instead of itself, and slow the victim's attack speed
+    public Entity attackSourceOverride;
+    public float attackSlowPercent;
+    public float attackSlowDuration;
+
     private GameManager gameManager;
     private Transform aimPoint;
     public Transform visual;
@@ -105,6 +123,7 @@ public abstract class Insect : Entity, IAttackable
     void OnDestroy()
     {
         allInsects.Remove(this);
+        friendlyInsects.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedInsect() == this)
             PlantUpgradeUI.instance.HidePanel();
     }
@@ -140,8 +159,11 @@ public abstract class Insect : Entity, IAttackable
             healthBarInstance.transform.localPosition = new Vector3(-0.475f, 0.6f, 0);
         }
 
-        int waveNumber = GameManager.instance.currentWave;
-        baseMaxHealth *= 1f + ((waveNumber-1) * 0.04f);
+        if (ScalesWithWave)
+        {
+            int waveNumber = GameManager.instance.currentWave;
+            baseMaxHealth *= 1f + ((waveNumber-1) * 0.04f);
+        }
         UpdateStats();
         health = maxHealth;
         RefreshHealthBarVisibility();
@@ -154,6 +176,7 @@ public abstract class Insect : Entity, IAttackable
         Move();
         SyncAimPoint();
         UpdateAttack();
+        RefreshEngagement();
         TrackFacing();
         UpdateFacingSprite();
         DebugPathTile();
@@ -339,13 +362,21 @@ public abstract class Insect : Entity, IAttackable
             {
                 Vector3 approachPoint = target.GetApproachPoint(transform.position);
                 float dist = Vector3.Distance(transform.position, approachPoint);
-                if (dist > attackRange)
+                if (dist > attackRange && ChasesTarget)
                 {
                     Vector3 dir = (approachPoint - transform.position).normalized;
                     transform.position += dir * GetMoveSpeed() * Time.deltaTime;
                 }
                 return;
             }
+        }
+
+        // friendlies with no target never walk the path forward; their idle behavior is overridable
+        // (minions hold, hypnotized retreat, shroomlets return to their hold point)
+        if (team == Team.Friendly)
+        {
+            FriendlyIdle();
+            return;
         }
 
         if (currentWaypointIndex >= waypoints.Length)
@@ -502,6 +533,118 @@ public abstract class Insect : Entity, IAttackable
         return nearest;
     }
 
+    // moves this insect between the enemy pool (allInsects) and the friendly pool. friendlies
+    // are out of allInsects so every plant/AoE that iterates it ignores them (no friendly fire)
+    public void SetTeam(Team newTeam)
+    {
+        if (team == newTeam) return;
+        team = newTeam;
+        if (newTeam == Team.Friendly)
+        {
+            allInsects.Remove(this);
+            if (!friendlyInsects.Contains(this)) friendlyInsects.Add(this);
+        }
+        else
+        {
+            friendlyInsects.Remove(this);
+            if (!allInsects.Contains(this)) allInsects.Add(this);
+        }
+    }
+
+    // permanently turns this enemy friendly (PvZ hypno style). it counts as a kill: it yields sun,
+    // hands out exp, and fires the death events, but the body lives on and retreats to fight enemies
+    // until it reaches the spawn. harmless to call on an already friendly insect
+    public void Hypnotize(Entity source)
+    {
+        if (team == Team.Friendly) return;
+        HypnotizeCore(source);
+        ApplyEffect(new HypnotizedEffect(this, source));
+    }
+
+    // Ghost Fungus variant: the turned insect's attacks are ice physical, credited to the plant,
+    // slow their victims, and it gains bonus health and attack damage
+    public void FungalHypnotize(Plant plant, float healthMultiplier, float attackMultiplier, float slowPercent, float slowDuration)
+    {
+        if (team == Team.Friendly) return;
+        HypnotizeCore(plant);
+        ApplyEffect(new FungalHypnosisEffect(this, plant, healthMultiplier, attackMultiplier, slowPercent, slowDuration));
+    }
+
+    // shared hypnotize transition: counts as a kill (sun/exp/events) but keeps the body alive as a
+    // full health friendly that retreats. the marker effect is applied by the caller
+    private void HypnotizeCore(Entity source)
+    {
+        if (source is Plant p) RegisterAttacker(p);
+        DistributeExp();
+        OnInsectKilled?.Invoke(transform.position);
+        OnInsectDied?.Invoke(this);
+        GameManager.instance?.AddSun(Mathf.CeilToInt(sunDrop * (1f + (source != null ? source.sunYieldBonus : 0f))));
+
+        RemoveEffect<TauntEffect>();   // drop any taunt/engagement it had as an enemy
+        SetTeam(Team.Friendly);
+        movingBackward = true;
+        health = maxHealth;            // turned insects come back at full health
+        UpdateHealthBar();
+    }
+
+    // nearest enemy insect within engage range (used by friendlies). enemies live in allInsects
+    private IAttackable FindNearestEnemyInRange()
+    {
+        Insect nearest = null;
+        float nearestDist = Mathf.Infinity;
+        float range = EngageRange;
+        foreach (Insect enemy in allInsects)
+        {
+            if (enemy == null || !enemy.IsAlive) continue;
+            float dist = Vector3.Distance(transform.position, enemy.transform.position);
+            if (dist <= range && dist < nearestDist) { nearestDist = dist; nearest = enemy; }
+        }
+        return nearest;
+    }
+
+    // a friendly locks its single current target into combat (stops it advancing and makes it
+    // fight back). block capacity is one enemy: other enemies in range are not held and walk on.
+    // many friendlies can still gang the same enemy, but only one of them "holds" the engagement
+    private void RefreshEngagement()
+    {
+        if (team != Team.Friendly) return;
+        Insect enemy = target as Insect;
+        if (enemy == null || !enemy.IsAlive) return;
+        if (Vector3.Distance(transform.position, enemy.transform.position) > EngageRange) return;
+
+        EngagedEffect existing = enemy.GetEffect<EngagedEffect>();
+        if (existing != null && existing.taunter != null && existing.taunter.IsAlive)
+        {
+            if (ReferenceEquals(existing.taunter, this)) existing.duration = EngageHold; // refresh mine
+            return; // already held by a living friendly; I still attack it via my target
+        }
+        enemy.ApplyEffect(new EngagedEffect(enemy, EngageHold, 1, this, this));
+    }
+
+    // what a friendly does when it has no target. default: retreat if hypnotized, else hold still
+    protected virtual void FriendlyIdle()
+    {
+        if (movingBackward) MoveBackward();
+    }
+
+    // friendlies that retreat walk toward the previous waypoint, looking for a fight, and
+    // despawn once they reach the start of the path (the spawn point)
+    private void MoveBackward()
+    {
+        if (waypoints == null || waypoints.Length == 0) return;
+        int prevIndex = Mathf.Max(0, currentWaypointIndex - 1);
+        Transform wp = waypoints[prevIndex];
+        if (wp == null) return;
+        Vector3 targetPos = wp.position + new Vector3(pathOffset.x, pathOffset.y, 0);
+        Vector3 dir = (targetPos - transform.position).normalized;
+        transform.position += dir * GetMoveSpeed() * Time.deltaTime;
+        if (Vector3.Distance(transform.position, targetPos) < 0.1f)
+        {
+            if (currentWaypointIndex > 0) currentWaypointIndex--;
+            else Destroy(gameObject);   // reached the spawn point, despawn quietly
+        }
+    }
+
     protected virtual void ReachObjective()
     {
         gameManager.Damage((int)baseAttackDamage);
@@ -526,6 +669,7 @@ public abstract class Insect : Entity, IAttackable
     public override void Kill(Entity source)
     {
         if (isDying) return;
+        if (team == Team.Friendly) { QuietDeath(); return; }   // already counted as killed when turned
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         OnInsectKilled?.Invoke(transform.position);
@@ -535,12 +679,14 @@ public abstract class Insect : Entity, IAttackable
         // the killer's sunYieldBonus (e.g. Aeonium's Blessing) increases sun dropped, rounded up
         gameManager.AddSun(Mathf.CeilToInt(sunDrop * (1f + (source != null ? source.sunYieldBonus : 0f))));
         allInsects.Remove(this);
+        friendlyInsects.Remove(this);
         StartCoroutine(DeathFade());
     }
 
     public override void Kill()
     {
         if (isDying) return;
+        if (team == Team.Friendly) { QuietDeath(); return; }   // already counted as killed when turned
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         OnInsectKilled?.Invoke(transform.position);
@@ -549,6 +695,19 @@ public abstract class Insect : Entity, IAttackable
         DistributeExp();
         gameManager.AddSun(sunDrop);
         allInsects.Remove(this);
+        friendlyInsects.Remove(this);
+        StartCoroutine(DeathFade());
+    }
+
+    // a friendly (minion or hypnotized) dies without any reward, event, or sun (it was already
+    // counted as killed when summoned/turned). just fades out and leaves the rosters
+    private void QuietDeath()
+    {
+        isDying = true;
+        foreach (StatusEffect e in activeEffects) e.OnTargetDied();
+        if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
+        allInsects.Remove(this);
+        friendlyInsects.Remove(this);
         StartCoroutine(DeathFade());
     }
 
@@ -624,7 +783,11 @@ public abstract class Insect : Entity, IAttackable
             StatusIndicator.Spawn(GetIndicatorPosition(), "Miss", new Color(0.55f, 0.6f, 0.75f));
             return;
         }
-        Damage(damage, attacker.attackDamageType, attacker.attackElementalType, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        // Fungal Hypnosis: credit the damage to the controlling plant and slow the victim's attacks
+        Entity src = attacker.attackSourceOverride != null ? attacker.attackSourceOverride : attacker;
+        Damage(damage, attacker.attackDamageType, attacker.attackElementalType, src, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        if (attacker.attackSlowPercent > 0f && IsAlive)
+            ApplyEffect(new AttackSpeedSlowEffect(this, attacker.attackSlowDuration, 1, src, attacker.attackSlowPercent));
     }
     public bool IsAlive => health > 0 && !isDying;
     public Vector3 Position => transform.position;

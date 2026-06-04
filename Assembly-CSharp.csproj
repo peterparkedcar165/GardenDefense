@@ -52,6 +52,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\GhostShroomlet.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerFormat.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\Airborne.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\EntrappedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PuncturedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\EngagedEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DarklingBeetleData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FlammableEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BogIrisData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BubbleTrapEffect.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\GhostFungusData.cs" />
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Skills\FireWave.cs" />
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
@@ -123,8 +126,10 @@
     <Compile Include="Assets\Scripts\Skills\BubblePrison.cs" />
     <Compile Include="Assets\Scripts\Skills\Geyser.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\GhostBoltProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\HollyData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\SummonerPlant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Lobber.cs" />
     <Compile Include="Assets\Scripts\Spawning\Level4.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
@@ -135,6 +140,7 @@
     <Compile Include="Assets\Scripts\Spawning\Level7.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HollyShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\CactusNeedleProjectile.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\FungalHypnosisEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DarklingBeetle.cs" />
     <Compile Include="Assets\Scripts\InsectData.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
@@ -161,6 +167,7 @@
     <Compile Include="Assets\Scripts\PlantButton.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\GhostFungus.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\GlowshroomProjectile.cs" />
@@ -175,6 +182,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HardCC\LevitatingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HypnotizedEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SilenceEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\NeriumOleanderData.cs" />
@@ -182,6 +190,8 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\NeriumOleander.cs" />
+    <Compile Include="Assets\Scripts\Skills\GhostHypnosisWave.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\Minion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlossomingEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\Blizzard.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
@@ -223,6 +233,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BegoniaProjectile.cs" />
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
@@ -246,6 +257,7 @@
     <Compile Include="Assets\Scripts\Environment\ObstacleMarker.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OffPathSlownessEffect.cs" />
     <Compile Include="Assets\Scripts\PlantData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\AttackSpeedSlowEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\MorningGloryData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SnowExposedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusTauntingEffect.cs" />
