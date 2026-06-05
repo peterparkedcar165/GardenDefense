@@ -10,11 +10,14 @@ public class GhostFungus : Shooter
     [SerializeField] private GameObject hypnosisWavePrefab;    // a GhostHypnosisWave prefab
     [SerializeField] private GameObject skillIndicatorPrefab;  // aim indicator for the skill direction
     [SerializeField] private Transform[] holdPoints;           // fixed posts for shroomlets (optional)
+    [SerializeField] private Transform shroomletCenter;        // center of the shroomlet ring (defaults to the fungus)
     [SerializeField] private float holdRadius = 0.8f;          // ring radius used when no holdPoints are set
 
     private GhostFungusData GData => data as GhostFungusData;
     private GhostShroomlet[] _slots = new GhostShroomlet[0];
     private GameObject _skillIndicatorInstance;
+    private Vector3 _formationCenter;        // runtime override set by the relocate button
+    private bool _hasFormationOverride;
 
     private int   ShroomletTarget => (GData?.baseShroomletCount ?? 1) + (GData?.path2ShroomletPerLevel ?? 1) * effectivePath2Level;
     private float FungalHealthMultiplier => (GData?.baseFungalHealthMultiplier ?? 1f) + (GData?.path3HealthMultiplierPerLevel ?? 0.2f) * effectivePath3Level;
@@ -99,22 +102,49 @@ public class GhostFungus : Shooter
         _slots = newSlots;
     }
 
+    // Burgeon command: the info panel shows a relocate button for this plant
+    public override bool CommandsMinions => true;
+
+    // move the shroomlet ring to an aimed point (clamped to range inside HoldPosition) and tell every
+    // live shroomlet to drop combat, walk to its new post, then resume hunting
+    public override void RelocateMinionFormation(Vector3 worldPoint)
+    {
+        _formationCenter = worldPoint;
+        _hasFormationOverride = true;
+
+        int target = ShroomletTarget;
+        if (holdPoints != null && holdPoints.Length > 0) target = Mathf.Min(target, holdPoints.Length);
+        for (int i = 0; i < _slots.Length && i < target; i++)
+            if (_slots[i] != null && _slots[i].IsAlive)
+                _slots[i].RelocateTo(HoldPosition(i, target));
+    }
+
     private Vector3 HoldPosition(int slot, int total)
     {
         if (holdPoints != null && holdPoints.Length > 0 && holdPoints[slot % holdPoints.Length] != null)
             return holdPoints[slot % holdPoints.Length].position;
+
+        // the ring center is clamped to within the fungus' attack range; placed beyond, it snaps to the edge
+        Vector3 center = _hasFormationOverride ? _formationCenter
+                       : shroomletCenter != null ? shroomletCenter.position
+                       : transform.position;
+        Vector3 offset = center - transform.position;
+        if (offset.magnitude > attackRange)
+            center = transform.position + offset.normalized * attackRange;
+
         float angle = (total > 0 ? (360f / total) * slot : 0f) * Mathf.Deg2Rad;
-        return transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * holdRadius;
+        return center + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * holdRadius;
     }
 
     private GhostShroomlet SpawnShroomletAt(int slot, int total)
     {
         if (shroomletPrefab == null) return null;
-        Vector3 pos = HoldPosition(slot, total);
-        GameObject go = Instantiate(shroomletPrefab, pos, Quaternion.identity);
+        Vector3 holdPos = HoldPosition(slot, total);
+        // spawn on top of the fungus, then let it walk out to its hold point
+        GameObject go = Instantiate(shroomletPrefab, transform.position, Quaternion.identity);
         GhostShroomlet shroomlet = go.GetComponent<GhostShroomlet>();
         if (shroomlet == null) { Destroy(go); return null; }
-        shroomlet.Configure(this, pos,
+        shroomlet.Configure(this, holdPos,
             ShroomletAttackDamage,
             ShroomletHealth,
             ShroomletAttackSpeed,
@@ -221,7 +251,7 @@ public class GhostFungus : Shooter
             if (s != null && s.IsAlive) s.Kill();
     }
 
-    public override string GetName() => $"<b><color=#B0E0E6>{(data != null ? data.displayName : "Ghost Fungus")}</color></b>";
+    public override string GetName() => $"<b><color=#00FFFF>{(data != null ? data.displayName : "Ghost Fungus")}</color></b>";
 
     public override string GetDescription() =>
         $"The {GetName()} is a haunted summoner that fires ice bolts, raises Ghost Shroomlets to guard the lane, and can turn an insect against its own.";

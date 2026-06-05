@@ -144,10 +144,12 @@
     <Compile Include="Assets\Scripts\Entities\Insects\DarklingBeetle.cs" />
     <Compile Include="Assets\Scripts\InsectData.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\CattailProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Moth.cs" />
     <Compile Include="Assets\Scripts\FertilizerManager.cs" />
     <Compile Include="Assets\Scripts\UI\GameButtons.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ChannelingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PathHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\Spawning\ProceduralLevel.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Ant.cs" />
@@ -220,6 +222,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\TaintedEffect.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\CattailData.cs" />
     <Compile Include="Assets\Scripts\Game\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\WaterlilyProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Termite.cs" />
@@ -278,6 +281,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\CaveSpider.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Stargazer.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Cattail.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
     <Compile Include="Assets\Scripts\UI\EntityInfoPanel.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />

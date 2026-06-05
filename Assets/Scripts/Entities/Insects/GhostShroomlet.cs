@@ -8,10 +8,12 @@ public class GhostShroomlet : Minion
 {
     private const float RegenPercent  = 0.05f;   // out of combat: regenerate 5% of max health
     private const float RegenInterval = 2f;      // ...per 2 seconds
+    private const float LeashMultiplier = 1.25f; // can chase out to 1.25x the fungus' attack range
 
     private GhostFungus _fungus;
     private Vector3 holdPoint;
     private bool holdSet;
+    private bool _relocating;   // dropping combat to walk to a newly relocated hold point
     private float detectionRange = 2.5f;
 
     protected override bool ChasesTarget => true;   // pursues enemies it spots within the fungus' leash
@@ -77,8 +79,9 @@ public class GhostShroomlet : Minion
     {
         get
         {
+            if (_relocating) return null;   // ignore enemies while repositioning to the new formation
             Vector3 fungusPos = owner != null ? owner.transform.position : transform.position;
-            float leash = owner != null ? owner.attackRange : Mathf.Infinity;
+            float leash = owner != null ? owner.attackRange * LeashMultiplier : Mathf.Infinity;
             // sticky: keep fighting one enemy it can see and is allowed to chase, ignoring passers-by
             return StickyEnemy(e =>
                 Vector3.Distance(transform.position, e.transform.position) <= detectionRange &&
@@ -90,9 +93,17 @@ public class GhostShroomlet : Minion
     protected override void FriendlyIdle()
     {
         if (!holdSet) return;
-        if (Vector3.Distance(transform.position, holdPoint) <= 0.1f) return;
+        if (Vector3.Distance(transform.position, holdPoint) <= 0.1f) { _relocating = false; return; }
         Vector3 dir = (holdPoint - transform.position).normalized;
         transform.position += dir * GetMoveSpeed() * Time.deltaTime;
+    }
+
+    // the fungus relocated the formation: drop combat and move to the new hold point, then resume
+    public void RelocateTo(Vector3 newHold)
+    {
+        holdPoint    = newHold;
+        holdSet      = true;
+        _relocating  = true;
     }
 
     public override string GetName() => "<color=#B0E0E6>Ghost Shroomlet</color>";

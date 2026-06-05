@@ -46,7 +46,7 @@ public class Snowdrop : Aura
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else if (!IsStunned && HasInsectsInRange())
+        else if (!IsStunned && !IsChanneling && HasInsectsInRange())
             Attack();
 
         foreach (Plant plant in Plant.allPlants)
@@ -165,6 +165,7 @@ public class Snowdrop : Aura
     private void OnTargetConfirmed(Vector3 targetPosition)
     {
         skillCooldownTimer = skillCooldown;
+        BeginChannel();   // can't attack while the blizzard is blowing
         Vector2 direction  = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
         _blizzardInstance  = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
         _blizzardInstance.GetComponent<Blizzard>()?.Initialize(

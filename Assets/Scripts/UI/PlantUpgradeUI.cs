@@ -12,6 +12,14 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private TMP_Text targetingModeText;
     [SerializeField] private Button targetingToggleButton;
 
+    [Header("Minions (Burgeon)")]
+    [SerializeField] private Button relocateMinionsButton;   // visible only for plants that command minions
+    [SerializeField] private float relocateIndicatorRadius = 0.5f;
+
+    [Header("Flying Priority (Cattail)")]
+    [SerializeField] private Button flyingToggleButton;      // visible only for plants with a flying-first toggle
+    [SerializeField] private TMP_Text flyingToggleText;
+
     [Header("Health Bar")]
     [SerializeField] private GameObject healthBarRoot;
     [SerializeField] private Image healthBarFill;
@@ -131,6 +139,12 @@ public class PlantUpgradeUI : EntityInfoPanel
             targetingToggleButton.gameObject.SetActive(plant.UsesTargeting);
         if (targetingModeText != null)
             targetingModeText.text = plant.targeting.ToString();
+        if (relocateMinionsButton != null)
+            relocateMinionsButton.gameObject.SetActive(plant.CommandsMinions);
+        if (flyingToggleButton != null)
+            flyingToggleButton.gameObject.SetActive(plant.UsesFlyingToggle);
+        if (flyingToggleText != null)
+            flyingToggleText.text = plant.prioritizeFlying ? "Flying First" : "Default";
 
         panel.SetActive(true);
 
@@ -156,6 +170,10 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (tempBarRoot != null)     tempBarRoot.SetActive(false);
         if (targetingToggleButton != null)
             targetingToggleButton.gameObject.SetActive(false);
+        if (relocateMinionsButton != null)
+            relocateMinionsButton.gameObject.SetActive(false);
+        if (flyingToggleButton != null)
+            flyingToggleButton.gameObject.SetActive(false);
         if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
 
         panel.SetActive(true);
@@ -333,6 +351,25 @@ public class PlantUpgradeUI : EntityInfoPanel
         int count = System.Enum.GetValues(typeof(TARGETING)).Length;
         selectedPlant.targeting = (TARGETING)(((int)selectedPlant.targeting + 1) % count);
         targetingModeText.text = selectedPlant.targeting.ToString();
+    }
+
+    // toggle the selected plant between prioritizing flyers and normal targeting
+    public void OnFlyingToggleClicked()
+    {
+        if (selectedPlant == null || !selectedPlant.UsesFlyingToggle) return;
+        selectedPlant.prioritizeFlying = !selectedPlant.prioritizeFlying;
+        if (flyingToggleText != null)
+            flyingToggleText.text = selectedPlant.prioritizeFlying ? "Flying First" : "Default";
+    }
+
+    // aim a point, then relocate the selected plant's minion formation there
+    public void OnRelocateMinionsClicked()
+    {
+        if (selectedPlant == null || !selectedPlant.CommandsMinions) return;
+        Plant plant = selectedPlant;   // capture in case selection changes before confirm
+        // clamp the aim point to within the plant's attack range
+        SkillTargetingManager.instance.BeginTargeting(relocateIndicatorRadius,
+            point => plant.RelocateMinionFormation(point), plant.transform.position, plant.attackRange);
     }
 
     // --- Temperature Bar ---

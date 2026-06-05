@@ -42,7 +42,7 @@ public class Holly : Aura
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else if (!IsStunned && HasInsectsInRange())
+        else if (!IsStunned && !IsChanneling && HasInsectsInRange())
             Attack();
 
         _tickTimer += Time.deltaTime;

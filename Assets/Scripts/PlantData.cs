@@ -75,6 +75,7 @@ public class PlantData : ScriptableObject
     public float basePassiveDuration;
     public float baseSkillCooldown;
     public float baseSkillDuration;
+    public float channelDuration;   // how long the plant cannot auto-attack while casting its skill
     public float baseSkillRadius;
     public float baseSkillDamageMultiplier;
     public float baseSkillHealth;

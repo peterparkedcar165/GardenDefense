@@ -124,6 +124,7 @@ public class AloeVera : Lobber
     {
         _isSkillTargeting = false;
         skillCooldownTimer = skillCooldown;
+        BeginChannel();   // can't attack until the rain appears (set channelDuration in data)
         StartCoroutine(ChannelAndSpawn(position));
     }
 

@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4311319333377526007}
   - component: {fileID: 549939264595078635}
   - component: {fileID: 3974951389667605070}
-  - component: {fileID: -6322066852377499160}
+  - component: {fileID: 4376414216295056325}
   m_Layer: 3
-  m_Name: BogIrisProjectile
+  m_Name: CattailProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -14.99, y: -1.19815, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -129,7 +129,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &-6322066852377499160
+--- !u!114 &4376414216295056325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,9 +138,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7388594979766616069}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c30a0b117b5dbf47af30452449e81c2, type: 3}
+  m_Script: {fileID: 11500000, guid: b392e1724b09b0749943ed86f40a9ce5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BogIrisProjectile
+  m_EditorClassIdentifier: Assembly-CSharp::CattailProjectile
   audioSource: {fileID: 0}
   hit: {fileID: 0}
   minPitch: 0.9
@@ -149,6 +149,6 @@ MonoBehaviour:
   projectileSpeed: 0
   maxRange: 0
   piercing: 0
-  damageType: 1
-  elementalType: 1
+  damageType: 0
+  elementalType: 0
   source: {fileID: 0}

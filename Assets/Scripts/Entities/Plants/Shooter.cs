@@ -40,7 +40,7 @@ public abstract class Shooter : Plant
         {
             attackCooldownTimer += Time.deltaTime;
         }
-        else if (!IsStunned)
+        else if (!IsStunned && !IsChanneling)
         {
             GameObject target = FindTarget();
             if (target != null)

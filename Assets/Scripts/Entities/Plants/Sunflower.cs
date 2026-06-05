@@ -84,6 +84,7 @@ public class Sunflower : Shooter
     {
         if (sunrayPrefab == null) return;
         skillCooldownTimer = skillCooldown;
+        BeginChannel();   // can't attack until the sunray appears (set channelDuration in data)
         StartCoroutine(ChannelAndSpawn(position));
     }
 

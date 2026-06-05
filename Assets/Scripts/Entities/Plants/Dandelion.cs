@@ -129,6 +129,7 @@ public class Dandelion : Shooter
     private void OnTargetConfirmed(Vector3 targetPosition)
     {
         skillCooldownTimer = skillCooldown;
+        BeginChannel();   // can't attack while the gust is blowing
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
         float beamWidth = (DData?.baseBeamWidth ?? 1f) + (DData?.path3BeamWidthPerLevel ?? 0.25f) * effectivePath3Level;
         if (windGustPrefab == null) return;

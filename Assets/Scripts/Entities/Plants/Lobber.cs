@@ -40,7 +40,7 @@ public abstract class Lobber : Plant
         {
             attackCooldownTimer += Time.deltaTime;
         }
-        else if (!IsStunned)
+        else if (!IsStunned && !IsChanneling)
         {
             GameObject target = FindLobberTarget();
             if (target != null)

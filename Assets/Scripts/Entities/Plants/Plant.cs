@@ -88,6 +88,17 @@ public abstract class Plant : Entity, IAttackable
     // without the plant carrying the Silence effect itself
     public bool IsSilenced => HasEffect<SilenceEffect>() || HasEffect<HardCrowdControl>();
 
+    // channeling a skill: the plant cannot perform its normal auto-attack while this is active
+    public bool IsChanneling => HasEffect<ChannelingEffect>();
+
+    // call when a skill that locks out attacking begins; channels for the data-driven duration
+    // (channelDuration on the plant's data). a duration of 0 means no channel
+    protected void BeginChannel()
+    {
+        float dur = data != null ? data.channelDuration : 0f;
+        if (dur > 0f) ApplyEffect(new ChannelingEffect(this, dur, 1, this));
+    }
+
     // hover/selection state, used by owned minions to show their range circles alongside the plant
     public bool IsHovered  => _hoverHighlighted;
     public bool IsSelected => PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this;
@@ -138,6 +149,15 @@ public abstract class Plant : Entity, IAttackable
     public TileType[] allowedTiles;
     public TARGETING targeting = TARGETING.First;
     public virtual bool UsesTargeting => false;
+
+    // secondary "flying first" targeting toggle (Cattail). when on, the plant prefers flying targets
+    public bool prioritizeFlying = false;
+    public virtual bool UsesFlyingToggle => false;
+
+    // Burgeon plants that command minions: the info panel shows a "relocate formation" button,
+    // and clicking it (after aiming a point) calls RelocateMinionFormation
+    public virtual bool CommandsMinions => false;
+    public virtual void RelocateMinionFormation(Vector3 worldPoint) { }
     public int sunCost, totalSunSpent = 0;
     [System.NonSerialized] public ElementalType elementalType;
     [System.NonSerialized] public DamageType damageType;
@@ -163,7 +183,7 @@ public abstract class Plant : Entity, IAttackable
     public float baseSkillRadius, skillRadius, skillRadiusAdder, skillRadiusMultiplier;
     public float baseSkillDamageMultiplier, skillDamageMultiplier, skillDamageMultiplierAdder;
     public float baseSkillHealth, skillHealth;
-    public bool SkillReady => path3Unlocked && skillCooldownTimer <= 0 && !IsSilenced;
+    public bool SkillReady => path3Unlocked && skillCooldownTimer <= 0 && !IsSilenced && !IsChanneling;
 
 
     [Header("Paths")]

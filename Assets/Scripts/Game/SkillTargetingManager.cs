@@ -15,6 +15,11 @@ public class SkillTargetingManager : MonoBehaviour
     private Action<Vector3> onConfirm;
     private GameObject indicatorInstance;
 
+    // optional: clamp the aim point (indicator + confirm) to within a radius of a center
+    private bool clampAim;
+    private Vector3 clampCenter;
+    private float clampRadius;
+
     private bool isPlantTargeting = false;
     private Action<Plant> onPlantConfirm;
     public bool IsPlantTargeting => isPlantTargeting;
@@ -42,6 +47,13 @@ public class SkillTargetingManager : MonoBehaviour
 
         Vector3 mouseWorld = GetMouseWorldPosition();
 
+        if (clampAim)
+        {
+            Vector3 off = mouseWorld - clampCenter;
+            if (off.sqrMagnitude > clampRadius * clampRadius)
+                mouseWorld = clampCenter + off.normalized * clampRadius;
+        }
+
         if (indicatorInstance != null)
             indicatorInstance.transform.position = mouseWorld;
 
@@ -62,13 +74,17 @@ public class SkillTargetingManager : MonoBehaviour
         if (isPlantTargeting) CancelPlantTargeting();
     }
 
-    public void BeginTargeting(float radius, Action<Vector3> onConfirm)
+    public void BeginTargeting(float radius, Action<Vector3> onConfirm, Vector3? clampCenter = null, float clampRadius = 0f)
     {
         PlantSelector.instance?.ClearAll();
         if (isTargeting) Cancel();
 
         this.onConfirm = onConfirm;
         isTargeting = true;
+
+        clampAim = clampCenter.HasValue;
+        this.clampCenter = clampCenter ?? Vector3.zero;
+        this.clampRadius = clampRadius;
 
         if (targetIndicatorPrefab != null)
         {
