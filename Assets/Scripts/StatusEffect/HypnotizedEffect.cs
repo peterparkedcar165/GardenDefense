@@ -32,15 +32,8 @@ public class HypnotizedEffect : StatusEffect
         Insect insect = target as Insect;
         if (insect == null) return;
         insect.movingBackward = false;
+        insect.ClearEngagementsByMe();   // its former victims stop targeting it
         insect.SetTeam(Team.Enemy);
-
-        // drop engagements it created while friendly so its former victims stop targeting it
-        foreach (Insect e in Insect.allInsects)
-        {
-            EngagedEffect eng = e != null ? e.GetEffect<EngagedEffect>() : null;
-            if (eng != null && ReferenceEquals(eng.taunter, insect))
-                e.RemoveEffect<EngagedEffect>();
-        }
     }
 
     public override string GetName() => "<color=#B266FF>Hypnotized</color>";

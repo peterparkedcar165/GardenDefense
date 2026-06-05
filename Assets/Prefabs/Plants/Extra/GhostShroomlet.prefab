@@ -198,6 +198,8 @@ MonoBehaviour:
   debuffReceivedDuration: 0
   burnDurationBonus: 0
   sunYieldBonus: 0
+  baseMinionDamage: 0
+  minionDamage: 0
   shieldBonusDamage: 0
   shieldToughness: 0
   startingShield: 0
@@ -246,6 +248,7 @@ MonoBehaviour:
   shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
+  minionDamageAdder: 0
   counterDamageAdder: 0
   debuffGivenDurationAdder: 0
   buffGivenDurationAdder: 0
@@ -324,8 +327,8 @@ MonoBehaviour:
   targetingRange: 0
   team: 0
   movingBackward: 0
-  spriteRight: {fileID: 21300000, guid: 7da9676eef904ab4a93274e71a88d6eb, type: 3}
-  spriteLeft: {fileID: 21300000, guid: 03df0a4588584bb48a8468cbc75e5155, type: 3}
+  spriteRight: {fileID: 21300000, guid: 53a6e763447d294408b69f5d42674ef3, type: 3}
+  spriteLeft: {fileID: 21300000, guid: 32ff0d867d19558419a16eea966a2604, type: 3}
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
   sunDrop: 0
@@ -336,7 +339,6 @@ MonoBehaviour:
   attackSlowPercent: 0
   attackSlowDuration: 0
   visual: {fileID: 3774765596699175811}
-  owner: {fileID: 0}
   rangeCircle: {fileID: 4334310149410444902}
   lifetime: 12
 --- !u!1 &3324219254640273640
@@ -456,8 +458,8 @@ Transform:
   m_GameObject: {fileID: 3949176022732913986}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: 0}
-  m_LocalScale: {x: 1, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0.005, y: -0.0167, z: 0}
+  m_LocalScale: {x: 0.8566378, y: 0.26665, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8391850788492431864}
@@ -603,7 +605,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: d852e9b01c514a1498e3348a6b17926f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 53a6e763447d294408b69f5d42674ef3, type: 3}
   m_Color: {r: 0.13519046, g: 0.9245283, b: 0.88129836, a: 1}
   m_FlipX: 0
   m_FlipY: 0

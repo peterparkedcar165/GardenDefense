@@ -12,10 +12,15 @@ public class DarknessManager : MonoBehaviour
     public bool pitchBlack = false;
 
     [Header("Setup-phase lighting (cave levels)")]
-    [Tooltip("if true, the level is fully lit during wave 0 (setup) and goes dark when wave 1 begins")]
+    [Tooltip("if true, the NightLight is lit during wave 0 (setup) and fades to black just before wave 1")]
     [SerializeField] private bool litDuringSetup = false;
-    [SerializeField] private Light2D globalLight;       // the scene's global light, faded in setup
-    [SerializeField] private float lightFadeSpeed = 1.5f;
+    [SerializeField] private Light2D nightLight;          // assign the scene's NightLight
+    [Tooltip("NightLight intensity during the setup phase")]
+    [SerializeField] private float setupIntensity = 0.4f;
+    [Tooltip("the light reaches 0 this many seconds before wave 1 begins")]
+    [SerializeField] private float darkByCountdown = 1f;
+    [Tooltip("how long (seconds) the fade from the setup intensity down to 0 takes")]
+    [SerializeField] private float fadeDuration = 0.4f;
 
     private static readonly List<(Transform t, float radius)> _dynamicSources = new List<(Transform, float)>();
 
@@ -32,14 +37,19 @@ public class DarknessManager : MonoBehaviour
     {
         if (!litDuringSetup) return;
 
-        // wave 0 = setup: keep the level bright; from wave 1 on it goes dark
         bool inSetup = GameManager.instance == null || GameManager.instance.currentWave == 0;
-        isDark = !inSetup;
-        if (globalLight != null)
-        {
-            float target = inSetup ? 1f : 0f;
-            globalLight.intensity = Mathf.MoveTowards(globalLight.intensity, target, lightFadeSpeed * Time.deltaTime);
-        }
+        float countdown = GameHUD.instance != null ? GameHUD.instance.NextWaveCountdown : float.PositiveInfinity;
+
+        // held at setupIntensity through setup, then fades to 0 over fadeDuration, reaching 0 when
+        // darkByCountdown seconds remain before wave 1. stays 0 from then on (pitch black for the wave)
+        float target;
+        if (!inSetup)
+            target = 0f;
+        else
+            target = setupIntensity * Mathf.Clamp01((countdown - darkByCountdown) / Mathf.Max(fadeDuration, 0.0001f));
+
+        isDark = target <= 0.001f;   // darkness gameplay kicks in once the NightLight is fully out
+        if (nightLight != null) nightLight.intensity = target;
     }
 
     public static void RegisterLightSource(Transform t, float radius) => _dynamicSources.Add((t, radius));

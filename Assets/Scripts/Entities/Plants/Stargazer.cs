@@ -53,12 +53,12 @@ public class Stargazer : Aura
         UpdateFacing();
         UpdateSkillIndicator();
 
-        bool hasTarget = FacingTarget() != null;
-        UpdateFireCone(hasTarget);   // stream fire while a target is in the cone
+        bool canAttack = FacingTarget() != null && !IsStunned;   // webbed/stunned can't spit fire
+        UpdateFireCone(canAttack);   // stream fire while a target is in the cone
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else if (hasTarget)   // only fires when there's a visible target in range (respects darkness)
+        else if (canAttack)   // only fires when there's a visible target in range (respects darkness)
             Attack();
     }
 

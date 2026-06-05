@@ -70,7 +70,7 @@ public abstract class Insect : Entity, IAttackable
             // friendlies (minions, hypnotized) fight enemy insects and ignore taunts (which aim at plants)
             if (team == Team.Friendly) return FindNearestEnemyInRange();
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
-            if (taunted != null) return taunted;
+            if ((taunted as UnityEngine.Object) != null) return taunted;   // ignore a destroyed taunter
             if (HasEffect<ObliviousEffect>() && aggressivity != Aggressivity.Low) return null;
             switch (aggressivity)
             {
@@ -588,7 +588,7 @@ public abstract class Insect : Entity, IAttackable
     protected static bool CanReach(Insect attacker, Insect target) => attacker.isFlying || !target.isFlying;
 
     // nearest enemy insect within engage range (used by friendlies). enemies live in allInsects
-    private IAttackable FindNearestEnemyInRange()
+    protected IAttackable FindNearestEnemyInRange()
     {
         return StickyEnemy(e => Vector3.Distance(transform.position, e.transform.position) <= EngageRange);
     }
@@ -663,7 +663,7 @@ public abstract class Insect : Entity, IAttackable
         if (Vector3.Distance(transform.position, targetPos) < 0.1f)
         {
             if (currentWaypointIndex > 0) currentWaypointIndex--;
-            else Destroy(gameObject);     // reached the spawn point: despawn
+            else QuietDeath();            // reached the spawn point: despawn (and clean up its engagements)
         }
     }
 
@@ -727,10 +727,22 @@ public abstract class Insect : Entity, IAttackable
     {
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
+        ClearEngagementsByMe();   // its former victims must stop targeting this now-gone friendly
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         allInsects.Remove(this);
         friendlyInsects.Remove(this);
         StartCoroutine(DeathFade());
+    }
+
+    // drops the EngagedEffects this insect created, so its victims release once it is gone
+    public void ClearEngagementsByMe()
+    {
+        foreach (Insect e in allInsects)
+        {
+            EngagedEffect eng = e != null ? e.GetEffect<EngagedEffect>() : null;
+            if (eng != null && ReferenceEquals(eng.taunter, this))
+                e.RemoveEffect<EngagedEffect>();
+        }
     }
 
     private IEnumerator DeathFade()
@@ -807,7 +819,11 @@ public abstract class Insect : Entity, IAttackable
         }
         // Fungal Hypnosis: credit the damage to the controlling plant and slow the victim's attacks
         Entity src = attacker.attackSourceOverride != null ? attacker.attackSourceOverride : attacker;
-        Damage(damage, attacker.attackDamageType, attacker.attackElementalType, src, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        // friendlies (minions and hypnotized insects) tag their hits as a minion attack
+        DamageTag[] tags = attacker.team == Team.Friendly
+            ? new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.MinionAttack }
+            : new DamageTag[] { DamageTag.Melee, DamageTag.Attack };
+        Damage(damage, attacker.attackDamageType, attacker.attackElementalType, src, false, tags);
         if (attacker.attackSlowPercent > 0f && IsAlive)
             ApplyEffect(new AttackSpeedSlowEffect(this, attacker.attackSlowDuration, 1, src, attacker.attackSlowPercent));
     }

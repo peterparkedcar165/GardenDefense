@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GhostFungusData
   m_EditorClassIdentifier: Assembly-CSharp::GhostFungusData
   plantPrefab: {fileID: 1056421689034034196, guid: a96b01cf1c491154fa2d87181560e4e6, type: 3}
-  icon: {fileID: 21300000, guid: 759a442b381ad244cb1e2e0741b05c12, type: 3}
+  icon: {fileID: 21300000, guid: 60664fb2fd02180448ec089c190efb1f, type: 3}
   plantName: GhostFungus
   displayName: Ghost Fungus
   cultivar: 6
@@ -95,6 +95,5 @@ MonoBehaviour:
   path3HealthMultiplierPerLevel: 0.1
   baseFungalAttackMultiplier: 0.15
   path3AttackMultiplierPerLevel: 0.1
-  baseFungalSlowPercent: 0.15
-  path3SlowPerLevel: 0.1
-  fungalSlowDuration: 3
+  baseFungalMoveSlow: 0.1
+  path3MoveSlowPerLevel: 0.05

@@ -614,6 +614,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarknessManager
   isDark: 1
   pitchBlack: 1
+  litDuringSetup: 1
+  nightLight: {fileID: 754671024}
+  setupIntensity: 0.4
+  darkByCountdown: 1
+  fadeDuration: 0.4
 --- !u!4 &316370015
 Transform:
   m_ObjectHideFlags: 0
@@ -1594,7 +1599,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Intensity
-      value: 0
+      value: 1.43
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_ApplyToSortingLayers.Array.size
@@ -1657,6 +1662,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
+--- !u!114 &754671024 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
+  m_PrefabInstance: {fileID: 754671023}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.Light2D
 --- !u!1 &774704556
 GameObject:
   m_ObjectHideFlags: 0

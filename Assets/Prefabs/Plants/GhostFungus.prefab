@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 943325936003181256}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.01, y: -0.233, z: 0}
-  m_LocalScale: {x: 0.75435996, y: 0.14191936, z: 0.5}
+  m_LocalPosition: {x: -0.0065, y: -0.233, z: 0}
+  m_LocalScale: {x: 1.1588408, y: 0.14191936, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1839221878583724804}
@@ -266,6 +266,8 @@ MonoBehaviour:
   debuffReceivedDuration: 0
   burnDurationBonus: 0
   sunYieldBonus: 0
+  baseMinionDamage: 0
+  minionDamage: 0
   shieldBonusDamage: 0
   shieldToughness: 0
   startingShield: 0
@@ -314,6 +316,7 @@ MonoBehaviour:
   shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
+  minionDamageAdder: 0
   counterDamageAdder: 0
   debuffGivenDurationAdder: 0
   buffGivenDurationAdder: 0
@@ -474,7 +477,7 @@ Transform:
   m_GameObject: {fileID: 5647405832183044929}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.012, y: 0.289, z: 0}
+  m_LocalPosition: {x: 0.016, y: 0.26, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -529,7 +532,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 759a442b381ad244cb1e2e0741b05c12, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 60664fb2fd02180448ec089c190efb1f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

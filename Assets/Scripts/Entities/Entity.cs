@@ -19,6 +19,7 @@ public enum DamageTag
     DoT,
     Melee,
     Attack,
+    MinionAttack,
     PassiveDamage,
     SkillDamage,
     ElementalDebuff,

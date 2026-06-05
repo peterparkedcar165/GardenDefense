@@ -16,8 +16,10 @@ public class Moth : FlyingInsect
     {
         get
         {
+            // hypnotized (friendly) moths fight enemy insects like any other friendly
+            if (team == Team.Friendly) return FindNearestEnemyInRange();
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
-            if (taunted != null) return taunted;
+            if ((taunted as Object) != null) return taunted;
             return FindNearestLightPlantInRange();
         }
     }
