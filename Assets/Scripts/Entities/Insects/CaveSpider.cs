@@ -16,8 +16,8 @@ public class CaveSpider : Insect
         IAttackable current = target;
         if (current == null) return;
         current.ReceiveAttack(attackDamage, this);
-        // a blinded spider can't aim its web
-        if (current is Plant plant && plant.IsAlive && !HasEffect<BlindEffect>())
-            plant.ApplyEffect(new WebbedEffect(plant, webbedDuration, 1, this));
+        // a blinded spider can't aim its web. webs whatever it hits (plant, or enemy insect while hypnotized)
+        if (current.IsAlive && current is Entity victim && !HasEffect<BlindEffect>())
+            victim.ApplyEffect(new WebbedEffect(victim, webbedDuration, 1, this));
     }
 }

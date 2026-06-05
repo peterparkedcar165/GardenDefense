@@ -824,6 +824,10 @@ public abstract class Insect : Entity, IAttackable
             ? new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.MinionAttack }
             : new DamageTag[] { DamageTag.Melee, DamageTag.Attack };
         Damage(damage, attacker.attackDamageType, attacker.attackElementalType, src, false, tags);
+        // Damage lifesteals to 'src'; when the credit is overridden (fungal hypnosis) the attacking
+        // insect still heals itself off its own lifesteal (e.g. a hypnotized mosquito)
+        if (src != attacker && attacker.lifesteal > 0f && attacker.IsAlive)
+            attacker.Heal(damage * attacker.lifesteal);
         if (attacker.attackSlowPercent > 0f && IsAlive)
             ApplyEffect(new AttackSpeedSlowEffect(this, attacker.attackSlowDuration, 1, src, attacker.attackSlowPercent));
     }

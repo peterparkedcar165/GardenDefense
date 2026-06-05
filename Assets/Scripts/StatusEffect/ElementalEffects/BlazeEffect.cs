@@ -24,7 +24,7 @@ public class BlazeEffect : ElementalDebuff
         {
             insect.RemoveEffect<BlazeEffect>();
             insect.RemoveEffect<SproutEffect>();
-            insect.ApplyEffect(new BurnEffect(insect, 5f, 1, source));
+            insect.ApplyEffect(new BurnEffect(insect, 6f, 1, source));
         }
         else if (insect.HasEffect<TaintedEffect>())
         {

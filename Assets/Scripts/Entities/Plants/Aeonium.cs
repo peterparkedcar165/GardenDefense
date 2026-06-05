@@ -58,12 +58,12 @@ public class Aeonium : Shooter
         }
     }
 
-    // each nearby plant's projectile attack speeds the sun timer
+    // each nearby plant's projectile or melee attack speeds the sun timer
     private void HandleNearbyAttack(Plant plant, DamageTag[] tags)
     {
         if (plant == this) return;
         if (!System.Array.Exists(tags, t => t == DamageTag.Attack)) return;
-        if (!System.Array.Exists(tags, t => t == DamageTag.Projectile)) return;
+        if (!System.Array.Exists(tags, t => t == DamageTag.Projectile || t == DamageTag.Melee)) return;
         if (Vector3.Distance(transform.position, plant.transform.position) <= attackRange)
             passiveCooldownTimer -= _sunTimerReduction;
     }
@@ -132,7 +132,7 @@ public class Aeonium : Shooter
         $"Launches an energy ball dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage to the first insect hit.";
 
     public override string GetPassiveDescription() =>
-        $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{passiveCooldown:F0}s</b></color>. Each projectile attack hit by a plant within her radius reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";
+        $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{passiveCooldown:F0}s</b></color>. Each projectile or melee attack hit by a plant within her radius reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";
 
     public override string GetSkillDesription() =>
         $"Grants all plants within range <color=green><b>Blessing of the Sun</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, increasing their Sun yield — both generation and the Sun their kills drop — by <color=green><b>{SunYieldBonus * 100f:F0}%</b></color>.";

@@ -17,18 +17,18 @@ public class DesertLocust : Insect
         IAttackable currentTarget = target;
         base.Attack();
 
-        // a blinded locust can't latch on to devour
-        if (currentTarget is Plant plant && plant.IsAlive && !HasEffect<BlindEffect>())
-            ApplyDevour(plant);
+        // a blinded locust can't latch on to devour. devours plants, or enemy insects while hypnotized
+        if (currentTarget is Entity victim && currentTarget.IsAlive && !HasEffect<BlindEffect>())
+            ApplyDevour(victim);
     }
 
-    private void ApplyDevour(Plant plant)
+    private void ApplyDevour(Entity victim)
     {
-        DevourEffect existing = plant.GetEffect<DevourEffect>();
+        DevourEffect existing = victim.GetEffect<DevourEffect>();
         if (existing == null)
         {
-            plant.ApplyEffect(new DevourEffect(plant, devourDuration, 1, this));
-            existing = plant.GetEffect<DevourEffect>();
+            victim.ApplyEffect(new DevourEffect(victim, devourDuration, 1, this));
+            existing = victim.GetEffect<DevourEffect>();
         }
         existing?.AddStack(attackDamage * (LData?.devourReductionPercent ?? 1f));
     }

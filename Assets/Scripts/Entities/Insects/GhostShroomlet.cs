@@ -25,7 +25,9 @@ public class GhostShroomlet : Minion
             baseMaxHealth    = _fungus.ShroomletHealth;
             baseAttackSpeed  = _fungus.ShroomletAttackSpeed;
         }
+        float prevMax = maxHealth;
         base.UpdateStats();
+        if (maxHealth > prevMax) health += maxHealth - prevMax;   // a Path 2 health upgrade also heals by the gain
     }
 
     protected override void Update()
