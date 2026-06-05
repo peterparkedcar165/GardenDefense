@@ -1,48 +1,93 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 // a ghostly summoner-shooter. it fires ice physical bolts, conjures Ghost Shroomlets that hold
 // and engage enemies, and its skill turns an insect with Fungal Hypnosis. emits a faint light
 public class GhostFungus : Shooter
 {
-    [SerializeField] private GameObject shroomletPrefab;     // a GhostShroomlet prefab
-    [SerializeField] private GameObject hypnosisWavePrefab;  // a GhostHypnosisWave prefab
-    [SerializeField] private Transform[] holdPoints;         // fixed posts for shroomlets (optional)
-    [SerializeField] private float holdRadius = 0.8f;        // ring radius used when no holdPoints are set
+    [SerializeField] private GameObject shroomletPrefab;       // a GhostShroomlet prefab
+    [SerializeField] private GameObject hypnosisWavePrefab;    // a GhostHypnosisWave prefab
+    [SerializeField] private GameObject skillIndicatorPrefab;  // aim indicator for the skill direction
+    [SerializeField] private Transform[] holdPoints;           // fixed posts for shroomlets (optional)
+    [SerializeField] private float holdRadius = 0.8f;          // ring radius used when no holdPoints are set
 
     private GhostFungusData GData => data as GhostFungusData;
     private GhostShroomlet[] _slots = new GhostShroomlet[0];
-    private float[] _slotTimer = new float[0];
+    private GameObject _skillIndicatorInstance;
 
     private int   ShroomletTarget => (GData?.baseShroomletCount ?? 1) + (GData?.path2ShroomletPerLevel ?? 1) * effectivePath2Level;
-    private float FungalSlow       => (GData?.baseFungalSlowPercent ?? 0.2f) + (GData?.path3SlowPerLevel ?? 0.03f) * effectivePath3Level;
+    private float FungalHealthMultiplier => (GData?.baseFungalHealthMultiplier ?? 1f) + (GData?.path3HealthMultiplierPerLevel ?? 0.2f) * effectivePath3Level;
+    private float FungalAttackMultiplier => (GData?.baseFungalAttackMultiplier ?? 1f) + (GData?.path3AttackMultiplierPerLevel ?? 0.2f) * effectivePath3Level;
+    private float FungalMoveSlow         => (GData?.baseFungalMoveSlow ?? 0.1f) + (GData?.path3MoveSlowPerLevel ?? 0.05f) * effectivePath3Level;
+
+    // shroomlet core stats: base + per level (path 1 for attack, path 2 for health) + magic power.
+    // public so live shroomlets can read them each frame and update as the fungus is upgraded
+    public float ShroomletAttackDamage => (GData?.shroomletBaseAttackDamage ?? 8f)  + (GData?.shroomletAttackDamagePerLevel ?? 2f)   * effectivePath1Level + (GData?.shroomletAttackDamageMP ?? 0f) * magicPower;
+    public float ShroomletAttackSpeed  => (GData?.shroomletBaseAttackSpeed ?? 1f)   + (GData?.shroomletAttackSpeedPerLevel ?? 0.05f) * effectivePath1Level + (GData?.shroomletAttackSpeedMP ?? 0f)  * magicPower;
+    public float ShroomletHealth       => (GData?.shroomletBaseHealth ?? 50f)       + (GData?.shroomletHealthPerLevel ?? 10f)        * effectivePath2Level + (GData?.shroomletHealthMP ?? 0f)       * magicPower;
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
+        passiveCooldownTimer = passiveCooldown;   // the spawn bar fills before the first shroomlet
     }
+
+    private bool _lightColored = false;
+
+    public override void UpdateStats()
+    {
+        // the faint light reaches exactly as far as her attack range
+        baseLightEmissionRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
+        base.UpdateStats();
+
+        if (!_lightColored)
+        {
+            Light2D light = GetComponentInChildren<Light2D>();
+            if (light != null)
+            {
+                light.color = new Color(0.05f, 0.65f, 1f);   // same as the Glowshroom
+                _lightColored = true;
+            }
+        }
+    }
+
+    // keep the spawn bar visible even while it sits full waiting for a shroomlet slot to open
+    protected override bool GetPassiveBarVisible() => passiveCooldown > 0f;
 
     protected override void Update()
     {
         base.Update();   // Shooter handles the ice bolt attack
         UpdateShroomlets();
+        UpdateSkillIndicator();
     }
 
-    // each hold-point slot keeps one shroomlet alive, respawning it at that post after a delay
+    // the passive cooldown (and its bar) gates shroomlet spawns: one per fill. when the bar is full
+    // it spawns into the first empty hold-point slot and refills. at the cap it just holds full,
+    // waiting for a shroomlet to die before the next spawn
     private void UpdateShroomlets()
     {
         int target = ShroomletTarget;
         if (holdPoints != null && holdPoints.Length > 0) target = Mathf.Min(target, holdPoints.Length);
         EnsureSlots(target);
 
+        int alive = 0;
+        for (int i = 0; i < _slots.Length; i++)
+        {
+            if (_slots[i] == null || !_slots[i].IsAlive) { _slots[i] = null; continue; }
+            if (i < target) alive++;
+        }
+
+        if (alive >= target) return;            // cap full: the ready bar waits for a slot to open
+        if (passiveCooldownTimer > 0f) return;  // bar still filling
+
         for (int i = 0; i < target; i++)
         {
             if (_slots[i] != null && _slots[i].IsAlive) continue;
-            _slots[i] = null;
-            _slotTimer[i] -= Time.deltaTime;
-            if (_slotTimer[i] > 0f) continue;
-            _slotTimer[i] = GData?.shroomletRespawnDelay ?? 5f;
             _slots[i] = SpawnShroomletAt(i, target);
+            passiveCooldownTimer += passiveCooldown;   // consume the bar; the next spawn waits a full fill
+            break;                                      // only one shroomlet per fill
         }
     }
 
@@ -50,12 +95,8 @@ public class GhostFungus : Shooter
     {
         if (_slots.Length >= n) return;
         var newSlots = new GhostShroomlet[n];
-        var newTimer = new float[n];
         _slots.CopyTo(newSlots, 0);
-        _slotTimer.CopyTo(newTimer, 0);
-        for (int i = _slotTimer.Length; i < n; i++) newTimer[i] = GData?.shroomletSpawnInterval ?? 2f; // first fill waits
         _slots = newSlots;
-        _slotTimer = newTimer;
     }
 
     private Vector3 HoldPosition(int slot, int total)
@@ -74,10 +115,12 @@ public class GhostFungus : Shooter
         GhostShroomlet shroomlet = go.GetComponent<GhostShroomlet>();
         if (shroomlet == null) { Destroy(go); return null; }
         shroomlet.Configure(this, pos,
-            attackDamage * (GData?.shroomletDamageFraction ?? 0.6f),
-            maxHealth    * (GData?.shroomletHealthFraction ?? 0.5f),
-            GData?.shroomletAttackSpeed ?? 1f,
-            GData?.shroomletAttackRange ?? 0.5f);
+            ShroomletAttackDamage,
+            ShroomletHealth,
+            ShroomletAttackSpeed,
+            GData?.shroomletAttackRange ?? 0.5f,
+            GData?.shroomletDetectionRange ?? 2.5f,
+            GData?.shroomletMoveSpeed ?? 1.5f);
         return shroomlet;
     }
 
@@ -96,11 +139,47 @@ public class GhostFungus : Shooter
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
+        if (_skillIndicatorInstance != null) return;
         SkillTargetingManager.instance.BeginTargeting(0f, OnTargetConfirmed);
+        if (skillIndicatorPrefab != null)
+        {
+            _skillIndicatorInstance = Instantiate(skillIndicatorPrefab, transform.position, Quaternion.identity);
+            SpriteRenderer sr = _skillIndicatorInstance.GetComponent<SpriteRenderer>();
+            if (sr != null) sr.enabled = false;   // hidden until the first UpdateSkillIndicator
+        }
+    }
+
+    // a rectangle pivoted at the fungus, pointing at the mouse, spanning the wave's path
+    private void UpdateSkillIndicator()
+    {
+        if (_skillIndicatorInstance == null) return;
+
+        if (SkillTargetingManager.instance == null || !SkillTargetingManager.instance.IsTargeting)
+        {
+            Destroy(_skillIndicatorInstance);
+            _skillIndicatorInstance = null;
+            return;
+        }
+
+        Vector2 mouseScreen = Mouse.current.position.ReadValue();
+        Vector3 mouseWorld  = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, Camera.main.nearClipPlane));
+        mouseWorld.z = 0f;
+        Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
+        if (dir.sqrMagnitude < 0.0001f) dir = Vector2.right;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        float length = GData?.skillTravelDistance ?? 12f;
+        float width  = GData?.skillWaveWidth ?? 1.5f;
+        Vector3 center = transform.position + (Vector3)(dir * length * 0.5f);   // wave travels forward from the fungus
+        _skillIndicatorInstance.transform.SetPositionAndRotation(center, Quaternion.Euler(0f, 0f, angle));
+        _skillIndicatorInstance.transform.localScale = new Vector3(length, width, 1f);
+        SpriteRenderer sr = _skillIndicatorInstance.GetComponent<SpriteRenderer>();
+        if (sr != null) sr.enabled = true;
     }
 
     private void OnTargetConfirmed(Vector3 position)
     {
+        if (_skillIndicatorInstance != null) { Destroy(_skillIndicatorInstance); _skillIndicatorInstance = null; }
         skillCooldownTimer = skillCooldown;
         if (hypnosisWavePrefab == null) return;
         Vector2 dir = ((Vector2)position - (Vector2)transform.position).normalized;
@@ -111,22 +190,33 @@ public class GhostFungus : Shooter
             transform.position, dir,
             GData?.skillWaveSpeed ?? 14f, GData?.skillWaveWidth ?? 1.5f, GData?.skillThickness ?? 1f,
             GData?.skillTravelDistance ?? 12f, this,
-            GData?.fungalHealthMultiplier ?? 1f, GData?.fungalAttackMultiplier ?? 1f,
-            FungalSlow, GData?.fungalSlowDuration ?? 2f);
+            FungalHealthMultiplier, FungalAttackMultiplier, FungalMoveSlow);
     }
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = data.baseAttackDamage + (GData?.path1AttackDamagePerLevel ?? 4f)  * level;
-        baseAttackSpeed  = data.baseAttackSpeed  + (GData?.path1AttackSpeedPerLevel  ?? 0.05f) * level;
+        // path 1 raises the fungus' own bolt damage; shroomlet attack damage/speed scale off
+        // effectivePath1Level automatically via ShroomletAttackDamage / ShroomletAttackSpeed
+        baseAttackDamage = data.baseAttackDamage + (GData?.path1AttackDamagePerLevel ?? 4f) * level;
     }
 
-    public override void OnPath2Upgrade(int level) { }
+    public override void OnPath2Upgrade(int level)
+    {
+        // shave a flat amount off the shroomlet spawn cooldown per level
+        passiveCooldownAdder = -(GData?.path2SpawnCooldownReducerPerLevel ?? 0.5f) * level;
+
+        // force one immediate spawn through the normal pipeline, then resume the timer where it was
+        float saved = passiveCooldownTimer;
+        passiveCooldownTimer = 0f;     // ready: UpdateShroomlets fills the next free slot
+        UpdateShroomlets();
+        passiveCooldownTimer = saved;  // restore the bar's progress (UpdateShroomlets had refilled it)
+    }
     public override void OnPath3Upgrade(int level) { }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        if (_skillIndicatorInstance != null) Destroy(_skillIndicatorInstance);
         foreach (GhostShroomlet s in _slots)
             if (s != null && s.IsAlive) s.Kill();
     }
@@ -140,34 +230,47 @@ public class GhostFungus : Shooter
         $"Fires a bolt of ice dealing <color=green><b>{attackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#A0522D>Physical</color> damage to the first insect hit.";
 
     public override string GetPassiveDescription() =>
-        $"Conjures up to <color=green><b>{ShroomletTarget}</b></color> Ghost Shroomlet{(ShroomletTarget == 1 ? "" : "s")} that hold position until an enemy comes into sight, then engage with <color=#00FFFF>Ice</color> <color=#A0522D>Physical</color> attacks. They inherit her stats and respawn <color=green><b>{(GData?.shroomletRespawnDelay ?? 5f):F0}s</b></color> after dying.";
+        $"Conjures a Ghost Shroomlet every <color=green><b>{passiveCooldown:F1}s</b></color> (up to <color=green><b>{ShroomletTarget}</b></color>) that holds position until an enemy comes into sight, then engages with <color=#00FFFF>Ice</color> <color=#A0522D>Physical</color> attacks dealing <color=green><b>{ShroomletAttackDamage:F0}</b></color> damage (<color=green><b>{ShroomletHealth:F0}</b></color> HP).";
 
     public override string GetSkillDesription() =>
-        $"Aim a direction to send a spectral wave that inflicts <color=#B266FF>Fungal Hypnosis</color> on the first insect hit, permanently turning it friendly. Its <color=#00FFFF>Ice</color> <color=#A0522D>Physical</color> strikes are credited to the {GetName()} and slow enemies' attack speed by <color=green><b>{FungalSlow * 100f:F0}%</b></color>.";
+        $"Send a spectral wave, inflicting <color=#00FFFF>Fungal Hypnosis</color> on the first insect hit, which permanently turns it friendly, and granting it:\n\n" +
+        $"<color=green><b>+{FungalHealthMultiplier * 100f:F0}%</b></color> Max Health\n" +
+        $"<color=green><b>+{FungalAttackMultiplier * 100f:F0}%</b></color> Attack Damage\n" +
+        $"<color=green><b>-{FungalMoveSlow * 100f:F0}%</b></color> Movement Speed";
 
     public override string GetPath1Description()
     {
-        float adpl = GData?.path1AttackDamagePerLevel ?? 4f;
-        float aspl = GData?.path1AttackSpeedPerLevel  ?? 0.05f;
+        float adpl  = GData?.path1AttackDamagePerLevel ?? 4f;
+        float sadpl = GData?.shroomletAttackDamagePerLevel ?? 2f;
+        float saspl = GData?.shroomletAttackSpeedPerLevel  ?? 0.05f;
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
                $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase Shroomlet Attack Damage by <color=green><b>{sadpl:F0}</b></color> per level. [<color=green><b>+{sadpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase Shroomlet Attack Speed by <color=green><b>{saspl:F2}</b></color> per level. [<color=green><b>+{saspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }
 
     public override string GetPath2Description()
     {
-        int spl = GData?.path2ShroomletPerLevel ?? 1;
+        int   spl  = GData?.path2ShroomletPerLevel ?? 1;
+        float shpl = GData?.shroomletHealthPerLevel ?? 10f;
+        float cdpl = GData?.path2SpawnCooldownReducerPerLevel ?? 0.5f;
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
                $"Conjure <color=green><b>{spl}</b></color> additional Ghost Shroomlet per level. [<color=green><b>+{spl * effectivePath2Level}</b></color>]\n\n" +
+               $"Increase Shroomlet Health by <color=green><b>{shpl:F0}</b></color> per level. [<color=green><b>+{shpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"Reduce spawn cooldown by <color=green><b>{cdpl:F1}s</b></color> per level. [<color=green><b>-{cdpl * effectivePath2Level:F1}s</b></color>]\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
     }
 
     public override string GetPath3Description()
     {
-        float spl = GData?.path3SlowPerLevel ?? 0.03f;
+        float hpl  = GData?.path3HealthMultiplierPerLevel ?? 0.2f;
+        float apl  = GData?.path3AttackMultiplierPerLevel ?? 0.2f;
+        float mpl  = GData?.path3MoveSlowPerLevel ?? 0.05f;
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Increase the attack speed slow by <color=green><b>{spl * 100f:F0}%</b></color> per level. [<color=green><b>+{spl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green>Max Health</color> bonus by <color=green><b>{hpl * 100f:F0}%</b></color> per level. [<color=green><b>+{hpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green>Attack Damage</color> bonus by <color=green><b>{apl * 100f:F0}%</b></color> per level. [<color=green><b>+{apl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Movement Speed reduction by <color=green><b>{mpl * 100f:F0}%</b></color> per level. [<color=green><b>+{mpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
     }
 }

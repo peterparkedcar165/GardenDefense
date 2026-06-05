@@ -61,6 +61,7 @@ public abstract class Insect : Entity, IAttackable
     [System.NonSerialized] protected SpriteRenderer _spriteRenderer;
     protected bool _facingRight = true;
     private Vector3 _prevPosition;
+    private Vector3 _spawnPosition;   // where it spawned; friendlies retreat here and despawn
 
     public virtual IAttackable target
     {
@@ -150,6 +151,7 @@ public abstract class Insect : Entity, IAttackable
         visual = transform.Find("Visual");
         _spriteRenderer = visual?.GetComponent<SpriteRenderer>();
         _prevPosition = transform.position;
+        _spawnPosition = transform.position;   // captured at spawn (the SpawnPoint it came from)
         pathOffset = new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
 
 
@@ -360,6 +362,9 @@ public abstract class Insect : Entity, IAttackable
             if (!target.IsAlive) { RemoveEffect<TauntEffect>(); }
             else
             {
+                // held by an unreachable flyer (e.g. a flying friendly): stop in place, don't chase up to it
+                if (target is Insect ti && !CanReach(this, ti)) return;
+
                 Vector3 approachPoint = target.GetApproachPoint(transform.position);
                 float dist = Vector3.Distance(transform.position, approachPoint);
                 if (dist > attackRange && ChasesTarget)
@@ -418,7 +423,7 @@ public abstract class Insect : Entity, IAttackable
         else if (!onPath && _debugOnPath)
         {
             Debug.Log($"[{gameObject.name}] left path tile at {transform.position}");
-            if (!isFlying && !isDying && !_offPathSlownessActive)
+            if (!isFlying && !isDying && !_offPathSlownessActive && team != Team.Friendly)
             {
                 _offPathSlownessActive = true;
                 ApplyEffect(new OffPathSlownessEffect(this));
@@ -490,6 +495,7 @@ public abstract class Insect : Entity, IAttackable
 
         if (target == null) return;
         if (!target.IsAlive) { RemoveEffect<TauntEffect>(); return; }
+        if (target is Insect ti && !CanReach(this, ti)) return;   // cannot hit a flyer it can't reach
         if (HasEffect<HardCrowdControl>()) return;
         if (attackSpeed <= 0) return;
 
@@ -535,6 +541,9 @@ public abstract class Insect : Entity, IAttackable
 
     // moves this insect between the enemy pool (allInsects) and the friendly pool. friendlies
     // are out of allInsects so every plant/AoE that iterates it ignores them (no friendly fire)
+    // friendly units (minions, hypnotized) show a green health bar; enemies stay red
+    protected override Color HealthBarColor => team == Team.Friendly ? Color.green : Color.red;
+
     public void SetTeam(Team newTeam)
     {
         if (team == newTeam) return;
@@ -549,31 +558,16 @@ public abstract class Insect : Entity, IAttackable
             friendlyInsects.Remove(this);
             if (!allInsects.Contains(this)) allInsects.Add(this);
         }
+        RefreshHealthBarColor();   // green when friendly, red when enemy
     }
 
-    // permanently turns this enemy friendly (PvZ hypno style). it counts as a kill: it yields sun,
-    // hands out exp, and fires the death events, but the body lives on and retreats to fight enemies
-    // until it reaches the spawn. harmless to call on an already friendly insect
-    public void Hypnotize(Entity source)
+    // the hypnotize transition (PvZ hypno style), triggered by HypnotizedEffect.OnApply. it counts
+    // as a kill (sun/exp/death events) but keeps the body alive as a full-health friendly that
+    // retreats. to hypnotize an insect, apply a HypnotizedEffect (or a subclass) — don't call this
+    // directly. harmless / no-op on an already friendly insect
+    public void ApplyHypnosis(Entity source)
     {
         if (team == Team.Friendly) return;
-        HypnotizeCore(source);
-        ApplyEffect(new HypnotizedEffect(this, source));
-    }
-
-    // Ghost Fungus variant: the turned insect's attacks are ice physical, credited to the plant,
-    // slow their victims, and it gains bonus health and attack damage
-    public void FungalHypnotize(Plant plant, float healthMultiplier, float attackMultiplier, float slowPercent, float slowDuration)
-    {
-        if (team == Team.Friendly) return;
-        HypnotizeCore(plant);
-        ApplyEffect(new FungalHypnosisEffect(this, plant, healthMultiplier, attackMultiplier, slowPercent, slowDuration));
-    }
-
-    // shared hypnotize transition: counts as a kill (sun/exp/events) but keeps the body alive as a
-    // full health friendly that retreats. the marker effect is applied by the caller
-    private void HypnotizeCore(Entity source)
-    {
         if (source is Plant p) RegisterAttacker(p);
         DistributeExp();
         OnInsectKilled?.Invoke(transform.position);
@@ -587,18 +581,36 @@ public abstract class Insect : Entity, IAttackable
         UpdateHealthBar();
     }
 
+    protected Insect _engagedEnemy;   // the enemy a friendly is locked onto (target stickiness)
+
+    // a unit can hit another unless it is grounded while the target flies. so: ground hits ground,
+    // flying hits anyone, ground cannot hit flying
+    protected static bool CanReach(Insect attacker, Insect target) => attacker.isFlying || !target.isFlying;
+
     // nearest enemy insect within engage range (used by friendlies). enemies live in allInsects
     private IAttackable FindNearestEnemyInRange()
     {
+        return StickyEnemy(e => Vector3.Distance(transform.position, e.transform.position) <= EngageRange);
+    }
+
+    // keeps the friendly locked onto one enemy until it dies or leaves the valid set, then picks the
+    // nearest new one. this stops enemies that merely pass by from being briefly targeted/taunted.
+    // only enemies this unit can actually hit are considered (a ground friendly ignores flyers)
+    protected Insect StickyEnemy(System.Func<Insect, bool> isValid)
+    {
+        if (_engagedEnemy != null && _engagedEnemy.IsAlive && _engagedEnemy.team != team &&
+            CanReach(this, _engagedEnemy) && isValid(_engagedEnemy))
+            return _engagedEnemy;
+
         Insect nearest = null;
         float nearestDist = Mathf.Infinity;
-        float range = EngageRange;
         foreach (Insect enemy in allInsects)
         {
-            if (enemy == null || !enemy.IsAlive) continue;
-            float dist = Vector3.Distance(transform.position, enemy.transform.position);
-            if (dist <= range && dist < nearestDist) { nearestDist = dist; nearest = enemy; }
+            if (enemy == null || !enemy.IsAlive || !CanReach(this, enemy) || !isValid(enemy)) continue;
+            float d = Vector3.Distance(transform.position, enemy.transform.position);
+            if (d < nearestDist) { nearestDist = d; nearest = enemy; }
         }
+        _engagedEnemy = nearest;
         return nearest;
     }
 
@@ -627,21 +639,31 @@ public abstract class Insect : Entity, IAttackable
         if (movingBackward) MoveBackward();
     }
 
-    // friendlies that retreat walk toward the previous waypoint, looking for a fight, and
-    // despawn once they reach the start of the path (the spawn point)
+    // friendlies that retreat walk back toward the previous waypoint, looking for a fight. once
+    // they pass waypoint 0 they head for the spawn point they came from, and despawn on arrival
     private void MoveBackward()
     {
         if (waypoints == null || waypoints.Length == 0) return;
-        int prevIndex = Mathf.Max(0, currentWaypointIndex - 1);
-        Transform wp = waypoints[prevIndex];
-        if (wp == null) return;
-        Vector3 targetPos = wp.position + new Vector3(pathOffset.x, pathOffset.y, 0);
+
+        Vector3 targetPos;
+        if (currentWaypointIndex > 0)
+        {
+            Transform wp = waypoints[currentWaypointIndex - 1];
+            if (wp == null) return;
+            targetPos = wp.position + new Vector3(pathOffset.x, pathOffset.y, 0);
+        }
+        else
+        {
+            targetPos = _spawnPosition;   // before the first waypoint: head back to the spawn
+        }
+
         Vector3 dir = (targetPos - transform.position).normalized;
         transform.position += dir * GetMoveSpeed() * Time.deltaTime;
+
         if (Vector3.Distance(transform.position, targetPos) < 0.1f)
         {
             if (currentWaypointIndex > 0) currentWaypointIndex--;
-            else Destroy(gameObject);   // reached the spawn point, despawn quietly
+            else Destroy(gameObject);     // reached the spawn point: despawn
         }
     }
 
@@ -849,9 +871,16 @@ public abstract class Insect : Entity, IAttackable
 
         foreach (StatusEffect effect in activeEffects)
         {
-            int mins = Mathf.FloorToInt(effect.duration / 60);
-            int secs = Mathf.FloorToInt(effect.duration % 60);
-            string entry = $"{effect.GetName()} ({mins}:{secs:D2})\n";
+            string time;
+            if (float.IsInfinity(effect.duration))
+                time = "∞";   // permanent effects show the infinity symbol
+            else
+            {
+                int mins = Mathf.FloorToInt(effect.duration / 60);
+                int secs = Mathf.FloorToInt(effect.duration % 60);
+                time = $"{mins}:{secs:D2}";
+            }
+            string entry = $"{effect.GetName()} ({time})\n";
 
             if (effect.effectType == StatusEffect.Type.positive)
                 positive += entry;

@@ -86,6 +86,8 @@ public abstract class Entity : MonoBehaviour
     public float debuffGivenDuration, buffGivenDuration, buffReceivedDuration, debuffReceivedDuration;
     public float burnDurationBonus;   // multiplies the duration of Burns this entity causes (e.g. Stargazer)
     public float sunYieldBonus;       // increases sun this entity generates and the sun its kills drop (Aeonium's Blessing)
+    public float baseMinionDamage;    // the plant's inherent minion damage bonus
+    public float minionDamage;        // multiplier on the damage this plant's minions deal
     public float shieldBonusDamage, shieldToughness;
     public float startingShield;
     public bool debuffsFrozen;
@@ -108,6 +110,7 @@ public abstract class Entity : MonoBehaviour
     public float shieldBonusDamageAdder, shieldToughnessAdder;
     public float lightEmissionRangeAdder;
     public float lifestealAdder;
+    public float minionDamageAdder;
     public float counterDamageAdder;
     public float debuffGivenDurationAdder, buffGivenDurationAdder, buffReceivedDurationAdder, debuffReceivedDurationAdder;
     public float evasionAdder, accuracyAdder;
@@ -179,6 +182,7 @@ public abstract class Entity : MonoBehaviour
         shieldToughness   = shieldToughnessAdder;
         lightEmissionRange = baseLightEmissionRange + lightEmissionRangeAdder + (baseLightEmissionRange * lightEmissionRangeMultiplier);
         lifesteal = baseLifesteal + lifestealAdder + (baseLifesteal * lifestealMultiplier);
+        minionDamage = baseMinionDamage + minionDamageAdder;
         counterDamage = baseCounterDamage + counterDamageAdder + (baseCounterDamage * counterDamageMultiplier);
         debuffGivenDuration    = baseDebuffGivenDuration    + debuffGivenDurationAdder    + (baseDebuffGivenDuration    * debuffGivenDurationMultiplier);
         buffGivenDuration      = baseBuffGivenDuration      + buffGivenDurationAdder      + (baseBuffGivenDuration      * buffGivenDurationMultiplier);
@@ -591,9 +595,8 @@ public abstract class Entity : MonoBehaviour
         healthBarInstance.transform.localScale = hbScale;
 
         healthBarFill = healthBarInstance.transform.Find("Fill");
-        SpriteRenderer fillRenderer = healthBarFill?.GetComponent<SpriteRenderer>();
-        if (fillRenderer)
-            fillRenderer.color = this is Plant ? Color.green : Color.red;
+        SpriteRenderer fillRenderer = healthBarFill != null ? healthBarFill.GetComponent<SpriteRenderer>() : null;
+        RefreshHealthBarColor();
 
         if (healthBarFill != null)
         {
@@ -618,7 +621,17 @@ public abstract class Entity : MonoBehaviour
 
         healthBarInstance.SetActive(false);
     }
-    
+
+    // plants and friendly units use a green fill, everything else red. overridable for teams
+    protected virtual Color HealthBarColor => this is Plant ? Color.green : Color.red;
+
+    // re-applies the fill color (call when the team changes, e.g. a hypnotized insect)
+    protected void RefreshHealthBarColor()
+    {
+        SpriteRenderer fillRenderer = healthBarFill != null ? healthBarFill.GetComponent<SpriteRenderer>() : null;
+        if (fillRenderer != null) fillRenderer.color = HealthBarColor;
+    }
+
     protected void UpdateHealthBar()
     {
         if (healthBarFill == null) return;

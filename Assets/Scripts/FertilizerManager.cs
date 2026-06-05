@@ -140,6 +140,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.BuffGivenDuration:            return (0.06f, 0.10f);
             case StatType.BuffReceivedDuration:         return (0.06f, 0.10f);
             case StatType.DebuffReceivedDuration:       return (0.06f, 0.10f);
+            case StatType.MinionDamage:                 return (0.06f, 0.08f);
             default:                       return (0f,    0f);
         }
     }
@@ -185,6 +186,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.BuffGivenDuration:            plant.buffGivenDurationAdder       += value; break;
             case StatType.BuffReceivedDuration:         plant.buffReceivedDurationAdder    += value; break;
             case StatType.DebuffReceivedDuration:       plant.debuffReceivedDurationAdder  += value; break;
+            case StatType.MinionDamage:                 plant.minionDamageAdder            += value; break;
         }
     }
 }

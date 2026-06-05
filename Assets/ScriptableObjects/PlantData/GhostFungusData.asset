@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afab7a6136fa9374d8ff4947cd3dc4df, type: 3}
+  m_Name: GhostFungusData
+  m_EditorClassIdentifier: Assembly-CSharp::GhostFungusData
+  plantPrefab: {fileID: 1056421689034034196, guid: a96b01cf1c491154fa2d87181560e4e6, type: 3}
+  icon: {fileID: 21300000, guid: 759a442b381ad244cb1e2e0741b05c12, type: 3}
+  plantName: GhostFungus
+  displayName: Ghost Fungus
+  cultivar: 6
+  elementalType: 4
+  damageType: 0
+  sunCost: 125
+  baseMaxHealth: 200
+  baseAttackDamage: 24
+  baseMagicPower: 0
+  baseAttackSpeed: 0.8
+  baseAttackRange: 2
+  startingShield: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseLifesteal: 0
+  baseBonusEffectChance: 0
+  baseCriticalChance: 0.05
+  baseCriticalDamage: 1.75
+  baseDotDamage: 0
+  baseelementalAffinity: 0
+  baseCoordinatedDamage: 0
+  baseCounterDamage: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseNatureDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseLightEmissionRange: 1.5
+  baseMinionDamage: 0
+  baseProjectileSpeed: 3
+  baseMaxRange: 99
+  basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
+  basePassiveCooldown: 12
+  basePassiveDuration: 0
+  baseSkillCooldown: 8
+  baseSkillDuration: 0
+  baseSkillRadius: 0
+  baseSkillDamageMultiplier: 0
+  baseSkillHealth: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
+  path1AttackDamagePerLevel: 6
+  shroomletBaseAttackDamage: 32
+  shroomletAttackDamagePerLevel: 12
+  shroomletAttackDamageMP: 0.12
+  shroomletBaseAttackSpeed: 1
+  shroomletAttackSpeedPerLevel: 0.06
+  shroomletAttackSpeedMP: 0.0033
+  shroomletBaseHealth: 300
+  shroomletHealthPerLevel: 60
+  shroomletHealthMP: 2.24
+  baseShroomletCount: 1
+  path2ShroomletPerLevel: 1
+  path2SpawnCooldownReducerPerLevel: 1
+  shroomletAttackRange: 0.5
+  shroomletDetectionRange: 2
+  shroomletMoveSpeed: 1.1
+  skillWaveSpeed: 8
+  skillWaveWidth: 1
+  skillThickness: 1
+  skillTravelDistance: 12
+  baseFungalHealthMultiplier: 0.15
+  path3HealthMultiplierPerLevel: 0.1
+  baseFungalAttackMultiplier: 0.15
+  path3AttackMultiplierPerLevel: 0.1
+  baseFungalSlowPercent: 0.15
+  path3SlowPerLevel: 0.1
+  fungalSlowDuration: 3

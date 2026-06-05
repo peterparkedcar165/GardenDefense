@@ -164,6 +164,14 @@ public class AloeVeraProjectile : MonoBehaviour
             }
         }
 
+        // also heal friendly minions caught in the burst (they live in friendlyInsects, not allInsects)
+        foreach (Insect ally in new List<Insect>(Insect.friendlyInsects))
+        {
+            if (ally == null || !ally.IsAlive) continue;
+            if (Vector3.Distance(transform.position, ally.transform.position) <= aoERadius)
+                ally.Heal(healAmount, source);
+        }
+
         foreach (Insect insect in new List<Insect>(Insect.allInsects))
         {
             if (insect == null || !insect.IsAlive) continue;

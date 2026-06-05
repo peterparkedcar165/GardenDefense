@@ -64,6 +64,17 @@ public class QueenAnt : Ant
             // so it follows the correct route regardless of which spawn lane the queen came from
             ant.SetPath(waypoints);
             ant.currentWaypointIndex = currentWaypointIndex;
+
+            // if the queen herself is hypnotized, her children are born with the same hypnosis.
+            // pre-set the team so it is born friendly (no kill rewards), then copy the effect
+            HypnotizedEffect hypno = GetEffect<HypnotizedEffect>();
+            if (hypno != null)
+            {
+                ant.SetTeam(Team.Friendly);
+                ant.movingBackward = true;
+                ant.ApplyEffect(hypno.Clone(ant));
+            }
+
             StartCoroutine(LaunchAnt(antGO));
         }
     }

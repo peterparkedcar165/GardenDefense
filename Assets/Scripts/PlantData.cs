@@ -58,6 +58,7 @@ public class PlantData : ScriptableObject
 
     [Header("Misc")]
     public float baseLightEmissionRange;
+    public float baseMinionDamage;   // multiplier bonus on damage dealt by this plant's minions
 
     [Header("Shooter")]
     public float baseProjectileSpeed;

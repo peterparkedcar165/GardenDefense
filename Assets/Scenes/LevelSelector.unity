@@ -9172,7 +9172,7 @@ PrefabInstance:
       objectReference: {fileID: 2039720363}
     - target: {fileID: 2063082988119655140, guid: 911ecbb4bc879b349a8b8b56ac94c576, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 18
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 2063082988119655140, guid: 911ecbb4bc879b349a8b8b56ac94c576, type: 3}
       propertyPath: tooltipSkillDescription
@@ -9262,6 +9262,10 @@ PrefabInstance:
       propertyPath: 'allPlantData.Array.data[17]'
       value: 
       objectReference: {fileID: 11400000, guid: e795825c77c9ced43be2da09a4e18c50, type: 2}
+    - target: {fileID: 2063082988119655140, guid: 911ecbb4bc879b349a8b8b56ac94c576, type: 3}
+      propertyPath: 'allPlantData.Array.data[18]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d2d7e88c28bd3ea42acf4813979dd1d3, type: 2}
     - target: {fileID: 2063082988119655140, guid: 911ecbb4bc879b349a8b8b56ac94c576, type: 3}
       propertyPath: insectTooltipPassiveDescription
       value: 

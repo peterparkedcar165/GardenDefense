@@ -88,6 +88,10 @@ public abstract class Plant : Entity, IAttackable
     // without the plant carrying the Silence effect itself
     public bool IsSilenced => HasEffect<SilenceEffect>() || HasEffect<HardCrowdControl>();
 
+    // hover/selection state, used by owned minions to show their range circles alongside the plant
+    public bool IsHovered  => _hoverHighlighted;
+    public bool IsSelected => PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this;
+
     public override void UpdateStats()
     {
         base.UpdateStats();
@@ -220,6 +224,7 @@ public abstract class Plant : Entity, IAttackable
         baseSkillDamage        = data.baseSkillDamage;
         baseCoordinatedDamage  = data.baseCoordinatedDamage;
         baseLightEmissionRange        = data.baseLightEmissionRange;
+        baseMinionDamage              = data.baseMinionDamage;
         baseCounterDamage             = data.baseCounterDamage;
         startingShield                = data.startingShield;
         sunCost                       = data.sunCost;

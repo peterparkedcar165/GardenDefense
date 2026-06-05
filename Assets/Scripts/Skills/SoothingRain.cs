@@ -41,5 +41,13 @@ public class SoothingRain : MonoBehaviour
                 plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
             }
         }
+
+        // friendly minions are also healed by the rain
+        foreach (Insect ally in new List<Insect>(Insect.friendlyInsects))
+        {
+            if (ally == null || !ally.IsAlive) continue;
+            if (Vector3.Distance(transform.position, ally.transform.position) <= radius)
+                ally.Heal(healPerTick, source);
+        }
     }
 }

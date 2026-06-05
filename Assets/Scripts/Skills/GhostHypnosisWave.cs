@@ -9,11 +9,11 @@ public class GhostHypnosisWave : MonoBehaviour
     private float speed, halfWidth, thickness, travelDistance;
     private Vector2 startPos;
     private Plant source;
-    private float healthMultiplier, attackMultiplier, slowPercent, slowDuration;
+    private float healthMultiplier, attackMultiplier, moveSlow;
 
     public void Initialize(Vector2 startPos, Vector2 direction, float speed, float width, float thickness,
                            float travelDistance, Plant source,
-                           float healthMultiplier, float attackMultiplier, float slowPercent, float slowDuration)
+                           float healthMultiplier, float attackMultiplier, float moveSlow)
     {
         this.startPos         = startPos;
         this.direction        = direction.normalized;
@@ -25,8 +25,7 @@ public class GhostHypnosisWave : MonoBehaviour
         this.source           = source;
         this.healthMultiplier = healthMultiplier;
         this.attackMultiplier = attackMultiplier;
-        this.slowPercent      = slowPercent;
-        this.slowDuration     = slowDuration;
+        this.moveSlow         = moveSlow;
 
         transform.position = startPos;
         float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;
@@ -38,7 +37,7 @@ public class GhostHypnosisWave : MonoBehaviour
     {
         transform.position += (Vector3)(direction * speed * Time.deltaTime);
 
-        // iterate a copy: FungalHypnotize moves the insect out of allInsects mid-loop
+        // iterate a copy: applying the effect moves the insect out of allInsects mid-loop
         foreach (Insect insect in new List<Insect>(Insect.allInsects))
         {
             if (insect == null || !insect.IsAlive) continue;
@@ -46,7 +45,7 @@ public class GhostHypnosisWave : MonoBehaviour
             if (Mathf.Abs(Vector2.Dot(to, direction)) <= thickness * 0.5f &&
                 Mathf.Abs(Vector2.Dot(to, perp))      <= halfWidth)
             {
-                insect.FungalHypnotize(source, healthMultiplier, attackMultiplier, slowPercent, slowDuration);
+                insect.ApplyEffect(new FungalHypnosisEffect(insect, source, healthMultiplier, attackMultiplier, moveSlow));
                 Destroy(gameObject);   // hits only the first insect
                 return;
             }

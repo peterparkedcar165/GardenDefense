@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
 public class DarknessManager : MonoBehaviour
@@ -9,6 +10,12 @@ public class DarknessManager : MonoBehaviour
     // true only for cave levels: insects standing outside any light are not rendered.
     // leave false for nighttime/desert-night, where insects stay visible in shadow
     public bool pitchBlack = false;
+
+    [Header("Setup-phase lighting (cave levels)")]
+    [Tooltip("if true, the level is fully lit during wave 0 (setup) and goes dark when wave 1 begins")]
+    [SerializeField] private bool litDuringSetup = false;
+    [SerializeField] private Light2D globalLight;       // the scene's global light, faded in setup
+    [SerializeField] private float lightFadeSpeed = 1.5f;
 
     private static readonly List<(Transform t, float radius)> _dynamicSources = new List<(Transform, float)>();
 
@@ -20,6 +27,20 @@ public class DarknessManager : MonoBehaviour
     }
 
     void Awake() { instance = this; }
+
+    void Update()
+    {
+        if (!litDuringSetup) return;
+
+        // wave 0 = setup: keep the level bright; from wave 1 on it goes dark
+        bool inSetup = GameManager.instance == null || GameManager.instance.currentWave == 0;
+        isDark = !inSetup;
+        if (globalLight != null)
+        {
+            float target = inSetup ? 1f : 0f;
+            globalLight.intensity = Mathf.MoveTowards(globalLight.intensity, target, lightFadeSpeed * Time.deltaTime);
+        }
+    }
 
     public static void RegisterLightSource(Transform t, float radius) => _dynamicSources.Add((t, radius));
 

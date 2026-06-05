@@ -60,5 +60,6 @@ public enum StatType
     DebuffGivenDuration,
     BuffGivenDuration,
     BuffReceivedDuration,
-    DebuffReceivedDuration
+    DebuffReceivedDuration,
+    MinionDamage
 }

@@ -55,23 +55,39 @@ public class AloeVera : Lobber
 
     protected override GameObject FindLobberTarget()
     {
+        // priority 1: an injured plant (lowest health wins)
         Plant bestPlant = null;
-        float lowestHealth = Mathf.Infinity;
+        float lowestPlantHealth = Mathf.Infinity;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == this || plant == null || !plant.IsAlive) continue;
             if (plant.health >= plant.maxHealth) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            if (plant.health < lowestHealth) { lowestHealth = plant.health; bestPlant = plant; }
+            if (plant.health < lowestPlantHealth) { lowestPlantHealth = plant.health; bestPlant = plant; }
         }
         if (bestPlant != null) return bestPlant.gameObject;
+
+        // priority 2 (only if no injured plant in range): an injured friendly minion
+        Insect bestAlly = null;
+        float lowestAllyHealth = Mathf.Infinity;
+        foreach (Insect ally in Insect.friendlyInsects)
+        {
+            if (ally == null || !ally.IsAlive) continue;
+            if (ally.health >= ally.maxHealth) continue;
+            if (Vector3.Distance(transform.position, ally.transform.position) > attackRange) continue;
+            if (ally.health < lowestAllyHealth) { lowestAllyHealth = ally.health; bestAlly = ally; }
+        }
+        if (bestAlly != null) return bestAlly.gameObject;
+
         return base.FindLobberTarget();
     }
 
     protected override void Fire(GameObject target, Vector3 landingPos)
     {
         if (projectilePrefab == null) return;
-        bool isHealMode = target.GetComponent<Plant>() != null;
+        // heal mode for plants and for friendly minions; otherwise it's an attack on an enemy
+        bool isHealMode = target.GetComponent<Plant>() != null
+                       || (target.GetComponent<Insect>() is Insect ins && ins.team == Team.Friendly);
 
         float bobDuration = Mathf.Clamp(0.4f / Mathf.Max(attackSpeed, 0.01f), 0.1f, 0.8f);
 
