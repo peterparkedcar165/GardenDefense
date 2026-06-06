@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 330754}
-  - component: {fileID: 330755}
   - component: {fileID: 330756}
   m_Layer: 0
   m_Name: MultiSpawns
@@ -156,58 +155,6 @@ Transform:
   - {fileID: 664460522}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &330755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330753}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a755e122d238844eb2bc7f4e14838e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Level15
-  spawnEntries:
-  - spawnPoint: {fileID: 836844669}
-    leadInWaypoints:
-    - {fileID: 1800521183}
-    - {fileID: 669315274}
-    - {fileID: 315094888}
-    - {fileID: 504627738}
-    - {fileID: 251150388}
-  - spawnPoint: {fileID: 1828323852}
-    leadInWaypoints:
-    - {fileID: 1474631302}
-    - {fileID: 1298353362}
-    - {fileID: 875768627}
-    - {fileID: 1179384179}
-    - {fileID: 287401896}
-  levelTime: 0
-  wave: 0
-  soldierAnt: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
-  scoutAnt: {fileID: 2279086888993795066, guid: c3349ff3828f87047a2105c4748346ef, type: 3}
-  fruitFly: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
-  wasp: {fileID: 2279086888993795066, guid: 726ce60c28034764084f54c3c199e9c1, type: 3}
-  queenAnt: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
-  mosquito: {fileID: 2279086888993795066, guid: aff6fd1b40eab2342bb9ae072042625a, type: 3}
-  darklingBeetle: {fileID: 2279086888993795066, guid: af2c6674e6ccba140a62522caacce5fc, type: 3}
-  fireAnt: {fileID: 2279086888993795066, guid: 8237841c21078424da97084f1f33ae04, type: 3}
-  termite: {fileID: 2279086888993795066, guid: 6a2d82503dc53a8468881f14bee007fc, type: 3}
-  scorpion: {fileID: 2279086888993795066, guid: 3f24b5768444f7844b72d80407813b09, type: 3}
-  moth: {fileID: 2279086888993795066, guid: ee01b098ec878574e9fe75ef5aa9fd22, type: 3}
-  firefly: {fileID: 2279086888993795066, guid: d7a6800c607f5f146a2134c6f2bca15d, type: 3}
-  desertLocust: {fileID: 2279086888993795066, guid: 1cc03d1bb5c0ee1449b80df99f4f73b3, type: 3}
-  weatherManager: {fileID: 29017235}
-  nextWaveTimer: 0
-  waitTime: 0
-  spawnInterval: 0
-  spawnCount: 0
-  restInterval: 12
-  fertilizerPool:
-  - {fileID: 11400000, guid: bcb5810a18b62334d94597949f18f9d1, type: 2}
-  - {fileID: 11400000, guid: 6dd3bd78e59d3804b8cb99705c8b6ef9, type: 2}
-  - {fileID: 11400000, guid: a41a71ca40b1e7447aea8846e2f2ebda, type: 2}
 --- !u!114 &330756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,8 +213,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe25a532237cad447ab16e5798aa0c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
-  weather: 0
-  temperature: 0
 --- !u!4 &29017237
 Transform:
   m_ObjectHideFlags: 0
@@ -596,6 +541,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarknessManager
   isDark: 1
+  pitchBlack: 0
+  litDuringSetup: 0
+  nightLight: {fileID: 0}
+  setupIntensity: 0.4
+  darkByCountdown: 1
+  fadeDuration: 0.4
 --- !u!4 &316370015
 Transform:
   m_ObjectHideFlags: 0
@@ -4765,7 +4716,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1982296483
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}

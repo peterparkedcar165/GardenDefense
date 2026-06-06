@@ -434,6 +434,7 @@ MonoBehaviour:
   shovelSprite: {fileID: 21300000, guid: becffc39cc9dbe640814952b1ac4830f, type: 3}
   alpha: 0.5
   canvas: {fileID: 1834192900}
+  rangePreviewPrefab: {fileID: 0}
 --- !u!114 &107206893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1544,7 +1545,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 531320439}
-  - component: {fileID: 531320438}
   m_Layer: 0
   m_Name: GridManager
   m_TagString: Untagged
@@ -1552,52 +1552,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &531320438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531320437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14c47eb5118e5db4b9e40762fbff725c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridManager
-  rows: 10
-  columns: 14
-  grassTilePrefab: {fileID: 1746608376694191165, guid: eb6e0b05e28606541bffc83add47cd61, type: 3}
-  pathCoordinates:
-  - {x: 0, y: 5}
-  - {x: 1, y: 5}
-  - {x: 2, y: 5}
-  - {x: 3, y: 5}
-  - {x: 4, y: 5}
-  - {x: 5, y: 5}
-  - {x: 6, y: 5}
-  - {x: 7, y: 5}
-  - {x: 7, y: 4}
-  - {x: 7, y: 3}
-  - {x: 8, y: 3}
-  - {x: 9, y: 3}
-  - {x: 10, y: 3}
-  - {x: 11, y: 3}
-  - {x: 12, y: 3}
-  - {x: 13, y: 3}
-  dirtCoordinates:
-  - {x: 2, y: 4}
-  - {x: 3, y: 6}
-  - {x: 6, y: 4}
-  - {x: 8, y: 4}
-  - {x: 9, y: 2}
-  - {x: 11, y: 4}
-  - {x: 4, y: 3}
-  - {x: 7, y: 6}
-  waterCoordinates:
-  - {x: 3, y: 3}
-  - {x: 6, y: 7}
-  - {x: 10, y: 5}
-  caveCoordinates: []
 --- !u!4 &531320439
 Transform:
   m_ObjectHideFlags: 0
@@ -1915,17 +1869,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   SunCount: 0
   playerHealth: 0
-  playerMaxHealth: 20
   BonusSunGain: 0
   audioSource: {fileID: 612021303}
   buttonClick: {fileID: 8300000, guid: 258b73180dff6774c929e5818d404859, type: 3}
   plantPlace: {fileID: 8300000, guid: ec80ddb72cd12f54ba848ec21454f43e, type: 3}
   plantSelect: {fileID: 8300000, guid: 5e6edfc0ce92ec44183cfe3f9c1cdd6c, type: 3}
   gameSpeed: 1
-  pauseButtonText: {fileID: 125803998}
-  speedButtonText: {fileID: 2099565116}
-  sunText: {fileID: 572278663}
-  healthText: {fileID: 1388142729}
+  currentWave: 0
 --- !u!4 &612021302
 Transform:
   m_ObjectHideFlags: 0
@@ -2779,13 +2729,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantUpgradeUI
   panel: {fileID: 930873968}
-  plantIcon: {fileID: 1359315672}
-  plantNameText: {fileID: 151409789}
+  entityIcon: {fileID: 0}
+  entityNameText: {fileID: 0}
   targetingModeText: {fileID: 1135887083}
   targetingToggleButton: {fileID: 100381704}
-  attackDamageText: {fileID: 206099975}
-  attackSpeedText: {fileID: 1348952960}
-  attackRangeText: {fileID: 1447000404}
+  relocateMinionsButton: {fileID: 0}
+  relocateIndicatorRadius: 0.5
+  flyingToggleButton: {fileID: 0}
+  flyingToggleText: {fileID: 0}
+  healthBarRoot: {fileID: 0}
+  healthBarFill: {fileID: 0}
+  healthText: {fileID: 0}
+  tempBarRoot: {fileID: 0}
+  tempBarBackground: {fileID: 0}
+  tempText: {fileID: 0}
+  tempStateText: {fileID: 0}
+  tempCurrentIndicator: {fileID: 0}
+  tempComfortMinIndicator: {fileID: 0}
+  tempComfortMaxIndicator: {fileID: 0}
+  tempMinIndicator: {fileID: 0}
+  tempMaxIndicator: {fileID: 0}
+  stat1Text: {fileID: 0}
+  stat2Text: {fileID: 0}
+  stat3Text: {fileID: 0}
+  stat4Text: {fileID: 0}
+  upgradesSection: {fileID: 0}
   path1NameText: {fileID: 800379346}
   path1CostText: {fileID: 1280447530}
   path1Pips: {fileID: 1508636342}
@@ -2799,6 +2767,9 @@ MonoBehaviour:
   path3Pips: {fileID: 21123018}
   path3Button: {fileID: 531419239}
   path3LockOverlay: {fileID: 2058959713}
+  skillButton: {fileID: 0}
+  skillCooldownText: {fileID: 0}
+  statusEffectPanel: {fileID: 0}
   tooltipPanel: {fileID: 1414410948}
   tooltipText: {fileID: 1981481183}
   pipSprites:
@@ -9209,6 +9180,7 @@ PrefabInstance:
       objectReference: {fileID: 2006234183}
     m_RemovedComponents:
     - {fileID: 2018508753106936876, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
+    - {fileID: 8902658371101449206, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

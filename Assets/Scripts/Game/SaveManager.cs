@@ -70,17 +70,27 @@ public class SaveManager : MonoBehaviour
             Save();
             Debug.Log("Unlocked all plants");
         }
+        if (UnityEngine.InputSystem.Keyboard.current.iKey.wasPressedThisFrame)
+        {
+            saveData.unlockedPlants.Clear();
+            saveData.unlockedPlants.Add("AcornSprout");
+            saveData.highestLevelUnlocked = 0;
+            Save();
+            Debug.Log("Reset unlocked plants to AcornSprout only");
+        }
     }
 
     public void CompleteLevel(int level)
     {
         Debug.Log($"CompleteLevel({level}) called. highestLevelUnlocked={saveData.highestLevelUnlocked}");
-        if (level <= saveData.highestLevelUnlocked) return;
-        saveData.highestLevelUnlocked = level;
+        if (level > saveData.highestLevelUnlocked)
+            saveData.highestLevelUnlocked = level;
         string unlock = GetPlantUnlockedByLevel(level);
         if (unlock != null && !saveData.unlockedPlants.Contains(unlock))
+        {
             saveData.unlockedPlants.Add(unlock);
-        Save();
+            Save();
+        }
     }
 
     private string GetPlantUnlockedByLevel(int level)

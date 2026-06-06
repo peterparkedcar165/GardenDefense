@@ -82,18 +82,37 @@ public class Cattail : Shooter
         // while channeling, darts fly straight down the lane (no homing target)
         if (_skillActive) return null;
 
-        // flying-first toggle: pick among flyers, falling back to normal targeting if none
+        bool dark = DarknessManager.instance != null && DarknessManager.instance.isDark;
+
         if (prioritizeFlying)
         {
             List<Insect> flyers = new List<Insect>();
             foreach (Insect insect in Insect.allInsects)
-                if (insect != null && insect.IsAlive && insect.isFlying) flyers.Add(insect);
-
+            {
+                if (insect == null || !insect.IsAlive || !insect.isFlying) continue;
+                if (dark && !DarknessManager.instance.IsIlluminated(insect.transform.position)) continue;
+                flyers.Add(insect);
+            }
             GameObject flyer = SelectByMode(flyers);
             if (flyer != null) return flyer;
         }
 
-        return base.FindTarget();
+        if (!dark) return base.FindTarget();
+
+        List<Insect> illuminated = new List<Insect>();
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            if (DarknessManager.instance.IsIlluminated(insect.transform.position))
+                illuminated.Add(insect);
+        }
+        return targeting switch
+        {
+            TARGETING.First   => FindFirst(illuminated),
+            TARGETING.Nearest => FindNearest(illuminated),
+            TARGETING.Last    => FindLast(illuminated),
+            _                 => null,
+        };
     }
 
     private GameObject SelectByMode(List<Insect> list) => targeting switch

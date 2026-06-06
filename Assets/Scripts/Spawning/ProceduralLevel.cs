@@ -22,15 +22,15 @@ public class ProceduralLevel : SpawnManager
             WeatherManager.instance.temperature = config.temperature;
         }
 
-        FertilizerSelectionUI.instance?.Configure(config.fertilizerPool);
-        GameManager.instance?.InitiateLevel(config.startSunCount, config.startHealth);
-        GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
-
-        // mark this level visible in save data and mark the prerequisite complete
+        // unlock previous level's plant before the loadout UI opens
         SaveManager.instance.saveData.highestLevelUnlocked =
             Mathf.Max(SaveManager.instance.saveData.highestLevelUnlocked, config.levelNumber);
         if (config.levelNumber > 1)
             SaveManager.instance.CompleteLevel(config.levelNumber - 1);
+
+        FertilizerSelectionUI.instance?.Configure(config.fertilizerPool);
+        GameManager.instance?.InitiateLevel(config.startSunCount, config.startHealth);
+        GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
 
         StartCoroutine(RunWaves());
     }
