@@ -68,6 +68,7 @@ public class SaveManager : MonoBehaviour
                 if (!saveData.unlockedPlants.Contains(p))
                     saveData.unlockedPlants.Add(p);
             Save();
+            LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log("Unlocked all plants");
         }
         if (UnityEngine.InputSystem.Keyboard.current.iKey.wasPressedThisFrame)
@@ -76,6 +77,7 @@ public class SaveManager : MonoBehaviour
             saveData.unlockedPlants.Add("AcornSprout");
             saveData.highestLevelUnlocked = 0;
             Save();
+            LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log("Reset unlocked plants to AcornSprout only");
         }
     }

@@ -157,7 +157,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (insectTooltipPanel != null) insectTooltipPanel.SetActive(false);
     }
 
-    private void RefreshUI()
+    public void RefreshUI()
     {
         Debug.Log("RefreshUI called. Unlocked plants: " + SaveManager.instance.saveData.unlockedPlants.Count);
         foreach (string p in SaveManager.instance.saveData.unlockedPlants)

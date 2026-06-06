@@ -17,6 +17,7 @@ public class Cattail : Shooter
     private float _skillTimer;
     private Vector2 _skillDir;
     private GameObject _skillIndicatorInstance;
+    private float _overcritBonus;
 
     public override bool ShowRangeCircle => false;        // infinite range, no circle
     public override bool UsesFlyingToggle => true;        // shows the Flying-first / Default toggle
@@ -49,10 +50,12 @@ public class Cattail : Shooter
         }
 
         // passive: any crit chance above 100% converts into crit damage
+        _overcritBonus = 0f;
         if (criticalChance > 1f)
         {
             float conversionRatio = (CData?.baseCritDamageConversion ?? 1f) + (CData?.path2CritDamageConversionPerLevel ?? 0.5f) * effectivePath2Level;
-            criticalDamage += (criticalChance - 1f) * conversionRatio;
+            _overcritBonus = (criticalChance - 1f) * conversionRatio;
+            criticalDamage += _overcritBonus;
             criticalChance = 1f;
         }
     }
@@ -242,6 +245,7 @@ public class Cattail : Shooter
         return $"Passive:\n\n" +
                $"Every <color=green><b>1%</b></color> of Critical Chance above <color=green><b>100%</b></color> will be converted to <color=green><b>{currentConversion:F1}%</b></color> Critical Damage.\n\n" +
                $"The Cattail's shots against flying insects will Ground them for <color=green><b>{GroundDuration:F1}s</b></color>.\n\n" +
+               $"Current Critical Damage Bonus: <color=green><b>{_overcritBonus * 100f:F1}%</b></color>\n\n" +
                $"Increase Base Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Grounded duration by <color=green><b>{grndpl:F1}s</b></color> per level. [<color=green><b>+{grndpl * effectivePath2Level:F1}s</b></color>]\n\n" +
                $"Increase the Critical Damage conversion by <color=green><b>{convpl:F1}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level:F1}%</b></color>]\n\n" +
