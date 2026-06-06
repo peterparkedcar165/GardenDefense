@@ -55,6 +55,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseMinionDamage: 0
   baseProjectileSpeed: 3
   baseMaxRange: 20
   basePiercing: 0
@@ -65,15 +66,16 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 90
   baseSkillDuration: 8
+  channelDuration: 0
   baseSkillRadius: 1.5
   baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseSunGenerated: 3
+  baseSunGenerated: 4
   baseSunrayDPS: 75
   path1AttackDamagePerLevel: 4
   path1AttackSpeedPerLevel: 0.03
-  path2SunPerLevel: 1
+  path2SunPerLevel: 2
   path3SunrayDPSPerLevel: 15
   path3SkillDurationPerLevel: 0.5
