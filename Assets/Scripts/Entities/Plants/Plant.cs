@@ -841,32 +841,7 @@ public abstract class Plant : Entity, IAttackable
     public virtual string GetPath1Description() => "";
     public virtual string GetPath2Description() => "";
     public virtual string GetPath3Description() => "";
-    public virtual string GetElement()
-    {
-        switch (data != null ? data.elementalType : elementalType)
-        {
-            case ElementalType.Fire:
-            return $"<color=orange>Fire</color>";
-
-            case ElementalType.Nature:
-            return $"<color=green>Nature</color>";
-
-            case ElementalType.Water:
-            return $"<color=#4FC3F7>Water</color>";
-
-            case ElementalType.Poison:
-            return $"<color=purple>Poison</color>";
-
-            case ElementalType.Ice:
-            return $"<color=#00FFFF>Ice</color>";
-
-            case ElementalType.Wind:
-            return $"<color=#B2EBF2>Wind</color>";
-
-            default:
-            return "";
-        }
-    }
+    public virtual string GetElement() => PlantData.ElementalTag(data != null ? data.elementalType : elementalType);
 
     public virtual string GetElementDescription()
     {

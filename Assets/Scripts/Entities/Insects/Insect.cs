@@ -279,10 +279,16 @@ public abstract class Insect : Entity, IAttackable
             healthBarInstance.SetActive(false);
     }
 
+    protected virtual Vector3 AimPointOffset => Vector3.zero;
+
     private void SyncAimPoint()
     {
-        if (visual != null && aimPoint != null && aimPoint.localPosition != visual.localPosition)
-            aimPoint.localPosition = visual.localPosition;
+        if (visual != null && aimPoint != null)
+        {
+            Vector3 desired = visual.localPosition + AimPointOffset;
+            if (aimPoint.localPosition != desired)
+                aimPoint.localPosition = desired;
+        }
     }
 
     protected virtual void Move()
@@ -587,6 +593,7 @@ public abstract class Insect : Entity, IAttackable
         GameManager.instance?.AddSun(Mathf.CeilToInt(sunDrop * (1f + (source != null ? source.sunYieldBonus : 0f))));
 
         RemoveEffect<TauntEffect>();   // drop any taunt/engagement it had as an enemy
+        RemoveAllDebuffs();
         SetTeam(Team.Friendly);
         movingBackward = true;
         health = maxHealth;            // turned insects come back at full health
@@ -598,7 +605,7 @@ public abstract class Insect : Entity, IAttackable
 
     // a unit can hit another unless it is grounded while the target flies. so: ground hits ground,
     // flying hits anyone, ground cannot hit flying
-    protected static bool CanReach(Insect attacker, Insect target) => attacker.isFlying || !target.isFlying;
+    protected static bool CanReach(Insect attacker, Insect target) => attacker.isFlying || !target.isFlying || attacker.attackRange >= 1f;
 
     // nearest enemy insect within engage range (used by friendlies). enemies live in allInsects
     protected IAttackable FindNearestEnemyInRange()

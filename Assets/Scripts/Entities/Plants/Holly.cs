@@ -64,7 +64,7 @@ public class Holly : Aura
     {
         if (!IsAlive || !attacker.IsAlive) return;
         float retaliationDamage = RetaliationHollyPct * attackDamage + RetaliationInsectPct * attacker.attackDamage;
-        attacker.Damage(retaliationDamage, DamageType.Physical, ElementalType.Ice, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Counter, DamageTag.PassiveDamage });
+        attacker.Damage(retaliationDamage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Counter, DamageTag.PassiveDamage });
     }
 
     public override void ActivateSkill()
@@ -106,7 +106,7 @@ public class Holly : Aura
         $"The {GetName()} is a resilient ice tank that retaliates against attackers and can taunt insects into targeting her.";
 
     public override string GetAttackDescription() =>
-        $"Releases icy thorns dealing <color=green><b>{attackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
+        $"Releases icy thorns dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range.";
 
     public override string GetPassiveDescription() =>
         $"Insects that attack {GetName()} retaliate for <color=green><b>{RetaliationHollyPct * 100f:F0}%</b></color> of {GetName()}'s Attack Damage + " +

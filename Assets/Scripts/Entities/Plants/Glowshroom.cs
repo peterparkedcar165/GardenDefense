@@ -143,7 +143,7 @@ public class Glowshroom : Shooter
         $"The {GetName()} is a bioluminescent cave fungus that illuminates the darkness, infects insects with a spreading glow, and blinds them with a sudden flash of light.";
 
     public override string GetAttackDescription() =>
-        $"Fires a fungal bolt dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage to the target, splashing <color=green><b>{SplashMultBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{SplashMultMP * 100f:F0}%</b></color>] of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius.";
+        $"Fires a fungal bolt dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the target, splashing <color=green><b>{SplashMultBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{SplashMultMP * 100f:F0}%</b></color>] of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
         $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed and the glow spreads to all insects within <color=green><b>{SpreadRadius:F1}</b></color> radius.";

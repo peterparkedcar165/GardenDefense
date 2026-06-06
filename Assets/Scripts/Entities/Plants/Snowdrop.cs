@@ -200,7 +200,7 @@ public class Snowdrop : Aura
         $"The {GetName()} is a frosty flower whose icy presence continuously damages and chills nearby insects, while cooling the plants around her.";
 
     public override string GetAttackDescription() =>
-        $"Continuously deals <color=green><b>{attackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
+        $"Continuously deals <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range.";
 
     public override string GetPassiveDescription() =>
         $"Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement by <color=green><b>{(baseSlow + scalingSlow * effectivePath2Level) * 100f:F0}%</b></color>.\n\n" +
@@ -208,7 +208,7 @@ public class Snowdrop : Aura
 
     public override string GetSkillDesription() =>
         $"Aim a powerful blizzard in a chosen direction, dealing <color=green><b>{(SData?.baseBlizzardDamage ?? 0f) + blizzardDamagePerLevel * effectivePath3Level:F0}</b></color> " +
-        $"[<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#00FFFF>Ice</color> <color=#FFB6C1>Magic</color> damage per second " +
+        $"[<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second " +
         $"to all insects in its path for <color=green><b>{skillDuration:F0}s</b></color>. " +
         $"Applies <color=#00FFFF>Chill</color> at <color=green><b>{blizzardChillMultiplier:F1}×</b></color> strength. " +
         $"Plants within the Blizzard also receive <color=#00FFFF>Cooling</color> effect for <color=green><b>{blizzardCoolingMultiplier:F1}×</b></color> the effect.";

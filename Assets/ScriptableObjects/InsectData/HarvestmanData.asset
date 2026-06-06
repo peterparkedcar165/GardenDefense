@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7583304469d80404c865070d0ca44501, type: 3}
+  m_Name: HarvestmanData
+  m_EditorClassIdentifier: Assembly-CSharp::InsectData
+  displayName: Harvestman
+  nameColor: {r: 0.3207547, g: 0.14373443, b: 0.14373443, a: 1}
+  description: Huge and scary
+  passiveDescription: Deals increased damage to minions
+  sprite: {fileID: 21300000, guid: db8f19884e67fa9418e3aa1134e8365b, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: be78d24b0d0ee094dadaae49bc5d136b, type: 3}
+  baseMaxHealth: 1500
+  baseAttackDamage: 32
+  baseMagicPower: 0
+  baseAttackSpeed: 1.5
+  baseAttackRange: 1.15
+  baseMovementSpeed: 1.3
+  baseTargetingRange: 1.5
+  startingShield: 0
+  attackDamageType: 0
+  attackElementalType: 6
+  baseLifesteal: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  threatValue: 2
+  threatType: 1
+  baseEvasion: 0
+  baseAccuracy: 0
+  sunDrop: 23
+  aggressivity: 0
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  aimPointHeight: 0.5
+  minionDamageBonus: 1

@@ -129,7 +129,7 @@ public class Aeonium : Shooter
         $"The {GetName()} is a radiant succulent that fuels the garden's economy — generating sun, and blessing nearby plants to reap far more of it.";
 
     public override string GetAttackDescription() =>
-        $"Launches an energy ball dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage to the first insect hit.";
+        $"Launches an energy ball dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit.";
 
     public override string GetPassiveDescription() =>
         $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{passiveCooldown:F0}s</b></color>. Each projectile or melee attack hit by a plant within her radius reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";

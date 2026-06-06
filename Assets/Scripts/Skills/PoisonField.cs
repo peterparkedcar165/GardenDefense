@@ -63,7 +63,7 @@ public class PoisonField : MonoBehaviour
             for (int i = affectedInsects.Count - 1; i >= 0; i--)
             {
                 if (affectedInsects[i] != null)
-                    affectedInsects[i].Damage(tickDamage, DamageType.Magic, ElementalType.Poison, source, false, damageTags);
+                    affectedInsects[i].Damage(tickDamage, source.damageType, source.elementalType, source, false, damageTags);
             }
         }
     }

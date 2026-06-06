@@ -19,10 +19,10 @@ public class CactusData : PlantData
     public float path3HealBonusPerLevel = 0.04f;
 
     public override string GetAttackDescription() =>
-        $"Fires needles in all directions, dealing <color=green><b>{baseAttackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage per needle hit. Each hit applies <color=#A0522D>Punctured</color>.";
+        $"Fires needles in all directions, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per needle hit. Each hit applies <color=#A0522D>Punctured</color>.";
 
     public override string GetPassiveDescription() =>
-        $"Insects that attack the Cactus take damage equal to <color=green><b>150%</b></color> of their Attack Damage as <color=green>Nature</color> <color=#A0522D>Physical</color> damage. Applies <color=#A0522D>Punctured</color>.";
+        $"Insects that attack the Cactus take damage equal to <color=green><b>150%</b></color> of their Attack Damage as {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage. Applies <color=#A0522D>Punctured</color>.";
 
     public override string GetSkillDescription() =>
         $"Gains a <color=grey><b>{baseShieldAmount:F0}</b></color> shield and taunts insects within range for <color=green><b>{baseSkillDuration:F0}</b></color> seconds. Healing received increased by <color=green><b>{baseSkillHealBonus * 100f:F0}%</b></color> during the effect.";

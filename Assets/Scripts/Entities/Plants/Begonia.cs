@@ -153,7 +153,7 @@ public class Begonia : Shooter
         float adpl    = BData?.path1AttackDamagePerLevel ?? 4f;
         float rangepl = BData?.path1AttackRangePerLevel  ?? 0.2f;
         return $"Attack:\n\n" +
-               $"Fire a magical bolt dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage.\n\n" +
+               $"Fire a magical bolt dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
                $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
@@ -186,7 +186,7 @@ public class Begonia : Shooter
     }
 
     public override string GetAttackDescription() =>
-        $"Fire a magical bolt dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage.";
+        $"Fire a magical bolt dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
         $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, " +

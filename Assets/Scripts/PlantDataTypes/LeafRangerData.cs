@@ -18,7 +18,7 @@ public class LeafRangerData : PlantData
     public float path3SkillDurationPerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{baseAttackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.";
+        $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
         $"Attacks can pierce <color=green><b>{basePiercing}</b></color> enemy.";

@@ -233,7 +233,7 @@ public class Cattail : Shooter
     }
 
     public override string GetAttackDescription() =>
-        $"Fires a high-pressure water dart, dealing <color=green><b>{attackDamage:F0}</b></color> <color=#1E90FF>Water</color> <color=#A0522D>Physical</color> damage to a single target at any range.";
+        $"Fires a high-pressure water dart, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to a single target at any range.";
 
     public override string GetPath2Description()
     {

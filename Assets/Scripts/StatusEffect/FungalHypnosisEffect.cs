@@ -34,7 +34,6 @@ public class FungalHypnosisEffect : HypnotizedEffect
         insect.health = insect.maxHealth;   // top up to the boosted maximum
 
         insect.attackDamageType     = DamageType.Physical;
-        insect.attackElementalType  = ElementalType.Ice;
         insect.attackSourceOverride = plant;
     }
 

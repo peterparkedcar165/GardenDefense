@@ -22,7 +22,7 @@ public class AeoniumData : PlantData
     public float path2SunTimerReductionPerLevel = 0.1f;
 
     public override string GetAttackDescription() =>
-        $"Launches an energy ball dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage to the first insect hit.";
+        $"Launches an energy ball dealing <color=green><b>{baseAttackDamage:F0}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to the first insect hit.";
 
     public override string GetPassiveDescription() =>
         $"Generates <color=yellow><b>{baseSunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{basePassiveCooldown:F0}s</b></color>. " +

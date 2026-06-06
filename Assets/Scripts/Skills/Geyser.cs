@@ -13,7 +13,7 @@ public class Geyser : MonoBehaviour
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(position, insect.transform.position) > radius) continue;
 
-            insect.Damage(damage, DamageType.Magic, ElementalType.Water, source, true,
+            insect.Damage(damage, source.damageType, source.elementalType, source, true,
                 new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
             insect.ApplyEffect(new KnockUpEffect(insect, 30f, 1, source, knockUpForce));
         }

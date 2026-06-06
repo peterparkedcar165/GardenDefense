@@ -339,8 +339,8 @@
     <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\EditorBinding\Inspector\InspectorLabelAttribute.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\Reflection\Optimization\Action_6.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\Listeners\MessageListener.cs" />
-    <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\Dependencies\FullSerializer\fsMemberSerialization.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\Collections\MergedList.cs" />
+    <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\Dependencies\FullSerializer\fsMemberSerialization.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\Dependencies\FullSerializer\Converters\Unity\Bounds_DirectConverter.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\Reflection\Operators\NumericNegationHandler.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@eb6004dcc707\Runtime\VisualScripting.Core\Variables\VariableDeclarations.cs" />

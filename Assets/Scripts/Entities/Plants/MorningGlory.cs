@@ -103,7 +103,7 @@ public class MorningGlory : Shooter
         $"The {GetName()} is a swift wind support, hastening allies and suspending enemies helplessly in the air.";
 
     public override string GetAttackDescription() =>
-        $"Sends a wind blade at the first target, dealing <color=green><b>{BladeDamage:F0}</b></color> <color=#B2EBF2>Wind</color> damage (<color=green><b>{attackDamage:F0}</b></color> Attack Damage + <color=green><b>{SpeedDamageScale:F1}×</b></color> <color=green><b>{projectileSpeed:F1}</b></color> Projectile Speed).";
+        $"Sends a wind blade at the first target, dealing <color=green><b>{BladeDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} damage (<color=green><b>{attackDamage:F0}</b></color> Attack Damage + <color=green><b>{SpeedDamageScale:F1}×</b></color> <color=green><b>{projectileSpeed:F1}</b></color> Projectile Speed).";
 
     public override string GetPassiveDescription() =>
         $"Plants within range — including herself — gain <color=#B2EBF2><b>Tailwind</b></color>: " +

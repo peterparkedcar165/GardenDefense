@@ -82,7 +82,7 @@ public class AcornSprout : Shooter
         float adpl = AcornData?.path1AttackDamagePerLevel ?? 8f;
         float aspl = AcornData?.path1AttackSpeedPerLevel  ?? 0.05f;
         return $"Attack:\n\n" +
-               $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage.\n\n" +
+               $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
                $"Increase Base Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
@@ -106,7 +106,7 @@ public class AcornSprout : Shooter
         float hppl     = AcornData?.path3HealthPerLevel           ?? 50f;
         float radiuspl = AcornData?.path3RadiusPerLevel           ?? 0.15f;
         return $"Skill:\n\n" +
-               $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
+               $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
                $"The acorn then sits on the ground for <color=green><b>{skillDuration}</b></color> seconds, blocking ground insects who stop to gnaw at it. The acorn can sustain <color=green><b>{acornBombHealth:F0}</b></color> damage.\n\n" +
                $"Increase impact damage multiplier by <color=green><b>{dmgpl * 100f:F0}%</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase acorn lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +

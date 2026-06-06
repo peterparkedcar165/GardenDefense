@@ -85,4 +85,23 @@ public class PlantData : ScriptableObject
     public virtual string GetAttackDescription() => "";
     public virtual string GetPassiveDescription() => "";
     public virtual string GetSkillDescription() => "";
+
+    public static string ElementalTag(ElementalType t) => t switch
+    {
+        ElementalType.Fire    => "<color=orange>Fire</color>",
+        ElementalType.Water   => "<color=#4FC3F7>Water</color>",
+        ElementalType.Nature  => "<color=green>Nature</color>",
+        ElementalType.Wind    => "<color=#B2EBF2>Wind</color>",
+        ElementalType.Poison  => "<color=purple>Poison</color>",
+        ElementalType.Ice     => "<color=#00FFFF>Ice</color>",
+        _                     => t.ToString()
+    };
+
+    public static string DamageTypeTag(DamageType t) => t switch
+    {
+        DamageType.Magic    => "<color=#FFB6C1>Magic</color>",
+        DamageType.Physical => "<color=#A0522D>Physical</color>",
+        DamageType.True     => "<color=white>True</color>",
+        _                   => t.ToString()
+    };
 }

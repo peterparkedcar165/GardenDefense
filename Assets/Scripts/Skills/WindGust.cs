@@ -76,7 +76,7 @@ public class WindGust : MonoBehaviour
 
             if (tickTimer >= tickInterval)
             {
-                insect.Damage(damage * tickInterval, DamageType.Magic, ElementalType.Wind, source, false, damageTags);
+                insect.Damage(damage * tickInterval, source.damageType, source.elementalType, source, false, damageTags);
                 insect.ApplyEffect(new DisplacedEffect(insect, 0.5f, 1, source));
             }
         }

@@ -92,7 +92,7 @@ MonoBehaviour:
   skillWaveWidth: 1
   skillThickness: 1
   skillTravelDistance: 12
-  baseFungalHealthMultiplier: -0.25
+  baseFungalHealthMultiplier: -0.5
   path3HealthMultiplierPerLevel: 0.1
   baseFungalAttackMultiplier: -0.1
   path3AttackMultiplierPerLevel: 0.05

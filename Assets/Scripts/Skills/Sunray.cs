@@ -66,7 +66,7 @@ public class Sunray : MonoBehaviour
                 {
                     if (insect == null || !insect.IsAlive) continue;
                     if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
-                        insect.Damage(damagePerSecond * tickInterval, DamageType.Magic, ElementalType.Fire, source, true, damageTags);
+                        insect.Damage(damagePerSecond * tickInterval, source.damageType, source.elementalType, source, true, damageTags);
                 }
                 nextTick += tickInterval;
             }

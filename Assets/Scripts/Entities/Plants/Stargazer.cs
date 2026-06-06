@@ -268,13 +268,13 @@ public class Stargazer : Aura
         $"The {GetName()} sprays a cone of fire that leaves enemies <color=#FF6B1A>Flammable</color>, and can call down a sweeping wall of flame across the entire map.";
 
     public override string GetAttackDescription() =>
-        $"Sprays fire in a <color=green><b>{ConeAngle:F0}°</b></color> cone, dealing <color=green><b>{attackDamage:F0}</b></color> <color=orange>Fire</color> damage to all insects within it.";
+        $"Sprays fire in a <color=green><b>{ConeAngle:F0}°</b></color> cone, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} damage to all insects within it.";
 
     public override string GetPassiveDescription() =>
         $"Striking a target applies <color=green><b>{StacksPerHit}</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> for <color=green><b>{FlammableDuration:F0}s</b></color>, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>{BurnDurationBonus * 100f:F0}%</b></color> longer.";
 
     public override string GetSkillDesription() =>
-        $"Aim a direction. After a brief delay, a wall of fire sweeps across the entire map, dealing <color=green><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> damage to everything in its path and applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. Deals <color=green><b>{SkillBurnMultiplier:F1}×</b></color> damage to <color=orange>Burning</color> targets.";
+        $"Aim a direction. After a brief delay, a wall of fire sweeps across the entire map, dealing <color=green><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage to everything in its path and applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. Deals <color=green><b>{SkillBurnMultiplier:F1}×</b></color> damage to <color=orange>Burning</color> targets.";
 
     public override string GetPath1Description()
     {

@@ -145,7 +145,7 @@ public class BogIris : Shooter
     {
         float adpl = BogData?.path1AttackDamagePerLevel ?? 8f;
         return $"Attack:\n\n" +
-               $"Fires a water bolt at a single target dealing <color=green><b>{attackDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage.\n\n" +
+               $"Fires a water bolt at a single target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
                $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }
@@ -169,7 +169,7 @@ public class BogIris : Shooter
         float knockpl  = BogData?.path3KnockUpPerLevel        ?? 1f;
         float radiuspl = BogData?.path3GeyserRadiusPerLevel   ?? 0.15f;
         return $"Skill:\n\n" +
-               $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{(BogData?.baseGeyserDamage ?? 0f) + dmgpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.\n\n" +
+               $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{(BogData?.baseGeyserDamage ?? 0f) + dmgpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.\n\n" +
                $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
                $"Increase the flat component of geyser damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> unit per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +

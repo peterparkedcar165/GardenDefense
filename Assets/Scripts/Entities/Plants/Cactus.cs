@@ -63,7 +63,7 @@ public class Cactus : Shooter
     protected override void OnHitByInsect(Insect attacker)
     {
         if (!IsAlive || !attacker.IsAlive) return;
-        attacker.Damage(attacker.attackDamage * 1.5f, DamageType.Physical, ElementalType.Nature, this, false, new DamageTag[] { DamageTag.PassiveDamage, DamageTag.Counter });
+        attacker.Damage(attacker.attackDamage * 1.5f, damageType, elementalType, this, false, new DamageTag[] { DamageTag.PassiveDamage, DamageTag.Counter });
         ApplyPunctured(attacker, 1 + effectivePath2Level);
     }
 
@@ -132,14 +132,14 @@ public class Cactus : Shooter
         int needleBase  = CactData?.path1NeedlesBase     ?? 8;
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
         return $"Fires <color=green><b>{needleBase + needleLevel * effectivePath1Level}</b></color> needles in equal angles around itself, dealing " +
-               $"<color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#A0522D>Physical</color> damage per needle. " +
+               $"<color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per needle. " +
                $"Each hit applies <color=#A0522D><b>Punctured</b></color>.\n" +
                $"At Level <color=green><b>5</b></color>, <color=green><b>+1</b></color> Piercing.";
     }
 
     public override string GetPassiveDescription() =>
         $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as " +
-        $"<color=green>Nature</color> <color=#A0522D>Physical</color> damage, and receive " +
+        $"{PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and receive " +
         $"<color=green><b>{1 + effectivePath2Level}</b></color> <color=#A0522D>Punctured</color> stack(s).";
 
     public override string GetSkillDesription() =>

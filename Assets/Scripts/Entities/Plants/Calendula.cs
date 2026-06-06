@@ -42,7 +42,7 @@ public class Calendula : Aura
         base.Attack();
         List<Insect> insects = GetInsectsInRange();
         foreach (Insect insect in insects)
-            insect.Damage(attackDamage, DamageType.Magic, ElementalType.Fire, this, true,
+            insect.Damage(attackDamage, damageType, elementalType, this, true,
                 new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
     }
 
@@ -94,7 +94,7 @@ public class Calendula : Aura
     public override string GetPath3Name() => "Floral Glow";
 
     public override string GetAttackDescription()
-        => $"Releases flaming petals dealing <color=green><b>{attackDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage to all insects within range.";
+        => $"Releases flaming petals dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range.";
 
     public override string GetPassiveDescription()
         => $"Illuminate the surrounding area with a radius equal to <color=green><b>2×</b></color> her Attack Range.";
@@ -103,7 +103,7 @@ public class Calendula : Aura
     {
         float healpl = CData?.path3HealPerLevel ?? 1f;
         float healBase = CData?.baseFloralGlowHeal ?? 8f;
-        return $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's attacks deal an additional <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{healBase + healpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillHealingMultiplier * magicPower:F0}</b></color>] health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s Base Illumination range.";
+        return $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's attacks deal an additional <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage on hit. Heals the plant for <color=green><b>{healBase + healpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillHealingMultiplier * magicPower:F0}</b></color>] health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s Base Illumination range.";
     }
 
     public override string GetPath1Description()

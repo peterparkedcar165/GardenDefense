@@ -223,7 +223,7 @@ public class Dandelion : Shooter
         float eppl    = DData?.path1elementalAffinityPerLevel ?? 0.06f;
         float rangepl = DData?.path1AttackRangePerLevel    ?? 0.25f;
         return $"Attack:\n\n" +
-               $"Each seed deals <color=green><b>{attackDamage}</b></color> <color=#B2EBF2>Wind</color> <color=#A0522D>Physical</color> damage.\n\n" +
+               $"Each seed deals <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
                $"Increase Elemental Affinity by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
@@ -245,7 +245,7 @@ public class Dandelion : Shooter
         float rangepl = DData?.path3WindGustRangePerLevel ?? 0.5f;
         float currentWidth = (DData?.baseBeamWidth ?? 1f) + beampl * effectivePath3Level;
         return $"Skill:\n\n" +
-               $"Blows a powerful gust of pollen wind <color=green><b>{currentWidth:F2}</b></color> units wide towards the targeted direction, reaching <color=green><b>{WindGustRange:F1}</b></color> units, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=#B2EBF2>Wind</color> <color=#FFB6C1>Magic</color> damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.\n\n" +
+               $"Blows a powerful gust of pollen wind <color=green><b>{currentWidth:F2}</b></color> units wide towards the targeted direction, reaching <color=green><b>{WindGustRange:F1}</b></color> units, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.\n\n" +
                $"Scaling: <color=green><b>100%</b></color> Attack Damage\n\n" +
                $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
                $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +

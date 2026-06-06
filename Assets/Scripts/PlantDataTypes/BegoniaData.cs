@@ -22,7 +22,7 @@ public class BegoniaData : PlantData
     public float path3RadiusPerLevel = 0.15f;
 
     public override string GetAttackDescription() =>
-        $"Fire a magical bolt dealing <color=green><b>{baseAttackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage.";
+        $"Fire a magical bolt dealing <color=green><b>{baseAttackDamage:F0}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
         $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, increasing Elemental Affinity by <color=green><b>{baseelementalAffinityBonus * 100f:F0}%</b></color>. " +

@@ -103,12 +103,12 @@ public class Sunflower : Shooter
         $"The {GetName()} shoots her targets with sun bolts and generate precious <color=yellow>Sun</color> for the garden.";
 
     public override string GetAttackDescription() =>
-        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=green><b>{attackDamage}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic </color>damage.";
+        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
 
     public override string GetSkillDesription()
     {
         float dpspl = SFData?.path3SunrayDPSPerLevel ?? 15f;
-        return $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.";
+        return $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.";
     }
 
     public override string GetPassiveDescription() =>

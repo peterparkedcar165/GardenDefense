@@ -123,7 +123,7 @@ public class AcornBomb : MonoBehaviour, IAttackable
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
             {
-                insect.Damage(damage, DamageType.Physical, ElementalType.Nature, source, false, impactTags);
+                insect.Damage(damage, source.damageType, source.elementalType, source, false, impactTags);
                 insect.ApplyEffect(new StunEffect(insect, stunDuration, 1, source));
             }
         }

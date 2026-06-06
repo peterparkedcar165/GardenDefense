@@ -191,7 +191,7 @@ public class AloeVera : Lobber
         $"The {GetName()} lobs arcing water droplets that burst on impact. She prioritizes healing injured allies before engaging insects.";
 
     public override string GetAttackDescription() =>
-        $"Lob a water droplet that bursts on landing, dealing <color=green><b>{attackDamage:F0}</b></color> <color=#4FC3F7>Water</color> <color=#FFB6C1>Magic</color> damage to all insects within <color=green><b>{aoERadius:F1}</b></color> radius.";
+        $"Lob a water droplet that bursts on landing, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within <color=green><b>{aoERadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
         $"Water droplets also heal plants, restoring <color=green><b>{healAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.22f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{tempReduction:F1}</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius. If an injured plant is within range, switch targetting to the one with the lowest Health.";

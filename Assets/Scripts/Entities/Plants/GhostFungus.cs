@@ -20,8 +20,8 @@ public class GhostFungus : Shooter
     private bool _hasFormationOverride;
 
     private int   ShroomletTarget => (GData?.baseShroomletCount ?? 1) + (GData?.path2ShroomletPerLevel ?? 1) * effectivePath2Level;
-    private float FungalHealthMultiplier => (GData?.baseFungalHealthMultiplier ?? 1f) + (GData?.path3HealthMultiplierPerLevel ?? 0.2f) * effectivePath3Level;
-    private float FungalAttackMultiplier => (GData?.baseFungalAttackMultiplier ?? 1f) + (GData?.path3AttackMultiplierPerLevel ?? 0.2f) * effectivePath3Level;
+    private float FungalHealthMultiplier => (GData?.baseFungalHealthMultiplier ?? 1f) + (GData?.path3HealthMultiplierPerLevel ?? 0.2f) * effectivePath3Level + (GData?.fungalHealthMP ?? 0f) * magicPower / 100f;
+    private float FungalAttackMultiplier => (GData?.baseFungalAttackMultiplier ?? 1f) + (GData?.path3AttackMultiplierPerLevel ?? 0.2f) * effectivePath3Level + (GData?.fungalAttackMP ?? 0f) * magicPower / 100f;
     private float FungalMoveSlow         => (GData?.baseFungalMoveSlow ?? 0.1f) + (GData?.path3MoveSlowPerLevel ?? 0.05f) * effectivePath3Level;
 
     // shroomlet core stats: base + per level (path 1 for attack, path 2 for health) + magic power.
@@ -257,18 +257,18 @@ public class GhostFungus : Shooter
         $"The {GetName()} is a haunted summoner that fires ice bolts, raises Ghost Shroomlets to guard the lane, and can turn an insect against its own.";
 
     public override string GetAttackDescription() =>
-        $"Fires a bolt of ice dealing <color=green><b>{attackDamage:F0}</b></color> <color=#00FFFF>Ice</color> <color=#A0522D>Physical</color> damage to the first insect hit.";
+        $"Fires a bolt of ice dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit.";
 
     public override string GetPassiveDescription() =>
-        $"Conjures a Ghost Shroomlet every <color=green><b>{passiveCooldown:F1}s</b></color> (up to <color=green><b>{ShroomletTarget}</b></color>) that holds position until an enemy comes into sight, then engages with <color=#00FFFF>Ice</color> <color=#A0522D>Physical</color> attacks dealing <color=green><b>{ShroomletAttackDamage:F0}</b></color> damage (<color=green><b>{ShroomletHealth:F0}</b></color> HP).";
+        $"Conjures a Ghost Shroomlet every <color=green><b>{passiveCooldown:F1}s</b></color> (up to <color=green><b>{ShroomletTarget}</b></color>) that holds position until an enemy comes into sight, then engages with {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} attacks dealing <color=green><b>{ShroomletAttackDamage:F0}</b></color> damage (<color=green><b>{ShroomletHealth:F0}</b></color> HP).";
 
     private static string SignedPct(float pct) =>
         pct >= 0f ? $"<color=green><b>+{pct:F0}%</b></color>" : $"<color=red><b>{pct:F0}%</b></color>";
 
     public override string GetSkillDesription() =>
         $"Send a spectral wave, inflicting <color=#00FFFF>Fungal Hypnosis</color> on the first insect hit, which permanently turns it friendly, and granting it:\n\n" +
-        $"{SignedPct(FungalHealthMultiplier * 100f)} Max Health\n" +
-        $"{SignedPct(FungalAttackMultiplier * 100f)} Attack Damage\n" +
+        $"{SignedPct(FungalHealthMultiplier * 100f)} [<color=#FFB6C1><b>+{(GData?.fungalHealthMP ?? 0f) * magicPower:F0}%</b></color>] Max Health\n" +
+        $"{SignedPct(FungalAttackMultiplier * 100f)} [<color=#FFB6C1><b>+{(GData?.fungalAttackMP ?? 0f) * magicPower:F0}%</b></color>] Attack Damage\n" +
         $"{SignedPct(-FungalMoveSlow * 100f)} Movement Speed";
 
     public override string GetPath1Description()
@@ -300,7 +300,11 @@ public class GhostFungus : Shooter
         float hpl  = GData?.path3HealthMultiplierPerLevel ?? 0.2f;
         float apl  = GData?.path3AttackMultiplierPerLevel ?? 0.2f;
         float mpl  = GData?.path3MoveSlowPerLevel ?? 0.05f;
+        float hmp = GData?.fungalHealthMP ?? 0f;
+        float amp = GData?.fungalAttackMP ?? 0f;
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{hmp:F0}%</b></color> Magic Power (Max Health bonus). [<color=#FFB6C1><b>+{hmp * magicPower:F0}%</b></color>]\n\n" +
+               $"Scaling: <color=#FFB6C1><b>{amp:F0}%</b></color> Magic Power (Attack Damage bonus). [<color=#FFB6C1><b>+{amp * magicPower:F0}%</b></color>]\n\n" +
                $"Increase <color=green>Max Health</color> bonus by <color=green><b>{hpl * 100f:F0}%</b></color> per level. [<color=green><b>+{hpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green>Attack Damage</color> bonus by <color=green><b>{apl * 100f:F0}%</b></color> per level. [<color=green><b>+{apl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Movement Speed reduction by <color=green><b>{mpl * 100f:F0}%</b></color> per level. [<color=green><b>+{mpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +

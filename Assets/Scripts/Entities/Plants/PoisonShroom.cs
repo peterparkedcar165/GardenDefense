@@ -97,7 +97,7 @@ public class PoisonShroom : Shooter
         float aspl    = PSData?.path1AttackSpeedPerLevel ?? 0.08f;
         float rangepl = PSData?.path1AttackRangePerLevel ?? 0.1f;
         return $"Attack:\n\n" +
-               $"Blows poisonous bubbles at his target, dealing <color=green><b>{attackDamage}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage.\n\n" +
+               $"Blows poisonous bubbles at his target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
                $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
@@ -108,7 +108,7 @@ public class PoisonShroom : Shooter
         float dpspl = PSData?.path2PoisonDPSPerLevel        ?? 6f;
         float durpl = PSData?.path2PoisonDurationPerLevel   ?? 1f;
         return $"Passive:\n\n" +
-               $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{PoisonBaseDPS + dpspl * effectivePath2Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=purple>Poison</color> damage per second.\n\n" +
+               $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{PoisonBaseDPS + dpspl * effectivePath2Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage per second.\n\n" +
                $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
                $"Increase <color=purple>Poison</color> damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=purple>Poison</color> duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath2Level:F0}s</b></color>]\n\n" +
@@ -120,7 +120,7 @@ public class PoisonShroom : Shooter
         float durpl    = PSData?.path3SkillDurationPerLevel ?? 1f;
         float radiuspl = PSData?.path3RadiusPerLevel        ?? 0.2f;
         return $"Skill:\n\n" +
-               $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>{activeRadius}</b></color> radius that lasts <color=green><b>{skillDuration}</b></color> seconds. Insects standing in the field take <color=green><b>{PoisonBaseDPS}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second, and any debuffs on them are frozen in time.\n\n" +
+               $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>{activeRadius}</b></color> radius that lasts <color=green><b>{skillDuration}</b></color> seconds. Insects standing in the field take <color=green><b>{PoisonBaseDPS}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second, and any debuffs on them are frozen in time.\n\n" +
                $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
                $"Increase field duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
                $"Increase field radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +

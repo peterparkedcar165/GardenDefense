@@ -107,7 +107,7 @@ public class LeafRanger : Shooter
         float adpl   = LRData?.path1AttackDamagePerLevel ?? 5f;
         float aspl   = LRData?.path1AttackSpeedPerLevel ?? 0.05f;
         return $"Attack:\n\n" +
-               $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> <color=green><b>Nature</b></color> <color=#A0522D>Physical</color> damage.\n\n" +
+               $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
                $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";

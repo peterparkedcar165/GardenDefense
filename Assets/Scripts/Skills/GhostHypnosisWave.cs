@@ -37,7 +37,7 @@ public class GhostHypnosisWave : MonoBehaviour
         light.lightType             = Light2D.LightType.Point;
         light.color                 = new Color(0.05f, 0.65f, 1f);
         light.intensity             = 1f;
-        light.pointLightOuterRadius = 1f;
+        light.pointLightOuterRadius = 2f;
         light.pointLightInnerRadius = 0.2f;
     }
 

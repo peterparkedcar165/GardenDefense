@@ -69,7 +69,7 @@ public class NeriumOleander : Shooter
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(position, insect.transform.position) > skillRadius) continue;
 
-            insect.Damage(computedSkillDamage, DamageType.Magic, ElementalType.Poison, this, false,
+            insect.Damage(computedSkillDamage, damageType, elementalType, this, false,
                 new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
 
             insect.ApplyEffect(new EntrappedEffect(insect, rootDuration, 1, this));
@@ -100,7 +100,7 @@ public class NeriumOleander : Shooter
         float adpl = OleanderData?.path1AttackDamagePerLevel ?? 10f;
         int   bpl  = OleanderData?.path1BouncePerLevel ?? 1;
         return $"Attack:\n\n" +
-               $"Fires a toxic petal at the target dealing <color=green><b>{attackDamage:F0}</b></color> <color=purple>Poison</color> <color=#A0522D>Physical</color> damage. The petal bounces to <color=green><b>{bounceCount}</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce.\n\n" +
+               $"Fires a toxic petal at the target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>{bounceCount}</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce.\n\n" +
                $"<color=green><b>Base Attack Damage</b></color> +{adpl:F0} per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"<color=green><b>Bounce Count</b></color> +{bpl} per level. [<color=green><b>+{bpl * effectivePath1Level}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
@@ -123,7 +123,7 @@ public class NeriumOleander : Shooter
         float rootpl   = OleanderData?.path3RootDurationPerLevel ?? 0.5f;
         float radiuspl = OleanderData?.path3SkillRadiusPerLevel ?? 0.5f;
         return $"Skill:\n\n" +
-               $"Target an area. After <color=green><b>{skillDelay:F1}s</b></color>, all insects within <color=green><b>{skillRadius:F1}</b></color> radius are dealt <color=green><b>{computedSkillDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=purple>Poison</color> <color=#A0522D>Physical</color> damage, rooted for <color=green><b>{rootDuration:F1}s</b></color>, and afflicted with <color=#9B59B6>Oleandic Toxin</color>.\n\n" +
+               $"Target an area. After <color=green><b>{skillDelay:F1}s</b></color>, all insects within <color=green><b>{skillRadius:F1}</b></color> radius are dealt <color=green><b>{computedSkillDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, rooted for <color=green><b>{rootDuration:F1}s</b></color>, and afflicted with <color=#9B59B6>Oleandic Toxin</color>.\n\n" +
                $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
                $"Increase Skill Damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase Root Duration by <color=green><b>{rootpl:F1}s</b></color> per level. [<color=green><b>+{rootpl * effectivePath3Level:F1}s</b></color>]\n\n" +

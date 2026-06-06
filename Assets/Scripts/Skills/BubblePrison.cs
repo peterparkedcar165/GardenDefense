@@ -92,7 +92,7 @@ public class BubblePrison : MonoBehaviour
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(center.position, insect.transform.position) <= trapRadius)
             {
-                insect.Damage(damagePerSecond, DamageType.Magic, ElementalType.Water, source, true,
+                insect.Damage(damagePerSecond, source.damageType, source.elementalType, source, true,
                     new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
                 insect.ApplyEffect(new BubblePrisonEffect(insect, duration, 1, source));
             }
