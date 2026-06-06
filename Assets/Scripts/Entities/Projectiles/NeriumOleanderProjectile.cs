@@ -45,10 +45,10 @@ public class NeriumOleanderProjectile : Projectile
         if (other.CompareTag("Insect"))
         {
             Insect insect = other.GetComponentInParent<Insect>();
-            if (insect == null || !insect.IsAlive || alreadyHit.Contains(insect)) return;
+            if (insect == null || !insect.IsAlive || insect.team == Team.Friendly || alreadyHit.Contains(insect)) return;
 
             OnHit(insect);
-            source?.GetEffect<FloralGlowEffect>()?.OnProjectileHit(insect);
+
             trackedTarget = null;
             trackedInsect = null;
 

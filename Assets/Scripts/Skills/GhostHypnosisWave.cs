@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
 // the Ghost Fungus skill: a small rectangle that sweeps in the aimed direction and inflicts
@@ -31,6 +32,13 @@ public class GhostHypnosisWave : MonoBehaviour
         float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
         transform.localScale = new Vector3(thickness, width, 1f);
+
+        Light2D light = gameObject.AddComponent<Light2D>();
+        light.lightType             = Light2D.LightType.Point;
+        light.color                 = new Color(0.05f, 0.65f, 1f);
+        light.intensity             = 1f;
+        light.pointLightOuterRadius = 1f;
+        light.pointLightInnerRadius = 0.2f;
     }
 
     private void Update()

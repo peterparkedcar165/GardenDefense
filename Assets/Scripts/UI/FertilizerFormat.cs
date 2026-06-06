@@ -69,6 +69,7 @@ public static class FertilizerFormat
             case StatType.BuffGivenDuration:            return "Buff Given Duration";
             case StatType.BuffReceivedDuration:         return "Buff Received Duration";
             case StatType.DebuffReceivedDuration:       return "Debuff Received Duration";
+            case StatType.MinionDamage:                 return "Minion Damage";
             default:                      return statType.ToString();
         }
     }

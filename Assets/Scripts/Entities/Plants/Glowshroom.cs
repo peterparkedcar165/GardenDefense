@@ -54,15 +54,19 @@ public class Glowshroom : Shooter
         if (mainTarget != null && mainTarget.IsAlive)
             mainTarget.ApplyEffect(new FungalGlowEffect(mainTarget, FungalGlowDuration, 1, this, SpreadRadius));
 
-        // splash damage to nearby insects
+        // splash damage + Fungal Glow to nearby insects
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
         foreach (Insect insect in snapshot)
         {
             if (insect == null || !insect.IsAlive) continue;
             if (insect == mainTarget) continue;
             if (Vector3.Distance(hitPosition, insect.transform.position) <= SplashRadius)
+            {
                 insect.Damage(attackDamage * SplashMult, damageType, elementalType, this, false,
                     new DamageTag[] { DamageTag.AoE });
+                if (insect.IsAlive)
+                    insect.ApplyEffect(new FungalGlowEffect(insect, FungalGlowDuration, 1, this, SpreadRadius));
+            }
         }
     }
 
@@ -142,7 +146,7 @@ public class Glowshroom : Shooter
         $"Fires a fungal bolt dealing <color=green><b>{attackDamage:F0}</b></color> <color=green>Nature</color> <color=#FFB6C1>Magic</color> damage to the target, splashing <color=green><b>{SplashMultBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{SplashMultMP * 100f:F0}%</b></color>] of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
-        $"Every attack inflicts <color=#88FF88>Fungal Glow</color> on the target, causing it to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed and the glow spreads to all insects within <color=green><b>{SpreadRadius:F1}</b></color> radius.";
+        $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed and the glow spreads to all insects within <color=green><b>{SpreadRadius:F1}</b></color> radius.";
 
     public override string GetSkillDesription() =>
         $"Unleashes a blinding flash, tripling the illumination radius to <color=green><b>{lightEmissionRange * LightMult:F1}</b></color> for <color=green><b>{skillDuration:F0}s</b></color>. All insects caught in the expanded radius are <color=#DDDDDD><b>Blinded</b></color> for <color=green><b>{BlindDurationBase:F1}s</b></color> [<color=#FFB6C1><b>+{BlindDurationMP:F1}s</b></color>], causing their attacks to miss.";

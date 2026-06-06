@@ -45,6 +45,10 @@ public class InsectData : ScriptableObject
     public float threatValue = 1f;
     public ThreatType threatType = ThreatType.Basic;
 
+    [Header("Evasion / Accuracy")]
+    public float baseEvasion;
+    public float baseAccuracy;
+
     [Header("Other")]
     public int sunDrop;
     public Aggressivity aggressivity;

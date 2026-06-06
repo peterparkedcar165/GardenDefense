@@ -48,7 +48,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 15
   minThreatBudget: 9
-  maxThreatBudget: 60
+  maxThreatBudget: 85
   budgetCurve:
     serializedVersion: 2
     m_Curve:

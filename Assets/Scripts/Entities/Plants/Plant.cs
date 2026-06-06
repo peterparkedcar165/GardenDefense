@@ -752,12 +752,12 @@ public abstract class Plant : Entity, IAttackable
 
     // upgrade cost scales with the plant's own suncost so premium plants cost
     // proportionally more to scale. base is the first level price as a fraction
-    // of buy cost, step is what each further level adds
-    const float upgradeBaseFactor = 0.25f;
-    const float upgradeStepFactor = 0.35f;
-    const float skillBaseFactor   = 0.35f;  // path 3 unlocks the skill so it costs a bit more
+    // of buy cost, step is the exponential multiplier per level
+    const float upgradeBaseFactor = 0.2f;
+    const float upgradeStepFactor = 2f;
+    const float skillBaseFactor   = 0.3f;  // path 3 unlocks the skill so it costs a bit more
 
-    int PathCost(int level, float baseFactor) => Mathf.RoundToInt(sunCost * (baseFactor + upgradeStepFactor * level));
+    int PathCost(int level, float baseFactor) => Mathf.RoundToInt(sunCost * baseFactor * Mathf.Pow(upgradeStepFactor, level));
 
     public int GetPath1Cost() => PathCost(path1Level, upgradeBaseFactor);
     public int GetPath2Cost() => PathCost(path2Level, upgradeBaseFactor);

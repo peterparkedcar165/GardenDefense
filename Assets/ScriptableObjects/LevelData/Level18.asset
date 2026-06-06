@@ -48,7 +48,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 6
   minThreatBudget: 10
-  maxThreatBudget: 80
+  maxThreatBudget: 155
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -86,6 +86,14 @@ MonoBehaviour:
     unlockWave: 2
     budgetWeight: 0.3
     startDelay: 8
+  - data: {fileID: 11400000, guid: 7f773353e0b72144baed277302b74c2e, type: 2}
+    unlockWave: 3
+    budgetWeight: 0.3
+    startDelay: 3
+  - data: {fileID: 11400000, guid: 3daf6caaa45e774478c2b54666c863be, type: 2}
+    unlockWave: 3
+    budgetWeight: 0.2
+    startDelay: 3
   - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
     unlockWave: 4
     budgetWeight: 0.4

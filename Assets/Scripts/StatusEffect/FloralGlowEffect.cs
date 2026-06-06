@@ -21,6 +21,7 @@ public class FloralGlowEffect : StatusEffect
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Floral Glow", new Color(1f, 0.6f, 0f));
         cachedLightRange = calendula?.baseLightEmissionRange ?? 0f;
         plant.lightEmissionRangeAdder += cachedLightRange;
+        Entity.OnPlantAttackHit += HandlePlantAttackHit;
     }
 
     public override void OnTick(float deltaTime)
@@ -39,11 +40,15 @@ public class FloralGlowEffect : StatusEffect
         if (plant == null) return;
         plant.lightEmissionRangeAdder -= cachedLightRange;
         plant.UpdateStats();
+        Entity.OnPlantAttackHit -= HandlePlantAttackHit;
     }
 
-    public void OnProjectileHit(Insect insect)
+    private void HandlePlantAttackHit(Plant plant, Insect insect, DamageTag[] tags)
     {
-        if (calendula == null || insect == null) return;
+        if (plant != target) return;
+        if (!System.Array.Exists(tags, t => t == DamageTag.Attack)) return;
+        if (!System.Array.Exists(tags, t => t == DamageTag.Melee || t == DamageTag.Projectile)) return;
+        if (calendula == null || insect == null || !insect.IsAlive) return;
         calendula.StartCoroutine(DelayedFireHit(insect));
     }
 
@@ -59,5 +64,5 @@ public class FloralGlowEffect : StatusEffect
     private float CoordinatedDamage => (calendula?.attackDamage ?? 0f) + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f);
 
     public override string GetName() => "<color=orange>Floral Glow</color>";
-    public override string GetDescription() => $"Regenerates <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Projectile attacks inflict a Coordinated <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage from the Calendula.";
+    public override string GetDescription() => $"Regenerates <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Attacks inflict a Coordinated <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage from the Calendula.";
 }

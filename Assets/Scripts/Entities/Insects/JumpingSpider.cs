@@ -13,10 +13,10 @@ public class JumpingSpider : Insect
     private enum LeapState { Walking, Aiming, Leaping, Attacking }
     private LeapState _leapState = LeapState.Walking;
 
-    private bool    _fallDamageImmune;
-    private bool    _hasLeftGround;
-    private Plant   _leapTarget;
-    private float   _aimTimer;
+    private bool        _fallDamageImmune;
+    private bool        _hasLeftGround;
+    private IAttackable _leapTarget;
+    private float       _aimTimer;
     private Vector3 _leapDestination;
     private float   _leapHorizSpeed;
 
@@ -88,8 +88,9 @@ public class JumpingSpider : Insect
 
     private void CheckLeapOpportunity()
     {
-        Plant nearest     = null;
-        float nearestDist = Mathf.Infinity;
+        IAttackable nearest     = null;
+        float       nearestDist = Mathf.Infinity;
+
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
@@ -97,6 +98,13 @@ public class JumpingSpider : Insect
             if (plant.occupiedTile != null && plant.occupiedTile.tileType == TileType.Water) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
             if (dist <= leapRange && dist < nearestDist) { nearestDist = dist; nearest = plant; }
+        }
+
+        foreach (Insect friendly in Insect.friendlyInsects)
+        {
+            if (friendly == null || !friendly.IsAlive) continue;
+            float dist = Vector3.Distance(transform.position, friendly.transform.position);
+            if (dist <= leapRange && dist < nearestDist) { nearestDist = dist; nearest = friendly; }
         }
 
         if (nearest != null)
@@ -147,8 +155,8 @@ public class JumpingSpider : Insect
             if (dist <= attackRange * 1.5f)
             {
                 bool hit = _leapTarget.ReceiveAttack(attackDamage, this);
-                if (hit && _leapTarget.IsAlive)
-                    _leapTarget.ApplyEffect(new WebbedEffect(_leapTarget, webDuration, 1, this));
+                if (hit && _leapTarget.IsAlive && _leapTarget is Entity landedOn)
+                    landedOn.ApplyEffect(new WebbedEffect(landedOn, webDuration, 1, this));
                 _leapState = LeapState.Attacking;
                 return;
             }

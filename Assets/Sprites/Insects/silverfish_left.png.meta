@@ -1,0 +1,2275 @@
+fileFormatVersion: 2
+guid: 09b74bfa964c1e54aa11247ff08b43e2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3950076832383446888
+    second: silverfish_left_0
+  - first:
+      213: -4389934045892232119
+    second: silverfish_left_1
+  - first:
+      213: 7869767849377329807
+    second: silverfish_left_2
+  - first:
+      213: -2700980982199936678
+    second: silverfish_left_3
+  - first:
+      213: 5604130743248783346
+    second: silverfish_left_4
+  - first:
+      213: -3738309495836602124
+    second: silverfish_left_5
+  - first:
+      213: -6871117773318784207
+    second: silverfish_left_6
+  - first:
+      213: 7252253697416503505
+    second: silverfish_left_7
+  - first:
+      213: 9156798204136400301
+    second: silverfish_left_8
+  - first:
+      213: -2029864563156439701
+    second: silverfish_left_9
+  - first:
+      213: 6566547090072655028
+    second: silverfish_left_10
+  - first:
+      213: -3244891782591808875
+    second: silverfish_left_11
+  - first:
+      213: -7252141030174801656
+    second: silverfish_left_12
+  - first:
+      213: -8526983393251247324
+    second: silverfish_left_13
+  - first:
+      213: -863939754310847656
+    second: silverfish_left_14
+  - first:
+      213: -7358695876148001934
+    second: silverfish_left_15
+  - first:
+      213: -199113658317536215
+    second: silverfish_left_16
+  - first:
+      213: 582336410770105551
+    second: silverfish_left_17
+  - first:
+      213: -5255672695426652488
+    second: silverfish_left_18
+  - first:
+      213: -2467237165827694616
+    second: silverfish_left_19
+  - first:
+      213: 5892110197617547552
+    second: silverfish_left_20
+  - first:
+      213: -2299915571464817215
+    second: silverfish_left_21
+  - first:
+      213: 2955683814270438769
+    second: silverfish_left_22
+  - first:
+      213: 2679578811255447771
+    second: silverfish_left_23
+  - first:
+      213: 7617424834574688274
+    second: silverfish_left_24
+  - first:
+      213: -7447389795738783798
+    second: silverfish_left_25
+  - first:
+      213: -8223288513538160572
+    second: silverfish_left_26
+  - first:
+      213: -2402599231703022035
+    second: silverfish_left_27
+  - first:
+      213: -4754006793014664411
+    second: silverfish_left_28
+  - first:
+      213: -3427755391185872073
+    second: silverfish_left_29
+  - first:
+      213: 5929577588851851000
+    second: silverfish_left_30
+  - first:
+      213: -4867432714324706347
+    second: silverfish_left_31
+  - first:
+      213: 1260033388450440923
+    second: silverfish_left_32
+  - first:
+      213: -2377763087557077759
+    second: silverfish_left_33
+  - first:
+      213: 5645358530303697940
+    second: silverfish_left_34
+  - first:
+      213: 2973531017152310705
+    second: silverfish_left_35
+  - first:
+      213: -4254012684426899869
+    second: silverfish_left_36
+  - first:
+      213: 5992238792166686189
+    second: silverfish_left_37
+  - first:
+      213: -9164461896618819497
+    second: silverfish_left_38
+  - first:
+      213: -6308296468056172099
+    second: silverfish_left_39
+  - first:
+      213: -3784375944843002561
+    second: silverfish_left_40
+  - first:
+      213: -1687039058357036624
+    second: silverfish_left_41
+  - first:
+      213: 6566873907995666833
+    second: silverfish_left_42
+  - first:
+      213: -2948505123255457707
+    second: silverfish_left_43
+  - first:
+      213: 4904874920059125852
+    second: silverfish_left_44
+  - first:
+      213: 5988794230792856500
+    second: silverfish_left_45
+  - first:
+      213: 4916971393171274393
+    second: silverfish_left_46
+  - first:
+      213: 7636201966699526362
+    second: silverfish_left_47
+  - first:
+      213: 4103118236283476750
+    second: silverfish_left_48
+  - first:
+      213: -7984773840168392656
+    second: silverfish_left_49
+  - first:
+      213: -3711157466942792035
+    second: silverfish_left_50
+  - first:
+      213: -1285771936298442445
+    second: silverfish_left_51
+  - first:
+      213: -7491639212084110715
+    second: silverfish_left_52
+  - first:
+      213: -7399276289634465303
+    second: silverfish_left_53
+  - first:
+      213: 85773589952224878
+    second: silverfish_left_54
+  - first:
+      213: 5223719369061131314
+    second: silverfish_left_55
+  - first:
+      213: -5565035047805054090
+    second: silverfish_left_56
+  - first:
+      213: -8197055249295596364
+    second: silverfish_left_57
+  - first:
+      213: 4680486723068688110
+    second: silverfish_left_58
+  - first:
+      213: 934217130364949198
+    second: silverfish_left_59
+  - first:
+      213: -7601505009168169477
+    second: silverfish_left_60
+  - first:
+      213: -6495275894964227114
+    second: silverfish_left_61
+  - first:
+      213: -3033845269020623384
+    second: silverfish_left_62
+  - first:
+      213: -383400097765636717
+    second: silverfish_left_63
+  - first:
+      213: 3738254407524440772
+    second: silverfish_left_64
+  - first:
+      213: -5513880796164165303
+    second: silverfish_left_65
+  - first:
+      213: 3492153700562023937
+    second: silverfish_left_66
+  - first:
+      213: 160773775878998303
+    second: silverfish_left_67
+  - first:
+      213: 801232872439638084
+    second: silverfish_left_68
+  - first:
+      213: 6119497106037460314
+    second: silverfish_left_69
+  - first:
+      213: 1179056382104251031
+    second: silverfish_left_70
+  - first:
+      213: 6302368848751647705
+    second: silverfish_left_71
+  - first:
+      213: -2924387219182309477
+    second: silverfish_left_72
+  - first:
+      213: -8730076211748525008
+    second: silverfish_left_73
+  - first:
+      213: 4941943603740244061
+    second: silverfish_left_74
+  - first:
+      213: -4882917996092935575
+    second: silverfish_left_75
+  - first:
+      213: -4351427778805055339
+    second: silverfish_left_76
+  - first:
+      213: -1150554963383621881
+    second: silverfish_left_77
+  - first:
+      213: -6071009219266108738
+    second: silverfish_left_78
+  - first:
+      213: 8835832128204973624
+    second: silverfish_left_79
+  - first:
+      213: 1695050755365350718
+    second: silverfish_left_80
+  - first:
+      213: -6844705963493633669
+    second: silverfish_left_81
+  - first:
+      213: 5485193304615626935
+    second: silverfish_left_82
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 500
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: silverfish_left_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 786
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 890d842ac028e29c0800000000000000
+      internalID: -3950076832383446888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_1
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 786
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94c333f7e32d313c0800000000000000
+      internalID: -4389934045892232119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_2
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 786
+        width: 23
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f82fce6c928073d60800000000000000
+      internalID: 7869767849377329807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_3
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 719
+        width: 108
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5913ea6b10348ad0800000000000000
+      internalID: -2700980982199936678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_4
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 717
+        width: 194
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f78032183fd5cd40800000000000000
+      internalID: 5604130743248783346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_5
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 682
+        width: 84
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f09038e15bde1cc0800000000000000
+      internalID: -3738309495836602124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_6
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 719
+        width: 138
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13bf5773ac2e4a0a0800000000000000
+      internalID: -6871117773318784207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_7
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 759
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d0268f405e25a460800000000000000
+      internalID: 7252253697416503505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_8
+      rect:
+        serializedVersion: 2
+        x: 839
+        y: 719
+        width: 116
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da52c7da37b731f70800000000000000
+      internalID: 9156798204136400301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_9
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 783
+        width: 31
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6d28ea3fe874d3e0800000000000000
+      internalID: -2029864563156439701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_10
+      rect:
+        serializedVersion: 2
+        x: 978
+        y: 783
+        width: 46
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b4d7a099cf012b50800000000000000
+      internalID: 6566547090072655028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_11
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 759
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59af70cad14d7f2d0800000000000000
+      internalID: -3244891782591808875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_12
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 719
+        width: 42
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 801456318283b5b90800000000000000
+      internalID: -7252141030174801656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_13
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 727
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42bba9f18c11aa980800000000000000
+      internalID: -8526983393251247324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_14
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 725
+        width: 34
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 853b6fcee5ba204f0800000000000000
+      internalID: -863939754310847656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_15
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 551
+        width: 41
+        height: 202
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2730114b619a0e990800000000000000
+      internalID: -7358695876148001934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_16
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 647
+        width: 44
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9240e06ce2b9c3df0800000000000000
+      internalID: -199113658317536215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_17
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 679
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc46ab751efd41800800000000000000
+      internalID: 582336410770105551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_18
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 687
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b6ef5d77891017b0800000000000000
+      internalID: -5255672695426652488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_19
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 679
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8efd232aedc92cdd0800000000000000
+      internalID: -2467237165827694616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_20
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 679
+        width: 28
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 029537ac10bf4c150800000000000000
+      internalID: 5892110197617547552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_21
+      rect:
+        serializedVersion: 2
+        x: 343
+        y: 679
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c5337529fe0510e0800000000000000
+      internalID: -2299915571464817215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_22
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 679
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17d06f9e4c2b40920800000000000000
+      internalID: 2955683814270438769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_23
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 679
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd06b885bb6cf2520800000000000000
+      internalID: 2679578811255447771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_24
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 685
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2102018378786b960800000000000000
+      internalID: 7617424834574688274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_25
+      rect:
+        serializedVersion: 2
+        x: 695
+        y: 685
+        width: 50
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acfee11507e85a890800000000000000
+      internalID: -7447389795738783798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_26
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 679
+        width: 90
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44802017aa201ed80800000000000000
+      internalID: -8223288513538160572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_27
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 679
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2607b07ab048aed0800000000000000
+      internalID: -2402599231703022035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_28
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 639
+        width: 38
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52321927200660eb0800000000000000
+      internalID: -4754006793014664411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_29
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 279
+        width: 996
+        height: 370
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73b9f6bf1aa2e60d0800000000000000
+      internalID: -3427755391185872073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_30
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 639
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8feb1ab96671a4250800000000000000
+      internalID: 5929577588851851000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_31
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 642
+        width: 28
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5db7f8e2cb7637cb0800000000000000
+      internalID: -4867432714324706347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_32
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 639
+        width: 34
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd668bbd0b98c7110800000000000000
+      internalID: 1260033388450440923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_33
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 645
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 105df1ed11d700fd0800000000000000
+      internalID: -2377763087557077759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_34
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 639
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41429744ca7585e40800000000000000
+      internalID: 5645358530303697940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_35
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 639
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bd28f5a4ba144920800000000000000
+      internalID: 2973531017152310705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_36
+      rect:
+        serializedVersion: 2
+        x: 479
+        y: 642
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36e8ab29006b6f4c0800000000000000
+      internalID: -4254012684426899869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_37
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 637
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ded3968ee65b82350800000000000000
+      internalID: 5992238792166686189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_38
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 639
+        width: 36
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 750ce6ed57a41d080800000000000000
+      internalID: -9164461896618819497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_39
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 639
+        width: 39
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db919abf8cd6478a0800000000000000
+      internalID: -6308296468056172099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_40
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 642
+        width: 28
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3d791fe0223b7bc0800000000000000
+      internalID: -3784375944843002561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_41
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 639
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b95b6c2aee6698e0800000000000000
+      internalID: -1687039058357036624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_42
+      rect:
+        serializedVersion: 2
+        x: 789
+        y: 639
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 199ecdac609322b50800000000000000
+      internalID: 6566873907995666833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_43
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 645
+        width: 26
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55860f5563ec417d0800000000000000
+      internalID: -2948505123255457707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_44
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 631
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c50c8dda0cd911440800000000000000
+      internalID: 4904874920059125852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_45
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 631
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b321577f987c1350800000000000000
+      internalID: 5988794230792856500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_46
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 511
+        width: 6
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99a3bbc4e679c3440800000000000000
+      internalID: 4916971393171274393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_47
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 447
+        width: 14
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad8b34afa3d39f960800000000000000
+      internalID: 7636201966699526362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_48
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 402
+        width: 14
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0b9a11fb4431f830800000000000000
+      internalID: 4103118236283476750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_49
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 359
+        width: 14
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0386eec5f72603190800000000000000
+      internalID: -7984773840168392656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_50
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 303
+        width: 66
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9e165542f15f7cc0800000000000000
+      internalID: -3711157466942792035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_51
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 322
+        width: 26
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 331e3ca7c35082ee0800000000000000
+      internalID: -1285771936298442445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_52
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 319
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58ad65a34d9580890800000000000000
+      internalID: -7491639212084110715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_53
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 319
+        width: 44
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e90e59ea6d705990800000000000000
+      internalID: -7399276289634465303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_54
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 325
+        width: 26
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6e563820aab03100800000000000000
+      internalID: 85773589952224878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_55
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 319
+        width: 26
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2346737f6116e7840800000000000000
+      internalID: 5223719369061131314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_56
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 319
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6731bfcdb1605c2b0800000000000000
+      internalID: -5565035047805054090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_57
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 325
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b42c7d3ea53e3e80800000000000000
+      internalID: -8197055249295596364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_58
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 319
+        width: 50
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee6f07850ed64f040800000000000000
+      internalID: 4680486723068688110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_59
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 333
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec2dc76c78107fc00800000000000000
+      internalID: 934217130364949198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_60
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 319
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf5cd2af777028690800000000000000
+      internalID: -7601505009168169477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_61
+      rect:
+        serializedVersion: 2
+        x: 767
+        y: 319
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d3ff7aacf42cd5a0800000000000000
+      internalID: -6495275894964227114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_62
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 319
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8edb6844dcd95e5d0800000000000000
+      internalID: -3033845269020623384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_63
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 237
+        width: 17
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39544d574a3edaaf0800000000000000
+      internalID: -383400097765636717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_64
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 317
+        width: 23
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ca5888d392f0e330800000000000000
+      internalID: 3738254407524440772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_65
+      rect:
+        serializedVersion: 2
+        x: 573
+        y: 319
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94179c231a2ca73b0800000000000000
+      internalID: -5513880796164165303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_66
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 279
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 106b017d94f967030800000000000000
+      internalID: 3492153700562023937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_67
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 279
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f194778b5ee2b3200800000000000000
+      internalID: 160773775878998303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_68
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 282
+        width: 18
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44861286d0d8e1b00800000000000000
+      internalID: 801232872439638084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_69
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 282
+        width: 26
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5dc4690232dce450800000000000000
+      internalID: 6119497106037460314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_70
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 279
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79a2b795889dc5010800000000000000
+      internalID: 1179056382104251031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_71
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 285
+        width: 36
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9db54599313867750800000000000000
+      internalID: 6302368848751647705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_72
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 287
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9f22f6715d7a67d0800000000000000
+      internalID: -2924387219182309477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_73
+      rect:
+        serializedVersion: 2
+        x: 621
+        y: 282
+        width: 28
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03c24a870f988d680800000000000000
+      internalID: -8730076211748525008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_74
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 279
+        width: 36
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5873f8268f459440800000000000000
+      internalID: 4941943603740244061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_75
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 285
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 962b48f04f36c3cb0800000000000000
+      internalID: -4882917996092935575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_76
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 279
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 590ce827d7f9c93c0800000000000000
+      internalID: -4351427778805055339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_77
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 279
+        width: 34
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 707e4f05b586800f0800000000000000
+      internalID: -1150554963383621881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_78
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 287
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb2a589d7417fbba0800000000000000
+      internalID: -6071009219266108738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_79
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 232
+        width: 6
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83624a0a18e2f9a70800000000000000
+      internalID: 8835832128204973624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_80
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 232
+        width: 1019
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3d2fc56ea7068710800000000000000
+      internalID: 1695050755365350718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_81
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 238
+        width: 26
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b71d6f5e038b201a0800000000000000
+      internalID: -6844705963493633669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: silverfish_left_82
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 245
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b827fdaf325f1c40800000000000000
+      internalID: 5485193304615626935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      silverfish_left_0: -3950076832383446888
+      silverfish_left_1: -4389934045892232119
+      silverfish_left_10: 6566547090072655028
+      silverfish_left_11: -3244891782591808875
+      silverfish_left_12: -7252141030174801656
+      silverfish_left_13: -8526983393251247324
+      silverfish_left_14: -863939754310847656
+      silverfish_left_15: -7358695876148001934
+      silverfish_left_16: -199113658317536215
+      silverfish_left_17: 582336410770105551
+      silverfish_left_18: -5255672695426652488
+      silverfish_left_19: -2467237165827694616
+      silverfish_left_2: 7869767849377329807
+      silverfish_left_20: 5892110197617547552
+      silverfish_left_21: -2299915571464817215
+      silverfish_left_22: 2955683814270438769
+      silverfish_left_23: 2679578811255447771
+      silverfish_left_24: 7617424834574688274
+      silverfish_left_25: -7447389795738783798
+      silverfish_left_26: -8223288513538160572
+      silverfish_left_27: -2402599231703022035
+      silverfish_left_28: -4754006793014664411
+      silverfish_left_29: -3427755391185872073
+      silverfish_left_3: -2700980982199936678
+      silverfish_left_30: 5929577588851851000
+      silverfish_left_31: -4867432714324706347
+      silverfish_left_32: 1260033388450440923
+      silverfish_left_33: -2377763087557077759
+      silverfish_left_34: 5645358530303697940
+      silverfish_left_35: 2973531017152310705
+      silverfish_left_36: -4254012684426899869
+      silverfish_left_37: 5992238792166686189
+      silverfish_left_38: -9164461896618819497
+      silverfish_left_39: -6308296468056172099
+      silverfish_left_4: 5604130743248783346
+      silverfish_left_40: -3784375944843002561
+      silverfish_left_41: -1687039058357036624
+      silverfish_left_42: 6566873907995666833
+      silverfish_left_43: -2948505123255457707
+      silverfish_left_44: 4904874920059125852
+      silverfish_left_45: 5988794230792856500
+      silverfish_left_46: 4916971393171274393
+      silverfish_left_47: 7636201966699526362
+      silverfish_left_48: 4103118236283476750
+      silverfish_left_49: -7984773840168392656
+      silverfish_left_5: -3738309495836602124
+      silverfish_left_50: -3711157466942792035
+      silverfish_left_51: -1285771936298442445
+      silverfish_left_52: -7491639212084110715
+      silverfish_left_53: -7399276289634465303
+      silverfish_left_54: 85773589952224878
+      silverfish_left_55: 5223719369061131314
+      silverfish_left_56: -5565035047805054090
+      silverfish_left_57: -8197055249295596364
+      silverfish_left_58: 4680486723068688110
+      silverfish_left_59: 934217130364949198
+      silverfish_left_6: -6871117773318784207
+      silverfish_left_60: -7601505009168169477
+      silverfish_left_61: -6495275894964227114
+      silverfish_left_62: -3033845269020623384
+      silverfish_left_63: -383400097765636717
+      silverfish_left_64: 3738254407524440772
+      silverfish_left_65: -5513880796164165303
+      silverfish_left_66: 3492153700562023937
+      silverfish_left_67: 160773775878998303
+      silverfish_left_68: 801232872439638084
+      silverfish_left_69: 6119497106037460314
+      silverfish_left_7: 7252253697416503505
+      silverfish_left_70: 1179056382104251031
+      silverfish_left_71: 6302368848751647705
+      silverfish_left_72: -2924387219182309477
+      silverfish_left_73: -8730076211748525008
+      silverfish_left_74: 4941943603740244061
+      silverfish_left_75: -4882917996092935575
+      silverfish_left_76: -4351427778805055339
+      silverfish_left_77: -1150554963383621881
+      silverfish_left_78: -6071009219266108738
+      silverfish_left_79: 8835832128204973624
+      silverfish_left_8: 9156798204136400301
+      silverfish_left_80: 1695050755365350718
+      silverfish_left_81: -6844705963493633669
+      silverfish_left_82: 5485193304615626935
+      silverfish_left_9: -2029864563156439701
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

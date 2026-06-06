@@ -18,7 +18,7 @@ public class Calendula : Aura
         skillHealingMultiplier = CData?.baseSkillHealingMultiplier ?? 0f;
     }
 
-    protected override bool ShowLight => DarknessManager.instance != null && DarknessManager.instance.isDark;
+    protected override bool ShowLight => DarknessManager.instance != null && (DarknessManager.instance.isDark || DarknessManager.instance.pitchBlack);
     protected override bool ShowDarkCircle => false;
 
     public override void UpdateStats()
@@ -103,7 +103,7 @@ public class Calendula : Aura
     {
         float healpl = CData?.path3HealPerLevel ?? 1f;
         float healBase = CData?.baseFloralGlowHeal ?? 8f;
-        return $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's projectiles deal an additional <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{healBase + healpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillHealingMultiplier * magicPower:F0}</b></color>] health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s Base Illumination range.";
+        return $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's attacks deal an additional <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage on hit. Heals the plant for <color=green><b>{healBase + healpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillHealingMultiplier * magicPower:F0}</b></color>] health per second. Emits light equal to <b><color=orange>Calendula</color></b>'s Base Illumination range.";
     }
 
     public override string GetPath1Description()

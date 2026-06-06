@@ -59,7 +59,7 @@ public class Aeonium : Shooter
     }
 
     // each nearby plant's projectile or melee attack speeds the sun timer
-    private void HandleNearbyAttack(Plant plant, DamageTag[] tags)
+    private void HandleNearbyAttack(Plant plant, Insect insect, DamageTag[] tags)
     {
         if (plant == this) return;
         if (!System.Array.Exists(tags, t => t == DamageTag.Attack)) return;

@@ -262,11 +262,14 @@ public class GhostFungus : Shooter
     public override string GetPassiveDescription() =>
         $"Conjures a Ghost Shroomlet every <color=green><b>{passiveCooldown:F1}s</b></color> (up to <color=green><b>{ShroomletTarget}</b></color>) that holds position until an enemy comes into sight, then engages with <color=#00FFFF>Ice</color> <color=#A0522D>Physical</color> attacks dealing <color=green><b>{ShroomletAttackDamage:F0}</b></color> damage (<color=green><b>{ShroomletHealth:F0}</b></color> HP).";
 
+    private static string SignedPct(float pct) =>
+        pct >= 0f ? $"<color=green><b>+{pct:F0}%</b></color>" : $"<color=red><b>{pct:F0}%</b></color>";
+
     public override string GetSkillDesription() =>
         $"Send a spectral wave, inflicting <color=#00FFFF>Fungal Hypnosis</color> on the first insect hit, which permanently turns it friendly, and granting it:\n\n" +
-        $"<color=green><b>+{FungalHealthMultiplier * 100f:F0}%</b></color> Max Health\n" +
-        $"<color=green><b>+{FungalAttackMultiplier * 100f:F0}%</b></color> Attack Damage\n" +
-        $"<color=green><b>-{FungalMoveSlow * 100f:F0}%</b></color> Movement Speed";
+        $"{SignedPct(FungalHealthMultiplier * 100f)} Max Health\n" +
+        $"{SignedPct(FungalAttackMultiplier * 100f)} Attack Damage\n" +
+        $"{SignedPct(-FungalMoveSlow * 100f)} Movement Speed";
 
     public override string GetPath1Description()
     {

@@ -73,6 +73,17 @@ public abstract class Insect : Entity, IAttackable
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
             if ((taunted as UnityEngine.Object) != null) return taunted;   // ignore a destroyed taunter
             if (HasEffect<ObliviousEffect>() && aggressivity != Aggressivity.Low) return null;
+
+            // if a flying friendly is attacking this ground enemy, stop in place (can't fight back)
+            if (_engagedByFriendly != null)
+            {
+                if (_engagedByFriendly.IsAlive && _engagedByFriendly.team == Team.Friendly
+                    && !CanReach(this, _engagedByFriendly)
+                    && Vector3.Distance(transform.position, _engagedByFriendly.transform.position) <= _engagedByFriendly.attackRange + 1f)
+                    return _engagedByFriendly;
+                _engagedByFriendly = null;
+            }
+
             switch (aggressivity)
             {
                 case Aggressivity.High:
@@ -583,6 +594,7 @@ public abstract class Insect : Entity, IAttackable
     }
 
     protected Insect _engagedEnemy;   // the enemy a friendly is locked onto (target stickiness)
+    private Insect _engagedByFriendly; // the friendly insect currently attacking this enemy (stops it in place)
 
     // a unit can hit another unless it is grounded while the target flies. so: ground hits ground,
     // flying hits anyone, ground cannot hit flying
@@ -831,6 +843,8 @@ public abstract class Insect : Entity, IAttackable
             attacker.Heal(damage * attacker.lifesteal);
         if (attacker.attackSlowPercent > 0f && IsAlive)
             ApplyEffect(new AttackSpeedSlowEffect(this, attacker.attackSlowDuration, 1, src, attacker.attackSlowPercent));
+        if (attacker.team == Team.Friendly && team != Team.Friendly)
+            _engagedByFriendly = attacker;
         return true;
     }
     public bool IsAlive => health > 0 && !isDying;
@@ -869,6 +883,8 @@ public abstract class Insect : Entity, IAttackable
         baseHealingBonus       = data.baseHealingBonus;
         baseHealingReceived    = data.baseHealingReceived;
         startingShield         = data.startingShield;
+        baseEvasion            = data.baseEvasion;
+        baseAccuracy           = data.baseAccuracy;
     }
 
     public virtual string GetName()

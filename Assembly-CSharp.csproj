@@ -190,6 +190,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\FlowerPot.cs" />
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\Silverfish.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleZone.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\InsectPreviewSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />

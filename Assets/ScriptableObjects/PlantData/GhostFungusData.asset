@@ -73,21 +73,21 @@ MonoBehaviour:
   basePassiveDamage: 0
   baseSkillDamage: 0
   path1AttackDamagePerLevel: 6
-  shroomletBaseAttackDamage: 32
+  shroomletBaseAttackDamage: 28
   shroomletAttackDamagePerLevel: 12
-  shroomletAttackDamageMP: 0.12
-  shroomletBaseAttackSpeed: 1
-  shroomletAttackSpeedPerLevel: 0.06
-  shroomletAttackSpeedMP: 0.0033
-  shroomletBaseHealth: 300
-  shroomletHealthPerLevel: 60
+  shroomletAttackDamageMP: 0.18
+  shroomletBaseAttackSpeed: 1.25
+  shroomletAttackSpeedPerLevel: 0.15
+  shroomletAttackSpeedMP: 0.0044
+  shroomletBaseHealth: 200
+  shroomletHealthPerLevel: 20
   shroomletHealthMP: 2.24
-  baseShroomletCount: 1
+  baseShroomletCount: 3
   path2ShroomletPerLevel: 1
   path2SpawnCooldownReducerPerLevel: 1
-  shroomletAttackRange: 0.5
+  shroomletAttackRange: 0.75
   shroomletDetectionRange: 2
-  shroomletMoveSpeed: 1.1
+  shroomletMoveSpeed: 1.3
   skillWaveSpeed: 8
   skillWaveWidth: 1
   skillThickness: 1

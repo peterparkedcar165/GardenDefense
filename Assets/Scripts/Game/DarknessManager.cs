@@ -74,6 +74,13 @@ public class DarknessManager : MonoBehaviour
                 return true;
         }
 
+        foreach (Insect insect in Insect.friendlyInsects)
+        {
+            if (insect == null || !insect.IsAlive || insect.lightEmissionRange <= 0) continue;
+            if (Vector3.Distance(position, insect.transform.position) <= insect.lightEmissionRange)
+                return true;
+        }
+
         for (int i = _dynamicSources.Count - 1; i >= 0; i--)
         {
             var (t, radius) = _dynamicSources[i];

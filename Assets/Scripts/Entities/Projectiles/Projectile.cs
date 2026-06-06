@@ -54,7 +54,8 @@ public abstract class Projectile : MonoBehaviour
     {
         if (trackedTarget != null)
         {
-            if (trackedInsect != null && !trackedInsect.IsAlive) { trackedTarget = null; trackedInsect = null; }
+            if (trackedInsect != null && (!trackedInsect.IsAlive || trackedInsect.team == Team.Friendly))
+                { trackedTarget = null; trackedInsect = null; }
             else
             {
                 Vector3 aimPos = trackedInsect != null ? trackedInsect.GetAimPoint() : trackedTarget.transform.position;
@@ -84,12 +85,12 @@ public abstract class Projectile : MonoBehaviour
         if (other.CompareTag("Insect"))
         {
             Insect insect = other.GetComponentInParent<Insect>();
-            if (insect != null && insect.IsAlive)
+            if (insect != null && insect.IsAlive && insect.team != Team.Friendly)
             {
                 hitCount++;
                 if (hitCount == 2) projectileDamage *= 0.5f;
                 OnHit(insect);
-                source?.GetEffect<FloralGlowEffect>()?.OnProjectileHit(insect);
+
                 trackedTarget = null;
                 trackedInsect = null;
                 if (hitCount > piercing)
