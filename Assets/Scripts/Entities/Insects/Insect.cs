@@ -28,6 +28,7 @@ public abstract class Insect : Entity, IAttackable
     public float verticalVelocity = 0f;
     public Entity fallDamageSource;
     public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f);
+    protected virtual bool FallDamageImmune => false;
     public bool isOnGround => visual != null && visual.localPosition.y <= 0.4f;
 
     [SerializeField] public InsectData data;
@@ -240,7 +241,7 @@ public abstract class Insect : Entity, IAttackable
             if (pos.y <= 0.4f)
             {
                 pos.y = 0.4f;
-                if (verticalVelocity >= 3f)
+                if (verticalVelocity >= 3f && !FallDamageImmune)
                 {
                     Entity src = fallDamageSource != null ? fallDamageSource : lastSource;
                     if (src != null)
@@ -809,13 +810,13 @@ public abstract class Insect : Entity, IAttackable
     }
 
     // IAttackable
-    public void ReceiveAttack(float damage, Insect attacker)
+    public bool ReceiveAttack(float damage, Insect attacker)
     {
         float missChance = Mathf.Clamp01(evasion - attacker.accuracy);
         if (UnityEngine.Random.value < missChance)
         {
             StatusIndicator.Spawn(GetIndicatorPosition(), "Miss", new Color(0.55f, 0.6f, 0.75f));
-            return;
+            return false;
         }
         // Fungal Hypnosis: credit the damage to the controlling plant and slow the victim's attacks
         Entity src = attacker.attackSourceOverride != null ? attacker.attackSourceOverride : attacker;
@@ -830,6 +831,7 @@ public abstract class Insect : Entity, IAttackable
             attacker.Heal(damage * attacker.lifesteal);
         if (attacker.attackSlowPercent > 0f && IsAlive)
             ApplyEffect(new AttackSpeedSlowEffect(this, attacker.attackSlowDuration, 1, src, attacker.attackSlowPercent));
+        return true;
     }
     public bool IsAlive => health > 0 && !isDying;
     public Vector3 Position => transform.position;

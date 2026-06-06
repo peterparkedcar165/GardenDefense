@@ -13,12 +13,10 @@ public class DesertLocust : Insect
 
     public override void Attack()
     {
-        // save target before base.Attack() resolves it (plant may die from the hit)
-        IAttackable currentTarget = target;
-        base.Attack();
-
-        // a blinded locust can't latch on to devour. devours plants, or enemy insects while hypnotized
-        if (currentTarget is Entity victim && currentTarget.IsAlive && !HasEffect<BlindEffect>())
+        IAttackable current = target;
+        if (current == null) return;
+        bool hit = current.ReceiveAttack(attackDamage, this);
+        if (hit && current is Entity victim && current.IsAlive)
             ApplyDevour(victim);
     }
 

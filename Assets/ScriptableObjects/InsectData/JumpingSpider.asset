@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7583304469d80404c865070d0ca44501, type: 3}
+  m_Name: JumpingSpider
+  m_EditorClassIdentifier: Assembly-CSharp::InsectData
+  displayName: Jumping Spider
+  nameColor: {r: 0.045033824, g: 0.5689214, b: 0.8679245, a: 1}
+  description: Tiny and elusive, it leaps to plants
+  passiveDescription: Leaps and webs plants that it lands on
+  sprite: {fileID: 21300000, guid: cd9243fb2c4a36a409323299a31861f7, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: d6d7e387d4af5d9458dbdb4861ece95b, type: 3}
+  baseMaxHealth: 400
+  baseAttackDamage: 18
+  baseMagicPower: 0
+  baseAttackSpeed: 1
+  baseAttackRange: 0.8
+  baseMovementSpeed: 1.2
+  baseTargetingRange: 1.5
+  startingShield: 0
+  attackDamageType: 0
+  attackElementalType: 6
+  baseLifesteal: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  threatValue: 1.6
+  threatType: 0
+  sunDrop: 11
+  aggressivity: 2
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0

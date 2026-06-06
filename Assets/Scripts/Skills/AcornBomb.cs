@@ -152,12 +152,15 @@ public class AcornBomb : MonoBehaviour, IAttackable
     }
 
     // IAttackable
-    public void ReceiveAttack(float damage, Insect attacker)
+    public bool ReceiveAttack(float damage, Insect attacker)
     {
-        if (isDead) return;
+        if (isDead) return false;
+        float missChance = Mathf.Clamp01(-attacker.accuracy); // no evasion on the bomb; negative accuracy (blind) causes misses
+        if (UnityEngine.Random.value < missChance) return false;
         hp -= damage * attacker.eatMultiplier;
         UpdateHealthBar();
         if (hp <= 0f) Die();
+        return true;
     }
     public bool IsAlive => !isDead;
     public Vector3 Position => transform.position;

@@ -86,6 +86,10 @@ MonoBehaviour:
     unlockWave: 2
     budgetWeight: 0.3
     startDelay: 8
+  - data: {fileID: 11400000, guid: 3daf6caaa45e774478c2b54666c863be, type: 2}
+    unlockWave: 3
+    budgetWeight: 0.3
+    startDelay: 1
   - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
     unlockWave: 4
     budgetWeight: 0.4

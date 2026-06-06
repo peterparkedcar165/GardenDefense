@@ -26,7 +26,6 @@ public class SaveManager : MonoBehaviour
         savePath = Application.persistentDataPath + "/save.json";
         saveData = new SaveData { highestLevelUnlocked = 0 };
         Load();
-        Save();
     }
 
     public void Save()
@@ -55,44 +54,54 @@ public class SaveManager : MonoBehaviour
         }
 
         if (saveData.unlockedPlants.Count == 0)
-        {
             saveData.unlockedPlants.Add("AcornSprout");
+
+        // on load, fill any plant gaps caused by levels already completed
+        RepairPlantsFromLevels();
+    }
+
+    // derives plants strictly from highestLevelUnlocked — levels are the single source of truth
+    private void RepairPlantsFromLevels()
+    {
+        for (int i = 1; i <= saveData.highestLevelUnlocked; i++)
+        {
+            string plant = GetPlantUnlockedByLevel(i);
+            if (plant != null && !saveData.unlockedPlants.Contains(plant))
+                saveData.unlockedPlants.Add(plant);
         }
     }
+
     void Update()
     {
         if (UnityEngine.InputSystem.Keyboard.current.uKey.wasPressedThisFrame)
         {
-            string[] all = { "AcornSprout", "Sunflower", "Waterlily", "LeafRanger", "Dandelion", "Snowdrop", "PoisonShroom", "Calendula", "BogIris", "Begonia", "Holly", "AloeVera", "Cactus", "Aeonium", "NeriumOleander", "Glowshroom", "MorningGlory", "Stargazer", "GhostFungus", "Cattail" };
-            foreach (string p in all)
-                if (!saveData.unlockedPlants.Contains(p))
-                    saveData.unlockedPlants.Add(p);
+            saveData.highestLevelUnlocked = 40;
+            saveData.unlockedPlants.Clear();
+            saveData.unlockedPlants.Add("AcornSprout");
+            RepairPlantsFromLevels();
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
-            Debug.Log("Unlocked all plants");
+            Debug.Log("Unlocked all levels and plants");
         }
         if (UnityEngine.InputSystem.Keyboard.current.iKey.wasPressedThisFrame)
         {
+            saveData.highestLevelUnlocked = 0;
             saveData.unlockedPlants.Clear();
             saveData.unlockedPlants.Add("AcornSprout");
-            saveData.highestLevelUnlocked = 0;
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
-            Debug.Log("Reset unlocked plants to AcornSprout only");
+            Debug.Log("Reset to level 1 only");
         }
     }
 
     public void CompleteLevel(int level)
     {
-        Debug.Log($"CompleteLevel({level}) called. highestLevelUnlocked={saveData.highestLevelUnlocked}");
-        if (level > saveData.highestLevelUnlocked)
-            saveData.highestLevelUnlocked = level;
-        string unlock = GetPlantUnlockedByLevel(level);
-        if (unlock != null && !saveData.unlockedPlants.Contains(unlock))
-        {
-            saveData.unlockedPlants.Add(unlock);
-            Save();
-        }
+        saveData.highestLevelUnlocked = Mathf.Max(saveData.highestLevelUnlocked, level);
+        string plant = GetPlantUnlockedByLevel(level);
+        if (plant != null && !saveData.unlockedPlants.Contains(plant))
+            saveData.unlockedPlants.Add(plant);
+        Save();
+        Debug.Log($"Level {level} completed. Unlocked: {plant ?? "none"}. highestLevelUnlocked={saveData.highestLevelUnlocked}");
     }
 
     private string GetPlantUnlockedByLevel(int level)

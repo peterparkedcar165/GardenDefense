@@ -12,6 +12,7 @@ public class FertilizerSelectionUI : MonoBehaviour
     [SerializeField] private FertilizerData[] fertilizerPool;
 
     private List<FertilizerCard> activeCards = new List<FertilizerCard>();
+    private int _currentLevelNumber;
 
     void Awake()
     {
@@ -20,9 +21,10 @@ public class FertilizerSelectionUI : MonoBehaviour
         panel.SetActive(false);
     }
 
-    public void Configure(FertilizerData[] pool)
+    public void Configure(FertilizerData[] pool, int levelNumber = 0)
     {
         fertilizerPool = pool;
+        _currentLevelNumber = levelNumber;
     }
 
     public bool IsOpen => panel.activeSelf;
@@ -68,6 +70,8 @@ public class FertilizerSelectionUI : MonoBehaviour
         foreach (var card in activeCards)
             Destroy(card.gameObject);
         activeCards.Clear();
+        if (_currentLevelNumber > 0)
+            SaveManager.instance.CompleteLevel(_currentLevelNumber);
     }
 
     private List<FertilizerData> PickRandom(FertilizerData[] pool, int count)

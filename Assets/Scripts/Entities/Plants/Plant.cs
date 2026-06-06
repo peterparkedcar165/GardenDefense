@@ -958,16 +958,17 @@ public abstract class Plant : Entity, IAttackable
         return transform.position;
     }
 
-    public void ReceiveAttack(float damage, Insect attacker)
+    public bool ReceiveAttack(float damage, Insect attacker)
     {
         float missChance = Mathf.Clamp01(evasion - attacker.accuracy);
         if (UnityEngine.Random.value < missChance)
         {
             StatusIndicator.Spawn(GetIndicatorPosition(), "Miss", new Color(0.55f, 0.6f, 0.75f));
-            return;
+            return false;
         }
         Damage(damage, attacker.attackDamageType, attacker.attackElementalType, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
         OnHitByInsect(attacker);
+        return true;
     }
 
     protected virtual void OnHitByInsect(Insect attacker) {}

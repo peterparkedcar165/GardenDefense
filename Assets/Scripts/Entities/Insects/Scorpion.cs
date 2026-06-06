@@ -23,10 +23,9 @@ public class Scorpion : Insect
     {
         IAttackable current = target;
         if (current == null) return;
-        current.ReceiveAttack(attackDamage, this);
-        // a blinded scorpion can't land its venomous sting. envenoms plants, or enemy insects while hypnotized
+        bool hit = current.ReceiveAttack(attackDamage, this);
         Entity victim = current as Entity;
-        if (victim != null && current.IsAlive && !HasEffect<BlindEffect>())
+        if (hit && victim != null && current.IsAlive)
             victim.ApplyEffect(new VenomEffect(victim, venomDuration, 1, this, venomDPS));
     }
 }

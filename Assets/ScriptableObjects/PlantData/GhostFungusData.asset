@@ -66,6 +66,7 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 8
   baseSkillDuration: 0
+  channelDuration: 0
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
@@ -91,9 +92,9 @@ MonoBehaviour:
   skillWaveWidth: 1
   skillThickness: 1
   skillTravelDistance: 12
-  baseFungalHealthMultiplier: 0.15
+  baseFungalHealthMultiplier: -0.25
   path3HealthMultiplierPerLevel: 0.1
-  baseFungalAttackMultiplier: 0.15
-  path3AttackMultiplierPerLevel: 0.1
+  baseFungalAttackMultiplier: -0.1
+  path3AttackMultiplierPerLevel: 0.05
   baseFungalMoveSlow: 0.1
   path3MoveSlowPerLevel: 0.05

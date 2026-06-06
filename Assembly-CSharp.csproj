@@ -194,6 +194,7 @@
     <Compile Include="Assets\Scripts\LevelSelector\InsectPreviewSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlessingOfTheSunEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\JumpingSpider.cs" />
     <Compile Include="Assets\Scripts\GridManagers\NighttimeGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AeoniumBloomEffect.cs" />
