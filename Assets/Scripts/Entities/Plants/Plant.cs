@@ -257,7 +257,11 @@ public abstract class Plant : Entity, IAttackable
         baseSkillHealth               = data.baseSkillHealth;
         elementalType                 = data.elementalType;
         damageType                    = data.damageType;
-        if (elementalType == ElementalType.Ice)  temperatureMaxAdder = 10f - baseTemperatureMax; // cap temperature at 10
+        if (elementalType == ElementalType.Ice)
+        {
+            temperatureMaxAdder = 10f - baseTemperatureMax;             // cap at 10, immune to heat
+            comfortMinAdder     = baseTemperatureMin - baseComfortMin;  // lower comfort floor to temperature min, immune to cold
+        }
         if (elementalType == ElementalType.Fire) temperatureMinAdder = 10f - baseTemperatureMin; // floor temperature at 10
         FertilizerManager.instance?.ApplyTo(this);
         UpdateStats();
@@ -679,12 +683,12 @@ public abstract class Plant : Entity, IAttackable
         temperature = Mathf.Clamp(temperature, temperatureMin, temperatureMax);
 
         if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Hot
-            && occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.tileType == TileType.WaterPotted || occupiedTile.isWaterAdjacent))
-            temperature = Mathf.Min(temperature, comfortMax);
+            && occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent))
+            temperature = Mathf.Min(temperature, 10f);
 
         if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Cold
             && occupiedTile != null && (occupiedTile.tileType == TileType.Heat || occupiedTile.isHeatAdjacent))
-            temperature = Mathf.Max(temperature, comfortMin);
+            temperature = Mathf.Max(temperature, 10f);
 
         bool tooCold = temperature < comfortMin;
         bool tooHot  = temperature > comfortMax;
@@ -716,11 +720,14 @@ public abstract class Plant : Entity, IAttackable
 
         if (elementalType == ElementalType.Water)
         {
-            bool onWater = occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.tileType == TileType.WaterPotted || occupiedTile.isWaterAdjacent);
+            bool onWater = occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent);
             if (onWater || HasEffect<RainExposedEffect>()) return 1;
         }
 
         if (elementalType == ElementalType.Wind && occupiedTile != null && occupiedTile.isHighground)
+            return 1;
+
+        if (elementalType == ElementalType.Ice && WeatherManager.instance?.temperature == TemperatureType.Cold)
             return 1;
 
         return 0;
@@ -858,7 +865,7 @@ public abstract class Plant : Entity, IAttackable
             return $"Can be placed on <color=green>Grass</color>.";
 
             case ElementalType.Water:
-            return $"Increase Passive tree level by <color=green>1</color> when near water";
+            return $"Increase Passive tree level by <color=green>1</color> when near natural water";
 
             case ElementalType.Poison:
             return $"Taking damage returns <color=purple>Poison</color> damage equal to <color=purple><b>200%</b></color> of the hit to the attacker.";

@@ -49,11 +49,14 @@ public class Snowdrop : Aura
         else if (!IsStunned && !IsChanneling && HasInsectsInRange())
             Attack();
 
-        foreach (Plant plant in Plant.allPlants)
+        if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Hot)
         {
-            if (plant == null || !plant.IsAlive) continue;
-            if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            plant.ApplyEffect(new CoolingEffect(plant, 0.5f, 1, this, coolingPerSecond));
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == null || !plant.IsAlive) continue;
+                if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+                plant.ApplyEffect(new CoolingEffect(plant, 0.5f, 1, this, coolingPerSecond));
+            }
         }
 
         UpdateBlizzardIndicator();

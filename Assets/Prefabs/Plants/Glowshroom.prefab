@@ -127,6 +127,8 @@ MonoBehaviour:
   baseDebuffReceivedDuration: 0
   baseEvasion: 0
   baseAccuracy: 0
+  baseBonusCritChanceReceived: 0
+  baseProjectileSpeed: 0
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -171,6 +173,10 @@ MonoBehaviour:
   buffGivenDuration: 0
   buffReceivedDuration: 0
   debuffReceivedDuration: 0
+  burnDurationBonus: 0
+  sunYieldBonus: 0
+  baseMinionDamage: 0
+  minionDamage: 0
   shieldBonusDamage: 0
   shieldToughness: 0
   startingShield: 0
@@ -178,6 +184,8 @@ MonoBehaviour:
   bypassShields: 0
   evasion: 0
   accuracy: 0
+  bonusCritChanceReceived: 0
+  projectileSpeed: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicPowerAdder: 0
@@ -217,6 +225,7 @@ MonoBehaviour:
   shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
+  minionDamageAdder: 0
   counterDamageAdder: 0
   debuffGivenDurationAdder: 0
   buffGivenDurationAdder: 0
@@ -224,6 +233,8 @@ MonoBehaviour:
   debuffReceivedDurationAdder: 0
   evasionAdder: 0
   accuracyAdder: 0
+  bonusCritChanceReceivedAdder: 0
+  projectileSpeedAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -267,6 +278,8 @@ MonoBehaviour:
   debuffReceivedDurationMultiplier: 0
   evasionMultiplier: 0
   accuracyMultiplier: 0
+  bonusCritChanceReceivedMultiplier: 0
+  projectileSpeedMultiplier: 0
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -282,8 +295,9 @@ MonoBehaviour:
   circleRadius: {fileID: 4875408615152910057}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
-  allowedTiles: 000000000500000004000000
+  allowedTiles: 00000000050000000400000006000000
   targeting: 1
+  prioritizeFlying: 0
   sunCost: 0
   totalSunSpent: 0
   exp: 0
@@ -337,8 +351,6 @@ MonoBehaviour:
   path3Unlocked: 0
   mainRenderer: {fileID: 5898074862566098166}
   projectilePrefab: {fileID: 7388594979766616069, guid: d3d9ca5d594e3f24896dc0ae316fdfec, type: 3}
-  baseProjectileSpeed: 0
-  projectileSpeed: 0
   baseMaxRange: 0
   maxRange: 0
   basePiercing: 0
@@ -422,7 +434,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1018753133
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: ce6df9bd969316d46958cdba3d27e509, type: 3}
@@ -513,7 +525,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1690330125
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: d852e9b01c514a1498e3348a6b17926f, type: 3}
