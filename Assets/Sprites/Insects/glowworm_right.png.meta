@@ -1,0 +1,845 @@
+fileFormatVersion: 2
+guid: 457d0ae1e2117444ab11099ef51693e0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7664121011421120525
+    second: glowworm_right_0
+  - first:
+      213: 5995483153438602336
+    second: glowworm_right_1
+  - first:
+      213: 873995315959933606
+    second: glowworm_right_2
+  - first:
+      213: -8620601075930741038
+    second: glowworm_right_3
+  - first:
+      213: -2147447122118827519
+    second: glowworm_right_4
+  - first:
+      213: 17838020545691148
+    second: glowworm_right_5
+  - first:
+      213: -5481110943660367336
+    second: glowworm_right_6
+  - first:
+      213: -8315191786361606729
+    second: glowworm_right_7
+  - first:
+      213: 7847432288176417556
+    second: glowworm_right_8
+  - first:
+      213: -2173717624715086330
+    second: glowworm_right_9
+  - first:
+      213: -3247402319549030636
+    second: glowworm_right_10
+  - first:
+      213: -6811823745756957042
+    second: glowworm_right_11
+  - first:
+      213: 1178010379290551674
+    second: glowworm_right_12
+  - first:
+      213: -4551811612398912999
+    second: glowworm_right_13
+  - first:
+      213: -6181305744790304951
+    second: glowworm_right_14
+  - first:
+      213: -4885130856801770674
+    second: glowworm_right_15
+  - first:
+      213: 3222942745128052392
+    second: glowworm_right_16
+  - first:
+      213: 3737550896808914374
+    second: glowworm_right_17
+  - first:
+      213: 5127617388324160831
+    second: glowworm_right_18
+  - first:
+      213: -21346598537119258
+    second: glowworm_right_19
+  - first:
+      213: -4952611552863628458
+    second: glowworm_right_20
+  - first:
+      213: 8655946637053927315
+    second: glowworm_right_21
+  - first:
+      213: -5402454058899344186
+    second: glowworm_right_22
+  - first:
+      213: 3796608269913400920
+    second: glowworm_right_23
+  - first:
+      213: 7648136134407288057
+    second: glowworm_right_24
+  - first:
+      213: 2436162095218556158
+    second: glowworm_right_25
+  - first:
+      213: -8704459963155492634
+    second: glowworm_right_26
+  - first:
+      213: -6878692549632781637
+    second: glowworm_right_27
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 450
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: glowworm_right_0
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 88
+        width: 887
+        height: 603
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f7f2aedb8293a590800000000000000
+      internalID: -7664121011421120525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_1
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 595
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 064fb81a92c343350800000000000000
+      internalID: 5995483153438602336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_2
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 592
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6aaa527fb1e012c00800000000000000
+      internalID: 873995315959933606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_3
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 599
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d64ccecef87d5880800000000000000
+      internalID: -8620601075930741038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_4
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 589
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1022c28583cb232e0800000000000000
+      internalID: -2147447122118827519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_5
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 587
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0e3f1ec59f5f3000800000000000000
+      internalID: 17838020545691148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_6
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 585
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8122e9c03ae2fe3b0800000000000000
+      internalID: -5481110943660367336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_7
+      rect:
+        serializedVersion: 2
+        x: 187
+        y: 585
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bdaba640218a9c80800000000000000
+      internalID: -8315191786361606729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_8
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 583
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41bafafa61ea7ec60800000000000000
+      internalID: 7847432288176417556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_9
+      rect:
+        serializedVersion: 2
+        x: 202
+        y: 576
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 606f9d0565765d1e0800000000000000
+      internalID: -2173717624715086330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_10
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 571
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41f108cbbc8eee2d0800000000000000
+      internalID: -3247402319549030636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_11
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 575
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e86f591d46a8771a0800000000000000
+      internalID: -6811823745756957042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_12
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 565
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a752657d232295010800000000000000
+      internalID: 1178010379290551674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_13
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 563
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91af67e7477b4d0c0800000000000000
+      internalID: -4551811612398912999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_14
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 520
+        width: 32
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94741b1dc27973aa0800000000000000
+      internalID: -6181305744790304951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_15
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 483
+        width: 23
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e43e7074e57843cb0800000000000000
+      internalID: -4885130856801770674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_16
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 460
+        width: 23
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a6a7cec9513abc20800000000000000
+      internalID: 3222942745128052392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_17
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 451
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cdec3efcb27ed330800000000000000
+      internalID: 3737550896808914374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_18
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 454
+        width: 14
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f358d2fe8d4f82740800000000000000
+      internalID: 5127617388324160831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_19
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 438
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e93809b16924bff0800000000000000
+      internalID: -21346598537119258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_20
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 425
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6535111680ac44bb0800000000000000
+      internalID: -4952611552863628458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_21
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 415
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39f1650fa99102870800000000000000
+      internalID: 8655946637053927315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_22
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 402
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c4ffe728a0a605b0800000000000000
+      internalID: -5402454058899344186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_23
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 399
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 856af7f2b1340b430800000000000000
+      internalID: 3796608269913400920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_24
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 387
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f4fc2dea43a32a60800000000000000
+      internalID: 7648136134407288057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_25
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 379
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efcf5cca48cfec120800000000000000
+      internalID: 2436162095218556158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_26
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 372
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e0d18e18cb833780800000000000000
+      internalID: -8704459963155492634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glowworm_right_27
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 367
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb2130c2299f980a0800000000000000
+      internalID: -6878692549632781637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      glowworm_right_0: -7664121011421120525
+      glowworm_right_1: 5995483153438602336
+      glowworm_right_10: -3247402319549030636
+      glowworm_right_11: -6811823745756957042
+      glowworm_right_12: 1178010379290551674
+      glowworm_right_13: -4551811612398912999
+      glowworm_right_14: -6181305744790304951
+      glowworm_right_15: -4885130856801770674
+      glowworm_right_16: 3222942745128052392
+      glowworm_right_17: 3737550896808914374
+      glowworm_right_18: 5127617388324160831
+      glowworm_right_19: -21346598537119258
+      glowworm_right_2: 873995315959933606
+      glowworm_right_20: -4952611552863628458
+      glowworm_right_21: 8655946637053927315
+      glowworm_right_22: -5402454058899344186
+      glowworm_right_23: 3796608269913400920
+      glowworm_right_24: 7648136134407288057
+      glowworm_right_25: 2436162095218556158
+      glowworm_right_26: -8704459963155492634
+      glowworm_right_27: -6878692549632781637
+      glowworm_right_3: -8620601075930741038
+      glowworm_right_4: -2147447122118827519
+      glowworm_right_5: 17838020545691148
+      glowworm_right_6: -5481110943660367336
+      glowworm_right_7: -8315191786361606729
+      glowworm_right_8: 7847432288176417556
+      glowworm_right_9: -2173717624715086330
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c0fb06a56551dd44b83d0217d5f9d97, type: 3}
+  m_Name: GlowwormData
+  m_EditorClassIdentifier: Assembly-CSharp::GlowwormData
+  displayName: Glowworm
+  nameColor: {r: 0.76818883, g: 0.7735849, b: 0.14231044, a: 1}
+  description: Glow in the dark, and heals insects
+  passiveDescription: Emits a faint glow,
+  sprite: {fileID: 21300000, guid: 457d0ae1e2117444ab11099ef51693e0, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: 9b9e47213a05b6b4ba7ccde9430f4261, type: 3}
+  baseMaxHealth: 1000
+  baseAttackDamage: 0
+  baseMagicPower: 0
+  baseAttackSpeed: 1
+  baseAttackRange: 0.5
+  baseMovementSpeed: 0.8
+  baseTargetingRange: 0
+  startingShield: 0
+  attackDamageType: 0
+  attackElementalType: 2
+  baseLifesteal: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseTenacity: 0
+  basePhysicalResistance: 0
+  baseMagicResistance: 0.66
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0.33
+  baseWindResistance: 0
+  baseDotResistance: 0.33
+  threatValue: 2
+  threatType: 1
+  baseEvasion: 0
+  baseAccuracy: 0
+  sunDrop: 27
+  aggressivity: 0
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  glowRadius: 1.5
+  glowIntensity: 0.4
+  healRange: 4
+  healCooldown: 3
+  castDuration: 0.5
+  healAmount: 60
+  healPercent: 0.14
+  regenerationDuration: 4
+  regenerationHealing: 18

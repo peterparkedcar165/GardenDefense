@@ -316,7 +316,7 @@ MonoBehaviour:
   isFlying: 0
   verticalVelocity: 0
   fallDamageSource: {fileID: 0}
-  data: {fileID: 11400000, guid: e3c19f0100b30e949bd47887bd9e1d20, type: 2}
+  data: {fileID: 11400000, guid: 22ad83977b530ed4787f7b4b1411cb25, type: 2}
   movementSpeed: 0
   baseMovementSpeed: 0
   windVelocity: {x: 0, y: 0}
@@ -338,8 +338,6 @@ MonoBehaviour:
   attackSlowPercent: 0
   attackSlowDuration: 0
   visual: {fileID: 3774765596699175811}
-  minionDamageBonus: 0.5
-  aimPointHeight: 0.5
 --- !u!1 &3949176022732913986
 GameObject:
   m_ObjectHideFlags: 0

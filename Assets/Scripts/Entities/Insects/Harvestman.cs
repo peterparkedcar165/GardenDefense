@@ -4,7 +4,9 @@ using UnityEngine;
 // aggressivity should be set to Low in the InsectData so it never targets plants.
 public class Harvestman : Insect
 {
-    protected override Vector3 AimPointOffset => new Vector3(0f, data?.aimPointHeight ?? 0f, 0f);
+    private HarvestmanData HData => data as HarvestmanData;
+
+    protected override Vector3 AimPointOffset => new Vector3(0f, HData?.aimPointHeight ?? 0f, 0f);
 
     protected override void Awake()
     {
@@ -47,7 +49,7 @@ public class Harvestman : Insect
         if (current == null) return;
         float damage = attackDamage;
         if (current is Insect)
-            damage *= 1f + (data?.minionDamageBonus ?? 0f);
+            damage *= 1f + (HData?.minionDamageBonus ?? 0f);
         current.ReceiveAttack(damage, this);
     }
 }

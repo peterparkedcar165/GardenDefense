@@ -86,6 +86,10 @@ MonoBehaviour:
     unlockWave: 2
     budgetWeight: 0.3
     startDelay: 8
+  - data: {fileID: 11400000, guid: dcc2e67738ed22141b2d77881202ac4a, type: 2}
+    unlockWave: 3
+    budgetWeight: 0.4
+    startDelay: 3
   - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
     unlockWave: 4
     budgetWeight: 0.4
@@ -114,13 +118,19 @@ MonoBehaviour:
   eliteInsects:
   - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}
     unlockWave: 5
-    budgetWeight: 0.353
+    budgetWeight: 0.3
     startDelay: 5
     minSpawnCount: 5
     maxSpawnCount: 8
   - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
     unlockWave: 3
     budgetWeight: 0.2
+    startDelay: 2
+    minSpawnCount: 7
+    maxSpawnCount: 12
+  - data: {fileID: 11400000, guid: dcc2e67738ed22141b2d77881202ac4a, type: 2}
+    unlockWave: 3
+    budgetWeight: 0.497
     startDelay: 2
     minSpawnCount: 7
     maxSpawnCount: 12

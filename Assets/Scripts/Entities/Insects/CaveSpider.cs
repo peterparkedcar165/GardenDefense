@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CaveSpider : Insect
 {
-    private const float webbedDuration = 3f;
+    private CaveSpiderData CSData => data as CaveSpiderData;
 
     protected override void Awake()
     {
@@ -17,6 +17,6 @@ public class CaveSpider : Insect
         if (current == null) return;
         bool hit = current.ReceiveAttack(attackDamage, this);
         if (hit && current.IsAlive && current is Entity victim)
-            victim.ApplyEffect(new WebbedEffect(victim, webbedDuration, 1, this));
+            victim.ApplyEffect(new WebbedEffect(victim, CSData?.webbedDuration ?? 3f, 1, this));
     }
 }

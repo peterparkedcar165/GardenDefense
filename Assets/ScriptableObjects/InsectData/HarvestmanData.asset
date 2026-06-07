@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7583304469d80404c865070d0ca44501, type: 3}
+  m_Script: {fileID: 11500000, guid: 41b63a4989808824bbc8b7683c7232ee, type: 3}
   m_Name: HarvestmanData
-  m_EditorClassIdentifier: Assembly-CSharp::InsectData
+  m_EditorClassIdentifier: Assembly-CSharp::HarvestmanData
   displayName: Harvestman
-  nameColor: {r: 0.3207547, g: 0.14373443, b: 0.14373443, a: 1}
+  nameColor: {r: 0.32156864, g: 0.14509805, b: 0.14509805, a: 1}
   description: Huge and scary
-  passiveDescription: Deals increased damage to minions
+  passiveDescription: Deals increased damage to minions and insects
   sprite: {fileID: 21300000, guid: db8f19884e67fa9418e3aa1134e8365b, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: be78d24b0d0ee094dadaae49bc5d136b, type: 3}
   baseMaxHealth: 1500
@@ -50,5 +50,5 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
-  aimPointHeight: 0.5
-  minionDamageBonus: 1
+  aimPointHeight: 0
+  minionDamageBonus: 0

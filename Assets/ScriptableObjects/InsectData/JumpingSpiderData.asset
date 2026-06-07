@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7583304469d80404c865070d0ca44501, type: 3}
-  m_Name: JumpingSpider
-  m_EditorClassIdentifier: Assembly-CSharp::InsectData
+  m_Script: {fileID: 11500000, guid: 2e23d9e73dbdbd04aa15e92ffa667f04, type: 3}
+  m_Name: JumpingSpiderData
+  m_EditorClassIdentifier: Assembly-CSharp::JumpingSpiderData
   displayName: Jumping Spider
-  nameColor: {r: 0.045033824, g: 0.5689214, b: 0.8679245, a: 1}
+  nameColor: {r: 0.043137256, g: 0.5686275, b: 0.8666667, a: 1}
   description: Tiny and elusive, it leaps to plants
   passiveDescription: Leaps and webs plants that it lands on
   sprite: {fileID: 21300000, guid: cd9243fb2c4a36a409323299a31861f7, type: 3}
@@ -43,8 +43,14 @@ MonoBehaviour:
   baseDotResistance: 0
   threatValue: 1.6
   threatType: 0
+  baseEvasion: 0
+  baseAccuracy: 0
   sunDrop: 11
   aggressivity: 2
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  leapRange: 3
+  aimDuration: 0.5
+  jumpUpVelocity: 7
+  webDuration: 3

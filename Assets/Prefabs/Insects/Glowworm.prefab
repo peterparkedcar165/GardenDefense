@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8391850788492431864}
   - component: {fileID: 5422947841978176508}
-  - component: {fileID: 8785079972107224673}
+  - component: {fileID: 1266486133273770341}
   m_Layer: 0
-  m_Name: CaveSpider
+  m_Name: Glowworm
   m_TagString: Insect
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8785079972107224673
+--- !u!114 &1266486133273770341
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,9 +71,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2279086888993795066}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee3a1ec903542f542b41f115e9df2c85, type: 3}
+  m_Script: {fileID: 11500000, guid: cc05f7f09e6a5b742b359785eecfef2d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CaveSpider
+  m_EditorClassIdentifier: Assembly-CSharp::Glowworm
   baseMaxHealth: 0
   baseAttackDamage: 0
   baseMagicPower: 0
@@ -284,7 +284,7 @@ MonoBehaviour:
   isFlying: 0
   verticalVelocity: 0
   fallDamageSource: {fileID: 0}
-  data: {fileID: 11400000, guid: 2d3f91fb7c002c34598abe68a6b4dfd3, type: 2}
+  data: {fileID: 11400000, guid: dcc2e67738ed22141b2d77881202ac4a, type: 2}
   movementSpeed: 0
   baseMovementSpeed: 0
   windVelocity: {x: 0, y: 0}
@@ -294,8 +294,8 @@ MonoBehaviour:
   targetingRange: 0
   team: 0
   movingBackward: 0
-  spriteRight: {fileID: 21300000, guid: 251fe8e3774b8284f8432e99f7ee7e40, type: 3}
-  spriteLeft: {fileID: 21300000, guid: 26740c44acad36c4395ba4a199725991, type: 3}
+  spriteRight: {fileID: 21300000, guid: 457d0ae1e2117444ab11099ef51693e0, type: 3}
+  spriteLeft: {fileID: 21300000, guid: 7a0e7d74e2bc09e40b5568e4fc44b029, type: 3}
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
   sunDrop: 0
@@ -333,7 +333,7 @@ Transform:
   m_GameObject: {fileID: 4515215125339047355}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.548, z: 0}
+  m_LocalPosition: {x: 0, y: 0.254, z: 0}
   m_LocalScale: {x: 0.90909094, y: 0.90909094, z: 0.90909094}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -388,7 +388,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 251fe8e3774b8284f8432e99f7ee7e40, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 457d0ae1e2117444ab11099ef51693e0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -460,8 +460,8 @@ Transform:
   m_GameObject: {fileID: 6268732927135444423}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0326, y: 0.203, z: 0}
-  m_LocalScale: {x: 1.4515674, y: 0.3686044, z: 0.90909094}
+  m_LocalPosition: {x: -0.0046, y: 0.0774, z: 0}
+  m_LocalScale: {x: 1.6543217, y: 0.36398667, z: 0.90909094}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8391850788492431864}

@@ -5,10 +5,12 @@ using UnityEngine;
 // if CC'd mid-air the immunity is stripped and the spider takes normal fall damage on landing.
 public class JumpingSpider : Insect
 {
-    private const float leapRange      = 3f;
-    private const float aimDuration    = 0.5f;
-    private const float jumpUpVelocity = 7f;  // initial upward push (units/s, negative = up in ApplyGravity)
-    private const float webDuration    = 2f;
+    private JumpingSpiderData JSData => data as JumpingSpiderData;
+
+    private float LeapRange      => JSData?.leapRange      ?? 3f;
+    private float AimDuration    => JSData?.aimDuration    ?? 0.5f;
+    private float JumpUpVelocity => JSData?.jumpUpVelocity ?? 7f;
+    private float WebDuration    => JSData?.webDuration    ?? 2f;
 
     private enum LeapState { Walking, Aiming, Leaping, Attacking }
     private LeapState _leapState = LeapState.Walking;
@@ -97,20 +99,20 @@ public class JumpingSpider : Insect
             if (plant.occupiedTile != null && plant.occupiedTile.isHighground) continue;
             if (plant.occupiedTile != null && plant.occupiedTile.tileType == TileType.Water) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
-            if (dist <= leapRange && dist < nearestDist) { nearestDist = dist; nearest = plant; }
+            if (dist <= LeapRange && dist < nearestDist) { nearestDist = dist; nearest = plant; }
         }
 
         foreach (Insect friendly in Insect.friendlyInsects)
         {
             if (friendly == null || !friendly.IsAlive) continue;
             float dist = Vector3.Distance(transform.position, friendly.transform.position);
-            if (dist <= leapRange && dist < nearestDist) { nearestDist = dist; nearest = friendly; }
+            if (dist <= LeapRange && dist < nearestDist) { nearestDist = dist; nearest = friendly; }
         }
 
         if (nearest != null)
         {
             _leapTarget = nearest;
-            _aimTimer   = aimDuration;
+            _aimTimer   = AimDuration;
             _leapState  = LeapState.Aiming;
         }
     }
@@ -120,13 +122,13 @@ public class JumpingSpider : Insect
         _leapDestination  = _leapTarget.GetApproachPoint(transform.position);
         _hasLeftGround    = false;
         _fallDamageImmune = true;
-        verticalVelocity  = -jumpUpVelocity;  // negative = upward in ApplyGravity convention
+        verticalVelocity  = -JumpUpVelocity;  // negative = upward in ApplyGravity convention
 
         // calculate horizontal speed so the spider arrives as the arc completes
         float horizDist = Vector2.Distance(
             new Vector2(transform.position.x, transform.position.y),
             new Vector2(_leapDestination.x,   _leapDestination.y));
-        float airTime    = 2f * jumpUpVelocity / gravity;
+        float airTime    = 2f * JumpUpVelocity / gravity;
         _leapHorizSpeed  = airTime > 0f ? horizDist / airTime : movementSpeed;
 
         _leapState = LeapState.Leaping;
@@ -156,7 +158,7 @@ public class JumpingSpider : Insect
             {
                 bool hit = _leapTarget.ReceiveAttack(attackDamage, this);
                 if (hit && _leapTarget.IsAlive && _leapTarget is Entity landedOn)
-                    landedOn.ApplyEffect(new WebbedEffect(landedOn, webDuration, 1, this));
+                    landedOn.ApplyEffect(new WebbedEffect(landedOn, WebDuration, 1, this));
                 _leapState = LeapState.Attacking;
                 return;
             }

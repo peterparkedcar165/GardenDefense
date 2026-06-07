@@ -56,9 +56,4 @@ public class InsectData : ScriptableObject
     public float baseHealingBonus;
     public float baseHealingReceived;
 
-    [Header("Harvestman")]
-    [Tooltip("how far above the visual the aim point sits (0 = default ground-level)")]
-    public float aimPointHeight;
-    [Tooltip("bonus damage multiplier against friendly insects (minions, hypnotized). 0 = no bonus")]
-    public float minionDamageBonus;
 }

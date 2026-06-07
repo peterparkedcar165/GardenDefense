@@ -284,7 +284,7 @@ MonoBehaviour:
   isFlying: 0
   verticalVelocity: 0
   fallDamageSource: {fileID: 0}
-  data: {fileID: 11400000, guid: 3daf6caaa45e774478c2b54666c863be, type: 2}
+  data: {fileID: 11400000, guid: 7132e106d084b3b458852756b3be085a, type: 2}
   movementSpeed: 0
   baseMovementSpeed: 0
   windVelocity: {x: 0, y: 0}
