@@ -105,16 +105,17 @@ public class Glowworm : Insect
             return;
         }
 
-        float flat       = GData?.healAmount           ?? 20f;
-        float pct        = GData?.healPercent          ?? 0.1f;
-        float regenDur   = GData?.regenerationDuration ?? 6f;
-        float regenHeal  = GData?.regenerationHealing  ?? 8f;
-        float glowRadius = GData?.glowRadius           ?? 2f;
-        float glowIntens = GData?.glowIntensity        ?? 0.8f;
+        float flat        = GData?.healAmount            ?? 20f;
+        float pct         = GData?.healPercent           ?? 0.1f;
+        float regenDur    = GData?.regenerationDuration  ?? 6f;
+        float regenHeal   = GData?.regenerationHealing   ?? 8f;
+        float regenPct    = GData?.regenerationPercent   ?? 0.01f;
+        float glowRadius  = GData?.glowRadius            ?? 2f;
+        float glowIntens  = GData?.glowIntensity         ?? 0.8f;
 
         _currentTarget.Heal(flat + _currentTarget.maxHealth * pct, this);
         _currentTarget.ApplyEffect(new RegenerativeGlowEffect(
-            _currentTarget, regenDur, 1, this, regenHeal, glowRadius, glowIntens));
+            _currentTarget, regenDur, 1, this, regenHeal, regenPct, glowRadius, glowIntens));
 
         _currentTarget = null;
     }

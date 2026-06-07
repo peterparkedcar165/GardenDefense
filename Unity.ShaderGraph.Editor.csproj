@@ -359,8 +359,8 @@
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Generation\Targets\Fullscreen\FullscreenData.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Generation\Targets\Canvas\Templates\CanvasShaderGUI.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Drawing\Views\PropertySheet.cs" />
-    <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Drawing\MaterialGraphPreviewGenerator.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Graphs\SpaceMaterialSlot.cs" />
+    <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Drawing\MaterialGraphPreviewGenerator.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Drawing\Views\ContextView.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Drawing\Inspector\PropertyDrawers\MatrixPropertyDrawer.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Nodes\Math\Range\MinimumNode.cs" />

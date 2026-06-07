@@ -24,6 +24,8 @@ public class GlowwormData : InsectData
     [Header("Regenerative Glow Buff")]
     [Tooltip("duration of the Regenerative Glow buff applied after the heal")]
     public float regenerationDuration = 6f;
-    [Tooltip("health restored per second by the Regenerative Glow buff")]
+    [Tooltip("flat health restored per second by the Regenerative Glow buff")]
     public float regenerationHealing = 8f;
+    [Tooltip("additional heal per second as a fraction of the target's max health (0.01 = 1%)")]
+    public float regenerationPercent = 0.01f;
 }

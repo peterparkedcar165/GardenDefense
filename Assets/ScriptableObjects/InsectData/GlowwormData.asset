@@ -18,7 +18,7 @@ MonoBehaviour:
   passiveDescription: Emits a faint glow,
   sprite: {fileID: 21300000, guid: 457d0ae1e2117444ab11099ef51693e0, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 9b9e47213a05b6b4ba7ccde9430f4261, type: 3}
-  baseMaxHealth: 1000
+  baseMaxHealth: 1200
   baseAttackDamage: 0
   baseMagicPower: 0
   baseAttackSpeed: 1
@@ -55,7 +55,8 @@ MonoBehaviour:
   healRange: 4
   healCooldown: 3
   castDuration: 0.5
-  healAmount: 60
-  healPercent: 0.14
+  healAmount: 40
+  healPercent: 0.08
   regenerationDuration: 4
   regenerationHealing: 18
+  regenerationPercent: 0.02

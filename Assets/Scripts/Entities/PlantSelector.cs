@@ -5,9 +5,11 @@ public class PlantSelector : MonoBehaviour
 {
     public bool uprootMode;
     public bool flowerPotMode;
+    public bool waterPotMode;
     public static PlantSelector instance;
 
     public GameObject flowerPotPrefab;
+    public GameObject waterPotPrefab;
 
     public GameObject SelectedPlant { get; private set; }
 
@@ -22,6 +24,7 @@ public class PlantSelector : MonoBehaviour
         if (newMode) SkillTargetingManager.instance?.CancelAll();
         ClearSelection();
         flowerPotMode = false;
+        waterPotMode  = false;
         uprootMode = newMode;
     }
 
@@ -29,15 +32,26 @@ public class PlantSelector : MonoBehaviour
     {
         if (newMode) SkillTargetingManager.instance?.CancelAll();
         ClearSelection();
-        uprootMode = false;
+        uprootMode   = false;
+        waterPotMode = false;
         flowerPotMode = newMode;
+    }
+
+    public void SetWaterPotMode(bool newMode)
+    {
+        if (newMode) SkillTargetingManager.instance?.CancelAll();
+        ClearSelection();
+        uprootMode    = false;
+        flowerPotMode = false;
+        waterPotMode  = newMode;
     }
 
     public void SelectPlant(GameObject plant)
     {
         SkillTargetingManager.instance?.CancelAll();
-        uprootMode = false;
+        uprootMode    = false;
         flowerPotMode = false;
+        waterPotMode  = false;
         SelectedPlant = plant;
         CursorIcon.instance?.OnSelectionChanged();
         GameManager.instance?.PlaySound(GameManager.instance.plantSelect);
@@ -52,8 +66,9 @@ public class PlantSelector : MonoBehaviour
     public void ClearAll()
     {
         SelectedPlant = null;
-        uprootMode = false;
+        uprootMode    = false;
         flowerPotMode = false;
+        waterPotMode  = false;
         CursorIcon.instance?.OnSelectionChanged();
     }
 
@@ -66,11 +81,15 @@ public class PlantSelector : MonoBehaviour
         if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             ClearSelection();
-            uprootMode = false;
+            uprootMode    = false;
             flowerPotMode = false;
+            waterPotMode  = false;
         }
 
         if (Keyboard.current.fKey.wasPressedThisFrame)
             SetFlowerPotMode(!flowerPotMode);
+
+        if (Keyboard.current.wKey.wasPressedThisFrame)
+            SetWaterPotMode(!waterPotMode);
     }
 }

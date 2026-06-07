@@ -295,7 +295,7 @@ MonoBehaviour:
   circleRadius: {fileID: 957996977735989291}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
-  allowedTiles: 02000000
+  allowedTiles: 0200000005000000
   targeting: 1
   prioritizeFlying: 0
   sunCost: 0
@@ -357,8 +357,6 @@ MonoBehaviour:
   piercing: 0
   piercingAdder: 0
   skillIndicatorPrefab: {fileID: 2096060468615343360, guid: 4fdcd920c341a3146963cdcebca24209, type: 3}
-  skillLaneLength: 30
-  skillLaneWidth: 1
 --- !u!1 &4211631318131847547
 GameObject:
   m_ObjectHideFlags: 0

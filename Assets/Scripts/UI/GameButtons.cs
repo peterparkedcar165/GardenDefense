@@ -16,4 +16,10 @@ public class GameButtons : MonoBehaviour
         if (PlantSelector.instance == null) return;
         PlantSelector.instance.SetFlowerPotMode(!PlantSelector.instance.flowerPotMode);
     }
+
+    public void ToggleWaterPot()
+    {
+        if (PlantSelector.instance == null) return;
+        PlantSelector.instance.SetWaterPotMode(!PlantSelector.instance.waterPotMode);
+    }
 }

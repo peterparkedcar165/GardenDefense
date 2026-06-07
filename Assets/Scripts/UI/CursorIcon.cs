@@ -8,6 +8,7 @@ public class CursorIcon : MonoBehaviour
     private Plant cachedPlant;
     private SpriteRenderer cachedRenderer;
     private SpriteRenderer cachedPotRenderer;
+    private SpriteRenderer cachedWaterPotRenderer;
 
     [SerializeField] private Image icon;
     [SerializeField] private Sprite shovelSprite;
@@ -49,7 +50,8 @@ public class CursorIcon : MonoBehaviour
             cachedPlant = null;
             cachedRenderer = null;
         }
-        cachedPotRenderer = null;
+        cachedPotRenderer      = null;
+        cachedWaterPotRenderer = null;
     }
 
     void Update()
@@ -86,11 +88,31 @@ public class CursorIcon : MonoBehaviour
             Collider2D hit = Physics2D.OverlapPoint(worldPosition);
             Tile tile = hit != null ? hit.GetComponent<Tile>() : null;
 
-            if (tile != null && tile.tileType != TileType.Water && tile.tileType != TileType.Path && tile.tileType != TileType.Potted && tile.tileType != TileType.Obstacle && cachedPotRenderer != null)
+            if (tile != null && tile.tileType != TileType.Water && tile.tileType != TileType.Path && tile.tileType != TileType.Potted && tile.tileType != TileType.Obstacle && tile.tileType != TileType.Heat && cachedPotRenderer != null)
             {
                 Vector2 tileScreenPos = cam.WorldToScreenPoint(tile.transform.position);
                 Show(cachedPotRenderer.sprite, tileScreenPos);
                 MatchSizeToRenderer(cachedPotRenderer);
+            }
+            else
+            {
+                icon.enabled = false;
+            }
+            HideRangePreview();
+        }
+        else if (PlantSelector.instance.waterPotMode)
+        {
+            if (cachedWaterPotRenderer == null && PlantSelector.instance.waterPotPrefab != null)
+                cachedWaterPotRenderer = PlantSelector.instance.waterPotPrefab.GetComponentInChildren<SpriteRenderer>();
+
+            Collider2D hit = Physics2D.OverlapPoint(worldPosition);
+            Tile tile = hit != null ? hit.GetComponent<Tile>() : null;
+
+            if (tile != null && tile.tileType != TileType.Water && tile.tileType != TileType.Path && tile.tileType != TileType.Potted && tile.tileType != TileType.WaterPotted && tile.tileType != TileType.Obstacle && tile.tileType != TileType.Heat && cachedWaterPotRenderer != null)
+            {
+                Vector2 tileScreenPos = cam.WorldToScreenPoint(tile.transform.position);
+                Show(cachedWaterPotRenderer.sprite, tileScreenPos);
+                MatchSizeToRenderer(cachedWaterPotRenderer);
             }
             else
             {

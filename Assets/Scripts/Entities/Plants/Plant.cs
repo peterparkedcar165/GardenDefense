@@ -679,8 +679,12 @@ public abstract class Plant : Entity, IAttackable
         temperature = Mathf.Clamp(temperature, temperatureMin, temperatureMax);
 
         if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Hot
-            && occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent))
+            && occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.tileType == TileType.WaterPotted || occupiedTile.isWaterAdjacent))
             temperature = Mathf.Min(temperature, comfortMax);
+
+        if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Cold
+            && occupiedTile != null && (occupiedTile.tileType == TileType.Heat || occupiedTile.isHeatAdjacent))
+            temperature = Mathf.Max(temperature, comfortMin);
 
         bool tooCold = temperature < comfortMin;
         bool tooHot  = temperature > comfortMax;
@@ -712,7 +716,7 @@ public abstract class Plant : Entity, IAttackable
 
         if (elementalType == ElementalType.Water)
         {
-            bool onWater = occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent);
+            bool onWater = occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.tileType == TileType.WaterPotted || occupiedTile.isWaterAdjacent);
             if (onWater || HasEffect<RainExposedEffect>()) return 1;
         }
 

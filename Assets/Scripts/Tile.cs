@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public enum TileType
 {
-    Grass, Dirt, Water, Path, Potted, Cave, Obstacle, Sand
+    Grass, Dirt, Water, Path, Potted, WaterPotted, Cave, Obstacle, Sand, Snow, Heat
     /* Nature-element plants will be able to be placed on Grass, others won't, except for Flower Pot
     Every plant that is non-aquatic will be placeable on Dirt and Potted
     Aquatic plants can be placed in Water, Pondplanters allow terrian plants to be placed on water
@@ -23,7 +23,9 @@ public class Tile : MonoBehaviour
 
     public bool isOccupied = false, isHighground = false;
     public bool isWaterAdjacent = false;
+    public bool isHeatAdjacent  = false;
     public FlowerPot flowerPot;
+    public WaterPot  waterPot;
 
     private TileType _tileType;
     public TileType tileType
@@ -32,9 +34,9 @@ public class Tile : MonoBehaviour
         set
         {
             _tileType = value;
-            if (value == TileType.Water)
+            if (value == TileType.Water || value == TileType.WaterPotted)
                 SpawnWaterZone();
-            if (value == TileType.Obstacle)
+            if (value == TileType.Obstacle || value == TileType.Heat)
                 SpawnObstacleZone();
         }
     }
@@ -92,9 +94,19 @@ public class Tile : MonoBehaviour
             return;
         }
 
+        if (selector.uprootMode && tileType == TileType.WaterPotted && waterPot != null)
+        {
+            WaterZone wz = GetComponentInChildren<WaterZone>();
+            if (wz != null) Destroy(wz.gameObject);
+            tileType = waterPot.originalTileType;
+            Destroy(waterPot.gameObject);
+            waterPot = null;
+            return;
+        }
+
         if (selector.flowerPotMode)
         {
-            if (tileType == TileType.Water || tileType == TileType.Path || tileType == TileType.Potted || tileType == TileType.Obstacle) return;
+            if (tileType == TileType.Water || tileType == TileType.Path || tileType == TileType.Potted || tileType == TileType.WaterPotted || tileType == TileType.Obstacle || tileType == TileType.Heat) return;
             if (selector.flowerPotPrefab == null || GameManager.instance == null) return;
             if (GameManager.instance.SpendSun(FlowerPot.SunCost))
             {
@@ -103,6 +115,21 @@ public class Tile : MonoBehaviour
                 flowerPot.originalTileType = tileType;
                 tileType = TileType.Potted;
                 selector.flowerPotMode = false;
+            }
+            return;
+        }
+
+        if (selector.waterPotMode)
+        {
+            if (tileType == TileType.Water || tileType == TileType.Path || tileType == TileType.Potted || tileType == TileType.WaterPotted || tileType == TileType.Obstacle || tileType == TileType.Heat) return;
+            if (selector.waterPotPrefab == null || GameManager.instance == null) return;
+            if (GameManager.instance.SpendSun(WaterPot.SunCost))
+            {
+                GameObject potObj = Instantiate(selector.waterPotPrefab, transform.position, Quaternion.identity);
+                waterPot = potObj.GetComponent<WaterPot>();
+                waterPot.originalTileType = tileType;
+                tileType = TileType.WaterPotted;
+                selector.waterPotMode = false;
             }
             return;
         }

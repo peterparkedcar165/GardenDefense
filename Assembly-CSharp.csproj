@@ -53,6 +53,7 @@
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\CaveSpiderData.cs" />
+    <Compile Include="Assets\Scripts\GridManagers\SnowGridManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\GhostShroomlet.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerFormat.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Aura.cs" />
     <Compile Include="Assets\Scripts\UI\PlantBar.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlot.cs" />
+    <Compile Include="Assets\Scripts\Entities\WaterPot.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Harvestman.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\QueenAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
@@ -289,6 +291,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ElementalPowerBoostEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DesertLocust.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VenomEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\WaterPotButton.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Mosquito.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AeoniumProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AcornProjectile.cs" />
