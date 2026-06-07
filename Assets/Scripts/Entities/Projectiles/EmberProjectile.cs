@@ -66,22 +66,28 @@ public class EmberProjectile : MonoBehaviour
     {
         if (_target == null || !_target.IsAlive) return;
 
-        if (_target is Plant hitPlant)
+        // primary target
+        Plant primaryPlant = _target as Plant;
+        if (primaryPlant != null)
         {
-            hitPlant.Heal(_healAmount, _source);
-            hitPlant.ApplyEffect(new WarmingEffect(hitPlant, 2f, 1, _source, _temperatureAmount));
-
-            foreach (Plant nearby in new List<Plant>(Plant.allPlants))
-            {
-                if (nearby == null || !nearby.IsAlive || nearby == hitPlant) continue;
-                if (Vector3.Distance(transform.position, nearby.transform.position) > _auraRadius) continue;
-                nearby.Heal(_healAmount * 0.5f, _source);
-                nearby.ApplyEffect(new WarmingEffect(nearby, 2f, 1, _source, _temperatureAmount * 0.5f));
-            }
+            primaryPlant.Heal(_healAmount, _source);
+            primaryPlant.temperature = Mathf.Min(primaryPlant.temperature + _temperatureAmount, primaryPlant.comfortMax);
         }
         else if (_target is Insect insect)
         {
-            insect.Damage(_damage, _damageType, _elementalType, _source, true, _damageTags);
+            if (insect.team == Team.Friendly)
+                insect.Heal(_healAmount, _source);
+            else
+                insect.Damage(_damage, _damageType, _elementalType, _source, true, _damageTags);
+        }
+
+        // aoe splash: always heals and warms nearby plants regardless of primary target
+        foreach (Plant nearby in new List<Plant>(Plant.allPlants))
+        {
+            if (nearby == null || !nearby.IsAlive || nearby == primaryPlant) continue;
+            if (Vector3.Distance(transform.position, nearby.transform.position) > _auraRadius) continue;
+            nearby.Heal(_healAmount * 0.5f, _source);
+            nearby.temperature = Mathf.Min(nearby.temperature + _temperatureAmount * 0.5f, nearby.comfortMax);
         }
     }
 }

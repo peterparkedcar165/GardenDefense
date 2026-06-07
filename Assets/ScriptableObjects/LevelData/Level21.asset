@@ -18,7 +18,7 @@ MonoBehaviour:
     intensity: 0
   temperature: 4
   maxWaves: 35
-  startSunCount: 850
+  startSunCount: 950
   startHealth: 200
   minWaveDuration: 25
   maxWaveDuration: 70
@@ -47,8 +47,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 6
-  minThreatBudget: 11
-  maxThreatBudget: 175
+  minThreatBudget: 9
+  maxThreatBudget: 135
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -128,21 +128,21 @@ MonoBehaviour:
     unlockWave: 5
     budgetWeight: 0.3
     startDelay: 5
-    minSpawnCount: 5
-    maxSpawnCount: 8
+    minSpawnCount: 3
+    maxSpawnCount: 6
   - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
     unlockWave: 3
     budgetWeight: 0.2
     startDelay: 2
-    minSpawnCount: 7
-    maxSpawnCount: 12
+    minSpawnCount: 4
+    maxSpawnCount: 8
   - data: {fileID: 11400000, guid: dcc2e67738ed22141b2d77881202ac4a, type: 2}
     unlockWave: 3
-    budgetWeight: 0.497
+    budgetWeight: 0.25
     startDelay: 2
-    minSpawnCount: 7
-    maxSpawnCount: 12
+    minSpawnCount: 3
+    maxSpawnCount: 4
   fertilizerPool:
-  - {fileID: 11400000, guid: 5b1fcf031c4fede44a676295285e96e2, type: 2}
-  - {fileID: 11400000, guid: dc6c78183d930f040aa36668c09a580c, type: 2}
-  - {fileID: 11400000, guid: abffbf10170e9574f97882becc815939, type: 2}
+  - {fileID: 11400000, guid: d774ba5796255eb4290ee77f71a878a7, type: 2}
+  - {fileID: 11400000, guid: 41fa158ff1d2d4c499cc01cda97768c2, type: 2}
+  - {fileID: 11400000, guid: bed07a22d5a9fdd438d845a3b961ec39, type: 2}

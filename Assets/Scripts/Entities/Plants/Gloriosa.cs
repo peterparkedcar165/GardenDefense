@@ -84,7 +84,20 @@ public class Gloriosa : Plant
         }
         if (bestPlant != null) return bestPlant;
 
-        // priority 2: nearest insect in range
+        // priority 2: most injured friendly minion in range (lowest hp fraction)
+        Insect bestAlly = null;
+        float  bestAllyFrac = 1f;
+        foreach (Insect ally in Insect.friendlyInsects)
+        {
+            if (ally == null || !ally.IsAlive) continue;
+            if (ally.health >= ally.maxHealth) continue;
+            if (Vector3.Distance(transform.position, ally.transform.position) > attackRange) continue;
+            float frac = ally.health / ally.maxHealth;
+            if (frac < bestAllyFrac) { bestAllyFrac = frac; bestAlly = ally; }
+        }
+        if (bestAlly != null) return bestAlly;
+
+        // priority 3: nearest enemy insect in range
         Insect bestInsect = null;
         float  nearest    = Mathf.Infinity;
         foreach (Insect insect in Insect.allInsects)
@@ -200,7 +213,7 @@ public class Gloriosa : Plant
         $"Targets injured plants before insects. Embers heal plants for " +
         $"<color=green><b>{HealAmountBase:F0}</b></color> [<color=#FFB6C1><b>+{HealAmountMP:F0}</b></color>] health " +
         $"and increase temperature by <color=orange><b>{TemperatureAmountBase:F1}</b></color> " +
-        $"[<color=#FFB6C1><b>+{TemperatureAmountMP:F1}</b></color>] per second until comfort. " +
+        $"[<color=#FFB6C1><b>+{TemperatureAmountMP:F1}</b></color>] until comfort. " +
         $"Plants within <color=green><b>{GData?.auraRadius ?? 1.5f:F1}</b></color> radius receive half the effect.";
 
     public override string GetSkillDesription()
@@ -211,11 +224,11 @@ public class Gloriosa : Plant
         float lDur  = (GData?.latchDuration ?? 3f) + (GData?.path3LatchDurationPerLevel ?? 0.5f) * effectivePath3Level;
         return $"Summons <color=green><b>{count}</b></color> Fiery Wisps that fly across the map seeking the most injured plant. " +
                $"Plants within <color=green><b>{wRad:F1}</b></color> radius heal " +
-               $"<color=orange><b>{WispHealBase:F0}</b></color> [<color=#FFB6C1><b>+{WispHealMP:F0}</b></color>] health and " +
+               $"<color=green><b>{WispHealBase:F0}</b></color> [<color=#FFB6C1><b>+{WispHealMP:F0}</b></color>] health and " +
                $"warm <color=orange><b>{wTemp:F1}°</b></color> per second while the wisp is near. " +
                $"When a wisp reaches its target it latches, applying <color=orange>Fiery Wisp Latched</color>: " +
-               $"heals <color=orange><b>{LatchHealBase:F0}</b></color> [<color=#FFB6C1><b>+{LatchHealMP:F0}</b></color>] per second and " +
-               $"increases <color=orange>Fire</color> damage by " +
+               $"heals <color=green><b>{LatchHealBase:F0}</b></color> [<color=#FFB6C1><b>+{LatchHealMP:F0}</b></color>] per second and " +
+               $"increases <color=orange><b>Fire Damage</b></color> by " +
                $"<color=orange><b>{LatchFireBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{LatchFireMP * 100f:F1}%</b></color>]. " +
                $"The effect lingers for <color=orange><b>{lDur:F1}s</b></color> after the wisp detaches. " +
                $"Wisps last <color=green><b>{skillDuration:F0}s</b></color>.";

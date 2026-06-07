@@ -53,7 +53,7 @@ public class GloriosaData : PlantData
 
     public override string GetPassiveDescription() =>
         $"Targets injured plants before insects. Embers heal plants for <color=green><b>{healAmount:F0}</b></color> health " +
-        $"and increase temperature by <color=orange><b>{temperatureAmount:F1}</b></color> per second until comfort. " +
+        $"and increase temperature by <color=orange><b>{temperatureAmount:F1}</b></color> until comfort. " +
         $"Plants within <color=green><b>{auraRadius:F1}</b></color> radius receive half the effect.";
 
     public override string GetSkillDescription() =>

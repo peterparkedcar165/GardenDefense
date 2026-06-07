@@ -82,6 +82,7 @@ public class FieryWisp : MonoBehaviour
         _light.pointLightOuterRadius = lightRadius;
         _light.pointLightInnerRadius = lightRadius * 0.3f;
         _light.falloffIntensity      = 0.5f;
+        _light.enabled               = false;
 
         DarknessManager.RegisterLightSource(transform, lightRadius);
 
