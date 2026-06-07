@@ -431,7 +431,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (temp < plant.comfortMin)
         {
             float t = Mathf.Clamp01((plant.comfortMin - temp) / (plant.comfortMin - plant.temperatureMin));
-            return Color.Lerp(Color.green, Color.blue, t);
+            return Color.Lerp(Color.green, Color.cyan, t);
         }
         float u = Mathf.Clamp01((temp - plant.comfortMax) / (plant.temperatureMax - plant.comfortMax));
         return Color.Lerp(Color.green, Color.red, u);

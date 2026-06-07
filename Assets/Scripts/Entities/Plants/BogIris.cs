@@ -12,7 +12,7 @@ public class BogIris : Shooter
     private float cycleTimer = 0f;
     private float sunTickTimer = 0f;
     private float healTickTimer = 0f;
-    private const float totalHeal = 200f;
+    private float TotalHeal => (BogData?.baseClosedHeal ?? 200f) + (BogData?.path2ClosedHealPerLevel ?? 20f) * effectivePath2Level;
 
     private BogIrisData BogData => data as BogIrisData;
 
@@ -56,7 +56,7 @@ public class BogIris : Shooter
             if (healTickTimer >= 1f)
             {
                 healTickTimer -= 1f;
-                Heal(totalHeal / passiveCooldown);
+                Heal(TotalHeal / passiveCooldown);
             }
             if (cycleTimer >= passiveCooldown)
             {
@@ -157,7 +157,7 @@ public class BogIris : Shooter
         return $"Passive:\n\n" +
                $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>{OpenDuration:F0}s</b></color>) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}s</b></color>) state.\n\n" +
                $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>{SunGenerated}</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds.\n\n" +
-               $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>{totalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.\n\n" +
+               $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>{TotalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.\n\n" +
                $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>{opendurpl:F0}</b></color> seconds per level. [<color=green><b>+{opendurpl * effectivePath2Level:F0}s</b></color>]\n\n" +
                $"Increase Sun generated per tick by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";

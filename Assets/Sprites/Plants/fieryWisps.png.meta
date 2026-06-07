@@ -1,0 +1,2301 @@
+fileFormatVersion: 2
+guid: cddd5f00a10e20b4f81c01a5dea550d7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4937098436597713889
+    second: fieryWisps_0
+  - first:
+      213: 9029310997007091931
+    second: fieryWisps_1
+  - first:
+      213: 195365931174408007
+    second: fieryWisps_2
+  - first:
+      213: 7446134686617268851
+    second: fieryWisps_3
+  - first:
+      213: -1545274099154383235
+    second: fieryWisps_4
+  - first:
+      213: 4301383451425853744
+    second: fieryWisps_5
+  - first:
+      213: 9203766298856292167
+    second: fieryWisps_6
+  - first:
+      213: -7446530609544885179
+    second: fieryWisps_7
+  - first:
+      213: -5742471959229003158
+    second: fieryWisps_8
+  - first:
+      213: 899713357170326277
+    second: fieryWisps_9
+  - first:
+      213: 3679977288196666703
+    second: fieryWisps_10
+  - first:
+      213: -3862859719818252602
+    second: fieryWisps_11
+  - first:
+      213: 2690299915034242077
+    second: fieryWisps_12
+  - first:
+      213: -6799773489855027377
+    second: fieryWisps_13
+  - first:
+      213: -2074147449671111085
+    second: fieryWisps_14
+  - first:
+      213: 1712751747458697042
+    second: fieryWisps_15
+  - first:
+      213: 9079913098357823549
+    second: fieryWisps_16
+  - first:
+      213: 277219044065319502
+    second: fieryWisps_17
+  - first:
+      213: -1197393863278727962
+    second: fieryWisps_18
+  - first:
+      213: -5017470897267955588
+    second: fieryWisps_19
+  - first:
+      213: 7297574101944547142
+    second: fieryWisps_20
+  - first:
+      213: -7961518664476771652
+    second: fieryWisps_21
+  - first:
+      213: 1283660500607614335
+    second: fieryWisps_22
+  - first:
+      213: 3723501391128816552
+    second: fieryWisps_23
+  - first:
+      213: 4005835953010944558
+    second: fieryWisps_24
+  - first:
+      213: -3214581111902697401
+    second: fieryWisps_25
+  - first:
+      213: 1592787701730472954
+    second: fieryWisps_26
+  - first:
+      213: 9087746169126609465
+    second: fieryWisps_27
+  - first:
+      213: 2714143415735271062
+    second: fieryWisps_28
+  - first:
+      213: 5086053879433656513
+    second: fieryWisps_29
+  - first:
+      213: -8043184894078678340
+    second: fieryWisps_30
+  - first:
+      213: 5124689710364966963
+    second: fieryWisps_31
+  - first:
+      213: -3465078895993589092
+    second: fieryWisps_32
+  - first:
+      213: 6222761394186635179
+    second: fieryWisps_33
+  - first:
+      213: -3392844239300157978
+    second: fieryWisps_34
+  - first:
+      213: 7848222661511377918
+    second: fieryWisps_35
+  - first:
+      213: 8405707816291004242
+    second: fieryWisps_36
+  - first:
+      213: -8280735720510961998
+    second: fieryWisps_37
+  - first:
+      213: -8444319192882968662
+    second: fieryWisps_38
+  - first:
+      213: 7752855249502874650
+    second: fieryWisps_39
+  - first:
+      213: -8030156302214829145
+    second: fieryWisps_40
+  - first:
+      213: -5049668652909990229
+    second: fieryWisps_41
+  - first:
+      213: -6024345901924293950
+    second: fieryWisps_42
+  - first:
+      213: 3955556582311697626
+    second: fieryWisps_43
+  - first:
+      213: -2046595025474989808
+    second: fieryWisps_44
+  - first:
+      213: -6176871220585669416
+    second: fieryWisps_45
+  - first:
+      213: -1175822732024742790
+    second: fieryWisps_46
+  - first:
+      213: 5078651205913517343
+    second: fieryWisps_47
+  - first:
+      213: -4804177016181822948
+    second: fieryWisps_48
+  - first:
+      213: -7391294437875142961
+    second: fieryWisps_49
+  - first:
+      213: -2404019636213557842
+    second: fieryWisps_50
+  - first:
+      213: 4517782797494434588
+    second: fieryWisps_51
+  - first:
+      213: 6135415994399085593
+    second: fieryWisps_52
+  - first:
+      213: -4626431783882025850
+    second: fieryWisps_53
+  - first:
+      213: 7765401915866303090
+    second: fieryWisps_54
+  - first:
+      213: 7237373775018787713
+    second: fieryWisps_55
+  - first:
+      213: 6210998427262321102
+    second: fieryWisps_56
+  - first:
+      213: -4933644170947180999
+    second: fieryWisps_57
+  - first:
+      213: 5650023014814671164
+    second: fieryWisps_58
+  - first:
+      213: 3024601065610645325
+    second: fieryWisps_59
+  - first:
+      213: -480444063981208284
+    second: fieryWisps_60
+  - first:
+      213: -9181012580888042390
+    second: fieryWisps_61
+  - first:
+      213: -8664164802197649175
+    second: fieryWisps_62
+  - first:
+      213: -2401025356976758621
+    second: fieryWisps_63
+  - first:
+      213: 2404560579497001933
+    second: fieryWisps_64
+  - first:
+      213: -5449732512489654431
+    second: fieryWisps_65
+  - first:
+      213: 4925541017652329738
+    second: fieryWisps_66
+  - first:
+      213: -4131436096397077149
+    second: fieryWisps_67
+  - first:
+      213: 3058411790607420510
+    second: fieryWisps_68
+  - first:
+      213: -18409946883340128
+    second: fieryWisps_69
+  - first:
+      213: 2236162857980780533
+    second: fieryWisps_70
+  - first:
+      213: -4676142479572619509
+    second: fieryWisps_71
+  - first:
+      213: 3795911192182885359
+    second: fieryWisps_72
+  - first:
+      213: -2851123730565402513
+    second: fieryWisps_73
+  - first:
+      213: 2881226680408396548
+    second: fieryWisps_74
+  - first:
+      213: 1340689703875690938
+    second: fieryWisps_75
+  - first:
+      213: -1451047155972180499
+    second: fieryWisps_76
+  - first:
+      213: 4984755981614774789
+    second: fieryWisps_77
+  - first:
+      213: 1978631524850352132
+    second: fieryWisps_78
+  - first:
+      213: -3345971369112495025
+    second: fieryWisps_79
+  - first:
+      213: -1475601451885260440
+    second: fieryWisps_80
+  - first:
+      213: -286580880102808084
+    second: fieryWisps_81
+  - first:
+      213: 2699470857630221300
+    second: fieryWisps_82
+  - first:
+      213: -1810199558494516072
+    second: fieryWisps_83
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 500
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: fieryWisps_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 991
+        width: 33
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1eb0b86ced8148440800000000000000
+      internalID: 4937098436597713889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 935
+        width: 17
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd8c22f238e8e4d70800000000000000
+      internalID: 9029310997007091931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_2
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 0
+        width: 1017
+        height: 1024
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74f2dd0874416b200800000000000000
+      internalID: 195365931174408007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_3
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 965
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3727981db0cf55760800000000000000
+      internalID: 7446134686617268851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_4
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 1015
+        width: 36
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7e8a4fd4651e8ae0800000000000000
+      internalID: -1545274099154383235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_5
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 1015
+        width: 28
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0315bf8957591bb30800000000000000
+      internalID: 4301383451425853744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_6
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 983
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74f7a076fa85abf70800000000000000
+      internalID: 9203766298856292167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_7
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 967
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54c01013ddb98a890800000000000000
+      internalID: -7446530609544885179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_8
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 959
+        width: 73
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6a83819d24ae40b0800000000000000
+      internalID: -5742471959229003158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 847
+        width: 19
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50bbfcd088c6c7c00800000000000000
+      internalID: 899713357170326277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_10
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 898
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f45b774a8d7e11330800000000000000
+      internalID: 3679977288196666703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_11
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 911
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ce61171d8d546ac0800000000000000
+      internalID: -3862859719818252602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_12
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 877
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1c21e6d48dd55520800000000000000
+      internalID: 2690299915034242077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_13
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 890
+        width: 31
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f47a218a90a52a1a0800000000000000
+      internalID: -6799773489855027377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_14
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 898
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35e229242e52733e0800000000000000
+      internalID: -2074147449671111085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_15
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 879
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25784b7c3aae4c710800000000000000
+      internalID: 1712751747458697042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_16
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 877
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d38d8030bd4520e70800000000000000
+      internalID: 9079913098357823549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_17
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 111
+        width: 17
+        height: 735
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4a9c767041e8d300800000000000000
+      internalID: 277219044065319502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_18
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 818
+        width: 34
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ece90b10a0026fe0800000000000000
+      internalID: -1197393863278727962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_19
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 834
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c78ab797dcc5e5ab0800000000000000
+      internalID: -5017470897267955588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_20
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 751
+        width: 89
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 647be744bf0364560800000000000000
+      internalID: 7297574101944547142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_21
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 834
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cba3833e4f0038190800000000000000
+      internalID: -7961518664476771652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_22
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 823
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7dbae69c6a70d110800000000000000
+      internalID: 1283660500607614335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_23
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 767
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8abe7ea89c88ca330800000000000000
+      internalID: 3723501391128816552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_24
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 743
+        width: 42
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2aa4bf4396979730800000000000000
+      internalID: 4005835953010944558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_25
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 751
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7480c53a2838363d0800000000000000
+      internalID: -3214581111902697401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_26
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 733
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af3714cc9f7ba1610800000000000000
+      internalID: 1592787701730472954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_27
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 714
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93265bbedf82e1e70800000000000000
+      internalID: 9087746169126609465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_28
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 690
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69ebd547e039aa520800000000000000
+      internalID: 2714143415735271062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_29
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 679
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c8f3286e0b459640800000000000000
+      internalID: 5086053879433656513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_30
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 647
+        width: 66
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cba07a514fdd06090800000000000000
+      internalID: -8043184894078678340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_31
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 671
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 330476ac32e8e1740800000000000000
+      internalID: 5124689710364966963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_32
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 615
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9279955a1199efc0800000000000000
+      internalID: -3465078895993589092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_33
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 551
+        width: 59
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba74286b480bb5650800000000000000
+      internalID: 6222761394186635179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_34
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 599
+        width: 44
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ed9842f3223ae0d0800000000000000
+      internalID: -3392844239300157978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_35
+      rect:
+        serializedVersion: 2
+        x: 962
+        y: 615
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef37e81ddec7aec60800000000000000
+      internalID: 7848222661511377918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_36
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 607
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25fefbb39b217a470800000000000000
+      internalID: 8405707816291004242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_37
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 599
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b64e044cbae41d80800000000000000
+      internalID: -8280735720510961998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_38
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 551
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa7823a1f60cfca80800000000000000
+      internalID: -8444319192882968662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_39
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 535
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1c24a5e5cca79b60800000000000000
+      internalID: 7752855249502874650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_40
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 447
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7abee9383672f8090800000000000000
+      internalID: -8030156302214829145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_41
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 471
+        width: 28
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baeefdd4d19fbe9b0800000000000000
+      internalID: -5049668652909990229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_42
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 463
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c2e8bf0259356ca0800000000000000
+      internalID: -6024345901924293950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_43
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 453
+        width: 60
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adc95a111c5f4e630800000000000000
+      internalID: 3955556582311697626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_44
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 450
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0115b7beaa80993e0800000000000000
+      internalID: -2046595025474989808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_45
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 453
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dc58a1f958574aa0800000000000000
+      internalID: -6176871220585669416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_46
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 389
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7cf5da7473aeafe0800000000000000
+      internalID: -1175822732024742790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_47
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 389
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1d959a2d5efa7640800000000000000
+      internalID: 5078651205913517343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_48
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 375
+        width: 34
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1ae2681572245db0800000000000000
+      internalID: -4804177016181822948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_49
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 386
+        width: 23
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcea1289ed8dc6990800000000000000
+      internalID: -7391294437875142961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_50
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 375
+        width: 41
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea55d6eb0e433aed0800000000000000
+      internalID: -2404019636213557842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_51
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 335
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1bb601a48362be30800000000000000
+      internalID: 4517782797494434588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_52
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 314
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 914586f0750652550800000000000000
+      internalID: 6135415994399085593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_53
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 325
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6849220fdcc9bcfb0800000000000000
+      internalID: -4626431783882025850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_54
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 314
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27a495d46ef34cb60800000000000000
+      internalID: 7765401915866303090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_55
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 314
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18309b66a11507460800000000000000
+      internalID: 7237373775018787713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_56
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 319
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec10b7d8926e13650800000000000000
+      internalID: 6210998427262321102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_57
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 309
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 936448e14cc288bb0800000000000000
+      internalID: -4933644170947180999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_58
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 303
+        width: 18
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c316fc23ff9e86e40800000000000000
+      internalID: 5650023014814671164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_59
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 271
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4f8df6e4aa89f920800000000000000
+      internalID: 3024601065610645325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_60
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 261
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42d74f75bae1559f0800000000000000
+      internalID: -480444063981208284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_61
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 247
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a64a6c563bd769080800000000000000
+      internalID: -9181012580888042390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_62
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 255
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e801916404b2c780800000000000000
+      internalID: -8664164802197649175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_63
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 239
+        width: 20
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a0e1b4b828ddaed0800000000000000
+      internalID: -2401025356976758621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_64
+      rect:
+        serializedVersion: 2
+        x: 882
+        y: 239
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc383dd6b17be5120800000000000000
+      internalID: 2404560579497001933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_65
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 247
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16738206729ae54b0800000000000000
+      internalID: -5449732512489654431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_66
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 239
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0d78cb75790b5440800000000000000
+      internalID: 4925541017652329738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_67
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 229
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 365960672c03aa6c0800000000000000
+      internalID: -4131436096397077149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_68
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 186
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5c8504c159a17a20800000000000000
+      internalID: 3058411790607420510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_69
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 178
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a84fa730489ebff0800000000000000
+      internalID: -18409946883340128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_70
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 167
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ffddd98542780f10800000000000000
+      internalID: 2236162857980780533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_71
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 157
+        width: 34
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0fa5f9a0310b1fb0800000000000000
+      internalID: -4676142479572619509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_72
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 167
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: feb8df02e19cda430800000000000000
+      internalID: 3795911192182885359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_73
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 167
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6076fca216ce68d0800000000000000
+      internalID: -2851123730565402513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_74
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 7
+        width: 17
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 403de13866c2cf720800000000000000
+      internalID: 2881226680408396548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_75
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 95
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab1c881be261b9210800000000000000
+      internalID: 1340689703875690938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_76
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 87
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de5ffe3bc48dcdbe0800000000000000
+      internalID: -1451047155972180499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_77
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 87
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50af628a7296d2540800000000000000
+      internalID: 4984755981614774789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_78
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 87
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 400481c73e2857b10800000000000000
+      internalID: 1978631524850352132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_79
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 23
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4c1c6b74c8b091d0800000000000000
+      internalID: -3345971369112495025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_80
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 861145e2c4c958be0800000000000000
+      internalID: -1475601451885260440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_81
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 0
+        width: 263
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce5ad0a353cd50cf0800000000000000
+      internalID: -286580880102808084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_82
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 0
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f3819e4172767520800000000000000
+      internalID: 2699470857630221300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fieryWisps_83
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 0
+        width: 50
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89c8d57a711e0e6e0800000000000000
+      internalID: -1810199558494516072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      fieryWisps_0: 4937098436597713889
+      fieryWisps_1: 9029310997007091931
+      fieryWisps_10: 3679977288196666703
+      fieryWisps_11: -3862859719818252602
+      fieryWisps_12: 2690299915034242077
+      fieryWisps_13: -6799773489855027377
+      fieryWisps_14: -2074147449671111085
+      fieryWisps_15: 1712751747458697042
+      fieryWisps_16: 9079913098357823549
+      fieryWisps_17: 277219044065319502
+      fieryWisps_18: -1197393863278727962
+      fieryWisps_19: -5017470897267955588
+      fieryWisps_2: 195365931174408007
+      fieryWisps_20: 7297574101944547142
+      fieryWisps_21: -7961518664476771652
+      fieryWisps_22: 1283660500607614335
+      fieryWisps_23: 3723501391128816552
+      fieryWisps_24: 4005835953010944558
+      fieryWisps_25: -3214581111902697401
+      fieryWisps_26: 1592787701730472954
+      fieryWisps_27: 9087746169126609465
+      fieryWisps_28: 2714143415735271062
+      fieryWisps_29: 5086053879433656513
+      fieryWisps_3: 7446134686617268851
+      fieryWisps_30: -8043184894078678340
+      fieryWisps_31: 5124689710364966963
+      fieryWisps_32: -3465078895993589092
+      fieryWisps_33: 6222761394186635179
+      fieryWisps_34: -3392844239300157978
+      fieryWisps_35: 7848222661511377918
+      fieryWisps_36: 8405707816291004242
+      fieryWisps_37: -8280735720510961998
+      fieryWisps_38: -8444319192882968662
+      fieryWisps_39: 7752855249502874650
+      fieryWisps_4: -1545274099154383235
+      fieryWisps_40: -8030156302214829145
+      fieryWisps_41: -5049668652909990229
+      fieryWisps_42: -6024345901924293950
+      fieryWisps_43: 3955556582311697626
+      fieryWisps_44: -2046595025474989808
+      fieryWisps_45: -6176871220585669416
+      fieryWisps_46: -1175822732024742790
+      fieryWisps_47: 5078651205913517343
+      fieryWisps_48: -4804177016181822948
+      fieryWisps_49: -7391294437875142961
+      fieryWisps_5: 4301383451425853744
+      fieryWisps_50: -2404019636213557842
+      fieryWisps_51: 4517782797494434588
+      fieryWisps_52: 6135415994399085593
+      fieryWisps_53: -4626431783882025850
+      fieryWisps_54: 7765401915866303090
+      fieryWisps_55: 7237373775018787713
+      fieryWisps_56: 6210998427262321102
+      fieryWisps_57: -4933644170947180999
+      fieryWisps_58: 5650023014814671164
+      fieryWisps_59: 3024601065610645325
+      fieryWisps_6: 9203766298856292167
+      fieryWisps_60: -480444063981208284
+      fieryWisps_61: -9181012580888042390
+      fieryWisps_62: -8664164802197649175
+      fieryWisps_63: -2401025356976758621
+      fieryWisps_64: 2404560579497001933
+      fieryWisps_65: -5449732512489654431
+      fieryWisps_66: 4925541017652329738
+      fieryWisps_67: -4131436096397077149
+      fieryWisps_68: 3058411790607420510
+      fieryWisps_69: -18409946883340128
+      fieryWisps_7: -7446530609544885179
+      fieryWisps_70: 2236162857980780533
+      fieryWisps_71: -4676142479572619509
+      fieryWisps_72: 3795911192182885359
+      fieryWisps_73: -2851123730565402513
+      fieryWisps_74: 2881226680408396548
+      fieryWisps_75: 1340689703875690938
+      fieryWisps_76: -1451047155972180499
+      fieryWisps_77: 4984755981614774789
+      fieryWisps_78: 1978631524850352132
+      fieryWisps_79: -3345971369112495025
+      fieryWisps_8: -5742471959229003158
+      fieryWisps_80: -1475601451885260440
+      fieryWisps_81: -286580880102808084
+      fieryWisps_82: 2699470857630221300
+      fieryWisps_83: -1810199558494516072
+      fieryWisps_9: 899713357170326277
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

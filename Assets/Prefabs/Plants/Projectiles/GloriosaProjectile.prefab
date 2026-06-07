@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4311319333377526007}
   - component: {fileID: 5323638503433831762}
   - component: {fileID: 549939264595078635}
-  - component: {fileID: -8227268841667839266}
+  - component: {fileID: 7061426088972956490}
   m_Layer: 3
-  m_Name: SunflowerProjectile
+  m_Name: GloriosaProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -6959759918091255618, guid: a64e29a2735a8f946ba8ee25fe35fbd4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b551e307545890c49978fe086aa8ea7e, type: 3}
   m_Color: {r: 0.9622642, g: 0.94492316, b: 0.24964403, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -129,7 +129,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.21133332}
   m_Radius: 0.49999997
---- !u!114 &-8227268841667839266
+--- !u!114 &7061426088972956490
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,17 +138,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7388594979766616069}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c90b93d025f649b5b4f02d815f96c8e, type: 3}
+  m_Script: {fileID: 11500000, guid: 645c39225bae1ea498cca6c11e5ba653, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SunflowerProjectile
-  audioSource: {fileID: 0}
-  hit: {fileID: 0}
-  minPitch: 0.9
-  maxPitch: 1.1
-  projectileDamage: 0
-  projectileSpeed: 0
-  maxRange: 0
-  piercing: 0
-  damageType: 0
-  elementalType: 0
-  source: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::EmberProjectile

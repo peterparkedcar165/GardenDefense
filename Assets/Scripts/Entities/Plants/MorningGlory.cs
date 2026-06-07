@@ -9,6 +9,9 @@ public class MorningGlory : Shooter
     private const float auraTickInterval = 0.25f;
     private const float auraEffectDuration = 0.35f;
 
+    private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
+    private static readonly Color HighlightColor = new Color(0f, 0.8f, 0.8f);
+
     private MorningGloryData MGData => data as MorningGloryData;
 
     private float AttackSpeedBonusBase => (MGData?.baseAttackSpeedBonus ?? 0.15f) + (MGData?.path2AttackSpeedBonusPerLevel ?? 0.03f) * effectivePath2Level;
@@ -41,6 +44,39 @@ public class MorningGlory : Shooter
     {
         base.Update();
         UpdateAura();
+        UpdateHighlights();
+    }
+
+    private void UpdateHighlights()
+    {
+        bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
+        var desired = new HashSet<Plant>();
+
+        if (isSelected)
+        {
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == null) continue;
+                if (Vector2.Distance(transform.position, plant.transform.position) <= attackRange)
+                    desired.Add(plant);
+            }
+        }
+
+        foreach (Plant p in _highlightedPlants)
+            if (p != null && !desired.Contains(p)) p.ClearHighlight();
+        foreach (Plant p in desired)
+            p.SetHighlight(HighlightColor);
+
+        _highlightedPlants.Clear();
+        foreach (Plant p in desired)
+            _highlightedPlants.Add(p);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        foreach (Plant p in _highlightedPlants)
+            if (p != null) p.ClearHighlight();
     }
 
     private void UpdateAura()

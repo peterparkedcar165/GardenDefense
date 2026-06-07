@@ -55,6 +55,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseMinionDamage: 0
   baseProjectileSpeed: 3
   baseMaxRange: 20
   basePiercing: 0
@@ -65,18 +66,21 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 90
   baseSkillDuration: 1
+  channelDuration: 0
   baseSkillRadius: 2
   baseSkillDamageMultiplier: 0.95
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseOpenDuration: 6
+  baseClosedHeal: 140
   baseSunGenerated: 2
   baseKnockUpHeight: 3.5
   baseGeyserDamage: 105
   path1AttackDamagePerLevel: 8
   path2OpenDurationPerLevel: 2
   path2SunPerLevel: 2
+  path2ClosedHealPerLevel: 20
   path3GeyserDamagePerLevel: 15
   path3KnockUpPerLevel: 1
   path3GeyserRadiusPerLevel: 0.15

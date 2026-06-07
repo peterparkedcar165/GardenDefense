@@ -78,6 +78,7 @@ public class RegenerativeGlowEffect : RegenerationEffect
         _light.falloffIntensity      = 0.5f;
         _light.pointLightOuterRadius = _glowRadius;
         _light.pointLightInnerRadius = _glowRadius * 0.3f;
+        _light.enabled               = DarknessManager.instance != null && DarknessManager.instance.isDark;
 
         DarknessManager.RegisterLightSource(lightObj.transform, _glowRadius);
     }

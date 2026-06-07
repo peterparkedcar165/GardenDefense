@@ -18,7 +18,7 @@ public class RegenerationEffect : StatusEffect
 
     public override void OnApply()
     {
-        StatusIndicator.Spawn(target.transform.position + new Vector3(-0.4f, 0f, 0f), "Regen", new Color(0.4f, 1f, 0.4f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(-0.4f, 0f, 0f), "Regeneration", new Color(0.4f, 1f, 0.4f));
     }
 
     public override void OnTick(float deltaTime)

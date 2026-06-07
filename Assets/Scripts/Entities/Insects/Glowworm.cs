@@ -38,6 +38,7 @@ public class Glowworm : Insect
             _light.pointLightOuterRadius = GData?.glowRadius    ?? 2f;
             _light.pointLightInnerRadius = (GData?.glowRadius   ?? 2f) * 0.3f;
             _light.intensity             = GData?.glowIntensity ?? 0.8f;
+            _light.enabled               = DarknessManager.instance != null && DarknessManager.instance.isDark;
         }
     }
 
