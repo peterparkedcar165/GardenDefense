@@ -190,11 +190,13 @@
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SilenceEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\NeriumOleanderData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Hellebore.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Gloriosa.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\NeriumOleander.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\HelleboreData.cs" />
     <Compile Include="Assets\Scripts\Skills\GhostHypnosisWave.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Minion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlossomingEffect.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="Assets\Scripts\LevelSelector\InsectPreviewSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlessingOfTheSunEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\HelleboreProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\JumpingSpider.cs" />
     <Compile Include="Assets\Scripts\GridManagers\NighttimeGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
@@ -228,6 +231,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\CattailData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\TaintedEffect.cs" />
     <Compile Include="Assets\Scripts\Game\SettingsManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HelleboreProtectionEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\WaterlilyProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Termite.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Scorpion.cs" />
@@ -258,6 +262,7 @@
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\HealIndicator.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aeonium.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HelleboreAuraEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleMarker.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OffPathSlownessEffect.cs" />

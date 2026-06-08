@@ -38,7 +38,8 @@ public class StatusEffect
     public virtual void OnTick(float deltaTime) {}
     public virtual void OnExpire() {}
     public virtual void OnTargetDied() {}
-    public virtual void OnDamageReceived(ElementalType elementalType, Entity damageSource) {}
+    public virtual void OnDamageReceived(ElementalType elementalType, Entity damageSource, DamageTag[] damageTags = null) {}
+    public virtual bool TryBlockNegativeEffect(StatusEffect incoming) => false;
 
     public bool IsExpired()
     {

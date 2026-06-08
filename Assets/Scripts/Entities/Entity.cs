@@ -249,7 +249,7 @@ public abstract class Entity : MonoBehaviour
         TriggerHitFlash();
         UpdateHealthBar();
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
-            e.OnDamageReceived(elementalType, null);
+            e.OnDamageReceived(elementalType, null, damageTag);
 
         if (health <= 0)
         {
@@ -454,7 +454,7 @@ public abstract class Entity : MonoBehaviour
 
         UpdateHealthBar();
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
-            e.OnDamageReceived(elementalType, source);
+            e.OnDamageReceived(elementalType, source, damageTag);
 
         if (health <= 0)
         {
@@ -810,6 +810,13 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
+        // Hellebore Protection intercept: negative effects aimed at a shielded entity can be reflected
+        if (effect.effectType == StatusEffect.Type.negative)
+        {
+            foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
+                if (e.TryBlockNegativeEffect(effect)) return;
+        }
+
         // OleandicToxin intercept: positive effects applied to a toxin-afflicted entity are captured and blocked
         if (effect.effectType == StatusEffect.Type.positive)
         {

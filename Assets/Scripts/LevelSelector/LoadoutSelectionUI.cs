@@ -281,6 +281,11 @@ public class LoadoutSelectionUI : MonoBehaviour
         };
     }
 
+    public void ResetUnlockedScroll()
+    {
+        ((RectTransform)unlockedContainer).anchoredPosition = Vector2.zero;
+    }
+
     private void HideTooltip()
     {
         if (tooltipPanel != null) tooltipPanel.SetActive(false);

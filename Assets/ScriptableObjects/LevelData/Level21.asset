@@ -74,29 +74,25 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   insects:
-  - data: {fileID: 11400000, guid: 2d3f91fb7c002c34598abe68a6b4dfd3, type: 2}
+  - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+    unlockWave: 0
+    budgetWeight: 0.4
+    startDelay: 0
+  - data: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
     unlockWave: 0
     budgetWeight: 0.3
-    startDelay: 3
+    startDelay: 8
   - data: {fileID: 11400000, guid: 7f773353e0b72144baed277302b74c2e, type: 2}
     unlockWave: 2
     budgetWeight: 0.3
     startDelay: 3
-  - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
-    unlockWave: 2
-    budgetWeight: 0.4
-    startDelay: 0
-  - data: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
-    unlockWave: 2
-    budgetWeight: 0.3
-    startDelay: 8
   - data: {fileID: 11400000, guid: dcc2e67738ed22141b2d77881202ac4a, type: 2}
     unlockWave: 3
     budgetWeight: 0.4
     startDelay: 3
   - data: {fileID: 11400000, guid: 7132e106d084b3b458852756b3be085a, type: 2}
     unlockWave: 4
-    budgetWeight: 0.3
+    budgetWeight: 0.137
     startDelay: 3
   - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
     unlockWave: 4

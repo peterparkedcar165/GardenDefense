@@ -1,0 +1,3861 @@
+fileFormatVersion: 2
+guid: dd02f7a96d231f74fb20a342701a2711
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2840389734665995668
+    second: hellebore_projectile_0
+  - first:
+      213: 5101468479248019387
+    second: hellebore_projectile_1
+  - first:
+      213: 1460540671080330528
+    second: hellebore_projectile_2
+  - first:
+      213: -3625453237881995039
+    second: hellebore_projectile_3
+  - first:
+      213: 6178802599711221192
+    second: hellebore_projectile_4
+  - first:
+      213: 4201684112149912907
+    second: hellebore_projectile_5
+  - first:
+      213: 7891808118810441618
+    second: hellebore_projectile_6
+  - first:
+      213: 5649133674945875318
+    second: hellebore_projectile_7
+  - first:
+      213: -2167610139226970178
+    second: hellebore_projectile_8
+  - first:
+      213: -7685419439678737867
+    second: hellebore_projectile_9
+  - first:
+      213: -6658894588514881456
+    second: hellebore_projectile_10
+  - first:
+      213: -5904412019330935615
+    second: hellebore_projectile_11
+  - first:
+      213: 1465359733031991209
+    second: hellebore_projectile_12
+  - first:
+      213: -8099076927747858235
+    second: hellebore_projectile_13
+  - first:
+      213: -2225453203415717646
+    second: hellebore_projectile_14
+  - first:
+      213: 2462356446564088131
+    second: hellebore_projectile_15
+  - first:
+      213: 1707777902997106425
+    second: hellebore_projectile_16
+  - first:
+      213: 878386169868968802
+    second: hellebore_projectile_17
+  - first:
+      213: 4918043923064234901
+    second: hellebore_projectile_18
+  - first:
+      213: 3813496140268625504
+    second: hellebore_projectile_19
+  - first:
+      213: -6868225900271771194
+    second: hellebore_projectile_20
+  - first:
+      213: 8905986745178782451
+    second: hellebore_projectile_21
+  - first:
+      213: -1418567401222669781
+    second: hellebore_projectile_22
+  - first:
+      213: -1968265012957928682
+    second: hellebore_projectile_23
+  - first:
+      213: -7891687083579015037
+    second: hellebore_projectile_24
+  - first:
+      213: -3843815427493794760
+    second: hellebore_projectile_25
+  - first:
+      213: -3235139549871777482
+    second: hellebore_projectile_26
+  - first:
+      213: 7963055171941203282
+    second: hellebore_projectile_27
+  - first:
+      213: 7447233979161194362
+    second: hellebore_projectile_28
+  - first:
+      213: -3313810224506376350
+    second: hellebore_projectile_29
+  - first:
+      213: -3653296652437044947
+    second: hellebore_projectile_30
+  - first:
+      213: -3307874568560024373
+    second: hellebore_projectile_31
+  - first:
+      213: -3367415694086046097
+    second: hellebore_projectile_32
+  - first:
+      213: 3352891692167110801
+    second: hellebore_projectile_33
+  - first:
+      213: -8353175254202172676
+    second: hellebore_projectile_34
+  - first:
+      213: -6969932878363099084
+    second: hellebore_projectile_35
+  - first:
+      213: 1913546676878463818
+    second: hellebore_projectile_36
+  - first:
+      213: 7112679148012413367
+    second: hellebore_projectile_37
+  - first:
+      213: 7265708746546096625
+    second: hellebore_projectile_38
+  - first:
+      213: 4548303035337150565
+    second: hellebore_projectile_39
+  - first:
+      213: 2066369968201069492
+    second: hellebore_projectile_40
+  - first:
+      213: 641867829195204540
+    second: hellebore_projectile_41
+  - first:
+      213: -4395423883953835318
+    second: hellebore_projectile_42
+  - first:
+      213: 5814445008932249904
+    second: hellebore_projectile_43
+  - first:
+      213: 4953996313775267678
+    second: hellebore_projectile_44
+  - first:
+      213: 4872224690251158495
+    second: hellebore_projectile_45
+  - first:
+      213: -3229734926506553092
+    second: hellebore_projectile_46
+  - first:
+      213: 8856493149848111416
+    second: hellebore_projectile_47
+  - first:
+      213: -5724645211420965242
+    second: hellebore_projectile_48
+  - first:
+      213: -6299127721185407344
+    second: hellebore_projectile_49
+  - first:
+      213: -2116911338351278391
+    second: hellebore_projectile_50
+  - first:
+      213: -8383110712013790935
+    second: hellebore_projectile_51
+  - first:
+      213: 5000109500325616843
+    second: hellebore_projectile_52
+  - first:
+      213: 6611285702784925526
+    second: hellebore_projectile_53
+  - first:
+      213: 2056108035719796428
+    second: hellebore_projectile_54
+  - first:
+      213: -5265449287812107153
+    second: hellebore_projectile_55
+  - first:
+      213: 3426045326642608828
+    second: hellebore_projectile_56
+  - first:
+      213: 8682244823369572621
+    second: hellebore_projectile_57
+  - first:
+      213: -4499645120737111911
+    second: hellebore_projectile_58
+  - first:
+      213: 7851428822239192837
+    second: hellebore_projectile_59
+  - first:
+      213: -1238735367117476232
+    second: hellebore_projectile_60
+  - first:
+      213: 7952236438429011057
+    second: hellebore_projectile_61
+  - first:
+      213: 3056041170179805245
+    second: hellebore_projectile_62
+  - first:
+      213: -8047787963054951386
+    second: hellebore_projectile_63
+  - first:
+      213: 1150052170886285496
+    second: hellebore_projectile_64
+  - first:
+      213: 1352210672054274684
+    second: hellebore_projectile_65
+  - first:
+      213: -6871405824660665770
+    second: hellebore_projectile_66
+  - first:
+      213: 6534934436698910243
+    second: hellebore_projectile_67
+  - first:
+      213: -976004324912663889
+    second: hellebore_projectile_68
+  - first:
+      213: 5609502059311919607
+    second: hellebore_projectile_69
+  - first:
+      213: -5152209018588314235
+    second: hellebore_projectile_70
+  - first:
+      213: -8754507251473319293
+    second: hellebore_projectile_71
+  - first:
+      213: 6395371587368826777
+    second: hellebore_projectile_72
+  - first:
+      213: -6210250393963549084
+    second: hellebore_projectile_73
+  - first:
+      213: -4270484595332018955
+    second: hellebore_projectile_74
+  - first:
+      213: 7133238667863975835
+    second: hellebore_projectile_75
+  - first:
+      213: -1272120213816549101
+    second: hellebore_projectile_76
+  - first:
+      213: -2723080919046991235
+    second: hellebore_projectile_77
+  - first:
+      213: -4834354490292072658
+    second: hellebore_projectile_78
+  - first:
+      213: -2778876110341908777
+    second: hellebore_projectile_79
+  - first:
+      213: -3929622652325926300
+    second: hellebore_projectile_80
+  - first:
+      213: -1981635403017865965
+    second: hellebore_projectile_81
+  - first:
+      213: -7930680791131740493
+    second: hellebore_projectile_82
+  - first:
+      213: -2138445942632221650
+    second: hellebore_projectile_83
+  - first:
+      213: -5318218880438779653
+    second: hellebore_projectile_84
+  - first:
+      213: -5879677390428666742
+    second: hellebore_projectile_85
+  - first:
+      213: 4964358667983822380
+    second: hellebore_projectile_86
+  - first:
+      213: 3496196775375399925
+    second: hellebore_projectile_87
+  - first:
+      213: 3761957387698345734
+    second: hellebore_projectile_88
+  - first:
+      213: -3999258394384762511
+    second: hellebore_projectile_89
+  - first:
+      213: -2844663814729675783
+    second: hellebore_projectile_90
+  - first:
+      213: -2441097829241417287
+    second: hellebore_projectile_91
+  - first:
+      213: -3056054610214044595
+    second: hellebore_projectile_92
+  - first:
+      213: 5572702089689710712
+    second: hellebore_projectile_93
+  - first:
+      213: 2143629867028605459
+    second: hellebore_projectile_94
+  - first:
+      213: 6985656994380459849
+    second: hellebore_projectile_95
+  - first:
+      213: 8263967061380681913
+    second: hellebore_projectile_96
+  - first:
+      213: -4577242410389908783
+    second: hellebore_projectile_97
+  - first:
+      213: 1111460723990420665
+    second: hellebore_projectile_98
+  - first:
+      213: -8428834160811344303
+    second: hellebore_projectile_99
+  - first:
+      213: -7804912434799696278
+    second: hellebore_projectile_100
+  - first:
+      213: 6525654593114409641
+    second: hellebore_projectile_101
+  - first:
+      213: 580929423402576456
+    second: hellebore_projectile_102
+  - first:
+      213: -8852887067631959213
+    second: hellebore_projectile_103
+  - first:
+      213: 5181570358218921891
+    second: hellebore_projectile_104
+  - first:
+      213: -3099838186489754145
+    second: hellebore_projectile_105
+  - first:
+      213: -6439080929121372701
+    second: hellebore_projectile_106
+  - first:
+      213: 7285540638585366965
+    second: hellebore_projectile_107
+  - first:
+      213: -6778572630171772137
+    second: hellebore_projectile_108
+  - first:
+      213: 4207314181015685330
+    second: hellebore_projectile_109
+  - first:
+      213: -1961053581098560627
+    second: hellebore_projectile_110
+  - first:
+      213: 3704157337584494790
+    second: hellebore_projectile_111
+  - first:
+      213: -7235005231631161481
+    second: hellebore_projectile_112
+  - first:
+      213: -214103534796562726
+    second: hellebore_projectile_113
+  - first:
+      213: -1209098520068461167
+    second: hellebore_projectile_114
+  - first:
+      213: -6488639187255158273
+    second: hellebore_projectile_115
+  - first:
+      213: -4801368021457444372
+    second: hellebore_projectile_116
+  - first:
+      213: -4887946119958876394
+    second: hellebore_projectile_117
+  - first:
+      213: -2425529167993551431
+    second: hellebore_projectile_118
+  - first:
+      213: 1567149182145990578
+    second: hellebore_projectile_119
+  - first:
+      213: 3547950712053949047
+    second: hellebore_projectile_120
+  - first:
+      213: -7738454562248188017
+    second: hellebore_projectile_121
+  - first:
+      213: -3826712229608083326
+    second: hellebore_projectile_122
+  - first:
+      213: -390800181782634124
+    second: hellebore_projectile_123
+  - first:
+      213: -364707756794112349
+    second: hellebore_projectile_124
+  - first:
+      213: -6686492745202086705
+    second: hellebore_projectile_125
+  - first:
+      213: -3611390591106556991
+    second: hellebore_projectile_126
+  - first:
+      213: -7375554019683445711
+    second: hellebore_projectile_127
+  - first:
+      213: -6991560445597134773
+    second: hellebore_projectile_128
+  - first:
+      213: -4083201322801414815
+    second: hellebore_projectile_129
+  - first:
+      213: -5622349104339142152
+    second: hellebore_projectile_130
+  - first:
+      213: -7532390973464558987
+    second: hellebore_projectile_131
+  - first:
+      213: -7417700008869548562
+    second: hellebore_projectile_132
+  - first:
+      213: -7439796186883814490
+    second: hellebore_projectile_133
+  - first:
+      213: 1416933159414694452
+    second: hellebore_projectile_134
+  - first:
+      213: -1192035416771615772
+    second: hellebore_projectile_135
+  - first:
+      213: -7627430031070517130
+    second: hellebore_projectile_136
+  - first:
+      213: 2722174702915369325
+    second: hellebore_projectile_137
+  - first:
+      213: 7772629717736229450
+    second: hellebore_projectile_138
+  - first:
+      213: -5597001251922685640
+    second: hellebore_projectile_139
+  - first:
+      213: 3837222779129555576
+    second: hellebore_projectile_140
+  - first:
+      213: 2420870132411142293
+    second: hellebore_projectile_141
+  - first:
+      213: 2107072315093873021
+    second: hellebore_projectile_142
+  - first:
+      213: -6917130716850945219
+    second: hellebore_projectile_143
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 2400
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: hellebore_projectile_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 959
+        width: 83
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 495ce662a671b6720800000000000000
+      internalID: 2840389734665995668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1007
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbf2e6a9d8e0cc640800000000000000
+      internalID: 5101468479248019387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_2
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 965
+        width: 66
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 025f0c78002e44410800000000000000
+      internalID: 1460540671080330528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_3
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 957
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e001461d7dcfadc0800000000000000
+      internalID: -3625453237881995039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_4
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 951
+        width: 226
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c52c0d4a348fb550800000000000000
+      internalID: 6178802599711221192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_5
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 973
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4d191340716f4a30800000000000000
+      internalID: 4201684112149912907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_6
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 983
+        width: 76
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2977d35eba5558d60800000000000000
+      internalID: 7891808118810441618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_7
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 959
+        width: 28
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67d88df9521c56e40800000000000000
+      internalID: 5649133674945875318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_8
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 957
+        width: 98
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb767d7101a1be1e0800000000000000
+      internalID: -2167610139226970178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_9
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 975
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 532311c1db7e75590800000000000000
+      internalID: -7685419439678737867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_10
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 935
+        width: 196
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 050bccee6aad693a0800000000000000
+      internalID: -6658894588514881456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_11
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 973
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c49b342d805f0ea0800000000000000
+      internalID: -5904412019330935615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_12
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 967
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a77883d9e0065410800000000000000
+      internalID: 1465359733031991209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_13
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 959
+        width: 73
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c0e609e17c4a9f80800000000000000
+      internalID: -8099076927747858235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 887
+        width: 35
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f8a62a3a1a9d11e0800000000000000
+      internalID: -2225453203415717646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_15
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 0
+        width: 866
+        height: 937
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34978db542c0c2220800000000000000
+      internalID: 2462356446564088131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_16
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 821
+        width: 106
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fe676f54fe33b710800000000000000
+      internalID: 1707777902997106425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_17
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 911
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 263e7ae4197a03c00800000000000000
+      internalID: 878386169868968802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_18
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 911
+        width: 23
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 593230024e6604440800000000000000
+      internalID: 4918043923064234901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_19
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 919
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06ed809e8824ce430800000000000000
+      internalID: 3813496140268625504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_20
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 911
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c1e921eee82fa0a0800000000000000
+      internalID: -6868225900271771194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_21
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 877
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3faf7b042cb689b70800000000000000
+      internalID: 8905986745178782451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_22
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 901
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2a7c28e67c305ce0800000000000000
+      internalID: -1418567401222669781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_23
+      rect:
+        serializedVersion: 2
+        x: 818
+        y: 911
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61320d626615fa4e0800000000000000
+      internalID: -1968265012957928682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_24
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 871
+        width: 47
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3800cb0d8681b7290800000000000000
+      internalID: -7891687083579015037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_25
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 898
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83ce01eeb3608aac0800000000000000
+      internalID: -3843815427493794760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 743
+        width: 17
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 639531b48b97a13d0800000000000000
+      internalID: -3235139549871777482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_27
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 877
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25d74622d74728e60800000000000000
+      internalID: 7963055171941203282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_28
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 845
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7f2f1fc8d3e95760800000000000000
+      internalID: 7447233979161194362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_29
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 807
+        width: 52
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26f6d3b782bf202d0800000000000000
+      internalID: -3313810224506376350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_30
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 834
+        width: 42
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d21cd54fc02ec4dc0800000000000000
+      internalID: -3653296652437044947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_31
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 733
+        width: 89
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc46e631b911812d0800000000000000
+      internalID: -3307874568560024373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_32
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 834
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6efcee74498441d0800000000000000
+      internalID: -3367415694086046097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_33
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 821
+        width: 26
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 190aaf9ca3dd78e20800000000000000
+      internalID: 3352891692167110801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_34
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 823
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfa32b20d5f831c80800000000000000
+      internalID: -8353175254202172676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_35
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 751
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4300ad4b9f2d54f90800000000000000
+      internalID: -6969932878363099084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_36
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 767
+        width: 20
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a43587070984e8a10800000000000000
+      internalID: 1913546676878463818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_37
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 757
+        width: 36
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b1ab92200055b260800000000000000
+      internalID: 7112679148012413367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_38
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 762
+        width: 42
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f9245f0c9bf4d460800000000000000
+      internalID: 7265708746546096625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_39
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 743
+        width: 47
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5601a104381de1f30800000000000000
+      internalID: 4548303035337150565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_40
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 733
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b3f829b9883dac10800000000000000
+      internalID: 2066369968201069492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_41
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 639
+        width: 17
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb76eefc36f58e800800000000000000
+      internalID: 641867829195204540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_42
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 714
+        width: 18
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac2f9a7f3415003c0800000000000000
+      internalID: -4395423883953835318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_43
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 647
+        width: 66
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 031237bedee01b050800000000000000
+      internalID: 5814445008932249904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_44
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 671
+        width: 42
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5f5b25666120c440800000000000000
+      internalID: 4953996313775267678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_45
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 663
+        width: 23
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd3de48aa8e9d9340800000000000000
+      internalID: 4872224690251158495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_46
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 671
+        width: 42
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf097ea323dad23d0800000000000000
+      internalID: -3229734926506553092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_47
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 637
+        width: 106
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8398068989598ea70800000000000000
+      internalID: 8856493149848111416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 607
+        width: 11
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 686cc1cb289fd80b0800000000000000
+      internalID: -5724645211420965242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_49
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 583
+        width: 73
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09e8de736b00598a0800000000000000
+      internalID: -6299127721185407344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_50
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 615
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c643988a583f92e0800000000000000
+      internalID: -2116911338351278391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_51
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 589
+        width: 42
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92165a9193539ab80800000000000000
+      internalID: -8383110712013790935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_52
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 599
+        width: 44
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bccd6fc4915f36540800000000000000
+      internalID: 5000109500325616843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_53
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 615
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65f3d1f815100cb50800000000000000
+      internalID: 6611285702784925526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_54
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 607
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc697e06d53c88c10800000000000000
+      internalID: 2056108035719796428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_55
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 583
+        width: 20
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f64302135cd5de6b0800000000000000
+      internalID: -5265449287812107153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 399
+        width: 49
+        height: 183
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cba7be69212cb8f20800000000000000
+      internalID: 3426045326642608828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_57
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 527
+        width: 52
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d01eae59aa78d7870800000000000000
+      internalID: 8682244823369572621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_58
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 511
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99015235a9c0e81c0800000000000000
+      internalID: -4499645120737111911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_59
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 535
+        width: 34
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 507a4d84ae0e5fc60800000000000000
+      internalID: 7851428822239192837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_60
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 543
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87eef382fb02fcee0800000000000000
+      internalID: -1238735367117476232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_61
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 527
+        width: 18
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17c8a7278e40c5e60800000000000000
+      internalID: 7952236438429011057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_62
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 517
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d30598fa04d396a20800000000000000
+      internalID: 3056041170179805245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_63
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 525
+        width: 52
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 624f1729c73805090800000000000000
+      internalID: -8047787963054951386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_64
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 447
+        width: 44
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b808de2b5ec5ff00800000000000000
+      internalID: 1150052170886285496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_65
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 415
+        width: 58
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7a8941217404c210800000000000000
+      internalID: 1352210672054274684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_66
+      rect:
+        serializedVersion: 2
+        x: 839
+        y: 479
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65a0d890fccd3a0a0800000000000000
+      internalID: -6871405824660665770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_67
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 471
+        width: 28
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32ee7e12f30c0ba50800000000000000
+      internalID: 6534934436698910243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_68
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 453
+        width: 62
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa2f552dc398472f0800000000000000
+      internalID: -976004324912663889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_69
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 471
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f1fb1c0764f8dd40800000000000000
+      internalID: 5609502059311919607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_70
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 461
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 585ca76f13daf78b0800000000000000
+      internalID: -5152209018588314235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_71
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 463
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38af954c90eb18680800000000000000
+      internalID: -8754507251473319293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_72
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 458
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 997beb7139ce0c850800000000000000
+      internalID: 6395371587368826777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_73
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 453
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46ea2958b22c0d9a0800000000000000
+      internalID: -6210250393963549084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_74
+      rect:
+        serializedVersion: 2
+        x: 861
+        y: 442
+        width: 28
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fc0574f2e03cb4c0800000000000000
+      internalID: -4270484595332018955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_75
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 301
+        width: 33
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b97ec1066ca5ef260800000000000000
+      internalID: 7133238667863975835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_76
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 381
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 311eedfc765885ee0800000000000000
+      internalID: -1272120213816549101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_77
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 373
+        width: 50
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d725f85e45ca53ad0800000000000000
+      internalID: -2723080919046991235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_78
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 343
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2f83df543ce8ecb0800000000000000
+      internalID: -4834354490292072658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_79
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 365
+        width: 42
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d6504896e27f69d0800000000000000
+      internalID: -2778876110341908777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_80
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 383
+        width: 47
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46ae8ca840d2779c0800000000000000
+      internalID: -3929622652325926300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_81
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 351
+        width: 89
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31538c0a911df74e0800000000000000
+      internalID: -1981635403017865965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_82
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 295
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b62499c6df80f190800000000000000
+      internalID: -7930680791131740493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_83
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 325
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e24f702ceb6b252e0800000000000000
+      internalID: -2138445942632221650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_84
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 322
+        width: 18
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf0cba9fa14e136b0800000000000000
+      internalID: -5318218880438779653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_85
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 309
+        width: 26
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a848a95b090376ea0800000000000000
+      internalID: -5879677390428666742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_86
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 327
+        width: 26
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2e9ecef7e1f4e440800000000000000
+      internalID: 4964358667983822380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_87
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 314
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fbed1d817cf48030800000000000000
+      internalID: 3496196775375399925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_88
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 319
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6079ae9ff48253430800000000000000
+      internalID: 3761957387698345734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_89
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 309
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17972b5eda7cf78c0800000000000000
+      internalID: -3999258394384762511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_90
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 279
+        width: 36
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fb41a90559b588d0800000000000000
+      internalID: -2844663814729675783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_91
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 314
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b19612357a7f1ed0800000000000000
+      internalID: -2441097829241417287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_92
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 309
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4c3fff0686b695d0800000000000000
+      internalID: -3056054610214044595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_93
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 191
+        width: 17
+        height: 111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 870480f6607365d40800000000000000
+      internalID: 5572702089689710712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_94
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 295
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31a6822b104bfbd10800000000000000
+      internalID: 2143629867028605459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_95
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 255
+        width: 12
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94f25c8560a02f060800000000000000
+      internalID: 6985656994380459849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_96
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 271
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b0df1902428fa270800000000000000
+      internalID: 8263967061380681913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_97
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 261
+        width: 26
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d25bdd674e5a70c0800000000000000
+      internalID: -4577242410389908783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_98
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 231
+        width: 46
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bc5f33c3a3bc6f00800000000000000
+      internalID: 1111460723990420665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_99
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 215
+        width: 44
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15e79261df3c60b80800000000000000
+      internalID: -8428834160811344303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_100
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 250
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a662cb42e716fa390800000000000000
+      internalID: -7804912434799696278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_101
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 239
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aa0b7d2748cf8a50800000000000000
+      internalID: 6525654593114409641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_102
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 199
+        width: 26
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84aab719b30ef0800800000000000000
+      internalID: 580929423402576456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_103
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 239
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 353c529dd1a342580800000000000000
+      internalID: -8852887067631959213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_104
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 229
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a71554a9c2a8e740800000000000000
+      internalID: 5181570358218921891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_105
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 25
+        height: 190
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdd4611d7992bf4d0800000000000000
+      internalID: -3099838186489754145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_106
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 178
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e57abbb20ac3a6a0800000000000000
+      internalID: -6439080929121372701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_107
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 159
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b9ad8f3c907b1560800000000000000
+      internalID: 7285540638585366965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_108
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 149
+        width: 58
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71b1d667b1cade1a0800000000000000
+      internalID: -6778572630171772137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_109
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 183
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d847e1d4f1636a30800000000000000
+      internalID: 4207314181015685330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_110
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 175
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d83dc197820f8c4e0800000000000000
+      internalID: -1961053581098560627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_111
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 159
+        width: 34
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c861ea197fc76330800000000000000
+      internalID: 3704157337584494790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_112
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 175
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77728841319189b90800000000000000
+      internalID: -7235005231631161481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_113
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 167
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ade9b4f28f9570df0800000000000000
+      internalID: -214103534796562726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_114
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 114
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19d6ed45d4b683fe0800000000000000
+      internalID: -1209098520068461167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_115
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 127
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff91af79909b3f5a0800000000000000
+      internalID: -6488639187255158273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_116
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 127
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce1eb15293d1e5db0800000000000000
+      internalID: -4801368021457444372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_117
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 111
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61f2a9eb6e68a2cb0800000000000000
+      internalID: -4887946119958876394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_118
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 95
+        width: 116
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b5456d921ac65ed0800000000000000
+      internalID: -2425529167993551431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_119
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 95
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bf0bd7c0e1afb510800000000000000
+      internalID: 1567149182145990578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_120
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 95
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 772e190ff5adc3130800000000000000
+      internalID: 3547950712053949047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_121
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 103
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8f12b2639c7b9490800000000000000
+      internalID: -7738454562248188017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_122
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 95
+        width: 26
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28031908089c4eac0800000000000000
+      internalID: -3826712229608083326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_123
+      rect:
+        serializedVersion: 2
+        x: 437
+        y: 103
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47120b22e49939af0800000000000000
+      internalID: -390800181782634124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_124
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 111
+        width: 28
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a6157d3a3c40faf0800000000000000
+      internalID: -364707756794112349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_125
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 111
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fccc009564ec433a0800000000000000
+      internalID: -6686492745202086705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_126
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 79
+        width: 44
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cbd7ef2463c1edc0800000000000000
+      internalID: -3611390591106556991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_127
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 87
+        width: 52
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 134501b42b4c4a990800000000000000
+      internalID: -7375554019683445711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_128
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 79
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b40d28e41dcf8fe90800000000000000
+      internalID: -6991560445597134773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_129
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 103
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16d3408d70e8557c0800000000000000
+      internalID: -4083201322801414815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_130
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 31
+        width: 52
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f931a0374769f1b0800000000000000
+      internalID: -5622349104339142152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_131
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 79
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57249456152977790800000000000000
+      internalID: -7532390973464558987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_132
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 87
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eed2be084290f0990800000000000000
+      internalID: -7417700008869548562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_133
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 87
+        width: 36
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ab0c7729c880c890800000000000000
+      internalID: -7439796186883814490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_134
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 87
+        width: 20
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43282658335f9a310800000000000000
+      internalID: 1416933159414694452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_135
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 87
+        width: 26
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e3a4a7aa1a057fe0800000000000000
+      internalID: -1192035416771615772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_136
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 79
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67825e07ccce52690800000000000000
+      internalID: -7627430031070517130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_137
+      rect:
+        serializedVersion: 2
+        x: 509
+        y: 79
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6933d7387b17c520800000000000000
+      internalID: 2722174702915369325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_138
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 87
+        width: 10
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4a00501c8deddb60800000000000000
+      internalID: 7772629717736229450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_139
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 87
+        width: 34
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8315bbbf3057352b0800000000000000
+      internalID: -5597001251922685640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_140
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 71
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87aed0289cd804530800000000000000
+      internalID: 3837222779129555576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_141
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 18
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59018b12f88a89120800000000000000
+      internalID: 2420870132411142293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_142
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 15
+        width: 74
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d71fa395b13dd3d10800000000000000
+      internalID: 2107072315093873021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hellebore_projectile_143
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 0
+        width: 97
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d330825f24a6100a0800000000000000
+      internalID: -6917130716850945219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      hellebore_projectile_0: 2840389734665995668
+      hellebore_projectile_1: 5101468479248019387
+      hellebore_projectile_10: -6658894588514881456
+      hellebore_projectile_100: -7804912434799696278
+      hellebore_projectile_101: 6525654593114409641
+      hellebore_projectile_102: 580929423402576456
+      hellebore_projectile_103: -8852887067631959213
+      hellebore_projectile_104: 5181570358218921891
+      hellebore_projectile_105: -3099838186489754145
+      hellebore_projectile_106: -6439080929121372701
+      hellebore_projectile_107: 7285540638585366965
+      hellebore_projectile_108: -6778572630171772137
+      hellebore_projectile_109: 4207314181015685330
+      hellebore_projectile_11: -5904412019330935615
+      hellebore_projectile_110: -1961053581098560627
+      hellebore_projectile_111: 3704157337584494790
+      hellebore_projectile_112: -7235005231631161481
+      hellebore_projectile_113: -214103534796562726
+      hellebore_projectile_114: -1209098520068461167
+      hellebore_projectile_115: -6488639187255158273
+      hellebore_projectile_116: -4801368021457444372
+      hellebore_projectile_117: -4887946119958876394
+      hellebore_projectile_118: -2425529167993551431
+      hellebore_projectile_119: 1567149182145990578
+      hellebore_projectile_12: 1465359733031991209
+      hellebore_projectile_120: 3547950712053949047
+      hellebore_projectile_121: -7738454562248188017
+      hellebore_projectile_122: -3826712229608083326
+      hellebore_projectile_123: -390800181782634124
+      hellebore_projectile_124: -364707756794112349
+      hellebore_projectile_125: -6686492745202086705
+      hellebore_projectile_126: -3611390591106556991
+      hellebore_projectile_127: -7375554019683445711
+      hellebore_projectile_128: -6991560445597134773
+      hellebore_projectile_129: -4083201322801414815
+      hellebore_projectile_13: -8099076927747858235
+      hellebore_projectile_130: -5622349104339142152
+      hellebore_projectile_131: -7532390973464558987
+      hellebore_projectile_132: -7417700008869548562
+      hellebore_projectile_133: -7439796186883814490
+      hellebore_projectile_134: 1416933159414694452
+      hellebore_projectile_135: -1192035416771615772
+      hellebore_projectile_136: -7627430031070517130
+      hellebore_projectile_137: 2722174702915369325
+      hellebore_projectile_138: 7772629717736229450
+      hellebore_projectile_139: -5597001251922685640
+      hellebore_projectile_14: -2225453203415717646
+      hellebore_projectile_140: 3837222779129555576
+      hellebore_projectile_141: 2420870132411142293
+      hellebore_projectile_142: 2107072315093873021
+      hellebore_projectile_143: -6917130716850945219
+      hellebore_projectile_15: 2462356446564088131
+      hellebore_projectile_16: 1707777902997106425
+      hellebore_projectile_17: 878386169868968802
+      hellebore_projectile_18: 4918043923064234901
+      hellebore_projectile_19: 3813496140268625504
+      hellebore_projectile_2: 1460540671080330528
+      hellebore_projectile_20: -6868225900271771194
+      hellebore_projectile_21: 8905986745178782451
+      hellebore_projectile_22: -1418567401222669781
+      hellebore_projectile_23: -1968265012957928682
+      hellebore_projectile_24: -7891687083579015037
+      hellebore_projectile_25: -3843815427493794760
+      hellebore_projectile_26: -3235139549871777482
+      hellebore_projectile_27: 7963055171941203282
+      hellebore_projectile_28: 7447233979161194362
+      hellebore_projectile_29: -3313810224506376350
+      hellebore_projectile_3: -3625453237881995039
+      hellebore_projectile_30: -3653296652437044947
+      hellebore_projectile_31: -3307874568560024373
+      hellebore_projectile_32: -3367415694086046097
+      hellebore_projectile_33: 3352891692167110801
+      hellebore_projectile_34: -8353175254202172676
+      hellebore_projectile_35: -6969932878363099084
+      hellebore_projectile_36: 1913546676878463818
+      hellebore_projectile_37: 7112679148012413367
+      hellebore_projectile_38: 7265708746546096625
+      hellebore_projectile_39: 4548303035337150565
+      hellebore_projectile_4: 6178802599711221192
+      hellebore_projectile_40: 2066369968201069492
+      hellebore_projectile_41: 641867829195204540
+      hellebore_projectile_42: -4395423883953835318
+      hellebore_projectile_43: 5814445008932249904
+      hellebore_projectile_44: 4953996313775267678
+      hellebore_projectile_45: 4872224690251158495
+      hellebore_projectile_46: -3229734926506553092
+      hellebore_projectile_47: 8856493149848111416
+      hellebore_projectile_48: -5724645211420965242
+      hellebore_projectile_49: -6299127721185407344
+      hellebore_projectile_5: 4201684112149912907
+      hellebore_projectile_50: -2116911338351278391
+      hellebore_projectile_51: -8383110712013790935
+      hellebore_projectile_52: 5000109500325616843
+      hellebore_projectile_53: 6611285702784925526
+      hellebore_projectile_54: 2056108035719796428
+      hellebore_projectile_55: -5265449287812107153
+      hellebore_projectile_56: 3426045326642608828
+      hellebore_projectile_57: 8682244823369572621
+      hellebore_projectile_58: -4499645120737111911
+      hellebore_projectile_59: 7851428822239192837
+      hellebore_projectile_6: 7891808118810441618
+      hellebore_projectile_60: -1238735367117476232
+      hellebore_projectile_61: 7952236438429011057
+      hellebore_projectile_62: 3056041170179805245
+      hellebore_projectile_63: -8047787963054951386
+      hellebore_projectile_64: 1150052170886285496
+      hellebore_projectile_65: 1352210672054274684
+      hellebore_projectile_66: -6871405824660665770
+      hellebore_projectile_67: 6534934436698910243
+      hellebore_projectile_68: -976004324912663889
+      hellebore_projectile_69: 5609502059311919607
+      hellebore_projectile_7: 5649133674945875318
+      hellebore_projectile_70: -5152209018588314235
+      hellebore_projectile_71: -8754507251473319293
+      hellebore_projectile_72: 6395371587368826777
+      hellebore_projectile_73: -6210250393963549084
+      hellebore_projectile_74: -4270484595332018955
+      hellebore_projectile_75: 7133238667863975835
+      hellebore_projectile_76: -1272120213816549101
+      hellebore_projectile_77: -2723080919046991235
+      hellebore_projectile_78: -4834354490292072658
+      hellebore_projectile_79: -2778876110341908777
+      hellebore_projectile_8: -2167610139226970178
+      hellebore_projectile_80: -3929622652325926300
+      hellebore_projectile_81: -1981635403017865965
+      hellebore_projectile_82: -7930680791131740493
+      hellebore_projectile_83: -2138445942632221650
+      hellebore_projectile_84: -5318218880438779653
+      hellebore_projectile_85: -5879677390428666742
+      hellebore_projectile_86: 4964358667983822380
+      hellebore_projectile_87: 3496196775375399925
+      hellebore_projectile_88: 3761957387698345734
+      hellebore_projectile_89: -3999258394384762511
+      hellebore_projectile_9: -7685419439678737867
+      hellebore_projectile_90: -2844663814729675783
+      hellebore_projectile_91: -2441097829241417287
+      hellebore_projectile_92: -3056054610214044595
+      hellebore_projectile_93: 5572702089689710712
+      hellebore_projectile_94: 2143629867028605459
+      hellebore_projectile_95: 6985656994380459849
+      hellebore_projectile_96: 8263967061380681913
+      hellebore_projectile_97: -4577242410389908783
+      hellebore_projectile_98: 1111460723990420665
+      hellebore_projectile_99: -8428834160811344303
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

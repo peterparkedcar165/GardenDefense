@@ -87,6 +87,7 @@ public class LevelSelector : MonoBehaviour
     {
         DisableAllButtons();
         SaveManager.instance.selectedLevel = level;
+        LoadoutSelectionUI.instance?.ResetUnlockedScroll();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
         transition.StartCoroutine(transition.FadeToScene("Level" + level));
     }

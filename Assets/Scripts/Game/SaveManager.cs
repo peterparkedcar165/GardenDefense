@@ -128,6 +128,7 @@ public class SaveManager : MonoBehaviour
             case 18: return "GhostFungus";
             case 19: return "Cattail";
             case 20: return "Gloriosa";
+            case 21: return "Hellebore";
             default: return null;
         }
     }

@@ -78,7 +78,7 @@ public class FungalGlowEffect : StatusEffect
 
     public override void OnTick(float deltaTime) { }
 
-    public override void OnDamageReceived(ElementalType elementalType, Entity damageSource)
+    public override void OnDamageReceived(ElementalType elementalType, Entity damageSource, DamageTag[] damageTags = null)
     {
         if (elementalType != ElementalType.Water) return;
 
