@@ -33,11 +33,11 @@ public class HelleboreData : PlantData
 
     public override string GetPassiveDescription() =>
         $"Each attack hit reduces skill cooldown by <color=green><b>{passiveCDRPerHit:F1}s</b></color>. " +
-        $"Plants within attack range gain <color=#A0522D><b>Thorned Guard</b></color>, increasing their " +
+        $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>, increasing their " +
         $"<color=#A0522D>Physical Resistance</color> by <color=green><b>{passivePhysResist * 100f:F0}%</b></color>.";
 
     public override string GetSkillDescription() =>
-        $"Targets a plant anywhere on the field, granting <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
+        $"Targets a plant anywhere on the field, granting <color=#9B30D0><b>Thorned Guard</b></color>: " +
         $"a shield of <color=green><b>{shieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{shieldMP * 100f:F0}% MP</b></color>] health for <color=green><b>{shieldDuration:F0}s</b></color>. " +
         $"While shielded, attackers receive <color=purple><b>{reflectPoisonBase:F0}</b></color> [<color=#FFB6C1><b>+{reflectPoisonMP * 100f:F0}% MP</b></color>] " +
         $"<color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per hit. " +

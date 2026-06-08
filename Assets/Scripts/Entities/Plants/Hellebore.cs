@@ -7,6 +7,8 @@ public class Hellebore : Shooter
 
     private float _auraTick;
     private const float AuraTickInterval = 0.25f;
+    private static readonly Color PurpleHighlight = new Color(0.6f, 0.2f, 0.8f);
+    private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
     private float AuraResist => (HData?.passivePhysResist ?? 0.1f)  + effectivePath2Level * (HData?.path2PhysResistPerLevel ?? 0.02f);
     private float CDRPerHit  => (HData?.passiveCDRPerHit  ?? 0.5f)  + effectivePath2Level * (HData?.path2CDRPerLevel       ?? 0.1f);
@@ -28,6 +30,7 @@ public class Hellebore : Shooter
     {
         base.Update();
         TickAura();
+        UpdateHighlights();
     }
 
     private void TickAura()
@@ -56,6 +59,28 @@ public class Hellebore : Shooter
         proj.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
     }
 
+    private void UpdateHighlights()
+    {
+        bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
+        var desired = new HashSet<Plant>();
+        if (isSelected)
+        {
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == null) continue;
+                if (Vector2.Distance(transform.position, plant.transform.position) <= attackRange)
+                    desired.Add(plant);
+            }
+        }
+        foreach (Plant p in _highlightedPlants)
+            if (p != null && !desired.Contains(p)) p.ClearHighlight();
+        foreach (Plant p in desired)
+            p.SetHighlight(PurpleHighlight);
+        _highlightedPlants.Clear();
+        foreach (Plant p in desired)
+            _highlightedPlants.Add(p);
+    }
+
     public void OnProjectileHit()
     {
         skillCooldownTimer = Mathf.Max(0f, skillCooldownTimer - CDRPerHit);
@@ -81,6 +106,13 @@ public class Hellebore : Shooter
         baseMagicPower  = data.baseMagicPower  + (HData?.path1MagicPowerPerLevel  ?? 5f)    * level;
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        foreach (Plant p in _highlightedPlants)
+            if (p != null) p.ClearHighlight();
+    }
+
     public override string GetName() => "<b><color=#9B30D0>Hellebore</color></b>";
 
     public override string GetDescription() =>
@@ -91,11 +123,11 @@ public class Hellebore : Shooter
 
     public override string GetPassiveDescription() =>
         $"Each attack hit reduces skill cooldown by <color=green><b>{CDRPerHit:F1}s</b></color>. " +
-        $"Plants within attack range gain <color=#A0522D><b>Thorned Guard</b></color>, increasing their " +
+        $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>, increasing their " +
         $"<color=#A0522D>Physical Resistance</color> by <color=green><b>{AuraResist * 100f:F0}%</b></color>.";
 
     public override string GetSkillDesription() =>
-        $"Targets a plant anywhere on the field, granting <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
+        $"Targets a plant anywhere on the field, granting <color=#9B30D0><b>Thorned Guard</b></color>: " +
         $"a shield of <color=green><b>{SkillShieldBase:F0}</b></color> [<color=#FFB6C1><b>+{SkillShieldMP:F0}</b></color>] health for <color=green><b>{SkillDur:F0}s</b></color>. " +
         $"While shielded, attackers receive <color=purple><b>{ReflectBase:F0}</b></color> " +
         $"[<color=#FFB6C1><b>+{magicPower * ReflectMP:F0}</b></color>] " +

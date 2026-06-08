@@ -64,7 +64,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 15
+  baseSkillCooldown: 30
   baseSkillDuration: 0
   channelDuration: 0
   baseSkillRadius: 0
@@ -81,8 +81,8 @@ MonoBehaviour:
   shieldAmount: 120
   shieldMP: 0.5
   shieldDuration: 12
-  reflectPoisonBase: 34
-  reflectPoisonMP: 0.33
-  path3ShieldPerLevel: 30
+  reflectPoisonBase: 16
+  reflectPoisonMP: 0.24
+  path3ShieldPerLevel: 60
   path3DurationPerLevel: 4
-  path3ReflectPerLevel: 17
+  path3ReflectPerLevel: 8

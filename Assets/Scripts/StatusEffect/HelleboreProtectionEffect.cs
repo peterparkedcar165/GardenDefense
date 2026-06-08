@@ -20,7 +20,7 @@ public class HelleboreProtectionEffect : ShieldEffect
     public override void OnApply()
     {
         base.OnApply();
-        StatusIndicator.Spawn(target.transform.position + Vector3.up * 0.3f, "Protected", new Color(0.5f, 0.2f, 0.8f));
+        StatusIndicator.Spawn(target.transform.position + Vector3.up * 0.3f, "Thorned Guard", new Color(0.5f, 0.2f, 0.8f));
     }
 
     // fires for every incoming attack that still has shield remaining
@@ -39,13 +39,14 @@ public class HelleboreProtectionEffect : ShieldEffect
         if (amount <= 0f) return false;
         if (incoming.source is Insect attacker && attacker.team != Team.Friendly)
         {
-            float dps = reflectBase + (hellebore != null ? hellebore.magicPower * reflectMP : 0f);
-            incoming.source.ApplyEffect(new VenomEffect(incoming.source, Mathf.Max(incoming.duration, 4f), 1, hellebore, dps));
+            incoming.target = attacker;
+            incoming.source = hellebore;
+            attacker.ApplyEffect(incoming);
         }
         StatusIndicator.Spawn(target.transform.position + Vector3.up * 0.5f, "Reflected!", new Color(0.6f, 0.2f, 0.8f));
         return true;
     }
 
-    public override string GetName()        => "<color=#9B30D0>Hellebore's Protection</color>";
+    public override string GetName()        => "<color=#9B30D0>Thorned Guard</color>";
     public override string GetDescription() => $"Shield: <color=grey><b>{amount:F0}/{originalAmount:F0}</b></color>. Attackers receive <color=purple>Poison</color> damage per hit. Negative effects are reflected.";
 }

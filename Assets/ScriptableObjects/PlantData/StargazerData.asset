@@ -55,6 +55,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseMinionDamage: 0
   baseProjectileSpeed: 0
   baseMaxRange: 0
   basePiercing: 0
@@ -63,8 +64,9 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 0
+  baseSkillCooldown: 60
   baseSkillDuration: 0
+  channelDuration: 0
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 1
   baseSkillHealth: 0

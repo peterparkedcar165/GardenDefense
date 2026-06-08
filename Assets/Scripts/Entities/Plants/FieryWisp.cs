@@ -77,7 +77,7 @@ public class FieryWisp : MonoBehaviour
 
         _light = gameObject.AddComponent<Light2D>();
         _light.lightType             = Light2D.LightType.Point;
-        _light.color                 = new Color(1f, 0.5f, 0.1f);
+        _light.color                 = Color.white;
         _light.intensity             = lightIntensity;
         _light.pointLightOuterRadius = lightRadius;
         _light.pointLightInnerRadius = lightRadius * 0.3f;
@@ -336,7 +336,8 @@ public class FieryWisp : MonoBehaviour
             if (plant == null || !plant.IsAlive) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > _radius) continue;
             plant.Heal(_healPerSecond * _tickInterval, _source);
-            plant.temperature = Mathf.Min(plant.temperature + _temperaturePerSecond * _tickInterval, 10f);
+            if (WeatherManager.instance?.temperature == TemperatureType.Cold)
+                plant.temperature = Mathf.Min(plant.temperature + _temperaturePerSecond * _tickInterval, 10f);
         }
     }
 

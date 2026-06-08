@@ -78,7 +78,7 @@ MonoBehaviour:
     unlockWave: 0
     budgetWeight: 0.4
     startDelay: 0
-  - data: {fileID: 11400000, guid: b4796f9368fb88046bc95900367bf356, type: 2}
+  - data: {fileID: 11400000, guid: 2d3f91fb7c002c34598abe68a6b4dfd3, type: 2}
     unlockWave: 0
     budgetWeight: 0.208
     startDelay: 8
@@ -90,7 +90,7 @@ MonoBehaviour:
     unlockWave: 3
     budgetWeight: 0.25
     startDelay: 3
-  - data: {fileID: 11400000, guid: 3daf6caaa45e774478c2b54666c863be, type: 2}
+  - data: {fileID: 11400000, guid: 7132e106d084b3b458852756b3be085a, type: 2}
     unlockWave: 3
     budgetWeight: 0.25
     startDelay: 3
@@ -110,7 +110,7 @@ MonoBehaviour:
     unlockWave: 8
     budgetWeight: 0.1
     startDelay: 4
-  - data: {fileID: 11400000, guid: e3c19f0100b30e949bd47887bd9e1d20, type: 2}
+  - data: {fileID: 11400000, guid: 22ad83977b530ed4787f7b4b1411cb25, type: 2}
     unlockWave: 8
     budgetWeight: 0.3
     startDelay: 3
@@ -136,7 +136,7 @@ MonoBehaviour:
     startDelay: 2
     minSpawnCount: 7
     maxSpawnCount: 12
-  - data: {fileID: 11400000, guid: e3c19f0100b30e949bd47887bd9e1d20, type: 2}
+  - data: {fileID: 11400000, guid: 22ad83977b530ed4787f7b4b1411cb25, type: 2}
     unlockWave: 4
     budgetWeight: 0.3
     startDelay: 2

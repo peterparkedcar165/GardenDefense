@@ -12,6 +12,6 @@ public class HelleboreAuraEffect : StatusEffect
     public override void OnApply()  => target.physicalResistanceAdder += resistBonus;
     public override void OnExpire() => target.physicalResistanceAdder -= resistBonus;
 
-    public override string GetName()        => "<color=#A0522D>Thorned Guard</color>";
+    public override string GetName()        => "<color=#9B30D0>Hellebore's Protection</color>";
     public override string GetDescription() => $"Physical Resistance increased by <color=green><b>{resistBonus * 100f:F0}%</b></color>.";
 }

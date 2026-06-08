@@ -82,7 +82,7 @@ MonoBehaviour:
     unlockWave: 0
     budgetWeight: 0.4
     startDelay: 0
-  - data: {fileID: 11400000, guid: b4796f9368fb88046bc95900367bf356, type: 2}
+  - data: {fileID: 11400000, guid: 2d3f91fb7c002c34598abe68a6b4dfd3, type: 2}
     unlockWave: 2
     budgetWeight: 0.1
     startDelay: 4

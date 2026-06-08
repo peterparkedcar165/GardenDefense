@@ -71,7 +71,8 @@ public class EmberProjectile : MonoBehaviour
         if (primaryPlant != null)
         {
             primaryPlant.Heal(_healAmount, _source);
-            primaryPlant.temperature = Mathf.Min(primaryPlant.temperature + _temperatureAmount, primaryPlant.comfortMax);
+            if (WeatherManager.instance?.temperature == TemperatureType.Cold)
+                primaryPlant.temperature = Mathf.Min(primaryPlant.temperature + _temperatureAmount, primaryPlant.comfortMax);
         }
         else if (_target is Insect insect)
         {
@@ -87,7 +88,8 @@ public class EmberProjectile : MonoBehaviour
             if (nearby == null || !nearby.IsAlive || nearby == primaryPlant) continue;
             if (Vector3.Distance(transform.position, nearby.transform.position) > _auraRadius) continue;
             nearby.Heal(_healAmount * 0.5f, _source);
-            nearby.temperature = Mathf.Min(nearby.temperature + _temperatureAmount * 0.5f, nearby.comfortMax);
+            if (WeatherManager.instance?.temperature == TemperatureType.Cold)
+                nearby.temperature = Mathf.Min(nearby.temperature + _temperatureAmount * 0.5f, nearby.comfortMax);
         }
     }
 }
