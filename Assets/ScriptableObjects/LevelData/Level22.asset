@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fed5c857faeea5443822e86a9723d554, type: 3}
-  m_Name: Level21
+  m_Name: Level22
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
-  levelNumber: 21
+  levelNumber: 22
   weather:
   - type: 5
     intensity: 0
   temperature: 4
-  maxWaves: 35
+  maxWaves: 40
   startSunCount: 950
   startHealth: 200
   minWaveDuration: 25
@@ -47,8 +47,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 6
-  minThreatBudget: 9
-  maxThreatBudget: 135
+  minThreatBudget: 10
+  maxThreatBudget: 155
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -127,6 +127,6 @@ MonoBehaviour:
     minSpawnCount: 3
     maxSpawnCount: 4
   fertilizerPool:
-  - {fileID: 11400000, guid: d774ba5796255eb4290ee77f71a878a7, type: 2}
-  - {fileID: 11400000, guid: 41fa158ff1d2d4c499cc01cda97768c2, type: 2}
-  - {fileID: 11400000, guid: bed07a22d5a9fdd438d845a3b961ec39, type: 2}
+  - {fileID: 11400000, guid: 4fe73e7add2d06844a758bb0948abe64, type: 2}
+  - {fileID: 11400000, guid: 66296567bc76cba48b5e78ae1146ca24, type: 2}
+  - {fileID: 11400000, guid: a5f8892c51345f540af0abc332726db2, type: 2}

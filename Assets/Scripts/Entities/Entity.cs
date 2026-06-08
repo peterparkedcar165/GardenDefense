@@ -137,7 +137,7 @@ public abstract class Entity : MonoBehaviour
     public float bonusCritChanceReceivedMultiplier, projectileSpeedMultiplier;
 
     [Header("Internal Cooldowns")]
-    public float internalCooldown = 1f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    public float internalCooldown = 2f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;
@@ -200,22 +200,22 @@ public abstract class Entity : MonoBehaviour
         switch (elementalType)
         {
             case ElementalType.Fire:
-            elementalMultiplier = (1 - this.fireResistance);
+            elementalMultiplier = Mathf.Max(0f, 1 - fireResistance);
             break;
             case ElementalType.Water:
-            elementalMultiplier = (1 - this.waterResistance);
+            elementalMultiplier = Mathf.Max(0f, 1 - waterResistance);
             break;
             case ElementalType.Ice:
-            elementalMultiplier = (1 - this.iceResistance);
+            elementalMultiplier = Mathf.Max(0f, 1 - iceResistance);
             break;
             case ElementalType.Wind:
-            elementalMultiplier = (1 - this.windResistance);
+            elementalMultiplier = Mathf.Max(0f, 1 - windResistance);
             break;
             case ElementalType.Nature:
-            elementalMultiplier = (1 - this.natureResistance);
+            elementalMultiplier = Mathf.Max(0f, 1 - natureResistance);
             break;
             case ElementalType.Poison:
-            elementalMultiplier = (1 - this.poisonResistance);
+            elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance);
             break;
             default:
             elementalMultiplier = 1;
@@ -225,10 +225,10 @@ public abstract class Entity : MonoBehaviour
         switch (damageType)
         {
             case DamageType.Physical:
-            modifiedDamage = damageDealt * (1 - physicalResistance);
+            modifiedDamage = damageDealt * Mathf.Max(0f, 1 - physicalResistance);
             break;
             case DamageType.Magic:
-            modifiedDamage = damageDealt * (1 - magicResistance);
+            modifiedDamage = damageDealt * Mathf.Max(0f, 1 - magicResistance);
             break;
             default:
             modifiedDamage = damageDealt;
@@ -264,6 +264,9 @@ public abstract class Entity : MonoBehaviour
             Damage(damageDealt, damageType, elementalType, damageTag);
             return;
         }
+
+        if (source.HasEffect<TauntEffect>() && System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+            damageDealt *= 0.5f;
 
         // melee attacks roll their miss check upstream in ReceiveAttack (so the counter
         // can be gated on the same result); here we only handle non-melee attacks
@@ -301,8 +304,8 @@ public abstract class Entity : MonoBehaviour
         switch (elementalType)
         {
             case ElementalType.Fire:
-            elementalMultiplier = (1 - this.fireResistance + source.fireDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.blazeInternalCooldown <= 0)
+            elementalMultiplier = Mathf.Max(0f, 1 - fireResistance + source.fireDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && blazeInternalCooldown <= 0)
                 {
                     blazeInternalCooldown = internalCooldown;
                     ApplyEffect(new BlazeEffect(this, elementalDebuffDuration, 1, source));
@@ -313,8 +316,8 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Water:
-            elementalMultiplier = (1 - this.waterResistance + source.waterDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.wetInternalCooldown <= 0)
+            elementalMultiplier = Mathf.Max(0f, 1 - waterResistance + source.waterDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && wetInternalCooldown <= 0)
                 {
                     wetInternalCooldown = internalCooldown;
                     ApplyEffect(new WetEffect(this, elementalDebuffDuration, 1, source));
@@ -322,8 +325,8 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Ice:
-            elementalMultiplier = (1 - this.iceResistance + source.iceDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.coldInternalCooldown <= 0)
+            elementalMultiplier = Mathf.Max(0f, 1 - iceResistance + source.iceDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && coldInternalCooldown <= 0)
                 {
                     coldInternalCooldown = internalCooldown;
                     ApplyEffect(new ColdEffect(this, elementalDebuffDuration, 1, source));
@@ -331,7 +334,7 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Wind:
-            elementalMultiplier = (1 - this.windResistance + source.windDamage);
+            elementalMultiplier = Mathf.Max(0f, 1 - windResistance + source.windDamage);
             if (this is Insect windInsect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
                     if (windInsect.HasEffect<BlazeEffect>() || windInsect.HasEffect<ColdEffect>() ||
@@ -344,8 +347,8 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Nature:
-            elementalMultiplier = (1 - this.natureResistance + source.natureDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.sproutInternalCooldown <= 0)
+            elementalMultiplier = Mathf.Max(0f, 1 - natureResistance + source.natureDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && sproutInternalCooldown <= 0)
                 {
                     sproutInternalCooldown = internalCooldown;
                     ApplyEffect(new SproutEffect(this, elementalDebuffDuration, 1, source));
@@ -353,8 +356,8 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Poison:
-            elementalMultiplier = (1 - this.poisonResistance + source.poisonDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && this.taintedInternalCooldown <= 0)
+            elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance + source.poisonDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && taintedInternalCooldown <= 0)
                 {
                     taintedInternalCooldown = internalCooldown;
                     ApplyEffect(new TaintedEffect(this, elementalDebuffDuration, 1, source));
@@ -369,10 +372,10 @@ public abstract class Entity : MonoBehaviour
         switch (damageType)
         {
             case DamageType.Physical:
-            modifiedDamage = damageDealt * (1 - physicalResistance + source.physicalDamage);
+            modifiedDamage = damageDealt * Mathf.Max(0f, 1 - physicalResistance + source.physicalDamage);
             break;
             case DamageType.Magic:
-            modifiedDamage = damageDealt * (1 - magicResistance + source.magicDamage);
+            modifiedDamage = damageDealt * Mathf.Max(0f, 1 - magicResistance + source.magicDamage);
             break;
             default:
             modifiedDamage = damageDealt;

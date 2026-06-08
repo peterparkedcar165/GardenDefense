@@ -52,6 +52,17 @@ public class Glowworm : Insect
     {
         base.Update();
 
+        if (HasEffect<HardCrowdControl>())
+        {
+            if (_isCasting)
+            {
+                _isCasting = false;
+                _currentTarget = null;
+                _healTimer = GData?.healCooldown ?? 3f;
+            }
+            return;
+        }
+
         if (_isCasting)
         {
             _castTimer -= Time.deltaTime;

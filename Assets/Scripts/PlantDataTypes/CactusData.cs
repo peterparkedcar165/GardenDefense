@@ -25,5 +25,5 @@ public class CactusData : PlantData
         $"Insects that attack the Cactus take damage equal to <color=green><b>150%</b></color> of their Attack Damage as {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage. Applies <color=#A0522D>Punctured</color>.";
 
     public override string GetSkillDescription() =>
-        $"Gains a <color=grey><b>{baseShieldAmount:F0}</b></color> shield and taunts insects within range for <color=green><b>{baseSkillDuration:F0}</b></color> seconds. Healing received increased by <color=green><b>{baseSkillHealBonus * 100f:F0}%</b></color> during the effect.";
+        $"Grants a <color=grey><b>{baseShieldAmount:F0}</b></color> shield for <color=green><b>{baseSkillDuration:F0}</b></color> seconds. While the shield holds, nearby insects are forced to target the Cactus.";
 }

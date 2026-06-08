@@ -55,6 +55,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseMinionDamage: 0
   baseProjectileSpeed: 0
   baseMaxRange: 0
   basePiercing: 0
@@ -65,6 +66,7 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 35
   baseSkillDuration: 15
+  channelDuration: 0
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
@@ -75,12 +77,12 @@ MonoBehaviour:
   baseHealthBonusMP: 0.3
   baseFrozenRageReduction: 0.12
   baseFrozenRageReductionMP: 0.08
-  baseSkillShield: 100
-  baseSkillShieldMP: 0.5
+  baseSkillShield: 120
+  baseSkillShieldMP: 0.7
   path1AttackDamagePerLevel: 7
   path1PhysicalResistancePerLevel: 0.06
   path2HealthPerLevel: 55
   path2RetaliationPerLevel: 0.15
-  path3ShieldPerLevel: 50
+  path3ShieldPerLevel: 60
   path3FrozenRagePerLevel: 0.04
   path3SkillDurationPerLevel: 2

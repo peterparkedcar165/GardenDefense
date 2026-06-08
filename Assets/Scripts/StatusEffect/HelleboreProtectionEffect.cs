@@ -6,7 +6,7 @@ public class HelleboreProtectionEffect : ShieldEffect
     private readonly float reflectMP;
     private readonly Hellebore hellebore;
 
-    private static readonly DamageTag[] _reflectTags = { DamageTag.PassiveDamage };
+    private static readonly DamageTag[] _reflectTags = { DamageTag.Counter, DamageTag.SkillDamage };
 
     public HelleboreProtectionEffect(Entity target, float duration, int level, Hellebore source,
                                      float shieldAmount, float reflectBase, float reflectMP)

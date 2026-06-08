@@ -10,9 +10,8 @@ public class Cactus : Shooter
     private readonly HashSet<Insect> _volleyHit = new HashSet<Insect>();
 
     private CactusData CactData => data as CactusData;
-    private float ShieldAmount   => (CactData?.baseShieldAmount ?? 100f) + (CactData?.path3ShieldPerLevel ?? 10f) * effectivePath3Level;
-    private float SkillDuration  => data.baseSkillDuration + (CactData?.path3SkillDurationPerLevel ?? 2f) * effectivePath3Level;
-    private float SkillHealBonus => (CactData?.baseSkillHealBonus ?? 0.16f) + (CactData?.path3HealBonusPerLevel ?? 0.04f) * effectivePath3Level;
+    private float ShieldAmount  => (CactData?.baseShieldAmount ?? 100f) + (CactData?.path3ShieldPerLevel ?? 10f) * effectivePath3Level;
+    private float SkillDuration => data.baseSkillDuration + (CactData?.path3SkillDurationPerLevel ?? 2f) * effectivePath3Level;
 
     protected override void Awake()
     {
@@ -24,7 +23,7 @@ public class Cactus : Shooter
     {
         base.Update();
 
-        if (HasEffect<CactusTauntingEffect>())
+        if (HasEffect<ShieldEffect>())
         {
             _tauntTickTimer += Time.deltaTime;
             if (_tauntTickTimer >= TauntTickInterval)
@@ -100,7 +99,6 @@ public class Cactus : Shooter
         if (!SkillReady) return;
         skillCooldownTimer = skillCooldown;
         ApplyEffect(new CactusShieldEffect(this, SkillDuration, 1, this, ShieldAmount));
-        ApplyEffect(new CactusTauntingEffect(this, SkillDuration, 1, this, SkillHealBonus));
     }
 
     public override void UpdateStats()
@@ -143,9 +141,8 @@ public class Cactus : Shooter
         $"<color=green><b>{1 + effectivePath2Level}</b></color> <color=#A0522D>Punctured</color> stack(s).";
 
     public override string GetSkillDesription() =>
-        $"Gains a <color=grey><b>{ShieldAmount:F0}</b></color> shield and taunts insects within range for " +
-        $"<color=green><b>{SkillDuration:F0}s</b></color>. Healing received increased by " +
-        $"<color=green><b>{SkillHealBonus * 100f:F0}%</b></color> during the effect.";
+        $"Grants the {GetName()} a <color=grey><b>{ShieldAmount:F0}</b></color> shield for <color=green><b>{SkillDuration:F0}s</b></color>. " +
+        $"While the shield holds, nearby insects are forced to target the {GetName()}.";
 
     public override string GetPath1Description()
     {

@@ -10,8 +10,10 @@ public class Hellebore : Shooter
     private static readonly Color PurpleHighlight = new Color(0.6f, 0.2f, 0.8f);
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
-    private float AuraResist => (HData?.passivePhysResist ?? 0.1f)  + effectivePath2Level * (HData?.path2PhysResistPerLevel ?? 0.02f);
-    private float CDRPerHit  => (HData?.passiveCDRPerHit  ?? 0.5f)  + effectivePath2Level * (HData?.path2CDRPerLevel       ?? 0.1f);
+    private float CDRPerHit  => (HData?.passiveCDRPerHit ?? 0.5f) + effectivePath2Level * (HData?.path2CDRPerLevel ?? 0.1f);
+
+    private float AuraShare  => (HData?.auraShareBase ?? 0.5f) + effectivePath2Level * (HData?.path2AuraSharePerLevel ?? 0.05f);
+    private float AuraResist => basePhysicalResistance * AuraShare;
 
     private float SkillShieldBase => (HData?.shieldAmount ?? 120f) + effectivePath3Level * (HData?.path3ShieldPerLevel ?? 30f);
     private float SkillShieldMP   => (HData?.shieldMP ?? 0.5f) * magicPower;
@@ -24,6 +26,14 @@ public class Hellebore : Shooter
     {
         base.Awake();
         LoadData();
+    }
+
+    public override void UpdateStats()
+    {
+        basePhysicalResistance = (HData?.selfPhysResistBase ?? 0.15f)
+            + effectivePath2Level * (HData?.selfPhysResistPerLevel ?? 0.02f)
+            + magicPower * (HData?.selfPhysResistMP ?? 0.002f);
+        base.UpdateStats();
     }
 
     protected override void Update()
@@ -43,7 +53,7 @@ public class Hellebore : Shooter
         float auraExpire = AuraTickInterval * 1.6f; // slightly longer than tick interval so it never gaps
         foreach (Plant plant in Plant.allPlants)
         {
-            if (plant == null || !plant.IsAlive) continue;
+            if (plant == null || !plant.IsAlive || plant == this) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
             plant.ApplyEffect(new HelleboreAuraEffect(plant, auraExpire, 1, this, resist));
         }
@@ -123,8 +133,11 @@ public class Hellebore : Shooter
 
     public override string GetPassiveDescription() =>
         $"Each attack hit reduces skill cooldown by <color=green><b>{CDRPerHit:F1}s</b></color>. " +
-        $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>, increasing their " +
-        $"<color=#A0522D>Physical Resistance</color> by <color=green><b>{AuraResist * 100f:F0}%</b></color>.";
+        $"Hellebore gains <color=#A0522D><b>Physical Resistance</b></color>: <color=green><b>{physicalResistance * 100f:F1}%</b></color> total " +
+        $"[<color=#FFB6C1><b>+{(HData?.selfPhysResistMP ?? 0.0012f) * 10000f:F0}% per 100 MP</b></color>]. " +
+        $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
+        $"<color=green><b>{AuraResist * 100f:F1}%</b></color> Physical Resistance " +
+        $"(<color=green><b>{AuraShare * 100f:F0}%</b></color> of Hellebore's).";
 
     public override string GetSkillDesription() =>
         $"Targets a plant anywhere on the field, granting <color=#9B30D0><b>Thorned Guard</b></color>: " +
@@ -150,11 +163,13 @@ public class Hellebore : Shooter
 
     public override string GetPath2Description()
     {
-        float cdrpl    = HData?.path2CDRPerLevel        ?? 0.1f;
-        float resistpl = HData?.path2PhysResistPerLevel ?? 0.02f;
+        float cdrpl      = HData?.path2CDRPerLevel       ?? 0.1f;
+        float resistpl   = HData?.selfPhysResistPerLevel ?? 0.02f;
+        float auraShpl   = HData?.path2AuraSharePerLevel ?? 0.05f;
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
                $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}s</b></color>]\n\n" +
-               $"Increase Physical Resistance aura by <color=green><b>{resistpl * 100f:F0}%</b></color> per level. [<color=green><b>+{resistpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Hellebore's Physical Resistance by <color=green><b>{resistpl * 100f:F0}%</b></color> per level. [<color=green><b>+{resistpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color> per level. [<color=green><b>+{auraShpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
     }
 

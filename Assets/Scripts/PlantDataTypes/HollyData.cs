@@ -30,10 +30,13 @@ public class HollyData : PlantData
     public override string GetPassiveDescription() =>
         $"Insects that attack <b><color=#00FFFF>Holly</color></b> retaliate for <color=green><b>{baseRetaliationHollyPercent * 100f:F0}%</b></color> of <b><color=#00FFFF>Holly</color></b>'s Attack Damage + " +
         $"<color=green><b>{baseRetaliationInsectPercent * 100f:F0}%</b></color> of the attacker's Attack Damage. " +
-        $"Increases Max Health by <color=#FFB6C1><b>{baseHealthBonusMP * 100f:F0}%</b></color> Magic Power.";
+        $"Increases Max Health by <color=#FFB6C1><b>{baseHealthBonusMP * 100f:F0}%</b></color> Magic Power. " +
+        $"While <b><color=#00FFFF>Holly</color></b> is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
+        $"forcing them to target her and reducing their Physical Resistance by " +
+        $"<color=green><b>{baseFrozenRageReduction * 100f:F0}%</b></color> + <color=#FFB6C1><b>{baseFrozenRageReductionMP * 100f:F0}%</b></color> Magic Power. " +
+        $"Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage.";
 
     public override string GetSkillDescription() =>
-        $"Enter a taunting state for <color=green><b>{baseSkillDuration:F0}s</b></color>. Gains a <color=grey><b>{baseSkillShield:F0}</b></color> + <color=#FFB6C1><b>{baseSkillShieldMP * 100f:F0}% Magic Power</b></color> shield for the duration. " +
-        $"Insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, forcing them to target <b><color=#00FFFF>Holly</color></b> and reducing their Physical Resistance by " +
-        $"<color=green><b>{baseFrozenRageReduction * 100f:F0}%</b></color> + <color=#FFB6C1><b>{baseFrozenRageReductionMP * 100f:F0}%</b></color> Magic Power.";
+        $"Grants <b><color=#00FFFF>Holly</color></b> a shield of <color=grey><b>{baseSkillShield:F0}</b></color> + <color=#FFB6C1><b>{baseSkillShieldMP * 100f:F0}% Magic Power</b></color> for <color=green><b>{baseSkillDuration:F0}s</b></color>. " +
+        $"While the shield holds, nearby insects are forced to target <b><color=#00FFFF>Holly</color></b> via <color=#00FFFF><b>Frozen Rage</b></color>.";
 }

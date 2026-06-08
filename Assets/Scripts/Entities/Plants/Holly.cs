@@ -49,7 +49,7 @@ public class Holly : Aura
         if (_tickTimer >= TickInterval)
         {
             _tickTimer -= TickInterval;
-            if (HasEffect<TauntingEffect>()) ApplyFrozenRageInRange();
+            if (HasEffect<ShieldEffect>()) ApplyFrozenRageInRange();
         }
     }
 
@@ -71,7 +71,6 @@ public class Holly : Aura
     {
         if (!SkillReady) return;
         skillCooldownTimer = skillCooldown;
-        ApplyEffect(new HollyTauntingEffect(this, skillDuration, 1, this));
         if (ShieldAmount > 0f)
             ApplyEffect(new HollyShieldEffect(this, skillDuration, 1, this, ShieldAmount));
     }
@@ -111,12 +110,15 @@ public class Holly : Aura
     public override string GetPassiveDescription() =>
         $"Insects that attack {GetName()} retaliate for <color=green><b>{RetaliationHollyPct * 100f:F0}%</b></color> of {GetName()}'s Attack Damage + " +
         $"<color=green><b>{RetaliationInsectPct * 100f:F0}%</b></color> of the attacker's Attack Damage. " +
-        $"Increases Max Health by [<color=#FFB6C1><b>+{(HData?.baseHealthBonusMP ?? 0f) * magicPower:F0}</b></color>].";
+        $"Increases Max Health by [<color=#FFB6C1><b>+{(HData?.baseHealthBonusMP ?? 0f) * magicPower:F0}</b></color>]. " +
+        $"While {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
+        $"forcing them to target {GetName()} and reducing their Physical Resistance by " +
+        $"<color=green><b>{FrozenRageReductionBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f:F0}%</b></color>]. " +
+        $"Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage.";
 
     public override string GetSkillDesription() =>
-        $"Enter a taunting state for <color=green><b>{skillDuration:F0}s</b></color>. Gains a <color=grey><b>{ShieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{ShieldAmountMP:F0}</b></color>] shield for the duration. " +
-        $"Insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, forcing them to target {GetName()} and reducing their Physical Resistance by " +
-        $"<color=green><b>{FrozenRageReductionBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f:F0}%</b></color>].";
+        $"Grants {GetName()} a shield of <color=grey><b>{ShieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{ShieldAmountMP:F0}</b></color>] for <color=green><b>{skillDuration:F0}s</b></color>. " +
+        $"While the shield holds, nearby insects are forced to target {GetName()} via <color=#00FFFF><b>Frozen Rage</b></color>.";
 
     public override string GetPath1Description()
     {
