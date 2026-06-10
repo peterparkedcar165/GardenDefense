@@ -26,6 +26,7 @@ MonoBehaviour:
   baseMovementSpeed: 0.8
   baseTargetingRange: 2
   startingShield: 0
+  baseMagicArmor: 49
   attackDamageType: 0
   attackElementalType: 3
   baseLifesteal: 0

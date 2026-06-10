@@ -26,6 +26,7 @@ MonoBehaviour:
   baseAttackSpeed: 0.6
   baseAttackRange: 3
   startingShield: 0
+  baseArmor: 49
   baseHealingBonus: 0
   baseHealingReceived: 0
   baseTenacity: 0

@@ -7,18 +7,18 @@ public class HelleboreData : PlantData
     public float path1AttackSpeedPerLevel = 0.05f;
     public float path1MagicPowerPerLevel  = 5f;
 
-    [Header("Passive - Self Physical Resistance")]
-    public float selfPhysResistBase      = 0.15f;
-    public float selfPhysResistPerLevel  = 0.02f;
-    public float selfPhysResistMP        = 0.002f;
-    public float passiveCDRPerHit        = 0.5f;
+    [Header("Passive - Self Armor")]
+    public int   selfArmorBase      = 14;
+    public int   selfArmorPerLevel  = 5;
+    public float selfArmorMP        = 0.14f;
+    public float passiveCDRPerHit   = 0.5f;
 
     [Header("Path 2 - Passive")]
-    public float path2CDRPerLevel        = 0.1f;
-    public float path2AuraSharePerLevel  = 0.05f;
+    public float path2CDRPerLevel       = 0.1f;
+    public float path2AuraSharePerLevel = 0.05f;
 
     [Header("Passive - Aura")]
-    public float auraShareBase           = 0.5f;
+    public float auraShareBase = 0.5f;
 
     [Header("Skill - Thorned Guard")]
     public float shieldAmount      = 120f;
@@ -38,10 +38,10 @@ public class HelleboreData : PlantData
 
     public override string GetPassiveDescription() =>
         $"Each attack hit reduces skill cooldown by <color=green><b>{passiveCDRPerHit:F1}s</b></color>. " +
-        $"Hellebore gains <color=#A0522D>Physical Resistance</color>: <color=green><b>{selfPhysResistBase * 100f:F0}%</b></color> base " +
-        $"[<color=#FFB6C1><b>+{selfPhysResistMP * 10000f:F0}% per 100 MP</b></color>] per level. " +
+        $"Hellebore gains <color=#00CED1><b>{selfArmorBase}</b></color> Base Armor " +
+        $"[<color=#FFB6C1><b>+{selfArmorMP * 100f:F0}% Magic Power</b></color>]. " +
         $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
-        $"<color=green><b>{auraShareBase * 100f:F0}%</b></color> of Hellebore's Physical Resistance.";
+        $"increasing their Armor by <color=green><b>{auraShareBase * 100f:F0}%</b></color> of Hellebore's Armor.";
 
     public override string GetSkillDescription() =>
         $"Targets a plant anywhere on the field, granting <color=#9B30D0><b>Thorned Guard</b></color>: " +

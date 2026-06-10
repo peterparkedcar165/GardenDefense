@@ -872,9 +872,13 @@ public abstract class Insect : Entity, IAttackable
         baseLifesteal          = data.baseLifesteal;
         basePhysicalDamage     = data.basePhysicalDamage;
         baseMagicDamage        = data.baseMagicDamage;
+        baseArmorPenFlat       = data.baseArmorPenFlat;
+        baseArmorPenPercent    = data.baseArmorPenPercent;
+        baseMagicPenFlat       = data.baseMagicPenFlat;
+        baseMagicPenPercent    = data.baseMagicPenPercent;
         baseTenacity           = data.baseTenacity;
-        basePhysicalResistance = data.basePhysicalResistance;
-        baseMagicResistance    = data.baseMagicResistance;
+        baseArmor      = data.baseArmor;
+        baseMagicArmor = data.baseMagicArmor;
         baseFireResistance     = data.baseFireResistance;
         baseWaterResistance    = data.baseWaterResistance;
         baseNatureResistance   = data.baseNatureResistance;

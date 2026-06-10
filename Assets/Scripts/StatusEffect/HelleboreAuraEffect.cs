@@ -9,9 +9,9 @@ public class HelleboreAuraEffect : StatusEffect
         effectType = Type.positive;
     }
 
-    public override void OnApply()  => target.physicalResistanceAdder += resistBonus;
-    public override void OnExpire() => target.physicalResistanceAdder -= resistBonus;
+    public override void OnApply()  => target.armorAdder += resistBonus;
+    public override void OnExpire() => target.armorAdder -= resistBonus;
 
     public override string GetName()        => "<color=#9B30D0>Hellebore's Protection</color>";
-    public override string GetDescription() => $"Physical Resistance increased by <color=green><b>{resistBonus * 100f:F0}%</b></color>.";
+    public override string GetDescription() => $"Armor increased by <color=#00CED1><b>{(int)resistBonus}</b></color>.";
 }

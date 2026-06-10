@@ -18,16 +18,16 @@ public class PlantData : ScriptableObject
     public float baseMagicPower;
     public float baseAttackSpeed;
     public float baseAttackRange;
-    public float startingShield;
+    public int baseArmor;
+    public int baseMagicArmor;
 
     [Header("Healing")]
     public float baseHealingBonus;
     public float baseHealingReceived;
 
     [Header("Resistances")]
+    public float startingShield;
     public float baseTenacity;
-    public float basePhysicalResistance;
-    public float baseMagicResistance;
     public float baseFireResistance;
     public float baseWaterResistance;
     public float basePoisonResistance;
@@ -39,6 +39,10 @@ public class PlantData : ScriptableObject
     [Header("Offensive")]
     public float basePhysicalDamage;
     public float baseMagicDamage;
+    public int baseArmorPenFlat;
+    public float baseArmorPenPercent;
+    public int baseMagicPenFlat;
+    public float baseMagicPenPercent;
     public float baseLifesteal;
     public float baseBonusEffectChance;
     public float baseCriticalChance = 0.05f;

@@ -217,8 +217,8 @@ public abstract class Plant : Entity, IAttackable
         baseHealingBonus       = data.baseHealingBonus;
         baseHealingReceived    = data.baseHealingReceived;
         baseTenacity           = data.baseTenacity;
-        basePhysicalResistance = data.basePhysicalResistance;
-        baseMagicResistance    = data.baseMagicResistance;
+        baseArmor      = data.baseArmor;
+        baseMagicArmor = data.baseMagicArmor;
         baseFireResistance     = data.baseFireResistance;
         baseWaterResistance    = data.baseWaterResistance;
         basePoisonResistance   = data.basePoisonResistance;
@@ -228,6 +228,10 @@ public abstract class Plant : Entity, IAttackable
         baseDotResistance      = data.baseDotResistance;
         basePhysicalDamage     = data.basePhysicalDamage;
         baseMagicDamage        = data.baseMagicDamage;
+        baseArmorPenFlat       = data.baseArmorPenFlat;
+        baseArmorPenPercent    = data.baseArmorPenPercent;
+        baseMagicPenFlat       = data.baseMagicPenFlat;
+        baseMagicPenPercent    = data.baseMagicPenPercent;
         baseLifesteal          = data.baseLifesteal;
         baseBonusEffectChance  = data.baseBonusEffectChance;
         baseFireDamage         = data.baseFireDamage;

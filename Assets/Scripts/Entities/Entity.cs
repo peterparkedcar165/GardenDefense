@@ -50,7 +50,9 @@ public abstract class Entity : MonoBehaviour
 
     [Header("Base Stats")]
     public float baseMaxHealth, baseAttackDamage, baseMagicPower, baseAttackSpeed, baseAttackRange, baseHealingBonus, baseHealingReceived;
-    public float basePhysicalResistance, baseMagicResistance;
+    public int baseArmor, baseMagicArmor;
+    public int baseArmorPenFlat, baseMagicPenFlat;
+    public float baseArmorPenPercent, baseMagicPenPercent;
     public float baseFireResistance, baseWaterResistance, baseNatureResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
     public float basePhysicalDamage, baseMagicDamage, baseBonusEffectChance;
     public float baseFireDamage, baseWaterDamage, baseNatureDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
@@ -72,6 +74,8 @@ public abstract class Entity : MonoBehaviour
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
     public float physicalResistance, magicResistance;
+    public int armor, magicArmor;
+    public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
     public float fireResistance, waterResistance, natureResistance, windResistance, poisonResistance, iceResistance;
     public float physicalDamage, magicDamage, bonusEffectChance;
     public float fireDamage, waterDamage, natureDamage, windDamage, poisonDamage, iceDamage;
@@ -98,7 +102,8 @@ public abstract class Entity : MonoBehaviour
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
-    public float physicalResistanceAdder, magicResistanceAdder;
+    public float armorAdder, magicArmorAdder;
+    public float armorPenFlatAdder, magicPenFlatAdder, armorPenPercentAdder, magicPenPercentAdder;
     public float fireResistanceAdder, waterResistanceAdder, natureResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
     public float physicalDamageAdder, magicDamageAdder, bonusEffectChanceAdder;
     public float fireDamageAdder, waterDamageAdder, natureDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
@@ -119,7 +124,8 @@ public abstract class Entity : MonoBehaviour
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
-    public float physicalResistanceMultiplier, magicResistanceMultiplier;
+    public float totalArmorMultiplier, totalMagicArmorMultiplier;
+    public float armorPenFlatMultiplier, magicPenFlatMultiplier, armorPenPercentMultiplier, magicPenPercentMultiplier;
     public float fireResistanceMultiplier, waterResistanceMultiplier, natureResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
     public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier;
     public float fireDamageMultiplier, waterDamageMultiplier, natureDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier;
@@ -144,8 +150,6 @@ public abstract class Entity : MonoBehaviour
     public virtual void UpdateStats()
     {
         maxHealth = baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier);
-        physicalResistance = basePhysicalResistance + physicalResistanceAdder + (basePhysicalResistance * physicalResistanceMultiplier);
-        magicResistance = baseMagicResistance + magicResistanceAdder + (baseMagicResistance * magicResistanceMultiplier);
         attackDamage = baseAttackDamage + attackDamageAdder + (baseAttackDamage * attackDamageMultiplier);
         magicPower = baseMagicPower + magicPowerAdder + (baseMagicPower * magicPowerMultiplier);
         attackSpeed = baseAttackSpeed + attackSpeedAdder + (baseAttackSpeed * attackSpeedMultiplier);
@@ -191,6 +195,14 @@ public abstract class Entity : MonoBehaviour
         debuffReceivedDuration = baseDebuffReceivedDuration + debuffReceivedDurationAdder + (baseDebuffReceivedDuration * debuffReceivedDurationMultiplier);
         evasion  = baseEvasion  + evasionAdder  + (baseEvasion  * evasionMultiplier);
         accuracy = baseAccuracy + accuracyAdder + (baseAccuracy * accuracyMultiplier);
+        armor      = (int)((baseArmor      + armorAdder)      * (1f + totalArmorMultiplier));
+        magicArmor = (int)((baseMagicArmor + magicArmorAdder) * (1f + totalMagicArmorMultiplier));
+        physicalResistance = armor      / (100f + armor);
+        magicResistance    = magicArmor / (100f + magicArmor);
+        armorPenFlat    = (baseArmorPenFlat    + armorPenFlatAdder)    * (1f + armorPenFlatMultiplier);
+        magicPenFlat    = (baseMagicPenFlat    + magicPenFlatAdder)    * (1f + magicPenFlatMultiplier);
+        armorPenPercent = baseArmorPenPercent  + armorPenPercentAdder  + (baseArmorPenPercent * armorPenPercentMultiplier);
+        magicPenPercent = baseMagicPenPercent  + magicPenPercentAdder  + (baseMagicPenPercent * magicPenPercentMultiplier);
         UpdateHealthBar();
     }
 
@@ -372,11 +384,17 @@ public abstract class Entity : MonoBehaviour
         switch (damageType)
         {
             case DamageType.Physical:
-            modifiedDamage = damageDealt * Mathf.Max(0f, 1 - physicalResistance + source.physicalDamage);
-            break;
+            {
+                float effArmor = Mathf.Max(-99f, armor * (1f - source.armorPenPercent) - source.armorPenFlat);
+                modifiedDamage = damageDealt * (1f - effArmor / (100f + effArmor));
+                break;
+            }
             case DamageType.Magic:
-            modifiedDamage = damageDealt * Mathf.Max(0f, 1 - magicResistance + source.magicDamage);
-            break;
+            {
+                float effMagicArmor = Mathf.Max(-99f, magicArmor * (1f - source.magicPenPercent) - source.magicPenFlat);
+                modifiedDamage = damageDealt * (1f - effMagicArmor / (100f + effMagicArmor));
+                break;
+            }
             default:
             modifiedDamage = damageDealt;
             break;

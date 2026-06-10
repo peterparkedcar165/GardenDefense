@@ -179,8 +179,8 @@ public class FertilizerManager : MonoBehaviour
             case StatType.CounterDamage:                plant.counterDamageAdder           += value; break;
             case StatType.PhysicalDamage:               plant.physicalDamageAdder          += value; break;
             case StatType.MagicDamage:                  plant.magicDamageAdder             += value; break;
-            case StatType.PhysicalResistance:           plant.physicalResistanceAdder      += value; break;
-            case StatType.MagicResistance:              plant.magicResistanceAdder         += value; break;
+            case StatType.PhysicalResistance:           plant.armorAdder      += value; break;
+            case StatType.MagicResistance:              plant.magicArmorAdder += value; break;
             case StatType.MagicPower:                   plant.magicPowerAdder              += value; break;
             case StatType.DebuffGivenDuration:          plant.debuffGivenDurationAdder     += value; break;
             case StatType.BuffGivenDuration:            plant.buffGivenDurationAdder       += value; break;

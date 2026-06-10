@@ -10,15 +10,15 @@ public class FrozenRageEffect : TauntEffect
 
     public override void OnApply()
     {
-        target.physicalResistanceAdder -= resistanceReduction;
+        target.armorAdder -= resistanceReduction;
     }
 
     public override void OnExpire()
     {
-        target.physicalResistanceAdder += resistanceReduction;
+        target.armorAdder += resistanceReduction;
     }
 
     public override string GetName() => "<color=#00FFFF>Frozen Rage</color>";
     public override string GetDescription() =>
-        $"Forced to attack Holly. Physical Resistance reduced by <color=#FF6666><b>{resistanceReduction * 100f:F0}%</b></color>.";
+        $"Forced to attack Holly. Armor reduced by <color=#FF6666><b>{resistanceReduction:F1}</b></color>.";
 }

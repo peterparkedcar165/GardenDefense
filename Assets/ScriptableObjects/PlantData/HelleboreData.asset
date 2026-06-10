@@ -74,9 +74,9 @@ MonoBehaviour:
   baseSkillDamage: 0
   path1AttackSpeedPerLevel: 0.06
   path1MagicPowerPerLevel: 12
-  selfPhysResistBase: 0.12
-  selfPhysResistPerLevel: 0.04
-  selfPhysResistMP: 0.0012
+  selfArmorBase: 14
+  selfArmorPerLevel: 5
+  selfArmorMP: 0.14
   passiveCDRPerHit: 1
   path2CDRPerLevel: 0.2
   path2AuraSharePerLevel: 0.05

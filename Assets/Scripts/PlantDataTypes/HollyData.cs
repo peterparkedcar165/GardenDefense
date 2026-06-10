@@ -13,7 +13,7 @@ public class HollyData : PlantData
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 4f;
-    public float path1PhysicalResistancePerLevel = 0.04f;
+    public int path1ArmorPerLevel = 8;
 
     [Header("Path 2 Scaling")]
     public float path2HealthPerLevel = 40f;
@@ -32,8 +32,9 @@ public class HollyData : PlantData
         $"<color=green><b>{baseRetaliationInsectPercent * 100f:F0}%</b></color> of the attacker's Attack Damage. " +
         $"Increases Max Health by <color=#FFB6C1><b>{baseHealthBonusMP * 100f:F0}%</b></color> Magic Power. " +
         $"While <b><color=#00FFFF>Holly</color></b> is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
-        $"forcing them to target her and reducing their Physical Resistance by " +
-        $"<color=green><b>{baseFrozenRageReduction * 100f:F0}%</b></color> + <color=#FFB6C1><b>{baseFrozenRageReductionMP * 100f:F0}%</b></color> Magic Power. " +
+        $"forcing them to target her and reducing their Armor by " +
+        $"<color=green><b>{baseFrozenRageReduction * 100f / (1f - baseFrozenRageReduction):F0}</b></color> " +
+        $"[+<color=#FFB6C1><b>{baseFrozenRageReductionMP * 100f:F0}%</b></color> Magic Power]. " +
         $"Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage.";
 
     public override string GetSkillDescription() =>

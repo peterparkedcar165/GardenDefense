@@ -79,6 +79,10 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         // --- Offense ---
         sb.AppendLine("<size=+8><color=white><b><u>Offense</u></b></color></size>");
+        ElemLine(sb, Physical, "Armor Penetration:",     $"{e.armorPenFlat:F0}",           e.armorPenFlat,    e.baseArmorPenFlat);
+        ElemLine(sb, Physical, "Armor Penetration (%):", $"{e.armorPenPercent * 100:F0}%", e.armorPenPercent, e.baseArmorPenPercent);
+        ElemLine(sb, Magic,    "Magic Penetration:",     $"{e.magicPenFlat:F0}",           e.magicPenFlat,    e.baseMagicPenFlat);
+        ElemLine(sb, Magic,    "Magic Penetration (%):", $"{e.magicPenPercent * 100:F0}%", e.magicPenPercent, e.baseMagicPenPercent);
         ElemLine(sb, Gold, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
         ElemLine(sb, Gold, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
         Line(sb, "Elemental Affinity:",  $"{e.elementalAffinity * 100:F0}%", e.elementalAffinity,  e.baseelementalAffinity);
@@ -98,8 +102,10 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         // --- Defenses ---
         sb.AppendLine("<size=+8><color=white><b><u>Defenses</u></b></color></size>");
-        ElemLine(sb, Physical, "Physical Resistance:", $"{e.physicalResistance * 100:F0}%", e.physicalResistance, e.basePhysicalResistance);
-        ElemLine(sb, Magic,    "Magic Resistance:",    $"{e.magicResistance * 100:F0}%",    e.magicResistance,    e.baseMagicResistance);
+        Line(sb, "<color=#00CED1>Armor:</color>",       $"{e.armor}",      e.armor,      e.baseArmor);
+        Line(sb, "<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
+        ElemLine(sb, Physical, "Physical Resistance:", $"{e.physicalResistance * 100:F0}%", e.physicalResistance, e.baseArmor / (100f + e.baseArmor));
+        ElemLine(sb, Magic,    "Magic Resistance:",    $"{e.magicResistance * 100:F0}%",    e.magicResistance,    e.baseMagicArmor / (100f + e.baseMagicArmor));
         ElemLine(sb, DoT,    "DoT Resistance:",    $"{e.dotResistance * 100:F0}%",    e.dotResistance,    e.baseDotResistance);
         ElemLine(sb, Fire,   "Fire Resistance:",   $"{e.fireResistance * 100:F0}%",   e.fireResistance,   e.baseFireResistance);
         ElemLine(sb, Water,  "Water Resistance:",  $"{e.waterResistance * 100:F0}%",  e.waterResistance,  e.baseWaterResistance);

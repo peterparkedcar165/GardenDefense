@@ -24,7 +24,7 @@ public abstract class ShieldEffect : StatusEffect
         // so additional shields (of any type) don't stack the bonus
         if (target is Snail && ShieldCount() == 1)
         {
-            target.physicalResistanceAdder += 0.6f;
+            target.armorAdder += 150f;
             ((Insect)target).movementSpeedAdder -= 0.2f;
         }
     }
@@ -36,7 +36,7 @@ public abstract class ShieldEffect : StatusEffect
         // revert only when the last shield is gone (this one is still counted here)
         if (target is Snail && ShieldCount() <= 1)
         {
-            target.physicalResistanceAdder -= 0.6f;
+            target.armorAdder -= 150f;
             ((Insect)target).movementSpeedAdder += 0.2f;
         }
     }

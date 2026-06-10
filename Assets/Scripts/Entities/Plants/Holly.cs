@@ -77,14 +77,16 @@ public class Holly : Aura
 
     private void ApplyFrozenRageInRange()
     {
+        float r = Mathf.Clamp(FrozenRageReduction, 0f, 0.99f);
+        float armorReduction = 100f * r / (1f - r);
         foreach (Insect insect in GetInsectsInRange())
-            insect.ApplyEffect(new FrozenRageEffect(insect, EffectDuration, 1, this, this, FrozenRageReduction));
+            insect.ApplyEffect(new FrozenRageEffect(insect, EffectDuration, 1, this, this, armorReduction));
     }
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage      = data.baseAttackDamage       + (HData?.path1AttackDamagePerLevel          ?? 4f)    * level;
-        basePhysicalResistance = data.basePhysicalResistance + (HData?.path1PhysicalResistancePerLevel ?? 0.04f) * level;
+        baseAttackDamage = data.baseAttackDamage + (HData?.path1AttackDamagePerLevel ?? 4f) * level;
+        baseArmor        = data.baseArmor        + (HData?.path1ArmorPerLevel        ?? 8) * level;
     }
 
     public override void OnPath2Upgrade(int level)
@@ -112,8 +114,9 @@ public class Holly : Aura
         $"<color=green><b>{RetaliationInsectPct * 100f:F0}%</b></color> of the attacker's Attack Damage. " +
         $"Increases Max Health by [<color=#FFB6C1><b>+{(HData?.baseHealthBonusMP ?? 0f) * magicPower:F0}</b></color>]. " +
         $"While {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
-        $"forcing them to target {GetName()} and reducing their Physical Resistance by " +
-        $"<color=green><b>{FrozenRageReductionBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f:F0}%</b></color>]. " +
+        $"forcing them to target {GetName()} and reducing their Armor by " +
+        $"<color=green><b>{FrozenRageReductionBase * 100f / (1f - FrozenRageReductionBase):F1}</b></color> " +
+        $"[<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f / Mathf.Max(1f - FrozenRageReductionMP, 0.01f):F1}</b></color>]. " +
         $"Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage.";
 
     public override string GetSkillDesription() =>
@@ -122,11 +125,11 @@ public class Holly : Aura
 
     public override string GetPath1Description()
     {
-        float adpl     = HData?.path1AttackDamagePerLevel          ?? 4f;
-        float resistpl = HData?.path1PhysicalResistancePerLevel ?? 0.04f;
+        float adpl    = HData?.path1AttackDamagePerLevel ?? 4f;
+        float armorpl = HData?.path1ArmorPerLevel        ?? 8;
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
                $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Physical Resistance by <color=green><b>{resistpl * 100f:F0}%</b></color> per level. [<color=green><b>+{resistpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Armor by <color=green><b>{armorpl:F0}</b></color> per level. [<color=green><b>+{armorpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
     }
 
@@ -145,9 +148,10 @@ public class Holly : Aura
         float shieldpl = HData?.path3ShieldPerLevel       ?? 20f;
         float ragepl   = HData?.path3FrozenRagePerLevel   ?? 0.04f;
         float durpl    = HData?.path3SkillDurationPerLevel ?? 2f;
+        float rageArmorpl = ragepl * 100f / (1f - ragepl);
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
                $"Scaling: <color=#FFB6C1><b>{(HData?.baseFrozenRageReductionMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Frozen Rage)\n\n<color=#FFB6C1><b>{(HData?.baseSkillShieldMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Shield)\n\n" +
-               $"Increase Physical Resistance reduction by <color=green><b>{ragepl * 100f:F0}%</b></color> per level. [<color=green><b>+{ragepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Armor reduction by <color=green><b>{rageArmorpl:F1}</b></color> per level. [<color=green><b>+{rageArmorpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";

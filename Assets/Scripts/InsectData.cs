@@ -19,7 +19,8 @@ public class InsectData : ScriptableObject
     public float baseAttackRange;
     public float baseMovementSpeed;
     public float baseTargetingRange;
-    public float startingShield;
+    public int baseArmor;
+    public int baseMagicArmor;
 
     [Header("Offensive")]
     public DamageType attackDamageType = DamageType.Physical;
@@ -27,11 +28,14 @@ public class InsectData : ScriptableObject
     public float baseLifesteal;
     public float basePhysicalDamage;
     public float baseMagicDamage;
+    public int baseArmorPenFlat;
+    public float baseArmorPenPercent;
+    public int baseMagicPenFlat;
+    public float baseMagicPenPercent;
 
     [Header("Resistances")]
+    public float startingShield;
     public float baseTenacity;
-    public float basePhysicalResistance;
-    public float baseMagicResistance;
     public float baseFireResistance;
     public float baseWaterResistance;
     public float basePoisonResistance;
