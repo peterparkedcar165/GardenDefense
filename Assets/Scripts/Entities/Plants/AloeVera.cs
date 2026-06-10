@@ -196,24 +196,34 @@ public class AloeVera : Lobber
     public override string GetPassiveDescription() =>
         $"Water droplets also heal plants, restoring <color=green><b>{healAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.22f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{tempReduction:F1}</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius. If an injured plant is within range, switch targetting to the one with the lowest Health.";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float aspl    = AVData?.path1AttackSpeedPerLevel ?? 0.02f;
         float rangepl = AVData?.path1AttackRangePerLevel ?? 0.2f;
+        string scaling = details
+            ? $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+              $"Increase Base Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]"
+            : $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color>.\n\n" +
+              $"Increase Base Attack Range by <color=green><b>{rangepl:F1}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Increase Base Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float healpl = AVData?.path2HealPerLevel          ?? 8f;
         float temppl = AVData?.path2TempReductionPerLevel ?? 0.5f;
+        string scaling = details
+            ? $"Increase base healing by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
+              $"Increase temperature reduction by <color=green><b>{temppl:F1}</b></color> per level. [<color=green><b>+{temppl * effectivePath2Level:F1}</b></color>]"
+            : $"Increase base healing by <color=green><b>{healpl:F0}</b></color>.\n\n" +
+              $"Increase temperature reduction by <color=green><b>{temppl:F1}</b></color>.";
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"Increase base healing by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"Increase temperature reduction by <color=green><b>{temppl:F1}</b></color> per level. [<color=green><b>+{temppl * effectivePath2Level:F1}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
     public override string GetSkillDesription()
@@ -223,17 +233,22 @@ public class AloeVera : Lobber
                $"For a total of <color=green><b>{totalHealing:F0}</b></color> Health.";
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float healpl3  = AVData?.path3SkillHealPerLevel    ?? 2f;
         float durpl    = AVData?.path3SkillDurationPerLevel ?? 1f;
         float radiuspl = AVData?.path3RadiusPerLevel        ?? 0.3f;
-        float totalHealing = skillHealPerTick * Mathf.Floor(skillDuration / baseSkillHealInterval);
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>6%</b></color> <color=#FFB6C1>Magic Power</color>\n\n" +
+              $"Increase healing by <color=green><b>{healpl3:F0}</b></color> per tick per level. [<color=green><b>+{healpl3 * effectivePath3Level:F0}</b></color>]\n\n" +
+              $"Increase rain duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+              $"Increase rain radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]"
+            : $"Increase healing by <color=green><b>{healpl3:F0}</b></color> per tick.\n\n" +
+              $"Increase rain duration by <color=green><b>{durpl:F0}</b></color> second.\n\n" +
+              $"Increase rain radius by <color=green><b>{radiuspl:F1}</b></color>.";
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>6%</b></color> <color=#FFB6C1>Magic Power</color>\n\n" +
-               $"Increase healing by <color=green><b>{healpl3:F0}</b></color> per tick per level. [<color=green><b>+{healpl3 * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase rain duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-               $"Increase rain radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

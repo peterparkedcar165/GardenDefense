@@ -77,41 +77,58 @@ public class AcornSprout : Shooter
         return $"The {GetName()} shoots acorns at targets, dealing damage with a chance of stunning.";
     }
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float adpl = AcornData?.path1AttackDamagePerLevel ?? 8f;
         float aspl = AcornData?.path1AttackSpeedPerLevel  ?? 0.05f;
+        string scaling = details
+            ? $"Increase Base Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+              $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]"
+            : $"Increase Base Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
+              $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color>.";
         return $"Attack:\n\n" +
                $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
-               $"Increase Base Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Base Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float chancepl = AcornData?.path2StunChancePerLevel   ?? 0.05f;
         float durpl    = AcornData?.path2StunDurationPerLevel ?? 0.1f;
+        string scaling = details
+            ? $"Increase Stun Chance by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase Stun Duration by <color=green><b>{durpl:F2}s</b></color> per level. [<color=green><b>+{durpl * effectivePath2Level:F2}s</b></color>]"
+            : $"Increase Stun Chance by <color=green><b>{chancepl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase Stun Duration by <color=green><b>{durpl:F2}s</b></color>.";
         return $"Passive:\n\n" +
                $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{stunDuration}</b></color> second.\n\n" +
-               $"Increase Stun Chance by <b><color=green>{chancepl * 100f:F0}%</color></b> per level. [<b><color=green>+{chancepl * effectivePath2Level * 100f:F0}%</color></b>]\n\n" +
-               $"Increase Stun Duration by <b><color=green>{durpl:F2}s</color></b> per level. [<b><color=green>+{durpl * effectivePath2Level:F2}s</color></b>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float dmgpl    = AcornData?.path3DamageMultiplierPerLevel ?? 0.25f;
         float durpl    = AcornData?.path3SkillDurationPerLevel    ?? 2f;
         float hppl     = AcornData?.path3HealthPerLevel           ?? 50f;
         float radiuspl = AcornData?.path3RadiusPerLevel           ?? 0.15f;
+        string scaling = details
+            ? $"Increase impact damage multiplier by <color=green><b>{dmgpl * 100f:F0}%</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase acorn lifetime by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+              $"Increase acorn health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath3Level:F0}</b></color>]\n\n" +
+              $"Increase acorn size and impact radius by <color=green><b>{radiuspl * 100f:F0}%</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level * 100f:F0}%</b></color>]"
+            : $"Increase impact damage multiplier by <color=green><b>{dmgpl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase acorn lifetime by <color=green><b>{durpl:F0}s</b></color>.\n\n" +
+              $"Increase acorn health by <color=green><b>{hppl:F0}</b></color>.\n\n" +
+              $"Increase acorn size and impact radius by <color=green><b>{radiuspl * 100f:F0}%</b></color>.";
         return $"Skill:\n\n" +
                $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
                $"The acorn then sits on the ground for <color=green><b>{skillDuration}</b></color> seconds, blocking ground insects who stop to gnaw at it. The acorn can sustain <color=green><b>{acornBombHealth:F0}</b></color> damage.\n\n" +
-               $"Increase impact damage multiplier by <color=green><b>{dmgpl * 100f:F0}%</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase acorn lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-               $"Increase acorn health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase acorn size and impact radius by <color=green><b>{radiuspl * 100f:F0}%</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

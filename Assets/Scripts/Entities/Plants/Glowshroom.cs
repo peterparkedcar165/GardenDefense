@@ -151,35 +151,50 @@ public class Glowshroom : Shooter
     public override string GetSkillDesription() =>
         $"Unleashes a blinding flash, tripling the illumination radius to <color=green><b>{lightEmissionRange * LightMult:F1}</b></color> for <color=green><b>{skillDuration:F0}s</b></color>. All insects caught in the expanded radius are <color=#DDDDDD><b>Blinded</b></color> for <color=green><b>{BlindDurationBase:F1}s</b></color> [<color=#FFB6C1><b>+{BlindDurationMP:F1}s</b></color>], causing their attacks to miss.";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float adpl    = GMData?.path1AttackDamagePerLevel ?? 8f;
         float rangepl = GMData?.path1AttackRangePerLevel  ?? 0.15f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{(GMData?.splashDamageMPMultiplier ?? 0.5f) * 100f:F0}%</b></color> Magic Power (Splash Damage)\n\n" +
+              $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+              $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]"
+            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
+              $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{(GMData?.splashDamageMPMultiplier ?? 0.5f) * 100f:F0}%</b></color> Magic Power (Splash Damage)\n\n" +
-               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float durpl    = GMData?.path2FungalGlowDurationPerLevel ?? 1f;
         float radiuspl = GMData?.path2SpreadRadiusPerLevel       ?? 0.25f;
+        string scaling = details
+            ? $"Increase <color=#88FF88>Fungal Glow</color> duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath2Level:F0}s</b></color>]\n\n" +
+              $"Increase spread radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath2Level:F2}</b></color>]"
+            : $"Increase <color=#88FF88>Fungal Glow</color> duration by <color=green><b>{durpl:F0}s</b></color>.\n\n" +
+              $"Increase spread radius by <color=green><b>{radiuspl:F2}</b></color>.";
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"Increase <color=#88FF88>Fungal Glow</color> duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath2Level:F0}s</b></color>]\n\n" +
-               $"Increase spread radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath2Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float blindpl = GMData?.path3BlindDurationPerLevel ?? 0.5f;
         float durpl   = GMData?.path3SkillDurationPerLevel ?? 1f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{(GMData?.blindDurationMPMultiplier ?? 0.04f) * 100f:F0}s</b></color> Blind per 100 Magic Power\n\n" +
+              $"Increase <color=#DDDDDD>Blind</color> duration by <color=green><b>{blindpl:F1}s</b></color> per level. [<color=green><b>+{blindpl * effectivePath3Level:F1}s</b></color>]\n\n" +
+              $"Increase skill duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]"
+            : $"Increase <color=#DDDDDD>Blind</color> duration by <color=green><b>{blindpl:F1}s</b></color>.\n\n" +
+              $"Increase skill duration by <color=green><b>{durpl:F0}s</b></color>.";
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{(GMData?.blindDurationMPMultiplier ?? 0.04f) * 100f:F0}s</b></color> Blind per 100 Magic Power\n\n" +
-               $"Increase <color=#DDDDDD>Blind</color> duration by <color=green><b>{blindpl:F1}s</b></color> per level. [<color=green><b>+{blindpl * effectivePath3Level:F1}s</b></color>]\n\n" +
-               $"Increase skill duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

@@ -97,37 +97,53 @@ public class Waterlily : Shooter
         return $"Attacks deal <color=green><b>{data.basePassiveDamage + attackDamage * splashpl * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] {PlantData.ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.";
     }
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float rangepl = WLData?.path1AttackRangePerLevel ?? 0.5f;
         float aspl    = WLData?.path1AttackSpeedPerLevel ?? 0.3f;
+        string scaling = details
+            ? $"Increase Attack Speed by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F1}</b></color>]\n\n" +
+              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]"
+            : $"Increase Attack Speed by <color=green><b>{aspl:F1}</b></color>.\n\n" +
+              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Increase Attack Speed by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
         float aoepl   = WLData?.path2AoERangePerLevel             ?? 0.05f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
+              $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> of Attack Damage per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
+              $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]"
+            : $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> of Attack Damage.\n\n" +
+              $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color>.";
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-               $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> of Attack Damage per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
-               $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float bubblepl = WLData?.path3BubbleDamagePerLevel     ?? 12f;
         float durpl    = WLData?.path3SkillDurationPerLevel     ?? 2f;
         float radiuspl = WLData?.path3RadiusPerLevel            ?? 0.2f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
+              $"Increase impact damage by <color=green><b>{bubblepl:F0}</b></color> per level. [<color=green><b>+{bubblepl * effectivePath3Level:F0}</b></color>]\n\n" +
+              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+              $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]"
+            : $"Increase impact damage by <color=green><b>{bubblepl:F0}</b></color>.\n\n" +
+              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds.\n\n" +
+              $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color>.";
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-               $"Increase impact damage by <color=green><b>{bubblepl:F0}</b></color> per level. [<color=green><b>+{bubblepl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-               $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

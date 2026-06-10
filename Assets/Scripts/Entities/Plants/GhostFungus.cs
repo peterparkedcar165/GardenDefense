@@ -271,43 +271,61 @@ public class GhostFungus : Shooter
         $"{SignedPct(FungalAttackMultiplier * 100f)} [<color=#FFB6C1><b>+{(GData?.fungalAttackMP ?? 0f) * magicPower:F0}%</b></color>] Attack Damage\n" +
         $"{SignedPct(-FungalMoveSlow * 100f)} Movement Speed";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float adpl  = GData?.path1AttackDamagePerLevel ?? 4f;
         float sadpl = GData?.shroomletAttackDamagePerLevel ?? 2f;
         float saspl = GData?.shroomletAttackSpeedPerLevel  ?? 0.05f;
+        string scaling = details
+            ? $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+              $"Increase Shroomlet Attack Damage by <color=green><b>{sadpl:F0}</b></color> per level. [<color=green><b>+{sadpl * effectivePath1Level:F0}</b></color>]\n\n" +
+              $"Increase Shroomlet Attack Speed by <color=green><b>{saspl:F2}</b></color> per level. [<color=green><b>+{saspl * effectivePath1Level:F2}</b></color>]"
+            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
+              $"Increase Shroomlet Attack Damage by <color=green><b>{sadpl:F0}</b></color>.\n\n" +
+              $"Increase Shroomlet Attack Speed by <color=green><b>{saspl:F2}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Shroomlet Attack Damage by <color=green><b>{sadpl:F0}</b></color> per level. [<color=green><b>+{sadpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Shroomlet Attack Speed by <color=green><b>{saspl:F2}</b></color> per level. [<color=green><b>+{saspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         int   spl  = GData?.path2ShroomletPerLevel ?? 1;
         float shpl = GData?.shroomletHealthPerLevel ?? 10f;
         float cdpl = GData?.path2SpawnCooldownReducerPerLevel ?? 0.5f;
+        string scaling = details
+            ? $"Conjure <color=green><b>{spl}</b></color> additional Ghost Shroomlet per level. [<color=green><b>+{spl * effectivePath2Level}</b></color>]\n\n" +
+              $"Increase Shroomlet Health by <color=green><b>{shpl:F0}</b></color> per level. [<color=green><b>+{shpl * effectivePath2Level:F0}</b></color>]\n\n" +
+              $"Reduce spawn cooldown by <color=green><b>{cdpl:F1}s</b></color> per level. [<color=green><b>-{cdpl * effectivePath2Level:F1}s</b></color>]"
+            : $"Conjure <color=green><b>{spl}</b></color> additional Ghost Shroomlet.\n\n" +
+              $"Increase Shroomlet Health by <color=green><b>{shpl:F0}</b></color>.\n\n" +
+              $"Reduce spawn cooldown by <color=green><b>{cdpl:F1}s</b></color>.";
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"Conjure <color=green><b>{spl}</b></color> additional Ghost Shroomlet per level. [<color=green><b>+{spl * effectivePath2Level}</b></color>]\n\n" +
-               $"Increase Shroomlet Health by <color=green><b>{shpl:F0}</b></color> per level. [<color=green><b>+{shpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"Reduce spawn cooldown by <color=green><b>{cdpl:F1}s</b></color> per level. [<color=green><b>-{cdpl * effectivePath2Level:F1}s</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float hpl  = GData?.path3HealthMultiplierPerLevel ?? 0.2f;
         float apl  = GData?.path3AttackMultiplierPerLevel ?? 0.2f;
         float mpl  = GData?.path3MoveSlowPerLevel ?? 0.05f;
         float hmp = GData?.fungalHealthMP ?? 0f;
         float amp = GData?.fungalAttackMP ?? 0f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{hmp:F0}%</b></color> Magic Power (Max Health bonus). [<color=#FFB6C1><b>+{hmp * magicPower:F0}%</b></color>]\n\n" +
+              $"Scaling: <color=#FFB6C1><b>{amp:F0}%</b></color> Magic Power (Attack Damage bonus). [<color=#FFB6C1><b>+{amp * magicPower:F0}%</b></color>]\n\n" +
+              $"Increase <color=green>Max Health</color> bonus by <color=green><b>{hpl * 100f:F0}%</b></color> per level. [<color=green><b>+{hpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase <color=green>Attack Damage</color> bonus by <color=green><b>{apl * 100f:F0}%</b></color> per level. [<color=green><b>+{apl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase Movement Speed reduction by <color=green><b>{mpl * 100f:F0}%</b></color> per level. [<color=green><b>+{mpl * effectivePath3Level * 100f:F0}%</b></color>]"
+            : $"Increase <color=green>Max Health</color> bonus by <color=green><b>{hpl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase <color=green>Attack Damage</color> bonus by <color=green><b>{apl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase Movement Speed reduction by <color=green><b>{mpl * 100f:F0}%</b></color>.";
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{hmp:F0}%</b></color> Magic Power (Max Health bonus). [<color=#FFB6C1><b>+{hmp * magicPower:F0}%</b></color>]\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{amp:F0}%</b></color> Magic Power (Attack Damage bonus). [<color=#FFB6C1><b>+{amp * magicPower:F0}%</b></color>]\n\n" +
-               $"Increase <color=green>Max Health</color> bonus by <color=green><b>{hpl * 100f:F0}%</b></color> per level. [<color=green><b>+{hpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase <color=green>Attack Damage</color> bonus by <color=green><b>{apl * 100f:F0}%</b></color> per level. [<color=green><b>+{apl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase Movement Speed reduction by <color=green><b>{mpl * 100f:F0}%</b></color> per level. [<color=green><b>+{mpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

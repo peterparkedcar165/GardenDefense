@@ -216,32 +216,50 @@ public class Snowdrop : Aura
         $"Applies <color=#00FFFF>Chill</color> at <color=green><b>{blizzardChillMultiplier:F1}×</b></color> strength. " +
         $"Plants within the Blizzard also receive <color=#00FFFF>Cooling</color> effect for <color=green><b>{blizzardCoolingMultiplier:F1}×</b></color> the effect.";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float adpl    = SData?.path1AttackDamagePerLevel ?? 1f;
         float rangepl = SData?.path1AttackRangePerLevel  ?? 0.1f;
+        string scaling = details
+            ? $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]"
+            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
+              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description() =>
-        $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-        $"Increase <color=#00FFFF>Chill</color> level by <color=green><b>1</b></color> per level, adding <color=green><b>{scalingSlow * 100f:F0}%</b></color> slow. [<color=green><b>+{scalingSlow * 100f * effectivePath2Level:F0}%</b></color>]\n\n" +
-        $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+    public override string GetPath2Description(bool details = false)
+    {
+        string scaling = details
+            ? $"Increase <color=#00FFFF>Chill</color> level by <color=green><b>1</b></color> per level, adding <color=green><b>{scalingSlow * 100f:F0}%</b></color> slow. [<color=green><b>+{scalingSlow * 100f * effectivePath2Level:F0}%</b></color>]"
+            : $"Increase <color=#00FFFF>Chill</color> level by <color=green><b>1</b></color>, adding <color=green><b>{scalingSlow * 100f:F0}%</b></color> slow.";
+        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
+    }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float widthpl = SData?.path3BlizzardWidthPerLevel ?? 0.5f;
         float rangepl = SData?.path3BlizzardRangePerLevel ?? 0.5f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
+              $"Range: <color=green><b>{BlizzardRange:F1}</b></color> units\n\n" +
+              $"Increase Blizzard Damage by <color=green><b>{blizzardDamagePerLevel:F0}</b></color> per second per level. [<color=green><b>+{blizzardDamagePerLevel * effectivePath3Level:F0}</b></color>]\n\n" +
+              $"Increase Blizzard Duration by <color=green><b>{blizzardDurationPerLevel:F1}s</b></color> per level. [<color=green><b>+{blizzardDurationPerLevel * effectivePath3Level:F1}s</b></color>]\n\n" +
+              $"Increase Blizzard Width by <color=green><b>{widthpl:F1}</b></color> per level. [<color=green><b>+{widthpl * effectivePath3Level:F1}</b></color>]\n\n" +
+              $"Increase Blizzard Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]"
+            : $"Increase Blizzard Damage by <color=green><b>{blizzardDamagePerLevel:F0}</b></color> per second.\n\n" +
+              $"Increase Blizzard Duration by <color=green><b>{blizzardDurationPerLevel:F1}s</b></color>.\n\n" +
+              $"Increase Blizzard Width by <color=green><b>{widthpl:F1}</b></color>.\n\n" +
+              $"Increase Blizzard Range by <color=green><b>{rangepl:F1}</b></color>.";
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-               $"Range: <color=green><b>{BlizzardRange:F1}</b></color> units\n\n" +
-               $"Increase Blizzard Damage by <color=green><b>{blizzardDamagePerLevel:F0}</b></color> per second per level. [<color=green><b>+{blizzardDamagePerLevel * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase Blizzard Duration by <color=green><b>{blizzardDurationPerLevel:F1}s</b></color> per level. [<color=green><b>+{blizzardDurationPerLevel * effectivePath3Level:F1}s</b></color>]\n\n" +
-               $"Increase Blizzard Width by <color=green><b>{widthpl:F1}</b></color> per level. [<color=green><b>+{widthpl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"Increase Blizzard Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

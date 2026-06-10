@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class PathHoverTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -15,13 +16,14 @@ public class PathHoverTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExi
         Plant plant = PlantUpgradeUI.instance?.GetSelectedPlant();
         if (plant == null) return;
 
+        bool details = Keyboard.current.shiftKey.isPressed;
         string description = "";
         if (pathType == PathType.Path1)
-            description = plant.GetPath1Description();
+            description = plant.GetPath1Description(details);
         else if (pathType == PathType.Path2)
-            description = plant.GetPath2Description();
+            description = plant.GetPath2Description(details);
         else if (pathType == PathType.Path3)
-            description = plant.GetPath3Description();
+            description = plant.GetPath3Description(details);
 
         PlantUpgradeUI.instance.ShowTooltip(description);
     }

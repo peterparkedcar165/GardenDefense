@@ -222,37 +222,48 @@ public class Cattail : Shooter
     public override string GetPath2Name() => "Passive";
     public override string GetPath3Name() => "Skill";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float adpl = CData?.path1AttackDamagePerLevel ?? 5f;
         float aspl = CData?.path1AttackSpeedPerLevel ?? 0.05f;
+        string scaling = details
+            ? $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+              $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]"
+            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
+              $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
     public override string GetAttackDescription() =>
         $"Fires a high-pressure water dart, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to a single target at any range.";
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float critpl  = CData?.path2CritChancePerLevel           ?? 0.08f;
         float grndpl  = CData?.path2GroundDurationPerLevel       ?? 0.5f;
         float baseConv = CData?.baseCritDamageConversion         ?? 1f;
         float convpl  = CData?.path2CritDamageConversionPerLevel ?? 0.5f;
         float currentConversion = baseConv + convpl * effectivePath2Level;
+        string scaling = details
+            ? $"Increase Base Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase Grounded duration by <color=green><b>{grndpl:F1}s</b></color> per level. [<color=green><b>+{grndpl * effectivePath2Level:F1}s</b></color>]\n\n" +
+              $"Increase the Critical Damage conversion by <color=green><b>{convpl:F1}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level:F1}%</b></color>]"
+            : $"Increase Base Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase Grounded duration by <color=green><b>{grndpl:F1}s</b></color>.\n\n" +
+              $"Increase the Critical Damage conversion by <color=green><b>{convpl:F1}%</b></color>.";
         return $"Passive:\n\n" +
                $"Every <color=green><b>1%</b></color> of Critical Chance above <color=green><b>100%</b></color> will be converted to <color=green><b>{currentConversion:F1}%</b></color> Critical Damage.\n\n" +
                $"The Cattail's shots against flying insects will Ground them for <color=green><b>{GroundDuration:F1}s</b></color>.\n\n" +
                $"Current Critical Damage Bonus: <color=green><b>{_overcritBonus * 100f:F1}%</b></color>\n\n" +
-               $"Increase Base Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase Grounded duration by <color=green><b>{grndpl:F1}s</b></color> per level. [<color=green><b>+{grndpl * effectivePath2Level:F1}s</b></color>]\n\n" +
-               $"Increase the Critical Damage conversion by <color=green><b>{convpl:F1}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level:F1}%</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float aspl       = CData?.path3AttackSpeedPerLevel ?? 0.25f;
         float durpl      = CData?.path3DurationPerLevel    ?? 0.5f;
@@ -260,11 +271,17 @@ public class Cattail : Shooter
         float critpl     = CData?.path3CritGrantPerLevel   ?? 0.1f;
         float baseAS     = CData?.baseSkillAttackSpeedBonus ?? 2f;
         float totalCrit  = baseCrit + critpl * effectivePath3Level;
+        string scaling = details
+            ? $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase Critical Chance bonus by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase duration by <color=green><b>{durpl:F1}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F1}s</b></color>]"
+            : $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase Critical Chance bonus by <color=green><b>{critpl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase duration by <color=green><b>{durpl:F1}s</b></color>.";
         return $"Skill:\n\n" +
                $"Aim a direction and rain darts down the lane for <color=green><b>{skillDuration:F1}s</b></color>, gaining <color=green><b>+{(baseAS + aspl * effectivePath3Level) * 100f:F0}%</b></color> Attack Speed and <color=green><b>+{totalCrit * 100f:F0}%</b></color> Critical Chance.\n\n" +
-               $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase Critical Chance bonus by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase duration by <color=green><b>{durpl:F1}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F1}s</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

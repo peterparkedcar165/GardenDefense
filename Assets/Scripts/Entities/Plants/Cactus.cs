@@ -144,33 +144,48 @@ public class Cactus : Shooter
         $"Grants the {GetName()} a <color=grey><b>{ShieldAmount:F0}</b></color> shield for <color=green><b>{SkillDuration:F0}s</b></color>. " +
         $"While the shield holds, nearby insects are forced to target the {GetName()}.";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
+        string scaling = details
+            ? $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]"
+            : $"Increase needle count by <color=green><b>{needleLevel}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float hppl = CactData?.path2HealthPerLevel ?? 60f;
+        string scaling = details
+            ? $"Increase <color=#A0522D>Punctured</color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+              $"Increase Max Health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]"
+            : $"Increase <color=#A0522D>Punctured</color> stacks per hit by <color=green><b>1</b></color>.\n\n" +
+              $"Increase Max Health by <color=green><b>{hppl:F0}</b></color>.";
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
                $"<color=#A0522D>Punctured</color>: reduces Physical Resistance by <color=green><b>0.5%</b></color> per stack, lasts 8 seconds.\n\n" +
-               $"Increase <color=#A0522D>Punctured</color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-               $"Increase Max Health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float shieldpl  = CactData?.path3ShieldPerLevel        ?? 10f;
         float durpl     = CactData?.path3SkillDurationPerLevel ?? 2f;
         float healpl    = CactData?.path3HealBonusPerLevel     ?? 0.04f;
+        string scaling = details
+            ? $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
+              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+              $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level * 100f:F0}%</b></color>]"
+            : $"Increase shield by <color=green><b>{shieldpl:F0}</b></color>.\n\n" +
+              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds.\n\n" +
+              $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color>.";
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-               $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

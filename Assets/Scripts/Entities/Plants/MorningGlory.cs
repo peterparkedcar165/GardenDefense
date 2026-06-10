@@ -150,37 +150,53 @@ public class MorningGlory : Shooter
         $"Summons an updraft field (radius <color=green><b>{FieldRadius:F1}</b></color>) for <color=green><b>{FieldDuration:F0}s</b></color>. " +
         $"Insects inside are kept airborne and <color=#B2EBF2><b>Levitating</b></color> — taking <color=#FFD700><b>+{LevitateCritBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{LevitateCritBonusMP * 100f:F0}%</b></color>] Critical Chance from all damage — until they land. Deals no damage.";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float adpl    = MGData?.path1AttackDamagePerLevel ?? 4f;
         float rangepl = MGData?.path1AttackRangePerLevel  ?? 0.2f;
+        string scaling = details
+            ? $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+              $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]"
+            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
+              $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float aspl = MGData?.path2AttackSpeedBonusPerLevel     ?? 0.03f;
         float pspl = MGData?.path2ProjectileSpeedBonusPerLevel ?? 0.03f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{(MGData?.attackSpeedBonusMPMultiplier ?? 0.16f) * 100f:F0}%</b></color> Magic Power (Attack Speed), <color=#FFB6C1><b>{(MGData?.projectileSpeedBonusMPMultiplier ?? 0.12f) * 100f:F0}%</b></color> Magic Power (Projectile Speed)\n\n" +
+              $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase Projectile Speed bonus by <color=green><b>{pspl * 100f:F0}%</b></color> per level. [<color=green><b>+{pspl * effectivePath2Level * 100f:F0}%</b></color>]"
+            : $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase Projectile Speed bonus by <color=green><b>{pspl * 100f:F0}%</b></color>.";
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{(MGData?.attackSpeedBonusMPMultiplier ?? 0.16f) * 100f:F0}%</b></color> Magic Power (Attack Speed), <color=#FFB6C1><b>{(MGData?.projectileSpeedBonusMPMultiplier ?? 0.12f) * 100f:F0}%</b></color> Magic Power (Projectile Speed)\n\n" +
-               $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase Projectile Speed bonus by <color=green><b>{pspl * 100f:F0}%</b></color> per level. [<color=green><b>+{pspl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float durpl  = MGData?.path3FieldDurationPerLevel ?? 0.5f;
         float critpl = MGData?.path3CritBonusPerLevel     ?? 0.05f;
         float radpl  = MGData?.path3RadiusPerLevel        ?? 0.15f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{(MGData?.critBonusMPMultiplier ?? 0.24f) * 100f:F0}%</b></color> Magic Power (Levitating Crit Chance)\n\n" +
+              $"Increase field duration by <color=green><b>{durpl:F1}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F1}s</b></color>]\n\n" +
+              $"Increase Levitating Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase field radius by <color=green><b>{radpl:F2}</b></color> per level. [<color=green><b>+{radpl * effectivePath3Level:F2}</b></color>]"
+            : $"Increase field duration by <color=green><b>{durpl:F1}s</b></color>.\n\n" +
+              $"Increase Levitating Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase field radius by <color=green><b>{radpl:F2}</b></color>.";
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{(MGData?.critBonusMPMultiplier ?? 0.24f) * 100f:F0}%</b></color> Magic Power (Levitating Crit Chance)\n\n" +
-               $"Increase field duration by <color=green><b>{durpl:F1}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F1}s</b></color>]\n\n" +
-               $"Increase Levitating Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase field radius by <color=green><b>{radpl:F2}</b></color> per level. [<color=green><b>+{radpl * effectivePath3Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

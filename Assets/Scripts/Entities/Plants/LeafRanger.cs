@@ -102,38 +102,53 @@ public class LeafRanger : Shooter
     public override string GetPath2Name() => "Passive";
     public override string GetPath3Name() => "Skill";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float adpl   = LRData?.path1AttackDamagePerLevel ?? 5f;
         float aspl   = LRData?.path1AttackSpeedPerLevel ?? 0.05f;
+        string scaling = details
+            ? $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+              $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]"
+            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
+              $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color>.";
         return $"Attack:\n\n" +
                $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
-               $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float baseCrit  = LRData?.baseCritChanceBonus ?? 0.1f;
         float critpl    = LRData?.path2CritChancePerLevel ?? 0.05f;
         float totalCrit = baseCrit + critpl * effectivePath2Level;
+        string scaling = details
+            ? $"Increase <color=green>Piercing</color> by an additional <b><color=green>1</color></b> per level. [<b><color=green>+{effectivePath2Level}</color></b>]\n\n" +
+              $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]"
+            : $"Increase <color=green>Piercing</color> by an additional <b><color=green>1</color></b>.\n\n" +
+              $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color>.";
         return $"Passive:\n\n" +
                $"Gains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.\n\n" +
-               $"Increase <color=green>Piercing</color> by an additional <b><color=green>1</color></b> per level. [<b><color=green>+{effectivePath2Level}</color></b>]\n\n" +
-               $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float aspl  = LRData?.path3AttackSpeedBonusPerLevel ?? 0.25f;
         float durpl = LRData?.path3SkillDurationPerLevel    ?? 0.5f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>+{skillDamageMultiplier * 100f:F0}%</b></color> bonus per <color=#FFB6C1>Magic Power</color>. [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower * 100f:F0}%</b></color>]\n\n" +
+              $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+              $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}s</b></color>]"
+            : $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color>.\n\n" +
+              $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds.";
         return $"Skill:\n\n" +
                $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{(LRData?.baseSkillAttackSpeedBonus ?? 3f) * 100f + aspl * effectivePath3Level * 100f + skillDamageMultiplier * magicPower * 100f:F0}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.\n\n" +
-               $"Scaling: <color=#FFB6C1><b>+{skillDamageMultiplier * 100f:F0}%</b></color> bonus per <color=#FFB6C1>Magic Power</color>. [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower * 100f:F0}%</b></color>]\n\n" +
-               $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}s</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

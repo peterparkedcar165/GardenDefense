@@ -152,39 +152,56 @@ public class Hellebore : Shooter
     public override string GetPath2Name() => "Shelter";
     public override string GetPath3Name() => "Protection";
 
-    public override string GetPath1Description()
+    public override string GetPath1Description(bool details = false)
     {
         float aspl = HData?.path1AttackSpeedPerLevel ?? 0.05f;
         float mppl = HData?.path1MagicPowerPerLevel  ?? 5f;
+        string scaling = details
+            ? $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+              $"Increase Magic Power by <color=green><b>{mppl:F0}</b></color> per level. [<color=#FFB6C1><b>+{mppl * effectivePath1Level:F0}</b></color>]"
+            : $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color>.\n\n" +
+              $"Increase Magic Power by <color=green><b>{mppl:F0}</b></color>.";
         return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Increase Magic Power by <color=green><b>{mppl:F0}</b></color> per level. [<color=#FFB6C1><b>+{mppl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath2Description()
+    public override string GetPath2Description(bool details = false)
     {
         float cdrpl    = HData?.path2CDRPerLevel       ?? 0.1f;
         int   armorpl  = HData?.selfArmorPerLevel      ?? 5;
         float auraShpl = HData?.path2AuraSharePerLevel ?? 0.05f;
+        string scaling = details
+            ? $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}s</b></color>]\n\n" +
+              $"Increase Hellebore's Armor by <color=green><b>{armorpl}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level}</b></color>]\n\n" +
+              $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color> per level. [<color=green><b>+{auraShpl * effectivePath2Level * 100f:F0}%</b></color>]"
+            : $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}s</b></color>.\n\n" +
+              $"Increase Hellebore's Armor by <color=green><b>{armorpl}</b></color>.\n\n" +
+              $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color>.";
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}s</b></color>]\n\n" +
-               $"Increase Hellebore's Armor by <color=green><b>{armorpl}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level}</b></color>]\n\n" +
-               $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color> per level. [<color=green><b>+{auraShpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 
-    public override string GetPath3Description()
+    public override string GetPath3Description(bool details = false)
     {
         float shieldpl = HData?.path3ShieldPerLevel   ?? 30f;
         float durpl    = HData?.path3DurationPerLevel ?? 2f;
         float reflpl   = HData?.path3ReflectPerLevel  ?? 5f;
+        string scaling = details
+            ? $"Scaling: <color=#FFB6C1><b>{(HData?.shieldMP ?? 0.5f) * 100f:F0}%</b></color> <color=#FFB6C1>Magic Power</color> (Shield)\n\n" +
+              $"Scaling: <color=#FFB6C1><b>{(HData?.reflectPoisonMP ?? 0.2f) * 100f:F0}%</b></color> <color=#FFB6C1>Magic Power</color> (Reflect Damage)\n\n" +
+              $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
+              $"Increase protection duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+              $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color> per level. [<color=green><b>+{reflpl * effectivePath3Level:F0}</b></color>]"
+            : $"Increase shield by <color=green><b>{shieldpl:F0}</b></color>.\n\n" +
+              $"Increase protection duration by <color=green><b>{durpl:F0}s</b></color>.\n\n" +
+              $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color>.";
         return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{(HData?.shieldMP ?? 0.5f) * 100f:F0}%</b></color> <color=#FFB6C1>Magic Power</color> (Shield)\n\n" +
-               $"Scaling: <color=#FFB6C1><b>{(HData?.reflectPoisonMP ?? 0.2f) * 100f:F0}%</b></color> <color=#FFB6C1>Magic Power</color> (Reflect Damage)\n\n" +
-               $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase protection duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-               $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color> per level. [<color=green><b>+{reflpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>";
+               $"{scaling}\n\n" +
+               $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
+               ShiftHint(details);
     }
 }

@@ -853,9 +853,13 @@ public abstract class Plant : Entity, IAttackable
     public virtual string GetPath1Name() => "Attack";
     public virtual string GetPath2Name() => "Passive";
     public virtual string GetPath3Name() => "Skill";
-    public virtual string GetPath1Description() => "";
-    public virtual string GetPath2Description() => "";
-    public virtual string GetPath3Description() => "";
+    public virtual string GetPath1Description(bool details = false) => "";
+    public virtual string GetPath2Description(bool details = false) => "";
+    public virtual string GetPath3Description(bool details = false) => "";
+
+    protected static string ShiftHint(bool details) =>
+        details ? "<color=grey>[Release SHIFT for overview]</color>"
+                : "<color=grey>[Hold SHIFT for details]</color>";
     public virtual string GetElement() => PlantData.ElementalTag(data != null ? data.elementalType : elementalType);
 
     public virtual string GetElementDescription()
