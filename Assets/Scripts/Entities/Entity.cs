@@ -41,6 +41,18 @@ public enum ElementalType
     Fire, Water, Nature, Poison, Ice, Wind, Neutral
 }
 
+public struct EntityEventData
+{
+    public Entity target;
+    public Entity source;
+    public Vector3 position;
+    public float damage;
+    public float amount;
+    public DamageType damageType;
+    public ElementalType elementalType;
+    public DamageTag[] tags;
+}
+
 public abstract class Entity : MonoBehaviour
 {
     private SpriteRenderer _flashRenderer;
@@ -70,6 +82,14 @@ public abstract class Entity : MonoBehaviour
     public float baseBonusCritChanceReceived, baseProjectileSpeed;
 
     public static event System.Action<Plant, Insect, DamageTag[]> OnPlantAttackHit;
+    public static event System.Action<EntityEventData> OnEntityHit;
+    public static event System.Action<EntityEventData> OnEntityKilled;
+    public static event System.Action<EntityEventData> OnEntityDied;
+    public static event System.Action<EntityEventData> OnHeal;
+    public static event System.Action<EntityEventData> OnShieldAcquire;
+    public static event System.Action<EntityEventData> OnShieldExpire;
+
+    protected static void RaiseEntityDied(EntityEventData data) => OnEntityDied?.Invoke(data);
 
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
@@ -263,8 +283,11 @@ public abstract class Entity : MonoBehaviour
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
             e.OnDamageReceived(elementalType, null, damageTag);
 
+        var evtData = new EntityEventData { target = this, position = transform.position, damage = finalDamage, damageType = damageType, elementalType = elementalType, tags = damageTag };
+        OnEntityHit?.Invoke(evtData);
         if (health <= 0)
         {
+            OnEntityKilled?.Invoke(evtData);
             Kill();
         }
     }
@@ -477,8 +500,11 @@ public abstract class Entity : MonoBehaviour
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
             e.OnDamageReceived(elementalType, source, damageTag);
 
+        var evtData = new EntityEventData { target = this, source = source, position = transform.position, damage = finalDamage, damageType = damageType, elementalType = elementalType, tags = damageTag };
+        OnEntityHit?.Invoke(evtData);
         if (health <= 0)
         {
+            OnEntityKilled?.Invoke(evtData);
             Kill(source);
         }
     }
@@ -490,6 +516,7 @@ public abstract class Entity : MonoBehaviour
         float actual = Mathf.Min(healingAmount * (1f + healingReceived) * (1f + bonus), maxHealth - health);
         if (actual <= 0f) return;
         health += actual;
+        OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual });
         UpdateHealthBar();
         HealIndicator.Spawn(GetIndicatorPosition(), actual);
     }
@@ -498,12 +525,14 @@ public abstract class Entity : MonoBehaviour
     public virtual void Kill()
     {
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
+        OnEntityDied?.Invoke(new EntityEventData { target = this, position = transform.position });
         Destroy(gameObject);
     }
 
-    public virtual void Kill(Entity source) // death including source
+    public virtual void Kill(Entity source)
     {
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
+        OnEntityDied?.Invoke(new EntityEventData { target = this, source = source, position = transform.position });
         Destroy(gameObject);
     }
 
@@ -782,7 +811,10 @@ public abstract class Entity : MonoBehaviour
 
     public bool HasShield() => TotalShield > 0f;
 
-    public virtual void OnShieldBreak(ShieldEffect shield) { }
+    public virtual void OnShieldBreak(ShieldEffect shield)
+    {
+        OnShieldExpire?.Invoke(new EntityEventData { target = this, source = shield.source, position = transform.position, amount = shield.amount });
+    }
 
     private float DrainShields(float damage, float attackerShieldBonus)
     {
@@ -885,6 +917,8 @@ public abstract class Entity : MonoBehaviour
 
         activeEffects.Add(effect);
         effect.OnApply();
+        if (effect is ShieldEffect acquiredShield)
+            OnShieldAcquire?.Invoke(new EntityEventData { target = this, source = acquiredShield.source, position = transform.position, amount = acquiredShield.amount });
     }
 
     public bool HasEffect<T>() where T : StatusEffect
@@ -943,6 +977,8 @@ public abstract class Entity : MonoBehaviour
             {
                 effect.OnExpire();
                 activeEffects.Remove(effect);
+                if (effect is ShieldEffect expiredShield)
+                    OnShieldExpire?.Invoke(new EntityEventData { target = this, source = expiredShield.source, position = transform.position, amount = expiredShield.amount });
             }
         }
     }

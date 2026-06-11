@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
@@ -221,28 +221,28 @@ public class Dandelion : Shooter
     public override string GetPath1Description(bool details = false)
     {
         float eppl    = DData?.path1elementalAffinityPerLevel ?? 0.06f;
-        float rangepl = DData?.path1AttackRangePerLevel    ?? 0.25f;
-        string scaling = details
-            ? $"Increase Elemental Affinity by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
-              $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]"
-            : $"Increase Elemental Affinity by <color=green><b>{eppl * 100f:F0}%</b></color>.\n\n" +
-              $"Increase Attack Range by <color=green><b>{rangepl:F2}</b></color>.";
-        return $"Attack:\n\n" +
-               $"Each seed deals <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
-               $"{scaling}\n\n" +
+        float rangepl = DData?.path1AttackRangePerLevel       ?? 0.25f;
+        string desc = details
+            ? $"Each seed deals <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            : $"Each seed deals <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase Elemental Affinity by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath2Description(bool details = false)
     {
-        int seeds = (DData?.baseSeedCount ?? 2) + effectivePath2Level;
-        string scaling = details
-            ? $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]"
-            : $"Increase target count by <color=green><b>1</b></color>.";
-        return $"Passive:\n\n" +
-               $"Fires <color=green><b>{seeds}</b></color> seeds per attack, targeting the <color=green><b>{seeds}</b></color> highest-priority insects in range.\n\n" +
-               $"{scaling}\n\n" +
+        int baseSeeds = DData?.baseSeedCount ?? 2;
+        int seeds = baseSeeds + effectivePath2Level;
+        string desc = details
+            ? $"Fires <color=green><b>[({baseSeeds}) + (1/Lvl.)]</b></color> seeds per attack, targeting the highest-priority insects in range."
+            : $"Fires <color=green><b>{seeds}</b></color> seeds per attack, targeting the <color=green><b>{seeds}</b></color> highest-priority insects in range.";
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -252,19 +252,16 @@ public class Dandelion : Shooter
         float beampl  = DData?.path3BeamWidthPerLevel     ?? 0.25f;
         float durpl   = DData?.path3SkillDurationPerLevel ?? 1f;
         float rangepl = DData?.path3WindGustRangePerLevel ?? 0.5f;
-        float currentWidth = (DData?.baseBeamWidth ?? 1f) + beampl * effectivePath3Level;
-        string scaling = details
-            ? $"Scaling: <color=green><b>100%</b></color> Attack Damage\n\n" +
-              $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-              $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-              $"Increase gust width by <color=green><b>{beampl:F2}</b></color> per level. [<color=green><b>+{beampl * effectivePath3Level:F2}</b></color>]\n\n" +
-              $"Increase gust range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]"
-            : $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> second.\n\n" +
-              $"Increase gust width by <color=green><b>{beampl:F2}</b></color>.\n\n" +
-              $"Increase gust range by <color=green><b>{rangepl:F1}</b></color>.";
-        return $"Skill:\n\n" +
-               $"Blows a powerful gust of pollen wind <color=green><b>{currentWidth:F2}</b></color> units wide towards the targeted direction, reaching <color=green><b>{WindGustRange:F1}</b></color> units, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.\n\n" +
-               $"{scaling}\n\n" +
+        float baseBeam = DData?.baseBeamWidth ?? 1f;
+        float baseRange = DData?.baseWindGustRange ?? 10f;
+        string desc = details
+            ? $"Blows a powerful gust of pollen wind <color=green><b>[({baseBeam:F2}) + ({beampl:F2}/Lvl.)]</b></color> units wide towards the targeted direction, reaching <color=green><b>[({baseRange:F1}) + ({rangepl:F1}/Lvl.)]</b></color> units, lasting <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Insects caught in the gust take <color=green><b>[100% Attack Damage]</b></color> + <color=green><b>{data.baseSkillDamage:F0}</b></color> <color=#FFB6C1>[+{skillDamageMultiplier * 100f:F0}% Magic Power]</color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>."
+            : $"Blows a powerful gust of pollen wind <color=green><b>{(baseBeam + beampl * effectivePath3Level):F2}</b></color> units wide towards the targeted direction, reaching <color=green><b>{WindGustRange:F1}</b></color> units, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase gust width by <color=green><b>{beampl:F2}</b></color> per level. [<color=green><b>+{beampl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"Increase gust range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

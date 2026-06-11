@@ -156,13 +156,13 @@ public class Hellebore : Shooter
     {
         float aspl = HData?.path1AttackSpeedPerLevel ?? 0.05f;
         float mppl = HData?.path1MagicPowerPerLevel  ?? 5f;
-        string scaling = details
-            ? $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-              $"Increase Magic Power by <color=green><b>{mppl:F0}</b></color> per level. [<color=#FFB6C1><b>+{mppl * effectivePath1Level:F0}</b></color>]"
-            : $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color>.\n\n" +
-              $"Increase Magic Power by <color=green><b>{mppl:F0}</b></color>.";
-        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Fires a thorned projectile dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            : GetAttackDescription();
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase <color=#FFB6C1><b>Base Magic Power</b></color> by <color=green><b>{mppl:F0}</b></color> per level. [<color=#FFB6C1><b>+{mppl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -172,15 +172,18 @@ public class Hellebore : Shooter
         float cdrpl    = HData?.path2CDRPerLevel       ?? 0.1f;
         int   armorpl  = HData?.selfArmorPerLevel      ?? 5;
         float auraShpl = HData?.path2AuraSharePerLevel ?? 0.05f;
-        string scaling = details
-            ? $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}s</b></color>]\n\n" +
-              $"Increase Hellebore's Armor by <color=green><b>{armorpl}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level}</b></color>]\n\n" +
-              $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color> per level. [<color=green><b>+{auraShpl * effectivePath2Level * 100f:F0}%</b></color>]"
-            : $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}s</b></color>.\n\n" +
-              $"Increase Hellebore's Armor by <color=green><b>{armorpl}</b></color>.\n\n" +
-              $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color>.";
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        float armorMP  = HData?.selfArmorMP            ?? 0.14f;
+        string desc = details
+            ? $"Each attack hit reduces skill cooldown by <color=green><b>[({HData?.passiveCDRPerHit ?? 0.5f:F1}) + ({cdrpl:F1}/Lvl.)]</b></color> seconds. " +
+              $"Hellebore gains <color=#00CED1><b>[({HData?.selfArmorBase ?? 14}) + ({armorpl}/Lvl.)]</b></color> Base Armor <color=#FFB6C1>[+{armorMP * 100f:F0}% Magic Power]</color>. " +
+              $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
+              $"increasing their Armor by <color=green><b>[({HData?.auraShareBase ?? 0.5f:F0}%) + ({auraShpl * 100f:F0}%/Lvl.)]</b></color> of Hellebore's Armor."
+            : GetPassiveDescription();
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}</b></color> seconds per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=green><b>{armorpl}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level}</b></color>]\n\n" +
+               $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color> per level. [<color=green><b>+{auraShpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -190,17 +193,22 @@ public class Hellebore : Shooter
         float shieldpl = HData?.path3ShieldPerLevel   ?? 30f;
         float durpl    = HData?.path3DurationPerLevel ?? 2f;
         float reflpl   = HData?.path3ReflectPerLevel  ?? 5f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{(HData?.shieldMP ?? 0.5f) * 100f:F0}%</b></color> <color=#FFB6C1>Magic Power</color> (Shield)\n\n" +
-              $"Scaling: <color=#FFB6C1><b>{(HData?.reflectPoisonMP ?? 0.2f) * 100f:F0}%</b></color> <color=#FFB6C1>Magic Power</color> (Reflect Damage)\n\n" +
-              $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase protection duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-              $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color> per level. [<color=green><b>+{reflpl * effectivePath3Level:F0}</b></color>]"
-            : $"Increase shield by <color=green><b>{shieldpl:F0}</b></color>.\n\n" +
-              $"Increase protection duration by <color=green><b>{durpl:F0}s</b></color>.\n\n" +
-              $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color>.";
-        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"{scaling}\n\n" +
+        float shieldMP = HData?.shieldMP              ?? 0.5f;
+        float reflMP   = HData?.reflectPoisonMP       ?? 0.2f;
+        string desc = details
+            ? $"Targets a plant anywhere on the field, granting <color=#9B30D0><b>Thorned Guard</b></color>: " +
+              $"a shield of <color=green><b>[({HData?.shieldAmount ?? 120f:F0}) + ({shieldpl:F0}/Lvl.) + <color=#FFB6C1>{shieldMP * 100f:F0}% Magic Power</color>]</b></color> health " +
+              $"for <color=green><b>[({HData?.shieldDuration ?? 12f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. " +
+              $"While shielded, attackers receive <color=purple><b>[({HData?.reflectPoisonBase ?? 15f:F0}) + ({reflpl:F0}/Lvl.)]</b></color> " +
+              $"<color=#FFB6C1>[+{reflMP * 100f:F0}% Magic Power]</color> " +
+              $"<color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per hit. " +
+              $"Negative effects are reflected back to the attacker. The protection fades when the shield breaks."
+            : GetSkillDesription();
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase protection duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color> per level. [<color=green><b>+{reflpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

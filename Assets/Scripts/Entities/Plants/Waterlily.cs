@@ -101,13 +101,13 @@ public class Waterlily : Shooter
     {
         float rangepl = WLData?.path1AttackRangePerLevel ?? 0.5f;
         float aspl    = WLData?.path1AttackSpeedPerLevel ?? 0.3f;
-        string scaling = details
-            ? $"Increase Attack Speed by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F1}</b></color>]\n\n" +
-              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]"
-            : $"Increase Attack Speed by <color=green><b>{aspl:F1}</b></color>.\n\n" +
-              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color>.";
-        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Blows little bubbles towards her target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            : GetAttackDescription();
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -116,33 +116,30 @@ public class Waterlily : Shooter
     {
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
         float aoepl   = WLData?.path2AoERangePerLevel             ?? 0.05f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-              $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> of Attack Damage per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
-              $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]"
-            : $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> of Attack Damage.\n\n" +
-              $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color>.";
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Attacks deal <color=green><b>[({data.basePassiveDamage:F1}) + ({splashpl * 100f:F0}% Attack Damage/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius."
+            : GetPassiveDescription();
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> Attack Damage per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float bubblepl = WLData?.path3BubbleDamagePerLevel     ?? 12f;
-        float durpl    = WLData?.path3SkillDurationPerLevel     ?? 2f;
-        float radiuspl = WLData?.path3RadiusPerLevel            ?? 0.2f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-              $"Increase impact damage by <color=green><b>{bubblepl:F0}</b></color> per level. [<color=green><b>+{bubblepl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-              $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]"
-            : $"Increase impact damage by <color=green><b>{bubblepl:F0}</b></color>.\n\n" +
-              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds.\n\n" +
-              $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color>.";
-        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"{scaling}\n\n" +
+        float bubblepl = WLData?.path3BubbleDamagePerLevel  ?? 12f;
+        float durpl    = WLData?.path3SkillDurationPerLevel ?? 2f;
+        float radiuspl = WLData?.path3RadiusPerLevel        ?? 0.2f;
+        string desc = details
+            ? $"Blows a large bubble onto a targeted area, trapping insects within the bubble while dealing <color=green><b>[({WLData?.baseBubblePrisonImpactDamage ?? 0f:F0}) + ({bubblepl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage upon impact, and keeping them airborne for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds within a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F2}/Lvl.)]</b></color> radius."
+            : GetSkillDesription();
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase impact damage by <color=green><b>{bubblepl:F0}</b></color> per level. [<color=green><b>+{bubblepl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

@@ -767,7 +767,7 @@ public abstract class Plant : Entity, IAttackable
 
     // upgrade cost scales with the plant's own suncost so premium plants cost
     // proportionally more to scale. base is the first level price as a fraction
-    // of buy cost, step is the exponential multiplier per level
+    // of buy cost, step is the exponential multiplier/Lvl.
     const float upgradeBaseFactor = 0.2f;
     const float upgradeStepFactor = 2f;
     const float skillBaseFactor   = 0.3f;  // path 3 unlocks the skill so it costs a bit more
@@ -860,6 +860,11 @@ public abstract class Plant : Entity, IAttackable
     protected static string ShiftHint(bool details) =>
         details ? "<color=grey>[Release SHIFT for overview]</color>"
                 : "<color=grey>[Hold SHIFT for details]</color>";
+
+    protected string Level5Section(int effectiveLevel) =>
+        effectiveLevel >= pathLevelCap
+            ? "<color=green><b>[Max Level Bonus]</b></color>"
+            : "<color=grey>[Max Level Bonus]</color>";
     public virtual string GetElement() => PlantData.ElementalTag(data != null ? data.elementalType : elementalType);
 
     public virtual string GetElementDescription()

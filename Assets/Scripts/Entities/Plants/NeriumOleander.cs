@@ -98,15 +98,14 @@ public class NeriumOleander : Shooter
     public override string GetPath1Description(bool details = false)
     {
         float adpl = OleanderData?.path1AttackDamagePerLevel ?? 10f;
-        int   bpl  = OleanderData?.path1BouncePerLevel ?? 1;
-        string scaling = details
-            ? $"<color=green><b>Base Attack Damage</b></color> +{adpl:F0} per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-              $"<color=green><b>Bounce Count</b></color> +{bpl} per level. [<color=green><b>+{bpl * effectivePath1Level}</b></color>]"
-            : $"<color=green><b>Base Attack Damage</b></color> +{adpl:F0}.\n\n" +
-              $"<color=green><b>Bounce Count</b></color> +{bpl}.";
-        return $"Attack:\n\n" +
-               $"Fires a toxic petal at the target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>{bounceCount}</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce.\n\n" +
-               $"{scaling}\n\n" +
+        int   bpl  = OleanderData?.path1BouncePerLevel       ?? 1;
+        string desc = details
+            ? $"Fires a toxic petal at the target dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>[({OleanderData?.baseBounceCount ?? 1}) + ({bpl}/Lvl.)]</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce."
+            : $"Fires a toxic petal at the target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>{bounceCount}</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce.";
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase Bounce Count by <color=green><b>{bpl}</b></color> per level. [<color=green><b>+{bpl * effectivePath1Level}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -114,34 +113,33 @@ public class NeriumOleander : Shooter
     public override string GetPath2Description(bool details = false)
     {
         float durpl = OleanderData?.path2ToxinDurationPerLevel ?? 2f;
-        string scaling = details
-            ? $"Increase duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath2Level:F0}s</b></color>]"
-            : $"Increase duration by <color=green><b>{durpl:F0}s</b></color>.";
-        return $"Passive:\n\n" +
-               $"Each petal hit applies <color=#9B59B6><b>Oleandic Toxin</b></color> for <color=green><b>{toxinDuration:F1}s</b></color>.\n\n" +
-               $"<color=#9B59B6><b><u>Oleandic Toxin</u></b></color>\n" +
-               $"Cleanses a random buff, and prevents them from receiving that buff while the effect is active.\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Each petal hit applies <color=#9B59B6><b>Oleandic Toxin</b></color> for <color=green><b>[({OleanderData?.baseToxinDuration ?? 6f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds.\n\n" +
+              $"<color=#9B59B6><b><u>Oleandic Toxin</u></b></color>\n" +
+              $"Cleanses a random buff, and prevents them from receiving that buff while the effect is active."
+            : $"Each petal hit applies <color=#9B59B6><b>Oleandic Toxin</b></color> for <color=green><b>{toxinDuration:F1}</b></color> seconds.\n\n" +
+              $"<color=#9B59B6><b><u>Oleandic Toxin</u></b></color>\n" +
+              $"Cleanses a random buff, and prevents them from receiving that buff while the effect is active.";
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float dmgpl    = OleanderData?.path3SkillDamagePerLevel ?? 20f;
+        float dmgpl    = OleanderData?.path3SkillDamagePerLevel  ?? 20f;
         float rootpl   = OleanderData?.path3RootDurationPerLevel ?? 0.5f;
-        float radiuspl = OleanderData?.path3SkillRadiusPerLevel ?? 0.5f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-              $"Increase Skill Damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase Root Duration by <color=green><b>{rootpl:F1}s</b></color> per level. [<color=green><b>+{rootpl * effectivePath3Level:F1}s</b></color>]\n\n" +
-              $"Increase Skill Radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]"
-            : $"Increase Skill Damage by <color=green><b>{dmgpl:F0}</b></color>.\n\n" +
-              $"Increase Root Duration by <color=green><b>{rootpl:F1}s</b></color>.\n\n" +
-              $"Increase Skill Radius by <color=green><b>{radiuspl:F1}</b></color>.";
-        return $"Skill:\n\n" +
-               $"Target an area. After <color=green><b>{skillDelay:F1}s</b></color>, all insects within <color=green><b>{skillRadius:F1}</b></color> radius are dealt <color=green><b>{computedSkillDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, rooted for <color=green><b>{rootDuration:F1}s</b></color>, and afflicted with <color=#9B59B6>Oleandic Toxin</color>.\n\n" +
-               $"{scaling}\n\n" +
+        float radiuspl = OleanderData?.path3SkillRadiusPerLevel  ?? 0.5f;
+        string desc = details
+            ? $"Target an area. After <color=green><b>{skillDelay:F1}</b></color> seconds, all insects within <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius are dealt <color=green><b>[({OleanderData?.baseSkillFlatDamage ?? 50f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, rooted for <color=green><b>[({data.baseSkillDuration:F1}) + ({rootpl:F1}/Lvl.)]</b></color> seconds, and afflicted with <color=#9B59B6>Oleandic Toxin</color>."
+            : $"Target an area. After <color=green><b>{skillDelay:F1}</b></color> seconds, all insects within <color=green><b>{skillRadius:F1}</b></color> radius are dealt <color=green><b>{computedSkillDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, rooted for <color=green><b>{rootDuration:F1}</b></color> seconds, and afflicted with <color=#9B59B6>Oleandic Toxin</color>.";
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase Skill Damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase Root Duration by <color=green><b>{rootpl:F1}</b></color> seconds per level. [<color=green><b>+{rootpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase Skill Radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

@@ -144,12 +144,12 @@ public class BogIris : Shooter
     public override string GetPath1Description(bool details = false)
     {
         float adpl = BogData?.path1AttackDamagePerLevel ?? 8f;
-        string scaling = details
-            ? $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]"
-            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.";
-        return $"Attack:\n\n" +
-               $"Fires a water bolt at a single target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Fires a water bolt at a single target dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            : $"Fires a water bolt at a single target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -157,17 +157,19 @@ public class BogIris : Shooter
     public override string GetPath2Description(bool details = false)
     {
         float opendurpl = BogData?.path2OpenDurationPerLevel ?? 2f;
-        int sunpl       = BogData?.path2SunPerLevel          ?? 1;
-        string scaling = details
-            ? $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>{opendurpl:F0}</b></color> seconds per level. [<color=green><b>+{opendurpl * effectivePath2Level:F0}s</b></color>]\n\n" +
-              $"Increase Sun generated per tick by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]"
-            : $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>{opendurpl:F0}</b></color> seconds.\n\n" +
-              $"Increase Sun generated per tick by <color=green><b>{sunpl}</b></color>.";
-        return $"Passive:\n\n" +
-               $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>{OpenDuration:F0}s</b></color>) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}s</b></color>) state.\n\n" +
-               $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>{SunGenerated}</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds.\n\n" +
-               $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>{TotalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.\n\n" +
-               $"{scaling}\n\n" +
+        int   sunpl     = BogData?.path2SunPerLevel          ?? 1;
+        float healpl    = BogData?.path2ClosedHealPerLevel   ?? 20f;
+        string desc = details
+            ? $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>[({BogData?.baseOpenDuration:F0}) + ({opendurpl:F0}/Lvl.)]</b></color>) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}</b></color> seconds) state.\n\n" +
+              $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>[({BogData?.baseSunGenerated}) + ({sunpl}/Lvl.)]</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds.\n\n" +
+              $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>[({BogData?.baseClosedHeal:F0}) + ({healpl:F0}/Lvl.)]</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds."
+            : $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>{OpenDuration:F0}</b></color> seconds) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}</b></color> seconds) state.\n\n" +
+              $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>{SunGenerated}</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds.\n\n" +
+              $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>{TotalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.";
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>{opendurpl:F0}</b></color> seconds per level. [<color=green><b>+{opendurpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"Increase Sun generated per tick by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -177,17 +179,14 @@ public class BogIris : Shooter
         float dmgpl    = BogData?.path3GeyserDamagePerLevel  ?? 15f;
         float knockpl  = BogData?.path3KnockUpPerLevel        ?? 1f;
         float radiuspl = BogData?.path3GeyserRadiusPerLevel   ?? 0.15f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-              $"Increase the flat component of geyser damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> unit per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase the radius of the geyser by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]"
-            : $"Increase the flat component of geyser damage by <color=green><b>{dmgpl:F0}</b></color>.\n\n" +
-              $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> unit.\n\n" +
-              $"Increase the radius of the geyser by <color=green><b>{radiuspl:F2}</b></color>.";
-        return $"Skill:\n\n" +
-               $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{(BogData?.baseGeyserDamage ?? 0f) + dmgpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>[({BogData?.baseGeyserDamage:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and knocking all insects airborne by <color=green><b>[({BogData?.baseKnockUpHeight:F0}) + ({knockpl:F0}/Lvl.)]</b></color> units within radius <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color>."
+            : $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>{(BogData?.baseGeyserDamage ?? 0f) + dmgpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.";
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase the flat component of geyser damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase the radius of the geyser by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

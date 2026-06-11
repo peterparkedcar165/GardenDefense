@@ -178,7 +178,10 @@ public class PlantUpgradeUI : EntityInfoPanel
 
         panel.SetActive(true);
 
-        entityNameText.text = insect.GetName();
+        string desc = insect.GetDescription();
+        entityNameText.text = string.IsNullOrEmpty(desc)
+            ? insect.GetName()
+            : $"{insect.GetName()}\n<size=70%><color=grey>{desc}</color></size>";
         if (entityIcon != null && cachedInsectRenderer != null)
             entityIcon.sprite = cachedInsectRenderer.sprite;
 
@@ -217,6 +220,10 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
         else if (selectedInsect != null)
         {
+            string desc = selectedInsect.GetDescription();
+            entityNameText.text = string.IsNullOrEmpty(desc)
+                ? selectedInsect.GetName()
+                : $"{selectedInsect.GetName()}\n<size=70%><color=grey>{desc}</color></size>";
             stat1Text.text = $"ATK: {selectedInsect.attackDamage:F0}";
             stat2Text.text = $"SPD: {selectedInsect.movementSpeed:F2}";
             stat3Text.text = $"SUN: {selectedInsect.sunDrop}";

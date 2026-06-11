@@ -127,13 +127,13 @@ public class Holly : Aura
     {
         float adpl    = HData?.path1AttackDamagePerLevel ?? 4f;
         float armorpl = HData?.path1ArmorPerLevel        ?? 8;
-        string scaling = details
-            ? $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-              $"Increase Armor by <color=green><b>{armorpl:F0}</b></color> per level. [<color=green><b>+{armorpl * effectivePath1Level:F0}</b></color>]"
-            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
-              $"Increase Armor by <color=green><b>{armorpl:F0}</b></color>.";
-        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Releases icy thorns dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range."
+            : GetAttackDescription();
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -142,33 +142,39 @@ public class Holly : Aura
     {
         float retalipl = HData?.path2RetaliationPerLevel ?? 0.05f;
         float hppl     = HData?.path2HealthPerLevel      ?? 40f;
-        string scaling = details
-            ? $"Increase retaliation percentages by <color=green><b>{retalipl * 100f:F0}%</b></color> per level for both. [<color=green><b>+{retalipl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-              $"Increase Max Health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]"
-            : $"Increase retaliation percentages by <color=green><b>{retalipl * 100f:F0}%</b></color> for both.\n\n" +
-              $"Increase Max Health by <color=green><b>{hppl:F0}</b></color>.";
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        float shieldMP = HData?.baseSkillShieldMP        ?? 0f;
+        string desc = details
+            ? $"Insects that attack {GetName()} retaliate for <color=green><b>[({HData?.baseRetaliationHollyPercent ?? 0.75f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of {GetName()}'s Attack Damage + " +
+              $"<color=green><b>[({HData?.baseRetaliationInsectPercent ?? 0.75f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of the attacker's Attack Damage. " +
+              $"Increases Max Health <color=#FFB6C1>[+{(HData?.baseHealthBonusMP ?? 0f) * 100f:F0}% Magic Power]</color>. " +
+              $"While {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
+              $"forcing them to target {GetName()} and reducing their Armor. Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage."
+            : GetPassiveDescription();
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase retaliation percentages by <color=green><b>{retalipl * 100f:F0}%</b></color> per level for both. [<color=green><b>+{retalipl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float shieldpl = HData?.path3ShieldPerLevel       ?? 20f;
-        float ragepl   = HData?.path3FrozenRagePerLevel   ?? 0.04f;
+        float shieldpl = HData?.path3ShieldPerLevel        ?? 20f;
+        float ragepl   = HData?.path3FrozenRagePerLevel    ?? 0.04f;
         float durpl    = HData?.path3SkillDurationPerLevel ?? 2f;
+        float shieldMP = HData?.baseSkillShieldMP          ?? 0f;
+        float rageMP   = HData?.baseFrozenRageReductionMP  ?? 0f;
         float rageArmorpl = ragepl * 100f / (1f - ragepl);
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{(HData?.baseFrozenRageReductionMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Frozen Rage)\n\n<color=#FFB6C1><b>{(HData?.baseSkillShieldMP ?? 0f) * 100f:F0}%</b></color> Magic Power (Shield)\n\n" +
-              $"Increase Armor reduction by <color=green><b>{rageArmorpl:F1}</b></color> per level. [<color=green><b>+{rageArmorpl * effectivePath3Level:F1}</b></color>]\n\n" +
-              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-              $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]"
-            : $"Increase Armor reduction by <color=green><b>{rageArmorpl:F1}</b></color>.\n\n" +
-              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds.\n\n" +
-              $"Increase shield by <color=green><b>{shieldpl:F0}</b></color>.";
-        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Grants {GetName()} a shield of <color=grey><b>[({HData?.baseSkillShield ?? 0f:F0}) + ({shieldpl:F0}/Lvl.) + <color=#FFB6C1>{shieldMP * 100f:F0}% Magic Power</color>]</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. " +
+              $"While the shield holds, nearby insects are forced to target {GetName()} via <color=#00FFFF><b>Frozen Rage</b></color> and have their Armor reduced."
+            : GetSkillDesription();
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase Armor reduction by <color=green><b>{rageArmorpl:F1}</b></color> per level. [<color=green><b>+{rageArmorpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

@@ -199,7 +199,7 @@ public class Stargazer : Aura
     }
 
     // a beam indicator pivoted at the plant, spanning the whole screen (plant in the middle),
-    // aimed at the mouse — same idea as WindGust/Blizzard but centered on the plant
+    // aimed at the mouse â€” same idea as WindGust/Blizzard but centered on the plant
     private void UpdateSkillIndicator()
     {
         if (_skillIndicatorInstance == null) return;
@@ -268,62 +268,59 @@ public class Stargazer : Aura
         $"The {GetName()} sprays a cone of fire that leaves enemies <color=#FF6B1A>Flammable</color>, and can call down a sweeping wall of flame across the entire map.";
 
     public override string GetAttackDescription() =>
-        $"Sprays fire in a <color=green><b>{ConeAngle:F0}°</b></color> cone, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} damage to all insects within it.";
+        $"Sprays fire in a <color=green><b>{ConeAngle:F0}Â°</b></color> cone, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} damage to all insects within it.";
 
     public override string GetPassiveDescription() =>
         $"Striking a target applies <color=green><b>{StacksPerHit}</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> for <color=green><b>{FlammableDuration:F0}s</b></color>, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>{BurnDurationBonus * 100f:F0}%</b></color> longer.";
 
     public override string GetSkillDesription() =>
-        $"Aim a direction. After a brief delay, a wall of fire sweeps across the entire map, dealing <color=green><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage to everything in its path and applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. Deals <color=green><b>{SkillBurnMultiplier:F1}×</b></color> damage to <color=orange>Burning</color> targets.";
+        $"Aim a direction. After a brief delay, a wall of fire sweeps across the entire map, dealing <color=green><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage to everything in its path and applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. Deals <color=green><b>{SkillBurnMultiplier:F1}Ã—</b></color> damage to <color=orange>Burning</color> targets.";
 
     public override string GetPath1Description(bool details = false)
     {
-        float adpl   = SData?.path1AttackDamagePerLevel ?? 3f;
-        float rngpl  = SData?.path1AttackRangePerLevel  ?? 0.2f;
-        string scaling = details
-            ? $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-              $"Increase Attack Range by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]"
-            : $"Increase Attack Damage by <color=green><b>{adpl:F0}</b></color>.\n\n" +
-              $"Increase Attack Range by <color=green><b>{rngpl:F2}</b></color>.";
-        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        float adpl  = SData?.path1AttackDamagePerLevel ?? 3f;
+        float rngpl = SData?.path1AttackRangePerLevel  ?? 0.2f;
+        string desc = details
+            ? $"Sprays fire in a <color=green><b>{ConeAngle:F0}</b></color> degree cone, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} damage to all insects within it."
+            : GetAttackDescription();
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath2Description(bool details = false)
     {
-        int spl = SData?.path2StacksPerLevel ?? 1;
-        float bdpl = SData?.path2BurnDurationPerLevel ?? 0.1f;
-        string scaling = details
-            ? $"Increase the <color=#FF6B1A>Flammable</color> stacks applied per hit by <color=green><b>{spl}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(spl * effectivePath2Level)}</b></color>]\n\n" +
-              $"Increase <color=orange>Burn</color> duration by <color=green><b>{bdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bdpl * effectivePath2Level * 100f:F0}%</b></color>]"
-            : $"Increase the <color=#FF6B1A>Flammable</color> stacks applied per hit by <color=green><b>{spl}</b></color>.\n\n" +
-              $"Increase <color=orange>Burn</color> duration by <color=green><b>{bdpl * 100f:F0}%</b></color>.";
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        int   spl  = SData?.path2StacksPerLevel       ?? 1;
+        float bdpl = SData?.path2BurnDurationPerLevel  ?? 0.1f;
+        string desc = details
+            ? $"Striking a target applies <color=green><b>[({SData?.baseStacksPerHit ?? 1}) + ({spl}/Lvl.)]</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> for <color=green><b>{FlammableDuration:F0}</b></color> seconds, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>[({SData?.baseBurnDurationBonus ?? 0.5f:F0}%) + ({bdpl * 100f:F0}%/Lvl.)]</b></color> longer."
+            : GetPassiveDescription();
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase <color=#FF6B1A>Flammable</color> stacks applied per hit by <color=green><b>{spl}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(spl * effectivePath2Level)}</b></color>]\n\n" +
+               $"Increase <color=orange>Burn</color> duration by <color=green><b>{bdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float dpl = SData?.path3SkillDamagePerLevel ?? 40f;
-        float wpl = SData?.path3WaveWidthPerLevel ?? 0.5f;
-        float bpl = SData?.path3BurnMultiplierPerLevel ?? 0.1f;
-        float fpl = SData?.path3FlammableStacksPerLevel ?? 0.5f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-              $"Increase fire wave damage by <color=green><b>{dpl:F0}</b></color> per level. [<color=green><b>+{dpl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase fire wave width by <color=green><b>{wpl:F1}</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level:F1}</b></color>]\n\n" +
-              $"Increase <color=orange>Burning</color>-target multiplier by <color=green><b>{bpl:F1}×</b></color> per level. [<color=green><b>+{bpl * effectivePath3Level:F1}×</b></color>]\n\n" +
-              $"Increase <color=#FF6B1A>Flammable</color> stacks applied by <color=green><b>{fpl:F1}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(fpl * effectivePath3Level)}</b></color>]"
-            : $"Increase fire wave damage by <color=green><b>{dpl:F0}</b></color>.\n\n" +
-              $"Increase fire wave width by <color=green><b>{wpl:F1}</b></color>.\n\n" +
-              $"Increase <color=orange>Burning</color>-target multiplier by <color=green><b>{bpl:F1}×</b></color>.\n\n" +
-              $"Increase <color=#FF6B1A>Flammable</color> stacks applied by <color=green><b>{fpl:F1}</b></color>.";
-        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"{scaling}\n\n" +
+        float dpl = SData?.path3SkillDamagePerLevel     ?? 40f;
+        float wpl = SData?.path3WaveWidthPerLevel        ?? 0.5f;
+        float bpl = SData?.path3BurnMultiplierPerLevel   ?? 0.1f;
+        float fpl = SData?.path3FlammableStacksPerLevel  ?? 0.5f;
+        string desc = details
+            ? $"Aim a direction. After a brief delay, a wall of fire sweeps across the entire map, dealing <color=green><b>[({SData?.skillBaseDamage ?? 200f:F0}) + ({dpl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} damage to everything in its path and applying <color=green><b>[({SData?.skillFlammableStacks ?? 2}) + ({fpl:F1}/Lvl.)]</b></color> stacks of <color=#FF6B1A>Flammable</color>. Deals <color=green><b>[({SData?.skillBurnMultiplier ?? 2f:F1}) + ({bpl:F1}/Lvl.)]x</b></color> damage to <color=orange>Burning</color> targets."
+            : GetSkillDesription();
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase fire wave damage by <color=green><b>{dpl:F0}</b></color> per level. [<color=green><b>+{dpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase fire wave width by <color=green><b>{wpl:F1}</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase <color=orange>Burning</color>-target multiplier by <color=green><b>{bpl:F1}x</b></color> per level. [<color=green><b>+{bpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase <color=#FF6B1A>Flammable</color> stacks applied by <color=green><b>{fpl:F1}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(fpl * effectivePath3Level)}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

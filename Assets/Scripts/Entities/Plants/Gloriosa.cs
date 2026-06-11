@@ -225,7 +225,7 @@ public class Gloriosa : Plant
         return $"Summons <color=green><b>{count}</b></color> Fiery Wisps that fly across the map seeking the most injured plant. " +
                $"Plants within <color=green><b>{wRad:F1}</b></color> radius heal " +
                $"<color=green><b>{WispHealBase:F0}</b></color> [<color=#FFB6C1><b>+{WispHealMP:F0}</b></color>] health and " +
-               $"warm <color=orange><b>{wTemp:F1}°</b></color> per second while the wisp is near. " +
+               $"warm <color=orange><b>{wTemp:F1}Â°</b></color> per second while the wisp is near. " +
                $"When a wisp reaches its target it latches, applying <color=orange>Fiery Wisp Latched</color>: " +
                $"heals <color=green><b>{LatchHealBase:F0}</b></color> [<color=#FFB6C1><b>+{LatchHealMP:F0}</b></color>] per second and " +
                $"increases <color=orange><b>Fire Damage</b></color> by " +
@@ -238,13 +238,13 @@ public class Gloriosa : Plant
     {
         float speedpl = GData?.path1AttackSpeedPerLevel ?? 0.1f;
         float rangepl = GData?.path1AttackRangePerLevel ?? 0.15f;
-        string scaling = details
-            ? $"Increase Attack Speed by <color=green><b>{speedpl:F2}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F2}</b></color>]\n\n" +
-              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]"
-            : $"Increase Attack Speed by <color=green><b>{speedpl:F2}</b></color>.\n\n" +
-              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color>.";
-        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Sends embers of soothing fire towards its target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            : GetAttackDescription();
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{speedpl:F2}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -255,14 +255,13 @@ public class Gloriosa : Plant
         float temppl = GData?.path2TemperaturePerLevel ?? 0.3f;
         float healMP = GData?.healMP                   ?? 0.3f;
         float tempMP = GData?.temperatureMP            ?? 0.02f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{healMP * 100f:F0}%</b></color> Magic Power (Healing), <color=#FFB6C1><b>{tempMP * 100f:F0}%</b></color> Magic Power (Temperature)\n\n" +
-              $"Increase base healing by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
-              $"Increase temperature regulation by <color=green><b>{temppl:F1}°</b></color> per level. [<color=green><b>+{temppl * effectivePath2Level:F1}°</b></color>]"
-            : $"Increase base healing by <color=green><b>{healpl:F0}</b></color>.\n\n" +
-              $"Increase temperature regulation by <color=green><b>{temppl:F1}°</b></color>.";
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Targets injured plants before insects. Embers heal plants for <color=green><b>[({GData?.healAmount ?? 25f:F0}) + ({healpl:F0}/Lvl.) + <color=#FFB6C1>{healMP * 100f:F0}% Magic Power</color>]</b></color> health and increase temperature by <color=orange><b>[({GData?.temperatureAmount ?? 2f:F1}) + ({temppl:F1}/Lvl.) + <color=#FFB6C1>{tempMP * 100f:F0}% Magic Power</color>]</b></color> until comfort. Plants within <color=green><b>{GData?.auraRadius ?? 1.5f:F1}</b></color> radius receive half the effect."
+            : GetPassiveDescription();
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Healing</b></color> by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"Increase temperature regulation by <color=green><b>{temppl:F1}</b></color> per level. [<color=green><b>+{temppl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -275,24 +274,20 @@ public class Gloriosa : Plant
         float lhealpl = GData?.path3LatchHealPerSecondPerLevel   ?? 2f;
         float lfirepl = GData?.path3LatchFireDamageBonusPerLevel ?? 0.05f;
         float ldurpl  = GData?.path3LatchDurationPerLevel        ?? 0.5f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{(GData?.wispHealMP ?? 0.05f) * 100f:F0}%</b></color> Magic Power (Wisp Heal), " +
-              $"<color=#FFB6C1><b>{(GData?.latchHealMP ?? 0.1f) * 100f:F0}%</b></color> Magic Power (Latch Heal), " +
-              $"<color=#FFB6C1><b>{(GData?.latchFireDamageBonusMP ?? 0.05f) * 100f:F0}%</b></color> Magic Power (Fire Bonus)\n\n" +
-              $"Increase wisp duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-              $"Increase aura healing by <color=green><b>{healpl:F0}</b></color> per second per level. [<color=green><b>+{healpl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase aura temperature by <color=orange><b>{temppl:F1}°</b></color> per second per level. [<color=orange><b>+{temppl * effectivePath3Level:F1}°</b></color>]\n\n" +
-              $"Increase latch healing by <color=green><b>{lhealpl:F0}</b></color> per second per level. [<color=green><b>+{lhealpl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase latch <color=orange>Fire</color> bonus by <color=orange><b>{lfirepl * 100f:F0}%</b></color> per level. [<color=orange><b>+{lfirepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-              $"Increase latch duration by <color=green><b>{ldurpl:F1}s</b></color> per level. [<color=green><b>+{ldurpl * effectivePath3Level:F1}s</b></color>]"
-            : $"Increase wisp duration by <color=green><b>{durpl:F0}s</b></color>.\n\n" +
-              $"Increase aura healing by <color=green><b>{healpl:F0}</b></color> per second.\n\n" +
-              $"Increase aura temperature by <color=orange><b>{temppl:F1}°</b></color> per second.\n\n" +
-              $"Increase latch healing by <color=green><b>{lhealpl:F0}</b></color> per second.\n\n" +
-              $"Increase latch <color=orange>Fire</color> bonus by <color=orange><b>{lfirepl * 100f:F0}%</b></color>.\n\n" +
-              $"Increase latch duration by <color=green><b>{ldurpl:F1}s</b></color>.";
-        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"{scaling}\n\n" +
+        float wispHealMP  = GData?.wispHealMP  ?? 0.05f;
+        float latchHealMP = GData?.latchHealMP ?? 0.1f;
+        float latchFireMP = GData?.latchFireDamageBonusMP ?? 0.05f;
+        string desc = details
+            ? GetSkillDesription()
+            : GetSkillDesription();
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase wisp duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase aura healing by <color=green><b>{healpl:F0}</b></color> per second per level. [<color=green><b>+{healpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase aura temperature by <color=orange><b>{temppl:F1}</b></color> per second per level. [<color=orange><b>+{temppl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase latch healing by <color=green><b>{lhealpl:F0}</b></color> per second per level. [<color=green><b>+{lhealpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase latch <color=orange>Fire</color> bonus by <color=orange><b>{lfirepl * 100f:F0}%</b></color> per level. [<color=orange><b>+{lfirepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase latch duration by <color=green><b>{ldurpl:F1}</b></color> seconds per level. [<color=green><b>+{ldurpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

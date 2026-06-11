@@ -146,12 +146,14 @@ public class Cactus : Shooter
 
     public override string GetPath1Description(bool details = false)
     {
+        int needleBase  = CactData?.path1NeedlesBase     ?? 8;
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
-        string scaling = details
-            ? $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]"
-            : $"Increase needle count by <color=green><b>{needleLevel}</b></color>.";
-        return $"Attack:\n\n{GetAttackDescription()}\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Fires <color=green><b>[({needleBase}) + ({needleLevel}/Lvl.)]</b></color> needles in equal angles around itself, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per needle. Each hit applies <color=#A0522D><b>Punctured</b></color>.\nAt Level <color=green><b>5</b></color>, <color=green><b>+1</b></color> Piercing."
+            : GetAttackDescription();
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -159,14 +161,14 @@ public class Cactus : Shooter
     public override string GetPath2Description(bool details = false)
     {
         float hppl = CactData?.path2HealthPerLevel ?? 60f;
-        string scaling = details
-            ? $"Increase <color=#A0522D>Punctured</color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-              $"Increase Max Health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]"
-            : $"Increase <color=#A0522D>Punctured</color> stacks per hit by <color=green><b>1</b></color>.\n\n" +
-              $"Increase Max Health by <color=green><b>{hppl:F0}</b></color>.";
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+        string desc = details
+            ? $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
+            : GetPassiveDescription();
+        return $"Passive:\n\n{desc}\n\n" +
                $"<color=#A0522D>Punctured</color>: reduces Physical Resistance by <color=green><b>0.5%</b></color> per stack, lasts 8 seconds.\n\n" +
-               $"{scaling}\n\n" +
+               $"Increase <color=#A0522D>Punctured</color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -176,15 +178,15 @@ public class Cactus : Shooter
         float shieldpl  = CactData?.path3ShieldPerLevel        ?? 10f;
         float durpl     = CactData?.path3SkillDurationPerLevel ?? 2f;
         float healpl    = CactData?.path3HealBonusPerLevel     ?? 0.04f;
-        string scaling = details
-            ? $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
-              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-              $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level * 100f:F0}%</b></color>]"
-            : $"Increase shield by <color=green><b>{shieldpl:F0}</b></color>.\n\n" +
-              $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds.\n\n" +
-              $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color>.";
-        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
-               $"{scaling}\n\n" +
+        float shieldBase = CactData?.baseShieldAmount ?? 100f;
+        string desc = details
+            ? $"Grants the {GetName()} a <color=grey><b>[({shieldBase:F0}) + ({shieldpl:F0}/Lvl.)]</b></color> shield for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. While the shield holds, nearby insects are forced to target the {GetName()}."
+            : GetSkillDesription();
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

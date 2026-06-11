@@ -9,8 +9,6 @@ public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();          // enemies only (the wave)
     public static List<Insect> friendlyInsects = new List<Insect>();     // minions + hypnotized insects
-    public static event System.Action<Vector3> OnInsectKilled;
-    public static event System.Action<Insect> OnInsectDied;
     private static int ObstacleLayer => LayerMask.GetMask("Obstacle");
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -588,8 +586,7 @@ public abstract class Insect : Entity, IAttackable
         if (team == Team.Friendly) return;
         if (source is Plant p) RegisterAttacker(p);
         DistributeExp();
-        OnInsectKilled?.Invoke(transform.position);
-        OnInsectDied?.Invoke(this);
+        RaiseEntityDied(new EntityEventData { target = this, source = source, position = transform.position });
         GameManager.instance?.AddSun(Mathf.CeilToInt(sunDrop * (1f + (source != null ? source.sunYieldBonus : 0f))));
 
         RemoveEffect<TauntEffect>();   // drop any taunt/engagement it had as an enemy
@@ -714,8 +711,7 @@ public abstract class Insect : Entity, IAttackable
         if (team == Team.Friendly) { QuietDeath(); return; }   // already counted as killed when turned
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
-        OnInsectKilled?.Invoke(transform.position);
-        OnInsectDied?.Invoke(this);
+        RaiseEntityDied(new EntityEventData { target = this, source = source, position = transform.position });
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         // the killer's sunYieldBonus (e.g. Aeonium's Blessing) increases sun dropped, rounded up
@@ -731,8 +727,7 @@ public abstract class Insect : Entity, IAttackable
         if (team == Team.Friendly) { QuietDeath(); return; }   // already counted as killed when turned
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
-        OnInsectKilled?.Invoke(transform.position);
-        OnInsectDied?.Invoke(this);
+        RaiseEntityDied(new EntityEventData { target = this, position = transform.position });
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(sunDrop);

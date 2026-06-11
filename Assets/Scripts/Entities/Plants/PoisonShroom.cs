@@ -96,31 +96,28 @@ public class PoisonShroom : Shooter
     {
         float aspl    = PSData?.path1AttackSpeedPerLevel ?? 0.08f;
         float rangepl = PSData?.path1AttackRangePerLevel ?? 0.1f;
-        string scaling = details
-            ? $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]"
-            : $"Increase Attack Speed by <color=green><b>{aspl:F2}</b></color>.\n\n" +
-              $"Increase Attack Range by <color=green><b>{rangepl:F1}</b></color>.";
-        return $"Attack:\n\n" +
-               $"Blows poisonous bubbles at his target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Blows poisonous bubbles at his target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            : $"Blows poisonous bubbles at his target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath2Description(bool details = false)
     {
-        float dpspl = PSData?.path2PoisonDPSPerLevel        ?? 6f;
-        float durpl = PSData?.path2PoisonDurationPerLevel   ?? 1f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-              $"Increase <color=purple>Poison</color> damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath2Level:F0}</b></color>]\n\n" +
-              $"Increase <color=purple>Poison</color> duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath2Level:F0}s</b></color>]"
-            : $"Increase <color=purple>Poison</color> damage by <color=green><b>{dpspl:F0}</b></color>.\n\n" +
-              $"Increase <color=purple>Poison</color> duration by <color=green><b>{durpl:F0}</b></color> second.";
-        return $"Passive:\n\n" +
-               $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{PoisonBaseDPS + dpspl * effectivePath2Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage per second.\n\n" +
-               $"{scaling}\n\n" +
+        float dpspl = PSData?.path2PoisonDPSPerLevel      ?? 6f;
+        float durpl = PSData?.path2PoisonDurationPerLevel ?? 1f;
+        string desc = details
+            ? $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>[({PSData?.basePoisonDuration ?? 0f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, dealing <color=green><b>[({PoisonBaseDPS:F0}) + ({dpspl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} damage per second."
+            : $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{poisonDuration}</b></color> seconds, dealing <color=green><b>{PoisonBaseDPS + dpspl * effectivePath2Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage per second.";
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Increase <color=purple>Poison</color> damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"Increase <color=purple>Poison</color> duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -129,15 +126,13 @@ public class PoisonShroom : Shooter
     {
         float durpl    = PSData?.path3SkillDurationPerLevel ?? 1f;
         float radiuspl = PSData?.path3RadiusPerLevel        ?? 0.2f;
-        string scaling = details
-            ? $"Scaling: <color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}%</b></color> Magic Power\n\n" +
-              $"Increase field duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-              $"Increase field radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]"
-            : $"Increase field duration by <color=green><b>{durpl:F0}</b></color> second.\n\n" +
-              $"Increase field radius by <color=green><b>{radiuspl:F1}</b></color>.";
-        return $"Skill:\n\n" +
-               $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>{activeRadius}</b></color> radius that lasts <color=green><b>{skillDuration}</b></color> seconds. Insects standing in the field take <color=green><b>{PoisonBaseDPS}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second, and any debuffs on them are frozen in time.\n\n" +
-               $"{scaling}\n\n" +
+        string desc = details
+            ? $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius that lasts <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Insects standing in the field take <color=green><b>{PoisonBaseDPS:F0}</b></color> <color=#FFB6C1>[+{skillDamageMultiplier * 100f:F0}% Magic Power]</color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second, and any debuffs on them are frozen in time."
+            : $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>{activeRadius:F1}</b></color> radius that lasts <color=green><b>{skillDuration:F0}</b></color> seconds. Insects standing in the field take <color=green><b>{PoisonBaseDPS:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second, and any debuffs on them are frozen in time.";
+        return $"Skill:\n\n{desc}\n\n" +
+               $"Increase field duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase field radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }
