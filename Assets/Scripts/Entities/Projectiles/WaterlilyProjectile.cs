@@ -50,11 +50,15 @@ public class WaterlilyProjectile : Projectile
 
         if (waterlily != null)
         {
+            bool path2Maxed = waterlily.effectivePath2Level >= Plant.pathLevelCap;
+            DamageTag[] splashTags = path2Maxed
+                ? new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage, DamageTag.Attack, DamageTag.Projectile }
+                : new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage };
             foreach (Insect splashedInsect in new List<Insect>(Insect.allInsects))
             {
                 if (splashedInsect == null || !splashedInsect.IsAlive) continue;
                 if (splashedInsect != insect && Vector3.Distance(transform.position, splashedInsect.transform.position) <= waterlily.AoERange)
-                    splashedInsect.Damage(waterlily.splashDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile});
+                    splashedInsect.Damage(waterlily.splashDamage, damageType, elementalType, source, true, splashTags);
             }
         }
     }

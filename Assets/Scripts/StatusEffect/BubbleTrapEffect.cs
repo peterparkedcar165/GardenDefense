@@ -10,11 +10,14 @@ public class BubblePrisonEffect : Airborne
     private GameObject bubbleVisual;
     private const float bobSpeed = 2f;
     private const float bobAmplitude = 0.08f;
+    private readonly bool _rising;
+    private const float riseSpeed = 0.5f;
 
-    public BubblePrisonEffect(Entity target, float duration, int level, Entity source)
+    public BubblePrisonEffect(Entity target, float duration, int level, Entity source, bool rising = false)
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        _rising = rising;
     }
 
     public override string GetName() => "<color=#3399FF>Bubble Prison</color>";
@@ -52,6 +55,9 @@ public class BubblePrisonEffect : Airborne
         {
             knockUpHeight = Random.Range(0.3f, 0.5f);
         }
+
+        if (_rising && target is Insect ri)
+            ri.fallDamageSource = source;
     }
 
     public override void OnTick(float deltaTime)
@@ -72,6 +78,14 @@ public class BubblePrisonEffect : Airborne
             if (insect.HasEffect<KnockUpEffect>()) return; // geyser overrides , let ApplyGravity control Y
             if (insect.affectedByGravity) return;
             insect.verticalVelocity = 0f;          // bubble caught at apex: snap vV so bob runs
+        }
+
+        if (_rising)
+        {
+            if (target is FlyingInsect)
+                storedVisualY += riseSpeed * deltaTime;
+            else
+                knockUpHeight += riseSpeed * deltaTime;
         }
 
         phase += bobSpeed * deltaTime;

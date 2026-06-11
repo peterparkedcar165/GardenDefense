@@ -22,7 +22,10 @@ public abstract class Insect : Entity, IAttackable
     protected Transform[] waypoints;
     public bool isFlying = false;
     public static float gravity = 9.8f;
-    public static float fallDamageMultiplier = 8f; // TUNING KNOB , damage = verticalVelocity * this
+    public static float fallDamageMultiplier = 8f;        // damage = velocity * this + maxHealth * healthPercent
+    public static float fallDamageHealthMin = 0.04f;      // 4% maxHealth at minimum velocity
+    public static float fallDamageHealthMax = 0.08f;      // 8% maxHealth at peak velocity
+    public static float fallDamageHealthVelocityCap = 20f; // velocity at which health % reaches max
     public float verticalVelocity = 0f;
     public Entity fallDamageSource;
     public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f);
@@ -252,14 +255,16 @@ public abstract class Insect : Entity, IAttackable
                 pos.y = 0.4f;
                 if (verticalVelocity >= 3f && !FallDamageImmune)
                 {
+                    float healthPercent = Mathf.Lerp(fallDamageHealthMin, fallDamageHealthMax, Mathf.Clamp01((verticalVelocity - 3f) / (fallDamageHealthVelocityCap - 3f)));
+                    float fallDmg = verticalVelocity * fallDamageMultiplier + maxHealth * healthPercent;
                     Entity src = fallDamageSource != null ? fallDamageSource : lastSource;
                     if (src != null)
                     {
-                        Damage(verticalVelocity * fallDamageMultiplier, DamageType.Physical, ElementalType.Neutral, src, false, new DamageTag[0]);
+                        Damage(fallDmg, DamageType.Physical, ElementalType.Neutral, src, false, new DamageTag[0]);
                         ApplyEffect(new StunEffect(this, 2f, 1, src));
                     }
                     else
-                        Damage(verticalVelocity * fallDamageMultiplier, DamageType.Physical, ElementalType.Neutral, new DamageTag[0]);
+                        Damage(fallDmg, DamageType.Physical, ElementalType.Neutral, new DamageTag[0]);
                 }
                 verticalVelocity = 0f;
             }

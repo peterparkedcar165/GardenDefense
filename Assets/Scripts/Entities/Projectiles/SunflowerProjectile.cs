@@ -23,7 +23,7 @@ public class SunflowerProjectile : Projectile
         Sunflower sunflower = source as Sunflower;
 
         if (sunflower != null)
-        sunflower.ReduceSunTimer();
+            sunflower.ReduceSunTimer();
 
     }
 

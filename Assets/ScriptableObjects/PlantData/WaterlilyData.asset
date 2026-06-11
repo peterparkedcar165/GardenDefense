@@ -25,12 +25,12 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.7
   baseAttackRange: 4
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -55,6 +59,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseMinionDamage: 0
   baseProjectileSpeed: 2.6
   baseMaxRange: 20
   basePiercing: 0
@@ -65,6 +70,7 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 90
   baseSkillDuration: 8
+  channelDuration: 0
   baseSkillRadius: 2
   baseSkillDamageMultiplier: 0.04
   baseSkillHealth: 0
@@ -74,7 +80,7 @@ MonoBehaviour:
   baseBubblePrisonImpactDamage: 42
   path1AttackRangePerLevel: 0.3
   path1AttackSpeedPerLevel: 0.35
-  path2AoERangePerLevel: 0.075
+  path2AoERangePerLevel: 0.125
   path2SplashDamageScalingPerLevel: 0.05
   path3BubbleDamagePerLevel: 12
   path3SkillDurationPerLevel: 2

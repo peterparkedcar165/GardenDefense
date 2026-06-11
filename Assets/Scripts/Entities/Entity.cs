@@ -144,7 +144,7 @@ public abstract class Entity : MonoBehaviour
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
-    public float totalArmorMultiplier, totalMagicArmorMultiplier;
+    public float armorMultiplier, magicArmorMultiplier;
     public float armorPenFlatMultiplier, magicPenFlatMultiplier, armorPenPercentMultiplier, magicPenPercentMultiplier;
     public float fireResistanceMultiplier, waterResistanceMultiplier, natureResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
     public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier;
@@ -161,6 +161,11 @@ public abstract class Entity : MonoBehaviour
     public float debuffGivenDurationMultiplier, buffGivenDurationMultiplier, buffReceivedDurationMultiplier, debuffReceivedDurationMultiplier;
     public float evasionMultiplier, accuracyMultiplier;
     public float bonusCritChanceReceivedMultiplier, projectileSpeedMultiplier;
+    public float maxHealthTotalMultiplier = 1f, attackDamageTotalMultiplier = 1f, magicPowerTotalMultiplier = 1f;
+    public float attackSpeedTotalMultiplier = 1f, attackRangeTotalMultiplier = 1f;
+    public float criticalChanceTotalMultiplier = 1f, criticalDamageTotalMultiplier = 1f;
+    public float armorTotalMultiplier = 1f, magicArmorTotalMultiplier = 1f;
+    public float armorPenFlatTotalMultiplier = 1f, magicPenFlatTotalMultiplier = 1f;
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 2f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
@@ -169,11 +174,11 @@ public abstract class Entity : MonoBehaviour
     public float timeAlive, totalDamageDealt;
     public virtual void UpdateStats()
     {
-        maxHealth = baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier);
-        attackDamage = baseAttackDamage + attackDamageAdder + (baseAttackDamage * attackDamageMultiplier);
-        magicPower = baseMagicPower + magicPowerAdder + (baseMagicPower * magicPowerMultiplier);
-        attackSpeed = baseAttackSpeed + attackSpeedAdder + (baseAttackSpeed * attackSpeedMultiplier);
-        attackRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
+        maxHealth = (baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier)) * maxHealthTotalMultiplier;
+        attackDamage = (baseAttackDamage + attackDamageAdder + (baseAttackDamage * attackDamageMultiplier)) * attackDamageTotalMultiplier;
+        magicPower = (baseMagicPower + magicPowerAdder + (baseMagicPower * magicPowerMultiplier)) * magicPowerTotalMultiplier;
+        attackSpeed = (baseAttackSpeed + attackSpeedAdder + (baseAttackSpeed * attackSpeedMultiplier)) * attackSpeedTotalMultiplier;
+        attackRange = (baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier)) * attackRangeTotalMultiplier;
         healingBonus = baseHealingBonus + healingBonusAdder + (baseHealingBonus * healingBonusMultiplier);
         healingReceived = baseHealingReceived + healingReceivedAdder + (baseHealingReceived * healingReceivedMultiplier);
         fireResistance = baseFireResistance + fireResistanceAdder + (baseFireResistance * fireResistanceMultiplier);
@@ -191,8 +196,8 @@ public abstract class Entity : MonoBehaviour
         windDamage = baseWindDamage + windDamageAdder + (baseWindDamage * windDamageMultiplier);
         poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
         iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
-        criticalChance = baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier);
-        criticalDamage = baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier);
+        criticalChance = (baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier)) * criticalChanceTotalMultiplier;
+        criticalDamage = (baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier)) * criticalDamageTotalMultiplier;
         bonusCritChanceReceived = baseBonusCritChanceReceived + bonusCritChanceReceivedAdder + (baseBonusCritChanceReceived * bonusCritChanceReceivedMultiplier);
         projectileSpeed = baseProjectileSpeed + projectileSpeedAdder + (baseProjectileSpeed * projectileSpeedMultiplier);
         dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
@@ -215,12 +220,12 @@ public abstract class Entity : MonoBehaviour
         debuffReceivedDuration = baseDebuffReceivedDuration + debuffReceivedDurationAdder + (baseDebuffReceivedDuration * debuffReceivedDurationMultiplier);
         evasion  = baseEvasion  + evasionAdder  + (baseEvasion  * evasionMultiplier);
         accuracy = baseAccuracy + accuracyAdder + (baseAccuracy * accuracyMultiplier);
-        armor      = (int)((baseArmor      + armorAdder)      * (1f + totalArmorMultiplier));
-        magicArmor = (int)((baseMagicArmor + magicArmorAdder) * (1f + totalMagicArmorMultiplier));
+        armor      = (int)(((baseArmor      + armorAdder)      + (baseArmor      * armorMultiplier))      * armorTotalMultiplier);
+        magicArmor = (int)(((baseMagicArmor + magicArmorAdder) + (baseMagicArmor * magicArmorMultiplier)) * magicArmorTotalMultiplier);
         physicalResistance = armor      / (100f + armor);
         magicResistance    = magicArmor / (100f + magicArmor);
-        armorPenFlat    = (baseArmorPenFlat    + armorPenFlatAdder)    * (1f + armorPenFlatMultiplier);
-        magicPenFlat    = (baseMagicPenFlat    + magicPenFlatAdder)    * (1f + magicPenFlatMultiplier);
+        armorPenFlat = (baseArmorPenFlat + armorPenFlatAdder + baseArmorPenFlat * armorPenFlatMultiplier) * armorPenFlatTotalMultiplier;
+        magicPenFlat = (baseMagicPenFlat + magicPenFlatAdder + baseMagicPenFlat * magicPenFlatMultiplier) * magicPenFlatTotalMultiplier;
         armorPenPercent = baseArmorPenPercent  + armorPenPercentAdder  + (baseArmorPenPercent * armorPenPercentMultiplier);
         magicPenPercent = baseMagicPenPercent  + magicPenPercentAdder  + (baseMagicPenPercent * magicPenPercentMultiplier);
         UpdateHealthBar();
