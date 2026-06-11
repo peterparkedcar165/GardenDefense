@@ -71,6 +71,9 @@ public class PlantUpgradeUI : EntityInfoPanel
     [Header("Status Effects")]
     [SerializeField] private StatusEffectPanel statusEffectPanel;
 
+    [Header("Stats Panels")]
+    [SerializeField] private GameObject statsPanels;
+
     [Header("Tooltip")]
     [SerializeField] private GameObject tooltipPanel;
     [SerializeField] private TMP_Text tooltipText;
@@ -197,6 +200,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         selectedInsect = null;
         cachedInsectRenderer = null;
         statusEffectPanel?.Hide();
+        statsPanels?.SetActive(false);
         base.HidePanel();
         HideTooltip();
     }

@@ -1,28 +1,30 @@
-﻿using UnityEngine;
-using UnityEngine.EventSystems;
+using TMPro;
+using UnityEngine;
 
-public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public enum StatsSection { Core, Offense, Defense, Utility }
+
+public class StatsPanelTooltip : MonoBehaviour
 {
-    private bool isHovering = false;
+    [SerializeField] private StatsSection section;
+    [SerializeField] private TMP_Text statsText;
 
-    // Tune this until values sit at the right edge for your font/panel size
     private const int Width = 30;
 
-    private const string Fire   = "<color=orange>";
-    private const string Water  = "<color=#4FC3F7>";
-    private const string Nature = "<color=green>";
-    private const string Ice    = "<color=#00FFFF>";
-    private const string Poison = "<color=purple>";
-    private const string Wind   = "<color=#B2EBF2>";
+    private const string Fire     = "<color=orange>";
+    private const string Water    = "<color=#4FC3F7>";
+    private const string Nature   = "<color=green>";
+    private const string Ice      = "<color=#00FFFF>";
+    private const string Poison   = "<color=purple>";
+    private const string Wind     = "<color=#B2EBF2>";
     private const string Magic    = "<color=#FFB6C1>";
     private const string Physical = "<color=#A0522D>";
-    private const string DoT = "<color=grey>";
+    private const string DoT      = "<color=grey>";
     private const string Gold     = "<color=white>";
     private const string HealCol  = "<color=#FF6B81>";
+    private const string Passive  = "<color=#FFB347>";
+    private const string Blue     = "<color=#6495ED>";
     private const string End      = "</color>";
 
-    // dot leader: label left, dots fill gap, value right
-    // strips rich text tags before measuring so color-wrapped labels align correctly
     private static string D(string label, string plain, string formatted)
     {
         int visibleLen = 0;
@@ -44,82 +46,134 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         return formatted;
     }
 
+    private string ColInv(float current, float baseValue, string formatted)
+    {
+        if (current < baseValue) return $"<color=green>{formatted}</color>";
+        if (current > baseValue) return $"<color=red>{formatted}</color>";
+        return formatted;
+    }
+
     private void Update()
     {
-        if (!isHovering) return;
+        if (statsText == null) return;
 
         Entity entity = (Entity)PlantUpgradeUI.instance?.GetSelectedPlant()
                      ?? PlantUpgradeUI.instance?.GetSelectedInsect();
-        if (entity != null)
-            PlantUpgradeUI.instance.ShowTooltip(BuildEntityText(entity));
-    }
 
-    public void OnPointerEnter(PointerEventData eventData) => isHovering = true;
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        isHovering = false;
-        PlantUpgradeUI.instance?.HideTooltip();
+        statsText.text = entity != null ? BuildEntityText(entity) : "";
     }
 
     private string BuildEntityText(Entity e)
     {
-        var sb = new System.Text.StringBuilder();
+        return section switch
+        {
+            StatsSection.Core    => BuildCore(e),
+            StatsSection.Offense => BuildOffense(e),
+            StatsSection.Defense => BuildDefense(e),
+            StatsSection.Utility => BuildUtility(e),
+            _                    => ""
+        };
+    }
 
-        // --- Core ---
+    private string BuildCore(Entity e)
+    {
+        var sb = new System.Text.StringBuilder();
         sb.AppendLine("<size=+8><color=white><b><u>Core</u></b></color></size>");
+        ElemLine(sb, HealCol, "Max Health:", $"{e.maxHealth:F0}", e.maxHealth, e.baseMaxHealth);
         ElemLine(sb, Nature, "Attack Damage:",  $"{e.attackDamage:F0}",  e.attackDamage,  e.baseAttackDamage);
         ElemLine(sb, Nature, "Attack Speed:",   $"{e.attackSpeed:F2}",   e.attackSpeed,   e.baseAttackSpeed);
         ElemLine(sb, Nature, "Attack Range:",   $"{e.attackRange:F1}",   e.attackRange,   e.baseAttackRange);
         if (e is Insect insect)
             Line(sb, "Move Speed:", $"{insect.movementSpeed:F2}", insect.movementSpeed, insect.baseMovementSpeed);
+        if (e is Plant plant)
+            ElemLine(sb, Nature, "Projectile Speed:", $"{e.projectileSpeed:F1}", e.projectileSpeed, e.baseProjectileSpeed);
+        ElemLine(sb, Nature, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
+        ElemLine(sb, Nature, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
+        sb.AppendLine();
         ElemLine(sb, Magic, "Magic Power:", $"{e.magicPower:F0}", e.magicPower, e.baseMagicPower);
-        if (e is Plant)
-            Line(sb, "Projectile Speed:", $"{e.projectileSpeed:F1}", e.projectileSpeed, e.baseProjectileSpeed);
-
-        // --- Offense ---
-        sb.AppendLine("<size=+8><color=white><b><u>Offense</u></b></color></size>");
+        if (e is Plant plant2)
+        {
+            float cdRatio = plant2.baseSkillCooldown > 0f ? plant2.skillCooldown / plant2.baseSkillCooldown : 1f;
+            string cdPlain = $"{cdRatio * 100:F0}%";
+            int cdDots = Mathf.Max(2, Width - "Skill Cooldown:".Length - cdPlain.Length);
+            sb.AppendLine($"{Nature}Skill Cooldown:{End}{new string('.', cdDots)}{ColInv(cdRatio, 1f, $"<b>{cdPlain}</b>")}");
+        }
+        sb.AppendLine();
+        Line(sb, "<color=#00CED1>Armor:</color>",       $"{e.armor}",      e.armor,      e.baseArmor);
+        Line(sb, "<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
+        sb.AppendLine();
         ElemLine(sb, Physical, "Armor Penetration:",     $"{e.armorPenFlat:F0}",           e.armorPenFlat,    e.baseArmorPenFlat);
         ElemLine(sb, Physical, "Armor Penetration (%):", $"{e.armorPenPercent * 100:F0}%", e.armorPenPercent, e.baseArmorPenPercent);
         ElemLine(sb, Magic,    "Magic Penetration:",     $"{e.magicPenFlat:F0}",           e.magicPenFlat,    e.baseMagicPenFlat);
         ElemLine(sb, Magic,    "Magic Penetration (%):", $"{e.magicPenPercent * 100:F0}%", e.magicPenPercent, e.baseMagicPenPercent);
-        ElemLine(sb, Gold, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
-        ElemLine(sb, Gold, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
-        Line(sb, "Elemental Affinity:",  $"{e.elementalAffinity * 100:F0}%", e.elementalAffinity,  e.baseelementalAffinity);
-        Line(sb, "Damage Over Time:", $"{e.dotDamage * 100:F0}%",      e.dotDamage,       e.baseDotDamage);
         if (e is Shooter shooter)
             ElemLine(sb, Nature, "Piercing:", $"{shooter.piercing}", shooter.piercing, shooter.basePiercing);
-        Line(sb, "Skill Damage:",   $"{e.skillDamage * 100:F0}%",   e.skillDamage,   e.baseSkillDamage);
-        Line(sb, "Passive Damage:", $"{e.passiveDamage * 100:F0}%", e.passiveDamage, e.basePassiveDamage);
-        ElemLine(sb, Physical, "Physical Damage:", $"{e.physicalDamage * 100:F0}%", e.physicalDamage, e.basePhysicalDamage);
-        ElemLine(sb, Magic,    "Magic Damage:",    $"{e.magicDamage * 100:F0}%",    e.magicDamage,    e.baseMagicDamage);
+        return sb.ToString().TrimEnd();
+    }
+
+    private string BuildOffense(Entity e)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("<size=+8><color=white><b><u>Offense</u></b></color></size>");
+        ElemLine(sb, Nature,   "Elemental Affinity:",  $"{e.elementalAffinity * 100:F0}%",  e.elementalAffinity,  e.baseelementalAffinity);
+        sb.AppendLine();
+        ElemLine(sb, Magic,    "Damage Over Time:",    $"{e.dotDamage * 100:F0}%",          e.dotDamage,          e.baseDotDamage);
+        ElemLine(sb, Magic,    "Skill Damage:",        $"{e.skillDamage * 100:F0}%",        e.skillDamage,        e.baseSkillDamage);
+        ElemLine(sb, Passive,  "Passive Damage:",      $"{e.passiveDamage * 100:F0}%",      e.passiveDamage,      e.basePassiveDamage);
+        ElemLine(sb, Physical, "Counter Damage:",      $"{e.counterDamage * 100:F0}%",      e.counterDamage,      e.baseCounterDamage);
+        ElemLine(sb, Blue,     "Coordinated Damage:",  $"{e.coordinatedDamage * 100:F0}%",  e.coordinatedDamage,  e.baseCoordinatedDamage);
+        ElemLine(sb, Nature,   "Minion Damage:",       $"{e.minionDamage * 100:F0}%",       e.minionDamage,       e.baseMinionDamage);
+        sb.AppendLine();
+        ElemLine(sb, Physical, "Physical Damage:",     $"{e.physicalDamage * 100:F0}%",     e.physicalDamage,     e.basePhysicalDamage);
+        ElemLine(sb, Magic,    "Magic Damage:",        $"{e.magicDamage * 100:F0}%",        e.magicDamage,        e.baseMagicDamage);
+        sb.AppendLine();
         ElemLine(sb, Fire,   "Fire Damage:",   $"{e.fireDamage * 100:F0}%",   e.fireDamage,   e.baseFireDamage);
         ElemLine(sb, Water,  "Water Damage:",  $"{e.waterDamage * 100:F0}%",  e.waterDamage,  e.baseWaterDamage);
         ElemLine(sb, Nature, "Nature Damage:", $"{e.natureDamage * 100:F0}%", e.natureDamage, e.baseNatureDamage);
         ElemLine(sb, Ice,    "Ice Damage:",    $"{e.iceDamage * 100:F0}%",    e.iceDamage,    e.baseIceDamage);
         ElemLine(sb, Poison, "Poison Damage:", $"{e.poisonDamage * 100:F0}%", e.poisonDamage, e.basePoisonDamage);
         ElemLine(sb, Wind,   "Wind Damage:",   $"{e.windDamage * 100:F0}%",   e.windDamage,   e.baseWindDamage);
+        return sb.ToString().TrimEnd();
+    }
 
-        // --- Defenses ---
+    private string BuildDefense(Entity e)
+    {
+        var sb = new System.Text.StringBuilder();
         sb.AppendLine("<size=+8><color=white><b><u>Defenses</u></b></color></size>");
-        Line(sb, "<color=#00CED1>Armor:</color>",       $"{e.armor}",      e.armor,      e.baseArmor);
-        Line(sb, "<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
         ElemLine(sb, Physical, "Physical Resistance:", $"{e.physicalResistance * 100:F0}%", e.physicalResistance, e.baseArmor / (100f + e.baseArmor));
         ElemLine(sb, Magic,    "Magic Resistance:",    $"{e.magicResistance * 100:F0}%",    e.magicResistance,    e.baseMagicArmor / (100f + e.baseMagicArmor));
+        sb.AppendLine();
         ElemLine(sb, DoT,    "DoT Resistance:",    $"{e.dotResistance * 100:F0}%",    e.dotResistance,    e.baseDotResistance);
+        sb.AppendLine();
         ElemLine(sb, Fire,   "Fire Resistance:",   $"{e.fireResistance * 100:F0}%",   e.fireResistance,   e.baseFireResistance);
         ElemLine(sb, Water,  "Water Resistance:",  $"{e.waterResistance * 100:F0}%",  e.waterResistance,  e.baseWaterResistance);
         ElemLine(sb, Nature, "Nature Resistance:", $"{e.natureResistance * 100:F0}%", e.natureResistance, e.baseNatureResistance);
         ElemLine(sb, Ice,    "Ice Resistance:",    $"{e.iceResistance * 100:F0}%",    e.iceResistance,    e.baseIceResistance);
         ElemLine(sb, Poison, "Poison Resistance:", $"{e.poisonResistance * 100:F0}%", e.poisonResistance, e.basePoisonResistance);
         ElemLine(sb, Wind,   "Wind Resistance:",   $"{e.windResistance * 100:F0}%",   e.windResistance,   e.baseWindResistance);
+        sb.AppendLine();
         Line(sb, "<color=grey>Tenacity:</color>", $"{e.tenacity * 100:F0}%", e.tenacity, e.baseTenacity);
+        return sb.ToString().TrimEnd();
+    }
 
-        // --- Miscellaneous ---
-        sb.AppendLine("<size=+8><color=white><b><u>Miscellaneous</u></b></color></size>");
+    private string BuildUtility(Entity e)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("<size=+8><color=white><b><u>Utility</u></b></color></size>");
+        ElemLine(sb, HealCol, "Lifesteal:",  $"{e.lifesteal * 100:F0}%",  e.lifesteal,  e.baseLifesteal);
+        Line(sb,              "Evasion:",    $"{e.evasion * 100:F1}%",    e.evasion,    e.baseEvasion);
+        ElemLine(sb, Nature,  "Accuracy:",   $"{e.accuracy * 100:F1}%",   e.accuracy,   e.baseAccuracy);
+        sb.AppendLine();
         ElemLine(sb, HealCol, "Heals & Shield Bonus:",    $"{e.healingBonus * 100:F0}%",    e.healingBonus,    e.baseHealingBonus);
         ElemLine(sb, HealCol, "Heals & Shield Received:", $"{e.healingReceived * 100:F0}%", e.healingReceived, e.baseHealingReceived);
-
+        sb.AppendLine();
+        ElemLine(sb, HealCol, "Buff Given Duration:",    $"{e.buffGivenDuration * 100:F0}%",    e.buffGivenDuration,    e.baseBuffGivenDuration);
+        ElemLine(sb, HealCol, "Buff Received Duration:", $"{e.buffReceivedDuration * 100:F0}%", e.buffReceivedDuration, e.baseBuffReceivedDuration);
+        ElemLine(sb, DoT,     "Debuff Given Duration:",    $"{e.debuffGivenDuration * 100:F0}%",    e.debuffGivenDuration,    e.baseDebuffGivenDuration);
+        ElemLine(sb, DoT,     "Debuff Received Duration:", $"{e.debuffReceivedDuration * 100:F0}%", e.debuffReceivedDuration, e.baseDebuffReceivedDuration);
+        sb.AppendLine();
+        ElemLine(sb, Gold,   "Light Emission Range:", $"{e.lightEmissionRange:F1}", e.lightEmissionRange, e.baseLightEmissionRange);
+        ElemLine(sb, Nature, "Skill Duration:",        $"{e.skillDuration:F1}s",    e.skillDuration,      e.baseSkillDuration);
         return sb.ToString().TrimEnd();
     }
 
@@ -133,5 +187,4 @@ public class StatsPanelTooltip : MonoBehaviour, IPointerEnterHandler, IPointerEx
         int dots = Mathf.Max(2, Width - label.Length - plain.Length);
         sb.AppendLine($"{colorTag}{label}{End}{new string('.', dots)}{Col(current, baseVal, $"<b>{plain}</b>")}");
     }
-
 }

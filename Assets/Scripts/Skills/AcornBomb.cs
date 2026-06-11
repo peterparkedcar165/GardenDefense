@@ -77,6 +77,7 @@ public class AcornBomb : Minion
     protected override void Start()
     {
         base.Start();
+        OnHeal += HandleHeal;
 
         // health bar stays on root, not visual (visual is tilted)
         if (healthBarInstance != null)
@@ -158,6 +159,17 @@ public class AcornBomb : Minion
     {
         if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsTargeting) return;
         PlantUpgradeUI.instance?.ShowPanel(this);
+    }
+
+    private void HandleHeal(EntityEventData data)
+    {
+        if (data.target != this) return;
+        lifetime += data.amount * 0.05f;
+    }
+
+    private void OnDestroy()
+    {
+        OnHeal -= HandleHeal;
     }
 
     public override void Attack() { }
