@@ -120,8 +120,7 @@ public class Holly : Aura
         $"Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage.";
 
     public override string GetSkillDesription() =>
-        $"Grants {GetName()} a shield of <color=grey><b>{ShieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{ShieldAmountMP:F0}</b></color>] for <color=green><b>{skillDuration:F0}s</b></color>. " +
-        $"While the shield holds, nearby insects are forced to target {GetName()} via <color=#00FFFF><b>Frozen Rage</b></color>.";
+        $"Grants {GetName()} a shield of <color=grey><b>{ShieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{ShieldAmountMP:F0}</b></color>] for <color=green><b>{skillDuration:F0}s</b></color>.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -144,8 +143,8 @@ public class Holly : Aura
         float hppl     = HData?.path2HealthPerLevel      ?? 40f;
         float shieldMP = HData?.baseSkillShieldMP        ?? 0f;
         string desc = details
-            ? $"Insects that attack {GetName()} retaliate for <color=green><b>[({HData?.baseRetaliationHollyPercent ?? 0.75f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of {GetName()}'s Attack Damage + " +
-              $"<color=green><b>[({HData?.baseRetaliationInsectPercent ?? 0.75f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of the attacker's Attack Damage. " +
+            ? $"Insects that attack {GetName()} retaliate for <color=green><b>[({(HData?.baseRetaliationHollyPercent ?? 0.75f) * 100f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of {GetName()}'s Attack Damage + " +
+              $"<color=green><b>[({(HData?.baseRetaliationInsectPercent ?? 0.75f) * 100f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of the attacker's Attack Damage. " +
               $"Increases Max Health <color=#FFB6C1>[+{(HData?.baseHealthBonusMP ?? 0f) * 100f:F0}% Magic Power]</color>. " +
               $"While {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
               $"forcing them to target {GetName()} and reducing their Armor. Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage."
@@ -173,7 +172,7 @@ public class Holly : Aura
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase Armor reduction by <color=green><b>{rageArmorpl:F1}</b></color> per level. [<color=green><b>+{rageArmorpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase <color=#00CED1>Frozen Rage's Armor Reduction</color> by <color=green><b>{rageArmorpl:F1}</b></color> per level. [<color=green><b>+{rageArmorpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"{Level5Section(effectivePath3Level)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

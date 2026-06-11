@@ -77,7 +77,7 @@ public class BubblePrison : MonoBehaviour
         if (visual != null)
             visual.localPosition = new Vector3(visual.localPosition.x, 0f, visual.localPosition.z);
 
-        // impact — one-time check
+        // impact , one-time check
         ImpactInsects();
 
         Destroy(gameObject);

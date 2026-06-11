@@ -22,7 +22,7 @@ public abstract class Insect : Entity, IAttackable
     protected Transform[] waypoints;
     public bool isFlying = false;
     public static float gravity = 9.8f;
-    public static float fallDamageMultiplier = 8f; // TUNING KNOB — damage = verticalVelocity * this
+    public static float fallDamageMultiplier = 8f; // TUNING KNOB , damage = verticalVelocity * this
     public float verticalVelocity = 0f;
     public Entity fallDamageSource;
     public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f);
@@ -198,7 +198,7 @@ public abstract class Insect : Entity, IAttackable
     // in dark (cave) levels, hide the entire insect (body, health bar, shield, etc.)
     // while it stands outside any emitted light, so the player only sees insects in
     // illuminated areas. uses forceRenderingOff so it never fights enabled/SetActive
-    // logic elsewhere. visual only — movement, attacks, and targeting are unaffected
+    // logic elsewhere. visual only , movement, attacks, and targeting are unaffected
     private float _darknessCheckTimer;
     private const float darknessCheckInterval = 0.15f;
     private Renderer[] _cachedRenderers;
@@ -347,7 +347,7 @@ public abstract class Insect : Entity, IAttackable
             }
         }
 
-        // displacement just ended this frame — begin walking back to the pre-displace position
+        // displacement just ended this frame , begin walking back to the pre-displace position
         if (wasDisplaced && windMomentum.sqrMagnitude <= 0.001f)
         {
             _isDisplaced = false;
@@ -579,7 +579,7 @@ public abstract class Insect : Entity, IAttackable
 
     // the hypnotize transition (PvZ hypno style), triggered by HypnotizedEffect.OnApply. it counts
     // as a kill (sun/exp/death events) but keeps the body alive as a full-health friendly that
-    // retreats. to hypnotize an insect, apply a HypnotizedEffect (or a subclass) — don't call this
+    // retreats. to hypnotize an insect, apply a HypnotizedEffect (or a subclass) , don't call this
     // directly. harmless / no-op on an already friendly insect
     public void ApplyHypnosis(Entity source)
     {

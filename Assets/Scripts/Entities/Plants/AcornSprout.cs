@@ -28,8 +28,19 @@ public class AcornSprout : Shooter
         if (acorn != null)
         {
             acorn.SetTarget(FindTarget());
+            if (effectivePath2Level >= pathLevelCap)
+                acorn.SetBounces(1 + piercing);
             acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
+    }
+
+    public override void UpdateStats()
+    {
+        base.UpdateStats();
+        if (effectivePath1Level >= pathLevelCap)
+            attackDamage += armor * 0.33f;
+        if (effectivePath2Level >= pathLevelCap)
+            piercing += 1;
     }
 
     public override void OnPath1Upgrade(int level)
@@ -87,7 +98,7 @@ public class AcornSprout : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level)}\n\n" +
+               $"{Level5Section(effectivePath1Level, effectivePath1Level >= pathLevelCap ? (details ? "Increase Attack Damage by 33% of <color=#00CED1>Armor</color>." : $"Increase Attack Damage by <color=#00CED1><b>{armor * 0.33f:F0}</b></color>.") : (details ? "Increase Attack Damage by 33% of Armor." : $"Increase Attack Damage by {armor * 0.33f:F0}."))}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -101,10 +112,14 @@ public class AcornSprout : Shooter
         string desc = details
             ? $"Attacks have a <color=green><b>[({chanceBase * 100f:F0}) + ({chancepl * 100f:F0}/Lvl.)]</b></color>% chance to stun targets for <color=green><b>[({durBase:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
             : $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{stunDuration:F1}</b></color> seconds.";
+        bool path2Maxed = effectivePath2Level >= pathLevelCap;
+        string passiveMaxBonus = path2Maxed
+            ? "Attacks' <color=green><b>Piercing</b></color> instead bounce to nearby targets.\n\nIncrease <color=green><b>Piercing</b></color> by <color=green><b>1</b></color>."
+            : "Attacks' Piercing instead bounce to nearby targets.\n\nIncrease Piercing by 1.";
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase Stun Chance by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase Stun Duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level)}\n\n" +
+               $"Increase <color=green><b>Stun Chance</b></color> by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Stun Duration</b></color> by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(effectivePath2Level, passiveMaxBonus)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -115,18 +130,24 @@ public class AcornSprout : Shooter
         float durpl    = AcornData?.path3SkillDurationPerLevel    ?? 2f;
         float hppl     = AcornData?.path3HealthPerLevel           ?? 50f;
         float radiuspl = AcornData?.path3RadiusPerLevel           ?? 0.15f;
+        bool path3Maxed = effectivePath3Level >= pathLevelCap;
+        string acornRef  = path3Maxed ? "<color=green><b>Acorn</b></color>" : "Acorn";
+        string armorRef  = path3Maxed ? "<color=#00CED1>Armor</color>" : "Armor";
+        string armorVal  = path3Maxed ? $"<color=#00CED1><b>{armor:F0}</b> Base Armor</color>" : $"{armor:F0} Base Armor";
+        string skillMaxBonus = details
+            ? $"Whenever the {acornRef} is healed, its lifetime is extended by 10% of the healing amount, in seconds.\n\nThe {acornRef} inherits the Acorn Sprout's {armorRef}."
+            : $"Whenever the {acornRef} is healed, its lifetime is extended by 10% of the healing amount, in seconds.\n\nThe {acornRef} gains {armorVal}.";
         string desc = details
-            ? $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>[{activeDamageMultiplier * 100f:F0}% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
-              $"The acorn then sits on the ground for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, blocking ground insects who stop to gnaw at it. The acorn can sustain <color=green><b>[({data.baseSkillHealth:F0}) + ({hppl:F0}/Lvl.)]</b></color> damage."
-            : $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
-              $"The acorn then sits on the ground for <color=green><b>{skillDuration}</b></color> seconds, blocking ground insects who stop to gnaw at it. The acorn can sustain <color=green><b>{acornBombHealth:F0}</b></color> damage.\n"+
-              $"The <color=green>Acorn</color> inherits the <color=green>Acorn Sprout</color>'s <color=#00CED1>Armor</color>.";
+            ? $"Hurls a giant <color=green><b>Acorn</b></color> from the sky at a targeted location, dealing <color=green><b>[{activeDamageMultiplier * 100f:F0}% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
+              $"The <color=green><b>Acorn</b></color> then sits on the ground for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, blocking ground insects who stop to gnaw at it. The <color=green><b>Acorn</b></color> has <color=green><b>[({data.baseSkillHealth:F0}) + ({hppl:F0}/Lvl.)]</b></color> health."
+            : $"Hurls a giant <color=green><b>Acorn</b></color> from the sky at a targeted location, dealing <color=green><b>{attackDamage * activeDamageMultiplier:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
+              $"The <color=green><b>Acorn</b></color> then sits on the ground for <color=green><b>{skillDuration}</b></color> seconds, blocking ground insects who stop to gnaw at it. The <color=green><b>Acorn</b></color> has <color=green><b>{acornBombHealth:F0}</b></color> health.";
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase impact damage multiplier by <color=green><b>{dmgpl * 100f:F0}%</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase <color=green>Acorn</color> lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase <color=green>Acorn</color> health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase <color=green>Acorn</color> size and impact radius by <color=green><b>{radiuspl * 100f:F0}%</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level)}\n\n" +
+               $"Increase <color=green><b>Acorn</b></color> lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Acorn</b></color> health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Acorn</b></color> size and impact radius by <color=green><b>{radiuspl * 100f:F0}%</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(effectivePath3Level, skillMaxBonus)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

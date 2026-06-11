@@ -60,7 +60,7 @@ public class SaveManager : MonoBehaviour
         RepairPlantsFromLevels();
     }
 
-    // derives plants strictly from highestLevelUnlocked — levels are the single source of truth
+    // derives plants strictly from highestLevelUnlocked , levels are the single source of truth
     private void RepairPlantsFromLevels()
     {
         for (int i = 1; i <= saveData.highestLevelUnlocked; i++)

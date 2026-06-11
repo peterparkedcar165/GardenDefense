@@ -30,8 +30,8 @@ public class AcornBomb : Minion
     public override string GetDescription()
     {
         if (!hasLanded) return "Blocks path while it lasts";
-        int remaining = (int)Mathf.Max(0f, lifetime - _lifetimeElapsed);
-        return $"Blocks path while it lasts\nDuration: {remaining} seconds";
+        float remaining = Mathf.Max(0f, lifetime - _lifetimeElapsed);
+        return $"Blocks path while it lasts\nTime remaining: {Mathf.CeilToInt(remaining)}s";
     }
 
     // called by AcornSprout immediately after Instantiate
@@ -42,7 +42,8 @@ public class AcornBomb : Minion
         owner = source;
         lifetime = lifespan;
         baseMaxHealth = maxHp;
-        baseArmor = source.armor;
+        AcornSprout sprout = source as AcornSprout;
+        baseArmor = (sprout != null && sprout.effectivePath3Level >= Plant.pathLevelCap) ? (int)source.armor : 0;
         baseMovementSpeed = 0f;
         isFlying = true;
 
@@ -164,7 +165,9 @@ public class AcornBomb : Minion
     private void HandleHeal(EntityEventData data)
     {
         if (data.target != this) return;
-        lifetime += data.amount * 0.05f;
+        AcornSprout sprout = owner as AcornSprout;
+        if (sprout == null || sprout.effectivePath3Level < Plant.pathLevelCap) return;
+        lifetime += data.amount * 0.10f;
     }
 
     private void OnDestroy()

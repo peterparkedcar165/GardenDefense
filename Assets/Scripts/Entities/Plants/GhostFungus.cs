@@ -260,7 +260,7 @@ public class GhostFungus : Shooter
         $"Fires a bolt of ice dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit.";
 
     public override string GetPassiveDescription() =>
-        $"Conjures a Ghost Shroomlet every <color=green><b>{passiveCooldown:F1}s</b></color> (up to <color=green><b>{ShroomletTarget}</b></color>) that holds position until an enemy comes into sight, then engages with {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} attacks dealing <color=green><b>{ShroomletAttackDamage:F0}</b></color> damage (<color=green><b>{ShroomletHealth:F0}</b></color> HP).";
+        $"Conjures a Ghost Shroomlet every <color=green><b>{passiveCooldown:F1}s</b></color> (up to <color=green><b>{ShroomletTarget}</b></color>) that holds position until an enemy comes into sight, then engages with {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} attacks dealing <color=green><b>{ShroomletAttackDamage:F0}</b></color> damage. Each Shroomlet has <color=green><b>{ShroomletHealth:F0}</b></color> HP.";
 
     private static string SignedPct(float pct) =>
         pct >= 0f ? $"<color=green><b>+{pct:F0}%</b></color>" : $"<color=red><b>{pct:F0}%</b></color>";
@@ -316,10 +316,12 @@ public class GhostFungus : Shooter
         float hBase = GData?.baseFungalHealthMultiplier  ?? 1f;
         float aBase = GData?.baseFungalAttackMultiplier  ?? 1f;
         float mBase = GData?.baseFungalMoveSlow          ?? 0.1f;
+        string hPfx = hBase >= 0f ? "+" : "";
+        string aPfx = aBase >= 0f ? "+" : "";
         string desc = details
             ? $"Send a spectral wave, inflicting <color=#00FFFF>Fungal Hypnosis</color> on the first insect hit, which permanently turns it friendly, and granting it:\n\n" +
-              $"<color=green><b>[+{hBase * 100f:F0}% + ({hpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{hmp:F0}% Magic Power</color>]</b></color> Max Health\n" +
-              $"<color=green><b>[+{aBase * 100f:F0}% + ({apl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{amp:F0}% Magic Power</color>]</b></color> Attack Damage\n" +
+              $"<color=green><b>[{hPfx}{hBase * 100f:F0}% + ({hpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{hmp:F0}% Magic Power</color>]</b></color> Max Health\n" +
+              $"<color=green><b>[{aPfx}{aBase * 100f:F0}% + ({apl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{amp:F0}% Magic Power</color>]</b></color> Attack Damage\n" +
               $"<color=red><b>[-{mBase * 100f:F0}% - ({mpl * 100f:F0}%/Lvl.)]</b></color> Movement Speed"
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +

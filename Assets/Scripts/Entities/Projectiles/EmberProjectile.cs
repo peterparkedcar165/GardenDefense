@@ -52,7 +52,8 @@ public class EmberProjectile : MonoBehaviour
             if (_target == null) { Destroy(gameObject); return; }
         }
 
-        Vector3 targetPos = ((Entity)_target).transform.position;
+        Insect targetInsect = _target as Insect;
+        Vector3 targetPos = targetInsect != null ? targetInsect.GetAimPoint() : ((Entity)_target).transform.position;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, targetPos) < 0.15f)

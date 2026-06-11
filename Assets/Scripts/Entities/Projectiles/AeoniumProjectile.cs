@@ -1,4 +1,4 @@
-// Aeonium's energy ball — Nature-magic orb that damages the first insect it hits
+// Aeonium's energy ball , Nature-magic orb that damages the first insect it hits
 public class AeoniumProjectile : Projectile
 {
     protected override void OnHit(Insect insect)

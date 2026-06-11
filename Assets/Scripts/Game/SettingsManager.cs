@@ -63,7 +63,7 @@ public class SettingsManager : MonoBehaviour
     public void Close()
     {
         settingsPanel.SetActive(false);
-        // Don't touch pause state here — caller is responsible
+        // Don't touch pause state here , caller is responsible
         // (e.g. loadout/fertilizer screens manage pause themselves)
     }
     public void Restart()

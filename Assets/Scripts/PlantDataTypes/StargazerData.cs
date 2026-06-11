@@ -17,7 +17,7 @@ public class StargazerData : PlantData
     public float skillBaseDamage = 200f;
     public float skillWaveSpeed  = 12f;
     public float skillLength     = 50f;    // total length of the lane, covers the whole screen (plant is the pivot)
-    public float skillWaveWidth  = 4f;     // the lane width (perpendicular) — the wave is bounded to this
+    public float skillWaveWidth  = 4f;     // the lane width (perpendicular) , the wave is bounded to this
     public float skillThickness  = 3f;     // band thickness along travel
     public float skillDelay      = 1f;
     public float skillBurnMultiplier = 2f; // damage multiplier against Burning targets

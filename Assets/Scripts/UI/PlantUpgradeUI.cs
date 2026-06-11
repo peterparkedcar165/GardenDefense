@@ -101,6 +101,13 @@ public class PlantUpgradeUI : EntityInfoPanel
     {
         base.Update();
 
+        if (tooltipPanel != null && tooltipPanel.activeSelf && selectedInsect != null && tooltipText != null)
+        {
+            string desc = selectedInsect.GetDescription();
+            if (!string.IsNullOrEmpty(desc))
+                tooltipText.text = $"{selectedInsect.GetName()}\n\n{desc}";
+        }
+
         if (selectedInsect != null && Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
@@ -325,7 +332,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
-    // Button callbacks — wired in Inspector
+    // Button callbacks , wired in Inspector
     public void OnPath1UpgradeClicked()
     {
         if (selectedPlant == null) return;

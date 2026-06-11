@@ -275,9 +275,10 @@ public abstract class Entity : MonoBehaviour
             dotMultiplier = 1;
         }
         
-        finalDamage = (modifiedDamage * elementalMultiplier * dotMultiplier);
+        finalDamage = Mathf.Round(modifiedDamage * elementalMultiplier * dotMultiplier);
         bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield);
         health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, 0f) : finalDamage;
+        health = Mathf.Max(0f, health);
         TriggerHitFlash();
         UpdateHealthBar();
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
@@ -465,21 +466,19 @@ public abstract class Entity : MonoBehaviour
 
         finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult;
 
-        // if damage source can crit, then calculate if it crits or not
         if (canCrit)
         {
-            // the target can add to the attacker's crit chance (e.g. Levitating)
             if (Random.value < source.criticalChance + bonusCritChanceReceived)
             {
                 finalDamage *= source.criticalDamage;
-                isCrit = true; // important for the damage indicator
-                // Debug.Log("CRITICAL HIT");
+                isCrit = true;
             }
         }
 
-        
+        finalDamage = Mathf.Round(finalDamage);
         bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield) || source.bypassShields;
         health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, source.shieldBonusDamage) : finalDamage;
+        health = Mathf.Max(0f, health);
         TriggerHitFlash();
         source.totalDamageDealt += finalDamage; // FOR DEBUG
         if (this is Insect damagedInsect) damagedInsect.lastSource = source;

@@ -8,7 +8,6 @@ public class NeriumOleander : Shooter
 
     [SerializeField] private float skillDelay = 0.5f;
 
-    private int bounceCount;
     private float toxinDuration;
     private float rootDuration;
     private float computedSkillDamage;
@@ -27,7 +26,7 @@ public class NeriumOleander : Shooter
     public override void UpdateStats()
     {
         base.UpdateStats();
-        bounceCount         = (OleanderData?.baseBounceCount ?? 1) + (OleanderData?.path1BouncePerLevel ?? 1) * effectivePath1Level;
+        piercing           += (OleanderData?.path1BouncePerLevel ?? 1) * effectivePath1Level;
         float durpl         = OleanderData?.path2ToxinDurationPerLevel ?? 2f;
         toxinDuration       = ((OleanderData?.baseToxinDuration ?? 6f) + durpl * effectivePath2Level) * (1 + passiveDuration);
         rootDuration        = (data.baseSkillDuration + (OleanderData?.path3RootDurationPerLevel ?? 0.5f) * effectivePath3Level) * (1 + passiveDuration);
@@ -45,7 +44,7 @@ public class NeriumOleander : Shooter
         {
             petal.SetTarget(FindTarget());
             petal.Initialize(target, attackDamage, projectileSpeed, maxRange, 0, damageType, elementalType, this);
-            petal.SetBounceData(bounceCount, toxinDuration, 1, OleanderData?.bounceSearchRadius ?? 6f, OleanderData?.bounceDamageReduction ?? 0.1f);
+            petal.SetBounceData(1 + piercing, toxinDuration, 1, OleanderData?.bounceSearchRadius ?? 6f, OleanderData?.bounceDamageReduction ?? 0.1f);
         }
     }
 
@@ -100,11 +99,11 @@ public class NeriumOleander : Shooter
         float adpl = OleanderData?.path1AttackDamagePerLevel ?? 10f;
         int   bpl  = OleanderData?.path1BouncePerLevel       ?? 1;
         string desc = details
-            ? $"Fires a toxic petal at the target dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>[({OleanderData?.baseBounceCount ?? 1}) + ({bpl}/Lvl.)]</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce."
-            : $"Fires a toxic petal at the target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>{bounceCount}</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce.";
+            ? $"Fires a toxic petal at the target dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>[(1) + Piercing]</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce."
+            : $"Fires a toxic petal at the target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>{1 + piercing}</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase Bounce Count by <color=green><b>{bpl}</b></color> per level. [<color=green><b>+{bpl * effectivePath1Level}</b></color>]\n\n" +
+               $"Increase <color=green><b>Piercing</b></color> by <color=green><b>{bpl}</b></color> per level. [<color=green><b>+{bpl * effectivePath1Level}</b></color>]\n\n" +
                $"{Level5Section(effectivePath1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);

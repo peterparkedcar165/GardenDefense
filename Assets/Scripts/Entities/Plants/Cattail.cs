@@ -249,10 +249,10 @@ public class Cattail : Shooter
         float currentConversion = baseConv + convpl * effectivePath2Level;
         string desc = details
             ? $"Every <color=green><b>1%</b></color> of Critical Chance above <color=green><b>100%</b></color> will be converted to <color=green><b>[({baseConv:F1}) + ({convpl:F1}/Lvl.)]%</b></color> Critical Damage.\n\n" +
-              $"The Cattail's shots against flying insects will Ground them for <color=green><b>[({CData?.groundDuration ?? 6f:F1}) + ({grndpl:F1}/Lvl.)]</b></color> seconds.\n\n" +
+              $"The Cattail's shots against flying insects will knock them down for <color=green><b>[({CData?.groundDuration ?? 6f:F1}) + ({grndpl:F1}/Lvl.)]</b></color> seconds.\n\n" +
               $"Passive Base Critical Chance bonus: <color=green><b>[({(CData?.baseCritChanceBonus ?? 0.1f) * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color>."
             : $"Every <color=green><b>1%</b></color> of Critical Chance above <color=green><b>100%</b></color> will be converted to <color=green><b>{currentConversion:F1}%</b></color> Critical Damage.\n\n" +
-              $"The Cattail's shots against flying insects will Ground them for <color=green><b>{GroundDuration:F1}</b></color> seconds.\n\n" +
+              $"The Cattail's shots against flying insects will knock them down for <color=green><b>{GroundDuration:F1}</b></color> seconds.\n\n" +
               $"Current Critical Damage Bonus: <color=green><b>{_overcritBonus * 100f:F1}%</b></color>";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase Base Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
@@ -272,8 +272,8 @@ public class Cattail : Shooter
         float baseAS   = CData?.baseSkillAttackSpeedBonus  ?? 2f;
         float totalCrit = baseCrit + critpl * effectivePath3Level;
         string desc = details
-            ? $"Aim a direction and rain darts down the lane for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds, gaining <color=green><b>+[({baseAS * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.)]</b></color> Attack Speed and <color=green><b>+[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> Critical Chance."
-            : $"Aim a direction and rain darts down the lane for <color=green><b>{skillDuration:F1}</b></color> seconds, gaining <color=green><b>+{(baseAS + aspl * effectivePath3Level) * 100f:F0}%</b></color> Attack Speed and <color=green><b>+{totalCrit * 100f:F0}%</b></color> Critical Chance.";
+            ? $"Aim a direction and rain darts in the targeted direction for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds, gaining <color=green><b>+[({baseAS * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.)]</b></color> Attack Speed and <color=green><b>+[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> Critical Chance."
+            : $"Aim a direction and rain darts in the targeted direction for <color=green><b>{skillDuration:F1}</b></color> seconds, gaining <color=green><b>+{(baseAS + aspl * effectivePath3Level) * 100f:F0}%</b></color> Attack Speed and <color=green><b>+{totalCrit * 100f:F0}%</b></color> Critical Chance.";
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Critical Chance bonus by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +

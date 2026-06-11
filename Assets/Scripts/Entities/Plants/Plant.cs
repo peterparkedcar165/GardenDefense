@@ -861,10 +861,12 @@ public abstract class Plant : Entity, IAttackable
         details ? "<color=grey>[Release SHIFT for overview]</color>"
                 : "<color=grey>[Hold SHIFT for details]</color>";
 
-    protected string Level5Section(int effectiveLevel) =>
-        effectiveLevel >= pathLevelCap
-            ? "<color=green><b>[Max Level Bonus]</b></color>"
-            : "<color=grey>[Max Level Bonus]</color>";
+    protected string Level5Section(int effectiveLevel, string bonusText = null)
+    {
+        string color = effectiveLevel >= pathLevelCap ? "green" : "grey";
+        string extra = bonusText != null ? $"\n\n{bonusText}" : "";
+        return $"<color={color}><b>[Max Level Bonus]</b>{extra}</color>";
+    }
     public virtual string GetElement() => PlantData.ElementalTag(data != null ? data.elementalType : elementalType);
 
     public virtual string GetElementDescription()

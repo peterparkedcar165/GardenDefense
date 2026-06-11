@@ -18,7 +18,7 @@ public class FungalGlowEffect : StatusEffect
 
     public override void OnApply()
     {
-        // only emit light in dark biomes (mirrors BurnEffect) — never in lit levels
+        // only emit light in dark biomes (mirrors BurnEffect) , never in lit levels
         if (DarknessManager.instance != null)
         {
             _fader = GetOrCreateFader();

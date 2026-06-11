@@ -162,7 +162,7 @@ public class Dandelion : Shooter
         windGustIndicatorInstance.transform.localScale = new Vector3(WindGustRange, beamWidth, 1f);
         windGustIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
 
-        /* multi-slice obstacle clipping — re-enable when ready
+        /* multi-slice obstacle clipping , re-enable when ready
         Vector2 perp = new Vector2(-dir.y, dir.x);
         EnsureSlices(windGustIndicatorInstance, IndicatorSlices);
         float sliceWidth = beamWidth / IndicatorSlices;

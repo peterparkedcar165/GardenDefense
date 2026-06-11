@@ -126,7 +126,7 @@ public class Aeonium : Shooter
     public override string GetName() => $"<b><color=green>{(data != null ? data.displayName : "Aeonium")}</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} is a radiant succulent that fuels the garden's economy â€” generating sun, and blessing nearby plants to reap far more of it.";
+        $"The {GetName()} is a radiant succulent that fuels the garden's economy , generating sun, and blessing nearby plants to reap far more of it.";
 
     public override string GetAttackDescription() =>
         $"Launches an energy ball dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit.";
@@ -135,7 +135,7 @@ public class Aeonium : Shooter
         $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{passiveCooldown:F0}s</b></color>. Each projectile or melee attack hit by a plant within her radius reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";
 
     public override string GetSkillDesription() =>
-        $"Grants all plants within range <color=green><b>Blessing of the Sun</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, increasing their Sun yield â€” both generation and the Sun their kills drop â€” by <color=green><b>{SunYieldBonus * 100f:F0}%</b></color>.";
+        $"Grants all plants within range <color=green><b>Blessing of the Sun</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, increasing their Sun yield (both generation and kills) by <color=green><b>{SunYieldBonus * 100f:F0}%</b></color>.";
 
     public override string GetPath1Description(bool details = false)
     {

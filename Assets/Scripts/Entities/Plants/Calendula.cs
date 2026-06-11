@@ -97,7 +97,7 @@ public class Calendula : Aura
         => $"Releases flaming petals dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range.";
 
     public override string GetPassiveDescription()
-        => $"Illuminate the surrounding area with a radius equal to <color=green><b>2Ã—</b></color> her Attack Range.";
+        => $"Illuminate the surrounding area with a radius of <color=green><b>{lightEmissionRange:F1}</b></color>.";
 
     public override string GetSkillDesription()
     {
@@ -125,7 +125,7 @@ public class Calendula : Aura
     {
         float rangepl = CData?.path2AttackRangePerLevel ?? 0.175f;
         string desc = details
-            ? $"Illuminate the surrounding area with a radius equal to <color=green><b>2×</b></color> her Attack Range."
+            ? $"Illuminate the surrounding area with a radius equal to <color=green><b>2×</b></color> her Attack Range (<color=green><b>{lightEmissionRange:F1}</b></color>)."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F3}</b></color> per level. [<color=green><b>+{rangepl * effectivePath2Level:F3}</b></color>]\n\n" +
