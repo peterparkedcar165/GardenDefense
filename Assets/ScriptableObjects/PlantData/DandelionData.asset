@@ -18,19 +18,19 @@ MonoBehaviour:
   displayName: Dandelion
   cultivar: 4
   elementalType: 5
-  damageType: 0
+  damageType: 1
   sunCost: 115
   baseMaxHealth: 200
   baseAttackDamage: 12
   baseMagicPower: 0
   baseAttackSpeed: 1
   baseAttackRange: 2
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -55,6 +59,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseMinionDamage: 0
   baseProjectileSpeed: 3
   baseMaxRange: 20
   basePiercing: 0
@@ -65,6 +70,7 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 90
   baseSkillDuration: 8
+  channelDuration: 0
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0

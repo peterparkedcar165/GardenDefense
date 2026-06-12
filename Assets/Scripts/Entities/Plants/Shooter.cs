@@ -48,12 +48,14 @@ public abstract class Shooter : Plant
                 attackCooldownTimer = 0;
                 Vector3 predictedPosition = PredictTargetPosition(target);
                 Shoot(predictedPosition);
+                OnShoot();
             }
         }
 
     }
 
     protected abstract void Shoot(Vector3 target);
+    protected virtual void OnShoot() {}
 
     protected virtual GameObject FindTarget()
     {

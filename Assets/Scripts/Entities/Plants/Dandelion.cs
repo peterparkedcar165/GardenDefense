@@ -14,6 +14,7 @@ public class Dandelion : Shooter
 
     private float WindGustDamage => data.baseSkillDamage + attackDamage + skillDamageMultiplier * magicPower;
     private float WindGustRange  => (DData?.baseWindGustRange ?? 10f) + (DData?.path3WindGustRangePerLevel ?? 0.5f) * effectivePath3Level;
+    private const float GlobalGustRange = 30f;
 
     private DandelionData DData => data as DandelionData;
 
@@ -22,6 +23,29 @@ public class Dandelion : Shooter
         base.Awake();
         LoadData();
         _obstacleMask = LayerMask.GetMask("Obstacle");
+    }
+
+    private void OnEnable()  { GustEffect.OnWindshearTriggered += OnWindshearReaction; }
+    private void OnDisable() { GustEffect.OnWindshearTriggered -= OnWindshearReaction; }
+
+    private void OnWindshearReaction(Vector3 center, Entity reactionSource)
+    {
+        if (effectivePath2Level < pathLevelCap) return;
+        if (reactionSource != this) return;
+        const float radius = 1.5f;
+        foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            if (Vector3.Distance(center, insect.transform.position) <= radius)
+                insect.ApplyEffect(new SlowingAllergenEffect(insect, 5f, 1, this));
+        }
+    }
+
+    public override void UpdateStats()
+    {
+        base.UpdateStats();
+        if (effectivePath1Level >= pathLevelCap)
+            magicPenFlat += 30f;
     }
 
     protected override void Update()
@@ -129,12 +153,14 @@ public class Dandelion : Shooter
     private void OnTargetConfirmed(Vector3 targetPosition)
     {
         skillCooldownTimer = skillCooldown;
-        BeginChannel();   // can't attack while the gust is blowing
+        bool isGlobal = effectivePath3Level >= pathLevelCap;
+        if (!isGlobal) BeginChannel();
         Vector2 direction = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
         float beamWidth = (DData?.baseBeamWidth ?? 1f) + (DData?.path3BeamWidthPerLevel ?? 0.25f) * effectivePath3Level;
+        float gustRange = isGlobal ? GlobalGustRange : WindGustRange;
         if (windGustPrefab == null) return;
         _windGustInstance = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
-        _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this, WindGustRange);
+        _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this, gustRange, isGlobal);
     }
 
     private void UpdateWindGustIndicator()
@@ -153,13 +179,17 @@ public class Dandelion : Shooter
         mouseWorld.z = 0f;
 
         float beamWidth = (DData?.baseBeamWidth ?? 1f) + (DData?.path3BeamWidthPerLevel ?? 0.25f) * effectivePath3Level;
+        float indicatorRange = effectivePath3Level >= pathLevelCap ? GlobalGustRange : WindGustRange;
         Vector2 dir  = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
         float   angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-        windGustIndicatorInstance.transform.SetPositionAndRotation(
-            transform.position + (Vector3)(dir * WindGustRange * 0.5f),
-            Quaternion.Euler(0f, 0f, angle));
-        windGustIndicatorInstance.transform.localScale = new Vector3(WindGustRange, beamWidth, 1f);
+        bool globalIndicator = effectivePath3Level >= pathLevelCap;
+        Vector3 indicatorCenter = globalIndicator
+            ? transform.position
+            : transform.position + (Vector3)(dir * indicatorRange * 0.5f);
+        float indicatorLength = globalIndicator ? indicatorRange * 2f : indicatorRange;
+        windGustIndicatorInstance.transform.SetPositionAndRotation(indicatorCenter, Quaternion.Euler(0f, 0f, angle));
+        windGustIndicatorInstance.transform.localScale = new Vector3(indicatorLength, beamWidth, 1f);
         windGustIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
 
         /* multi-slice obstacle clipping , re-enable when ready
@@ -228,7 +258,7 @@ public class Dandelion : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase Elemental Affinity by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level)}\n\n" +
+               $"{Level5Section(effectivePath1Level, effectivePath1Level >= pathLevelCap ? "Increase <color=green><b>Magic Penetration</b></color> by <color=green><b>30</b></color>." : "Increase Magic Penetration by 30.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -242,7 +272,7 @@ public class Dandelion : Shooter
             : $"Fires <color=green><b>{seeds}</b></color> seeds per attack, targeting the <color=green><b>{seeds}</b></color> highest-priority insects in range.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level)}\n\n" +
+               $"{Level5Section(effectivePath2Level, effectivePath2Level >= pathLevelCap ? "Upon triggering <color=#B2EBF2><b>Wind Shear</b></color>, all damaged insects are inflicted <color=#B2EBF2><b>Slowing Allergen</b></color>, reducing their <color=green><b>Movement Speed</b></color> by <color=green><b>27%</b></color> and <color=#E0E0E0><b>Wind Resistance</b></color> by <color=green><b>23%</b></color>." : "Upon triggering Wind Shear, all damaged insects are inflicted Slowing Allergen, reducing their Movement Speed by 27% and Wind Resistance by 23%.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -261,7 +291,7 @@ public class Dandelion : Shooter
                $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase gust width by <color=green><b>{beampl:F2}</b></color> per level. [<color=green><b>+{beampl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"Increase gust range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level)}\n\n" +
+               $"{Level5Section(effectivePath3Level, effectivePath3Level >= pathLevelCap ? "No longer disarmed while the wind gust is active. The wind gust now extends <color=green><b>globally</b></color>." : "No longer disarmed while the wind gust is active. The wind gust now extends globally.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

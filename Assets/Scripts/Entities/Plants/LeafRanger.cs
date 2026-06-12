@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 public class LeafRanger : Shooter
 {
-    private bool skillActive;
-    private float skillTimer;
-
     public override bool ShowRangeCircle => false;
     private LeafRangerData LRData => data as LeafRangerData;
 
@@ -24,22 +21,14 @@ public class LeafRanger : Shooter
             + (LRData?.path2CritChancePerLevel ?? 0.05f) * effectivePath2Level;
 
         base.UpdateStats();
-        float aspl = LRData?.path3AttackSpeedBonusPerLevel ?? 0.25f;
-        if (skillActive)
-            attackSpeed += baseAttackSpeed * ((LRData?.baseSkillAttackSpeedBonus ?? 3f) + aspl * effectivePath3Level + skillDamageMultiplier * magicPower);
+        if (effectivePath1Level >= pathLevelCap)
+            armorPenFlat += 30f;
     }
 
     protected override void Update()
     {
         base.Update();
         basePiercing = data.basePiercing + effectivePath2Level;
-
-        if (skillActive)
-        {
-            skillTimer -= Time.deltaTime;
-            if (skillTimer <= 0f)
-                skillActive = false;
-        }
     }
 
     protected override GameObject FindTarget()
@@ -64,14 +53,53 @@ public class LeafRanger : Shooter
         };
     }
 
+    protected override void OnShoot()
+    {
+        if (effectivePath2Level < pathLevelCap) return;
+        VerdantFervorEffect existing = GetEffect<VerdantFervorEffect>();
+        if (existing != null)
+            existing.AddStack();
+        else
+            ApplyEffect(new VerdantFervorEffect(this, 8f, 1, this));
+    }
+
     protected override void Shoot(Vector3 target)
+    {
+        if (HasEffect<RapidFocusEffect>() && effectivePath3Level >= pathLevelCap)
+        {
+            FireVolley(target);
+            return;
+        }
+        FireArrow(FindTarget(), target);
+    }
+
+    private void FireVolley(Vector3 target)
+    {
+        Vector3 baseDir = (target - transform.position).normalized;
+        int arrowCount = 5;
+        int centerIndex = arrowCount / 2;
+        float totalSpread = 30f;
+        float spacing = totalSpread / (arrowCount - 1);
+        float startAngle = -totalSpread / 2f;
+        GameObject primaryTarget = FindTarget();
+
+        for (int i = 0; i < arrowCount; i++)
+        {
+            float angle = startAngle + spacing * i;
+            Vector3 rotatedDir = Quaternion.Euler(0f, 0f, angle) * baseDir;
+            Vector3 arrowTarget = transform.position + rotatedDir * maxRange;
+            FireArrow(i == centerIndex ? primaryTarget : null, arrowTarget);
+        }
+    }
+
+    private void FireArrow(GameObject targetObj, Vector3 targetPos)
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         LeafRangerProjectile arrow = projectile.GetComponent<LeafRangerProjectile>();
         if (arrow != null)
         {
-            arrow.SetTarget(FindTarget());
-            arrow.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
+            arrow.SetTarget(targetObj);
+            arrow.Initialize(targetPos, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
     }
 
@@ -90,9 +118,10 @@ public class LeafRanger : Shooter
 
     public override void ActivateSkill()
     {
-        skillActive = true;
-        skillTimer = skillDuration;
         skillCooldownTimer = skillCooldown;
+        float aspl = LRData?.path3AttackSpeedBonusPerLevel ?? 0.25f;
+        float bonus = (LRData?.baseSkillAttackSpeedBonus ?? 3f) + aspl * effectivePath3Level + skillDamageMultiplier * magicPower;
+        ApplyEffect(new RapidFocusEffect(this, skillDuration, 1, this, bonus));
     }
 
     public override string GetDescription() =>
@@ -112,7 +141,7 @@ public class LeafRanger : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level)}\n\n" +
+               $"{Level5Section(effectivePath1Level, effectivePath1Level >= pathLevelCap ? "Increase <color=green><b>Armor Penetration</b></color> by <color=green><b>30</b></color>." : "Increase Armor Penetration by 30.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -128,7 +157,7 @@ public class LeafRanger : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green>Piercing</color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level)}\n\n" +
+               $"{Level5Section(effectivePath2Level, effectivePath2Level >= pathLevelCap ? "Upon shooting, grant a level of <color=green><b>Verdant Fervor</b></color>, increasing <b>Total Attack Speed</b> by <color=green><b>4%</b></color> per level for <color=green><b>8</b></color> seconds." : "Upon shooting, grant a level of Verdant Fervor, increasing <b>Total Attack Speed</b> by 4% per level for 8 seconds.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -139,12 +168,12 @@ public class LeafRanger : Shooter
         float durpl = LRData?.path3SkillDurationPerLevel    ?? 0.5f;
         float baseAS = LRData?.baseSkillAttackSpeedBonus    ?? 3f;
         string desc = details
-            ? $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>[({baseAS * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
-            : $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{(baseAS + aspl * effectivePath3Level) * 100f + skillDamageMultiplier * magicPower * 100f:F0}%</b></color> for <color=green><b>{skillDuration}</b></color> seconds.";
+            ? $"Enter a state of <color=green><b>Rapid Focus</b></color>, increasing <color=green>Attack Speed</color> by <color=green><b>[({baseAS * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color>, for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
+            : $"Enter a state of <color=green><b>Rapid Focus</b></color>, increasing <color=green>Attack Speed</color> by <color=green><b>{(baseAS + aspl * effectivePath3Level) * 100f + skillDamageMultiplier * magicPower * 100f:F0}%</b></color>, for <color=green><b>{skillDuration}</b></color> seconds.";
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level)}\n\n" +
+               $"{Level5Section(effectivePath3Level, effectivePath3Level >= pathLevelCap ? "While the skill is active, shots instead fire a volley of <color=green><b>5</b></color> arrows in a <color=green><b>30°</b></color> cone." : "While the skill is active, shots instead fire a volley of 5 arrows in a 30° cone.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

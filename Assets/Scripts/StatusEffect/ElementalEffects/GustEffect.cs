@@ -5,6 +5,8 @@ public class GustEffect : ElementalDebuff
 {
     private const float WindshearRadius = 1.5f;
 
+    public static event System.Action<Vector3, Entity> OnWindshearTriggered;
+
     public GustEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
 
@@ -72,6 +74,8 @@ public class GustEffect : ElementalDebuff
         DealWindshearAoe(center, halfDamage, ElementalType.Wind, source, tags);
         yield return new WaitForSeconds(0.05f);
         DealWindshearAoe(center, halfDamage, primerElement, source, tags);
+
+        OnWindshearTriggered?.Invoke(center, source);
     }
 
     // deals one burst of the reaction damage to every insect within WindshearRadius of the center

@@ -18,19 +18,19 @@ MonoBehaviour:
   displayName: Morning Glory
   cultivar: 4
   elementalType: 5
-  damageType: 1
+  damageType: 0
   sunCost: 110
   baseMaxHealth: 200
   baseAttackDamage: 18
   baseMagicPower: 0
   baseAttackSpeed: 0.7
   baseAttackRange: 3.5
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -55,6 +59,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseMinionDamage: 0
   baseProjectileSpeed: 12
   baseMaxRange: 99
   basePiercing: 0
@@ -65,6 +70,7 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 15
   baseSkillDuration: 0
+  channelDuration: 0
   baseSkillRadius: 1
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
