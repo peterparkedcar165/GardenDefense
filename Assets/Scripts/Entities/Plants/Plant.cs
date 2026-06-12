@@ -43,19 +43,38 @@ public enum PlantCultivar
     Kinship,        // coordinated attacks (e.g. Calendula's skill)
 }
 
+[System.Serializable]
+public class DeadPlantRecord
+{
+    public GameObject prefab;
+    public Sprite previewSprite;
+    public int sortingLayerID;
+    public int sortingOrder;
+    public int path1Level, path2Level, path3Level;
+    public bool path3Unlocked;
+    public int totalSunSpent;
+    public int exp;
+}
+
 public abstract class Plant : Entity, IAttackable
 {
     public static List<Plant> allPlants = new List<Plant>();
+    private static readonly List<GameObject> _ghosts = new List<GameObject>();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
     {
         allPlants = new List<Plant>();
-        SceneManager.sceneLoaded += (scene, mode) => allPlants.Clear();
+        SceneManager.sceneLoaded += (scene, mode) =>
+        {
+            allPlants.Clear();
+            HideDeadPlantGhosts();
+        };
     }
 
     public PlantData data;
     public Tile occupiedTile;
+    public GameObject selfPrefab;
 
     public virtual bool ShowRangeCircle => true;
     protected virtual bool GetPassiveBarVisible() => passiveCooldown > 0f && passiveCooldownTimer > 0f;
@@ -102,6 +121,84 @@ public abstract class Plant : Entity, IAttackable
     // hover/selection state, used by owned minions to show their range circles alongside the plant
     public bool IsHovered  => _hoverHighlighted;
     public bool IsSelected => PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this;
+
+    private void StoreDeadRecord()
+    {
+        if (occupiedTile == null || selfPrefab == null) return;
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        occupiedTile.deadPlant = new DeadPlantRecord
+        {
+            prefab         = selfPrefab,
+            previewSprite  = sr != null ? sr.sprite         : null,
+            sortingLayerID = sr != null ? sr.sortingLayerID : 0,
+            sortingOrder   = sr != null ? sr.sortingOrder   : 0,
+            path1Level   = path1Level,
+            path2Level   = path2Level,
+            path3Level   = path3Level,
+            path3Unlocked = path3Unlocked,
+            totalSunSpent = totalSunSpent,
+            exp          = exp,
+        };
+    }
+
+    public static void ShowDeadPlantGhosts()
+    {
+        HideDeadPlantGhosts();
+        foreach (var kvp in Tile.allTiles)
+        {
+            DeadPlantRecord record = kvp.Value.deadPlant;
+            if (record == null || record.previewSprite == null) continue;
+
+            GameObject ghost = new GameObject("DeadPlantGhost");
+            ghost.transform.position = kvp.Value.transform.position;
+            SpriteRenderer sr = ghost.AddComponent<SpriteRenderer>();
+            sr.sprite = record.previewSprite;
+            sr.sortingLayerID = record.sortingLayerID;
+            sr.sortingOrder   = record.sortingOrder;
+            sr.color = new Color(1f, 1f, 1f, 0.3f);
+            _ghosts.Add(ghost);
+        }
+    }
+
+    public static void HideDeadPlantGhosts()
+    {
+        foreach (GameObject g in _ghosts)
+            if (g != null) Destroy(g);
+        _ghosts.Clear();
+    }
+
+    public static void RevivePlant(Tile tile, float healthPercent = 0.5f)
+    {
+        if (tile == null || tile.deadPlant == null || tile.deadPlant.prefab == null) return;
+        DeadPlantRecord record = tile.deadPlant;
+        tile.deadPlant = null;
+
+        GameObject obj = Instantiate(record.prefab, tile.transform.position, Quaternion.identity);
+        Plant plant = obj.GetComponent<Plant>();
+        if (plant == null) { Destroy(obj); return; }
+
+        plant.selfPrefab    = record.prefab;
+        plant.occupiedTile  = tile;
+        plant.path1Level    = record.path1Level;
+        plant.path2Level    = record.path2Level;
+        plant.path3Level    = record.path3Level;
+        plant.path3Unlocked = record.path3Unlocked;
+        plant.totalSunSpent = record.totalSunSpent;
+        plant.exp           = record.exp;
+        plant.effectivePath1Level = record.path1Level;
+        plant.effectivePath2Level = record.path2Level;
+        plant.effectivePath3Level = record.path3Level;
+        plant.OnPath1Upgrade(record.path1Level);
+        plant.OnPath2Upgrade(record.path2Level);
+        plant.OnPath3Upgrade(record.path3Level);
+
+        plant.health = plant.maxHealth * Mathf.Clamp01(healthPercent);
+        plant.UpdateHealthBar();
+
+        tile.isOccupied = true;
+        Collider2D tileCol = tile.GetComponent<Collider2D>();
+        if (tileCol != null) tileCol.enabled = false;
+    }
 
     public override void UpdateStats()
     {
@@ -932,6 +1029,7 @@ public abstract class Plant : Entity, IAttackable
 
     public override void Kill()
     {
+        StoreDeadRecord();
         FreeTile();
         DetachAndFadeLight();
         base.Kill();
@@ -939,6 +1037,7 @@ public abstract class Plant : Entity, IAttackable
 
     public override void Kill(Entity source)
     {
+        StoreDeadRecord();
         FreeTile();
         DetachAndFadeLight();
         base.Kill(source);
@@ -948,7 +1047,8 @@ public abstract class Plant : Entity, IAttackable
     {
         if (occupiedTile == null) return;
         occupiedTile.isOccupied = false;
-        occupiedTile.GetComponent<Collider2D>().enabled = true;
+        Collider2D tileCol = occupiedTile.GetComponent<Collider2D>();
+        if (tileCol != null) tileCol.enabled = true;
     }
 
     // IAttackable

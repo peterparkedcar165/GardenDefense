@@ -22,6 +22,7 @@ public class Tile : MonoBehaviour
     private void OnDestroy() => allTiles.Remove(TileKey(transform.position));
 
     public bool isOccupied = false, isHighground = false;
+    public DeadPlantRecord deadPlant;
     public bool isWaterAdjacent = false;
     public bool isHeatAdjacent  = false;
     public FlowerPot flowerPot;
@@ -158,9 +159,11 @@ public class Tile : MonoBehaviour
 
         if (gm.SpendSun(cost))
         {
+            deadPlant = null;
             GameObject placedPlant = Instantiate(selector.SelectedPlant, transform.position, Quaternion.identity);
             GameManager.instance.PlaySound(GameManager.instance.plantPlace);
             Plant plant = placedPlant.GetComponent<Plant>();
+            plant.selfPrefab = selector.SelectedPlant;
             plant.totalSunSpent += cost;
             plant.occupiedTile = this;
             if (isHighground)
