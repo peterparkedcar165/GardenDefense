@@ -32,13 +32,24 @@ public class SoothingRain : MonoBehaviour
         if (tickTimer < tickInterval) return;
         tickTimer -= tickInterval;
 
+        bool path3Maxed = source != null && source.IsPath3Maxed;
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
-            if (Vector3.Distance(transform.position, plant.transform.position) <= radius)
+            if (Vector3.Distance(transform.position, plant.transform.position) > radius) continue;
+            float scaledHeal = healPerTick * (1f + plant.healingReceived) * (1f + plant.healingBonus);
+            float overflow = path3Maxed ? Mathf.Max(0f, scaledHeal - plant.MissingHealth) : 0f;
+            plant.Heal(healPerTick, source);
+            plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
+            if (overflow > 0f && plant.IsAlive)
             {
-                plant.Heal(healPerTick, source);
-                plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
+                DrizzleBarrierEffect shield = plant.GetEffect<DrizzleBarrierEffect>();
+                if (shield == null)
+                {
+                    shield = new DrizzleBarrierEffect(plant, source);
+                    plant.ApplyEffect(shield);
+                }
+                shield.AddShield(overflow);
             }
         }
 

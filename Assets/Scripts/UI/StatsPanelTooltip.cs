@@ -126,6 +126,7 @@ public class StatsPanelTooltip : MonoBehaviour
         sb.AppendLine();
         ElemLine(sb, Physical, "Physical Damage:",     $"{e.physicalDamage * 100:F0}%",     e.physicalDamage,     e.basePhysicalDamage);
         ElemLine(sb, Magic,    "Magic Damage:",        $"{e.magicDamage * 100:F0}%",        e.magicDamage,        e.baseMagicDamage);
+        ElemLine(sb, Physical, "Fall Damage:",         $"{e.fallDamage * 100:F0}%",         e.fallDamage,         e.baseFallDamage);
         sb.AppendLine();
         ElemLine(sb, Fire,   "Fire Damage:",   $"{e.fireDamage * 100:F0}%",   e.fireDamage,   e.baseFireDamage);
         ElemLine(sb, Water,  "Water Damage:",  $"{e.waterDamage * 100:F0}%",  e.waterDamage,  e.baseWaterDamage);

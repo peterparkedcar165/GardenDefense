@@ -61,5 +61,8 @@ public enum StatType
     BuffGivenDuration,
     BuffReceivedDuration,
     DebuffReceivedDuration,
-    MinionDamage
+    MinionDamage,
+    FallDamage,
+    Armor,
+    MagicArmor
 }

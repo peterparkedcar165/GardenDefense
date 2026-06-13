@@ -154,12 +154,14 @@ public class AloeVeraProjectile : MonoBehaviour
 
     private void Explode()
     {
+        bool path2Maxed = source != null && source.IsPath2Maxed;
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) <= aoERadius)
             {
-                plant.Heal(healAmount, source);
+                float bonus = path2Maxed ? plant.MissingHealth * 0.12f : 0f;
+                plant.Heal(healAmount + bonus, source);
                 plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
             }
         }
@@ -169,7 +171,10 @@ public class AloeVeraProjectile : MonoBehaviour
         {
             if (ally == null || !ally.IsAlive) continue;
             if (Vector3.Distance(transform.position, ally.transform.position) <= aoERadius)
-                ally.Heal(healAmount, source);
+            {
+                float bonus = path2Maxed ? ally.MissingHealth * 0.12f : 0f;
+                ally.Heal(healAmount + bonus, source);
+            }
         }
 
         foreach (Insect insect in new List<Insect>(Insect.allInsects))

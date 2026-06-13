@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -37,7 +37,10 @@ public class AloeVera : Lobber
 
     public override void UpdateStats()
     {
+        float path1MPBonus = IsPath1Maxed ? 50f : 0f;
+        magicPowerAdder += path1MPBonus;
         base.UpdateStats();
+        magicPowerAdder -= path1MPBonus;
         temperatureMax = comfortMax;
         float healpl  = AVData?.path2HealPerLevel           ?? 8f;
         float temppl  = AVData?.path2TempReductionPerLevel  ?? 0.5f;
@@ -206,7 +209,7 @@ public class AloeVera : Lobber
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level)}\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=#FFB6C1><b>Magic Power</b></color> by <color=green><b>50</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -221,7 +224,7 @@ public class AloeVera : Lobber
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Healing</b></color> by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase temperature reduction by <color=green><b>{temppl:F1}</b></color> per level. [<color=green><b>+{temppl * effectivePath2Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level)}\n\n" +
+               $"{Level5Section(path2Level, "Heals also restore an additional <color=green><b>12%</b></color> of the target's <color=green><b>Missing Health</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -245,7 +248,7 @@ public class AloeVera : Lobber
                $"Increase <color=green><b>Base Healing</b></color> by <color=green><b>{healpl3:F0}</b></color> per tick per level. [<color=green><b>+{healpl3 * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase rain duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase rain radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level)}\n\n" +
+               $"{Level5Section(path3Level, "Overhealing from Soothing Rain accumulates into <color=#4FC3F7><b>Drizzle Barrier</b></color>, shielding plants for up to <color=green><b>120</b></color> for <color=green><b>16</b></color> seconds.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

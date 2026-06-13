@@ -28,6 +28,7 @@ public abstract class Insect : Entity, IAttackable
     public static float fallDamageHealthVelocityCap = 20f; // velocity at which health % reaches max
     public float verticalVelocity = 0f;
     public Entity fallDamageSource;
+    public float fallDamageVulnerabilityMultiplier = 0f;
     public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f);
     protected virtual bool FallDamageImmune => false;
     public bool isOnGround => visual != null && visual.localPosition.y <= 0.4f;
@@ -256,10 +257,11 @@ public abstract class Insect : Entity, IAttackable
                 if (verticalVelocity >= 3f && !FallDamageImmune)
                 {
                     float healthPercent = Mathf.Lerp(fallDamageHealthMin, fallDamageHealthMax, Mathf.Clamp01((verticalVelocity - 3f) / (fallDamageHealthVelocityCap - 3f)));
-                    float fallDmg = verticalVelocity * fallDamageMultiplier + maxHealth * healthPercent;
+                    float fallDmg = (verticalVelocity * fallDamageMultiplier + maxHealth * healthPercent);
                     Entity src = fallDamageSource != null ? fallDamageSource : lastSource;
                     if (src != null)
                     {
+                        fallDmg *= (1f + src.fallDamage) * (1f + fallDamageVulnerabilityMultiplier);
                         Damage(fallDmg, DamageType.Physical, ElementalType.Neutral, src, false, new DamageTag[0]);
                         ApplyEffect(new StunEffect(this, 2f, 1, src));
                     }

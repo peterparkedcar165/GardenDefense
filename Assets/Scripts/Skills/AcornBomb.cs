@@ -43,7 +43,7 @@ public class AcornBomb : Minion
         lifetime = lifespan;
         baseMaxHealth = maxHp;
         AcornSprout sprout = source as AcornSprout;
-        baseArmor = (sprout != null && sprout.effectivePath3Level >= Plant.pathLevelCap) ? (int)source.armor : 0;
+        baseArmor = (sprout != null && sprout.IsPath3Maxed) ? (int)source.armor : 0;
         baseMovementSpeed = 0f;
         isFlying = true;
 
@@ -166,7 +166,7 @@ public class AcornBomb : Minion
     {
         if (data.target != this) return;
         AcornSprout sprout = owner as AcornSprout;
-        if (sprout == null || sprout.effectivePath3Level < Plant.pathLevelCap) return;
+        if (sprout == null || !sprout.IsPath3Maxed) return;
         lifetime += data.amount * 0.10f;
     }
 

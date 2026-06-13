@@ -56,7 +56,20 @@ public class BogIris : Shooter
             if (healTickTimer >= 1f)
             {
                 healTickTimer -= 1f;
-                Heal(TotalHeal / passiveCooldown);
+                float healPerTick = TotalHeal / passiveCooldown;
+                float scaledHeal = healPerTick * (1f + healingReceived) * (1f + healingBonus);
+                float overflow = IsPath2Maxed ? Mathf.Max(0f, scaledHeal - (maxHealth - health)) : 0f;
+                Heal(healPerTick);
+                if (overflow > 0f && IsAlive)
+                {
+                    AquaticOvershieldEffect shield = GetEffect<AquaticOvershieldEffect>();
+                    if (shield == null)
+                    {
+                        shield = new AquaticOvershieldEffect(this, this);
+                        ApplyEffect(shield);
+                    }
+                    shield.AddShield(overflow);
+                }
             }
             if (cycleTimer >= passiveCooldown)
             {
@@ -128,11 +141,30 @@ public class BogIris : Shooter
         if (geyserPrefab == null) yield break;
         GameObject obj = Instantiate(geyserPrefab, position, Quaternion.identity);
         obj.GetComponent<Geyser>()?.Initialize(position, GeyserRadius, skillDuration, GeyserDamage, KnockUpForce, this);
+        if (IsPath3Maxed)
+        {
+            foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
+            {
+                if (insect == null || !insect.IsAlive) continue;
+                if (Vector3.Distance(position, insect.transform.position) <= GeyserRadius)
+                    insect.ApplyEffect(new GeyseredEffect(insect, 12f, 1, this));
+            }
+        }
     }
 
     public override void OnPath1Upgrade(int level)
     {
         baseAttackDamage = data.baseAttackDamage + (BogData?.path1AttackDamagePerLevel ?? 8f) * level;
+    }
+
+    public override void UpdateStats()
+    {
+        base.UpdateStats();
+        if (IsPath1Maxed)
+        {
+            attackDamage *= 1.33f;
+            projectileSpeed *= 1.45f;
+        }
     }
 
     public override void OnPath2Upgrade(int level) { }
@@ -149,7 +181,7 @@ public class BogIris : Shooter
             : $"Fires a water bolt at a single target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level)}\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=green><b>Attack Damage</b></color> by <color=green><b>33%</b></color> and <color=green><b>Projectile Speed</b></color> by <color=green><b>45%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -169,7 +201,7 @@ public class BogIris : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>{opendurpl:F0}</b></color> seconds per level. [<color=green><b>+{opendurpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase Sun generated per tick by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level)}\n\n" +
+               $"{Level5Section(path2Level, "Overhealing while in the <b><color=#4FC3F7>closed</color></b> state grants <color=#4FC3F7><b>Aquatic Overshield</b></color> up to <color=green><b>100</b></color>. Taking <color=#FF69B4><b>Physical Damage</b></color> while protected by the shield primes the attacker with <color=#1E90FF><b>Wet</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -186,7 +218,7 @@ public class BogIris : Shooter
                $"Increase the flat component of geyser damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the radius of the geyser by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level)}\n\n" +
+               $"{Level5Section(path3Level, "Successful <color=#4FC3F7><b>Geyser</b></color> hits inflict <color=#4FC3F7><b>Geysered</b></color> for <color=green><b>12</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> by <color=red><b>30</b></color> and increasing <color=#FF69B4><b>Fall Damage</b></color> taken by <color=red><b>33%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

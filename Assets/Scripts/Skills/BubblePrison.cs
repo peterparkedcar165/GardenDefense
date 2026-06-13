@@ -94,7 +94,7 @@ public class BubblePrison : MonoBehaviour
             {
                 insect.Damage(damagePerSecond, source.damageType, source.elementalType, source, true,
                     new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
-                bool rising = source is Waterlily wl && wl.effectivePath3Level >= Plant.pathLevelCap;
+                bool rising = source is Waterlily wl && wl.IsPath3Maxed;
                 insect.ApplyEffect(new BubblePrisonEffect(insect, duration, 1, source, rising));
             }
         }

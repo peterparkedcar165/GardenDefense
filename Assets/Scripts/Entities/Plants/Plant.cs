@@ -862,6 +862,10 @@ public abstract class Plant : Entity, IAttackable
     // UPGRADE COSTS
     public const int pathLevelCap = 5;
 
+    public bool IsPath1Maxed => path1Level >= pathLevelCap;
+    public bool IsPath2Maxed => path2Level >= pathLevelCap;
+    public bool IsPath3Maxed => path3Level >= pathLevelCap;
+
     // upgrade cost scales with the plant's own suncost so premium plants cost
     // proportionally more to scale. base is the first level price as a fraction
     // of buy cost, step is the exponential multiplier/Lvl.
@@ -960,9 +964,13 @@ public abstract class Plant : Entity, IAttackable
 
     protected string Level5Section(int effectiveLevel, string bonusText = null)
     {
-        string color = effectiveLevel >= pathLevelCap ? "green" : "grey";
-        string extra = bonusText != null ? $"\n\n{bonusText}" : "";
-        return $"<color={color}><b>[Max Level Bonus]</b>{extra}</color>";
+        bool unlocked = effectiveLevel >= pathLevelCap;
+        string header = $"<color={(unlocked ? "green" : "grey")}><b>[Max Level Bonus]</b></color>";
+        if (bonusText == null) return header;
+        string body = unlocked
+            ? bonusText
+            : $"<color=grey>{System.Text.RegularExpressions.Regex.Replace(bonusText, "</?color[^>]*>", "")}</color>";
+        return $"{header}\n\n{body}";
     }
     public virtual string GetElement() => PlantData.ElementalTag(data != null ? data.elementalType : elementalType);
 

@@ -21,7 +21,7 @@ public class LeafRanger : Shooter
             + (LRData?.path2CritChancePerLevel ?? 0.05f) * effectivePath2Level;
 
         base.UpdateStats();
-        if (effectivePath1Level >= pathLevelCap)
+        if (IsPath1Maxed)
             armorPenFlat += 30f;
     }
 
@@ -55,7 +55,7 @@ public class LeafRanger : Shooter
 
     protected override void OnShoot()
     {
-        if (effectivePath2Level < pathLevelCap) return;
+        if (!IsPath2Maxed) return;
         VerdantFervorEffect existing = GetEffect<VerdantFervorEffect>();
         if (existing != null)
             existing.AddStack();
@@ -65,7 +65,7 @@ public class LeafRanger : Shooter
 
     protected override void Shoot(Vector3 target)
     {
-        if (HasEffect<RapidFocusEffect>() && effectivePath3Level >= pathLevelCap)
+        if (HasEffect<RapidFocusEffect>() && IsPath3Maxed)
         {
             FireVolley(target);
             return;
@@ -141,7 +141,7 @@ public class LeafRanger : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level, effectivePath1Level >= pathLevelCap ? "Increase <color=green><b>Armor Penetration</b></color> by <color=green><b>30</b></color>." : "Increase Armor Penetration by 30.")}\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=green><b>Armor Penetration</b></color> by <color=green><b>30</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -157,7 +157,7 @@ public class LeafRanger : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green>Piercing</color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level, effectivePath2Level >= pathLevelCap ? "Upon shooting, grant a level of <color=green><b>Verdant Fervor</b></color>, increasing <b>Total Attack Speed</b> by <color=green><b>4%</b></color> per level for <color=green><b>8</b></color> seconds." : "Upon shooting, grant a level of Verdant Fervor, increasing <b>Total Attack Speed</b> by 4% per level for 8 seconds.")}\n\n" +
+               $"{Level5Section(path2Level, "Upon shooting, grant a level of <color=green><b>Verdant Fervor</b></color>, increasing <b>Total Attack Speed</b> by <color=green><b>4%</b></color> per level for <color=green><b>8</b></color> seconds.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -173,7 +173,7 @@ public class LeafRanger : Shooter
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level, effectivePath3Level >= pathLevelCap ? "While the skill is active, shots instead fire a volley of <color=green><b>5</b></color> arrows in a <color=green><b>30°</b></color> cone." : "While the skill is active, shots instead fire a volley of 5 arrows in a 30° cone.")}\n\n" +
+               $"{Level5Section(path3Level, "While the skill is active, shots instead fire a volley of <color=green><b>5</b></color> arrows in a <color=green><b>30°</b></color> cone.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

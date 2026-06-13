@@ -31,6 +31,14 @@ public class Begonia : Shooter
         LoadData();
     }
 
+    public override void UpdateStats()
+    {
+        float path1EABonus = path1Level >= Plant.pathLevelCap ? 0.32f : 0f;
+        elementalAffinityAdder += path1EABonus;
+        base.UpdateStats();
+        elementalAffinityAdder -= path1EABonus;
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -44,13 +52,14 @@ public class Begonia : Shooter
         if (auraTickTimer < auraTickInterval) return;
         auraTickTimer -= auraTickInterval;
 
+        float armorPen = path2Level >= Plant.pathLevelCap ? 22f : 0f;
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             elementalAffinityBoostEffect existing = plant.GetEffect<elementalAffinityBoostEffect>();
-            if (existing != null && existing.bonus > elementalAffinityBonus) continue;
-            plant.ApplyEffect(new elementalAffinityBoostEffect(plant, auraEffectDuration, 1, this, elementalAffinityBonus));
+            if (existing != null && existing.bonus > elementalAffinityBonus && existing.armorPenFlatBonus >= armorPen) continue;
+            plant.ApplyEffect(new elementalAffinityBoostEffect(plant, auraEffectDuration, 1, this, elementalAffinityBonus, armorPen));
         }
     }
 
@@ -158,7 +167,7 @@ public class Begonia : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level)}\n\n" +
+               $"{Level5Section(path1Level, details ? $"Increases {GetName()}'s <color=green><b>Elemental Affinity</b></color> by <color=green><b>32%</b></color>." : $"Elemental Affinity increased by <color=green><b>+{(path1Level >= Plant.pathLevelCap ? 32 : 0)}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -172,7 +181,7 @@ public class Begonia : Shooter
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase Elemental Affinity bonus by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level)}\n\n" +
+               $"{Level5Section(path2Level, details ? $"Plants affected by <color=green><b>Begonia's Blessing</b></color> are also granted <color=#A0522D><b>22</b></color> Armor Penetration." : $"Begonia's Blessing also grants <color=#A0522D><b>22</b></color> Armor Penetration.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -192,7 +201,7 @@ public class Begonia : Shooter
                $"Increase Nature Power bonus by <color=green><b>{naturepl * 100f:F0}%</b></color> per level. [<color=green><b>+{naturepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level)}\n\n" +
+               $"{Level5Section(path3Level, details ? $"Whenever a plant blessed by <color=green><b>Blossoming</b></color> deals <color=green><b>Germinate</b></color> or <color=#A0522D><b>Brittle</b></color> damage, their Elemental Affinity is increased by <color=green><b>22%</b></color> for <color=green><b>5</b></color> seconds." : $"Blossoming triggers increase Elemental Affinity by <color=green><b>+22%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

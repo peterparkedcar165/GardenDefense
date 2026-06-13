@@ -22,6 +22,8 @@ public static class FertilizerFormat
                 return $"{sign}{value:F1}s";
             case StatType.Piercing:
             case StatType.MagicPower:
+            case StatType.Armor:
+            case StatType.MagicArmor:
                 return $"{sign}{UnityEngine.Mathf.RoundToInt(value)}";
             default:
                 return $"{sign}{value * 100f:F0}%";
@@ -70,6 +72,9 @@ public static class FertilizerFormat
             case StatType.BuffReceivedDuration:         return "Buff Received Duration";
             case StatType.DebuffReceivedDuration:       return "Debuff Received Duration";
             case StatType.MinionDamage:                 return "Minion Damage";
+            case StatType.FallDamage:                   return "Fall Damage";
+            case StatType.Armor:                        return "Armor";
+            case StatType.MagicArmor:                   return "Magic Armor";
             default:                      return statType.ToString();
         }
     }

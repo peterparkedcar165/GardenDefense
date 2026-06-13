@@ -6,6 +6,7 @@ public class Holly : Aura
     private HollyData HData => data as HollyData;
 
     private float _tickTimer;
+    private bool _shieldArmorBonusActive = false;
     private const float TickInterval = 0.25f;
     private const float EffectDuration = 0.35f;
 
@@ -45,6 +46,16 @@ public class Holly : Aura
         else if (!IsStunned && !IsChanneling && HasInsectsInRange())
             Attack();
 
+        if (IsPath2Maxed)
+        {
+            bool shieldedNow = HasShield();
+            if (shieldedNow != _shieldArmorBonusActive)
+            {
+                armorAdder += shieldedNow ? 75f : -75f;
+                _shieldArmorBonusActive = shieldedNow;
+            }
+        }
+
         _tickTimer += Time.deltaTime;
         if (_tickTimer >= TickInterval)
         {
@@ -53,11 +64,24 @@ public class Holly : Aura
         }
     }
 
+    public override void OnShieldBreak(ShieldEffect shield)
+    {
+        base.OnShieldBreak(shield);
+        if (!IsPath3Maxed) return;
+        float damage = shield.originalAmount * 0.5f;
+        foreach (Insect insect in GetInsectsInRange())
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            insect.Damage(damage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
+        }
+    }
+
     protected override void Attack()
     {
         base.Attack();
+        float armorBonus = IsPath1Maxed ? armor * 0.33f : 0f;
         foreach (Insect insect in GetInsectsInRange())
-            insect.Damage(attackDamage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+            insect.Damage(attackDamage + armorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
     }
 
     protected override void OnHitByInsect(Insect attacker)
@@ -132,7 +156,7 @@ public class Holly : Aura
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level)}\n\n" +
+               $"{Level5Section(path1Level, details ? $"Attacks deal increased damage equal to <color=green><b>33%</b></color> of {GetName()}'s <color=#00CED1><b>Armor</b></color>." : $"Attacks deal <color=#00CED1><b>+{armor * 0.33f:F0}</b></color> increased damage.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -152,7 +176,7 @@ public class Holly : Aura
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase retaliation percentages by <color=green><b>{retalipl * 100f:F0}%</b></color> per level for both. [<color=green><b>+{retalipl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level)}\n\n" +
+               $"{Level5Section(path2Level, $"While {GetName()} is <color=grey><b>Shielded</b></color>, her <color=#00CED1><b>Armor</b></color> is increased by <color=green><b>75</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -173,7 +197,7 @@ public class Holly : Aura
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=#00CED1>Frozen Rage's Armor Reduction</color> by <color=green><b>{rageArmorpl:F1}</b></color> per level. [<color=green><b>+{rageArmorpl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level)}\n\n" +
+               $"{Level5Section(path3Level, $"Whenever a Shield breaks, deal damage equal to <color=green><b>50%</b></color> of the Shield's amount to all insects within range. Each Shield break triggers this separately.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

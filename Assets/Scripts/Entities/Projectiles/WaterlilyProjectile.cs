@@ -50,7 +50,7 @@ public class WaterlilyProjectile : Projectile
 
         if (waterlily != null)
         {
-            bool path2Maxed = waterlily.effectivePath2Level >= Plant.pathLevelCap;
+            bool path2Maxed = waterlily.IsPath2Maxed;
             DamageTag[] splashTags = path2Maxed
                 ? new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage, DamageTag.Attack, DamageTag.Projectile }
                 : new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage };

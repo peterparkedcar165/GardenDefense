@@ -39,7 +39,7 @@ public class Waterlily : Shooter
         GameObject primaryTarget = FindTarget();
         FireBubble(primaryTarget, target);
 
-        if (effectivePath1Level >= pathLevelCap)
+        if (IsPath1Maxed)
         {
             GameObject secondTarget = FindSecondTarget(primaryTarget);
             if (secondTarget != null)
@@ -136,7 +136,7 @@ public class Waterlily : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath1Level, effectivePath1Level >= pathLevelCap ? "Attacks shoot at an additional <color=green><b>most-valid</b></color> target." : "Attacks shoot at an additional most-valid target.")}\n\n" +
+               $"{Level5Section(path1Level, "Attacks shoot at an additional <color=green><b>most-valid</b></color> target.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -151,7 +151,7 @@ public class Waterlily : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> Attack Damage per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath2Level, effectivePath2Level >= pathLevelCap ? "Splash damage is now also considered <color=green><b>Attack</b></color> and <color=green><b>Projectile</b></color>." : "Splash damage is now also considered Attack and Projectile.")}\n\n" +
+               $"{Level5Section(path2Level, "Splash damage is now also considered <color=green><b>Attack</b></color> and <color=green><b>Projectile</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -168,7 +168,7 @@ public class Waterlily : Shooter
                $"Increase impact damage by <color=green><b>{bubblepl:F0}</b></color> per level. [<color=green><b>+{bubblepl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(effectivePath3Level, "Imprisoned insects slowly rise during the effect.")}\n\n" +
+               $"{Level5Section(path3Level, "Imprisoned insects slowly rise during the effect.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

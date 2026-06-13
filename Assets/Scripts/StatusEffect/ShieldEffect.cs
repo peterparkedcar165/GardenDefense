@@ -29,6 +29,8 @@ public abstract class ShieldEffect : StatusEffect
         }
     }
 
+    public virtual void OnAbsorbHit(Entity attacker, DamageType damageType) { }
+
     public override void OnTick(float deltaTime) { }
 
     public override void OnExpire()

@@ -12,18 +12,27 @@ public class PoisonShroomProjectile : Projectile
         base.Update();
     }
 
-    protected override void OnHit(Insect insect) // to change for every plant
+    protected override void OnHit(Insect insect)
     {
-        
-        //if (source != null)
-        //   insect.RegisterAttacker(source);
+        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
 
-        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag [] {DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget});
+        PoisonShroom ps = source as PoisonShroom;
+        if (ps == null) return;
 
-        if (source != null && source is PoisonShroom shooter)
+        float additionalDPS = ps.PoisonBaseDPS + (6f * ps.effectivePath2Level) + ps.skillDamageMultiplier * ps.magicPower;
+        insect.ApplyEffect(new PoisonEffect(insect, ps.poisonDuration, ps.poisonLevel, source, additionalDPS));
+
+        if (ps.IsPath1Maxed)
         {
-            float additionalDPS = shooter.PoisonBaseDPS + (6f * shooter.effectivePath2Level) + shooter.skillDamageMultiplier * shooter.magicPower;
-            insect.ApplyEffect(new PoisonEffect(insect, shooter.poisonDuration, shooter.poisonLevel, source, additionalDPS));
+            foreach (Insect nearby in new System.Collections.Generic.List<Insect>(Insect.allInsects))
+            {
+                if (nearby == null || !nearby.IsAlive || nearby == insect) continue;
+                if (Vector3.Distance(insect.transform.position, nearby.transform.position) <= 1.5f)
+                {
+                    nearby.Damage(projectileDamage, damageType, elementalType, source, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+                    nearby.ApplyEffect(new PoisonEffect(nearby, ps.poisonDuration, ps.poisonLevel, source, additionalDPS));
+                }
+            }
         }
     }
     

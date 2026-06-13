@@ -60,10 +60,17 @@ public class PoisonField : MonoBehaviour
         {
             tickTimer -= tickInterval;
             float tickDamage = damagePerSecond * tickInterval;
+            PoisonShroom ps = source as PoisonShroom;
+            bool applyPoison = ps != null && ps.IsPath3Maxed;
+            float poisonDPS = applyPoison ? ps.PoisonBaseDPS + 6f * ps.effectivePath2Level + ps.skillDamageMultiplier * ps.magicPower : 0f;
             for (int i = affectedInsects.Count - 1; i >= 0; i--)
             {
                 if (affectedInsects[i] != null)
+                {
                     affectedInsects[i].Damage(tickDamage, source.damageType, source.elementalType, source, false, damageTags);
+                    if (applyPoison)
+                        affectedInsects[i].ApplyEffect(new PoisonEffect(affectedInsects[i], ps.poisonDuration, ps.poisonLevel, source, poisonDPS));
+                }
             }
         }
     }

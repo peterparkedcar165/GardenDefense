@@ -56,12 +56,14 @@ public class FloralGlowEffect : StatusEffect
     {
         yield return new UnityEngine.WaitForSeconds(0.1f);
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
-        float hitDamage = calendula.attackDamage + calendula.skillDamageMultiplier * calendula.magicPower;
+        float hitDamage = calendula.attackDamage * 0.35f + calendula.skillDamageMultiplier * calendula.magicPower;
         insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false,
             new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated });
     }
 
-    private float CoordinatedDamage => (calendula?.attackDamage ?? 0f) + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f);
+    private float CoordinatedDamage =>
+        ((calendula?.attackDamage ?? 0f) * 0.35f + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f))
+        * (1f + (calendula?.coordinatedDamage ?? 0f));
 
     public override string GetName() => "<color=orange>Floral Glow</color>";
     public override string GetDescription() => $"Regenerates <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Attacks inflict a Coordinated <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage from the Calendula.";

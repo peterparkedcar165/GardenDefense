@@ -26,7 +26,9 @@ public enum DamageTag
     Coordinated,
     Counter,
     Weather,
-    BypassShield
+    BypassShield,
+    Germinate,
+    Brittle
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -66,7 +68,7 @@ public abstract class Entity : MonoBehaviour
     public int baseArmorPenFlat, baseMagicPenFlat;
     public float baseArmorPenPercent, baseMagicPenPercent;
     public float baseFireResistance, baseWaterResistance, baseNatureResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
-    public float basePhysicalDamage, baseMagicDamage, baseBonusEffectChance;
+    public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance;
     public float baseFireDamage, baseWaterDamage, baseNatureDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseDotResistance, baseDotDamage;
@@ -83,6 +85,7 @@ public abstract class Entity : MonoBehaviour
 
     public static event System.Action<Plant, Insect, DamageTag[]> OnPlantAttackHit;
     public static event System.Action<EntityEventData> OnEntityHit;
+    public static event System.Action<StatusEffect> OnEffectApplied;
     public static event System.Action<EntityEventData> OnEntityKilled;
     public static event System.Action<EntityEventData> OnEntityDied;
     public static event System.Action<EntityEventData> OnHeal;
@@ -93,11 +96,12 @@ public abstract class Entity : MonoBehaviour
 
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
+    public float MissingHealth => maxHealth - health;
     public float physicalResistance, magicResistance;
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
     public float fireResistance, waterResistance, natureResistance, windResistance, poisonResistance, iceResistance;
-    public float physicalDamage, magicDamage, bonusEffectChance;
+    public float physicalDamage, magicDamage, fallDamage, bonusEffectChance;
     public float fireDamage, waterDamage, natureDamage, windDamage, poisonDamage, iceDamage;
     public float criticalChance, criticalDamage;
     public float dotResistance, dotDamage;
@@ -125,7 +129,7 @@ public abstract class Entity : MonoBehaviour
     public float armorAdder, magicArmorAdder;
     public float armorPenFlatAdder, magicPenFlatAdder, armorPenPercentAdder, magicPenPercentAdder;
     public float fireResistanceAdder, waterResistanceAdder, natureResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
-    public float physicalDamageAdder, magicDamageAdder, bonusEffectChanceAdder;
+    public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder;
     public float fireDamageAdder, waterDamageAdder, natureDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
     public float dotResistanceAdder, dotDamageAdder;
@@ -189,6 +193,7 @@ public abstract class Entity : MonoBehaviour
         iceResistance = baseIceResistance + iceResistanceAdder + (baseIceResistance * iceResistanceMultiplier);
         physicalDamage = basePhysicalDamage + physicalDamageAdder + (basePhysicalDamage * physicalDamageMultiplier);
         magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
+        fallDamage = baseFallDamage + fallDamageAdder;
         bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
         fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
         waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
@@ -282,7 +287,7 @@ public abstract class Entity : MonoBehaviour
         
         finalDamage = Mathf.Round(modifiedDamage * elementalMultiplier * dotMultiplier);
         bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield);
-        health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, 0f) : finalDamage;
+        health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, 0f, null, damageType) : finalDamage;
         health = Mathf.Max(0f, health);
         TriggerHitFlash();
         UpdateHealthBar();
@@ -482,7 +487,7 @@ public abstract class Entity : MonoBehaviour
 
         finalDamage = Mathf.Round(finalDamage);
         bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield) || source.bypassShields;
-        health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, source.shieldBonusDamage) : finalDamage;
+        health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, source.shieldBonusDamage, source, damageType) : finalDamage;
         health = Mathf.Max(0f, health);
         TriggerHitFlash();
         source.totalDamageDealt += finalDamage; // FOR DEBUG
@@ -820,7 +825,7 @@ public abstract class Entity : MonoBehaviour
         OnShieldExpire?.Invoke(new EntityEventData { target = this, source = shield.source, position = transform.position, amount = shield.amount });
     }
 
-    private float DrainShields(float damage, float attackerShieldBonus)
+    private float DrainShields(float damage, float attackerShieldBonus, Entity source = null, DamageType damageType = DamageType.Physical)
     {
         float multiplier = (1f + attackerShieldBonus) * (1f - shieldToughness);
         float remaining  = damage;
@@ -829,7 +834,7 @@ public abstract class Entity : MonoBehaviour
         for (int i = 0; i < activeEffects.Count; i++)
         {
             if (!(activeEffects[i] is ShieldEffect shield) || shield.IsInfinite) continue;
-            remaining = DrainSingleShield(shield, i, remaining, multiplier);
+            remaining = DrainSingleShield(shield, i, remaining, multiplier, source, damageType);
             if (activeEffects.Count <= i || activeEffects[i] != shield) i--;
             if (remaining <= 0f) return 0f;
         }
@@ -838,7 +843,7 @@ public abstract class Entity : MonoBehaviour
         for (int i = 0; i < activeEffects.Count; i++)
         {
             if (!(activeEffects[i] is ShieldEffect shield) || !shield.IsInfinite) continue;
-            remaining = DrainSingleShield(shield, i, remaining, multiplier);
+            remaining = DrainSingleShield(shield, i, remaining, multiplier, source, damageType);
             if (activeEffects.Count <= i || activeEffects[i] != shield) i--;
             if (remaining <= 0f) return 0f;
         }
@@ -846,11 +851,12 @@ public abstract class Entity : MonoBehaviour
         return remaining;
     }
 
-    private float DrainSingleShield(ShieldEffect shield, int index, float remaining, float multiplier)
+    private float DrainSingleShield(ShieldEffect shield, int index, float remaining, float multiplier, Entity source, DamageType damageType)
     {
         float origToDeplete = multiplier > 0f ? shield.amount / multiplier : float.MaxValue;
         if (remaining >= origToDeplete)
         {
+            shield.OnAbsorbHit(source, damageType);
             remaining -= origToDeplete;
             OnShieldBreak(shield);
             shield.OnExpire();
@@ -858,6 +864,7 @@ public abstract class Entity : MonoBehaviour
             return remaining;
         }
         shield.amount -= remaining * multiplier;
+        shield.OnAbsorbHit(source, damageType);
         return 0f;
     }
 
@@ -921,6 +928,7 @@ public abstract class Entity : MonoBehaviour
 
         activeEffects.Add(effect);
         effect.OnApply();
+        OnEffectApplied?.Invoke(effect);
         if (effect is ShieldEffect acquiredShield)
             OnShieldAcquire?.Invoke(new EntityEventData { target = this, source = acquiredShield.source, position = transform.position, amount = acquiredShield.amount });
     }

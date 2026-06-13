@@ -16,7 +16,13 @@ public class PoisonEffect : DoTEffect
     }
 
     public override string GetName() => "<color=purple>Poison</color>";
-    public override string GetDescription() => $"Deal <color=green><b>{damagePerSecond:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.";
+    public override string GetDescription()
+    {
+        string desc = $"Deal <color=green><b>{damagePerSecond:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.";
+        if (source is PoisonShroom ps && ps.IsPath2Maxed)
+            desc += " Deals an additional <color=green><b>2%</b></color> of the target's <color=green><b>Max Health</b></color> per second.";
+        return desc;
+    }
 
     public override void OnApply()
     {
@@ -35,10 +41,13 @@ public class PoisonEffect : DoTEffect
         tickTimer += deltaTime;
         if (tickTimer >= tickInterval)
         {
+            float damage = damagePerSecond * tickInterval;
+            if (source is PoisonShroom ps && ps.IsPath2Maxed)
+                damage += target.maxHealth * 0.02f * tickInterval;
             if (source != null)
-                target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Poison, source, false, tickTags);
+                target.Damage(damage, DamageType.Magic, ElementalType.Poison, source, false, tickTags);
             else
-                target.Damage((damagePerSecond * tickInterval), DamageType.Magic, ElementalType.Poison, tickTags);
+                target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
             tickTimer -= tickInterval;
         }
     }
