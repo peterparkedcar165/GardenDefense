@@ -10,7 +10,7 @@ public class VulnerableEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#FF6347>Vulnerable</color>";
-    public override string GetDescription() => $"Reduce DoT Resistance by <color=green><b>{shred * 100f:F0}%</b></color>.";
+    public override string GetDescription() => $"Reduce <color=#9400D3><b>DoT Resistance</b></color> by <color=red><b>{shred * 100f:F0}%</b></color>.";
 
     public override void OnApply()
     {

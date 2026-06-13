@@ -20,5 +20,5 @@ public class FrozenRageEffect : TauntEffect
 
     public override string GetName() => "<color=#00FFFF>Frozen Rage</color>";
     public override string GetDescription() =>
-        $"Forced to attack Holly. Armor reduced by <color=#FF6666><b>{resistanceReduction:F1}</b></color>.";
+        $"Forced to attack <color=#00FFFF><b>Holly</b></color>. <color=#00CED1><b>Armor</b></color> reduced by <color=red><b>{resistanceReduction:F1}</b></color>.";
 }

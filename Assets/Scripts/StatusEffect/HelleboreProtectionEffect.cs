@@ -47,6 +47,7 @@ public class HelleboreProtectionEffect : ShieldEffect
         return true;
     }
 
-    public override string GetName()        => "<color=#9B30D0>Thorned Guard</color>";
-    public override string GetDescription() => $"Shield: <color=grey><b>{amount:F0}/{originalAmount:F0}</b></color>. Attackers receive <color=purple>Poison</color> damage per hit. Negative effects are reflected.";
+    protected override string GetShieldDetails() => $"Attackers receive <color=purple><b>Poison</b></color> damage per hit. Negative effects are reflected.";
+
+    public override string GetName() => "<color=#9B30D0>Thorned Guard</color>";
 }

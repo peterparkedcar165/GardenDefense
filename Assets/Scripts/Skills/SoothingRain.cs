@@ -41,15 +41,20 @@ public class SoothingRain : MonoBehaviour
             float overflow = path3Maxed ? Mathf.Max(0f, scaledHeal - plant.MissingHealth) : 0f;
             plant.Heal(healPerTick, source);
             plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
-            if (overflow > 0f && plant.IsAlive)
+            if (plant.IsAlive)
             {
                 DrizzleBarrierEffect shield = plant.GetEffect<DrizzleBarrierEffect>();
-                if (shield == null)
+                if (overflow > 0f)
                 {
-                    shield = new DrizzleBarrierEffect(plant, source);
-                    plant.ApplyEffect(shield);
+                    if (shield == null)
+                    {
+                        shield = new DrizzleBarrierEffect(plant, source);
+                        plant.ApplyEffect(shield);
+                        shield = plant.GetEffect<DrizzleBarrierEffect>();
+                    }
+                    shield?.AddShield(overflow);
                 }
-                shield.AddShield(overflow);
+                shield?.RefreshDuration();
             }
         }
 

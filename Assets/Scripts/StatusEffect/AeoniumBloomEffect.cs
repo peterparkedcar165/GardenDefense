@@ -31,5 +31,5 @@ public class AeoniumBloomEffect : StatusEffect
 
     public override string GetName() => "<color=green>Grassy Terrain</color>";
     public override string GetDescription() =>
-        $"Attack Range increased by <color=green><b>{_rangeBonus * 100f:F0}%</b></color>. Attack Speed increased by <color=green><b>{_speedBonus * 100f:F0}%</b></color>.";
+        $"<color=green><b>Attack Range</b></color> increased by <color=green><b>{_rangeBonus * 100f:F0}%</b></color>. <color=green><b>Attack Speed</b></color> increased by <color=green><b>{_speedBonus * 100f:F0}%</b></color>.";
 }

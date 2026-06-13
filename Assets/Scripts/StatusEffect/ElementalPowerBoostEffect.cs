@@ -26,8 +26,8 @@ public class elementalAffinityBoostEffect : StatusEffect
     public override string GetName() => "<color=green><b>Begonia's Blessing</b></color>";
     public override string GetDescription()
     {
-        string desc = $"Increase Elemental Affinity by <color=green><b>{bonus * 100f:F0}%</b></color>.";
-        if (armorPenFlatBonus > 0f) desc += $" Gain <color=#A0522D><b>{armorPenFlatBonus:F0}</b></color> Armor Penetration.";
+        string desc = $"Increase <color=green><b>Elemental Affinity</b></color> by <color=green><b>{bonus * 100f:F0}%</b></color>.";
+        if (armorPenFlatBonus > 0f) desc += $" and <color=#A0522D><b>Armor Penetration</b></color> by <color=#A0522D><b>{armorPenFlatBonus:F0}</b></color>.";
         return desc;
     }
 }

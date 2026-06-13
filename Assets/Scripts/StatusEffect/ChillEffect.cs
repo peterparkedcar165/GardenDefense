@@ -17,7 +17,7 @@ public class ChillEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#00FFFF>Chill</color>";
-    public override string GetDescription() => $"Reduce Movement Speed by <b>{TotalSlow * 100f:F0}%</b>.";
+    public override string GetDescription() => $"Reduce <color=#00FFFF><b>Movement Speed</b></color> by <color=red><b>{TotalSlow * 100f:F0}%</b></color>.";
 
     public override void OnApply()
     {

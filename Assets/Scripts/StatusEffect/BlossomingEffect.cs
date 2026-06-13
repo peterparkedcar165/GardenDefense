@@ -6,9 +6,7 @@ public class BlossomingEffect : StatusEffect
     private readonly float attackSpeedBonus;
 
     private const float AffinityBurst = 0.22f;
-    private const float AffinityBurstDuration = 5f;
     private bool _affinityBurstActive = false;
-    private float _affinityBurstTimer = 0f;
 
     public BlossomingEffect(Entity target, float duration, int level, Entity source, float natureDamageBonus, float attackSpeedBonus)
         : base(target, duration, level, source)
@@ -38,38 +36,24 @@ public class BlossomingEffect : StatusEffect
         }
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        if (!_affinityBurstActive) return;
-        _affinityBurstTimer -= deltaTime;
-        if (_affinityBurstTimer <= 0f)
-        {
-            target.elementalAffinityAdder -= AffinityBurst;
-            _affinityBurstActive = false;
-        }
-    }
+    public override void OnTick(float deltaTime) { }
 
     private void HandleEffectApplied(StatusEffect effect)
     {
         if (effect.source != target) return;
         if (!(effect is GerminateEffect) && !(effect is BrittleEffect)) return;
         if (!(source is Begonia beg) || beg.path3Level < Plant.pathLevelCap) return;
-        if (_affinityBurstActive)
-        {
-            _affinityBurstTimer = AffinityBurstDuration;
-            return;
-        }
+        if (_affinityBurstActive) return;
         target.elementalAffinityAdder += AffinityBurst;
         _affinityBurstActive = true;
-        _affinityBurstTimer = AffinityBurstDuration;
     }
 
     public override string GetName() => "<color=green>Blossoming</color>";
     public override string GetDescription()
     {
-        string desc = $"Increase Nature Power by <color=green><b>{natureDamageBonus * 100f:F0}%</b></color>, and Attack Speed by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color>.";
+        string desc = $"Increase <color=green><b>Nature Power</b></color> by <color=green><b>{natureDamageBonus * 100f:F0}%</b></color>, and <color=green><b>Attack Speed</b></color> by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color>.";
         if (source is Begonia beg && beg.path3Level >= Plant.pathLevelCap)
-            desc += " Dealing Germinate or Brittle damage temporarily increases Elemental Affinity by <color=green><b>22%</b></color>.";
+            desc += " When a plant triggers <color=green><b>Germinate</b></color> or <color=green><b>Brittle</b></color>, they gain <color=green><b>22% Elemental Affinity</b></color> until the end of the effect.";
         return desc;
     }
 }

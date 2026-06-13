@@ -47,7 +47,7 @@ public class AloeVera : Lobber
         float healpl3 = AVData?.path3SkillHealPerLevel      ?? 2f;
         healAmount       = baseHealAmount       + healpl  * effectivePath2Level + magicPower * 0.22f;
         tempReduction    = baseTempReduction    + temppl  * effectivePath2Level;
-        skillHealPerTick = baseSkillHealPerTick + healpl3 * effectivePath3Level + magicPower * 0.06f;
+        skillHealPerTick = baseSkillHealPerTick + healpl3 * effectivePath3Level + magicPower * 0.14f;
     }
 
     protected override void Update()
@@ -232,7 +232,7 @@ public class AloeVera : Lobber
     public override string GetSkillDesription()
     {
         float totalHealing = skillHealPerTick * Mathf.Floor(skillDuration / baseSkillHealInterval);
-        return $"Channels for <color=green><b>{channelDuration:F1}s</b></color>, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>{baseSkillRadius:F1}</b></color> radius for <color=green><b>{skillHealPerTick:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.03f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}s</b></color> over <color=green><b>{skillDuration:F0}</b></color> seconds. " +
+        return $"Channels for <color=green><b>{channelDuration:F1}s</b></color>, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>{baseSkillRadius:F1}</b></color> radius for <color=green><b>{skillHealPerTick:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.14f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}s</b></color> over <color=green><b>{skillDuration:F0}</b></color> seconds. " +
                $"For a total of <color=green><b>{totalHealing:F0}</b></color> Health.";
     }
 
@@ -242,7 +242,7 @@ public class AloeVera : Lobber
         float durpl    = AVData?.path3SkillDurationPerLevel ?? 1f;
         float radiuspl = AVData?.path3RadiusPerLevel        ?? 0.3f;
         string desc = details
-            ? $"Channels for <color=green><b>{channelDuration:F1}</b></color> seconds, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius for <color=green><b>[({baseSkillHealPerTick:F0}) + ({healpl3:F0}/Lvl.) + <color=#FFB6C1>6% Magic Power</color>]</b></color> Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}</b></color> seconds over <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds."
+            ? $"Channels for <color=green><b>{channelDuration:F1}</b></color> seconds, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius for <color=green><b>[({baseSkillHealPerTick:F0}) + ({healpl3:F0}/Lvl.) + <color=#FFB6C1>14% Magic Power</color>]</b></color> Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}</b></color> seconds over <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Healing</b></color> by <color=green><b>{healpl3:F0}</b></color> per tick per level. [<color=green><b>+{healpl3 * effectivePath3Level:F0}</b></color>]\n\n" +

@@ -20,7 +20,7 @@ public class GerminateEffect : StatusEffect
     public override string GetName() => "<color=#32CD32>Germinate</color>";
     public override string GetDescription()
     {
-        return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{ComputeDamage():F0}</b></color> <color=green>Nature</color> Physical damage to nearby insects. (42 + <color=green>43% Attack Damage</color>) × (1 + <color=#FFD700>213% Elemental Affinity</color>)";
+        return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{ComputeDamage():F0}</b></color> <color=green>Nature</color> Physical damage to nearby insects. (42 + <color=#A0522D><b>43% Attack Damage</b></color>) × (1 + <color=green><b>213% Elemental Affinity</b></color>)";
     }
 
     public override void OnApply()

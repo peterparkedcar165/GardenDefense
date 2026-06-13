@@ -66,5 +66,5 @@ public class FloralGlowEffect : StatusEffect
         * (1f + (calendula?.coordinatedDamage ?? 0f));
 
     public override string GetName() => "<color=orange>Floral Glow</color>";
-    public override string GetDescription() => $"Regenerates <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Attacks inflict a Coordinated <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage from the Calendula.";
+    public override string GetDescription() => $"Regenerates <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Attacks inflict a <color=orange><b>Coordinated</b></color> <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage hit from the <color=orange><b>Calendula</b></color>.";
 }

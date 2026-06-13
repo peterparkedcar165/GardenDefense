@@ -18,5 +18,5 @@ public class AttackSpeedSlowEffect : StatusEffect
     public override void OnTick(float deltaTime) { }
 
     public override string GetName() => "<color=#9FD8E0>Sluggish</color>";
-    public override string GetDescription() => $"Attack speed reduced by <color=#9FD8E0><b>{percent * 100f:F0}%</b></color>.";
+    public override string GetDescription() => $"<color=#9FD8E0><b>Attack Speed</b></color> reduced by <color=red><b>{percent * 100f:F0}%</b></color>.";
 }

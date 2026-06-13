@@ -32,5 +32,5 @@ public class TermiteSwarmEffect : StatusEffect
 
     public override string GetName() => "<color=#DB5B00>Termite Swarm</color>";
     public override string GetDescription() =>
-        $"Attack Damage increased by <color=#DB5B00><b>{level * attackBonusPerLevel:F0}</b></color> ({level} nearby termite{(level == 1 ? "" : "s")}).";
+        $"<color=#A0522D><b>Attack Damage</b></color> increased by <color=#DB5B00><b>{level * attackBonusPerLevel:F0}</b></color> ({level} nearby termite{(level == 1 ? "" : "s")}).";
 }

@@ -11,7 +11,7 @@ public class BoilEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#1E90FF>Boil</color>";
-    public override string GetDescription() => $"Reduce Water Resistance and Fire Resistance by <color=green><b>{resistShred * 100f:F0}%</b></color>.";
+    public override string GetDescription() => $"Reduce <color=#4FC3F7><b>Water Resistance</b></color> and <color=orange><b>Fire Resistance</b></color> by <color=red><b>{resistShred * 100f:F0}%</b></color>.";
 
     public override void OnApply()
     {

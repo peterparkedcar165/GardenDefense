@@ -62,7 +62,8 @@ public class Cactus : Shooter
     protected override void OnHitByInsect(Insect attacker)
     {
         if (!IsAlive || !attacker.IsAlive) return;
-        attacker.Damage(attacker.attackDamage * 1.5f, damageType, elementalType, this, false, new DamageTag[] { DamageTag.PassiveDamage, DamageTag.Counter });
+        float armorBonus = IsPath2Maxed ? armor * 0.33f : 0f;
+        attacker.Damage(attacker.attackDamage * 1.5f + armorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.PassiveDamage, DamageTag.Counter });
         ApplyPunctured(attacker, 1 + effectivePath2Level);
     }
 
@@ -103,14 +104,16 @@ public class Cactus : Shooter
 
     public override void UpdateStats()
     {
+        if (IsPath1Maxed) piercingAdder += 2;
+        float asBonus = IsPath3Maxed && HasEffect<ShieldEffect>() ? 0.35f : 0f;
+        attackSpeedTotalMultiplier += asBonus;
         base.UpdateStats();
+        if (IsPath1Maxed) piercingAdder -= 2;
+        attackSpeedTotalMultiplier -= asBonus;
         temperatureMax = comfortMax;
     }
 
-    public override void OnPath1Upgrade(int level)
-    {
-        piercingAdder = level >= 5 ? 1 : 0;
-    }
+    public override void OnPath1Upgrade(int level) { }
 
     public override void OnPath2Upgrade(int level)
     {
@@ -131,8 +134,7 @@ public class Cactus : Shooter
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
         return $"Fires <color=green><b>{needleBase + needleLevel * effectivePath1Level}</b></color> needles in equal angles around itself, dealing " +
                $"<color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per needle. " +
-               $"Each hit applies <color=#A0522D><b>Punctured</b></color>.\n" +
-               $"At Level <color=green><b>5</b></color>, <color=green><b>+1</b></color> Piercing.";
+               $"Each hit applies <color=#A0522D><b>Punctured</b></color>.";
     }
 
     public override string GetPassiveDescription() =>
@@ -149,11 +151,11 @@ public class Cactus : Shooter
         int needleBase  = CactData?.path1NeedlesBase     ?? 8;
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
         string desc = details
-            ? $"Fires <color=green><b>[({needleBase}) + ({needleLevel}/Lvl.)]</b></color> needles in equal angles around itself, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per needle. Each hit applies <color=#A0522D><b>Punctured</b></color>.\nAt Level <color=green><b>5</b></color>, <color=green><b>+1</b></color> Piercing."
+            ? $"Fires <color=green><b>[({needleBase}) + ({needleLevel}/Lvl.)]</b></color> needles in equal angles around itself, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per needle. Each hit applies <color=#A0522D><b>Punctured</b></color>."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]\n\n" +
-               $"{Level5Section(path1Level)}\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=green><b>Piercing</b></color> by <color=green><b>2</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -165,10 +167,10 @@ public class Cactus : Shooter
             ? $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"<color=#A0522D>Punctured</color>: reduces Physical Resistance by <color=green><b>0.5%</b></color> per stack, lasts 8 seconds.\n\n" +
-               $"Increase <color=#A0522D>Punctured</color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+               $"<color=#A0522D><b>Punctured</b></color>: reduces <color=#00CED1><b>Armor</b></color> by <color=red><b>1</b></color> per stack, lasts 8 seconds.\n\n" +
+               $"Increase <color=#A0522D><b>Punctured</b></color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level)}\n\n" +
+               $"{Level5Section(path2Level, details ? $"Retaliation damage is increased by <color=#00CED1><b>33%</b></color> of the {GetName()}'s <color=#00CED1><b>Armor</b></color>." : $"Retaliation deals <color=#A0522D><b>+{armor * 0.33f:F0}</b></color> bonus damage.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -186,7 +188,7 @@ public class Cactus : Shooter
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path3Level)}\n\n" +
+               $"{Level5Section(path3Level, $"While <color=grey><b>Shielded</b></color>, <color=green><b>Total Attack Speed</b></color> is increased by <color=green><b>35%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

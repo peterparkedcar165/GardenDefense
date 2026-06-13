@@ -15,8 +15,15 @@ public abstract class ShieldEffect : StatusEffect
         effectType = Type.positive;
     }
 
-    public override string GetDescription() =>
-        $"Remaining Shield: [<color=grey><b>{amount:F0}/{originalAmount:F0}</b></color>]";
+    protected virtual float ShieldCap => originalAmount;
+    protected virtual string GetShieldDetails() => string.Empty;
+
+    public override string GetDescription()
+    {
+        string remaining = $"\n\nShield Health: [<color=grey><b>{amount:F0}/{ShieldCap:F0}</b></color>]";
+        string details = GetShieldDetails();
+        return string.IsNullOrEmpty(details) ? remaining.TrimStart() : $"{details}{remaining}";
+    }
 
     public override void OnApply()
     {

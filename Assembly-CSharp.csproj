@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\InsectDataTypes\DarklingBeetleData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FlammableEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\DrizzleBarrierEffect.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\Scripts\Environment\WaterZone.cs" />
     <Compile Include="Assets\Scripts\Skills\UpdraftField.cs" />

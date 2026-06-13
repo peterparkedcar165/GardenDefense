@@ -19,6 +19,8 @@ public class AquaticOvershieldEffect : ShieldEffect
         attacker.ApplyEffect(new WetEffect(attacker, 3f, 1, target));
     }
 
+    protected override float ShieldCap => cap;
+    protected override string GetShieldDetails() => $"<color=#A0522D><b>Physical Damage</b></color> dealt to this shield primes the attacker with <color=#1E90FF><b>Wet</b></color>.";
+
     public override string GetName() => "<color=#4FC3F7>Aquatic Overshield</color>";
-    public override string GetDescription() => $"Remaining Shield: [<color=grey><b>{amount:F0}/{cap}</b></color>]. Physical damage dealt to this shield primes the attacker with <color=#1E90FF>Wet</color>.";
 }

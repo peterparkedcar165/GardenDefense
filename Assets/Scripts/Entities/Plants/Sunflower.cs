@@ -178,7 +178,7 @@ public class Sunflower : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Reduce Total Attack Damage by <color=green><b>50%</b></color>. Attacks now shoot <color=green><b>3</b></color> projectiles to the target.")}\n\n" +
+               $"{Level5Section(path1Level, "Reduce <color=green><b>Total Attack Damage</b></color> by <color=green><b>50%</b></color>. Attacks now shoot <color=green><b>3</b></color> projectiles to the target.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }

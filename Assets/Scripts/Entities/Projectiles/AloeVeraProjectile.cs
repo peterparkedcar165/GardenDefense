@@ -118,8 +118,10 @@ public class AloeVeraProjectile : MonoBehaviour
         // ── Phase 2: Bob ───────────────────────────────────────────────────────────
         // Root continues tracking in case the target is still alive and moving.
         // Visual hovers and bobs gently at arcPeakHeight.
+        // For attack-mode projectiles, hold the bob until the target insect is on the ground.
         elapsed = 0f;
-        while (elapsed < bobDuration)
+        Insect trackedInsect = !isHealMode ? trackedTarget?.GetComponent<Insect>() : null;
+        while (elapsed < bobDuration || (trackedInsect != null && !trackedInsect.isOnGround))
         {
             elapsed += Time.deltaTime;
 
@@ -180,6 +182,7 @@ public class AloeVeraProjectile : MonoBehaviour
         foreach (Insect insect in new List<Insect>(Insect.allInsects))
         {
             if (insect == null || !insect.IsAlive) continue;
+            if (!insect.isOnGround) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= aoERadius)
                 insect.Damage(damage, damageType, elementalType, source, true,
                     new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile });

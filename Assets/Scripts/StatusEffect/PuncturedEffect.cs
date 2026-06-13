@@ -8,16 +8,16 @@ public class PuncturedEffect : StatusEffect
 
     public override void OnApply()
     {
-        target.armorAdder -= 0.5f * level;
+        target.armorAdder -= level;
     }
 
     public override void OnTick(float deltaTime) { }
 
     public override void OnExpire()
     {
-        target.armorAdder += 0.5f * level;
+        target.armorAdder += level;
     }
 
     public override string GetName() => "<color=#A0522D>Punctured</color>";
-    public override string GetDescription() => $"Armor reduced by <color=green><b>{level * 0.5f:F1}</b></color>.";
+    public override string GetDescription() => $"<color=#00CED1><b>Armor</b></color> reduced by <color=red><b>{level}</b></color>.";
 }

@@ -11,7 +11,7 @@ public class FractureEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#00FFFF>Fracture</color>";
-    public override string GetDescription() => $"Upon taking Physical Damage, deal an additional Fire Damage instance equal to <color=green><b>{bonusMultiplier * 100f:F0}%</b></color> of the original damage.";
+    public override string GetDescription() => $"Upon taking <color=#A0522D><b>Physical Damage</b></color>, deal an additional <color=orange><b>Fire Damage</b></color> instance equal to <color=green><b>{bonusMultiplier * 100f:F0}%</b></color> of the original damage.";
 
     public override void OnApply()
     {

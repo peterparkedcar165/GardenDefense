@@ -117,7 +117,7 @@ public class PoisonShroom : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=purple>Poison</color> damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=purple>Poison</color> duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "<color=purple><b>Poison</b></color> deals an additional <color=green><b>2%</b></color> of the target's <color=green><b>Max Health</b></color> as <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.")}\n\n" +
+               $"{Level5Section(path2Level, "<color=purple><b>Poison</b></color> deals an additional <color=green><b>2%</b></color> of the target's <color=green><b>Max Health</b></color> per second.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

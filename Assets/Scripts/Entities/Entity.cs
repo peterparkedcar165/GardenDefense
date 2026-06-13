@@ -71,7 +71,7 @@ public abstract class Entity : MonoBehaviour
     public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance;
     public float baseFireDamage, baseWaterDamage, baseNatureDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
     public float baseCriticalChance, baseCriticalDamage;
-    public float baseDotResistance, baseDotDamage;
+    public float baseDotResistance, baseDotDamage, baseFallDamageResistance;
     public float baseelementalAffinity;
     public float basePassiveDamage, baseSkillDamage, baseCoordinatedDamage;
     public float baseSkillDuration;
@@ -104,7 +104,7 @@ public abstract class Entity : MonoBehaviour
     public float physicalDamage, magicDamage, fallDamage, bonusEffectChance;
     public float fireDamage, waterDamage, natureDamage, windDamage, poisonDamage, iceDamage;
     public float criticalChance, criticalDamage;
-    public float dotResistance, dotDamage;
+    public float dotResistance, dotDamage, fallDamageResistance;
     public float elementalAffinity;
     public float passiveDamage, skillDamage, coordinatedDamage;
     public float skillDuration;
@@ -132,7 +132,7 @@ public abstract class Entity : MonoBehaviour
     public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder;
     public float fireDamageAdder, waterDamageAdder, natureDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
-    public float dotResistanceAdder, dotDamageAdder;
+    public float dotResistanceAdder, dotDamageAdder, fallDamageResistanceAdder;
     public float elementalAffinityAdder;
     public float passiveDamageAdder, skillDamageAdder, coordinatedDamageAdder;
     public float skillDurationAdder;
@@ -206,6 +206,7 @@ public abstract class Entity : MonoBehaviour
         bonusCritChanceReceived = baseBonusCritChanceReceived + bonusCritChanceReceivedAdder + (baseBonusCritChanceReceived * bonusCritChanceReceivedMultiplier);
         projectileSpeed = baseProjectileSpeed + projectileSpeedAdder + (baseProjectileSpeed * projectileSpeedMultiplier);
         dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
+        fallDamageResistance = baseFallDamageResistance + fallDamageResistanceAdder;
         dotDamage = baseDotDamage + dotDamageAdder + (baseDotDamage * dotDamageMultiplier);
         elementalAffinity = baseelementalAffinity + elementalAffinityAdder + (baseelementalAffinity * elementalAffinityMultiplier);
         passiveDamage = basePassiveDamage + passiveDamageAdder + (basePassiveDamage * passiveDamageMultiplier);

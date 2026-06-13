@@ -29,5 +29,5 @@ public class TailwindEffect : StatusEffect
 
     public override string GetName() => "<color=#B2EBF2>Tailwind</color>";
     public override string GetDescription() =>
-        $"Increase Attack Speed by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color> and Projectile Speed by <color=green><b>{projectileSpeedBonus * 100f:F0}%</b></color>.";
+        $"Increase <color=green><b>Attack Speed</b></color> by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color> and <color=green><b>Projectile Speed</b></color> by <color=green><b>{projectileSpeedBonus * 100f:F0}%</b></color>.";
 }
