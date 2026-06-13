@@ -23,11 +23,14 @@ public class Blizzard : MonoBehaviour
     private float beamStart = 0f;
     private float beamEnd   = 0f;
 
+    private bool _isGlobal;
+    private Transform _sourceTransform;
+
     [SerializeField] private SpriteRenderer visualRenderer;
 
     public void Initialize(Vector2 origin, Vector2 direction, float width, float duration,
                            float damage, int chillLevel, Plant source,
-                           float baseSlow, float slowPerLevel, float coolingPerSecond, float maxRange)
+                           float baseSlow, float slowPerLevel, float coolingPerSecond, float maxRange, bool isGlobal = false)
     {
         this.origin           = origin;
         this.direction        = direction.normalized;
@@ -40,6 +43,8 @@ public class Blizzard : MonoBehaviour
         this.slowPerLevel     = slowPerLevel;
         this.coolingPerSecond = coolingPerSecond;
         this.maxRange         = maxRange;
+        _isGlobal             = isGlobal;
+        _sourceTransform      = source != null ? source.transform : null;
 
         if (visualRenderer != null)
         {
@@ -57,6 +62,12 @@ public class Blizzard : MonoBehaviour
         {
             Destroy(gameObject);
             return;
+        }
+
+        if (_isGlobal && _sourceTransform != null)
+        {
+            transform.position = _sourceTransform.position;
+            origin = _sourceTransform.position;
         }
 
         tickTimer += Time.deltaTime;
@@ -94,19 +105,39 @@ public class Blizzard : MonoBehaviour
             if (duration > retractDuration)
             {
                 currentLength = Mathf.MoveTowards(currentLength, maxRange, (maxRange / extendDuration) * Time.deltaTime);
-                beamStart = 0f;
-                beamEnd   = currentLength;
-                visualRenderer.transform.localPosition = (Vector3)(direction * currentLength * 0.5f);
-                visualRenderer.transform.localScale    = new Vector3(currentLength, width, 1f);
+                if (_isGlobal)
+                {
+                    beamStart = -currentLength;
+                    beamEnd   = currentLength;
+                    visualRenderer.transform.localPosition = Vector3.zero;
+                    visualRenderer.transform.localScale    = new Vector3(currentLength * 2f, width, 1f);
+                }
+                else
+                {
+                    beamStart = 0f;
+                    beamEnd   = currentLength;
+                    visualRenderer.transform.localPosition = (Vector3)(direction * currentLength * 0.5f);
+                    visualRenderer.transform.localScale    = new Vector3(currentLength, width, 1f);
+                }
             }
             else
             {
                 float remainingLength = (duration / retractDuration) * maxRange;
-                float nearEdge = maxRange - remainingLength;
-                beamStart = nearEdge;
-                beamEnd   = maxRange;
-                visualRenderer.transform.localPosition = (Vector3)(direction * (nearEdge + remainingLength * 0.5f));
-                visualRenderer.transform.localScale    = new Vector3(remainingLength, width, 1f);
+                if (_isGlobal)
+                {
+                    beamStart = -remainingLength;
+                    beamEnd   = remainingLength;
+                    visualRenderer.transform.localPosition = Vector3.zero;
+                    visualRenderer.transform.localScale    = new Vector3(remainingLength * 2f, width, 1f);
+                }
+                else
+                {
+                    float nearEdge = maxRange - remainingLength;
+                    beamStart = nearEdge;
+                    beamEnd   = maxRange;
+                    visualRenderer.transform.localPosition = (Vector3)(direction * (nearEdge + remainingLength * 0.5f));
+                    visualRenderer.transform.localScale    = new Vector3(remainingLength, width, 1f);
+                }
             }
 
             Color c = visualRenderer.color;

@@ -24,6 +24,7 @@ public class Snowdrop : Aura
     private float blizzardDurationPerLevel  => SData?.blizzardDurationPerLevel  ?? 1f;
     private float blizzardCoolingMultiplier => SData?.blizzardCoolingMultiplier ?? 2f;
     private float BlizzardRange => (SData?.baseBlizzardRange ?? 10f) + (SData?.path3BlizzardRangePerLevel ?? 0.5f) * effectivePath3Level;
+    private const float GlobalBlizzardRange = 30f;
 
     protected override void Awake()
     {
@@ -80,10 +81,15 @@ public class Snowdrop : Aura
         Vector2 dir   = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
         float   angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-        blizzardIndicatorInstance.transform.SetPositionAndRotation(
-            transform.position + (Vector3)(dir * BlizzardRange * 0.5f),
-            Quaternion.Euler(0f, 0f, angle));
-        blizzardIndicatorInstance.transform.localScale = new Vector3(BlizzardRange, blizzardWidth, 1f);
+        bool globalIndicator = IsPath3Maxed;
+        float indicatorRange = globalIndicator ? GlobalBlizzardRange : BlizzardRange;
+        Vector3 indicatorCenter = globalIndicator
+            ? transform.position
+            : transform.position + (Vector3)(dir * indicatorRange * 0.5f);
+        float indicatorLength = globalIndicator ? indicatorRange * 2f : indicatorRange;
+
+        blizzardIndicatorInstance.transform.SetPositionAndRotation(indicatorCenter, Quaternion.Euler(0f, 0f, angle));
+        blizzardIndicatorInstance.transform.localScale = new Vector3(indicatorLength, blizzardWidth, 1f);
         blizzardIndicatorInstance.GetComponent<SpriteRenderer>().enabled = true;
 
         /* multi-slice obstacle clipping â€” re-enable when ready
@@ -168,8 +174,10 @@ public class Snowdrop : Aura
     private void OnTargetConfirmed(Vector3 targetPosition)
     {
         skillCooldownTimer = skillCooldown;
-        BeginChannel();   // can't attack while the blizzard is blowing
+        if (!IsPath3Maxed) BeginChannel();
         Vector2 direction  = ((Vector2)targetPosition - (Vector2)transform.position).normalized;
+        bool isGlobal = IsPath3Maxed;
+        float range = isGlobal ? GlobalBlizzardRange : BlizzardRange;
         _blizzardInstance  = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
         _blizzardInstance.GetComponent<Blizzard>()?.Initialize(
             transform.position, direction, blizzardWidth, skillDuration, blizzardDamage,
@@ -177,17 +185,19 @@ public class Snowdrop : Aura
             baseSlow    * blizzardChillMultiplier,
             scalingSlow * blizzardChillMultiplier,
             coolingPerSecond * blizzardCoolingMultiplier,
-            BlizzardRange);
+            range, isGlobal);
     }
 
     protected override void Attack()
     {
         base.Attack();
         List<Insect> inRange = GetInsectsInRange();
+        DamageTag[] tags = IsPath1Maxed
+            ? new DamageTag[] { DamageTag.Attack, DamageTag.AoE, DamageTag.DoT }
+            : new DamageTag[] { DamageTag.Attack, DamageTag.AoE };
         foreach (Insect insect in inRange)
         {
-            insect.Damage(attackDamage, damageType, elementalType, this, false,
-                new DamageTag[] { DamageTag.Attack, DamageTag.AoE });
+            insect.Damage(attackDamage, damageType, elementalType, this, false, tags);
         }
     }
 
@@ -226,7 +236,7 @@ public class Snowdrop : Aura
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level)}\n\n" +
+               $"{Level5Section(path1Level, "Attack damage is also considered to be <color=#9400D3><b>Damage Over Time</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -239,7 +249,7 @@ public class Snowdrop : Aura
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#00FFFF>Chill</color> level by <color=green><b>1</b></color> per level, adding <color=green><b>{scalingSlow * 100f:F0}%</b></color> slow per level. [<color=green><b>+{scalingSlow * 100f * effectivePath2Level:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level)}\n\n" +
+               $"{Level5Section(path2Level, "<color=#00FFFF>Chill</color> also reduces <color=#00FFFF><b>Ice Resistance</b></color> by <color=red><b>24%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -256,7 +266,7 @@ public class Snowdrop : Aura
                $"Increase Blizzard Duration by <color=green><b>{blizzardDurationPerLevel:F1}</b></color> seconds per level. [<color=green><b>+{blizzardDurationPerLevel * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase Blizzard Width by <color=green><b>{widthpl:F1}</b></color> per level. [<color=green><b>+{widthpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase Blizzard Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path3Level)}\n\n" +
+               $"{Level5Section(path3Level, "No longer channeling while the Blizzard is active. The Blizzard now extends <color=green><b>globally</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }
