@@ -13,6 +13,8 @@ public class FireWave : MonoBehaviour
     private Plant source;
     private Vector2 startPos;
     private readonly HashSet<Insect> _hit = new HashSet<Insect>();
+    private bool _returnsAfterEnd;
+    private bool _isReturning;
 
     // a 2d light that travels with the wave so the fire wall illuminates dark biomes
     private LightFader _lightFader;
@@ -24,7 +26,7 @@ public class FireWave : MonoBehaviour
 
     public void Initialize(Vector2 startPos, Vector2 direction, float speed, float width,
                            float thickness, float damage, float burnMultiplier, int flammableStacks,
-                           float travelDistance, Plant source)
+                           float travelDistance, Plant source, bool returnsAfterEnd = false)
     {
         this.startPos        = startPos;
         this.direction       = direction.normalized;
@@ -37,6 +39,7 @@ public class FireWave : MonoBehaviour
         this.flammableStacks = flammableStacks;
         this.travelDistance  = travelDistance;
         this.source          = source;
+        _returnsAfterEnd     = returnsAfterEnd;
 
         transform.position = startPos;
         float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;
@@ -99,7 +102,23 @@ public class FireWave : MonoBehaviour
         }
 
         if (Vector2.Distance(startPos, transform.position) >= travelDistance)
-            DestroyWave();
+        {
+            if (_returnsAfterEnd && !_isReturning)
+            {
+                _isReturning     = true;
+                _returnsAfterEnd = false;
+                direction        = -direction;
+                perp             = -perp;
+                startPos         = (Vector2)transform.position;
+                _hit.Clear();
+                float returnAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0f, 0f, returnAngle);
+            }
+            else
+            {
+                DestroyWave();
+            }
+        }
     }
 
     private void DestroyWave()

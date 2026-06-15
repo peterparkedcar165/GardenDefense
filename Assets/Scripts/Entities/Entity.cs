@@ -81,11 +81,12 @@ public abstract class Entity : MonoBehaviour
     public float baseCounterDamage;
     public float baseDebuffGivenDuration, baseBuffGivenDuration, baseBuffReceivedDuration, baseDebuffReceivedDuration;
     public float baseEvasion, baseAccuracy;
-    public float baseBonusCritChanceReceived, baseProjectileSpeed;
+    public float baseBonusCritChanceReceived, baseBonusCritDamageReceived, baseProjectileSpeed;
 
     public static event System.Action<Plant, Insect, DamageTag[]> OnPlantAttackHit;
     public static event System.Action<EntityEventData> OnEntityHit;
     public static event System.Action<StatusEffect> OnEffectApplied;
+    public static event System.Action<Entity, Entity> OnCriticalHit;
     public static event System.Action<EntityEventData> OnEntityKilled;
     public static event System.Action<EntityEventData> OnEntityDied;
     public static event System.Action<EntityEventData> OnHeal;
@@ -122,7 +123,7 @@ public abstract class Entity : MonoBehaviour
     public bool debuffsFrozen;
     public bool bypassShields;
     public float evasion, accuracy;
-    public float bonusCritChanceReceived, projectileSpeed;
+    public float bonusCritChanceReceived, bonusCritDamageReceived, projectileSpeed;
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -144,7 +145,7 @@ public abstract class Entity : MonoBehaviour
     public float counterDamageAdder;
     public float debuffGivenDurationAdder, buffGivenDurationAdder, buffReceivedDurationAdder, debuffReceivedDurationAdder;
     public float evasionAdder, accuracyAdder;
-    public float bonusCritChanceReceivedAdder, projectileSpeedAdder;
+    public float bonusCritChanceReceivedAdder, bonusCritDamageReceivedAdder, projectileSpeedAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -204,6 +205,7 @@ public abstract class Entity : MonoBehaviour
         criticalChance = (baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier)) * criticalChanceTotalMultiplier;
         criticalDamage = (baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier)) * criticalDamageTotalMultiplier;
         bonusCritChanceReceived = baseBonusCritChanceReceived + bonusCritChanceReceivedAdder + (baseBonusCritChanceReceived * bonusCritChanceReceivedMultiplier);
+        bonusCritDamageReceived = baseBonusCritDamageReceived + bonusCritDamageReceivedAdder;
         projectileSpeed = baseProjectileSpeed + projectileSpeedAdder + (baseProjectileSpeed * projectileSpeedMultiplier);
         dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
         fallDamageResistance = baseFallDamageResistance + fallDamageResistanceAdder;
@@ -481,8 +483,9 @@ public abstract class Entity : MonoBehaviour
         {
             if (Random.value < source.criticalChance + bonusCritChanceReceived)
             {
-                finalDamage *= source.criticalDamage;
+                finalDamage *= source.criticalDamage * (1f + bonusCritDamageReceived);
                 isCrit = true;
+                OnCriticalHit?.Invoke(source, this);
             }
         }
 

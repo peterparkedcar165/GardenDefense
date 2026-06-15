@@ -8,6 +8,8 @@ public class OleandicToxinEffect : StatusEffect
     // display names of each captured effect, in capture order
     public List<string> immuneNames = new List<string>();
     private float baseDuration;
+    private int _magicArmorReduction = 0;
+    private const float MagicArmorPerLock = 8f;
 
     public OleandicToxinEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)
@@ -19,6 +21,7 @@ public class OleandicToxinEffect : StatusEffect
     public override void OnApply()
     {
         CleanseRandomBuff();
+        SyncMagicArmorReduction();
     }
 
     // called on reapplication instead of creating a new instance
@@ -28,6 +31,7 @@ public class OleandicToxinEffect : StatusEffect
         source = newSource;
         duration = baseDuration;
         CleanseRandomBuff();
+        SyncMagicArmorReduction();
     }
 
     // called from Entity.ApplyEffect when a positive effect is being applied to this target
@@ -43,6 +47,7 @@ public class OleandicToxinEffect : StatusEffect
         immuneTypes.Add(t);
         immuneNames.Add(name);
         SpawnCaptureIndicator(name, 0f);
+        SyncMagicArmorReduction();
         return true;
     }
 
@@ -76,21 +81,44 @@ public class OleandicToxinEffect : StatusEffect
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, yOffset, 0f), $"Captured: {buffName}", new Color(0.6f, 0.2f, 0.8f));
     }
 
+    private void SyncMagicArmorReduction()
+    {
+        if (!(source is NeriumOleander oleander) || !oleander.IsPath2Maxed) return;
+        int expected = (int)(immuneTypes.Count * MagicArmorPerLock);
+        int delta = expected - _magicArmorReduction;
+        if (delta <= 0) return;
+        target.magicArmorAdder -= delta;
+        _magicArmorReduction += delta;
+    }
+
     public override void OnTick(float deltaTime) { }
-    public override void OnExpire() { }
+
+    public override void OnExpire()
+    {
+        if (_magicArmorReduction > 0)
+        {
+            target.magicArmorAdder += _magicArmorReduction;
+            _magicArmorReduction = 0;
+        }
+    }
 
     public override string GetName() => "<color=#9B59B6>Oleandic Toxin</color>";
     public override string GetDescription()
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("Cleanses a random buff, and prevents them from receiving that buff while the effect is active.");
-        if (immuneNames.Count == 0)
-            sb.AppendLine("Waiting to capture a buff.");
 
-        if (immuneNames.Count > 0)
+        if (source is NeriumOleander oleander && oleander.IsPath2Maxed && immuneTypes.Count > 0)
+            sb.AppendLine($"Decrease <color=#FF69B4><b>Magic Armor</b></color> by <color=#FF69B4><b>{immuneTypes.Count * (int)MagicArmorPerLock}</b></color>.");
+
+        if (immuneNames.Count == 0)
+        {
+            sb.AppendLine("Waiting to capture a buff.");
+        }
+        else
         {
             sb.AppendLine();
-            sb.AppendLine("<color=#9B59B6><b><u>Buffs Captured:</u></b></color>");
+            sb.AppendLine($"<color=#9B59B6><b><u>Buffs Captured:</u></b></color> [<b>{immuneNames.Count}</b>]");
             foreach (string name in immuneNames)
                 sb.AppendLine($"[{name}]");
         }

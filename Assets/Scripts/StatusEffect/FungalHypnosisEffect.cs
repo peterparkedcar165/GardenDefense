@@ -7,6 +7,7 @@ public class FungalHypnosisEffect : HypnotizedEffect
 {
     private readonly Plant plant;
     private readonly float healthMultiplier, attackMultiplier, moveSlow;
+    private readonly bool _reversesAtSpawn;
 
     public FungalHypnosisEffect(Entity target, Plant plant, float healthMultiplier, float attackMultiplier, float moveSlow)
         : base(target, plant)
@@ -15,6 +16,7 @@ public class FungalHypnosisEffect : HypnotizedEffect
         this.healthMultiplier = healthMultiplier;
         this.attackMultiplier = attackMultiplier;
         this.moveSlow         = moveSlow;
+        _reversesAtSpawn      = plant is GhostFungus gf && gf.IsPath3Maxed;
     }
 
     protected override string IndicatorLabel => "Fungal Hypnosis";
@@ -35,6 +37,7 @@ public class FungalHypnosisEffect : HypnotizedEffect
 
         insect.attackDamageType     = DamageType.Physical;
         insect.attackSourceOverride = plant;
+        if (_reversesAtSpawn) insect.reversesAtSpawn = true;
     }
 
     // only runs if the marker is explicitly removed (it never expires on its own); undo the boosts,

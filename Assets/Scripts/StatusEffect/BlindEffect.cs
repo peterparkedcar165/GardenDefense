@@ -9,6 +9,8 @@ public class BlindEffect : StatusEffect
         this.accuracyPenalty = accuracyPenalty;
     }
 
+    public void RefreshDuration(float newDuration) => duration = newDuration;
+
     public override void OnApply()
     {
         target.accuracyAdder -= accuracyPenalty;

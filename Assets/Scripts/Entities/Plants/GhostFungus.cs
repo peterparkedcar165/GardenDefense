@@ -283,7 +283,7 @@ public class GhostFungus : Shooter
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Shroomlet Attack Damage</b></color> by <color=green><b>{sadpl:F0}</b></color> per level. [<color=green><b>+{sadpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Shroomlet Attack Speed</b></color> by <color=green><b>{saspl:F2}</b></color> per level. [<color=green><b>+{saspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level)}\n\n" +
+               $"{Level5Section(path1Level, "Each attack hit reduces the <color=green><b>Passive Cooldown</b></color> by <color=green><b>1s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -301,7 +301,7 @@ public class GhostFungus : Shooter
                $"Conjure <color=green><b>{spl}</b></color> additional Ghost Shroomlet per level. [<color=green><b>+{spl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase Shroomlet Health by <color=green><b>{shpl:F0}</b></color> per level. [<color=green><b>+{shpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Reduce spawn cooldown by <color=green><b>{cdpl:F1}</b></color> seconds per level. [<color=green><b>-{cdpl * effectivePath2Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path2Level)}\n\n" +
+               $"{Level5Section(path2Level, "When a <color=#B0E0E6>Ghost Shroomlet</color> dies, it explodes, dealing <color=green><b>3x</b></color> its <color=green><b>Attack Damage</b></color> to nearby insects.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -328,7 +328,7 @@ public class GhostFungus : Shooter
                $"Increase <color=green>Max Health</color> bonus by <color=green><b>{hpl * 100f:F0}%</b></color> per level. [<color=green><b>+{hpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green>Attack Damage</color> bonus by <color=green><b>{apl * 100f:F0}%</b></color> per level. [<color=green><b>+{apl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Movement Speed reduction by <color=green><b>{mpl * 100f:F0}%</b></color> per level. [<color=green><b>+{mpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path3Level)}\n\n" +
+               $"{Level5Section(path3Level, "When a <color=#00FFFF>hypnotized</color> insect reaches the beginning of the path, it walks back towards the end.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

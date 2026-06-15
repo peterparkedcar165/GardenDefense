@@ -870,8 +870,8 @@ public abstract class Plant : Entity, IAttackable
     // proportionally more to scale. base is the first level price as a fraction
     // of buy cost, step is the exponential multiplier/Lvl.
     const float upgradeBaseFactor = 0.2f;
-    const float upgradeStepFactor = 2f;
-    const float skillBaseFactor   = 0.3f;  // path 3 unlocks the skill so it costs a bit more
+    const float upgradeStepFactor = 2.5f;
+    const float skillBaseFactor   = 0.25f;
 
     int PathCost(int level, float baseFactor) => Mathf.RoundToInt(sunCost * baseFactor * Mathf.Pow(upgradeStepFactor, level));
 

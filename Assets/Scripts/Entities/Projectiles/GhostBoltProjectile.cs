@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 // the Ghost Fungus' attack: a spectral bolt that damages the first insect hit
@@ -18,5 +19,7 @@ public class GhostBoltProjectile : Projectile
     {
         insect.Damage(projectileDamage, damageType, elementalType, source, true,
             new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
+        if (source is GhostFungus gf && gf.IsPath1Maxed)
+            gf.passiveCooldownTimer = Mathf.Max(0f, gf.passiveCooldownTimer - 1f);
     }
 }

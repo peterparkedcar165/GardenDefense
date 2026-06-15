@@ -20,6 +20,7 @@ public class StatsPanelTooltip : MonoBehaviour
     private const string Physical = "<color=#A0522D>";
     private const string DoT      = "<color=grey>";
     private const string Gold     = "<color=white>";
+    private const string Crit     = "<color=#FFD700>";
     private const string HealCol  = "<color=#FF6B81>";
     private const string Passive  = "<color=#FFB347>";
     private const string Blue     = "<color=#6495ED>";
@@ -87,8 +88,8 @@ public class StatsPanelTooltip : MonoBehaviour
             Line(sb, "Move Speed:", $"{insect.movementSpeed:F2}", insect.movementSpeed, insect.baseMovementSpeed);
         if (e is Plant plant)
             ElemLine(sb, Nature, "Projectile Speed:", $"{e.projectileSpeed:F1}", e.projectileSpeed, e.baseProjectileSpeed);
-        ElemLine(sb, Nature, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
-        ElemLine(sb, Nature, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
+        ElemLine(sb, Crit, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
+        ElemLine(sb, Crit, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
         sb.AppendLine();
         ElemLine(sb, Magic, "Magic Power:", $"{e.magicPower:F0}", e.magicPower, e.baseMagicPower);
         if (e is Plant plant2)

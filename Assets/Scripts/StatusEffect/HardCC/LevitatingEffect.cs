@@ -6,6 +6,8 @@ public class LevitatingEffect : Airborne
 {
     private readonly float critBonus;
     private Insect insect;
+    private const float CritDamageBonus = 0.25f;
+    private bool _increasesCritDamage;
 
     public LevitatingEffect(Entity target, float duration, int level, Entity source, float critBonus)
         : base(target, duration, level, source)
@@ -19,6 +21,8 @@ public class LevitatingEffect : Airborne
         insect = target as Insect;
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Levitating", new Color(0.7f, 0.92f, 1f));
         target.bonusCritChanceReceivedAdder += critBonus;
+        _increasesCritDamage = source is MorningGlory mg && mg.IsPath3Maxed;
+        if (_increasesCritDamage) target.bonusCritDamageReceivedAdder += CritDamageBonus;
         // credit the lifter for the fall damage the insect takes when it drops back down
         if (insect != null) insect.fallDamageSource = source;
     }
@@ -26,6 +30,7 @@ public class LevitatingEffect : Airborne
     public override void OnExpire()
     {
         target.bonusCritChanceReceivedAdder -= critBonus;
+        if (_increasesCritDamage) target.bonusCritDamageReceivedAdder -= CritDamageBonus;
     }
 
     public override void OnTick(float deltaTime)
@@ -36,6 +41,12 @@ public class LevitatingEffect : Airborne
     }
 
     public override string GetName() => "<color=#B2EBF2>Levitating</color>";
-    public override string GetDescription() =>
-        $"Suspended helplessly in the air. Takes <color=#FFD700><b>+{critBonus * 100f:F0}%</b></color> Critical Chance from all incoming damage.";
+    public override string GetDescription()
+    {
+        string desc = $"Suspended helplessly in the air. Takes <color=#FFD700><b>+{critBonus * 100f:F0}%</b></color> <color=#FFD700><b>Critical Chance</b></color> from all incoming damage";
+        desc += _increasesCritDamage
+            ? $", and <color=#FFD700><b>+{CritDamageBonus * 100f:F0}%</b></color> <color=#FFD700><b>Critical Damage</b></color>."
+            : ".";
+        return desc;
+    }
 }

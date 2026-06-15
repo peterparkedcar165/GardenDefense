@@ -21,16 +21,16 @@ MonoBehaviour:
   damageType: 0
   sunCost: 155
   baseMaxHealth: 200
-  baseAttackDamage: 28
+  baseAttackDamage: 24
   baseMagicPower: 0
   baseAttackSpeed: 1.25
   baseAttackRange: 99
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -74,7 +78,7 @@ MonoBehaviour:
   baseSkillDamage: 0
   groundDuration: 6
   baseCritDamageConversion: 1
-  path1AttackDamagePerLevel: 9
+  path1AttackDamagePerLevel: 7
   path1AttackSpeedPerLevel: 0.07
   baseCritChanceBonus: 0.15
   path2CritChancePerLevel: 0.08
@@ -82,7 +86,8 @@ MonoBehaviour:
   path2CritDamageConversionPerLevel: 0.5
   skillLaneLength: 30
   skillLaneWidth: 0.3
-  skillCritGrant: 0.5
+  baseSkillCritGrant: 0.5
+  path3CritGrantPerLevel: 0.1
   baseSkillAttackSpeedBonus: 2
   path3AttackSpeedPerLevel: 0.25
   path3DurationPerLevel: 1

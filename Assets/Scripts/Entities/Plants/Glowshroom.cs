@@ -54,7 +54,7 @@ public class Glowshroom : Shooter
         if (mainTarget != null && mainTarget.IsAlive)
             mainTarget.ApplyEffect(new FungalGlowEffect(mainTarget, FungalGlowDuration, 1, this, SpreadRadius));
 
-        // splash damage + Fungal Glow to nearby insects
+        // splash damage to nearby insects
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
         foreach (Insect insect in snapshot)
         {
@@ -64,7 +64,7 @@ public class Glowshroom : Shooter
             {
                 insect.Damage(attackDamage * SplashMult, damageType, elementalType, this, false,
                     new DamageTag[] { DamageTag.AoE });
-                if (insect.IsAlive)
+                if (insect.IsAlive && IsPath1Maxed)
                     insect.ApplyEffect(new FungalGlowEffect(insect, FungalGlowDuration, 1, this, SpreadRadius));
             }
         }
@@ -91,7 +91,25 @@ public class Glowshroom : Shooter
                 insect.ApplyEffect(new BlindEffect(insect, BlindDuration, 1, this, BlindPenalty));
         }
 
-        yield return new WaitForSeconds(skillDuration);
+        float elapsed = 0f;
+        while (elapsed < skillDuration)
+        {
+            elapsed += Time.deltaTime;
+            if (IsPath3Maxed)
+            {
+                foreach (Insect insect in new List<Insect>(Insect.allInsects))
+                {
+                    if (insect == null || !insect.IsAlive) continue;
+                    if (Vector3.Distance(transform.position, insect.transform.position) > expandedRange) continue;
+                    BlindEffect existing = insect.GetEffect<BlindEffect>();
+                    if (existing != null)
+                        existing.RefreshDuration(BlindDuration);
+                    else
+                        insect.ApplyEffect(new BlindEffect(insect, BlindDuration, 1, this, BlindPenalty));
+                }
+            }
+            yield return null;
+        }
 
         // ramp the bonus back down so the light radius shrinks smoothly instead of snapping
         float fadeDuration = 1f;
@@ -162,7 +180,7 @@ public class Glowshroom : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level)}\n\n" +
+               $"{Level5Section(path1Level, "Splash damage now applies <color=#88FF88>Fungal Glow</color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -177,7 +195,7 @@ public class Glowshroom : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#88FF88>Fungal Glow</color> duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase spread radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath2Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path2Level)}\n\n" +
+               $"{Level5Section(path2Level, "<color=#88FF88>Fungal Glow</color> reduces <color=green><b>Nature Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=green><b>22%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -193,7 +211,7 @@ public class Glowshroom : Shooter
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=#DDDDDD>Blind</color> duration by <color=green><b>{blindpl:F1}</b></color> seconds per level. [<color=green><b>+{blindpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path3Level)}\n\n" +
+               $"{Level5Section(path3Level, "Blind applies continuously while the skill is active.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

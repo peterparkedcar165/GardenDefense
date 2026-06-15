@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 // summoned by the Ghost Fungus. it holds at a fixed point and only pursues enemies that are
 // within the FUNGUS' attack range (a leash). when no such enemy exists it walks back to its hold
@@ -6,6 +7,7 @@ using UnityEngine;
 // the hover/select range circle is handled generically by Minion (rangeCircle + owner)
 public class GhostShroomlet : Minion
 {
+    private const float ExplosionRadius = 1.5f;
     private const float RegenPercent  = 0.05f;   // out of combat: regenerate 5% of max health
     private const float RegenInterval = 2f;      // ...per 2 seconds
     private const float LeashMultiplier = 1.25f; // can chase out to 1.25x the fungus' attack range
@@ -104,6 +106,31 @@ public class GhostShroomlet : Minion
         holdPoint    = newHold;
         holdSet      = true;
         _relocating  = true;
+    }
+
+    public override void Kill(Entity source)
+    {
+        if (!isDying && _fungus != null && _fungus.IsPath2Maxed)
+            ExplodeOnDeath();
+        base.Kill(source);
+    }
+
+    public override void Kill()
+    {
+        if (!isDying && _fungus != null && _fungus.IsPath2Maxed)
+            ExplodeOnDeath();
+        base.Kill();
+    }
+
+    private void ExplodeOnDeath()
+    {
+        float dmg = attackDamage * 3f;
+        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        {
+            if (insect == null || !insect.IsAlive || insect.team == Team.Friendly) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) <= ExplosionRadius)
+                insect.Damage(dmg, DamageType.Physical, ElementalType.Ice, _fungus, false, new DamageTag[] { DamageTag.AoE });
+        }
     }
 
     public override string GetName() => "<color=#B0E0E6>Ghost Shroomlet</color>";

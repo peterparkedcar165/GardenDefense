@@ -124,6 +124,13 @@ public class MorningGlory : Shooter
         obj.GetComponent<UpdraftField>()?.Initialize(position, FieldRadius, FieldDuration, LiftForce, LiftMaxHeight, LevitateCritBonus, this);
     }
 
+    public override void UpdateStats()
+    {
+        if (IsPath1Maxed) piercingAdder += 1;
+        base.UpdateStats();
+        if (IsPath1Maxed) piercingAdder -= 1;
+    }
+
     public override void OnPath1Upgrade(int level)
     {
         baseAttackDamage = data.baseAttackDamage + (MGData?.path1AttackDamagePerLevel ?? 4f)  * level;
@@ -143,12 +150,12 @@ public class MorningGlory : Shooter
 
     public override string GetPassiveDescription() =>
         $"The {GetName()} and nearby other plants are granted <color=#B2EBF2><b>Tailwind</b></color>, which grants " +
-        $"<color=green><b>+{AttackSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{AttackSpeedBonusMP * 100f:F0}%</b></color>] Attack Speed and " +
-        $"<color=green><b>+{ProjectileSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ProjectileSpeedBonusMP * 100f:F0}%</b></color>] Projectile Speed.";
+        $"<color=green><b>+{AttackSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{AttackSpeedBonusMP * 100f:F0}%</b></color>] <color=green><b>Attack Speed</b></color> and " +
+        $"<color=green><b>+{ProjectileSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ProjectileSpeedBonusMP * 100f:F0}%</b></color>] <color=green><b>Projectile Speed</b></color>.";
 
     public override string GetSkillDesription() =>
         $"Summons an updraft field with a radius of <color=green><b>{FieldRadius:F1}</b></color> for <color=green><b>{FieldDuration:F0}s</b></color>. " +
-        $"Insects inside are kept airborne and <color=#B2EBF2><b>Levitating</b></color>, taking <color=#FFD700><b>+{LevitateCritBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{LevitateCritBonusMP * 100f:F0}%</b></color>] Critical Chance from all damage, until they land.";
+        $"Insects inside are kept airborne and <color=#B2EBF2><b>Levitating</b></color>, taking <color=green><b>+{LevitateCritBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{LevitateCritBonusMP * 100f:F0}%</b></color>] <color=#FFD700><b>Critical Chance</b></color> from all damage, until they land.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -160,7 +167,7 @@ public class MorningGlory : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level)}\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=green><b>Piercing</b></color> by <color=green><b>1</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -177,9 +184,9 @@ public class MorningGlory : Shooter
               $"<color=green><b>[({MGData?.baseProjectileSpeedBonus ?? 0.15f:F0}%) + ({pspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{psMP * 100f:F0}% Magic Power</color>]</b></color> Projectile Speed."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase Projectile Speed bonus by <color=green><b>{pspl * 100f:F0}%</b></color> per level. [<color=green><b>+{pspl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level)}\n\n" +
+               $"Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Projectile Speed</b></color> bonus by <color=green><b>{pspl * 100f:F0}%</b></color> per level. [<color=green><b>+{pspl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(path2Level, "<color=#B2EBF2>Tailwind</color> also increases <color=green><b>Accuracy</b></color> by <color=green><b>40%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -196,10 +203,10 @@ public class MorningGlory : Shooter
               $"<color=#FFD700><b>[({MGData?.baseLevitateCritBonus ?? 0.25f:F0}%) + ({critpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{critMP * 100f:F0}% Magic Power</color>]</b></color> increased Critical Chance."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase field duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase Levitating Critical Chance by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase field radius by <color=green><b>{radpl:F1}</b></color> per level. [<color=green><b>+{radpl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path3Level)}\n\n" +
+               $"Increase <color=green><b>Field Duration</b></color> by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase <color=#B2EBF2>Levitating</color> <color=#FFD700><b>Critical Chance</b></color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Field Radius</b></color> by <color=green><b>{radpl:F1}</b></color> per level. [<color=green><b>+{radpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(path3Level, "<color=#B2EBF2>Levitating</color> also increases <color=#FFD700><b>Critical Damage</b></color> taken by <color=green><b>25%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

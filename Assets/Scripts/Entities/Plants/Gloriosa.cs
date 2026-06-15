@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Gloriosa : Plant
+public class Gloriosa : Shooter
 {
     private GloriosaData GData => data as GloriosaData;
 
@@ -51,22 +51,15 @@ public class Gloriosa : Plant
     {
         base.Update();
         UpdateHighlights();
-        attackCooldown = 1f / Mathf.Max(attackSpeed, 0.01f);
-
-        if (IsStunned || IsChanneling) return;
-
-        if (attackCooldownTimer < attackCooldown)
-            attackCooldownTimer += Time.deltaTime;
-        else
-        {
-            _currentTarget = FindCurrentTarget();
-            if (_currentTarget != null)
-            {
-                attackCooldownTimer = 0f;
-                SpawnEmber();
-            }
-        }
     }
+
+    protected override GameObject FindTarget()
+    {
+        _currentTarget = FindCurrentTarget();
+        return _currentTarget != null ? ((Entity)_currentTarget).gameObject : null;
+    }
+
+    protected override void Shoot(Vector3 target) => SpawnEmber();
 
     // public so EmberProjectile can retarget when its current target dies
     public IAttackable FindCurrentTarget()
@@ -112,15 +105,14 @@ public class Gloriosa : Plant
     private void SpawnEmber()
     {
         if (emberPrefab == null || _currentTarget == null) return;
-        GameObject obj       = Instantiate(emberPrefab, transform.position, Quaternion.identity);
+        GameObject obj        = Instantiate(emberPrefab, transform.position, Quaternion.identity);
         EmberProjectile ember = obj.GetComponent<EmberProjectile>();
         ember.Initialize(this, _currentTarget,
             data?.baseProjectileSpeed ?? 5f,
-            healAmount,
-            temperatureAmount,
-            GData?.auraRadius    ?? 1.5f,
-            attackDamage,
-            damageType, elementalType);
+            healAmount, temperatureAmount,
+            GData?.auraRadius ?? 1.5f,
+            attackDamage, damageType, elementalType);
+        if (IsPath1Maxed) ember.SetBouncesRemaining(piercing);
     }
 
     public override void ActivateSkill()
@@ -130,8 +122,24 @@ public class Gloriosa : Plant
             w.Despawn();
         _activeWisps.Clear();
         int count = GData?.wispCount ?? 2;
+        if (IsPath3Maxed) count++;
         for (int i = 0; i < count; i++)
             SpawnWisp();
+    }
+
+    public void SpawnBounceEmber(Vector3 fromPos, IAttackable target, int bouncesRemaining)
+    {
+        if (emberPrefab == null || target == null) return;
+        GameObject obj    = Instantiate(emberPrefab, fromPos, Quaternion.identity);
+        EmberProjectile e = obj.GetComponent<EmberProjectile>();
+        if (e == null) return;
+        e.Initialize(this, target,
+            data?.baseProjectileSpeed ?? 5f,
+            healAmount, temperatureAmount,
+            GData?.auraRadius ?? 1.5f,
+            attackDamage, damageType, elementalType);
+        e.SetBouncesRemaining(bouncesRemaining);
+        e.MarkAsBounce();
     }
 
     public void UnregisterWisp(FieryWisp wisp) => _activeWisps.Remove(wisp);
@@ -244,7 +252,7 @@ public class Gloriosa : Plant
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{speedpl:F2}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level)}\n\n" +
+               $"{Level5Section(path1Level, "When targeting a friendly unit, the projectile bounces to the most injured friendly unit. If all are at full health, it targets the coldest plant instead.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -261,7 +269,7 @@ public class Gloriosa : Plant
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Healing</b></color> by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase temperature regulation by <color=green><b>{temppl:F1}</b></color> per level. [<color=green><b>+{temppl * effectivePath2Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path2Level)}\n\n" +
+               $"{Level5Section(path2Level, $"Healing applies <color=orange><b>Heated Comfort</b></color>, regenerating the full amount of health and temperature over <color=green><b>4s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -294,7 +302,7 @@ public class Gloriosa : Plant
                $"Increase latch healing by <color=green><b>{lhealpl:F0}</b></color> per second per level. [<color=green><b>+{lhealpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase latch <color=orange>Fire</color> bonus by <color=orange><b>{lfirepl * 100f:F0}%</b></color> per level. [<color=orange><b>+{lfirepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase latch duration by <color=green><b>{ldurpl:F1}</b></color> seconds per level. [<color=green><b>+{ldurpl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path3Level)}\n\n" +
+               $"{Level5Section(path3Level, $"Summons an additional <color=orange><b>Fiery Wisp</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

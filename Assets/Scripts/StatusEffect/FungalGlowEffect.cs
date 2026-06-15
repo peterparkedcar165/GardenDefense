@@ -7,6 +7,8 @@ public class FungalGlowEffect : StatusEffect
     private readonly float originalDuration;
     private LightFader _fader;
     private const float LightRadius = 1.2f;
+    private const float ResistanceReduction = 0.22f;
+    private bool _reducesResistances;
 
     public FungalGlowEffect(Entity target, float duration, int level, Entity source, float spreadRadius = 2f)
         : base(target, duration, level, source)
@@ -28,6 +30,13 @@ public class FungalGlowEffect : StatusEffect
             // is treated as illuminated in pitch black cave levels
             DarknessManager.UnregisterLightSource(_fader.transform);
             DarknessManager.RegisterLightSource(_fader.transform, LightRadius);
+        }
+
+        _reducesResistances = source is Glowshroom gm && gm.IsPath2Maxed;
+        if (_reducesResistances)
+        {
+            target.natureResistanceAdder -= ResistanceReduction;
+            target.waterResistanceAdder  -= ResistanceReduction;
         }
     }
 
@@ -65,6 +74,12 @@ public class FungalGlowEffect : StatusEffect
             DarknessManager.UnregisterLightSource(_fader.transform);
             _fader.FadeOut(0.5f);
         }
+
+        if (_reducesResistances)
+        {
+            target.natureResistanceAdder += ResistanceReduction;
+            target.waterResistanceAdder  += ResistanceReduction;
+        }
     }
 
     public override void OnTargetDied()
@@ -94,6 +109,12 @@ public class FungalGlowEffect : StatusEffect
     }
 
     public override string GetName() => "<color=#88FF88>Fungal Glow</color>";
-    public override string GetDescription() =>
-        $"Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration and spreads this effect to nearby insects within <color=green><b>{spreadRadius:F1}</b></color> radius.";
+    public override string GetDescription()
+    {
+        string desc = $"Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration and spreads this effect to nearby insects within <color=green><b>{spreadRadius:F1}</b></color> radius";
+        desc += _reducesResistances
+            ? $", and reduces <color=green><b>Nature Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=red><b>22%</b></color>."
+            : ".";
+        return desc;
+    }
 }

@@ -656,10 +656,16 @@ public abstract class Insect : Entity, IAttackable
         enemy.ApplyEffect(new EngagedEffect(enemy, EngageHold, 1, this, this));
     }
 
+    // set by FungalHypnosisEffect when the Ghost Fungus is path3 maxed
+    public bool reversesAtSpawn;
+    // true after reversesAtSpawn fires: the insect walks forward along the path again as a friendly
+    public bool advancingAsFriendly;
+
     // what a friendly does when it has no target. default: retreat if hypnotized, else hold still
     protected virtual void FriendlyIdle()
     {
         if (movingBackward) MoveBackward();
+        else if (advancingAsFriendly) MoveForwardAsFriendly();
     }
 
     // friendlies that retreat walk back toward the previous waypoint, looking for a fight. once
@@ -685,9 +691,37 @@ public abstract class Insect : Entity, IAttackable
 
         if (Vector3.Distance(transform.position, targetPos) < 0.1f)
         {
-            if (currentWaypointIndex > 0) currentWaypointIndex--;
-            else QuietDeath();            // reached the spawn point: despawn (and clean up its engagements)
+            if (currentWaypointIndex > 0)
+            {
+                currentWaypointIndex--;
+            }
+            else if (reversesAtSpawn)
+            {
+                movingBackward    = false;
+                advancingAsFriendly = true;
+                currentWaypointIndex = 0;
+            }
+            else
+            {
+                QuietDeath();
+            }
         }
+    }
+
+    // walks forward along the path as a friendly (after reversing at spawn). despawns on reaching the end
+    private void MoveForwardAsFriendly()
+    {
+        if (waypoints == null || waypoints.Length == 0) return;
+        if (currentWaypointIndex >= waypoints.Length) { QuietDeath(); return; }
+
+        Transform wp = waypoints[currentWaypointIndex];
+        if (wp == null) return;
+        Vector3 targetPos = wp.position + new Vector3(pathOffset.x, pathOffset.y, 0);
+        Vector3 dir = (targetPos - transform.position).normalized;
+        transform.position += dir * GetMoveSpeed() * Time.deltaTime;
+
+        if (Vector3.Distance(transform.position, targetPos) < 0.1f)
+            currentWaypointIndex++;
     }
 
     protected virtual void ReachObjective()
