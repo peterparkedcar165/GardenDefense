@@ -421,7 +421,7 @@ MonoBehaviour:
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: d2d7e88c28bd3ea42acf4813979dd1d3, type: 2}
   occupiedTile: {fileID: 0}
-  selfPrefab: {fileID: 0}
+  selfPrefab: {fileID: 2387982406283412628}
   circleRadius: {fileID: 2223205672080502255}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2

@@ -129,6 +129,7 @@ public class SaveManager : MonoBehaviour
             case 19: return "Cattail";
             case 20: return "Gloriosa";
             case 21: return "Hellebore";
+            case 22: return "Rhodiola";
             default: return null;
         }
     }

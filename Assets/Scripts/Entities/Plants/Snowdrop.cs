@@ -266,6 +266,7 @@ public class Snowdrop : Aura
                $"Increase Blizzard Duration by <color=green><b>{blizzardDurationPerLevel:F1}</b></color> seconds per level. [<color=green><b>+{blizzardDurationPerLevel * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase Blizzard Width by <color=green><b>{widthpl:F1}</b></color> per level. [<color=green><b>+{widthpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase Blizzard Range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "No longer channeling while the Blizzard is active. The Blizzard now extends <color=green><b>globally</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

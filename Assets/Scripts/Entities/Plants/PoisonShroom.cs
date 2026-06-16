@@ -132,6 +132,7 @@ public class PoisonShroom : Shooter
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase field duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase field radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "The <color=purple><b>Poison Field</b></color> applies <color=purple><b>Poison</b></color> to all insects on each tick of damage.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

@@ -348,6 +348,7 @@ public class Stargazer : Aura
                $"Increase <color=#FF6B1A>Fire Wave</color> width by <color=green><b>{wpl:F1}</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase <color=orange>Burning</color>-target multiplier by <color=green><b>{bpl:F1}x</b></color> per level. [<color=green><b>+{bpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase <color=#FF6B1A>Flammable</color> stacks applied by <color=green><b>{fpl:F1}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(fpl * effectivePath3Level)}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "The <color=#FF6B1A><b>Fire Wave</b></color> returns after reaching its end, sweeping back in the opposite direction.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

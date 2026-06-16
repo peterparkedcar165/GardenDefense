@@ -10553,6 +10553,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9e69b772e8aa6914ea406473e74471a9, type: 2}
   - {fileID: 11400000, guid: eff13cac8b82a324dad737978b29cf7c, type: 2}
   - {fileID: 11400000, guid: d0b39d02d557c704687e1b4d2744077d, type: 2}
+  - {fileID: 11400000, guid: 146abf62a7449d54eb1abc221e06d3d2, type: 2}
   unlockedContainer: {fileID: 9034181458017544738}
   selectedContainer: {fileID: 5004368987507350865}
   slotPrefab: {fileID: 5867209283828803215, guid: 2e8312dd84a408c4ba86748a0f9a96ba, type: 3}

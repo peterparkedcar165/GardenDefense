@@ -963,6 +963,8 @@ public abstract class Plant : Entity, IAttackable
         details ? "<color=grey>[Release SHIFT for overview]</color>"
                 : "<color=grey>[Hold SHIFT for details]</color>";
 
+    protected string SkillCooldownLine() => $"Cooldown: <b>{Mathf.RoundToInt(skillCooldown)}s</b>";
+
     protected string Level5Section(int effectiveLevel, string bonusText = null)
     {
         bool unlocked = effectiveLevel >= pathLevelCap;

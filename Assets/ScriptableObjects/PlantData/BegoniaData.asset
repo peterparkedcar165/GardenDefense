@@ -25,12 +25,12 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 2
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -72,14 +76,14 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseelementalAffinityBonus: 0.24
-  baseNatureDamageBonus: 0.16
-  baseAttackSpeedBonus: 0.16
+  baseelementalAffinityBonus: 0.16
+  baseNatureDamageBonus: 0.12
+  baseAttackSpeedBonus: 0.12
   basePassiveMultiplier: 0.24
   baseSkillMultiplier: 0.16
   path1AttackDamagePerLevel: 4
   path1AttackRangePerLevel: 0.2
-  path2elementalAffinityPerLevel: 0.09
-  path3NatureDamageBonusPerLevel: 0.09
-  path3AttackSpeedBonusPerLevel: 0.09
+  path2elementalAffinityPerLevel: 0.08
+  path3NatureDamageBonusPerLevel: 0.06
+  path3AttackSpeedBonusPerLevel: 0.06
   path3RadiusPerLevel: 0.15

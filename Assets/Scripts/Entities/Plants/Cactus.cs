@@ -188,6 +188,7 @@ public class Cactus : Shooter
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"While <color=grey><b>Shielded</b></color>, <color=green><b>Total Attack Speed</b></color> is increased by <color=green><b>35%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

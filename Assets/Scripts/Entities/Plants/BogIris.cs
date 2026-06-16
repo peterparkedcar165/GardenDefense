@@ -219,6 +219,7 @@ public class BogIris : Shooter
                $"Increase the flat component of geyser damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the radius of the geyser by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "Successful <color=#4FC3F7><b>Geyser</b></color> hits inflict <color=#4FC3F7><b>Geysered</b></color> for <color=green><b>12</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> by <color=red><b>30</b></color> and <color=#A0522D><b>Fall Damage Resistance</b></color> by <color=red><b>33%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

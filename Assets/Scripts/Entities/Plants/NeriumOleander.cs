@@ -140,6 +140,7 @@ public class NeriumOleander : Shooter
                $"Increase Skill Damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase Root Duration by <color=green><b>{rootpl:F1}</b></color> seconds per level. [<color=green><b>+{rootpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase Skill Radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"Applies <color=#9B59B6><b>Oleandic Toxin</b></color>. For each positive effect locked, increase skill damage by <color=green><b>12%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

@@ -105,6 +105,7 @@ MonoBehaviour:
   baseIceResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseFallDamage: 0
   baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
@@ -116,6 +117,7 @@ MonoBehaviour:
   baseCriticalDamage: 0
   baseDotResistance: 0
   baseDotDamage: 0
+  baseFallDamageResistance: 0
   baseelementalAffinity: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
@@ -132,6 +134,7 @@ MonoBehaviour:
   baseEvasion: 0
   baseAccuracy: 0
   baseBonusCritChanceReceived: 0
+  baseBonusCritDamageReceived: 0
   baseProjectileSpeed: 0
   maxHealth: 0
   health: 0
@@ -159,6 +162,7 @@ MonoBehaviour:
   iceResistance: 0
   physicalDamage: 0
   magicDamage: 0
+  fallDamage: 0
   bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
@@ -170,6 +174,7 @@ MonoBehaviour:
   criticalDamage: 0
   dotResistance: 0
   dotDamage: 0
+  fallDamageResistance: 0
   elementalAffinity: 0
   passiveDamage: 0
   skillDamage: 0
@@ -195,6 +200,7 @@ MonoBehaviour:
   evasion: 0
   accuracy: 0
   bonusCritChanceReceived: 0
+  bonusCritDamageReceived: 0
   projectileSpeed: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
@@ -217,6 +223,7 @@ MonoBehaviour:
   iceResistanceAdder: 0
   physicalDamageAdder: 0
   magicDamageAdder: 0
+  fallDamageAdder: 0
   bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
@@ -228,6 +235,7 @@ MonoBehaviour:
   criticalDamageAdder: 0
   dotResistanceAdder: 0
   dotDamageAdder: 0
+  fallDamageResistanceAdder: 0
   elementalAffinityAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
@@ -248,6 +256,7 @@ MonoBehaviour:
   evasionAdder: 0
   accuracyAdder: 0
   bonusCritChanceReceivedAdder: 0
+  bonusCritDamageReceivedAdder: 0
   projectileSpeedAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
@@ -256,8 +265,8 @@ MonoBehaviour:
   attackRangeMultiplier: 0
   healingBonusMultiplier: 0
   healingReceivedMultiplier: 0
-  totalArmorMultiplier: 0
-  totalMagicArmorMultiplier: 0
+  armorMultiplier: 0
+  magicArmorMultiplier: 0
   armorPenFlatMultiplier: 0
   magicPenFlatMultiplier: 0
   armorPenPercentMultiplier: 0
@@ -298,6 +307,17 @@ MonoBehaviour:
   accuracyMultiplier: 0
   bonusCritChanceReceivedMultiplier: 0
   projectileSpeedMultiplier: 0
+  maxHealthTotalMultiplier: 1
+  attackDamageTotalMultiplier: 1
+  magicPowerTotalMultiplier: 1
+  attackSpeedTotalMultiplier: 1
+  attackRangeTotalMultiplier: 1
+  criticalChanceTotalMultiplier: 1
+  criticalDamageTotalMultiplier: 1
+  armorTotalMultiplier: 1
+  magicArmorTotalMultiplier: 1
+  armorPenFlatTotalMultiplier: 1
+  magicPenFlatTotalMultiplier: 1
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -310,6 +330,7 @@ MonoBehaviour:
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: af9a14076b54ba042bb17f9558910deb, type: 2}
   occupiedTile: {fileID: 0}
+  selfPrefab: {fileID: 2387982406283412628}
   circleRadius: {fileID: 5644347511344771682}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2

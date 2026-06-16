@@ -208,6 +208,7 @@ public class Sunflower : Shooter
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Sunray Damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase Sunray duration by <color=green><b>{durpl:F1}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "Unleashes an additional <color=orange><b>Sunray</b></color> at a random insect's location on the map.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

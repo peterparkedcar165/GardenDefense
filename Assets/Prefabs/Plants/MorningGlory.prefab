@@ -182,8 +182,12 @@ MonoBehaviour:
   baseAttackRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
+  baseArmor: 0
+  baseMagicArmor: 0
+  baseArmorPenFlat: 0
+  baseMagicPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenPercent: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   baseNatureResistance: 0
@@ -192,6 +196,7 @@ MonoBehaviour:
   baseIceResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseFallDamage: 0
   baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
@@ -203,6 +208,7 @@ MonoBehaviour:
   baseCriticalDamage: 0
   baseDotResistance: 0
   baseDotDamage: 0
+  baseFallDamageResistance: 0
   baseelementalAffinity: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
@@ -219,6 +225,7 @@ MonoBehaviour:
   baseEvasion: 0
   baseAccuracy: 0
   baseBonusCritChanceReceived: 0
+  baseBonusCritDamageReceived: 0
   baseProjectileSpeed: 0
   maxHealth: 0
   health: 0
@@ -232,6 +239,12 @@ MonoBehaviour:
   healingReceived: 0
   physicalResistance: 0
   magicResistance: 0
+  armor: 0
+  magicArmor: 0
+  armorPenFlat: 0
+  magicPenFlat: 0
+  armorPenPercent: 0
+  magicPenPercent: 0
   fireResistance: 0
   waterResistance: 0
   natureResistance: 0
@@ -240,6 +253,7 @@ MonoBehaviour:
   iceResistance: 0
   physicalDamage: 0
   magicDamage: 0
+  fallDamage: 0
   bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
@@ -251,6 +265,7 @@ MonoBehaviour:
   criticalDamage: 0
   dotResistance: 0
   dotDamage: 0
+  fallDamageResistance: 0
   elementalAffinity: 0
   passiveDamage: 0
   skillDamage: 0
@@ -264,6 +279,10 @@ MonoBehaviour:
   buffGivenDuration: 0
   buffReceivedDuration: 0
   debuffReceivedDuration: 0
+  burnDurationBonus: 0
+  sunYieldBonus: 0
+  baseMinionDamage: 0
+  minionDamage: 0
   shieldBonusDamage: 0
   shieldToughness: 0
   startingShield: 0
@@ -272,6 +291,7 @@ MonoBehaviour:
   evasion: 0
   accuracy: 0
   bonusCritChanceReceived: 0
+  bonusCritDamageReceived: 0
   projectileSpeed: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
@@ -280,8 +300,12 @@ MonoBehaviour:
   attackRangeAdder: 0
   healingBonusAdder: 0
   healingReceivedAdder: 0
-  physicalResistanceAdder: 0
-  magicResistanceAdder: 0
+  armorAdder: 0
+  magicArmorAdder: 0
+  armorPenFlatAdder: 0
+  magicPenFlatAdder: 0
+  armorPenPercentAdder: 0
+  magicPenPercentAdder: 0
   fireResistanceAdder: 0
   waterResistanceAdder: 0
   natureResistanceAdder: 0
@@ -290,6 +314,7 @@ MonoBehaviour:
   iceResistanceAdder: 0
   physicalDamageAdder: 0
   magicDamageAdder: 0
+  fallDamageAdder: 0
   bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
@@ -301,6 +326,7 @@ MonoBehaviour:
   criticalDamageAdder: 0
   dotResistanceAdder: 0
   dotDamageAdder: 0
+  fallDamageResistanceAdder: 0
   elementalAffinityAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
@@ -312,6 +338,7 @@ MonoBehaviour:
   shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
+  minionDamageAdder: 0
   counterDamageAdder: 0
   debuffGivenDurationAdder: 0
   buffGivenDurationAdder: 0
@@ -320,6 +347,7 @@ MonoBehaviour:
   evasionAdder: 0
   accuracyAdder: 0
   bonusCritChanceReceivedAdder: 0
+  bonusCritDamageReceivedAdder: 0
   projectileSpeedAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
@@ -328,8 +356,12 @@ MonoBehaviour:
   attackRangeMultiplier: 0
   healingBonusMultiplier: 0
   healingReceivedMultiplier: 0
-  physicalResistanceMultiplier: 0
-  magicResistanceMultiplier: 0
+  armorMultiplier: 0
+  magicArmorMultiplier: 0
+  armorPenFlatMultiplier: 0
+  magicPenFlatMultiplier: 0
+  armorPenPercentMultiplier: 0
+  magicPenPercentMultiplier: 0
   fireResistanceMultiplier: 0
   waterResistanceMultiplier: 0
   natureResistanceMultiplier: 0
@@ -366,6 +398,17 @@ MonoBehaviour:
   accuracyMultiplier: 0
   bonusCritChanceReceivedMultiplier: 0
   projectileSpeedMultiplier: 0
+  maxHealthTotalMultiplier: 1
+  attackDamageTotalMultiplier: 1
+  magicPowerTotalMultiplier: 1
+  attackSpeedTotalMultiplier: 1
+  attackRangeTotalMultiplier: 1
+  criticalChanceTotalMultiplier: 1
+  criticalDamageTotalMultiplier: 1
+  armorTotalMultiplier: 1
+  magicArmorTotalMultiplier: 1
+  armorPenFlatTotalMultiplier: 1
+  magicPenFlatTotalMultiplier: 1
   internalCooldown: 1
   blazeInternalCooldown: 0
   wetInternalCooldown: 0
@@ -378,11 +421,13 @@ MonoBehaviour:
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: 0fc6bff944cf898499d4b1a4f5f59b8e, type: 2}
   occupiedTile: {fileID: 0}
+  selfPrefab: {fileID: 2387982406283412628}
   circleRadius: {fileID: 2223205672080502255}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 0100000004000000
   targeting: 1
+  prioritizeFlying: 0
   sunCost: 0
   totalSunSpent: 0
   exp: 0

@@ -328,6 +328,7 @@ public class GhostFungus : Shooter
                $"Increase <color=green>Max Health</color> bonus by <color=green><b>{hpl * 100f:F0}%</b></color> per level. [<color=green><b>+{hpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green>Attack Damage</color> bonus by <color=green><b>{apl * 100f:F0}%</b></color> per level. [<color=green><b>+{apl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Movement Speed reduction by <color=green><b>{mpl * 100f:F0}%</b></color> per level. [<color=green><b>+{mpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "When a <color=#00FFFF>hypnotized</color> insect reaches the beginning of the path, it walks back towards the end.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

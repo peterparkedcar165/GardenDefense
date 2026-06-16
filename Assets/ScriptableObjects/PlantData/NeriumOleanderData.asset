@@ -25,12 +25,12 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 3
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -64,7 +68,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 4
+  baseSkillCooldown: 60
   baseSkillDuration: 3
   channelDuration: 0
   baseSkillRadius: 1.5

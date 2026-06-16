@@ -173,6 +173,7 @@ public class LeafRanger : Shooter
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "While the skill is active, shots instead fire a volley of <color=green><b>5</b></color> arrows in a <color=green><b>30°</b></color> cone.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

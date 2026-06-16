@@ -68,7 +68,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 10
+  baseSkillCooldown: 45
   baseSkillDuration: 8
   channelDuration: 0
   baseSkillRadius: 0

@@ -9687,7 +9687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: allPlantData.Array.size
-      value: 22
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: 'allPlantData.Array.data[0]'
@@ -9777,6 +9777,10 @@ PrefabInstance:
       propertyPath: 'allPlantData.Array.data[21]'
       value: 
       objectReference: {fileID: 11400000, guid: d0b39d02d557c704687e1b4d2744077d, type: 2}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: 'allPlantData.Array.data[22]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 146abf62a7449d54eb1abc221e06d3d2, type: 2}
     - target: {fileID: 6880875180400606863, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

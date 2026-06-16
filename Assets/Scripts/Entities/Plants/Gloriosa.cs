@@ -302,6 +302,7 @@ public class Gloriosa : Shooter
                $"Increase latch healing by <color=green><b>{lhealpl:F0}</b></color> per second per level. [<color=green><b>+{lhealpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase latch <color=orange>Fire</color> bonus by <color=orange><b>{lfirepl * 100f:F0}%</b></color> per level. [<color=orange><b>+{lfirepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase latch duration by <color=green><b>{ldurpl:F1}</b></color> seconds per level. [<color=green><b>+{ldurpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"Summons an additional <color=orange><b>Fiery Wisp</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

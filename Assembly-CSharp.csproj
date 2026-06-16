@@ -257,6 +257,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
     <Compile Include="Assets\Scripts\UI\StatsAreaHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\MelterEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
@@ -309,6 +310,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Stargazer.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cattail.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Rhodiola.cs" />
     <Compile Include="Assets\Scripts\UI\EntityInfoPanel.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TermiteSwarmEffect.cs" />

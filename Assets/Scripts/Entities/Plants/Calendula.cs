@@ -199,6 +199,7 @@ public class Calendula : Aura
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase Healing per second by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "Whenever a plant on the field takes damage that would reduce their Health to under <color=green><b>25%</b></color>, if they do not already have the <color=orange><b>Floral Glow</b></color> effect, the <b><color=orange>Calendula</color></b> automatically blesses the plant with the effect. This instance has a separate cooldown, but share the same cooldown time." + (IsPath3Maxed ? $"\n\nCooldown: [<color=green><b>{AutoCooldownText}</b></color>]" : ""))}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

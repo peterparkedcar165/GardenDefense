@@ -206,6 +206,7 @@ public class MorningGlory : Shooter
                $"Increase <color=green><b>Field Duration</b></color> by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=#B2EBF2>Levitating</color> <color=#FFD700><b>Critical Chance</b></color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Field Radius</b></color> by <color=green><b>{radpl:F1}</b></color> per level. [<color=green><b>+{radpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "<color=#B2EBF2>Levitating</color> also increases <color=#FFD700><b>Critical Damage</b></color> taken by <color=green><b>25%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

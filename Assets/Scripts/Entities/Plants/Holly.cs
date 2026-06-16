@@ -197,6 +197,7 @@ public class Holly : Aura
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=#00CED1>Frozen Rage's Armor Reduction</color> by <color=green><b>{rageArmorpl:F1}</b></color> per level. [<color=green><b>+{rageArmorpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"Whenever a Shield breaks, deal damage equal to <color=green><b>50%</b></color> of the Shield's amount to all insects within range. Each Shield break triggers this separately.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

@@ -25,12 +25,12 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 1.15
   baseAttackRange: 3
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -97,10 +101,10 @@ MonoBehaviour:
   wispTickInterval: 0.25
   wispHealMP: 0.07
   latchHealMP: 0.03
-  latchFireDamageBonusMP: 0.16
+  latchFireDamageBonusMP: 0.08
   path3DurationPerLevel: 3
   path3HealPerSecondPerLevel: 3
   path3TemperaturePerSecondPerLevel: 0.6
   path3LatchHealPerSecondPerLevel: 2
-  path3LatchFireDamageBonusPerLevel: 0.08
+  path3LatchFireDamageBonusPerLevel: 0.04
   path3LatchDurationPerLevel: 2

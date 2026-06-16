@@ -25,12 +25,12 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 2
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -64,7 +68,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 12
   basePassiveDuration: 0
-  baseSkillCooldown: 8
+  baseSkillCooldown: 75
   baseSkillDuration: 0
   channelDuration: 0
   baseSkillRadius: 0
@@ -88,6 +92,8 @@ MonoBehaviour:
   shroomletAttackRange: 0.75
   shroomletDetectionRange: 2
   shroomletMoveSpeed: 1.3
+  fungalHealthMP: 0
+  fungalAttackMP: 0
   skillWaveSpeed: 8
   skillWaveWidth: 1
   skillThickness: 1

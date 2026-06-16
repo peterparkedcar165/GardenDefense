@@ -211,6 +211,7 @@ public class Glowshroom : Shooter
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=#DDDDDD>Blind</color> duration by <color=green><b>{blindpl:F1}</b></color> seconds per level. [<color=green><b>+{blindpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "Blind applies continuously while the skill is active.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

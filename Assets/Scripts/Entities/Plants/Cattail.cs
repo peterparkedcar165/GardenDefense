@@ -297,6 +297,7 @@ public class Cattail : Shooter
                $"Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#FFD700><b>Critical Chance</b></color> bonus by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"During <color=#4FC3F7><b>Aquatic Sniper</b></color>, each attack hit increases <color=#4FC3F7><b>Water Damage</b></color> by <color=green><b>1%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

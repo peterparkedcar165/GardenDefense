@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6808a117a7f67e4f8cf555e14a1e877, type: 3}
-  m_Name: DahliaData
-  m_EditorClassIdentifier: Assembly-CSharp::DahliaData
-  plantPrefab: {fileID: 0}
-  icon: {fileID: 0}
-  plantName: Dahlia
-  displayName: Dahlia
+  m_Script: {fileID: 11500000, guid: 934f78b0da13fcb4ea54c29c1bdf885d, type: 3}
+  m_Name: RhodiolaData
+  m_EditorClassIdentifier: Assembly-CSharp::RhodiolaData
+  plantPrefab: {fileID: 155170275551995472, guid: 5bb64dfb4ca8ae54597ca1453e8ba0c1, type: 3}
+  icon: {fileID: 21300000, guid: 85c1868abb6a3c24e97a94b49a4e6ab1, type: 3}
+  plantName: Rhodiola
+  displayName: Rhodiola
   cultivar: 1
   elementalType: 2
   damageType: 1
@@ -23,7 +23,7 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
+  baseAttackSpeed: 0.7
   baseAttackRange: 2.5
   baseArmor: 0
   baseMagicArmor: 0
@@ -76,11 +76,14 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  path1AttackSpeedPerLevel: 0.08
+  path1AttackSpeedPerLevel: 0.06
   path1HealingBonusPerLevel: 0.03
-  baseBurgeonHeal: 10
+  baseBurgeonHealPerTick: 8
   baseBurgeonDuration: 4
-  burgeonTickInterval: 0.5
-  path2HealPerLevel: 5
-  revivalHealthPercent: 0.3
-  path3CooldownReductionPerLevel: 30
+  burgeonTickInterval: 1
+  path2HealPerLevel: 4
+  revivalHealthPercent: 0.2
+  path3CooldownReductionPerLevel: 20
+  verdantGuardianShield: 200
+  verdantGuardianRegen: 20
+  verdantGuardianDuration: 20

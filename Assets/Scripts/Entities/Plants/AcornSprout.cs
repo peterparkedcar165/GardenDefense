@@ -140,6 +140,7 @@ public class AcornSprout : Shooter
                $"Increase <color=green><b>Acorn</b></color> lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Acorn</b></color> health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Acorn</b></color> size and impact radius by <color=green><b>{radiuspl * 100f:F0}%</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, skillMaxBonus)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

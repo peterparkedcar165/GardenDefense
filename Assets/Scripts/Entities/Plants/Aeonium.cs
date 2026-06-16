@@ -198,6 +198,7 @@ public class Aeonium : Shooter
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Sun yield bonus by <color=green><b>{yieldpl * 100f:F0}%</b></color> per level. [<color=green><b>+{yieldpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"Plants under <color=green><b>Blessing of the Sun</b></color> also yield <color=yellow><b>+1</b></color> <color=yellow>Sun</color> when triggering the timer reduction.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

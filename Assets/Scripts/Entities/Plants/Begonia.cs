@@ -201,6 +201,7 @@ public class Begonia : Shooter
                $"Increase Nature Power bonus by <color=green><b>{naturepl * 100f:F0}%</b></color> per level. [<color=green><b>+{naturepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"When a plant triggers <color=green><b>Germinate</b></color> or <color=green><b>Brittle</b></color> while under <color=green><b>Blossoming</b></color>, they gain <color=green><b>22% Elemental Affinity</b></color> until the effect ends.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
