@@ -15,7 +15,7 @@ MonoBehaviour:
   fertilizerName: Cyclone
   stats:
   - statType: 8
-    value: 0.42
+    value: 0.16
   - statType: 11
     value: 0.52
   icon: {fileID: 0}

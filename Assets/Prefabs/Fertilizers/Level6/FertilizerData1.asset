@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Burner
   stats:
   - statType: 11
-    value: 0.42
+    value: 0.33
   - statType: 3
-    value: 0.32
+    value: 0.16
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

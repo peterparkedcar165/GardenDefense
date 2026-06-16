@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Rainy Day
   stats:
   - statType: 22
-    value: 0.42
+    value: 0.23
   - statType: 14
-    value: 0.43
+    value: 0.23
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Helper
   stats:
   - statType: 26
-    value: 1.04
+    value: 0.72
   - statType: 24
-    value: 0.53
+    value: 0.23
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

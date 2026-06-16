@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Inflammatory
   stats:
   - statType: 3
-    value: 0.43
+    value: 0.23
   - statType: 11
-    value: 0.42
-  - statType: 29
-    value: 0.33
+    value: 0.23
+  - statType: 15
+    value: 0.16
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   targetElementalType: 0
   appliesToAll: 1

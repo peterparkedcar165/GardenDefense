@@ -24,6 +24,8 @@ public static class FertilizerFormat
             case StatType.MagicPower:
             case StatType.Armor:
             case StatType.MagicArmor:
+            case StatType.ArmorPenetration:
+            case StatType.MagicPenetration:
                 return $"{sign}{UnityEngine.Mathf.RoundToInt(value)}";
             default:
                 return $"{sign}{value * 100f:F0}%";
@@ -75,6 +77,10 @@ public static class FertilizerFormat
             case StatType.FallDamage:                   return "Fall Damage";
             case StatType.Armor:                        return "Armor";
             case StatType.MagicArmor:                   return "Magic Armor";
+            case StatType.ArmorPenetration:             return "Armor Penetration";
+            case StatType.MagicPenetration:             return "Magic Penetration";
+            case StatType.ArmorShred:                   return "Armor Shred";
+            case StatType.MagicArmorShred:              return "Magic Armor Shred";
             default:                      return statType.ToString();
         }
     }

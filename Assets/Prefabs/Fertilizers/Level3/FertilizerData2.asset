@@ -15,7 +15,7 @@ MonoBehaviour:
   fertilizerName: Imprisoner
   stats:
   - statType: 14
-    value: 0.42
+    value: 0.33
   - statType: 18
     value: 2.24
   icon: {fileID: 0}

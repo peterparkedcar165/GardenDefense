@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Boiler
   stats:
   - statType: 5
-    value: 0.42
+    value: 0.16
   - statType: 11
-    value: 0.46
+    value: 0.33
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

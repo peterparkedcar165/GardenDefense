@@ -167,15 +167,15 @@ public abstract class Plant : Entity, IAttackable
         _ghosts.Clear();
     }
 
-    public static void RevivePlant(Tile tile, float healthPercent = 0.5f)
+    public static Plant RevivePlant(Tile tile, float healthPercent = 0.5f)
     {
-        if (tile == null || tile.deadPlant == null || tile.deadPlant.prefab == null) return;
+        if (tile == null || tile.deadPlant == null || tile.deadPlant.prefab == null) return null;
         DeadPlantRecord record = tile.deadPlant;
         tile.deadPlant = null;
 
         GameObject obj = Instantiate(record.prefab, tile.transform.position, Quaternion.identity);
         Plant plant = obj.GetComponent<Plant>();
-        if (plant == null) { Destroy(obj); return; }
+        if (plant == null) { Destroy(obj); return null; }
 
         plant.selfPrefab    = record.prefab;
         plant.occupiedTile  = tile;
@@ -198,6 +198,7 @@ public abstract class Plant : Entity, IAttackable
         tile.isOccupied = true;
         Collider2D tileCol = tile.GetComponent<Collider2D>();
         if (tileCol != null) tileCol.enabled = false;
+        return plant;
     }
 
     public override void UpdateStats()

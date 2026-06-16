@@ -27,6 +27,10 @@ public class SkillTargetingManager : MonoBehaviour
     public bool WasPlantCancelledThisFrame => cancelledPlantThisFrame;
     public Plant PlantTargetingSource { get; private set; }
 
+    private bool isDeadTileTargeting = false;
+    private Action<Tile> onDeadTileConfirm;
+    public bool IsDeadTileTargeting => isDeadTileTargeting;
+
     private void Awake()
     {
         instance = this;
@@ -40,6 +44,25 @@ public class SkillTargetingManager : MonoBehaviour
             {
                 CancelPlantTargeting();
                 return;
+            }
+        }
+
+        if (isDeadTileTargeting)
+        {
+            if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                CancelDeadTileTargeting();
+                return;
+            }
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+                {
+                    Vector3 tileClickPos = GetMouseWorldPosition();
+                    Vector2Int key = Tile.TileKey(tileClickPos);
+                    if (Tile.allTiles.TryGetValue(key, out Tile clickedTile) && clickedTile.deadPlant != null)
+                        ConfirmDeadTile(clickedTile);
+                }
             }
         }
 
@@ -72,6 +95,7 @@ public class SkillTargetingManager : MonoBehaviour
     {
         if (isTargeting) Cancel();
         if (isPlantTargeting) CancelPlantTargeting();
+        if (isDeadTileTargeting) CancelDeadTileTargeting();
     }
 
     public void BeginTargeting(float radius, Action<Vector3> onConfirm, Vector3? clampCenter = null, float clampRadius = 0f)
@@ -118,6 +142,33 @@ public class SkillTargetingManager : MonoBehaviour
         PlantTargetingSource = null;
         onPlantConfirm = null;
         cancelledPlantThisFrame = true;
+    }
+
+    public void BeginDeadTileTargeting(Action<Tile> onConfirm)
+    {
+        PlantSelector.instance?.ClearAll();
+        if (isTargeting) Cancel();
+        if (isPlantTargeting) CancelPlantTargeting();
+        if (isDeadTileTargeting) CancelDeadTileTargeting();
+        Plant.ShowDeadPlantGhosts();
+        onDeadTileConfirm   = onConfirm;
+        isDeadTileTargeting = true;
+    }
+
+    private void ConfirmDeadTile(Tile tile)
+    {
+        isDeadTileTargeting = false;
+        Plant.HideDeadPlantGhosts();
+        var cb = onDeadTileConfirm;
+        onDeadTileConfirm = null;
+        cb?.Invoke(tile);
+    }
+
+    public void CancelDeadTileTargeting()
+    {
+        isDeadTileTargeting = false;
+        Plant.HideDeadPlantGhosts();
+        onDeadTileConfirm = null;
     }
 
     private void Confirm(Vector3 worldPosition)

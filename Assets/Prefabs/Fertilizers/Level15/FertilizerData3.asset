@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Survival
   stats:
-  - statType: 30
-    value: 0.36
+  - statType: 39
+    value: 30
   - statType: 24
-    value: 0.32
+    value: 0.18
   - statType: 36
-    value: -0.36
+    value: -0.17
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

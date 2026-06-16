@@ -104,9 +104,9 @@ public class StatsPanelTooltip : MonoBehaviour
         Line(sb, "<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
         sb.AppendLine();
         ElemLine(sb, Physical, "Armor Penetration:",     $"{e.armorPenFlat:F0}",           e.armorPenFlat,    e.baseArmorPenFlat);
-        ElemLine(sb, Physical, "Armor Penetration (%):", $"{e.armorPenPercent * 100:F0}%", e.armorPenPercent, e.baseArmorPenPercent);
-        ElemLine(sb, Magic,    "Magic Penetration:",     $"{e.magicPenFlat:F0}",           e.magicPenFlat,    e.baseMagicPenFlat);
-        ElemLine(sb, Magic,    "Magic Penetration (%):", $"{e.magicPenPercent * 100:F0}%", e.magicPenPercent, e.baseMagicPenPercent);
+        ElemLine(sb, Physical, "Armor Shred:",       $"{e.armorPenPercent * 100:F0}%", e.armorPenPercent, e.baseArmorPenPercent);
+        ElemLine(sb, Magic,    "Magic Penetration:", $"{e.magicPenFlat:F0}",           e.magicPenFlat,    e.baseMagicPenFlat);
+        ElemLine(sb, Magic,    "Magic Armor Shred:", $"{e.magicPenPercent * 100:F0}%", e.magicPenPercent, e.baseMagicPenPercent);
         if (e is Shooter shooter)
             ElemLine(sb, Nature, "Piercing:", $"{shooter.piercing}", shooter.piercing, shooter.basePiercing);
         return sb.ToString().TrimEnd();

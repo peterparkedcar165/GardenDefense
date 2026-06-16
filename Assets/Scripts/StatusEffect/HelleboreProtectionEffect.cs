@@ -5,6 +5,8 @@ public class HelleboreProtectionEffect : ShieldEffect
     private readonly float reflectBase;
     private readonly float reflectMP;
     private readonly Hellebore hellebore;
+    private float _regenTick = 0f;
+    private const float RegenInterval = 0.5f;
 
     private static readonly DamageTag[] _reflectTags = { DamageTag.Counter, DamageTag.SkillDamage };
 
@@ -24,6 +26,16 @@ public class HelleboreProtectionEffect : ShieldEffect
     }
 
     // fires for every incoming attack that still has shield remaining
+    public override void OnTick(float deltaTime)
+    {
+        if (hellebore == null || !hellebore.IsPath3Maxed) return;
+        if (amount >= originalAmount) return;
+        _regenTick += deltaTime;
+        if (_regenTick < RegenInterval) return;
+        _regenTick -= RegenInterval;
+        amount = UnityEngine.Mathf.Min(amount + originalAmount * 0.03f * RegenInterval, originalAmount);
+    }
+
     public override void OnDamageReceived(ElementalType elementalType, Entity damageSource, DamageTag[] damageTags = null)
     {
         if (damageSource == null) return;

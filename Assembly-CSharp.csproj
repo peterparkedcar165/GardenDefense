@@ -157,6 +157,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ChannelingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PathHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\Spawning\ProceduralLevel.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Dahlia.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Ant.cs" />
     <Compile Include="Assets\Scripts\Audio\MusicManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoilEffect.cs" />
@@ -230,7 +231,9 @@
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GustEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingSeedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowingAllergenEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingBurgeonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\SproutEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\LightFader.cs" />
@@ -244,6 +247,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Termite.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AquaticSniperEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Scorpion.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\DahliaData.cs" />
     <Compile Include="Assets\Scripts\UI\PlantSlotButton.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\BurnEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\Sunray.cs" />
@@ -267,6 +271,7 @@
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GeyseredEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\VerdantGuardianEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\FireAntData.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FireAnt.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />

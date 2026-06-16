@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Benevolent
   stats:
   - statType: 2
-    value: 0.52
+    value: 0.32
   - statType: 32
-    value: 112
+    value: 66
   - statType: 34
-    value: 0.35
+    value: 0.22
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

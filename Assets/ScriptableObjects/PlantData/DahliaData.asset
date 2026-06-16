@@ -9,22 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d260b852bedaf914e8cbd8160df7e118, type: 3}
-  m_Name: HelleboreData
-  m_EditorClassIdentifier: Assembly-CSharp::HelleboreData
-  plantPrefab: {fileID: -4817205511605284098, guid: 11c06fc22c0f8ab4a85cf897addbc107, type: 3}
-  icon: {fileID: 21300000, guid: 49fbe52b17c585147b7f35671376c045, type: 3}
-  plantName: Hellebore
-  displayName: Hellebore
-  cultivar: 3
-  elementalType: 3
+  m_Script: {fileID: 11500000, guid: d6808a117a7f67e4f8cf555e14a1e877, type: 3}
+  m_Name: DahliaData
+  m_EditorClassIdentifier: Assembly-CSharp::DahliaData
+  plantPrefab: {fileID: 0}
+  icon: {fileID: 0}
+  plantName: Dahlia
+  displayName: Dahlia
+  cultivar: 1
+  elementalType: 2
   damageType: 1
   sunCost: 105
   baseMaxHealth: 200
-  baseAttackDamage: 32
+  baseAttackDamage: 24
   baseMagicPower: 0
   baseAttackSpeed: 0.8
-  baseAttackRange: 2.3
+  baseAttackRange: 2.5
   baseArmor: 0
   baseMagicArmor: 0
   baseHealingBonus: 0
@@ -60,15 +60,15 @@ MonoBehaviour:
   baseIceDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 3
-  baseMaxRange: 99
+  baseProjectileSpeed: 0
+  baseMaxRange: 0
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 30
+  baseSkillCooldown: 180
   baseSkillDuration: 0
   channelDuration: 0
   baseSkillRadius: 0
@@ -76,20 +76,11 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  path1AttackSpeedPerLevel: 0.06
-  path1MagicPowerPerLevel: 12
-  selfArmorBase: 14
-  selfArmorPerLevel: 5
-  selfArmorMP: 0.14
-  passiveCDRPerHit: 1
-  path2CDRPerLevel: 0.2
-  path2AuraSharePerLevel: 0.05
-  auraShareBase: 0.5
-  shieldAmount: 80
-  shieldMP: 0.5
-  shieldDuration: 12
-  reflectPoisonBase: 16
-  reflectPoisonMP: 0.24
-  path3ShieldPerLevel: 40
-  path3DurationPerLevel: 4
-  path3ReflectPerLevel: 8
+  path1AttackSpeedPerLevel: 0.08
+  path1HealingBonusPerLevel: 0.03
+  baseBurgeonHeal: 10
+  baseBurgeonDuration: 4
+  burgeonTickInterval: 0.5
+  path2HealPerLevel: 5
+  revivalHealthPercent: 0.3
+  path3CooldownReductionPerLevel: 30

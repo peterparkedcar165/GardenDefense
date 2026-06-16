@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Arctic Wind
   stats:
   - statType: 14
-    value: 0.36
+    value: 0.22
   - statType: 22
-    value: 0.32
+    value: 0.23
   - statType: 4
-    value: 0.32
+    value: 0.16
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

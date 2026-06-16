@@ -170,7 +170,7 @@ public class Cactus : Shooter
                $"<color=#A0522D><b>Punctured</b></color>: reduces <color=#00CED1><b>Armor</b></color> by <color=red><b>1</b></color> per stack, lasts 8 seconds.\n\n" +
                $"Increase <color=#A0522D><b>Punctured</b></color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, details ? $"Retaliation damage is increased by <color=#00CED1><b>33%</b></color> of the {GetName()}'s <color=#00CED1><b>Armor</b></color>." : $"Retaliation deals <color=#A0522D><b>+{armor * 0.33f:F0}</b></color> bonus damage.")}\n\n" +
+               $"{Level5Section(path2Level, details ? $"Retaliation damage is increased by <color=#00CED1><b>33%</b></color> of the {GetName()}'s <color=#00CED1><b>Armor</b></color>." : $"Retaliation deals <color=#00CED1><b>+{armor * 0.33f:F0}</b></color> bonus damage.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

@@ -6,7 +6,20 @@ public class Hellebore : Shooter
     private HelleboreData HData => data as HelleboreData;
 
     private float _auraTick;
-    private const float AuraTickInterval = 0.25f;
+    private float _autoShieldCooldownTimer;
+    private const float AuraTickInterval    = 0.25f;
+    private const float AutoShieldThreshold = 0.25f;
+
+    private string AutoShieldCooldownText
+    {
+        get
+        {
+            if (_autoShieldCooldownTimer <= 0f) return "Ready";
+            int m = (int)(_autoShieldCooldownTimer / 60f);
+            int s = UnityEngine.Mathf.CeilToInt(_autoShieldCooldownTimer % 60f);
+            return $"{m}:{s:D2}";
+        }
+    }
     private static readonly Color PurpleHighlight = new Color(0.6f, 0.2f, 0.8f);
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
@@ -42,6 +55,28 @@ public class Hellebore : Shooter
         base.Update();
         TickAura();
         UpdateHighlights();
+
+        if (IsPath3Maxed && path3Unlocked && IsAlive)
+        {
+            if (_autoShieldCooldownTimer > 0f)
+                _autoShieldCooldownTimer -= Time.deltaTime;
+            else
+                CheckAutoShield();
+        }
+    }
+
+    private void CheckAutoShield()
+    {
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive) continue;
+            if (plant.maxHealth <= 0f || plant.health / plant.maxHealth >= AutoShieldThreshold) continue;
+            if (plant.GetEffect<HelleboreProtectionEffect>() != null) continue;
+            _autoShieldCooldownTimer = skillCooldown;
+            plant.ApplyEffect(new HelleboreProtectionEffect(
+                plant, SkillDur, effectivePath3Level + 1, this, SkillShield, ReflectBase, ReflectMP));
+            return;
+        }
     }
 
     private void TickAura()
@@ -50,13 +85,14 @@ public class Hellebore : Shooter
         if (_auraTick < AuraTickInterval) return;
         _auraTick -= AuraTickInterval;
 
-        float armorBonus = AuraArmor;
+        float armorBonus      = AuraArmor;
+        float magicArmorBonus = IsPath2Maxed ? armorBonus * 0.5f : 0f;
         float auraExpire = AuraTickInterval * 1.6f; // slightly longer than tick interval so it never gaps
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive || plant == this) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            plant.ApplyEffect(new HelleboreAuraEffect(plant, auraExpire, 1, this, armorBonus));
+            plant.ApplyEffect(new HelleboreAuraEffect(plant, auraExpire, 1, this, armorBonus, magicArmorBonus));
         }
     }
 
@@ -162,7 +198,7 @@ public class Hellebore : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#FFB6C1><b>Base Magic Power</b></color> by <color=green><b>{mppl:F0}</b></color> per level. [<color=#FFB6C1><b>+{mppl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path1Level)}\n\n" +
+               $"{Level5Section(path1Level, $"Attacks deal additional damage equal to <color=green><b>28%</b></color> of Hellebore's <color=#00CED1><b>Armor</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -183,7 +219,7 @@ public class Hellebore : Shooter
                $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}</b></color> seconds per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=green><b>{armorpl}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color> per level. [<color=green><b>+{auraShpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level)}\n\n" +
+               $"{Level5Section(path2Level, $"Plants within aura range also gain <color=#FFB6C1><b>Magic Armor</b></color> equal to half of the provided <color=#00CED1><b>Armor</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -208,7 +244,7 @@ public class Hellebore : Shooter
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase protection duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color> per level. [<color=green><b>+{reflpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path3Level)}\n\n" +
+               $"{Level5Section(path3Level, $"Thorned Guard regenerates <color=green><b>3%</b></color> of its shield every second.\n\nWhenever a plant on the field drops below <color=green><b>25%</b></color> health, if they do not already have <color=#9B30D0><b>Thorned Guard</b></color>, Hellebore automatically applies it. This instance shares the same cooldown as the manual skill." + (IsPath3Maxed ? $"\n\nCooldown: [<color=green><b>{AutoShieldCooldownText}</b></color>]" : ""))}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

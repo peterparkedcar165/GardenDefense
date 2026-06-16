@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Aiding
   stats:
   - statType: 14
-    value: 0.43
+    value: 0.23
   - statType: 22
-    value: 0.42
+    value: 0.23
   - statType: 32
-    value: 114
+    value: 66
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

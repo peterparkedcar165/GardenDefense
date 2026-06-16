@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Fracturing
   stats:
   - statType: 3
-    value: 0.53
+    value: 0.22
   - statType: 11
-    value: 0.52
-  - statType: 28
-    value: 0.53
+    value: 0.23
+  - statType: 41
+    value: 12
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

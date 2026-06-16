@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Spellweaver
   stats:
   - statType: 14
-    value: 0.73
+    value: 0.33
   - statType: 32
-    value: 120
+    value: 66
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

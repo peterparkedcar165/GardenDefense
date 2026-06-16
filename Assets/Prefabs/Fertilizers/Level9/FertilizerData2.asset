@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Regenerative
   stats:
   - statType: 24
-    value: 0.72
+    value: 0.32
   - statType: 22
-    value: 0.48
+    value: 0.22
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: MAGIC!
   stats:
   - statType: 32
-    value: 86
-  - statType: 29
-    value: 0.32
+    value: 68
+  - statType: 42
+    value: 12
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

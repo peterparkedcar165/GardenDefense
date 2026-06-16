@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Brittling
   stats:
   - statType: 6
-    value: 0.53
+    value: 0.16
   - statType: 11
-    value: 0.52
+    value: 0.23
   - statType: 1
-    value: 0.86
+    value: 0.26
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

@@ -64,5 +64,9 @@ public enum StatType
     MinionDamage,
     FallDamage,
     Armor,
-    MagicArmor
+    MagicArmor,
+    ArmorPenetration,
+    MagicPenetration,
+    ArmorShred,
+    MagicArmorShred
 }

@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Brute Force
   stats:
   - statType: 9
-    value: 0.32
+    value: 0.12
   - statType: 10
-    value: 0.44
+    value: 0.32
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

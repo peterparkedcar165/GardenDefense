@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Omnipresence
   stats:
   - statType: 22
-    value: 0.33
+    value: 0.23
   - statType: 14
-    value: 0.39
+    value: 0.26
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

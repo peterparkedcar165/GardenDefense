@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Quick Charge
   stats:
   - statType: 22
-    value: 0.56
+    value: 0.32
   - statType: 14
-    value: 0.43
+    value: 0.23
   icon: {fileID: 0}
   targetElementalType: 0
   appliesToAll: 1

@@ -144,6 +144,10 @@ public class FertilizerManager : MonoBehaviour
             case StatType.FallDamage:                   return (0.06f, 0.08f);
             case StatType.Armor:                        return (5f,    10f);
             case StatType.MagicArmor:                   return (5f,    10f);
+            case StatType.ArmorPenetration:             return (3f,    6f);
+            case StatType.MagicPenetration:             return (3f,    6f);
+            case StatType.ArmorShred:                   return (0.04f, 0.06f);
+            case StatType.MagicArmorShred:              return (0.04f, 0.06f);
             default:                       return (0f,    0f);
         }
     }
@@ -193,6 +197,10 @@ public class FertilizerManager : MonoBehaviour
             case StatType.FallDamage:                   plant.fallDamageAdder              += value; break;
             case StatType.Armor:                        plant.armorAdder                   += value; break;
             case StatType.MagicArmor:                   plant.magicArmorAdder              += value; break;
+            case StatType.ArmorPenetration:             plant.armorPenFlatAdder            += value; break;
+            case StatType.MagicPenetration:             plant.magicPenFlatAdder            += value; break;
+            case StatType.ArmorShred:                   plant.armorPenPercentAdder         += value; break;
+            case StatType.MagicArmorShred:              plant.magicPenPercentAdder         += value; break;
         }
     }
 }

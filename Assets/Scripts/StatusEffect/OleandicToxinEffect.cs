@@ -38,6 +38,7 @@ public class OleandicToxinEffect : StatusEffect
     // returns true if the incoming effect should be blocked
     public bool TryCapture(StatusEffect incoming)
     {
+        if (incoming is ShieldEffect) return false;
         System.Type t = incoming.GetType();
         if (immuneTypes.Contains(t)) return true; // already captured, silently block it
         // only capture a new buff type if none has been captured yet (waiting state)
@@ -56,7 +57,7 @@ public class OleandicToxinEffect : StatusEffect
         var positiveEffects = new List<StatusEffect>();
         foreach (StatusEffect effect in target.activeEffects)
         {
-            if (effect.effectType == StatusEffect.Type.positive)
+            if (effect.effectType == StatusEffect.Type.positive && !(effect is ShieldEffect))
                 positiveEffects.Add(effect);
         }
         if (positiveEffects.Count == 0) return;
