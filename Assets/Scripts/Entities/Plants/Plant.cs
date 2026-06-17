@@ -48,6 +48,7 @@ public class DeadPlantRecord
 {
     public GameObject prefab;
     public Sprite previewSprite;
+    public Vector3 spriteLocalPosition;
     public int sortingLayerID;
     public int sortingOrder;
     public int path1Level, path2Level, path3Level;
@@ -128,10 +129,11 @@ public abstract class Plant : Entity, IAttackable
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
         occupiedTile.deadPlant = new DeadPlantRecord
         {
-            prefab         = selfPrefab,
-            previewSprite  = sr != null ? sr.sprite         : null,
-            sortingLayerID = sr != null ? sr.sortingLayerID : 0,
-            sortingOrder   = sr != null ? sr.sortingOrder   : 0,
+            prefab              = selfPrefab,
+            previewSprite       = sr != null ? sr.sprite                  : null,
+            spriteLocalPosition = sr != null ? sr.transform.localPosition : Vector3.zero,
+            sortingLayerID      = sr != null ? sr.sortingLayerID          : 0,
+            sortingOrder        = sr != null ? sr.sortingOrder            : 0,
             path1Level   = path1Level,
             path2Level   = path2Level,
             path3Level   = path3Level,
@@ -150,12 +152,12 @@ public abstract class Plant : Entity, IAttackable
             if (record == null || record.previewSprite == null) continue;
 
             GameObject ghost = new GameObject("DeadPlantGhost");
-            ghost.transform.position = kvp.Value.transform.position;
+            ghost.transform.position = kvp.Value.transform.position + record.spriteLocalPosition;
             SpriteRenderer sr = ghost.AddComponent<SpriteRenderer>();
             sr.sprite = record.previewSprite;
             sr.sortingLayerID = record.sortingLayerID;
             sr.sortingOrder   = record.sortingOrder;
-            sr.color = new Color(1f, 1f, 1f, 0.3f);
+            sr.color = new Color(1f, 1f, 1f, 0.6f);
             _ghosts.Add(ghost);
         }
     }
@@ -191,9 +193,11 @@ public abstract class Plant : Entity, IAttackable
         plant.OnPath1Upgrade(record.path1Level);
         plant.OnPath2Upgrade(record.path2Level);
         plant.OnPath3Upgrade(record.path3Level);
+        plant.UpdateStats();
 
         plant.health = plant.maxHealth * Mathf.Clamp01(healthPercent);
         plant.UpdateHealthBar();
+        plant.skillCooldownTimer = plant.skillCooldown * 0.1f;
 
         tile.isOccupied = true;
         Collider2D tileCol = tile.GetComponent<Collider2D>();

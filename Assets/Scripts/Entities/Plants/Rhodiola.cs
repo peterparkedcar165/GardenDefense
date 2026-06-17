@@ -76,10 +76,9 @@ public class Rhodiola : Shooter
         Plant revived = Plant.RevivePlant(tile, RData?.revivalHealthPercent ?? 0.2f);
         if (revived != null && IsPath3Maxed)
         {
-            float shield   = RData?.verdantGuardianShield   ?? 200f;
-            float regen    = RData?.verdantGuardianRegen    ?? 20f;
-            float duration = RData?.verdantGuardianDuration ?? 8f;
-            revived.ApplyEffect(new VerdantGuardianEffect(revived, duration, this, shield, regen));
+            float shield = RData?.verdantGuardianShield ?? 200f;
+            float regen  = RData?.verdantGuardianRegen  ?? 20f;
+            revived.ApplyEffect(new VerdantGuardianEffect(revived, skillDuration, this, shield, regen));
         }
     }
 
@@ -144,7 +143,7 @@ public class Rhodiola : Shooter
         return $"Skill:\n\n{desc}\n\n" +
                $"Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Upon reviving a plant, grant it <color=green><b>Verdant Guardian</b></color>, shielding it for <color=green><b>{RData?.verdantGuardianShield ?? 200f:F0}</b></color> health and regenerating <color=green><b>{RData?.verdantGuardianRegen ?? 20f:F0}</b></color> health per second while the shield lasts, for <color=green><b>{RData?.verdantGuardianDuration ?? 8f:F0}s</b></color>.")}\n\n" +
+               $"{Level5Section(path3Level, $"Upon reviving a plant, grant it <color=green><b>Verdant Guardian</b></color>, shielding it for <color=grey><b>{RData?.verdantGuardianShield ?? 200f:F0}</b></color> health and regenerating <color=green><b>{RData?.verdantGuardianRegen ?? 20f:F0}</b></color> health per second while the shield lasts, for <color=green><b>{skillDuration:F0}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }
