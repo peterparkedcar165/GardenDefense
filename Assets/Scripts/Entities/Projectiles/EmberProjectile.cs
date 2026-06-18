@@ -127,7 +127,7 @@ public class EmberProjectile : MonoBehaviour
 
         foreach (Plant plant in Plant.allPlants)
         {
-            if (plant == null || !plant.IsAlive || plant == justHit) continue;
+            if (plant == null || !plant.IsAlive || plant == (Object)justHit) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > range) continue;
             float frac = plant.health / plant.maxHealth;
             if (frac < bestFrac) { bestFrac = frac; best = plant; }
@@ -135,7 +135,7 @@ public class EmberProjectile : MonoBehaviour
 
         foreach (Insect ally in Insect.friendlyInsects)
         {
-            if (ally == null || !ally.IsAlive || ally == justHit) continue;
+            if (ally == null || !ally.IsAlive || ally == (Object)justHit) continue;
             if (Vector3.Distance(transform.position, ((Entity)ally).transform.position) > range) continue;
             float frac = ally.health / ally.maxHealth;
             if (frac < bestFrac) { bestFrac = frac; best = ally; }
@@ -148,7 +148,7 @@ public class EmberProjectile : MonoBehaviour
             float lowestTemp = float.MaxValue;
             foreach (Plant plant in Plant.allPlants)
             {
-                if (plant == null || !plant.IsAlive || plant == justHit) continue;
+                if (plant == null || !plant.IsAlive || plant == (Object)justHit) continue;
                 if (Vector3.Distance(transform.position, plant.transform.position) > range) continue;
                 if (plant.temperature < lowestTemp) { lowestTemp = plant.temperature; coldest = plant; }
             }

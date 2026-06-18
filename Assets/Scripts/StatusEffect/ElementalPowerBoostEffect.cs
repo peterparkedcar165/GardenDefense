@@ -8,7 +8,8 @@ public class elementalAffinityBoostEffect : StatusEffect
     {
         this.bonus = bonus;
         this.armorPenFlatBonus = armorPenFlatBonus;
-        effectType = Type.positive;
+        effectType      = Type.positive;
+        sourceStackable = true;
     }
 
     public override void OnApply()

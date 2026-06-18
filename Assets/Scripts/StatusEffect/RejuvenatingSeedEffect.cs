@@ -10,8 +10,9 @@ public class RejuvenatingSeedEffect : StatusEffect
         : base(target, duration, 1, source)
     {
         _rhodiola       = source as Rhodiola;
-        _fullDuration = duration;
-        effectType    = Type.negative;
+        _fullDuration   = duration;
+        effectType      = Type.negative;
+        sourceStackable = true;
     }
 
     public override void OnApply()

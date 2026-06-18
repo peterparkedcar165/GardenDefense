@@ -25,16 +25,19 @@ MonoBehaviour:
   baseAttackRange: 1
   baseMovementSpeed: 0.8
   baseTargetingRange: 2
-  startingShield: 0
+  baseArmor: 0
   baseMagicArmor: 49
   attackDamageType: 0
   attackElementalType: 3
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0.33
   baseFireResistance: -0.1
   baseWaterResistance: 0.3
   basePoisonResistance: 0.66
@@ -44,10 +47,12 @@ MonoBehaviour:
   baseDotResistance: 0
   threatValue: 6
   threatType: 1
+  baseEvasion: 0
+  baseAccuracy: 0
   sunDrop: 32
   aggressivity: 0
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
-  venomDPS: 10
+  venomDPS: 6
   venomDuration: 6

@@ -52,13 +52,11 @@ public class Begonia : Shooter
         if (auraTickTimer < auraTickInterval) return;
         auraTickTimer -= auraTickInterval;
 
-        float armorPen = path2Level >= Plant.pathLevelCap ? 22f : 0f;
+        float armorPen = path2Level >= Plant.pathLevelCap ? 12f : 0f;
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            elementalAffinityBoostEffect existing = plant.GetEffect<elementalAffinityBoostEffect>();
-            if (existing != null && existing.bonus > elementalAffinityBonus && existing.armorPenFlatBonus >= armorPen) continue;
             plant.ApplyEffect(new elementalAffinityBoostEffect(plant, auraEffectDuration, 1, this, elementalAffinityBonus, armorPen));
         }
     }
@@ -181,7 +179,7 @@ public class Begonia : Shooter
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase Elemental Affinity bonus by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Plants affected by <color=green><b>Begonia's Blessing</b></color> are also granted <color=#A0522D><b>22 Armor Penetration</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"Plants affected by <color=green><b>Begonia's Blessing</b></color> are also granted <color=#A0522D><b>12 Armor Penetration</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

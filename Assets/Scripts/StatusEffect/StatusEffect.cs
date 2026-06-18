@@ -24,6 +24,7 @@ public class StatusEffect
     public Entity target, source;
 
     public EffectTag[] tags = new EffectTag[0];
+    public bool sourceStackable = false;
 
 
     public StatusEffect(Entity target, float duration, int level, Entity source)

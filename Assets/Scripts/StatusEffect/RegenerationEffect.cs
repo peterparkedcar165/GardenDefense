@@ -11,6 +11,7 @@ public class RegenerationEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.positive;
+        sourceStackable = true;
         tags = new EffectTag[] { EffectTag.Regenerative };
         this.healingPerSecond = healingPerSecond;
         this.tickInterval     = tickInterval;

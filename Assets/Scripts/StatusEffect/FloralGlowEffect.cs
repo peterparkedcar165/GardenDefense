@@ -10,8 +10,18 @@ public class FloralGlowEffect : StatusEffect
     public FloralGlowEffect(Entity target, float duration, int level, Entity source, Calendula calendula)
         : base(target, duration, level, source)
     {
-        this.calendula = calendula;
-        effectType = Type.positive;
+        this.calendula  = calendula;
+        effectType      = Type.positive;
+        sourceStackable = true;
+    }
+
+    private float BestRangeExcluding(FloralGlowEffect exclude)
+    {
+        float best = 0f;
+        foreach (var e in target.activeEffects)
+            if (e is FloralGlowEffect fg && fg != exclude && fg.cachedLightRange > best)
+                best = fg.cachedLightRange;
+        return best;
     }
 
     public override void OnApply()
@@ -19,8 +29,16 @@ public class FloralGlowEffect : StatusEffect
         Plant plant = target as Plant;
         if (plant == null) return;
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Floral Glow", new Color(1f, 0.6f, 0f));
+
+        float prevBest = BestRangeExcluding(this);
         cachedLightRange = calendula?.baseLightEmissionRange ?? 0f;
-        plant.lightEmissionRangeAdder += cachedLightRange;
+        float delta = Mathf.Max(prevBest, cachedLightRange) - prevBest;
+        if (delta > 0f)
+        {
+            plant.lightEmissionRangeAdder += delta;
+            plant.UpdateStats();
+        }
+
         Entity.OnPlantAttackHit += HandlePlantAttackHit;
     }
 
@@ -38,8 +56,16 @@ public class FloralGlowEffect : StatusEffect
     {
         Plant plant = target as Plant;
         if (plant == null) return;
-        plant.lightEmissionRangeAdder -= cachedLightRange;
-        plant.UpdateStats();
+
+        float currentBest = Mathf.Max(BestRangeExcluding(this), cachedLightRange);
+        float nextBest = BestRangeExcluding(this);
+        float delta = currentBest - nextBest;
+        if (delta > 0f)
+        {
+            plant.lightEmissionRangeAdder -= delta;
+            plant.UpdateStats();
+        }
+
         Entity.OnPlantAttackHit -= HandlePlantAttackHit;
     }
 

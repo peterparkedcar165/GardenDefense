@@ -13,7 +13,8 @@ public class BlossomingEffect : StatusEffect
     {
         this.natureDamageBonus = natureDamageBonus;
         this.attackSpeedBonus = attackSpeedBonus;
-        effectType = Type.positive;
+        effectType      = Type.positive;
+        sourceStackable = true;
     }
 
     public override void OnApply()

@@ -11,6 +11,7 @@ public class VenomEffect : StatusEffect
     {
         this.damagePerSecond = damagePerSecond;
         effectType = Type.negative;
+        sourceStackable = true;
         tags = new EffectTag[] { EffectTag.DoT };
     }
 

@@ -12,7 +12,8 @@ public class TailwindEffect : StatusEffect
     {
         this.attackSpeedBonus     = attackSpeedBonus;
         this.projectileSpeedBonus = projectileSpeedBonus;
-        effectType = Type.positive;
+        effectType      = Type.positive;
+        sourceStackable = true;
     }
 
     public override void OnApply()

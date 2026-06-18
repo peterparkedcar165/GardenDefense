@@ -17,7 +17,8 @@ public class HeatedComfortEffect : StatusEffect
         int ticks      = Mathf.RoundToInt(Duration / TickInterval);
         _healPerTick   = totalHeal / ticks;
         _tempPerTick   = totalTemp / ticks;
-        effectType     = Type.positive;
+        effectType      = Type.positive;
+        sourceStackable = true;
     }
 
     public override void OnApply()  { }

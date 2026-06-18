@@ -78,8 +78,8 @@ MonoBehaviour:
   baseSkillDamage: 0
   path1AttackSpeedPerLevel: 0.06
   path1MagicPowerPerLevel: 12
-  selfArmorBase: 14
-  selfArmorPerLevel: 5
+  selfArmorBase: 12
+  selfArmorPerLevel: 4
   selfArmorMP: 0.14
   passiveCDRPerHit: 0.5
   path2CDRPerLevel: 0.1

@@ -25,16 +25,19 @@ MonoBehaviour:
   baseAttackRange: 0.5
   baseMovementSpeed: 0.8
   baseTargetingRange: 0
-  startingShield: 0
+  baseArmor: 0
   baseMagicArmor: 49
   attackDamageType: 0
   attackElementalType: 2
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0.33
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -59,5 +62,5 @@ MonoBehaviour:
   healAmount: 30
   healPercent: 0.07
   regenerationDuration: 4
-  regenerationHealing: 18
-  regenerationPercent: 0.02
+  regenerationHealing: 8
+  regenerationPercent: 0.01

@@ -8,7 +8,8 @@ public class HelleboreAuraEffect : StatusEffect
     {
         this.resistBonus      = resistBonus;
         this.magicResistBonus = magicResistBonus;
-        effectType = Type.positive;
+        effectType      = Type.positive;
+        sourceStackable = true;
     }
 
     public override void OnApply()  { target.armorAdder += resistBonus; target.magicArmorAdder += magicResistBonus; }

@@ -28,7 +28,8 @@ public enum DamageTag
     Weather,
     BypassShield,
     Germinate,
-    Brittle
+    Brittle,
+    SpecialCanCrit
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -479,7 +480,7 @@ public abstract class Entity : MonoBehaviour
 
         finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult;
 
-        if (canCrit)
+        if (canCrit || System.Array.Exists(damageTag, t => t == DamageTag.SpecialCanCrit))
         {
             if (Random.value < source.criticalChance + bonusCritChanceReceived)
             {
@@ -912,6 +913,8 @@ public abstract class Entity : MonoBehaviour
             {
                 if (activeEffects[i].GetType() == effect.GetType())
                 {
+                    if (effect.sourceStackable && activeEffects[i].source != effect.source)
+                        continue;
                     activeEffects[i].OnExpire();
                     activeEffects.RemoveAt(i);
                     break;

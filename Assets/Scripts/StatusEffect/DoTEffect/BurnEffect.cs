@@ -4,7 +4,7 @@ public class BurnEffect : DoTEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.01f, mpPerSecond = 0.24f, flatPerSecond = 12f;
+    public float healthPerSecond = 0.01f, mpPerSecond = 0.12f, flatPerSecond = 7f;
     private float cachedMaxHealth;
     private float cachedMagicPower;
     private float cachedelementalAffinity;
@@ -16,7 +16,8 @@ public class BurnEffect : DoTEffect
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
-        tickInterval = 0.5f;
+        sourceStackable = true;
+        tickInterval = 1f;
         // the source can extend the Burns it causes (Stargazer passive)
         if (source != null) this.duration *= 1f + source.burnDurationBonus;
     }
@@ -27,8 +28,10 @@ public class BurnEffect : DoTEffect
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
         float mp = cachedMagicPower > 0 ? cachedMagicPower : (source?.magicPower ?? 0f);
         float ep = cachedelementalAffinity;
-        float total = ((healthPerSecond * hp) + (mpPerSecond * mp) + flatPerSecond) * (1f + ep);
-        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second. (<color=red>{healthPerSecond * 100:F0}% Max Health</color> + <color=#FFB6C1>{mpPerSecond * 100:F0}% Magic Power</color> + {flatPerSecond:F0}) × (1 + <color=#FFD700>{ep * 100:F0}% Elemental Affinity</color>)";
+        float flammable = target?.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
+        float total = ((healthPerSecond * hp) + (mpPerSecond * mp) + flatPerSecond) * (1f + ep) * flammable;
+        string flammableSuffix = flammable > 1f ? $" × <color=orange><b>{flammable:F2} Flammable</b></color>" : "";
+        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second.{flammableSuffix}";
     }
 
     public override void OnApply()

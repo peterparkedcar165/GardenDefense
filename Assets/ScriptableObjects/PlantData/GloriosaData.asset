@@ -93,18 +93,18 @@ MonoBehaviour:
   wispRadius: 1.5
   wispHealPerSecond: 6
   wispTemperaturePerSecond: 1.6
-  latchHealPerSecond: 4
-  latchFireDamageBonus: 0.2
+  latchHealPerSecond: 3
+  latchFireDamageBonus: 0.08
   latchDuration: 3
   wispLightRadius: 1.5
   wispLightIntensity: 0.4
   wispTickInterval: 0.25
-  wispHealMP: 0.07
-  latchHealMP: 0.03
-  latchFireDamageBonusMP: 0.08
+  wispHealMP: 0.06
+  latchHealMP: 0.014
+  latchFireDamageBonusMP: 0.04
   path3DurationPerLevel: 3
   path3HealPerSecondPerLevel: 3
   path3TemperaturePerSecondPerLevel: 0.6
-  path3LatchHealPerSecondPerLevel: 2
-  path3LatchFireDamageBonusPerLevel: 0.04
+  path3LatchHealPerSecondPerLevel: 1
+  path3LatchFireDamageBonusPerLevel: 0.02
   path3LatchDurationPerLevel: 2

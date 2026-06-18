@@ -78,10 +78,10 @@ MonoBehaviour:
   baseSkillDamage: 0
   path1AttackSpeedPerLevel: 0.06
   path1HealingBonusPerLevel: 0.03
-  baseBurgeonHealPerTick: 8
+  baseBurgeonHealPerTick: 6
   baseBurgeonDuration: 4
   burgeonTickInterval: 1
-  path2HealPerLevel: 4
+  path2HealPerLevel: 3
   revivalHealthPercent: 0.2
   path3CooldownReductionPerLevel: 20
   verdantGuardianShield: 200

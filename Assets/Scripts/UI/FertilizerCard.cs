@@ -48,6 +48,24 @@ public class FertilizerCard : MonoBehaviour
         if (statsText != null)
         {
             var sb = new StringBuilder();
+
+            bool hasElements  = data.targetElementalTypes != null && data.targetElementalTypes.Length > 0;
+            bool hasCultivars = data.targetCultivars       != null && data.targetCultivars.Length       > 0;
+
+            if (data.appliesToAll)
+            {
+                sb.AppendLine("Applies to all plants");
+            }
+            else
+            {
+                if (hasElements)
+                    sb.AppendLine($"Element: {string.Join(", ", data.targetElementalTypes)}");
+if (hasCultivars)
+                    sb.AppendLine($"Cultivar: {string.Join(", ", data.targetCultivars)}");
+            }
+
+            sb.AppendLine();
+
             for (int i = 0; i < rolledStats.Length; i++)
             {
                 bool isGood = rolledValues[i] >= 0f;
@@ -55,7 +73,7 @@ public class FertilizerCard : MonoBehaviour
                 string color = isGood ? "green" : "red";
                 sb.AppendLine($"{FertilizerFormat.FormatStatName(rolledStats[i].statType)}: <color={color}><b>{FertilizerFormat.FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color>");
             }
-            statsText.text = sb.ToString();
+            statsText.text = sb.ToString().TrimEnd();
         }
     }
 

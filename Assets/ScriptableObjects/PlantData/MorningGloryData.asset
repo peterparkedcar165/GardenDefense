@@ -79,10 +79,10 @@ MonoBehaviour:
   projectileSpeedDamageScale: 2.5
   path1AttackDamagePerLevel: 6
   path1AttackRangePerLevel: 0.2
-  baseAttackSpeedBonus: 0.16
+  baseAttackSpeedBonus: 0.12
   baseProjectileSpeedBonus: 0.08
-  path2AttackSpeedBonusPerLevel: 0.12
-  path2ProjectileSpeedBonusPerLevel: 0.06
+  path2AttackSpeedBonusPerLevel: 0.06
+  path2ProjectileSpeedBonusPerLevel: 0.04
   attackSpeedBonusMPMultiplier: 0.16
   projectileSpeedBonusMPMultiplier: 0.12
   baseFieldDuration: 8

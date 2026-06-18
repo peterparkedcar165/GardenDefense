@@ -25,12 +25,12 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.5
   baseAttackRange: 1.75
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -55,6 +59,7 @@ MonoBehaviour:
   basePoisonDamage: 0
   baseIceDamage: 0
   baseLightEmissionRange: 0
+  baseMinionDamage: 0
   baseProjectileSpeed: 0
   baseMaxRange: 0
   basePiercing: 0
@@ -63,17 +68,18 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 30
-  baseSkillDuration: 15
+  baseSkillCooldown: 35
+  baseSkillDuration: 10
+  channelDuration: 0
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0.35
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseFloralGlowHeal: 5
+  baseFloralGlowHeal: 4
   baseSkillHealingMultiplier: 0.03
-  path1AttackDamagePerLevel: 7
+  path1AttackDamagePerLevel: 3
   path1FireDamagePerLevel: 0.1
   path2AttackRangePerLevel: 0.175
   path3SkillDurationPerLevel: 5
-  path3HealPerLevel: 4
+  path3HealPerLevel: 3

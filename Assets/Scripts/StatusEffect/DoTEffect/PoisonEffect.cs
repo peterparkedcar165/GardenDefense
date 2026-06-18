@@ -11,6 +11,7 @@ public class PoisonEffect : DoTEffect
     public PoisonEffect(Entity target, float duration, int level, Entity source, float additionalDPS = 0f) : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        sourceStackable = true;
         tickInterval = 0.5f;
         this.additionalDPS = additionalDPS;
     }

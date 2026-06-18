@@ -49,9 +49,22 @@ public class FertilizerManager : MonoBehaviour
 
         var sb = new StringBuilder();
         sb.AppendLine($"<b>{activeFertilizer.fertilizerName}</b>");
-        string target = activeFertilizer.appliesToAll
-            ? "All Plants"
-            : $"{activeFertilizer.targetElementalType} Plants";
+        string target;
+        if (activeFertilizer.appliesToAll)
+        {
+            target = "All Plants";
+        }
+        else
+        {
+            var parts = new System.Collections.Generic.List<string>();
+            if (activeFertilizer.targetElementalTypes != null)
+                foreach (var e in activeFertilizer.targetElementalTypes)
+                    parts.Add(e.ToString());
+            if (activeFertilizer.targetCultivars != null)
+                foreach (var c in activeFertilizer.targetCultivars)
+                    parts.Add(c.ToString());
+            target = parts.Count > 0 ? string.Join(", ", parts) : "None";
+        }
         sb.AppendLine($"<size=85%>Applies to: <color=#FFD700>{target}</color></size>");
         sb.AppendLine();
 
@@ -69,7 +82,7 @@ public class FertilizerManager : MonoBehaviour
     public float GetPreviewRangeMultiplier(ElementalType elementalType)
     {
         if (activeFertilizer == null || selectedStats == null) return 0f;
-        if (!activeFertilizer.appliesToAll && elementalType != activeFertilizer.targetElementalType) return 0f;
+        if (!activeFertilizer.appliesToAll && (activeFertilizer.targetElementalTypes == null || System.Array.IndexOf(activeFertilizer.targetElementalTypes, elementalType) < 0)) return 0f;
         float multiplier = 0f;
         for (int i = 0; i < selectedStats.Length; i++)
             if (selectedStats[i].statType == StatType.AttackRange)
@@ -82,10 +95,21 @@ public class FertilizerManager : MonoBehaviour
         if (activeFertilizer == null) return;
         if (activeFertilizer.stats == null) return;
 
-        if (!activeFertilizer.appliesToAll && plant.elementalType != activeFertilizer.targetElementalType) return;
+        if (!activeFertilizer.appliesToAll && !MatchesTarget(plant)) return;
 
         for (int i = 0; i < selectedStats.Length; i++)
             ApplyStat(plant, selectedStats[i].statType, rolledValues[i]);
+    }
+
+    private bool MatchesTarget(Plant plant)
+    {
+        if (activeFertilizer.targetElementalTypes != null)
+            foreach (var e in activeFertilizer.targetElementalTypes)
+                if (plant.elementalType == e) return true;
+        if (activeFertilizer.targetCultivars != null)
+            foreach (var c in activeFertilizer.targetCultivars)
+                if (plant.data != null && plant.data.cultivar == c) return true;
+        return false;
     }
 
     private float GetTierMultiplier(FertilizerTier tier)

@@ -6,8 +6,9 @@ public class FertilizerData : ScriptableObject
     public string fertilizerName;
     public FertilizerStat[] stats;
     public Sprite icon;
-    public ElementalType targetElementalType; // can be all!
-    public bool appliesToAll; // if true, ignores targetelementaltype
+    public ElementalType[] targetElementalTypes;
+    public PlantCultivar[] targetCultivars;
+    public bool appliesToAll;
     public FertilizerTier tier;
 }
 
