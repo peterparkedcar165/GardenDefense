@@ -12,7 +12,7 @@ public class PoisonEffect : DoTEffect
     {
         effectType = Type.negative;
         sourceStackable = true;
-        tickInterval = 0.5f;
+        tickInterval = 1f;
         this.additionalDPS = additionalDPS;
     }
 

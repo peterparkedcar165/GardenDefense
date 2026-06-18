@@ -10,7 +10,8 @@ public class BlessingOfTheSunEffect : StatusEffect
         : base(target, duration, level, source)
     {
         this.bonus = bonus;
-        effectType = Type.positive;
+        effectType      = Type.positive;
+        sourceStackable = true;
     }
 
     public override void OnApply()
