@@ -10,6 +10,7 @@ public class LeafRanger : Shooter
     {
         base.Awake();
         LoadData();
+        basePassiveDuration = 8f;
     }
 
     public override void UpdateStats()
@@ -60,7 +61,7 @@ public class LeafRanger : Shooter
         if (existing != null)
             existing.AddStack();
         else
-            ApplyEffect(new VerdantFervorEffect(this, 8f, 1, this));
+            ApplyEffect(new VerdantFervorEffect(this, passiveDuration, 1, this));
     }
 
     protected override void Shoot(Vector3 target)
@@ -157,7 +158,7 @@ public class LeafRanger : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green>Piercing</color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "Upon shooting, grant a level of <color=green><b>Verdant Fervor</b></color>, increasing <b>Total Attack Speed</b> by <color=green><b>4%</b></color> per level for <color=green><b>8</b></color> seconds.")}\n\n" +
+               $"{Level5Section(path2Level, $"Upon shooting, grant a level of <color=green><b>Verdant Fervor</b></color>, increasing <b>Total Attack Speed</b> by <color=green><b>4%</b></color> per level for <color=green><b>{passiveDuration:F0}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

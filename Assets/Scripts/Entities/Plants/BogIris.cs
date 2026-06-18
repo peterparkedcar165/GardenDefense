@@ -16,7 +16,7 @@ public class BogIris : Shooter
 
     private BogIrisData BogData => data as BogIrisData;
 
-    private float SunInterval => 2f * (passiveCooldown / basePassiveCooldown);
+    private float SunInterval => 2f * (1f + sunGenerationCooldown);
     private float OpenDuration => ((BogData?.baseOpenDuration ?? 0f) + (BogData?.path2OpenDurationPerLevel ?? 2f) * effectivePath2Level) * (1 + passiveDuration);
     private int SunGenerated => (BogData?.baseSunGenerated ?? 0) + (BogData?.path2SunPerLevel ?? 1) * effectivePath2Level;
     private float GeyserRadius => skillRadius + (BogData?.path3GeyserRadiusPerLevel ?? 0.15f) * effectivePath3Level;

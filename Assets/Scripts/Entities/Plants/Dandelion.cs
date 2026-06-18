@@ -23,6 +23,7 @@ public class Dandelion : Shooter
         base.Awake();
         LoadData();
         _obstacleMask = LayerMask.GetMask("Obstacle");
+        basePassiveDuration = 5f;
     }
 
     private void OnEnable()  { GustEffect.OnWindshearTriggered += OnWindshearReaction; }
@@ -37,7 +38,7 @@ public class Dandelion : Shooter
         {
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(center, insect.transform.position) <= radius)
-                insect.ApplyEffect(new SlowingAllergenEffect(insect, 5f, 1, this));
+                insect.ApplyEffect(new SlowingAllergenEffect(insect, passiveDuration, 1, this));
         }
     }
 
@@ -272,7 +273,7 @@ public class Dandelion : Shooter
             : $"Fires <color=green><b>{seeds}</b></color> seeds per attack, targeting the <color=green><b>{seeds}</b></color> highest-priority insects in range.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "Upon triggering <color=#B2EBF2><b>Wind Shear</b></color>, all damaged insects are inflicted <color=#B2EBF2><b>Slowing Allergen</b></color>, reducing their <color=green><b>Movement Speed</b></color> by <color=green><b>27%</b></color> and <color=#E0E0E0><b>Wind Resistance</b></color> by <color=green><b>23%</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"Upon triggering <color=#B2EBF2><b>Wind Shear</b></color>, all damaged insects are inflicted <color=#B2EBF2><b>Slowing Allergen</b></color> for <color=green><b>{passiveDuration:F0}s</b></color>, reducing their <color=green><b>Movement Speed</b></color> by <color=green><b>27%</b></color> and <color=#E0E0E0><b>Wind Resistance</b></color> by <color=green><b>23%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

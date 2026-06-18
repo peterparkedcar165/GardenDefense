@@ -5,6 +5,7 @@ public class RhodiolaData : PlantData
 {
     [Header("Path 1 Scaling")]
     public float path1AttackSpeedPerLevel  = 0.08f;
+    public float path1AttackRangePerLevel  = 0.2f;
     public float path1HealingBonusPerLevel = 0.03f;
 
     [Header("Path 2 Scaling")]

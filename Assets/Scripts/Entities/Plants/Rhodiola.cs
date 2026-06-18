@@ -7,7 +7,7 @@ public class Rhodiola : Shooter
 
     private Insect _currentTarget;
 
-    private const float SeedDuration = 8f;
+    private const float SeedDurationBase = 8f;
     private const float BurstRadius  = 2.5f;
 
     public float BurgeonHealPerTick  => (RData?.baseBurgeonHealPerTick ?? 2f) + effectivePath2Level * (RData?.path2HealPerLevel ?? 1f);
@@ -18,6 +18,7 @@ public class Rhodiola : Shooter
     {
         base.Awake();
         LoadData();
+        basePassiveDuration = SeedDurationBase;
     }
 
     protected override void Update()
@@ -46,13 +47,14 @@ public class Rhodiola : Shooter
         if (_currentTarget == null || !_currentTarget.IsAlive) return;
         _currentTarget.Damage(attackDamage, damageType, elementalType, this, true,
             new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget });
-        _currentTarget.ApplyEffect(new RejuvenatingSeedEffect(_currentTarget, SeedDuration, this));
+        _currentTarget.ApplyEffect(new RejuvenatingSeedEffect(_currentTarget, passiveDuration, this));
     }
 
     public override void OnPath1Upgrade(int level)
     {
         baseAttackSpeed  = data.baseAttackSpeed  + level * (RData?.path1AttackSpeedPerLevel  ?? 0.08f);
         baseHealingBonus = data.baseHealingBonus + level * (RData?.path1HealingBonusPerLevel ?? 0.03f);
+        baseAttackRange  = data.baseAttackRange  + level * (RData?.path1AttackRangePerLevel  ?? 0.2f);
     }
 
     public override void OnPath3Upgrade(int level)
@@ -92,7 +94,7 @@ public class Rhodiola : Shooter
 
     public override string GetPassiveDescription()
     {
-        return $"Attacks inflict <color=green><b>Rejuvenating Seed</b></color> on the target. " +
+        return $"Attacks inflict <color=green><b>Rejuvenating Seed</b></color> on the target for <color=green><b>{passiveDuration:F0}s</b></color>. " +
                $"When the target is attacked by a plant, that plant is granted <color=green><b>Rejuvenating Burgeon</b></color>, " +
                $"healing <color=green><b>{Mathf.RoundToInt(BurgeonHealPerTick)}</b></color> health every <color=green><b>{BurgeonTickInterval}s</b></color> " +
                $"for <color=green><b>{BurgeonDuration:F0}s</b></color>.";
@@ -107,13 +109,15 @@ public class Rhodiola : Shooter
 
     public override string GetPath1Description(bool details = false)
     {
-        float aspl = RData?.path1AttackSpeedPerLevel  ?? 0.08f;
-        float hbpl = RData?.path1HealingBonusPerLevel ?? 0.03f;
+        float aspl  = RData?.path1AttackSpeedPerLevel  ?? 0.08f;
+        float hbpl  = RData?.path1HealingBonusPerLevel ?? 0.03f;
+        float rngpl = RData?.path1AttackRangePerLevel  ?? 0.2f;
         string desc = details
             ? $"Instantly deals <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the target."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Healing Bonus</b></color> by <color=green><b>{hbpl * 100f:F0}%</b></color> per level. [<color=green><b>+{hbpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"When an insect with <color=green><b>Rejuvenating Seed</b></color> dies, it bursts, spreading the seed to nearby insects within a <color=green><b>{BurstRadius}</b></color>-radius.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +

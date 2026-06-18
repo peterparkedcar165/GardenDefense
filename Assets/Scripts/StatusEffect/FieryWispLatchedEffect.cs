@@ -26,7 +26,7 @@ public class FieryWispLatchedEffect : RegenerationEffect
         target.fireDamageAdder -= _fireDamageFrac;
     }
 
-    public override string GetName() => "<color=orange>Fiery Wisp Latched</color>";
+    public override string GetName() => "<color=orange><b>Fiery Assistance</b></color>";
     public override string GetDescription() =>
         $"Recovering <color=orange><b>{healingPerSecond:F0}</b></color> health per second. " +
         $"<color=orange>Fire Damage</color> increased by <color=green><b>{_fireDamageFrac * 100f:F0}%</b></color>.";

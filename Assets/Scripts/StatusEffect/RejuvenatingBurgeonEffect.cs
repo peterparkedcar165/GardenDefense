@@ -9,6 +9,8 @@ public class RejuvenatingBurgeonEffect : RegenerationEffect
     {
     }
 
+    public override void OnApply() { }
+
     public override string GetName()        => "<color=green><b>Rejuvenating Burgeon</b></color>";
     public override string GetDescription() =>
         $"Recovering <color=green><b>{Mathf.RoundToInt(healingPerSecond)}</b></color> health every <color=green><b>{tickInterval}s</b></color>.";

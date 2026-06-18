@@ -7,6 +7,8 @@ public abstract class ShieldEffect : StatusEffect
     protected ShieldEffect(Entity target, float duration, int level, Entity source, float amount)
         : base(target, duration, level, source)
     {
+        if (source != null && source.shieldDuration != 0f)
+            this.duration *= (1f + source.shieldDuration);
         // shields scale with the source's Heals & Shield Bonus and the target's Heals & Shield Received, like heals
         float bonus = source != null ? source.healingBonus : 0f;
         float scaled = amount * (1f + target.healingReceived) * (1f + bonus);

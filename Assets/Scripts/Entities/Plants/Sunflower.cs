@@ -11,11 +11,14 @@ public class Sunflower : Shooter
     [SerializeField] private GameObject sunrayPrefab;
 
     private SunflowerData SFData => data as SunflowerData;
+    private float SunMarkDuration => passiveDuration;
+    private float SunGenInterval  => passiveCooldown * (1f + sunGenerationCooldown);
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
+        basePassiveDuration  = 6f;
         skillAoERadius       = data.baseSkillRadius;
         passiveCooldownTimer = data.basePassiveCooldown;
         Entity.OnEntityHit  += OnAnyEntityHit;
@@ -33,7 +36,7 @@ public class Sunflower : Shooter
         if (data.elementalType != ElementalType.Fire) return;
         if (!IsPath2Maxed) return;
         if (data.target is Insect insect)
-            insect.ApplyEffect(new SunMarkEffect(insect, 6f, 1, this));
+            insect.ApplyEffect(new SunMarkEffect(insect, SunMarkDuration, 1, this));
     }
 
     protected override void Update()
@@ -46,7 +49,7 @@ public class Sunflower : Shooter
         if (passiveCooldownTimer <= 0)
         {
             int granted = GenerateSun(sunGenerated);
-            passiveCooldownTimer += passiveCooldown;
+            passiveCooldownTimer += passiveCooldown * (1f + sunGenerationCooldown);
             SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), granted);
         }
     }
@@ -166,7 +169,7 @@ public class Sunflower : Shooter
     }
 
     public override string GetPassiveDescription() =>
-        $"Passively generates <color=green><b>{sunGenerated}</b></color> <color=yellow>Sun</color> for the garden every <color=green><b>{passiveCooldown}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>1</b></color> second.";
+        $"Passively generates <color=green><b>{sunGenerated}</b></color> <color=yellow>Sun</color> for the garden every <color=green><b>{SunGenInterval:F1}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>1</b></color> second.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -186,7 +189,7 @@ public class Sunflower : Shooter
     public override string GetPath2Description(bool details = false)
     {
         int sunpl = SFData?.path2SunPerLevel ?? 2;
-        string passiveMaxBonus = "Dealing <color=red><b>Fire Damage</b></color> inflicts <color=#FFD700><b>Sun Mark</b></color>, increasing the <color=yellow><b>Sun</b></color> yield of the target by <color=green><b>27%</b></color>.";
+        string passiveMaxBonus = $"Dealing <color=red><b>Fire Damage</b></color> inflicts <color=#FFD700><b>Sun Mark</b></color> for <color=green><b>{SunMarkDuration:F0}s</b></color>, increasing the <color=yellow><b>Sun</b></color> yield of the target by <color=green><b>27%</b></color>.";
         string desc = details
             ? $"Passively generates <color=green><b>[({SFData?.baseSunGenerated ?? 6}) + ({sunpl}/Lvl.)]</b></color> <color=yellow>Sun</color> for the garden every <color=green><b>[({data.basePassiveCooldown:F0}) - (1/Lvl.)]</b></color> seconds. Attacks reduce the cooldown by <color=green><b>1</b></color> second."
             : GetPassiveDescription();

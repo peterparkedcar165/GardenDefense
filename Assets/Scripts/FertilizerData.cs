@@ -69,5 +69,9 @@ public enum StatType
     ArmorPenetration,
     MagicPenetration,
     ArmorShred,
-    MagicArmorShred
+    MagicArmorShred,
+    DoTDuration,
+    RegenerationDuration,
+    ShieldDuration,
+    SunGenerationCooldownMultiplier
 }

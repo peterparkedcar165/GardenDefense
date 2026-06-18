@@ -21,6 +21,7 @@ MonoBehaviour:
   - statType: 32
     value: 66
   icon: {fileID: 0}
-  targetElementalType: 0
-  appliesToAll: 1
+  targetElementalTypes: 
+  targetCultivars: 0200000001000000
+  appliesToAll: 0
   tier: 0

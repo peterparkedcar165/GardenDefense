@@ -77,7 +77,7 @@ public class AcornProjectile : Projectile
         {
             float procChance = acorn.stunChance * (1 + acorn.bonusEffectChance);
             if (Random.value < procChance)
-                insect.ApplyEffect(new StunEffect(insect, acorn.stunDuration * (1 + acorn.passiveDuration), 1, source));
+                insect.ApplyEffect(new StunEffect(insect, acorn.passiveDuration, 1, source));
         }
     }
 }

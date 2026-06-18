@@ -15,6 +15,13 @@ public class RegenerationEffect : StatusEffect
         tags = new EffectTag[] { EffectTag.Regenerative };
         this.healingPerSecond = healingPerSecond;
         this.tickInterval     = tickInterval;
+        if (source != null && source.regenerationDuration != 0f)
+            this.duration *= (1f + source.regenerationDuration);
+    }
+
+    public override void OnReapply(StatusEffect previous)
+    {
+        if (previous is RegenerationEffect prev) tickTimer = prev.tickTimer;
     }
 
     public override void OnApply()

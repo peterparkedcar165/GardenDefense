@@ -4,11 +4,15 @@ public class DrizzleBarrierEffect : ShieldEffect
 {
     private const float Cap = 120f;
     private const float BaseDuration = 16f;
+    private readonly float _scaledDuration;
 
     public DrizzleBarrierEffect(Entity target, AloeVera source)
-        : base(target, BaseDuration, 1, source, 0f) { }
+        : base(target, BaseDuration * (1f + source.skillDurationMultiplier) + source.skillDurationAdder, 1, source, 0f)
+    {
+        _scaledDuration = BaseDuration * (1f + source.skillDurationMultiplier) + source.skillDurationAdder;
+    }
 
-    public void RefreshDuration() => duration = BaseDuration;
+    public void RefreshDuration() => duration = _scaledDuration;
 
     public void AddShield(float overflow)
     {

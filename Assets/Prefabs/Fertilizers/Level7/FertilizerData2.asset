@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Sun Generator
   stats:
-  - statType: 19
-    value: 0.26
+  - statType: 48
+    value: -0.28
   - statType: 20
     value: 0.23
   icon: {fileID: 0}
-  targetElementalType: 0
-  appliesToAll: 1
+  targetElementalTypes: 
+  targetCultivars: 00000000
+  appliesToAll: 0
   tier: 0

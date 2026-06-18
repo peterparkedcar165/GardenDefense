@@ -148,7 +148,7 @@ public class Gloriosa : Shooter
     {
         if (wispPrefab == null) return;
         float effectiveTempPerSec = (GData?.wispTemperaturePerSecond ?? 1f)  + (GData?.path3TemperaturePerSecondPerLevel ?? 0.2f) * effectivePath3Level;
-        float effectiveLatchDur   = (GData?.latchDuration ?? 3f) + (GData?.path3LatchDurationPerLevel ?? 0.5f) * effectivePath3Level;
+        float effectiveLatchDur   = ((GData?.latchDuration ?? 3f) + (GData?.path3LatchDurationPerLevel ?? 0.5f) * effectivePath3Level) * (1f + skillDurationMultiplier) + skillDurationAdder;
 
         Vector3 offset = new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f), 0f);
         GameObject obj = Instantiate(wispPrefab, transform.position + offset, Quaternion.identity);
@@ -229,17 +229,15 @@ public class Gloriosa : Shooter
         int   count = GData?.wispCount ?? 2;
         float wRad  = GData?.wispRadius ?? 1.5f;
         float wTemp = (GData?.wispTemperaturePerSecond ?? 1f) + (GData?.path3TemperaturePerSecondPerLevel ?? 0.2f) * effectivePath3Level;
-        float lDur  = (GData?.latchDuration ?? 3f) + (GData?.path3LatchDurationPerLevel ?? 0.5f) * effectivePath3Level;
-        return $"Summons <color=green><b>{count}</b></color> Fiery Wisps that fly across the map seeking the most injured plant. " +
-               $"Plants within <color=green><b>{wRad:F1}</b></color> radius heal " +
-               $"<color=green><b>{WispHealBase:F0}</b></color> [<color=#FFB6C1><b>+{WispHealMP:F0}</b></color>] health and " +
-               $"warm <color=orange><b>{wTemp:F1}°</b></color> per second while the wisp is near. " +
-               $"When a wisp reaches its target it latches, applying <color=orange>Fiery Wisp Latched</color>: " +
-               $"heals <color=green><b>{LatchHealBase:F0}</b></color> [<color=#FFB6C1><b>+{LatchHealMP:F0}</b></color>] per second and " +
-               $"increases <color=orange><b>Fire Damage</b></color> by " +
+        float lDur  = ((GData?.latchDuration ?? 3f) + (GData?.path3LatchDurationPerLevel ?? 0.5f) * effectivePath3Level) * (1f + skillDurationMultiplier) + skillDurationAdder;
+        return $"Summons <color=green><b>{count}</b></color> <color=orange><b>Fiery Wisps</b></color> that seek injured plants, " +
+               $"healing <color=green><b>{WispHealBase:F0}</b></color> [<color=#FFB6C1><b>+{WispHealMP:F0}</b></color>] health " +
+               $"and heating <color=orange><b>{wTemp:F1}°</b></color> per second around them. " +
+               $"Upon reaching a target, it latches, applying <color=orange><b>Fiery Assistance</b></color>, " +
+               $"which heals <color=green><b>{LatchHealBase:F0}</b></color> [<color=#FFB6C1><b>+{LatchHealMP:F0}</b></color>] per second " +
+               $"and increases <color=orange><b>Fire Damage</b></color> by " +
                $"<color=orange><b>{LatchFireBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{LatchFireMP * 100f:F1}%</b></color>]. " +
-               $"The effect lingers for <color=orange><b>{lDur:F1}s</b></color> after the wisp detaches. " +
-               $"Wisps last <color=green><b>{skillDuration:F0}s</b></color>.";
+               $"The effect lingers for <color=orange><b>{lDur:F1}s</b></color>.";
     }
 
     public override string GetPath1Description(bool details = false)
@@ -296,12 +294,12 @@ public class Gloriosa : Shooter
               $"Wisps last <color=green><b>[({GData?.wispDuration ?? 20f:F0}) + ({durpl:F0}/Lvl.)]</b></color>s."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase wisp duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase aura healing by <color=green><b>{healpl:F0}</b></color> per second per level. [<color=green><b>+{healpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase aura temperature by <color=orange><b>{temppl:F1}</b></color> per second per level. [<color=orange><b>+{temppl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"Increase latch healing by <color=green><b>{lhealpl:F0}</b></color> per second per level. [<color=green><b>+{lhealpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase latch <color=orange>Fire</color> bonus by <color=orange><b>{lfirepl * 100f:F0}%</b></color> per level. [<color=orange><b>+{lfirepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase latch duration by <color=green><b>{ldurpl:F1}</b></color> seconds per level. [<color=green><b>+{ldurpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase healing by <color=green><b>{healpl:F0}</b></color> per second per level. [<color=green><b>+{healpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase heating by <color=orange><b>{temppl:F1}</b></color>° per second per level. [<color=orange><b>+{temppl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase <color=orange><b>Assistance</b></color> healing by <color=green><b>{lhealpl:F0}</b></color> per second per level. [<color=green><b>+{lhealpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase <color=orange><b>Fire Damage</b></color> bonus by <color=orange><b>{lfirepl * 100f:F0}%</b></color> per level. [<color=orange><b>+{lfirepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=orange><b>Assistance</b></color> duration by <color=green><b>{ldurpl:F1}</b></color> seconds per level. [<color=green><b>+{ldurpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"Summons an additional <color=orange><b>Fiery Wisp</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +

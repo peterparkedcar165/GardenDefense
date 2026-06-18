@@ -13,7 +13,8 @@ public class Aeonium : Shooter
     private float _sunTimerReduction => _sunTimerReductionBase + _sunTimerReductionMP;
     private int   _shotCounter = 0;
 
-    private float SunYieldBonus => (AData?.baseSunYieldBonus ?? 0.5f) + (AData?.path3SunYieldPerLevel ?? 0.05f) * effectivePath3Level;
+    private float SunYieldBonus  => (AData?.baseSunYieldBonus ?? 0.5f) + (AData?.path3SunYieldPerLevel ?? 0.05f) * effectivePath3Level;
+    private float SunGenInterval => passiveCooldown * (1f + sunGenerationCooldown);
 
     protected override void Awake()
     {
@@ -42,7 +43,7 @@ public class Aeonium : Shooter
         if (passiveCooldownTimer <= 0)
         {
             int granted = GenerateSun(_sunGenerated);
-            passiveCooldownTimer += passiveCooldown;
+            passiveCooldownTimer += passiveCooldown * (1f + sunGenerationCooldown);
             SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), granted);
         }
     }
@@ -151,7 +152,7 @@ public class Aeonium : Shooter
         $"Launches an energy ball dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit.";
 
     public override string GetPassiveDescription() =>
-        $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{passiveCooldown:F0}s</b></color>. Each projectile or melee attack hit by a plant within her radius reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";
+        $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{SunGenInterval:F1}s</b></color>. Each projectile or melee attack hit by a plant within her radius reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";
 
     public override string GetSkillDesription() =>
         $"Grants all plants within range <color=green><b>Blessing of the Sun</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, increasing their Sun yield (both generation and kills) by <color=green><b>{SunYieldBonus * 100f:F0}%</b></color>.";

@@ -17,6 +17,7 @@ public class Cactus : Shooter
     {
         base.Awake();
         LoadData();
+        basePassiveDuration = 8f;
     }
 
     protected override void Update()
@@ -82,7 +83,7 @@ public class Cactus : Shooter
         int current = insect.GetEffect<PuncturedEffect>()?.level ?? 0;
         int total = Mathf.Min(current + stacks, 100);
         if (total <= current) return;
-        insect.ApplyEffect(new PuncturedEffect(insect, 8f, total, this));
+        insect.ApplyEffect(new PuncturedEffect(insect, passiveDuration, total, this));
     }
 
     private void ApplyTauntInRange()
@@ -167,7 +168,7 @@ public class Cactus : Shooter
             ? $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"<color=#A0522D><b>Punctured</b></color>: reduces <color=#00CED1><b>Armor</b></color> by <color=red><b>1</b></color> per stack, lasts 8 seconds.\n\n" +
+               $"<color=#A0522D><b>Punctured</b></color>: reduces <color=#00CED1><b>Armor</b></color> by <color=red><b>1</b></color> per stack, lasts <color=green><b>{passiveDuration:F0}s</b></color>.\n\n" +
                $"Increase <color=#A0522D><b>Punctured</b></color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, details ? $"Retaliation damage is increased by <color=#00CED1><b>33%</b></color> of the {GetName()}'s <color=#00CED1><b>Armor</b></color>." : $"Retaliation deals <color=#00CED1><b>+{armor * 0.33f:F0}</b></color> bonus damage.")}\n\n" +

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AcornSprout : Shooter
 {
-    public float stunChance, stunDuration, activeRadius, activeDamageMultiplier, acornBombHealth;
+    public float stunChance, activeRadius, activeDamageMultiplier, acornBombHealth;
     [SerializeField] private GameObject acornBombPrefab;
 
     private AcornSproutData AcornData => data as AcornSproutData;
@@ -14,7 +14,7 @@ public class AcornSprout : Shooter
         if (AcornData != null)
         {
             stunChance = AcornData.stunChance;
-            stunDuration = AcornData.stunDuration;
+            basePassiveDuration = AcornData.stunDuration;
         }
         activeDamageMultiplier = data.baseSkillDamageMultiplier;
         acornBombHealth        = data.baseSkillHealth;
@@ -52,8 +52,8 @@ public class AcornSprout : Shooter
     public override void OnPath2Upgrade(int level)
     {
         if (AcornData == null) return;
-        stunChance   = AcornData.stunChance   + AcornData.path2StunChancePerLevel   * level;
-        stunDuration = AcornData.stunDuration + AcornData.path2StunDurationPerLevel * level;
+        stunChance          = AcornData.stunChance   + AcornData.path2StunChancePerLevel   * level;
+        basePassiveDuration = AcornData.stunDuration + AcornData.path2StunDurationPerLevel * level;
     }
 
     public override void OnPath3Upgrade(int level)
@@ -111,7 +111,7 @@ public class AcornSprout : Shooter
         float durpl      = AcornData?.path2StunDurationPerLevel ?? 0.1f;
         string desc = details
             ? $"Attacks have a <color=green><b>[({chanceBase * 100f:F0}) + ({chancepl * 100f:F0}/Lvl.)]</b></color>% chance to stun targets for <color=green><b>[({durBase:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
-            : $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{stunDuration:F1}</b></color> seconds.";
+            : $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{passiveDuration:F1}</b></color> seconds.";
         string passiveMaxBonus = "Attacks' <color=green><b>Piercing</b></color> instead bounce to nearby targets.\n\nIncrease <color=green><b>Piercing</b></color> by <color=green><b>1</b></color>.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Stun Chance</b></color> by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +

@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Omnipresence
   stats:
-  - statType: 22
-    value: 0.23
+  - statType: 46
+    value: 0.32
   - statType: 14
     value: 0.26
   icon: {fileID: 0}
-  targetElementalType: 0
-  appliesToAll: 1
+  targetElementalTypes: 
+  targetCultivars: 07000000
+  appliesToAll: 0
   tier: 0

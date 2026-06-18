@@ -6,7 +6,12 @@ public static class FertilizerFormat
     {
         switch (statType)
         {
-            case StatType.DebuffReceivedDuration: return true;
+            case StatType.DebuffReceivedDuration:
+            case StatType.DoTDuration:
+            case StatType.RegenerationDuration:
+            case StatType.ShieldDuration:
+            case StatType.SunGenerationCooldownMultiplier:
+                return true;
             default: return false;
         }
     }
@@ -79,9 +84,13 @@ public static class FertilizerFormat
             case StatType.MagicArmor:                   return "Magic Armor";
             case StatType.ArmorPenetration:             return "Armor Penetration";
             case StatType.MagicPenetration:             return "Magic Penetration";
-            case StatType.ArmorShred:                   return "Armor Shred";
-            case StatType.MagicArmorShred:              return "Magic Armor Shred";
-            default:                      return statType.ToString();
+            case StatType.ArmorShred:                       return "Armor Shred";
+            case StatType.MagicArmorShred:                  return "Magic Armor Shred";
+            case StatType.DoTDuration:                      return "DoT Duration";
+            case StatType.RegenerationDuration:             return "Regeneration Duration";
+            case StatType.ShieldDuration:                   return "Shield Duration";
+            case StatType.SunGenerationCooldownMultiplier:  return "Sun Generation Cooldown";
+            default:                                        return statType.ToString();
         }
     }
 }

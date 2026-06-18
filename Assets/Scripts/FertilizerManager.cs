@@ -200,7 +200,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.ImmobilizeDurationAdder:      plant.immobilizeDurationAdder      += value; break;
             case StatType.ImmobilizeDurationMultiplier: plant.immobilizeDurationMultiplier += value; break;
             case StatType.PassiveCooldown:              plant.passiveCooldownReductionMultiplier += value; break;
-            case StatType.PassiveDurationMultiplier:    plant.passiveDurationAdder               += value; break;
+            case StatType.PassiveDurationMultiplier:    plant.passiveDurationMultiplier          += value; break;
             case StatType.SkillDurationAdder:           plant.skillDurationAdder      += value; break;
             case StatType.SkillDurationMultiplier:      plant.skillDurationMultiplier      += value; break;
             case StatType.CoordinatedDamage:            plant.coordinatedDamageAdder       += value; break;
@@ -225,6 +225,10 @@ public class FertilizerManager : MonoBehaviour
             case StatType.MagicPenetration:             plant.magicPenFlatAdder            += value; break;
             case StatType.ArmorShred:                   plant.armorPenPercentAdder         += value; break;
             case StatType.MagicArmorShred:              plant.magicPenPercentAdder         += value; break;
+            case StatType.DoTDuration:                  plant.dotDurationAdder             += value; break;
+            case StatType.RegenerationDuration:         plant.regenerationDurationAdder    += value; break;
+            case StatType.ShieldDuration:               plant.shieldDurationAdder          += value; break;
+            case StatType.SunGenerationCooldownMultiplier:  plant.sunGenerationCooldownMultiplier += value; break;
         }
     }
 }

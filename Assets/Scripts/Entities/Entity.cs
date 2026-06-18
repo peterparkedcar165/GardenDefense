@@ -81,6 +81,7 @@ public abstract class Entity : MonoBehaviour
     public float baseLifesteal;
     public float baseCounterDamage;
     public float baseDebuffGivenDuration, baseBuffGivenDuration, baseBuffReceivedDuration, baseDebuffReceivedDuration;
+    public float baseDotDuration, baseRegenerationDuration, baseShieldDuration, baseSunGenerationCooldown;
     public float baseEvasion, baseAccuracy;
     public float baseBonusCritChanceReceived, baseBonusCritDamageReceived, baseProjectileSpeed;
 
@@ -115,6 +116,7 @@ public abstract class Entity : MonoBehaviour
     public float counterDamage;
     public float tenacity;
     public float debuffGivenDuration, buffGivenDuration, buffReceivedDuration, debuffReceivedDuration;
+    public float dotDuration, regenerationDuration, shieldDuration, sunGenerationCooldown;
     public float burnDurationBonus;   // multiplies the duration of Burns this entity causes (e.g. Stargazer)
     public float sunYieldBonus;       // increases sun this entity generates and the sun its kills drop (Aeonium's Blessing)
     public float baseMinionDamage;    // the plant's inherent minion damage bonus
@@ -145,6 +147,7 @@ public abstract class Entity : MonoBehaviour
     public float minionDamageAdder;
     public float counterDamageAdder;
     public float debuffGivenDurationAdder, buffGivenDurationAdder, buffReceivedDurationAdder, debuffReceivedDurationAdder;
+    public float dotDurationAdder, regenerationDurationAdder, shieldDurationAdder, sunGenerationCooldownMultiplier;
     public float evasionAdder, accuracyAdder;
     public float bonusCritChanceReceivedAdder, bonusCritDamageReceivedAdder, projectileSpeedAdder;
 
@@ -227,6 +230,11 @@ public abstract class Entity : MonoBehaviour
         buffGivenDuration      = baseBuffGivenDuration      + buffGivenDurationAdder      + (baseBuffGivenDuration      * buffGivenDurationMultiplier);
         buffReceivedDuration   = baseBuffReceivedDuration   + buffReceivedDurationAdder   + (baseBuffReceivedDuration   * buffReceivedDurationMultiplier);
         debuffReceivedDuration = baseDebuffReceivedDuration + debuffReceivedDurationAdder + (baseDebuffReceivedDuration * debuffReceivedDurationMultiplier);
+        // percentage bonuses for effect categories (e.g. 0.2 = 20% longer); base + adder only, no multiplier since base is typically 0
+        dotDuration           = baseDotDuration           + dotDurationAdder;
+        regenerationDuration  = baseRegenerationDuration  + regenerationDurationAdder;
+        shieldDuration        = baseShieldDuration        + shieldDurationAdder;
+        sunGenerationCooldown = Mathf.Max(-0.8f, sunGenerationCooldownMultiplier);
         evasion  = baseEvasion  + evasionAdder  + (baseEvasion  * evasionMultiplier);
         accuracy = baseAccuracy + accuracyAdder + (baseAccuracy * accuracyMultiplier);
         armor      = (int)(((baseArmor      + armorAdder)      + (baseArmor      * armorMultiplier))      * armorTotalMultiplier);
@@ -915,6 +923,7 @@ public abstract class Entity : MonoBehaviour
                 {
                     if (effect.sourceStackable && activeEffects[i].source != effect.source)
                         continue;
+                    effect.OnReapply(activeEffects[i]);
                     activeEffects[i].OnExpire();
                     activeEffects.RemoveAt(i);
                     break;

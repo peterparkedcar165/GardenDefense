@@ -20,6 +20,7 @@ public class AloeVera : Lobber
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
     private AloeVeraData AVData => data as AloeVeraData;
+    private float DrizzleBarrierDuration => 16f * (1f + skillDurationMultiplier) + skillDurationAdder;
 
     protected override void Awake()
     {
@@ -249,7 +250,7 @@ public class AloeVera : Lobber
                $"Increase rain duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase rain radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, "Overhealing from Soothing Rain accumulates into <color=#4FC3F7><b>Drizzle Barrier</b></color>, shielding plants for up to <color=green><b>120</b></color> for <color=green><b>16</b></color> seconds.")}\n\n" +
+               $"{Level5Section(path3Level, $"Overhealing from Soothing Rain accumulates into <color=#4FC3F7><b>Drizzle Barrier</b></color>, shielding plants for up to <color=green><b>120</b></color> for <color=green><b>{DrizzleBarrierDuration:F0}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

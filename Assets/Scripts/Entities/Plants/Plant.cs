@@ -212,9 +212,9 @@ public abstract class Plant : Entity, IAttackable
         comfortMax = baseComfortMax + comfortMaxAdder;
         temperatureMin = baseTemperatureMin + temperatureMinAdder;
         temperatureMax = baseTemperatureMax + temperatureMaxAdder;
-        passiveCooldown = basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier);
-        passiveDuration = basePassiveDuration + passiveDurationAdder;
-        skillCooldown = baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier);
+        passiveCooldown = Mathf.Max(basePassiveCooldown * 0.2f, basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier));
+        passiveDuration = basePassiveDuration + passiveDurationAdder + (basePassiveDuration * passiveDurationMultiplier);
+        skillCooldown = Mathf.Max(baseSkillCooldown * 0.2f, baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier));
         skillRadius = baseSkillRadius + skillRadiusAdder + (baseSkillRadius * skillRadiusMultiplier);
         skillDamageMultiplier = baseSkillDamageMultiplier + skillDamageMultiplierAdder;
         skillDamage += baseSkillDamage * skillDamageMultiplier;
@@ -277,7 +277,8 @@ public abstract class Plant : Entity, IAttackable
     [Header("Passive")]
     public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownReductionMultiplier, passiveCooldownMultiplier;
     public float passiveCooldownTimer;
-    public float basePassiveDuration, passiveDuration, passiveDurationAdder;
+    public float basePassiveDuration, passiveDuration, passiveDurationAdder, passiveDurationMultiplier;
+
 
     [Header("Skill")]
     public float baseSkillCooldown, skillCooldown, skillCooldownReductionAdder, skillCooldownReductionMultiplier;

@@ -10,6 +10,11 @@ public abstract class DoTEffect : StatusEffect
         effectType = Type.negative;
     }
 
+    public override void OnReapply(StatusEffect previous)
+    {
+        if (previous is DoTEffect prev) tickTimer = prev.tickTimer;
+    }
+
     public override void OnApply()
     {
         if (target.HasEffect<SludgeEffect>())

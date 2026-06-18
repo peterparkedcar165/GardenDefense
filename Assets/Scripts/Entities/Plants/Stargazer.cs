@@ -17,13 +17,13 @@ public class Stargazer : Aura
     private Vector2 _facingDir = Vector2.right;
     private GameObject _skillIndicatorInstance;
 
-    private const float ScorcherDuration = 12f;
-    private const float MelterDuration   = 12f;
+    private float ScorcherDuration => passiveDuration;
+    private float MelterDuration   => passiveDuration;
 
     private float ConeAngle              => SData?.coneAngle ?? 60f;
     private float FlammableBonusPerStack => SData?.flammableBonusPerStack ?? 0.08f;
     private int   FlammableMaxStacks     => SData?.flammableMaxStacks ?? 5;
-    private float FlammableDuration       => SData?.flammableDuration ?? 4f;
+    private float FlammableDuration       => passiveDuration;
     private int   StacksPerHit           => (SData?.baseStacksPerHit ?? 1) + Mathf.RoundToInt((SData?.path2StacksPerLevel ?? 1) * effectivePath2Level);
     private float BurnDurationBonus       => (SData?.baseBurnDurationBonus ?? 0.5f) + (SData?.path2BurnDurationPerLevel ?? 0.1f) * effectivePath2Level;
 
@@ -41,6 +41,7 @@ public class Stargazer : Aura
     {
         base.Awake();
         LoadData();
+        basePassiveDuration = 12f;
         Entity.OnEffectApplied += OnAnyEffectApplied;
     }
 
@@ -314,7 +315,7 @@ public class Stargazer : Aura
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Decrease <color=green><b>Total Attack Damage</b></color> by <color=red><b>33%</b></color>, but every attack grants a stack of <color=orange><b>Scorcher</b></color>, increasing <color=orange><b>Fire Damage</b></color> by <color=green><b>4%</b></color> per stack, up to <color=green><b>10</b></color>, for <color=green><b>12s</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, $"Decrease <color=green><b>Total Attack Damage</b></color> by <color=red><b>33%</b></color>, but every attack grants a stack of <color=orange><b>Scorcher</b></color>, increasing <color=orange><b>Fire Damage</b></color> by <color=green><b>4%</b></color> per stack, up to <color=green><b>10</b></color>, for <color=green><b>{ScorcherDuration:F0}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -329,7 +330,7 @@ public class Stargazer : Aura
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#FF6B1A>Flammable</color> stacks applied per hit by <color=green><b>{spl}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(spl * effectivePath2Level)}</b></color>]\n\n" +
                $"Increase <color=orange>Burn</color> duration by <color=green><b>{bdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "Upon inflicting a <color=orange>Burn</color>, grants a stack of <color=#FF6B1A><b>Melter</b></color>, increasing <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>6%</b></color> per stack, up to <color=green><b>10</b></color>, for <color=green><b>12s</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"Upon inflicting a <color=orange>Burn</color>, grants a stack of <color=#FF6B1A><b>Melter</b></color>, increasing <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>6%</b></color> per stack, up to <color=green><b>10</b></color>, for <color=green><b>{MelterDuration:F0}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
