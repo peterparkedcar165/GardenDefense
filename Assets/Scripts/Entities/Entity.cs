@@ -362,7 +362,7 @@ public abstract class Entity : MonoBehaviour
         switch (elementalType)
         {
             case ElementalType.Fire:
-            elementalMultiplier = Mathf.Max(0f, 1 - fireResistance + source.fireDamage);
+            elementalMultiplier = Mathf.Max(0f, 1 - fireResistance) * (1 + source.fireDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && blazeInternalCooldown <= 0)
                 {
                     blazeInternalCooldown = internalCooldown;
@@ -374,7 +374,7 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Water:
-            elementalMultiplier = Mathf.Max(0f, 1 - waterResistance + source.waterDamage);
+            elementalMultiplier = Mathf.Max(0f, 1 - waterResistance) * (1 + source.waterDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && wetInternalCooldown <= 0)
                 {
                     wetInternalCooldown = internalCooldown;
@@ -383,7 +383,7 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Ice:
-            elementalMultiplier = Mathf.Max(0f, 1 - iceResistance + source.iceDamage);
+            elementalMultiplier = Mathf.Max(0f, 1 - iceResistance) * (1 + source.iceDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && coldInternalCooldown <= 0)
                 {
                     coldInternalCooldown = internalCooldown;
@@ -392,7 +392,7 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Wind:
-            elementalMultiplier = Mathf.Max(0f, 1 - windResistance + source.windDamage);
+            elementalMultiplier = Mathf.Max(0f, 1 - windResistance) * (1 + source.windDamage);
             if (this is Insect windInsect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
                     if (windInsect.HasEffect<BlazeEffect>() || windInsect.HasEffect<ColdEffect>() ||
@@ -405,7 +405,7 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Nature:
-            elementalMultiplier = Mathf.Max(0f, 1 - natureResistance + source.natureDamage);
+            elementalMultiplier = Mathf.Max(0f, 1 - natureResistance) * (1 + source.natureDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && sproutInternalCooldown <= 0)
                 {
                     sproutInternalCooldown = internalCooldown;
@@ -414,7 +414,7 @@ public abstract class Entity : MonoBehaviour
             break;
 
             case ElementalType.Poison:
-            elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance + source.poisonDamage);
+            elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance) * (1 + source.poisonDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && taintedInternalCooldown <= 0)
                 {
                     taintedInternalCooldown = internalCooldown;

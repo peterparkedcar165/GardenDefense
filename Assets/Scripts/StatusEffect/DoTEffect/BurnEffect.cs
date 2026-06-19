@@ -30,8 +30,7 @@ public class BurnEffect : DoTEffect
         float ep = cachedelementalAffinity;
         float flammable = target?.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
         float total = ((healthPerSecond * hp) + (mpPerSecond * mp) + flatPerSecond) * (1f + ep) * flammable;
-        string flammableSuffix = flammable > 1f ? $" × <color=orange><b>{flammable:F2} Flammable</b></color>" : "";
-        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second.{flammableSuffix}";
+        return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second.";
     }
 
     public override void OnApply()
