@@ -82,6 +82,7 @@ MonoBehaviour:
   bounceSearchRadius: 4
   bounceDamageReduction: 0.1
   path1AttackDamagePerLevel: 11
+  path1AttackRangePerLevel: 0.2
   path1BouncePerLevel: 1
   path2ToxinDurationPerLevel: 2
   path3SkillDamagePerLevel: 17

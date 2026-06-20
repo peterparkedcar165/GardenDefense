@@ -55,6 +55,11 @@ public class InsectData : ScriptableObject
 
     [Header("Other")]
     public int sunDrop;
+    public float sunDropAdder;
+    public float sunDropMultiplier;
+    public int currencyDrop;
+    public float currencyDropAdder;
+    public float currencyDropMultiplier;
     public Aggressivity aggressivity;
     public float baseLightEmissionRange;
     public float baseHealingBonus;

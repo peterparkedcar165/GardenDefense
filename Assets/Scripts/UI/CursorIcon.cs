@@ -131,7 +131,16 @@ public class CursorIcon : MonoBehaviour
             }
             else
             {
-                icon.enabled = false;
+                Tile tile = hit != null ? (hit.GetComponent<Tile>() ?? hit.GetComponentInParent<Tile>()) : null;
+                if (tile != null && (tile.flowerPot != null || tile.waterPot != null))
+                {
+                    Vector2 tileScreenPos = cam.WorldToScreenPoint(tile.transform.position);
+                    Show(shovelSprite, tileScreenPos);
+                }
+                else
+                {
+                    icon.enabled = false;
+                }
             }
             HideRangePreview();
         }

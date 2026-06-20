@@ -44,7 +44,8 @@ public class SettingsManager : MonoBehaviour
         bool fertilizerOpen = FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen;
         bool inEncyclopedia = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Encyclopedia";
         bool inLevelSelector = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "LevelSelector";
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !fertilizerOpen && !inEncyclopedia && !inLevelSelector && !SceneTransition.IsTransitioning)
+        bool inShop = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Shop";
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !fertilizerOpen && !inEncyclopedia && !inLevelSelector && !inShop && !SceneTransition.IsTransitioning)
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);

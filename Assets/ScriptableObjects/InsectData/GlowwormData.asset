@@ -42,9 +42,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0.33
+  baseNatureResistance: 0.12
   baseWindResistance: 0
-  baseDotResistance: 0.16
+  baseDotResistance: 0.06
   threatValue: 2
   threatType: 1
   baseEvasion: 0
@@ -57,10 +57,10 @@ MonoBehaviour:
   glowRadius: 1.5
   glowIntensity: 0.4
   healRange: 4
-  healCooldown: 4
+  healCooldown: 8
   castDuration: 0.5
-  healAmount: 30
-  healPercent: 0.07
-  regenerationDuration: 4
-  regenerationHealing: 8
+  healAmount: 25
+  healPercent: 0.04
+  regenerationDuration: 3
+  regenerationHealing: 6
   regenerationPercent: 0.01

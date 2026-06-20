@@ -196,7 +196,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     private void OnUnlockedSlotClicked(string plantName)
     {
-        if (selectedLoadout.Contains(plantName) || selectedLoadout.Count >= SaveManager.instance.saveData.maxLoadoutSize) return;
+        if (selectedLoadout.Contains(plantName) || selectedLoadout.Count >= SaveManager.instance.saveData.MaxLoadoutSize) return;
         selectedLoadout.Add(plantName);
         RefreshUI();
     }

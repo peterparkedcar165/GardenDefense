@@ -86,6 +86,7 @@ public class NeriumOleander : Shooter
     public override void OnPath1Upgrade(int level)
     {
         baseAttackDamage = data.baseAttackDamage + (OleanderData?.path1AttackDamagePerLevel ?? 10f) * level;
+        baseAttackRange  = data.baseAttackRange  + (OleanderData?.path1AttackRangePerLevel  ?? 0.5f) * level;
     }
 
     public override void OnPath2Upgrade(int level) { }
@@ -98,13 +99,15 @@ public class NeriumOleander : Shooter
 
     public override string GetPath1Description(bool details = false)
     {
-        float adpl = OleanderData?.path1AttackDamagePerLevel ?? 10f;
-        int   bpl  = OleanderData?.path1BouncePerLevel       ?? 1;
+        float adpl = OleanderData?.path1AttackDamagePerLevel  ?? 10f;
+        float arpl = OleanderData?.path1AttackRangePerLevel   ?? 0.5f;
+        int   bpl  = OleanderData?.path1BouncePerLevel        ?? 1;
         string desc = details
             ? $"Fires a toxic petal at the target dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>[(1) + Piercing]</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce."
             : $"Fires a toxic petal at the target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>{1 + piercing}</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{arpl:F1}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=green><b>Piercing</b></color> by <color=green><b>{bpl}</b></color> per level. [<color=green><b>+{bpl * effectivePath1Level}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Deal <color=green><b>22% increased damage</b></color> for each positive effect on the target.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +

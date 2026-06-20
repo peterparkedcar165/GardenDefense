@@ -100,6 +100,7 @@ public class SaveManager : MonoBehaviour
         string plant = GetPlantUnlockedByLevel(level);
         if (plant != null && !saveData.unlockedPlants.Contains(plant))
             saveData.unlockedPlants.Add(plant);
+        saveData.currency += 200 + level * 40;
         Save();
         Debug.Log($"Level {level} completed. Unlocked: {plant ?? "none"}. highestLevelUnlocked={saveData.highestLevelUnlocked}");
     }

@@ -78,13 +78,13 @@ MonoBehaviour:
   baseSkillDamage: 0
   healAmount: 12
   healMP: 0.12
-  temperatureAmount: 0.9
-  temperatureMP: 0.007
+  temperatureAmount: 1.6
+  temperatureMP: 0.012
   auraRadius: 1.5
   path1AttackSpeedPerLevel: 0.08
   path1AttackRangePerLevel: 0.2
   path2HealPerLevel: 4
-  path2TemperaturePerLevel: 0.3
+  path2TemperaturePerLevel: 0.8
   wispCount: 2
   wispDuration: 15
   wispSpeed: 4
@@ -92,7 +92,7 @@ MonoBehaviour:
   wispSeekDelay: 0.7
   wispRadius: 1.5
   wispHealPerSecond: 6
-  wispTemperaturePerSecond: 1.6
+  wispTemperaturePerSecond: 3
   latchHealPerSecond: 3
   latchFireDamageBonus: 0.08
   latchDuration: 3
@@ -104,7 +104,7 @@ MonoBehaviour:
   latchFireDamageBonusMP: 0.04
   path3DurationPerLevel: 3
   path3HealPerSecondPerLevel: 3
-  path3TemperaturePerSecondPerLevel: 0.6
+  path3TemperaturePerSecondPerLevel: 1.5
   path3LatchHealPerSecondPerLevel: 1
   path3LatchFireDamageBonusPerLevel: 0.02
   path3LatchDurationPerLevel: 2

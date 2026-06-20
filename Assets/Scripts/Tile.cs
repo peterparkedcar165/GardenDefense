@@ -21,7 +21,7 @@ public class Tile : MonoBehaviour
     private void Awake()  => allTiles[TileKey(transform.position)] = this;
     private void OnDestroy() => allTiles.Remove(TileKey(transform.position));
 
-    public bool isOccupied = false, isHighground = false;
+    public bool isOccupied = false, isHighground = false, isLowground = false;
     public DeadPlantRecord deadPlant;
     public bool isWaterAdjacent = false;
     public bool isHeatAdjacent  = false;
@@ -89,6 +89,9 @@ public class Tile : MonoBehaviour
 
         if (selector.uprootMode && tileType == TileType.Potted && flowerPot != null)
         {
+            float refundRate = GameManager.instance.currentWave == 0 ? 1f : 0.5f;
+            GameManager.instance.SunCount += Mathf.CeilToInt(FlowerPot.SunCost * refundRate);
+            GameManager.instance.UpdateSun();
             tileType = flowerPot.originalTileType;
             Destroy(flowerPot.gameObject);
             flowerPot = null;
@@ -97,6 +100,9 @@ public class Tile : MonoBehaviour
 
         if (selector.uprootMode && tileType == TileType.WaterPotted && waterPot != null)
         {
+            float refundRate = GameManager.instance.currentWave == 0 ? 1f : 0.5f;
+            GameManager.instance.SunCount += Mathf.CeilToInt(WaterPot.SunCost * refundRate);
+            GameManager.instance.UpdateSun();
             WaterZone wz = GetComponentInChildren<WaterZone>();
             if (wz != null) Destroy(wz.gameObject);
             tileType = waterPot.originalTileType;

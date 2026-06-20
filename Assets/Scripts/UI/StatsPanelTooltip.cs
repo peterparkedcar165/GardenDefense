@@ -176,10 +176,10 @@ public class StatsPanelTooltip : MonoBehaviour
         sb.AppendLine();
         ElemLine(sb, Gold,   "Light Emission Range:", $"{e.lightEmissionRange:F1}", e.lightEmissionRange, e.baseLightEmissionRange);
         ElemLine(sb, Nature, "Skill Duration:",        $"{e.skillDuration:F1}s",    e.skillDuration,      e.baseSkillDuration);
-        InvLine(sb, DoT,     "DoT Duration:",           $"{e.dotDuration * 100:F0}%",           e.dotDuration,           e.baseDotDuration);
-        InvLine(sb, HealCol, "Regeneration Duration:",  $"{e.regenerationDuration * 100:F0}%",  e.regenerationDuration,  e.baseRegenerationDuration);
-        InvLine(sb, HealCol, "Shield Duration:",         $"{e.shieldDuration * 100:F0}%",        e.shieldDuration,        e.baseShieldDuration);
-        InvLine(sb, Crit,    "Sun Generation Cooldown:",       $"{e.sunGenerationCooldown * 100:F0}%", e.sunGenerationCooldown, e.baseSunGenerationCooldown);
+        ElemLine(sb, DoT,     "DoT Duration:",            $"{e.dotDuration * 100:F0}%",           e.dotDuration,           e.baseDotDuration);
+        ElemLine(sb, HealCol, "Regeneration Duration:",  $"{e.regenerationDuration * 100:F0}%",  e.regenerationDuration,  e.baseRegenerationDuration);
+        ElemLine(sb, HealCol, "Shield Duration:",         $"{e.shieldDuration * 100:F0}%",        e.shieldDuration,        e.baseShieldDuration);
+        InvLine(sb, Crit,    "Sun Generation Cooldown:", $"{e.sunGenerationCooldown * 100:F0}%", e.sunGenerationCooldown, e.baseSunGenerationCooldown);
         return sb.ToString().TrimEnd();
     }
 

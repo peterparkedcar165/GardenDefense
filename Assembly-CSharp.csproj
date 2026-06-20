@@ -183,6 +183,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\GlowshroomProjectile.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
+    <Compile Include="Assets\Scripts\UI\PotButtonVisibility.cs" />
     <Compile Include="Assets\Scripts\GridManagers\CaveGridManager.cs" />
     <Compile Include="Assets\Scripts\Spawning\ThreatType.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VulnerableEffect.cs" />
@@ -299,6 +300,7 @@
     <Compile Include="Assets\Scripts\UI\FlowerPotButton.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\EncyclopediaManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ObliviousEffect.cs" />
+    <Compile Include="Assets\Scripts\Shop\ShopManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OleandicToxinEffect.cs" />

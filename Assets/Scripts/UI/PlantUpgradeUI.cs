@@ -444,15 +444,9 @@ public class PlantUpgradeUI : EntityInfoPanel
     private static Color GetTempColor(Plant plant)
     {
         float temp = plant.temperature;
-        if (temp >= plant.comfortMin && temp <= plant.comfortMax)
-            return Color.green;
-        if (temp < plant.comfortMin)
-        {
-            float t = Mathf.Clamp01((plant.comfortMin - temp) / (plant.comfortMin - plant.temperatureMin));
-            return Color.Lerp(Color.green, Color.cyan, t);
-        }
-        float u = Mathf.Clamp01((temp - plant.comfortMax) / (plant.temperatureMax - plant.comfortMax));
-        return Color.Lerp(Color.green, Color.red, u);
+        if (temp < plant.comfortMin)  return Color.cyan;
+        if (temp > plant.comfortMax)  return new Color(1f, 0.5f, 0f);
+        return Color.green;
     }
 
     // --- Tooltips ---

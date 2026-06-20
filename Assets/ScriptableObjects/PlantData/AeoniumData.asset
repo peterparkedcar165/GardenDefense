@@ -25,12 +25,12 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.7
   baseAttackRange: 2
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -40,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -73,7 +77,7 @@ MonoBehaviour:
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseSunGenerated: 3
-  baseSunTimerReduction: 0.1
+  baseSunTimerReduction: 0.4
   sunTimerMPMultiplier: 0.005
   baseSunYieldBonus: 0.25
   path3SunYieldPerLevel: 0.05
@@ -81,4 +85,4 @@ MonoBehaviour:
   path1AttackSpeedPerLevel: 0.08
   path1AttackRangePerLevel: 0.25
   path2SunPerLevel: 2
-  path2SunTimerReductionPerLevel: 0.05
+  path2SunTimerReductionPerLevel: 0.2

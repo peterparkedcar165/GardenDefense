@@ -112,6 +112,11 @@ public abstract class Insect : Entity, IAttackable
     }
 
     public int sunDrop;
+    public float sunDropAdder;
+    public float sunDropMultiplier;
+    public int currencyDrop;
+    public float currencyDropAdder;
+    public float currencyDropMultiplier;
     public int expDrop;
     public DamageType attackDamageType = DamageType.Physical;
     public ElementalType attackElementalType = ElementalType.Neutral;
@@ -593,7 +598,8 @@ public abstract class Insect : Entity, IAttackable
         if (source is Plant p) RegisterAttacker(p);
         DistributeExp();
         RaiseEntityDied(new EntityEventData { target = this, source = source, position = transform.position });
-        GameManager.instance?.AddSun(Mathf.CeilToInt(sunDrop * (1f + (source != null ? source.sunYieldBonus : 0f))));
+        GameManager.instance?.AddSun(SunReward(source));
+        if (SaveManager.instance != null) SaveManager.instance.saveData.currency += CurrencyReward(source);
 
         RemoveEffect<TauntEffect>();   // drop any taunt/engagement it had as an enemy
         RemoveAllDebuffs();
@@ -745,6 +751,20 @@ public abstract class Insect : Entity, IAttackable
 
     protected bool isDying = false;
 
+    private int SunReward(Entity source)
+    {
+        float yieldAdder = source != null ? source.sunYieldAdder : 0f;
+        float yieldMult  = source != null ? source.sunYieldMultiplier : 0f;
+        return Mathf.CeilToInt(sunDrop + sunDropAdder + yieldAdder + sunDrop * sunDropMultiplier + sunDrop * yieldMult);
+    }
+
+    private int CurrencyReward(Entity source)
+    {
+        float yieldAdder = source != null ? source.currencyYieldAdder : 0f;
+        float yieldMult  = source != null ? source.currencyYieldMultiplier : 0f;
+        return Mathf.CeilToInt(currencyDrop + currencyDropAdder + yieldAdder + currencyDrop * currencyDropMultiplier + currencyDrop * yieldMult);
+    }
+
     public override void Kill(Entity source)
     {
         if (isDying) return;
@@ -754,8 +774,8 @@ public abstract class Insect : Entity, IAttackable
         RaiseEntityDied(new EntityEventData { target = this, source = source, position = transform.position });
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
-        // the killer's sunYieldBonus (e.g. Aeonium's Blessing) increases sun dropped, rounded up
-        gameManager.AddSun(Mathf.CeilToInt(sunDrop * (1f + (source != null ? source.sunYieldBonus : 0f))));
+        gameManager.AddSun(SunReward(source));
+        if (SaveManager.instance != null) SaveManager.instance.saveData.currency += CurrencyReward(source);
         allInsects.Remove(this);
         friendlyInsects.Remove(this);
         StartCoroutine(DeathFade());
@@ -770,7 +790,8 @@ public abstract class Insect : Entity, IAttackable
         RaiseEntityDied(new EntityEventData { target = this, position = transform.position });
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
-        gameManager.AddSun(sunDrop);
+        gameManager.AddSun(SunReward(null));
+        if (SaveManager.instance != null) SaveManager.instance.saveData.currency += CurrencyReward(null);
         allInsects.Remove(this);
         friendlyInsects.Remove(this);
         StartCoroutine(DeathFade());
@@ -922,6 +943,11 @@ public abstract class Insect : Entity, IAttackable
         baseIceResistance      = data.baseIceResistance;
         baseDotResistance      = data.baseDotResistance;
         sunDrop                = data.sunDrop;
+        sunDropAdder           = data.sunDropAdder;
+        sunDropMultiplier      = data.sunDropMultiplier;
+        currencyDrop           = data.currencyDrop > 0 ? data.currencyDrop : data.sunDrop / 2;
+        currencyDropAdder      = data.currencyDropAdder;
+        currencyDropMultiplier = data.currencyDropMultiplier;
         aggressivity           = data.aggressivity;
         attackDamageType       = data.attackDamageType;
         attackElementalType    = data.attackElementalType;

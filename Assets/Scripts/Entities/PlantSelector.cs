@@ -86,10 +86,10 @@ public class PlantSelector : MonoBehaviour
             waterPotMode  = false;
         }
 
-        if (Keyboard.current.fKey.wasPressedThisFrame)
+        if (Keyboard.current.fKey.wasPressedThisFrame && SaveManager.instance?.saveData.flowerPotLevel > 0)
             SetFlowerPotMode(!flowerPotMode);
 
-        if (Keyboard.current.wKey.wasPressedThisFrame)
+        if (Keyboard.current.wKey.wasPressedThisFrame && SaveManager.instance?.saveData.waterPotLevel > 0)
             SetWaterPotMode(!waterPotMode);
     }
 }

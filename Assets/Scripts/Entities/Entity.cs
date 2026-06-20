@@ -118,7 +118,6 @@ public abstract class Entity : MonoBehaviour
     public float debuffGivenDuration, buffGivenDuration, buffReceivedDuration, debuffReceivedDuration;
     public float dotDuration, regenerationDuration, shieldDuration, sunGenerationCooldown;
     public float burnDurationBonus;   // multiplies the duration of Burns this entity causes (e.g. Stargazer)
-    public float sunYieldBonus;       // increases sun this entity generates and the sun its kills drop (Aeonium's Blessing)
     public float baseMinionDamage;    // the plant's inherent minion damage bonus
     public float minionDamage;        // multiplier on the damage this plant's minions deal
     public float shieldBonusDamage, shieldToughness;
@@ -150,6 +149,7 @@ public abstract class Entity : MonoBehaviour
     public float dotDurationAdder, regenerationDurationAdder, shieldDurationAdder, sunGenerationCooldownMultiplier;
     public float evasionAdder, accuracyAdder;
     public float bonusCritChanceReceivedAdder, bonusCritDamageReceivedAdder, projectileSpeedAdder;
+    public float sunYieldAdder, currencyYieldAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -170,6 +170,7 @@ public abstract class Entity : MonoBehaviour
     public float debuffGivenDurationMultiplier, buffGivenDurationMultiplier, buffReceivedDurationMultiplier, debuffReceivedDurationMultiplier;
     public float evasionMultiplier, accuracyMultiplier;
     public float bonusCritChanceReceivedMultiplier, projectileSpeedMultiplier;
+    public float sunYieldMultiplier, currencyYieldMultiplier;
     public float maxHealthTotalMultiplier = 1f, attackDamageTotalMultiplier = 1f, magicPowerTotalMultiplier = 1f;
     public float attackSpeedTotalMultiplier = 1f, attackRangeTotalMultiplier = 1f;
     public float criticalChanceTotalMultiplier = 1f, criticalDamageTotalMultiplier = 1f;
@@ -291,7 +292,7 @@ public abstract class Entity : MonoBehaviour
 
         if (System.Array.Exists(damageTag, t => t == DamageTag.DoT))
         {
-            dotMultiplier = 1 - dotResistance;
+            dotMultiplier = Mathf.Max(0f, 1 - dotResistance);
         } else
         {
             dotMultiplier = 1;
@@ -448,7 +449,7 @@ public abstract class Entity : MonoBehaviour
 
         if (System.Array.Exists(damageTag, t => t == DamageTag.DoT))
         {
-            dotMultiplier = 1 - dotResistance + source.dotDamage;
+            dotMultiplier = Mathf.Max(0f, 1 - dotResistance) * (1 + source.dotDamage);
         } else
         {
             dotMultiplier = 1;
@@ -944,6 +945,7 @@ public abstract class Entity : MonoBehaviour
 
         activeEffects.Add(effect);
         effect.OnApply();
+        if (effect is ShieldEffect) UpdateHealthBar();
         OnEffectApplied?.Invoke(effect);
         if (effect is ShieldEffect acquiredShield)
             OnShieldAcquire?.Invoke(new EntityEventData { target = this, source = acquiredShield.source, position = transform.position, amount = acquiredShield.amount });

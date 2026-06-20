@@ -11,6 +11,7 @@ public class NeriumOleanderData : PlantData
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 10f;
+    public float path1AttackRangePerLevel = 0.5f;
     public int path1BouncePerLevel = 1;
 
     [Header("Path 2 Scaling")]

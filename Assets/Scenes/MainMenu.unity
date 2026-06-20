@@ -3309,7 +3309,10 @@ MonoBehaviour:
   saveData:
     highestLevelUnlocked: 1
     unlockedPlants: []
-    maxLoadoutSize: 5
+    currency: 0
+    plantSlotLevel: 0
+    flowerPotLevel: 0
+    waterPotLevel: 0
   selectedLevel: 0
 --- !u!4 &1900346993
 Transform:

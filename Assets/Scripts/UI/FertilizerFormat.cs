@@ -7,9 +7,6 @@ public static class FertilizerFormat
         switch (statType)
         {
             case StatType.DebuffReceivedDuration:
-            case StatType.DoTDuration:
-            case StatType.RegenerationDuration:
-            case StatType.ShieldDuration:
             case StatType.SunGenerationCooldownMultiplier:
                 return true;
             default: return false;

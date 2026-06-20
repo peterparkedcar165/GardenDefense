@@ -6,6 +6,7 @@ public class HelleboreProtectionEffect : ShieldEffect
     private readonly float reflectMP;
     private readonly Hellebore hellebore;
     private float _regenTick = 0f;
+    private readonly float _cachedReflectDamage;
     private const float RegenInterval = 0.5f;
 
     private static readonly DamageTag[] _reflectTags = { DamageTag.Counter, DamageTag.SkillDamage };
@@ -14,9 +15,10 @@ public class HelleboreProtectionEffect : ShieldEffect
                                      float shieldAmount, float reflectBase, float reflectMP)
         : base(target, duration, level, source, shieldAmount)
     {
-        this.reflectBase = reflectBase;
-        this.reflectMP   = reflectMP;
-        this.hellebore   = source;
+        this.reflectBase        = reflectBase;
+        this.reflectMP          = reflectMP;
+        this.hellebore          = source;
+        _cachedReflectDamage    = reflectBase + (source != null ? source.magicPower * reflectMP : 0f);
     }
 
     public override void OnApply()
@@ -59,7 +61,7 @@ public class HelleboreProtectionEffect : ShieldEffect
         return true;
     }
 
-    protected override string GetShieldDetails() => $"Attackers receive <color=purple><b>Poison</b></color> damage per hit. Negative effects are reflected.";
+    protected override string GetShieldDetails() => $"Attackers receive <color=purple><b>{_cachedReflectDamage:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per hit. Negative effects are reflected.";
 
     public override string GetName() => "<color=#9B30D0>Thorned Guard</color>";
 }

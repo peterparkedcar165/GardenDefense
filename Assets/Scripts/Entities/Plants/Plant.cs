@@ -1092,11 +1092,11 @@ public abstract class Plant : Entity, IAttackable
     public bool IsAlive => health > 0;
     public Vector3 Position => transform.position;
 
-    // generates sun scaled by this plant's sunYieldBonus, rounded up (sun can't be decimal).
+    // generates sun scaled by this plant's sunYieldMultiplier, rounded up (sun can't be decimal).
     // returns the total granted so callers can show the right indicator amount
     protected int GenerateSun(int amount)
     {
-        int total = Mathf.CeilToInt(amount * (1f + sunYieldBonus));
+        int total = Mathf.CeilToInt(amount * (1f + sunYieldMultiplier));
         GameManager.instance?.AddSun(total);
         return total;
     }

@@ -81,7 +81,7 @@ public class Holly : Aura
         base.Attack();
         float armorBonus = IsPath1Maxed ? armor * 0.33f : 0f;
         foreach (Insect insect in GetInsectsInRange())
-            insect.Damage(attackDamage + armorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+            insect.Damage(attackDamage + armorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Melee });
     }
 
     protected override void OnHitByInsect(Insect attacker)

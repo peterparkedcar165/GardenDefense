@@ -303,7 +303,7 @@ public class Stargazer : Aura
         $"Striking a target applies <color=green><b>{StacksPerHit}</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> for <color=green><b>{FlammableDuration:F0}s</b></color>, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>{BurnDurationBonus * 100f:F0}%</b></color> longer.";
 
     public override string GetSkillDesription() =>
-        $"Aim a direction. After a brief delay, a <color=#FF6B1A><b>Fire Wave</b></color> sweeps across the entire map, dealing <color=green><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage to everything in its path and applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. Deals <color=green><b>{SkillBurnMultiplier:F1}x</b></color> damage to <color=orange>Burning</color> targets.";
+        $"Aim a direction. After a brief delay, a <color=#FF6B1A><b>Fire Wave</b></color> sweeps across the entire map, dealing <color=green><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage to everything in its path and applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. Deals <color=green><b>{(SkillBurnMultiplier - 1f) * 100f:F0}%</b></color> increased damage to <color=orange>Burning</color> targets.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -347,7 +347,7 @@ public class Stargazer : Aura
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=#FF6B1A>Fire Wave</color> damage by <color=green><b>{dpl:F0}</b></color> per level. [<color=green><b>+{dpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=#FF6B1A>Fire Wave</color> width by <color=green><b>{wpl:F1}</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"Increase <color=orange>Burning</color>-target multiplier by <color=green><b>{bpl:F1}x</b></color> per level. [<color=green><b>+{bpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase <color=orange>Burning</color>-target bonus damage by <color=green><b>{bpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#FF6B1A>Flammable</color> stacks applied by <color=green><b>{fpl:F1}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(fpl * effectivePath3Level)}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "The <color=#FF6B1A><b>Fire Wave</b></color> returns after reaching its end, sweeping back in the opposite direction.")}\n\n" +
