@@ -222,6 +222,10 @@ MonoBehaviour:
   baseBuffGivenDuration: 0
   baseBuffReceivedDuration: 0
   baseDebuffReceivedDuration: 0
+  baseDotDuration: 0
+  baseRegenerationDuration: 0
+  baseShieldDuration: 0
+  baseSunGenerationCooldown: 0
   baseEvasion: 0
   baseAccuracy: 0
   baseBonusCritChanceReceived: 0
@@ -279,8 +283,11 @@ MonoBehaviour:
   buffGivenDuration: 0
   buffReceivedDuration: 0
   debuffReceivedDuration: 0
+  dotDuration: 0
+  regenerationDuration: 0
+  shieldDuration: 0
+  sunGenerationCooldown: 0
   burnDurationBonus: 0
-  sunYieldBonus: 0
   baseMinionDamage: 0
   minionDamage: 0
   shieldBonusDamage: 0
@@ -344,11 +351,17 @@ MonoBehaviour:
   buffGivenDurationAdder: 0
   buffReceivedDurationAdder: 0
   debuffReceivedDurationAdder: 0
+  dotDurationAdder: 0
+  regenerationDurationAdder: 0
+  shieldDurationAdder: 0
+  sunGenerationCooldownMultiplier: 0
   evasionAdder: 0
   accuracyAdder: 0
   bonusCritChanceReceivedAdder: 0
   bonusCritDamageReceivedAdder: 0
   projectileSpeedAdder: 0
+  sunYieldAdder: 0
+  currencyYieldAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -398,6 +411,8 @@ MonoBehaviour:
   accuracyMultiplier: 0
   bonusCritChanceReceivedMultiplier: 0
   projectileSpeedMultiplier: 0
+  sunYieldMultiplier: 0
+  currencyYieldMultiplier: 0
   maxHealthTotalMultiplier: 1
   attackDamageTotalMultiplier: 1
   magicPowerTotalMultiplier: 1
@@ -455,6 +470,7 @@ MonoBehaviour:
   basePassiveDuration: 0
   passiveDuration: 0
   passiveDurationAdder: 0
+  passiveDurationMultiplier: 0
   baseSkillCooldown: 0
   skillCooldown: 0
   skillCooldownReductionAdder: 0
@@ -481,6 +497,7 @@ MonoBehaviour:
   path3Unlocked: 0
   mainRenderer: {fileID: 7028219029107938175}
   skillHealingMultiplier: 0
+  fireBurstPrefab: {fileID: 6584693673283434052, guid: fb0ccfed77477a746a1e147f8910a8c8, type: 3}
 --- !u!1 &6784474226973136681
 GameObject:
   m_ObjectHideFlags: 0

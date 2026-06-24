@@ -25,13 +25,12 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 1
   baseAttackRange: 2
-  startingShield: 0
-  baseArmor: 43
+  baseArmor: 32
+  baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0.3
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -41,6 +40,10 @@ MonoBehaviour:
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -81,7 +84,7 @@ MonoBehaviour:
   baseSkillShield: 120
   baseSkillShieldMP: 0.7
   path1AttackDamagePerLevel: 7
-  path1ArmorPerLevel: 20
+  path1ArmorPerLevel: 16
   path2HealthPerLevel: 55
   path2RetaliationPerLevel: 0.15
   path3ShieldPerLevel: 60

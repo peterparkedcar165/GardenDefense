@@ -8,7 +8,7 @@ public class PlantBar : MonoBehaviour
 
     [SerializeField] private PlantSlotButton slotPrefab;
     [SerializeField] private Transform container;
-    [SerializeField] private PlantData[] allPlantData;
+    [SerializeField] private PlantRegistry plantRegistry;
 
     private readonly List<PlantSlotButton> slots = new List<PlantSlotButton>();
 
@@ -70,7 +70,7 @@ public class PlantBar : MonoBehaviour
 
     private PlantData GetPlantData(string plantName)
     {
-        foreach (var data in allPlantData)
+        foreach (var data in plantRegistry.plants)
             if (data.plantName == plantName) return data;
         return null;
     }

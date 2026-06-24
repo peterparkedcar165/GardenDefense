@@ -1215,12 +1215,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709538195}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dec57560eb949441981c1c7eff0342a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  backdrop: {fileID: 0}
+  groundTilemap: {fileID: 5664941724810384060}
+  minZoom: 3
+  zoomSpeed: 0.5
+  zoomSmoothing: 8
+  moveSpeed: 24
+  rightPanelFraction: 0.236
 --- !u!114 &1709538200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3269,7 +3274,7 @@ Tilemap:
       - {fileID: -605774503, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1545045942, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 954890067, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 8, y: -8, z: 0}
@@ -3405,7 +3410,7 @@ Tilemap:
       - {fileID: -605774503, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -1545045942, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: 954890067, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6
+      m_AnimationSpeed: 6.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -5, y: -5, z: 0}
@@ -3473,7 +3478,7 @@ Tilemap:
       - {fileID: -1633308353, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -179146731, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -249037636, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6.0000005
+      m_AnimationSpeed: 6
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -5, y: -2, z: 0}
@@ -3592,7 +3597,7 @@ Tilemap:
       - {fileID: -1633308353, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -179146731, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
       - {fileID: -249037636, guid: a8c0388273f180847ab64a4a4ee6859d, type: 3}
-      m_AnimationSpeed: 6
+      m_AnimationSpeed: 6.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -5, y: 2, z: 0}
@@ -4231,6 +4236,8 @@ MonoBehaviour:
   dirtTilemap: {fileID: 1106046315799417803}
   highgroundGroundTilemap: {fileID: 4342432802062637398}
   highgroundWaterTilemap: {fileID: 1727625775561553716}
+  lowgroundGroundTilemap: {fileID: 0}
+  lowgroundWaterTilemap: {fileID: 0}
 --- !u!1 &4281738036460108351
 GameObject:
   m_ObjectHideFlags: 0

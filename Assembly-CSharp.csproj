@@ -52,6 +52,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
+    <Compile Include="Assets\Scripts\PlantRegistry.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\CaveSpiderData.cs" />
     <Compile Include="Assets\Scripts\GridManagers\SnowGridManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\GhostShroomlet.cs" />

@@ -5,6 +5,7 @@ public class Calendula : Aura
 {
     public float skillHealingMultiplier;
     private CalendulaData CData => data as CalendulaData;
+    [SerializeField] private GameObject fireBurstPrefab;
 
     private float _illuminationHealTimer = 0f;
     private float _autoFloralGlowCooldownTimer = 0f;
@@ -91,6 +92,48 @@ public class Calendula : Aura
     protected override void Attack()
     {
         base.Attack();
+        if (fireBurstPrefab != null)
+        {
+            GameObject burst = Instantiate(fireBurstPrefab, transform.position, Quaternion.identity);
+            ParticleSystem ps = burst.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                const float lifetime = 0.6f;
+
+                var main = ps.main;
+                main.startLifetime = lifetime;
+                main.startSpeed = new ParticleSystem.MinMaxCurve(
+                    attackRange * 0.7f / lifetime,
+                    attackRange        / lifetime);
+
+                var lvol = ps.limitVelocityOverLifetime;
+                lvol.enabled = true;
+                lvol.separateAxes = false;
+                lvol.dampen = 0.4f;
+                AnimationCurve limitCurve = new AnimationCurve(
+                    new Keyframe(0f,   1f, 0f, 0f),
+                    new Keyframe(0.8f, 1f, 0f, 0f),
+                    new Keyframe(1f,   0f, 0f, 0f)
+                );
+                lvol.limit = new ParticleSystem.MinMaxCurve(attackRange / lifetime, limitCurve);
+
+                var col = ps.colorOverLifetime;
+                col.enabled = true;
+                Gradient gradient = new Gradient();
+                gradient.SetKeys(
+                    new GradientColorKey[] {
+                        new GradientColorKey(Color.white, 0f),
+                        new GradientColorKey(Color.white, 1f)
+                    },
+                    new GradientAlphaKey[] {
+                        new GradientAlphaKey(1f, 0f),
+                        new GradientAlphaKey(1f, 0.8f),
+                        new GradientAlphaKey(0f, 1f)
+                    }
+                );
+                col.color = new ParticleSystem.MinMaxGradient(gradient);
+            }
+        }
         List<Insect> insects = GetInsectsInRange();
         foreach (Insect insect in insects)
             insect.Damage(attackDamage, damageType, elementalType, this, true,

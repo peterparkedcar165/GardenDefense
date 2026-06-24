@@ -6,7 +6,7 @@ public class PlantsPanelUI : MonoBehaviour
 {
     [SerializeField] private PlantEntry entryPrefab;
     [SerializeField] private Transform content;
-    [SerializeField] private PlantData[] allPlantData;
+    [SerializeField] private PlantRegistry plantRegistry;
 
     [Header("Detail Panel")]
     [SerializeField] private GameObject detailPanel;
@@ -43,7 +43,7 @@ public class PlantsPanelUI : MonoBehaviour
 
     void Start()
     {
-        foreach (PlantData data in allPlantData)
+        foreach (PlantData data in plantRegistry.plants)
         {
             PlantEntry entry = Instantiate(entryPrefab, content);
             entry.Initialize(data, OnEntryHover, OnEntryHoverExit, OnEntryClicked);

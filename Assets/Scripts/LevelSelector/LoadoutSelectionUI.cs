@@ -8,7 +8,7 @@ public class LoadoutSelectionUI : MonoBehaviour
     public static LoadoutSelectionUI instance;
 
     [SerializeField] private GameObject panel;
-    [SerializeField] private PlantData[] allPlantData;
+    [SerializeField] private PlantRegistry plantRegistry;
     [SerializeField] private Transform unlockedContainer;
     [SerializeField] private Transform selectedContainer;
     [SerializeField] private LoadoutSlot slotPrefab;
@@ -169,7 +169,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         unlockedSlots.Clear();
 
         List<string> unlocked = SaveManager.instance.saveData.unlockedPlants;
-        foreach (PlantData data in allPlantData)
+        foreach (PlantData data in plantRegistry.plants)
         {
             if (!unlocked.Contains(data.plantName)) continue;
 
@@ -293,7 +293,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     private PlantData GetPlantData(string plantName)
     {
-        foreach (var data in allPlantData)
+        foreach (var data in plantRegistry.plants)
         {
             Debug.Log($"Comparing '{plantName}' to '{data.plantName}'");
             if (data.plantName == plantName) return data;

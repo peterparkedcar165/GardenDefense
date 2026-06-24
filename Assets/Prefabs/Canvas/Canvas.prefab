@@ -8744,7 +8744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5931827, g: 0.8113208, b: 0.7574131, a: 0.6117647}
+  m_Color: {r: 0.5931827, g: 0.8113208, b: 0.7574131, a: 0.94509804}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9734,6 +9734,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlantContainers
       objectReference: {fileID: 0}
+    - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
+      propertyPath: plantRegistry
+      value: 
+      objectReference: {fileID: 11400000, guid: 16efee928f1a12a4ca9d8b9e30207fb2, type: 2}
     - target: {fileID: 6297319378953812312, guid: ff89164f106acd14d820164a73d3f861, type: 3}
       propertyPath: allPlantData.Array.size
       value: 23

@@ -446,6 +446,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarknessManager
   isDark: 1
   pitchBlack: 0
+  litDuringSetup: 0
+  nightLight: {fileID: 0}
+  setupIntensity: 0.4
+  darkByCountdown: 1
+  fadeDuration: 0.4
 --- !u!4 &296199317
 Transform:
   m_ObjectHideFlags: 0
@@ -1211,12 +1216,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709538195}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dec57560eb949441981c1c7eff0342a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  backdrop: {fileID: 0}
+  groundTilemap: {fileID: 1870782915823050893}
+  minZoom: 3
+  zoomSpeed: 0.5
+  zoomSmoothing: 8
+  moveSpeed: 24
+  rightPanelFraction: 0.236
 --- !u!114 &1709538200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11098,6 +11108,8 @@ MonoBehaviour:
   dirtTilemap: {fileID: 6355359839132492282}
   highgroundGroundTilemap: {fileID: 7721662329257896807}
   highgroundWaterTilemap: {fileID: 4652907977177269509}
+  lowgroundGroundTilemap: {fileID: 0}
+  lowgroundWaterTilemap: {fileID: 0}
 --- !u!1 &3023228869361215062
 GameObject:
   m_ObjectHideFlags: 0

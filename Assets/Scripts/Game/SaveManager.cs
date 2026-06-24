@@ -8,6 +8,7 @@ public class SaveManager : MonoBehaviour
     public SaveData saveData = new SaveData();
     private string savePath;
     public int selectedLevel;
+    [SerializeField] private PlantRegistry plantRegistry;
 
     [System.NonSerialized] public List<string> selectedLoadout = new List<string>();
     
@@ -53,16 +54,18 @@ public class SaveManager : MonoBehaviour
             Debug.Log("Loaded save data");
         }
 
-        if (saveData.unlockedPlants.Count == 0)
-            saveData.unlockedPlants.Add("AcornSprout");
-
         // on load, fill any plant gaps caused by levels already completed
         RepairPlantsFromLevels();
     }
 
-    // derives plants strictly from highestLevelUnlocked , levels are the single source of truth
+    // derives plants strictly from highestLevelUnlocked, levels are the single source of truth
     private void RepairPlantsFromLevels()
     {
+        // index 0 is always unlocked regardless of level
+        string defaultPlant = GetPlantUnlockedByLevel(0);
+        if (defaultPlant != null && !saveData.unlockedPlants.Contains(defaultPlant))
+            saveData.unlockedPlants.Add(defaultPlant);
+
         for (int i = 1; i <= saveData.highestLevelUnlocked; i++)
         {
             string plant = GetPlantUnlockedByLevel(i);
@@ -75,7 +78,7 @@ public class SaveManager : MonoBehaviour
     {
         if (UnityEngine.InputSystem.Keyboard.current.uKey.wasPressedThisFrame)
         {
-            saveData.highestLevelUnlocked = 40;
+            saveData.highestLevelUnlocked = plantRegistry != null ? plantRegistry.plants.Length - 1 : 40;
             saveData.unlockedPlants.Clear();
             saveData.unlockedPlants.Add("AcornSprout");
             RepairPlantsFromLevels();
@@ -92,6 +95,26 @@ public class SaveManager : MonoBehaviour
             LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log("Reset to level 1 only");
         }
+        if (UnityEngine.InputSystem.Keyboard.current.oKey.wasPressedThisFrame)
+        {
+            saveData.flowerPotLevel = 0;
+            saveData.waterPotLevel  = 0;
+            saveData.plantSlotLevel = 0;
+            Save();
+            Debug.Log("Reset shop upgrades");
+        }
+        if (UnityEngine.InputSystem.Keyboard.current.leftBracketKey.wasPressedThisFrame)
+        {
+            saveData.currency += 99999;
+            Save();
+            Debug.Log("Added 99999 currency");
+        }
+        if (UnityEngine.InputSystem.Keyboard.current.rightBracketKey.wasPressedThisFrame)
+        {
+            saveData.currency = 0;
+            Save();
+            Debug.Log("Removed all currency");
+        }
     }
 
     public void CompleteLevel(int level)
@@ -107,31 +130,8 @@ public class SaveManager : MonoBehaviour
 
     private string GetPlantUnlockedByLevel(int level)
     {
-        switch (level)
-        {
-            case 1: return "Sunflower";
-            case 2: return "Waterlily"; // TBD
-            case 3: return "LeafRanger";
-            case 4: return "Dandelion";
-            case 5: return "Calendula";
-            case 6: return "BogIris";
-            case 7: return "PoisonShroom";
-            case 8: return "Holly";
-            case 9: return "Begonia";
-            case 10: return "AloeVera";
-            case 11: return "Cactus";
-            case 12: return "Aeonium";
-            case 13: return "Snowdrop";
-            case 14: return "NeriumOleander";
-            case 15: return "Glowshroom";
-            case 16: return "MorningGlory";
-            case 17: return "Stargazer";
-            case 18: return "GhostFungus";
-            case 19: return "Cattail";
-            case 20: return "Gloriosa";
-            case 21: return "Hellebore";
-            case 22: return "Rhodiola";
-            default: return null;
-        }
+        if (plantRegistry == null) return null;
+        if (level < 0 || level >= plantRegistry.plants.Length) return null;
+        return plantRegistry.plants[level].plantName;
     }
 }
