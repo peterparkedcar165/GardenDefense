@@ -74,7 +74,7 @@ MonoBehaviour:
   baseSkillRadius: 2
   baseSkillDamageMultiplier: 0.04
   baseSkillHealth: 0
-  basePassiveDamage: 6
+  basePassiveDamage: 0
   baseSkillDamage: 0
   baseAoERange: 1.5
   baseBubblePrisonImpactDamage: 42

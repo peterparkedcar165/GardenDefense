@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public int SunCount;
     public int playerHealth;
+    [SerializeField] private GameObject germinateBloomPrefab;
     [System.NonSerialized] public int playerMaxHealth = 200;
     public float BonusSunGain;
     public AudioSource audioSource;
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
     protected void Awake()
     {
         instance = this;
+        GerminateEffect.bloomPrefab = germinateBloomPrefab;
     }
 
     public void AddSun(int amount)

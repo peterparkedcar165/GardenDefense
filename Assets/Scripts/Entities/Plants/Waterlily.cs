@@ -30,7 +30,7 @@ public class Waterlily : Shooter
         base.UpdateStats();
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
         float bubblepl = WLData?.path3BubbleDamagePerLevel        ?? 12f;
-        splashDamage = data.basePassiveDamage + attackDamage * splashpl * effectivePath2Level + skillDamageMultiplier * magicPower;
+        splashDamage = WLData.baseSplashDamage + attackDamage * splashpl * effectivePath2Level + skillDamageMultiplier * magicPower;
         bubbleDamage = (WLData?.baseBubblePrisonImpactDamage ?? 0f) + bubblepl * effectivePath3Level + skillDamageMultiplier * magicPower;
     }
 
@@ -123,7 +123,7 @@ public class Waterlily : Shooter
     public override string GetPassiveDescription()
     {
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
-        return $"Attacks deal <color=green><b>{data.basePassiveDamage + attackDamage * splashpl * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] {PlantData.ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.";
+        return $"Attacks deal <color=green><b>{WLData.baseSplashDamage + attackDamage * splashpl * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] {PlantData.ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.";
     }
 
     public override string GetPath1Description(bool details = false)
@@ -146,7 +146,7 @@ public class Waterlily : Shooter
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
         float aoepl   = WLData?.path2AoERangePerLevel             ?? 0.05f;
         string desc = details
-            ? $"Attacks deal <color=green><b>[({data.basePassiveDamage:F1}) + ({splashpl * 100f:F0}% Attack Damage/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius."
+            ? $"Attacks deal <color=green><b>[({WLData.baseSplashDamage:F1}) + ({splashpl * 100f:F0}% Attack Damage/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> Attack Damage per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +

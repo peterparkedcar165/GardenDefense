@@ -98,7 +98,7 @@ public class Calendula : Aura
             ParticleSystem ps = burst.GetComponent<ParticleSystem>();
             if (ps != null)
             {
-                const float lifetime = 0.6f;
+                const float lifetime = 0.25f;
 
                 var main = ps.main;
                 main.startLifetime = lifetime;
@@ -112,7 +112,7 @@ public class Calendula : Aura
                 lvol.dampen = 0.4f;
                 AnimationCurve limitCurve = new AnimationCurve(
                     new Keyframe(0f,   1f, 0f, 0f),
-                    new Keyframe(0.8f, 1f, 0f, 0f),
+                    new Keyframe(0.5f, 1f, 0f, 0f),
                     new Keyframe(1f,   0f, 0f, 0f)
                 );
                 lvol.limit = new ParticleSystem.MinMaxCurve(attackRange / lifetime, limitCurve);
@@ -127,7 +127,7 @@ public class Calendula : Aura
                     },
                     new GradientAlphaKey[] {
                         new GradientAlphaKey(1f, 0f),
-                        new GradientAlphaKey(1f, 0.8f),
+                        new GradientAlphaKey(1f, 0.5f),
                         new GradientAlphaKey(0f, 1f)
                     }
                 );

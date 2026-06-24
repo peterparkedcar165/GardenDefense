@@ -4,6 +4,7 @@ using UnityEngine;
 public class WaterlilyData : PlantData
 {
     public float baseAoERange;
+    public float baseSplashDamage = 6f;
     public float baseBubblePrisonImpactDamage;
 
     [Header("Path 1 Scaling")]
@@ -23,7 +24,7 @@ public class WaterlilyData : PlantData
         $"Blow little bubbles towards her target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks deal <color=green><b>{basePassiveDamage}</b></color> {ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>{baseAoERange}</b></color> radius.";
+        $"Attacks deal <color=green><b>{baseSplashDamage}</b></color> {ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>{baseAoERange}</b></color> radius.";
 
     public override string GetSkillDescription() =>
         $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{baseBubblePrisonImpactDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage upon impact, and keeping them airborne for <color=green><b>{baseSkillDuration}</b></color> seconds.";

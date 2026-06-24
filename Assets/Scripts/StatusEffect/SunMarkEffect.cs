@@ -5,7 +5,7 @@ public class SunMarkEffect : StatusEffect
     public SunMarkEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)
     {
-        effectType = Type.neutral;
+        effectType = Type.negative;
     }
 
     public override void OnTargetDied()

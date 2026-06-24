@@ -17,11 +17,11 @@ MonoBehaviour:
   - type: 2
     intensity: 0
   temperature: 2
-  maxWaves: 18
+  maxWaves: 22
   startSunCount: 450
   startHealth: 200
   minWaveDuration: 20
-  maxWaveDuration: 65
+  maxWaveDuration: 60
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -48,7 +48,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 5
   minThreatBudget: 10
-  maxThreatBudget: 35
+  maxThreatBudget: 60
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -83,7 +83,7 @@ MonoBehaviour:
     budgetWeight: 0.3
     startDelay: 1
   - data: {fileID: 11400000, guid: 39cb5390faf0d7e468c1921ab3466cf2, type: 2}
-    unlockWave: 4
+    unlockWave: 3
     budgetWeight: 0.1
     startDelay: 6
   - data: {fileID: 11400000, guid: 647ab323b77b9d949b24c742142f1010, type: 2}
@@ -94,7 +94,7 @@ MonoBehaviour:
     unlockWave: 8
     budgetWeight: 0.3
     startDelay: 1
-  eliteWaveInterval: 4
+  eliteWaveInterval: 3
   eliteInsects:
   - data: {fileID: 11400000, guid: 39cb5390faf0d7e468c1921ab3466cf2, type: 2}
     unlockWave: 3

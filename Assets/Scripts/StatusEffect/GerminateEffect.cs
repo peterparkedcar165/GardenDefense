@@ -2,6 +2,8 @@
 
 public class GerminateEffect : StatusEffect
 {
+    public static GameObject bloomPrefab;
+
     private float aoeRadius = 2.5f;
     public float delay = 1f;
     private float cachedAttackDamage;
@@ -35,6 +37,49 @@ public class GerminateEffect : StatusEffect
     {
         if (target == null) return;
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Bloom", new Color(0.3f, 1f, 0.2f));
+
+        if (bloomPrefab != null)
+        {
+            GameObject burst = Object.Instantiate(bloomPrefab, target.transform.position, Quaternion.identity);
+            ParticleSystem ps = burst.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                const float lifetime = 0.25f;
+
+                var main = ps.main;
+                main.startLifetime = lifetime;
+                main.startSpeed = new ParticleSystem.MinMaxCurve(
+                    aoeRadius * 0.7f / lifetime,
+                    aoeRadius        / lifetime);
+
+                var lvol = ps.limitVelocityOverLifetime;
+                lvol.enabled = true;
+                lvol.separateAxes = false;
+                lvol.dampen = 0.4f;
+                AnimationCurve limitCurve = new AnimationCurve(
+                    new Keyframe(0f,   1f, 0f, 0f),
+                    new Keyframe(0.5f, 1f, 0f, 0f),
+                    new Keyframe(1f,   0f, 0f, 0f)
+                );
+                lvol.limit = new ParticleSystem.MinMaxCurve(aoeRadius / lifetime, limitCurve);
+
+                var col = ps.colorOverLifetime;
+                col.enabled = true;
+                Gradient gradient = new Gradient();
+                gradient.SetKeys(
+                    new GradientColorKey[] {
+                        new GradientColorKey(Color.white, 0f),
+                        new GradientColorKey(Color.white, 1f)
+                    },
+                    new GradientAlphaKey[] {
+                        new GradientAlphaKey(1f, 0f),
+                        new GradientAlphaKey(1f, 0.5f),
+                        new GradientAlphaKey(0f, 1f)
+                    }
+                );
+                col.color = new ParticleSystem.MinMaxGradient(gradient);
+            }
+        }
 
         float damage = ComputeDamage();
 
