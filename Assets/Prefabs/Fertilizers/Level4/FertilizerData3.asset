@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Resurrector
   stats:
-  - statType: 46
+  - statType: 24
     value: 0.22
   - statType: 14
     value: 0.16

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Healer
   stats:
-  - statType: 24
+  - statType: 46
     value: 0.22
-  - statType: 1
-    value: 0.22
+  - statType: 32
+    value: 65
   icon: {fileID: 0}
   targetElementalTypes: 
   targetCultivars: 

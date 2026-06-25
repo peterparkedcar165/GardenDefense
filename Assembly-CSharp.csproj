@@ -130,6 +130,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\RapidFocusEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\BubblePrison.cs" />
     <Compile Include="Assets\Scripts\Skills\Geyser.cs" />
+    <Compile Include="Assets\Scripts\UI\ToolButtonTooltip.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WorkerAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RegenerativeGlowEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\GhostBoltProjectile.cs" />

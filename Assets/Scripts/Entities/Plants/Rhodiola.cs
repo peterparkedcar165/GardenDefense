@@ -10,9 +10,16 @@ public class Rhodiola : Shooter
     private const float SeedDurationBase = 8f;
     private const float BurstRadius  = 2.5f;
 
-    public float BurgeonHealPerTick  => (RData?.baseBurgeonHealPerTick ?? 2f) + effectivePath2Level * (RData?.path2HealPerLevel ?? 1f);
+    public float BurgeonHealFlat    => (RData?.baseBurgeonHealPerTick ?? 2f) + effectivePath2Level * (RData?.path2HealPerLevel ?? 1f);
+    public float BurgeonMPHeal      => (RData?.passiveHealMPScaling ?? 0.04f) * magicPower;
+    public float BurgeonHealPerTick => BurgeonHealFlat + BurgeonMPHeal;
     public float BurgeonDuration     => RData?.baseBurgeonDuration  ?? 4f;
     public float BurgeonTickInterval => RData?.burgeonTickInterval   ?? 0.5f;
+    public float RevivalBaseHeal     => RData?.revivalBaseHeal     ?? 40f;
+    public float RevivalHealPerLevel => RData?.revivalHealPerLevel ?? 20f;
+    public float RevivalHealFlat     => RevivalBaseHeal + RevivalHealPerLevel * effectivePath3Level;
+    public float RevivalMPHeal       => (RData?.skillHealMPScaling ?? 0.30f) * magicPower;
+    public float RevivalHeal         => RevivalHealFlat + RevivalMPHeal;
 
     protected override void Awake()
     {
@@ -75,7 +82,9 @@ public class Rhodiola : Shooter
     private void OnTargetConfirmed(Tile tile)
     {
         skillCooldownTimer = skillCooldown;
-        Plant revived = Plant.RevivePlant(tile, RData?.revivalHealthPercent ?? 0.2f);
+        Plant revived = Plant.RevivePlant(tile);
+        if (revived != null)
+            revived.Heal(RevivalHeal, this);
         if (revived != null && IsPath3Maxed)
         {
             float shield = RData?.verdantGuardianShield ?? 200f;
@@ -96,12 +105,12 @@ public class Rhodiola : Shooter
     {
         return $"Attacks inflict <color=green><b>Rejuvenating Seed</b></color> on the target for <color=green><b>{passiveDuration:F0}s</b></color>. " +
                $"When the target is attacked by a plant, that plant is granted <color=green><b>Rejuvenating Burgeon</b></color>, " +
-               $"healing <color=green><b>{Mathf.RoundToInt(BurgeonHealPerTick)}</b></color> health every <color=green><b>{BurgeonTickInterval}s</b></color> " +
+               $"healing <color=green><b>{BurgeonHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{BurgeonMPHeal:F0}</b></color>] health every <color=green><b>{BurgeonTickInterval}s</b></color> " +
                $"for <color=green><b>{BurgeonDuration:F0}s</b></color>.";
     }
 
     public override string GetSkillDesription() =>
-        $"Target a tile where a plant has fallen to resurrect it. The plant is revived with <color=green><b>{(RData?.revivalHealthPercent ?? 0.2f) * 100f:F0}%</b></color> of its maximum health.";
+        $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
 
     public override string GetPath1Name() => "Verdance";
     public override string GetPath2Name() => "Seed";
@@ -131,7 +140,7 @@ public class Rhodiola : Shooter
         string desc = details
             ? $"Attacks inflict <color=green><b>Rejuvenating Seed</b></color> on the target. " +
               $"When the target is attacked by a plant, that plant is granted <color=green><b>Rejuvenating Burgeon</b></color>, " +
-              $"healing <color=green><b>[({baseHealPT:F0}) + ({healpl:F0}/Lvl.)]</b></color> health every <color=green><b>{BurgeonTickInterval}s</b></color> for <color=green><b>{BurgeonDuration:F0}s</b></color>."
+              $"healing <color=green><b>[({baseHealPT:F0}) + ({healpl:F0}/Lvl.) + <color=#FFB6C1>{(RData?.passiveHealMPScaling ?? 0.04f) * 100f:F0}% Magic Power</color>]</b></color> health every <color=green><b>{BurgeonTickInterval}s</b></color> for <color=green><b>{BurgeonDuration:F0}s</b></color>."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Burgeon</b></color> heal per tick by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
@@ -143,8 +152,11 @@ public class Rhodiola : Shooter
     public override string GetPath3Description(bool details = false)
     {
         float cdrpl = RData?.path3CooldownReductionPerLevel ?? 0.1f;
-        string desc = GetSkillDesription();
+        string desc = details
+            ? $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</color>]</b></color> Health."
+            : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Revival Heal</b></color> by <color=green><b>{RevivalHealPerLevel:F0}</b></color> per level. [<color=green><b>+{RevivalHealPerLevel * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"Upon reviving a plant, grant it <color=green><b>Verdant Guardian</b></color>, shielding it for <color=grey><b>{RData?.verdantGuardianShield ?? 200f:F0}</b></color> health and regenerating <color=green><b>{RData?.verdantGuardianRegen ?? 20f:F0}</b></color> health per second while the shield lasts, for <color=green><b>{skillDuration:F0}s</b></color>.")}\n\n" +

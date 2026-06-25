@@ -13,9 +13,12 @@ public class RhodiolaData : PlantData
     public float baseBurgeonDuration    = 4f;
     public float burgeonTickInterval    = 0.5f;
     public float path2HealPerLevel      = 1f;
+    public float passiveHealMPScaling   = 0.04f;
 
     [Header("Path 3 Scaling")]
-    public float revivalHealthPercent           = 0.2f;
+    public float revivalBaseHeal                = 40f;
+    public float revivalHealPerLevel            = 20f;
+    public float skillHealMPScaling             = 0.30f;
     public float path3CooldownReductionPerLevel = 0f;
     public float verdantGuardianShield          = 200f;
     public float verdantGuardianRegen           = 20f;
@@ -28,5 +31,5 @@ public class RhodiolaData : PlantData
         $"Attacks inflict <color=green><b>Rejuvenating Seed</b></color> on the target. When the target is attacked by a plant, that plant is granted <color=green><b>Rejuvenating Burgeon</b></color>, healing it over {baseBurgeonDuration:F0} seconds.";
 
     public override string GetSkillDescription() =>
-        $"Target a tile where a plant has fallen to resurrect it. The plant is revived with <color=green><b>{revivalHealthPercent * 100f:F0}%</b></color> of its maximum health.";
+        $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{revivalBaseHeal:F0}</b></color> HP.";
 }

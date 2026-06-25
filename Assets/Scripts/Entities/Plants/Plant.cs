@@ -169,7 +169,7 @@ public abstract class Plant : Entity, IAttackable
         _ghosts.Clear();
     }
 
-    public static Plant RevivePlant(Tile tile, float healthPercent = 0.5f)
+    public static Plant RevivePlant(Tile tile)
     {
         if (tile == null || tile.deadPlant == null || tile.deadPlant.prefab == null) return null;
         DeadPlantRecord record = tile.deadPlant;
@@ -195,7 +195,7 @@ public abstract class Plant : Entity, IAttackable
         plant.OnPath3Upgrade(record.path3Level);
         plant.UpdateStats();
 
-        plant.health = plant.maxHealth * Mathf.Clamp01(healthPercent);
+        plant.health = 1f;
         plant.UpdateHealthBar();
         plant.skillCooldownTimer = plant.skillCooldown * 0.1f;
 
