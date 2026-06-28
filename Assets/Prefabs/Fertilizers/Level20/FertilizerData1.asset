@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData1
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Sniper
+  fertilizerName: Poisonous
   stats:
-  - statType: 9
+  - statType: 7
+    value: 0.16
+  - statType: 15
     value: 0.22
-  - statType: 10
-    value: 0.27
-  - statType: 0
-    value: 0.22
+  - statType: 45
+    value: 0.62
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   targetElementalTypes: 
-  targetCultivars: 04000000
+  targetCultivars: 05000000
   appliesToAll: 0
   tier: 0

@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Poisonous
+  fertilizerName: Bullseye
   stats:
-  - statType: 45
+  - statType: 9
     value: 0.33
-  - statType: 15
+  - statType: 10
     value: 0.52
   icon: {fileID: 0}
-  targetElementalTypes: 03000000
-  targetCultivars: 
+  targetElementalTypes: 
+  targetCultivars: 04000000
   appliesToAll: 0
   tier: 0

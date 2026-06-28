@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: BushAnimated
   m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
   m_AnimatedSprites:
-  - {fileID: 4296193443984631328, guid: e86c9f388dae44f4eba2b896269a9c8a, type: 3}
-  - {fileID: -685289702, guid: e86c9f388dae44f4eba2b896269a9c8a, type: 3}
-  - {fileID: 1934854754, guid: e86c9f388dae44f4eba2b896269a9c8a, type: 3}
-  - {fileID: -1467449629, guid: e86c9f388dae44f4eba2b896269a9c8a, type: 3}
+  - {fileID: -6376789313893623536, guid: 953eb743061d4ce45bab17367e009c46, type: 3}
+  - {fileID: 650636794, guid: 953eb743061d4ce45bab17367e009c46, type: 3}
+  - {fileID: -185253458, guid: 953eb743061d4ce45bab17367e009c46, type: 3}
+  - {fileID: 442734056, guid: 953eb743061d4ce45bab17367e009c46, type: 3}
   m_MinSpeed: 2
   m_MaxSpeed: 2
   m_AnimationStartTime: 0

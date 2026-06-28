@@ -402,6 +402,8 @@ public abstract class Entity : MonoBehaviour
                     {
                         ApplyEffect(new GustEffect(this, 0.5f, 1, source));
                     }
+                    if (source is Anemone anemone)
+                        anemone.ApplyWindErosion(windInsect);
                 }
             break;
 

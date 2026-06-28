@@ -1,0 +1,1781 @@
+fileFormatVersion: 2
+guid: cd0062463e89d8246a15054ff003db89
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2383509880101189496
+    second: anemone_0
+  - first:
+      213: 7134875521067129464
+    second: anemone_1
+  - first:
+      213: 4393420153742976970
+    second: anemone_2
+  - first:
+      213: 5209244676016083820
+    second: anemone_3
+  - first:
+      213: -4722670175846015791
+    second: anemone_4
+  - first:
+      213: -5353445397659336502
+    second: anemone_5
+  - first:
+      213: -3349448843354895017
+    second: anemone_6
+  - first:
+      213: -175307692027180317
+    second: anemone_7
+  - first:
+      213: 2951903789589770119
+    second: anemone_8
+  - first:
+      213: 3102299387190112776
+    second: anemone_9
+  - first:
+      213: -9143608205853237872
+    second: anemone_10
+  - first:
+      213: -7713631169509286579
+    second: anemone_11
+  - first:
+      213: -9132389903471669273
+    second: anemone_12
+  - first:
+      213: -5538696213475853699
+    second: anemone_13
+  - first:
+      213: -2451030836805837592
+    second: anemone_14
+  - first:
+      213: 3822176270355320049
+    second: anemone_15
+  - first:
+      213: -6166080569277185714
+    second: anemone_16
+  - first:
+      213: 2267231103254369923
+    second: anemone_17
+  - first:
+      213: 5486196692695800622
+    second: anemone_18
+  - first:
+      213: -2883047343602259379
+    second: anemone_19
+  - first:
+      213: 3814290109600010453
+    second: anemone_20
+  - first:
+      213: -5752022271187662509
+    second: anemone_21
+  - first:
+      213: -3865400632679347662
+    second: anemone_22
+  - first:
+      213: 7572841653356778311
+    second: anemone_23
+  - first:
+      213: 449504872301103426
+    second: anemone_24
+  - first:
+      213: -2732109362022986661
+    second: anemone_25
+  - first:
+      213: 3404526090244979695
+    second: anemone_26
+  - first:
+      213: -5887548198267465161
+    second: anemone_27
+  - first:
+      213: -2628117099737918053
+    second: anemone_28
+  - first:
+      213: 74848658220773356
+    second: anemone_29
+  - first:
+      213: -9145339998122960333
+    second: anemone_30
+  - first:
+      213: -484071905975230564
+    second: anemone_31
+  - first:
+      213: -7867037624381361491
+    second: anemone_32
+  - first:
+      213: 3829386469857337057
+    second: anemone_33
+  - first:
+      213: -5361293288261328313
+    second: anemone_34
+  - first:
+      213: -6038785729920837705
+    second: anemone_35
+  - first:
+      213: 1708622553920929885
+    second: anemone_36
+  - first:
+      213: 634336762730920505
+    second: anemone_37
+  - first:
+      213: 5268698677434370184
+    second: anemone_38
+  - first:
+      213: -403100237135251110
+    second: anemone_39
+  - first:
+      213: -3928019659375702251
+    second: anemone_40
+  - first:
+      213: -7621105045206005788
+    second: anemone_41
+  - first:
+      213: -7325977921342454517
+    second: anemone_42
+  - first:
+      213: 2155690238692259163
+    second: anemone_43
+  - first:
+      213: -7087836993261349080
+    second: anemone_44
+  - first:
+      213: -1002653475085073449
+    second: anemone_45
+  - first:
+      213: -5960365209861240274
+    second: anemone_46
+  - first:
+      213: -2509016206197317233
+    second: anemone_47
+  - first:
+      213: 6449203383963879941
+    second: anemone_48
+  - first:
+      213: -736700943713836622
+    second: anemone_49
+  - first:
+      213: 2823757624885399401
+    second: anemone_50
+  - first:
+      213: 8775688284833747385
+    second: anemone_51
+  - first:
+      213: 3529064007760713592
+    second: anemone_52
+  - first:
+      213: 8660869178110436048
+    second: anemone_53
+  - first:
+      213: 1847170218590482339
+    second: anemone_54
+  - first:
+      213: -5558911827742014213
+    second: anemone_55
+  - first:
+      213: 4647983819475194206
+    second: anemone_56
+  - first:
+      213: -995639593012390045
+    second: anemone_57
+  - first:
+      213: -8611422294736779153
+    second: anemone_58
+  - first:
+      213: -1028846187760178025
+    second: anemone_59
+  - first:
+      213: -9157887024885711651
+    second: anemone_60
+  - first:
+      213: 841790237099766711
+    second: anemone_61
+  - first:
+      213: 1115223139757156169
+    second: anemone_62
+  - first:
+      213: 7911409728361973695
+    second: anemone_63
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: anemone_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 6
+        width: 993
+        height: 1018
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 877b01a8b9de31120800000000000000
+      internalID: 2383509880101189496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1015
+        width: 33
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87a16d5fb7b240360800000000000000
+      internalID: 7134875521067129464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 975
+        width: 17
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac764ec3a5098fc30800000000000000
+      internalID: 4393420153742976970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 949
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c63980ede64fa4840800000000000000
+      internalID: 5209244676016083820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_4
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 1015
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1dcdd513f74b57eb0800000000000000
+      internalID: -4722670175846015791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_5
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 967
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac0c01c46cdb4b5b0800000000000000
+      internalID: -5353445397659336502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_6
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 959
+        width: 73
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75d0d7ae50e5481d0800000000000000
+      internalID: -3349448843354895017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 847
+        width: 17
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ea835a359e219df0800000000000000
+      internalID: -175307692027180317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_8
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 877
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78fa0a55bd447f820800000000000000
+      internalID: 2951903789589770119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_9
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 898
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 802f0602bd49d0b20800000000000000
+      internalID: 3102299387190112776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_10
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 877
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09d55cc18c06b1180800000000000000
+      internalID: -9143608205853237872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 743
+        width: 17
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4d9405e15da3f490800000000000000
+      internalID: -7713631169509286579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_12
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 751
+        width: 89
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ef053da4cb334180800000000000000
+      internalID: -9132389903471669273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_13
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 834
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7a78fc93299223b0800000000000000
+      internalID: -5538696213475853699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_14
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 823
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ecd8a6a0703cfdd0800000000000000
+      internalID: -2451030836805837592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_15
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 751
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fcc47f21191b0530800000000000000
+      internalID: 3822176270355320049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 677
+        width: 17
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e418bcb346ead6aa0800000000000000
+      internalID: -6166080569277185714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_17
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 714
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38691351da2d67f10800000000000000
+      internalID: 2267231103254369923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_18
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 690
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2b5e0c23d2e22c40800000000000000
+      internalID: 5486196692695800622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_19
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 647
+        width: 66
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4a24fd47bb5df7d0800000000000000
+      internalID: -2883047343602259379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 527
+        width: 17
+        height: 151
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d09efc45a41fe430800000000000000
+      internalID: 3814290109600010453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_21
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 615
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35949b94836bc20b0800000000000000
+      internalID: -5752022271187662509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_22
+      rect:
+        serializedVersion: 2
+        x: 962
+        y: 615
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23ac396ba965b5ac0800000000000000
+      internalID: -3865400632679347662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_23
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 607
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 743dc907c53281960800000000000000
+      internalID: 7572841653356778311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_24
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 599
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 249805ebc46fc3600800000000000000
+      internalID: 449504872301103426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_25
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 551
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5cc915b209951ad0800000000000000
+      internalID: -2732109362022986661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_26
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 535
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: febf99de07e4f3f20800000000000000
+      internalID: 3404526090244979695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_27
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 479
+        width: 25
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 732d6447b1a3b4ea0800000000000000
+      internalID: -5887548198267465161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 399
+        width: 17
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b95ddf11c6d078bd0800000000000000
+      internalID: -2628117099737918053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_29
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 447
+        width: 36
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cefe925457ae90100800000000000000
+      internalID: 74848658220773356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_30
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 453
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33a95bdc9b9351180800000000000000
+      internalID: -9145339998122960333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_31
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 463
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9f999e8a2b3849f0800000000000000
+      internalID: -484071905975230564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_32
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 453
+        width: 60
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da2bd1446faa2d290800000000000000
+      internalID: -7867037624381361491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_33
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 407
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ee988394b6b42530800000000000000
+      internalID: 3829386469857337057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_34
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 375
+        width: 41
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7426f70e82cd895b0800000000000000
+      internalID: -5361293288261328313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 335
+        width: 17
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b7de5d9f5ce13ca0800000000000000
+      internalID: -6038785729920837705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_36
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 389
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d508dadf82f36b710800000000000000
+      internalID: 1708622553920929885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_37
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 191
+        width: 11
+        height: 143
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93a3c82cced9dc800800000000000000
+      internalID: 634336762730920505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_38
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 314
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 888cb09488d2e1940800000000000000
+      internalID: 5268698677434370184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_39
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 325
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a597da45876e76af0800000000000000
+      internalID: -403100237135251110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_40
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 314
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51f092c6eeedc79c0800000000000000
+      internalID: -3928019659375702251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_41
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 319
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e70f88f6556c3690800000000000000
+      internalID: -7621105045206005788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_42
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 303
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b05470e25e5e45a90800000000000000
+      internalID: -7325977921342454517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_43
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 309
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b55770bc9dc8aed10800000000000000
+      internalID: 2155690238692259163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_44
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 303
+        width: 18
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 827d8cebec1f2ad90800000000000000
+      internalID: -7087836993261349080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_45
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 287
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d34eb80afbd512f0800000000000000
+      internalID: -1002653475085073449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_46
+      rect:
+        serializedVersion: 2
+        x: 967
+        y: 261
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2acf96cb67884da0800000000000000
+      internalID: -5960365209861240274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_47
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 247
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8129e5cd0f2e2dd0800000000000000
+      internalID: -2509016206197317233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_48
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 247
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50a0a61fe4c208950800000000000000
+      internalID: 6449203383963879941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_49
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 239
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b1ed381566b6c5f0800000000000000
+      internalID: -736700943713836622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_50
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 229
+        width: 18
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96f48135990003720800000000000000
+      internalID: 2823757624885399401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_51
+      rect:
+        serializedVersion: 2
+        x: 975
+        y: 186
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b1921ddff189c970800000000000000
+      internalID: 8775688284833747385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_52
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 178
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 877913c6401c9f030800000000000000
+      internalID: 3529064007760713592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_53
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 167
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d2e66751a6913870800000000000000
+      internalID: 8660869178110436048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_54
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 151
+        width: 9
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3af24cee68772a910800000000000000
+      internalID: 1847170218590482339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_55
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 167
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf448b12527cad2b0800000000000000
+      internalID: -5558911827742014213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_56
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 39
+        width: 17
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e51159168a4f08040800000000000000
+      internalID: 4647983819475194206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_57
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 87
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3679e26b017ce22f0800000000000000
+      internalID: -995639593012390045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_58
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 89
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f68c5575c051e7880800000000000000
+      internalID: -8611422294736779153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_59
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 23
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79c2a02e7ddc8b1f0800000000000000
+      internalID: -1028846187760178025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 286
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddc378c7546a8e080800000000000000
+      internalID: -9157887024885711651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_61
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 0
+        width: 506
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b339b9b2c3aeab00800000000000000
+      internalID: 841790237099766711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_62
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 0
+        width: 223
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 947658279811a7f00800000000000000
+      internalID: 1115223139757156169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anemone_63
+      rect:
+        serializedVersion: 2
+        x: 1018
+        y: 0
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb7c5934b39facd60800000000000000
+      internalID: 7911409728361973695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      anemone_0: 2383509880101189496
+      anemone_1: 7134875521067129464
+      anemone_10: -9143608205853237872
+      anemone_11: -7713631169509286579
+      anemone_12: -9132389903471669273
+      anemone_13: -5538696213475853699
+      anemone_14: -2451030836805837592
+      anemone_15: 3822176270355320049
+      anemone_16: -6166080569277185714
+      anemone_17: 2267231103254369923
+      anemone_18: 5486196692695800622
+      anemone_19: -2883047343602259379
+      anemone_2: 4393420153742976970
+      anemone_20: 3814290109600010453
+      anemone_21: -5752022271187662509
+      anemone_22: -3865400632679347662
+      anemone_23: 7572841653356778311
+      anemone_24: 449504872301103426
+      anemone_25: -2732109362022986661
+      anemone_26: 3404526090244979695
+      anemone_27: -5887548198267465161
+      anemone_28: -2628117099737918053
+      anemone_29: 74848658220773356
+      anemone_3: 5209244676016083820
+      anemone_30: -9145339998122960333
+      anemone_31: -484071905975230564
+      anemone_32: -7867037624381361491
+      anemone_33: 3829386469857337057
+      anemone_34: -5361293288261328313
+      anemone_35: -6038785729920837705
+      anemone_36: 1708622553920929885
+      anemone_37: 634336762730920505
+      anemone_38: 5268698677434370184
+      anemone_39: -403100237135251110
+      anemone_4: -4722670175846015791
+      anemone_40: -3928019659375702251
+      anemone_41: -7621105045206005788
+      anemone_42: -7325977921342454517
+      anemone_43: 2155690238692259163
+      anemone_44: -7087836993261349080
+      anemone_45: -1002653475085073449
+      anemone_46: -5960365209861240274
+      anemone_47: -2509016206197317233
+      anemone_48: 6449203383963879941
+      anemone_49: -736700943713836622
+      anemone_5: -5353445397659336502
+      anemone_50: 2823757624885399401
+      anemone_51: 8775688284833747385
+      anemone_52: 3529064007760713592
+      anemone_53: 8660869178110436048
+      anemone_54: 1847170218590482339
+      anemone_55: -5558911827742014213
+      anemone_56: 4647983819475194206
+      anemone_57: -995639593012390045
+      anemone_58: -8611422294736779153
+      anemone_59: -1028846187760178025
+      anemone_6: -3349448843354895017
+      anemone_60: -9157887024885711651
+      anemone_61: 841790237099766711
+      anemone_62: 1115223139757156169
+      anemone_63: 7911409728361973695
+      anemone_7: -175307692027180317
+      anemone_8: 2951903789589770119
+      anemone_9: 3102299387190112776
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

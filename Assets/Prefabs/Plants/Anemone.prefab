@@ -1,0 +1,658 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &943325936003181256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7109502881225831005}
+  - component: {fileID: 5934561039063047419}
+  m_Layer: 3
+  m_Name: Shadow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7109502881225831005
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943325936003181256}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01, y: -0.233, z: 0}
+  m_LocalScale: {x: 0.75435996, y: 0.14191936, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1839221878583724804}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &5934561039063047419
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943325936003181256}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: -1690330125
+  m_SortingLayer: 4
+  m_SortingOrder: -1
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: -2413806693520163455, guid: d852e9b01c514a1498e3348a6b17926f, type: 3}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.4117647}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
+--- !u!1 &2387982406283412628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1839221878583724804}
+  - component: {fileID: 7476232177775528650}
+  - component: {fileID: 8075726610809195255}
+  m_Layer: 3
+  m_Name: Anemone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1839221878583724804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2387982406283412628}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1528871622940679921}
+  - {fileID: 7109502881225831005}
+  - {fileID: 2223205672080502255}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &7476232177775528650
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2387982406283412628}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.02278778, y: 0.005717993}
+  m_Radius: 0.5
+--- !u!114 &8075726610809195255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2387982406283412628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eefd9f5f4d43a041b15580680e2e2f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Anemone
+  baseMaxHealth: 0
+  baseAttackDamage: 0
+  baseMagicPower: 0
+  baseAttackSpeed: 0
+  baseAttackRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  baseArmor: 0
+  baseMagicArmor: 0
+  baseArmorPenFlat: 0
+  baseMagicPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenPercent: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseFallDamage: 0
+  baseBonusEffectChance: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseNatureDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseCriticalChance: 0
+  baseCriticalDamage: 0
+  baseDotResistance: 0
+  baseDotDamage: 0
+  baseFallDamageResistance: 0
+  baseelementalAffinity: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
+  baseCoordinatedDamage: 0
+  baseSkillDuration: 0
+  baseTenacity: 0
+  baseLightEmissionRange: 0
+  baseLifesteal: 0
+  baseCounterDamage: 0
+  baseDebuffGivenDuration: 0
+  baseBuffGivenDuration: 0
+  baseBuffReceivedDuration: 0
+  baseDebuffReceivedDuration: 0
+  baseDotDuration: 0
+  baseRegenerationDuration: 0
+  baseShieldDuration: 0
+  baseSunGenerationCooldown: 0
+  baseEvasion: 0
+  baseAccuracy: 0
+  baseBonusCritChanceReceived: 0
+  baseBonusCritDamageReceived: 0
+  baseProjectileSpeed: 0
+  maxHealth: 0
+  health: 0
+  attackDamage: 0
+  magicPower: 0
+  attackSpeed: 0
+  attackCooldown: 0
+  attackCooldownTimer: 0
+  attackRange: 0
+  healingBonus: 0
+  healingReceived: 0
+  physicalResistance: 0
+  magicResistance: 0
+  armor: 0
+  magicArmor: 0
+  armorPenFlat: 0
+  magicPenFlat: 0
+  armorPenPercent: 0
+  magicPenPercent: 0
+  fireResistance: 0
+  waterResistance: 0
+  natureResistance: 0
+  windResistance: 0
+  poisonResistance: 0
+  iceResistance: 0
+  physicalDamage: 0
+  magicDamage: 0
+  fallDamage: 0
+  bonusEffectChance: 0
+  fireDamage: 0
+  waterDamage: 0
+  natureDamage: 0
+  windDamage: 0
+  poisonDamage: 0
+  iceDamage: 0
+  criticalChance: 0
+  criticalDamage: 0
+  dotResistance: 0
+  dotDamage: 0
+  fallDamageResistance: 0
+  elementalAffinity: 0
+  passiveDamage: 0
+  skillDamage: 0
+  coordinatedDamage: 0
+  skillDuration: 0
+  lightEmissionRange: 0
+  lifesteal: 0
+  counterDamage: 0
+  tenacity: 0
+  debuffGivenDuration: 0
+  buffGivenDuration: 0
+  buffReceivedDuration: 0
+  debuffReceivedDuration: 0
+  dotDuration: 0
+  regenerationDuration: 0
+  shieldDuration: 0
+  sunGenerationCooldown: 0
+  burnDurationBonus: 0
+  baseMinionDamage: 0
+  minionDamage: 0
+  shieldBonusDamage: 0
+  shieldToughness: 0
+  startingShield: 0
+  debuffsFrozen: 0
+  bypassShields: 0
+  evasion: 0
+  accuracy: 0
+  bonusCritChanceReceived: 0
+  bonusCritDamageReceived: 0
+  projectileSpeed: 0
+  maxHealthAdder: 0
+  attackDamageAdder: 0
+  magicPowerAdder: 0
+  attackSpeedAdder: 0
+  attackRangeAdder: 0
+  healingBonusAdder: 0
+  healingReceivedAdder: 0
+  armorAdder: 0
+  magicArmorAdder: 0
+  armorPenFlatAdder: 0
+  magicPenFlatAdder: 0
+  armorPenPercentAdder: 0
+  magicPenPercentAdder: 0
+  fireResistanceAdder: 0
+  waterResistanceAdder: 0
+  natureResistanceAdder: 0
+  windResistanceAdder: 0
+  poisonResistanceAdder: 0
+  iceResistanceAdder: 0
+  physicalDamageAdder: 0
+  magicDamageAdder: 0
+  fallDamageAdder: 0
+  bonusEffectChanceAdder: 0
+  fireDamageAdder: 0
+  waterDamageAdder: 0
+  natureDamageAdder: 0
+  windDamageAdder: 0
+  poisonDamageAdder: 0
+  iceDamageAdder: 0
+  criticalChanceAdder: 0
+  criticalDamageAdder: 0
+  dotResistanceAdder: 0
+  dotDamageAdder: 0
+  fallDamageResistanceAdder: 0
+  elementalAffinityAdder: 0
+  passiveDamageAdder: 0
+  skillDamageAdder: 0
+  coordinatedDamageAdder: 0
+  skillDurationAdder: 0
+  tenacityAdder: 0
+  immobilizeDurationAdder: 0
+  shieldBonusDamageAdder: 0
+  shieldToughnessAdder: 0
+  lightEmissionRangeAdder: 0
+  lifestealAdder: 0
+  minionDamageAdder: 0
+  counterDamageAdder: 0
+  debuffGivenDurationAdder: 0
+  buffGivenDurationAdder: 0
+  buffReceivedDurationAdder: 0
+  debuffReceivedDurationAdder: 0
+  dotDurationAdder: 0
+  regenerationDurationAdder: 0
+  shieldDurationAdder: 0
+  sunGenerationCooldownMultiplier: 0
+  evasionAdder: 0
+  accuracyAdder: 0
+  bonusCritChanceReceivedAdder: 0
+  bonusCritDamageReceivedAdder: 0
+  projectileSpeedAdder: 0
+  sunYieldAdder: 0
+  currencyYieldAdder: 0
+  maxHealthMultiplier: 0
+  attackDamageMultiplier: 0
+  magicPowerMultiplier: 0
+  attackSpeedMultiplier: 0
+  attackRangeMultiplier: 0
+  healingBonusMultiplier: 0
+  healingReceivedMultiplier: 0
+  armorMultiplier: 0
+  magicArmorMultiplier: 0
+  armorPenFlatMultiplier: 0
+  magicPenFlatMultiplier: 0
+  armorPenPercentMultiplier: 0
+  magicPenPercentMultiplier: 0
+  fireResistanceMultiplier: 0
+  waterResistanceMultiplier: 0
+  natureResistanceMultiplier: 0
+  windResistanceMultiplier: 0
+  poisonResistanceMultiplier: 0
+  iceResistanceMultiplier: 0
+  physicalDamageMultiplier: 0
+  magicDamageMultiplier: 0
+  bonusEffectChanceMultiplier: 0
+  fireDamageMultiplier: 0
+  waterDamageMultiplier: 0
+  natureDamageMultiplier: 0
+  windDamageMultiplier: 0
+  poisonDamageMultiplier: 0
+  iceDamageMultiplier: 0
+  criticalChanceMultiplier: 0
+  criticalDamageMultiplier: 0
+  dotResistanceMultiplier: 0
+  dotDamageMultiplier: 0
+  elementalAffinityMultiplier: 0
+  passiveDamageMultiplier: 0
+  coordinatedDamageMultiplier: 0
+  skillDurationMultiplier: 0
+  tenacityMultiplier: 0
+  immobilizeDurationMultiplier: 0
+  lightEmissionRangeMultiplier: 0
+  lifestealMultiplier: 0
+  counterDamageMultiplier: 0
+  debuffGivenDurationMultiplier: 0
+  buffGivenDurationMultiplier: 0
+  buffReceivedDurationMultiplier: 0
+  debuffReceivedDurationMultiplier: 0
+  evasionMultiplier: 0
+  accuracyMultiplier: 0
+  bonusCritChanceReceivedMultiplier: 0
+  projectileSpeedMultiplier: 0
+  sunYieldMultiplier: 0
+  currencyYieldMultiplier: 0
+  maxHealthTotalMultiplier: 1
+  attackDamageTotalMultiplier: 1
+  magicPowerTotalMultiplier: 1
+  attackSpeedTotalMultiplier: 1
+  attackRangeTotalMultiplier: 1
+  criticalChanceTotalMultiplier: 1
+  criticalDamageTotalMultiplier: 1
+  armorTotalMultiplier: 1
+  magicArmorTotalMultiplier: 1
+  armorPenFlatTotalMultiplier: 1
+  magicPenFlatTotalMultiplier: 1
+  internalCooldown: 2
+  blazeInternalCooldown: 0
+  wetInternalCooldown: 0
+  sproutInternalCooldown: 0
+  coldInternalCooldown: 0
+  taintedInternalCooldown: 0
+  freezeInternalCooldown: 0
+  germinateInternalCooldown: 0
+  timeAlive: 0
+  totalDamageDealt: 0
+  data: {fileID: 11400000, guid: 39cd88ed7f2b74843aa7e2f2f97f7b5a, type: 2}
+  occupiedTile: {fileID: 0}
+  selfPrefab: {fileID: 2387982406283412628}
+  circleRadius: {fileID: 2223205672080502255}
+  lightInnerRadius: 1.2
+  lightFalloffStrength: 0.2
+  allowedTiles: 0100000004000000
+  targeting: 1
+  prioritizeFlying: 0
+  sunCost: 0
+  totalSunSpent: 0
+  exp: 0
+  expBoost: 0
+  activeCooldown: 0
+  temperature: 10
+  baseComfortMin: 0
+  comfortMinAdder: 0
+  comfortMin: 0
+  baseComfortMax: 20
+  comfortMaxAdder: 0
+  comfortMax: 0
+  baseTemperatureMin: -10
+  temperatureMinAdder: 0
+  temperatureMin: 0
+  baseTemperatureMax: 30
+  temperatureMaxAdder: 0
+  temperatureMax: 0
+  basePassiveCooldown: 0
+  passiveCooldown: 0
+  passiveCooldownAdder: 0
+  passiveCooldownReductionMultiplier: 0
+  passiveCooldownMultiplier: 0
+  passiveCooldownTimer: 0
+  basePassiveDuration: 0
+  passiveDuration: 0
+  passiveDurationAdder: 0
+  passiveDurationMultiplier: 0
+  baseSkillCooldown: 0
+  skillCooldown: 0
+  skillCooldownReductionAdder: 0
+  skillCooldownReductionMultiplier: 0
+  skillCooldownTimer: 0
+  baseSkillRadius: 0
+  skillRadius: 0
+  skillRadiusAdder: 0
+  skillRadiusMultiplier: 0
+  baseSkillDamageMultiplier: 0
+  skillDamageMultiplier: 0
+  skillDamageMultiplierAdder: 0
+  baseSkillHealth: 0
+  skillHealth: 0
+  path1Level: 0
+  path2Level: 0
+  path3Level: 0
+  path1LevelAdder: 0
+  path2LevelAdder: 0
+  path3LevelAdder: 0
+  effectivePath1Level: 0
+  effectivePath2Level: 0
+  effectivePath3Level: 0
+  path3Unlocked: 0
+  mainRenderer: {fileID: 4183141067293570032}
+  projectilePrefab: {fileID: 7388594979766616069, guid: f1394e74ff34f9b4d911c7c7442b221a, type: 3}
+  baseMaxRange: 0
+  maxRange: 0
+  basePiercing: 0
+  piercing: 0
+  piercingAdder: 0
+  vortexPrefab: {fileID: 8482905087334200380, guid: 26cc6bed9e7daa349b754824bb484bdc, type: 3}
+--- !u!1 &5647405832183044929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1528871622940679921}
+  - component: {fileID: 4183141067293570032}
+  m_Layer: 3
+  m_Name: Visual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1528871622940679921
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5647405832183044929}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.012, y: 0.289, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1839221878583724804}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &4183141067293570032
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5647405832183044929}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: -1018753133
+  m_SortingLayer: 5
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: cd0062463e89d8246a15054ff003db89, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1.2500001, y: 1.2500001}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
+--- !u!1001 &2231484702110357990
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1839221878583724804}
+    m_Modifications:
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7507562756265830079, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+      propertyPath: m_Name
+      value: RangeIndicator
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+--- !u!4 &2223205672080502255 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 12871179031049225, guid: 39c7b2286e7757b42971c743fe73769e, type: 3}
+  m_PrefabInstance: {fileID: 2231484702110357990}
+  m_PrefabAsset: {fileID: 0}

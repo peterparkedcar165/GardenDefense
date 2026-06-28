@@ -28,7 +28,7 @@ public abstract class Insect : Entity, IAttackable
     public static float fallDamageHealthVelocityCap = 20f; // velocity at which health % reaches max
     public float verticalVelocity = 0f;
     public Entity fallDamageSource;
-    public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f);
+    public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f) && !HasEffect<VortexLiftEffect>();
     protected virtual bool FallDamageImmune => false;
     public bool isOnGround => visual != null && visual.localPosition.y <= 0.4f;
 

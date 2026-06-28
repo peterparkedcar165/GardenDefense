@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4069475746422670408}
-  - component: {fileID: 8902658371101449206}
   m_Layer: 0
   m_Name: SpawnPoint
   m_TagString: Untagged
@@ -32,28 +31,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8902658371101449206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4336965381066371071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9805fda9d6639a24ba9d167410511b3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Level1
-  spawnPoint: {fileID: 0}
-  levelTime: 0
-  wave: 0
-  workerAnt: {fileID: 0}
-  soldierAnt: {fileID: 0}
-  scoutAnt: {fileID: 0}
-  weatherManager: {fileID: 0}
-  waveCountText: {fileID: 0}
-  nextWaveTimerText: {fileID: 0}
-  nextWaveTimer: 0
-  waitTime: 0
-  spawnInterval: 0
-  spawnCount: 0

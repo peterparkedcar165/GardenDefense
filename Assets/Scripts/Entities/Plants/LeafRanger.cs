@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class LeafRanger : Shooter
 {
@@ -32,27 +31,7 @@ public class LeafRanger : Shooter
         basePiercing = data.basePiercing + effectivePath2Level;
     }
 
-    protected override GameObject FindTarget()
-    {
-        if (DarknessManager.instance == null || !DarknessManager.instance.isDark)
-            return base.FindTarget();
-
-        List<Insect> illuminated = new List<Insect>();
-        foreach (Insect insect in Insect.allInsects)
-        {
-            if (insect == null || !insect.IsAlive) continue;
-            if (DarknessManager.instance.IsIlluminated(insect.transform.position))
-                illuminated.Add(insect);
-        }
-
-        return targeting switch
-        {
-            TARGETING.First   => FindFirst(illuminated),
-            TARGETING.Nearest => FindNearest(illuminated),
-            TARGETING.Last    => FindLast(illuminated),
-            _                 => null,
-        };
-    }
+    public override bool IsValidNightTarget(Insect insect, float distance) => true;
 
     protected override void OnShoot()
     {
@@ -125,6 +104,8 @@ public class LeafRanger : Shooter
         ApplyEffect(new RapidFocusEffect(this, skillDuration, 1, this, bonus));
     }
 
+    public override string GetName() => "<b><color=green>Leaf Ranger</color></b>";
+
     public override string GetDescription() =>
         $"The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can pierce through his target.";
 
@@ -153,8 +134,8 @@ public class LeafRanger : Shooter
         float critpl   = LRData?.path2CritChancePerLevel ?? 0.05f;
         float totalCrit = baseCrit + critpl * effectivePath2Level;
         string desc = details
-            ? $"Gains <color=green><b>[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>[(0) + (1/Lvl.)]</b></color> <color=green>Piercing</color>."
-            : $"Gains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.";
+            ? $"The {GetName()} sees in the dark.\n\nGains <color=green><b>[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>[(0) + (1/Lvl.)]</b></color> <color=green>Piercing</color>."
+            : $"The {GetName()} sees in the dark.\n\nGains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green>Piercing</color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +

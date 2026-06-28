@@ -25,7 +25,7 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.7
   baseAttackRange: 2
-  baseArmor: 32
+  baseArmor: 16
   baseMagicArmor: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -84,7 +84,7 @@ MonoBehaviour:
   baseSkillShield: 120
   baseSkillShieldMP: 0.7
   path1AttackDamagePerLevel: 7
-  path1ArmorPerLevel: 16
+  path1ArmorPerLevel: 8
   path2HealthPerLevel: 55
   path2RetaliationPerLevel: 0.15
   path3ShieldPerLevel: 60

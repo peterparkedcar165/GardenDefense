@@ -21,7 +21,7 @@ public class LeafRangerData : PlantData
         $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks can pierce <color=green><b>{basePiercing}</b></color> enemy.";
+        $"The <color=green><b>Leaf Ranger</b></color> sees in the dark.\n\nAttacks can pierce <color=green><b>{basePiercing}</b></color> enemy.";
 
     public override string GetSkillDescription() =>
         $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{baseSkillAttackSpeedBonus * 100f:F0}%</b></color> for <color=green><b>{baseSkillDuration}</b></color> seconds.";

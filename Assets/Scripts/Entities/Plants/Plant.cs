@@ -1172,7 +1172,7 @@ public abstract class Plant : Entity, IAttackable
         return last;
     }
 
-    public bool IsValidNightTarget(Insect insect, float distance)
+    public virtual bool IsValidNightTarget(Insect insect, float distance)
     {
         if (DarknessManager.instance == null || !DarknessManager.instance.isDark) return true;
         if (distance <= attackRange * 0.5f) return true;

@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dcae6fa5f0a3ce429da2f0578824406, type: 3}
+  m_Name: AnemoneData
+  m_EditorClassIdentifier: Assembly-CSharp::AnemoneData
+  plantPrefab: {fileID: 8075726610809195255, guid: cdeaaaa7d09999e43a2abad5cc88d118, type: 3}
+  icon: {fileID: 21300000, guid: cd0062463e89d8246a15054ff003db89, type: 3}
+  plantName: Anemone
+  displayName: Anemone
+  cultivar: 5
+  elementalType: 5
+  damageType: 1
+  sunCost: 95
+  baseMaxHealth: 200
+  baseAttackDamage: 40
+  baseMagicPower: 0
+  baseAttackSpeed: 0.65
+  baseAttackRange: 3
+  baseArmor: 0
+  baseMagicArmor: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  startingShield: 0
+  baseTenacity: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  baseLifesteal: 0
+  baseBonusEffectChance: 0
+  baseCriticalChance: 0.05
+  baseCriticalDamage: 1.75
+  baseDotDamage: 0
+  baseelementalAffinity: 0
+  baseCoordinatedDamage: 0
+  baseCounterDamage: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseNatureDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseLightEmissionRange: 0
+  baseMinionDamage: 0
+  baseProjectileSpeed: 3
+  baseMaxRange: 20
+  basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
+  basePassiveCooldown: 0
+  basePassiveDuration: 16
+  baseSkillCooldown: 4
+  baseSkillDuration: 16
+  channelDuration: 0
+  baseSkillRadius: 0
+  baseSkillDamageMultiplier: 0
+  baseSkillHealth: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
+  splashRadius: 1.2
+  path1AttackDamagePerLevel: 12
+  path1AttackRangePerLevel: 0.2
+  baseInitialErosionStacks: 10
+  path2InitialStacksPerLevel: 2
+  baseReductionPerStack: 1
+  baseVortexRadius: 1.5
+  path3RadiusPerLevel: 0.3
+  vortexDuration: 6
+  vortexDamagePerTick: 4
+  vortexTickInterval: 0.5
+  vortexDragSpeed: 0.5
+  path3DragSpeedPerLevel: 0.1
+  vortexDetonationDamage: 200
+  vortexKnockbackForce: 12
