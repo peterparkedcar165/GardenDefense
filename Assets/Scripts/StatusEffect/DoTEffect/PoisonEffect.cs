@@ -21,6 +21,15 @@ public class PoisonedEffect : DoTEffect
     public override string GetDescription() =>
         $"Deals escalating <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage each second, starting at <color=green><b>1%</b></color> Max Health + <color=green><b>2</b></color>, increasing by <color=green><b>0.15%</b></color> Max Health and <color=green><b>1</b></color> flat per tick.";
 
+    public override void OnReapply(StatusEffect previous)
+    {
+        if (previous is PoisonedEffect old)
+        {
+            currentHealthPercent = old.currentHealthPercent + 0.01f;
+            currentFlatDamage    = old.currentFlatDamage + 2f;
+        }
+    }
+
     public override void OnApply()
     {
         cachedElementalAffinity = source?.elementalAffinity ?? 0f;
