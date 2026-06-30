@@ -30,7 +30,7 @@ public class SproutEffect : ElementalDebuff
         {
             insect.RemoveEffect<SproutEffect>();
             insect.RemoveEffect<TaintedEffect>();
-            insect.ApplyEffect(new DecayEffect(insect, 8f, 1, source));
+            insect.ApplyEffect(new PoisonedEffect(insect, 8f, 1, source));
         }
         else if (insect.HasEffect<WetEffect>())
         {

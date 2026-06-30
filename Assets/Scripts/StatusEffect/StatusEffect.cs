@@ -21,6 +21,7 @@ public class StatusEffect
     }
     public Type effectType;
     public ElementalType elementalType = ElementalType.Neutral;
+    public bool visible = true;
     public int level;
     public Entity target, source;
 

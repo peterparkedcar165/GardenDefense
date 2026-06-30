@@ -35,10 +35,10 @@ public class StatusEffectPanel : MonoBehaviour
     {
         if (trackedEntity == null || effectsText == null) return;
 
-        var buffs   = trackedEntity.activeEffects.FindAll(ef => ef.effectType == StatusEffect.Type.positive);
-        var debuffs = trackedEntity.activeEffects.FindAll(ef => ef.effectType == StatusEffect.Type.negative);
-        var neutral = trackedEntity.activeEffects.FindAll(ef => ef.effectType == StatusEffect.Type.neutral);
-        var primers = trackedEntity.activeEffects.FindAll(ef => ef.effectType == StatusEffect.Type.primer);
+        var buffs   = trackedEntity.activeEffects.FindAll(ef => ef.visible && ef.effectType == StatusEffect.Type.positive);
+        var debuffs = trackedEntity.activeEffects.FindAll(ef => ef.visible && ef.effectType == StatusEffect.Type.negative);
+        var neutral = trackedEntity.activeEffects.FindAll(ef => ef.visible && ef.effectType == StatusEffect.Type.neutral);
+        var primers = trackedEntity.activeEffects.FindAll(ef => ef.visible && ef.effectType == StatusEffect.Type.primer);
 
         bool hasAny = buffs.Count > 0 || debuffs.Count > 0 || neutral.Count > 0 || primers.Count > 0;
         gameObject.SetActive(hasAny);
