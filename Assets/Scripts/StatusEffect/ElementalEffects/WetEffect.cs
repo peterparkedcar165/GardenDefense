@@ -4,10 +4,10 @@ public class WetEffect : ElementalDebuff
 {
     public WetEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-
+        elementalType = ElementalType.Water;
     }
 
-    public override string GetName() => "<color=#1E90FF>Wet</color>";
+    public override string GetName() => "<color=#4FC3F7>Wet</color>";
     public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()

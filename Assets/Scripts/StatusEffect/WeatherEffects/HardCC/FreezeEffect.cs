@@ -11,6 +11,7 @@ public class FreezeEffect : HardCrowdControl
         float baseShred = 0.32f * (1f + source.elementalAffinity);
         magicResistShred = 100f * baseShred / (1f - Mathf.Min(baseShred, 0.99f));
         effectType = Type.negative;
+        elementalType = ElementalType.Ice;
     }
 
     public override string GetName() => "<color=#00FFFF>Freeze</color>";

@@ -11,9 +11,10 @@ public class WindErosionEffect : StatusEffect
         this.hasSlow = hasSlow;
         this.reductionPerStack = reductionPerStack;
         effectType = Type.negative;
+        elementalType = ElementalType.Wind;
     }
 
-    public override string GetName() => "<color=#E0E0E0>Wind Erosion</color>";
+    public override string GetName() => "<color=#B2EBF2>Wind Erosion</color>";
 
     public override string GetDescription() =>
         hasSlow

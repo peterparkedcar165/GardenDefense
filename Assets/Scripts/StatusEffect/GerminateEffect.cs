@@ -14,12 +14,13 @@ public class GerminateEffect : StatusEffect
         cachedAttackDamage = source?.attackDamage ?? 0f;
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
+        elementalType = ElementalType.Nature;
     }
 
     // (42 + 43% attack damage) × (1 + 213% elemental affinity), snapshotted from the source on apply
     private float ComputeDamage() => (42f + cachedAttackDamage * 0.43f) * (1f + 2.13f * cachedelementalAffinity);
 
-    public override string GetName() => "<color=#32CD32>Germinate</color>";
+    public override string GetName() => "<color=green>Germinate</color>";
     public override string GetDescription()
     {
         return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{ComputeDamage():F0}</b></color> <color=green>Nature</color> Physical damage to nearby insects.";
@@ -90,7 +91,7 @@ public class GerminateEffect : StatusEffect
             if (Vector3.Distance(origin, insect.transform.position) <= aoeRadius)
             {
                 if (source != null)
-                    insect.Damage(damage, DamageType.Physical, ElementalType.Nature, source, false, damageTags);
+                    insect.Damage(damage, DamageType.Physical, ElementalType.Nature, source, source.ElementalReactionCanCrit, damageTags);
                 else
                     insect.Damage(damage, DamageType.Physical, ElementalType.Nature, damageTags);
             }

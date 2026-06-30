@@ -1,36 +1,30 @@
 using UnityEngine;
 
-public class PoisonEffect : DoTEffect
+public class PoisonedEffect : DoTEffect
 {
-
     private ParticleSystem poisonParticles;
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.PassiveDamage };
 
-    private float additionalDPS;
+    private float currentHealthPercent = 0.01f;
+    private float currentFlatDamage = 2f;
+    private float cachedElementalAffinity;
 
-    public PoisonEffect(Entity target, float duration, int level, Entity source, float additionalDPS = 0f) : base(target, duration, level, source)
+    public PoisonedEffect(Entity target, float duration, int level, Entity source)
+        : base(target, duration, level, source)
     {
         effectType = Type.negative;
-        sourceStackable = true;
+        elementalType = ElementalType.Poison;
         tickInterval = 1f;
-        this.additionalDPS = additionalDPS;
     }
 
-    public override string GetName() => "<color=purple>Poison</color>";
-    public override string GetDescription()
-    {
-        string desc = $"Deal <color=green><b>{damagePerSecond:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.";
-        if (source is PoisonShroom ps && ps.IsPath2Maxed)
-            desc += " Deals an additional <color=green><b>2%</b></color> of the target's <color=green><b>Max Health</b></color> per second.";
-        return desc;
-    }
+    public override string GetName() => "<color=purple>Poisoned</color>";
+    public override string GetDescription() =>
+        $"Deals escalating <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage each second, starting at <color=green><b>1%</b></color> Max Health + <color=green><b>2</b></color>, increasing by <color=green><b>0.15%</b></color> Max Health and <color=green><b>1</b></color> flat per tick.";
 
     public override void OnApply()
     {
-        base.OnApply();
-        damagePerSecond = additionalDPS;
-        Debug.Log("Poison applied at level " + level);
-
+        cachedElementalAffinity = source?.elementalAffinity ?? 0f;
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Poisoned", new Color(0.6f, 0.1f, 0.8f));
         GameObject fx = Object.Instantiate(Resources.Load<GameObject>("PoisonBubbles"), target.transform.position, Quaternion.identity);
         fx.transform.SetParent(target.transform);
         fx.transform.localPosition = Vector3.zero;
@@ -40,26 +34,22 @@ public class PoisonEffect : DoTEffect
     public override void OnTick(float deltaTime)
     {
         tickTimer += deltaTime;
-        if (tickTimer >= tickInterval)
-        {
-            float damage = damagePerSecond * tickInterval;
-            if (source is PoisonShroom ps && ps.IsPath2Maxed)
-                damage += target.maxHealth * 0.02f * tickInterval;
-            if (source != null)
-                target.Damage(damage, DamageType.Magic, ElementalType.Poison, source, false, tickTags);
-            else
-                target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
-            tickTimer -= tickInterval;
-        }
+        if (tickTimer < tickInterval) return;
+
+        float damage = (target.maxHealth * currentHealthPercent + currentFlatDamage) * (1f + cachedElementalAffinity);
+        if (source != null)
+            target.Damage(damage, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
+        else
+            target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
+
+        currentHealthPercent += 0.0015f;
+        currentFlatDamage    += 1f;
+        tickTimer            -= tickInterval;
     }
 
     public override void OnExpire()
     {
-        Debug.Log("Poison expired");
-
         if (poisonParticles != null)
-        {
             Object.Destroy(poisonParticles.gameObject);
-        }
     }
 }

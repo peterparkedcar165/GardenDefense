@@ -4,8 +4,9 @@ public class EatingAcornEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Nature;
     }
 
-    public override string GetName() => "Eating Acorn";
+    public override string GetName() => "<color=green>Eating Acorn</color>";
     public override string GetDescription() => "Stopped to eat an acorn.";
 }

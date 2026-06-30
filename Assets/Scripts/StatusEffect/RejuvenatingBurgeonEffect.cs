@@ -7,6 +7,7 @@ public class RejuvenatingBurgeonEffect : RegenerationEffect
                healingPerSecond: healPerTick,
                tickInterval: tickInterval)
     {
+        elementalType = ElementalType.Nature;
     }
 
     public override void OnApply() { }

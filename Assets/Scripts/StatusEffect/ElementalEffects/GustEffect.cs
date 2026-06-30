@@ -9,10 +9,10 @@ public class GustEffect : ElementalDebuff
 
     public GustEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-
+        elementalType = ElementalType.Wind;
     }
 
-    public override string GetName() => "<color=#E0E0E0>Gust</color>";
+    public override string GetName() => "<color=#B2EBF2>Gust</color>";
     public override string GetDescription()
     {
         float halfDamage = 72f * (1f + 1.8f * source.elementalAffinity);
@@ -85,7 +85,7 @@ public class GustEffect : ElementalDebuff
         {
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(center, insect.transform.position) <= WindshearRadius)
-                insect.Damage(damage, DamageType.Magic, element, source, false, tags);
+                insect.Damage(damage, DamageType.Magic, element, source, source?.ElementalReactionCanCrit ?? false, tags);
         }
     }
 

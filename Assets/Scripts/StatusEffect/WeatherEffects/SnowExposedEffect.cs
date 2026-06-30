@@ -9,6 +9,7 @@ public class SnowExposedEffect : StatusEffect
         : base(target, float.MaxValue, intensity, source)
     {
         effectType = Type.neutral;
+        elementalType = ElementalType.Ice;
         bonus = baseBonus + bonusPerLevel * (level - 1);
     }
 
@@ -16,7 +17,7 @@ public class SnowExposedEffect : StatusEffect
     public override void OnExpire() => target.iceDamageAdder -= bonus;
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=#88DDFF>[Weather]: Snow</color>";
+    public override string GetName() => "<color=#00FFFF>[Weather]: Snow</color>";
     public override string GetDescription() =>
         $"Increase <color=#88DDFF><b>Ice Damage</b></color> by <color=#88DDFF><b>{bonus * 100f:F0}%</b></color>.";
 }

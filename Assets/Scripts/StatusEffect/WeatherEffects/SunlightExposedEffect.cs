@@ -9,6 +9,7 @@ public class SunlightExposedEffect : StatusEffect
         : base(target, float.MaxValue, intensity, source)
     {
         effectType = Type.neutral;
+        elementalType = ElementalType.Fire;
         bonus = baseBonus + bonusPerLevel * (level - 1);
     }
 

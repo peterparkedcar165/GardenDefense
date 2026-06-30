@@ -9,6 +9,7 @@ public class FieryWispLatchedEffect : RegenerationEffect
         : base(target, duration, level, source, healingPerSecond, tickInterval)
     {
         _fireDamageFrac = fireDamageFrac;
+        elementalType = ElementalType.Fire;
     }
 
     public override void OnApply()

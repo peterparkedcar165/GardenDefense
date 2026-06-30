@@ -10,6 +10,7 @@ public class WarmingEffect : StatusEffect
     {
         this.warmingPerSecond = warmingPerSecond;
         effectType = Type.positive;
+        elementalType = ElementalType.Fire;
     }
 
     public override void OnApply()  { }

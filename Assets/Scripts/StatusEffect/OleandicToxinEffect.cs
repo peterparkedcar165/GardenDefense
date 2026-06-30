@@ -15,6 +15,7 @@ public class OleandicToxinEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Poison;
         baseDuration = duration;
     }
 
@@ -103,7 +104,7 @@ public class OleandicToxinEffect : StatusEffect
         }
     }
 
-    public override string GetName() => "<color=#9B59B6>Oleandic Toxin</color>";
+    public override string GetName() => "<color=purple>Oleandic Toxin</color>";
     public override string GetDescription()
     {
         var sb = new System.Text.StringBuilder();

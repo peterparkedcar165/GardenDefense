@@ -5,9 +5,10 @@ public class DisplacedEffect : HardCrowdControl
     public DisplacedEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Wind;
     }
 
-    public override string GetName() => "<color=#E0E0E0>Displaced</color>";
+    public override string GetName() => "<color=#B2EBF2>Displaced</color>";
     public override string GetDescription() => "Currently being displaced against its will. When the effect ends, the insect returns to its original location.";
 
     public override void OnApply()

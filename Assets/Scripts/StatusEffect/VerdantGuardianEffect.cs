@@ -9,6 +9,7 @@ public class VerdantGuardianEffect : ShieldEffect
         : base(target, duration, 1, source, shieldAmount)
     {
         _regenPerSecond = regenPerSecond;
+        elementalType = ElementalType.Nature;
     }
 
     public override void OnTick(float deltaTime)

@@ -11,6 +11,7 @@ public class VenomEffect : StatusEffect
     {
         this.damagePerSecond = damagePerSecond;
         effectType = Type.negative;
+        elementalType = ElementalType.Poison;
         sourceStackable = true;
         tags = new EffectTag[] { EffectTag.DoT };
     }
@@ -27,10 +28,10 @@ public class VenomEffect : StatusEffect
         tickTimer += deltaTime;
         if (tickTimer < tickInterval) return;
         tickTimer -= tickInterval;
-        plant.Damage(damagePerSecond * tickInterval, DamageType.Magic, ElementalType.Poison, source, false,
+        plant.Damage(damagePerSecond * tickInterval, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit,
             new DamageTag[] { DamageTag.DoT });
     }
 
-    public override string GetName() => "<color=#9B30D0>Venom</color>";
+    public override string GetName() => "<color=purple>Venom</color>";
     public override string GetDescription() => $"Inflicts <color=green><b>{damagePerSecond:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.";
 }

@@ -7,6 +7,7 @@ public class CactusTauntingEffect : StatusEffect
     {
         this.healingBonus = healingBonus;
         effectType = Type.positive;
+        elementalType = ElementalType.Nature;
     }
 
     public override void OnApply()

@@ -1,7 +1,10 @@
 public class HollyTauntingEffect : TauntingEffect
 {
     public HollyTauntingEffect(Entity target, float duration, int level, Entity source)
-        : base(target, duration, level, source) { }
+        : base(target, duration, level, source)
+    {
+        elementalType = ElementalType.Ice;
+    }
 
     private Holly Holly => source as Holly;
 

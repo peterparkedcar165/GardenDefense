@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public enum WeatherType { Clear, Cloudy, Sunny, Rain, Windy, Snow, Sandstorm }
+public enum WeatherType { Clear, Sunny, Rain, Windy, Snow, Sandstorm }
 public enum TemperatureType { Hot, Warm, Normal, Chill, Cold }
 
 [System.Serializable]
@@ -79,7 +79,6 @@ public class WeatherManager : MonoBehaviour
         switch (type)
         {
             case WeatherType.Clear:     return "<color=white>Clear</color>";
-            case WeatherType.Cloudy:    return "<color=#B0B0B0>Cloudy</color>";
             case WeatherType.Sunny:     return "<color=orange>Sunny</color>";
             case WeatherType.Rain:      return "<color=#4FC3F7>Rain</color>";
             case WeatherType.Windy:     return "<color=#B2EBF2>Windy</color>";
@@ -92,11 +91,10 @@ public class WeatherManager : MonoBehaviour
     // player facing description; intensity scales the elemental bonus where one applies
     public static string GetWeatherDescription(WeatherType type, int intensity)
     {
-        int bonus = Mathf.RoundToInt((0.24f + 0.12f * (intensity - 1)) * 100f);
+        int bonus = Mathf.RoundToInt((0.08f + 0.04f * (intensity - 1)) * 100f);
         switch (type)
         {
             case WeatherType.Clear:     return "No effect.";
-            case WeatherType.Cloudy:    return "No effect.";
             case WeatherType.Sunny:     return $"Sunlight empowers the <color=orange>Fire</color> damage of all plants by <color=green><b>{bonus}%</b></color>, and raises the Passive level of <color=orange>Fire</color> plants by <color=green><b>1</b></color>.";
             case WeatherType.Rain:      return $"Rainfall empowers the <color=#4FC3F7>Water</color> damage of all plants by <color=green><b>{bonus}%</b></color>, and raises the Passive level of <color=#4FC3F7>Water</color> plants by <color=green><b>1</b></color>.";
             case WeatherType.Windy:     return "Strong winds sweep across the battlefield.";

@@ -4,10 +4,10 @@ public class BlazeEffect : ElementalDebuff
 {
     public BlazeEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-
+        elementalType = ElementalType.Fire;
     }
 
-    public override string GetName() => "<color=#FF4500>Blaze</color>";
+    public override string GetName() => "<color=orange>Blaze</color>";
     public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()

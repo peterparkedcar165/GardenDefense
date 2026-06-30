@@ -12,6 +12,7 @@ public class FloralGlowEffect : StatusEffect
     {
         this.calendula  = calendula;
         effectType      = Type.positive;
+        elementalType   = ElementalType.Fire;
         sourceStackable = true;
     }
 

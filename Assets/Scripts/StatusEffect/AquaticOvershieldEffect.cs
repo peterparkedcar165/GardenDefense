@@ -3,7 +3,10 @@ public class AquaticOvershieldEffect : ShieldEffect
     private const float cap = 100f;
 
     public AquaticOvershieldEffect(Entity target, Entity source)
-        : base(target, float.MaxValue, 1, source, 0f) { }
+        : base(target, float.MaxValue, 1, source, 0f)
+    {
+        elementalType = ElementalType.Water;
+    }
 
     public void AddShield(float heal)
     {

@@ -17,6 +17,7 @@ public class FungalHypnosisEffect : HypnotizedEffect
         this.attackMultiplier = attackMultiplier;
         this.moveSlow         = moveSlow;
         _reversesAtSpawn      = plant is GhostFungus gf && gf.IsPath3Maxed;
+        elementalType         = ElementalType.Ice;
     }
 
     protected override string IndicatorLabel => "Fungal Hypnosis";

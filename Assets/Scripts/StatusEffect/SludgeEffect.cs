@@ -8,9 +8,10 @@ public class SludgeEffect : StatusEffect
     {
         bonusDuration = 4f * (1f + source.elementalAffinity);
         effectType = Type.negative;
+        elementalType = ElementalType.Poison;
     }
 
-    public override string GetName() => "<color=#9400D3>Sludge</color>";
+    public override string GetName() => "<color=purple>Sludge</color>";
     public override string GetDescription() => $"Increase duration of <color=#9400D3><b>DoT</b></color> effects by <color=green><b>{bonusDuration:F1}s</b></color>.";
 
     public override void OnApply()

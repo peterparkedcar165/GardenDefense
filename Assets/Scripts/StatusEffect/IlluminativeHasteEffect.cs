@@ -6,6 +6,7 @@ public class IlluminativeHasteEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.positive;
+        elementalType = ElementalType.Nature;
     }
 
     public override void OnApply()
@@ -22,6 +23,6 @@ public class IlluminativeHasteEffect : StatusEffect
 
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=#378745>Illuminative Haste</color>";
+    public override string GetName() => "<color=green>Illuminative Haste</color>";
     public override string GetDescription() => $"Movement Speed increased by {speedBonus * 100:F0}% while near a light source.";
 }

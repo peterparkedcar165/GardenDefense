@@ -19,6 +19,7 @@ public class HelleboreProtectionEffect : ShieldEffect
         this.reflectMP          = reflectMP;
         this.hellebore          = source;
         _cachedReflectDamage    = reflectBase + (source != null ? source.magicPower * reflectMP : 0f);
+        elementalType           = ElementalType.Poison;
     }
 
     public override void OnApply()
@@ -63,5 +64,5 @@ public class HelleboreProtectionEffect : ShieldEffect
 
     protected override string GetShieldDetails() => $"Attackers receive <color=purple><b>{_cachedReflectDamage:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per hit. Negative effects are reflected.";
 
-    public override string GetName() => "<color=#9B30D0>Thorned Guard</color>";
+    public override string GetName() => "<color=purple>Thorned Guard</color>";
 }

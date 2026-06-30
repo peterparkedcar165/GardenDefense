@@ -6,6 +6,7 @@ public class SunMarkEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Fire;
     }
 
     public override void OnTargetDied()
@@ -18,6 +19,6 @@ public class SunMarkEffect : StatusEffect
         }
     }
 
-    public override string GetName() => "<color=#FFD700><b>Sun Mark</b></color>";
+    public override string GetName() => "<color=orange><b>Sun Mark</b></color>";
     public override string GetDescription() => "Yields <color=yellow><b>+27%</b></color> bonus <color=yellow>Sun</color> on death.";
 }

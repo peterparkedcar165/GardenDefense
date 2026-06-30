@@ -7,6 +7,7 @@ public class SlowingAllergenEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Wind;
     }
 
     public override void OnApply()

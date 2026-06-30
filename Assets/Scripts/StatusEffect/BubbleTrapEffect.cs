@@ -17,10 +17,11 @@ public class BubblePrisonEffect : Airborne
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Water;
         _rising = rising;
     }
 
-    public override string GetName() => "<color=#3399FF>Bubble Prison</color>";
+    public override string GetName() => "<color=#4FC3F7>Bubble Prison</color>";
     public override string GetDescription() => "Hanging in the air, imprisoned within a bubble.";
 
     public override void OnApply()

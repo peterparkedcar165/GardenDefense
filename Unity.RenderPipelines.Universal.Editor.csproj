@@ -178,8 +178,8 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\Decal\CreateDecalProjector.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\ShaderGraph\AssetCallbacks\CreateLitShaderGraph.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\VFXGraph\VFXURPBinder.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\AssetPostProcessors\ShaderGraphMaterialsUpdater.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\ShaderGraph\Targets\UniversalSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\AssetPostProcessors\ShaderGraphMaterialsUpdater.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\LightExplorer.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\BuildProcessors\URPBuildData.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@0c5162adfb45\Editor\Analytics\AssetReimporterAnalytic.cs" />

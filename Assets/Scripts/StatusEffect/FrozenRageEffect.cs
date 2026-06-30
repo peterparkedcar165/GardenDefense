@@ -6,6 +6,7 @@ public class FrozenRageEffect : TauntEffect
         : base(target, duration, level, source, taunter)
     {
         this.resistanceReduction = resistanceReduction;
+        elementalType = ElementalType.Ice;
     }
 
     public override void OnApply()

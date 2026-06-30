@@ -7,6 +7,7 @@ public class ScorcherEffect : StatusEffect
         : base(target, duration, stacks, source)
     {
         effectType = Type.positive;
+        elementalType = ElementalType.Fire;
     }
 
     public override void OnApply()

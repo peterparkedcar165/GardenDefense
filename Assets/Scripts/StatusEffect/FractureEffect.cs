@@ -8,6 +8,7 @@ public class FractureEffect : StatusEffect
     {
         bonusMultiplier = 0.25f * (1f + source.elementalAffinity);
         effectType = Type.negative;
+        elementalType = ElementalType.Ice;
     }
 
     public override string GetName() => "<color=#00FFFF>Fracture</color>";

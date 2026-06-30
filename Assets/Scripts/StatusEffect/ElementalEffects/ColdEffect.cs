@@ -4,10 +4,10 @@ public class ColdEffect : ElementalDebuff
 {
     public ColdEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-
+        elementalType = ElementalType.Ice;
     }
 
-    public override string GetName() => "<color=#00BFFF>Cold</color>";
+    public override string GetName() => "<color=#00FFFF>Cold</color>";
     public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()

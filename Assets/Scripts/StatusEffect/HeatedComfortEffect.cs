@@ -18,6 +18,7 @@ public class HeatedComfortEffect : StatusEffect
         _healPerTick   = totalHeal / ticks;
         _tempPerTick   = totalTemp / ticks;
         effectType      = Type.positive;
+        elementalType   = ElementalType.Fire;
         sourceStackable = true;
     }
 

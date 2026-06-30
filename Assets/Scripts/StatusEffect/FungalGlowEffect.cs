@@ -14,6 +14,7 @@ public class FungalGlowEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Nature;
         this.spreadRadius = spreadRadius;
         this.originalDuration = duration;
     }
@@ -108,7 +109,7 @@ public class FungalGlowEffect : StatusEffect
         }
     }
 
-    public override string GetName() => "<color=#88FF88>Fungal Glow</color>";
+    public override string GetName() => "<color=green>Fungal Glow</color>";
     public override string GetDescription()
     {
         string desc = $"Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration and spreads this effect to nearby insects within <color=green><b>{spreadRadius:F1}</b></color> radius";

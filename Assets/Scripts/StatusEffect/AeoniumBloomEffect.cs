@@ -13,6 +13,7 @@ public class AeoniumBloomEffect : StatusEffect
         _speedBonus = speedBonus;
         _indicator = indicator;
         effectType = Type.positive;
+        elementalType = ElementalType.Nature;
     }
 
     public override void OnApply()

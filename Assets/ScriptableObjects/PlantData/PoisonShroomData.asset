@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoisonShroomData
   plantPrefab: {fileID: 1216329997766717309, guid: d08989aa5a1b0e74c84350560309b2fe, type: 3}
   icon: {fileID: 480713740630145538, guid: 17364a63666fa6849902937eb5b3392e, type: 3}
-  plantName: PoisonShroom
-  displayName: Poison Shroom
+  plantName: Cordyceps
+  displayName: Cordyceps
   cultivar: 5
   elementalType: 3
   damageType: 1

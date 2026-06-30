@@ -9,6 +9,7 @@ public class RainExposedEffect : StatusEffect
         : base(target, float.MaxValue, intensity, source)
     {
         effectType = Type.neutral;
+        elementalType = ElementalType.Water;
         bonus = baseBonus + bonusPerLevel * (level - 1);
     }
 
@@ -16,7 +17,7 @@ public class RainExposedEffect : StatusEffect
     public override void OnExpire() => target.waterDamageAdder -= bonus;
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=#4488FF>[Weather]: Rain</color>";
+    public override string GetName() => "<color=#4FC3F7>[Weather]: Rain</color>";
     public override string GetDescription() =>
         $"Increase <color=#4488FF><b>Water Damage</b></color> by <color=#4488FF><b>{bonus * 100f:F0}%</b></color>.";
 }

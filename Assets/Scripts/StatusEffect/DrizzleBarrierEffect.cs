@@ -10,6 +10,7 @@ public class DrizzleBarrierEffect : ShieldEffect
         : base(target, BaseDuration * (1f + source.skillDurationMultiplier) + source.skillDurationAdder, 1, source, 0f)
     {
         _scaledDuration = BaseDuration * (1f + source.skillDurationMultiplier) + source.skillDurationAdder;
+        elementalType = ElementalType.Water;
     }
 
     public void RefreshDuration() => duration = _scaledDuration;

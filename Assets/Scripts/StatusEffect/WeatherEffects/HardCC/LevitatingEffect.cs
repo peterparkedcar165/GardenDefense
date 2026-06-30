@@ -14,6 +14,7 @@ public class LevitatingEffect : Airborne
     {
         this.critBonus = critBonus;
         effectType = Type.negative;
+        elementalType = ElementalType.Wind;
     }
 
     public override void OnApply()

@@ -8,7 +8,8 @@ public class AquaticSniperEffect : ChannelingEffect
     {
         _attackSpeedBonus = attackSpeedBonus;
         _critChanceBonus  = critChanceBonus;
-        effectType        = Type.positive;   // override ChannelingEffect's neutral
+        effectType        = Type.positive;
+        elementalType     = ElementalType.Water;   // override ChannelingEffect's neutral
     }
 
     public override void OnApply()

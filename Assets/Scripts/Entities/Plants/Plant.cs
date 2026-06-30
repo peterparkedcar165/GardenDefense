@@ -831,6 +831,9 @@ public abstract class Plant : Entity, IAttackable
             if (onWater || HasEffect<RainExposedEffect>()) return 1;
         }
 
+        if (elementalType == ElementalType.Nature && occupiedTile != null && occupiedTile.tileType == TileType.Grass)
+            return 1;
+
         if (elementalType == ElementalType.Wind && occupiedTile != null && occupiedTile.isHighground)
             return 1;
 
@@ -990,7 +993,7 @@ public abstract class Plant : Entity, IAttackable
             return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight\nImmune to cold temperatures";
 
             case ElementalType.Nature:
-            return $"Can be placed on <color=green>Grass</color>.";
+            return $"Can be placed on <color=green>Grass</color>.\nIncrease Passive tree level by <color=green>1</color> when placed on Grass";
 
             case ElementalType.Water:
             return $"Increase Passive tree level by <color=green>1</color> when near natural water";

@@ -124,6 +124,21 @@ public abstract class Entity : MonoBehaviour
     public float startingShield;
     public bool debuffsFrozen;
     public bool bypassShields;
+
+    private int _healCanCritSources;
+    public bool HealCanCrit => _healCanCritSources > 0;
+    public void AddHealCanCrit()    => _healCanCritSources++;
+    public void RemoveHealCanCrit() => _healCanCritSources = Mathf.Max(0, _healCanCritSources - 1);
+
+    private int _dotCanCritSources;
+    public bool DotCanCrit => _dotCanCritSources > 0;
+    public void AddDotCanCrit()    => _dotCanCritSources++;
+    public void RemoveDotCanCrit() => _dotCanCritSources = Mathf.Max(0, _dotCanCritSources - 1);
+
+    private int _elementalReactionCanCritSources;
+    public bool ElementalReactionCanCrit => _elementalReactionCanCritSources > 0;
+    public void AddElementalReactionCanCrit()    => _elementalReactionCanCritSources++;
+    public void RemoveElementalReactionCanCrit() => _elementalReactionCanCritSources = Mathf.Max(0, _elementalReactionCanCritSources - 1);
     public float evasion, accuracy;
     public float bonusCritChanceReceived, bonusCritDamageReceived, projectileSpeed;
 
@@ -537,13 +552,35 @@ public abstract class Entity : MonoBehaviour
 // method for healing
     public virtual void Heal(float healingAmount, Entity source = null)
     {
+        DecayEffect decay = GetEffect<DecayEffect>();
+        if (decay != null)
+        {
+            float invertDmg = Mathf.Round(healingAmount);
+            if (invertDmg > 0f)
+            {
+                DamageTag[] invertTags = { DamageTag.PassiveDamage };
+                if (decay.source != null)
+                    Damage(invertDmg, DamageType.Magic, ElementalType.Poison, decay.source, false, invertTags);
+                else
+                    Damage(invertDmg, DamageType.Magic, ElementalType.Poison, invertTags);
+            }
+            return;
+        }
+
         float bonus = source != null ? source.healingBonus : 0f;
         float actual = Mathf.Min(healingAmount * (1f + healingReceived) * (1f + bonus), maxHealth - health);
         if (actual <= 0f) return;
+        bool isCrit = false;
+        if (source != null && source.HealCanCrit && Random.value < source.criticalChance)
+        {
+            actual *= 1.5f;
+            actual = Mathf.Min(actual, maxHealth - health);
+            isCrit = true;
+        }
         health += actual;
         OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual });
         UpdateHealthBar();
-        HealIndicator.Spawn(GetIndicatorPosition(), actual);
+        HealIndicator.Spawn(GetIndicatorPosition(), actual, isCrit);
     }
 
 // method for death

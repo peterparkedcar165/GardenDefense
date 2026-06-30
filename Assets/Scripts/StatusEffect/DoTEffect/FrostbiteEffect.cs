@@ -14,11 +14,12 @@ public class FrostbiteEffect : DoTEffect
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
+        elementalType = ElementalType.Ice;
         sourceStackable = true;
         tickInterval = 1f;
     }
 
-    public override string GetName() => "<color=#00BFFF>Frostbite</color>";
+    public override string GetName() => "<color=#00FFFF>Frostbite</color>";
     public override string GetDescription()
     {
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
@@ -47,7 +48,7 @@ public class FrostbiteEffect : DoTEffect
         if (tickTimer >= tickInterval)
         {
             if (source != null)
-                target.Damage(damagePerSecond * tickInterval, DamageType.Physical, ElementalType.Ice, source, false, tickTags);
+                target.Damage(damagePerSecond * tickInterval, DamageType.Physical, ElementalType.Ice, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
             else
                 target.Damage(damagePerSecond * tickInterval, DamageType.Physical, ElementalType.Ice, tickTags);
             tickTimer -= tickInterval;

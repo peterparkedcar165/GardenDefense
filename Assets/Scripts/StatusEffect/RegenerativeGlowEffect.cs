@@ -21,6 +21,7 @@ public class RegenerativeGlowEffect : RegenerationEffect
         _regenPercent  = regenPercent;
         _glowRadius    = glowRadius;
         _glowIntensity = glowIntensity;
+        elementalType  = ElementalType.Nature;
     }
 
     public override void OnApply()
@@ -91,7 +92,7 @@ public class RegenerativeGlowEffect : RegenerationEffect
         _light = null;
     }
 
-    public override string GetName() => "<color=#AAFF44>Regenerative Glow</color>";
+    public override string GetName() => "<color=green>Regenerative Glow</color>";
     public override string GetDescription()
     {
         float pctPerSec = _regenPercent * 100f;

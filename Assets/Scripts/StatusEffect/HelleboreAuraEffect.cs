@@ -9,6 +9,7 @@ public class HelleboreAuraEffect : StatusEffect
         this.resistBonus      = resistBonus;
         this.magicResistBonus = magicResistBonus;
         effectType      = Type.positive;
+        elementalType   = ElementalType.Poison;
         sourceStackable = true;
     }
 
@@ -17,7 +18,7 @@ public class HelleboreAuraEffect : StatusEffect
 
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=#9B30D0>Hellebore's Protection</color>";
+    public override string GetName() => "<color=purple>Hellebore's Protection</color>";
     public override string GetDescription()
     {
         string s = $"Armor increased by <color=#00CED1><b>{(int)resistBonus}</b></color>.";

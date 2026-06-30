@@ -7,6 +7,7 @@ public class MelterEffect : StatusEffect
         : base(target, duration, stacks, source)
     {
         effectType = Type.positive;
+        elementalType = ElementalType.Fire;
     }
 
     public override void OnApply()
@@ -21,7 +22,7 @@ public class MelterEffect : StatusEffect
 
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=#FF6B1A><b>Melter</b></color>";
+    public override string GetName() => "<color=orange><b>Melter</b></color>";
     public override string GetDescription() =>
         $"Increase <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>{level * BonusPerStack * 100f:F0}%</b></color>.";
 }

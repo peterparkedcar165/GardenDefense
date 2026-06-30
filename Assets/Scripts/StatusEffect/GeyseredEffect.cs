@@ -3,6 +3,7 @@ public class GeyseredEffect : StatusEffect
     public GeyseredEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Water;
     }
 
     public override void OnApply()

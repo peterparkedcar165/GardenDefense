@@ -228,8 +228,8 @@
     <Compile Include="Assets\Scripts\StatusEffect\BlessingOfTheSunEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\HelleboreProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\JumpingSpider.cs" />
-    <Compile Include="Assets\Scripts\GridManagers\NighttimeGridManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Anemone.cs" />
+    <Compile Include="Assets\Scripts\GridManagers\NighttimeGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\StunEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\GlowwormData.cs" />

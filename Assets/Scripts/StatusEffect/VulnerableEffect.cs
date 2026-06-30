@@ -7,9 +7,10 @@ public class VulnerableEffect : StatusEffect
     {
         shred = 0.32f * (1f + source.elementalAffinity);
         effectType = Type.negative;
+        elementalType = ElementalType.Poison;
     }
 
-    public override string GetName() => "<color=#FF6347>Vulnerable</color>";
+    public override string GetName() => "<color=purple>Vulnerable</color>";
     public override string GetDescription() => $"Reduce <color=#9400D3><b>DoT Resistance</b></color> by <color=red><b>{shred * 100f:F0}%</b></color>.";
 
     public override void OnApply()

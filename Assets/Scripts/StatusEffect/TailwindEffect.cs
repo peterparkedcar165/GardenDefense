@@ -13,6 +13,7 @@ public class TailwindEffect : StatusEffect
         this.attackSpeedBonus     = attackSpeedBonus;
         this.projectileSpeedBonus = projectileSpeedBonus;
         effectType      = Type.positive;
+        elementalType   = ElementalType.Wind;
         sourceStackable = true;
     }
 

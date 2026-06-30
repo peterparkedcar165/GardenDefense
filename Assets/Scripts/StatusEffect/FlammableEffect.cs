@@ -9,6 +9,7 @@ public class FlammableEffect : StatusEffect
     {
         this.bonusPerStack = bonusPerStack;
         effectType = Type.negative;
+        elementalType = ElementalType.Fire;
     }
 
     // multiplier applied to Burn DoT ticks
@@ -18,7 +19,7 @@ public class FlammableEffect : StatusEffect
     public override void OnExpire() { }
     public override void OnTick(float deltaTime) { }
 
-    public override string GetName() => "<color=#FF6B1A>Flammable</color>";
+    public override string GetName() => "<color=orange>Flammable</color>";
     public override string GetDescription() =>
         $"Increases <color=orange>Burn</color> damage taken by <color=green><b>{(BurnMultiplier - 1f) * 100f:F0}%</b></color>.";
 }

@@ -4,10 +4,10 @@ public class TaintedEffect : ElementalDebuff
 {
     public TaintedEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-
+        elementalType = ElementalType.Poison;
     }
 
-    public override string GetName() => "<color=#8B008B>Tainted</color>";
+    public override string GetName() => "<color=purple>Tainted</color>";
     public override string GetDescription() => "Used as a primer to react with other elements";
 
     public override void OnApply()
@@ -30,7 +30,7 @@ public class TaintedEffect : ElementalDebuff
         {
             insect.RemoveEffect<TaintedEffect>();
             insect.RemoveEffect<SproutEffect>();
-            insect.ApplyEffect(new DecayEffect(insect, 8f, 1, source));
+            insect.ApplyEffect(new PoisonedEffect(insect, 8f, 1, source));
         }
         else if (insect.HasEffect<WetEffect>())
         {

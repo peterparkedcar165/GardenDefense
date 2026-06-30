@@ -16,6 +16,7 @@ public class ChillEffect : StatusEffect
         this.baseSlow     = baseSlow;
         this.slowPerLevel = slowPerLevel;
         effectType = Type.negative;
+        elementalType = ElementalType.Ice;
     }
 
     public override string GetName() => "<color=#00FFFF>Chill</color>";

@@ -16,6 +16,7 @@ public class BurnEffect : DoTEffect
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
+        elementalType = ElementalType.Fire;
         sourceStackable = true;
         tickInterval = 1f;
         // the source can extend the Burns it causes (Stargazer passive)
@@ -136,7 +137,7 @@ public class BurnEffect : DoTEffect
             float flammable = target.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
             float tick = damagePerSecond * tickInterval * flammable;
             if (source != null)
-                target.Damage(tick, DamageType.Magic, ElementalType.Fire, source, false, tickTags);
+                target.Damage(tick, DamageType.Magic, ElementalType.Fire, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
             else
                 target.Damage(tick, DamageType.Magic, ElementalType.Fire, tickTags);
             tickTimer -= tickInterval;

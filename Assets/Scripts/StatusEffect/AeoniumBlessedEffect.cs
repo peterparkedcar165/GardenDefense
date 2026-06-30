@@ -9,6 +9,7 @@ public class AeoniumBlessedEffect : StatusEffect
     {
         _bonusSun = bonusSun;
         effectType = Type.neutral;
+        elementalType = ElementalType.Nature;
     }
 
     public override void OnTargetDied()
@@ -17,6 +18,6 @@ public class AeoniumBlessedEffect : StatusEffect
         SunIndicator.SpawnBonus(target.transform.position + new Vector3(0.25f, 0.5f, 0f), Mathf.RoundToInt(_bonusSun));
     }
 
-    public override string GetName() => "<color=yellow>Mark of the Sun</color>";
+    public override string GetName() => "<color=green>Mark of the Sun</color>";
     public override string GetDescription() => $"Yields <color=yellow><b>+{_bonusSun}</b></color> bonus <color=yellow>Sun</color> on death.";
 }

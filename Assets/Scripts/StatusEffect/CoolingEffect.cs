@@ -13,6 +13,7 @@ public class CoolingEffect : StatusEffect
     {
         this.coolingPerSecond = coolingPerSecond;
         effectType = Type.positive;
+        elementalType = ElementalType.Ice;
     }
 
     public override string GetName() => "<color=#00FFFF>Cooling</color>";

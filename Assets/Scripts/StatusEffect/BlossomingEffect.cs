@@ -14,6 +14,7 @@ public class BlossomingEffect : StatusEffect
         this.natureDamageBonus = natureDamageBonus;
         this.attackSpeedBonus = attackSpeedBonus;
         effectType      = Type.positive;
+        elementalType   = ElementalType.Nature;
         sourceStackable = true;
     }
 

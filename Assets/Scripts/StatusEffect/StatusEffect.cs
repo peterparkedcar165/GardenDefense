@@ -20,6 +20,7 @@ public class StatusEffect
         Regenerative
     }
     public Type effectType;
+    public ElementalType elementalType = ElementalType.Neutral;
     public int level;
     public Entity target, source;
 
