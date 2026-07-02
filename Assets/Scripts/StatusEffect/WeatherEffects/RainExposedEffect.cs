@@ -1,7 +1,7 @@
 public class RainExposedEffect : StatusEffect
 {
-    private const float baseBonus     = 0.24f;
-    private const float bonusPerLevel = 0.12f;
+    private const float baseBonus     = 0.12f;
+    private const float bonusPerLevel = 0.08f;
 
     private readonly float bonus;
 

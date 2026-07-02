@@ -27,12 +27,11 @@ public class CattailData : PlantData
     public float path3DurationPerLevel     = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Fires a high-pressure water dart, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to a single target at any range.";
+        $"Fires a high-pressure water dart, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to a single target at any range.";
 
     public override string GetPassiveDescription() =>
-        $"Every <color=green><b>1%</b></color> of Critical Chance above <color=green><b>100%</b></color> will be converted to <color=green><b>1%</b></color> Critical Damage. " +
-        $"The Cattail's shots against flying insects will Ground them for <color=green><b>{groundDuration:F1}s</b></color>.";
+        "Every Critical Chance above 100% is converted into Critical Damage. Shots against flying insects will Ground them.";
 
     public override string GetSkillDescription() =>
-        $"Aim a direction and rain darts down the lane with massively increased Attack Speed and Critical Chance for <color=green><b>{baseSkillDuration:F0}s</b></color>.";
+        "Aim a direction and rain darts down the lane with massively increased Attack Speed and Critical Chance for a duration.";
 }

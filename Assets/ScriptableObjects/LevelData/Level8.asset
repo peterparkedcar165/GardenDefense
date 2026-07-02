@@ -15,7 +15,7 @@ MonoBehaviour:
   levelNumber: 8
   weather:
   - type: 0
-    intensity: 0
+    intensity: 1
   temperature: 2
   maxWaves: 26
   startSunCount: 650

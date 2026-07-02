@@ -36,7 +36,7 @@ public class BlazeEffect : ElementalDebuff
         {
             insect.RemoveEffect<BlazeEffect>();
             insect.RemoveEffect<WetEffect>();
-            insect.ApplyEffect(new BoilEffect(insect, 8f, 1, source));
+            insect.ApplyEffect(new SteamEffect(insect, 8f, 1, source));
         }
     }
 

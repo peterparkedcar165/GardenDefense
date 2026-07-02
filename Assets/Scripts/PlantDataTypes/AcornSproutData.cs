@@ -21,14 +21,11 @@ public class AcornSproutData : PlantData
     public float path3RadiusPerLevel = 0.15f;
 
     public override string GetAttackDescription() =>
-        $"Shoots acorns towards his target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Shoots acorns towards his target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{stunDuration}</b></color> second.";
+        "Attacks have a chance to stun targets.";
 
-    public override string GetSkillDescription()
-    {
-        float impactDamage = baseAttackDamage * baseSkillDamageMultiplier;
-        return $"Hurls a giant acorn from the sky at a targeted location, dealing <color=green><b>{impactDamage:F0}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. The acorn then sits on the ground for <color=green><b>{baseSkillDuration}</b></color> seconds, blocking ground insects who stop to gnaw at it. The acorn can sustain <color=green><b>{baseSkillHealth:F0}</b></color> damage.";
-    }
+    public override string GetSkillDescription() =>
+        $"Hurls a giant acorn from the sky at a targeted location, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage and stunning all insects in the impact radius. The acorn then sits on the ground, blocking ground insects who stop to gnaw at it.";
 }

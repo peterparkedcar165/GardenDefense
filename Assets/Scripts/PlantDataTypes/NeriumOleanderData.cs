@@ -23,11 +23,11 @@ public class NeriumOleanderData : PlantData
     public float path3SkillRadiusPerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Fires a toxic petal at the target dealing <color=green><b>{baseAttackDamage:F0}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage. The petal bounces to <color=green><b>{baseBounceCount}</b></color> additional target(s).";
+        $"Fires a toxic petal at the target dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage. The petal bounces to additional targets.";
 
     public override string GetPassiveDescription() =>
-        $"Each petal hit applies <color=#9B59B6>Oleandic Toxin</color> for <color=green><b>{baseToxinDuration}s</b></color>, immediately cleansing a random buff and immunizing the insect to it.";
+        "Each petal hit applies <color=#9B59B6>Oleandic Toxin</color>, immediately cleansing a random buff and immunizing the insect to it.";
 
     public override string GetSkillDescription() =>
-        $"Target an area. Instantly deals <color=green><b>{baseSkillFlatDamage:F0}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to all insects within <color=green><b>{baseSkillRadius}</b></color> radius, rooting them and applying <color=#9B59B6>Oleandic Toxin</color>.";
+        $"Target an area. Deals {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to all insects within, rooting them and applying <color=#9B59B6>Oleandic Toxin</color>.";
 }

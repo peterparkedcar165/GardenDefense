@@ -33,20 +33,12 @@ public class HelleboreData : PlantData
     public float path3ReflectPerLevel  = 5f;
 
     public override string GetAttackDescription() =>
-        $"Fires a thorned projectile dealing <color=green><b>{baseAttackDamage:F0}</b></color> " +
-        $"{ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Fires a thorned projectile dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"Each attack hit reduces skill cooldown by <color=green><b>{passiveCDRPerHit:F1}s</b></color>. " +
-        $"Hellebore gains <color=#00CED1><b>{selfArmorBase}</b></color> Base Armor " +
-        $"[<color=#FFB6C1><b>+{selfArmorMP * 100f:F0}% Magic Power</b></color>]. " +
-        $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
-        $"increasing their Armor by <color=green><b>{auraShareBase * 100f:F0}%</b></color> of Hellebore's Armor.";
+        "Each attack hit reduces skill cooldown. Hellebore gains bonus <color=#00CED1><b>Armor</b></color>, scaling with <color=#FFB6C1><b>Magic Power</b></color>. " +
+        "Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>, sharing a portion of Hellebore's Armor.";
 
     public override string GetSkillDescription() =>
-        $"Targets a plant anywhere on the field, granting <color=#9B30D0><b>Thorned Guard</b></color>: " +
-        $"a shield of <color=green><b>{shieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{shieldMP * 100f:F0}% MP</b></color>] health for <color=green><b>{shieldDuration:F0}s</b></color>. " +
-        $"While shielded, attackers receive <color=purple><b>{reflectPoisonBase:F0}</b></color> [<color=#FFB6C1><b>+{reflectPoisonMP * 100f:F0}% MP</b></color>] " +
-        $"<color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per hit. " +
-        $"Negative effects are reflected back to the attacker. The protection fades when the shield breaks.";
+        "Targets a plant anywhere on the field, granting <color=#9B30D0><b>Thorned Guard</b></color>: a shield that reflects <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage back to attackers and negates negative effects. The protection fades when the shield breaks.";
 }

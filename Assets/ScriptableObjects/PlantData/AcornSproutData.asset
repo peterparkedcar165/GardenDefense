@@ -67,7 +67,7 @@ MonoBehaviour:
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
-  basePassiveDuration: 0.5
+  basePassiveDuration: 0.75
   baseSkillCooldown: 90
   baseSkillDuration: 20
   channelDuration: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
   path1AttackDamagePerLevel: 13
   path1AttackSpeedPerLevel: 0.11
   path2StunChancePerLevel: 0.06
-  path2StunDurationPerLevel: 0.2
+  path2StunDurationPerLevel: 0.3
   path3DamageMultiplierPerLevel: 0.25
   path3SkillDurationPerLevel: 2
   path3HealthPerLevel: 60

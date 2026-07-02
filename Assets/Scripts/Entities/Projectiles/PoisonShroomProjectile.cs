@@ -16,14 +16,15 @@ public class CordycepsProjectile : Projectile
 
         insect.ApplyEffect(new DecayEffect(insect, cs.invertDuration, cs.invertLevel, source));
 
-        if (cs.IsPath1Maxed)
+        if (cs.IsPath1Maxed || cs.IsPath2Maxed)
         {
             foreach (Insect nearby in new System.Collections.Generic.List<Insect>(Insect.allInsects))
             {
                 if (nearby == null || !nearby.IsAlive || nearby == insect) continue;
                 if (Vector3.Distance(insect.transform.position, nearby.transform.position) <= 1.5f)
                 {
-                    nearby.Damage(projectileDamage, damageType, elementalType, source, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+                    if (cs.IsPath1Maxed)
+                        nearby.Damage(projectileDamage, damageType, elementalType, source, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
                     nearby.ApplyEffect(new DecayEffect(nearby, cs.invertDuration, cs.invertLevel, source));
                 }
             }

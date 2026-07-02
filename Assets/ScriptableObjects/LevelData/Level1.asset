@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 1
   weather:
-  - type: 2
-    intensity: 0
+  - type: 1
+    intensity: 1
   temperature: 2
-  maxWaves: 12
+  maxWaves: 20
   startSunCount: 250
   startHealth: 200
   minWaveDuration: 15
-  maxWaveDuration: 65
+  maxWaveDuration: 120
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -48,7 +48,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 8
   minThreatBudget: 3
-  maxThreatBudget: 20
+  maxThreatBudget: 60
   budgetCurve:
     serializedVersion: 2
     m_Curve:

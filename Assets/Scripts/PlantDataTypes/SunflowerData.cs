@@ -18,11 +18,11 @@ public class SunflowerData : PlantData
     public float path3SkillDurationPerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"Passively generates <color=green><b>{baseSunGenerated}</b></color> <color=yellow>Sun</color> for the garden every <color=green><b>{basePassiveCooldown}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>1</b></color> second.";
+        "Passively generates <color=yellow>Sun</color> for the garden periodically. Attacks reduce the generation cooldown.";
 
     public override string GetSkillDescription() =>
-        $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{baseSunrayDPS}</b></color> (+{baseSkillDamageMultiplier * 100f:F0}% <color=#FFB6C1>Magic Power</color>) {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second to insects within the designated area for <color=green><b>{baseSkillDuration}</b></color> seconds.";
+        $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second to insects within the designated area. Scales with <color=#FFB6C1>Magic Power</color>.";
 }

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 9
   weather:
-  - type: 0
-    intensity: 0
+  - type: 2
+    intensity: 1
   temperature: 2
   maxWaves: 28
   startSunCount: 750

@@ -3,7 +3,7 @@ using UnityEngine;
 public class PoisonedEffect : DoTEffect
 {
     private ParticleSystem poisonParticles;
-    private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.PassiveDamage };
+    private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
     private float currentHealthPercent = 0.01f;
     private float currentFlatDamage = 2f;

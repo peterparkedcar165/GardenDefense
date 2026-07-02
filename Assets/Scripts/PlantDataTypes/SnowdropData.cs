@@ -28,14 +28,12 @@ public class SnowdropData : PlantData
     public float path3BlizzardRangePerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Continuously deals <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to all ground-level insects within range.";
+        $"Continuously deals {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to all ground-level insects within range.";
 
     public override string GetPassiveDescription() =>
-        $"Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement by <color=green><b>{baseSlow * 100f:F0}%</b></color>.\n\n" +
-        $"Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature by <color=green><b>{coolingPerSecond:F1}</b></color> per second, until comfort.";
+        "Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement.\n\n" +
+        "Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature toward comfort.";
 
     public override string GetSkillDescription() =>
-        $"Summon a strong blizzard, aiming it towards the targeted area. The blizzard deals <color=green><b>{baseBlizzardDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second to insects caught in the area, " +
-        $"and applies <color=#00FFFF>Chill</color> at <color=green><b>{blizzardChillMultiplier:F1}×</b></color> strength. " +
-        $"Plants within the Blizzard also receive <color=#00FFFF>Cooling</color> effect for <color=green><b>{blizzardCoolingMultiplier:F1}×</b></color> the effect.";
+        $"Summons a strong blizzard aimed toward the targeted area, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second to insects caught within and applying a stronger <color=#00FFFF>Chill</color>. Plants within the blizzard also receive an enhanced <color=#00FFFF>Cooling</color> effect.";
 }

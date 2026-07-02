@@ -19,11 +19,11 @@ public class PoisonShroomData : PlantData
     public float path3RadiusPerLevel = 0.2f;
 
     public override string GetAttackDescription() =>
-        $"Blows poisonous bubbles at his target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Blows poisonous bubbles at his target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks apply a <color=purple>Poison</color> effect on hit for <color=green><b>{basePoisonDuration}</b></color> seconds, dealing <color=green><b>{basePoisonDPS}</b></color> {ElementalTag(elementalType)} damage per second.";
+        $"Attacks apply <color=purple>Poison</color> on hit, dealing {ElementalTag(elementalType)} damage over time.";
 
     public override string GetSkillDescription() =>
-        $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>{baseSkillRadius}</b></color> radius that lasts <color=green><b>{baseSkillDuration}</b></color> seconds. Insects standing in the field take <color=green><b>{basePoisonDPS}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second, and any debuffs on them are frozen in time.";
+        $"Hurls a toxic blob towards a targeted area, creating a poison field that lasts for a duration. Insects standing in the field take {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second, and any debuffs on them are frozen in time.";
 }

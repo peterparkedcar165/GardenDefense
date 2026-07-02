@@ -25,25 +25,36 @@ MonoBehaviour:
   baseAttackRange: 0.3
   baseMovementSpeed: 1
   baseTargetingRange: 1.5
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   attackDamageType: 0
   attackElementalType: 0
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
-  baseFireResistance: 0.3
+  baseFireResistance: 0.5
   baseWaterResistance: 0
   basePoisonResistance: 0
-  baseIceResistance: 0
+  baseIceResistance: -0.5
   baseNatureResistance: 0
   baseWindResistance: 0
   baseDotResistance: 0
   threatValue: 1.2
   threatType: 0
+  baseEvasion: 0
+  baseAccuracy: 0
   sunDrop: 11
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   aggressivity: 1
   baseLightEmissionRange: 0
   baseHealingBonus: 0

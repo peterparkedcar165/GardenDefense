@@ -21,11 +21,11 @@ public class WaterlilyData : PlantData
     public float path3RadiusPerLevel = 0.2f;
 
     public override string GetAttackDescription() =>
-        $"Blow little bubbles towards her target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Blows little bubbles towards her target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks deal <color=green><b>{baseSplashDamage}</b></color> {ElementalTag(elementalType)} damage to surrounding insects within a <color=green><b>{baseAoERange}</b></color> radius.";
+        $"Attacks deal {ElementalTag(elementalType)} damage to surrounding insects within a small radius.";
 
     public override string GetSkillDescription() =>
-        $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color=green><b>{baseBubblePrisonImpactDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage upon impact, and keeping them airborne for <color=green><b>{baseSkillDuration}</b></color> seconds.";
+        "Blows a large bubble onto a targeted area, trapping insects within and keeping them airborne for a duration.";
 }

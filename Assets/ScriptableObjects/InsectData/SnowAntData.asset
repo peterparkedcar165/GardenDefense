@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ffeef14a76caf41997b2be1939dd73, type: 3}
+  m_Name: SnowAntData
+  m_EditorClassIdentifier: Assembly-CSharp::SnowAntData
+  displayName: Snow Ant
+  nameColor: {r: 0.04004982, g: 0.7310073, b: 0.9433962, a: 1}
+  description: Ants with cold mandibles
+  passiveDescription: Attacks against plants decrease their temperature by 2
+  sprite: {fileID: 0}
+  insectPrefab: {fileID: 0}
+  baseMaxHealth: 500
+  baseAttackDamage: 24
+  baseMagicPower: 0
+  baseAttackSpeed: 1
+  baseAttackRange: 0.3
+  baseMovementSpeed: 1
+  baseTargetingRange: 1.5
+  baseArmor: 0
+  baseMagicArmor: 0
+  attackDamageType: 0
+  attackElementalType: 4
+  baseLifesteal: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
+  baseTenacity: 0
+  baseFireResistance: -0.5
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0.5
+  baseNatureResistance: 0
+  baseWindResistance: 0
+  baseDotResistance: 0
+  threatValue: 1.2
+  threatType: 0
+  baseEvasion: 0
+  baseAccuracy: 0
+  sunDrop: 11
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
+  aggressivity: 1
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  tempDecreasePerHit: 2

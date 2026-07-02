@@ -15,7 +15,7 @@ MonoBehaviour:
   levelNumber: 17
   weather:
   - type: 0
-    intensity: 0
+    intensity: 1
   temperature: 2
   maxWaves: 32
   startSunCount: 850

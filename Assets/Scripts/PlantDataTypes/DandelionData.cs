@@ -19,11 +19,11 @@ public class DandelionData : PlantData
     public float path3WindGustRangePerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Each seed deals <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Fires multiple seeds per attack, each dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to a separate target.";
 
     public override string GetPassiveDescription() =>
-        $"Fires <color=green><b>{baseSeedCount}</b></color> seeds per attack, targeting the <color=green><b>{baseSeedCount}</b></color> highest-priority insects in range.";
+        "Seeds simultaneously target the highest-priority insects in range, allowing multi-target fire with a single attack.";
 
     public override string GetSkillDescription() =>
-        $"Blows a powerful gust of pollen wind <color=green><b>{baseBeamWidth}</b></color> units wide towards the targeted direction, crossing the entire map, lasting <color=green><b>{baseSkillDuration}</b></color> seconds. Insects caught in the gust take <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";
+        $"Blows a powerful gust of pollen wind towards the targeted direction, crossing the entire map. Insects caught in the gust take {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";
 }

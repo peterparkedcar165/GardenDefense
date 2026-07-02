@@ -18,11 +18,11 @@ public class LeafRangerData : PlantData
     public float path3SkillDurationPerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Shoots slow but precise and fierce arrows at his target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Shoots slow but precise and fierce arrows at his target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"The <color=green><b>Leaf Ranger</b></color> sees in the dark.\n\nAttacks can pierce <color=green><b>{basePiercing}</b></color> enemy.";
+        "The <color=green><b>Leaf Ranger</b></color> sees in the dark. Attacks can pierce enemies.";
 
     public override string GetSkillDescription() =>
-        $"Enters a state of rapid focus, increasing his Attack Speed by <color=green><b>{baseSkillAttackSpeedBonus * 100f:F0}%</b></color> for <color=green><b>{baseSkillDuration}</b></color> seconds.";
+        "Enters a state of rapid focus, greatly increasing Attack Speed for a duration.";
 }

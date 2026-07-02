@@ -27,11 +27,11 @@ public class AnemoneData : PlantData
     public float vortexKnockbackForce  = 8f;
 
     public override string GetAttackDescription() =>
-        $"Launches a wind ball at the target, dealing <color=green><b>{baseAttackDamage}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage, and half that to surrounding insects.";
+        $"Launches a wind ball at the target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage, and half that to surrounding insects.";
 
     public override string GetPassiveDescription() =>
-        $"Dealing Wind Damage applies <color=green><b>{baseInitialErosionStacks}</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>{basePassiveDuration:F0}s</b></color>, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)baseReductionPerStack}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead.";
+        $"Dealing {ElementalTag(elementalType)} damage applies <color=#E0E0E0><b>Wind Erosion</b></color>, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> per stack. If the target is already afflicted, adds an additional stack instead.";
 
     public override string GetSkillDescription() =>
-        $"Summon a vortex of wind at target location, dragging insects toward its center and dealing damage over time.";
+        "Summons a vortex of wind at a targeted location, dragging insects toward its center and dealing damage over time.";
 }

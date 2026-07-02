@@ -16,9 +16,7 @@ public class ProceduralLevel : SpawnManager
     {
         if (WeatherManager.instance)
         {
-            if (config.weather != null)
-                foreach (WeatherEntry entry in config.weather)
-                    WeatherManager.instance.SetWeather(entry.type, entry.intensity);
+            WeatherManager.instance.SetBaseWeather(config.weather);
             WeatherManager.instance.temperature = config.temperature;
         }
 

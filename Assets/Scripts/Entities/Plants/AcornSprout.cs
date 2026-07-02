@@ -29,7 +29,7 @@ public class AcornSprout : Shooter
         {
             acorn.SetTarget(FindTarget());
             if (IsPath2Maxed)
-                acorn.SetBounces(1 + piercing);
+                acorn.SetBounces(piercing);
             acorn.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
     }

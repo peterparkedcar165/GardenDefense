@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 3
   weather:
-  - type: 2
-    intensity: 0
+  - type: 1
+    intensity: 1
   temperature: 2
-  maxWaves: 20
-  startSunCount: 350
+  maxWaves: 24
+  startSunCount: 450
   startHealth: 200
   minWaveDuration: 20
-  maxWaveDuration: 60
+  maxWaveDuration: 130
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -47,8 +47,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 5
-  minThreatBudget: 7
-  maxThreatBudget: 50
+  minThreatBudget: 4
+  maxThreatBudget: 140
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -90,14 +90,14 @@ MonoBehaviour:
     unlockWave: 8
     budgetWeight: 0.3
     startDelay: 1
-  eliteWaveInterval: 2
+  eliteWaveInterval: 3
   eliteInsects:
   - data: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
     unlockWave: 0
     budgetWeight: 1
     startDelay: 2
-    minSpawnCount: 12
-    maxSpawnCount: 24
+    minSpawnCount: 6
+    maxSpawnCount: 8
   fertilizerPool:
   - {fileID: 11400000, guid: 776ca88767de12d468963df682d471e8, type: 2}
   - {fileID: 11400000, guid: 41f003a6a45d0ed48a417a0c5df050a5, type: 2}

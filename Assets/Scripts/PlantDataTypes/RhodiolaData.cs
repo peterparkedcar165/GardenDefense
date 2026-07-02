@@ -25,11 +25,11 @@ public class RhodiolaData : PlantData
     public float verdantGuardianDuration        = 8f;
 
     public override string GetAttackDescription() =>
-        $"Instantly deals <color=green><b>{baseAttackDamage:F0}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to the target.";
+        $"Instantly deals {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to the target.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks inflict <color=green><b>Rejuvenating Seed</b></color> on the target. When the target is attacked by a plant, that plant is granted <color=green><b>Rejuvenating Burgeon</b></color>, healing it over {baseBurgeonDuration:F0} seconds.";
+        "Attacks inflict <color=green><b>Rejuvenating Seed</b></color> on the target. When the target is attacked by a plant, that plant is granted <color=green><b>Rejuvenating Burgeon</b></color>, healing it over time.";
 
     public override string GetSkillDescription() =>
-        $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{revivalBaseHeal:F0}</b></color> HP.";
+        "Target a tile where a plant has fallen to resurrect it and restore a portion of its Health.";
 }

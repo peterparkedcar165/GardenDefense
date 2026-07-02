@@ -23,6 +23,8 @@ public class WeatherManager : MonoBehaviour
     private TemperatureType _temperature;
 
     private readonly Dictionary<WeatherType, int> activeWeather = new();
+    // the natural weather a level reverts to once every active weather effect has expired
+    private readonly Dictionary<WeatherType, int> baseWeather = new();
 
     public TemperatureType temperature
     {
@@ -53,24 +55,53 @@ public class WeatherManager : MonoBehaviour
     {
         intensity = Mathf.Max(1, intensity);
         activeWeather[type] = intensity;
+        Debug.Log($"[Weather] {type} set to intensity {intensity}");
         OnWeatherAdded?.Invoke(type, intensity);
     }
 
-    // remove a weather type; fires OnWeatherRemoved
+    // remove a weather type; fires OnWeatherRemoved, then restores the level's base weather
+    // if that was the last active condition
     public void RemoveWeather(WeatherType type)
     {
         if (!activeWeather.ContainsKey(type)) return;
         activeWeather.Remove(type);
+        Debug.Log($"[Weather] {type} removed");
         OnWeatherRemoved?.Invoke(type);
+        RestoreBaseWeatherIfEmpty();
     }
 
-    // wipe all active weather conditions
+    // wipe all active weather conditions without restoring the base weather
+    // (used when a caller is about to set a new weather immediately after, e.g. Zinnia's skill)
     public void ClearAllWeather()
     {
         var types = new WeatherType[activeWeather.Count];
         activeWeather.Keys.CopyTo(types, 0);
         foreach (WeatherType type in types)
-            RemoveWeather(type);
+        {
+            activeWeather.Remove(type);
+            Debug.Log($"[Weather] {type} removed");
+            OnWeatherRemoved?.Invoke(type);
+        }
+    }
+
+    // defines the natural weather this level reverts to once every active weather effect
+    // has expired, and immediately applies it
+    public void SetBaseWeather(IEnumerable<WeatherEntry> entries)
+    {
+        baseWeather.Clear();
+        if (entries != null)
+            foreach (WeatherEntry entry in entries)
+                baseWeather[entry.type] = Mathf.Max(1, entry.intensity);
+
+        foreach (var kvp in baseWeather)
+            SetWeather(kvp.Key, kvp.Value);
+    }
+
+    private void RestoreBaseWeatherIfEmpty()
+    {
+        if (activeWeather.Count > 0 || baseWeather.Count == 0) return;
+        foreach (var kvp in baseWeather)
+            SetWeather(kvp.Key, kvp.Value);
     }
 
     // display name for a weather condition
@@ -91,7 +122,7 @@ public class WeatherManager : MonoBehaviour
     // player facing description; intensity scales the elemental bonus where one applies
     public static string GetWeatherDescription(WeatherType type, int intensity)
     {
-        int bonus = Mathf.RoundToInt((0.08f + 0.04f * (intensity - 1)) * 100f);
+        int bonus = 12 + 8 * (intensity - 1);
         switch (type)
         {
             case WeatherType.Clear:     return "No effect.";
