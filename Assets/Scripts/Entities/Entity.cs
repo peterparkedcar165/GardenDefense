@@ -193,7 +193,7 @@ public abstract class Entity : MonoBehaviour
     public float armorPenFlatTotalMultiplier = 1f, magicPenFlatTotalMultiplier = 1f;
 
     [Header("Internal Cooldowns")]
-    public float internalCooldown = 2f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    public float internalCooldown = 4f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, gustInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;
@@ -362,7 +362,7 @@ public abstract class Entity : MonoBehaviour
                 OnPlantAttackHit?.Invoke(plant, insect, damageTag);
         }
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 6f, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
+        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 8f, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
         bool isCrit = false;
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
@@ -411,10 +411,12 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - windResistance) * (1 + source.windDamage);
             if (this is Insect windInsect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
-                    if (windInsect.HasEffect<BlazeEffect>() || windInsect.HasEffect<ColdEffect>() ||
-                        windInsect.HasEffect<WetEffect>() || windInsect.HasEffect<TaintedEffect>() ||
-                        windInsect.HasEffect<SproutEffect>())
+                    if (gustInternalCooldown <= 0 &&
+                        (windInsect.HasEffect<BlazeEffect>() || windInsect.HasEffect<ColdEffect>() ||
+                         windInsect.HasEffect<WetEffect>()   || windInsect.HasEffect<TaintedEffect>() ||
+                         windInsect.HasEffect<SproutEffect>()))
                     {
+                        gustInternalCooldown = internalCooldown;
                         ApplyEffect(new GustEffect(this, 0.5f, 1, source));
                     }
                     if (source is Anemone anemone)

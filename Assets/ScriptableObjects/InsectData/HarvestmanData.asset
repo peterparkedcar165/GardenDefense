@@ -18,22 +18,26 @@ MonoBehaviour:
   passiveDescription: Deals increased damage to minions and insects
   sprite: {fileID: 21300000, guid: db8f19884e67fa9418e3aa1134e8365b, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: be78d24b0d0ee094dadaae49bc5d136b, type: 3}
-  baseMaxHealth: 1500
+  baseMaxHealth: 1800
   baseAttackDamage: 32
   baseMagicPower: 0
   baseAttackSpeed: 1.5
   baseAttackRange: 1.15
-  baseMovementSpeed: 1.3
+  baseMovementSpeed: 1
   baseTargetingRange: 1.5
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -46,6 +50,11 @@ MonoBehaviour:
   baseEvasion: 0
   baseAccuracy: 0
   sunDrop: 23
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   aggressivity: 0
   baseLightEmissionRange: 0
   baseHealingBonus: 0

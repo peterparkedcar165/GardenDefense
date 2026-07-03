@@ -783,8 +783,21 @@ public abstract class Plant : Entity, IAttackable
         {
             switch (WeatherManager.instance.temperature)
             {
-                case TemperatureType.Hot:  temperature += 1f * Time.deltaTime; break;
-                case TemperatureType.Cold: temperature -= 1f * Time.deltaTime; break;
+                case TemperatureType.Hot:
+                    bool rainCoolsHeat = WeatherManager.instance.GetIntensity(WeatherType.Rain) >= 5
+                                      || WeatherManager.instance.GetIntensity(WeatherType.Snow) >= 5;
+                    if (rainCoolsHeat)
+                        temperature = Mathf.Max(temperature - 1f * Time.deltaTime, comfortMin);
+                    else
+                        temperature += 1f * Time.deltaTime;
+                    break;
+                case TemperatureType.Cold:
+                    bool sunWarmsFreeze = WeatherManager.instance.GetIntensity(WeatherType.Sunny) >= 5;
+                    if (sunWarmsFreeze)
+                        temperature = Mathf.Min(temperature + 1f * Time.deltaTime, comfortMax);
+                    else
+                        temperature -= 1f * Time.deltaTime;
+                    break;
             }
         }
         temperature = Mathf.Clamp(temperature, temperatureMin, temperatureMax);

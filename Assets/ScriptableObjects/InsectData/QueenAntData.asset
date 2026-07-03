@@ -18,14 +18,13 @@ MonoBehaviour:
   passiveDescription: Stops periodically to give birth lol
   sprite: {fileID: 21300000, guid: 1c27e4fa9d6ba654e8c711258d0af381, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
-  baseMaxHealth: 2000
+  baseMaxHealth: 2400
   baseAttackDamage: 30
   baseMagicPower: 0
   baseAttackSpeed: 1
   baseAttackRange: 0.3
-  baseMovementSpeed: 0.5
+  baseMovementSpeed: 0.3
   baseTargetingRange: 1.5
-  startingShield: 0
   baseArmor: 18
   baseMagicArmor: 18
   attackDamageType: 0
@@ -33,9 +32,12 @@ MonoBehaviour:
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
   baseTenacity: 0.5
-  basePhysicalResistance: 0.15
-  baseMagicResistance: 0.15
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -45,7 +47,14 @@ MonoBehaviour:
   baseDotResistance: 0
   threatValue: 6
   threatType: 1
+  baseEvasion: 0
+  baseAccuracy: 0
   sunDrop: 28
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   aggressivity: 0
   baseLightEmissionRange: 0
   baseHealingBonus: 0

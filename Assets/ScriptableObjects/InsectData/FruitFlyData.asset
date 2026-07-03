@@ -18,22 +18,26 @@ MonoBehaviour:
   passiveDescription: Flies at very high speed, but gets knocked out easily
   sprite: {fileID: 21300000, guid: f1901fcfcdedfe44a9982814b2eb01f2, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 4fd69a1c3cf121140a76e4106c06de4f, type: 3}
-  baseMaxHealth: 200
+  baseMaxHealth: 300
   baseAttackDamage: 10
   baseMagicPower: 0
   baseAttackSpeed: 1
   baseAttackRange: 0.3
-  baseMovementSpeed: 1.4
+  baseMovementSpeed: 1
   baseTargetingRange: 1.5
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -43,7 +47,14 @@ MonoBehaviour:
   baseDotResistance: 0
   threatValue: 1
   threatType: 0
+  baseEvasion: 0
+  baseAccuracy: 0
   sunDrop: 7
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   aggressivity: 0
   baseLightEmissionRange: 0
   baseHealingBonus: 0

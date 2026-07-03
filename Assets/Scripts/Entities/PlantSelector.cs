@@ -26,6 +26,7 @@ public class PlantSelector : MonoBehaviour
         flowerPotMode = false;
         waterPotMode  = false;
         uprootMode = newMode;
+        CursorManager.instance?.SetMode(newMode ? CursorState.Uproot : CursorState.Default);
     }
 
     public void SetFlowerPotMode(bool newMode)

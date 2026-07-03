@@ -19,22 +19,26 @@ MonoBehaviour:
     Physical Resistance. Otherwise, increases Movement Speed
   sprite: {fileID: 21300000, guid: 6e83769186f25154dab65705b4a8e62c, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d0a925c758eadd44eb3532b9a2eeee0f, type: 3}
-  baseMaxHealth: 2400
+  baseMaxHealth: 2800
   baseAttackDamage: 40
   baseMagicPower: 0
   baseAttackSpeed: 0.5
   baseAttackRange: 0.3
-  baseMovementSpeed: 0.7
+  baseMovementSpeed: 0.4
   baseTargetingRange: 1.5
-  startingShield: 1600
+  baseArmor: 0
+  baseMagicArmor: 0
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 1600
   baseTenacity: 0.5
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0.5
   baseWaterResistance: 0.5
   basePoisonResistance: -0.25
@@ -44,7 +48,14 @@ MonoBehaviour:
   baseDotResistance: 0
   threatValue: 1.7
   threatType: 1
+  baseEvasion: 0
+  baseAccuracy: 0
   sunDrop: 22
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   aggressivity: 0
   baseLightEmissionRange: 1
   baseHealingBonus: 0

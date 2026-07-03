@@ -19,22 +19,26 @@ MonoBehaviour:
     plants.
   sprite: {fileID: 21300000, guid: 64e952f1628f39d4281c0f3b34c4c909, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: aff6fd1b40eab2342bb9ae072042625a, type: 3}
-  baseMaxHealth: 600
+  baseMaxHealth: 800
   baseAttackDamage: 12
   baseMagicPower: 0
   baseAttackSpeed: 1.5
   baseAttackRange: 0.3
-  baseMovementSpeed: 1.4
+  baseMovementSpeed: 1
   baseTargetingRange: 1.5
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0.35
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: -0.3
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -44,7 +48,14 @@ MonoBehaviour:
   baseDotResistance: 0
   threatValue: 3
   threatType: 0
+  baseEvasion: 0
+  baseAccuracy: 0
   sunDrop: 16
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   aggressivity: 2
   baseLightEmissionRange: 0
   baseHealingBonus: 0

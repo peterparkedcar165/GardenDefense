@@ -18,12 +18,12 @@ MonoBehaviour:
   passiveDescription: Attacks against plants decrease their temperature by 2
   sprite: {fileID: 0}
   insectPrefab: {fileID: 0}
-  baseMaxHealth: 500
+  baseMaxHealth: 700
   baseAttackDamage: 24
   baseMagicPower: 0
   baseAttackSpeed: 1
   baseAttackRange: 0.3
-  baseMovementSpeed: 1
+  baseMovementSpeed: 0.6
   baseTargetingRange: 1.5
   baseArmor: 0
   baseMagicArmor: 0

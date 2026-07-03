@@ -18,22 +18,26 @@ MonoBehaviour:
   passiveDescription: Emits a small light glow.
   sprite: {fileID: 8760434079162307657, guid: 9addbd6f45f48d046bd5a3e6058abae1, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d7a6800c607f5f146a2134c6f2bca15d, type: 3}
-  baseMaxHealth: 500
+  baseMaxHealth: 700
   baseAttackDamage: 15
   baseMagicPower: 0
   baseAttackSpeed: 1
   baseAttackRange: 0.3
-  baseMovementSpeed: 1.3
+  baseMovementSpeed: 0.9
   baseTargetingRange: 1.5
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
@@ -43,7 +47,14 @@ MonoBehaviour:
   baseDotResistance: 0
   threatValue: 1.1
   threatType: 0
+  baseEvasion: 0
+  baseAccuracy: 0
   sunDrop: 9
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   aggressivity: 0
   baseLightEmissionRange: 1
   baseHealingBonus: 0
