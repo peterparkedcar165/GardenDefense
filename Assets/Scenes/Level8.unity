@@ -6180,7 +6180,7 @@ TilemapRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1439254913
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -6361,6 +6361,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarknessManager
   isDark: 1
   pitchBlack: 0
+  litDuringSetup: 0
+  nightLight: {fileID: 0}
+  setupIntensity: 0.4
+  darkByCountdown: 1
+  fadeDuration: 0.4
 --- !u!4 &296199317
 Transform:
   m_ObjectHideFlags: 0
@@ -7556,7 +7561,7 @@ TilemapRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1439254913
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -9843,6 +9848,8 @@ MonoBehaviour:
   dirtTilemap: {fileID: 431268890}
   highgroundGroundTilemap: {fileID: 1067983622}
   highgroundWaterTilemap: {fileID: 1373915345}
+  lowgroundGroundTilemap: {fileID: 0}
+  lowgroundWaterTilemap: {fileID: 0}
 --- !u!1 &1013996288
 GameObject:
   m_ObjectHideFlags: 0
@@ -14142,7 +14149,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dec57560eb949441981c1c7eff0342a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  backdrop: {fileID: 0}
+  groundTilemap: {fileID: 0}
+  minZoom: 3
+  zoomSpeed: 0.5
+  zoomSmoothing: 8
+  moveSpeed: 24
+  moveSmoothing: 10
+  rightPanelFraction: 0.236
 --- !u!114 &1709538200
 MonoBehaviour:
   m_ObjectHideFlags: 0
