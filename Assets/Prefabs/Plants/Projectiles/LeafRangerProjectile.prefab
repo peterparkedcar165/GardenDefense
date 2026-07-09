@@ -81,7 +81,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1018753133
-  m_SortingLayer: 3
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -6941557632905077606, guid: 6f963b1b65c95844cad57cdeab699b7d, type: 3}
@@ -146,6 +146,7 @@ MonoBehaviour:
   hit: {fileID: 8300000, guid: 6f3c61af95c8eec429131b926016035f, type: 3}
   minPitch: 0.9
   maxPitch: 1.1
+  hitVolume: 0.5
   projectileDamage: 0
   projectileSpeed: 0
   maxRange: 0
@@ -174,7 +175,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0.45154
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0

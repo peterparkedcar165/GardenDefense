@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class AcornProjectile : Projectile
 {
     private int _bouncesRemaining;
+    private bool _spent;
     private readonly List<Insect> _alreadyHit = new List<Insect>();
     private const float bounceSearchRadius = 3f;
     private const float bounceDamageReduction = 0.1f;
@@ -22,6 +23,8 @@ public class AcornProjectile : Projectile
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
+        if (_spent) return;
+
         if (other.CompareTag("Insect"))
         {
             Insect insect = other.GetComponentInParent<Insect>();
@@ -47,6 +50,7 @@ public class AcornProjectile : Projectile
                 }
             }
 
+            _spent = true;
             Destroy(gameObject);
         }
 
@@ -69,6 +73,8 @@ public class AcornProjectile : Projectile
 
     protected override void OnHit(Insect insect)
     {
+        PlaySound(hit);
+
         int bouncesDone = _alreadyHit.Count - 1;
         float effectiveDamage = projectileDamage * Mathf.Max(0f, 1f - bouncesDone * bounceDamageReduction);
         insect.Damage(effectiveDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });

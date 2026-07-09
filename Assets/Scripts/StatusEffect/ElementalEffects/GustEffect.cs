@@ -15,8 +15,8 @@ public class GustEffect : ElementalDebuff
     public override string GetName() => "<color=#B2EBF2>Gust</color>";
     public override string GetDescription()
     {
-        float halfDamage = 72f * (1f + 1.8f * source.elementalAffinity);
-        return $"Reacts with an existing primer, dealing <color=#E0E0E0><b>{halfDamage:F0}</b></color> Wind + <color=#E0E0E0><b>{halfDamage:F0}</b></color> elemental Magic damage to all insects within a <color=#E0E0E0><b>{WindshearRadius:F1}</b></color> radius. (72 × (1 + 1.8× <color=#FFD700>{source.elementalAffinity * 100:F0}% Elemental Affinity</color>))";
+        float halfDamage = 52f * (1f + 0.6f * source.elementalAffinity);
+        return $"Reacts with an existing primer, dealing <color=#E0E0E0><b>{halfDamage:F0}</b></color> Wind + <color=#E0E0E0><b>{halfDamage:F0}</b></color> elemental Magic damage to all insects within a <color=#E0E0E0><b>{WindshearRadius:F1}</b></color> radius. (52 × (1 + 0.6× <color=#FFD700>{source.elementalAffinity * 100:F0}% Elemental Affinity</color>))";
     }
 
     public override void OnApply()
@@ -67,7 +67,7 @@ public class GustEffect : ElementalDebuff
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Windshear", new Color(0.85f, 1f, 0.85f));
         // detonate around where the reaction happened, so a dying target does not cancel the AoE
         Vector3 center = target.transform.position;
-        float halfDamage = 72f * (1f + 1.8f * source.elementalAffinity);
+        float halfDamage = 52f * (1f + 0.6f * source.elementalAffinity);
         DamageTag[] tags = new DamageTag[] { DamageTag.ElementalDebuff };
 
         yield return new WaitForSeconds(0.1f);

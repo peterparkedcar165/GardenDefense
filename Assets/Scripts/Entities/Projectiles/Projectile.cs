@@ -6,6 +6,7 @@ public abstract class Projectile : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip hit;
     [SerializeField] private float minPitch = 0.9f, maxPitch = 1.1f;
+    [SerializeField] private float hitVolume = 0.5f;
     private int hitCount = 0;
 
     [Header("Combat")]
@@ -116,7 +117,7 @@ public abstract class Projectile : MonoBehaviour
         source.clip = sound;
         source.pitch = Random.Range(minPitch, maxPitch);
         source.spatialBlend = 0f;
-        source.volume = 0.5f;
+        source.volume = hitVolume;
         source.Play();
         Destroy(tempAudio,sound.length/source.pitch);
     }
