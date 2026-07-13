@@ -48,6 +48,11 @@ public class MainMenu : MonoBehaviour
         TryStartTransition("Encyclopedia");
     }
 
+    public void OnSkillTree()
+    {
+        TryStartTransition("SkillTree");
+    }
+
     public void OnQuit()
     {
         Debug.Log("Quit clicked");

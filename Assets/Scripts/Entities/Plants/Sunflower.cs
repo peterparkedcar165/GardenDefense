@@ -21,7 +21,7 @@ public class Sunflower : Shooter
         basePassiveDuration  = 6f;
         skillAoERadius       = data.baseSkillRadius;
         passiveCooldownTimer = data.basePassiveCooldown;
-        Entity.OnEntityHit  += OnAnyEntityHit;
+        Entity.OnEntityHit += OnAnyEntityHit;
     }
 
     protected override void OnDestroy()

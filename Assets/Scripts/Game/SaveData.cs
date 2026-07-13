@@ -15,4 +15,30 @@ public class SaveData
     public int waterPotLevel  = 0;
 
     public int MaxLoadoutSize => 4 + plantSlotLevel;
+
+    // skill tree meta progression, points earned from level clears
+    public int skillPoints = 0;
+    public List<SkillNodePurchase> skillPurchases = new List<SkillNodePurchase>();
+
+    public int GetSkillRank(string plantName, string nodeId)
+    {
+        foreach (SkillNodePurchase p in skillPurchases)
+            if (p.plantName == plantName && p.nodeId == nodeId) return p.rank;
+        return 0;
+    }
+
+    public void SetSkillRank(string plantName, string nodeId, int rank)
+    {
+        foreach (SkillNodePurchase p in skillPurchases)
+            if (p.plantName == plantName && p.nodeId == nodeId) { p.rank = rank; return; }
+        skillPurchases.Add(new SkillNodePurchase { plantName = plantName, nodeId = nodeId, rank = rank });
+    }
+}
+
+[System.Serializable]
+public class SkillNodePurchase
+{
+    public string plantName;
+    public string nodeId;
+    public int rank;
 }

@@ -45,6 +45,7 @@ public class PlantsPanelUI : MonoBehaviour
     {
         foreach (PlantData data in plantRegistry.plants)
         {
+            if (data == null) continue;
             PlantEntry entry = Instantiate(entryPrefab, content);
             entry.Initialize(data, OnEntryHover, OnEntryHoverExit, OnEntryClicked);
         }

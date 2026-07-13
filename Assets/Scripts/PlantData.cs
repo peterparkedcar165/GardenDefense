@@ -12,6 +12,9 @@ public class PlantData : ScriptableObject
     public DamageType damageType;
     public int sunCost;
 
+    [Header("Skill Tree")]
+    public SkillTreeData skillTree;
+
     [Header("Core")]
     public float baseMaxHealth = 200f;
     public float baseAttackDamage;

@@ -40,7 +40,7 @@ public class FloralGlowEffect : StatusEffect
             plant.UpdateStats();
         }
 
-        Entity.OnPlantAttackHit += HandlePlantAttackHit;
+        Entity.OnHit += HandleHit;
     }
 
     public override void OnTick(float deltaTime)
@@ -67,15 +67,14 @@ public class FloralGlowEffect : StatusEffect
             plant.UpdateStats();
         }
 
-        Entity.OnPlantAttackHit -= HandlePlantAttackHit;
+        Entity.OnHit -= HandleHit;
     }
 
-    private void HandlePlantAttackHit(Plant plant, Insect insect, DamageTag[] tags)
+    private void HandleHit(EntityEventData data)
     {
-        if (plant != target) return;
-        if (!System.Array.Exists(tags, t => t == DamageTag.Attack)) return;
-        if (!System.Array.Exists(tags, t => t == DamageTag.Melee || t == DamageTag.Projectile)) return;
-        if (calendula == null || insect == null || !insect.IsAlive) return;
+        if (data.source != target) return;
+        if (!System.Array.Exists(data.tags, t => t == DamageTag.Melee || t == DamageTag.Projectile)) return;
+        if (data.target is not Insect insect || calendula == null || !insect.IsAlive) return;
         calendula.StartCoroutine(DelayedFireHit(insect));
     }
 

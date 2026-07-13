@@ -71,7 +71,7 @@ public class PlantBar : MonoBehaviour
     private PlantData GetPlantData(string plantName)
     {
         foreach (var data in plantRegistry.plants)
-            if (data.plantName == plantName) return data;
+            if (data != null && data.plantName == plantName) return data;
         return null;
     }
 }

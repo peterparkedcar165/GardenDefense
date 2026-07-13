@@ -73,5 +73,8 @@ public enum StatType
     DoTDuration,
     RegenerationDuration,
     ShieldDuration,
-    SunGenerationCooldownMultiplier
+    SunGenerationCooldownMultiplier,
+    MaxHealth,
+    SunYield,
+    CurrencyYield
 }

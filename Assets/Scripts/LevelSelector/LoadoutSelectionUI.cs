@@ -171,6 +171,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         List<string> unlocked = SaveManager.instance.saveData.unlockedPlants;
         foreach (PlantData data in plantRegistry.plants)
         {
+            if (data == null) continue;
             if (!unlocked.Contains(data.plantName)) continue;
 
             LoadoutSlot slot = Instantiate(slotPrefab, unlockedContainer);
@@ -295,6 +296,7 @@ public class LoadoutSelectionUI : MonoBehaviour
     {
         foreach (var data in plantRegistry.plants)
         {
+            if (data == null) continue;
             Debug.Log($"Comparing '{plantName}' to '{data.plantName}'");
             if (data.plantName == plantName) return data;
         }

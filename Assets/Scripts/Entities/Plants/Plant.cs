@@ -371,6 +371,7 @@ public abstract class Plant : Entity, IAttackable
         }
         if (elementalType == ElementalType.Fire) temperatureMinAdder = 10f - baseTemperatureMin; // floor temperature at 10
         FertilizerManager.instance?.ApplyTo(this);
+        SkillTreeManager.ApplyTo(this);
         UpdateStats();
         health = maxHealth;
         UpdateHealthBar();

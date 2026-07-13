@@ -62,12 +62,14 @@
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSelectionUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SunlightExposedEffect.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\PlantStatApplier.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CactusData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PuncturedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\EngagedEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DarklingBeetleData.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillNodeButton.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FlammableEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DrizzleBarrierEffect.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\WaterPot.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AquaticOvershieldEffect.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillTreeManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Harvestman.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\QueenAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
@@ -224,6 +227,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\FlowerPot.cs" />
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillTreeData.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Silverfish.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleZone.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\InsectPreviewSlot.cs" />
@@ -281,6 +285,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\BegoniaProjectile.cs" />
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\ZinniaData.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillTreeUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ScorcherEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />

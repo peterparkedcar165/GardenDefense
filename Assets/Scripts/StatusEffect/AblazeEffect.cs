@@ -17,18 +17,19 @@ public class AblazeEffect : StatusEffect
     public override void OnApply()
     {
         StatusIndicator.Spawn(target.transform.position + new UnityEngine.Vector3(0.4f, 0f, 0f), "Ablaze", new UnityEngine.Color(1f, 0.4f, 0f));
-        Entity.OnPlantAttackHit += HandlePlantAttackHit;
+        Entity.OnHit += HandleHit;
     }
 
     public override void OnExpire()
     {
-        Entity.OnPlantAttackHit -= HandlePlantAttackHit;
+        Entity.OnHit -= HandleHit;
     }
 
-    private void HandlePlantAttackHit(Plant plant, Insect insect, DamageTag[] tags)
+    private void HandleHit(EntityEventData data)
     {
-        if (plant != target) return;
-        Entity.OnPlantAttackHit -= HandlePlantAttackHit;
+        if (data.source != target) return;
+        if (data.target is not Insect insect) return;
+        Entity.OnHit -= HandleHit;
         target.RemoveEffect<AblazeEffect>();
         target.StartCoroutine(DelayedBonusDamage(insect));
     }

@@ -87,6 +87,9 @@ public static class FertilizerFormat
             case StatType.RegenerationDuration:             return "Regeneration Duration";
             case StatType.ShieldDuration:                   return "Shield Duration";
             case StatType.SunGenerationCooldownMultiplier:  return "Sun Generation Cooldown";
+            case StatType.MaxHealth:                        return "Max Health";
+            case StatType.SunYield:                         return "Sun Yield";
+            case StatType.CurrencyYield:                    return "Currency Yield";
             default:                                        return statType.ToString();
         }
     }

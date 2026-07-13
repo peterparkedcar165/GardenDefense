@@ -85,7 +85,7 @@ public abstract class Entity : MonoBehaviour
     public float baseEvasion, baseAccuracy;
     public float baseBonusCritChanceReceived, baseBonusCritDamageReceived, baseProjectileSpeed;
 
-    public static event System.Action<Plant, Insect, DamageTag[]> OnPlantAttackHit;
+    public static event System.Action<EntityEventData> OnHit;
     public static event System.Action<EntityEventData> OnEntityHit;
     public static event System.Action<StatusEffect> OnEffectApplied;
     public static event System.Action<Entity, Entity> OnCriticalHit;
@@ -323,6 +323,8 @@ public abstract class Entity : MonoBehaviour
             e.OnDamageReceived(elementalType, null, damageTag);
 
         var evtData = new EntityEventData { target = this, position = transform.position, damage = finalDamage, damageType = damageType, elementalType = elementalType, tags = damageTag };
+        if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+            OnHit?.Invoke(evtData);
         OnEntityHit?.Invoke(evtData);
         if (health <= 0)
         {
@@ -355,12 +357,8 @@ public abstract class Entity : MonoBehaviour
             }
         }
 
-        if (this is Insect insect && source is Plant plant) // if target = insect and source = plant
-        {
+        if (this is Insect insect && source is Plant plant)
             insect.RegisterAttacker(plant);
-            if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
-                OnPlantAttackHit?.Invoke(plant, insect, damageTag);
-        }
 
         float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 8f, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
         bool isCrit = false;
@@ -543,6 +541,8 @@ public abstract class Entity : MonoBehaviour
             e.OnDamageReceived(elementalType, source, damageTag);
 
         var evtData = new EntityEventData { target = this, source = source, position = transform.position, damage = finalDamage, damageType = damageType, elementalType = elementalType, tags = damageTag };
+        if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+            OnHit?.Invoke(evtData);
         OnEntityHit?.Invoke(evtData);
         if (health <= 0)
         {

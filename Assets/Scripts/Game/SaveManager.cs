@@ -115,15 +115,33 @@ public class SaveManager : MonoBehaviour
             Save();
             Debug.Log("Removed all currency");
         }
+        if (UnityEngine.InputSystem.Keyboard.current.semicolonKey.wasPressedThisFrame)
+        {
+            saveData.skillPoints += 20;
+            Save();
+            SkillTreeUI.instance?.RefreshAll();
+            Debug.Log("Added 20 skill points");
+        }
+        if (UnityEngine.InputSystem.Keyboard.current.quoteKey.wasPressedThisFrame)
+        {
+            saveData.skillPoints = 0;
+            saveData.skillPurchases.Clear();
+            Save();
+            SkillTreeUI.instance?.RefreshAll();
+            Debug.Log("Reset skill points and purchases");
+        }
     }
 
     public void CompleteLevel(int level)
     {
+        // first clear grants bonus skill points
+        bool firstClear = level > saveData.highestLevelUnlocked;
         saveData.highestLevelUnlocked = Mathf.Max(saveData.highestLevelUnlocked, level);
         string plant = GetPlantUnlockedByLevel(level);
         if (plant != null && !saveData.unlockedPlants.Contains(plant))
             saveData.unlockedPlants.Add(plant);
         saveData.currency += 200 + level * 40;
+        saveData.skillPoints += firstClear ? 3 : 1;
         Save();
         Debug.Log($"Level {level} completed. Unlocked: {plant ?? "none"}. highestLevelUnlocked={saveData.highestLevelUnlocked}");
     }
@@ -132,6 +150,8 @@ public class SaveManager : MonoBehaviour
     {
         if (plantRegistry == null) return null;
         if (level < 0 || level >= plantRegistry.plants.Length) return null;
+        // empty registry slots mark levels that unlock no plant, such as the level before a boss
+        if (plantRegistry.plants[level] == null) return null;
         return plantRegistry.plants[level].plantName;
     }
 }

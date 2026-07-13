@@ -23,8 +23,8 @@ public class Aeonium : Shooter
         passiveCooldownTimer = passiveCooldown;
     }
 
-    private void OnEnable()  => Entity.OnPlantAttackHit += HandleNearbyAttack;
-    private void OnDisable() => Entity.OnPlantAttackHit -= HandleNearbyAttack;
+    private void OnEnable()  => Entity.OnHit += HandleNearbyAttack;
+    private void OnDisable() => Entity.OnHit -= HandleNearbyAttack;
 
     public override void UpdateStats()
     {
@@ -72,11 +72,11 @@ public class Aeonium : Shooter
     }
 
     // each nearby plant's projectile or melee attack speeds the sun timer
-    private void HandleNearbyAttack(Plant plant, Insect insect, DamageTag[] tags)
+    private void HandleNearbyAttack(EntityEventData data)
     {
+        if (data.source is not Plant plant) return;
         if (plant == this && !IsPath2Maxed) return;
-        if (!System.Array.Exists(tags, t => t == DamageTag.Attack)) return;
-        if (!System.Array.Exists(tags, t => t == DamageTag.Projectile || t == DamageTag.Melee)) return;
+        if (!System.Array.Exists(data.tags, t => t == DamageTag.Projectile || t == DamageTag.Melee)) return;
         if (Vector3.Distance(transform.position, plant.transform.position) <= attackRange)
         {
             passiveCooldownTimer -= _sunTimerReduction;
