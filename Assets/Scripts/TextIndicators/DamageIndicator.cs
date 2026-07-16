@@ -12,7 +12,8 @@ public class DamageIndicator : TextIndicator
 
     public void Initialize(float damage, ElementalType elementalType, bool isCrit)
     {
-        shrink = true;
+        shrink = false;
+        horizontalDrift = 0f;
 
         if (damage <= 0.5f) { Destroy(gameObject); return; }
 
@@ -28,12 +29,13 @@ public class DamageIndicator : TextIndicator
             default:                    color = new Color(0.9f, 0.9f, 0.9f); break;
         }
 
-        tmpText.fontSize = Mathf.Clamp(7f + damage * 0.04f, 7f, 11f);
+        // size starts at 6, damage scale with number, then clamp min, clamp max
+        tmpText.fontSize = Mathf.Clamp(6f + damage * 0.00f, 5f, 8f);
 
         if (isCrit)
         {
             tmpText.fontStyle = FontStyles.Bold;
-            tmpText.fontSize *= 1.5f;
+            tmpText.fontSize *= 1.05f;
         }
         else
         {

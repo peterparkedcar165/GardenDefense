@@ -7,7 +7,7 @@ using TMPro;
 public abstract class TextIndicator : MonoBehaviour
 {
     protected TMP_Text tmpText;
-    private float horizontalDrift;
+    protected float horizontalDrift;
     private float verticalSpeed;
     protected bool shrink = false;
 

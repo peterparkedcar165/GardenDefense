@@ -45,6 +45,6 @@ public class LoadoutSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void SetDimmed(bool dimmed)
     {
         if (canvasGroup != null)
-            canvasGroup.alpha = dimmed ? 0.4f : 1f;
+            canvasGroup.alpha = dimmed ? 0.1f : 1f;
     }
 }

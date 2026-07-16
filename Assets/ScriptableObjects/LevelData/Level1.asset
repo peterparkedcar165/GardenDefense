@@ -17,8 +17,8 @@ MonoBehaviour:
   - type: 1
     intensity: 1
   temperature: 2
-  maxWaves: 20
-  startSunCount: 250
+  maxWaves: 16
+  startSunCount: 100
   startHealth: 200
   minWaveDuration: 15
   maxWaveDuration: 120
@@ -47,8 +47,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 8
-  minThreatBudget: 3
-  maxThreatBudget: 60
+  minThreatBudget: 2
+  maxThreatBudget: 35
   budgetCurve:
     serializedVersion: 2
     m_Curve:
