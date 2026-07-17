@@ -195,7 +195,7 @@ public class Glowshroom : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#88FF88>Fungal Glow</color> duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase spread radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath2Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "<color=#88FF88>Fungal Glow</color> reduces <color=green><b>Nature Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=green><b>22%</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, "<color=#88FF88>Fungal Glow</color> reduces <color=green><b>Grass Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=green><b>22%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

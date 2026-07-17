@@ -1,18 +1,18 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class GustEffect : ElementalDebuff
+public class WindPrimer : ElementalDebuff
 {
     private const float WindshearRadius = 1.5f;
 
     public static event System.Action<Vector3, Entity> OnWindshearTriggered;
 
-    public GustEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
+    public WindPrimer(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         elementalType = ElementalType.Wind;
     }
 
-    public override string GetName() => "<color=#B2EBF2>Gust</color>";
+    public override string GetName() => "<color=#B2EBF2>Wind</color>";
     public override string GetDescription()
     {
         float halfDamage = 52f * (1f + 0.6f * source.elementalAffinity);
@@ -23,43 +23,43 @@ public class GustEffect : ElementalDebuff
     {
         Insect insect = (Insect)target;
 
-        if (insect.HasEffect<BlazeEffect>())
+        if (insect.HasEffect<FirePrimer>())
         {
-            insect.RemoveEffect<BlazeEffect>();
-            insect.RemoveEffect<GustEffect>();
+            insect.RemoveEffect<FirePrimer>();
+            insect.RemoveEffect<WindPrimer>();
             insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Fire));
             return;
         }
-        if (insect.HasEffect<ColdEffect>())
+        if (insect.HasEffect<IcePrimer>())
         {
-            insect.RemoveEffect<ColdEffect>();
-            insect.RemoveEffect<GustEffect>();
+            insect.RemoveEffect<IcePrimer>();
+            insect.RemoveEffect<WindPrimer>();
             insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Ice));
             return;
         }
-        if (insect.HasEffect<WetEffect>())
+        if (insect.HasEffect<WaterPrimer>())
         {
-            insect.RemoveEffect<WetEffect>();
-            insect.RemoveEffect<GustEffect>();
+            insect.RemoveEffect<WaterPrimer>();
+            insect.RemoveEffect<WindPrimer>();
             insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Water));
             return;
         }
-        if (insect.HasEffect<TaintedEffect>())
+        if (insect.HasEffect<PoisonPrimer>())
         {
-            insect.RemoveEffect<TaintedEffect>();
-            insect.RemoveEffect<GustEffect>();
+            insect.RemoveEffect<PoisonPrimer>();
+            insect.RemoveEffect<WindPrimer>();
             insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Poison));
             return;
         }
-        if (insect.HasEffect<SproutEffect>())
+        if (insect.HasEffect<GrassPrimer>())
         {
-            insect.RemoveEffect<SproutEffect>();
-            insect.RemoveEffect<GustEffect>();
-            insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Nature));
+            insect.RemoveEffect<GrassPrimer>();
+            insect.RemoveEffect<WindPrimer>();
+            insect.StartCoroutine(WindshearDelay(insect, source, ElementalType.Grass));
             return;
         }
 
-        insect.RemoveEffect<GustEffect>();
+        insect.RemoveEffect<WindPrimer>();
     }
 
     private static IEnumerator WindshearDelay(Insect target, Entity source, ElementalType primerElement)

@@ -11,7 +11,7 @@ public class BlessingOfTheSunEffect : StatusEffect
     {
         this.bonus = bonus;
         effectType      = Type.positive;
-        elementalType   = ElementalType.Nature;
+        elementalType   = ElementalType.Grass;
         sourceStackable = true;
     }
 

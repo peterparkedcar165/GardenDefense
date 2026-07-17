@@ -14,7 +14,7 @@ public class GerminateEffect : StatusEffect
         cachedAttackDamage = source?.attackDamage ?? 0f;
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
-        elementalType = ElementalType.Nature;
+        elementalType = ElementalType.Grass;
     }
 
     // (42 + 43% attack damage) × (1 + 213% elemental affinity), snapshotted from the source on apply
@@ -23,7 +23,7 @@ public class GerminateEffect : StatusEffect
     public override string GetName() => "<color=green>Germinate</color>";
     public override string GetDescription()
     {
-        return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{ComputeDamage():F0}</b></color> <color=green>Nature</color> Physical damage to nearby insects.";
+        return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{ComputeDamage():F0}</b></color> <color=green>Grass</color> Physical damage to nearby insects.";
     }
 
     public override void OnApply()
@@ -91,9 +91,9 @@ public class GerminateEffect : StatusEffect
             if (Vector3.Distance(origin, insect.transform.position) <= aoeRadius)
             {
                 if (source != null)
-                    insect.Damage(damage, DamageType.Physical, ElementalType.Nature, source, source.ElementalReactionCanCrit, damageTags);
+                    insect.Damage(damage, DamageType.Physical, ElementalType.Grass, source, source.ElementalReactionCanCrit, damageTags);
                 else
-                    insect.Damage(damage, DamageType.Physical, ElementalType.Nature, damageTags);
+                    insect.Damage(damage, DamageType.Physical, ElementalType.Grass, damageTags);
             }
         }
     }

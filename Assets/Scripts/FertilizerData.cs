@@ -31,7 +31,7 @@ public enum StatType
     FireDamage,
     IceDamage,
     WaterDamage,
-    NatureDamage,
+    GrassDamage,
     PoisonDamage,
     WindDamage,
     CriticalChance,
@@ -76,5 +76,6 @@ public enum StatType
     SunGenerationCooldownMultiplier,
     MaxHealth,
     SunYield,
-    CurrencyYield
+    CurrencyYield,
+    GroundDamage
 }

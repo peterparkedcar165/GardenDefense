@@ -6,7 +6,7 @@ public class IlluminativeHasteEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.positive;
-        elementalType = ElementalType.Nature;
+        elementalType = ElementalType.Grass;
     }
 
     public override void OnApply()

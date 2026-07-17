@@ -44,9 +44,10 @@ public static class FertilizerFormat
             case StatType.FireDamage:     return "Fire Damage";
             case StatType.IceDamage:      return "Ice Damage";
             case StatType.WaterDamage:    return "Water Damage";
-            case StatType.NatureDamage:   return "Nature Damage";
+            case StatType.GrassDamage:   return "Grass Damage";
             case StatType.PoisonDamage:   return "Poison Damage";
             case StatType.WindDamage:     return "Wind Damage";
+            case StatType.GroundDamage:   return "Ground Damage";
             case StatType.CriticalChance: return "Critical Chance";
             case StatType.CriticalDamage: return "Critical Damage";
             case StatType.elementalAffinity: return "Elemental Affinity";

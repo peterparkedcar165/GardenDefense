@@ -202,7 +202,7 @@ public class BogIris : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>{opendurpl:F0}</b></color> seconds per level. [<color=green><b>+{opendurpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase Sun generated per tick by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "Overhealing while in the <b><color=#4FC3F7>closed</color></b> state grants <color=#4FC3F7><b>Aquatic Overshield</b></color> up to <color=green><b>100</b></color>. Taking <color=#FF69B4><b>Physical Damage</b></color> while protected by the shield primes the attacker with <color=#1E90FF><b>Wet</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, "Overhealing while in the <b><color=#4FC3F7>closed</color></b> state grants <color=#4FC3F7><b>Aquatic Overshield</b></color> up to <color=green><b>100</b></color>. Taking <color=#FF69B4><b>Physical Damage</b></color> while protected by the shield primes the attacker with <color=#1E90FF><b>Water</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

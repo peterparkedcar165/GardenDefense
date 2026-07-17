@@ -40,8 +40,9 @@ public class InsectData : ScriptableObject
     public float baseWaterResistance;
     public float basePoisonResistance;
     public float baseIceResistance;
-    public float baseNatureResistance;
+    public float baseGrassResistance;
     public float baseWindResistance;
+    public float baseGroundResistance;
     public float baseDotResistance;
 
 

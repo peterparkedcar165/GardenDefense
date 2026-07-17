@@ -14,9 +14,10 @@ public static class PlantStatApplier
             case StatType.FireDamage:      plant.fireDamageAdder             += value; break;
             case StatType.IceDamage:       plant.iceDamageAdder              += value; break;
             case StatType.WaterDamage:     plant.waterDamageAdder            += value; break;
-            case StatType.NatureDamage:    plant.natureDamageAdder           += value; break;
+            case StatType.GrassDamage:    plant.grassDamageAdder           += value; break;
             case StatType.PoisonDamage:    plant.poisonDamageAdder           += value; break;
             case StatType.WindDamage:      plant.windDamageAdder             += value; break;
+            case StatType.GroundDamage:    plant.groundDamageAdder           += value; break;
             case StatType.CriticalChance:  plant.criticalChanceAdder         += value; break;
             case StatType.CriticalDamage:  plant.criticalDamageAdder         += value; break;
             case StatType.elementalAffinity:  plant.elementalAffinityAdder         += value; break;

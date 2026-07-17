@@ -266,8 +266,9 @@ public class LoadoutSelectionUI : MonoBehaviour
             ElementalType.Water   => "<color=#4FC3F7>Water</color>",
             ElementalType.Ice     => "<color=#00FFFF>Ice</color>",
             ElementalType.Wind    => "<color=#B2EBF2>Wind</color>",
-            ElementalType.Nature  => "<color=green>Nature</color>",
+            ElementalType.Grass  => "<color=green>Grass</color>",
             ElementalType.Poison  => "<color=purple>Poison</color>",
+            ElementalType.Ground  => "<color=#79391F>Ground</color>",
             _                     => "<color=white>Neutral</color>"
         };
     }

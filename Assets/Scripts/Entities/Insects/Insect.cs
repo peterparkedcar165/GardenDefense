@@ -937,10 +937,11 @@ public abstract class Insect : Entity, IAttackable
         baseMagicArmor = data.baseMagicArmor;
         baseFireResistance     = data.baseFireResistance;
         baseWaterResistance    = data.baseWaterResistance;
-        baseNatureResistance   = data.baseNatureResistance;
+        baseGrassResistance   = data.baseGrassResistance;
         baseWindResistance     = data.baseWindResistance;
         basePoisonResistance   = data.basePoisonResistance;
         baseIceResistance      = data.baseIceResistance;
+        baseGroundResistance   = data.baseGroundResistance;
         baseDotResistance      = data.baseDotResistance;
         sunDrop                = data.sunDrop;
         sunDropAdder           = data.sunDropAdder;

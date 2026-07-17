@@ -12,10 +12,11 @@ public class StatsPanelTooltip : MonoBehaviour
 
     private const string Fire     = "<color=orange>";
     private const string Water    = "<color=#4FC3F7>";
-    private const string Nature   = "<color=green>";
+    private const string Grass   = "<color=green>";
     private const string Ice      = "<color=#00FFFF>";
     private const string Poison   = "<color=purple>";
     private const string Wind     = "<color=#B2EBF2>";
+    private const string Ground   = "<color=#79391F>";
     private const string Magic    = "<color=#FFB6C1>";
     private const string Physical = "<color=#A0522D>";
     private const string DoT      = "<color=grey>";
@@ -81,13 +82,13 @@ public class StatsPanelTooltip : MonoBehaviour
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("<size=+8><color=white><b><u>Core</u></b></color></size>");
         ElemLine(sb, HealCol, "Max Health:", $"{e.maxHealth:F0}", e.maxHealth, e.baseMaxHealth);
-        ElemLine(sb, Nature, "Attack Damage:",  $"{e.attackDamage:F0}",  e.attackDamage,  e.baseAttackDamage);
-        ElemLine(sb, Nature, "Attack Speed:",   $"{e.attackSpeed:F2}",   e.attackSpeed,   e.baseAttackSpeed);
-        ElemLine(sb, Nature, "Attack Range:",   $"{e.attackRange:F1}",   e.attackRange,   e.baseAttackRange);
+        ElemLine(sb, Grass, "Attack Damage:",  $"{e.attackDamage:F0}",  e.attackDamage,  e.baseAttackDamage);
+        ElemLine(sb, Grass, "Attack Speed:",   $"{e.attackSpeed:F2}",   e.attackSpeed,   e.baseAttackSpeed);
+        ElemLine(sb, Grass, "Attack Range:",   $"{e.attackRange:F1}",   e.attackRange,   e.baseAttackRange);
         if (e is Insect insect)
             Line(sb, "Move Speed:", $"{insect.movementSpeed:F2}", insect.movementSpeed, insect.baseMovementSpeed);
         if (e is Plant plant)
-            ElemLine(sb, Nature, "Projectile Speed:", $"{e.projectileSpeed:F1}", e.projectileSpeed, e.baseProjectileSpeed);
+            ElemLine(sb, Grass, "Projectile Speed:", $"{e.projectileSpeed:F1}", e.projectileSpeed, e.baseProjectileSpeed);
         ElemLine(sb, Crit, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
         ElemLine(sb, Crit, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
         sb.AppendLine();
@@ -97,7 +98,7 @@ public class StatsPanelTooltip : MonoBehaviour
             float cdRatio = plant2.baseSkillCooldown > 0f ? plant2.skillCooldown / plant2.baseSkillCooldown : 1f;
             string cdPlain = $"{cdRatio * 100:F0}%";
             int cdDots = Mathf.Max(2, Width - "Skill Cooldown:".Length - cdPlain.Length);
-            sb.AppendLine($"{Nature}Skill Cooldown:{End}{new string('.', cdDots)}{ColInv(cdRatio, 1f, $"<b>{cdPlain}</b>")}");
+            sb.AppendLine($"{Grass}Skill Cooldown:{End}{new string('.', cdDots)}{ColInv(cdRatio, 1f, $"<b>{cdPlain}</b>")}");
         }
         sb.AppendLine();
         Line(sb, "<color=#00CED1>Armor:</color>",       $"{e.armor}",      e.armor,      e.baseArmor);
@@ -108,7 +109,7 @@ public class StatsPanelTooltip : MonoBehaviour
         ElemLine(sb, Magic,    "Magic Penetration:", $"{e.magicPenFlat:F0}",           e.magicPenFlat,    e.baseMagicPenFlat);
         ElemLine(sb, Magic,    "Magic Armor Shred:", $"{e.magicPenPercent * 100:F0}%", e.magicPenPercent, e.baseMagicPenPercent);
         if (e is Shooter shooter)
-            ElemLine(sb, Nature, "Piercing:", $"{shooter.piercing}", shooter.piercing, shooter.basePiercing);
+            ElemLine(sb, Grass, "Piercing:", $"{shooter.piercing}", shooter.piercing, shooter.basePiercing);
         return sb.ToString().TrimEnd();
     }
 
@@ -116,14 +117,14 @@ public class StatsPanelTooltip : MonoBehaviour
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("<size=+8><color=white><b><u>Offense</u></b></color></size>");
-        ElemLine(sb, Nature,   "Elemental Affinity:",  $"{e.elementalAffinity * 100:F0}%",  e.elementalAffinity,  e.baseelementalAffinity);
+        ElemLine(sb, Grass,   "Elemental Affinity:",  $"{e.elementalAffinity * 100:F0}%",  e.elementalAffinity,  e.baseelementalAffinity);
         sb.AppendLine();
         ElemLine(sb, Magic,    "Damage Over Time:",    $"{e.dotDamage * 100:F0}%",          e.dotDamage,          e.baseDotDamage);
         ElemLine(sb, Magic,    "Skill Damage:",        $"{e.skillDamage * 100:F0}%",        e.skillDamage,        e.baseSkillDamage);
         ElemLine(sb, Passive,  "Passive Damage:",      $"{e.passiveDamage * 100:F0}%",      e.passiveDamage,      e.basePassiveDamage);
         ElemLine(sb, Physical, "Counter Damage:",      $"{e.counterDamage * 100:F0}%",      e.counterDamage,      e.baseCounterDamage);
         ElemLine(sb, Blue,     "Coordinated Damage:",  $"{e.coordinatedDamage * 100:F0}%",  e.coordinatedDamage,  e.baseCoordinatedDamage);
-        ElemLine(sb, Nature,   "Minion Damage:",       $"{e.minionDamage * 100:F0}%",       e.minionDamage,       e.baseMinionDamage);
+        ElemLine(sb, Grass,   "Minion Damage:",       $"{e.minionDamage * 100:F0}%",       e.minionDamage,       e.baseMinionDamage);
         sb.AppendLine();
         ElemLine(sb, Physical, "Physical Damage:",     $"{e.physicalDamage * 100:F0}%",     e.physicalDamage,     e.basePhysicalDamage);
         ElemLine(sb, Magic,    "Magic Damage:",        $"{e.magicDamage * 100:F0}%",        e.magicDamage,        e.baseMagicDamage);
@@ -131,10 +132,11 @@ public class StatsPanelTooltip : MonoBehaviour
         sb.AppendLine();
         ElemLine(sb, Fire,   "Fire Damage:",   $"{e.fireDamage * 100:F0}%",   e.fireDamage,   e.baseFireDamage);
         ElemLine(sb, Water,  "Water Damage:",  $"{e.waterDamage * 100:F0}%",  e.waterDamage,  e.baseWaterDamage);
-        ElemLine(sb, Nature, "Nature Damage:", $"{e.natureDamage * 100:F0}%", e.natureDamage, e.baseNatureDamage);
+        ElemLine(sb, Grass, "Grass Damage:", $"{e.grassDamage * 100:F0}%", e.grassDamage, e.baseGrassDamage);
         ElemLine(sb, Ice,    "Ice Damage:",    $"{e.iceDamage * 100:F0}%",    e.iceDamage,    e.baseIceDamage);
         ElemLine(sb, Poison, "Poison Damage:", $"{e.poisonDamage * 100:F0}%", e.poisonDamage, e.basePoisonDamage);
         ElemLine(sb, Wind,   "Wind Damage:",   $"{e.windDamage * 100:F0}%",   e.windDamage,   e.baseWindDamage);
+        ElemLine(sb, Ground, "Ground Damage:", $"{e.groundDamage * 100:F0}%", e.groundDamage, e.baseGroundDamage);
         return sb.ToString().TrimEnd();
     }
 
@@ -149,10 +151,11 @@ public class StatsPanelTooltip : MonoBehaviour
         sb.AppendLine();
         ElemLine(sb, Fire,   "Fire Resistance:",   $"{e.fireResistance * 100:F0}%",   e.fireResistance,   e.baseFireResistance);
         ElemLine(sb, Water,  "Water Resistance:",  $"{e.waterResistance * 100:F0}%",  e.waterResistance,  e.baseWaterResistance);
-        ElemLine(sb, Nature, "Nature Resistance:", $"{e.natureResistance * 100:F0}%", e.natureResistance, e.baseNatureResistance);
+        ElemLine(sb, Grass, "Grass Resistance:", $"{e.grassResistance * 100:F0}%", e.grassResistance, e.baseGrassResistance);
         ElemLine(sb, Ice,    "Ice Resistance:",    $"{e.iceResistance * 100:F0}%",    e.iceResistance,    e.baseIceResistance);
         ElemLine(sb, Poison, "Poison Resistance:", $"{e.poisonResistance * 100:F0}%", e.poisonResistance, e.basePoisonResistance);
         ElemLine(sb, Wind,   "Wind Resistance:",   $"{e.windResistance * 100:F0}%",   e.windResistance,   e.baseWindResistance);
+        ElemLine(sb, Ground, "Ground Resistance:", $"{e.groundResistance * 100:F0}%", e.groundResistance, e.baseGroundResistance);
         sb.AppendLine();
         Line(sb, "<color=grey>Tenacity:</color>", $"{e.tenacity * 100:F0}%", e.tenacity, e.baseTenacity);
         return sb.ToString().TrimEnd();
@@ -164,7 +167,7 @@ public class StatsPanelTooltip : MonoBehaviour
         sb.AppendLine("<size=+8><color=white><b><u>Utility</u></b></color></size>");
         ElemLine(sb, HealCol, "Lifesteal:",  $"{e.lifesteal * 100:F0}%",  e.lifesteal,  e.baseLifesteal);
         Line(sb,              "Evasion:",    $"{e.evasion * 100:F1}%",    e.evasion,    e.baseEvasion);
-        ElemLine(sb, Nature,  "Accuracy:",   $"{e.accuracy * 100:F1}%",   e.accuracy,   e.baseAccuracy);
+        ElemLine(sb, Grass,  "Accuracy:",   $"{e.accuracy * 100:F1}%",   e.accuracy,   e.baseAccuracy);
         sb.AppendLine();
         ElemLine(sb, HealCol, "Heals & Shield Bonus:",    $"{e.healingBonus * 100:F0}%",    e.healingBonus,    e.baseHealingBonus);
         ElemLine(sb, HealCol, "Heals & Shield Received:", $"{e.healingReceived * 100:F0}%", e.healingReceived, e.baseHealingReceived);
@@ -175,7 +178,7 @@ public class StatsPanelTooltip : MonoBehaviour
         ElemLine(sb, DoT,     "Debuff Received Duration:", $"{e.debuffReceivedDuration * 100:F0}%", e.debuffReceivedDuration, e.baseDebuffReceivedDuration);
         sb.AppendLine();
         ElemLine(sb, Gold,   "Light Emission Range:", $"{e.lightEmissionRange:F1}", e.lightEmissionRange, e.baseLightEmissionRange);
-        ElemLine(sb, Nature, "Skill Duration:",        $"{e.skillDuration:F1}s",    e.skillDuration,      e.baseSkillDuration);
+        ElemLine(sb, Grass, "Skill Duration:",        $"{e.skillDuration:F1}s",    e.skillDuration,      e.baseSkillDuration);
         ElemLine(sb, DoT,     "DoT Duration:",            $"{e.dotDuration * 100:F0}%",           e.dotDuration,           e.baseDotDuration);
         ElemLine(sb, HealCol, "Regeneration Duration:",  $"{e.regenerationDuration * 100:F0}%",  e.regenerationDuration,  e.baseRegenerationDuration);
         ElemLine(sb, HealCol, "Shield Duration:",         $"{e.shieldDuration * 100:F0}%",        e.shieldDuration,        e.baseShieldDuration);

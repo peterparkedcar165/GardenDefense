@@ -16,9 +16,9 @@ public class Begonia : Shooter
     private float elementalAffinityBonusMP   => (BData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
     private float elementalAffinityBonus     => elementalAffinityBonusBase + elementalAffinityBonusMP;
 
-    private float NatureDamageBonusBase => (BData?.baseNatureDamageBonus ?? 0f) + (BData?.path3NatureDamageBonusPerLevel ?? 0.04f) * effectivePath3Level;
-    private float NatureDamageBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
-    private float NatureDamageBonus     => NatureDamageBonusBase + NatureDamageBonusMP;
+    private float GrassDamageBonusBase => (BData?.baseGrassDamageBonus ?? 0f) + (BData?.path3GrassDamageBonusPerLevel ?? 0.04f) * effectivePath3Level;
+    private float GrassDamageBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
+    private float GrassDamageBonus     => GrassDamageBonusBase + GrassDamageBonusMP;
 
     private float AttackSpeedBonusBase => (BData?.baseAttackSpeedBonus ?? 0f) + (BData?.path3AttackSpeedBonusPerLevel ?? 0.04f) * effectivePath3Level;
     private float AttackSpeedBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
@@ -88,7 +88,7 @@ public class Begonia : Shooter
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(position, plant.transform.position) <= BlossomRadius)
-                plant.ApplyEffect(new BlossomingEffect(plant, skillDuration, effectivePath3Level + 1, this, NatureDamageBonus, AttackSpeedBonus));
+                plant.ApplyEffect(new BlossomingEffect(plant, skillDuration, effectivePath3Level + 1, this, GrassDamageBonus, AttackSpeedBonus));
         }
     }
 
@@ -153,7 +153,7 @@ public class Begonia : Shooter
 
     public override string GetName() => "<b><color=green>Begonia</color></b>";
     public override string GetDescription() =>
-        $"The {GetName()} infuses nearby allies with Elemental Affinity and can bless them with the power of nature.";
+        $"The {GetName()} infuses nearby allies with Elemental Affinity and can bless them with the power of grass.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -186,17 +186,17 @@ public class Begonia : Shooter
 
     public override string GetPath3Description(bool details = false)
     {
-        float naturepl = BData?.path3NatureDamageBonusPerLevel ?? 0.04f;
+        float grasspl = BData?.path3GrassDamageBonusPerLevel ?? 0.04f;
         float aspl     = BData?.path3AttackSpeedBonusPerLevel  ?? 0.04f;
         float radiuspl = BData?.path3RadiusPerLevel            ?? 0.15f;
         float mpMult   = BData?.baseSkillMultiplier ?? 0f;
         string desc = details
             ? $"Target an area on the field (radius <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color>). Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}</b></color> seconds, " +
-              $"increasing Nature Power by <color=green><b>[({(BData?.baseNatureDamageBonus ?? 0f) * 100f:F0}%) + ({naturepl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> " +
+              $"increasing Grass Power by <color=green><b>[({(BData?.baseGrassDamageBonus ?? 0f) * 100f:F0}%) + ({grasspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> " +
               $"and Attack Speed by <color=green><b>[({(BData?.baseAttackSpeedBonus ?? 0f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase Nature Power bonus by <color=green><b>{naturepl * 100f:F0}%</b></color> per level. [<color=green><b>+{naturepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Grass Power bonus by <color=green><b>{grasspl * 100f:F0}%</b></color> per level. [<color=green><b>+{grasspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
@@ -214,6 +214,6 @@ public class Begonia : Shooter
 
     public override string GetSkillDesription() =>
         $"Target an area on the field. Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +
-        $"increasing Nature Power by <color=green><b>{NatureDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{NatureDamageBonusMP * 100f:F0}%</b></color>] " +
+        $"increasing Grass Power by <color=green><b>{GrassDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{GrassDamageBonusMP * 100f:F0}%</b></color>] " +
         $"and Attack Speed by <color=green><b>{AttackSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{AttackSpeedBonusMP * 100f:F0}%</b></color>].";
 }

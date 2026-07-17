@@ -9,7 +9,7 @@ public class VerdantFervorEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.positive;
-        elementalType = ElementalType.Nature;
+        elementalType = ElementalType.Grass;
         _stacks = 1;
     }
 

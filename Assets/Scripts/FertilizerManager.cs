@@ -133,9 +133,10 @@ public class FertilizerManager : MonoBehaviour
             case StatType.FireDamage:      return (0.06f, 0.08f);
             case StatType.IceDamage:       return (0.06f, 0.08f);
             case StatType.WaterDamage:     return (0.06f, 0.08f);
-            case StatType.NatureDamage:    return (0.06f, 0.08f);
+            case StatType.GrassDamage:    return (0.06f, 0.08f);
             case StatType.PoisonDamage:    return (0.06f, 0.08f);
             case StatType.WindDamage:      return (0.06f, 0.08f);
+            case StatType.GroundDamage:    return (0.06f, 0.08f);
             case StatType.CriticalChance:  return (0.04f, 0.06f);
             case StatType.CriticalDamage:  return (0.125f,  0.15f);
             case StatType.elementalAffinity:  return (0.01f, 0.125f);

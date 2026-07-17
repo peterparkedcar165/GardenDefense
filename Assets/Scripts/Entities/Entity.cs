@@ -33,7 +33,7 @@ public enum DamageTag
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
-    // IgnoresNatureResistance,
+    // IgnoresGrassResistance,
     // IgnoresFireResistance,
     // IgnoresWaterResistance,
     // IgnoresWindResistance
@@ -41,7 +41,7 @@ public enum DamageTag
 
 public enum ElementalType
 {
-    Fire, Water, Nature, Poison, Ice, Wind, Neutral
+    Fire, Water, Grass, Poison, Ice, Wind, Neutral, Ground
 }
 
 public struct EntityEventData
@@ -68,9 +68,9 @@ public abstract class Entity : MonoBehaviour
     public int baseArmor, baseMagicArmor;
     public int baseArmorPenFlat, baseMagicPenFlat;
     public float baseArmorPenPercent, baseMagicPenPercent;
-    public float baseFireResistance, baseWaterResistance, baseNatureResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
+    public float baseFireResistance, baseWaterResistance, baseGrassResistance, baseWindResistance, basePoisonResistance, baseIceResistance, baseGroundResistance;
     public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance;
-    public float baseFireDamage, baseWaterDamage, baseNatureDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
+    public float baseFireDamage, baseWaterDamage, baseGrassDamage, baseWindDamage, basePoisonDamage, baseIceDamage, baseGroundDamage;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseDotResistance, baseDotDamage, baseFallDamageResistance;
     public float baseelementalAffinity;
@@ -103,9 +103,9 @@ public abstract class Entity : MonoBehaviour
     public float physicalResistance, magicResistance;
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
-    public float fireResistance, waterResistance, natureResistance, windResistance, poisonResistance, iceResistance;
+    public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance, groundResistance;
     public float physicalDamage, magicDamage, fallDamage, bonusEffectChance;
-    public float fireDamage, waterDamage, natureDamage, windDamage, poisonDamage, iceDamage;
+    public float fireDamage, waterDamage, grassDamage, windDamage, poisonDamage, iceDamage, groundDamage;
     public float criticalChance, criticalDamage;
     public float dotResistance, dotDamage, fallDamageResistance;
     public float elementalAffinity;
@@ -146,9 +146,9 @@ public abstract class Entity : MonoBehaviour
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
     public float armorAdder, magicArmorAdder;
     public float armorPenFlatAdder, magicPenFlatAdder, armorPenPercentAdder, magicPenPercentAdder;
-    public float fireResistanceAdder, waterResistanceAdder, natureResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
+    public float fireResistanceAdder, waterResistanceAdder, grassResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder, groundResistanceAdder;
     public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder;
-    public float fireDamageAdder, waterDamageAdder, natureDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
+    public float fireDamageAdder, waterDamageAdder, grassDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder, groundDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
     public float dotResistanceAdder, dotDamageAdder, fallDamageResistanceAdder;
     public float elementalAffinityAdder;
@@ -170,9 +170,9 @@ public abstract class Entity : MonoBehaviour
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
     public float armorMultiplier, magicArmorMultiplier;
     public float armorPenFlatMultiplier, magicPenFlatMultiplier, armorPenPercentMultiplier, magicPenPercentMultiplier;
-    public float fireResistanceMultiplier, waterResistanceMultiplier, natureResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
+    public float fireResistanceMultiplier, waterResistanceMultiplier, grassResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier, groundResistanceMultiplier;
     public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier;
-    public float fireDamageMultiplier, waterDamageMultiplier, natureDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier;
+    public float fireDamageMultiplier, waterDamageMultiplier, grassDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier, groundDamageMultiplier;
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
     public float elementalAffinityMultiplier;
@@ -193,7 +193,7 @@ public abstract class Entity : MonoBehaviour
     public float armorPenFlatTotalMultiplier = 1f, magicPenFlatTotalMultiplier = 1f;
 
     [Header("Internal Cooldowns")]
-    public float internalCooldown = 4f, blazeInternalCooldown, wetInternalCooldown, sproutInternalCooldown, coldInternalCooldown, taintedInternalCooldown, gustInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    public float internalCooldown = 4f, fireInternalCooldown, waterInternalCooldown, grassInternalCooldown, iceInternalCooldown, poisonInternalCooldown, windInternalCooldown, groundInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;
@@ -208,20 +208,22 @@ public abstract class Entity : MonoBehaviour
         healingReceived = baseHealingReceived + healingReceivedAdder + (baseHealingReceived * healingReceivedMultiplier);
         fireResistance = baseFireResistance + fireResistanceAdder + (baseFireResistance * fireResistanceMultiplier);
         waterResistance = baseWaterResistance + waterResistanceAdder + (baseWaterResistance * waterResistanceMultiplier);
-        natureResistance = baseNatureResistance + natureResistanceAdder + (baseNatureResistance * natureResistanceMultiplier);
+        grassResistance = baseGrassResistance + grassResistanceAdder + (baseGrassResistance * grassResistanceMultiplier);
         windResistance = baseWindResistance + windResistanceAdder + (baseWindResistance * windResistanceMultiplier);
         poisonResistance = basePoisonResistance + poisonResistanceAdder + (basePoisonResistance * poisonResistanceMultiplier);
         iceResistance = baseIceResistance + iceResistanceAdder + (baseIceResistance * iceResistanceMultiplier);
+        groundResistance = baseGroundResistance + groundResistanceAdder + (baseGroundResistance * groundResistanceMultiplier);
         physicalDamage = basePhysicalDamage + physicalDamageAdder + (basePhysicalDamage * physicalDamageMultiplier);
         magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
         fallDamage = baseFallDamage + fallDamageAdder;
         bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
         fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
         waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
-        natureDamage = baseNatureDamage + natureDamageAdder + (baseNatureDamage * natureDamageMultiplier);
+        grassDamage = baseGrassDamage + grassDamageAdder + (baseGrassDamage * grassDamageMultiplier);
         windDamage = baseWindDamage + windDamageAdder + (baseWindDamage * windDamageMultiplier);
         poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
         iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
+        groundDamage = baseGroundDamage + groundDamageAdder + (baseGroundDamage * groundDamageMultiplier);
         criticalChance = (baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier)) * criticalChanceTotalMultiplier;
         criticalDamage = (baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier)) * criticalDamageTotalMultiplier;
         bonusCritChanceReceived = baseBonusCritChanceReceived + bonusCritChanceReceivedAdder + (baseBonusCritChanceReceived * bonusCritChanceReceivedMultiplier);
@@ -281,11 +283,14 @@ public abstract class Entity : MonoBehaviour
             case ElementalType.Wind:
             elementalMultiplier = Mathf.Max(0f, 1 - windResistance);
             break;
-            case ElementalType.Nature:
-            elementalMultiplier = Mathf.Max(0f, 1 - natureResistance);
+            case ElementalType.Grass:
+            elementalMultiplier = Mathf.Max(0f, 1 - grassResistance);
             break;
             case ElementalType.Poison:
             elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance);
+            break;
+            case ElementalType.Ground:
+            elementalMultiplier = Mathf.Max(0f, 1 - groundResistance);
             break;
             default:
             elementalMultiplier = 1;
@@ -365,7 +370,7 @@ public abstract class Entity : MonoBehaviour
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
-            Damage(GetEffect<BrittleEffect>().bonusDamage, damageType, ElementalType.Nature, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+            Damage(GetEffect<BrittleEffect>().bonusDamage, damageType, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
         if (this.HasEffect<FractureEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
@@ -377,10 +382,10 @@ public abstract class Entity : MonoBehaviour
         {
             case ElementalType.Fire:
             elementalMultiplier = Mathf.Max(0f, 1 - fireResistance) * (1 + source.fireDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && blazeInternalCooldown <= 0)
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && fireInternalCooldown <= 0)
                 {
-                    blazeInternalCooldown = internalCooldown;
-                    ApplyEffect(new BlazeEffect(this, elementalDebuffDuration, 1, source));
+                    fireInternalCooldown = internalCooldown;
+                    ApplyEffect(new FirePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
                 if (this.HasEffect<GerminateEffect>())
@@ -389,19 +394,19 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Water:
             elementalMultiplier = Mathf.Max(0f, 1 - waterResistance) * (1 + source.waterDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && wetInternalCooldown <= 0)
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && waterInternalCooldown <= 0)
                 {
-                    wetInternalCooldown = internalCooldown;
-                    ApplyEffect(new WetEffect(this, elementalDebuffDuration, 1, source));
+                    waterInternalCooldown = internalCooldown;
+                    ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
                 }
             break;
 
             case ElementalType.Ice:
             elementalMultiplier = Mathf.Max(0f, 1 - iceResistance) * (1 + source.iceDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && coldInternalCooldown <= 0)
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && iceInternalCooldown <= 0)
                 {
-                    coldInternalCooldown = internalCooldown;
-                    ApplyEffect(new ColdEffect(this, elementalDebuffDuration, 1, source));
+                    iceInternalCooldown = internalCooldown;
+                    ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
                 }
             break;
 
@@ -409,34 +414,43 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - windResistance) * (1 + source.windDamage);
             if (this is Insect windInsect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
-                    if (gustInternalCooldown <= 0 &&
-                        (windInsect.HasEffect<BlazeEffect>() || windInsect.HasEffect<ColdEffect>() ||
-                         windInsect.HasEffect<WetEffect>()   || windInsect.HasEffect<TaintedEffect>() ||
-                         windInsect.HasEffect<SproutEffect>()))
+                    if (windInternalCooldown <= 0 &&
+                        (windInsect.HasEffect<FirePrimer>() || windInsect.HasEffect<IcePrimer>() ||
+                         windInsect.HasEffect<WaterPrimer>()   || windInsect.HasEffect<PoisonPrimer>() ||
+                         windInsect.HasEffect<GrassPrimer>()))
                     {
-                        gustInternalCooldown = internalCooldown;
-                        ApplyEffect(new GustEffect(this, 0.5f, 1, source));
+                        windInternalCooldown = internalCooldown;
+                        ApplyEffect(new WindPrimer(this, 0.5f, 1, source));
                     }
                     if (source is Anemone anemone)
                         anemone.ApplyWindErosion(windInsect);
                 }
             break;
 
-            case ElementalType.Nature:
-            elementalMultiplier = Mathf.Max(0f, 1 - natureResistance) * (1 + source.natureDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && sproutInternalCooldown <= 0)
+            case ElementalType.Grass:
+            elementalMultiplier = Mathf.Max(0f, 1 - grassResistance) * (1 + source.grassDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && grassInternalCooldown <= 0)
                 {
-                    sproutInternalCooldown = internalCooldown;
-                    ApplyEffect(new SproutEffect(this, elementalDebuffDuration, 1, source));
+                    grassInternalCooldown = internalCooldown;
+                    ApplyEffect(new GrassPrimer(this, elementalDebuffDuration, 1, source));
                 }
             break;
 
             case ElementalType.Poison:
             elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance) * (1 + source.poisonDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && taintedInternalCooldown <= 0)
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && poisonInternalCooldown <= 0)
                 {
-                    taintedInternalCooldown = internalCooldown;
-                    ApplyEffect(new TaintedEffect(this, elementalDebuffDuration, 1, source));
+                    poisonInternalCooldown = internalCooldown;
+                    ApplyEffect(new PoisonPrimer(this, elementalDebuffDuration, 1, source));
+                }
+            break;
+
+            case ElementalType.Ground:
+            elementalMultiplier = Mathf.Max(0f, 1 - groundResistance) * (1 + source.groundDamage);
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && groundInternalCooldown <= 0)
+                {
+                    groundInternalCooldown = internalCooldown;
+                    ApplyEffect(new GroundPrimer(this, elementalDebuffDuration, 1, source));
                 }
             break;
 
@@ -645,29 +659,39 @@ public abstract class Entity : MonoBehaviour
             UpdateHealthBar();
         }
 
-        if (blazeInternalCooldown > 0)
+        if (fireInternalCooldown > 0)
         {
-            blazeInternalCooldown -= Time.deltaTime;
+            fireInternalCooldown -= Time.deltaTime;
         }
 
-        if (wetInternalCooldown > 0)
+        if (waterInternalCooldown > 0)
         {
-            wetInternalCooldown -= Time.deltaTime;
+            waterInternalCooldown -= Time.deltaTime;
         }
 
-        if (sproutInternalCooldown > 0)
+        if (grassInternalCooldown > 0)
         {
-            sproutInternalCooldown -= Time.deltaTime;
+            grassInternalCooldown -= Time.deltaTime;
         }
 
-        if (coldInternalCooldown > 0)
+        if (iceInternalCooldown > 0)
         {
-            coldInternalCooldown -= Time.deltaTime;
+            iceInternalCooldown -= Time.deltaTime;
         }
 
-        if (taintedInternalCooldown > 0)
+        if (poisonInternalCooldown > 0)
         {
-            taintedInternalCooldown -= Time.deltaTime;
+            poisonInternalCooldown -= Time.deltaTime;
+        }
+
+        if (windInternalCooldown > 0)
+        {
+            windInternalCooldown -= Time.deltaTime;
+        }
+
+        if (groundInternalCooldown > 0)
+        {
+            groundInternalCooldown -= Time.deltaTime;
         }
 
         if (freezeInternalCooldown > 0)

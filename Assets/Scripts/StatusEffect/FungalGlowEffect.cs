@@ -14,7 +14,7 @@ public class FungalGlowEffect : StatusEffect
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
-        elementalType = ElementalType.Nature;
+        elementalType = ElementalType.Grass;
         this.spreadRadius = spreadRadius;
         this.originalDuration = duration;
     }
@@ -36,7 +36,7 @@ public class FungalGlowEffect : StatusEffect
         _reducesResistances = source is Glowshroom gm && gm.IsPath2Maxed;
         if (_reducesResistances)
         {
-            target.natureResistanceAdder -= ResistanceReduction;
+            target.grassResistanceAdder -= ResistanceReduction;
             target.waterResistanceAdder  -= ResistanceReduction;
         }
     }
@@ -78,7 +78,7 @@ public class FungalGlowEffect : StatusEffect
 
         if (_reducesResistances)
         {
-            target.natureResistanceAdder += ResistanceReduction;
+            target.grassResistanceAdder += ResistanceReduction;
             target.waterResistanceAdder  += ResistanceReduction;
         }
     }
@@ -114,7 +114,7 @@ public class FungalGlowEffect : StatusEffect
     {
         string desc = $"Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration and spreads this effect to nearby insects within <color=green><b>{spreadRadius:F1}</b></color> radius";
         desc += _reducesResistances
-            ? $", and reduces <color=green><b>Nature Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=red><b>22%</b></color>."
+            ? $", and reduces <color=green><b>Grass Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=red><b>22%</b></color>."
             : ".";
         return desc;
     }

@@ -12,7 +12,7 @@ public class RejuvenatingSeedEffect : StatusEffect
         _rhodiola       = source as Rhodiola;
         _fullDuration   = duration;
         effectType      = Type.negative;
-        elementalType   = ElementalType.Nature;
+        elementalType   = ElementalType.Grass;
         sourceStackable = true;
     }
 

@@ -35,8 +35,9 @@ public class PlantData : ScriptableObject
     public float baseWaterResistance;
     public float basePoisonResistance;
     public float baseIceResistance;
-    public float baseNatureResistance;
+    public float baseGrassResistance;
     public float baseWindResistance;
+    public float baseGroundResistance;
     public float baseDotResistance;
 
     [Header("Offensive")]
@@ -58,10 +59,11 @@ public class PlantData : ScriptableObject
     [Header("Elemental Damage")]
     public float baseFireDamage;
     public float baseWaterDamage;
-    public float baseNatureDamage;
+    public float baseGrassDamage;
     public float baseWindDamage;
     public float basePoisonDamage;
     public float baseIceDamage;
+    public float baseGroundDamage;
 
     [Header("Misc")]
     public float baseLightEmissionRange;
@@ -97,10 +99,11 @@ public class PlantData : ScriptableObject
     {
         ElementalType.Fire    => "<color=orange>Fire</color>",
         ElementalType.Water   => "<color=#4FC3F7>Water</color>",
-        ElementalType.Nature  => "<color=green>Nature</color>",
+        ElementalType.Grass  => "<color=green>Grass</color>",
         ElementalType.Wind    => "<color=#B2EBF2>Wind</color>",
         ElementalType.Poison  => "<color=purple>Poison</color>",
         ElementalType.Ice     => "<color=#00FFFF>Ice</color>",
+        ElementalType.Ground  => "<color=#79391F>Ground</color>",
         _                     => t.ToString()
     };
 

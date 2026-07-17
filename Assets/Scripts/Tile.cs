@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public enum TileType
 {
     Grass, Dirt, Water, Path, Potted, WaterPotted, Cave, Obstacle, Sand, Snow, Heat
-    /* Nature-element plants will be able to be placed on Grass, others won't, except for Flower Pot
+    /* Grass-element plants will be able to be placed on Grass, others won't, except for Flower Pot
     Every plant that is non-aquatic will be placeable on Dirt and Potted
     Aquatic plants can be placed in Water, Pondplanters allow terrian plants to be placed on water
     Water Pot will allow aquatic plants to be placed on ground

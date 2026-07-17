@@ -26,8 +26,8 @@ public class Dandelion : Shooter
         basePassiveDuration = 5f;
     }
 
-    private void OnEnable()  { GustEffect.OnWindshearTriggered += OnWindshearReaction; }
-    private void OnDisable() { GustEffect.OnWindshearTriggered -= OnWindshearReaction; }
+    private void OnEnable()  { WindPrimer.OnWindshearTriggered += OnWindshearReaction; }
+    private void OnDisable() { WindPrimer.OnWindshearTriggered -= OnWindshearReaction; }
 
     private void OnWindshearReaction(Vector3 center, Entity reactionSource)
     {

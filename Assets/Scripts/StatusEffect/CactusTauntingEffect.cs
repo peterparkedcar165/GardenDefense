@@ -7,7 +7,7 @@ public class CactusTauntingEffect : StatusEffect
     {
         this.healingBonus = healingBonus;
         effectType = Type.positive;
-        elementalType = ElementalType.Nature;
+        elementalType = ElementalType.Grass;
     }
 
     public override void OnApply()
@@ -23,5 +23,5 @@ public class CactusTauntingEffect : StatusEffect
     }
 
     public override string GetName() => "<color=green>Cactus Taunt</color>";
-    public override string GetDescription() => $"Forces nearby insects to target it. Returns <color=green><b>150%</b></color> of the attacker's ATK as <color=green>Nature</color> Physical damage.";
+    public override string GetDescription() => $"Forces nearby insects to target it. Returns <color=green><b>150%</b></color> of the attacker's ATK as <color=green>Grass</color> Physical damage.";
 }

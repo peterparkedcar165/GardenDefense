@@ -168,10 +168,11 @@ public class DoTAggregator : MonoBehaviour
         {
             ElementalType.Fire    => new Color(1f, 0.4f, 0f),
             ElementalType.Water   => new Color(0.2f, 0.6f, 1f),
-            ElementalType.Nature  => new Color(0.3f, 1f, 0.2f),
+            ElementalType.Grass  => new Color(0.3f, 1f, 0.2f),
             ElementalType.Ice     => new Color(0f, 1f, 1f),
             ElementalType.Poison  => new Color(0.6f, 0.1f, 0.8f),
             ElementalType.Wind    => new Color(0.85f, 1f, 0.85f),
+            ElementalType.Ground  => new Color(0.475f, 0.224f, 0.122f),
             _                     => new Color(0.9f, 0.9f, 0.9f),
         };
     }

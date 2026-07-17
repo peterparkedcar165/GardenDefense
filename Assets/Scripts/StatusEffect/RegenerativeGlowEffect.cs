@@ -21,7 +21,7 @@ public class RegenerativeGlowEffect : RegenerationEffect
         _regenPercent  = regenPercent;
         _glowRadius    = glowRadius;
         _glowIntensity = glowIntensity;
-        elementalType  = ElementalType.Nature;
+        elementalType  = ElementalType.Grass;
     }
 
     public override void OnApply()

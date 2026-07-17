@@ -326,8 +326,9 @@ public abstract class Plant : Entity, IAttackable
         baseWaterResistance    = data.baseWaterResistance;
         basePoisonResistance   = data.basePoisonResistance;
         baseIceResistance      = data.baseIceResistance;
-        baseNatureResistance   = data.baseNatureResistance;
+        baseGrassResistance   = data.baseGrassResistance;
         baseWindResistance     = data.baseWindResistance;
+        baseGroundResistance   = data.baseGroundResistance;
         baseDotResistance      = data.baseDotResistance;
         basePhysicalDamage     = data.basePhysicalDamage;
         baseMagicDamage        = data.baseMagicDamage;
@@ -339,10 +340,11 @@ public abstract class Plant : Entity, IAttackable
         baseBonusEffectChance  = data.baseBonusEffectChance;
         baseFireDamage         = data.baseFireDamage;
         baseWaterDamage        = data.baseWaterDamage;
-        baseNatureDamage       = data.baseNatureDamage;
+        baseGrassDamage       = data.baseGrassDamage;
         baseWindDamage         = data.baseWindDamage;
         basePoisonDamage       = data.basePoisonDamage;
         baseIceDamage          = data.baseIceDamage;
+        baseGroundDamage       = data.baseGroundDamage;
         baseCriticalChance     = data.baseCriticalChance;
         baseCriticalDamage     = data.baseCriticalDamage;
         baseDotDamage          = data.baseDotDamage;
@@ -845,7 +847,7 @@ public abstract class Plant : Entity, IAttackable
             if (onWater || HasEffect<RainExposedEffect>()) return 1;
         }
 
-        if (elementalType == ElementalType.Nature && occupiedTile != null && occupiedTile.tileType == TileType.Grass)
+        if (elementalType == ElementalType.Grass && occupiedTile != null && occupiedTile.tileType == TileType.Grass)
             return 1;
 
         if (elementalType == ElementalType.Wind && occupiedTile != null && occupiedTile.isHighground)
@@ -1006,7 +1008,7 @@ public abstract class Plant : Entity, IAttackable
             case ElementalType.Fire:
             return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight\nImmune to cold temperatures";
 
-            case ElementalType.Nature:
+            case ElementalType.Grass:
             return $"Can be placed on <color=green>Grass</color>.\nIncrease Passive tree level by <color=green>1</color> when placed on Grass";
 
             case ElementalType.Water:

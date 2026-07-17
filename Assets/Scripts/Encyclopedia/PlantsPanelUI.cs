@@ -119,8 +119,9 @@ public class PlantsPanelUI : MonoBehaviour
         ElementalType.Water  => "#4FC3F7",
         ElementalType.Ice    => "#00FFFF",
         ElementalType.Wind   => "#B2EBF2",
-        ElementalType.Nature => "green",
+        ElementalType.Grass => "green",
         ElementalType.Poison => "purple",
+        ElementalType.Ground => "#79391F",
         _                    => "white"
     };
 

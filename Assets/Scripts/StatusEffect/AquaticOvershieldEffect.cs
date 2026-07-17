@@ -19,11 +19,11 @@ public class AquaticOvershieldEffect : ShieldEffect
     public override void OnAbsorbHit(Entity attacker, DamageType damageType)
     {
         if (damageType != DamageType.Physical || attacker == null || !(attacker is Insect)) return;
-        attacker.ApplyEffect(new WetEffect(attacker, 3f, 1, target));
+        attacker.ApplyEffect(new WaterPrimer(attacker, 3f, 1, target));
     }
 
     protected override float ShieldCap => cap;
-    protected override string GetShieldDetails() => $"<color=#A0522D><b>Physical Damage</b></color> dealt to this shield primes the attacker with <color=#1E90FF><b>Wet</b></color>.";
+    protected override string GetShieldDetails() => $"<color=#A0522D><b>Physical Damage</b></color> dealt to this shield primes the attacker with <color=#1E90FF><b>Water</b></color>.";
 
     public override string GetName() => "<color=#4FC3F7>Aquatic Overshield</color>";
 }

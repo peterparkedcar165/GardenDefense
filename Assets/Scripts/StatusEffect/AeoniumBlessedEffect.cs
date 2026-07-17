@@ -9,7 +9,7 @@ public class AeoniumBlessedEffect : StatusEffect
     {
         _bonusSun = bonusSun;
         effectType = Type.neutral;
-        elementalType = ElementalType.Nature;
+        elementalType = ElementalType.Grass;
     }
 
     public override void OnTargetDied()
