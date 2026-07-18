@@ -154,51 +154,13 @@ public class Stargazer : Aura
         }
     }
 
-    private const float FireConeRate = 250f;   // particles per second while firing
-    private const float FireConeReachMin = 1.1f; // each particle overshoots the range by a random
-    private const float FireConeReachMax = 1.2f; // factor in this interval for a ragged flame edge
-    private float _fireEmitAccumulator;
+    private ConeParticleEmitter _fireCone;
 
-    // emits the fire cone directly in 2D: each particle gets a velocity at a random angle within
-    // the cone around the target direction. this sidesteps the 3D Shape entirely, so the fan is
-    // always flat, symmetric, evenly spread, and centered on the target. the prefab's Shape/Arc/
-    // rotation no longer matter; Emission Rate over Time should be 0 (we emit manually here)
+    // emission logic lives in the shared ConeParticleEmitter, see that class for details
     private void UpdateFireCone(bool active)
     {
-        if (fireConeParticles == null) return;
-
-        // disable automatic emission so the shape never spawns stationary particles on the plant.
-        // all fire comes from the manual Emit() calls below, which ignore this module
-        ParticleSystem.EmissionModule emission = fireConeParticles.emission;
-        emission.enabled = false;
-
-        // reach: a particle crosses attackRange (plus a random overshoot so it fades past the edge)
-        // in fireConeTravelTime seconds. lifetime is fixed, speed is randomized per particle below
-        float travel = fireConeTravelTime > 0f ? fireConeTravelTime : 0.25f;
-        ParticleSystem.MainModule main = fireConeParticles.main;
-        main.startLifetime = travel;
-        main.startSpeed    = 0f;   // velocity is assigned per particle below
-
-        if (!active) { _fireEmitAccumulator = 0f; return; }
-
-        // accumulate fractional emissions so the rate is smooth across frames
-        _fireEmitAccumulator += FireConeRate * Time.deltaTime;
-        int count = Mathf.FloorToInt(_fireEmitAccumulator);
-        _fireEmitAccumulator -= count;
-
-        float baseAngle = Mathf.Atan2(_facingDir.y, _facingDir.x);
-        float half      = ConeAngle * 0.5f * Mathf.Deg2Rad;
-
-        for (int i = 0; i < count; i++)
-        {
-            float a = baseAngle + Random.Range(-half, half);
-            float speed = attackRange * Random.Range(FireConeReachMin, FireConeReachMax) / travel;
-            ParticleSystem.EmitParams ep = new ParticleSystem.EmitParams
-            {
-                velocity = new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f) * speed
-            };
-            fireConeParticles.Emit(ep, 1);
-        }
+        if (_fireCone == null) _fireCone = new ConeParticleEmitter(fireConeParticles);
+        _fireCone.Update(active, _facingDir, ConeAngle, attackRange, fireConeTravelTime);
     }
 
     private void ApplyFlammable(Insect insect) => AddFlammable(insect, StacksPerHit);

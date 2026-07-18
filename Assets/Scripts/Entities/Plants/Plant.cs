@@ -55,6 +55,8 @@ public class DeadPlantRecord
     public bool path3Unlocked;
     public int totalSunSpent;
     public int exp;
+    public float skillCooldownRemaining;
+    public float deathTime;
 }
 
 public abstract class Plant : Entity, IAttackable
@@ -140,6 +142,8 @@ public abstract class Plant : Entity, IAttackable
             path3Unlocked = path3Unlocked,
             totalSunSpent = totalSunSpent,
             exp          = exp,
+            skillCooldownRemaining = skillCooldownTimer,
+            deathTime    = Time.time,
         };
     }
 
@@ -197,7 +201,8 @@ public abstract class Plant : Entity, IAttackable
 
         plant.health = 1f;
         plant.UpdateHealthBar();
-        plant.skillCooldownTimer = plant.skillCooldown * 0.1f;
+        // the cooldown kept ticking while the plant was dead, resume as if it never died
+        plant.skillCooldownTimer = Mathf.Max(0f, record.skillCooldownRemaining - (Time.time - record.deathTime));
 
         tile.isOccupied = true;
         Collider2D tileCol = tile.GetComponent<Collider2D>();

@@ -180,6 +180,7 @@
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\StargazerData.cs" />
     <Compile Include="Assets\Scripts\UI\GameInfoPanel.cs" />
+    <Compile Include="Assets\Scripts\ConeParticleEmitter.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\Airborne.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Calendula.cs" />
@@ -252,7 +253,6 @@
     <Compile Include="Assets\Scripts\Skills\SoothingRain.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingSeedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowingAllergenEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingBurgeonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />

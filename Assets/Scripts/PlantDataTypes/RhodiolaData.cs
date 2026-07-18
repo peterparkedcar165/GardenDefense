@@ -3,12 +3,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RhodiolaData", menuName = "Scriptable Objects/PlantData/Rhodiola")]
 public class RhodiolaData : PlantData
 {
+    [Header("Attack")]
+    public float baseHealPerSecond = 8f;
+    public float attackHealMPScaling = 0.05f;
+    public float healTickInterval = 0.5f;
+    public float coneAngle = 40f;
+    public float splashHealMultiplier = 0.5f;
+
     [Header("Path 1 Scaling")]
-    public float path1AttackSpeedPerLevel  = 0.08f;
-    public float path1AttackRangePerLevel  = 0.2f;
-    public float path1HealingBonusPerLevel = 0.03f;
+    public float path1AttackRangePerLevel = 0.2f;
+    public float path1HealPerSecondPerLevel = 2f;
+    public float maxMissingHealthPerSecond = 0.08f;
 
     [Header("Path 2 Scaling")]
+    public float baseGrassConversion = 0.5f;
+    public float path2GrassConversionPerLevel = 0.1f;
+    public float baseHealingReturn = 0.15f;
+    public float path2HealingReturnPerLevel = 0.03f;
+
+    [Header("Burgeon (passive max bonus)")]
     public float baseBurgeonHealPerTick = 2f;
     public float baseBurgeonDuration    = 4f;
     public float burgeonTickInterval    = 0.5f;
@@ -25,10 +38,10 @@ public class RhodiolaData : PlantData
     public float verdantGuardianDuration        = 8f;
 
     public override string GetAttackDescription() =>
-        $"Instantly deals {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to the target.";
+        "Breathes rejuvenating energy in a cone towards the most injured plant, healing plants within it over time.";
 
     public override string GetPassiveDescription() =>
-        "Attacks inflict <color=green><b>Rejuvenating Seed</b></color> on the target. When the target is attacked by a plant, that plant is granted <color=green><b>Rejuvenating Burgeon</b></color>, healing it over time.";
+        "Heals & Shields given are increased by a portion of <color=green><b>Grass Damage</b></color>, and part of the healing given to others is returned to the Rhodiola.";
 
     public override string GetSkillDescription() =>
         "Target a tile where a plant has fallen to resurrect it and restore a portion of its Health.";
