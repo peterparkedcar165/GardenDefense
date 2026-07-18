@@ -127,6 +127,7 @@
     <Compile Include="Assets\Scripts\UI\WaveStartArrow.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BogIrisProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />
+    <Compile Include="Assets\Scripts\Audio\AmbienceProfile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\FreezeEffect.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerCard.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />

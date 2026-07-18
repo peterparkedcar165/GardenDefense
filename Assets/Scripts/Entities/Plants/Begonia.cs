@@ -33,7 +33,7 @@ public class Begonia : Shooter
 
     public override void UpdateStats()
     {
-        float path1EABonus = path1Level >= Plant.pathLevelCap ? 0.32f : 0f;
+        float path1EABonus = path1Level >= Plant.absoluteLevelCap ? 0.32f : 0f;
         elementalAffinityAdder += path1EABonus;
         base.UpdateStats();
         elementalAffinityAdder -= path1EABonus;
@@ -52,7 +52,7 @@ public class Begonia : Shooter
         if (auraTickTimer < auraTickInterval) return;
         auraTickTimer -= auraTickInterval;
 
-        float armorPen = path2Level >= Plant.pathLevelCap ? 12f : 0f;
+        float armorPen = path2Level >= Plant.absoluteLevelCap ? 12f : 0f;
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;

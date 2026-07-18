@@ -21,10 +21,29 @@ public class ProceduralLevel : SpawnManager
         }
 
         FertilizerSelectionUI.instance?.Configure(config.fertilizerPool, config.levelNumber);
+        Plant.pathLevelCap = config.maxUpgradeLevel;
+        StartAmbience();
         GameManager.instance?.InitiateLevel(config.startSunCount, config.startHealth);
         GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
 
         StartCoroutine(RunWaves());
+    }
+
+    // spawns one looping audio source per ambience clip, destroyed with the scene
+    private void StartAmbience()
+    {
+        if (config.ambience == null) return;
+        foreach (var entry in config.ambience.sounds)
+        {
+            if (entry.clip == null) continue;
+            AudioSource src = gameObject.AddComponent<AudioSource>();
+            src.clip = entry.clip;
+            src.volume = entry.volume;
+            src.outputAudioMixerGroup = config.ambience.output;
+            src.loop = true;
+            src.playOnAwake = false;
+            src.Play();
+        }
     }
 
     // ── main loop ─────────────────────────────────────────────────────────────

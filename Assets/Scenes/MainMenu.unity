@@ -1433,6 +1433,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1743487404225318543, guid: d7c3056664bd167459f8238fd576ec4f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743487404225318543, guid: d7c3056664bd167459f8238fd576ec4f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743487404225318543, guid: d7c3056664bd167459f8238fd576ec4f, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2183690502820621133, guid: d7c3056664bd167459f8238fd576ec4f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1739,6 +1751,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8328975854523478593, guid: d7c3056664bd167459f8238fd576ec4f, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9026021576465400999, guid: d7c3056664bd167459f8238fd576ec4f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9026021576465400999, guid: d7c3056664bd167459f8238fd576ec4f, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3223,6 +3243,8 @@ MonoBehaviour:
     plantSlotLevel: 0
     flowerPotLevel: 0
     waterPotLevel: 0
+    skillPoints: 0
+    skillPurchases: []
   selectedLevel: 0
   plantRegistry: {fileID: 11400000, guid: 16efee928f1a12a4ca9d8b9e30207fb2, type: 2}
 --- !u!4 &1900346993

@@ -18,6 +18,9 @@ public static class PlantStatApplier
             case StatType.PoisonDamage:    plant.poisonDamageAdder           += value; break;
             case StatType.WindDamage:      plant.windDamageAdder             += value; break;
             case StatType.GroundDamage:    plant.groundDamageAdder           += value; break;
+            case StatType.BonusEffectChance: plant.bonusEffectChanceAdder    += value; break;
+            case StatType.MinimumDamage:   plant.minimumDamageAdder          += value; break;
+            case StatType.MaximumDamage:   plant.maximumDamageAdder          += value; break;
             case StatType.CriticalChance:  plant.criticalChanceAdder         += value; break;
             case StatType.CriticalDamage:  plant.criticalDamageAdder         += value; break;
             case StatType.elementalAffinity:  plant.elementalAffinityAdder         += value; break;

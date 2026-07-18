@@ -284,14 +284,14 @@ public class PlantUpgradeUI : EntityInfoPanel
         RefreshPips(path1Pips, selectedPlant.path1Level);
         bool path1Maxed = selectedPlant.path1Level >= Plant.pathLevelCap;
         path1UpgradeButton.interactable = !path1Maxed;
-        path1CostText.text = path1Maxed ? "MAX" : $"{selectedPlant.GetPath1Cost()} Sun";
+        path1CostText.text = path1Maxed ? CapLabel(selectedPlant.path1Level) : $"{selectedPlant.GetPath1Cost()} Sun";
 
         // Path 2
         path2NameText.text = selectedPlant.GetPath2Name();
         RefreshPips(path2Pips, selectedPlant.path2Level);
         bool path2Maxed = selectedPlant.path2Level >= Plant.pathLevelCap;
         path2UpgradeButton.interactable = !path2Maxed;
-        path2CostText.text = path2Maxed ? "MAX" : $"{selectedPlant.GetPath2Cost()} Sun";
+        path2CostText.text = path2Maxed ? CapLabel(selectedPlant.path2Level) : $"{selectedPlant.GetPath2Cost()} Sun";
 
         // Path 3
         path3NameText.text = selectedPlant.GetPath3Name();
@@ -309,9 +309,13 @@ public class PlantUpgradeUI : EntityInfoPanel
             RefreshPips(path3Pips, selectedPlant.path3Level);
             bool path3Maxed = selectedPlant.path3Level >= Plant.pathLevelCap;
             path3Button.interactable = !path3Maxed;
-            path3CostText.text = path3Maxed ? "MAX" : $"{selectedPlant.GetPath3Cost()} Sun";
+            path3CostText.text = path3Maxed ? CapLabel(selectedPlant.path3Level) : $"{selectedPlant.GetPath3Cost()} Sun";
         }
     }
+
+    // maxed at the true cap shows max, capped early by the level shows locked
+    private static string CapLabel(int pathLevel) =>
+        pathLevel >= Plant.absoluteLevelCap ? "MAX" : "LOCKED";
 
     private void RefreshPips(Image pips, int level)
     {

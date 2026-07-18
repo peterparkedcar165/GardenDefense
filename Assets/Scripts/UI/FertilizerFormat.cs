@@ -48,6 +48,9 @@ public static class FertilizerFormat
             case StatType.PoisonDamage:   return "Poison Damage";
             case StatType.WindDamage:     return "Wind Damage";
             case StatType.GroundDamage:   return "Ground Damage";
+            case StatType.BonusEffectChance: return "Bonus Effect Chance";
+            case StatType.MinimumDamage:  return "Minimum Damage";
+            case StatType.MaximumDamage:  return "Maximum Damage";
             case StatType.CriticalChance: return "Critical Chance";
             case StatType.CriticalDamage: return "Critical Damage";
             case StatType.elementalAffinity: return "Elemental Affinity";

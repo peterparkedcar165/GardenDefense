@@ -12,8 +12,8 @@ public class SettingsManager : MonoBehaviour
     public static string previousScene;
 
     [SerializeField] private AudioMixer audioMixer;
-    [SerializeField] private Slider masterSlider, musicSlider, gameSlider;
-    [SerializeField] private TMP_Text masterText, musicText, gameText;
+    [SerializeField] private Slider masterSlider, musicSlider, gameSlider, ambientSlider;
+    [SerializeField] private TMP_Text masterText, musicText, gameText, ambientText;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject restartButton;
     [SerializeField] private GameObject mainMenuButton;
@@ -100,18 +100,22 @@ public class SettingsManager : MonoBehaviour
         float master = PlayerPrefs.GetFloat("MasterVolume", 1f);
         float music = PlayerPrefs.GetFloat("MusicVolume", 0.1f);
         float game = PlayerPrefs.GetFloat("GameVolume", 1f);
+        float ambient = PlayerPrefs.GetFloat("AmbientVolume", 1f);
 
         masterSlider.value = master;
         musicSlider.value = music;
         gameSlider.value = game;
+        if (ambientSlider != null) ambientSlider.value = ambient;
 
         ApplyVolume("MasterVolume", master);
         ApplyVolume("MusicVolume", music);
         ApplyVolume("GameVolume", game);
+        ApplyVolume("AmbientVolume", ambient);
 
         masterText.text = $"Master: {Mathf.RoundToInt(master * 100)}%";
         musicText.text  = $"Music: {Mathf.RoundToInt(music * 100)}%";
         gameText.text   = $"Game: {Mathf.RoundToInt(game * 100)}%";
+        if (ambientText != null) ambientText.text = $"Ambient: {Mathf.RoundToInt(ambient * 100)}%";
     }
 
     public void OnMasterChanged(float value)
@@ -133,6 +137,13 @@ public class SettingsManager : MonoBehaviour
         ApplyVolume("GameVolume", value);
         PlayerPrefs.SetFloat("GameVolume", value);
         gameText.text = $"Game: {Mathf.RoundToInt(value * 100)}%";
+    }
+
+    public void OnAmbientChanged(float value)
+    {
+        ApplyVolume("AmbientVolume", value);
+        PlayerPrefs.SetFloat("AmbientVolume", value);
+        if (ambientText != null) ambientText.text = $"Ambient: {Mathf.RoundToInt(value * 100)}%";
     }
 
     private void ApplyVolume(string parameter, float value)

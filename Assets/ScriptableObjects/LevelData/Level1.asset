@@ -18,28 +18,29 @@ MonoBehaviour:
     intensity: 1
   temperature: 2
   maxWaves: 16
-  startSunCount: 100
+  startSunCount: 105
   startHealth: 200
-  minWaveDuration: 15
-  maxWaveDuration: 120
+  maxUpgradeLevel: 1
+  minWaveDuration: 20
+  maxWaveDuration: 100
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
@@ -47,26 +48,26 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 8
-  minThreatBudget: 2
-  maxThreatBudget: 35
+  minThreatBudget: 3
+  maxThreatBudget: 30
   budgetCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
@@ -88,3 +89,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 34229fd6526dadf4a914e970da50e8c4, type: 2}
   - {fileID: 11400000, guid: 5281a5372cce3ed4590c07fe6edfca00, type: 2}
   - {fileID: 11400000, guid: 29b27bf494b9dd04e9b7220ee21fd41c, type: 2}
+  ambience: {fileID: 11400000, guid: d1804b1344ff0b341aff0c11181dc078, type: 2}

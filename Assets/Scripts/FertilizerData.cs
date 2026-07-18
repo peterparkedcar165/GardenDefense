@@ -77,5 +77,8 @@ public enum StatType
     MaxHealth,
     SunYield,
     CurrencyYield,
-    GroundDamage
+    GroundDamage,
+    BonusEffectChance,
+    MinimumDamage,
+    MaximumDamage
 }

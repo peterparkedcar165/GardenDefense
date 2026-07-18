@@ -84,6 +84,13 @@ public class GameManager : MonoBehaviour
                     if (LoadoutSelectionUI.instance == null || !LoadoutSelectionUI.instance.IsOpen)
                         TogglePause();
         }
+
+        // cheatcode m grants 99999 sun while in a level
+        if (IsGameActive && Keyboard.current.mKey.wasPressedThisFrame)
+        {
+            SunCount += 99999;
+            UpdateSun();
+        }
     }
 
     public void TogglePause()

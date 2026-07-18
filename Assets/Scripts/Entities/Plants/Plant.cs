@@ -885,18 +885,21 @@ public abstract class Plant : Entity, IAttackable
     public virtual void OnPath3Upgrade(int level) {}
 
     // UPGRADE COSTS
-    public const int pathLevelCap = 5;
+    // per level cap set by ProceduralLevel from LevelConfig, default 5
+    public static int pathLevelCap = 5;
+    // absolute cap, max level bonuses always require this regardless of the level cap
+    public const int absoluteLevelCap = 5;
 
-    public bool IsPath1Maxed => path1Level >= pathLevelCap;
-    public bool IsPath2Maxed => path2Level >= pathLevelCap;
-    public bool IsPath3Maxed => path3Level >= pathLevelCap;
+    public bool IsPath1Maxed => path1Level >= absoluteLevelCap;
+    public bool IsPath2Maxed => path2Level >= absoluteLevelCap;
+    public bool IsPath3Maxed => path3Level >= absoluteLevelCap;
 
     // upgrade cost scales with the plant's own suncost so premium plants cost
     // proportionally more to scale. base is the first level price as a fraction
     // of buy cost, step is the exponential multiplier/Lvl.
-    const float upgradeBaseFactor = 0.2f;
-    const float upgradeStepFactor = 2.5f;
-    const float skillBaseFactor   = 0.25f;
+    const float upgradeBaseFactor = 0.25f;
+    const float upgradeStepFactor = 2.1f;
+    const float skillBaseFactor   = 0.5f;
 
     int PathCost(int level, float baseFactor) => Mathf.RoundToInt(sunCost * baseFactor * Mathf.Pow(upgradeStepFactor, level));
 
@@ -989,9 +992,9 @@ public abstract class Plant : Entity, IAttackable
 
     protected string SkillCooldownLine() => $"Cooldown: <b>{Mathf.RoundToInt(skillCooldown)}s</b>";
 
-    protected string Level5Section(int effectiveLevel, string bonusText = null)
+    protected string Level5Section(int pathLevel, string bonusText = null)
     {
-        bool unlocked = effectiveLevel >= pathLevelCap;
+        bool unlocked = pathLevel >= absoluteLevelCap;
         string header = $"<color={(unlocked ? "green" : "grey")}><b>[Max Level Bonus]</b></color>";
         if (bonusText == null) return header;
         string body = unlocked

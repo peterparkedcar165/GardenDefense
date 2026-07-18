@@ -72,6 +72,7 @@ public abstract class Entity : MonoBehaviour
     public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance;
     public float baseFireDamage, baseWaterDamage, baseGrassDamage, baseWindDamage, basePoisonDamage, baseIceDamage, baseGroundDamage;
     public float baseCriticalChance, baseCriticalDamage;
+    public float baseMinimumDamage = 0.8f, baseMaximumDamage = 1.2f;
     public float baseDotResistance, baseDotDamage, baseFallDamageResistance;
     public float baseelementalAffinity;
     public float basePassiveDamage, baseSkillDamage, baseCoordinatedDamage;
@@ -107,6 +108,7 @@ public abstract class Entity : MonoBehaviour
     public float physicalDamage, magicDamage, fallDamage, bonusEffectChance;
     public float fireDamage, waterDamage, grassDamage, windDamage, poisonDamage, iceDamage, groundDamage;
     public float criticalChance, criticalDamage;
+    public float minimumDamage, maximumDamage;
     public float dotResistance, dotDamage, fallDamageResistance;
     public float elementalAffinity;
     public float passiveDamage, skillDamage, coordinatedDamage;
@@ -150,6 +152,7 @@ public abstract class Entity : MonoBehaviour
     public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder;
     public float fireDamageAdder, waterDamageAdder, grassDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder, groundDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
+    public float minimumDamageAdder, maximumDamageAdder;
     public float dotResistanceAdder, dotDamageAdder, fallDamageResistanceAdder;
     public float elementalAffinityAdder;
     public float passiveDamageAdder, skillDamageAdder, coordinatedDamageAdder;
@@ -224,6 +227,8 @@ public abstract class Entity : MonoBehaviour
         poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
         iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
         groundDamage = baseGroundDamage + groundDamageAdder + (baseGroundDamage * groundDamageMultiplier);
+        minimumDamage = baseMinimumDamage + minimumDamageAdder;
+        maximumDamage = baseMaximumDamage + maximumDamageAdder;
         criticalChance = (baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier)) * criticalChanceTotalMultiplier;
         criticalDamage = (baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier)) * criticalDamageTotalMultiplier;
         bonusCritChanceReceived = baseBonusCritChanceReceived + bonusCritChanceReceivedAdder + (baseBonusCritChanceReceived * bonusCritChanceReceivedMultiplier);
@@ -519,6 +524,15 @@ public abstract class Entity : MonoBehaviour
         }
 
         finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult;
+
+        // damage variance roll, dot ticks stay flat so aggregated numbers remain stable
+        // min always wins, when min surpasses max every roll lands on min
+        if (!System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+        {
+            float minRoll = source.minimumDamage;
+            float maxRoll = Mathf.Max(source.maximumDamage, minRoll);
+            finalDamage *= Random.Range(minRoll, maxRoll);
+        }
 
         if (canCrit || System.Array.Exists(damageTag, t => t == DamageTag.SpecialCanCrit))
         {

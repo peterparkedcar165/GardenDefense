@@ -11,6 +11,8 @@ public class LevelConfig : ScriptableObject
     public int maxWaves = 40;
     public int startSunCount = 350;
     public int startHealth = 200;
+    [Tooltip("highest upgrade level plants can reach in this level")]
+    public int maxUpgradeLevel = 5;
 
     [Header("wave duration")]
     [Tooltip("duration in seconds of the very first wave")]
@@ -43,4 +45,8 @@ public class LevelConfig : ScriptableObject
 
     [Header("fertilizers")]
     public FertilizerData[] fertilizerPool;
+
+    [Header("ambience")]
+    [Tooltip("looping background sounds, share one profile asset across a biome")]
+    public AmbienceProfile ambience;
 }

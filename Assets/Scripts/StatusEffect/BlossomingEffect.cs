@@ -44,7 +44,7 @@ public class BlossomingEffect : StatusEffect
     {
         if (effect.source != target) return;
         if (!(effect is GerminateEffect) && !(effect is BrittleEffect)) return;
-        if (!(source is Begonia beg) || beg.path3Level < Plant.pathLevelCap) return;
+        if (!(source is Begonia beg) || beg.path3Level < Plant.absoluteLevelCap) return;
         if (_affinityBurstActive) return;
         target.elementalAffinityAdder += AffinityBurst;
         _affinityBurstActive = true;
@@ -54,7 +54,7 @@ public class BlossomingEffect : StatusEffect
     public override string GetDescription()
     {
         string desc = $"Increase <color=green><b>Grass Power</b></color> by <color=green><b>{grassDamageBonus * 100f:F0}%</b></color>, and <color=green><b>Attack Speed</b></color> by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color>.";
-        if (source is Begonia beg && beg.path3Level >= Plant.pathLevelCap)
+        if (source is Begonia beg && beg.path3Level >= Plant.absoluteLevelCap)
             desc += " When a plant triggers <color=green><b>Germinate</b></color> or <color=green><b>Brittle</b></color>, they gain <color=green><b>22% Elemental Affinity</b></color> until the end of the effect.";
         return desc;
     }
