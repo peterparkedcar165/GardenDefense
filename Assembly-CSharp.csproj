@@ -49,6 +49,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.4.0f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Skills\EarthPillars.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Begonia.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RegenerationEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\GroundThornProjectile.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SnowdropData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalGlowEffect.cs" />
@@ -173,6 +175,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Dahlia.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Ant.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GrassPrimer.cs" />
+    <Compile Include="Assets\Scripts\SpriteFadeInOut.cs" />
     <Compile Include="Assets\Scripts\Audio\MusicManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\WebbedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
@@ -252,14 +255,17 @@
     <Compile Include="Assets\Scripts\StatusEffect\StartingShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\SoothingRain.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\SunderedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowingAllergenEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingBurgeonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\LightFader.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\CharredEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CattailData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\GroundThorn.cs" />
     <Compile Include="Assets\Scripts\Game\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreProtectionEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\WaterlilyProjectile.cs" />
@@ -290,6 +296,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\JumpingSpiderData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\GroundThornData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AeoniumData.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
