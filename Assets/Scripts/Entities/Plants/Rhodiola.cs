@@ -24,11 +24,10 @@ public class Rhodiola : Aura
     public float GrassConversion => (RData?.baseGrassConversion ?? 0.5f) + (RData?.path2GrassConversionPerLevel ?? 0.1f) * effectivePath2Level;
     public float HealingReturn   => (RData?.baseHealingReturn ?? 0.15f) + (RData?.path2HealingReturnPerLevel ?? 0.03f) * effectivePath2Level;
 
-    public float BurgeonHealFlat    => (RData?.baseBurgeonHealPerTick ?? 2f) + effectivePath2Level * (RData?.path2HealPerLevel ?? 1f);
-    public float BurgeonMPHeal      => (RData?.passiveHealMPScaling ?? 0.04f) * magicPower;
-    public float BurgeonHealPerTick => BurgeonHealFlat + BurgeonMPHeal;
-    public float BurgeonDuration     => RData?.baseBurgeonDuration  ?? 4f;
-    public float BurgeonTickInterval => RData?.burgeonTickInterval   ?? 0.5f;
+    // fixed rate, does not scale with levels or magic power
+    public float BurgeonHealPerSecond => RData?.burgeonHealPerSecond ?? 12f;
+    public float BurgeonDuration      => RData?.baseBurgeonDuration  ?? 4f;
+    public float BurgeonTickInterval  => RData?.burgeonTickInterval   ?? 0.5f;
 
     public float RevivalBaseHeal     => RData?.revivalBaseHeal     ?? 40f;
     public float RevivalHealPerLevel => RData?.revivalHealPerLevel ?? 20f;
@@ -134,7 +133,7 @@ public class Rhodiola : Aura
         plant.Heal(amount, this);
 
         if (IsPath2Maxed)
-            plant.ApplyEffect(new RejuvenatingBurgeonEffect(plant, BurgeonDuration, 1, this, BurgeonHealPerTick, BurgeonTickInterval));
+            plant.ApplyEffect(new RejuvenatingBurgeonEffect(plant, BurgeonDuration, 1, this, BurgeonHealPerSecond * BurgeonTickInterval, BurgeonTickInterval));
     }
 
     public override void OnPath1Upgrade(int level)
@@ -221,7 +220,7 @@ public class Rhodiola : Aura
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Healing Returned</b></color> by <color=green><b>{retpl * 100f:F0}%</b></color> per level. [<color=green><b>+{retpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Healing from the attack applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{BurgeonMPHeal:F0}</b></color>] health every <color=green><b>{BurgeonTickInterval}s</b></color> for <color=green><b>{BurgeonDuration:F0}s</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"Healing from the attack applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

@@ -22,11 +22,9 @@ public class RhodiolaData : PlantData
     public float path2HealingReturnPerLevel = 0.03f;
 
     [Header("Burgeon (passive max bonus)")]
-    public float baseBurgeonHealPerTick = 2f;
-    public float baseBurgeonDuration    = 4f;
-    public float burgeonTickInterval    = 0.5f;
-    public float path2HealPerLevel      = 1f;
-    public float passiveHealMPScaling   = 0.04f;
+    public float burgeonHealPerSecond = 12f;
+    public float baseBurgeonDuration  = 4f;
+    public float burgeonTickInterval  = 0.5f;
 
     [Header("Path 3 Scaling")]
     public float revivalBaseHeal                = 40f;
