@@ -1,10 +1,14 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class GroundThorn : Shooter
+public class Carrot : Shooter
 {
-    [SerializeField] private GameObject pillarVisualPrefab;  // optional per pillar eruption visual
+    [SerializeField] private GameObject pillarVisualPrefab;   // optional per square visual left by the furrow
+    [SerializeField] private GameObject skillIndicatorPrefab; // rectangle sprite shown while aiming the furrow
 
-    private GroundThornData GData => data as GroundThornData;
+    private GameObject _skillIndicatorInstance;
+
+    private CarrotData GData => data as CarrotData;
 
     public float SplashRadius     => GData?.splashRadius ?? 1f;
     public float SplashMultiplier => GData?.splashMultiplier ?? 0.75f;
@@ -20,7 +24,13 @@ public class GroundThorn : Shooter
     public float SunderPercent  => GData?.sunderPercent ?? 0.35f;
     public float SunderDuration => GData?.sunderDuration ?? 8f;
 
-    public int   PillarCount     => (GData?.pillarCountBase ?? 3) + effectivePath3Level;
+    public float VisualFadeIn         => GData?.visualFadeIn ?? 0.1f;
+    public float VisualHold           => GData?.visualHold ?? 0.7f;
+    public float VisualFadeOut        => GData?.visualFadeOut ?? 0.5f;
+    public float VisualPositionJitter => GData?.visualPositionJitter ?? 0.05f;
+
+    public float SquareRadius    => GData?.pillarRadius ?? 0.9f;
+    public int   CarrotCount     => (GData?.carrotCountBase ?? 3) + (GData?.carrotsPerLevel ?? 1) * effectivePath3Level;
     public float SkillDamageFlat => (GData?.skillBaseDamage ?? 40f) + (GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level;
     public float SkillDamageMP   => skillDamageMultiplier * magicPower;
     public float SkillDamage     => SkillDamageFlat + SkillDamageMP;
@@ -34,6 +44,11 @@ public class GroundThorn : Shooter
     {
         base.Awake();
         LoadData();
+        // ground element perk, placeable on any non water non obstacle tile
+        allowedTiles = new TileType[]
+        {
+            TileType.Grass, TileType.Dirt, TileType.Potted, TileType.Cave, TileType.Sand, TileType.Snow
+        };
     }
 
     // pushes an insect over a short time so the knockback reads as motion instead of a teleport.
@@ -52,7 +67,8 @@ public class GroundThorn : Shooter
         {
             if (insect == null || !insect.IsAlive) yield break;
             float step = Mathf.Min(speed * Time.deltaTime, distance - moved);
-            insect.transform.position += (Vector3)(direction * step);
+            Vector3 clamped = Insect.ClampStepAgainstObstacles(insect.transform.position, (Vector3)(direction * step));
+            insect.transform.position += clamped;
             moved += step;
             yield return null;
         }
@@ -92,7 +108,7 @@ public class GroundThorn : Shooter
     {
         if (projectilePrefab == null) return;
         GameObject obj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        GroundThornProjectile proj = obj.GetComponent<GroundThornProjectile>();
+        CarrotProjectile proj = obj.GetComponent<CarrotProjectile>();
         if (proj == null) return;
         proj.SetTarget(FindTarget());
         proj.Initialize(target, attackDamage * TileDamageMultiplier, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
@@ -101,7 +117,57 @@ public class GroundThorn : Shooter
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
+        if (_skillIndicatorInstance != null) return;
         SkillTargetingManager.instance.BeginTargeting(0f, OnSkillTargetConfirmed);
+        if (skillIndicatorPrefab != null)
+        {
+            _skillIndicatorInstance = Instantiate(skillIndicatorPrefab, transform.position, Quaternion.identity);
+            SpriteRenderer sr = _skillIndicatorInstance.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null) sr.enabled = false;   // hidden until the first aim update positions it
+        }
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        UpdateSkillIndicator();
+    }
+
+    // a rectangle pivoted at the plant, matching the exact footprint of the furrow,
+    // aimed at the mouse while targeting. destroyed on confirm or cancel
+    private void UpdateSkillIndicator()
+    {
+        if (_skillIndicatorInstance == null) return;
+
+        if (!SkillTargetingManager.instance.IsTargeting)
+        {
+            Destroy(_skillIndicatorInstance);
+            _skillIndicatorInstance = null;
+            return;
+        }
+
+        Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
+        if (dir.sqrMagnitude < 0.0001f) dir = Vector2.right;
+
+        float squareSize   = CarrotFurrow.VisualSquareSize(pillarVisualPrefab, SquareRadius * 2f);
+        float half         = squareSize * 0.5f;
+        float startOffset  = GData?.pillarStartOffset ?? 1f;
+        float frontEdge    = startOffset - half;
+        float farEdge      = startOffset + squareSize * (CarrotCount - 1) + half;
+        float length       = farEdge - frontEdge;
+
+        _skillIndicatorInstance.transform.position = transform.position + (Vector3)(dir * (frontEdge + length * 0.5f));
+        _skillIndicatorInstance.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+
+        SpriteRenderer sr = _skillIndicatorInstance.GetComponentInChildren<SpriteRenderer>();
+        if (sr != null && sr.sprite != null)
+        {
+            Vector2 spriteSize = sr.sprite.bounds.size;
+            if (spriteSize.x > 0f && spriteSize.y > 0f)
+                _skillIndicatorInstance.transform.localScale = new Vector3(length / spriteSize.x, squareSize / spriteSize.y, 1f);
+            sr.enabled = true;
+        }
     }
 
     private void OnSkillTargetConfirmed(Vector3 target)
@@ -112,25 +178,34 @@ public class GroundThorn : Shooter
         Vector2 direction = ((Vector2)target - (Vector2)transform.position).normalized;
         if (direction.sqrMagnitude < 0.0001f) direction = Vector2.right;
 
-        GameObject waveObj = new GameObject("EarthPillars");
+        SpawnFurrow(direction);
+        // max level bonus, a second furrow follows the first along the same path
+        if (IsPath3Maxed)
+            StartCoroutine(SecondFurrow(direction));
+    }
+
+    private System.Collections.IEnumerator SecondFurrow(Vector2 direction)
+    {
+        yield return new WaitForSeconds(GData?.secondFurrowDelay ?? 0.8f);
+        if (IsAlive) SpawnFurrow(direction);
+    }
+
+    private void SpawnFurrow(Vector2 direction)
+    {
+        GameObject waveObj = new GameObject("CarrotFurrow");
         waveObj.transform.position = transform.position;
-        EarthPillars wave = waveObj.AddComponent<EarthPillars>();
+        CarrotFurrow wave = waveObj.AddComponent<CarrotFurrow>();
         wave.Initialize(
             transform.position,
             direction,
-            PillarCount,
+            CarrotCount,
             GData?.pillarStartOffset ?? 1f,
-            GData?.pillarSpacing ?? 1f,
             GData?.pillarInterval ?? 0.12f,
-            GData?.pillarRadius ?? 0.9f,
-            GData?.pillarHitboxMultiplier ?? 1.2f,
-            GData?.pillarDamageGrowth ?? 0.1f,
+            SquareRadius,
+            GData?.pillarHitboxMultiplier ?? 1.3f,
             SkillDamage * TileDamageMultiplier,
             GData?.pillarKnockUpForce ?? 5f,
             GData?.pillarKnockbackDistance ?? 0.9f,
-            IsPath3Maxed,
-            GData?.pillarStunHitThreshold ?? 3,
-            GData?.pillarStunDuration ?? 1f,
             this,
             pillarVisualPrefab);
     }
@@ -141,10 +216,10 @@ public class GroundThorn : Shooter
         baseAttackRange  = data.baseAttackRange  + (GData?.path1AttackRangePerLevel ?? 0.2f) * level;
     }
 
-    public override string GetName() => "<b><color=#79391F>GroundThorn</color></b>";
+    public override string GetName() => "<b><color=#ED9121>Carrot</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} commands the earth itself, hurling stone at its enemies and splitting the ground beneath them.";
+        $"The {GetName()} is an elderly root sage who commands the earth itself, hurling stone at its enemies and plowing the ground beneath them.";
 
     public override string GetAttackDescription() =>
         $"Hurls earth at the target, dealing <color=green><b>{attackDamage * TileDamageMultiplier:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit " +
@@ -159,10 +234,9 @@ public class GroundThorn : Shooter
         $"<color=#E0FFFF><b>Snow</b></color>: applies a <color=green><b>{SnowSlow * 100f:F0}%</b></color> <color=#87CEEB><b>Slow</b></color>.";
 
     public override string GetSkillDesription() =>
-        $"Aim a direction. <color=green><b>{PillarCount}</b></color> pillars of earth erupt from the ground in a line, starting at the {GetName()} and emerging outwards. " +
-        $"Each pillar deals <color=green><b>{SkillDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{SkillDamageMP:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, " +
-        $"increased by <color=green><b>{(GData?.pillarDamageGrowth ?? 0.1f) * 100f:F0}%</b></color> for each pillar after the first, " +
-        $"knocking insects up and pushing them along the line, carrying them into the next eruption.";
+        $"Aim a direction. A furrow of churned earth plows from the {GetName()}, sprouting <color=green><b>{CarrotCount}</b></color> carrots in a line, each covering one square, " +
+        $"striking each insect once for <color=green><b>{SkillDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{SkillDamageMP:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. " +
+        $"Insects struck are knocked up and pushed along the furrow.";
 
     public override string GetPath1Name() => "Upheaval";
     public override string GetPath2Name() => "Attunement";
@@ -206,16 +280,15 @@ public class GroundThorn : Shooter
     public override string GetPath3Description(bool details = false)
     {
         string desc = details
-            ? $"Aim a direction. <color=green><b>[(3) + (1/Lvl.)]</b></color> pillars of earth erupt from the ground in a line, starting at the {GetName()} and emerging outwards. " +
-              $"Each pillar deals <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, " +
-              $"increased by <color=green><b>{(GData?.pillarDamageGrowth ?? 0.1f) * 100f:F0}%</b></color> for each pillar after the first, " +
-              $"knocking insects up and pushing them along the line, carrying them into the next eruption."
+            ? $"Aim a direction. A furrow of churned earth plows from the {GetName()}, sprouting <color=green><b>[({GData?.carrotCountBase ?? 3}) + ({GData?.carrotsPerLevel ?? 1}/Lvl.)]</b></color> carrots in a line, each covering one square, " +
+              $"striking each insect once for <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. " +
+              $"Insects struck are knocked up and pushed along the furrow."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase <color=green><b>Pillars</b></color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath3Level}</b></color>]\n\n" +
-               $"Increase <color=green><b>Pillar Base Damage</b></color> by <color=green><b>{GData?.path3SkillDamagePerLevel ?? 8f:F0}</b></color> per level. [<color=green><b>+{(GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Carrots</b></color> by <color=green><b>{GData?.carrotsPerLevel ?? 1}</b></color> per level. [<color=green><b>+{(GData?.carrotsPerLevel ?? 1) * effectivePath3Level}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Damage</b></color> by <color=green><b>{GData?.path3SkillDamagePerLevel ?? 8f:F0}</b></color> per level. [<color=green><b>+{(GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Insects struck by <color=green><b>{GData?.pillarStunHitThreshold ?? 3}</b></color> or more pillars are <color=#FFD700><b>Stunned</b></color> for <color=green><b>{GData?.pillarStunDuration ?? 1f:F0}s</b></color>.")}\n\n" +
+               $"{Level5Section(path3Level, $"The {GetName()} tills the earth twice over: shortly after the first furrow, a second one erupts along the same path.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

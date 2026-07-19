@@ -23,8 +23,8 @@ public abstract class Insect : Entity, IAttackable
     public bool isFlying = false;
     public static float gravity = 9.8f;
     public static float fallDamageMultiplier = 8f;        // damage = velocity * this + maxHealth * healthPercent
-    public static float fallDamageHealthMin = 0.04f;      // 4% maxHealth at minimum velocity
-    public static float fallDamageHealthMax = 0.08f;      // 8% maxHealth at peak velocity
+    public static float fallDamageHealthMin = 0.08f;      // 8% maxHealth at minimum velocity
+    public static float fallDamageHealthMax = 0.16f;      // 16% maxHealth at peak velocity
     public static float fallDamageHealthVelocityCap = 20f; // velocity at which health % reaches max
     public float verticalVelocity = 0f;
     public Entity fallDamageSource;
@@ -203,7 +203,7 @@ public abstract class Insect : Entity, IAttackable
         UpdateDarknessVisibility();
     }
 
-    // in dark (cave) levels, hide the entire insect (body, health bar, shield, etc.)
+    // in dark (cave) levels, hide the entire insect (body, health bar, shield, etc.)stead,
     // while it stands outside any emitted light, so the player only sees insects in
     // illuminated areas. uses forceRenderingOff so it never fights enabled/SetActive
     // logic elsewhere. visual only , movement, attacks, and targeting are unaffected
@@ -298,6 +298,51 @@ public abstract class Insect : Entity, IAttackable
             if (aimPoint.localPosition != desired)
                 aimPoint.localPosition = desired;
         }
+    }
+
+    // clamps a displacement step against obstacle colliders with collide and slide:
+    // the insect moves up to the wall, then the blocked remainder is projected along
+    // the wall surface, so a diagonal push into a wall keeps its sideways component.
+    // swept circle, so thin walls cannot be tunneled through no matter the step size.
+    // a step that starts inside a collider is allowed, so a stuck insect can escape
+    public static Vector3 ClampStepAgainstObstacles(Vector3 from, Vector3 step, float bodyRadius = 0.15f)
+    {
+        Vector3 moved = SweepStep(from, step, bodyRadius, out Vector2 normal, out bool blocked);
+        if (blocked)
+        {
+            Vector3 remaining = step - moved;
+            Vector3 slide = remaining - (Vector3)(normal * Vector2.Dot(remaining, normal));
+            moved += SweepStep(from + moved, slide, bodyRadius, out _, out _);
+        }
+
+        // displacement may not leave the map rectangle. only applies to insects that are
+        // already inside it, so insects walking in from an off map spawn are unaffected
+        Bounds map = CameraFit.MapBounds;
+        if (map.size.sqrMagnitude > 0f && map.Contains(new Vector3(from.x, from.y, map.center.z)))
+        {
+            Vector3 dest = from + moved;
+            dest.x = Mathf.Clamp(dest.x, map.min.x + 0.1f, map.max.x - 0.1f);
+            dest.y = Mathf.Clamp(dest.y, map.min.y + 0.1f, map.max.y - 0.1f);
+            moved = dest - from;
+        }
+        return moved;
+    }
+
+    private static Vector3 SweepStep(Vector3 from, Vector3 step, float bodyRadius, out Vector2 normal, out bool blocked)
+    {
+        normal = Vector2.zero;
+        blocked = false;
+        float dist = step.magnitude;
+        if (dist < 0.0001f) return Vector3.zero;
+        Vector2 dir = step / dist;
+        RaycastHit2D hit = Physics2D.CircleCast(from, bodyRadius, dir, dist, ObstacleLayer);
+        if (hit.collider == null || hit.distance <= 0.001f) return step;
+        // grazing and parallel contacts do not block. this prevents the sweep from catching
+        // on the seams between adjacent tile colliders while sliding along a flat wall
+        if (Vector2.Dot(dir, hit.normal) > -0.05f) return step;
+        blocked = true;
+        normal = hit.normal;
+        return (Vector3)(dir * Mathf.Max(0f, hit.distance - 0.02f));
     }
 
     protected virtual void Move()

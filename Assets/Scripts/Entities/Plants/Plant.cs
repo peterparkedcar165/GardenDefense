@@ -855,6 +855,10 @@ public abstract class Plant : Entity, IAttackable
         if (elementalType == ElementalType.Grass && occupiedTile != null && occupiedTile.tileType == TileType.Grass)
             return 1;
 
+        if (elementalType == ElementalType.Ground && occupiedTile != null
+            && (occupiedTile.tileType == TileType.Dirt || occupiedTile.tileType == TileType.Potted))
+            return 1;
+
         if (elementalType == ElementalType.Wind && occupiedTile != null && occupiedTile.isHighground)
             return 1;
 
@@ -1030,6 +1034,9 @@ public abstract class Plant : Entity, IAttackable
 
             case ElementalType.Wind:
             return $"Increase Passive tree level by <color=green>1</color> when in high altitude";
+
+            case ElementalType.Ground:
+            return $"Can be placed on any non-water, non-obstacle tile.\nIncrease Passive tree level by <color=green>1</color> when placed on <color=#79391F>Dirt</color>";
 
             default:
             return "";

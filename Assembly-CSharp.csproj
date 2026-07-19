@@ -49,7 +49,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.4.0f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Skills\EarthPillars.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\CarrotData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
@@ -120,7 +120,6 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Begonia.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RegenerationEffect.cs" />
-    <Compile Include="Assets\Scripts\Entities\Projectiles\GroundThornProjectile.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SnowdropData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalGlowEffect.cs" />
@@ -148,6 +147,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Insect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\HollyData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\SummonerPlant.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Carrot.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Lobber.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
@@ -265,7 +265,6 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CattailData.cs" />
-    <Compile Include="Assets\Scripts\Entities\Plants\GroundThorn.cs" />
     <Compile Include="Assets\Scripts\Game\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreProtectionEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\WaterlilyProjectile.cs" />
@@ -282,6 +281,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
     <Compile Include="Assets\Scripts\UI\StatsAreaHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\CarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\MelterEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
@@ -296,7 +296,6 @@
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\JumpingSpiderData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
-    <Compile Include="Assets\Scripts\PlantDataTypes\GroundThornData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AeoniumData.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
@@ -321,6 +320,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SnowExposedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\LevitatingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusTauntingEffect.cs" />
+    <Compile Include="Assets\Scripts\Skills\CarrotFurrow.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlindEffect.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\UI\PlantUpgradeUI.cs" />

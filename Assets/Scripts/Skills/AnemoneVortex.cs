@@ -61,8 +61,11 @@ public class AnemoneVortex : MonoBehaviour
             if (Vector3.Distance(transform.position, insect.transform.position) > radius) continue;
 
             if (Vector3.Distance(transform.position, insect.transform.position) > minPullRadius)
-                insect.transform.position = Vector3.MoveTowards(
-                    insect.transform.position, transform.position, dragSpeed * Time.deltaTime);
+            {
+                Vector3 dragStep = Vector3.MoveTowards(
+                    insect.transform.position, transform.position, dragSpeed * Time.deltaTime) - insect.transform.position;
+                insect.transform.position += Insect.ClampStepAgainstObstacles(insect.transform.position, dragStep);
+            }
 
             if (isAirborne && !insect.isFlying)
             {

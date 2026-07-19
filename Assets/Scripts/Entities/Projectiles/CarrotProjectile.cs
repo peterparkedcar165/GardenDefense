@@ -4,7 +4,7 @@ using System.Collections.Generic;
 // hurled chunk of earth: full damage to the first insect hit, reduced damage in a small
 // radius around the impact, knocks down flying insects. at path 1 max the impact also
 // knocks insects back
-public class GroundThornProjectile : Projectile
+public class CarrotProjectile : Projectile
 {
     // the base projectile fires OnHit once per insect overlapped in the same frame,
     // and destruction only happens at end of frame. this chunk detonates exactly once
@@ -15,7 +15,7 @@ public class GroundThornProjectile : Projectile
         if (_hasImpacted) return;
         _hasImpacted = true;
 
-        GroundThorn thorn = source as GroundThorn;
+        Carrot thorn = source as Carrot;
         PlaySound(hit);
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true,
@@ -37,7 +37,7 @@ public class GroundThornProjectile : Projectile
         }
     }
 
-    private void ApplyImpactEffects(Insect insect, GroundThorn thorn)
+    private void ApplyImpactEffects(Insect insect, Carrot thorn)
     {
         if (thorn == null) return;
 

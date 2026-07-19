@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7476232177775528650}
   - component: {fileID: 9160436179017353685}
   m_Layer: 3
-  m_Name: GroundThorn
+  m_Name: Carrot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -428,6 +428,7 @@ MonoBehaviour:
   piercing: 0
   piercingAdder: 0
   pillarVisualPrefab: {fileID: 8482905087334200380, guid: 5d056d879cc10cc4e8773e174918925b, type: 3}
+  skillIndicatorPrefab: {fileID: 2096060468615343360, guid: bbd82d20d4cd52a47a40db0f6590d7ba, type: 3}
 --- !u!1 &4211631318131847547
 GameObject:
   m_ObjectHideFlags: 0

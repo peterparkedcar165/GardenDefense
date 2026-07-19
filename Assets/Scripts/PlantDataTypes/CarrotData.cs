@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GroundThornData", menuName = "Scriptable Objects/PlantData/GroundThorn")]
-public class GroundThornData : PlantData
+[CreateAssetMenu(fileName = "CarrotData", menuName = "Scriptable Objects/PlantData/Carrot")]
+public class CarrotData : PlantData
 {
     [Header("Attack")]
     public float splashRadius = 1f;
@@ -34,20 +34,29 @@ public class GroundThornData : PlantData
     public float sunderPercent = 0.35f;
     public float sunderDuration = 8f;
 
-    [Header("Path 3 Scaling (earth pillars)")]
-    public int   pillarCountBase = 3;
+    [Header("Path 3 Scaling (carrot furrow)")]
+    [Tooltip("number of carrots in the furrow, each covers one square length")]
+    public int carrotCountBase = 3;
+    public int carrotsPerLevel = 1;
     public float pillarStartOffset = 1f;
-    public float pillarSpacing = 1f;
+    [Tooltip("seconds for the plow to cross one square")]
     public float pillarInterval = 0.12f;
+    [Tooltip("half the square size, squares are spaced exactly one square apart")]
     public float pillarRadius = 0.9f;
-    public float pillarHitboxMultiplier = 1.2f;
-    public float pillarDamageGrowth = 0.1f;
+    public float pillarHitboxMultiplier = 1.3f;
     public float skillBaseDamage = 40f;
     public float path3SkillDamagePerLevel = 8f;
     public float pillarKnockUpForce = 5f;
     public float pillarKnockbackDistance = 0.9f;
-    public int   pillarStunHitThreshold = 3;
-    public float pillarStunDuration = 1f;
+    [Tooltip("max level bonus, seconds before the second furrow follows the first")]
+    public float secondFurrowDelay = 0.8f;
+
+    [Header("Furrow Visuals")]
+    public float visualFadeIn = 0.1f;
+    public float visualHold = 0.7f;
+    public float visualFadeOut = 0.5f;
+    [Tooltip("random x and y offset applied to each carrot visual on spawn")]
+    public float visualPositionJitter = 0.05f;
 
     public override string GetAttackDescription() =>
         "Lifts earth from the ground and hurls it at the target, damaging insects around the impact and knocking down flying insects.";

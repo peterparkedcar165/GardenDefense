@@ -18,6 +18,9 @@ public class CameraFit : MonoBehaviour
     [Header("UI")]
     [Range(0f, 0.5f)] public float rightPanelFraction = 0.236f;
 
+    // the ground tilemap rectangle of the current level, used by displacement clamping
+    public static Bounds MapBounds { get; private set; }
+
     private Camera _cam;
     private Bounds _mapBounds;
     private float _maxZoom;
@@ -43,6 +46,7 @@ public class CameraFit : MonoBehaviour
         groundTilemap.CompressBounds();
         _mapBounds = groundTilemap.GetComponent<TilemapRenderer>().bounds;
         _maxZoom = _mapBounds.size.y / 2f;
+        MapBounds = _mapBounds;
     }
 
     private void CenterCamera()

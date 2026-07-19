@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 626ee385e9a6c334d80baddf8be70784, type: 3}
-  m_Name: GroundThornData
+  m_Name: CarrotData
   m_EditorClassIdentifier: Assembly-CSharp::GroundThornData
   plantPrefab: {fileID: 9160436179017353685, guid: 5f4d027105558fe469363bc45d73868f, type: 3}
   icon: {fileID: 21300000, guid: acbe6310247c778458a3c3376cf43e5e, type: 3}
-  plantName: GroundThorn
-  displayName: Ground Thorn
+  plantName: Carrot
+  displayName: Carrot
   cultivar: 4
   elementalType: 7
   damageType: 1
   sunCost: 150
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 132
+  baseAttackDamage: 112
   baseMagicPower: 0
   baseAttackSpeed: 0.3
   baseAttackRange: 3
@@ -104,16 +104,18 @@ MonoBehaviour:
   snowSlowDuration: 3
   sunderPercent: 0.35
   sunderDuration: 8
-  pillarCountBase: 3
+  carrotCountBase: 6
+  carrotsPerLevel: 2
   pillarStartOffset: 0.5
-  pillarSpacing: 1.75
-  pillarInterval: 0.36
-  pillarRadius: 1
-  pillarHitboxMultiplier: 1.2
-  pillarDamageGrowth: 0.1
-  skillBaseDamage: 62
-  path3SkillDamagePerLevel: 8
-  pillarKnockUpForce: 3
-  pillarKnockbackDistance: 1.8
-  pillarStunHitThreshold: 3
-  pillarStunDuration: 2
+  pillarInterval: 0.1
+  pillarRadius: 0.3
+  pillarHitboxMultiplier: 2.5
+  skillBaseDamage: 83
+  path3SkillDamagePerLevel: 22
+  pillarKnockUpForce: 5
+  pillarKnockbackDistance: 1.2
+  secondFurrowDelay: 1.5
+  visualFadeIn: 0.1
+  visualHold: 0.7
+  visualFadeOut: 0.5
+  visualPositionJitter: 0.2
