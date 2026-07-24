@@ -39,7 +39,13 @@ public class SettingsManager : MonoBehaviour
         if (mainMenuButton != null)
             mainMenuButton.SetActive(GameManager.instance != null && GameManager.instance.IsGameActive);
 
-        bool skillCancelled = SkillTargetingManager.instance != null && SkillTargetingManager.instance.WasCancelledThisFrame;
+        // true if targeting was active (about to be cancelled) or was already cancelled this frame.
+        // covers both orderings of Update() between this script and SkillTargetingManager, so an
+        // escape press that closes a skill's targeting never also opens the settings panel
+        bool skillCancelled = SkillTargetingManager.instance != null &&
+            (SkillTargetingManager.instance.IsTargeting || SkillTargetingManager.instance.WasCancelledThisFrame ||
+             SkillTargetingManager.instance.IsPlantTargeting || SkillTargetingManager.instance.WasPlantCancelledThisFrame ||
+             SkillTargetingManager.instance.IsDeadTileTargeting);
         bool loadoutOpen = LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen;
         bool fertilizerOpen = FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen;
         bool inEncyclopedia = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Encyclopedia";

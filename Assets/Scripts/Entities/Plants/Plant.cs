@@ -784,6 +784,8 @@ public abstract class Plant : Entity, IAttackable
 
     private static readonly DamageTag[] temperatureDamageTags = { DamageTag.Weather };
     private float temperatureDamageTimer;
+    private int temperatureDamageTicks;   // consecutive ticks spent out of comfort, resets on return
+    private const float TemperatureDamageRampPerTick = 0.02f;  // +2% max health damage per tick
 
     private void UpdateTemperature()
     {
@@ -827,7 +829,10 @@ public abstract class Plant : Entity, IAttackable
             if (temperatureDamageTimer >= 2f)
             {
                 temperatureDamageTimer = 0f;
-                float dmg = maxHealth * 0.03f * 2f;
+                temperatureDamageTicks++;
+                // first tick is the base rate, each tick after ramps up another 2% max health,
+                // rewarding regulating plants that return the target to comfort before it stacks
+                float dmg = maxHealth * 0.03f * 2f + maxHealth * TemperatureDamageRampPerTick * (temperatureDamageTicks - 1);
                 ElementalType dmgElement = tooCold ? ElementalType.Ice : ElementalType.Fire;
                 Damage(dmg, DamageType.True, dmgElement, temperatureDamageTags);
                 DamageIndicator.Spawn(GetIndicatorPosition(), dmg, dmgElement, false);
@@ -836,6 +841,7 @@ public abstract class Plant : Entity, IAttackable
         else
         {
             temperatureDamageTimer = 0f;
+            temperatureDamageTicks = 0;
         }
     }
 

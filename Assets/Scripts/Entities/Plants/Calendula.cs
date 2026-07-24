@@ -37,7 +37,7 @@ public class Calendula : Aura
 
     public override void UpdateStats()
     {
-        baseLightEmissionRange = 2f * (baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier));
+        baseLightEmissionRange = 1.5f * (baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier));
         coordinatedDamageAdder = IsPath1Maxed ? 0.33f : 0f;
         base.UpdateStats();
     }
@@ -219,7 +219,7 @@ public class Calendula : Aura
     {
         float rangepl = CData?.path2AttackRangePerLevel ?? 0.175f;
         string desc = details
-            ? $"Illuminate the surrounding area with a radius equal to <color=green><b>2×</b></color> her Attack Range (<color=green><b>{lightEmissionRange:F1}</b></color>)."
+            ? $"Illuminate the surrounding area with a radius equal to <color=green><b>1.5×</b></color> her Attack Range (<color=green><b>{lightEmissionRange:F1}</b></color>)."
             : GetPassiveDescription();
         string p2Bonus = details
             ? "Plants within illumination range heal <color=green><b>3</b></color> [<color=#FFB6C1><b>+6% Magic Power</b></color>] health per second."
