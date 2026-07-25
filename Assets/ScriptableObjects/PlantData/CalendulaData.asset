@@ -24,8 +24,8 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 36
   baseMagicPower: 0
-  baseAttackSpeed: 0.5
-  baseAttackRange: 2
+  baseAttackSpeed: 0.3
+  baseAttackRange: 2.5
   baseArmor: 0
   baseMagicArmor: 0
   baseHealingBonus: 0
@@ -79,10 +79,7 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseFloralGlowHeal: 4
-  baseSkillHealingMultiplier: 0.03
   path1AttackDamagePerLevel: 8
   path1FireDamagePerLevel: 0.04
   path2AttackRangePerLevel: 0.2
   path3SkillDurationPerLevel: 5
-  path3HealPerLevel: 3

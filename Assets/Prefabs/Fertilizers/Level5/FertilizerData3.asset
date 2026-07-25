@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData3
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Quick Charge
+  fertilizerName: Germinator
   stats:
-  - statType: 22
-    value: 0.32
-  - statType: 14
-    value: 0.23
+  - statType: 6
+    value: 0.22
+  - statType: 11
+    value: 0.53
   icon: {fileID: 0}
-  targetElementalType: 0
+  targetElementalTypes: 
+  targetCultivars: 
   appliesToAll: 1
   tier: 0

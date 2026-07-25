@@ -220,6 +220,7 @@ public abstract class Plant : Entity, IAttackable
         passiveCooldown = Mathf.Max(basePassiveCooldown * 0.2f, basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier));
         passiveDuration = basePassiveDuration + passiveDurationAdder + (basePassiveDuration * passiveDurationMultiplier);
         skillCooldown = Mathf.Max(baseSkillCooldown * 0.2f, baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier));
+        skillChargeRate = Mathf.Max(0f, baseSkillChargeRate + skillChargeRateAdder);
         skillRadius = baseSkillRadius + skillRadiusAdder + (baseSkillRadius * skillRadiusMultiplier);
         skillDamageMultiplier = baseSkillDamageMultiplier + skillDamageMultiplierAdder;
         skillDamage += baseSkillDamage * skillDamageMultiplier;
@@ -288,6 +289,8 @@ public abstract class Plant : Entity, IAttackable
     [Header("Skill")]
     public float baseSkillCooldown, skillCooldown, skillCooldownReductionAdder, skillCooldownReductionMultiplier;
     public float skillCooldownTimer;
+    // multiplier on how fast the skill charges, base 1 is normal speed, 2 charges twice as fast
+    public float baseSkillChargeRate = 1f, skillChargeRate = 1f, skillChargeRateAdder;
     public float baseSkillRadius, skillRadius, skillRadiusAdder, skillRadiusMultiplier;
     public float baseSkillDamageMultiplier, skillDamageMultiplier, skillDamageMultiplierAdder;
     public float baseSkillHealth, skillHealth;
@@ -712,7 +715,7 @@ public abstract class Plant : Entity, IAttackable
         if (passiveCooldownTimer > 0)
             passiveCooldownTimer -= Time.deltaTime;
         if (skillCooldownTimer > 0)
-            skillCooldownTimer -= Time.deltaTime;
+            skillCooldownTimer -= Time.deltaTime * skillChargeRate;
 
         {
             float stackY = healthBarOffset.y - 0.046875f;

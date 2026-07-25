@@ -9,7 +9,7 @@ public class Rhodiola : Aura
 
     private RhodiolaData RData => data as RhodiolaData;
 
-    private Plant _mainTarget;
+    private Entity _mainTarget;
     private Vector2 _facingDir = Vector2.right;
     private ConeParticleEmitter _healCone;
 
@@ -69,7 +69,7 @@ public class Rhodiola : Aura
         base.Update();
         attackCooldown = TickInterval;
 
-        _mainTarget = FindMostInjuredPlant();
+        _mainTarget = FindMostInjuredHealable();
         if (_mainTarget != null)
             _facingDir = ((Vector2)_mainTarget.transform.position - (Vector2)transform.position).normalized;
 
@@ -84,11 +84,12 @@ public class Rhodiola : Aura
             Attack();
     }
 
-    // lowest health percentage injured plant within range, the cone aims at it
-    private Plant FindMostInjuredPlant()
+    // lowest health percentage injured plant or friendly insect/minion within range, the cone aims at it
+    private Entity FindMostInjuredHealable()
     {
-        Plant best = null;
+        Entity best = null;
         float bestPercent = 1f;
+
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || plant == this || !plant.IsAlive) continue;
@@ -101,6 +102,20 @@ public class Rhodiola : Aura
                 best = plant;
             }
         }
+
+        foreach (Insect ally in Insect.friendlyInsects)
+        {
+            if (ally == null || !ally.IsAlive) continue;
+            if (ally.health >= ally.maxHealth) continue;
+            if (Vector2.Distance(transform.position, ally.transform.position) > attackRange) continue;
+            float percent = ally.health / ally.maxHealth;
+            if (percent < bestPercent)
+            {
+                bestPercent = percent;
+                best = ally;
+            }
+        }
+
         return best;
     }
 
@@ -112,6 +127,7 @@ public class Rhodiola : Aura
         HealTick(_mainTarget, 1f);
 
         float halfAngle = ConeAngle * 0.5f;
+
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || plant == this || plant == _mainTarget || !plant.IsAlive) continue;
@@ -121,19 +137,29 @@ public class Rhodiola : Aura
             if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
             HealTick(plant, SplashMultiplier);
         }
+
+        foreach (Insect ally in new List<Insect>(Insect.friendlyInsects))
+        {
+            if (ally == null || ally == _mainTarget || !ally.IsAlive) continue;
+            if (ally.health >= ally.maxHealth) continue;
+            Vector2 to = (Vector2)ally.transform.position - (Vector2)transform.position;
+            if (to.magnitude > attackRange) continue;
+            if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
+            HealTick(ally, SplashMultiplier);
+        }
     }
 
-    // heals one plant for one tick, the healing return is handled by the OnHeal hook
-    private void HealTick(Plant plant, float multiplier)
+    // heals one plant, friendly insect, or minion for one tick, the healing return is handled by the OnHeal hook
+    private void HealTick(Entity entity, float multiplier)
     {
         float amount = HealPerSecond * TickInterval * multiplier;
         if (IsPath1Maxed)
-            amount += (plant.maxHealth - plant.health) * MissingHealthPerSecond * TickInterval * multiplier;
+            amount += (entity.maxHealth - entity.health) * MissingHealthPerSecond * TickInterval * multiplier;
 
-        plant.Heal(amount, this);
+        entity.Heal(amount, this);
 
         if (IsPath2Maxed)
-            plant.ApplyEffect(new RejuvenatingBurgeonEffect(plant, BurgeonDuration, 1, this, BurgeonHealPerSecond * BurgeonTickInterval, BurgeonTickInterval));
+            entity.ApplyEffect(new RejuvenatingBurgeonEffect(entity, BurgeonDuration, 1, this, BurgeonHealPerSecond * BurgeonTickInterval, BurgeonTickInterval));
     }
 
     public override void OnPath1Upgrade(int level)

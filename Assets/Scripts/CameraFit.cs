@@ -16,7 +16,7 @@ public class CameraFit : MonoBehaviour
     public float moveSmoothing = 10f;
 
     [Header("UI")]
-    [Range(0f, 0.5f)] public float rightPanelFraction = 0.236f;
+    [Range(0f, 0.5f)] public float rightPanelFraction = 0.241f;
 
     // the ground tilemap rectangle of the current level, used by displacement clamping
     public static Bounds MapBounds { get; private set; }
@@ -69,7 +69,9 @@ public class CameraFit : MonoBehaviour
     {
         bool blocked = InputBlocked();
         if (!blocked) HandleZoom();
-        HandleMovement(blocked);
+        // fully zoomed out already shows the whole map, panning has nothing left to reveal
+        bool atMaxZoom = _cam.orthographicSize >= _maxZoom - 0.01f;
+        HandleMovement(blocked || atMaxZoom);
         ClampPosition();
     }
 

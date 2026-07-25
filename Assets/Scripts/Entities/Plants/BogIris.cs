@@ -159,6 +159,9 @@ public class BogIris : Shooter
 
     public override void UpdateStats()
     {
+        // hidden, undocumented, skill charges faster per level of rain exposure
+        int rainLevel = GetEffect<RainExposedEffect>()?.level ?? 0;
+        skillChargeRateAdder = 0.2f * rainLevel;
         base.UpdateStats();
         if (IsPath1Maxed)
         {

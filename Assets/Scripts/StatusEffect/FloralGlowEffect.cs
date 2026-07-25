@@ -3,8 +3,6 @@ using UnityEngine;
 public class FloralGlowEffect : StatusEffect
 {
     private readonly Calendula calendula;
-    private float HealingPerSecond => calendula?.FloralGlowHealPerSecond ?? 0f;
-    private float healTickTimer = 0f;
     private float cachedLightRange;
 
     public FloralGlowEffect(Entity target, float duration, int level, Entity source, Calendula calendula)
@@ -43,15 +41,7 @@ public class FloralGlowEffect : StatusEffect
         Entity.OnHit += HandleHit;
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        Plant plant = target as Plant;
-        if (plant == null || !plant.IsAlive) return;
-        healTickTimer += deltaTime;
-        if (healTickTimer < 0.5f) return;
-        healTickTimer -= 0.5f;
-        plant.Heal(HealingPerSecond * 0.5f, calendula);
-    }
+    public override void OnTick(float deltaTime) { }
 
     public override void OnExpire()
     {
@@ -92,5 +82,5 @@ public class FloralGlowEffect : StatusEffect
         * (1f + (calendula?.coordinatedDamage ?? 0f));
 
     public override string GetName() => "<color=orange>Floral Glow</color>";
-    public override string GetDescription() => $"Regenerates <color=green><b>{HealingPerSecond:F0}</b></color> health per second. Attacks inflict a <color=orange><b>Coordinated</b></color> <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage hit from the <color=orange><b>Calendula</b></color>.";
+    public override string GetDescription() => $"Attacks inflict a <color=orange><b>Coordinated</b></color> <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage hit from the <color=orange><b>Calendula</b></color>.";
 }

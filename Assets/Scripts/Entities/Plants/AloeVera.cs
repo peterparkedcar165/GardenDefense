@@ -40,6 +40,9 @@ public class AloeVera : Lobber
     {
         float path1MPBonus = IsPath1Maxed ? 50f : 0f;
         magicPowerAdder += path1MPBonus;
+        // hidden, undocumented, skill charges faster per level of rain exposure
+        int rainLevel = GetEffect<RainExposedEffect>()?.level ?? 0;
+        skillChargeRateAdder = 0.2f * rainLevel;
         base.UpdateStats();
         magicPowerAdder -= path1MPBonus;
         temperatureMax = comfortMax;

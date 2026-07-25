@@ -2037,7 +2037,7 @@ MonoBehaviour:
   zoomSmoothing: 8
   moveSpeed: 24
   moveSmoothing: 10
-  rightPanelFraction: 0.236
+  rightPanelFraction: 0.241
 --- !u!114 &1709538200
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -128,8 +128,8 @@ public class AcornSprout : Shooter
         float hppl     = AcornData?.path3HealthPerLevel           ?? 50f;
         float radiuspl = AcornData?.path3RadiusPerLevel           ?? 0.15f;
         string skillMaxBonus = details
-            ? "Whenever the <color=green><b>Acorn</b></color> is healed, its lifetime is extended by 10% of the healing amount, in seconds.\n\nThe <color=green><b>Acorn</b></color> inherits the Acorn Sprout's <color=#00CED1><b>Armor</b></color>."
-            : $"Whenever the <color=green><b>Acorn</b></color> is healed, its lifetime is extended by 10% of the healing amount, in seconds.\n\nThe <color=green><b>Acorn</b></color> gains <color=#00CED1><b>{armor:F0} Base Armor</b></color>.";
+            ? "Whenever the <color=green><b>Acorn</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Acorn</b></color> inherits the Acorn Sprout's <color=#00CED1><b>Armor</b></color>."
+            : $"Whenever the <color=green><b>Acorn</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Acorn</b></color> gains <color=#00CED1><b>{armor:F0} Base Armor</b></color>.";
         string desc = details
             ? $"Hurls a giant <color=green><b>Acorn</b></color> from the sky at a targeted location, dealing <color=green><b>[{activeDamageMultiplier * 100f:F0}% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
               $"The <color=green><b>Acorn</b></color> then sits on the ground for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, blocking ground insects who stop to gnaw at it. The <color=green><b>Acorn</b></color> has <color=green><b>[({data.baseSkillHealth:F0}) + ({hppl:F0}/Lvl.)]</b></color> health."

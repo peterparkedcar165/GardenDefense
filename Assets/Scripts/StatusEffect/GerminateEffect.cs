@@ -37,7 +37,6 @@ public class GerminateEffect : StatusEffect
     public override void OnExpire()
     {
         if (target == null) return;
-        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Bloom", new Color(0.3f, 1f, 0.2f));
 
         if (bloomPrefab != null)
         {

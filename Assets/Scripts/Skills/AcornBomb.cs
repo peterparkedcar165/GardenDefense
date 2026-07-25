@@ -167,7 +167,7 @@ public class AcornBomb : Minion
         if (data.target != this) return;
         AcornSprout sprout = owner as AcornSprout;
         if (sprout == null || !sprout.IsPath3Maxed) return;
-        lifetime += data.amount * 0.10f;
+        lifetime += data.amount * 0.02f;
     }
 
     private void OnDestroy()

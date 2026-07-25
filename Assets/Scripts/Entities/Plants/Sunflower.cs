@@ -57,6 +57,9 @@ public class Sunflower : Shooter
     public override void UpdateStats()
     {
         attackDamageTotalMultiplier = IsPath1Maxed ? 0.5f : 1f;
+        // hidden, undocumented, skill charges faster per level of sunlight exposure
+        int sunlightLevel = GetEffect<SunlightExposedEffect>()?.level ?? 0;
+        skillChargeRateAdder = 0.2f * sunlightLevel;
         base.UpdateStats();
         float dpspl = SFData?.path3SunrayDPSPerLevel ?? 15f;
         sunrayDamagePerSecond = (SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level + skillDamageMultiplier * magicPower;

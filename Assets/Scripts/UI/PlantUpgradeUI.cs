@@ -84,6 +84,35 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private Color pipFilled = Color.yellow;
     [SerializeField] private Color pipEmpty = Color.black;
 
+    [System.Serializable]
+    private struct ElementalPanelTheme
+    {
+        public ElementalType elementalType;
+        public Sprite backgroundSprite;
+    }
+
+    [Header("Elemental Theme")]
+    [SerializeField] private Image panelBackground;
+    [SerializeField] private ElementalPanelTheme[] elementalThemes;
+
+    private void ApplyElementalTheme(ElementalType type)
+    {
+        if (panelBackground == null)
+        {
+            Debug.LogWarning("PlantUpgradeUI: Panel Background is not assigned, cannot apply elemental theme.");
+            return;
+        }
+        foreach (var theme in elementalThemes)
+        {
+            if (theme.elementalType == type)
+            {
+                panelBackground.sprite = theme.backgroundSprite;
+                return;
+            }
+        }
+        Debug.LogWarning($"PlantUpgradeUI: no elemental theme set for {type}.");
+    }
+
     private Plant selectedPlant;
     private Insect selectedInsect;
     private SpriteRenderer cachedInsectRenderer;
@@ -157,6 +186,7 @@ public class PlantUpgradeUI : EntityInfoPanel
             flyingToggleText.text = plant.prioritizeFlying ? "Flying First" : "Default";
 
         panel.SetActive(true);
+        ApplyElementalTheme(plant.elementalType);
 
         entityNameText.text = plant.GetName();
         if (entityIcon != null && plant.data != null)
@@ -187,6 +217,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
 
         panel.SetActive(true);
+        ApplyElementalTheme(ElementalType.Neutral);
 
         string desc = insect.GetDescription();
         entityNameText.text = string.IsNullOrEmpty(desc)

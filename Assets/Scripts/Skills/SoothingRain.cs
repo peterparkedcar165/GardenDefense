@@ -33,6 +33,7 @@ public class SoothingRain : MonoBehaviour
         tickTimer -= tickInterval;
 
         bool path3Maxed = source != null && source.IsPath3Maxed;
+        int rainLevel = (source != null ? source.effectivePath3Level : 0) + 1;
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
@@ -41,6 +42,13 @@ public class SoothingRain : MonoBehaviour
             float overflow = path3Maxed ? Mathf.Max(0f, scaledHeal - plant.MissingHealth) : 0f;
             plant.Heal(healPerTick, source);
             plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
+
+            // this is literally rain, apply the same exposure effect real rain weather grants.
+            // short duration so it fades shortly after a plant leaves the rain, refreshed every
+            // tick while still inside it
+            RainExposedEffect rain = new RainExposedEffect(plant, source, rainLevel);
+            rain.duration = tickInterval + 0.5f;
+            plant.ApplyEffect(rain);
             if (plant.IsAlive)
             {
                 DrizzleBarrierEffect shield = plant.GetEffect<DrizzleBarrierEffect>();

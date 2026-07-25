@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData1
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Brute Force
+  fertilizerName: Steamer
   stats:
-  - statType: 1
+  - statType: 3
     value: 0.22
-  - statType: 0
-    value: 0.32
+  - statType: 5
+    value: 0.22
   icon: {fileID: 0}
   targetElementalTypes: 
   targetCultivars: 
