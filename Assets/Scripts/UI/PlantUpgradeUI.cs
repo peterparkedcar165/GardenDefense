@@ -48,19 +48,19 @@ public class PlantUpgradeUI : EntityInfoPanel
     [Header("Path 1")]
     [SerializeField] private TMP_Text path1NameText;
     [SerializeField] private TMP_Text path1CostText;
-    [SerializeField] private Image path1Pips;
+    [SerializeField] private Transform path1PipsContainer;
     [SerializeField] private Button path1UpgradeButton;
 
     [Header("Path 2")]
     [SerializeField] private TMP_Text path2NameText;
     [SerializeField] private TMP_Text path2CostText;
-    [SerializeField] private Image path2Pips;
+    [SerializeField] private Transform path2PipsContainer;
     [SerializeField] private Button path2UpgradeButton;
 
     [Header("Path 3")]
     [SerializeField] private TMP_Text path3NameText;
     [SerializeField] private TMP_Text path3CostText;
-    [SerializeField] private Image path3Pips;
+    [SerializeField] private Transform path3PipsContainer;
     [SerializeField] private Button path3Button;
     [SerializeField] private GameObject path3LockOverlay;
 
@@ -78,8 +78,6 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private GameObject tooltipPanel;
     [SerializeField] private TMP_Text tooltipText;
 
-    [Header("Pip Sprites")]
-    [SerializeField] private Sprite[] pipSprites;
     [Header("Colors")]
     [SerializeField] private Color pipFilled = Color.yellow;
     [SerializeField] private Color pipEmpty = Color.black;
@@ -312,14 +310,14 @@ public class PlantUpgradeUI : EntityInfoPanel
     {
         // Path 1
         path1NameText.text = selectedPlant.GetPath1Name();
-        RefreshPips(path1Pips, selectedPlant.path1Level);
+        RefreshPips(path1PipsContainer, selectedPlant.path1Level, selectedPlant.effectivePath1Level);
         bool path1Maxed = selectedPlant.path1Level >= Plant.pathLevelCap;
         path1UpgradeButton.interactable = !path1Maxed;
         path1CostText.text = path1Maxed ? CapLabel(selectedPlant.path1Level) : $"{selectedPlant.GetPath1Cost()} Sun";
 
         // Path 2
         path2NameText.text = selectedPlant.GetPath2Name();
-        RefreshPips(path2Pips, selectedPlant.path2Level);
+        RefreshPips(path2PipsContainer, selectedPlant.path2Level, selectedPlant.effectivePath2Level);
         bool path2Maxed = selectedPlant.path2Level >= Plant.pathLevelCap;
         path2UpgradeButton.interactable = !path2Maxed;
         path2CostText.text = path2Maxed ? CapLabel(selectedPlant.path2Level) : $"{selectedPlant.GetPath2Cost()} Sun";
@@ -333,11 +331,11 @@ public class PlantUpgradeUI : EntityInfoPanel
         {
             path3CostText.text = $"{selectedPlant.GetPath3Cost()} Sun to unlock.";
             path3Button.interactable = true;
-            RefreshPips(path3Pips, selectedPlant.path3Level);
+            RefreshPips(path3PipsContainer, selectedPlant.path3Level, selectedPlant.effectivePath3Level);
         }
         else
         {
-            RefreshPips(path3Pips, selectedPlant.path3Level);
+            RefreshPips(path3PipsContainer, selectedPlant.path3Level, selectedPlant.effectivePath3Level);
             bool path3Maxed = selectedPlant.path3Level >= Plant.pathLevelCap;
             path3Button.interactable = !path3Maxed;
             path3CostText.text = path3Maxed ? CapLabel(selectedPlant.path3Level) : $"{selectedPlant.GetPath3Cost()} Sun";
@@ -348,9 +346,37 @@ public class PlantUpgradeUI : EntityInfoPanel
     private static string CapLabel(int pathLevel) =>
         pathLevel >= Plant.absoluteLevelCap ? "MAX" : "LOCKED";
 
-    private void RefreshPips(Image pips, int level)
+    // a row of pre-placed pip icon children, all always visible.
+    // purchased pips show full color, pips only reached through a temporary
+    // effective level bonus (not yet truly maxed) show the same color at 75% alpha,
+    // everything else is tinted pitch black
+    private void RefreshPips(Transform pipsContainer, int level, int effectiveLevel)
     {
-        pips.sprite = pipSprites[level];
+        if (pipsContainer == null) return;
+        bool showBonus = level < Plant.absoluteLevelCap && effectiveLevel > level;
+
+        for (int i = 0; i < pipsContainer.childCount; i++)
+        {
+            Transform pip = pipsContainer.GetChild(i);
+            pip.gameObject.SetActive(true);
+            Image pipImage = pip.GetComponent<Image>();
+            if (pipImage == null) continue;
+
+            if (i < level)
+            {
+                pipImage.color = pipFilled;
+            }
+            else if (showBonus && i < effectiveLevel)
+            {
+                Color bonus = pipFilled;
+                bonus.a = 0.35f;
+                pipImage.color = bonus;
+            }
+            else
+            {
+                pipImage.color = pipEmpty;
+            }
+        }
     }
 
     private void RefreshSkillButton()

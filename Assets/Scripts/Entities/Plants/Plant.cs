@@ -1052,6 +1052,41 @@ public abstract class Plant : Entity, IAttackable
         }
     }
 
+    public virtual string GetCultivar() => PlantData.CultivarTag(data != null ? data.cultivar : default);
+
+    public virtual string GetCultivarDescription()
+    {
+        switch (data != null ? data.cultivar : default)
+        {
+            case PlantCultivar.Chlorophyll:
+            return "Generates sun.";
+
+            case PlantCultivar.Verdance:
+            return "Heals.";
+
+            case PlantCultivar.Symbiosis:
+            return "Enhances allies.";
+
+            case PlantCultivar.Shelter:
+            return "Tank or shields allies.";
+
+            case PlantCultivar.Thorn:
+            return "DPS.";
+
+            case PlantCultivar.Wither:
+            return "Applies debuffs.";
+
+            case PlantCultivar.Burgeon:
+            return "Uses companions to fight.";
+
+            case PlantCultivar.Kinship:
+            return "Specializes in coordinated attacks, requiring the placement of other plants.";
+
+            default:
+            return "";
+        }
+    }
+
     // DESCRIPTIONS
     public virtual string GetName() => data != null ? data.displayName : "";
 

@@ -107,6 +107,19 @@ public class PlantData : ScriptableObject
         _                     => t.ToString()
     };
 
+    public static string CultivarTag(PlantCultivar c) => c switch
+    {
+        PlantCultivar.Chlorophyll => "<color=#FFD700>Chlorophyll</color>",
+        PlantCultivar.Verdance    => "<color=#FF6B81>Verdance</color>",
+        PlantCultivar.Symbiosis   => "<color=#20B2AA>Symbiosis</color>",
+        PlantCultivar.Shelter     => "<color=#A9A9A9>Shelter</color>",
+        PlantCultivar.Thorn       => "<color=#DC143C>Thorn</color>",
+        PlantCultivar.Wither      => "<color=#8B008B>Wither</color>",
+        PlantCultivar.Burgeon     => "<color=#DA70D6>Burgeon</color>",
+        PlantCultivar.Kinship     => "<color=#6495ED>Kinship</color>",
+        _                         => c.ToString()
+    };
+
     public static string DamageTypeTag(DamageType t) => t switch
     {
         DamageType.Magic    => "<color=#FFB6C1>Magic</color>",
