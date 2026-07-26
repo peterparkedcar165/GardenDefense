@@ -18,7 +18,7 @@ MonoBehaviour:
     intensity: 1
   temperature: 2
   maxWaves: 26
-  startSunCount: 450
+  startSunCount: 500
   startHealth: 200
   maxUpgradeLevel: 4
   minWaveDuration: 20
@@ -95,14 +95,14 @@ MonoBehaviour:
     unlockWave: 8
     budgetWeight: 0.3
     startDelay: 1
-  eliteWaveInterval: 4
+  eliteWaveInterval: 3
   eliteInsects:
   - data: {fileID: 11400000, guid: 39cb5390faf0d7e468c1921ab3466cf2, type: 2}
     unlockWave: 1
     budgetWeight: 0.1
     startDelay: 2
     minSpawnCount: 3
-    maxSpawnCount: 6
+    maxSpawnCount: 18
   fertilizerPool:
   - {fileID: 11400000, guid: c8613c3921154b64f86afc3c6ea94b78, type: 2}
   - {fileID: 11400000, guid: 06970b7a93644514e96c630052df2a18, type: 2}

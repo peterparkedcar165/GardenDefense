@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Resurrector
   stats:
-  - statType: 24
-    value: 0.22
+  - statType: 22
+    value: 0.35
   - statType: 14
-    value: 0.16
+    value: 0.35
   icon: {fileID: 0}
   targetElementalTypes: 
   targetCultivars: 

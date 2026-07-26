@@ -20,7 +20,7 @@ public class ProceduralLevel : SpawnManager
             WeatherManager.instance.temperature = config.temperature;
         }
 
-        FertilizerSelectionUI.instance?.Configure(config.fertilizerPool, config.levelNumber);
+        FertilizerSelectionUI.instance?.Configure(config.fertilizerPool);
         Plant.pathLevelCap = config.maxUpgradeLevel;
         StartAmbience();
         GameManager.instance?.InitiateLevel(config.startSunCount, config.startHealth);

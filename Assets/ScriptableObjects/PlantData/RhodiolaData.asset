@@ -19,7 +19,7 @@ MonoBehaviour:
   cultivar: 1
   elementalType: 2
   damageType: 1
-  sunCost: 105
+  sunCost: 85
   skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 24
@@ -91,11 +91,9 @@ MonoBehaviour:
   path2GrassConversionPerLevel: 0.1
   baseHealingReturn: 0.15
   path2HealingReturnPerLevel: 0.03
-  baseBurgeonHealPerTick: 6
+  burgeonHealPerSecond: 12
   baseBurgeonDuration: 4
   burgeonTickInterval: 1
-  path2HealPerLevel: 3
-  passiveHealMPScaling: 0.04
   revivalBaseHeal: 40
   revivalHealPerLevel: 20
   skillHealMPScaling: 0.3

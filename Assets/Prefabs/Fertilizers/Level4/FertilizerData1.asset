@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Shooter
   stats:
   - statType: 0
-    value: 0.22
-  - statType: 1
-    value: 0.22
+    value: 0.35
+  - statType: 2
+    value: 0.35
   icon: {fileID: 0}
   targetElementalTypes: 
   targetCultivars: 
