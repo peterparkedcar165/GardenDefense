@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 115
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 36
+  baseAttackDamage: 32
   baseMagicPower: 0
   baseAttackSpeed: 0.3
   baseAttackRange: 2.5
@@ -79,7 +79,9 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  path1AttackDamagePerLevel: 8
+  path1AttackDamagePerLevel: 6
   path1FireDamagePerLevel: 0.04
   path2AttackRangePerLevel: 0.2
   path3SkillDurationPerLevel: 5
+  floralGlowBaseDamageScaling: 0.15
+  floralGlowDamageScalingPerLevel: 0.05

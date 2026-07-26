@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\SnowAnt.cs" />
     <Compile Include="Assets\Scripts\UI\CursorManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantFervorEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\CalendulasLightEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\WaterPot.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AquaticOvershieldEffect.cs" />

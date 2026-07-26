@@ -1,7 +1,10 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class FloralGlowEffect : StatusEffect
 {
+    private const float ExplosionRadius = 2f;
+
     private readonly Calendula calendula;
     private float cachedLightRange;
 
@@ -13,6 +16,9 @@ public class FloralGlowEffect : StatusEffect
         elementalType   = ElementalType.Fire;
         sourceStackable = true;
     }
+
+    // 25% base, +5% per level, 50% at max level, defined on CalendulaData
+    private float DamageScaling => calendula?.FloralGlowDamageScaling ?? 0.25f;
 
     private float BestRangeExcluding(FloralGlowEffect exclude)
     {
@@ -70,15 +76,28 @@ public class FloralGlowEffect : StatusEffect
 
     private System.Collections.IEnumerator DelayedFireHit(Insect insect)
     {
-        yield return new UnityEngine.WaitForSeconds(0.1f);
+        yield return new UnityEngine.WaitForSeconds(0.03f);
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
-        float hitDamage = calendula.attackDamage * 0.35f + calendula.skillDamageMultiplier * calendula.magicPower;
-        insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false,
-            new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated });
+        float hitDamage = calendula.attackDamage * DamageScaling + calendula.skillDamageMultiplier * calendula.magicPower;
+        DamageTag[] tags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated };
+        insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false, tags);
+
+        // max level, the hit explodes, catching other insects within a small radius
+        if (!calendula.IsPath3Maxed) yield break;
+        Vector3 origin = insect.transform.position;
+        Vector3 visualOrigin = insect.visual != null ? insect.visual.position : origin;
+        calendula.SpawnFireBurst(visualOrigin, ExplosionRadius);
+        DamageTag[] splashTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.AoE };
+        foreach (Insect other in new List<Insect>(Insect.allInsects))
+        {
+            if (other == null || other == insect || !other.IsAlive || other.team == Team.Friendly) continue;
+            if (Vector3.Distance(origin, other.transform.position) > ExplosionRadius) continue;
+            other.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false, splashTags);
+        }
     }
 
     private float CoordinatedDamage =>
-        ((calendula?.attackDamage ?? 0f) * 0.35f + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f))
+        ((calendula?.attackDamage ?? 0f) * DamageScaling + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f))
         * (1f + (calendula?.coordinatedDamage ?? 0f));
 
     public override string GetName() => "<color=orange>Floral Glow</color>";

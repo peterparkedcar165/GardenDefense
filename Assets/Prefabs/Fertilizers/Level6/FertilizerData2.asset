@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Helper
+  fertilizerName: All-Seeing
   stats:
   - statType: 26
-    value: 0.72
-  - statType: 24
-    value: 0.23
+    value: 1
+  - statType: 49
+    value: 0.5
   icon: {fileID: 0}
   targetElementalTypes: 
-  targetCultivars: 07000000
-  appliesToAll: 0
+  targetCultivars: 
+  appliesToAll: 1
   tier: 0

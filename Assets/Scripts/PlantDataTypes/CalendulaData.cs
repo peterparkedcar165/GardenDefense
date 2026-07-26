@@ -12,6 +12,8 @@ public class CalendulaData : PlantData
 
     [Header("Path 3 Scaling")]
     public float path3SkillDurationPerLevel = 2f;
+    public float floralGlowBaseDamageScaling = 0.25f;
+    public float floralGlowDamageScalingPerLevel = 0.05f;
 
     public override string GetAttackDescription() =>
         $"Releases flaming petals dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to all insects within range.";

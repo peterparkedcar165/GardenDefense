@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Burner
   stats:
-  - statType: 11
+  - statType: 15
     value: 0.33
   - statType: 3
-    value: 0.16
+    value: 0.22
   icon: {fileID: 0}
-  targetElementalType: 0
+  targetElementalTypes: 
+  targetCultivars: 
   appliesToAll: 1
   tier: 0

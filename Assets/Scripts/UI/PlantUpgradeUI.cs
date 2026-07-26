@@ -68,6 +68,10 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private Button skillButton;
     [SerializeField] private TMP_Text skillCooldownText;
 
+    [Header("Auto Cast")]
+    [SerializeField] private Button autoCastButton;          // visible only for plants that support auto cast
+    [SerializeField] private TMP_Text autoCastButtonText;
+
     [Header("Status Effects")]
     [SerializeField] private StatusEffectPanel statusEffectPanel;
 
@@ -146,6 +150,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (selectedPlant != null)
         {
             RefreshSkillButton();
+            RefreshAutoCastButton();
             RefreshPaths();
             if (Keyboard.current.qKey.wasPressedThisFrame && selectedPlant.SkillReady)
                 selectedPlant.ActivateSkill();
@@ -182,6 +187,8 @@ public class PlantUpgradeUI : EntityInfoPanel
             flyingToggleButton.gameObject.SetActive(plant.UsesFlyingToggle);
         if (flyingToggleText != null)
             flyingToggleText.text = plant.prioritizeFlying ? "Flying First" : "Default";
+        if (autoCastButton != null)
+            autoCastButton.gameObject.SetActive(plant.UsesAutoCast);
 
         panel.SetActive(true);
         ApplyElementalTheme(plant.elementalType);
@@ -212,6 +219,8 @@ public class PlantUpgradeUI : EntityInfoPanel
             relocateMinionsButton.gameObject.SetActive(false);
         if (flyingToggleButton != null)
             flyingToggleButton.gameObject.SetActive(false);
+        if (autoCastButton != null)
+            autoCastButton.gameObject.SetActive(false);
         if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
 
         panel.SetActive(true);
@@ -393,6 +402,14 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
+    private void RefreshAutoCastButton()
+    {
+        if (autoCastButton == null || !selectedPlant.UsesAutoCast) return;
+        bool targeting = SkillTargetingManager.instance.IsPlantTargeting;
+        if (autoCastButtonText != null)
+            autoCastButtonText.text = targeting ? "Pick a target..." : (selectedPlant.IsAutoCasting ? "Auto Cast: ON" : "Auto Cast: OFF");
+    }
+
     // Button callbacks , wired in Inspector
     public void OnPath1UpgradeClicked()
     {
@@ -422,6 +439,12 @@ public class PlantUpgradeUI : EntityInfoPanel
     {
         if (selectedPlant == null || !selectedPlant.SkillReady) return;
         selectedPlant.ActivateSkill();
+    }
+
+    public void OnAutoCastButtonClicked()
+    {
+        if (selectedPlant == null || !selectedPlant.UsesAutoCast) return;
+        selectedPlant.ToggleAutoCast();
     }
 
     public void OnTargetingToggleClicked()

@@ -266,6 +266,12 @@ public abstract class Plant : Entity, IAttackable
     // and clicking it (after aiming a point) calls RelocateMinionFormation
     public virtual bool CommandsMinions => false;
     public virtual void RelocateMinionFormation(Vector3 worldPoint) { }
+
+    // plants whose skill can be locked onto a plant target and recast automatically
+    // whenever it comes off cooldown, until toggled off (Calendula)
+    public virtual bool UsesAutoCast => false;
+    public virtual bool IsAutoCasting => false;
+    public virtual void ToggleAutoCast() { }
     public int sunCost, totalSunSpent = 0;
     [System.NonSerialized] public ElementalType elementalType;
     [System.NonSerialized] public DamageType damageType;

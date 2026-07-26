@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData3
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Omnipresence
+  fertilizerName: Tag-Teaming
   stats:
-  - statType: 46
-    value: 0.32
+  - statType: 23
+    value: 0.42
   - statType: 14
-    value: 0.26
+    value: 0.28
   icon: {fileID: 0}
   targetElementalTypes: 
-  targetCultivars: 07000000
-  appliesToAll: 0
+  targetCultivars: 
+  appliesToAll: 1
   tier: 0
