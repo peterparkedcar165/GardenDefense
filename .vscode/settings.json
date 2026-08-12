@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Garden Defense.slnx",
+    "dotnet.defaultSolution": "GardenDefense.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }

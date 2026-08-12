@@ -22,25 +22,25 @@ MonoBehaviour:
   startHealth: 200
   maxUpgradeLevel: 2
   minWaveDuration: 20
-  maxWaveDuration: 120
+  maxWaveDuration: 100
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 5
   minThreatBudget: 3
-  maxThreatBudget: 60
+  maxThreatBudget: 80
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -80,12 +80,12 @@ MonoBehaviour:
     budgetWeight: 0.4
     startDelay: 1
   - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
-    unlockWave: 2
-    budgetWeight: 0.2
+    unlockWave: 3
+    budgetWeight: 0.1
     startDelay: 3
   - data: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
-    unlockWave: 6
-    budgetWeight: 0.1
+    unlockWave: 5
+    budgetWeight: 0.2
     startDelay: 4
   eliteWaveInterval: 4
   eliteInsects: []

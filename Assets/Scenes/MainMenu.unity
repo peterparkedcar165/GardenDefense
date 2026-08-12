@@ -618,7 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c246495bd51ad4986a90362078516c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursorManager
-  defaultCursor: {fileID: 2800000, guid: 9d648ec5af897de4c921ba121f32e6f1, type: 3}
+  defaultCursor: {fileID: 0}
   uprootCursor: {fileID: 2800000, guid: becffc39cc9dbe640814952b1ac4830f, type: 3}
   defaultHotspot: {x: 0, y: 0}
   uprootHotspot: {x: 0, y: 0}
