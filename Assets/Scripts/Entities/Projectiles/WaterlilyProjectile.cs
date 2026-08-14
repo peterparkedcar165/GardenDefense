@@ -45,11 +45,13 @@ public class WaterlilyProjectile : Projectile
         //    insect.RegisterAttacker(source);
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile});
-        
+
         Waterlily waterlily = source as Waterlily;
 
         if (waterlily != null)
         {
+            waterlily.ApplyStackingSlow(insect);
+
             bool path2Maxed = waterlily.IsPath2Maxed;
             DamageTag[] splashTags = path2Maxed
                 ? new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage, DamageTag.Attack, DamageTag.Projectile }
@@ -58,7 +60,10 @@ public class WaterlilyProjectile : Projectile
             {
                 if (splashedInsect == null || !splashedInsect.IsAlive) continue;
                 if (splashedInsect != insect && Vector3.Distance(transform.position, splashedInsect.transform.position) <= waterlily.AoERange)
+                {
                     splashedInsect.Damage(waterlily.splashDamage, damageType, elementalType, source, true, splashTags);
+                    waterlily.ApplyStackingSlow(splashedInsect);
+                }
             }
         }
     }

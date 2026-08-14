@@ -18,7 +18,7 @@ MonoBehaviour:
   passiveDescription: Stops periodically to give birth lol
   sprite: {fileID: 21300000, guid: 1c27e4fa9d6ba654e8c711258d0af381, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
-  baseMaxHealth: 2400
+  baseMaxHealth: 800
   baseAttackDamage: 30
   baseMagicPower: 0
   baseAttackSpeed: 1
@@ -42,8 +42,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0.3
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   threatValue: 6
   threatType: 1

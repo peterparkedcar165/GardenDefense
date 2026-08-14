@@ -387,11 +387,14 @@ public abstract class Entity : MonoBehaviour
         {
             case ElementalType.Fire:
             elementalMultiplier = Mathf.Max(0f, 1 - fireResistance) * (1 + source.fireDamage);
+            // elemental reactions temporarily disabled
+            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && fireInternalCooldown <= 0)
                 {
                     fireInternalCooldown = internalCooldown;
                     ApplyEffect(new FirePrimer(this, elementalDebuffDuration, 1, source));
                 }
+            */
 
                 if (this.HasEffect<GerminateEffect>())
                 RemoveEffect<GerminateEffect>();
@@ -399,26 +402,34 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Water:
             elementalMultiplier = Mathf.Max(0f, 1 - waterResistance) * (1 + source.waterDamage);
+            // elemental reactions temporarily disabled
+            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && waterInternalCooldown <= 0)
                 {
                     waterInternalCooldown = internalCooldown;
                     ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
                 }
+            */
             break;
 
             case ElementalType.Ice:
             elementalMultiplier = Mathf.Max(0f, 1 - iceResistance) * (1 + source.iceDamage);
+            // elemental reactions temporarily disabled
+            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && iceInternalCooldown <= 0)
                 {
                     iceInternalCooldown = internalCooldown;
                     ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
                 }
+            */
             break;
 
             case ElementalType.Wind:
             elementalMultiplier = Mathf.Max(0f, 1 - windResistance) * (1 + source.windDamage);
             if (this is Insect windInsect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
+                    // elemental reactions temporarily disabled
+                    /*
                     if (windInternalCooldown <= 0 &&
                         (windInsect.HasEffect<FirePrimer>() || windInsect.HasEffect<IcePrimer>() ||
                          windInsect.HasEffect<WaterPrimer>()   || windInsect.HasEffect<PoisonPrimer>() ||
@@ -427,6 +438,7 @@ public abstract class Entity : MonoBehaviour
                         windInternalCooldown = internalCooldown;
                         ApplyEffect(new WindPrimer(this, 0.5f, 1, source));
                     }
+                    */
                     if (source is Anemone anemone)
                         anemone.ApplyWindErosion(windInsect);
                 }
@@ -434,29 +446,38 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Grass:
             elementalMultiplier = Mathf.Max(0f, 1 - grassResistance) * (1 + source.grassDamage);
+            // elemental reactions temporarily disabled
+            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && grassInternalCooldown <= 0)
                 {
                     grassInternalCooldown = internalCooldown;
                     ApplyEffect(new GrassPrimer(this, elementalDebuffDuration, 1, source));
                 }
+            */
             break;
 
             case ElementalType.Poison:
             elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance) * (1 + source.poisonDamage);
+            // elemental reactions temporarily disabled
+            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && poisonInternalCooldown <= 0)
                 {
                     poisonInternalCooldown = internalCooldown;
                     ApplyEffect(new PoisonPrimer(this, elementalDebuffDuration, 1, source));
                 }
+            */
             break;
 
             case ElementalType.Ground:
             elementalMultiplier = Mathf.Max(0f, 1 - groundResistance) * (1 + source.groundDamage);
+            // elemental reactions temporarily disabled
+            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && groundInternalCooldown <= 0)
                 {
                     groundInternalCooldown = internalCooldown;
                     ApplyEffect(new GroundPrimer(this, elementalDebuffDuration, 1, source));
                 }
+            */
             break;
 
             default:

@@ -8,12 +8,15 @@ public class WaterlilyData : PlantData
     public float baseBubblePrisonImpactDamage;
 
     [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 5f;
     public float path1AttackRangePerLevel = 0.5f;
     public float path1AttackSpeedPerLevel = 0.3f;
 
     [Header("Path 2 Scaling")]
     public float path2AoERangePerLevel = 0.05f;
     public float path2SplashDamageScalingPerLevel = 0.05f;
+    public float baseSlowDuration = 6f;
+    public int path2MaxSlowStacksPerLevel = 1;
 
     [Header("Path 3 Scaling")]
     public float path3BubbleDamagePerLevel = 12f;
