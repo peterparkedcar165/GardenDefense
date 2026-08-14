@@ -84,39 +84,55 @@ public class Rhodiola : Aura
             Attack();
     }
 
-    // lowest health percentage injured plant or friendly insect/minion within range, the cone aims at it
+    private const float CriticalHealthPercent = 0.25f;
+
+    // targeting priority: 1) any plant under 25% health (lowest % wins), always overrides
+    // everything else. 2) whichever plant is already being healed, kept as the target until
+    // it reaches full health, so healing does not flicker between similarly injured plants.
+    // 3) the single lowest health plant, once no plant qualifies for the tiers above.
+    // 4) friendly insects and minions, lowest health, only once no plant needs healing at all
     private Entity FindMostInjuredHealable()
     {
-        Entity best = null;
-        float bestPercent = 1f;
+        Plant critical = null;
+        float criticalPercent = 1f;
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || plant == this || !plant.IsAlive) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
+            float percent = plant.health / plant.maxHealth;
+            if (percent >= CriticalHealthPercent) continue;
+            if (percent < criticalPercent) { criticalPercent = percent; critical = plant; }
+        }
+        if (critical != null) return critical;
 
+        if (_mainTarget is Plant currentTarget && currentTarget.IsAlive
+            && currentTarget.health < currentTarget.maxHealth
+            && Vector2.Distance(transform.position, currentTarget.transform.position) <= attackRange)
+            return currentTarget;
+
+        Plant lowest = null;
+        float lowestPercent = 1f;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || plant == this || !plant.IsAlive) continue;
             if (plant.health >= plant.maxHealth) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             float percent = plant.health / plant.maxHealth;
-            if (percent < bestPercent)
-            {
-                bestPercent = percent;
-                best = plant;
-            }
+            if (percent < lowestPercent) { lowestPercent = percent; lowest = plant; }
         }
+        if (lowest != null) return lowest;
 
+        Insect lowestAlly = null;
+        float lowestAllyPercent = 1f;
         foreach (Insect ally in Insect.friendlyInsects)
         {
             if (ally == null || !ally.IsAlive) continue;
             if (ally.health >= ally.maxHealth) continue;
             if (Vector2.Distance(transform.position, ally.transform.position) > attackRange) continue;
             float percent = ally.health / ally.maxHealth;
-            if (percent < bestPercent)
-            {
-                bestPercent = percent;
-                best = ally;
-            }
+            if (percent < lowestAllyPercent) { lowestAllyPercent = percent; lowestAlly = ally; }
         }
-
-        return best;
+        return lowestAlly;
     }
 
     protected override void Attack()
