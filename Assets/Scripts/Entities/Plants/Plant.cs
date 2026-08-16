@@ -89,6 +89,7 @@ public abstract class Plant : Entity, IAttackable
     private CircleCollider2D _circleCollider;
     private bool _isSelected = false;
     private UnityEngine.Rendering.Universal.Light2D _light2D;
+    private LightFader _lightFader;
     private float _lastLightEmissionRange;
     protected virtual float LightIntensity => 0.65f;
     private const float lightFadeSpeed = 2f;
@@ -246,6 +247,8 @@ public abstract class Plant : Entity, IAttackable
             _light2D.falloffIntensity = lightFalloffStrength;
             _light2D.targetSortingLayers = GetAllSortingLayerIDs();
 
+            _lightFader = lightObj.AddComponent<LightFader>();
+            _lightFader.Setup(_light2D, LightIntensity);
         }
 
         if (_light2D != null)
@@ -705,22 +708,29 @@ public abstract class Plant : Entity, IAttackable
 
         if (_light2D != null)
         {
-            if (lightEmissionRange > _lastLightEmissionRange)
+            if (lightEmissionRange != _lastLightEmissionRange)
             {
-                // growing: pop the radius out immediately, then fade intensity up from black into it
-                _light2D.pointLightOuterRadius = lightEmissionRange;
-                _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
-                _light2D.intensity = 0f;
+                if (lightEmissionRange > 0f && _lastLightEmissionRange <= 0f)
+                {
+                    // turning on from fully off: pop the radius out, then fade intensity up from black
+                    _light2D.pointLightOuterRadius = lightEmissionRange;
+                    _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
+                    _lightFader?.FadeIn(1f);
+                }
+                else if (lightEmissionRange <= 0f)
+                {
+                    // turning off: fade the light out in place, radius stays as-is
+                    _lightFader?.FadeOut(1f);
+                }
+                else
+                {
+                    // already lit and resizing (e.g. Floral Glow changing an already-illuminated
+                    // plant's range): fade the old radius out, swap it, fade the new one back in
+                    _lightFader?.CrossFadeTo(lightEmissionRange, Mathf.Min(lightInnerRadius, lightEmissionRange));
+                }
+
+                _lastLightEmissionRange = lightEmissionRange;
             }
-            _lastLightEmissionRange = lightEmissionRange;
-
-            // shrinking (including down to 0) eases the radius down instead of snapping
-            float targetRadius = Mathf.Max(0f, lightEmissionRange);
-            _light2D.pointLightOuterRadius = Mathf.Lerp(_light2D.pointLightOuterRadius, targetRadius, Time.unscaledDeltaTime * lightFadeSpeed);
-            _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, _light2D.pointLightOuterRadius);
-
-            float targetIntensity = lightEmissionRange > 0f ? LightIntensity : 0f;
-            _light2D.intensity = Mathf.Lerp(_light2D.intensity, targetIntensity, Time.unscaledDeltaTime * lightFadeSpeed);
         }
 
         if (passiveCooldownTimer > 0)
@@ -1126,10 +1136,11 @@ public abstract class Plant : Entity, IAttackable
         if (_light2D == null) return;
         GameObject lightObj = _light2D.gameObject;
         lightObj.transform.SetParent(null);
-        var fader = lightObj.AddComponent<LightFader>();
+        LightFader fader = _lightFader ?? lightObj.AddComponent<LightFader>();
         fader.SetupForFadeOut(_light2D);
         fader.FadeOut(0.3f, destroyOnComplete: true);
         _light2D = null;
+        _lightFader = null;
     }
 
     public override void Kill()
