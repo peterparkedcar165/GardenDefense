@@ -82,7 +82,7 @@ MonoBehaviour:
   baseHealPerSecond: 8
   attackHealMPScaling: 0.05
   healTickInterval: 0.5
-  coneAngle: 45
+  coneAngle: 90
   splashHealMultiplier: 0.5
   path1AttackRangePerLevel: 0.2
   path1HealPerSecondPerLevel: 4

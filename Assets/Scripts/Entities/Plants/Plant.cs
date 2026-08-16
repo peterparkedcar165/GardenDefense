@@ -353,6 +353,7 @@ public abstract class Plant : Entity, IAttackable
         baseLifesteal          = data.baseLifesteal;
         baseBonusEffectChance  = data.baseBonusEffectChance;
         baseElementalEffectChance = data.baseElementalEffectChance;
+        baseOnHitEffectiveness = data.baseOnHitEffectiveness;
         baseFireDamage         = data.baseFireDamage;
         baseWaterDamage        = data.baseWaterDamage;
         baseGrassDamage       = data.baseGrassDamage;
@@ -704,17 +705,20 @@ public abstract class Plant : Entity, IAttackable
 
         if (_light2D != null)
         {
-            if (lightEmissionRange != _lastLightEmissionRange)
+            if (lightEmissionRange > _lastLightEmissionRange)
             {
-                if (lightEmissionRange > 0f)
-                {
-                    _light2D.pointLightOuterRadius = lightEmissionRange;
-                    _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
-                }
-                if (lightEmissionRange > _lastLightEmissionRange)
-                    _light2D.intensity = 0f;
-                _lastLightEmissionRange = lightEmissionRange;
+                // growing: pop the radius out immediately, then fade intensity up from black into it
+                _light2D.pointLightOuterRadius = lightEmissionRange;
+                _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
+                _light2D.intensity = 0f;
             }
+            _lastLightEmissionRange = lightEmissionRange;
+
+            // shrinking (including down to 0) eases the radius down instead of snapping
+            float targetRadius = Mathf.Max(0f, lightEmissionRange);
+            _light2D.pointLightOuterRadius = Mathf.Lerp(_light2D.pointLightOuterRadius, targetRadius, Time.unscaledDeltaTime * lightFadeSpeed);
+            _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, _light2D.pointLightOuterRadius);
+
             float targetIntensity = lightEmissionRange > 0f ? LightIntensity : 0f;
             _light2D.intensity = Mathf.Lerp(_light2D.intensity, targetIntensity, Time.unscaledDeltaTime * lightFadeSpeed);
         }

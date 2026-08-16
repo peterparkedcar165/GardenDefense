@@ -24,6 +24,7 @@ public class PlantData : ScriptableObject
     public int baseArmor;
     public int baseMagicArmor;
     public float baseElementalEffectChance = 0.1f;
+    public float baseOnHitEffectiveness = 1f;
 
     [Header("Healing")]
     public float baseHealingBonus;

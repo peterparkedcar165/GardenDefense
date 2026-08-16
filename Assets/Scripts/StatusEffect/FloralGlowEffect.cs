@@ -43,8 +43,6 @@ public class FloralGlowEffect : StatusEffect
             plant.lightEmissionRangeAdder += delta;
             plant.UpdateStats();
         }
-
-        Entity.OnHit += HandleHit;
     }
 
     public override void OnTick(float deltaTime) { }
@@ -62,23 +60,19 @@ public class FloralGlowEffect : StatusEffect
             plant.lightEmissionRangeAdder -= delta;
             plant.UpdateStats();
         }
-
-        Entity.OnHit -= HandleHit;
     }
 
-    private void HandleHit(EntityEventData data)
+    public void Trigger(Insect insect, float effectiveness)
     {
-        if (data.source != target) return;
-        if (!System.Array.Exists(data.tags, t => t == DamageTag.Melee || t == DamageTag.Projectile)) return;
-        if (data.target is not Insect insect || calendula == null || !insect.IsAlive) return;
-        calendula.StartCoroutine(DelayedFireHit(insect));
+        if (calendula == null || insect == null || !insect.IsAlive) return;
+        calendula.StartCoroutine(DelayedFireHit(insect, effectiveness));
     }
 
-    private System.Collections.IEnumerator DelayedFireHit(Insect insect)
+    private System.Collections.IEnumerator DelayedFireHit(Insect insect, float effectiveness)
     {
         yield return new UnityEngine.WaitForSeconds(0.03f);
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
-        float hitDamage = calendula.attackDamage * DamageScaling + calendula.skillDamageMultiplier * calendula.magicPower;
+        float hitDamage = (calendula.attackDamage * DamageScaling + calendula.skillDamageMultiplier * calendula.magicPower) * effectiveness;
         DamageTag[] tags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated };
         insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false, tags);
 

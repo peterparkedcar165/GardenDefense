@@ -42,8 +42,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   threatValue: 1.1
   threatType: 0
@@ -56,6 +57,6 @@ MonoBehaviour:
   currencyDropAdder: 0
   currencyDropMultiplier: 0
   aggressivity: 0
-  baseLightEmissionRange: 1
+  baseLightEmissionRange: 2
   baseHealingBonus: 0
   baseHealingReceived: 0

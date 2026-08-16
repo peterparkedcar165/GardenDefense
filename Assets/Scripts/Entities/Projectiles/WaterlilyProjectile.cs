@@ -53,9 +53,7 @@ public class WaterlilyProjectile : Projectile
             waterlily.ApplyStackingSlow(insect);
 
             bool path2Maxed = waterlily.IsPath2Maxed;
-            DamageTag[] splashTags = path2Maxed
-                ? new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage, DamageTag.Attack, DamageTag.Projectile }
-                : new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage };
+            DamageTag[] splashTags = new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage };
             foreach (Insect splashedInsect in new List<Insect>(Insect.allInsects))
             {
                 if (splashedInsect == null || !splashedInsect.IsAlive) continue;
@@ -63,6 +61,18 @@ public class WaterlilyProjectile : Projectile
                 {
                     splashedInsect.Damage(waterlily.splashDamage, damageType, elementalType, source, true, splashTags);
                     waterlily.ApplyStackingSlow(splashedInsect);
+
+                    if (path2Maxed)
+                        Entity.RaiseOnHit(new EntityEventData
+                        {
+                            target = splashedInsect,
+                            source = source,
+                            position = splashedInsect.transform.position,
+                            damage = waterlily.splashDamage,
+                            damageType = damageType,
+                            elementalType = elementalType,
+                            tags = splashTags
+                        });
                 }
             }
         }

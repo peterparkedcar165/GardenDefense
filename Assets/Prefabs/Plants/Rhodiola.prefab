@@ -200,6 +200,7 @@ MonoBehaviour:
   baseMagicDamage: 0
   baseFallDamage: 0
   baseBonusEffectChance: 0
+  baseElementalEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
   baseGrassDamage: 0
@@ -265,6 +266,7 @@ MonoBehaviour:
   magicDamage: 0
   fallDamage: 0
   bonusEffectChance: 0
+  elementalEffectChance: 0
   fireDamage: 0
   waterDamage: 0
   grassDamage: 0
@@ -333,6 +335,7 @@ MonoBehaviour:
   magicDamageAdder: 0
   fallDamageAdder: 0
   bonusEffectChanceAdder: 0
+  elementalEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
   grassDamageAdder: 0
@@ -398,6 +401,7 @@ MonoBehaviour:
   physicalDamageMultiplier: 0
   magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
+  elementalEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
   grassDamageMultiplier: 0
@@ -493,6 +497,9 @@ MonoBehaviour:
   skillCooldownReductionAdder: 0
   skillCooldownReductionMultiplier: 0
   skillCooldownTimer: 0
+  baseSkillChargeRate: 1
+  skillChargeRate: 1
+  skillChargeRateAdder: 0
   baseSkillRadius: 0
   skillRadius: 0
   skillRadiusAdder: 0
@@ -617,11 +624,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2286134516124833348, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.20455
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2286134516124833348, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.10686
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2286134516124833348, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
       propertyPath: m_LocalPosition.z

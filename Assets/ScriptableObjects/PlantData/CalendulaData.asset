@@ -28,6 +28,8 @@ MonoBehaviour:
   baseAttackRange: 2.5
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 0.5
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -83,5 +85,5 @@ MonoBehaviour:
   path1FireDamagePerLevel: 0.04
   path2AttackRangePerLevel: 0.2
   path3SkillDurationPerLevel: 5
-  floralGlowBaseDamageScaling: 0.5
+  floralGlowBaseDamageScaling: 0.35
   floralGlowDamageScalingPerLevel: 0.1

@@ -85,6 +85,7 @@ public abstract class Entity : MonoBehaviour
     public float baseDotDuration, baseRegenerationDuration, baseShieldDuration, baseSunGenerationCooldown;
     public float baseEvasion, baseAccuracy;
     public float baseBonusCritChanceReceived, baseBonusCritDamageReceived, baseProjectileSpeed;
+    public float baseOnHitEffectiveness = 1f;
 
     public static event System.Action<EntityEventData> OnHit;
     public static event System.Action<EntityEventData> OnEntityHit;
@@ -97,6 +98,31 @@ public abstract class Entity : MonoBehaviour
     public static event System.Action<EntityEventData> OnShieldExpire;
 
     protected static void RaiseEntityDied(EntityEventData data) => OnEntityDied?.Invoke(data);
+    public static void RaiseOnHit(EntityEventData data) => OnHit?.Invoke(data);
+
+    // single centralized dispatcher for all on-hit effects, rather than each effect
+    // subscribing to OnHit individually. add a new on-hit effect here as its own check
+    static Entity()
+    {
+        OnHit += HandleOnHitEffects;
+    }
+
+    private static void HandleOnHitEffects(EntityEventData data)
+    {
+        if (data.source == null || data.target is not Insect insect || !insect.IsAlive) return;
+
+        // fast-attacking sources (Snowdrop, Stargazer) deal reduced on-hit effect damage per hit,
+        // so their overall on-hit output doesn't scale with attack speed the way base damage does
+        float effectiveness = data.source.onHitEffectiveness;
+
+        FloralGlowEffect floralGlow = data.source.GetEffect<FloralGlowEffect>();
+        if (floralGlow != null)
+            floralGlow.Trigger(insect, effectiveness);
+
+        AblazeEffect ablaze = data.source.GetEffect<AblazeEffect>();
+        if (ablaze != null)
+            ablaze.Trigger(insect, effectiveness);
+    }
 
     [Header("Stats")]
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
@@ -143,6 +169,7 @@ public abstract class Entity : MonoBehaviour
     public void RemoveElementalReactionCanCrit() => _elementalReactionCanCritSources = Mathf.Max(0, _elementalReactionCanCritSources - 1);
     public float evasion, accuracy;
     public float bonusCritChanceReceived, bonusCritDamageReceived, projectileSpeed;
+    public float onHitEffectiveness;
 
     [Header("Stat Adders")]
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
@@ -168,6 +195,7 @@ public abstract class Entity : MonoBehaviour
     public float evasionAdder, accuracyAdder;
     public float bonusCritChanceReceivedAdder, bonusCritDamageReceivedAdder, projectileSpeedAdder;
     public float sunYieldAdder, currencyYieldAdder;
+    public float onHitEffectivenessAdder;
 
     [Header("Stat Multipliers")]
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
@@ -235,6 +263,7 @@ public abstract class Entity : MonoBehaviour
         bonusCritChanceReceived = baseBonusCritChanceReceived + bonusCritChanceReceivedAdder + (baseBonusCritChanceReceived * bonusCritChanceReceivedMultiplier);
         bonusCritDamageReceived = baseBonusCritDamageReceived + bonusCritDamageReceivedAdder;
         projectileSpeed = baseProjectileSpeed + projectileSpeedAdder + (baseProjectileSpeed * projectileSpeedMultiplier);
+        onHitEffectiveness = Mathf.Max(0f, baseOnHitEffectiveness + onHitEffectivenessAdder);
         dotResistance = baseDotResistance + dotResistanceAdder + (baseDotResistance * dotResistanceMultiplier);
         fallDamageResistance = baseFallDamageResistance + fallDamageResistanceAdder;
         dotDamage = baseDotDamage + dotDamageAdder + (baseDotDamage * dotDamageMultiplier);

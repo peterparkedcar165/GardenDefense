@@ -17,28 +17,22 @@ public class AblazeEffect : StatusEffect
     public override void OnApply()
     {
         StatusIndicator.Spawn(target.transform.position + new UnityEngine.Vector3(0.4f, 0f, 0f), "Ablaze", new UnityEngine.Color(1f, 0.4f, 0f));
-        Entity.OnHit += HandleHit;
     }
 
-    public override void OnExpire()
-    {
-        Entity.OnHit -= HandleHit;
-    }
+    public override void OnExpire() { }
 
-    private void HandleHit(EntityEventData data)
+    public void Trigger(Insect insect, float effectiveness)
     {
-        if (data.source != target) return;
-        if (data.target is not Insect insect) return;
-        Entity.OnHit -= HandleHit;
+        if (insect == null) return;
         target.RemoveEffect<AblazeEffect>();
-        target.StartCoroutine(DelayedBonusDamage(insect));
+        target.StartCoroutine(DelayedBonusDamage(insect, effectiveness));
     }
 
-    private System.Collections.IEnumerator DelayedBonusDamage(Insect insect)
+    private System.Collections.IEnumerator DelayedBonusDamage(Insect insect, float effectiveness)
     {
         yield return new UnityEngine.WaitForSeconds(0.1f);
         if (insect == null || !insect.IsAlive) yield break;
-        insect.Damage(bonusDamage, DamageType.Magic, ElementalType.Fire, target, false, bonusDamageTags);
+        insect.Damage(bonusDamage * effectiveness, DamageType.Magic, ElementalType.Fire, target, false, bonusDamageTags);
     }
 
     public override void OnTick(float deltaTime) { }
