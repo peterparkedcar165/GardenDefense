@@ -80,5 +80,6 @@ public enum StatType
     GroundDamage,
     BonusEffectChance,
     MinimumDamage,
-    MaximumDamage
+    MaximumDamage,
+    ElementalEffectChance
 }

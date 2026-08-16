@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PoisonedEffect : DoTEffect
+public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
 {
     private ParticleSystem poisonParticles;
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
@@ -8,6 +8,8 @@ public class PoisonedEffect : DoTEffect
     private float currentHealthPercent = 0.01f;
     private float currentFlatDamage = 2f;
     private float cachedElementalAffinity;
+
+    public float AffinityPower => source?.elementalAffinity ?? 0f;
 
     public PoisonedEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)
@@ -45,7 +47,7 @@ public class PoisonedEffect : DoTEffect
         tickTimer += deltaTime;
         if (tickTimer < tickInterval) return;
 
-        float damage = (target.maxHealth * currentHealthPercent + currentFlatDamage) * (1f + cachedElementalAffinity);
+        float damage = target.maxHealth * currentHealthPercent + currentFlatDamage * (1f + cachedElementalAffinity);
         if (source != null)
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
         else

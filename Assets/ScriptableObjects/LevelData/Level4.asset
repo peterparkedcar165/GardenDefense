@@ -102,7 +102,7 @@ MonoBehaviour:
     budgetWeight: 0.1
     startDelay: 2
     minSpawnCount: 3
-    maxSpawnCount: 18
+    maxSpawnCount: 12
   fertilizerPool:
   - {fileID: 11400000, guid: c8613c3921154b64f86afc3c6ea94b78, type: 2}
   - {fileID: 11400000, guid: 06970b7a93644514e96c630052df2a18, type: 2}

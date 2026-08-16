@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
 
-public class BurnEffect : DoTEffect
+public class BurnEffect : DoTEffect, IElementalAffinityEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.02f, mpPerSecond = 0.12f, flatPerSecond = 7f;
+    public float healthPerSecond = 0.04f, flatPerSecond = 12f;
     private float cachedMaxHealth;
-    private float cachedMagicPower;
     private float cachedelementalAffinity;
     private LightFader _burnFader;
     private const float BurnLightRadius = 1.25f;
     private ParticleSystem _burnParticles;
+
+    public float AffinityPower => source?.elementalAffinity ?? 0f;
 
     public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
         elementalType = ElementalType.Fire;
-        sourceStackable = true;
         tickInterval = 1f;
         // the source can extend the Burns it causes (Stargazer passive)
         if (source != null) this.duration *= 1f + source.burnDurationBonus;
@@ -27,10 +27,9 @@ public class BurnEffect : DoTEffect
     public override string GetDescription()
     {
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
-        float mp = cachedMagicPower > 0 ? cachedMagicPower : (source?.magicPower ?? 0f);
         float ep = cachedelementalAffinity;
         float flammable = target?.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
-        float total = ((healthPerSecond * hp) + (mpPerSecond * mp) + flatPerSecond) * (1f + ep) * flammable;
+        float total = ((healthPerSecond * hp) + (flatPerSecond * (1f + ep))) * flammable;
         return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second.";
     }
 
@@ -38,8 +37,7 @@ public class BurnEffect : DoTEffect
     {
         base.OnApply();
         cachedMaxHealth = target.maxHealth;
-        cachedMagicPower = source?.magicPower ?? 0f;
-        damagePerSecond = ((healthPerSecond * cachedMaxHealth) + (mpPerSecond * cachedMagicPower) + flatPerSecond) * (1f + cachedelementalAffinity);
+        damagePerSecond = (healthPerSecond * cachedMaxHealth) + (flatPerSecond * (1f + cachedelementalAffinity));
 
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Burn", new Color(1f, 0.4f, 0f));
 

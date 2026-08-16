@@ -77,6 +77,7 @@ public class StatsPanelTooltip : MonoBehaviour
         ElemLine(sb, Crit, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
         ElemLine(sb, Crit, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
         ElemLine(sb, Effect, "Bonus Effect Chance:", $"{e.bonusEffectChance * 100:F0}%", e.bonusEffectChance, e.baseBonusEffectChance);
+        ElemLine(sb, Effect, "Elemental Effect Chance:", $"{e.elementalEffectChance * 100:F0}%", e.elementalEffectChance, e.baseElementalEffectChance);
         sb.AppendLine();
         ElemLine(sb, Magic, "Maximum Damage:", $"{e.maximumDamage * 100:F0}%", e.maximumDamage, e.baseMaximumDamage);
         ElemLine(sb, Magic, "Minimum Damage:", $"{e.minimumDamage * 100:F0}%", e.minimumDamage, e.baseMinimumDamage);

@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Tag-Teaming
   stats:
   - statType: 23
-    value: 0.42
+    value: 0.55
   - statType: 14
-    value: 0.28
+    value: 0.33
   icon: {fileID: 0}
   targetElementalTypes: 
   targetCultivars: 

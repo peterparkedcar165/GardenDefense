@@ -69,7 +69,7 @@ public abstract class Entity : MonoBehaviour
     public int baseArmorPenFlat, baseMagicPenFlat;
     public float baseArmorPenPercent, baseMagicPenPercent;
     public float baseFireResistance, baseWaterResistance, baseGrassResistance, baseWindResistance, basePoisonResistance, baseIceResistance, baseGroundResistance;
-    public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance;
+    public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance, baseElementalEffectChance;
     public float baseFireDamage, baseWaterDamage, baseGrassDamage, baseWindDamage, basePoisonDamage, baseIceDamage, baseGroundDamage;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseMinimumDamage = 0.8f, baseMaximumDamage = 1.2f;
@@ -105,7 +105,7 @@ public abstract class Entity : MonoBehaviour
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
     public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance, groundResistance;
-    public float physicalDamage, magicDamage, fallDamage, bonusEffectChance;
+    public float physicalDamage, magicDamage, fallDamage, bonusEffectChance, elementalEffectChance;
     public float fireDamage, waterDamage, grassDamage, windDamage, poisonDamage, iceDamage, groundDamage;
     public float criticalChance, criticalDamage;
     public float minimumDamage, maximumDamage;
@@ -149,7 +149,7 @@ public abstract class Entity : MonoBehaviour
     public float armorAdder, magicArmorAdder;
     public float armorPenFlatAdder, magicPenFlatAdder, armorPenPercentAdder, magicPenPercentAdder;
     public float fireResistanceAdder, waterResistanceAdder, grassResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder, groundResistanceAdder;
-    public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder;
+    public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder, elementalEffectChanceAdder;
     public float fireDamageAdder, waterDamageAdder, grassDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder, groundDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
     public float minimumDamageAdder, maximumDamageAdder;
@@ -174,7 +174,7 @@ public abstract class Entity : MonoBehaviour
     public float armorMultiplier, magicArmorMultiplier;
     public float armorPenFlatMultiplier, magicPenFlatMultiplier, armorPenPercentMultiplier, magicPenPercentMultiplier;
     public float fireResistanceMultiplier, waterResistanceMultiplier, grassResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier, groundResistanceMultiplier;
-    public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier;
+    public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier, elementalEffectChanceMultiplier;
     public float fireDamageMultiplier, waterDamageMultiplier, grassDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier, groundDamageMultiplier;
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
@@ -220,6 +220,7 @@ public abstract class Entity : MonoBehaviour
         magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
         fallDamage = baseFallDamage + fallDamageAdder;
         bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
+        elementalEffectChance = baseElementalEffectChance + elementalEffectChanceAdder + (baseElementalEffectChance * elementalEffectChanceMultiplier);
         fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
         waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
         grassDamage = baseGrassDamage + grassDamageAdder + (baseGrassDamage * grassDamageMultiplier);
@@ -373,6 +374,12 @@ public abstract class Entity : MonoBehaviour
         float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 8f, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
         bool isCrit = false;
 
+        // elemental effect procs: dot damage (burn/poison ticks etc) rolls at half chance, and
+        // damage already tagged as a reaction/debuff proc (e.g. a burn tick) cannot itself proc a new effect
+        bool canProcElementalEffect = this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff);
+        bool isDoTDamage = System.Array.Exists(damageTag, t => t == DamageTag.DoT);
+        float elementalEffectRoll = source.elementalEffectChance * (1f + source.bonusEffectChance) * (isDoTDamage ? 0.5f : 1f);
+
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
             Damage(GetEffect<BrittleEffect>().bonusDamage, damageType, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
@@ -398,6 +405,9 @@ public abstract class Entity : MonoBehaviour
 
                 if (this.HasEffect<GerminateEffect>())
                 RemoveEffect<GerminateEffect>();
+
+                if (canProcElementalEffect && Random.value < elementalEffectRoll)
+                    ApplyEffect(new BurnEffect(this, 6f, 1, source));
             break;
 
             case ElementalType.Water:
@@ -410,6 +420,9 @@ public abstract class Entity : MonoBehaviour
                     ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
                 }
             */
+
+                if (canProcElementalEffect && Random.value < elementalEffectRoll)
+                    ApplyEffect(new SoakedEffect(this, 8f, 1, source));
             break;
 
             case ElementalType.Ice:
@@ -422,6 +435,9 @@ public abstract class Entity : MonoBehaviour
                     ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
                 }
             */
+
+                if (canProcElementalEffect && Random.value < elementalEffectRoll)
+                    ApplyEffect(new FreezeEffect(this, 4f, 1, source));
             break;
 
             case ElementalType.Wind:
@@ -454,6 +470,9 @@ public abstract class Entity : MonoBehaviour
                     ApplyEffect(new GrassPrimer(this, elementalDebuffDuration, 1, source));
                 }
             */
+
+                if (canProcElementalEffect && Random.value < elementalEffectRoll)
+                    ApplyEffect(new SeededEffect(this, 8f, 1, source));
             break;
 
             case ElementalType.Poison:
@@ -466,6 +485,9 @@ public abstract class Entity : MonoBehaviour
                     ApplyEffect(new PoisonPrimer(this, elementalDebuffDuration, 1, source));
                 }
             */
+
+                if (canProcElementalEffect && Random.value < elementalEffectRoll)
+                    ApplyEffect(new PoisonedEffect(this, 6f, 1, source));
             break;
 
             case ElementalType.Ground:
@@ -478,6 +500,9 @@ public abstract class Entity : MonoBehaviour
                     ApplyEffect(new GroundPrimer(this, elementalDebuffDuration, 1, source));
                 }
             */
+
+                if (canProcElementalEffect && Random.value < elementalEffectRoll)
+                    ApplyEffect(new VulnerableEffect(this, 8f, 1, source));
             break;
 
             default:
@@ -1003,6 +1028,18 @@ public abstract class Entity : MonoBehaviour
                 return;
         }
 
+        // scale duration by source's given-duration stat and this entity's received-duration stat
+        if (effect.effectType == StatusEffect.Type.positive)
+        {
+            if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.buffGivenDuration);
+            effect.duration *= Mathf.Max(0f, 1f + buffReceivedDuration);
+        }
+        else if (effect.effectType == StatusEffect.Type.negative)
+        {
+            if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.debuffGivenDuration);
+            effect.duration *= Mathf.Max(0f, 1f + debuffReceivedDuration);
+        }
+
         if (effect is ShieldEffect newShield)
         {
             for (int i = activeEffects.Count - 1; i >= 0; i--)
@@ -1013,6 +1050,29 @@ public abstract class Entity : MonoBehaviour
                     existing.OnExpire();
                     activeEffects.RemoveAt(i);
                     break;
+                }
+            }
+        }
+        else if (effect is IElementalAffinityEffect newElemental)
+        {
+            // unique per target: the instance with the higher elemental affinity wins, but any
+            // attempted application refreshes the duration of whichever instance ends up active
+            for (int i = activeEffects.Count - 1; i >= 0; i--)
+            {
+                if (activeEffects[i].GetType() == effect.GetType() && activeEffects[i] is IElementalAffinityEffect existingElemental)
+                {
+                    if (newElemental.AffinityPower >= existingElemental.AffinityPower)
+                    {
+                        effect.OnReapply(activeEffects[i]);
+                        activeEffects[i].OnExpire();
+                        activeEffects.RemoveAt(i);
+                        break;
+                    }
+                    else
+                    {
+                        activeEffects[i].duration = effect.duration;
+                        return;
+                    }
                 }
             }
         }
@@ -1030,17 +1090,6 @@ public abstract class Entity : MonoBehaviour
                     break;
                 }
             }
-        }
-        // scale duration by source's given-duration stat and this entity's received-duration stat
-        if (effect.effectType == StatusEffect.Type.positive)
-        {
-            if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.buffGivenDuration);
-            effect.duration *= Mathf.Max(0f, 1f + buffReceivedDuration);
-        }
-        else if (effect.effectType == StatusEffect.Type.negative)
-        {
-            if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.debuffGivenDuration);
-            effect.duration *= Mathf.Max(0f, 1f + debuffReceivedDuration);
         }
 
         activeEffects.Add(effect);

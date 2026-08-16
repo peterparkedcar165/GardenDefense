@@ -172,6 +172,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ChannelingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PathHoverTrigger.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\SoakedEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\ProceduralLevel.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dahlia.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Ant.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\AeoniumBlessedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\SeededEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\HarvestmanData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AnemoneData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
@@ -303,6 +305,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\GeyseredEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantGuardianEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\FireAntData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\IElementalAffinityEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FireAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WindPrimer.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />

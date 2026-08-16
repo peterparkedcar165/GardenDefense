@@ -352,6 +352,7 @@ public abstract class Plant : Entity, IAttackable
         baseMagicPenPercent    = data.baseMagicPenPercent;
         baseLifesteal          = data.baseLifesteal;
         baseBonusEffectChance  = data.baseBonusEffectChance;
+        baseElementalEffectChance = data.baseElementalEffectChance;
         baseFireDamage         = data.baseFireDamage;
         baseWaterDamage        = data.baseWaterDamage;
         baseGrassDamage       = data.baseGrassDamage;
