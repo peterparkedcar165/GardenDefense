@@ -4,5 +4,7 @@ public class BogIrisProjectile : Projectile
     {
         insect.Damage(projectileDamage, damageType, elementalType, source, true,
             new DamageTag[] { DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile });
+
+        (source as BogIris)?.TryExtendOpenState();
     }
 }

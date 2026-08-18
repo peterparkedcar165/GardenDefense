@@ -28,6 +28,8 @@ MonoBehaviour:
   baseAttackRange: 3
   baseArmor: 49
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -83,7 +85,7 @@ MonoBehaviour:
   stunDuration: 0.5
   path1AttackDamagePerLevel: 13
   path1AttackSpeedPerLevel: 0.11
-  path2StunChancePerLevel: 0.06
+  path2StunChancePerLevel: 0.04
   path2StunDurationPerLevel: 0.3
   path3DamageMultiplierPerLevel: 0.25
   path3SkillDurationPerLevel: 2

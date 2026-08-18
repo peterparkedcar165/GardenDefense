@@ -5,6 +5,7 @@ public class SunflowerData : PlantData
 {
     public int baseSunGenerated;
     public float baseSunrayDPS;
+    public float sunProcChance = 0.35f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 5f;
@@ -12,6 +13,7 @@ public class SunflowerData : PlantData
 
     [Header("Path 2 Scaling")]
     public int path2SunPerLevel = 2;
+    public float path2ProcChancePerLevel = 0.03f;
 
     [Header("Path 3 Scaling")]
     public float path3SunrayDPSPerLevel = 15f;

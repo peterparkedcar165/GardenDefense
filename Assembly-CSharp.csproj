@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\PlantDataTypes\CarrotData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WindshearFireEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
     <Compile Include="Assets\Scripts\PlantRegistry.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\HollyData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\SummonerPlant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Carrot.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WindshearGroundEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Lobber.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
@@ -199,12 +201,14 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\AnemoneData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WindshearGrassEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\GhostFungus.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Zinnia.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SunMarkEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\GlowshroomProjectile.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WindshearedEffect.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
     <Compile Include="Assets\Scripts\UI\PotButtonVisibility.cs" />
     <Compile Include="Assets\Scripts\GridManagers\CaveGridManager.cs" />
@@ -228,6 +232,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\NeriumOleander.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WindshearWaterEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\HelleboreData.cs" />
     <Compile Include="Assets\Scripts\Skills\GhostHypnosisWave.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Minion.cs" />
@@ -236,6 +241,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\FlowerPot.cs" />
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WindshearEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeData.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Silverfish.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleZone.cs" />
@@ -287,7 +293,9 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\CarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\MelterEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WindshearPoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\EntrappedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BegoniaProjectile.cs" />

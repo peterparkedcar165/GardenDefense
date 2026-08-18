@@ -28,6 +28,8 @@ MonoBehaviour:
   baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -81,8 +83,10 @@ MonoBehaviour:
   baseSkillDamage: 0
   baseSunGenerated: 6
   baseSunrayDPS: 75
+  sunProcChance: 0.35
   path1AttackDamagePerLevel: 4
   path1AttackSpeedPerLevel: 0.03
-  path2SunPerLevel: 1
+  path2SunPerLevel: 2
+  path2ProcChancePerLevel: 0.03
   path3SunrayDPSPerLevel: 15
   path3SkillDurationPerLevel: 0.5

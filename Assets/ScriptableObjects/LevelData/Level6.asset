@@ -22,7 +22,7 @@ MonoBehaviour:
   startHealth: 200
   maxUpgradeLevel: 5
   minWaveDuration: 25
-  maxWaveDuration: 70
+  maxWaveDuration: 100
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -49,7 +49,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 5
   minThreatBudget: 8
-  maxThreatBudget: 60
+  maxThreatBudget: 200
   budgetCurve:
     serializedVersion: 2
     m_Curve:

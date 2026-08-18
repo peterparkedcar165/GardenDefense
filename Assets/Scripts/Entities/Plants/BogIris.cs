@@ -12,7 +12,9 @@ public class BogIris : Shooter
     private float cycleTimer = 0f;
     private float sunTickTimer = 0f;
     private float healTickTimer = 0f;
+    private float openExtendChance;
     private float TotalHeal => (BogData?.baseClosedHeal ?? 200f) + (BogData?.path2ClosedHealPerLevel ?? 20f) * effectivePath2Level;
+    private float StateTimeRemaining => Mathf.Max(0f, (isOpen ? OpenDuration : passiveCooldown) - cycleTimer);
 
     private BogIrisData BogData => data as BogIrisData;
 
@@ -30,6 +32,7 @@ public class BogIris : Shooter
         LoadData();
         _rootRenderer = GetComponent<SpriteRenderer>();
         SetVisualState(false);
+        openExtendChance = BogData?.openExtendChance ?? 0.35f;
     }
 
     protected override void Update()
@@ -98,6 +101,14 @@ public class BogIris : Shooter
         }
     }
 
+    public void TryExtendOpenState()
+    {
+        if (!isOpen) return;
+        float procChance = openExtendChance * (1f + bonusEffectChance);
+        if (Random.value >= procChance) return;
+        cycleTimer = Mathf.Max(0f, cycleTimer - 1f);
+    }
+
     protected override SpriteRenderer GetMainRenderer()
     {
         return isOpen ? openVisual : closedVisual;
@@ -147,7 +158,8 @@ public class BogIris : Shooter
             {
                 if (insect == null || !insect.IsAlive) continue;
                 if (Vector3.Distance(position, insect.transform.position) <= GeyserRadius)
-                    insect.ApplyEffect(new GeyseredEffect(insect, 12f, 1, this));
+                    insect.ApplyEffect(new GeyseredEffect(insect, BogData?.geyseredDuration ?? 8f, 1, this,
+                        BogData?.geyseredArmorShred ?? 20f, BogData?.geyseredFallDamageResistanceShred ?? 0.15f));
             }
         }
     }
@@ -155,6 +167,7 @@ public class BogIris : Shooter
     public override void OnPath1Upgrade(int level)
     {
         baseAttackDamage = data.baseAttackDamage + (BogData?.path1AttackDamagePerLevel ?? 8f) * level;
+        baseAttackSpeed  = data.baseAttackSpeed  + (BogData?.path1AttackSpeedPerLevel  ?? 0.05f) * level;
     }
 
     public override void UpdateStats()
@@ -170,7 +183,10 @@ public class BogIris : Shooter
         }
     }
 
-    public override void OnPath2Upgrade(int level) { }
+    public override void OnPath2Upgrade(int level)
+    {
+        openExtendChance = (BogData?.openExtendChance ?? 0.35f) + (BogData?.path2OpenExtendChancePerLevel ?? 0.03f) * level;
+    }
     public override void OnPath3Upgrade(int level) { }
 
     public override string GetName() => "<b><color=#4FC3F7>Bog Iris</color></b>";
@@ -180,11 +196,13 @@ public class BogIris : Shooter
     public override string GetPath1Description(bool details = false)
     {
         float adpl = BogData?.path1AttackDamagePerLevel ?? 8f;
+        float aspl = BogData?.path1AttackSpeedPerLevel  ?? 0.05f;
         string desc = details
             ? $"Fires a water bolt at a single target dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
             : $"Fires a water bolt at a single target dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Increase <color=green><b>Attack Damage</b></color> by <color=green><b>33%</b></color> and <color=green><b>Projectile Speed</b></color> by <color=green><b>45%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -195,17 +213,21 @@ public class BogIris : Shooter
         float opendurpl = BogData?.path2OpenDurationPerLevel ?? 2f;
         int   sunpl     = BogData?.path2SunPerLevel          ?? 1;
         float healpl    = BogData?.path2ClosedHealPerLevel   ?? 20f;
+        float extendpl  = BogData?.path2OpenExtendChancePerLevel ?? 0.03f;
         string desc = details
             ? $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>[({BogData?.baseOpenDuration:F0}) + ({opendurpl:F0}/Lvl.)]</b></color>) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}</b></color> seconds) state.\n\n" +
-              $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>[({BogData?.baseSunGenerated}) + ({sunpl}/Lvl.)]</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds.\n\n" +
+              $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>[({BogData?.baseSunGenerated}) + ({sunpl}/Lvl.)]</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds, and attacks have a <color=green><b>[({(BogData?.openExtendChance ?? 0.35f) * 100f:F0}%) + ({extendpl * 100f:F0}%/Lvl.)]</b></color> chance to extend the <b><color=#4FC3F7>open</color></b> state by <color=green><b>1</b></color> second.\n\n" +
               $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>[({BogData?.baseClosedHeal:F0}) + ({healpl:F0}/Lvl.)]</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds."
             : $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>{OpenDuration:F0}</b></color> seconds) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}</b></color> seconds) state.\n\n" +
-              $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>{SunGenerated}</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds.\n\n" +
+              $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>{SunGenerated}</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds, and attacks have a <color=green><b>{openExtendChance * 100f:F0}%</b></color> chance to extend the <b><color=#4FC3F7>open</color></b> state by <color=green><b>1</b></color> second.\n\n" +
               $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>{TotalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.";
-        return $"Passive:\n\n{desc}\n\n" +
+        int stateSecondsRemaining = Mathf.CeilToInt(StateTimeRemaining);
+        string stateLine = $"<b><color=#4FC3F7>{(isOpen ? "OPEN" : "CLOSED")}</color></b>: [<color=green><b>{stateSecondsRemaining / 60:00}:{stateSecondsRemaining % 60:00}</b></color>]";
+        return $"Passive:\n\n{stateLine}\n\n{desc}\n\n" +
                $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>{opendurpl:F0}</b></color> seconds per level. [<color=green><b>+{opendurpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase Sun generated per tick by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "Overhealing while in the <b><color=#4FC3F7>closed</color></b> state grants <color=#4FC3F7><b>Aquatic Overshield</b></color> up to <color=green><b>100</b></color>. Taking <color=#FF69B4><b>Physical Damage</b></color> while protected by the shield primes the attacker with <color=#1E90FF><b>Water</b></color>.")}\n\n" +
+               $"Increase <b><color=#4FC3F7>open</color></b> state extend chance by <color=green><b>{extendpl * 100f:F0}%</b></color> per level. [<color=green><b>+{extendpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(path2Level, "Overhealing while in the <b><color=#4FC3F7>closed</color></b> state grants <color=#4FC3F7><b>Aquatic Overshield</b></color> up to <color=green><b>100</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -223,7 +245,7 @@ public class BogIris : Shooter
                $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the radius of the geyser by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, "Successful <color=#4FC3F7><b>Geyser</b></color> hits inflict <color=#4FC3F7><b>Geysered</b></color> for <color=green><b>12</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> by <color=red><b>30</b></color> and <color=#A0522D><b>Fall Damage Resistance</b></color> by <color=red><b>33%</b></color>.")}\n\n" +
+               $"{Level5Section(path3Level, $"Successful <color=#4FC3F7><b>Geyser</b></color> hits inflict <color=#4FC3F7><b>Geysered</b></color> for <color=green><b>{BogData?.geyseredDuration ?? 8f:F0}</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> by <color=red><b>{BogData?.geyseredArmorShred ?? 20f:F0}</b></color> and <color=#A0522D><b>Fall Damage Resistance</b></color> by <color=red><b>{(BogData?.geyseredFallDamageResistanceShred ?? 0.15f) * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

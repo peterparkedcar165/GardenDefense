@@ -71,7 +71,8 @@ public class WaterlilyProjectile : Projectile
                             damage = waterlily.splashDamage,
                             damageType = damageType,
                             elementalType = elementalType,
-                            tags = splashTags
+                            tags = splashTags,
+                            effectivenessOverride = waterlily.splashOnHitEffectiveness
                         });
                 }
             }

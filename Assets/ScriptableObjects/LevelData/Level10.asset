@@ -17,12 +17,12 @@ MonoBehaviour:
   - type: 2
     intensity: 1
   temperature: 2
-  maxWaves: 30
+  maxWaves: 32
   startSunCount: 750
   startHealth: 200
   maxUpgradeLevel: 5
   minWaveDuration: 20
-  maxWaveDuration: 70
+  maxWaveDuration: 100
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -48,8 +48,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 15
-  minThreatBudget: 9
-  maxThreatBudget: 85
+  minThreatBudget: 8
+  maxThreatBudget: 260
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -119,8 +119,8 @@ MonoBehaviour:
     unlockWave: 5
     budgetWeight: 0.193
     startDelay: 2
-    minSpawnCount: 4
-    maxSpawnCount: 12
+    minSpawnCount: 8
+    maxSpawnCount: 24
   fertilizerPool:
   - {fileID: 11400000, guid: 193b3643c86fdce4cacc09775f4190eb, type: 2}
   - {fileID: 11400000, guid: a844e3e1f18bb844ea388353436bf88e, type: 2}

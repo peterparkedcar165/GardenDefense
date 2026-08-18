@@ -19,27 +19,35 @@ MonoBehaviour:
   cultivar: 0
   elementalType: 1
   damageType: 1
-  sunCost: 115
+  sunCost: 95
+  skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 42
+  baseAttackDamage: 36
   baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 3
-  startingShield: 0
+  baseArmor: 0
+  baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
+  startingShield: 0
   baseTenacity: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
@@ -50,10 +58,11 @@ MonoBehaviour:
   baseCounterDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 3
@@ -76,11 +85,17 @@ MonoBehaviour:
   baseClosedHeal: 140
   baseSunGenerated: 2
   baseKnockUpHeight: 3.5
-  baseGeyserDamage: 105
-  path1AttackDamagePerLevel: 8
+  baseGeyserDamage: 85
+  openExtendChance: 0.35
+  geyseredDuration: 8
+  geyseredArmorShred: 20
+  geyseredFallDamageResistanceShred: 0.15
+  path1AttackDamagePerLevel: 4
+  path1AttackSpeedPerLevel: 0.03
   path2OpenDurationPerLevel: 2
   path2SunPerLevel: 2
   path2ClosedHealPerLevel: 20
+  path2OpenExtendChancePerLevel: 0.03
   path3GeyserDamagePerLevel: 15
   path3KnockUpPerLevel: 1
   path3GeyserRadiusPerLevel: 0.15

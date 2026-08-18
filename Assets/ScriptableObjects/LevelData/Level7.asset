@@ -22,7 +22,7 @@ MonoBehaviour:
   startHealth: 200
   maxUpgradeLevel: 5
   minWaveDuration: 25
-  maxWaveDuration: 70
+  maxWaveDuration: 100
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -48,8 +48,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 5
-  minThreatBudget: 6
-  maxThreatBudget: 40
+  minThreatBudget: 8
+  maxThreatBudget: 220
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -110,13 +110,13 @@ MonoBehaviour:
     budgetWeight: 0.193
     startDelay: 2
     minSpawnCount: 5
-    maxSpawnCount: 15
+    maxSpawnCount: 20
   - data: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
     unlockWave: 6
     budgetWeight: 0.193
     startDelay: 2
-    minSpawnCount: 3
-    maxSpawnCount: 6
+    minSpawnCount: 4
+    maxSpawnCount: 12
   fertilizerPool:
   - {fileID: 11400000, guid: 3e13ef541c9f3cd4aba5f81c62f1e4de, type: 2}
   - {fileID: 11400000, guid: b374faaf2b29af0428d4952befb3396b, type: 2}

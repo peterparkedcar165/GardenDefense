@@ -5,6 +5,7 @@ public class SeededEffect : StatusEffect, IElementalAffinityEffect
 {
     private float shred;
     private float magicArmorReduction;
+    private float damageReduction;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
 
@@ -12,13 +13,14 @@ public class SeededEffect : StatusEffect, IElementalAffinityEffect
     {
         shred = 0.2f * (1f + source.elementalAffinity);
         magicArmorReduction = 100f * shred / (1f - Mathf.Min(shred, 0.99f));
+        damageReduction = 0.15f * (1f + source.elementalAffinity);
         effectType = Type.negative;
         elementalType = ElementalType.Grass;
     }
 
     public override string GetName() => "<color=green>Seeded</color>";
     public override string GetDescription() =>
-        $"Reduce <color=#00CED1><b>Magic Resistance</b></color> by <color=red><b>{shred * 100f:F0}%</b></color>.";
+        $"Reduce <color=#00CED1><b>Magic Resistance</b></color> by <color=red><b>{shred * 100f:F0}%</b></color>. Reduce <color=green><b>Attack Damage</b></color> by <color=red><b>{damageReduction * 100f:F0}%</b></color>.";
 
     public override void OnApply()
     {
@@ -26,6 +28,7 @@ public class SeededEffect : StatusEffect, IElementalAffinityEffect
 
         Insect insect = (Insect)target;
         insect.magicArmorAdder -= magicArmorReduction;
+        insect.attackDamageMultiplier -= damageReduction;
     }
 
     public override void OnTick(float deltaTime) { }
@@ -34,5 +37,6 @@ public class SeededEffect : StatusEffect, IElementalAffinityEffect
     {
         Insect insect = (Insect)target;
         insect.magicArmorAdder += magicArmorReduction;
+        insect.attackDamageMultiplier += damageReduction;
     }
 }

@@ -20,13 +20,16 @@ MonoBehaviour:
   elementalType: 2
   damageType: 0
   sunCost: 155
+  skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 152
+  baseAttackDamage: 132
   baseMagicPower: 0
   baseAttackSpeed: 0.25
   baseAttackRange: 99
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -35,8 +38,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -54,10 +58,11 @@ MonoBehaviour:
   baseCounterDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 20
@@ -77,9 +82,9 @@ MonoBehaviour:
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseSkillAttackSpeedBonus: 3
-  path1AttackDamagePerLevel: 26
-  path1AttackSpeedPerLevel: 0.08
+  path1AttackDamagePerLevel: 18
+  path1AttackSpeedPerLevel: 0.06
   baseCritChanceBonus: 0.15
-  path2CritChancePerLevel: 0.07
+  path2CritChancePerLevel: 0.06
   path3AttackSpeedBonusPerLevel: 0.3
   path3SkillDurationPerLevel: 1

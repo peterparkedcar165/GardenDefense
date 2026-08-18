@@ -54,6 +54,8 @@ public struct EntityEventData
     public DamageType damageType;
     public ElementalType elementalType;
     public DamageTag[] tags;
+    // overrides source.onHitEffectiveness for this specific event (e.g. a weaker proc from splash/AoE damage)
+    public float? effectivenessOverride;
 }
 
 public abstract class Entity : MonoBehaviour
@@ -113,7 +115,7 @@ public abstract class Entity : MonoBehaviour
 
         // fast-attacking sources (Snowdrop, Stargazer) deal reduced on-hit effect damage per hit,
         // so their overall on-hit output doesn't scale with attack speed the way base damage does
-        float effectiveness = data.source.onHitEffectiveness;
+        float effectiveness = data.effectivenessOverride ?? data.source.onHitEffectiveness;
 
         FloralGlowEffect floralGlow = data.source.GetEffect<FloralGlowEffect>();
         if (floralGlow != null)
@@ -419,6 +421,29 @@ public abstract class Entity : MonoBehaviour
             Damage(damageDealt * GetEffect<FractureEffect>().bonusMultiplier, DamageType.Physical, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
+        // windshear: any other element's damage consumes it and shreds that element's resistance, scaled
+        // by the elemental affinity of whichever plant originally applied the Windshear primer (not the
+        // plant landing this detonating hit). one subclass per element, so multiple Windsheared debuffs
+        // can be active on the same target at once
+        if (this.HasEffect<WindshearEffect>() && elementalType != ElementalType.Wind && elementalType != ElementalType.Neutral
+            && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
+        {
+            Entity windshearSource = GetEffect<WindshearEffect>().source;
+            RemoveEffect<WindshearEffect>();
+            StatusEffect windsheared = elementalType switch
+            {
+                ElementalType.Fire   => new WindshearFireEffect(this, 4f, 1, windshearSource),
+                ElementalType.Water  => new WindshearWaterEffect(this, 4f, 1, windshearSource),
+                ElementalType.Grass  => new WindshearGrassEffect(this, 4f, 1, windshearSource),
+                ElementalType.Poison => new WindshearPoisonEffect(this, 4f, 1, windshearSource),
+                ElementalType.Ice    => new WindshearIceEffect(this, 4f, 1, windshearSource),
+                ElementalType.Ground => new WindshearGroundEffect(this, 4f, 1, windshearSource),
+                _ => null
+            };
+            if (windsheared != null)
+                ApplyEffect(windsheared);
+        }
+
         switch (elementalType)
         {
             case ElementalType.Fire:
@@ -487,6 +512,9 @@ public abstract class Entity : MonoBehaviour
                     if (source is Anemone anemone)
                         anemone.ApplyWindErosion(windInsect);
                 }
+
+                if (canProcElementalEffect && Random.value < elementalEffectRoll)
+                    ApplyEffect(new WindshearEffect(this, 8f, 1, source));
             break;
 
             case ElementalType.Grass:

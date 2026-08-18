@@ -6,17 +6,22 @@ public class WaterlilyData : PlantData
     public float baseAoERange;
     public float baseSplashDamage = 6f;
     public float baseBubblePrisonImpactDamage;
+    public float slowProcChance = 0.5f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 5f;
     public float path1AttackRangePerLevel = 0.5f;
     public float path1AttackSpeedPerLevel = 0.3f;
+    public float path1MaxOnHitEffectivenessBonus = 0.5f;
 
     [Header("Path 2 Scaling")]
     public float path2AoERangePerLevel = 0.05f;
     public float path2SplashDamageScalingPerLevel = 0.05f;
     public float baseSlowDuration = 6f;
     public int path2MaxSlowStacksPerLevel = 1;
+    public float path2SlowProcChancePerLevel = 0.05f;
+    // fraction of onHitEffectiveness that splash procs apply at, so it scales if onHitEffectiveness is buffed
+    public float splashOnHitEffectiveness = 0.33f;
 
     [Header("Path 3 Scaling")]
     public float path3BubbleDamagePerLevel = 12f;
