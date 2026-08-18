@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 8
   weather:
-  - type: 0
+  - type: 2
     intensity: 1
   temperature: 2
   maxWaves: 26
   startSunCount: 650
   startHealth: 200
+  maxUpgradeLevel: 5
   minWaveDuration: 25
   maxWaveDuration: 70
   waveDurationCurve:
@@ -124,3 +125,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a8f457390b39184187be407123d9e48, type: 2}
   - {fileID: 11400000, guid: 93904acc0a236f945b9da61ab1749fd8, type: 2}
   - {fileID: 11400000, guid: 07e5c490f83f8f64582ef1bc122766cc, type: 2}
+  ambience: {fileID: 11400000, guid: d0fcac010926b95498209523b9240970, type: 2}

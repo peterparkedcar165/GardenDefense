@@ -24,10 +24,12 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 16
   baseMagicPower: 0
-  baseAttackSpeed: 0.7
+  baseAttackSpeed: 0.6
   baseAttackRange: 4
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -84,9 +86,11 @@ MonoBehaviour:
   baseBubblePrisonImpactDamage: 42
   path1AttackDamagePerLevel: 3
   path1AttackRangePerLevel: 0.3
-  path1AttackSpeedPerLevel: 0.35
-  path2AoERangePerLevel: 0.125
+  path1AttackSpeedPerLevel: 0.2
+  path2AoERangePerLevel: 0.1
   path2SplashDamageScalingPerLevel: 0.05
+  baseSlowDuration: 6
+  path2MaxSlowStacksPerLevel: 1
   path3BubbleDamagePerLevel: 12
   path3SkillDurationPerLevel: 2
   path3RadiusPerLevel: 0.2

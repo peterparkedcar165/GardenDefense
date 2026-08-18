@@ -63,6 +63,9 @@ TagManager:
   - name: Non-Colliders_Air
     uniqueID: 2312670813
     locked: 0
+  - name: Weather
+    uniqueID: 1437761845
+    locked: 0
   - name: Indicators
     uniqueID: 120307403
     locked: 0

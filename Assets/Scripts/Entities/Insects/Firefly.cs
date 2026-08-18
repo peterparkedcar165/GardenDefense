@@ -16,7 +16,7 @@ public class Firefly : FlyingInsect
         {
             _light2D = visual.gameObject.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
             _light2D.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
-            _light2D.intensity = 0.8f;
+            _light2D.intensity = 0.5f;
             _light2D.falloffIntensity = 0.5f;
         }
 

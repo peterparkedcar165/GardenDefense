@@ -20,6 +20,7 @@ MonoBehaviour:
   maxWaves: 28
   startSunCount: 750
   startHealth: 200
+  maxUpgradeLevel: 5
   minWaveDuration: 25
   maxWaveDuration: 70
   waveDurationCurve:
@@ -124,3 +125,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7f029c4d5f2a9aa428657749cc004134, type: 2}
   - {fileID: 11400000, guid: 7a63b0be52209304d884ae38049d32e1, type: 2}
   - {fileID: 11400000, guid: ea6e435240e2ee046bd0290ef777153c, type: 2}
+  ambience: {fileID: 11400000, guid: d0fcac010926b95498209523b9240970, type: 2}

@@ -4,7 +4,7 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.04f, flatPerSecond = 12f;
+    public float healthPerSecond = 0.01f, flatPerSecond = 18f;
     private float cachedMaxHealth;
     private float cachedelementalAffinity;
     private LightFader _burnFader;

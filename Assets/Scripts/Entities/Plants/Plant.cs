@@ -91,7 +91,7 @@ public abstract class Plant : Entity, IAttackable
     private UnityEngine.Rendering.Universal.Light2D _light2D;
     private LightFader _lightFader;
     private float _lastLightEmissionRange;
-    protected virtual float LightIntensity => 0.65f;
+    protected virtual float LightIntensity => 0.5f;
     private const float lightFadeSpeed = 2f;
     private GameObject _skillBarInstance;
     private Transform _skillBarFill;

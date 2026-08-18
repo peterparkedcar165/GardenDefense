@@ -62732,12 +62732,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709538195}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dec57560eb949441981c1c7eff0342a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  groundTilemap: {fileID: 0}
+  groundTilemap: {fileID: 5899146400110301598}
   minZoom: 3
   zoomSpeed: 0.5
   zoomSmoothing: 8
@@ -74231,6 +74231,16 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: -16, y: -4, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 9
+      m_TileSpriteIndex: 9
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: -9, y: -4, z: 0}
     second:
       serializedVersion: 2
@@ -74751,6 +74761,16 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: -8, y: 6, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 9
+      m_TileSpriteIndex: 9
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: -7, y: 6, z: 0}
     second:
       serializedVersion: 2
@@ -74906,6 +74926,16 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 10
       m_TileSpriteIndex: 10
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 2, y: 8, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 9
+      m_TileSpriteIndex: 9
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -75354,7 +75384,7 @@ Tilemap:
     m_RefCount: 0
     m_Data: {fileID: 11400000, guid: 2ff86c3ebaaac514c8c63880ee1ca2a2, type: 2}
   - serializedVersion: 2
-    m_RefCount: 5
+    m_RefCount: 8
     m_Data: {fileID: 11400000, guid: b784f5bdc0f078e488711c797561dcc8, type: 2}
   - serializedVersion: 2
     m_RefCount: 4
@@ -75454,7 +75484,7 @@ Tilemap:
     m_RefCount: 0
     m_Data: {fileID: -1125296018, guid: 442fb010a8612a24590520084a717ee8, type: 3}
   - serializedVersion: 2
-    m_RefCount: 5
+    m_RefCount: 8
     m_Data: {fileID: 620779759, guid: 022ddc2d93dfa0e489c75c3561cdec91, type: 3}
   - serializedVersion: 2
     m_RefCount: 4
@@ -75527,7 +75557,7 @@ Tilemap:
     m_Data: {fileID: 628893061, guid: 839861dac7acdff418ff01c364db1730, type: 3}
   m_TileMatrixArray:
   - serializedVersion: 2
-    m_RefCount: 196
+    m_RefCount: 199
     m_Data:
       e00: 1
       e01: 0
@@ -75547,7 +75577,7 @@ Tilemap:
       e33: 1
   m_TileColorArray:
   - serializedVersion: 2
-    m_RefCount: 196
+    m_RefCount: 199
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -75822,19 +75852,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Color.b
-      value: 0.77254903
+      value: 0.32941177
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Color.g
-      value: 0.31764707
+      value: 0.13333334
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Color.r
-      value: 0.22352941
+      value: 0.12156863
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Intensity
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_ApplyToSortingLayers.Array.size

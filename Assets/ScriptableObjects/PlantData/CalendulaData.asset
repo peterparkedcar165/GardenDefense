@@ -81,9 +81,9 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  path1AttackDamagePerLevel: 8
-  path1FireDamagePerLevel: 0.04
+  path1AttackDamagePerLevel: 6
+  path1FireDamagePerLevel: 0.02
   path2AttackRangePerLevel: 0.2
   path3SkillDurationPerLevel: 5
-  floralGlowBaseDamageScaling: 0.35
-  floralGlowDamageScalingPerLevel: 0.1
+  floralGlowBaseDamageScaling: 0.15
+  floralGlowDamageScalingPerLevel: 0.025
