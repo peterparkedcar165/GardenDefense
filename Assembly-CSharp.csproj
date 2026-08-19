@@ -292,8 +292,8 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\CarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\MelterEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\MelterEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearPoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
