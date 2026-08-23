@@ -22,7 +22,7 @@ public class DandelionData : PlantData
         $"Fires multiple seeds per attack, each dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to a separate target.";
 
     public override string GetPassiveDescription() =>
-        "Seeds simultaneously target the highest-priority insects in range, allowing multi-target fire with a single attack.";
+        "Can be upgraded to fire additional seeds, striking more enemies with each volley.";
 
     public override string GetSkillDescription() =>
         $"Blows a powerful gust of pollen wind towards the targeted direction, crossing the entire map. Insects caught in the gust take {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";

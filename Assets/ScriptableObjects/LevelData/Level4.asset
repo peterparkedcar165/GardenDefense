@@ -21,8 +21,8 @@ MonoBehaviour:
   startSunCount: 500
   startHealth: 200
   maxUpgradeLevel: 4
-  minWaveDuration: 20
-  maxWaveDuration: 140
+  minWaveDuration: 16
+  maxWaveDuration: 130
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -47,7 +47,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restDuration: 5
+  restDuration: 10
   minThreatBudget: 5
   maxThreatBudget: 180
   budgetCurve:

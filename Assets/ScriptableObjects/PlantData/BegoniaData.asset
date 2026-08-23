@@ -19,7 +19,8 @@ MonoBehaviour:
   cultivar: 2
   elementalType: 2
   damageType: 1
-  sunCost: 95
+  sunCost: 85
+  skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 32
   baseMagicPower: 0
@@ -27,6 +28,8 @@ MonoBehaviour:
   baseAttackRange: 2
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -35,8 +38,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -54,10 +58,11 @@ MonoBehaviour:
   baseCounterDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 4
@@ -77,13 +82,13 @@ MonoBehaviour:
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseelementalAffinityBonus: 0.16
-  baseNatureDamageBonus: 0.12
+  baseElementalEffectChanceBonus: 0.01
   baseAttackSpeedBonus: 0.12
   basePassiveMultiplier: 0.24
   baseSkillMultiplier: 0.16
   path1AttackDamagePerLevel: 4
   path1AttackRangePerLevel: 0.2
   path2elementalAffinityPerLevel: 0.08
-  path3NatureDamageBonusPerLevel: 0.06
+  path3ElementalEffectChancePerLevel: 0.0075
   path3AttackSpeedBonusPerLevel: 0.06
   path3RadiusPerLevel: 0.15

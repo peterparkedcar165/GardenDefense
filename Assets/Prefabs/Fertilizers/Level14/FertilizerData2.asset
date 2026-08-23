@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Freezer
   stats:
   - statType: 18
-    value: 0.33
+    value: 0.35
   - statType: 11
-    value: 0.42
+    value: 0.35
   icon: {fileID: 0}
-  targetElementalTypes: 0100000004000000
+  targetElementalTypes: 
   targetCultivars: 
-  appliesToAll: 0
+  appliesToAll: 1
   tier: 0

@@ -23,7 +23,7 @@ public class SunflowerData : PlantData
         $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        "Passively generates <color=yellow>Sun</color> for the garden periodically. Attacks reduce the generation cooldown.";
+        "Passively generates <color=yellow>Sun</color> for the garden periodically. Attacks have a chance to reduce the generation cooldown.";
 
     public override string GetSkillDescription() =>
         $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second to insects within the designated area. Scales with <color=#FFB6C1>Magic Power</color>.";

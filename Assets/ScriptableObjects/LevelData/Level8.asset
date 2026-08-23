@@ -18,7 +18,7 @@ MonoBehaviour:
     intensity: 1
   temperature: 2
   maxWaves: 26
-  startSunCount: 650
+  startSunCount: 850
   startHealth: 200
   maxUpgradeLevel: 5
   minWaveDuration: 25
@@ -47,8 +47,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restDuration: 13
-  minThreatBudget: 8
+  restDuration: 15
+  minThreatBudget: 6
   maxThreatBudget: 220
   budgetCurve:
     serializedVersion: 2
@@ -113,7 +113,7 @@ MonoBehaviour:
     unlockWave: 4
     budgetWeight: 0.193
     startDelay: 2
-    minSpawnCount: 5
+    minSpawnCount: 3
     maxSpawnCount: 18
   - data: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
     unlockWave: 4

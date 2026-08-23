@@ -28,7 +28,7 @@ public struct PlantBaseStats
     public float floralGlowHeal;
 }
 
-public enum TARGETING { Nearest, First, Last }
+public enum TARGETING { Nearest, First, Last, Strongest }
 
 // a plant's cultivar defines its archetype/role in the garden
 public enum PlantCultivar
@@ -1216,6 +1216,24 @@ public abstract class Plant : Entity, IAttackable
             }
         }
         return nearest;
+    }
+
+    protected GameObject FindStrongest(System.Collections.Generic.List<Insect> insects)
+    {
+        GameObject strongest = null;
+        float highestMaxHealth = -1f;
+        foreach (Insect insect in insects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+            if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
+            if (insect.maxHealth > highestMaxHealth)
+            {
+                highestMaxHealth = insect.maxHealth;
+                strongest = insect.gameObject;
+            }
+        }
+        return strongest;
     }
 
     protected GameObject FindFirst(System.Collections.Generic.List<Insect> insects)

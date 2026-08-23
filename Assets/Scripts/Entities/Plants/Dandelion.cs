@@ -26,14 +26,15 @@ public class Dandelion : Shooter
         basePassiveDuration = 5f;
     }
 
-    private void OnEnable()  { WindPrimer.OnWindshearTriggered += OnWindshearReaction; }
-    private void OnDisable() { WindPrimer.OnWindshearTriggered -= OnWindshearReaction; }
+    private void OnEnable()  { Entity.OnEffectApplied += OnEffectApplied; }
+    private void OnDisable() { Entity.OnEffectApplied -= OnEffectApplied; }
 
-    private void OnWindshearReaction(Vector3 center, Entity reactionSource)
+    private void OnEffectApplied(StatusEffect effect)
     {
+        if (effect is not WindshearEffect || effect.source != this || effect.target is not Insect primed) return;
         if (!IsPath2Maxed) return;
-        if (reactionSource != this) return;
         const float radius = 1.5f;
+        Vector3 center = primed.transform.position;
         foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
         {
             if (insect == null || !insect.IsAlive) continue;
@@ -121,6 +122,9 @@ public class Dandelion : Shooter
                 inRange.Sort((a, b) =>
                     Vector3.Distance(transform.position, a.transform.position)
                            .CompareTo(Vector3.Distance(transform.position, b.transform.position)));
+                break;
+            case TARGETING.Strongest:
+                inRange.Sort((a, b) => b.maxHealth.CompareTo(a.maxHealth));
                 break;
         }
 
@@ -273,7 +277,7 @@ public class Dandelion : Shooter
             : $"Fires <color=green><b>{seeds}</b></color> seeds per attack, targeting the <color=green><b>{seeds}</b></color> highest-priority insects in range.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Upon triggering <color=#B2EBF2><b>Wind Shear</b></color>, all damaged insects are inflicted <color=#B2EBF2><b>Slowing Allergen</b></color> for <color=green><b>{passiveDuration:F0}s</b></color>, reducing their <color=green><b>Movement Speed</b></color> by <color=green><b>27%</b></color> and <color=#E0E0E0><b>Wind Resistance</b></color> by <color=green><b>23%</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"Upon inflicting <color=#B2EBF2><b>Windshear</b></color>, nearby insects are also inflicted <color=#B2EBF2><b>Slowing Allergen</b></color> for <color=green><b>{passiveDuration:F0}s</b></color>, reducing their <color=green><b>Movement Speed</b></color> by <color=green><b>27%</b></color> and <color=#E0E0E0><b>Wind Resistance</b></color> by <color=green><b>23%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

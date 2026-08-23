@@ -4,7 +4,7 @@
 public class BegoniaData : PlantData
 {
     public float baseelementalAffinityBonus;
-    public float baseGrassDamageBonus;
+    public float baseElementalEffectChanceBonus = 0.02f;
     public float baseAttackSpeedBonus;
     public float basePassiveMultiplier;
     public float baseSkillMultiplier;
@@ -17,7 +17,7 @@ public class BegoniaData : PlantData
     public float path2elementalAffinityPerLevel = 0.06f;
 
     [Header("Path 3 Scaling")]
-    public float path3GrassDamageBonusPerLevel = 0.04f;
+    public float path3ElementalEffectChancePerLevel = 0.01f;
     public float path3AttackSpeedBonusPerLevel = 0.04f;
     public float path3RadiusPerLevel = 0.15f;
 
@@ -28,5 +28,5 @@ public class BegoniaData : PlantData
         "Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, increasing <color=green><b>Elemental Affinity</b></color>. Scales with <color=#FFB6C1><b>Magic Power</b></color>.";
 
     public override string GetSkillDescription() =>
-        "Target an area on the field. Plants within the selected area are granted <color=green><b>Blossoming</b></color>, increasing <color=green><b>Grass Power</b></color> and <color=green><b>Attack Speed</b></color>. Scales with <color=#FFB6C1><b>Magic Power</b></color>.";
+        "Target an area on the field. Plants within the selected area are granted <color=green><b>Blossoming</b></color>, increasing <color=green><b>Elemental Effect Chance</b></color> and <color=green><b>Attack Speed</b></color>. Scales with <color=#FFB6C1><b>Magic Power</b></color>.";
 }

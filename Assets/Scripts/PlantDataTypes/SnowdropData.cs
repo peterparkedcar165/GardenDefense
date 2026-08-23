@@ -22,6 +22,9 @@ public class SnowdropData : PlantData
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 1f;
     public float path1AttackRangePerLevel  = 0.1f;
+    public float path1MaxElementalEffectChanceBonus = 0.02f;
+    public float path1MaxAttackDamagePenalty        = 0.5f;
+    public float path1MaxAttackSpeedBonus           = 1f;
 
     [Header("Path 3 Scaling")]
     public float path3BlizzardWidthPerLevel = 0.5f;

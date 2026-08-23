@@ -55,10 +55,11 @@ public abstract class Lobber : Plant
     {
         switch (targeting)
         {
-            case TARGETING.First:   return FindFirst(Insect.allInsects);
-            case TARGETING.Nearest: return FindNearest(Insect.allInsects);
-            case TARGETING.Last:    return FindLast(Insect.allInsects);
-            default:                return null;
+            case TARGETING.First:     return FindFirst(Insect.allInsects);
+            case TARGETING.Nearest:   return FindNearest(Insect.allInsects);
+            case TARGETING.Last:      return FindLast(Insect.allInsects);
+            case TARGETING.Strongest: return FindStrongest(Insect.allInsects);
+            default:                  return null;
         }
     }
 

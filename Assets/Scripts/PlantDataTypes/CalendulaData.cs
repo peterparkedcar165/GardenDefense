@@ -22,5 +22,5 @@ public class CalendulaData : PlantData
         "Illuminates the surrounding area with a radius equal to her Attack Range.";
 
     public override string GetSkillDescription() =>
-        $"Target a plant anywhere on the field to grant it <color=orange>Floral Glow</color>. The plant's projectiles deal additional {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
+        $"Target a plant anywhere on the field to grant it <color=orange>Floral Glow</color>. The plant's attacks deal additional {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
 }

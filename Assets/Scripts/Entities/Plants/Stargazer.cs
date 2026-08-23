@@ -121,9 +121,10 @@ public class Stargazer : Aura
         GameObject go;
         switch (targeting)
         {
-            case TARGETING.Nearest: go = FindNearest(Insect.allInsects); break;
-            case TARGETING.Last:    go = FindLast(Insect.allInsects);    break;
-            default:                go = FindFirst(Insect.allInsects);   break;
+            case TARGETING.Nearest:   go = FindNearest(Insect.allInsects);   break;
+            case TARGETING.Last:      go = FindLast(Insect.allInsects);      break;
+            case TARGETING.Strongest: go = FindStrongest(Insect.allInsects); break;
+            default:                  go = FindFirst(Insect.allInsects);    break;
         }
         return go != null ? go.GetComponent<Insect>() : null;
     }

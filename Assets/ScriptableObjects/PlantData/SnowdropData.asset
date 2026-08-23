@@ -19,16 +19,16 @@ MonoBehaviour:
   cultivar: 5
   elementalType: 4
   damageType: 1
-  sunCost: 125
+  sunCost: 105
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 9
+  baseAttackDamage: 7
   baseMagicPower: 0
   baseAttackSpeed: 2
   baseAttackRange: 2
   baseArmor: 0
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.1
+  baseElementalEffectChance: 0.04
   baseOnHitEffectiveness: 0.1
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -81,17 +81,20 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseSlow: 0.12
-  scalingSlow: 0.06
+  baseSlow: 0.08
+  scalingSlow: 0.04
   coolingPerSecond: 1.25
-  baseBlizzardDamage: 25
-  blizzardDamagePerLevel: 10
+  baseBlizzardDamage: 20
+  blizzardDamagePerLevel: 5
   baseBlizzardDuration: 5
   blizzardDurationPerLevel: 1
   blizzardChillMultiplier: 1.5
   blizzardCoolingMultiplier: 2
   baseBlizzardRange: 10
-  path1AttackDamagePerLevel: 6
-  path1AttackRangePerLevel: 0.1
+  path1AttackDamagePerLevel: 2
+  path1AttackRangePerLevel: 0.2
+  path1MaxElementalEffectChanceBonus: 0.04
+  path1MaxAttackDamagePenalty: 0.5
+  path1MaxAttackSpeedBonus: 1
   path3BlizzardWidthPerLevel: 0.5
   path3BlizzardRangePerLevel: 0.5

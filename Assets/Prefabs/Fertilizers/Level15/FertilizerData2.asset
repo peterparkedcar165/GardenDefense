@@ -12,16 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Vulnerability
+  fertilizerName: Burner
   stats:
-  - statType: 15
-    value: 0.22
   - statType: 11
-    value: 0.33
+    value: 0.35
   - statType: 33
     value: 0.24
   icon: {fileID: 0}
-  targetElementalTypes: 0300000004000000
+  targetElementalTypes: 
   targetCultivars: 
-  appliesToAll: 0
+  appliesToAll: 1
   tier: 0

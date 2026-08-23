@@ -17,6 +17,8 @@ public class CactusData : PlantData
     public float path3SkillDurationPerLevel = 2f;
     public float baseSkillHealBonus = 0.16f;
     public float path3HealBonusPerLevel = 0.04f;
+    public float baseShieldArmorBonus = 25f;
+    public float path3ShieldArmorPerLevel = 5f;
 
     public override string GetAttackDescription() =>
         $"Fires needles in all directions, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per needle hit. Each hit applies <color=#A0522D>Punctured</color>.";
@@ -25,5 +27,5 @@ public class CactusData : PlantData
         $"Insects that attack the Cactus take {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage in return. Applies <color=#A0522D>Punctured</color>.";
 
     public override string GetSkillDescription() =>
-        "Grants a shield for a duration. While the shield holds, nearby insects are forced to target the Cactus.";
+        "Grants a shield for a duration. While shielded, the Cactus gains bonus Armor and nearby insects are forced to target it.";
 }

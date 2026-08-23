@@ -19,7 +19,7 @@ MonoBehaviour:
   cultivar: 7
   elementalType: 0
   damageType: 1
-  sunCost: 105
+  sunCost: 100
   skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 54

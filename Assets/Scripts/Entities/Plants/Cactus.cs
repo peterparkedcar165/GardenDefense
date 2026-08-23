@@ -12,6 +12,7 @@ public class Cactus : Shooter
     private CactusData CactData => data as CactusData;
     private float ShieldAmount  => (CactData?.baseShieldAmount ?? 100f) + (CactData?.path3ShieldPerLevel ?? 10f) * effectivePath3Level;
     private float SkillDuration => data.baseSkillDuration + (CactData?.path3SkillDurationPerLevel ?? 2f) * effectivePath3Level;
+    private float ShieldArmorBonus => (CactData?.baseShieldArmorBonus ?? 25f) + (CactData?.path3ShieldArmorPerLevel ?? 5f) * effectivePath3Level;
 
     protected override void Awake()
     {
@@ -106,11 +107,15 @@ public class Cactus : Shooter
     public override void UpdateStats()
     {
         if (IsPath1Maxed) piercingAdder += 2;
-        float asBonus = IsPath3Maxed && HasEffect<ShieldEffect>() ? 0.35f : 0f;
+        bool shielded = HasEffect<ShieldEffect>();
+        float asBonus = IsPath3Maxed && shielded ? 0.35f : 0f;
+        float armorBonus = shielded ? ShieldArmorBonus : 0f;
         attackSpeedTotalMultiplier += asBonus;
+        armorAdder += armorBonus;
         base.UpdateStats();
         if (IsPath1Maxed) piercingAdder -= 2;
         attackSpeedTotalMultiplier -= asBonus;
+        armorAdder -= armorBonus;
         temperatureMax = comfortMax;
     }
 
@@ -145,7 +150,7 @@ public class Cactus : Shooter
 
     public override string GetSkillDesription() =>
         $"Grants the {GetName()} a <color=grey><b>{ShieldAmount:F0}</b></color> shield for <color=green><b>{SkillDuration:F0}s</b></color>. " +
-        $"While the shield holds, nearby insects are forced to target the {GetName()}.";
+        $"While the shield holds, nearby insects are forced to target the {GetName()}, and it gains <color=#00CED1><b>{ShieldArmorBonus:F0} Armor</b></color>.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -182,6 +187,8 @@ public class Cactus : Shooter
         float durpl     = CactData?.path3SkillDurationPerLevel ?? 2f;
         float healpl    = CactData?.path3HealBonusPerLevel     ?? 0.04f;
         float shieldBase = CactData?.baseShieldAmount ?? 100f;
+        float armorpl   = CactData?.path3ShieldArmorPerLevel  ?? 5f;
+        float armorBase = CactData?.baseShieldArmorBonus      ?? 25f;
         string desc = details
             ? $"Grants the {GetName()} a <color=grey><b>[({shieldBase:F0}) + ({shieldpl:F0}/Lvl.)]</b></color> shield for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. While the shield holds, nearby insects are forced to target the {GetName()}."
             : GetSkillDesription();
@@ -189,6 +196,7 @@ public class Cactus : Shooter
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"While <color=grey><b>Shielded</b></color> by any source, gain <color=#00CED1><b>[({armorBase:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor. [<color=#00CED1><b>{ShieldArmorBonus:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"While <color=grey><b>Shielded</b></color>, <color=green><b>Total Attack Speed</b></color> is increased by <color=green><b>35%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
