@@ -18,7 +18,7 @@ MonoBehaviour:
   passiveDescription: Has a longer reach of attack
   sprite: {fileID: -2001639675669158682, guid: e31122e50668b2d42afb0fdfbff8a40e, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: af2c6674e6ccba140a62522caacce5fc, type: 3}
-  baseMaxHealth: 2400
+  baseMaxHealth: 800
   baseAttackDamage: 42
   baseMagicPower: 0
   baseAttackSpeed: 0.7
@@ -42,8 +42,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0.3
+  baseGrassResistance: 0
   baseWindResistance: 0.3
+  baseGroundResistance: 0
   baseDotResistance: 0
   threatValue: 4
   threatType: 1

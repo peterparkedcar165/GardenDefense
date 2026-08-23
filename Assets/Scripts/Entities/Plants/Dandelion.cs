@@ -26,10 +26,10 @@ public class Dandelion : Shooter
         basePassiveDuration = 5f;
     }
 
-    private void OnEnable()  { Entity.OnEffectApplied += OnEffectApplied; }
-    private void OnDisable() { Entity.OnEffectApplied -= OnEffectApplied; }
+    private void OnEnable()  { Entity.OnEffectApplied += HandleEffectApplied; }
+    private void OnDisable() { Entity.OnEffectApplied -= HandleEffectApplied; }
 
-    private void OnEffectApplied(StatusEffect effect)
+    private void HandleEffectApplied(StatusEffect effect)
     {
         if (effect is not WindshearEffect || effect.source != this || effect.target is not Insect primed) return;
         if (!IsPath2Maxed) return;

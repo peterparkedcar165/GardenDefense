@@ -261,7 +261,7 @@ MonoBehaviour:
   - {fileID: 2279086888993795066, guid: c3349ff3828f87047a2105c4748346ef, type: 3}
   - {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
   spawnInterval: 12
-  antsPerSpawn: 3
+  antsPerSpawn: 2
 --- !u!1 &4515215125339047355
 GameObject:
   m_ObjectHideFlags: 0

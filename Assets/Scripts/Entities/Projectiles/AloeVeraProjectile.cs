@@ -7,6 +7,7 @@ public class AloeVeraProjectile : MonoBehaviour
     private Transform visual;
     private Transform trackedTarget;
     private Vector3 lastKnownPosition; // updated every frame; used as destination once target dies
+    private bool hasTriedRetarget; // only attempt to find a replacement target once
 
     private float speed;
     private float aoERadius;
@@ -71,8 +72,34 @@ public class AloeVeraProjectile : MonoBehaviour
     private Vector3 GetTargetPosition()
     {
         if (trackedTarget != null && trackedTarget.gameObject.activeInHierarchy)
+        {
             lastKnownPosition = trackedTarget.position;
+        }
+        else
+        {
+            TryRetarget();
+            if (trackedTarget != null && trackedTarget.gameObject.activeInHierarchy)
+                lastKnownPosition = trackedTarget.position;
+        }
         return lastKnownPosition;
+    }
+
+    // if our original target died mid-flight, try once to pick up a fresh valid target of the
+    // same kind (heal target for heal-mode shots, enemy insect for attack-mode shots) instead of
+    // just riding out to the empty spot where the old target used to be
+    private void TryRetarget()
+    {
+        if (hasTriedRetarget || source == null) return;
+        hasTriedRetarget = true;
+
+        GameObject candidate = source.FindLobberTarget();
+        if (candidate == null) return;
+
+        bool candidateIsHealable = candidate.GetComponent<Plant>() != null
+                                 || (candidate.GetComponent<Insect>() is Insect ins && ins.team == Team.Friendly);
+
+        if (candidateIsHealable == isHealMode)
+            trackedTarget = candidate.transform;
     }
 
     private void HomeTowardTarget()

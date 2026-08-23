@@ -49,7 +49,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 15
   minThreatBudget: 7
-  maxThreatBudget: 180
+  maxThreatBudget: 210
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -102,7 +102,7 @@ MonoBehaviour:
     budgetWeight: 0.193
     startDelay: 2
     minSpawnCount: 2
-    maxSpawnCount: 4
+    maxSpawnCount: 3
   fertilizerPool:
   - {fileID: 11400000, guid: 7d208e5dc4df5cc4ebd25db08e00e449, type: 2}
   - {fileID: 11400000, guid: 47e3a395b78676d448ab276e0df1a863, type: 2}

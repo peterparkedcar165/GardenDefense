@@ -402,7 +402,7 @@ public abstract class Entity : MonoBehaviour
         if (this is Insect insect && source is Plant plant)
             insect.RegisterAttacker(plant);
 
-        float modifiedDamage, elementalMultiplier, finalDamage, elementalDebuffDuration = 8f, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
+        float modifiedDamage, elementalMultiplier, finalDamage, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
         bool isCrit = false;
 
         // elemental effect procs: dot damage (burn/poison ticks etc) rolls at half chance, and

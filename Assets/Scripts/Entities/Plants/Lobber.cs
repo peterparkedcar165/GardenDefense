@@ -51,7 +51,7 @@ public abstract class Lobber : Plant
         }
     }
 
-    protected virtual GameObject FindLobberTarget()
+    public virtual GameObject FindLobberTarget()
     {
         switch (targeting)
         {

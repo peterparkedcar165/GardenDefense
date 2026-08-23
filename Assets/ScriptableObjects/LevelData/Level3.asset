@@ -22,7 +22,7 @@ MonoBehaviour:
   startHealth: 200
   maxUpgradeLevel: 3
   minWaveDuration: 20
-  maxWaveDuration: 130
+  maxWaveDuration: 100
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:

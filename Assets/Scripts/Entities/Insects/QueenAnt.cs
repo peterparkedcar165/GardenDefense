@@ -5,7 +5,7 @@ public class QueenAnt : Ant
 {
     [SerializeField] private GameObject[] antPrefabs;
     public float spawnInterval = 12f;
-    public int antsPerSpawn = 5;
+    public int antsPerSpawn = 2;
 
     private float spawnTimer;
     private bool isSpawning;

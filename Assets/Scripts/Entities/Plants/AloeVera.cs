@@ -60,7 +60,7 @@ public class AloeVera : Lobber
         UpdateHighlights();
     }
 
-    protected override GameObject FindLobberTarget()
+    public override GameObject FindLobberTarget()
     {
         // priority 1: an injured plant (lowest health wins)
         Plant bestPlant = null;
