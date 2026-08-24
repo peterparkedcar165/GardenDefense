@@ -71,8 +71,10 @@ public abstract class Insect : Entity, IAttackable
         {
             // friendlies (minions, hypnotized) fight enemy insects and ignore taunts (which aim at plants)
             if (team == Team.Friendly) return FindNearestEnemyInRange();
+
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
             if ((taunted as UnityEngine.Object) != null) return taunted;   // ignore a destroyed taunter
+
             if (HasEffect<ObliviousEffect>() && aggressivity != Aggressivity.Low) return null;
 
             // if a flying friendly is attacking this ground enemy, stop in place (can't fight back)
@@ -91,7 +93,10 @@ public abstract class Insect : Entity, IAttackable
                     return FindNearestPlantInRange();
                 case Aggressivity.Medium:
                     if (_plantAttackCooldown > 0) return null;
-                    return FindNearestPlantInRange();
+                    IAttackable mediumTarget = FindNearestPlantInRange();
+                    if (mediumTarget is AcornSprout sprout && sprout.IsAlive && sprout.health > sprout.maxHealth * DeliciousAcornEffect.HealthThreshold)
+                        ApplyEffect(new DeliciousAcornEffect(this, sprout, sprout));
+                    return mediumTarget;
                 default:
                     return null;
             }

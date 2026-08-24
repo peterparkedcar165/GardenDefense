@@ -84,22 +84,29 @@ MonoBehaviour:
   coneAngle: 45
   flammableBonusPerStack: 0.01
   flammableMaxStacks: 500
-  flammableDuration: 12
+  flammableDuration: 8
   baseStacksPerHit: 1
   baseBurnDurationBonus: 0.5
-  skillBaseDamage: 70
+  passiveProcChance: 0.25
+  skillBaseDamage: 120
   skillWaveSpeed: 12
   skillLength: 60
   skillWaveWidth: 4
   skillThickness: 1.5
   skillDelay: 0.25
-  skillBurnMultiplier: 1.5
+  skillBurnMultiplier: 2
   skillFlammableStacks: 10
+  skillBurnDuration: 6
   path1AttackDamagePerLevel: 1
   path1AttackRangePerLevel: 0.3
+  path1MaxFireDamageBonus: 0.25
+  path1MaxConeAngleBonus: 45
   path2StacksPerLevel: 1
-  path2BurnDurationPerLevel: 0.2
-  path3SkillDamagePerLevel: 10
+  path2BurnDurationPerLevel: 0.1
+  path2ProcChancePerLevel: 0.05
+  path2MaxElementalAffinityBonus: 0.2
+  path2MaxElementalEffectChanceBonus: 0.06
+  path3SkillDamagePerLevel: 20
   path3WaveWidthPerLevel: 1
-  path3BurnMultiplierPerLevel: 0.5
+  path3BurnMultiplierPerLevel: 0.75
   path3FlammableStacksPerLevel: 5

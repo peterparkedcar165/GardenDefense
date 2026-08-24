@@ -280,6 +280,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Termite.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AquaticSniperEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Scorpion.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\ToxicSporeEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\DahliaData.cs" />
     <Compile Include="Assets\Scripts\UI\PlantSlotButton.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\BurnEffect.cs" />
@@ -293,7 +294,6 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\CarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\MelterEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearPoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
@@ -303,7 +303,6 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\ZinniaData.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\ScorcherEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\JumpingSpiderData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
@@ -374,6 +373,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Glowshroom.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\StatusIndicator.cs" />
     <Compile Include="Assets\Scripts\DoTAggregator.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\DeliciousAcornEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\EmberProjectile.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DesertLocustData.cs" />
   </ItemGroup>

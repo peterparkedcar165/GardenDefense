@@ -8,6 +8,7 @@ public abstract class DoTEffect : StatusEffect
     public DoTEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        if (source != null) this.duration *= Mathf.Max(0f, 1f + source.dotDuration);
     }
 
     public override void OnReapply(StatusEffect previous)

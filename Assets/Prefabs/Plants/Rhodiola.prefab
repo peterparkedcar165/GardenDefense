@@ -237,6 +237,7 @@ MonoBehaviour:
   baseBonusCritChanceReceived: 0
   baseBonusCritDamageReceived: 0
   baseProjectileSpeed: 0
+  baseOnHitEffectiveness: 1
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -311,6 +312,7 @@ MonoBehaviour:
   bonusCritChanceReceived: 0
   bonusCritDamageReceived: 0
   projectileSpeed: 0
+  onHitEffectiveness: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicPowerAdder: 0
@@ -378,6 +380,7 @@ MonoBehaviour:
   projectileSpeedAdder: 0
   sunYieldAdder: 0
   currencyYieldAdder: 0
+  onHitEffectivenessAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -665,6 +668,22 @@ PrefabInstance:
     - target: {fileID: 3685499691179430935, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
       propertyPath: m_Name
       value: RhodiolaAttackParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 6251732868713553602, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6251732868713553602, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
+      propertyPath: InitialModule.startSize.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6251732868713553602, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
+      propertyPath: InitialModule.startSizeY.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6251732868713553602, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
+      propertyPath: InitialModule.startSizeZ.minMaxState
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CordycepsProjectile : Projectile
+public class PoisonShroomProjectile : Projectile
 {
     public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
     {
@@ -9,24 +9,21 @@ public class CordycepsProjectile : Projectile
 
     protected override void OnHit(Insect insect)
     {
-        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
+        // deals no direct damage; all damage comes from the Toxic Spore DoT applied below
+        insect.Damage(0f, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
 
-        Cordyceps cs = source as Cordyceps;
+        PoisonShroom cs = source as PoisonShroom;
         if (cs == null) return;
 
-        insect.ApplyEffect(new DecayEffect(insect, cs.invertDuration, cs.invertLevel, source));
+        insect.ApplyEffect(new ToxicSporeEffect(insect, cs.ToxicSporeDuration, 1, source));
 
-        if (cs.IsPath1Maxed || cs.IsPath2Maxed)
+        if (cs.IsPath1Maxed)
         {
             foreach (Insect nearby in new System.Collections.Generic.List<Insect>(Insect.allInsects))
             {
                 if (nearby == null || !nearby.IsAlive || nearby == insect) continue;
                 if (Vector3.Distance(insect.transform.position, nearby.transform.position) <= 1.5f)
-                {
-                    if (cs.IsPath1Maxed)
-                        nearby.Damage(projectileDamage, damageType, elementalType, source, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
-                    nearby.ApplyEffect(new DecayEffect(nearby, cs.invertDuration, cs.invertLevel, source));
-                }
+                    nearby.ApplyEffect(new ToxicSporeEffect(nearby, cs.ToxicSporeDuration, 1, source));
             }
         }
     }

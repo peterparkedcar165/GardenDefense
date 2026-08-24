@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class NeriumOleander : Shooter
 {
-    private NeriumOleanderData OleanderData => data as NeriumOleanderData;
+    public NeriumOleanderData OleanderData => data as NeriumOleanderData;
 
     [SerializeField] private float skillDelay = 0.5f;
 
@@ -109,7 +109,7 @@ public class NeriumOleander : Shooter
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{arpl:F1}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=green><b>Piercing</b></color> by <color=green><b>{bpl}</b></color> per level. [<color=green><b>+{bpl * effectivePath1Level}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Deal <color=green><b>22% increased damage</b></color> for each positive effect on the target.")}\n\n" +
+               $"{Level5Section(path1Level, $"Attacks extend <color=purple><b>Poison</b></color>-Element negative status effects on targets by <color=green><b>{OleanderData?.path1MaxPoisonExtendPerHit ?? 1f:F0}</b></color> second per hit.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -126,7 +126,7 @@ public class NeriumOleander : Shooter
               $"Cleanses a random buff, and prevents them from receiving that buff while the effect is active.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"For each positive effect locked, the target loses <color=#FF69B4><b>8 Magic Armor</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"For each positive effect locked, the target loses <color=#FF69B4><b>{OleanderData?.path2MaxMagicArmorPerLock ?? 12f:F0} Magic Armor</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

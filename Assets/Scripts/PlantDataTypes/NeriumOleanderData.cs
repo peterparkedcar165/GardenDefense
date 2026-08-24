@@ -13,9 +13,11 @@ public class NeriumOleanderData : PlantData
     public float path1AttackDamagePerLevel = 10f;
     public float path1AttackRangePerLevel = 0.5f;
     public int path1BouncePerLevel = 1;
+    public float path1MaxPoisonExtendPerHit = 1f;
 
     [Header("Path 2 Scaling")]
     public float path2ToxinDurationPerLevel = 2f;
+    public float path2MaxMagicArmorPerLock = 12f;
 
     [Header("Path 3 Scaling")]
     public float path3SkillDamagePerLevel = 20f;

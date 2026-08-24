@@ -47,6 +47,7 @@ public class AcornSprout : Shooter
     {
         baseAttackDamage = data.baseAttackDamage + level * (AcornData?.path1AttackDamagePerLevel ?? 8f);
         baseAttackSpeed  = data.baseAttackSpeed  + level * (AcornData?.path1AttackSpeedPerLevel  ?? 0.05f);
+        baseArmor        = data.baseArmor        + level * (AcornData?.path1ArmorPerLevel        ?? 4);
     }
 
     public override void OnPath2Upgrade(int level)
@@ -92,12 +93,14 @@ public class AcornSprout : Shooter
     {
         float adpl = AcornData?.path1AttackDamagePerLevel ?? 8f;
         float aspl = AcornData?.path1AttackSpeedPerLevel  ?? 0.05f;
+        int   armorpl = AcornData?.path1ArmorPerLevel     ?? 4;
         string desc = details
             ? $"Shoots acorns towards his target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
             : $"Shoots acorns towards his target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl}</b></color> per level. [<color=green><b>+{armorpl * effectivePath1Level}</b></color>]\n\n" +
                $"{Level5Section(path1Level, details ? "Increase Attack Damage by 33% of <color=#00CED1><b>Armor</b></color>." : $"Increase Attack Damage by <color=#00CED1><b>{armor * 0.33f:F0}</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -109,9 +112,10 @@ public class AcornSprout : Shooter
         float durBase    = AcornData?.stunDuration             ?? 0.5f;
         float chancepl   = AcornData?.path2StunChancePerLevel   ?? 0.05f;
         float durpl      = AcornData?.path2StunDurationPerLevel ?? 0.1f;
+        string stickyDesc = $"While the {GetName()} is above <color=green><b>{DeliciousAcornEffect.HealthThreshold * 100f:F0}%</b></color> Health, its delicious skin retains any attacker that would otherwise leave after a bite.";
         string desc = details
-            ? $"Attacks have a <color=green><b>[({chanceBase * 100f:F0}) + ({chancepl * 100f:F0}/Lvl.)]</b></color>% chance to stun targets for <color=green><b>[({durBase:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
-            : $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{passiveDuration:F1}</b></color> seconds.";
+            ? $"Attacks have a <color=green><b>[({chanceBase * 100f:F0}) + ({chancepl * 100f:F0}/Lvl.)]</b></color>% chance to stun targets for <color=green><b>[({durBase:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\n\n{stickyDesc}"
+            : $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{passiveDuration:F1}</b></color> seconds.\n\n{stickyDesc}";
         string passiveMaxBonus = "Attacks' <color=green><b>Piercing</b></color> instead bounce to nearby targets.\n\nIncrease <color=green><b>Piercing</b></color> by <color=green><b>1</b></color>.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Stun Chance</b></color> by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +

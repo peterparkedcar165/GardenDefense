@@ -14,19 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoisonShroomData
   plantPrefab: {fileID: 1216329997766717309, guid: d08989aa5a1b0e74c84350560309b2fe, type: 3}
   icon: {fileID: 480713740630145538, guid: 17364a63666fa6849902937eb5b3392e, type: 3}
-  plantName: Cordyceps
-  displayName: Cordyceps
+  plantName: PoisonShroom
+  displayName: Poison Shroom
   cultivar: 5
   elementalType: 3
   damageType: 1
   sunCost: 115
+  skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 0.7
+  baseAttackSpeed: 0.6
   baseAttackRange: 2.5
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -35,8 +38,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -54,10 +58,11 @@ MonoBehaviour:
   baseCounterDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 3
@@ -76,11 +81,16 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  basePoisonDuration: 6
   basePoisonDPS: 8
-  path1AttackSpeedPerLevel: 0.11
+  baseToxicSporeDuration: 3
+  path1AttackSpeedPerLevel: 0.08
   path1AttackRangePerLevel: 0.13
-  path2PoisonDurationPerLevel: 3
-  path2PoisonDPSPerLevel: 4
+  path1ToxicSporeDurationPerLevel: 0.4
+  baseCritChanceBonus: 0.1
+  path2CritChancePerLevel: 0.03
+  baseElementalAffinityBonus: 0.15
+  path2ElementalAffinityPerLevel: 0.04
+  path2MaxElementalEffectChanceBonus: 0.1
+  path2MaxDotDurationBonus: 0.5
   path3SkillDurationPerLevel: 2
   path3RadiusPerLevel: 0.2

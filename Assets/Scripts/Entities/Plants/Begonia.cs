@@ -10,6 +10,11 @@ public class Begonia : Shooter
     private bool _isSkillTargeting = false;
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
+    private bool autoCastEnabled = false;
+    private Vector3 autoCastPosition;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
+
     private BegoniaData BData => data as BegoniaData;
 
     private float elementalAffinityBonusBase => (BData?.baseelementalAffinityBonus ?? 0f) + (BData?.path2elementalAffinityPerLevel ?? 0.06f) * effectivePath2Level;
@@ -44,6 +49,13 @@ public class Begonia : Shooter
         base.Update();
         UpdateAura();
         UpdateHighlights();
+        UpdateAutoCast();
+    }
+
+    private void UpdateAutoCast()
+    {
+        if (!autoCastEnabled) return;
+        if (SkillReady) OnTargetConfirmed(autoCastPosition);
     }
 
     private void UpdateAura()
@@ -92,6 +104,25 @@ public class Begonia : Shooter
         }
     }
 
+    // click Auto Cast to lock in an area, click again to turn it off
+    public override void ToggleAutoCast()
+    {
+        if (autoCastEnabled)
+        {
+            autoCastEnabled = false;
+            return;
+        }
+        _isSkillTargeting = true;
+        SkillTargetingManager.instance.BeginTargeting(BlossomRadius, OnAutoCastTargetConfirmed);
+    }
+
+    private void OnAutoCastTargetConfirmed(Vector3 position)
+    {
+        _isSkillTargeting = false;
+        autoCastEnabled = true;
+        autoCastPosition = position;
+    }
+
     private void UpdateHighlights()
     {
         if (!SkillTargetingManager.instance.IsTargeting) _isSkillTargeting = false;
@@ -111,6 +142,16 @@ public class Begonia : Shooter
                     desired.Add(plant);
             }
             highlightColor = Color.red;
+        }
+        else if (autoCastEnabled && isSelected)
+        {
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == null) continue;
+                if (Vector2.Distance(autoCastPosition, plant.transform.position) <= BlossomRadius)
+                    desired.Add(plant);
+            }
+            highlightColor = Color.yellow;
         }
         else if (isSelected)
         {

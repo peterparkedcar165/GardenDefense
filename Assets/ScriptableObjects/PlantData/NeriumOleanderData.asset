@@ -20,6 +20,7 @@ MonoBehaviour:
   elementalType: 3
   damageType: 0
   sunCost: 105
+  skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 22
   baseMagicPower: 0
@@ -27,6 +28,8 @@ MonoBehaviour:
   baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -35,8 +38,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -54,10 +58,11 @@ MonoBehaviour:
   baseCounterDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 3.3
@@ -81,10 +86,12 @@ MonoBehaviour:
   baseSkillFlatDamage: 33
   bounceSearchRadius: 4
   bounceDamageReduction: 0.1
-  path1AttackDamagePerLevel: 11
+  path1AttackDamagePerLevel: 6
   path1AttackRangePerLevel: 0.2
   path1BouncePerLevel: 1
-  path2ToxinDurationPerLevel: 2
+  path1MaxPoisonExtendPerHit: 1
+  path2ToxinDurationPerLevel: 1
+  path2MaxMagicArmorPerLock: 12
   path3SkillDamagePerLevel: 17
   path3RootDurationPerLevel: 1.5
   path3SkillRadiusPerLevel: 0.2

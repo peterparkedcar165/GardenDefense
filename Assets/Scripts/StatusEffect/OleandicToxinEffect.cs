@@ -9,7 +9,7 @@ public class OleandicToxinEffect : StatusEffect
     public List<string> immuneNames = new List<string>();
     private float baseDuration;
     private int _magicArmorReduction = 0;
-    private const float MagicArmorPerLock = 8f;
+    private float MagicArmorPerLock => (source as NeriumOleander)?.OleanderData?.path2MaxMagicArmorPerLock ?? 12f;
 
     public OleandicToxinEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)

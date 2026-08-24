@@ -9,6 +9,7 @@ public class AcornSproutData : PlantData
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 8f;
     public float path1AttackSpeedPerLevel = 0.05f;
+    public int path1ArmorPerLevel = 4;
 
     [Header("Path 2 Scaling")]
     public float path2StunChancePerLevel = 0.05f;
@@ -24,7 +25,7 @@ public class AcornSproutData : PlantData
         $"Shoots acorns towards his target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        "Attacks have a chance to stun targets.";
+        "Attacks have a chance to stun targets. While healthy, its delicious skin keeps attackers from wandering off.";
 
     public override string GetSkillDescription() =>
         $"Hurls a giant acorn from the sky at a targeted location, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage and stunning all insects in the impact radius. The acorn then sits on the ground, blocking ground insects who stop to gnaw at it.";

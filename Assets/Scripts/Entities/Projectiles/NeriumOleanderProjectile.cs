@@ -26,17 +26,17 @@ public class NeriumOleanderProjectile : Projectile
         float effectiveDamage = projectileDamage * Mathf.Max(0f, 1f - bouncesHit * bounceDamageReduction);
         bouncesHit++;
 
-        if (source is NeriumOleander oleander && oleander.IsPath1Maxed)
-        {
-            int positiveCount = 0;
-            foreach (StatusEffect e in insect.activeEffects)
-                if (e.effectType == StatusEffect.Type.positive) positiveCount++;
-            effectiveDamage *= 1f + 0.22f * positiveCount;
-        }
-
         insect.Damage(effectiveDamage, damageType, elementalType, source, true,
             new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
         ApplyToxin(insect);
+
+        if (source is NeriumOleander oleander && oleander.IsPath1Maxed)
+        {
+            float extend = oleander.OleanderData?.path1MaxPoisonExtendPerHit ?? 1f;
+            foreach (StatusEffect e in insect.activeEffects)
+                if (e.elementalType == ElementalType.Poison && e.effectType == StatusEffect.Type.negative)
+                    e.duration += extend;
+        }
     }
 
     private void ApplyToxin(Insect insect)

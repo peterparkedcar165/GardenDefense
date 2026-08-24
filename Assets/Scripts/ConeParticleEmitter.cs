@@ -12,7 +12,7 @@ public class ConeParticleEmitter
     private readonly float reachMax;  // factor in this interval for a ragged edge
     private float emitAccumulator;
 
-    public ConeParticleEmitter(ParticleSystem particles, float rate = 250f, float reachMin = 1.1f, float reachMax = 1.2f)
+    public ConeParticleEmitter(ParticleSystem particles, float rate = 250f, float reachMin = 0.95f, float reachMax = 1.05f)
     {
         this.particles = particles;
         this.rate      = rate;

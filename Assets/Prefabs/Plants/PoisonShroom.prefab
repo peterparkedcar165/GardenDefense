@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1216329997766717309}
   - component: {fileID: 2239396661144763570}
   m_Layer: 3
-  m_Name: Cordyceps
+  m_Name: PoisonShroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

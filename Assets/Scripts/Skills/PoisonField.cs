@@ -60,15 +60,15 @@ public class PoisonField : MonoBehaviour
         {
             tickTimer -= tickInterval;
             float tickDamage = damagePerSecond * tickInterval;
-            Cordyceps cs = source as Cordyceps;
-            bool applyDecay = cs != null && cs.IsPath3Maxed;
+            PoisonShroom shroom = source as PoisonShroom;
+            bool applyToxicSpore = shroom != null && shroom.IsPath3Maxed;
             for (int i = affectedInsects.Count - 1; i >= 0; i--)
             {
                 if (affectedInsects[i] != null)
                 {
                     affectedInsects[i].Damage(tickDamage, source.damageType, source.elementalType, source, false, damageTags);
-                    if (applyDecay)
-                        affectedInsects[i].ApplyEffect(new DecayEffect(affectedInsects[i], cs.invertDuration, cs.invertLevel, source));
+                    if (applyToxicSpore)
+                        affectedInsects[i].ApplyEffect(new ToxicSporeEffect(affectedInsects[i], shroom.ToxicSporeDuration, 1, source));
                 }
             }
         }

@@ -96,6 +96,7 @@ public class FireWave : MonoBehaviour
                 float dmg = insect.HasEffect<BurnEffect>() ? damage * burnMultiplier : damage;
                 insect.Damage(dmg, source.damageType, source.elementalType, source, true, waveTags);
                 (source as Stargazer)?.AddFlammable(insect, flammableStacks);
+                (source as Stargazer)?.ApplySkillBurn(insect);
                 _hit.Add(insect);
             }
 
