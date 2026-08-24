@@ -1,7 +1,8 @@
 // PoisonShroom's attack: deals no direct damage on hit, instead applying this DoT.
-// each tick deals the source's Attack Damage at the time of application (so extending the
-// duration is a straight buff, never a nerf). source-stackable, so multiple PoisonShrooms
-// can each have their own instance active on the same target at once. not tagged
+// per-tick damage is Attack Damage scaled by the tick interval, so total damage per second is
+// tickInterval-independent (extending the duration is a straight buff, never a nerf, and the
+// tick rate can change without changing overall damage output). source-stackable, so multiple
+// PoisonShrooms can each have their own instance active on the same target at once. not tagged
 // ElementalDebuff, so its own ticks can still roll to inflict Poisoned like any other Poison damage
 public class ToxicSporeEffect : DoTEffect
 {
@@ -15,9 +16,9 @@ public class ToxicSporeEffect : DoTEffect
     {
         effectType = Type.negative;
         elementalType = ElementalType.Poison;
-        tickInterval = 1f;
+        tickInterval = 0.5f;
         sourceStackable = true;
-        damagePerTick = source?.attackDamage ?? 0f;
+        damagePerTick = (source?.attackDamage ?? 0f) * tickInterval;
     }
 
     // called (on this new instance) only when the same source already had one running on this
@@ -52,5 +53,5 @@ public class ToxicSporeEffect : DoTEffect
 
     public override string GetName() => "<color=purple>Toxic Spore</color>";
     public override string GetDescription() =>
-        $"Deals <color=green><b>{damagePerTick:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage on application and per second after.";
+        $"Deals <color=green><b>{damagePerTick:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage on application and every <color=green><b>{tickInterval:F1}s</b></color> after.";
 }

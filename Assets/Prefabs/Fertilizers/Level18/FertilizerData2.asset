@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Arsonist
   stats:
   - statType: 3
-    value: 0.16
+    value: 0.25
   - statType: 11
-    value: 0.32
-  - statType: 33
-    value: 0.26
+    value: 0.25
+  - statType: 45
+    value: 0.25
   icon: {fileID: 0}
   targetElementalTypes: 00000000
   targetCultivars: 

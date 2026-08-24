@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData1
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Summoner
+  fertilizerName: Melter
   stats:
-  - statType: 19
-    value: 0.33
-  - statType: 37
-    value: 0.23
-  - statType: 32
-    value: 66
+  - statType: 15
+    value: 0.25
+  - statType: 45
+    value: 0.25
+  - statType: 56
+    value: 0.1
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
-  targetElementalTypes: 
-  targetCultivars: 06000000
+  targetElementalTypes: 0300000000000000
+  targetCultivars: 
   appliesToAll: 0
   tier: 0

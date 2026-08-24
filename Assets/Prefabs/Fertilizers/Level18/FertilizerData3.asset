@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData3
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Firewall
+  fertilizerName: Brute Force
   stats:
-  - statType: 32
-    value: 118
-  - statType: 14
-    value: 0.52
-  - statType: 3
-    value: 0.47
+  - statType: 0
+    value: 0.25
+  - statType: 1
+    value: 0.25
+  - statType: 2
+    value: 0.25
   icon: {fileID: 0}
-  targetElementalTypes: 00000000
+  targetElementalTypes: 
   targetCultivars: 
-  appliesToAll: 0
+  appliesToAll: 1
   tier: 0

@@ -20,6 +20,7 @@ public class BegoniaData : PlantData
     public float path3ElementalEffectChancePerLevel = 0.01f;
     public float path3AttackSpeedBonusPerLevel = 0.04f;
     public float path3RadiusPerLevel = 0.15f;
+    public float path3SkillDurationPerLevel = 1f;
 
     public override string GetAttackDescription() =>
         $"Fires a magical bolt dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";

@@ -15,7 +15,6 @@ public class Glowshroom : Shooter
     private float SplashMultMP       => (GMData?.splashDamageMPMultiplier ?? 0.5f) * magicPower / 100f;
     private float SplashMult         => SplashMultBase + SplashMultMP;
     private float FungalGlowDuration => (GMData?.fungalGlowDuration       ?? 6f) + (GMData?.path2FungalGlowDurationPerLevel ?? 1f) * effectivePath2Level;
-    private float SpreadRadius       => (GMData?.fungalGlowSpreadRadius    ?? 2f) + (GMData?.path2SpreadRadiusPerLevel       ?? 0.25f) * effectivePath2Level;
     private float LightMult          => GMData?.lightRadiusMultiplier      ?? 3f;
     private float BlindDurationBase  => (GMData?.blindDuration             ?? 3f) + (GMData?.path3BlindDurationPerLevel     ?? 0.5f) * effectivePath3Level;
     private float BlindDurationMP    => (GMData?.blindDurationMPMultiplier ?? 0.04f) * magicPower;
@@ -52,7 +51,7 @@ public class Glowshroom : Shooter
     {
         // apply Fungal Glow to main target
         if (mainTarget != null && mainTarget.IsAlive)
-            mainTarget.ApplyEffect(new FungalGlowEffect(mainTarget, FungalGlowDuration, 1, this, SpreadRadius));
+            mainTarget.ApplyEffect(new FungalGlowEffect(mainTarget, FungalGlowDuration, 1, this));
 
         // splash damage to nearby insects
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
@@ -65,7 +64,7 @@ public class Glowshroom : Shooter
                 insect.Damage(attackDamage * SplashMult, damageType, elementalType, this, false,
                     new DamageTag[] { DamageTag.AoE });
                 if (insect.IsAlive && IsPath1Maxed)
-                    insect.ApplyEffect(new FungalGlowEffect(insect, FungalGlowDuration, 1, this, SpreadRadius));
+                    insect.ApplyEffect(new FungalGlowEffect(insect, FungalGlowDuration, 1, this));
             }
         }
     }
@@ -158,13 +157,13 @@ public class Glowshroom : Shooter
     public override string GetName() => "<b><color=green>Glowshroom</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} is a bioluminescent cave fungus that illuminates the darkness, infects insects with a spreading glow, and blinds them with a sudden flash of light.";
+        $"The {GetName()} is a bioluminescent cave fungus that illuminates the darkness, infects insects with a glow, and blinds them with a sudden flash of light.";
 
     public override string GetAttackDescription() =>
         $"Fires a fungal bolt dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the target, splashing <color=green><b>{SplashMultBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{SplashMultMP * 100f:F0}%</b></color>] of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
-        $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed and the glow spreads to all insects within <color=green><b>{SpreadRadius:F1}</b></color> radius.";
+        $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed.";
 
     public override string GetSkillDesription() =>
         $"Unleashes a blinding flash, tripling the illumination radius to <color=green><b>{lightEmissionRange * LightMult:F1}</b></color> for <color=green><b>{skillDuration:F0}s</b></color>. All insects caught in the expanded radius are <color=#DDDDDD><b>Blinded</b></color> for <color=green><b>{BlindDurationBase:F1}s</b></color> [<color=#FFB6C1><b>+{BlindDurationMP:F1}s</b></color>], causing their attacks to miss.";
@@ -187,14 +186,12 @@ public class Glowshroom : Shooter
 
     public override string GetPath2Description(bool details = false)
     {
-        float durpl    = GMData?.path2FungalGlowDurationPerLevel ?? 1f;
-        float radiuspl = GMData?.path2SpreadRadiusPerLevel       ?? 0.25f;
+        float durpl = GMData?.path2FungalGlowDurationPerLevel ?? 1f;
         string desc = details
-            ? $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>[({GMData?.fungalGlowDuration ?? 6f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed and the glow spreads to all insects within <color=green><b>[({GMData?.fungalGlowSpreadRadius ?? 2f:F1}) + ({radiuspl:F2}/Lvl.)]</b></color> radius."
+            ? $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>[({GMData?.fungalGlowDuration ?? 6f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#88FF88>Fungal Glow</color> duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"Increase spread radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path2Level, "<color=#88FF88>Fungal Glow</color> reduces <color=green><b>Grass Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=green><b>22%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);

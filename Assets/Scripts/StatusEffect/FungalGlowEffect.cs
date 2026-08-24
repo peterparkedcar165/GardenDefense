@@ -3,19 +3,17 @@ using UnityEngine.Rendering.Universal;
 
 public class FungalGlowEffect : StatusEffect
 {
-    private readonly float spreadRadius;
     private readonly float originalDuration;
     private LightFader _fader;
     private const float LightRadius = 1.2f;
     private const float ResistanceReduction = 0.22f;
     private bool _reducesResistances;
 
-    public FungalGlowEffect(Entity target, float duration, int level, Entity source, float spreadRadius = 2f)
+    public FungalGlowEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
         elementalType = ElementalType.Grass;
-        this.spreadRadius = spreadRadius;
         this.originalDuration = duration;
     }
 
@@ -97,22 +95,13 @@ public class FungalGlowEffect : StatusEffect
     public override void OnDamageReceived(ElementalType elementalType, Entity damageSource, DamageTag[] damageTags = null)
     {
         if (elementalType != ElementalType.Water) return;
-
         duration = originalDuration;
-
-        foreach (Insect nearby in new System.Collections.Generic.List<Insect>(Insect.allInsects))
-        {
-            if (nearby == null || !nearby.IsAlive) continue;
-            if (nearby == (Insect)target) continue;
-            if (Vector3.Distance(target.transform.position, nearby.transform.position) <= spreadRadius)
-                nearby.ApplyEffect(new FungalGlowEffect(nearby, originalDuration, level, source, spreadRadius));
-        }
     }
 
     public override string GetName() => "<color=green>Fungal Glow</color>";
     public override string GetDescription()
     {
-        string desc = $"Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration and spreads this effect to nearby insects within <color=green><b>{spreadRadius:F1}</b></color> radius";
+        string desc = "Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration";
         desc += _reducesResistances
             ? $", and reduces <color=green><b>Grass Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=red><b>22%</b></color>."
             : ".";

@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Fracturing
+  fertilizerName: Supportive
   stats:
-  - statType: 3
-    value: 0.22
-  - statType: 11
-    value: 0.23
-  - statType: 41
-    value: 12
+  - statType: 26
+    value: 0.75
+  - statType: 24
+    value: 0.35
+  - statType: 2
+    value: 0.35
   icon: {fileID: 0}
-  targetElementalType: 0
-  appliesToAll: 1
+  targetElementalTypes: 02000000
+  targetCultivars: 0100000007000000
+  appliesToAll: 0
   tier: 0

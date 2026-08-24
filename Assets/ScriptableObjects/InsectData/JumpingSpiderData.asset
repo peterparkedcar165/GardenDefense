@@ -18,7 +18,7 @@ MonoBehaviour:
   passiveDescription: Leaps and webs plants that it lands on
   sprite: {fileID: 21300000, guid: cd9243fb2c4a36a409323299a31861f7, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d6d7e387d4af5d9458dbdb4861ece95b, type: 3}
-  baseMaxHealth: 600
+  baseMaxHealth: 160
   baseAttackDamage: 18
   baseMagicPower: 0
   baseAttackSpeed: 1
@@ -42,8 +42,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   threatValue: 1.6
   threatType: 0

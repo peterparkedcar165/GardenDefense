@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Airplayer
+  fertilizerName: Poisonous
   stats:
-  - statType: 22
-    value: 0.22
-  - statType: 14
-    value: 0.22
-  - statType: 33
-    value: 0.23
+  - statType: 56
+    value: 0.2
+  - statType: 1
+    value: 0.35
+  - statType: 15
+    value: 0.25
   icon: {fileID: 0}
-  targetElementalTypes: 05000000
+  targetElementalTypes: 03000000
   targetCultivars: 
   appliesToAll: 0
   tier: 0

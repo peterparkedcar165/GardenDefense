@@ -123,6 +123,16 @@ public class Begonia : Shooter
         autoCastPosition = position;
     }
 
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled, targetPosition = autoCastPosition };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled) return;
+        autoCastEnabled = true;
+        autoCastPosition = state.targetPosition;
+    }
+
     private void UpdateHighlights()
     {
         if (!SkillTargetingManager.instance.IsTargeting) _isSkillTargeting = false;
@@ -190,7 +200,10 @@ public class Begonia : Shooter
 
     public override void OnPath2Upgrade(int level) { }
 
-    public override void OnPath3Upgrade(int level) { }
+    public override void OnPath3Upgrade(int level)
+    {
+        baseSkillDuration = data.baseSkillDuration + (BData?.path3SkillDurationPerLevel ?? 1f) * level;
+    }
 
     public override string GetName() => "<b><color=green>Begonia</color></b>";
     public override string GetDescription() =>
@@ -230,9 +243,10 @@ public class Begonia : Shooter
         float eecpl    = BData?.path3ElementalEffectChancePerLevel ?? 0.01f;
         float aspl     = BData?.path3AttackSpeedBonusPerLevel  ?? 0.04f;
         float radiuspl = BData?.path3RadiusPerLevel            ?? 0.15f;
+        float durpl    = BData?.path3SkillDurationPerLevel     ?? 1f;
         float mpMult   = BData?.baseSkillMultiplier ?? 0f;
         string desc = details
-            ? $"Target an area on the field (radius <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color>). Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}</b></color> seconds, " +
+            ? $"Target an area on the field (radius <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color>). Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, " +
               $"increasing <color=green><b>Elemental Effect Chance</b></color> by <color=green><b>[({(BData?.baseElementalEffectChanceBonus ?? 0.02f) * 100f:F0}%) + ({eecpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> " +
               $"and <color=green><b>Attack Speed</b></color> by <color=green><b>[({(BData?.baseAttackSpeedBonus ?? 0f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>."
             : GetSkillDesription();
@@ -240,6 +254,7 @@ public class Begonia : Shooter
                $"Increase <color=green><b>Elemental Effect Chance</b></color> bonus by <color=green><b>{eecpl * 100f:F0}%</b></color> per level. [<color=green><b>+{eecpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"Also increases <color=green><b>Minimum Damage</b></color> by <color=green><b>10%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +

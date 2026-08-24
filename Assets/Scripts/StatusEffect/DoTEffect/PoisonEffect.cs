@@ -5,8 +5,8 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     private ParticleSystem poisonParticles;
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    private float currentHealthPercent = 0.005f;
-    private float currentFlatDamage = 2f;
+    private float currentHealthPercent = 0.02f;
+    private float currentFlatDamage = 4f;
     private float cachedElementalAffinity;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
@@ -21,14 +21,14 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
 
     public override string GetName() => "<color=purple>Poisoned</color>";
     public override string GetDescription() =>
-        $"Deals escalating <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage each second, starting at <color=green><b>1%</b></color> Max Health + <color=green><b>2</b></color>, increasing by <color=green><b>0.15%</b></color> Max Health and <color=green><b>1</b></color> flat per tick.";
+        $"Deals escalating <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage each second, starting at <color=green><b>2%</b></color> Max Health + <color=green><b>4</b></color>, increasing by <color=green><b>0.5%</b></color> Max Health and <color=green><b>2</b></color> flat per tick.";
 
     public override void OnReapply(StatusEffect previous)
     {
         if (previous is PoisonedEffect old)
         {
-            currentHealthPercent = old.currentHealthPercent + 0.005f;
-            currentFlatDamage    = old.currentFlatDamage + 2f;
+            currentHealthPercent = old.currentHealthPercent + 0.02f;
+            currentFlatDamage    = old.currentFlatDamage + 4f;
         }
     }
 
@@ -53,8 +53,8 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
         else
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
 
-        currentHealthPercent += 0.0015f;
-        currentFlatDamage    += 1f;
+        currentHealthPercent += 0.005f;
+        currentFlatDamage    += 2f;
         tickTimer            -= tickInterval;
     }
 

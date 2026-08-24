@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData3
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Vulnerability
+  fertilizerName: Sun Generator
   stats:
-  - statType: 33
-    value: 0.27
-  - statType: 11
-    value: 0.23
-  - statType: 45
-    value: 0.22
+  - statType: 48
+    value: -0.25
+  - statType: 50
+    value: 0.25
+  - statType: 1
+    value: 0.25
   icon: {fileID: 0}
   targetElementalTypes: 
   targetCultivars: 

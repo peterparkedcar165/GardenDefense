@@ -43,6 +43,19 @@ public enum PlantCultivar
     Kinship,        // coordinated attacks (e.g. Calendula's skill)
 }
 
+// generic snapshot of a plant's auto-cast state, captured on death and restored on revival.
+// targetTile is used by plants that auto-cast onto another plant (e.g. Calendula), so the
+// auto-cast keeps working even if that target plant itself dies and gets revived later, since
+// it's resolved live from the tile rather than pinned to the old (destroyed) instance.
+// targetPosition is used by plants that auto-cast onto a fixed area (e.g. Begonia)
+[System.Serializable]
+public struct AutoCastState
+{
+    public bool enabled;
+    public Tile targetTile;
+    public Vector3 targetPosition;
+}
+
 [System.Serializable]
 public class DeadPlantRecord
 {
@@ -57,6 +70,7 @@ public class DeadPlantRecord
     public int exp;
     public float skillCooldownRemaining;
     public float deathTime;
+    public AutoCastState autoCastState;
 }
 
 public abstract class Plant : Entity, IAttackable
@@ -126,6 +140,22 @@ public abstract class Plant : Entity, IAttackable
     public bool IsHovered  => _hoverHighlighted;
     public bool IsSelected => PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this;
 
+    // overridden by plants that support UsesAutoCast, so their auto-cast survives their own
+    // death and revival. see AutoCastState for how the target is preserved
+    public virtual AutoCastState CaptureAutoCastState() => default;
+    public virtual void RestoreAutoCastState(AutoCastState state) { }
+
+    // finds whichever plant currently occupies a tile (if any). used to resolve an auto-cast
+    // target live rather than pinning to a specific instance, so a target that dies and gets
+    // revived (a brand new instance on the same tile) is picked back up automatically
+    public static Plant GetPlantOnTile(Tile tile)
+    {
+        if (tile == null) return null;
+        foreach (Plant p in allPlants)
+            if (p != null && p.occupiedTile == tile) return p;
+        return null;
+    }
+
     private void StoreDeadRecord()
     {
         if (occupiedTile == null || selfPrefab == null) return;
@@ -145,6 +175,7 @@ public abstract class Plant : Entity, IAttackable
             exp          = exp,
             skillCooldownRemaining = skillCooldownTimer,
             deathTime    = Time.time,
+            autoCastState = CaptureAutoCastState(),
         };
     }
 
@@ -204,6 +235,7 @@ public abstract class Plant : Entity, IAttackable
         plant.UpdateHealthBar();
         // the cooldown kept ticking while the plant was dead, resume as if it never died
         plant.skillCooldownTimer = Mathf.Max(0f, record.skillCooldownRemaining - (Time.time - record.deathTime));
+        plant.RestoreAutoCastState(record.autoCastState);
 
         tile.isOccupied = true;
         Collider2D tileCol = tile.GetComponent<Collider2D>();

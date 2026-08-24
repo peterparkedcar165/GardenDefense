@@ -18,10 +18,11 @@ MonoBehaviour:
     intensity: 1
   temperature: 2
   maxWaves: 32
-  startSunCount: 850
+  startSunCount: 1250
   startHealth: 200
+  maxUpgradeLevel: 5
   minWaveDuration: 25
-  maxWaveDuration: 70
+  maxWaveDuration: 100
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -46,7 +47,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  restDuration: 6
+  restDuration: 15
   minThreatBudget: 8
   maxThreatBudget: 145
   budgetCurve:
@@ -132,3 +133,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0c38c5a016b0ce842860c1f5440fe371, type: 2}
   - {fileID: 11400000, guid: 4076b26003a02ef44b4442c0d76c4af8, type: 2}
   - {fileID: 11400000, guid: 403f7412059d428429a978a97c2bff6b, type: 2}
+  ambience: {fileID: 0}

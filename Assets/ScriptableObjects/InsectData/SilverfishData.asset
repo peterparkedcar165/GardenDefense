@@ -18,7 +18,7 @@ MonoBehaviour:
   passiveDescription: Can dodge attacks
   sprite: {fileID: 21300000, guid: 96a0d6b89d71dc44d99295f9b93fe1f7, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: e882afe36e318764e82aadfbb50ff046, type: 3}
-  baseMaxHealth: 550
+  baseMaxHealth: 350
   baseAttackDamage: 22
   baseMagicPower: 0
   baseAttackSpeed: 1
@@ -42,8 +42,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0.08
   threatValue: 1.5
   threatType: 0

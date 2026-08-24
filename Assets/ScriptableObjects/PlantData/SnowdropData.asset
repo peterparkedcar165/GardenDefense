@@ -28,7 +28,7 @@ MonoBehaviour:
   baseAttackRange: 2
   baseArmor: 0
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.04
+  baseElementalEffectChance: 0.03
   baseOnHitEffectiveness: 0.1
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -93,7 +93,7 @@ MonoBehaviour:
   baseBlizzardRange: 10
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.2
-  path1MaxElementalEffectChanceBonus: 0.04
+  path1MaxElementalEffectChanceBonus: 0.03
   path1MaxAttackDamagePenalty: 0.5
   path1MaxAttackSpeedBonus: 1
   path3BlizzardWidthPerLevel: 0.5

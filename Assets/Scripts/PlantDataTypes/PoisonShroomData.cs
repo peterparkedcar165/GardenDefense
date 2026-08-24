@@ -7,6 +7,7 @@ public class PoisonShroomData : PlantData
     public float baseToxicSporeDuration = 3f;
 
     [Header("Path 1 Scaling")]
+    public float path1AttackDamagePerLevel = 8f;
     public float path1AttackSpeedPerLevel = 0.08f;
     public float path1AttackRangePerLevel = 0.1f;
     public float path1ToxicSporeDurationPerLevel = 0.4f;

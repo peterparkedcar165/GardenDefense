@@ -13,7 +13,7 @@ public class Calendula : Aura
     private float _illuminationAuraTimer = 0f;
 
     private bool autoCastEnabled = false;
-    private Plant autoCastTarget = null;
+    private Tile autoCastTargetTile = null;
     private Plant _autoCastHighlighted;
     public override bool UsesAutoCast => true;
     public override bool IsAutoCasting => autoCastEnabled;
@@ -61,18 +61,16 @@ public class Calendula : Aura
 
         if (autoCastEnabled)
         {
-            if (autoCastTarget == null || !autoCastTarget.IsAlive)
-            {
-                autoCastEnabled = false;
-                autoCastTarget = null;
-            }
-            else if (SkillReady)
+            // resolved live from the tile (not a pinned instance), so if the target plant dies
+            // and gets revived, the auto-cast picks the new instance back up on its own
+            Plant currentTarget = Plant.GetPlantOnTile(autoCastTargetTile);
+            if (currentTarget != null && currentTarget.IsAlive && SkillReady)
             {
                 int myLevel = effectivePath3Level + 1;
-                FloralGlowEffect existing = autoCastTarget.GetEffect<FloralGlowEffect>();
+                FloralGlowEffect existing = currentTarget.GetEffect<FloralGlowEffect>();
                 // a stronger instance is already active (e.g. from another Calendula), wait it out
                 if (existing == null || existing.level <= myLevel)
-                    CastFloralGlow(autoCastTarget, myLevel);
+                    CastFloralGlow(currentTarget, myLevel);
             }
         }
 
@@ -82,12 +80,22 @@ public class Calendula : Aura
     // while this Calendula is selected and auto casting, highlight its locked target in yellow
     private void UpdateAutoCastHighlight()
     {
-        Plant desired = (IsSelected && autoCastEnabled) ? autoCastTarget : null;
+        Plant desired = (IsSelected && autoCastEnabled) ? Plant.GetPlantOnTile(autoCastTargetTile) : null;
         if (_autoCastHighlighted != null && _autoCastHighlighted != desired)
             _autoCastHighlighted.ClearHighlight();
         if (desired != null)
             desired.SetHighlight(Color.yellow);
         _autoCastHighlighted = desired;
+    }
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled, targetTile = autoCastTargetTile };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled || state.targetTile == null) return;
+        autoCastEnabled = true;
+        autoCastTargetTile = state.targetTile;
     }
 
     protected override void OnDestroy()
@@ -102,7 +110,7 @@ public class Calendula : Aura
         if (autoCastEnabled)
         {
             autoCastEnabled = false;
-            autoCastTarget = null;
+            autoCastTargetTile = null;
             return;
         }
         SkillTargetingManager.instance.BeginPlantTargeting(OnAutoCastTargetConfirmed, this);
@@ -112,7 +120,7 @@ public class Calendula : Aura
     {
         if (targetPlant == null) return;
         autoCastEnabled = true;
-        autoCastTarget = targetPlant;
+        autoCastTargetTile = targetPlant.occupiedTile;
     }
 
     protected override void Attack()

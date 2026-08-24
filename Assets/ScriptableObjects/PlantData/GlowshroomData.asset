@@ -85,15 +85,13 @@ MonoBehaviour:
   splashDamageMultiplier: 0.5
   splashDamageMPMultiplier: 0.5
   fungalGlowDuration: 4
-  fungalGlowSpreadRadius: 2
   passiveCooldown: 4
   lightRadiusMultiplier: 2
   blindDuration: 4
   blindDurationMPMultiplier: 0.04
   blindAccuracyPenalty: 1
   path1AttackDamagePerLevel: 12
-  path1AttackRangePerLevel: 0.15
-  path2FungalGlowDurationPerLevel: 2
-  path2SpreadRadiusPerLevel: 0.15
+  path1AttackRangePerLevel: 0.3
+  path2FungalGlowDurationPerLevel: 3
   path3BlindDurationPerLevel: 2
   path3SkillDurationPerLevel: 2

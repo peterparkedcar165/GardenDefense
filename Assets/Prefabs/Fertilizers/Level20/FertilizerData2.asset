@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData2
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Hexer
+  fertilizerName: Caster
   stats:
   - statType: 22
-    value: 0.23
+    value: 0.25
   - statType: 14
-    value: 0.23
-  - statType: 45
-    value: 0.23
+    value: 0.25
+  - statType: 32
+    value: 85
   icon: {fileID: 0}
   targetElementalTypes: 
   targetCultivars: 

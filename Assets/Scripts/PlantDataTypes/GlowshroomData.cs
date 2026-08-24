@@ -10,7 +10,6 @@ public class GlowshroomData : PlantData
 
     [Header("Passive Fungal Glow")]
     public float fungalGlowDuration = 6f;
-    public float fungalGlowSpreadRadius = 2f;
     public float passiveCooldown = 4f;
 
     [Header("Skill Flash")]
@@ -25,7 +24,6 @@ public class GlowshroomData : PlantData
 
     [Header("Path 2 Scaling")]
     public float path2FungalGlowDurationPerLevel = 1f;
-    public float path2SpreadRadiusPerLevel = 0.25f;
 
     [Header("Path 3 Scaling")]
     public float path3BlindDurationPerLevel = 0.5f;
@@ -35,7 +33,7 @@ public class GlowshroomData : PlantData
         $"Fires a fungal bolt dealing <color=green><b>{baseAttackDamage:F0}</b></color> {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage, splashing to nearby insects.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks inflict <color=#88FF88>Fungal Glow</color> on the target. <color=#4FC3F7><b>Water</b></color> damage refreshes and spreads the glow to nearby insects.";
+        $"Attacks inflict <color=#88FF88>Fungal Glow</color> on the target. <color=#4FC3F7><b>Water</b></color> damage refreshes the glow's duration.";
 
     public override string GetSkillDescription() =>
         $"Releases a blinding flash, tripling the illumination radius and <color=#DDDDDD>Blinding</color> all insects caught in the expanded area.";

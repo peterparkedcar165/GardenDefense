@@ -89,6 +89,7 @@ MonoBehaviour:
   path1AttackDamagePerLevel: 4
   path1AttackRangePerLevel: 0.2
   path2elementalAffinityPerLevel: 0.08
-  path3ElementalEffectChancePerLevel: 0.0075
+  path3ElementalEffectChancePerLevel: 0.01
   path3AttackSpeedBonusPerLevel: 0.06
   path3RadiusPerLevel: 0.15
+  path3SkillDurationPerLevel: 3

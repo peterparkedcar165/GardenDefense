@@ -93,8 +93,9 @@ public class PoisonShroom : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackSpeed = data.baseAttackSpeed + level * (PSData?.path1AttackSpeedPerLevel ?? 0.08f);
-        baseAttackRange = data.baseAttackRange + level * (PSData?.path1AttackRangePerLevel ?? 0.1f);
+        baseAttackDamage = data.baseAttackDamage + level * (PSData?.path1AttackDamagePerLevel ?? 8f);
+        baseAttackSpeed  = data.baseAttackSpeed  + level * (PSData?.path1AttackSpeedPerLevel  ?? 0.08f);
+        baseAttackRange  = data.baseAttackRange  + level * (PSData?.path1AttackRangePerLevel  ?? 0.1f);
     }
 
     public override void OnPath2Upgrade(int level) { }
@@ -141,6 +142,7 @@ public class PoisonShroom : Shooter
 
     public override string GetPath1Description(bool details = false)
     {
+        float adpl    = PSData?.path1AttackDamagePerLevel ?? 8f;
         float aspl    = PSData?.path1AttackSpeedPerLevel ?? 0.08f;
         float rangepl = PSData?.path1AttackRangePerLevel ?? 0.1f;
         float durpl   = PSData?.path1ToxicSporeDurationPerLevel ?? 0.4f;
@@ -148,6 +150,7 @@ public class PoisonShroom : Shooter
             ? $"Fires <color=purple><b>Toxic Spores</b></color> at the target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second for <color=green><b>{ToxicSporeDuration:F1}</b></color> seconds."
             : $"Fires <color=purple><b>Toxic Spores</b></color> at the target, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second for <color=green><b>{ToxicSporeDuration:F1}</b></color> seconds.";
         return $"Attack:\n\n{desc}\n\n" +
+               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=purple><b>Toxic Spore</b></color> duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath1Level:F1}</b></color>]\n\n" +
