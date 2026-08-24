@@ -5,8 +5,8 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     private ParticleSystem poisonParticles;
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    private float currentHealthPercent = 0.02f;
-    private float currentFlatDamage = 4f;
+    private float currentHealthPercent = 0.015f;
+    private float currentFlatDamage = 3f;
     private float cachedElementalAffinity;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
@@ -21,14 +21,17 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
 
     public override string GetName() => "<color=purple>Poisoned</color>";
     public override string GetDescription() =>
-        $"Deals escalating <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage each second, starting at <color=green><b>2%</b></color> Max Health + <color=green><b>4</b></color>, increasing by <color=green><b>0.5%</b></color> Max Health and <color=green><b>2</b></color> flat per tick.";
+        $"Take escalating damage over time (<color=purple><b>{ComputeDamage():F0}</b></color>).";
+
+    private float ComputeDamage() =>
+        target.maxHealth * currentHealthPercent + currentFlatDamage * (1f + 3f * cachedElementalAffinity);
 
     public override void OnReapply(StatusEffect previous)
     {
         if (previous is PoisonedEffect old)
         {
-            currentHealthPercent = old.currentHealthPercent + 0.02f;
-            currentFlatDamage    = old.currentFlatDamage + 4f;
+            currentHealthPercent = old.currentHealthPercent + 0.015f;
+            currentFlatDamage    = old.currentFlatDamage + 3f;
         }
     }
 
@@ -47,14 +50,14 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
         tickTimer += deltaTime;
         if (tickTimer < tickInterval) return;
 
-        float damage = target.maxHealth * currentHealthPercent + currentFlatDamage * (1f + cachedElementalAffinity);
+        float damage = ComputeDamage();
         if (source != null)
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
         else
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
 
-        currentHealthPercent += 0.005f;
-        currentFlatDamage    += 2f;
+        currentHealthPercent += 0.0025f;
+        currentFlatDamage    += 1f;
         tickTimer            -= tickInterval;
     }
 

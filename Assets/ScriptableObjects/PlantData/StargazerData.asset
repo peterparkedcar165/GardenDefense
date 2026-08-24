@@ -73,7 +73,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 60
+  baseSkillCooldown: 90
   baseSkillDuration: 0
   channelDuration: 0
   baseSkillRadius: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
   skillThickness: 1.5
   skillDelay: 0.25
   skillBurnMultiplier: 2
-  skillFlammableStacks: 10
+  skillFlammableStacks: 5
   skillBurnDuration: 6
   path1AttackDamagePerLevel: 1
   path1AttackRangePerLevel: 0.3
@@ -109,4 +109,4 @@ MonoBehaviour:
   path3SkillDamagePerLevel: 20
   path3WaveWidthPerLevel: 1
   path3BurnMultiplierPerLevel: 0.75
-  path3FlammableStacksPerLevel: 2
+  path3FlammableStacksPerLevel: 1

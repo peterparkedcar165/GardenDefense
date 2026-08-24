@@ -45,6 +45,8 @@ public class Gloriosa : Shooter
     {
         baseSkillDuration = (GData?.wispDuration ?? 20f) + (GData?.path3DurationPerLevel ?? 3f) * effectivePath3Level;
         base.UpdateStats();
+        if (IsPath1Maxed)
+            piercing += 1;
     }
 
     protected override void Update()
@@ -127,7 +129,7 @@ public class Gloriosa : Shooter
             SpawnWisp();
     }
 
-    public void SpawnBounceEmber(Vector3 fromPos, IAttackable target, int bouncesRemaining)
+    public void SpawnBounceEmber(Vector3 fromPos, IAttackable target, int bouncesRemaining, HashSet<IAttackable> hitHistory)
     {
         if (emberPrefab == null || target == null) return;
         GameObject obj    = Instantiate(emberPrefab, fromPos, Quaternion.identity);
@@ -140,6 +142,7 @@ public class Gloriosa : Shooter
             attackDamage, damageType, elementalType);
         e.SetBouncesRemaining(bouncesRemaining);
         e.MarkAsBounce();
+        e.SetHitHistory(hitHistory);
     }
 
     public void UnregisterWisp(FieryWisp wisp) => _activeWisps.Remove(wisp);
@@ -250,7 +253,7 @@ public class Gloriosa : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{speedpl:F2}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "When targeting a friendly unit, the projectile bounces to the most injured friendly unit. If all are at full health, it targets the coldest plant instead.")}\n\n" +
+               $"{Level5Section(path1Level, "When targeting a friendly unit, the ember bounces to nearby injured friendly units.\n\nIncrease <color=green><b>Piercing</b></color> by <color=green><b>1</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }

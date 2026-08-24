@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\Entities\WaterPot.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AquaticOvershieldEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeManager.cs" />
+    <Compile Include="Assets\Scripts\Skills\OleanderSprout.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Harvestman.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\QueenAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowingAllergenEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingBurgeonEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\OleandicCurseEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\LightFader.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CharredEffect.cs" />

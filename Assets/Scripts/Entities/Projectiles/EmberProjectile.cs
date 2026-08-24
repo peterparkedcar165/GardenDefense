@@ -18,6 +18,7 @@ public class EmberProjectile : MonoBehaviour
     private ElementalType _elementalType;
     private bool          _isBounce;
     private int           _bouncesRemaining;
+    private readonly HashSet<IAttackable> _hitHistory = new HashSet<IAttackable>();
 
     private static readonly DamageTag[] _damageTags = { DamageTag.Attack, DamageTag.Projectile };
 
@@ -48,12 +49,20 @@ public class EmberProjectile : MonoBehaviour
     public void SetBouncesRemaining(int count) => _bouncesRemaining = count;
     public void MarkAsBounce()                 => _isBounce = true;
 
+    // carries the full set of targets already hit earlier in this bounce chain, so a later hop
+    // never lands on the same one twice. passed forward across every SpawnBounceEmber call
+    public void SetHitHistory(HashSet<IAttackable> history)
+    {
+        _hitHistory.Clear();
+        foreach (IAttackable h in history) _hitHistory.Add(h);
+    }
+
     void Update()
     {
         if (_target == null || !_target.IsAlive)
         {
             // bounce embers only ever seek friendly units
-            _target = _isBounce ? FindBounceTarget(null) : (_source != null ? _source.FindCurrentTarget() : null);
+            _target = _isBounce ? FindBounceTarget(_hitHistory) : (_source != null ? _source.FindCurrentTarget() : null);
             if (_target == null) { Destroy(gameObject); return; }
         }
 
@@ -107,18 +116,21 @@ public class EmberProjectile : MonoBehaviour
                 nearby.temperature = Mathf.Min(nearby.temperature + _temperatureAmount * 0.5f, nearby.comfortMax);
         }
 
-        // path 1 max level: bounce to another friendly unit, chain limited by bouncesRemaining
+        // path 1 max level: bounce to another friendly unit, chain limited by bouncesRemaining.
+        // the current target joins the hit history first, so the chain can never double back
+        _hitHistory.Add(_target);
         if (targetWasFriendly && _source != null && _source.IsPath1Maxed && _bouncesRemaining > 0)
         {
-            IAttackable bounceTarget = FindBounceTarget(_target);
+            IAttackable bounceTarget = FindBounceTarget(_hitHistory);
             if (bounceTarget != null)
-                _source.SpawnBounceEmber(transform.position, bounceTarget, _bouncesRemaining - 1);
+                _source.SpawnBounceEmber(transform.position, bounceTarget, _bouncesRemaining - 1, _hitHistory);
         }
     }
 
-    // lowest health fraction first; if all are full, coldest plant instead. never targets enemies.
-    // search is limited to the Gloriosa's attack range from the bounce origin (current position).
-    private IAttackable FindBounceTarget(IAttackable justHit)
+    // lowest health fraction first; if all are full, coldest plant instead. never targets enemies,
+    // and never a target already hit earlier in this chain. search is limited to the Gloriosa's
+    // attack range from the bounce origin (current position) — same range as its own attack range
+    private IAttackable FindBounceTarget(HashSet<IAttackable> excluded)
     {
         float range = _source != null ? _source.attackRange : float.MaxValue;
 
@@ -127,7 +139,7 @@ public class EmberProjectile : MonoBehaviour
 
         foreach (Plant plant in Plant.allPlants)
         {
-            if (plant == null || !plant.IsAlive || plant == (Object)justHit) continue;
+            if (plant == null || !plant.IsAlive || excluded.Contains(plant)) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > range) continue;
             float frac = plant.health / plant.maxHealth;
             if (frac < bestFrac) { bestFrac = frac; best = plant; }
@@ -135,7 +147,7 @@ public class EmberProjectile : MonoBehaviour
 
         foreach (Insect ally in Insect.friendlyInsects)
         {
-            if (ally == null || !ally.IsAlive || ally == (Object)justHit) continue;
+            if (ally == null || !ally.IsAlive || excluded.Contains(ally)) continue;
             if (Vector3.Distance(transform.position, ((Entity)ally).transform.position) > range) continue;
             float frac = ally.health / ally.maxHealth;
             if (frac < bestFrac) { bestFrac = frac; best = ally; }
@@ -148,7 +160,7 @@ public class EmberProjectile : MonoBehaviour
             float lowestTemp = float.MaxValue;
             foreach (Plant plant in Plant.allPlants)
             {
-                if (plant == null || !plant.IsAlive || plant == (Object)justHit) continue;
+                if (plant == null || !plant.IsAlive || excluded.Contains(plant)) continue;
                 if (Vector3.Distance(transform.position, plant.transform.position) > range) continue;
                 if (plant.temperature < lowestTemp) { lowestTemp = plant.temperature; coldest = plant; }
             }

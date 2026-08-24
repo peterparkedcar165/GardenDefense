@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 95
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 22
+  baseAttackDamage: 24
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 3
@@ -65,7 +65,7 @@ MonoBehaviour:
   baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 3.3
+  baseProjectileSpeed: 2.6
   baseMaxRange: 99
   basePiercing: 0
   baseAoERadius: 0
@@ -73,7 +73,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 60
+  baseSkillCooldown: 30
   baseSkillDuration: 3
   channelDuration: 0
   baseSkillRadius: 1.5
@@ -83,15 +83,15 @@ MonoBehaviour:
   baseSkillDamage: 0
   baseBounceCount: 2
   baseToxinDuration: 6
-  baseSkillFlatDamage: 33
-  bounceSearchRadius: 4
   bounceDamageReduction: 0.1
-  path1AttackDamagePerLevel: 6
+  baseSproutDuration: 15
+  baseCursePoisonResistReduction: 0.04
+  path1AttackDamagePerLevel: 7
   path1AttackRangePerLevel: 0.2
   path1BouncePerLevel: 1
   path1MaxPoisonExtendPerHit: 1
   path2ToxinDurationPerLevel: 1
   path2MaxMagicArmorPerLock: 12
-  path3SkillDamagePerLevel: 17
-  path3RootDurationPerLevel: 1.5
-  path3SkillRadiusPerLevel: 0.2
+  path3SproutDurationPerLevel: 3
+  path3CurseReductionPerLevel: 0.01
+  path3MaxBounceBonus: 3

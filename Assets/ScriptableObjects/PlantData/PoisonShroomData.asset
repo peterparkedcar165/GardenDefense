@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 95
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 24
+  baseAttackDamage: 20
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 2.5
@@ -83,7 +83,7 @@ MonoBehaviour:
   baseSkillDamage: 0
   basePoisonDPS: 8
   baseToxicSporeDuration: 3
-  path1AttackDamagePerLevel: 8
+  path1AttackDamagePerLevel: 4
   path1AttackSpeedPerLevel: 0.08
   path1AttackRangePerLevel: 0.13
   path1ToxicSporeDurationPerLevel: 0.4
