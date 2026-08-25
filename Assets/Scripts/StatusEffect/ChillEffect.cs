@@ -23,7 +23,7 @@ public class ChillEffect : StatusEffect
 
     public override string GetDescription()
     {
-        string desc = $"Reduce <color=#00FFFF><b>Movement Speed</b></color> by <color=red><b>{TotalSlow * 100f:F0}%</b></color>";
+        string desc = $"Reduce <color=#00FFFF><b>Movement Speed</b></color> and <color=#00FFFF><b>Attack Speed</b></color> by <color=red><b>{TotalSlow * 100f:F0}%</b></color>";
         if (ReducesIceResistance)
             desc += $" and <color=#00FFFF><b>Ice Resistance</b></color> by <color=red><b>{IceResReduction * 100f:F0}%</b></color>";
         return desc + ".";
@@ -33,6 +33,7 @@ public class ChillEffect : StatusEffect
     {
         Insect insect = (Insect)target;
         insect.movementSpeedMultiplier -= TotalSlow;
+        insect.attackSpeedMultiplier -= TotalSlow;
         if (ReducesIceResistance)
             target.iceResistanceAdder -= IceResReduction;
     }
@@ -43,6 +44,7 @@ public class ChillEffect : StatusEffect
     {
         Insect insect = (Insect)target;
         insect.movementSpeedMultiplier += TotalSlow;
+        insect.attackSpeedMultiplier += TotalSlow;
         if (ReducesIceResistance)
             target.iceResistanceAdder += IceResReduction;
     }

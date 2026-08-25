@@ -18,6 +18,14 @@ public class PlantBar : MonoBehaviour
         Key.Digit5, Key.Digit6, Key.Digit7, Key.Digit8,
     };
 
+    // F1-F8 mirror the toolbar slots, but cycle through already-placed instances of that
+    // slot's plant type instead of picking a seed to place
+    private static readonly Key[] fKeys = new Key[]
+    {
+        Key.F1, Key.F2, Key.F3, Key.F4,
+        Key.F5, Key.F6, Key.F7, Key.F8,
+    };
+
     void Awake()
     {
         if (instance != null) return;
@@ -43,6 +51,34 @@ public class PlantBar : MonoBehaviour
             if (Keyboard.current[digitKeys[i]].wasPressedThisFrame)
                 slots[i].OnClicked();
         }
+
+        for (int i = 0; i < slots.Count && i < fKeys.Length; i++)
+        {
+            if (Keyboard.current[fKeys[i]].wasPressedThisFrame)
+                CyclePlacedPlant(slots[i].Data);
+        }
+    }
+
+    // selects the oldest-placed live instance of this plant type, or the next one placed after
+    // the currently-selected plant if it's already one of this type (wrapping to the oldest
+    // again after the most recently placed one)
+    private void CyclePlacedPlant(PlantData slotData)
+    {
+        if (slotData == null || PlantUpgradeUI.instance == null) return;
+
+        List<Plant> matching = new List<Plant>();
+        foreach (Plant plant in Plant.allPlants)
+            if (plant != null && plant.IsAlive && plant.data != null && plant.data.plantName == slotData.plantName)
+                matching.Add(plant);
+
+        if (matching.Count == 0) return;
+
+        Plant current = PlantUpgradeUI.instance.GetSelectedPlant();
+        int currentIndex = matching.IndexOf(current);
+        Plant next = currentIndex < 0 ? matching[0] : matching[(currentIndex + 1) % matching.Count];
+
+        PlantUpgradeUI.instance.ShowPanel(next);
+        CameraFit.instance?.CenterOn(next.transform.position);
     }
 
     public void Clear()

@@ -11,6 +11,8 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
     private PlantData data;
     private Plant plant;
 
+    public PlantData Data => data;
+
     public void Setup(PlantData plantData)
     {
         data = plantData;

@@ -65,8 +65,8 @@ MonoBehaviour:
   healRange: 4
   healCooldown: 8
   castDuration: 0.5
-  healAmount: 25
-  healPercent: 0.04
+  healAmount: 35
+  healPercent: 0.06
   regenerationDuration: 3
   regenerationHealing: 6
   regenerationPercent: 0.01

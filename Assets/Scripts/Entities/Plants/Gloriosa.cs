@@ -9,7 +9,7 @@ public class Gloriosa : Shooter
     [SerializeField] private GameObject wispPrefab;
 
     private IAttackable _currentTarget;
-    private readonly List<FieryWisp> _activeWisps = new List<FieryWisp>();
+    private readonly List<Cinderwisp> _activeWisps = new List<Cinderwisp>();
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
     private static readonly Color HighlightColor = new Color(1f, 0.5f, 0f);
 
@@ -33,6 +33,11 @@ public class Gloriosa : Shooter
     private float LatchFireMP   => (GData?.latchFireDamageBonusMP ?? 0.05f) * magicPower / 100f;
     private float LatchFire     => LatchFireBase + LatchFireMP;
 
+    // no targeting needed: the skill just summons wisps wherever Gloriosa stands
+    private bool autoCastEnabled = false;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
+
     protected override void Awake()
     {
         base.Awake();
@@ -53,6 +58,21 @@ public class Gloriosa : Shooter
     {
         base.Update();
         UpdateHighlights();
+
+        if (autoCastEnabled && SkillReady)
+            ActivateSkill();
+    }
+
+    // click Auto Cast to toggle it on, click again to turn it off — no target to pick
+    public override void ToggleAutoCast() => autoCastEnabled = !autoCastEnabled;
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled) return;
+        autoCastEnabled = true;
     }
 
     protected override GameObject FindTarget()
@@ -99,7 +119,7 @@ public class Gloriosa : Shooter
         {
             if (insect == null || !insect.IsAlive) continue;
             float dist = Vector3.Distance(transform.position, insect.GetApproachPoint(transform.position));
-            if (dist <= attackRange && dist < nearest) { nearest = dist; bestInsect = insect; }
+            if (dist <= attackRange && dist < nearest && IsValidNightTarget(insect, dist)) { nearest = dist; bestInsect = insect; }
         }
         return bestInsect;
     }
@@ -120,9 +140,7 @@ public class Gloriosa : Shooter
     public override void ActivateSkill()
     {
         skillCooldownTimer = skillCooldown;
-        foreach (FieryWisp w in new List<FieryWisp>(_activeWisps))
-            w.Despawn();
-        _activeWisps.Clear();
+        DespawnAllWisps();
         int count = GData?.wispCount ?? 2;
         if (IsPath3Maxed) count++;
         for (int i = 0; i < count; i++)
@@ -145,7 +163,14 @@ public class Gloriosa : Shooter
         e.SetHitHistory(hitHistory);
     }
 
-    public void UnregisterWisp(FieryWisp wisp) => _activeWisps.Remove(wisp);
+    public void UnregisterWisp(Cinderwisp wisp) => _activeWisps.Remove(wisp);
+
+    private void DespawnAllWisps()
+    {
+        foreach (Cinderwisp w in new List<Cinderwisp>(_activeWisps))
+            w.Despawn();
+        _activeWisps.Clear();
+    }
 
     private void SpawnWisp()
     {
@@ -155,7 +180,7 @@ public class Gloriosa : Shooter
 
         Vector3 offset = new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f), 0f);
         GameObject obj = Instantiate(wispPrefab, transform.position + offset, Quaternion.identity);
-        FieryWisp wisp = obj.GetComponent<FieryWisp>();
+        Cinderwisp wisp = obj.GetComponent<Cinderwisp>();
         _activeWisps.Add(wisp);
         wisp.Initialize(this,
             skillDuration,
@@ -166,7 +191,6 @@ public class Gloriosa : Shooter
             LatchHeal,
             LatchFire,
             effectiveLatchDur,
-            GData?.wispLightRadius    ?? 1.5f,
             GData?.wispLightIntensity ?? 0.6f,
             GData?.wispEmergeSpeed    ?? 3f,
             GData?.wispSeekDelay      ?? 1f,
@@ -204,8 +228,24 @@ public class Gloriosa : Shooter
             _highlightedPlants.Add(p);
     }
 
+    // a dead gloriosa can't sustain its wisps: they must go with it. Kill() catches death
+    // immediately (before any death animation delay); OnDestroy catches every other way the
+    // gloriosa can leave the field (sold, scene unload, etc.)
+    public override void Kill()
+    {
+        DespawnAllWisps();
+        base.Kill();
+    }
+
+    public override void Kill(Entity source)
+    {
+        DespawnAllWisps();
+        base.Kill(source);
+    }
+
     protected override void OnDestroy()
     {
+        DespawnAllWisps();
         base.OnDestroy();
         foreach (Plant p in _highlightedPlants)
             if (p != null) p.ClearHighlight();
@@ -233,10 +273,10 @@ public class Gloriosa : Shooter
         float wRad  = GData?.wispRadius ?? 1.5f;
         float wTemp = (GData?.wispTemperaturePerSecond ?? 1f) + (GData?.path3TemperaturePerSecondPerLevel ?? 0.2f) * effectivePath3Level;
         float lDur  = ((GData?.latchDuration ?? 3f) + (GData?.path3LatchDurationPerLevel ?? 0.5f) * effectivePath3Level) * (1f + skillDurationMultiplier) + skillDurationAdder;
-        return $"Summons <color=green><b>{count}</b></color> <color=orange><b>Fiery Wisps</b></color> that seek injured plants, " +
+        return $"Summons <color=green><b>{count}</b></color> <color=orange><b>Cinderwisps</b></color> that seek injured plants, " +
                $"healing <color=green><b>{WispHealBase:F0}</b></color> [<color=#FFB6C1><b>+{WispHealMP:F0}</b></color>] health " +
                $"and heating <color=orange><b>{wTemp:F1}°</b></color> per second around them. " +
-               $"Upon reaching a target, it latches, applying <color=orange><b>Fiery Assistance</b></color>, " +
+               $"Upon reaching a target, it latches, applying <color=orange><b>Boon of The Wisp</b></color>, " +
                $"which heals <color=green><b>{LatchHealBase:F0}</b></color> [<color=#FFB6C1><b>+{LatchHealMP:F0}</b></color>] per second " +
                $"and increases <color=orange><b>Fire Damage</b></color> by " +
                $"<color=orange><b>{LatchFireBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{LatchFireMP * 100f:F1}%</b></color>]. " +
@@ -287,7 +327,7 @@ public class Gloriosa : Shooter
         float latchHealMP = GData?.latchHealMP ?? 0.1f;
         float latchFireMP = GData?.latchFireDamageBonusMP ?? 0.05f;
         string desc = details
-            ? $"Summons <color=green><b>{GData?.wispCount ?? 2}</b></color> Fiery Wisps that fly across the map seeking the most injured plant. " +
+            ? $"Summons <color=green><b>{GData?.wispCount ?? 2}</b></color> Cinderwisps that fly across the map seeking the most injured plant. " +
               $"Plants within <color=green><b>{GData?.wispRadius ?? 1.5f:F1}</b></color> radius heal " +
               $"<color=green><b>[({GData?.wispHealPerSecond ?? 4f:F0}) + ({healpl:F0}/Lvl.) + <color=#FFB6C1>{wispHealMP * 100f:F0}% Magic Power</color>]</b></color> health and " +
               $"warm <color=orange><b>[({GData?.wispTemperaturePerSecond ?? 1f:F1}) + ({temppl:F1}/Lvl.)]</b></color> per second. " +
@@ -300,11 +340,11 @@ public class Gloriosa : Shooter
                $"Increase lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase healing by <color=green><b>{healpl:F0}</b></color> per second per level. [<color=green><b>+{healpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase heating by <color=orange><b>{temppl:F1}</b></color>° per second per level. [<color=orange><b>+{temppl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"Increase <color=orange><b>Assistance</b></color> healing by <color=green><b>{lhealpl:F0}</b></color> per second per level. [<color=green><b>+{lhealpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase <color=orange><b>Boon of The Wisp</b></color> healing by <color=green><b>{lhealpl:F0}</b></color> per second per level. [<color=green><b>+{lhealpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=orange><b>Fire Damage</b></color> bonus by <color=orange><b>{lfirepl * 100f:F0}%</b></color> per level. [<color=orange><b>+{lfirepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase <color=orange><b>Assistance</b></color> duration by <color=green><b>{ldurpl:F1}</b></color> seconds per level. [<color=green><b>+{ldurpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase <color=orange><b>Boon of The Wisp</b></color> duration by <color=green><b>{ldurpl:F1}</b></color> seconds per level. [<color=green><b>+{ldurpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Summons an additional <color=orange><b>Fiery Wisp</b></color>.")}\n\n" +
+               $"{Level5Section(path3Level, $"Summons an additional <color=orange><b>Cinderwisp</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

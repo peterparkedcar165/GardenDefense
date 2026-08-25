@@ -15,12 +15,13 @@ MonoBehaviour:
   fertilizerName: Resisting
   stats:
   - statType: 39
-    value: 16
+    value: 25
   - statType: 36
-    value: -0.22
+    value: -0.25
   - statType: 32
-    value: 52
+    value: 85
   icon: {fileID: 0}
-  targetElementalType: 0
+  targetElementalTypes: 
+  targetCultivars: 
   appliesToAll: 1
   tier: 0

@@ -140,4 +140,4 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae0b868581ef6fb4a85c7a7a6f7f88ee, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FieryWisp
+  m_EditorClassIdentifier: Assembly-CSharp::Cinderwisp

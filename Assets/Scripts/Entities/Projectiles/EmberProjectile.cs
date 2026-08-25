@@ -106,14 +106,17 @@ public class EmberProjectile : MonoBehaviour
             }
         }
 
-        // aoe splash: heals and warms nearby plants regardless of primary target
-        foreach (Plant nearby in new List<Plant>(Plant.allPlants))
+        // aoe splash: only when the primary target was actually a plant, not a friendly/enemy insect
+        if (primaryPlant != null)
         {
-            if (nearby == null || !nearby.IsAlive || nearby == primaryPlant) continue;
-            if (Vector3.Distance(transform.position, nearby.transform.position) > _auraRadius) continue;
-            nearby.Heal(_healAmount * 0.5f, _source);
-            if (WeatherManager.instance?.temperature == TemperatureType.Cold)
-                nearby.temperature = Mathf.Min(nearby.temperature + _temperatureAmount * 0.5f, nearby.comfortMax);
+            foreach (Plant nearby in new List<Plant>(Plant.allPlants))
+            {
+                if (nearby == null || !nearby.IsAlive || nearby == primaryPlant) continue;
+                if (Vector3.Distance(transform.position, nearby.transform.position) > _auraRadius) continue;
+                nearby.Heal(_healAmount * 0.5f, _source);
+                if (WeatherManager.instance?.temperature == TemperatureType.Cold)
+                    nearby.temperature = Mathf.Min(nearby.temperature + _temperatureAmount * 0.5f, nearby.comfortMax);
+            }
         }
 
         // path 1 max level: bounce to another friendly unit, chain limited by bouncesRemaining.

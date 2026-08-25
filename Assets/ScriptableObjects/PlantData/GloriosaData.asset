@@ -20,6 +20,7 @@ MonoBehaviour:
   elementalType: 0
   damageType: 1
   sunCost: 105
+  skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 32
   baseMagicPower: 0
@@ -27,6 +28,8 @@ MonoBehaviour:
   baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -35,8 +38,9 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -54,10 +58,11 @@ MonoBehaviour:
   baseCounterDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 4
@@ -68,7 +73,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 90
+  baseSkillCooldown: 45
   baseSkillDuration: 0
   channelDuration: 0
   baseSkillRadius: 0
@@ -78,33 +83,32 @@ MonoBehaviour:
   baseSkillDamage: 0
   healAmount: 12
   healMP: 0.12
-  temperatureAmount: 1.6
+  temperatureAmount: 1.3
   temperatureMP: 0.012
   auraRadius: 1.5
   path1AttackSpeedPerLevel: 0.08
   path1AttackRangePerLevel: 0.2
   path2HealPerLevel: 4
-  path2TemperaturePerLevel: 0.8
+  path2TemperaturePerLevel: 0.6
   wispCount: 2
   wispDuration: 15
   wispSpeed: 4
   wispEmergeSpeed: 2
   wispSeekDelay: 0.7
-  wispRadius: 1.5
-  wispHealPerSecond: 6
-  wispTemperaturePerSecond: 3
-  latchHealPerSecond: 3
-  latchFireDamageBonus: 0.08
-  latchDuration: 3
-  wispLightRadius: 1.5
+  wispRadius: 2
+  wispHealPerSecond: 3
+  wispTemperaturePerSecond: 2.2
+  latchHealPerSecond: 5
+  latchFireDamageBonus: 0.04
+  latchDuration: 5
   wispLightIntensity: 0.4
   wispTickInterval: 0.25
   wispHealMP: 0.06
   latchHealMP: 0.014
   latchFireDamageBonusMP: 0.04
   path3DurationPerLevel: 3
-  path3HealPerSecondPerLevel: 3
-  path3TemperaturePerSecondPerLevel: 1.5
-  path3LatchHealPerSecondPerLevel: 1
-  path3LatchFireDamageBonusPerLevel: 0.02
-  path3LatchDurationPerLevel: 2
+  path3HealPerSecondPerLevel: 1
+  path3TemperaturePerSecondPerLevel: 0.8
+  path3LatchHealPerSecondPerLevel: 2
+  path3LatchFireDamageBonusPerLevel: 0.01
+  path3LatchDurationPerLevel: 1

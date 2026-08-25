@@ -20,7 +20,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 64e952f1628f39d4281c0f3b34c4c909, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: aff6fd1b40eab2342bb9ae072042625a, type: 3}
   baseMaxHealth: 280
-  baseAttackDamage: 12
+  baseAttackDamage: 10
   baseMagicPower: 0
   baseAttackSpeed: 1.5
   baseAttackRange: 0.3

@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Countering
   stats:
   - statType: 7
-    value: 0.23
+    value: 0.25
   - statType: 27
-    value: 0.26
+    value: 0.25
   - statType: 14
-    value: 0.22
+    value: 0.25
   icon: {fileID: 0}
   targetElementalTypes: 03000000
   targetCultivars: 03000000

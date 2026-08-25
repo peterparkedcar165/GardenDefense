@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Protector
   stats:
   - statType: 24
-    value: 0.32
+    value: 0.25
   - statType: 32
-    value: 72
+    value: 75
   - statType: 47
-    value: 0.33
+    value: 0.25
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   targetElementalTypes: 
   targetCultivars: 03000000

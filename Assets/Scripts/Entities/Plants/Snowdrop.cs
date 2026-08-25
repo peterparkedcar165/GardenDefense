@@ -223,7 +223,7 @@ public class Snowdrop : Aura
         $"Continuously deals <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range.";
 
     public override string GetPassiveDescription() =>
-        $"Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement by <color=green><b>{(baseSlow + scalingSlow * effectivePath2Level) * 100f:F0}%</b></color>.\n\n" +
+        $"Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement and attack speed by <color=green><b>{(baseSlow + scalingSlow * effectivePath2Level) * 100f:F0}%</b></color>.\n\n" +
         $"Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature by <color=green><b>{coolingPerSecond:F1}</b></color> per second, until comfort.";
 
     public override string GetSkillDesription() =>
@@ -251,7 +251,7 @@ public class Snowdrop : Aura
     public override string GetPath2Description(bool details = false)
     {
         string desc = details
-            ? $"Applies <color=#00FFFF>Chill</color> to nearby insects at level <color=green><b>[1 + (1/Lvl.)]</b></color>, slowing their movement by <color=green><b>[({baseSlow * 100f:F0}%) + ({scalingSlow * 100f:F0}%/Lvl.)]</b></color>.\n\n" +
+            ? $"Applies <color=#00FFFF>Chill</color> to nearby insects at level <color=green><b>[1 + (1/Lvl.)]</b></color>, slowing their movement and attack speed by <color=green><b>[({baseSlow * 100f:F0}%) + ({scalingSlow * 100f:F0}%/Lvl.)]</b></color>.\n\n" +
               $"Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature by <color=green><b>{coolingPerSecond:F1}</b></color> per second, until comfort."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +

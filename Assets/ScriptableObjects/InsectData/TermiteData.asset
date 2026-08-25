@@ -38,7 +38,7 @@ MonoBehaviour:
   baseMagicPenPercent: 0
   startingShield: 0
   baseTenacity: 0
-  baseFireResistance: 0
+  baseFireResistance: 0.25
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0

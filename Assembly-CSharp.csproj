@@ -101,7 +101,6 @@
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\VortexLiftEffect.cs" />
     <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\PoisonShroomData.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\FieryWispLatchedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\FirePrimer.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\SunIndicator.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
@@ -114,7 +113,6 @@
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Skills\FireWave.cs" />
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
-    <Compile Include="Assets\Scripts\Entities\Plants\FieryWisp.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GroundPrimer.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
@@ -221,6 +219,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BoonOfTheWispEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HypnotizedEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
@@ -322,6 +321,7 @@
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\HealIndicator.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\SnowAntData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Cinderwisp.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aeonium.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreAuraEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />

@@ -28,7 +28,7 @@ MonoBehaviour:
   baseAttackRange: 2.5
   baseArmor: 0
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.1
+  baseElementalEffectChance: 0.08
   baseOnHitEffectiveness: 0.5
   baseHealingBonus: 0
   baseHealingReceived: 0

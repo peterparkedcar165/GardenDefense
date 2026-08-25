@@ -7,7 +7,7 @@ using System.Collections.Generic;
 // one wisp per plant (claim dict covers both seeking and latched states).
 // seeking: injured plants first (urgency override every frame), then plants with least latch time.
 // latched: leaves after 1s or plant full health, looks for a more-injured plant next.
-public class FieryWisp : MonoBehaviour
+public class Cinderwisp : MonoBehaviour
 {
     private Gloriosa _source;
     private float _lifetime;
@@ -40,6 +40,11 @@ public class FieryWisp : MonoBehaviour
     private Vector3 _seekDirection;
     private const float RedirectPauseDuration = 0.5f;
 
+    // once every plant already has Boon of The Wisp (any duration) and it's dark, wisps stop
+    // topping off a fully-covered garden and instead go reveal the deepest hidden threat
+    private bool    _isChasingDarkness;
+    private Insect  _chasedInsect;
+
     private Light2D _light;
     private bool _cleanedUp;
     private bool _isDying;
@@ -49,13 +54,14 @@ public class FieryWisp : MonoBehaviour
     private SpriteRenderer[] _allRenderers;
     private const float FadeDuration = 0.6f;
 
-    // one wisp per plant: maps plant to the wisp that owns it (seeking or latched)
-    private static readonly Dictionary<Plant, FieryWisp> _occupiedBy = new Dictionary<Plant, FieryWisp>();
+    // one wisp per (plant, source gloriosa): maps a plant+gloriosa pair to the wisp that owns
+    // it (seeking or latched), so a different gloriosa's wisps aren't blocked by this claim
+    private static readonly Dictionary<(Plant, Gloriosa), Cinderwisp> _occupiedBy = new Dictionary<(Plant, Gloriosa), Cinderwisp>();
 
     public void Initialize(Gloriosa source, float lifetime, float speed, float radius,
                            float healPerSecond, float temperaturePerSecond,
                            float latchHealPerSecond, float latchFireDamageFrac,
-                           float latchDuration, float lightRadius, float lightIntensity, float emergeSpeed, float seekDelay, float tickInterval)
+                           float latchDuration, float lightIntensity, float emergeSpeed, float seekDelay, float tickInterval)
     {
         _source               = source;
         _lifetime             = lifetime;
@@ -79,12 +85,14 @@ public class FieryWisp : MonoBehaviour
         _light.lightType             = Light2D.LightType.Point;
         _light.color                 = Color.white;
         _light.intensity             = lightIntensity;
-        _light.pointLightOuterRadius = lightRadius;
-        _light.pointLightInnerRadius = lightRadius * 0.3f;
+        _light.pointLightOuterRadius = radius;
+        _light.pointLightInnerRadius = radius * 0.3f;
         _light.falloffIntensity      = 0.5f;
         _light.enabled               = false;
 
-        DarknessManager.RegisterLightSource(transform, lightRadius);
+        // illumination range matches the healing aura radius, so a wisp lights up exactly the
+        // area it's also healing/warming
+        DarknessManager.RegisterLightSource(transform, radius);
 
         GameObject barPrefab = Resources.Load<GameObject>("HealthBar");
         if (barPrefab != null)
@@ -140,10 +148,133 @@ public class FieryWisp : MonoBehaviour
             return;
         }
 
-        if (_isLatched) UpdateLatched();
-        else            UpdateSeeking();
+        if (_isChasingDarkness)
+        {
+            UpdateDarknessChase();
+        }
+        else if (!HasUnoccupiedInjuredPlant() && ShouldChaseDarkness())
+        {
+            if (_isLatched) Unlatch();
+            _isChasingDarkness = true;
+            UpdateDarknessChase();
+        }
+        else
+        {
+            if (_isLatched) UpdateLatched();
+            else            UpdateSeeking();
+        }
 
         UpdateAura();
+    }
+
+    // lowest priority tier: only while it's dark, and only once nothing with higher priority
+    // (an injured plant, or a plant with no Boon of The Wisp at all) is waiting for a wisp.
+    // "has Boon of The Wisp" only cares about presence, not remaining duration
+    private bool ShouldChaseDarkness()
+    {
+        if (DarknessManager.instance == null || !DarknessManager.instance.isDark) return false;
+        return !HasUnoccupiedPlantWithoutBoonOfTheWisp();
+    }
+
+    // priority 1: an unoccupied plant that needs healing
+    private bool HasUnoccupiedInjuredPlant()
+    {
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive || IsOccupied(plant)) continue;
+            if (plant.health < plant.maxHealth) return true;
+        }
+        return false;
+    }
+
+    // priority 2: an unoccupied plant with no Boon of The Wisp at all, regardless of health
+    private bool HasUnoccupiedPlantWithoutBoonOfTheWisp()
+    {
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive || IsOccupied(plant)) continue;
+            if (!plant.HasEffect<BoonOfTheWispEffect>()) return true;
+        }
+        return false;
+    }
+
+    // priority 3: holds the same insect until it dies (re-target) or a higher-priority plant
+    // need appears (drop the chase entirely and let normal seeking pick it up)
+    private void UpdateDarknessChase()
+    {
+        if (HasUnoccupiedInjuredPlant() || HasUnoccupiedPlantWithoutBoonOfTheWisp())
+        {
+            StopChasingDarkness();
+            return;
+        }
+
+        if (_chasedInsect == null || !_chasedInsect.IsAlive)
+        {
+            ReleaseInsectClaim();
+            _chasedInsect = FindDarknessTarget();
+            if (_chasedInsect != null) ClaimInsect(_chasedInsect);
+        }
+
+        if (_chasedInsect == null)
+        {
+            StopChasingDarkness();
+            return;
+        }
+
+        transform.position = Vector3.MoveTowards(transform.position, _chasedInsect.GetAimPoint(), _speed * Time.deltaTime);
+    }
+
+    private void StopChasingDarkness()
+    {
+        _isChasingDarkness = false;
+        ReleaseInsectClaim();
+        _chasedInsect = null;
+    }
+
+    // the non-illuminated, unclaimed insect furthest along its path: lowest waypoint index first,
+    // tied broken by whichever is furthest from its next waypoint (mirrors Plant's Last targeting)
+    private Insect FindDarknessTarget()
+    {
+        Insect best = null;
+        int lowestWaypointIndex = int.MaxValue;
+        float furthestDistToNext = -1f;
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive || !IsHiddenInDarkness(insect) || IsInsectOccupied(insect)) continue;
+            Transform waypoint = insect.GetCurrentWaypoint();
+            if (waypoint == null) continue;
+            if (insect.currentWaypointIndex < lowestWaypointIndex)
+            {
+                lowestWaypointIndex = insect.currentWaypointIndex;
+                furthestDistToNext = Vector3.Distance(insect.transform.position, waypoint.position);
+                best = insect;
+            }
+            else if (insect.currentWaypointIndex == lowestWaypointIndex)
+            {
+                float d = Vector3.Distance(insect.transform.position, waypoint.position);
+                if (d > furthestDistToNext) { furthestDistToNext = d; best = insect; }
+            }
+        }
+        return best;
+    }
+
+    private static bool IsHiddenInDarkness(Insect insect) =>
+        DarknessManager.instance != null && DarknessManager.instance.isDark &&
+        !DarknessManager.instance.IsIlluminated(insect.transform.position);
+
+    // one wisp per insect, mirrors the plant-occupation dictionary above
+    private static readonly Dictionary<Insect, Cinderwisp> _insectOccupiedBy = new Dictionary<Insect, Cinderwisp>();
+
+    private bool IsInsectOccupied(Insect insect) =>
+        _insectOccupiedBy.TryGetValue(insect, out var wisp) && wisp != this;
+
+    private void ClaimInsect(Insect insect) => _insectOccupiedBy[insect] = this;
+
+    private void ReleaseInsectClaim()
+    {
+        if (_chasedInsect == null) return;
+        if (_insectOccupiedBy.TryGetValue(_chasedInsect, out var wisp) && wisp == this)
+            _insectOccupiedBy.Remove(_chasedInsect);
     }
 
     private void UpdateSeeking()
@@ -193,7 +324,7 @@ public class FieryWisp : MonoBehaviour
         if (_latchRefreshTimer <= 0f)
         {
             _latchRefreshTimer = LatchRefreshInterval;
-            _latchedPlant.ApplyEffect(new FieryWispLatchedEffect(
+            _latchedPlant.ApplyEffect(new BoonOfTheWispEffect(
                 _latchedPlant, _latchDuration, 1, _source, _latchHealPerSecond, _latchFireDamageFrac, _tickInterval));
         }
 
@@ -207,7 +338,8 @@ public class FieryWisp : MonoBehaviour
             Unlatch();
     }
 
-    // seeking: priority 1 = most injured unoccupied plant; priority 2 = unoccupied plant with least latch time
+    // seeking: priority 1 = most injured unoccupied plant; priority 2 = unoccupied plant with no
+    // Boon of The Wisp at all yet (presence only, not remaining duration)
     private Plant FindTarget()
     {
         Plant best     = null;
@@ -221,25 +353,16 @@ public class FieryWisp : MonoBehaviour
         }
         if (best != null) return best;
 
-        // fallback: unoccupied plant with least remaining FieryWispLatchedEffect time (0 = no effect)
-        float leastTime = float.MaxValue;
-        float leastFrac = 1f;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive || IsOccupied(plant)) continue;
-            float remaining = GetLatchRemainingTime(plant);
-            float frac      = plant.maxHealth > 0f ? plant.health / plant.maxHealth : 1f;
-            if (remaining < leastTime || (remaining == leastTime && frac < leastFrac))
-            {
-                leastTime = remaining;
-                leastFrac = frac;
-                best = plant;
-            }
+            if (!plant.HasEffect<BoonOfTheWispEffect>()) return plant;
         }
-        return best;
+        return null;
     }
 
-    // post-latch: injured plant with lower frac than threshold, else least latch time
+    // post-latch: injured plant with lower frac than threshold, else any unoccupied plant with
+    // no Boon of The Wisp at all yet
     private Plant FindNextTarget(float thresholdFrac)
     {
         Plant best     = null;
@@ -253,47 +376,33 @@ public class FieryWisp : MonoBehaviour
         }
         if (best != null) return best;
 
-        // fallback: unoccupied plant (excluding self) with least remaining latch time
-        float leastTime = float.MaxValue;
-        float leastFrac = 1f;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive || plant == _latchedPlant || IsOccupied(plant)) continue;
-            float remaining = GetLatchRemainingTime(plant);
-            float frac      = plant.maxHealth > 0f ? plant.health / plant.maxHealth : 1f;
-            if (remaining < leastTime || (remaining == leastTime && frac < leastFrac))
-            {
-                leastTime = remaining;
-                leastFrac = frac;
-                best = plant;
-            }
+            if (!plant.HasEffect<BoonOfTheWispEffect>()) return plant;
         }
-        return best;
+        return null;
     }
 
-    private float GetLatchRemainingTime(Plant plant)
-    {
-        foreach (StatusEffect e in plant.activeEffects)
-            if (e is FieryWispLatchedEffect) return e.duration;
-        return 0f;
-    }
-
+    // occupation is scoped per source gloriosa: a plant claimed by one gloriosa's wisp is still
+    // free for another gloriosa's wisp to also latch onto (each contributes its own stackable
+    // Boon of The Wisp instance)
     private bool IsOccupied(Plant plant) =>
-        _occupiedBy.TryGetValue(plant, out var wisp) && wisp != this;
+        _occupiedBy.TryGetValue((plant, _source), out var wisp) && wisp != this;
 
     private void ClaimPlant(Plant plant)
     {
         if (_claimedPlant == plant) return;
         ReleaseClaim();
         _claimedPlant = plant;
-        _occupiedBy[plant] = this;
+        _occupiedBy[(plant, _source)] = this;
     }
 
     private void ReleaseClaim()
     {
         if (_claimedPlant == null) return;
-        if (_occupiedBy.TryGetValue(_claimedPlant, out var wisp) && wisp == this)
-            _occupiedBy.Remove(_claimedPlant);
+        if (_occupiedBy.TryGetValue((_claimedPlant, _source), out var wisp) && wisp == this)
+            _occupiedBy.Remove((_claimedPlant, _source));
         _claimedPlant = null;
     }
 
@@ -304,7 +413,7 @@ public class FieryWisp : MonoBehaviour
         _isLatched         = true;
         _latchTimer        = 0f;
         _latchRefreshTimer = LatchRefreshInterval;
-        plant.ApplyEffect(new FieryWispLatchedEffect(
+        plant.ApplyEffect(new BoonOfTheWispEffect(
             plant, _latchDuration, 1, _source, _latchHealPerSecond, _latchFireDamageFrac, _tickInterval));
     }
 
@@ -370,6 +479,7 @@ public class FieryWisp : MonoBehaviour
         _cleanedUp = true;
         if (_isLatched) Unlatch();
         else            ReleaseClaim();
+        ReleaseInsectClaim();
         _source?.UnregisterWisp(this);
         DarknessManager.UnregisterLightSource(transform);
     }

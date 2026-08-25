@@ -30,7 +30,6 @@ public class GloriosaData : PlantData
     public float latchHealPerSecond           = 8f;
     public float latchFireDamageBonus         = 0.2f;
     public float latchDuration                = 2f;
-    public float wispLightRadius              = 1.5f;
     public float wispLightIntensity           = 0.6f;
     public float wispTickInterval             = 1f;
 
@@ -54,5 +53,5 @@ public class GloriosaData : PlantData
         "Targets injured plants before insects. Embers heal the plant and increase its temperature toward comfort. Plants nearby also receive a weaker version of the effect.";
 
     public override string GetSkillDescription() =>
-        "Summons Fiery Wisps that fly across the map seeking the most injured plant. Wisps heal and warm plants near them. When a wisp reaches its target it latches, applying <color=orange>Fiery Wisp Latched</color>: healing the plant and increasing its <color=orange>Fire</color> damage. The effect lingers after the wisp detaches.";
+        "Summons Cinderwisps that fly across the map seeking the most injured plant. Wisps heal and warm plants near them. When a wisp reaches its target it latches, applying <color=orange>Boon of The Wisp</color>: healing the plant and increasing its <color=orange>Fire</color> damage. The effect lingers after the wisp detaches.";
 }

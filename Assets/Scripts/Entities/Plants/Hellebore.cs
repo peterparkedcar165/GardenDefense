@@ -23,6 +23,12 @@ public class Hellebore : Shooter
     private static readonly Color PurpleHighlight = new Color(0.6f, 0.2f, 0.8f);
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
+    private bool autoCastEnabled = false;
+    private Tile autoCastTargetTile = null;
+    private Plant _autoCastHighlighted;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
+
     private float CDRPerHit  => (HData?.passiveCDRPerHit ?? 0.5f) + effectivePath2Level * (HData?.path2CDRPerLevel ?? 0.1f);
 
     private float AuraShare => (HData?.auraShareBase ?? 0.5f) + effectivePath2Level * (HData?.path2AuraSharePerLevel ?? 0.05f);
@@ -63,6 +69,58 @@ public class Hellebore : Shooter
             else
                 CheckAutoShield();
         }
+
+        if (autoCastEnabled)
+        {
+            // resolved live from the tile (not a pinned instance), so if the target plant dies
+            // and gets revived, the auto-cast picks the new instance back up on its own
+            Plant currentTarget = Plant.GetPlantOnTile(autoCastTargetTile);
+            if (currentTarget != null && currentTarget.IsAlive && SkillReady &&
+                currentTarget.GetEffect<HelleboreProtectionEffect>() == null)
+                CastProtection(currentTarget);
+        }
+
+        UpdateAutoCastHighlight();
+    }
+
+    // while this Hellebore is selected and auto casting, highlight its locked target in yellow
+    private void UpdateAutoCastHighlight()
+    {
+        Plant desired = (IsSelected && autoCastEnabled) ? Plant.GetPlantOnTile(autoCastTargetTile) : null;
+        if (_autoCastHighlighted != null && _autoCastHighlighted != desired)
+            _autoCastHighlighted.ClearHighlight();
+        if (desired != null)
+            desired.SetHighlight(Color.yellow);
+        _autoCastHighlighted = desired;
+    }
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled, targetTile = autoCastTargetTile };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled || state.targetTile == null) return;
+        autoCastEnabled = true;
+        autoCastTargetTile = state.targetTile;
+    }
+
+    // click Auto Cast to pick a target, click again to turn it off
+    public override void ToggleAutoCast()
+    {
+        if (autoCastEnabled)
+        {
+            autoCastEnabled = false;
+            autoCastTargetTile = null;
+            return;
+        }
+        SkillTargetingManager.instance.BeginPlantTargeting(OnAutoCastTargetConfirmed, this);
+    }
+
+    private void OnAutoCastTargetConfirmed(Plant targetPlant)
+    {
+        if (targetPlant == null) return;
+        autoCastEnabled = true;
+        autoCastTargetTile = targetPlant.occupiedTile;
     }
 
     private void CheckAutoShield()
@@ -144,6 +202,12 @@ public class Hellebore : Shooter
     private void OnTargetConfirmed(Plant targetPlant)
     {
         if (targetPlant == null) return;
+        CastProtection(targetPlant);
+    }
+
+    // shared by the manual skill cast and auto cast, does not reopen targeting on its own
+    private void CastProtection(Plant targetPlant)
+    {
         skillCooldownTimer = skillCooldown;
         targetPlant.ApplyEffect(new HelleboreProtectionEffect(
             targetPlant, SkillDur, effectivePath3Level + 1, this, SkillShield, ReflectBase, ReflectMP));
@@ -160,6 +224,7 @@ public class Hellebore : Shooter
         base.OnDestroy();
         foreach (Plant p in _highlightedPlants)
             if (p != null) p.ClearHighlight();
+        _autoCastHighlighted?.ClearHighlight();
     }
 
     public override string GetName() => "<b><color=#9B30D0>Hellebore</color></b>";

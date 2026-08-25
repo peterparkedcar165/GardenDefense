@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 105
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 7
+  baseAttackDamage: 5
   baseMagicPower: 0
   baseAttackSpeed: 2
   baseAttackRange: 2
@@ -91,7 +91,7 @@ MonoBehaviour:
   blizzardChillMultiplier: 1.5
   blizzardCoolingMultiplier: 2
   baseBlizzardRange: 10
-  path1AttackDamagePerLevel: 2
+  path1AttackDamagePerLevel: 1
   path1AttackRangePerLevel: 0.2
   path1MaxElementalEffectChanceBonus: 0.03
   path1MaxAttackDamagePenalty: 0.5
