@@ -1103,6 +1103,10 @@ public abstract class Entity : MonoBehaviour
             {
                 if (activeEffects[i].GetType() == effect.GetType() && activeEffects[i] is ShieldEffect existing)
                 {
+                    // sourceStackable shields from a different source coexist instead of merging;
+                    // same-source (or non-stackable) shields still keep only the stronger one
+                    if (effect.sourceStackable && existing.source != effect.source)
+                        continue;
                     if (newShield.amount <= existing.amount) return;
                     existing.OnExpire();
                     activeEffects.RemoveAt(i);

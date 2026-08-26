@@ -20,6 +20,10 @@ public class HelleboreProtectionEffect : ShieldEffect
         this.hellebore          = source;
         _cachedReflectDamage    = reflectBase + (source != null ? source.magicPower * reflectMP : 0f);
         elementalType           = ElementalType.Poison;
+        // multiple Hellebores can shield the same target; their shield amounts pool together
+        // (TotalShield/DrainShields already sum across every active ShieldEffect), but the
+        // counter-damage on hit is deduplicated in OnDamageReceived below so it only fires once
+        sourceStackable         = true;
     }
 
     public override void OnApply()
@@ -44,6 +48,17 @@ public class HelleboreProtectionEffect : ShieldEffect
         if (damageSource == null) return;
         if (damageTags == null || !System.Array.Exists(damageTags, t => t == DamageTag.Attack)) return;
         if (damageSource is Insect ins && ins.team == Team.Friendly) return;
+
+        // OnDamageReceived fires independently on every stacked HelleboreProtectionEffect for
+        // this same hit — only the single hardest-hitting one should actually counter. ties
+        // are broken by whichever appears first in the target's effect list, so every instance
+        // agrees on the same winner without needing to coordinate directly
+        HelleboreProtectionEffect strongest = null;
+        foreach (StatusEffect e in target.activeEffects)
+            if (e is HelleboreProtectionEffect hp && (strongest == null || hp._cachedReflectDamage > strongest._cachedReflectDamage))
+                strongest = hp;
+        if (strongest != this) return;
+
         float dmg = reflectBase + (hellebore != null ? hellebore.magicPower * reflectMP : 0f);
         damageSource.Damage(dmg, DamageType.Magic, ElementalType.Poison, hellebore, false, _reflectTags);
     }

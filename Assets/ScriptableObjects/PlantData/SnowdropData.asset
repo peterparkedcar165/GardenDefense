@@ -42,6 +42,8 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -83,13 +85,14 @@ MonoBehaviour:
   baseSkillDamage: 0
   baseSlow: 0.08
   scalingSlow: 0.04
-  coolingPerSecond: 1.25
+  coolingPerSecond: 0.75
+  coolingPerSecondPerLevel: 0.1
   baseBlizzardDamage: 20
   blizzardDamagePerLevel: 5
   baseBlizzardDuration: 5
   blizzardDurationPerLevel: 1
   blizzardChillMultiplier: 1.5
-  blizzardCoolingMultiplier: 2
+  blizzardCoolingMultiplier: 4
   baseBlizzardRange: 10
   path1AttackDamagePerLevel: 1
   path1AttackRangePerLevel: 0.2

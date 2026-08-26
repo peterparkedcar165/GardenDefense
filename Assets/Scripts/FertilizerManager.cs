@@ -177,6 +177,8 @@ public class FertilizerManager : MonoBehaviour
             case StatType.MagicPenetration:             return (3f,    6f);
             case StatType.ArmorShred:                   return (0.04f, 0.06f);
             case StatType.MagicArmorShred:              return (0.04f, 0.06f);
+            case StatType.HeatResistance:                return (0.04f, 0.06f);
+            case StatType.ColdResistance:                return (0.04f, 0.06f);
             default:                       return (0f,    0f);
         }
     }

@@ -73,10 +73,12 @@ public class Hellebore : Shooter
         if (autoCastEnabled)
         {
             // resolved live from the tile (not a pinned instance), so if the target plant dies
-            // and gets revived, the auto-cast picks the new instance back up on its own
+            // and gets revived, the auto-cast picks the new instance back up on its own.
+            // unlike the Path3 max-level auto-shield below, this can stack a new Thorned Guard
+            // on top of one already there (its own instance just refreshes; a stack only
+            // actually happens if a different Hellebore's shield is already present)
             Plant currentTarget = Plant.GetPlantOnTile(autoCastTargetTile);
-            if (currentTarget != null && currentTarget.IsAlive && SkillReady &&
-                currentTarget.GetEffect<HelleboreProtectionEffect>() == null)
+            if (currentTarget != null && currentTarget.IsAlive && SkillReady)
                 CastProtection(currentTarget);
         }
 

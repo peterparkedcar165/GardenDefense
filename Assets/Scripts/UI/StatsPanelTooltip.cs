@@ -99,14 +99,27 @@ public class StatsPanelTooltip : MonoBehaviour
         Line(sb, "<color=grey>Tenacity:</color>", $"{e.tenacity * 100:F0}%", e.tenacity, e.baseTenacity);
         ElemLine(sb, HealCol, "Heals & Shield Bonus:",    $"{e.healingBonus * 100:F0}%",    e.healingBonus,    e.baseHealingBonus);
         sb.AppendLine();
-        ElemLine(sb, Grass,   "Elemental Affinity:",  $"{e.elementalAffinity * 100:F0}%",  e.elementalAffinity,  e.baseelementalAffinity);
-        ElemLine(sb, Fire,   "Fire Damage:",   $"{e.fireDamage * 100:F0}%",   e.fireDamage,   e.baseFireDamage);
-        ElemLine(sb, Water,  "Water Damage:",  $"{e.waterDamage * 100:F0}%",  e.waterDamage,  e.baseWaterDamage);
-        ElemLine(sb, Grass, "Grass Damage:", $"{e.grassDamage * 100:F0}%", e.grassDamage, e.baseGrassDamage);
-        ElemLine(sb, Ice,    "Ice Damage:",    $"{e.iceDamage * 100:F0}%",    e.iceDamage,    e.baseIceDamage);
-        ElemLine(sb, Poison, "Poison Damage:", $"{e.poisonDamage * 100:F0}%", e.poisonDamage, e.basePoisonDamage);
-        ElemLine(sb, Wind,   "Wind Damage:",   $"{e.windDamage * 100:F0}%",   e.windDamage,   e.baseWindDamage);
-        ElemLine(sb, Ground, "Ground Damage:", $"{e.groundDamage * 100:F0}%", e.groundDamage, e.baseGroundDamage);
+        if (e is Insect)
+        {
+            ElemLine(sb, Fire,   "Fire Resistance:",   $"{e.fireResistance * 100:F0}%",   e.fireResistance,   e.baseFireResistance);
+            ElemLine(sb, Water,  "Water Resistance:",  $"{e.waterResistance * 100:F0}%",  e.waterResistance,  e.baseWaterResistance);
+            ElemLine(sb, Grass, "Grass Resistance:", $"{e.grassResistance * 100:F0}%", e.grassResistance, e.baseGrassResistance);
+            ElemLine(sb, Ice,    "Ice Resistance:",    $"{e.iceResistance * 100:F0}%",    e.iceResistance,    e.baseIceResistance);
+            ElemLine(sb, Poison, "Poison Resistance:", $"{e.poisonResistance * 100:F0}%", e.poisonResistance, e.basePoisonResistance);
+            ElemLine(sb, Wind,   "Wind Resistance:",   $"{e.windResistance * 100:F0}%",   e.windResistance,   e.baseWindResistance);
+            ElemLine(sb, Ground, "Ground Resistance:", $"{e.groundResistance * 100:F0}%", e.groundResistance, e.baseGroundResistance);
+        }
+        else
+        {
+            ElemLine(sb, Grass,   "Elemental Affinity:",  $"{e.elementalAffinity * 100:F0}%",  e.elementalAffinity,  e.baseelementalAffinity);
+            ElemLine(sb, Fire,   "Fire Damage:",   $"{e.fireDamage * 100:F0}%",   e.fireDamage,   e.baseFireDamage);
+            ElemLine(sb, Water,  "Water Damage:",  $"{e.waterDamage * 100:F0}%",  e.waterDamage,  e.baseWaterDamage);
+            ElemLine(sb, Grass, "Grass Damage:", $"{e.grassDamage * 100:F0}%", e.grassDamage, e.baseGrassDamage);
+            ElemLine(sb, Ice,    "Ice Damage:",    $"{e.iceDamage * 100:F0}%",    e.iceDamage,    e.baseIceDamage);
+            ElemLine(sb, Poison, "Poison Damage:", $"{e.poisonDamage * 100:F0}%", e.poisonDamage, e.basePoisonDamage);
+            ElemLine(sb, Wind,   "Wind Damage:",   $"{e.windDamage * 100:F0}%",   e.windDamage,   e.baseWindDamage);
+            ElemLine(sb, Ground, "Ground Damage:", $"{e.groundDamage * 100:F0}%", e.groundDamage, e.baseGroundDamage);
+        }
         return sb.ToString().TrimEnd();
     }
 

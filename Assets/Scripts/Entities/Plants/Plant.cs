@@ -250,6 +250,8 @@ public abstract class Plant : Entity, IAttackable
         comfortMax = baseComfortMax + comfortMaxAdder;
         temperatureMin = baseTemperatureMin + temperatureMinAdder;
         temperatureMax = baseTemperatureMax + temperatureMaxAdder;
+        heatResistance = baseHeatResistance + heatResistanceAdder + (baseHeatResistance * heatResistanceMultiplier);
+        coldResistance = baseColdResistance + coldResistanceAdder + (baseColdResistance * coldResistanceMultiplier);
         passiveCooldown = Mathf.Max(basePassiveCooldown * 0.2f, basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier));
         passiveDuration = basePassiveDuration + passiveDurationAdder + (basePassiveDuration * passiveDurationMultiplier);
         skillCooldown = Mathf.Max(baseSkillCooldown * 0.2f, baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier));
@@ -320,6 +322,9 @@ public abstract class Plant : Entity, IAttackable
     public float baseComfortMax = 20f,   comfortMaxAdder,    comfortMax;
     public float baseTemperatureMin = -10f, temperatureMinAdder, temperatureMin;
     public float baseTemperatureMax = 30f,  temperatureMaxAdder, temperatureMax;
+    // percentage: slows how fast temperature drifts from Hot/Cold weather, not the damage it deals
+    public float baseHeatResistance, heatResistanceAdder, heatResistanceMultiplier, heatResistance;
+    public float baseColdResistance, coldResistanceAdder, coldResistanceMultiplier, coldResistance;
 
     [Header("Passive")]
     public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownReductionMultiplier, passiveCooldownMultiplier;
@@ -379,6 +384,8 @@ public abstract class Plant : Entity, IAttackable
         baseWindResistance     = data.baseWindResistance;
         baseGroundResistance   = data.baseGroundResistance;
         baseDotResistance      = data.baseDotResistance;
+        baseHeatResistance     = data.baseHeatResistance;
+        baseColdResistance     = data.baseColdResistance;
         basePhysicalDamage     = data.basePhysicalDamage;
         baseMagicDamage        = data.baseMagicDamage;
         baseArmorPenFlat       = data.baseArmorPenFlat;
@@ -417,12 +424,8 @@ public abstract class Plant : Entity, IAttackable
         baseSkillHealth               = data.baseSkillHealth;
         elementalType                 = data.elementalType;
         damageType                    = data.damageType;
-        if (elementalType == ElementalType.Ice)
-        {
-            temperatureMaxAdder = 10f - baseTemperatureMax;             // cap at 10, immune to heat
-            comfortMinAdder     = baseTemperatureMin - baseComfortMin;  // lower comfort floor to temperature min, immune to cold
-        }
-        if (elementalType == ElementalType.Fire) temperatureMinAdder = 10f - baseTemperatureMin; // floor temperature at 10
+        if (elementalType == ElementalType.Fire) heatResistanceAdder += 0.5f; // 50% resistance to heat-driven warming, not full immunity
+        if (elementalType == ElementalType.Ice)  coldResistanceAdder += 0.5f; // 50% resistance to cold-driven cooling, not full immunity
         FertilizerManager.instance?.ApplyTo(this);
         SkillTreeManager.ApplyTo(this);
         UpdateStats();
@@ -855,14 +858,16 @@ public abstract class Plant : Entity, IAttackable
                     if (rainCoolsHeat)
                         temperature = Mathf.Max(temperature - 1f * Time.deltaTime, comfortMin);
                     else
-                        temperature += 1f * Time.deltaTime;
+                        // Heat Resistance only slows the heat-driven rise, not the recovery above
+                        temperature += 1f * Mathf.Max(0f, 1f - heatResistance) * Time.deltaTime;
                     break;
                 case TemperatureType.Cold:
                     bool sunWarmsFreeze = WeatherManager.instance.GetIntensity(WeatherType.Sunny) >= 5;
                     if (sunWarmsFreeze)
                         temperature = Mathf.Min(temperature + 1f * Time.deltaTime, comfortMax);
                     else
-                        temperature -= 1f * Time.deltaTime;
+                        // Cold Resistance only slows the cold-driven drop, not the recovery above
+                        temperature -= 1f * Mathf.Max(0f, 1f - coldResistance) * Time.deltaTime;
                     break;
             }
         }
@@ -1080,7 +1085,7 @@ public abstract class Plant : Entity, IAttackable
         switch (data != null ? data.elementalType : elementalType)
         {
             case ElementalType.Fire:
-            return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight\nImmune to cold temperatures";
+            return $"Increase Passive tree level by <color=green>1</color> when exposed to sunlight\n50% Heat Resistance";
 
             case ElementalType.Grass:
             return $"Can be placed on <color=green>Grass</color>.\nIncrease Passive tree level by <color=green>1</color> when placed on Grass";
@@ -1092,7 +1097,7 @@ public abstract class Plant : Entity, IAttackable
             return $"Taking damage returns <color=purple>Poison</color> damage equal to <color=purple><b>200%</b></color> of the hit to the attacker.";
 
             case ElementalType.Ice:
-            return $"Increase Passive tree level by <color=green>1</color> when in cold weather\nImmune to hot temperatures";
+            return $"Increase Passive tree level by <color=green>1</color> when in cold weather\n50% Cold Resistance";
 
             case ElementalType.Wind:
             return $"Increase Passive tree level by <color=green>1</color> when in high altitude";

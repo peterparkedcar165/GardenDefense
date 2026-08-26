@@ -65,6 +65,8 @@ public static class PlantStatApplier
             case StatType.MaxHealth:                    plant.maxHealthMultiplier          += value; break;
             case StatType.SunYield:                     plant.sunYieldMultiplier           += value; break;
             case StatType.CurrencyYield:                plant.currencyYieldMultiplier      += value; break;
+            case StatType.HeatResistance:                plant.heatResistanceAdder          += value; break;
+            case StatType.ColdResistance:                plant.coldResistanceAdder          += value; break;
         }
     }
 }

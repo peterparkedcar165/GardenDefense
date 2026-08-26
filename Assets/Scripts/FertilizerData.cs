@@ -81,5 +81,7 @@ public enum StatType
     BonusEffectChance,
     MinimumDamage,
     MaximumDamage,
-    ElementalEffectChance
+    ElementalEffectChance,
+    HeatResistance,
+    ColdResistance
 }

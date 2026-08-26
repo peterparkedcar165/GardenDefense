@@ -126,8 +126,8 @@ public class WeatherManager : MonoBehaviour
         switch (type)
         {
             case WeatherType.Clear:     return "No effect.";
-            case WeatherType.Sunny:     return $"Sunlight empowers the <color=orange>Fire</color> damage of all plants by <color=green><b>{bonus}%</b></color>, and raises the Passive level of <color=orange>Fire</color> plants by <color=green><b>1</b></color>.";
-            case WeatherType.Rain:      return $"Rainfall empowers the <color=#4FC3F7>Water</color> damage of all plants by <color=green><b>{bonus}%</b></color>, and raises the Passive level of <color=#4FC3F7>Water</color> plants by <color=green><b>1</b></color>.";
+            case WeatherType.Sunny:     return $"Sunlight empowers the <color=orange>Fire</color> damage of all plants by <color=green><b>{bonus}%</b></color> while weakening their <color=#4FC3F7>Water</color> damage by <color=red><b>{bonus}%</b></color>, and raises the Passive level of <color=orange>Fire</color> plants by <color=green><b>1</b></color>.";
+            case WeatherType.Rain:      return $"Rainfall empowers the <color=#4FC3F7>Water</color> damage of all plants by <color=green><b>{bonus}%</b></color> while weakening their <color=orange>Fire</color> damage by <color=red><b>{bonus}%</b></color>, and raises the Passive level of <color=#4FC3F7>Water</color> plants by <color=green><b>1</b></color>.";
             case WeatherType.Windy:     return "Strong winds sweep across the battlefield.";
             case WeatherType.Snow:      return $"Snowfall empowers the <color=#00FFFF>Ice</color> damage of all plants by <color=green><b>{bonus}%</b></color>.";
             case WeatherType.Sandstorm: return "A harsh sandstorm blankets the area.";

@@ -13,11 +13,21 @@ public class SunlightExposedEffect : StatusEffect
         bonus = baseBonus + bonusPerLevel * (level - 1);
     }
 
-    public override void OnApply()   => target.fireDamageAdder  += bonus;
-    public override void OnExpire()  => target.fireDamageAdder  -= bonus;
+    public override void OnApply()
+    {
+        target.fireDamageAdder  += bonus;
+        target.waterDamageAdder -= bonus;
+    }
+
+    public override void OnExpire()
+    {
+        target.fireDamageAdder  -= bonus;
+        target.waterDamageAdder += bonus;
+    }
+
     public override void OnTick(float deltaTime) { }
 
     public override string GetName() => "<color=orange>[Weather]: Sunny</color>";
     public override string GetDescription() =>
-        $"Increase <color=orange><b>Fire Damage</b></color> by <color=orange><b>{bonus * 100f:F0}%</b></color>.";
+        $"Increase <color=orange><b>Fire Damage</b></color> by <color=orange><b>{bonus * 100f:F0}%</b></color>, and reduce <color=#4488FF><b>Water Damage</b></color> by <color=red><b>{bonus * 100f:F0}%</b></color>.";
 }

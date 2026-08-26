@@ -95,6 +95,8 @@ public static class FertilizerFormat
             case StatType.MaxHealth:                        return "Max Health";
             case StatType.SunYield:                         return "Sun Yield";
             case StatType.CurrencyYield:                    return "Currency Yield";
+            case StatType.HeatResistance:                   return "Heat Resistance";
+            case StatType.ColdResistance:                   return "Cold Resistance";
             default:                                        return statType.ToString();
         }
     }

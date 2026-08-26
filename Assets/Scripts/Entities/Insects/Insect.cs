@@ -446,8 +446,14 @@ public abstract class Insect : Entity, IAttackable
                 float dist = Vector3.Distance(transform.position, approachPoint);
                 if (dist > attackRange && ChasesTarget)
                 {
+                    // a taunt/forced target bypasses normal selection (which already filters out
+                    // unreachable terrain like highground for ground insects). it still tries to
+                    // walk there, but real obstacle colliders (e.g. a highground cliff edge) stop
+                    // it just like they would any other movement, instead of it climbing straight
+                    // through terrain it has no business reaching
                     Vector3 dir = (approachPoint - transform.position).normalized;
-                    transform.position += dir * GetMoveSpeed() * Time.deltaTime;
+                    Vector3 step = dir * GetMoveSpeed() * Time.deltaTime;
+                    transform.position += ClampStepAgainstObstacles(transform.position, step);
                 }
                 return;
             }
@@ -573,6 +579,10 @@ public abstract class Insect : Entity, IAttackable
         if (target == null) return;
         if (!target.IsAlive) { RemoveEffect<TauntEffect>(); return; }
         if (target is Insect ti && !CanReach(this, ti)) return;   // cannot hit a flyer it can't reach
+        // a taunt/forced target can put a plant on unreachable terrain (e.g. highground) within
+        // attackRange by sheer distance even though the insect can't actually stand there; block
+        // the attack itself as a last line of defense on top of the movement-side obstacle blocking
+        if (target is Plant tp && !CanReachPlant(tp)) return;
         if (HasEffect<HardCrowdControl>()) return;
         if (attackSpeed <= 0) return;
 
@@ -603,9 +613,7 @@ public abstract class Insect : Entity, IAttackable
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
-            if (isOnGround && plant.occupiedTile != null && plant.occupiedTile.isHighground) continue;
-            // non-flying insects cannot reach plants sitting on water
-            if (!isFlying && plant.occupiedTile != null && plant.occupiedTile.tileType == TileType.Water) continue;
+            if (!CanReachPlant(plant)) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
             if (dist <= targetingRange && dist < nearestDist)
             {
@@ -614,6 +622,17 @@ public abstract class Insect : Entity, IAttackable
             }
         }
         return nearest;
+    }
+
+    // same terrain rules FindNearestPlantInRange uses, shared so a taunted target (which
+    // bypasses normal target selection) can't pull an insect onto terrain it can't reach
+    protected bool CanReachPlant(Plant plant)
+    {
+        if (plant.occupiedTile == null) return true;
+        if (isOnGround && plant.occupiedTile.isHighground) return false;
+        // non-flying insects cannot reach plants sitting on water
+        if (!isFlying && plant.occupiedTile.tileType == TileType.Water) return false;
+        return true;
     }
 
     // moves this insect between the enemy pool (allInsects) and the friendly pool. friendlies

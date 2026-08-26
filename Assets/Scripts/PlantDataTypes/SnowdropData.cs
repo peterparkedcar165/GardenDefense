@@ -9,6 +9,7 @@ public class SnowdropData : PlantData
 
     [Header("Passive Cooling")]
     public float coolingPerSecond = 2f;
+    public float coolingPerSecondPerLevel = 0.1f;
 
     [Header("Skill Blizzard")]
     public float baseBlizzardDamage        = 0f;

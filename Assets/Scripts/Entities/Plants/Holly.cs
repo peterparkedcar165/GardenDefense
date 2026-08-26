@@ -25,6 +25,11 @@ public class Holly : Aura
     private float ShieldAmountMP   => (HData?.baseSkillShieldMP ?? 0f) * magicPower;
     private float ShieldAmount     => ShieldAmountBase + ShieldAmountMP;
 
+    // no targeting needed: the skill just shields Holly herself
+    private bool autoCastEnabled = false;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
+
     protected override void Awake()
     {
         base.Awake();
@@ -41,6 +46,9 @@ public class Holly : Aura
     {
         base.Update();
 
+        if (autoCastEnabled && SkillReady)
+            ActivateSkill();
+
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
         else if (!IsStunned && !IsChanneling && HasInsectsInRange())
@@ -51,7 +59,7 @@ public class Holly : Aura
             bool shieldedNow = HasShield();
             if (shieldedNow != _shieldArmorBonusActive)
             {
-                armorAdder += shieldedNow ? 75f : -75f;
+                armorAdder += shieldedNow ? 35f : -35f;
                 _shieldArmorBonusActive = shieldedNow;
             }
         }
@@ -99,6 +107,18 @@ public class Holly : Aura
             ApplyEffect(new HollyShieldEffect(this, skillDuration, 1, this, ShieldAmount));
     }
 
+    // click Auto Cast to toggle it on, click again to turn it off — no target to pick
+    public override void ToggleAutoCast() => autoCastEnabled = !autoCastEnabled;
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled) return;
+        autoCastEnabled = true;
+    }
+
     private void ApplyFrozenRageInRange()
     {
         float r = Mathf.Clamp(FrozenRageReduction, 0f, 0.99f);
@@ -137,7 +157,7 @@ public class Holly : Aura
         $"Insects that attack {GetName()} retaliate for <color=green><b>{RetaliationHollyPct * 100f:F0}%</b></color> of {GetName()}'s Attack Damage + " +
         $"<color=green><b>{RetaliationInsectPct * 100f:F0}%</b></color> of the attacker's Attack Damage. " +
         $"Increases Max Health by [<color=#FFB6C1><b>+{(HData?.baseHealthBonusMP ?? 0f) * magicPower:F0}</b></color>]. " +
-        $"While {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
+        $"\n\nWhile {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
         $"forcing them to target {GetName()} and reducing their Armor by " +
         $"<color=green><b>{FrozenRageReductionBase * 100f / (1f - FrozenRageReductionBase):F1}</b></color> " +
         $"[<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f / Mathf.Max(1f - FrozenRageReductionMP, 0.01f):F1}</b></color>]. " +
@@ -170,13 +190,13 @@ public class Holly : Aura
             ? $"Insects that attack {GetName()} retaliate for <color=green><b>[({(HData?.baseRetaliationHollyPercent ?? 0.75f) * 100f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of {GetName()}'s Attack Damage + " +
               $"<color=green><b>[({(HData?.baseRetaliationInsectPercent ?? 0.75f) * 100f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of the attacker's Attack Damage. " +
               $"Increases Max Health <color=#FFB6C1>[+{(HData?.baseHealthBonusMP ?? 0f) * 100f:F0}% Magic Power]</color>. " +
-              $"While {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
+              $"\n\nWhile {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
               $"forcing them to target {GetName()} and reducing their Armor. Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase retaliation percentages by <color=green><b>{retalipl * 100f:F0}%</b></color> per level for both. [<color=green><b>+{retalipl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"While {GetName()} is <color=grey><b>Shielded</b></color>, her <color=#00CED1><b>Armor</b></color> is increased by <color=green><b>75</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"While {GetName()} is <color=grey><b>Shielded</b></color>, her <color=#00CED1><b>Armor</b></color> is increased by <color=green><b>35</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

@@ -14,6 +14,11 @@ public class Cactus : Shooter
     private float SkillDuration => data.baseSkillDuration + (CactData?.path3SkillDurationPerLevel ?? 2f) * effectivePath3Level;
     private float ShieldArmorBonus => (CactData?.baseShieldArmorBonus ?? 25f) + (CactData?.path3ShieldArmorPerLevel ?? 5f) * effectivePath3Level;
 
+    // no targeting needed: the skill just shields Cactus herself
+    private bool autoCastEnabled = false;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
+
     protected override void Awake()
     {
         base.Awake();
@@ -24,6 +29,9 @@ public class Cactus : Shooter
     protected override void Update()
     {
         base.Update();
+
+        if (autoCastEnabled && SkillReady)
+            ActivateSkill();
 
         if (HasEffect<ShieldEffect>())
         {
@@ -38,6 +46,18 @@ public class Cactus : Shooter
         {
             _tauntTickTimer = 0f;
         }
+    }
+
+    // click Auto Cast to toggle it on, click again to turn it off — no target to pick
+    public override void ToggleAutoCast() => autoCastEnabled = !autoCastEnabled;
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled) return;
+        autoCastEnabled = true;
     }
 
     protected override void Shoot(Vector3 target)
