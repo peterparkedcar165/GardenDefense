@@ -25,6 +25,9 @@ public class Tile : MonoBehaviour
     public DeadPlantRecord deadPlant;
     public bool isWaterAdjacent = false;
     public bool isHeatAdjacent  = false;
+    // true if this exact tile radiates heat, independent of its resolved tileType — lets a
+    // heat tile also be painted as a collider/path/water tile without losing its warmth
+    public bool isHeatSource    = false;
     public FlowerPot flowerPot;
     public WaterPot  waterPot;
 
@@ -37,7 +40,7 @@ public class Tile : MonoBehaviour
             _tileType = value;
             if (value == TileType.Water || value == TileType.WaterPotted)
                 SpawnWaterZone();
-            if (value == TileType.Obstacle || value == TileType.Heat)
+            if (value == TileType.Obstacle)
                 SpawnObstacleZone();
         }
     }

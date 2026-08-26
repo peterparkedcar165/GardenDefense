@@ -20,6 +20,14 @@ public class EmberProjectile : MonoBehaviour
     private int           _bouncesRemaining;
     private readonly HashSet<IAttackable> _hitHistory = new HashSet<IAttackable>();
 
+    // brief freeze on impact before spawning the next bounce ember, matching the Oleander's
+    // bounce pacing. each bounce is a fresh instance, so this holds the current one in place
+    // rather than redirecting it
+    private const float BounceHitPause = 0.05f;
+    private bool _isPausedAfterHit;
+    private float _pauseTimer;
+    private int _pendingBouncesRemaining;
+
     private static readonly DamageTag[] _damageTags = { DamageTag.Attack, DamageTag.Projectile };
 
     private void Awake()
@@ -59,6 +67,19 @@ public class EmberProjectile : MonoBehaviour
 
     void Update()
     {
+        if (_isPausedAfterHit)
+        {
+            _pauseTimer -= Time.deltaTime;
+            if (_pauseTimer <= 0f)
+            {
+                IAttackable bounceTarget = FindBounceTarget(_hitHistory);
+                if (bounceTarget != null)
+                    _source.SpawnBounceEmber(transform.position, bounceTarget, _pendingBouncesRemaining, _hitHistory);
+                Destroy(gameObject);
+            }
+            return;
+        }
+
         if (_target == null || !_target.IsAlive)
         {
             // bounce embers only ever seek friendly units
@@ -71,10 +92,7 @@ public class EmberProjectile : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, targetPos) < 0.15f)
-        {
             Detonate();
-            Destroy(gameObject);
-        }
     }
 
     private void Detonate()
@@ -120,13 +138,18 @@ public class EmberProjectile : MonoBehaviour
         }
 
         // path 1 max level: bounce to another friendly unit, chain limited by bouncesRemaining.
-        // the current target joins the hit history first, so the chain can never double back
+        // the current target joins the hit history first, so the chain can never double back.
+        // the actual retarget+spawn is deferred to Update() until the hit pause elapses
         _hitHistory.Add(_target);
         if (targetWasFriendly && _source != null && _source.IsPath1Maxed && _bouncesRemaining > 0)
         {
-            IAttackable bounceTarget = FindBounceTarget(_hitHistory);
-            if (bounceTarget != null)
-                _source.SpawnBounceEmber(transform.position, bounceTarget, _bouncesRemaining - 1, _hitHistory);
+            _pendingBouncesRemaining = _bouncesRemaining - 1;
+            _isPausedAfterHit = true;
+            _pauseTimer = BounceHitPause;
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 

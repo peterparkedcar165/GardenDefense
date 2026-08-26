@@ -9,6 +9,12 @@ public class AcornProjectile : Projectile
     private const float bounceSearchRadius = 3f;
     private const float bounceDamageReduction = 0.1f;
 
+    // brief freeze on every bounce hit before jumping to the next target, matching the
+    // Oleander's bounce pacing
+    private const float BounceHitPause = 0.05f;
+    private float pauseTimer = 0f;
+    private bool awaitingRetarget = false;
+
     public void SetBounces(int count) { _bouncesRemaining = count; }
 
     // below max level, Piercing behaves like any other shooter's piercing (straight-line pass
@@ -50,15 +56,9 @@ public class AcornProjectile : Projectile
             if (_bouncesRemaining > 0)
             {
                 _bouncesRemaining--;
-                Insect next = FindNextBounceTarget();
-                if (next != null)
-                {
-                    spawnPosition = transform.position;
-                    trackedTarget = next.gameObject;
-                    trackedInsect = next;
-                    direction = (next.GetAimPoint() - transform.position).normalized;
-                    return;
-                }
+                pauseTimer = BounceHitPause;
+                awaitingRetarget = true;
+                return;
             }
 
             _spent = true;
@@ -67,6 +67,33 @@ public class AcornProjectile : Projectile
 
         if (other.gameObject.CompareTag("Border"))
             Destroy(gameObject);
+    }
+
+    protected override void Move()
+    {
+        if (pauseTimer > 0f)
+        {
+            pauseTimer -= Time.deltaTime;
+            if (pauseTimer <= 0f && awaitingRetarget)
+            {
+                awaitingRetarget = false;
+                Insect next = FindNextBounceTarget();
+                if (next != null)
+                {
+                    spawnPosition = transform.position;
+                    trackedTarget = next.gameObject;
+                    trackedInsect = next;
+                    direction = (next.GetAimPoint() - transform.position).normalized;
+                }
+                else
+                {
+                    _spent = true;
+                    Destroy(gameObject);
+                }
+            }
+            return;
+        }
+        base.Move();
     }
 
     private Insect FindNextBounceTarget()

@@ -312,7 +312,7 @@ public class Hellebore : Shooter
                $"Increase protection duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color> per level. [<color=green><b>+{reflpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Thorned Guard regenerates <color=green><b>3%</b></color> of its shield every second.\n\nWhenever a plant on the field drops below <color=green><b>25%</b></color> health, if they do not already have <color=#9B30D0><b>Thorned Guard</b></color>, Hellebore automatically applies it. This instance shares the same cooldown as the manual skill." + (IsPath3Maxed ? $"\n\nCooldown: [<color=green><b>{AutoShieldCooldownText}</b></color>]" : ""))}\n\n" +
+               $"{Level5Section(path3Level, $"Thorned Guard regenerates <color=green><b>3%</b></color> of its shield every second.\n\nWhenever a plant on the field drops below <color=green><b>25%</b></color> health, if they do not already have <color=#9B30D0><b>Thorned Guard</b></color>, Hellebore automatically applies it. The cooldown is not shared with the manual skill." + (IsPath3Maxed ? $"\n\nCooldown: [<color=green><b>{AutoShieldCooldownText}</b></color>]" : ""))}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

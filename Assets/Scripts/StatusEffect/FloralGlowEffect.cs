@@ -82,12 +82,30 @@ public class FloralGlowEffect : StatusEffect
         Vector3 visualOrigin = insect.visual != null ? insect.visual.position : origin;
         calendula.SpawnFireBurst(visualOrigin, ExplosionRadius);
         DamageTag[] splashTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.AoE };
-        foreach (Insect other in new List<Insect>(Insect.allInsects))
+
+        // snapshot every target in the blast before any of them take damage, then delay each
+        // hit to match how long the visual burst takes to actually reach that distance
+        const float burstLifetime = Calendula.FireBurstLifetime;
+        List<Insect> splashTargets = new List<Insect>();
+        foreach (Insect other in Insect.allInsects)
         {
             if (other == null || other == insect || !other.IsAlive || other.team == Team.Friendly) continue;
             if (Vector3.Distance(origin, other.transform.position) > ExplosionRadius) continue;
-            other.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false, splashTags);
+            splashTargets.Add(other);
         }
+        foreach (Insect other in splashTargets)
+        {
+            float dist = Vector3.Distance(origin, other.transform.position);
+            float delay = ExplosionRadius > 0f ? (dist / ExplosionRadius) * burstLifetime : 0f;
+            calendula.StartCoroutine(DelayedSplashHit(other, hitDamage, splashTags, delay));
+        }
+    }
+
+    private System.Collections.IEnumerator DelayedSplashHit(Insect other, float damage, DamageTag[] tags, float delay)
+    {
+        if (delay > 0f) yield return new UnityEngine.WaitForSeconds(delay);
+        if (other == null || !other.IsAlive) yield break;
+        other.Damage(damage, DamageType.Magic, ElementalType.Fire, calendula, false, tags);
     }
 
     private float CoordinatedDamage =>

@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fed5c857faeea5443822e86a9723d554, type: 3}
-  m_Name: Level22
+  m_Name: Level23
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
-  levelNumber: 22
+  levelNumber: 23
   weather:
   - type: 4
     intensity: 1
   temperature: 4
-  maxWaves: 40
+  maxWaves: 45
   startSunCount: 1250
   startHealth: 200
   maxUpgradeLevel: 5
   minWaveDuration: 25
-  maxWaveDuration: 180
+  maxWaveDuration: 200
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:
@@ -49,7 +49,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 15
   minThreatBudget: 10
-  maxThreatBudget: 250
+  maxThreatBudget: 350
   budgetCurve:
     serializedVersion: 2
     m_Curve:
@@ -125,10 +125,10 @@ MonoBehaviour:
     unlockWave: 3
     budgetWeight: 0.25
     startDelay: 2
-    minSpawnCount: 4
-    maxSpawnCount: 8
+    minSpawnCount: 5
+    maxSpawnCount: 9
   fertilizerPool:
-  - {fileID: 11400000, guid: 4fe73e7add2d06844a758bb0948abe64, type: 2}
-  - {fileID: 11400000, guid: 66296567bc76cba48b5e78ae1146ca24, type: 2}
-  - {fileID: 11400000, guid: a5f8892c51345f540af0abc332726db2, type: 2}
+  - {fileID: 11400000, guid: 31d018b5e8c44fd49944574a0a384fa0, type: 2}
+  - {fileID: 11400000, guid: 7ba92f365b4f3c9499a00b675268da0f, type: 2}
+  - {fileID: 11400000, guid: d9b550d03a7f16f408220245f26d3e3e, type: 2}
   ambience: {fileID: 0}

@@ -11,7 +11,8 @@ public class Stargazer : Aura
     [SerializeField] private GameObject fireWavePrefab;
     [SerializeField] private GameObject skillIndicatorPrefab; // beam aim indicator for the ultimate
     [SerializeField] private ParticleSystem fireConeParticles; // continuous cone of fire while attacking
-    [SerializeField] private float fireConeTravelTime = 0.25f; // seconds for a particle to cross the attack range (lower = faster, shorter)
+    [SerializeField] private float fireConeTravelTime = 0.25f; // particle stream speed only: seconds for a particle to cross the attack range (lower = faster, shorter)
+    [SerializeField] private float attackHitDelayTime = 0.25f; // damage timing only: seconds for a hit at the edge of attack range to land, scaled down by distance for closer targets
 
     private StargazerData SData => data as StargazerData;
     private Vector2 _facingDir = Vector2.right;
@@ -27,6 +28,7 @@ public class Stargazer : Aura
 
     private float SkillLength       => SData?.skillLength ?? 50f;
     private float SkillWaveWidth    => (SData?.skillWaveWidth ?? 4f) + (SData?.path3WaveWidthPerLevel ?? 0.5f) * effectivePath3Level;
+    private float SkillWaveRadius   => SkillWaveWidth * 0.5f;
     private float SkillBurnMultiplier => (SData?.skillBurnMultiplier ?? 2f) + (SData?.path3BurnMultiplierPerLevel ?? 0.1f) * effectivePath3Level;
     private int   SkillFlammableStacks => Mathf.RoundToInt((SData?.skillFlammableStacks ?? 2) + (SData?.path3FlammableStacksPerLevel ?? 0.5f) * effectivePath3Level);
     private float SkillDamage    => (SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level + skillDamageMultiplier * magicPower;
@@ -141,6 +143,14 @@ public class Stargazer : Aura
 
         // _facingDir is kept current by UpdateFacing (tracks the target even out of range)
         float halfAngle = ConeAngle * 0.5f;
+
+        // snapshot every target, its distance, and the damage it'll take before any of it
+        // lands — same approach as Calendula's attack: each hit is delayed proportionally to
+        // that snapshotted distance, using attackHitDelayTime (separate from fireConeTravelTime,
+        // which only paces the continuous visual particle stream)
+        float snapshotDamage = attackDamage;
+        DamageType snapshotDamageType = damageType;
+        ElementalType snapshotElementalType = elementalType;
         foreach (Insect insect in new List<Insect>(Insect.allInsects))
         {
             if (insect == null || !insect.IsAlive) continue;
@@ -148,9 +158,17 @@ public class Stargazer : Aura
             if (to.magnitude > attackRange) continue;
             if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
 
-            insect.Damage(attackDamage, damageType, elementalType, this, true,
-                new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+            float delay = attackRange > 0f ? Mathf.Clamp01(to.magnitude / attackRange) * attackHitDelayTime : 0f;
+            StartCoroutine(DelayedAttackHit(insect, snapshotDamage, snapshotDamageType, snapshotElementalType, delay));
         }
+    }
+
+    private IEnumerator DelayedAttackHit(Insect insect, float damage, DamageType dmgType, ElementalType elemType, float delay)
+    {
+        if (delay > 0f) yield return new WaitForSeconds(delay);
+        if (insect == null || !insect.IsAlive) yield break;
+        insect.Damage(damage, dmgType, elemType, this, true,
+            new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
     }
 
     private ConeParticleEmitter _fireCone;
@@ -246,8 +264,7 @@ public class Stargazer : Aura
         obj.GetComponent<FireWave>()?.Initialize(
             startPos, dir,
             SData?.skillWaveSpeed ?? 12f,
-            SkillWaveWidth,
-            SData?.skillThickness ?? 3f,
+            SkillWaveRadius,
             SkillDamage,
             SkillBurnMultiplier,
             SkillFlammableStacks,
@@ -322,7 +339,7 @@ public class Stargazer : Aura
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=#FF6B1A>Fire Wave</color> damage by <color=green><b>{dpl:F0}</b></color> per level. [<color=green><b>+{dpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase <color=#FF6B1A>Fire Wave</color> width by <color=green><b>{wpl:F1}</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase <color=#FF6B1A>Fire Wave</color> radius by <color=green><b>{wpl * 0.5f:F1}</b></color> per level. [<color=green><b>+{wpl * 0.5f * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase <color=orange>Burning</color>-target bonus damage by <color=green><b>{bpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#FF6B1A>Flammable</color> stacks applied by <color=green><b>{fpl:F1}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(fpl * effectivePath3Level)}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

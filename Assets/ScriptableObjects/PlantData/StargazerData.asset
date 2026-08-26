@@ -91,8 +91,7 @@ MonoBehaviour:
   skillBaseDamage: 120
   skillWaveSpeed: 12
   skillLength: 60
-  skillWaveWidth: 4
-  skillThickness: 1.5
+  skillWaveWidth: 6
   skillDelay: 0.25
   skillBurnMultiplier: 2
   skillFlammableStacks: 5
@@ -107,6 +106,6 @@ MonoBehaviour:
   path2MaxElementalAffinityBonus: 0.2
   path2MaxElementalEffectChanceBonus: 0.06
   path3SkillDamagePerLevel: 20
-  path3WaveWidthPerLevel: 1
+  path3WaveWidthPerLevel: 0.5
   path3BurnMultiplierPerLevel: 0.75
   path3FlammableStacksPerLevel: 1

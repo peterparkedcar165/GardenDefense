@@ -873,7 +873,7 @@ public abstract class Plant : Entity, IAttackable
             temperature = Mathf.Min(temperature, 10f);
 
         if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Cold
-            && occupiedTile != null && (occupiedTile.tileType == TileType.Heat || occupiedTile.isHeatAdjacent))
+            && occupiedTile != null && (occupiedTile.isHeatSource || occupiedTile.isHeatAdjacent))
             temperature = Mathf.Max(temperature, 10f);
 
         bool tooCold = temperature < comfortMin;

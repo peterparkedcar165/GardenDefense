@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Calendula : Aura
@@ -123,14 +124,56 @@ public class Calendula : Aura
         autoCastTargetTile = targetPlant.occupiedTile;
     }
 
+    // drives both the visual burst's travel time (SpawnFireBurst) and how long the live damage
+    // sweep takes to expand from 0 to attackRange. public so FloralGlowEffect's explosion can
+    // share it
+    public const float FireBurstLifetime = 0.3f;
+
     protected override void Attack()
     {
         base.Attack();
         SpawnFireBurst(transform.position, attackRange);
-        List<Insect> insects = GetInsectsInRange();
-        foreach (Insect insect in insects)
-            insect.Damage(attackDamage, damageType, elementalType, this, true,
-                new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+
+        // snapshot only the damage values (so a mid-burst attackDamage change can't retroactively
+        // affect it), not the target list — who gets hit is decided live, frame by frame, below
+        float snapshotDamage = attackDamage;
+        DamageType snapshotDamageType = damageType;
+        ElementalType snapshotElementalType = elementalType;
+        StartCoroutine(SweepAttackDamage(snapshotDamage, snapshotDamageType, snapshotElementalType));
+    }
+
+    // the fire spreads outward from Calendula over FireBurstLifetime. every frame, ANY insect
+    // currently within the growing radius is damaged — including one that wasn't even in range
+    // when the attack fired but wanders into the expanding burst zone partway through. each
+    // insect can only be hit once per attack
+    private IEnumerator SweepAttackDamage(float damage, DamageType dmgType, ElementalType elemType)
+    {
+        DamageTag[] tags = new DamageTag[] { DamageTag.AoE, DamageTag.Attack };
+        HashSet<Insect> hit = new HashSet<Insect>();
+        float elapsed = 0f;
+
+        while (elapsed < FireBurstLifetime)
+        {
+            float currentRadius = (elapsed / FireBurstLifetime) * attackRange;
+            foreach (Insect insect in new List<Insect>(Insect.allInsects))
+            {
+                if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
+                if (Vector3.Distance(transform.position, insect.transform.position) > currentRadius) continue;
+                hit.Add(insect);
+                insect.Damage(damage, dmgType, elemType, this, true, tags);
+            }
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+
+        // catch anyone the wavefront should have reached by now but a frame gap missed
+        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        {
+            if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) > attackRange) continue;
+            hit.Add(insect);
+            insect.Damage(damage, dmgType, elemType, this, true, tags);
+        }
     }
 
     // same fire burst visual used by the attack, reused at a smaller radius by Floral Glow's explosion
@@ -141,7 +184,7 @@ public class Calendula : Aura
         ParticleSystem ps = burst.GetComponent<ParticleSystem>();
         if (ps == null) return;
 
-        const float lifetime = 0.25f;
+        const float lifetime = FireBurstLifetime;
 
         var main = ps.main;
         main.startLifetime = lifetime;

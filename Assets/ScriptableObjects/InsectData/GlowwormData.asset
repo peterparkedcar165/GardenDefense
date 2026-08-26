@@ -64,9 +64,9 @@ MonoBehaviour:
   glowIntensity: 0.4
   healRange: 4
   healCooldown: 8
-  castDuration: 0.5
+  castDuration: 1
   healAmount: 35
   healPercent: 0.06
-  regenerationDuration: 3
-  regenerationHealing: 6
-  regenerationPercent: 0.01
+  regenerationDuration: 12
+  regenerationHealing: 8
+  regenerationPercent: 0.03

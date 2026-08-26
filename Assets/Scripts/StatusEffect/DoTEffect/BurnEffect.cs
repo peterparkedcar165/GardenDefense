@@ -29,7 +29,7 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
         float ep = cachedelementalAffinity;
         float flammable = target?.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
-        float total = ((healthPerSecond * hp) + (flatPerSecond * (1f + 3f * ep))) * flammable;
+        float total = (healthPerSecond * hp + flatPerSecond) * (1f + 0.33f * ep) * flammable;
         return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second.";
     }
 
@@ -37,7 +37,7 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
     {
         base.OnApply();
         cachedMaxHealth = target.maxHealth;
-        damagePerSecond = (healthPerSecond * cachedMaxHealth) + (flatPerSecond * (1f + 3f * cachedelementalAffinity));
+        damagePerSecond = (healthPerSecond * cachedMaxHealth + flatPerSecond) * (1f + 0.33f * cachedelementalAffinity);
 
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Burn", new Color(1f, 0.4f, 0f));
 

@@ -5,8 +5,8 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     private ParticleSystem poisonParticles;
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    private float currentHealthPercent = 0.015f;
-    private float currentFlatDamage = 3f;
+    private float currentHealthPercent = 0.01f;
+    private float currentFlatDamage = 1f;
     private float cachedElementalAffinity;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
@@ -16,7 +16,7 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     {
         effectType = Type.negative;
         elementalType = ElementalType.Poison;
-        tickInterval = 1f;
+        tickInterval = 0.5f;
     }
 
     public override string GetName() => "<color=purple>Poisoned</color>";
@@ -24,14 +24,14 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
         $"Take escalating damage over time (<color=purple><b>{ComputeDamage():F0}</b></color>).";
 
     private float ComputeDamage() =>
-        target.maxHealth * currentHealthPercent + currentFlatDamage * (1f + 3f * cachedElementalAffinity);
+        (target.maxHealth * currentHealthPercent + currentFlatDamage) * (1f + 0.33f * cachedElementalAffinity);
 
     public override void OnReapply(StatusEffect previous)
     {
         if (previous is PoisonedEffect old)
         {
-            currentHealthPercent = old.currentHealthPercent + 0.015f;
-            currentFlatDamage    = old.currentFlatDamage + 3f;
+            currentHealthPercent = old.currentHealthPercent + 0.01f;
+            currentFlatDamage    = old.currentFlatDamage + 1f;
         }
     }
 
@@ -56,7 +56,7 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
         else
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
 
-        currentHealthPercent += 0.0025f;
+        currentHealthPercent += 0.001f;
         currentFlatDamage    += 1f;
         tickTimer            -= tickInterval;
     }

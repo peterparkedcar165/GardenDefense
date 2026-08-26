@@ -2,13 +2,12 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
 
-// Stargazer ultimate: a wall of fire that sweeps across the map in a direction,
+// Stargazer ultimate: a ball of fire that sweeps across the map in a direction,
 // damaging each insect once as it passes
 public class FireWave : MonoBehaviour
 {
     private Vector2 direction;
-    private Vector2 perp;
-    private float speed, halfWidth, thickness, damage, travelDistance, burnMultiplier;
+    private float speed, radius, damage, travelDistance, burnMultiplier;
     private int flammableStacks;
     private Plant source;
     private Vector2 startPos;
@@ -21,19 +20,19 @@ public class FireWave : MonoBehaviour
     private Light2D _light;
     private const float LightIntensity = 0.7f;
     private const float LightFadeTime = 0.3f;
+    private const float LightRadiusPadding = 0.5f; // flat padding beyond the wave's own radius
+    private const float LightRadiusScale   = 1.5f; // then scaled up, same as the old rectangle formula
 
     private static readonly DamageTag[] waveTags = { DamageTag.AoE, DamageTag.SkillDamage };
 
-    public void Initialize(Vector2 startPos, Vector2 direction, float speed, float width,
-                           float thickness, float damage, float burnMultiplier, int flammableStacks,
+    public void Initialize(Vector2 startPos, Vector2 direction, float speed, float radius,
+                           float damage, float burnMultiplier, int flammableStacks,
                            float travelDistance, Plant source, bool returnsAfterEnd = false)
     {
         this.startPos        = startPos;
         this.direction       = direction.normalized;
-        this.perp            = new Vector2(-this.direction.y, this.direction.x);
         this.speed           = speed;
-        this.halfWidth       = width * 0.5f;
-        this.thickness       = thickness;
+        this.radius          = radius;
         this.damage          = damage;
         this.burnMultiplier  = burnMultiplier;
         this.flammableStacks = flammableStacks;
@@ -42,16 +41,14 @@ public class FireWave : MonoBehaviour
         _returnsAfterEnd     = returnsAfterEnd;
 
         transform.position = startPos;
-        float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
-        transform.localScale = new Vector3(thickness, width, 1f);
+        transform.localScale = new Vector3(radius * 2f, radius * 2f, 1f);
 
-        CreateLight(width, thickness);
+        CreateLight(radius);
     }
 
     // a warm point light that follows the wave. kept as a separate object (not a child) so the
-    // wave's non uniform scale does not distort it. only lit in dark biomes, like Burn and Glowshroom
-    private void CreateLight(float width, float thickness)
+    // wave's scale does not distort it. only lit in dark biomes, like Burn and Glowshroom
+    private void CreateLight(float radius)
     {
         if (DarknessManager.instance == null) return;
 
@@ -62,15 +59,15 @@ public class FireWave : MonoBehaviour
         _light.lightType = Light2D.LightType.Point;
         // leave color at the Light2D default (white), matching the Calendula's light
         _light.falloffIntensity = 0.5f;
-        float radius = (width * 0.5f + thickness * 0.5f + 0.5f) * 1.35f;
-        _light.pointLightOuterRadius = radius;
-        _light.pointLightInnerRadius = radius * 0.3f;
+        float lightRadius = (radius + LightRadiusPadding) * LightRadiusScale;
+        _light.pointLightOuterRadius = lightRadius;
+        _light.pointLightInnerRadius = lightRadius * 0.3f;
         _light.enabled = DarknessManager.instance.isDark;   // only shine while it is actually dark
 
         _lightFader = lightObj.AddComponent<LightFader>();
         _lightFader.Setup(_light, LightIntensity);
         _lightFader.FadeIn(0.05f);
-        DarknessManager.RegisterLightSource(lightObj.transform, radius);
+        DarknessManager.RegisterLightSource(lightObj.transform, lightRadius);
     }
 
     private void Update()
@@ -87,10 +84,7 @@ public class FireWave : MonoBehaviour
         {
             if (insect == null || !insect.IsAlive || _hit.Contains(insect)) continue;
 
-            Vector2 to = (Vector2)insect.transform.position - (Vector2)transform.position;
-            float along = Mathf.Abs(Vector2.Dot(to, direction));   // distance along the sweep
-            float side  = Mathf.Abs(Vector2.Dot(to, perp));        // distance across the wall
-            if (along <= thickness * 0.5f && side <= halfWidth)
+            if (Vector2.Distance(insect.transform.position, transform.position) <= radius)
             {
                 // amplified damage against already-burning targets
                 float dmg = insect.HasEffect<BurnEffect>() ? damage * burnMultiplier : damage;
@@ -109,11 +103,8 @@ public class FireWave : MonoBehaviour
                 _isReturning     = true;
                 _returnsAfterEnd = false;
                 direction        = -direction;
-                perp             = -perp;
                 startPos         = (Vector2)transform.position;
                 _hit.Clear();
-                float returnAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0f, 0f, returnAngle);
             }
             else
             {

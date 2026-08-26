@@ -121,7 +121,27 @@ public class Gloriosa : Shooter
             float dist = Vector3.Distance(transform.position, insect.GetApproachPoint(transform.position));
             if (dist <= attackRange && dist < nearest && IsValidNightTarget(insect, dist)) { nearest = dist; bestInsect = insect; }
         }
-        return bestInsect;
+        if (bestInsect != null) return bestInsect;
+
+        // priority 4 (last resort): nothing hurt, nothing to fight — keep the coldest nearby
+        // plant warm. only worth it in Cold weather, since that's the only time warming
+        // actually does anything (Detonate() only adjusts temperature when the weather is
+        // Cold), and only for plants still below comfort (10) — above that they're fine
+        if (WeatherManager.instance?.temperature == TemperatureType.Cold)
+        {
+            Plant coldest = null;
+            float lowestTemp = 10f;
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == this || plant == null || !plant.IsAlive) continue;
+                if (plant.temperature >= 10f) continue;
+                if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+                if (plant.temperature < lowestTemp) { lowestTemp = plant.temperature; coldest = plant; }
+            }
+            if (coldest != null) return coldest;
+        }
+
+        return null;
     }
 
     private void SpawnEmber()
