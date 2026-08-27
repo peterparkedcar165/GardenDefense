@@ -42,6 +42,8 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -73,7 +75,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 16
   basePassiveDuration: 0
-  baseSkillCooldown: 90
+  baseSkillCooldown: 75
   baseSkillDuration: 8
   channelDuration: 0
   baseSkillRadius: 1.5

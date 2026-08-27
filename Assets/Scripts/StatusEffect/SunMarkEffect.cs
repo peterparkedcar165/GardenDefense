@@ -7,6 +7,8 @@ public class SunMarkEffect : StatusEffect
     {
         effectType = Type.negative;
         elementalType = ElementalType.Fire;
+        // multiple Sunflowers can mark the same insect; each mark pays out its own bonus sun on death
+        sourceStackable = true;
     }
 
     public override void OnTargetDied()

@@ -1,11 +1,11 @@
-public class ZinniaAuraEffect : StatusEffect
+public class ZinniaAuraEffect : PlantAuraBuffEffect
 {
     private readonly float fireDamageBonus;
     private readonly float magicPowerBonus;
     private readonly float elementalAffinityBonus;
 
-    public ZinniaAuraEffect(Entity target, float duration, int level, Entity source, float fireDamageBonus, float magicPowerBonus, float elementalAffinityBonus = 0f)
-        : base(target, duration, level, source)
+    public ZinniaAuraEffect(Entity target, int level, Plant source, float range, float fireDamageBonus, float magicPowerBonus, float elementalAffinityBonus = 0f)
+        : base(target, level, source, range)
     {
         this.fireDamageBonus       = fireDamageBonus;
         this.magicPowerBonus       = magicPowerBonus;

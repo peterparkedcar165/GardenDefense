@@ -1,9 +1,9 @@
-public class CalendulasLightEffect : StatusEffect
+public class CalendulasLightEffect : PlantAuraBuffEffect
 {
     private readonly float attackSpeedBonus;
 
-    public CalendulasLightEffect(Entity target, float duration, int level, Entity source, float attackSpeedBonus)
-        : base(target, duration, level, source)
+    public CalendulasLightEffect(Entity target, int level, Plant source, float range, float attackSpeedBonus)
+        : base(target, level, source, range)
     {
         this.attackSpeedBonus = attackSpeedBonus;
         effectType      = Type.positive;
@@ -13,7 +13,6 @@ public class CalendulasLightEffect : StatusEffect
 
     public override void OnApply()  => target.attackSpeedMultiplier += attackSpeedBonus;
     public override void OnExpire() => target.attackSpeedMultiplier -= attackSpeedBonus;
-    public override void OnTick(float deltaTime) { }
 
     public override string GetName() => "<color=orange>Calendula's Light</color>";
     public override string GetDescription() =>

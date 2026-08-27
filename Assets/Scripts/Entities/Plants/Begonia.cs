@@ -5,7 +5,6 @@ public class Begonia : Shooter
 {
     private float auraTickTimer = 0f;
     private const float auraTickInterval = 0.25f;
-    private const float auraEffectDuration = 0.35f;
 
     private bool _isSkillTargeting = false;
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
@@ -69,7 +68,7 @@ public class Begonia : Shooter
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            plant.ApplyEffect(new elementalAffinityBoostEffect(plant, auraEffectDuration, 1, this, elementalAffinityBonus, magicPen));
+            plant.ApplyEffect(new elementalAffinityBoostEffect(plant, 1, this, attackRange, elementalAffinityBonus, magicPen));
         }
     }
 

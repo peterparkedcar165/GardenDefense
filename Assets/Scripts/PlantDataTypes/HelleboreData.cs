@@ -6,6 +6,7 @@ public class HelleboreData : PlantData
     [Header("Path 1 - Attack")]
     public float path1AttackSpeedPerLevel = 0.05f;
     public float path1MagicPowerPerLevel  = 5f;
+    public float path1AttackRangePerLevel = 0.2f;
 
     [Header("Passive - Self Armor")]
     public int   selfArmorBase      = 14;

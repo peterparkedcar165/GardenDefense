@@ -40,7 +40,7 @@ public class HelleboreProtectionEffect : ShieldEffect
         _regenTick += deltaTime;
         if (_regenTick < RegenInterval) return;
         _regenTick -= RegenInterval;
-        amount = UnityEngine.Mathf.Min(amount + originalAmount * 0.03f * RegenInterval, originalAmount);
+        amount = UnityEngine.Mathf.Min(amount + originalAmount * 0.06f * RegenInterval, originalAmount);
     }
 
     public override void OnDamageReceived(ElementalType elementalType, Entity damageSource, DamageTag[] damageTags = null)

@@ -11,10 +11,10 @@ public class SoldierAnt : Ant
     public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag) // sourced
     {
         float reducedDamage;
-        // passive of the soldier ant, reduces physical damage taken by a flat 2
+        // passive of the soldier ant, reduces physical damage taken by a flat amount
         if (damageType == DamageType.Physical)
         {
-            reducedDamage = Mathf.Max(0, damageDealt -12f);
+            reducedDamage = Mathf.Max(0, damageDealt - data.flatPhysicalDamageReduction);
         }
         else // if its magic or true, ignores the reduction
         {
@@ -27,10 +27,10 @@ public class SoldierAnt : Ant
     public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag) // non-sourced
     {
         float reducedDamage;
-        // passive of the soldier ant, reduces physical damage taken by a flat 2
+        // passive of the soldier ant, reduces physical damage taken by a flat amount
         if (damageType == DamageType.Physical)
         {
-            reducedDamage = Mathf.Max(0, damageDealt -12f);
+            reducedDamage = Mathf.Max(0, damageDealt - data.flatPhysicalDamageReduction);
         }
         else // if its magic or true, ignores the reduction
         {

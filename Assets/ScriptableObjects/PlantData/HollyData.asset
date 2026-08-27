@@ -19,7 +19,7 @@ MonoBehaviour:
   cultivar: 3
   elementalType: 4
   damageType: 0
-  sunCost: 105
+  sunCost: 95
   skillTree: {fileID: 0}
   baseMaxHealth: 300
   baseAttackDamage: 23
@@ -42,6 +42,8 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -94,4 +96,4 @@ MonoBehaviour:
   path2RetaliationPerLevel: 0.05
   path3ShieldPerLevel: 20
   path3FrozenRagePerLevel: 0.04
-  path3SkillDurationPerLevel: 2
+  path3SkillDurationPerLevel: 3

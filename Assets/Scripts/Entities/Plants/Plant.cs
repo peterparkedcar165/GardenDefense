@@ -428,6 +428,7 @@ public abstract class Plant : Entity, IAttackable
         if (elementalType == ElementalType.Ice)  coldResistanceAdder += 0.5f; // 50% resistance to cold-driven cooling, not full immunity
         FertilizerManager.instance?.ApplyTo(this);
         SkillTreeManager.ApplyTo(this);
+        RecomputeEffectivePathLevels();
         UpdateStats();
         health = maxHealth;
         UpdateHealthBar();
@@ -737,9 +738,7 @@ public abstract class Plant : Entity, IAttackable
     protected override void Update()
     {
         base.Update();
-        effectivePath1Level = path1Level + path1LevelAdder;
-        effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
-        effectivePath3Level = path3Level + path3LevelAdder;
+        RecomputeEffectivePathLevels();
 
         if (_light2D != null)
         {
@@ -907,6 +906,13 @@ public abstract class Plant : Entity, IAttackable
     }
 
     public virtual void ActivateSkill() {}
+
+    private void RecomputeEffectivePathLevels()
+    {
+        effectivePath1Level = path1Level + path1LevelAdder;
+        effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
+        effectivePath3Level = path3Level + path3LevelAdder;
+    }
 
     private int GetWeatherPath2Bonus()
     {

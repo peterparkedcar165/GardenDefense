@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 23
   weather:
-  - type: 4
+  - type: 0
     intensity: 1
   temperature: 4
   maxWaves: 45
@@ -75,6 +75,10 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   insects:
+  - data: {fileID: 11400000, guid: eb37e63b69fcb174193009d3c7e2a6dd, type: 2}
+    unlockWave: 0
+    budgetWeight: 0.4
+    startDelay: 0
   - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
     unlockWave: 0
     budgetWeight: 0.4
@@ -95,16 +99,16 @@ MonoBehaviour:
     unlockWave: 4
     budgetWeight: 0.137
     startDelay: 3
-  - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
-    unlockWave: 4
-    budgetWeight: 0.4
-    startDelay: 0
-  - data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
-    unlockWave: 9
+  - data: {fileID: 11400000, guid: b2c8eb2d9b0a4ed0a548d164be6f3bcb, type: 2}
+    unlockWave: 5
     budgetWeight: 0.4
     startDelay: 3
-  - data: {fileID: 11400000, guid: c0cd54e6f33f68d4a891a984ef059bda, type: 2}
-    unlockWave: 12
+  - data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
+    unlockWave: 6
+    budgetWeight: 0.4
+    startDelay: 3
+  - data: {fileID: 11400000, guid: a5c0e8f19f3f45509787d366f01c5785, type: 2}
+    unlockWave: 9
     budgetWeight: 0.4
     startDelay: 3
   eliteWaveInterval: 4

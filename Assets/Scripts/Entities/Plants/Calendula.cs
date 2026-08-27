@@ -50,12 +50,11 @@ public class Calendula : Aura
             if (_illuminationAuraTimer >= 1f)
             {
                 _illuminationAuraTimer -= 1f;
-                float auraExpire = 1.6f; // slightly longer than the tick interval so it never gaps
                 foreach (Plant plant in Plant.allPlants)
                 {
                     if (plant == null || !plant.IsAlive) continue;
                     if (Vector2.Distance(transform.position, plant.transform.position) <= lightEmissionRange)
-                        plant.ApplyEffect(new CalendulasLightEffect(plant, auraExpire, 1, this, 0.15f));
+                        plant.ApplyEffect(new CalendulasLightEffect(plant, 1, this, lightEmissionRange, 0.15f));
                 }
             }
         }

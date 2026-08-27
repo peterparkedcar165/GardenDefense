@@ -147,12 +147,11 @@ public class Hellebore : Shooter
 
         float armorBonus      = AuraArmor;
         float magicArmorBonus = IsPath2Maxed ? armorBonus * 0.5f : 0f;
-        float auraExpire = AuraTickInterval * 1.6f; // slightly longer than tick interval so it never gaps
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive || plant == this) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            plant.ApplyEffect(new HelleboreAuraEffect(plant, auraExpire, 1, this, armorBonus, magicArmorBonus));
+            plant.ApplyEffect(new HelleboreAuraEffect(plant, 1, this, attackRange, armorBonus, magicArmorBonus));
         }
     }
 
@@ -219,6 +218,7 @@ public class Hellebore : Shooter
     {
         baseAttackSpeed = data.baseAttackSpeed + (HData?.path1AttackSpeedPerLevel ?? 0.05f) * level;
         baseMagicPower  = data.baseMagicPower  + (HData?.path1MagicPowerPerLevel  ?? 5f)    * level;
+        baseAttackRange = data.baseAttackRange + (HData?.path1AttackRangePerLevel ?? 0.2f)  * level;
     }
 
     protected override void OnDestroy()
@@ -261,12 +261,14 @@ public class Hellebore : Shooter
     {
         float aspl = HData?.path1AttackSpeedPerLevel ?? 0.05f;
         float mppl = HData?.path1MagicPowerPerLevel  ?? 5f;
+        float rgpl = HData?.path1AttackRangePerLevel ?? 0.2f;
         string desc = details
             ? $"Fires a thorned projectile dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#FFB6C1><b>Base Magic Power</b></color> by <color=green><b>{mppl:F0}</b></color> per level. [<color=#FFB6C1><b>+{mppl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rgpl:F1}</b></color> per level. [<color=green><b>+{rgpl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Attacks deal additional damage equal to <color=green><b>28%</b></color> of Hellebore's <color=#00CED1><b>Armor</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -314,7 +316,7 @@ public class Hellebore : Shooter
                $"Increase protection duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color> per level. [<color=green><b>+{reflpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Thorned Guard regenerates <color=green><b>3%</b></color> of its shield every second.\n\nWhenever a plant on the field drops below <color=green><b>25%</b></color> health, if they do not already have <color=#9B30D0><b>Thorned Guard</b></color>, Hellebore automatically applies it. The cooldown is not shared with the manual skill." + (IsPath3Maxed ? $"\n\nCooldown: [<color=green><b>{AutoShieldCooldownText}</b></color>]" : ""))}\n\n" +
+               $"{Level5Section(path3Level, $"Thorned Guard regenerates <color=green><b>6%</b></color> of its shield every second.\n\nWhenever a plant on the field drops below <color=green><b>25%</b></color> health, if they do not already have <color=#9B30D0><b>Thorned Guard</b></color>, Hellebore automatically applies it. The cooldown is not shared with the manual skill." + (IsPath3Maxed ? $"\n\nCooldown: [<color=green><b>{AutoShieldCooldownText}</b></color>]" : ""))}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

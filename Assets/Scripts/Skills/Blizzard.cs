@@ -93,7 +93,7 @@ public class Blizzard : MonoBehaviour
             if (plant == null || !plant.IsAlive) continue;
             if (!IsInBeam(plant.transform.position)) continue;
 
-            plant.ApplyEffect(new CoolingEffect(plant, 0.5f, 2, source, coolingPerSecond));
+            plant.ApplyEffect(new BlizzardCoolingEffect(plant, 0.5f, 2, source, coolingPerSecond));
         }
 
         if (tickTimer >= tickInterval)

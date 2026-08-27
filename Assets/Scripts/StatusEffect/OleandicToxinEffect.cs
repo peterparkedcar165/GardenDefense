@@ -42,9 +42,6 @@ public class OleandicToxinEffect : StatusEffect
         if (incoming is ShieldEffect) return false;
         System.Type t = incoming.GetType();
         if (immuneTypes.Contains(t)) return true; // already captured, silently block it
-        // only capture a new buff type if none has been captured yet (waiting state)
-        // once one is held, new types pass through; only another oleandic toxin hit can capture more
-        if (immuneTypes.Count > 0) return false;
         string name = incoming.GetName();
         immuneTypes.Add(t);
         immuneNames.Add(name);

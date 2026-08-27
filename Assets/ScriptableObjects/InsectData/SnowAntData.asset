@@ -16,8 +16,8 @@ MonoBehaviour:
   nameColor: {r: 0.04004982, g: 0.7310073, b: 0.9433962, a: 1}
   description: Ants with cold mandibles
   passiveDescription: Attacks against plants decrease their temperature by 2
-  sprite: {fileID: 0}
-  insectPrefab: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 8a779be57e7632646b54f620fae06c6c, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: 492fc6312afa0c94f8c30cb7a5dfa03d, type: 3}
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0
@@ -46,6 +46,7 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  flatPhysicalDamageReduction: 0
   threatValue: 1.2
   threatType: 0
   baseEvasion: 0

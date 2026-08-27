@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 21
   weather:
-  - type: 4
+  - type: 0
     intensity: 1
   temperature: 4
   maxWaves: 35
@@ -83,8 +83,16 @@ MonoBehaviour:
     unlockWave: 0
     budgetWeight: 0.3
     startDelay: 8
+  - data: {fileID: 11400000, guid: eb37e63b69fcb174193009d3c7e2a6dd, type: 2}
+    unlockWave: 2
+    budgetWeight: 0.3
+    startDelay: 2
   - data: {fileID: 11400000, guid: 7f773353e0b72144baed277302b74c2e, type: 2}
     unlockWave: 2
+    budgetWeight: 0.4
+    startDelay: 3
+  - data: {fileID: 11400000, guid: b2c8eb2d9b0a4ed0a548d164be6f3bcb, type: 2}
+    unlockWave: 3
     budgetWeight: 0.3
     startDelay: 3
   - data: {fileID: 11400000, guid: dcc2e67738ed22141b2d77881202ac4a, type: 2}
@@ -95,22 +103,14 @@ MonoBehaviour:
     unlockWave: 4
     budgetWeight: 0.137
     startDelay: 3
-  - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
-    unlockWave: 4
-    budgetWeight: 0.4
-    startDelay: 0
   - data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
     unlockWave: 9
-    budgetWeight: 0.4
-    startDelay: 3
-  - data: {fileID: 11400000, guid: c0cd54e6f33f68d4a891a984ef059bda, type: 2}
-    unlockWave: 12
     budgetWeight: 0.4
     startDelay: 3
   eliteWaveInterval: 4
   eliteInsects:
   - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}
-    unlockWave: 5
+    unlockWave: 3
     budgetWeight: 0.3
     startDelay: 5
     minSpawnCount: 2

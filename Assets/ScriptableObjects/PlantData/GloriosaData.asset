@@ -19,7 +19,7 @@ MonoBehaviour:
   cultivar: 1
   elementalType: 0
   damageType: 1
-  sunCost: 105
+  sunCost: 95
   skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 32
@@ -42,6 +42,8 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0

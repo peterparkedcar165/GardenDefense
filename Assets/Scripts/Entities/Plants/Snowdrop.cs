@@ -62,7 +62,7 @@ public class Snowdrop : Aura
             {
                 if (plant == null || !plant.IsAlive) continue;
                 if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
-                plant.ApplyEffect(new CoolingEffect(plant, 0.5f, 1, this, CoolingPerSecond));
+                plant.ApplyEffect(new CoolingEffect(plant, 1, this, attackRange, CoolingPerSecond));
             }
         }
 

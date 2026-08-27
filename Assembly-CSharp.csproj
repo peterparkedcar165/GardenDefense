@@ -67,11 +67,13 @@
     <Compile Include="Assets\Scripts\SkillTree\PlantStatApplier.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CactusData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ColdAuraEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PuncturedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\EngagedEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DarklingBeetleData.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillNodeButton.cs" />
+    <Compile Include="Assets\Scripts\InsectDataTypes\SnowFlyData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FlammableEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DrizzleBarrierEffect.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\WindshearGroundEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Lobber.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\WinterMoth.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
@@ -169,6 +172,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Moth.cs" />
     <Compile Include="Assets\Scripts\FertilizerManager.cs" />
     <Compile Include="Assets\Scripts\Skills\AnemoneVortex.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\SnowFly.cs" />
     <Compile Include="Assets\Scripts\UI\GameButtons.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ChannelingEffect.cs" />
@@ -240,6 +244,7 @@
     <Compile Include="Assets\Scripts\Skills\Blizzard.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\FlowerPot.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\PlantAuraBuffEffect.cs" />
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeData.cs" />
@@ -251,6 +256,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\BlessingOfTheSunEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\HelleboreProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\JumpingSpider.cs" />
+    <Compile Include="Assets\Scripts\InsectDataTypes\WinterMothData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AblazeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Anemone.cs" />
     <Compile Include="Assets\Scripts\GridManagers\NighttimeGridManager.cs" />
@@ -294,6 +300,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\CarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BlizzardCoolingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearPoisonEffect.cs" />

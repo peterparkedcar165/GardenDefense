@@ -1,10 +1,10 @@
-public class HelleboreAuraEffect : StatusEffect
+public class HelleboreAuraEffect : PlantAuraBuffEffect
 {
     private readonly float resistBonus;
     private readonly float magicResistBonus;
 
-    public HelleboreAuraEffect(Entity target, float duration, int level, Entity source, float resistBonus, float magicResistBonus = 0f)
-        : base(target, duration, level, source)
+    public HelleboreAuraEffect(Entity target, int level, Plant source, float range, float resistBonus, float magicResistBonus = 0f)
+        : base(target, level, source, range)
     {
         this.resistBonus      = resistBonus;
         this.magicResistBonus = magicResistBonus;
@@ -15,8 +15,6 @@ public class HelleboreAuraEffect : StatusEffect
 
     public override void OnApply()  { target.armorAdder += resistBonus; target.magicArmorAdder += magicResistBonus; }
     public override void OnExpire() { target.armorAdder -= resistBonus; target.magicArmorAdder -= magicResistBonus; }
-
-    public override void OnTick(float deltaTime) { }
 
     public override string GetName() => "<color=purple>Hellebore's Protection</color>";
     public override string GetDescription()

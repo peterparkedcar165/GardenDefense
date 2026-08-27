@@ -8,7 +8,6 @@ public class Zinnia : Aura
 
     private float auraTickTimer = 0f;
     private const float auraTickInterval   = 0.25f;
-    private const float auraEffectDuration = 0.35f;
 
     private float _sunnyTimer  = 0f;
     private bool  _sunnyActive = false;
@@ -143,7 +142,7 @@ public class Zinnia : Aura
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            plant.ApplyEffect(new ZinniaAuraEffect(plant, auraEffectDuration, 1, this, FireDamageBonus, MagicPowerBonus, EABonusAtMaxLevel));
+            plant.ApplyEffect(new ZinniaAuraEffect(plant, 1, this, attackRange, FireDamageBonus, MagicPowerBonus, EABonusAtMaxLevel));
         }
     }
 

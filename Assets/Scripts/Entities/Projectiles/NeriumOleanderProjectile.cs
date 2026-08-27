@@ -17,6 +17,7 @@ public class NeriumOleanderProjectile : Projectile
     private const float BounceHitPause = 0.05f;
     private float pauseTimer = 0f;
     private Insect pendingJustHit = null;
+    private OleanderSprout pendingJustHitSprout = null;
     private bool awaitingRetarget = false;
 
     public void SetBounceData(int bounces, float toxinDuration, int toxinLevel, float bounceSearchRadius, float bounceDamageReduction)
@@ -92,11 +93,12 @@ public class NeriumOleanderProjectile : Projectile
             Destroy(gameObject);
     }
 
-    // hitting a sprout is free: it doesn't cost a bounce charge, and can only trigger once per
-    // petal. any max-leveled sprout (not just this petal's own source's) grants +bounces, once
+    // hitting a sprout is free: it doesn't cost a bounce charge, and can be rebounced off of
+    // repeatedly (lets the petal ping-pong between sprouts when no insects are around instead
+    // of despawning). any max-leveled sprout (not just this petal's own source's) grants
+    // +bounces, but only the very first sprout hit of the petal's whole flight ever grants it
     private void HandleSproutHit(OleanderSprout sprout)
     {
-        if (hitSprouts.Contains(sprout)) return;
         hitSprouts.Add(sprout);
 
         if (!hasGainedSproutBounceBonus && sprout.owner != null && sprout.owner.IsPath3Maxed)
@@ -107,15 +109,16 @@ public class NeriumOleanderProjectile : Projectile
 
         trackedTarget = null;
         trackedInsect = null;
-        BeginBouncePause(null);
+        BeginBouncePause(null, sprout);
     }
 
     // freezes the petal in place at the point of impact; the actual retarget (and the
     // destroy-if-nothing-found fallback) happens once the pause elapses, in Move()
-    private void BeginBouncePause(Insect justHit)
+    private void BeginBouncePause(Insect justHitInsect, OleanderSprout justHitSprout = null)
     {
         pauseTimer = BounceHitPause;
-        pendingJustHit = justHit;
+        pendingJustHit = justHitInsect;
+        pendingJustHitSprout = justHitSprout;
         awaitingRetarget = true;
     }
 
@@ -130,14 +133,17 @@ public class NeriumOleanderProjectile : Projectile
                 if (!RetargetNextBounce(pendingJustHit))
                     Destroy(gameObject);
                 pendingJustHit = null;
+                pendingJustHitSprout = null;
             }
             return;
         }
         base.Move();
     }
 
-    // aims the petal at its next waypoint: a nearby un-bounced sprout takes priority (smart
-    // targeting), otherwise the nearest valid insect. returns false if nothing was found
+    // aims the petal at its next waypoint: an un-touched, Path3-max-owned sprout takes
+    // priority (smart targeting for the bonus bounces), otherwise the nearest valid insect.
+    // if nothing is left to fight, falls back to any sprout at all so the petal can keep
+    // ping-ponging in place instead of despawning. returns false if nothing was found at all
     private bool RetargetNextBounce(Insect justHit)
     {
         OleanderSprout sprout = FindBounceableSprout();
@@ -151,21 +157,37 @@ public class NeriumOleanderProjectile : Projectile
         }
 
         Insect next = FindNextBounceTarget(justHit);
-        if (next == null) return false;
+        if (next != null)
+        {
+            spawnPosition = transform.position;
+            trackedTarget = next.gameObject;
+            trackedInsect = next;
+            direction = (next.GetAimPoint() - transform.position).normalized;
+            return true;
+        }
 
-        spawnPosition = transform.position;
-        trackedTarget = next.gameObject;
-        trackedInsect = next;
-        direction = (next.GetAimPoint() - transform.position).normalized;
-        return true;
+        OleanderSprout anySprout = FindAnySproutInRange(pendingJustHitSprout);
+        if (anySprout != null)
+        {
+            spawnPosition = transform.position;
+            trackedTarget = anySprout.gameObject;
+            trackedInsect = null;
+            direction = ((Vector3)anySprout.transform.position - transform.position).normalized;
+            return true;
+        }
+
+        return false;
     }
 
     // mid-flight bounce priority only favors a sprout over a fresh insect target when the
     // sprout's owner is maxed: that's the only case where routing through it actually pays off
     // (the bonus bounces). an unmaxed sprout can still be hit incidentally (free pass-through,
-    // handled in OnTriggerEnter2D), it just isn't sought out over a live insect
+    // handled in OnTriggerEnter2D), it just isn't sought out over a live insect. once the bonus
+    // has already been secured once, there's nothing left to gain from seeking one out, so this
+    // stops entirely and lets insect targeting take priority as normal
     private OleanderSprout FindBounceableSprout()
     {
+        if (hasGainedSproutBounceBonus) return null;
         foreach (OleanderSprout s in OleanderSprout.allSprouts)
         {
             if (s == null || hitSprouts.Contains(s)) continue;
@@ -174,6 +196,26 @@ public class NeriumOleanderProjectile : Projectile
                 return s;
         }
         return null;
+    }
+
+    // last-resort fallback once no insect or bonus-eligible sprout remains: any sprout at all
+    // (touched or not, any owner) so the petal can keep ping-ponging instead of despawning.
+    // excludes the sprout it's physically sitting on right now to avoid a zero-distance self-loop
+    private OleanderSprout FindAnySproutInRange(OleanderSprout justHitSprout)
+    {
+        OleanderSprout nearest = null;
+        float nearestDist = bounceSearchRadius;
+        foreach (OleanderSprout s in OleanderSprout.allSprouts)
+        {
+            if (s == null || s == justHitSprout) continue;
+            float dist = Vector3.Distance(transform.position, s.transform.position);
+            if (dist < nearestDist)
+            {
+                nearestDist = dist;
+                nearest = s;
+            }
+        }
+        return nearest;
     }
 
     // at Path 1 max level, older targets become valid again, but only as a fallback once no

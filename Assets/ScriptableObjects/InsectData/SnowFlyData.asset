@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1db5fa3a174578b7525b641cf4d4f1, type: 3}
+  m_Name: SnowFlyData
+  m_EditorClassIdentifier: Assembly-CSharp::SnowFlyData
+  displayName: Snow Fly
+  nameColor: {r: 0.6981132, g: 0.9433962, b: 0.9433962, a: 1}
+  description: Fast but vulnerable, unbothered by the cold
+  passiveDescription: Slowing effects cannot reduce its Movement Speed below base.
+    Gains 25 Armor and Magic Armor while it is snowing
+  sprite: {fileID: 21300000, guid: e1247a6f7d64b60449fb8343389185f2, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: be6b9b5c8df82634ebb6902da46e4187, type: 3}
+  baseMaxHealth: 140
+  baseAttackDamage: 10
+  baseMagicPower: 0
+  baseAttackSpeed: 1
+  baseAttackRange: 0.3
+  baseMovementSpeed: 1
+  baseTargetingRange: 1.5
+  baseArmor: 0
+  baseMagicArmor: 0
+  attackDamageType: 0
+  attackElementalType: 4
+  baseLifesteal: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
+  baseTenacity: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0.15
+  baseGrassResistance: 0
+  baseWindResistance: 0
+  baseGroundResistance: 0
+  baseDotResistance: 0
+  flatPhysicalDamageReduction: 0
+  threatValue: 1
+  threatType: 0
+  baseEvasion: 0
+  baseAccuracy: 0
+  sunDrop: 7
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
+  aggressivity: 0
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  snowArmorBonus: 25

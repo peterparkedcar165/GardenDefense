@@ -1,10 +1,10 @@
-public class elementalAffinityBoostEffect : StatusEffect
+public class elementalAffinityBoostEffect : PlantAuraBuffEffect
 {
     public readonly float bonus;
     public readonly float magicPenFlatBonus;
 
-    public elementalAffinityBoostEffect(Entity target, float duration, int level, Entity source, float bonus, float magicPenFlatBonus = 0f)
-        : base(target, duration, level, source)
+    public elementalAffinityBoostEffect(Entity target, int level, Plant source, float range, float bonus, float magicPenFlatBonus = 0f)
+        : base(target, level, source, range)
     {
         this.bonus = bonus;
         this.magicPenFlatBonus = magicPenFlatBonus;
