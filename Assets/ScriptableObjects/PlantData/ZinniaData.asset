@@ -20,6 +20,7 @@ MonoBehaviour:
   elementalType: 0
   damageType: 1
   sunCost: 95
+  skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0
@@ -27,6 +28,8 @@ MonoBehaviour:
   baseAttackRange: 1.25
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -35,9 +38,12 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -54,10 +60,11 @@ MonoBehaviour:
   baseCounterDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 0
@@ -68,8 +75,8 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 240
-  baseSkillDuration: 40
+  baseSkillCooldown: 90
+  baseSkillDuration: 30
   channelDuration: 0
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0
@@ -79,14 +86,18 @@ MonoBehaviour:
   baseDetonationMultiplier: 0.45
   baseDetonationFlat: 25
   baseFireDamageBonus: 0.06
-  baseMagicPowerBonus: 12
+  baseMagicPowerBonus: 16
   basePassiveMultiplier: 0
-  baseElementalAffinityBonus: 0.52
+  baseElementalAffinityBonus: 0.25
   path1AttackSpeedPerLevel: 0.06
   path1AttackRangePerLevel: 0.15
   path1MaxAttackSpeedBonus: 0.3
+  baseAblazeMaxHealthPercent: 0.02
+  path1AblazeMaxHealthPercentPerLevel: 0.004
   path2FireDamageBonusPerLevel: 0.03
   path2MagicPowerBonusPerLevel: 6
-  path3SkillDurationPerLevel: 20
-  baseSkillIntensity: 0
+  path3SkillDurationPerLevel: 6
+  baseSkillIntensity: 1
   path3SunIntensityPerLevel: 1
+  baseSunHeatingPerSecond: 1
+  path3HeatingPerLevel: 0.1

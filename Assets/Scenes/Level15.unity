@@ -1351,11 +1351,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709538195}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dec57560eb949441981c1c7eff0342a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  groundTilemap: {fileID: 4252530058363853063}
   backdrop: {fileID: 0}
 --- !u!114 &1709538200
 MonoBehaviour:

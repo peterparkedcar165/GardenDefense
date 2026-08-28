@@ -16,8 +16,8 @@ public class AnemoneProjectile : Projectile
         {
             if (splashTarget == null || !splashTarget.IsAlive || splashTarget == insect) continue;
             if (Vector3.Distance(transform.position, splashTarget.transform.position) > anemone.SplashRadius) continue;
-            splashTarget.Damage(splashDmg, damageType, elementalType, source, false,
-                new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile });
+            splashTarget.Damage(splashDmg, damageType, elementalType, source, true,
+                new DamageTag[] { DamageTag.AoE });
         }
     }
 }

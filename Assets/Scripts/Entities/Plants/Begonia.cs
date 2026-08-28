@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 public class Begonia : Shooter
 {
-    private float auraTickTimer = 0f;
-    private const float auraTickInterval = 0.25f;
-
     private bool _isSkillTargeting = false;
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
@@ -33,6 +30,14 @@ public class Begonia : Shooter
     {
         base.Awake();
         LoadData();
+        Plant.OnPlantPlaced += HandlePlantPlaced;
+        ApplyAuraToAllInRange();
+    }
+
+    private void HandlePlantPlaced(Plant plant)
+    {
+        if (!IsAlive) return;
+        ApplyAuraToAllInRange();
     }
 
     public override void UpdateStats()
@@ -46,7 +51,6 @@ public class Begonia : Shooter
     protected override void Update()
     {
         base.Update();
-        UpdateAura();
         UpdateHighlights();
         UpdateAutoCast();
     }
@@ -57,12 +61,11 @@ public class Begonia : Shooter
         if (SkillReady) OnTargetConfirmed(autoCastPosition);
     }
 
-    private void UpdateAura()
+    // applied once on placement, on a Path2 upgrade, or whenever any new plant appears on the
+    // field (via Plant.OnPlantPlaced) — not re-scanned every tick. removal is handled entirely
+    // by elementalAffinityBoostEffect itself (PlantAuraBuffEffect base)
+    private void ApplyAuraToAllInRange()
     {
-        auraTickTimer += Time.deltaTime;
-        if (auraTickTimer < auraTickInterval) return;
-        auraTickTimer -= auraTickInterval;
-
         float magicPen = path2Level >= Plant.absoluteLevelCap ? 16f : 0f;
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
@@ -187,6 +190,7 @@ public class Begonia : Shooter
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        Plant.OnPlantPlaced -= HandlePlantPlaced;
         foreach (Plant p in _highlightedPlants)
             if (p != null) p.ClearHighlight();
     }
@@ -197,7 +201,7 @@ public class Begonia : Shooter
         baseAttackRange  = data.baseAttackRange  + (BData?.path1AttackRangePerLevel  ?? 0.2f) * level;
     }
 
-    public override void OnPath2Upgrade(int level) { }
+    public override void OnPath2Upgrade(int level) => ApplyAuraToAllInRange();
 
     public override void OnPath3Upgrade(int level)
     {

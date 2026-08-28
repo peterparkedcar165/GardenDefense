@@ -25,7 +25,7 @@ MonoBehaviour:
   baseAttackRange: 0.3
   baseMovementSpeed: 0.6
   baseTargetingRange: 1.5
-  baseArmor: 0
+  baseArmor: 23
   baseMagicArmor: 0
   attackDamageType: 0
   attackElementalType: 0
@@ -46,6 +46,7 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  flatPhysicalDamageReduction: 0
   threatValue: 1.2
   threatType: 0
   baseEvasion: 0

@@ -7,13 +7,16 @@ public class AnemoneData : PlantData
     public float splashRadius = 1.2f;
 
     [Header("Path 1 Scaling")]
-    public float path1AttackDamagePerLevel = 5f;
-    public float path1AttackRangePerLevel  = 0.2f;
+    public float path1AttackSpeedPerLevel = 0.05f;
+    public float path1AttackRangePerLevel = 0.2f;
 
     [Header("Path 2 Scaling")]
     public int   baseInitialErosionStacks     = 3;
     public int   path2InitialStacksPerLevel   = 1;
     public float baseReductionPerStack        = 0.5f;
+    public float baseErosionProcChance        = 0.5f;
+    public float path2ProcChancePerLevel      = 0.05f;
+    public float erosionDurationPerLevel      = 1f;
 
     [Header("Path 3 Scaling")]
     public float baseVortexRadius      = 1.5f;

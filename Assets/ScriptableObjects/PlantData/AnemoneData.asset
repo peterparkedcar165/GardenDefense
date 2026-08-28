@@ -20,13 +20,16 @@ MonoBehaviour:
   elementalType: 5
   damageType: 1
   sunCost: 95
+  skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 40
+  baseAttackDamage: 18
   baseMagicPower: 0
-  baseAttackSpeed: 0.65
+  baseAttackSpeed: 0.6
   baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 0.33
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -35,9 +38,12 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
+  baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -54,10 +60,11 @@ MonoBehaviour:
   baseCounterDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 3
@@ -67,7 +74,7 @@ MonoBehaviour:
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
-  basePassiveDuration: 16
+  basePassiveDuration: 6
   baseSkillCooldown: 4
   baseSkillDuration: 16
   channelDuration: 0
@@ -76,17 +83,20 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  splashRadius: 1.2
-  path1AttackDamagePerLevel: 12
+  splashRadius: 2
+  path1AttackSpeedPerLevel: 0.05
   path1AttackRangePerLevel: 0.2
-  baseInitialErosionStacks: 10
-  path2InitialStacksPerLevel: 2
+  baseInitialErosionStacks: 5
+  path2InitialStacksPerLevel: 1
   baseReductionPerStack: 1
-  baseVortexRadius: 1.5
-  path3RadiusPerLevel: 0.3
+  baseErosionProcChance: 0.5
+  path2ProcChancePerLevel: 0.05
+  erosionDurationPerLevel: 1
+  baseVortexRadius: 2
+  path3RadiusPerLevel: 0.2
   vortexDuration: 6
-  vortexDamagePerTick: 4
-  vortexTickInterval: 0.5
+  vortexDamagePerTick: 1
+  vortexTickInterval: 0.33
   vortexDragSpeed: 0.5
   path3DragSpeedPerLevel: 0.1
   vortexDetonationDamage: 200

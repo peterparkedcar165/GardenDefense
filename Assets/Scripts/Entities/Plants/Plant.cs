@@ -432,9 +432,16 @@ public abstract class Plant : Entity, IAttackable
         UpdateStats();
         health = maxHealth;
         UpdateHealthBar();
+        OnPlantPlaced?.Invoke(this);
     }
 
-    private int[] GetAllSortingLayerIDs()
+    // fires once a plant's stats are actually valid (end of LoadData, not Awake — subclasses
+    // call LoadData from their own Awake, after their data-driven fields are set up). lets
+    // stationary aura plants (Hellebore, Begonia, Zinnia, Calendula) react when a new plant
+    // appears nearby, instead of re-scanning the whole field every tick
+    public static event System.Action<Plant> OnPlantPlaced;
+
+    protected int[] GetAllSortingLayerIDs()
     {
         var layers = UnityEngine.SortingLayer.layers;
         int[] ids = new int[layers.Length];
@@ -935,7 +942,7 @@ public abstract class Plant : Entity, IAttackable
         if (elementalType == ElementalType.Wind && occupiedTile != null && occupiedTile.isHighground)
             return 1;
 
-        if (elementalType == ElementalType.Ice && WeatherManager.instance?.temperature == TemperatureType.Cold)
+        if (elementalType == ElementalType.Ice && HasEffect<SnowExposedEffect>())
             return 1;
 
         return 0;

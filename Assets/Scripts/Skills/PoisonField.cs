@@ -27,6 +27,8 @@ public class PoisonField : MonoBehaviour
 
     private void Update()
     {
+        if (source == null || !source.IsAlive) { Die(); return; }
+
         duration -= Time.deltaTime;
         if (duration <= 0f) { Die(); return; }
 

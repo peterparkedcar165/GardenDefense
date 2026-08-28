@@ -10,6 +10,11 @@ public class Glowshroom : Shooter
 
     private bool _lightColored = false;
 
+    // no targeting needed: the skill just flashes from her own position
+    private bool autoCastEnabled = false;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
+
     private float SplashRadius       => GMData?.splashRadius              ?? 1.5f;
     private float SplashMultBase     => GMData?.splashDamageMultiplier    ?? 0.5f;
     private float SplashMultMP       => (GMData?.splashDamageMPMultiplier ?? 0.5f) * magicPower / 100f;
@@ -30,6 +35,21 @@ public class Glowshroom : Shooter
     protected override void Update()
     {
         base.Update();
+
+        if (autoCastEnabled && SkillReady)
+            ActivateSkill();
+    }
+
+    // click Auto Cast to toggle it on, click again to turn it off — no target to pick
+    public override void ToggleAutoCast() => autoCastEnabled = !autoCastEnabled;
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled) return;
+        autoCastEnabled = true;
     }
 
     protected override void Shoot(Vector3 target)

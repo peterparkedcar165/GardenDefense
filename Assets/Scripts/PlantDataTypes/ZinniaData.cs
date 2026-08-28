@@ -17,6 +17,8 @@ public class ZinniaData : PlantData
     public float path1AttackSpeedPerLevel  = 0.08f;
     public float path1AttackRangePerLevel  = 0.15f;
     public float path1MaxAttackSpeedBonus  = 0.4f;
+    public float baseAblazeMaxHealthPercent           = 0.03f;
+    public float path1AblazeMaxHealthPercentPerLevel  = 0.01f;
 
     [Header("Path 2 Scaling")]
     public float path2FireDamageBonusPerLevel  = 0.04f;
@@ -26,6 +28,8 @@ public class ZinniaData : PlantData
     public float path3SkillDurationPerLevel = 2f;
     public int   baseSkillIntensity         = 0;
     public int   path3SunIntensityPerLevel  = 1;
+    public float baseSunHeatingPerSecond    = 1f;
+    public float path3HeatingPerLevel       = 0.2f;
 
     public override string GetAttackDescription() =>
         $"Releases fiery sparks dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to nearby insects. Nearby plants take no damage and are instead marked with <color=orange><b>Ablaze</b></color>.";
@@ -34,5 +38,5 @@ public class ZinniaData : PlantData
         "Plants within her radius gain <color=orange><b>Zinnia's Warmth</b></color>, increasing <color=orange><b>Fire Damage</b></color> and <color=#FFB6C1><b>Magic Power</b></color>.";
 
     public override string GetSkillDescription() =>
-        "Call upon the sun, changing the weather to <color=orange><b>Sunny</b></color> for a duration.";
+        "Emits an artificial sun, granting Sunlight Exposure and warmth to plants within its radius for a duration.";
 }

@@ -39,6 +39,28 @@ public class Snowdrop : Aura
         blizzardWidth  = data.baseSkillRadius;
         _obstacleMask  = LayerMask.GetMask("Obstacle");
         heatResistanceAdder += BonusHeatResistance;
+        Plant.OnPlantPlaced += HandlePlantPlaced;
+        ApplyCoolingToAllInRange();
+    }
+
+    private void HandlePlantPlaced(Plant plant)
+    {
+        if (!IsAlive) return;
+        ApplyCoolingToAllInRange();
+    }
+
+    // applied once on placement, on a Path2 upgrade, or whenever any new plant appears on the
+    // field (via Plant.OnPlantPlaced) — not re-scanned every tick. removal is handled entirely
+    // by CoolingEffect itself (PlantAuraBuffEffect base)
+    private void ApplyCoolingToAllInRange()
+    {
+        if (WeatherManager.instance == null || WeatherManager.instance.temperature != TemperatureType.Hot) return;
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive || plant == this) continue;
+            if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+            plant.ApplyEffect(new CoolingEffect(plant, 1, this, attackRange, CoolingPerSecond));
+        }
     }
 
     protected override void Update()
@@ -55,16 +77,6 @@ public class Snowdrop : Aura
             attackCooldownTimer += Time.deltaTime;
         else if (!IsStunned && !IsChanneling && HasInsectsInRange())
             Attack();
-
-        if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Hot)
-        {
-            foreach (Plant plant in Plant.allPlants)
-            {
-                if (plant == null || !plant.IsAlive) continue;
-                if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
-                plant.ApplyEffect(new CoolingEffect(plant, 1, this, attackRange, CoolingPerSecond));
-            }
-        }
 
         UpdateBlizzardIndicator();
     }
@@ -152,6 +164,7 @@ public class Snowdrop : Aura
     public override void OnPath2Upgrade(int level)
     {
         chillLevel = 1 + level;
+        ApplyCoolingToAllInRange();
     }
 
     public override void UpdateStats()
@@ -217,6 +230,7 @@ public class Snowdrop : Aura
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        Plant.OnPlantPlaced -= HandlePlantPlaced;
         if (_blizzardInstance != null) Destroy(_blizzardInstance);
     }
 

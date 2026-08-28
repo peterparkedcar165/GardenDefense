@@ -187,7 +187,9 @@ public abstract class Insect : Entity, IAttackable
         if (ScalesWithWave)
         {
             int waveNumber = GameManager.instance.currentWave;
-            baseMaxHealth *= 1f + ((waveNumber-1) * 0.22f);
+            baseMaxHealth   *= 1f + ((waveNumber-1) * 0.22f);
+            armorAdder      += (waveNumber - 1) * 0.5f;
+            magicArmorAdder += (waveNumber - 1) * 0.5f;
         }
         UpdateStats();
         health = maxHealth;

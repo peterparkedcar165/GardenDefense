@@ -57,6 +57,12 @@ public class Blizzard : MonoBehaviour
 
     private void Update()
     {
+        if (source == null || !source.IsAlive)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         duration -= Time.deltaTime;
         if (duration <= 0f)
         {

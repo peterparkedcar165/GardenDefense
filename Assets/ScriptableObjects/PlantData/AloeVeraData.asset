@@ -42,6 +42,8 @@ MonoBehaviour:
   baseWindResistance: 1
   baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -73,7 +75,7 @@ MonoBehaviour:
   projectileHeight: 4
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 90
+  baseSkillCooldown: 60
   baseSkillDuration: 15
   channelDuration: 0
   baseSkillRadius: 2
@@ -91,5 +93,5 @@ MonoBehaviour:
   path2HealPerLevel: 8
   path2TempReductionPerLevel: 1
   path3SkillHealPerLevel: 4
-  path3SkillDurationPerLevel: 2
+  path3SkillDurationPerLevel: 3
   path3RadiusPerLevel: 0.3

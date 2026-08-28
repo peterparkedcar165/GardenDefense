@@ -20,6 +20,7 @@ public class QueenAnt : Ant
     protected override void Update()
     {
         base.Update();
+        if (HasEffect<HardCrowdControl>()) return;
         if (!isSpawning)
         {
             spawnTimer += Time.deltaTime;
@@ -43,6 +44,8 @@ public class QueenAnt : Ant
         float interval = 1f / antsPerSpawn;
         for (int i = 0; i < antsPerSpawn; i++)
         {
+            while (HasEffect<HardCrowdControl>())
+                yield return null;
             SpawnRandomAnt();
             yield return new WaitForSeconds(interval);
         }

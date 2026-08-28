@@ -11,8 +11,6 @@ public class Calendula : Aura
     public float FloralGlowDamageScaling =>
         (CData?.floralGlowBaseDamageScaling ?? 0.25f) + (CData?.floralGlowDamageScalingPerLevel ?? 0.05f) * effectivePath3Level;
 
-    private float _illuminationAuraTimer = 0f;
-
     private bool autoCastEnabled = false;
     private Tile autoCastTargetTile = null;
     private Plant _autoCastHighlighted;
@@ -23,6 +21,28 @@ public class Calendula : Aura
     {
         base.Awake();
         LoadData();
+        Plant.OnPlantPlaced += HandlePlantPlaced;
+        ApplyAuraToAllInRange();
+    }
+
+    private void HandlePlantPlaced(Plant plant)
+    {
+        if (!IsAlive) return;
+        ApplyAuraToAllInRange();
+    }
+
+    // applied once on placement, on reaching Path2 max, or whenever any new plant appears on
+    // the field (via Plant.OnPlantPlaced) — not re-scanned every tick. removal is handled
+    // entirely by CalendulasLightEffect itself (PlantAuraBuffEffect base)
+    private void ApplyAuraToAllInRange()
+    {
+        if (!IsPath2Maxed) return;
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
+            plant.ApplyEffect(new CalendulasLightEffect(plant, 1, this, lightEmissionRange, 0.15f));
+        }
     }
 
     protected override bool ShowLight => DarknessManager.instance != null && (DarknessManager.instance.isDark || DarknessManager.instance.pitchBlack);
@@ -43,21 +63,6 @@ public class Calendula : Aura
             attackCooldownTimer += Time.deltaTime;
         else if (!IsStunned && !IsChanneling && HasInsectsInRange())
             Attack();
-
-        if (IsPath2Maxed && IsAlive)
-        {
-            _illuminationAuraTimer += Time.deltaTime;
-            if (_illuminationAuraTimer >= 1f)
-            {
-                _illuminationAuraTimer -= 1f;
-                foreach (Plant plant in Plant.allPlants)
-                {
-                    if (plant == null || !plant.IsAlive) continue;
-                    if (Vector2.Distance(transform.position, plant.transform.position) <= lightEmissionRange)
-                        plant.ApplyEffect(new CalendulasLightEffect(plant, 1, this, lightEmissionRange, 0.15f));
-                }
-            }
-        }
 
         if (autoCastEnabled)
         {
@@ -101,6 +106,7 @@ public class Calendula : Aura
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        Plant.OnPlantPlaced -= HandlePlantPlaced;
         _autoCastHighlighted?.ClearHighlight();
     }
 
@@ -254,6 +260,7 @@ public class Calendula : Aura
     public override void OnPath2Upgrade(int level)
     {
         baseAttackRange = data.baseAttackRange + (CData?.path2AttackRangePerLevel ?? 0.175f) * level;
+        ApplyAuraToAllInRange();
     }
 
     public override void OnPath3Unlock()

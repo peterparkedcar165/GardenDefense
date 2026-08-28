@@ -5,6 +5,11 @@ public class LeafRanger : Shooter
     public override bool ShowRangeCircle => false;
     private LeafRangerData LRData => data as LeafRangerData;
 
+    // no targeting needed: the skill just buffs herself
+    private bool autoCastEnabled = false;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
+
     protected override void Awake()
     {
         base.Awake();
@@ -29,6 +34,21 @@ public class LeafRanger : Shooter
     {
         base.Update();
         basePiercing = data.basePiercing + effectivePath2Level;
+
+        if (autoCastEnabled && SkillReady)
+            ActivateSkill();
+    }
+
+    // click Auto Cast to toggle it on, click again to turn it off — no target to pick
+    public override void ToggleAutoCast() => autoCastEnabled = !autoCastEnabled;
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled) return;
+        autoCastEnabled = true;
     }
 
     public override bool IsValidNightTarget(Insect insect, float distance) => true;

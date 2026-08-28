@@ -51,7 +51,8 @@ public class SnowGridManager : MonoBehaviour
 
                 Vector3Int cell = groundTilemap.WorldToCell(worldPos);
 
-                bool hasCollider         = colliderTilemap         != null && colliderTilemap.HasTile(cell);
+                bool hasCollider         = (colliderTilemap != null && colliderTilemap.HasTile(cell))
+                                         || (lightColliderTilemap != null && lightColliderTilemap.HasTile(cell));
                 bool hasPath             = pathTilemap             != null && pathTilemap.HasTile(cell);
                 bool hasWater            = waterTilemap            != null && waterTilemap.HasTile(cell);
                 bool hasHeat             = heatTilemap             != null && heatTilemap.HasTile(cell);

@@ -1,7 +1,7 @@
 public class SunlightExposedEffect : StatusEffect
 {
-    private const float baseBonus    = 0.12f;
-    private const float bonusPerLevel = 0.08f;
+    public const float baseBonus    = 0.12f;
+    public const float bonusPerLevel = 0.08f;
 
     private readonly float bonus;
 

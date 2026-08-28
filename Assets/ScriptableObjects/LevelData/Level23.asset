@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 23
   weather:
-  - type: 0
+  - type: 4
     intensity: 1
   temperature: 4
   maxWaves: 45

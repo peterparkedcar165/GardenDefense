@@ -17,7 +17,7 @@ MonoBehaviour:
   - type: 4
     intensity: 1
   temperature: 4
-  maxWaves: 50
+  maxWaves: 55
   startSunCount: 1500
   startHealth: 200
   maxUpgradeLevel: 5
@@ -49,7 +49,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   restDuration: 15
   minThreatBudget: 10
-  maxThreatBudget: 450
+  maxThreatBudget: 550
   budgetCurve:
     serializedVersion: 2
     m_Curve:

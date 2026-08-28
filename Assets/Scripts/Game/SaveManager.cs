@@ -95,6 +95,27 @@ public class SaveManager : MonoBehaviour
             LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log("Reset to level 1 only");
         }
+        if (UnityEngine.InputSystem.Keyboard.current.minusKey.wasPressedThisFrame)
+        {
+            if (saveData.highestLevelUnlocked > 0)
+            {
+                string plant = GetPlantUnlockedByLevel(saveData.highestLevelUnlocked);
+                if (plant != null) saveData.unlockedPlants.Remove(plant);
+                saveData.highestLevelUnlocked--;
+            }
+            Save();
+            LoadoutSelectionUI.instance?.RefreshUI();
+            Debug.Log($"highestLevelUnlocked decreased to {saveData.highestLevelUnlocked}");
+        }
+        if (UnityEngine.InputSystem.Keyboard.current.equalsKey.wasPressedThisFrame)
+        {
+            int maxLevel = plantRegistry != null ? plantRegistry.plants.Length - 1 : 40;
+            saveData.highestLevelUnlocked = Mathf.Min(maxLevel, saveData.highestLevelUnlocked + 1);
+            RepairPlantsFromLevels();
+            Save();
+            LoadoutSelectionUI.instance?.RefreshUI();
+            Debug.Log($"highestLevelUnlocked increased to {saveData.highestLevelUnlocked}");
+        }
         if (UnityEngine.InputSystem.Keyboard.current.oKey.wasPressedThisFrame)
         {
             saveData.flowerPotLevel = 0;

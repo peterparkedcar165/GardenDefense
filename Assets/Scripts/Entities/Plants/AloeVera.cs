@@ -19,6 +19,11 @@ public class AloeVera : Lobber
     private bool _isSkillTargeting = false;
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
+    private bool autoCastEnabled = false;
+    private Vector3 autoCastPosition;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
+
     private AloeVeraData AVData => data as AloeVeraData;
     private float DrizzleBarrierDuration => 16f * (1f + skillDurationMultiplier) + skillDurationAdder;
 
@@ -58,6 +63,38 @@ public class AloeVera : Lobber
     {
         base.Update();
         UpdateHighlights();
+
+        if (autoCastEnabled && SkillReady)
+            CastSoothingRain(autoCastPosition);
+    }
+
+    // click Auto Cast to pick a target, click again to turn it off
+    public override void ToggleAutoCast()
+    {
+        if (autoCastEnabled)
+        {
+            autoCastEnabled = false;
+            return;
+        }
+        _isSkillTargeting = true;
+        SkillTargetingManager.instance.BeginTargeting(baseSkillRadius, OnAutoCastTargetConfirmed);
+    }
+
+    private void OnAutoCastTargetConfirmed(Vector3 position)
+    {
+        _isSkillTargeting = false;
+        autoCastEnabled = true;
+        autoCastPosition = position;
+    }
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled, targetPosition = autoCastPosition };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled) return;
+        autoCastEnabled = true;
+        autoCastPosition = state.targetPosition;
     }
 
     public override GameObject FindLobberTarget()
@@ -130,6 +167,12 @@ public class AloeVera : Lobber
     private void OnTargetConfirmed(Vector3 position)
     {
         _isSkillTargeting = false;
+        CastSoothingRain(position);
+    }
+
+    // shared by the manual skill cast and auto cast, does not reopen targeting on its own
+    private void CastSoothingRain(Vector3 position)
+    {
         skillCooldownTimer = skillCooldown;
         BeginChannel();   // can't attack until the rain appears (set channelDuration in data)
         StartCoroutine(ChannelAndSpawn(position));
@@ -154,6 +197,16 @@ public class AloeVera : Lobber
                     desired.Add(plant);
             }
             highlightColor = Color.cyan;
+        }
+        else if (autoCastEnabled && isSelected)
+        {
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == null) continue;
+                if (Vector2.Distance(autoCastPosition, plant.transform.position) <= baseSkillRadius)
+                    desired.Add(plant);
+            }
+            highlightColor = Color.yellow;
         }
         else if (isSelected)
         {

@@ -5,14 +5,14 @@ public class Zinnia : Aura
 {
     private ZinniaData ZData => data as ZinniaData;
     [SerializeField] private GameObject fireBurstPrefab;
-
-    private float auraTickTimer = 0f;
-    private const float auraTickInterval   = 0.25f;
-
-    private float _sunnyTimer  = 0f;
-    private bool  _sunnyActive = false;
+    [SerializeField] private float sunRadiusMultiplier = 2f;
 
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
+
+    // no targeting needed: the skill just conjures the sun at her own position
+    private bool autoCastEnabled = false;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => autoCastEnabled;
 
     private float FireDamageBonusBase => (ZData?.baseFireDamageBonus ?? 0f)   + (ZData?.path2FireDamageBonusPerLevel ?? 0.04f) * effectivePath2Level;
     private float FireDamageBonusMP   => (ZData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
@@ -20,12 +20,22 @@ public class Zinnia : Aura
     private float MagicPowerBonus     => (ZData?.baseMagicPowerBonus ?? 0f)   + (ZData?.path2MagicPowerBonusPerLevel ?? 5f)    * effectivePath2Level;
     private float EABonusAtMaxLevel   => IsPath2Maxed ? (ZData?.baseElementalAffinityBonus ?? 0.1f) : 0f;
     public  float AblazeBonusDamage   => (ZData?.baseDetonationMultiplier ?? 0.6f) * magicPower + (ZData?.baseDetonationFlat ?? 15f);
+    public  float AblazeMaxHealthPercent => (ZData?.baseAblazeMaxHealthPercent ?? 0.03f) + (ZData?.path1AblazeMaxHealthPercentPerLevel ?? 0.01f) * effectivePath1Level;
     private int   SunIntensity        => (ZData?.baseSkillIntensity ?? 0) + (ZData?.path3SunIntensityPerLevel ?? 1) * effectivePath3Level;
+    private float SunHeatingPerSecond => (ZData?.baseSunHeatingPerSecond ?? 1f) + (ZData?.path3HeatingPerLevel ?? 0.2f) * effectivePath3Level;
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
+        Plant.OnPlantPlaced += HandlePlantPlaced;
+        ApplyAuraToAllInRange();
+    }
+
+    private void HandlePlantPlaced(Plant plant)
+    {
+        if (!IsAlive) return;
+        ApplyAuraToAllInRange();
     }
 
     public override void UpdateStats()
@@ -45,9 +55,22 @@ public class Zinnia : Aura
         else if (!IsStunned && !IsChanneling && (HasInsectsInRange() || HasPlantsInRange()))
             Attack();
 
-        UpdateAura();
-        UpdateSunnyTimer();
+        if (autoCastEnabled && SkillReady)
+            ActivateSkill();
+
         UpdateHighlights();
+    }
+
+    // click Auto Cast to toggle it on, click again to turn it off — no target to pick
+    public override void ToggleAutoCast() => autoCastEnabled = !autoCastEnabled;
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = autoCastEnabled };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled) return;
+        autoCastEnabled = true;
     }
 
     protected override void Attack()
@@ -105,7 +128,7 @@ public class Zinnia : Aura
         List<Plant> plants = GetPlantsInRange();
         foreach (Plant plant in plants)
         {
-            plant.ApplyEffect(new AblazeEffect(plant, 8f, 1, this, AblazeBonusDamage));
+            plant.ApplyEffect(new AblazeEffect(plant, 8f, 1, this, AblazeBonusDamage, AblazeMaxHealthPercent));
         }
     }
 
@@ -132,28 +155,16 @@ public class Zinnia : Aura
         return false;
     }
 
-    private void UpdateAura()
+    // applied once on placement, on a Path2 upgrade, or whenever any new plant appears on the
+    // field (via Plant.OnPlantPlaced) — not re-scanned every tick. removal is handled entirely
+    // by ZinniaAuraEffect itself (PlantAuraBuffEffect base)
+    private void ApplyAuraToAllInRange()
     {
-        auraTickTimer += Time.deltaTime;
-        if (auraTickTimer < auraTickInterval) return;
-        auraTickTimer -= auraTickInterval;
-
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             plant.ApplyEffect(new ZinniaAuraEffect(plant, 1, this, attackRange, FireDamageBonus, MagicPowerBonus, EABonusAtMaxLevel));
-        }
-    }
-
-    private void UpdateSunnyTimer()
-    {
-        if (!_sunnyActive) return;
-        _sunnyTimer -= Time.deltaTime;
-        if (_sunnyTimer <= 0f)
-        {
-            _sunnyActive = false;
-            WeatherManager.instance.RemoveWeather(WeatherType.Sunny);
         }
     }
 
@@ -186,18 +197,21 @@ public class Zinnia : Aura
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        Plant.OnPlantPlaced -= HandlePlantPlaced;
         foreach (Plant p in _highlightedPlants)
             if (p != null) p.ClearHighlight();
     }
+
+    // lightEmissionRangeMultiplier is applied here directly rather than through lightEmissionRange
+    // itself, since that stat scales off baseLightEmissionRange (0 for Zinnia) and would otherwise
+    // always multiply out to zero regardless of any Illumination Range Multiplier fertilizer roll
+    private float ArtificialSunRadius => (attackRange * sunRadiusMultiplier + lightEmissionRange) * (1f + lightEmissionRangeMultiplier);
 
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
         skillCooldownTimer = skillCooldown;
-        WeatherManager.instance.ClearAllWeather();
-        WeatherManager.instance.SetWeather(WeatherType.Sunny, SunIntensity);
-        _sunnyTimer  = skillDuration;
-        _sunnyActive = true;
+        ApplyEffect(new ArtificialSunEffect(this, skillDuration, this, ArtificialSunRadius, SunIntensity, LightIntensity, SunHeatingPerSecond, IsPath3Maxed));
     }
 
     public override void OnPath1Upgrade(int level)
@@ -206,7 +220,7 @@ public class Zinnia : Aura
         baseAttackRange = data.baseAttackRange + (ZData?.path1AttackRangePerLevel ?? 0.15f) * level;
     }
 
-    public override void OnPath2Upgrade(int level) { }
+    public override void OnPath2Upgrade(int level) => ApplyAuraToAllInRange();
 
     public override void OnPath3Upgrade(int level)
     {
@@ -223,12 +237,14 @@ public class Zinnia : Aura
         float aspl  = ZData?.path1AttackSpeedPerLevel ?? 0.08f;
         float arpl  = ZData?.path1AttackRangePerLevel ?? 0.15f;
         float maxAS = ZData?.path1MaxAttackSpeedBonus ?? 0.4f;
+        float ablazepl = ZData?.path1AblazeMaxHealthPercentPerLevel ?? 0.01f;
         string desc = details
-            ? $"Releases fiery sparks dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects in range. Nearby plants instead take no damage and are marked with <color=orange><b>Ablaze</b></color>, causing their next attack to deal <color=green><b>[({ZData?.baseDetonationFlat ?? 15f:F0}) + ({(ZData?.baseDetonationMultiplier ?? 0.6f) * 100f:F0}% <color=#FFB6C1>Magic Power</color>)]</b></color> bonus <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage."
-            : $"Releases fiery sparks dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects in range. Nearby plants instead take no damage and are marked with <color=orange><b>Ablaze</b></color>, causing their next attack to deal <color=orange><b>{AblazeBonusDamage:F0}</b></color> bonus <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage.";
+            ? $"Releases fiery sparks dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects in range. Nearby plants instead take no damage and are marked with <color=orange><b>Ablaze</b></color>, causing their next attack to deal <color=green><b>[({ZData?.baseDetonationFlat ?? 15f:F0}) + ({(ZData?.baseDetonationMultiplier ?? 0.6f) * 100f:F0}% <color=#FFB6C1>Magic Power</color>)]</b></color> + <color=green><b>[({(ZData?.baseAblazeMaxHealthPercent ?? 0.03f) * 100f:F0}%) + ({ablazepl * 100f:F0}%/Lvl.)]</b></color> of the target's Max Health as bonus <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage."
+            : $"Releases fiery sparks dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects in range. Nearby plants instead take no damage and are marked with <color=orange><b>Ablaze</b></color>, causing their next attack to deal <color=orange><b>{AblazeBonusDamage:F0}</b></color> + <color=orange><b>{AblazeMaxHealthPercent * 100f:F0}%</b></color> of the target's Max Health as bonus <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Attack Range</b></color> by <color=green><b>{arpl:F2}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase <color=orange><b>Ablaze</b></color> Max Health damage by <color=green><b>{ablazepl * 100f:F1}%</b></color> per level. [<color=green><b>+{ablazepl * effectivePath1Level * 100f:F1}%</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Increases {GetName()}'s own <color=green><b>Attack Speed</b></color> by <color=green><b>{maxAS * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -255,13 +271,21 @@ public class Zinnia : Aura
     {
         float durpl = ZData?.path3SkillDurationPerLevel ?? 2f;
         int   sipl  = ZData?.path3SunIntensityPerLevel ?? 1;
+        float baseHeat = ZData?.baseSunHeatingPerSecond ?? 1f;
+        float heatpl   = ZData?.path3HeatingPerLevel    ?? 0.2f;
         string desc = details
-            ? $"Call upon the sun, changing the weather to <color=orange><b>Sunny</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds or until another plant changes the weather."
-            : $"Call upon the sun, changing the weather to <color=orange><b>Sunny</b></color> for <color=green><b>{skillDuration:F0}s</b></color> or until another plant changes the weather.";
+            ? $"Gather energy from within to conjure an <color=orange><b>Artificial Sun</b></color> that shines within a radius of <color=green><b>{ArtificialSunRadius:F1}</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Plants illuminated by the sunlight receive the effects of being <color=green><b>Exposed to Sunlight</b></color> at intensity <color=green><b>[({ZData?.baseSkillIntensity ?? 0}) + ({sipl}/Lvl.)]</b></color>. The <color=orange><b>Artificial Sun</b></color> also emits heat, warming up plants for <color=green><b>[({baseHeat:F1}) + ({heatpl:F1}/Lvl.)]</b></color> per second."
+            : GetSkillDesription();
+        string exposureBreakdown = details
+            ? $"<color=green><b>[Exposed to Sunlight]</b></color>: Increase <color=orange><b>Fire Damage</b></color> by <color=green><b>{SunlightExposedEffect.baseBonus * 100f:F0}% + {SunlightExposedEffect.bonusPerLevel * 100f:F0}%</b></color> per level of intensity. Decrease <color=#4FC3F7><b>Water Damage</b></color> by <color=green><b>{SunlightExposedEffect.baseBonus * 100f:F0}% + {SunlightExposedEffect.bonusPerLevel * 100f:F0}%</b></color> per level of intensity.\n\n"
+            : "";
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase duration by <color=green><b>{durpl:F0}s</b></color> per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
-               $"Base <color=orange><b>Sun Intensity</b></color>: <color=green><b>{ZData?.baseSkillIntensity ?? 0}</b></color>. Increase by <color=green><b>{sipl}</b></color> per level. [<color=green><b>{SunIntensity}</b></color>]\n\n" +
+               exposureBreakdown +
+               $"Increase <color=orange><b>Artificial Sun</b></color> lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
+               $"Increase intensity by <color=green><b>{sipl}</b></color> per level. [<color=green><b>{SunIntensity}</b></color>]\n\n" +
+               $"Increase warming by <color=green><b>{heatpl:F1}</b></color> per second per level. [<color=green><b>+{heatpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
+               $"{Level5Section(path3Level, $"<color=orange><b>Fire</b></color> plants illuminated by the <color=orange><b>Artificial Sun</b></color> benefit from an additional <color=green><b>Passive</b></color> level bonus.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -273,5 +297,5 @@ public class Zinnia : Aura
         $"Plants within her radius gain <color=orange><b>Zinnia's Warmth</b></color>: <color=orange><b>+{FireDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{FireDamageBonusMP * 100f:F0}%</b></color>] Fire Damage, <color=#FFB6C1><b>+{MagicPowerBonus:F0}</b></color> Magic Power.";
 
     public override string GetSkillDesription() =>
-        $"Change the weather to <color=orange><b>Sunny</b></color> for <color=green><b>{skillDuration:F0}s</b></color>.";
+        $"Gather energy from within to conjure an <color=orange><b>Artificial Sun</b></color> that shines within a radius of <color=green><b>{ArtificialSunRadius:F1}</b></color> for <color=green><b>{skillDuration:F0}</b></color> seconds. Plants illuminated by the sunlight receive the effects of being <color=green><b>Exposed to Sunlight</b></color> at intensity <color=green><b>{SunIntensity}</b></color>. The <color=orange><b>Artificial Sun</b></color> also emits heat, warming up plants for <color=green><b>{SunHeatingPerSecond:F1}</b></color> per second.";
 }

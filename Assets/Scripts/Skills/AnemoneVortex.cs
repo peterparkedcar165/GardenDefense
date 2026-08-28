@@ -25,6 +25,8 @@ public class AnemoneVortex : MonoBehaviour
     private static readonly DamageTag[] vortexTags     = { DamageTag.AoE, DamageTag.SkillDamage };
     private static readonly DamageTag[] detonationTags = { DamageTag.AoE, DamageTag.SkillDamage };
 
+    [SerializeField] private GameObject detonationBurstPrefab;
+
     public void Initialize(float radius, float duration, float damagePerTick, float tickInterval,
         float dragSpeed, float detonationDamage, float detonationRadius, float knockbackForce,
         bool detonatesOnExpiry, bool isAirborne, Plant source)
@@ -41,12 +43,21 @@ public class AnemoneVortex : MonoBehaviour
         this.isAirborne        = isAirborne;
         this.source            = source;
 
-        float s = radius * 2f;
-        transform.localScale = new Vector3(s, s, 1f);
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null) sr.enabled = false;
+
+        ParticleSystem particles = GetComponentInChildren<ParticleSystem>();
+        if (particles != null)
+        {
+            ParticleSystem.ShapeModule shape = particles.shape;
+            shape.radius = radius;
+        }
     }
 
     private void Update()
     {
+        if (source == null || !source.IsAlive) { Destroy(gameObject); return; }
+
         duration -= Time.deltaTime;
         if (duration <= 0f) { Expire(); return; }
 
@@ -93,6 +104,8 @@ public class AnemoneVortex : MonoBehaviour
     {
         if (detonatesOnExpiry)
         {
+            SpawnDetonationBurst();
+
             List<Insect> snapshot = new List<Insect>(Insect.allInsects);
             foreach (Insect insect in snapshot)
             {
@@ -109,5 +122,20 @@ public class AnemoneVortex : MonoBehaviour
             }
         }
         Destroy(gameObject);
+    }
+
+    private void SpawnDetonationBurst()
+    {
+        if (detonationBurstPrefab == null) return;
+        GameObject obj = Instantiate(detonationBurstPrefab, transform.position, Quaternion.identity);
+        ParticleSystem burst = obj.GetComponentInChildren<ParticleSystem>();
+        if (burst == null) return;
+
+        ParticleSystem.ShapeModule shape = burst.shape;
+        shape.radius = radius;
+
+        // let the engine destroy it once every particle has finished, instead of guessing a delay
+        ParticleSystem.MainModule main = burst.main;
+        main.stopAction = ParticleSystemStopAction.Destroy;
     }
 }

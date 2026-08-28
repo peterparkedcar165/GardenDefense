@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7583304469d80404c865070d0ca44501, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fc3c2962c624badb32bc7d67f01f29e, type: 3}
   m_Name: SnailData
-  m_EditorClassIdentifier: Assembly-CSharp::InsectData
+  m_EditorClassIdentifier: Assembly-CSharp::SnailData
   displayName: Snail
   nameColor: {r: 0.5188679, g: 0.5188679, b: 0.40383586, a: 1}
   description: Slow, armored, and moist.
-  passiveDescription: Starts shielded. Whenever the Snail is shielded, it gains 60%
-    Physical Resistance. Otherwise, increases Movement Speed
+  passiveDescription: Starts shielded. Whenever the Snail is shielded, it gains 150
+    Armor. Otherwise, increases Movement Speed by 50%
   sprite: {fileID: 21300000, guid: 6e83769186f25154dab65705b4a8e62c, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d0a925c758eadd44eb3532b9a2eeee0f, type: 3}
   baseMaxHealth: 2800
@@ -26,8 +26,8 @@ MonoBehaviour:
   baseAttackRange: 0.3
   baseMovementSpeed: 0.4
   baseTargetingRange: 1.5
-  baseArmor: 0
-  baseMagicArmor: 0
+  baseArmor: 23
+  baseMagicArmor: 23
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0
@@ -47,6 +47,7 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  flatPhysicalDamageReduction: 0
   threatValue: 1.7
   threatType: 1
   baseEvasion: 0
@@ -61,3 +62,5 @@ MonoBehaviour:
   baseLightEmissionRange: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
+  armorBonusWhileShielded: 150
+  moveSpeedBonusWhileUnshielded: 0.5

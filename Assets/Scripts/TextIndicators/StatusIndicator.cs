@@ -15,6 +15,7 @@ public class StatusIndicator : TextIndicator
         tmpText.color     = color;
         tmpText.fontStyle = FontStyles.Bold | FontStyles.Italic;
         tmpText.fontSize += 1f;
+        tmpText.fontSize *= 0.5f;
         tmpText.text      = text;
     }
 }

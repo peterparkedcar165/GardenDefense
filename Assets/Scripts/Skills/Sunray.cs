@@ -53,7 +53,7 @@ public class Sunray : MonoBehaviour
         float elapsed = 0f;
         float nextTick = 0f;
 
-        while (elapsed < duration)
+        while (elapsed < duration && source != null && source.IsAlive)
         {
             elapsed += Time.deltaTime;
             float rotY = Mathf.Sin(elapsed * oscillationSpeed) * oscillationAngle;

@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\TextIndicators\SunIndicator.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\Skills\AcornBomb.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ArtificialSunEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\ScorpionData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BogIrisData.cs" />
@@ -318,6 +319,7 @@
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GeyseredEffect.cs" />
+    <Compile Include="Assets\Scripts\InsectDataTypes\SnailData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantGuardianEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\FireAntData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IElementalAffinityEffect.cs" />

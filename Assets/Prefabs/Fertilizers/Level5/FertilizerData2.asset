@@ -17,7 +17,7 @@ MonoBehaviour:
   - statType: 1
     value: 0.25
   - statType: 48
-    value: 0.25
+    value: -0.25
   icon: {fileID: 0}
   targetElementalTypes: 
   targetCultivars: 

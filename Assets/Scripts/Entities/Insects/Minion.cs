@@ -44,6 +44,7 @@ public class Minion : Insect
     protected override void Update()
     {
         base.Update();
+        if (owner == null || !owner.IsAlive) { Kill(); return; }
         UpdateRangeCircle();
         _lifeTimer += Time.deltaTime;
         if (_lifeTimer >= lifetime) Kill();

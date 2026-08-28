@@ -64,6 +64,8 @@ public class WindGust : MonoBehaviour
 
     private void Update()
     {
+        if (source == null || !source.IsAlive) { Destroy(gameObject); return; }
+
         duration -= Time.deltaTime;
         if (duration <= 0f) { Destroy(gameObject); return; }
 

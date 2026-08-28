@@ -5,9 +5,7 @@ public class Hellebore : Shooter
 {
     private HelleboreData HData => data as HelleboreData;
 
-    private float _auraTick;
     private float _autoShieldCooldownTimer;
-    private const float AuraTickInterval    = 0.25f;
     private const float AutoShieldThreshold = 0.25f;
 
     private string AutoShieldCooldownText
@@ -45,6 +43,14 @@ public class Hellebore : Shooter
     {
         base.Awake();
         LoadData();
+        Plant.OnPlantPlaced += HandlePlantPlaced;
+        ApplyAuraToAllInRange();
+    }
+
+    private void HandlePlantPlaced(Plant plant)
+    {
+        if (!IsAlive) return;
+        ApplyAuraToAllInRange();
     }
 
     public override void UpdateStats()
@@ -56,10 +62,11 @@ public class Hellebore : Shooter
         base.UpdateStats();
     }
 
+    public override void OnPath2Upgrade(int level) => ApplyAuraToAllInRange();
+
     protected override void Update()
     {
         base.Update();
-        TickAura();
         UpdateHighlights();
 
         if (IsPath3Maxed && path3Unlocked && IsAlive)
@@ -139,12 +146,12 @@ public class Hellebore : Shooter
         }
     }
 
-    private void TickAura()
+    // applied once on placement, on a Path2 upgrade, or whenever any new plant appears on the
+    // field (via Plant.OnPlantPlaced) — not re-scanned every tick. removal is handled entirely
+    // by HelleboreAuraEffect itself (PlantAuraBuffEffect base), which checks every frame whether
+    // this Hellebore is still alive and in range, and expires itself if not
+    private void ApplyAuraToAllInRange()
     {
-        _auraTick += Time.deltaTime;
-        if (_auraTick < AuraTickInterval) return;
-        _auraTick -= AuraTickInterval;
-
         float armorBonus      = AuraArmor;
         float magicArmorBonus = IsPath2Maxed ? armorBonus * 0.5f : 0f;
         foreach (Plant plant in Plant.allPlants)
@@ -224,6 +231,7 @@ public class Hellebore : Shooter
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        Plant.OnPlantPlaced -= HandlePlantPlaced;
         foreach (Plant p in _highlightedPlants)
             if (p != null) p.ClearHighlight();
         _autoCastHighlighted?.ClearHighlight();
@@ -241,7 +249,7 @@ public class Hellebore : Shooter
         $"Each attack hit reduces skill cooldown by <color=green><b>{CDRPerHit:F1}s</b></color>. " +
         $"Hellebore gains <color=#00CED1><b>{baseArmor}</b></color> Base Armor " +
         $"[<color=#FFB6C1><b>+{(HData?.selfArmorMP ?? 0.14f) * 100f:F0}% Magic Power</b></color>]. " +
-        $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
+        $"Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
         $"increasing their Armor by <color=green><b>{AuraShare * 100f:F0}%</b></color> of Hellebore's Armor " +
         $"(<color=#00CED1><b>{(int)AuraArmor}</b></color>).";
 
@@ -283,7 +291,7 @@ public class Hellebore : Shooter
         string desc = details
             ? $"Each attack hit reduces skill cooldown by <color=green><b>[({HData?.passiveCDRPerHit ?? 0.5f:F1}) + ({cdrpl:F1}/Lvl.)]</b></color> seconds. " +
               $"Hellebore gains <color=#00CED1><b>[({HData?.selfArmorBase ?? 14}) + ({armorpl}/Lvl.)]</b></color> Base Armor <color=#FFB6C1>[+{armorMP * 100f:F0}% Magic Power]</color>. " +
-              $"Plants within attack range gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
+              $"Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
               $"increasing their Armor by <color=green><b>[({HData?.auraShareBase ?? 0.5f:F0}%) + ({auraShpl * 100f:F0}%/Lvl.)]</b></color> of Hellebore's Armor."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +

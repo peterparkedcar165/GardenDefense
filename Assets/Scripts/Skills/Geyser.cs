@@ -3,8 +3,11 @@ using System.Collections.Generic;
 
 public class Geyser : MonoBehaviour
 {
+    private Plant source;
+
     public void Initialize(Vector3 position, float radius, float knockDuration, float damage, float knockUpForce, Plant source)
     {
+        this.source = source;
         transform.localScale = new Vector3(radius * 2f, radius * 2f, 1f);
 
         List<Insect> snapshot = new List<Insect>(Insect.allInsects);
@@ -19,5 +22,10 @@ public class Geyser : MonoBehaviour
         }
 
         Destroy(gameObject, knockDuration + 0.5f);
+    }
+
+    private void Update()
+    {
+        if (source == null || !source.IsAlive) Destroy(gameObject);
     }
 }
