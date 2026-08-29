@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public enum WeatherType { Clear, Sunny, Rain, Windy, Snow, Sandstorm }
+public enum WeatherType { Clear, Sunny, Rain, Windy, Snow, Sandstorm, Underwater }
 public enum TemperatureType { Hot, Warm, Normal, Chill, Cold }
 
 [System.Serializable]
@@ -115,6 +115,7 @@ public class WeatherManager : MonoBehaviour
             case WeatherType.Windy:     return "<color=#B2EBF2>Windy</color>";
             case WeatherType.Snow:      return "<color=#00FFFF>Snow</color>";
             case WeatherType.Sandstorm: return "<color=#E8D9A8>Sandstorm</color>";
+            case WeatherType.Underwater: return "<color=#1B6CA8>Underwater</color>";
             default:                    return type.ToString();
         }
     }
@@ -131,6 +132,7 @@ public class WeatherManager : MonoBehaviour
             case WeatherType.Windy:     return "Strong winds sweep across the battlefield.";
             case WeatherType.Snow:      return $"Snowfall empowers the <color=#00FFFF>Ice</color> damage of all plants by <color=green><b>{bonus}%</b></color>.";
             case WeatherType.Sandstorm: return "A harsh sandstorm blankets the area.";
+            case WeatherType.Underwater: return $"Plants are <color=#1B6CA8><b>Submerged</b></color>: their <color=green><b>Air</b></color> depletes over time unless mitigated by <color=green><b>Respiration</b></color>. Non-<color=#4FC3F7>Water</color> plants have their Projectile Speed halved, <color=orange>Fire</color> damage is reduced by <color=red><b>50%</b></color>, and <color=#4FC3F7>Water</color> damage is increased by <color=green><b>20%</b></color>.";
             default:                    return "";
         }
     }

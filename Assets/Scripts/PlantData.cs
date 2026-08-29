@@ -43,6 +43,7 @@ public class PlantData : ScriptableObject
     public float baseDotResistance;
     public float baseHeatResistance;   // slows temperature rise in Hot weather, does not reduce the resulting damage
     public float baseColdResistance;   // slows temperature drop in Cold weather, does not reduce the resulting damage
+    public float baseRespiration;      // slows Air depletion while Submerged, same shape as heat/cold resistance
 
     [Header("Offensive")]
     public float basePhysicalDamage;

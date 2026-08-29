@@ -200,6 +200,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\AeoniumBlessedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
     <Compile Include="Assets\Scripts\PlantButton.cs" />
+    <Compile Include="Assets\Scripts\GridManagers\UnderwaterGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SeededEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\HarvestmanData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AnemoneData.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\GhostFungus.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Zinnia.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SunMarkEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\IRespirationEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\GlowshroomProjectile.cs" />
@@ -310,6 +312,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\BegoniaProjectile.cs" />
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\ZinniaData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SubmergedEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />

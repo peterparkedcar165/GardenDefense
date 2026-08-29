@@ -83,5 +83,6 @@ public enum StatType
     MaximumDamage,
     ElementalEffectChance,
     HeatResistance,
-    ColdResistance
+    ColdResistance,
+    Respiration
 }

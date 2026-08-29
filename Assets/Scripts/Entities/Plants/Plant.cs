@@ -252,6 +252,7 @@ public abstract class Plant : Entity, IAttackable
         temperatureMax = baseTemperatureMax + temperatureMaxAdder;
         heatResistance = baseHeatResistance + heatResistanceAdder + (baseHeatResistance * heatResistanceMultiplier);
         coldResistance = baseColdResistance + coldResistanceAdder + (baseColdResistance * coldResistanceMultiplier);
+        respiration = baseRespiration + respirationAdder;
         passiveCooldown = Mathf.Max(basePassiveCooldown * 0.2f, basePassiveCooldown + passiveCooldownAdder + (basePassiveCooldown * passiveCooldownMultiplier) - (basePassiveCooldown * passiveCooldownReductionMultiplier));
         passiveDuration = basePassiveDuration + passiveDurationAdder + (basePassiveDuration * passiveDurationMultiplier);
         skillCooldown = Mathf.Max(baseSkillCooldown * 0.2f, baseSkillCooldown - skillCooldownReductionAdder - (baseSkillCooldown * skillCooldownReductionMultiplier));
@@ -326,6 +327,12 @@ public abstract class Plant : Entity, IAttackable
     public float baseHeatResistance, heatResistanceAdder, heatResistanceMultiplier, heatResistance;
     public float baseColdResistance, coldResistanceAdder, coldResistanceMultiplier, coldResistance;
 
+    [Header("Air")]
+    // 0-100 resource that depletes while Submerged (Underwater weather), mirrors Temperature
+    public float air = 100f;
+    // percentage: slows how fast Air depletes while Submerged, same shape as heat/cold resistance
+    public float baseRespiration, respirationAdder, respiration;
+
     [Header("Passive")]
     public float basePassiveCooldown, passiveCooldown, passiveCooldownAdder, passiveCooldownReductionMultiplier, passiveCooldownMultiplier;
     public float passiveCooldownTimer;
@@ -386,6 +393,7 @@ public abstract class Plant : Entity, IAttackable
         baseDotResistance      = data.baseDotResistance;
         baseHeatResistance     = data.baseHeatResistance;
         baseColdResistance     = data.baseColdResistance;
+        baseRespiration        = data.baseRespiration;
         basePhysicalDamage     = data.basePhysicalDamage;
         baseMagicDamage        = data.baseMagicDamage;
         baseArmorPenFlat       = data.baseArmorPenFlat;
@@ -683,9 +691,10 @@ public abstract class Plant : Entity, IAttackable
     {
         switch (w)
         {
-            case WeatherType.Sunny: ApplyEffect(new SunlightExposedEffect(this, this, intensity)); break;
-            case WeatherType.Rain:  ApplyEffect(new RainExposedEffect(this, this, intensity));     break;
-            case WeatherType.Snow:  ApplyEffect(new SnowExposedEffect(this, this, intensity));    break;
+            case WeatherType.Sunny:      ApplyEffect(new SunlightExposedEffect(this, this, intensity)); break;
+            case WeatherType.Rain:       ApplyEffect(new RainExposedEffect(this, this, intensity));     break;
+            case WeatherType.Snow:       ApplyEffect(new SnowExposedEffect(this, this, intensity));    break;
+            case WeatherType.Underwater: ApplyEffect(new SubmergedEffect(this, this, intensity));      break;
         }
     }
 
@@ -693,9 +702,10 @@ public abstract class Plant : Entity, IAttackable
     {
         switch (w)
         {
-            case WeatherType.Sunny: RemoveEffect<SunlightExposedEffect>(); break;
-            case WeatherType.Rain:  RemoveEffect<RainExposedEffect>();     break;
-            case WeatherType.Snow:  RemoveEffect<SnowExposedEffect>();    break;
+            case WeatherType.Sunny:      RemoveEffect<SunlightExposedEffect>(); break;
+            case WeatherType.Rain:       RemoveEffect<RainExposedEffect>();     break;
+            case WeatherType.Snow:       RemoveEffect<SnowExposedEffect>();    break;
+            case WeatherType.Underwater: RemoveEffect<SubmergedEffect>();      break;
         }
     }
 
@@ -845,6 +855,53 @@ public abstract class Plant : Entity, IAttackable
             SetHighlight(Color.white);
 
         UpdateTemperature();
+        UpdateAir();
+    }
+
+    private float airDamageTimer;
+    private int airDamageTicks;   // consecutive ticks spent at 0 Air, resets on recovery
+
+    // mirrors UpdateTemperature: only relevant while actually Submerged (Underwater weather).
+    // an active IRespirationEffect flips depletion into regeneration at that effect's own rate,
+    // instead of just slowing the drain the way Respiration (the resistance stat) does
+    private void UpdateAir()
+    {
+        if (!HasEffect<SubmergedEffect>()) return;
+
+        IRespirationEffect bestRespiration = null;
+        foreach (StatusEffect e in activeEffects)
+        {
+            if (e is IRespirationEffect r && (bestRespiration == null || r.RespirationRegenPerSecond > bestRespiration.RespirationRegenPerSecond))
+                bestRespiration = r;
+        }
+
+        bool inAirBubble = occupiedTile != null && occupiedTile.isAirBubble;
+
+        if (bestRespiration != null)
+            // the Respiration stat also boosts regen while an IRespirationEffect is active,
+            // not just the depletion mitigation
+            air = Mathf.Min(air + bestRespiration.RespirationRegenPerSecond * (1f + respiration) * Time.deltaTime, 100f);
+        else if (!inAirBubble)
+            air = Mathf.Max(air - 10f * Mathf.Max(0f, 1f - respiration) * Time.deltaTime, 0f);
+
+        // same ramping rate/formula as running out of comfort on temperature, just Wind True damage
+        if (air <= 0f)
+        {
+            airDamageTimer += Time.deltaTime;
+            if (airDamageTimer >= 2f)
+            {
+                airDamageTimer = 0f;
+                airDamageTicks++;
+                float dmg = maxHealth * 0.03f * 2f + maxHealth * TemperatureDamageRampPerTick * (airDamageTicks - 1);
+                Damage(dmg, DamageType.True, ElementalType.Wind, temperatureDamageTags);
+                DamageIndicator.Spawn(GetIndicatorPosition(), dmg, ElementalType.Wind, false);
+            }
+        }
+        else
+        {
+            airDamageTimer = 0f;
+            airDamageTicks = 0;
+        }
     }
 
     private static readonly DamageTag[] temperatureDamageTags = { DamageTag.Weather };

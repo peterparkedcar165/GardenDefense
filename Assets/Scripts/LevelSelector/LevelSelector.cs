@@ -7,6 +7,7 @@ public class LevelSelector : MonoBehaviour
 {
     [SerializeField] private Button level1, level2, level3, level4, level5, level6, level7, level8, level9, level10, level11, level12, level13, level14, level15, previousPage, nextPage;
     [SerializeField] private Button level16, level17, level18, level19, level20, level21, level22, level23, level24, level25;
+    [SerializeField] private Button level26, level27, level28, level29, level30;
     void Start()
     {
         int highestLevelUnlocked = SaveManager.instance.saveData.highestLevelUnlocked;
@@ -35,6 +36,11 @@ public class LevelSelector : MonoBehaviour
         if (level23 != null) level23.interactable = highestLevelUnlocked >= 22;
         if (level24 != null) level24.interactable = highestLevelUnlocked >= 23;
         if (level25 != null) level25.interactable = highestLevelUnlocked >= 24;
+        if (level26 != null) level26.interactable = highestLevelUnlocked >= 25;
+        if (level27 != null) level27.interactable = highestLevelUnlocked >= 26;
+        if (level28 != null) level28.interactable = highestLevelUnlocked >= 27;
+        if (level29 != null) level29.interactable = highestLevelUnlocked >= 28;
+        if (level30 != null) level30.interactable = highestLevelUnlocked >= 29;
         //previousPage.interactable = true;
        // nextPage.interactable = true;
     }
@@ -79,6 +85,11 @@ public class LevelSelector : MonoBehaviour
         if (level23 != null) level23.interactable = false;
         if (level24 != null) level24.interactable = false;
         if (level25 != null) level25.interactable = false;
+        if (level26 != null) level26.interactable = false;
+        if (level27 != null) level27.interactable = false;
+        if (level28 != null) level28.interactable = false;
+        if (level29 != null) level29.interactable = false;
+        if (level30 != null) level30.interactable = false;
         //previousPage.interactable = false;
         //nextPage.interactable = false;
     }

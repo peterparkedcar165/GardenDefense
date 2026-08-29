@@ -67,6 +67,7 @@ public static class PlantStatApplier
             case StatType.CurrencyYield:                plant.currencyYieldMultiplier      += value; break;
             case StatType.HeatResistance:                plant.heatResistanceAdder          += value; break;
             case StatType.ColdResistance:                plant.coldResistanceAdder          += value; break;
+            case StatType.Respiration:                   plant.respirationAdder             += value; break;
         }
     }
 }

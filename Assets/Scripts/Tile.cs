@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public enum TileType
 {
-    Grass, Dirt, Water, Path, Potted, WaterPotted, Cave, Obstacle, Sand, Snow, Heat
+    Grass, Dirt, Water, Path, Potted, WaterPotted, Cave, Obstacle, Sand, Snow, Heat, Seafloor
     /* Grass-element plants will be able to be placed on Grass, others won't, except for Flower Pot
     Every plant that is non-aquatic will be placeable on Dirt and Potted
     Aquatic plants can be placed in Water, Pondplanters allow terrian plants to be placed on water
@@ -28,6 +28,8 @@ public class Tile : MonoBehaviour
     // true if this exact tile radiates heat, independent of its resolved tileType — lets a
     // heat tile also be painted as a collider/path/water tile without losing its warmth
     public bool isHeatSource    = false;
+    // true for Underwater levels' air bubble tiles: a plant standing here doesn't lose Air
+    public bool isAirBubble     = false;
     public FlowerPot flowerPot;
     public WaterPot  waterPot;
 

@@ -97,6 +97,7 @@ public static class FertilizerFormat
             case StatType.CurrencyYield:                    return "Currency Yield";
             case StatType.HeatResistance:                   return "Heat Resistance";
             case StatType.ColdResistance:                   return "Cold Resistance";
+            case StatType.Respiration:                      return "Respiration";
             default:                                        return statType.ToString();
         }
     }

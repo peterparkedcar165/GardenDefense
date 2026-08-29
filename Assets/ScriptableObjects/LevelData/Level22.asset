@@ -135,4 +135,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4fe73e7add2d06844a758bb0948abe64, type: 2}
   - {fileID: 11400000, guid: 66296567bc76cba48b5e78ae1146ca24, type: 2}
   - {fileID: 11400000, guid: a5f8892c51345f540af0abc332726db2, type: 2}
-  ambience: {fileID: 0}
+  ambience: {fileID: 11400000, guid: a4de42a35d3694545b7cbe9faff06683, type: 2}
