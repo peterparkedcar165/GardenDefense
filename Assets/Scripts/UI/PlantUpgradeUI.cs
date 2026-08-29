@@ -478,6 +478,13 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     private void RefreshTemperatureBar(Plant plant)
     {
+        // Underwater levels replace the whole bar with Air instead of Temperature
+        if (plant.HasEffect<SubmergedEffect>())
+        {
+            RefreshAirBar(plant);
+            return;
+        }
+
         bool isTempLevel = WeatherManager.instance != null &&
             (WeatherManager.instance.temperature == TemperatureType.Hot ||
              WeatherManager.instance.temperature == TemperatureType.Cold);
@@ -508,12 +515,49 @@ public class PlantUpgradeUI : EntityInfoPanel
                 tempStateText.text = "Comfort";
         }
 
+        if (tempComfortMinIndicator != null) tempComfortMinIndicator.gameObject.SetActive(true);
+        if (tempComfortMaxIndicator != null) tempComfortMaxIndicator.gameObject.SetActive(true);
+
         float min = plant.temperatureMin, max = plant.temperatureMax;
         SetTempIndicator(tempCurrentIndicator,    plant.temperature, min, max);
         SetTempIndicator(tempComfortMinIndicator, plant.comfortMin,  min, max);
         SetTempIndicator(tempComfortMaxIndicator, plant.comfortMax,  min, max);
         SetTempIndicator(tempMinIndicator,        min,               min, max);
         SetTempIndicator(tempMaxIndicator,        max,               min, max);
+    }
+
+    // --- Air Bar (Underwater levels' replacement for the Temperature bar) ---
+
+    private static readonly Color AirColor = new Color(0.698f, 0.922f, 0.949f); // #B2EBF2
+
+    private void RefreshAirBar(Plant plant)
+    {
+        if (tempBarRoot != null)
+            tempBarRoot.SetActive(true);
+
+        Color airColor = plant.air <= 0f ? Color.red : AirColor;
+
+        if (tempBarBackground != null)
+            tempBarBackground.color = airColor;
+
+        if (tempText != null)
+        {
+            tempText.text  = $"{plant.air:F0}";
+            tempText.color = airColor;
+        }
+
+        if (tempStateText != null)
+            tempStateText.text = "Oxygen";
+
+        // Air has no comfort range, unlike Temperature — hide those indicators entirely
+        if (tempComfortMinIndicator != null) tempComfortMinIndicator.gameObject.SetActive(false);
+        if (tempComfortMaxIndicator != null) tempComfortMaxIndicator.gameObject.SetActive(false);
+
+        // left side of the bar is 0, right side is 100
+        const float min = 0f, max = 100f;
+        SetTempIndicator(tempCurrentIndicator, plant.air, min, max);
+        SetTempIndicator(tempMinIndicator,     min,       min, max);
+        SetTempIndicator(tempMaxIndicator,     max,       min, max);
     }
 
     private static void SetTempIndicator(RectTransform indicator, float value, float min, float max)

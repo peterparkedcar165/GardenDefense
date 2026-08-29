@@ -6,4 +6,9 @@
 public interface IRespirationEffect
 {
     float RespirationRegenPerSecond { get; }
+
+    // called by Plant.UpdateAir() with the amount actually regenerated this tick, so a source
+    // that turns granted Oxygen into a resource (e.g. Kelp's Sun generation) can be credited
+    // for it even though the effect itself never touches Air directly
+    void OnOxygenGranted(float amount);
 }

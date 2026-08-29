@@ -21,6 +21,9 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
         tickInterval = 1f;
         // the source can extend the Burns it causes (Stargazer passive)
         if (source != null) this.duration *= 1f + source.burnDurationBonus;
+        // water douses fire: while the level is Underwater, Burn only lasts a quarter as long
+        if (WeatherManager.instance != null && WeatherManager.instance.HasWeather(WeatherType.Underwater))
+            this.duration *= 0.25f;
     }
 
     public override string GetName() => "<color=orange>Burn</color>";

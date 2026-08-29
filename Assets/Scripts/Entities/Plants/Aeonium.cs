@@ -42,9 +42,8 @@ public class Aeonium : Shooter
         // passive: generate sun on a timer
         if (passiveCooldownTimer <= 0)
         {
-            int granted = GenerateSun(_sunGenerated);
+            GenerateSun(_sunGenerated);
             passiveCooldownTimer += passiveCooldown * (1f + sunGenerationCooldown);
-            SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), granted);
         }
     }
 
@@ -65,8 +64,7 @@ public class Aeonium : Shooter
             if (_shotCounter >= 4)
             {
                 _shotCounter = 0;
-                int granted = GenerateSun(8);
-                SunIndicator.Spawn(transform.position + new Vector3(0.25f, 0.5f, 0f), granted);
+                GenerateSun(8);
             }
         }
     }
@@ -82,8 +80,7 @@ public class Aeonium : Shooter
             passiveCooldownTimer -= _sunTimerReduction;
             if (IsPath3Maxed && plant.HasEffect<BlessingOfTheSunEffect>())
             {
-                int granted = GenerateSun(1);
-                SunIndicator.Spawn(plant.transform.position + new Vector3(0.25f, 0.5f, 0f), granted);
+                GenerateSun(1, plant.transform.position);
             }
         }
     }

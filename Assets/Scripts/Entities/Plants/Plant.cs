@@ -861,6 +861,16 @@ public abstract class Plant : Entity, IAttackable
     private float airDamageTimer;
     private int airDamageTicks;   // consecutive ticks spent at 0 Air, resets on recovery
 
+    // Oxygen equivalent of Heal(): scales by this plant's own Respiration internally, and
+    // returns the (Respiration-scaled) amount actually provided, so callers that track
+    // cumulative Oxygen handed out (e.g. Kelp's Sun production) can accumulate the real total
+    public float ReplenishOxygen(float amount)
+    {
+        float scaled = amount * (1f + respiration);
+        air = Mathf.Min(air + scaled, 100f);
+        return scaled;
+    }
+
     // mirrors UpdateTemperature: only relevant while actually Submerged (Underwater weather).
     // an active IRespirationEffect flips depletion into regeneration at that effect's own rate,
     // instead of just slowing the drain the way Respiration (the resistance stat) does
@@ -878,9 +888,13 @@ public abstract class Plant : Entity, IAttackable
         bool inAirBubble = occupiedTile != null && occupiedTile.isAirBubble;
 
         if (bestRespiration != null)
+        {
             // the Respiration stat also boosts regen while an IRespirationEffect is active,
             // not just the depletion mitigation
-            air = Mathf.Min(air + bestRespiration.RespirationRegenPerSecond * (1f + respiration) * Time.deltaTime, 100f);
+            float regen = bestRespiration.RespirationRegenPerSecond * (1f + respiration) * Time.deltaTime;
+            air = Mathf.Min(air + regen, 100f);
+            bestRespiration.OnOxygenGranted(regen);
+        }
         else if (!inAirBubble)
             air = Mathf.Max(air - 10f * Mathf.Max(0f, 1f - respiration) * Time.deltaTime, 0f);
 
@@ -931,6 +945,11 @@ public abstract class Plant : Entity, IAttackable
                     else
                         // Cold Resistance only slows the cold-driven drop, not the recovery above
                         temperature -= 1f * Mathf.Max(0f, 1f - coldResistance) * Time.deltaTime;
+                    break;
+                default:
+                    // Warm/Normal/Chill aren't extreme enough to drive Temperature at all: force it
+                    // back into Comfort instead of leaving it stuck wherever a prior Hot/Cold left it
+                    temperature = Mathf.Clamp(temperature, comfortMin, comfortMax);
                     break;
             }
         }
@@ -1299,12 +1318,14 @@ public abstract class Plant : Entity, IAttackable
     public bool IsAlive => health > 0;
     public Vector3 Position => transform.position;
 
-    // generates sun scaled by this plant's sunYieldMultiplier, rounded up (sun can't be decimal).
-    // returns the total granted so callers can show the right indicator amount
-    protected int GenerateSun(int amount)
+    // generates sun scaled by this plant's sunYieldMultiplier, rounded up (sun can't be decimal),
+    // and pops the +Sun indicator at indicatorPosition (defaults to this plant's own position,
+    // e.g. Aeonium granting sun via a nearby plant's Blessing passes that plant's position instead)
+    protected int GenerateSun(int amount, Vector3? indicatorPosition = null)
     {
         int total = Mathf.CeilToInt(amount * (1f + sunYieldMultiplier));
         GameManager.instance?.AddSun(total);
+        SunIndicator.Spawn((indicatorPosition ?? transform.position) + new Vector3(0.25f, 0.5f, 0f), total);
         return total;
     }
 

@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd2ad10252d4fd8ad692efb02723adf, type: 3}
+  m_Name: KelpData
+  m_EditorClassIdentifier: Assembly-CSharp::KelpData
+  plantPrefab: {fileID: 4477910278792148574, guid: 035f94db913d1f94eaa8e91b5787f2b7, type: 3}
+  icon: {fileID: 21300000, guid: 45a5652c854f11244b9618c4866be32d, type: 3}
+  plantName: Kelp
+  displayName: Kelp
+  cultivar: 0
+  elementalType: 5
+  damageType: 0
+  sunCost: 95
+  skillTree: {fileID: 0}
+  baseMaxHealth: 200
+  baseAttackDamage: 35
+  baseMagicPower: 0
+  baseAttackSpeed: 0.8
+  baseAttackRange: 2
+  baseArmor: 0
+  baseMagicArmor: 0
+  baseElementalEffectChance: 0.03
+  baseOnHitEffectiveness: 1
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  startingShield: 0
+  baseTenacity: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0.3
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseGrassResistance: 0
+  baseWindResistance: 0
+  baseGroundResistance: 0
+  baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
+  baseRespiration: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  baseLifesteal: 0
+  baseBonusEffectChance: 0
+  baseCriticalChance: 0.05
+  baseCriticalDamage: 1.75
+  baseDotDamage: 0
+  baseelementalAffinity: 0
+  baseCoordinatedDamage: 0
+  baseCounterDamage: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseGrassDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseGroundDamage: 0
+  baseLightEmissionRange: 0
+  baseMinionDamage: 0
+  baseProjectileSpeed: 0
+  baseMaxRange: 0
+  basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
+  basePassiveCooldown: 0
+  basePassiveDuration: 0
+  baseSkillCooldown: 45
+  baseSkillDuration: 12
+  channelDuration: 0
+  baseSkillRadius: 0
+  baseSkillDamageMultiplier: 0
+  baseSkillHealth: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
+  attackSplashRadius: 1
+  path1AttackDamagePerLevel: 5
+  path1AttackRangePerLevel: 0.4
+  baseOxygenReplenish: 10
+  path2OxygenReplenishPerLevel: 2
+  baseOxygenRequirement: 100
+  path2OxygenRequirementReductionPerLevel: 10
+  path2AttackSpeedPerLevel: 0.06
+  bubbleTravelSpeed: 5
+  bubbleMaxRange: 60
+  baseBubbleWidth: 2
+  path3BubbleWidthPerLevel: 0.25
+  baseBubbleInitialOxygen: 20
+  path3BubbleInitialOxygenPerLevel: 4
+  baseBubbleRegenPerSecond: 2
+  path3BubbleRegenPerLevel: 0.5
+  path3DurationPerLevel: 2

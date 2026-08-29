@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SunlightExposedEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\PlantStatApplier.cs" />
+    <Compile Include="Assets\Scripts\Skills\KelpBubbleProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CactusData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ColdAuraEffect.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WinterMoth.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\KelpData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\TextIndicator.cs" />
@@ -360,6 +362,7 @@
     <Compile Include="Assets\Scripts\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\CaveSpider.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\AirBubbleEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Glowworm.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Stargazer.cs" />
@@ -390,6 +393,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DeliciousAcornEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\EmberProjectile.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DesertLocustData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\Kelp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
