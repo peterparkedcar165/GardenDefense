@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData3
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Bulwark
+  fertilizerName: Sunlight
   stats:
-  - statType: 24
-    value: 0.25
-  - statType: 47
+  - statType: 26
+    value: 0.5
+  - statType: 22
     value: 0.25
   - statType: 14
     value: 0.25
