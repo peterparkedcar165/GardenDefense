@@ -166,7 +166,7 @@ public class NeriumOleanderProjectile : Projectile
             return true;
         }
 
-        OleanderSprout anySprout = FindAnySproutInRange(pendingJustHitSprout);
+        OleanderSprout anySprout = FindAnySproutInRange();
         if (anySprout != null)
         {
             spawnPosition = transform.position;
@@ -198,16 +198,18 @@ public class NeriumOleanderProjectile : Projectile
         return null;
     }
 
-    // last-resort fallback once no insect or bonus-eligible sprout remains: any sprout at all
-    // (touched or not, any owner) so the petal can keep ping-ponging instead of despawning.
-    // excludes the sprout it's physically sitting on right now to avoid a zero-distance self-loop
-    private OleanderSprout FindAnySproutInRange(OleanderSprout justHitSprout)
+    // last-resort fallback once no insect or bonus-eligible sprout remains: any untouched
+    // sprout so the petal can keep ping-ponging instead of despawning. excludes every sprout
+    // already in hitSprouts (not just the one just left), so once every sprout in range has
+    // been visited once, this correctly comes up empty instead of endlessly replaying the
+    // same two sprouts back and forth forever
+    private OleanderSprout FindAnySproutInRange()
     {
         OleanderSprout nearest = null;
         float nearestDist = bounceSearchRadius;
         foreach (OleanderSprout s in OleanderSprout.allSprouts)
         {
-            if (s == null || s == justHitSprout) continue;
+            if (s == null || hitSprouts.Contains(s)) continue;
             float dist = Vector3.Distance(transform.position, s.transform.position);
             if (dist < nearestDist)
             {

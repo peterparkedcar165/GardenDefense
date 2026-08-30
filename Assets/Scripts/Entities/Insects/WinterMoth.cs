@@ -31,4 +31,10 @@ public class WinterMoth : Moth
         movementSpeed = Mathf.Max(movementSpeed, baseMovementSpeed);
         flightSpeed = 2f * movementSpeed;
     }
+
+    public override void ApplyEffect(StatusEffect effect)
+    {
+        if (effect is FreezeEffect) return;
+        base.ApplyEffect(effect);
+    }
 }

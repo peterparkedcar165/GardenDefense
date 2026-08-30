@@ -769,10 +769,20 @@ public abstract class Entity : MonoBehaviour
         timeAlive += Time.deltaTime;
         TickEffects();
 
-        // keep the health bar fill proportion in sync when maxHealth changes (buffs, effects, etc.)
+        // keep current health in sync when maxHealth changes (buffs, effects, etc.): a maxHealth
+        // increase carries the same gain into current health (so e.g. a plant that only gains its
+        // placement-based maxHealth bonus a frame or two after spawn doesn't stay stuck missing that
+        // health forever), while a decrease just clamps health down to avoid an overheal display.
+        // _lastMaxHealth starts at -1 as a sentinel so the very first tick only syncs, never heals
         if (maxHealth != _lastMaxHealth)
         {
+            if (_lastMaxHealth >= 0f)
+            {
+                float delta = maxHealth - _lastMaxHealth;
+                if (delta > 0f) health += delta;
+            }
             _lastMaxHealth = maxHealth;
+            health = Mathf.Min(health, maxHealth);
             UpdateHealthBar();
         }
 

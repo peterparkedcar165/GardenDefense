@@ -1005,7 +1005,7 @@ public abstract class Plant : Entity, IAttackable
         if (elementalType == ElementalType.Water)
         {
             bool onWater = occupiedTile != null && (occupiedTile.tileType == TileType.Water || occupiedTile.isWaterAdjacent);
-            if (onWater || HasEffect<RainExposedEffect>()) return 1;
+            if (onWater || HasEffect<RainExposedEffect>() || HasEffect<SubmergedEffect>()) return 1;
         }
 
         if (elementalType == ElementalType.Grass && occupiedTile != null && occupiedTile.tileType == TileType.Grass)

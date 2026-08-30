@@ -44,6 +44,7 @@ MonoBehaviour:
   baseDotResistance: 0
   baseHeatResistance: 0
   baseColdResistance: 0
+  baseRespiration: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -75,7 +76,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 6
-  baseSkillCooldown: 4
+  baseSkillCooldown: 90
   baseSkillDuration: 16
   channelDuration: 0
   baseSkillRadius: 0
@@ -100,4 +101,4 @@ MonoBehaviour:
   vortexDragSpeed: 0.5
   path3DragSpeedPerLevel: 0.1
   vortexDetonationDamage: 200
-  vortexKnockbackForce: 12
+  vortexKnockbackForce: 20

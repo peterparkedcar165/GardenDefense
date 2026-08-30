@@ -24,4 +24,10 @@ public class SnowAnt : Ant
         if (plant != null && plant.IsAlive)
             plant.temperature = Mathf.Max(plant.temperature - tempDecreasePerHit, plant.temperatureMin);
     }
+
+    public override void ApplyEffect(StatusEffect effect)
+    {
+        if (effect is FreezeEffect) return;
+        base.ApplyEffect(effect);
+    }
 }

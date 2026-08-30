@@ -7,6 +7,7 @@ public class OffPathSlownessEffect : StatusEffect
         : base(target, float.MaxValue, 1, null)
     {
         effectType = Type.negative;
+        visible = false;
         insect = target as Insect;
     }
 
