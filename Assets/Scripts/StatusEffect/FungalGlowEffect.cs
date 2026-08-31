@@ -6,8 +6,6 @@ public class FungalGlowEffect : StatusEffect
     private readonly float originalDuration;
     private LightFader _fader;
     private const float LightRadius = 1.2f;
-    private const float ResistanceReduction = 0.22f;
-    private bool _reducesResistances;
 
     public FungalGlowEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)
@@ -29,13 +27,6 @@ public class FungalGlowEffect : StatusEffect
             // is treated as illuminated in pitch black cave levels
             DarknessManager.UnregisterLightSource(_fader.transform);
             DarknessManager.RegisterLightSource(_fader.transform, LightRadius);
-        }
-
-        _reducesResistances = source is Glowshroom gm && gm.IsPath2Maxed;
-        if (_reducesResistances)
-        {
-            target.grassResistanceAdder -= ResistanceReduction;
-            target.waterResistanceAdder  -= ResistanceReduction;
         }
     }
 
@@ -68,21 +59,15 @@ public class FungalGlowEffect : StatusEffect
 
     public override void OnExpire()
     {
-        if (_fader != null)
-        {
-            DarknessManager.UnregisterLightSource(_fader.transform);
-            _fader.FadeOut(0.5f);
-        }
-
-        if (_reducesResistances)
-        {
-            target.grassResistanceAdder += ResistanceReduction;
-            target.waterResistanceAdder  += ResistanceReduction;
-        }
+        if (_fader == null) return;
+        DarknessManager.UnregisterLightSource(_fader.transform);
+        _fader.FadeOut(0.5f);
     }
 
     public override void OnTargetDied()
     {
+        if (source is Glowshroom gm) gm.OnFungalGlowInsectDied(target.transform.position);
+
         if (_fader == null) return;
         DarknessManager.UnregisterLightSource(_fader.transform);
         _fader.transform.SetParent(null);
@@ -99,12 +84,6 @@ public class FungalGlowEffect : StatusEffect
     }
 
     public override string GetName() => "<color=green>Fungal Glow</color>";
-    public override string GetDescription()
-    {
-        string desc = "Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration";
-        desc += _reducesResistances
-            ? $", and reduces <color=green><b>Grass Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=red><b>22%</b></color>."
-            : ".";
-        return desc;
-    }
+    public override string GetDescription() =>
+        "Emitting a faint fungal light. <color=#4FC3F7>Water</color> damage refreshes the duration.";
 }

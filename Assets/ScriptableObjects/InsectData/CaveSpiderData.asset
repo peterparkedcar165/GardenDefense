@@ -40,7 +40,7 @@ MonoBehaviour:
   baseTenacity: 0
   baseFireResistance: 0
   baseWaterResistance: 0
-  basePoisonResistance: 0.33
+  basePoisonResistance: 0.5
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0

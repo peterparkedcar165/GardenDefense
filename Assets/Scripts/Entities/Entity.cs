@@ -29,7 +29,8 @@ public enum DamageTag
     BypassShield,
     Germinate,
     Brittle,
-    SpecialCanCrit
+    SpecialCanCrit,
+    CanHitBurrowed
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -305,6 +306,16 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
     {
+        // burrowed insects can't be hit by anything new that doesn't explicitly carry
+        // CanHitBurrowed (e.g. a splash/AoE attack that happens to overlap one incidentally) -
+        // this is the hard backstop, independent of whether targeting logic picked it or not.
+        // DoT ticks (burn/poison/etc) are exempt: those are already-running effects from before
+        // it burrowed, not a new attack reaching it underground, so they keep ticking normally
+        if (this is Insect burrowedCheck && burrowedCheck.isBurrowed
+            && !System.Array.Exists(damageTag, t => t == DamageTag.CanHitBurrowed)
+            && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+            return;
+
         float modifiedDamage, elementalMultiplier, finalDamage, dotMultiplier;
         switch (elementalType)
         {
@@ -377,6 +388,11 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag) // damage with source
     {
+        if (this is Insect burrowedCheck && burrowedCheck.isBurrowed
+            && !System.Array.Exists(damageTag, t => t == DamageTag.CanHitBurrowed)
+            && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+            return;
+
         if (source == null)
         {
             Damage(damageDealt, damageType, elementalType, damageTag);
@@ -826,6 +842,29 @@ public abstract class Entity : MonoBehaviour
 
         if (germinateInternalCooldown > 0)
             germinateInternalCooldown -= Time.deltaTime;
+
+        if (_ccStackTimer > 0f)
+        {
+            _ccStackTimer -= Time.deltaTime;
+            if (_ccStackTimer <= 0f) _ccStacks = 0;
+        }
+    }
+
+    // diminishing returns on hard CC (see HardCrowdControl): each hard CC applied within
+    // CCDecayWindow seconds of the last one bumps the stack and shortens the NEXT hard CC's
+    // duration, floored at CCDurationMultipliers' last entry rather than reaching full immunity.
+    // one shared pool across every hard CC type, so alternating Stun/Freeze/KnockUp can't dodge it
+    private int _ccStacks;
+    private float _ccStackTimer;
+    private const float CCDecayWindow = 4f;
+    private static readonly float[] CCDurationMultipliers = { 1f, 0.9f, 0.8f, 0.7f, 0.6f, 0.5f };
+
+    public float GetCCDurationMultiplier() => CCDurationMultipliers[Mathf.Min(_ccStacks, CCDurationMultipliers.Length - 1)];
+
+    public void RegisterHardCC()
+    {
+        _ccStacks++;
+        _ccStackTimer = CCDecayWindow;
     }
 
     // HEALTH BAR
@@ -1205,6 +1244,18 @@ public abstract class Entity : MonoBehaviour
         return null;
     }
 
+    // for sourceStackable effects where several instances of the same type can coexist (e.g.
+    // Carrot's Psionic Mark - each Carrot hitting a target tracks its own stack independently)
+    public T GetEffect<T>(Entity bySource) where T : StatusEffect
+    {
+        foreach (StatusEffect effect in activeEffects)
+        {
+            if (effect is T typedEffect && effect.source == bySource)
+                return typedEffect;
+        }
+        return null;
+    }
+
 // tick effects of the status effect. starts at end of the list
 // checks until head, if duration is under or equal to 0, executes isExpired
 // and then removes it from the list
@@ -1268,6 +1319,22 @@ public abstract class Entity : MonoBehaviour
         for (int i = activeEffects.Count -1; i>=0 ; i--)
         {
             if (activeEffects[i] is T)
+            {
+                activeEffects[i].OnExpire();
+                activeEffects.RemoveAt(i);
+                return;
+            }
+        }
+    }
+
+    // for sourceStackable effects where several instances of the same type can coexist (e.g.
+    // multiple Carrots' Psionic Bond on the same Shooter): removes only the one from bySource,
+    // leaving every other source's instance untouched
+    public void RemoveEffect<T>(Entity bySource) where T : StatusEffect
+    {
+        for (int i = activeEffects.Count - 1; i >= 0; i--)
+        {
+            if (activeEffects[i] is T && activeEffects[i].source == bySource)
             {
                 activeEffects[i].OnExpire();
                 activeEffects.RemoveAt(i);

@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8db6e780da9de4468452622eb196dbd, type: 3}
+  m_Name: DuskdarterData
+  m_EditorClassIdentifier: Assembly-CSharp::DuskdarterData
+  displayName: Duskdarter
+  nameColor: {r: 0.4, g: 0.35, b: 0.6, a: 1}
+  description: A dusk-dwelling dragonfly that ferries slower insects past danger.
+  passiveDescription: Gains Movement Speed and Evasion while in darkness. Immune
+    to Taunts that redirect attacks onto a plant directly. Can carry a slower ground
+    insect on its back.
+  sprite: {fileID: 21300000, guid: 91b07b506de5d2f469eb277333cf9be8, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: 4f58dbcc84527e3449982adc5291021a, type: 3}
+  baseMaxHealth: 600
+  baseAttackDamage: 20
+  baseMagicPower: 0
+  baseAttackSpeed: 1
+  baseAttackRange: 0.3
+  baseMovementSpeed: 1.1
+  baseTargetingRange: 1.5
+  baseArmor: 20
+  baseMagicArmor: 20
+  attackDamageType: 0
+  attackElementalType: 6
+  baseLifesteal: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
+  baseTenacity: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseGrassResistance: 0
+  baseWindResistance: 0
+  baseGroundResistance: 0
+  baseDotResistance: 0
+  flatPhysicalDamageReduction: 0
+  threatValue: 1
+  threatType: 1
+  baseEvasion: 0
+  baseAccuracy: 0
+  sunDrop: 10
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
+  aggressivity: 0
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  darkMovementSpeedBonus: 0.4
+  darkEvasionBonus: 0.15
+  carryPickupRange: 3
+  carryPickupCheckInterval: 0.3
+  carryPickupDelay: 0.5

@@ -24,6 +24,10 @@ public class GlowshroomData : PlantData
 
     [Header("Path 2 Scaling")]
     public float path2FungalGlowDurationPerLevel = 1f;
+    public float deathSunGeneration = 3f;
+    public float path2SunGenerationPerLevel = 1f;
+    public float deathBlindDuration = 4f;
+    public float deathBlindRadius = 2f;
 
     [Header("Path 3 Scaling")]
     public float path3BlindDurationPerLevel = 0.5f;

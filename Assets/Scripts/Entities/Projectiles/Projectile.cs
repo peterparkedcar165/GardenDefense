@@ -70,9 +70,8 @@ public abstract class Projectile : MonoBehaviour
 
         transform.position += direction * projectileSpeed * Time.deltaTime;
 
-        if (Vector3.Distance(transform.position, spawnPosition) >= maxRange)
-        Destroy(gameObject);
-
+        if (!Tile.IsInsideGrid(transform.position))
+            Destroy(gameObject);
     }
 
     protected virtual void OnHit(Insect insect)

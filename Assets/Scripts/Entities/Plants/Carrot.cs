@@ -5,40 +5,43 @@ public class Carrot : Shooter
 {
     [SerializeField] private GameObject pillarVisualPrefab;   // optional per square visual left by the furrow
     [SerializeField] private GameObject skillIndicatorPrefab; // rectangle sprite shown while aiming the furrow
+    [SerializeField] private GameObject psionicCarrotPrefab;  // Psionic Bond's own projectile
 
     private GameObject _skillIndicatorInstance;
 
     private CarrotData GData => data as CarrotData;
 
-    public float SplashRadius     => GData?.splashRadius ?? 1f;
-    public float SplashMultiplier => GData?.splashMultiplier ?? 0.75f;
-    public float GroundedDuration => GData?.groundedDuration ?? 3f;
-    public float KnockbackDistance => GData?.knockbackDistance ?? 0.6f;
-
-    public float GrassChance  => (GData?.grassChanceBase ?? 0.75f) + (GData?.grassChancePerLevel ?? 0.05f) * effectivePath2Level;
-    public float SandChance   => (GData?.sandChanceBase ?? 0.5f) + (GData?.sandChancePerLevel ?? 0.1f) * effectivePath2Level;
-    public float CaveChance   => (GData?.caveChanceBase ?? 0.5f) + (GData?.caveChancePerLevel ?? 0.05f) * effectivePath2Level;
-    public float StunDuration => (GData?.stunDuration ?? 1f) + (GData?.stunDurationPerLevel ?? 0.2f) * effectivePath2Level;
-    public float SnowSlow     => (GData?.snowSlowPercent ?? 0.15f) + (GData?.snowSlowPerLevel ?? 0.03f) * effectivePath2Level;
-    public float DirtBonus    => (GData?.dirtDamageBonus ?? 0.25f) + (GData?.dirtBonusPerLevel ?? 0.05f) * effectivePath2Level;
-    public float SunderPercent  => GData?.sunderPercent ?? 0.35f;
-    public float SunderDuration => GData?.sunderDuration ?? 8f;
+    public int   TargetSwitchBonusHits => GData?.path1TargetSwitchBonusHits ?? 1;
 
     public float VisualFadeIn         => GData?.visualFadeIn ?? 0.1f;
     public float VisualHold           => GData?.visualHold ?? 0.7f;
     public float VisualFadeOut        => GData?.visualFadeOut ?? 0.5f;
     public float VisualPositionJitter => GData?.visualPositionJitter ?? 0.05f;
 
-    public float SquareRadius    => GData?.pillarRadius ?? 0.9f;
+    public float SquareRadius          => GData?.pillarRadius ?? 0.9f;
+    public float SquareWidthMultiplier => 1f + (GData?.path3WidthPerLevel ?? 0.1f) * effectivePath3Level;
     public int   CarrotCount     => (GData?.carrotCountBase ?? 3) + (GData?.carrotsPerLevel ?? 1) * effectivePath3Level;
     public float SkillDamageFlat => (GData?.skillBaseDamage ?? 40f) + (GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level;
     public float SkillDamageMP   => skillDamageMultiplier * magicPower;
     public float SkillDamage     => SkillDamageFlat + SkillDamageMP;
 
-    private TileType CurrentTile => occupiedTile != null ? occupiedTile.tileType : TileType.Path;
+    // Psionic Bond: a permanent link to a chosen Shooter plant, resolved live from the tile it
+    // sits on (like Calendula's auto-cast target) so a bonded plant that dies and revives - a
+    // brand new instance - gets automatically picked back up instead of leaving a stale link
+    private Tile boundTile;
+    private Shooter boundShooter;
+    private float psionicCooldownTimer;
+    private Plant _bondHighlighted;
+    private static readonly Color BondHighlightColor = new Color(1f, 0.45f, 0.75f);
 
-    // dirt grants flat bonus damage to attack and skill
-    public float TileDamageMultiplier => CurrentTile == TileType.Dirt ? 1f + DirtBonus : 1f;
+    public override bool UsesAutoCast => true;
+    public override bool IsAutoCasting => boundTile != null;
+    public override string AutoCastLabel => "Bond";
+
+    public float PsionicCooldown    => Mathf.Max(0.5f, (GData?.psionicCooldownBase ?? 3f) - (GData?.psionicCooldownReductionPerLevel ?? 0.3f) * effectivePath2Level);
+    public float PsionicDamageFlat  => (GData?.psionicDamageBase ?? 30f) + (GData?.psionicDamagePerLevel ?? 20f) * effectivePath2Level;
+    public float PsionicDamageMP    => (GData?.psionicDamageMPScaling ?? 0.5f) * magicPower;
+    public float PsionicDamage      => PsionicDamageFlat + PsionicDamageMP;
 
     protected override void Awake()
     {
@@ -49,6 +52,156 @@ public class Carrot : Shooter
         {
             TileType.Grass, TileType.Dirt, TileType.Potted, TileType.Cave, TileType.Sand, TileType.Snow
         };
+    }
+
+    // Path2 max, mirrored on the bonded plant's side by PsionicBondEffect: while actively
+    // bonded, both sides gain the same Attack Speed / Passive Cooldown Reduction bonus
+    private const float BondMaxLevelBonus = 0.15f;
+
+    public override void UpdateStats()
+    {
+        bool grantsBondBonus = IsPath2Maxed && boundShooter != null;
+        float bonus = grantsBondBonus ? BondMaxLevelBonus : 0f;
+        attackSpeedMultiplier += bonus;
+        passiveCooldownReductionMultiplier += bonus;
+        base.UpdateStats();
+        attackSpeedMultiplier -= bonus;
+        passiveCooldownReductionMultiplier -= bonus;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        UpdateSkillIndicator();
+
+        if (psionicCooldownTimer > 0f)
+            psionicCooldownTimer -= Time.deltaTime;
+
+        ResyncBond();
+        UpdateBondHighlight();
+    }
+
+    // while this Carrot is selected, outline its bonded target in pink so it's obvious at a
+    // glance which plant is linked (mirrors Calendula's own auto-cast target highlight)
+    private void UpdateBondHighlight()
+    {
+        Plant desired = IsSelected ? boundShooter : null;
+        if (_bondHighlighted != null && _bondHighlighted != desired)
+            _bondHighlighted.ClearHighlight();
+        if (desired != null)
+            desired.SetHighlight(BondHighlightColor);
+        _bondHighlighted = desired;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Unbind();
+        _bondHighlighted?.ClearHighlight();
+    }
+
+    // click Bond to pick a Shooter plant to link with, click again to break the bond.
+    // clicking anything that isn't a Shooter (including Carrot itself) is silently rejected and
+    // stays in targeting mode - spamming clicks on invalid plants never confirms anything
+    public override void ToggleAutoCast()
+    {
+        if (boundTile != null)
+        {
+            boundTile = null;
+            return;
+        }
+        SkillTargetingManager.instance.BeginPlantTargeting(OnBondTargetConfirmed, this);
+    }
+
+    private void OnBondTargetConfirmed(Plant targetPlant)
+    {
+        if (targetPlant == null) return; // cancelled
+        if (targetPlant is not Shooter || targetPlant == this)
+        {
+            SkillTargetingManager.instance.BeginPlantTargeting(OnBondTargetConfirmed, this);
+            return;
+        }
+        boundTile = targetPlant.occupiedTile;
+    }
+
+    // re-resolves whichever Shooter currently occupies boundTile every frame (cheap: a
+    // reference compare, only doing real work when the occupant actually changed) and keeps
+    // the OnFired subscription + visible Psionic Bond effect pointed at that live instance
+    private void ResyncBond()
+    {
+        Shooter current = boundTile != null ? Plant.GetPlantOnTile(boundTile) as Shooter : null;
+
+        bool boundShooterGone = boundShooter == null;
+        if (!boundShooterGone && current == boundShooter) return;
+
+        if (!boundShooterGone) Unbind();
+
+        boundShooter = current;
+        if (boundShooter != null)
+        {
+            boundShooter.OnFired += HandleBoundShooterFired;
+            boundShooter.ApplyEffect(new PsionicBondEffect(boundShooter, this, this));
+        }
+    }
+
+    private void Unbind()
+    {
+        if (boundShooter == null) return;
+        boundShooter.OnFired -= HandleBoundShooterFired;
+        // removes only this Carrot's own instance - PsionicBondEffect is source-stackable, so
+        // other Carrots bonded to the same plant keep theirs untouched
+        boundShooter.RemoveEffect<PsionicBondEffect>(this);
+        boundShooter = null;
+    }
+
+    private void HandleBoundShooterFired(GameObject target)
+    {
+        if (psionicCooldownTimer > 0f) return;
+        if (target == null || !IsAlive || IsStunned || IsChanneling) return;
+        psionicCooldownTimer = PsionicCooldown;
+        FirePsionicCarrot(target);
+    }
+
+    private void FirePsionicCarrot(GameObject target)
+    {
+        if (psionicCarrotPrefab == null || boundShooter == null) return;
+        GameObject obj = Instantiate(psionicCarrotPrefab, transform.position, Quaternion.identity);
+        PsionicCarrotProjectile proj = obj.GetComponent<PsionicCarrotProjectile>();
+        if (proj == null)
+        {
+            Debug.LogWarning("Carrot: psionicCarrotPrefab has no PsionicCarrotProjectile component - check the prefab's script.");
+            Destroy(obj);
+            return;
+        }
+        proj.SetTarget(target);
+        proj.Initialize(target.transform.position, PsionicDamage, projectileSpeed, maxRange,
+            piercing, damageType, elementalType, this);
+    }
+
+    public override AutoCastState CaptureAutoCastState() =>
+        new AutoCastState { enabled = boundTile != null, targetTile = boundTile };
+
+    public override void RestoreAutoCastState(AutoCastState state)
+    {
+        if (!state.enabled || state.targetTile == null) return;
+        boundTile = state.targetTile;
+    }
+
+    // Path1 max, called by both CarrotProjectile and PsionicCarrotProjectile so attack and
+    // Psionic Carrot hits feed and benefit from the same stack. returns the multiplier the
+    // caller should apply to the damage it's about to deal (based on stacks BEFORE this hit),
+    // then adds/refreshes a stack for the next hit
+    public float ApplyPsionicMark(Insect insect)
+    {
+        PsionicMarkEffect mark = insect.GetEffect<PsionicMarkEffect>(this);
+        if (mark != null)
+        {
+            float multiplier = mark.DamageMultiplier;
+            mark.AddStack();
+            return multiplier;
+        }
+        insect.ApplyEffect(new PsionicMarkEffect(insect, this));
+        return 1f;
     }
 
     // pushes an insect over a short time so the knockback reads as motion instead of a teleport.
@@ -74,36 +227,6 @@ public class Carrot : Shooter
         }
     }
 
-    // rolls the tile bonus for one damaged insect, called for attack hits, splash and pillars
-    public void ApplyTileBonus(Insect insect)
-    {
-        if (insect == null || !insect.IsAlive) return;
-
-        switch (CurrentTile)
-        {
-            case TileType.Grass:
-                if (Random.value < GrassChance)
-                    insect.ApplyEffect(new CharredEffect(insect, GData?.grassFireResDuration ?? 4f, 1, this, GData?.grassFireResReduction ?? 0.35f));
-                break;
-
-            case TileType.Sand:
-                if (Random.value < SandChance)
-                    insect.ApplyEffect(new BlindEffect(insect, GData?.blindDuration ?? 4f, 1, this, GData?.blindAccuracyPenalty ?? 0.5f));
-                break;
-
-            case TileType.Cave:
-                if (Random.value < CaveChance)
-                    insect.ApplyEffect(new StunEffect(insect, StunDuration, 1, this));
-                break;
-
-            case TileType.Snow:
-                SlowEffect slow = new SlowEffect(insect, GData?.snowSlowDuration ?? 3f, 1, this);
-                slow.slowness = SnowSlow;
-                insect.ApplyEffect(slow);
-                break;
-        }
-    }
-
     protected override void Shoot(Vector3 target)
     {
         if (projectilePrefab == null) return;
@@ -111,7 +234,7 @@ public class Carrot : Shooter
         CarrotProjectile proj = obj.GetComponent<CarrotProjectile>();
         if (proj == null) return;
         proj.SetTarget(FindTarget());
-        proj.Initialize(target, attackDamage * TileDamageMultiplier, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
+        proj.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
     }
 
     public override void ActivateSkill()
@@ -125,12 +248,6 @@ public class Carrot : Shooter
             SpriteRenderer sr = _skillIndicatorInstance.GetComponentInChildren<SpriteRenderer>();
             if (sr != null) sr.enabled = false;   // hidden until the first aim update positions it
         }
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-        UpdateSkillIndicator();
     }
 
     // a rectangle pivoted at the plant, matching the exact footprint of the furrow,
@@ -150,7 +267,7 @@ public class Carrot : Shooter
         Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
         if (dir.sqrMagnitude < 0.0001f) dir = Vector2.right;
 
-        float squareSize   = CarrotFurrow.VisualSquareSize(pillarVisualPrefab, SquareRadius * 2f);
+        float squareSize   = CarrotFurrow.VisualSquareSize(pillarVisualPrefab, SquareRadius * 2f) * SquareWidthMultiplier;
         float half         = squareSize * 0.5f;
         float startOffset  = GData?.pillarStartOffset ?? 1f;
         float frontEdge    = startOffset - half;
@@ -179,15 +296,6 @@ public class Carrot : Shooter
         if (direction.sqrMagnitude < 0.0001f) direction = Vector2.right;
 
         SpawnFurrow(direction);
-        // max level bonus, a second furrow follows the first along the same path
-        if (IsPath3Maxed)
-            StartCoroutine(SecondFurrow(direction));
-    }
-
-    private System.Collections.IEnumerator SecondFurrow(Vector2 direction)
-    {
-        yield return new WaitForSeconds(GData?.secondFurrowDelay ?? 0.8f);
-        if (IsAlive) SpawnFurrow(direction);
     }
 
     private void SpawnFurrow(Vector2 direction)
@@ -202,10 +310,10 @@ public class Carrot : Shooter
             GData?.pillarStartOffset ?? 1f,
             GData?.pillarInterval ?? 0.12f,
             SquareRadius,
+            SquareWidthMultiplier,
             GData?.pillarHitboxMultiplier ?? 1.3f,
-            SkillDamage * TileDamageMultiplier,
+            SkillDamage,
             GData?.pillarKnockUpForce ?? 5f,
-            GData?.pillarKnockbackDistance ?? 0.9f,
             this,
             pillarVisualPrefab);
     }
@@ -214,29 +322,26 @@ public class Carrot : Shooter
     {
         baseAttackDamage = data.baseAttackDamage + (GData?.path1AttackDamagePerLevel ?? 23f) * level;
         baseAttackRange  = data.baseAttackRange  + (GData?.path1AttackRangePerLevel ?? 0.2f) * level;
+        piercingAdder    = (GData?.path1PiercingPerLevel ?? 1) * level;
     }
 
     public override string GetName() => "<b><color=#ED9121>Carrot</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} is an elderly root sage who commands the earth itself, hurling stone at its enemies and plowing the ground beneath them.";
+        $"The {GetName()} is an elderly root sage who commands the earth itself, hurling stone at its enemies and forging psionic links with its allies.";
 
     public override string GetAttackDescription() =>
-        $"Hurls earth at the target, dealing <color=green><b>{attackDamage * TileDamageMultiplier:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit " +
-        $"and <color=green><b>{SplashMultiplier * 100f:F0}%</b></color> to other insects within a <color=green><b>{SplashRadius:F0}</b></color>-radius. Knocks down flying insects.";
+        $"Hurls earth at the target, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
 
     public override string GetPassiveDescription() =>
-        $"When dealing damage with its attack or skill, gains a bonus effect depending on the tile it is planted on:\n" +
-        $"<color=green><b>Grass</b></color>: <color=green><b>{GrassChance * 100f:F0}%</b></color> chance to reduce <color=orange><b>Fire Resistance</b></color> by <color=green><b>{(GData?.grassFireResReduction ?? 0.35f) * 100f:F0}%</b></color> for <color=green><b>{GData?.grassFireResDuration ?? 4f:F0}s</b></color>.\n" +
-        $"<color=#79391F><b>Dirt</b></color>: <color=green><b>{DirtBonus * 100f:F0}%</b></color> increased damage.\n" +
-        $"<color=#EDC9AF><b>Sand</b></color>: <color=green><b>{SandChance * 100f:F0}%</b></color> chance to <color=#DDDDDD><b>Blind</b></color> for <color=green><b>{GData?.blindDuration ?? 4f:F0}s</b></color>.\n" +
-        $"<color=grey><b>Cave</b></color>: <color=green><b>{CaveChance * 100f:F0}%</b></color> chance to <color=#FFD700><b>Stun</b></color> for <color=green><b>{StunDuration:F1}s</b></color>.\n" +
-        $"<color=#E0FFFF><b>Snow</b></color>: applies a <color=green><b>{SnowSlow * 100f:F0}%</b></color> <color=#87CEEB><b>Slow</b></color>.";
+        $"Forms a <color=#B266FF><b>Psionic Bond</b></color> with a chosen Shooter plant. Every time that plant fires, the {GetName()} also fires a " +
+        $"<color=#B266FF><b>Psionic Carrot</b></color> at the same target, dealing <color=green><b>{PsionicDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{PsionicDamageMP:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. " +
+        $"Cooldown: <color=green><b>{PsionicCooldown:F1}s</b></color>.";
 
     public override string GetSkillDesription() =>
         $"Aim a direction. A furrow of churned earth plows from the {GetName()}, sprouting <color=green><b>{CarrotCount}</b></color> carrots in a line, each covering one square, " +
         $"striking each insect once for <color=green><b>{SkillDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{SkillDamageMP:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. " +
-        $"Insects struck are knocked up and pushed along the furrow.";
+        $"Insects struck are knocked up and pushed aside, away from the line of carrots.";
 
     public override string GetPath1Name() => "Upheaval";
     public override string GetPath2Name() => "Attunement";
@@ -246,33 +351,31 @@ public class Carrot : Shooter
     {
         float adpl  = GData?.path1AttackDamagePerLevel ?? 23f;
         float rngpl = GData?.path1AttackRangePerLevel ?? 0.2f;
+        int   ppl   = GData?.path1PiercingPerLevel ?? 1;
         string desc = details
-            ? $"Hurls earth at the target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit " +
-              $"and <color=green><b>{SplashMultiplier * 100f:F0}%</b></color> to other insects within a <color=green><b>{SplashRadius:F0}</b></color>-radius. Knocks down flying insects."
+            ? $"Hurls earth at the target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Attacks knock insects back.")}\n\n" +
+               $"Increase <color=green><b>Piercing</b></color> by <color=green><b>{ppl}</b></color> per level. [<color=green><b>+{ppl * effectivePath1Level}</b></color>]\n\n" +
+               $"{Level5Section(path1Level, $"Each hit against the same target increases damage by <color=green><b>{PsionicMarkEffect.DamagePerStack * 100f:F0}%</b></color>. Switching targets grants <color=green><b>+{TargetSwitchBonusHits}</b></color> additional hits.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath2Description(bool details = false)
     {
-        float gcpl = GData?.grassChancePerLevel ?? 0.05f;
-        float dbpl = GData?.dirtBonusPerLevel ?? 0.05f;
-        float scpl = GData?.sandChancePerLevel ?? 0.1f;
-        float ccpl = GData?.caveChancePerLevel ?? 0.05f;
-        float sdpl = GData?.stunDurationPerLevel ?? 0.2f;
-        float sspl = GData?.snowSlowPerLevel ?? 0.03f;
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
-               $"Per level: <color=green><b>Grass</b></color> chance <color=green><b>+{gcpl * 100f:F0}%</b></color>, " +
-               $"<color=#79391F><b>Dirt</b></color> damage <color=green><b>+{dbpl * 100f:F0}%</b></color>, " +
-               $"<color=#EDC9AF><b>Sand</b></color> chance <color=green><b>+{scpl * 100f:F0}%</b></color>, " +
-               $"<color=grey><b>Cave</b></color> chance <color=green><b>+{ccpl * 100f:F0}%</b></color> and duration <color=green><b>+{sdpl:F1}s</b></color>, " +
-               $"<color=#E0FFFF><b>Snow</b></color> slow <color=green><b>+{sspl * 100f:F0}%</b></color>.\n\n" +
-               $"{Level5Section(path2Level, $"Attacks also reduce the target's <color=#00CED1><b>Armor</b></color> by <color=green><b>{SunderPercent * 100f:F0}%</b></color> for <color=green><b>{SunderDuration:F0}s</b></color>.")}\n\n" +
+        float cdpl  = GData?.psionicCooldownReductionPerLevel ?? 0.3f;
+        float dmgpl = GData?.psionicDamagePerLevel ?? 20f;
+        string desc = details
+            ? $"Forms a <color=#B266FF><b>Psionic Bond</b></color> with a chosen Shooter plant. Every time that plant fires, the {GetName()} also fires a <color=#B266FF><b>Psionic Carrot</b></color> at the same target, " +
+              $"dealing <color=green><b>[({GData?.psionicDamageBase ?? 30f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{(GData?.psionicDamageMPScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            : GetPassiveDescription();
+        return $"Passive:\n\n{desc}\n\n" +
+               $"Decrease Psionic Carrot cooldown by <color=green><b>{cdpl:F1}s</b></color> per level. [<color=green><b>-{cdpl * effectivePath2Level:F1}s</b></color>]\n\n" +
+               $"Increase Psionic Carrot damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(path2Level, $"While bonded, both the {GetName()} and the bonded plant gain <color=green><b>{BondMaxLevelBonus * 100f:F0}%</b></color> Attack Speed and <color=green><b>{BondMaxLevelBonus * 100f:F0}%</b></color> Passive Cooldown Reduction.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -282,13 +385,15 @@ public class Carrot : Shooter
         string desc = details
             ? $"Aim a direction. A furrow of churned earth plows from the {GetName()}, sprouting <color=green><b>[({GData?.carrotCountBase ?? 3}) + ({GData?.carrotsPerLevel ?? 1}/Lvl.)]</b></color> carrots in a line, each covering one square, " +
               $"striking each insect once for <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. " +
-              $"Insects struck are knocked up and pushed along the furrow."
+              $"Insects struck are knocked up and pushed aside, away from the line of carrots."
             : GetSkillDesription();
+        float wpl = GData?.path3WidthPerLevel ?? 0.1f;
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Carrots</b></color> by <color=green><b>{GData?.carrotsPerLevel ?? 1}</b></color> per level. [<color=green><b>+{(GData?.carrotsPerLevel ?? 1) * effectivePath3Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Damage</b></color> by <color=green><b>{GData?.path3SkillDamagePerLevel ?? 8f:F0}</b></color> per level. [<color=green><b>+{(GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase carrot width by <color=green><b>{wpl * 100f:F0}%</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"The {GetName()} tills the earth twice over: shortly after the first furrow, a second one erupts along the same path.")}\n\n" +
+               $"{Level5Section(path3Level, $"Each carrot further down the line deals <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> more damage and grows <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> larger than the last, calculated from the first carrot.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

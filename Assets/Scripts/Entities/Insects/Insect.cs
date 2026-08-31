@@ -28,7 +28,76 @@ public abstract class Insect : Entity, IAttackable
     public static float fallDamageHealthVelocityCap = 20f; // velocity at which health % reaches max
     public float verticalVelocity = 0f;
     public Entity fallDamageSource;
-    public bool affectedByGravity => !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f) && !HasEffect<VortexLiftEffect>();
+    // non-null while a carrier insect (e.g. Duskdarter, see ICarrierInsect) is carrying this one:
+    // movement/attacking/gravity are all suspended and it just rides at the carrier's position,
+    // resuming everything normally the instant it's dropped (carriedBy set back to null)
+    public Insect carriedBy;
+    private const float CarryVisualHeight = 0.9f;
+    // generic movement freeze, e.g. Duskdarter pausing both itself and its about-to-be-carried
+    // passenger during the pickup sequence. only blocks Move(); attacking is unaffected
+    public bool movementPaused;
+
+    // true while underground (an Earthworm digging its own tunnel, or any ground insect currently
+    // being routed through a completed UndergroundTunnel). still moves along its assigned path,
+    // but can't attack or be attacked/targeted while burrowed (see Entity.Damage's CanHitBurrowed
+    // gate and Plant.IsValidNightTarget's DetectsBurrowed check)
+    [System.NonSerialized] public bool isBurrowed;
+    private Coroutine _burrowVisualRoutine;
+    private float _visualRestY;
+    private bool _visualRestYCaptured;
+    private const float BurrowSinkOffset = 0.3f;
+    private const float BurrowFadeDuration = 0.5f;
+    private const float UnburrowFadeDuration = 0.25f;
+
+    // fades the sprite out and sinks it slightly as it burrows (reversed, faster, on unburrow).
+    // the health bar is untouched throughout, since it's a separate renderer from the sprite and
+    // needs to stay visible so the player can still track a burrowed insect's position/health
+    public void SetBurrowed(bool burrowed)
+    {
+        isBurrowed = burrowed;
+        if (visual == null || _spriteRenderer == null) return;
+
+        if (!_visualRestYCaptured)
+        {
+            _visualRestY = visual.localPosition.y;
+            _visualRestYCaptured = true;
+        }
+
+        if (_burrowVisualRoutine != null) StopCoroutine(_burrowVisualRoutine);
+        _burrowVisualRoutine = StartCoroutine(BurrowVisualRoutine(burrowed));
+    }
+
+    private IEnumerator BurrowVisualRoutine(bool burrowed)
+    {
+        float duration = burrowed ? BurrowFadeDuration : UnburrowFadeDuration;
+        float startAlpha = _spriteRenderer.color.a;
+        float endAlpha = burrowed ? 0f : 1f;
+        float startY = visual.localPosition.y;
+        float endY = burrowed ? _visualRestY - BurrowSinkOffset : _visualRestY;
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float p = Mathf.Clamp01(t / duration);
+            Color c = _spriteRenderer.color;
+            c.a = Mathf.Lerp(startAlpha, endAlpha, p);
+            _spriteRenderer.color = c;
+            Vector3 pos = visual.localPosition;
+            pos.y = Mathf.Lerp(startY, endY, p);
+            visual.localPosition = pos;
+            yield return null;
+        }
+
+        Color finalColor = _spriteRenderer.color;
+        finalColor.a = endAlpha;
+        _spriteRenderer.color = finalColor;
+        Vector3 finalPos = visual.localPosition;
+        finalPos.y = endY;
+        visual.localPosition = finalPos;
+        _burrowVisualRoutine = null;
+    }
+    public bool affectedByGravity => carriedBy == null && !isFlying && (!HasEffect<BubblePrisonEffect>() || verticalVelocity < 0f) && !HasEffect<VortexLiftEffect>();
     protected virtual bool FallDamageImmune => false;
     public bool isOnGround => visual != null && visual.localPosition.y <= 0.4f;
 
@@ -163,6 +232,35 @@ public abstract class Insect : Entity, IAttackable
         _pendingAllPaths = allPaths;
     }
 
+    // live re-route (unlike SetPath, which only stages a path for the next Start()): used by
+    // UndergroundTunnel to divert an already-walking insect through the tunnel mid-route
+    public void RerouteTo(Transform[] newWaypoints)
+    {
+        waypoints = newWaypoints;
+        currentWaypointIndex = 0;
+    }
+
+    // the remaining stretch of this insect's own current path (from wherever it currently is),
+    // starting at whichever of those waypoints sits nearest to `position`. used to splice a
+    // tunnel's exit back onto the insect's normal route instead of restarting it from the top
+    public Transform[] GetPathFromNearest(Vector3 position)
+    {
+        if (waypoints == null || waypoints.Length == 0) return new Transform[0];
+
+        int nearestIndex = currentWaypointIndex;
+        float nearestDist = float.MaxValue;
+        for (int i = currentWaypointIndex; i < waypoints.Length; i++)
+        {
+            if (waypoints[i] == null) continue;
+            float d = Vector3.Distance(position, waypoints[i].position);
+            if (d < nearestDist) { nearestDist = d; nearestIndex = i; }
+        }
+
+        Transform[] result = new Transform[waypoints.Length - nearestIndex];
+        System.Array.Copy(waypoints, nearestIndex, result, 0, result.Length);
+        return result;
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -187,9 +285,9 @@ public abstract class Insect : Entity, IAttackable
         if (ScalesWithWave)
         {
             int waveNumber = GameManager.instance.currentWave;
-            baseMaxHealth   *= 1f + ((waveNumber-1) * 0.22f);
-            armorAdder      += (waveNumber - 1) * 0.5f;
-            magicArmorAdder += (waveNumber - 1) * 0.5f;
+            baseMaxHealth   *= 1f + ((waveNumber-1) * 0.12f);
+            armorAdder      += (waveNumber - 1) * 2f;
+            magicArmorAdder += (waveNumber - 1) * 2f;
         }
         UpdateStats();
         health = maxHealth;
@@ -200,14 +298,41 @@ public abstract class Insect : Entity, IAttackable
     {
         base.Update();
         ApplyGravity();
-        Move();
+        if (isDying)
+        {
+            // no more movement/tracking once dying, matching Move()'s own isDying guard
+        }
+        else if (carriedBy != null)
+        {
+            FollowCarrier();
+        }
+        else
+        {
+            Move();
+            // burrowed: still travels its (tunnel) path, but can't fight or be off-path slowed
+            // while underground and undetectable
+            if (!isBurrowed)
+            {
+                UpdateAttack();
+                RefreshEngagement();
+                DebugPathTile();
+            }
+        }
         SyncAimPoint();
-        UpdateAttack();
-        RefreshEngagement();
         TrackFacing();
         UpdateFacingSprite();
-        DebugPathTile();
         UpdateDarknessVisibility();
+    }
+
+    // while carried: no pathing, targeting, or attacking of its own, just riding along at a
+    // fixed visual height (as if sitting on the carrier's back) instead of on the ground
+    private void FollowCarrier()
+    {
+        transform.position = carriedBy.transform.position;
+        if (visual == null) return;
+        Vector3 pos = visual.localPosition;
+        pos.y = CarryVisualHeight;
+        visual.localPosition = pos;
     }
 
     // in dark (cave) levels, hide the entire insect (body, health bar, shield, etc.)stead,
@@ -355,6 +480,7 @@ public abstract class Insect : Entity, IAttackable
     protected virtual void Move()
     {
         if (isDying) return;
+        if (movementPaused) return;
         if (waypoints == null) return;
 
         bool wasDisplaced = windMomentum.sqrMagnitude > 0.001f;
@@ -806,7 +932,11 @@ public abstract class Insect : Entity, IAttackable
         gameManager.Damage((int)baseAttackDamage);
         Destroy(gameObject);
     }
-    
+
+    // exposes gameManager (private, cached in Start) to subclasses that need to damage the
+    // player's base outside of ReachObjective itself (e.g. Duskdarter's carried passenger)
+    protected void DamagePlayerBase(int amount) => gameManager.Damage(amount);
+
     protected virtual float GetMoveSpeed() => movementSpeed;
 
     public virtual Vector3 GetVelocity()
@@ -839,6 +969,7 @@ public abstract class Insect : Entity, IAttackable
     public override void Kill(Entity source)
     {
         if (isDying) return;
+        if (this is ICarrierInsect carrier) carrier.DropCarriedInsect();
         if (team == Team.Friendly) { QuietDeath(); return; }   // already counted as killed when turned
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
@@ -855,6 +986,7 @@ public abstract class Insect : Entity, IAttackable
     public override void Kill()
     {
         if (isDying) return;
+        if (this is ICarrierInsect carrier) carrier.DropCarriedInsect();
         if (team == Team.Friendly) { QuietDeath(); return; }   // already counted as killed when turned
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();

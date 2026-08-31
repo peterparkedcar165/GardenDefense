@@ -83,7 +83,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ffedb609d137d94ab8f06e2634303c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GroundThorn
+  m_EditorClassIdentifier: Assembly-CSharp::Carrot
   baseMaxHealth: 0
   baseAttackDamage: 0
   baseMagicPower: 0
@@ -108,6 +108,7 @@ MonoBehaviour:
   baseMagicDamage: 0
   baseFallDamage: 0
   baseBonusEffectChance: 0
+  baseElementalEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
   baseGrassDamage: 0
@@ -144,6 +145,7 @@ MonoBehaviour:
   baseBonusCritChanceReceived: 0
   baseBonusCritDamageReceived: 0
   baseProjectileSpeed: 0
+  baseOnHitEffectiveness: 1
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -173,6 +175,7 @@ MonoBehaviour:
   magicDamage: 0
   fallDamage: 0
   bonusEffectChance: 0
+  elementalEffectChance: 0
   fireDamage: 0
   waterDamage: 0
   grassDamage: 0
@@ -217,6 +220,7 @@ MonoBehaviour:
   bonusCritChanceReceived: 0
   bonusCritDamageReceived: 0
   projectileSpeed: 0
+  onHitEffectiveness: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicPowerAdder: 0
@@ -241,6 +245,7 @@ MonoBehaviour:
   magicDamageAdder: 0
   fallDamageAdder: 0
   bonusEffectChanceAdder: 0
+  elementalEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
   grassDamageAdder: 0
@@ -283,6 +288,7 @@ MonoBehaviour:
   projectileSpeedAdder: 0
   sunYieldAdder: 0
   currencyYieldAdder: 0
+  onHitEffectivenessAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -306,6 +312,7 @@ MonoBehaviour:
   physicalDamageMultiplier: 0
   magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
+  elementalEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
   grassDamageMultiplier: 0
@@ -386,6 +393,18 @@ MonoBehaviour:
   baseTemperatureMax: 30
   temperatureMaxAdder: 0
   temperatureMax: 0
+  baseHeatResistance: 0
+  heatResistanceAdder: 0
+  heatResistanceMultiplier: 0
+  heatResistance: 0
+  baseColdResistance: 0
+  coldResistanceAdder: 0
+  coldResistanceMultiplier: 0
+  coldResistance: 0
+  air: 100
+  baseRespiration: 0
+  respirationAdder: 0
+  respiration: 0
   basePassiveCooldown: 0
   passiveCooldown: 0
   passiveCooldownAdder: 0
@@ -401,6 +420,9 @@ MonoBehaviour:
   skillCooldownReductionAdder: 0
   skillCooldownReductionMultiplier: 0
   skillCooldownTimer: 0
+  baseSkillChargeRate: 1
+  skillChargeRate: 1
+  skillChargeRateAdder: 0
   baseSkillRadius: 0
   skillRadius: 0
   skillRadiusAdder: 0
@@ -429,6 +451,7 @@ MonoBehaviour:
   piercingAdder: 0
   pillarVisualPrefab: {fileID: 8482905087334200380, guid: 5d056d879cc10cc4e8773e174918925b, type: 3}
   skillIndicatorPrefab: {fileID: 2096060468615343360, guid: bbd82d20d4cd52a47a40db0f6590d7ba, type: 3}
+  psionicCarrotPrefab: {fileID: 7388594979766616069, guid: 57ed97c6692fc8240bd9fe3bdc57e08c, type: 3}
 --- !u!1 &4211631318131847547
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,7 +624,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: acbe6310247c778458a3c3376cf43e5e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8d3eeae861e27694ab506d918cc5726a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

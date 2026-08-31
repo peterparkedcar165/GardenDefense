@@ -310,6 +310,9 @@ public abstract class Plant : Entity, IAttackable
     public virtual bool UsesAutoCast => false;
     public virtual bool IsAutoCasting => false;
     public virtual void ToggleAutoCast() { }
+    // overridable label for the auto-cast button, since it isn't always about "casting" a
+    // skill on a timer (e.g. Carrot's is a one-time, permanent link, so it reads better as "Bond")
+    public virtual string AutoCastLabel => "Auto Cast";
     public int sunCost, totalSunSpent = 0;
     [System.NonSerialized] public ElementalType elementalType;
     [System.NonSerialized] public DamageType damageType;
@@ -449,6 +452,11 @@ public abstract class Plant : Entity, IAttackable
     // appears nearby, instead of re-scanning the whole field every tick
     public static event System.Action<Plant> OnPlantPlaced;
 
+    // fires from OnDestroy, for ANY removal cause (death, uproot/sell, scene unload) - lets a
+    // plant holding a reference to another specific plant (e.g. Carrot's Psionic Bond) clean
+    // that reference up no matter how the bonded plant leaves the field
+    public static event System.Action<Plant> OnPlantRemoved;
+
     protected int[] GetAllSortingLayerIDs()
     {
         var layers = UnityEngine.SortingLayer.layers;
@@ -465,6 +473,7 @@ public abstract class Plant : Entity, IAttackable
         allPlants.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this)
             PlantUpgradeUI.instance.HidePanel();
+        OnPlantRemoved?.Invoke(this);
     }
 
     private void SpawnAttackBar()
@@ -1335,7 +1344,7 @@ public abstract class Plant : Entity, IAttackable
         float nearestDist = Mathf.Infinity;
         foreach (Insect insect in insects)
         {
-            if (insect == null || !insect.IsAlive) continue;
+            if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
             if (dist <= attackRange && dist < nearestDist && IsValidNightTarget(insect, dist))
             {
@@ -1352,7 +1361,7 @@ public abstract class Plant : Entity, IAttackable
         float highestMaxHealth = -1f;
         foreach (Insect insect in insects)
         {
-            if (insect == null || !insect.IsAlive) continue;
+            if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
             if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
             if (insect.maxHealth > highestMaxHealth)
@@ -1371,7 +1380,7 @@ public abstract class Plant : Entity, IAttackable
         float closestDistToNext = Mathf.Infinity;
         foreach (Insect insect in insects)
         {
-            if (insect == null || !insect.IsAlive) continue;
+            if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
             if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
@@ -1398,7 +1407,7 @@ public abstract class Plant : Entity, IAttackable
         float furthestDistToNext = -1f;
         foreach (Insect insect in insects)
         {
-            if (insect == null || !insect.IsAlive) continue;
+            if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
             if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
@@ -1420,8 +1429,16 @@ public abstract class Plant : Entity, IAttackable
 
     public virtual bool IsValidNightTarget(Insect insect, float distance)
     {
+        if (insect.isBurrowed && !DetectsBurrowed) return false;
         if (DarknessManager.instance == null || !DarknessManager.instance.isDark) return true;
         if (distance <= attackRange * 0.5f) return true;
         return DarknessManager.instance.IsIlluminated(insect.transform.position);
     }
+
+    // override on a plant that can specifically detect burrowed insects (ground-level
+    // detection). false by default: a burrowed insect just can't be picked as anyone's primary
+    // target. this only stops it from being SELECTED - incidental splash/AoE that overlaps its
+    // position is separately blocked by Entity.Damage's CanHitBurrowed tag requirement, since
+    // that isn't gated by target selection at all
+    public virtual bool DetectsBurrowed => false;
 }

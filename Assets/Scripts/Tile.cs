@@ -21,6 +21,55 @@ public class Tile : MonoBehaviour
     private void Awake()  => allTiles[TileKey(transform.position)] = this;
     private void OnDestroy() => allTiles.Remove(TileKey(transform.position));
 
+    // world-space bounding box of every currently-registered tile, cached lazily and rebuilt
+    // once per scene (tiles are level-authored and static once loaded, so the set of keys in
+    // allTiles doesn't otherwise change mid-level). lets anything (e.g. projectiles) cheaply
+    // check "am I still over the playable grid" without re-scanning allTiles every frame
+    private static bool _boundsValid;
+    private static float _minX, _maxX, _minY, _maxY;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetBoundsCacheOnLoad()
+    {
+        _boundsValid = false;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (_, __) => _boundsValid = false;
+    }
+
+    private static void EnsureBounds()
+    {
+        if (_boundsValid || allTiles.Count == 0) return;
+
+        _minX = _minY = float.MaxValue;
+        _maxX = _maxY = float.MinValue;
+        foreach (Vector2Int key in allTiles.Keys)
+        {
+            float x = key.x * 0.5f;
+            float y = key.y * 0.5f;
+            if (x < _minX) _minX = x;
+            if (x > _maxX) _maxX = x;
+            if (y < _minY) _minY = y;
+            if (y > _maxY) _maxY = y;
+        }
+        _boundsValid = true;
+    }
+
+    // true if worldPos falls within the playable tile grid, plus a 2-tile grace margin beyond
+    // its outer edge (so things don't despawn the instant they clip past the last row of
+    // tiles). if no tiles are registered yet (e.g. called before the level finishes loading),
+    // defaults to true so nothing gets destroyed prematurely
+    private const float TileSize = 0.5f;
+    private const float GraceTiles = 2f;
+
+    public static bool IsInsideGrid(Vector3 worldPos)
+    {
+        EnsureBounds();
+        if (!_boundsValid) return true;
+
+        const float margin = TileSize * 0.5f + GraceTiles * TileSize;
+        return worldPos.x >= _minX - margin && worldPos.x <= _maxX + margin
+            && worldPos.y >= _minY - margin && worldPos.y <= _maxY + margin;
+    }
+
     public bool isOccupied = false, isHighground = false, isLowground = false;
     public DeadPlantRecord deadPlant;
     public bool isWaterAdjacent = false;

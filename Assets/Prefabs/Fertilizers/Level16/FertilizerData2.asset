@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Sun Generator
   stats:
-  - statType: 48
+  - statType: 33
     value: -0.25
   - statType: 50
     value: 0.35

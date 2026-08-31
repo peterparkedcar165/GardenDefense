@@ -11,23 +11,25 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 626ee385e9a6c334d80baddf8be70784, type: 3}
   m_Name: CarrotData
-  m_EditorClassIdentifier: Assembly-CSharp::GroundThornData
+  m_EditorClassIdentifier: Assembly-CSharp::CarrotData
   plantPrefab: {fileID: 9160436179017353685, guid: 5f4d027105558fe469363bc45d73868f, type: 3}
-  icon: {fileID: 21300000, guid: acbe6310247c778458a3c3376cf43e5e, type: 3}
+  icon: {fileID: 21300000, guid: 8d3eeae861e27694ab506d918cc5726a, type: 3}
   plantName: Carrot
   displayName: Carrot
-  cultivar: 4
+  cultivar: 7
   elementalType: 7
   damageType: 1
-  sunCost: 150
+  sunCost: 225
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 112
+  baseAttackDamage: 54
   baseMagicPower: 0
-  baseAttackSpeed: 0.3
+  baseAttackSpeed: 0.15
   baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -40,6 +42,9 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
+  baseRespiration: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -79,31 +84,15 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  splashRadius: 1
-  splashMultiplier: 0.75
-  groundedDuration: 3
-  path1AttackDamagePerLevel: 23
+  path1AttackDamagePerLevel: 9
   path1AttackRangePerLevel: 0.2
-  knockbackDistance: 0.6
-  grassChanceBase: 0.75
-  grassChancePerLevel: 0.05
-  grassFireResReduction: 0.35
-  grassFireResDuration: 8
-  dirtDamageBonus: 0.25
-  dirtBonusPerLevel: 0.05
-  sandChanceBase: 0.5
-  sandChancePerLevel: 0.1
-  blindDuration: 4
-  blindAccuracyPenalty: 0.5
-  caveChanceBase: 0.5
-  caveChancePerLevel: 0.05
-  stunDuration: 1
-  stunDurationPerLevel: 0.2
-  snowSlowPercent: 0.15
-  snowSlowPerLevel: 0.03
-  snowSlowDuration: 3
-  sunderPercent: 0.35
-  sunderDuration: 8
+  path1PiercingPerLevel: 1
+  path1TargetSwitchBonusHits: 1
+  psionicCooldownBase: 4
+  psionicCooldownReductionPerLevel: 0.4
+  psionicDamageBase: 20
+  psionicDamagePerLevel: 10
+  psionicDamageMPScaling: 0.2
   carrotCountBase: 6
   carrotsPerLevel: 2
   pillarStartOffset: 0.5
@@ -113,8 +102,7 @@ MonoBehaviour:
   skillBaseDamage: 83
   path3SkillDamagePerLevel: 22
   pillarKnockUpForce: 5
-  pillarKnockbackDistance: 1.2
-  secondFurrowDelay: 1.5
+  path3WidthPerLevel: 0.1
   visualFadeIn: 0.1
   visualHold: 0.7
   visualFadeOut: 0.5

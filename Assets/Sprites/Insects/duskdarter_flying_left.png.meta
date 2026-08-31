@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: 5c27bc1c42ada5743ac64172910a5a25
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6498585335626048546
+    second: duskdarter_flying_left_0
+  - first:
+      213: 833761400079165703
+    second: duskdarter_flying_left_1
+  - first:
+      213: -210296166324459353
+    second: duskdarter_flying_left_2
+  - first:
+      213: -7799955655443670996
+    second: duskdarter_flying_left_3
+  - first:
+      213: 5150801247300133306
+    second: duskdarter_flying_left_4
+  - first:
+      213: 1046687077661469801
+    second: duskdarter_flying_left_5
+  - first:
+      213: 4745176972507418949
+    second: duskdarter_flying_left_6
+  - first:
+      213: -2529961660157791412
+    second: duskdarter_flying_left_7
+  - first:
+      213: -5492423927519219396
+    second: duskdarter_flying_left_8
+  - first:
+      213: 8104883495528202083
+    second: duskdarter_flying_left_9
+  - first:
+      213: -3150091128813099964
+    second: duskdarter_flying_left_10
+  - first:
+      213: 1025779684970499871
+    second: duskdarter_flying_left_11
+  - first:
+      213: 1025870781869889566
+    second: duskdarter_flying_left_12
+  - first:
+      213: 5907656754093050973
+    second: duskdarter_flying_left_13
+  - first:
+      213: 3792434969237310240
+    second: duskdarter_flying_left_14
+  - first:
+      213: -4634240159965891052
+    second: duskdarter_flying_left_15
+  - first:
+      213: -2138349689995773440
+    second: duskdarter_flying_left_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 300
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: duskdarter_flying_left_0
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 145
+        width: 877
+        height: 858
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 224ad888eec9f2a50800000000000000
+      internalID: 6498585335626048546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_1
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 326
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 709a62f639d129b00800000000000000
+      internalID: 833761400079165703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_2
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 236
+        width: 36
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a8aa9c30c0e41df0800000000000000
+      internalID: -210296166324459353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_3
+      rect:
+        serializedVersion: 2
+        x: 947
+        y: 270
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c281b7548adf0c390800000000000000
+      internalID: -7799955655443670996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_4
+      rect:
+        serializedVersion: 2
+        x: 958
+        y: 236
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab1a6fdb1725b7740800000000000000
+      internalID: 5150801247300133306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_5
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 191
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96ce00ff954968e00800000000000000
+      internalID: 1046687077661469801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_6
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 191
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5411ba2c0514ad140800000000000000
+      internalID: 4745176972507418949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_7
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 157
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c43ffee3645c3ecd0800000000000000
+      internalID: -2529961660157791412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_8
+      rect:
+        serializedVersion: 2
+        x: 947
+        y: 157
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c317c5cb98df6c3b0800000000000000
+      internalID: -5492423927519219396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_9
+      rect:
+        serializedVersion: 2
+        x: 812
+        y: 134
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36f72e009945a7070800000000000000
+      internalID: 8104883495528202083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_10
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 123
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4446cf8eec0a844d0800000000000000
+      internalID: -3150091128813099964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_11
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 123
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1f8a7c403d4c3e00800000000000000
+      internalID: 1025779684970499871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_12
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 134
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e189ec27a00ac3e00800000000000000
+      internalID: 1025870781869889566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_13
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 100
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5c47aa84863cf150800000000000000
+      internalID: 5907656754093050973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_14
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 100
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02bc827e28f61a430800000000000000
+      internalID: 3792434969237310240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_15
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 100
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4163265b02fdfafb0800000000000000
+      internalID: -4634240159965891052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: duskdarter_flying_left_16
+      rect:
+        serializedVersion: 2
+        x: 958
+        y: 112
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00a3c32594e0352e0800000000000000
+      internalID: -2138349689995773440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      duskdarter_flying_left_0: 6498585335626048546
+      duskdarter_flying_left_1: 833761400079165703
+      duskdarter_flying_left_10: -3150091128813099964
+      duskdarter_flying_left_11: 1025779684970499871
+      duskdarter_flying_left_12: 1025870781869889566
+      duskdarter_flying_left_13: 5907656754093050973
+      duskdarter_flying_left_14: 3792434969237310240
+      duskdarter_flying_left_15: -4634240159965891052
+      duskdarter_flying_left_16: -2138349689995773440
+      duskdarter_flying_left_2: -210296166324459353
+      duskdarter_flying_left_3: -7799955655443670996
+      duskdarter_flying_left_4: 5150801247300133306
+      duskdarter_flying_left_5: 1046687077661469801
+      duskdarter_flying_left_6: 4745176972507418949
+      duskdarter_flying_left_7: -2529961660157791412
+      duskdarter_flying_left_8: -5492423927519219396
+      duskdarter_flying_left_9: 8104883495528202083
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

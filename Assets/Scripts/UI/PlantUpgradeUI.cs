@@ -407,7 +407,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (autoCastButton == null || !selectedPlant.UsesAutoCast) return;
         bool targeting = SkillTargetingManager.instance.IsPlantTargeting;
         if (autoCastButtonText != null)
-            autoCastButtonText.text = targeting ? "Pick a target..." : (selectedPlant.IsAutoCasting ? "Auto Cast: ON" : "Auto Cast: OFF");
+            autoCastButtonText.text = targeting ? "Pick a target..." : $"{selectedPlant.AutoCastLabel}: {(selectedPlant.IsAutoCasting ? "ON" : "OFF")}";
     }
 
     // Button callbacks , wired in Inspector

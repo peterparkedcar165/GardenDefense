@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3974951389667605070}
   - component: {fileID: 8957681408788208386}
   m_Layer: 3
-  m_Name: GroundThornProjectile
+  m_Name: CarrotProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119,7 +119,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: e02e15da4c9691f44815decd1705b660, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3fdf8e52fd1cae7428b7a648132e9970, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ef75cec9f57dfc4e86bf8c67cd9760e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GroundThornProjectile
+  m_EditorClassIdentifier: Assembly-CSharp::CarrotProjectile
   audioSource: {fileID: 0}
   hit: {fileID: 0}
   minPitch: 0.9

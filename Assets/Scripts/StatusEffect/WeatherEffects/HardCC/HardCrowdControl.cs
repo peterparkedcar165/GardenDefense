@@ -8,7 +8,11 @@ public abstract class HardCrowdControl : StatusEffect
         if (source != null)
             finalDuration = duration * (1 + source.immobilizeDurationMultiplier) + source.immobilizeDurationAdder;
         if (target != null)
+        {
             finalDuration *= (1 - target.tenacity);
+            finalDuration *= target.GetCCDurationMultiplier();
+            target.RegisterHardCC();
+        }
         this.duration = finalDuration;
     }
 

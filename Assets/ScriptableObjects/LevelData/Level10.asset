@@ -107,6 +107,10 @@ MonoBehaviour:
     unlockWave: 7
     budgetWeight: 0.15
     startDelay: 5
+  - data: {fileID: 11400000, guid: c82889c58bb1d0445864e9315c0d3fb5, type: 2}
+    unlockWave: 7
+    budgetWeight: 0.15
+    startDelay: 5
   eliteWaveInterval: 5
   eliteInsects:
   - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}

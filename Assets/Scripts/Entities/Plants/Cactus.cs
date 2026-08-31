@@ -30,7 +30,7 @@ public class Cactus : Shooter
     {
         base.Update();
 
-        if (autoCastEnabled && SkillReady)
+        if (autoCastEnabled && SkillReady && HasInsectsInRange())
             ActivateSkill();
 
         if (HasEffect<ShieldEffect>())
@@ -115,6 +115,17 @@ public class Cactus : Shooter
             if (Vector3.Distance(transform.position, insect.transform.position) <= attackRange)
                 insect.ApplyEffect(new TauntEffect(insect, TauntEffectDuration, 1, this, this));
         }
+    }
+
+    private bool HasInsectsInRange()
+    {
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) <= attackRange)
+                return true;
+        }
+        return false;
     }
 
     public override void ActivateSkill()

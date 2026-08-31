@@ -26,6 +26,10 @@ public class Glowshroom : Shooter
     private float BlindDuration      => BlindDurationBase + BlindDurationMP;
     private float BlindPenalty       => GMData?.blindAccuracyPenalty       ?? 1f;
 
+    private int   DeathSunGeneration => Mathf.RoundToInt((GMData?.deathSunGeneration ?? 3f) + (GMData?.path2SunGenerationPerLevel ?? 1f) * effectivePath2Level);
+    private float DeathBlindDuration => GMData?.deathBlindDuration ?? 4f;
+    private float DeathBlindRadius   => GMData?.deathBlindRadius   ?? 2f;
+
     protected override void Awake()
     {
         base.Awake();
@@ -52,6 +56,35 @@ public class Glowshroom : Shooter
         autoCastEnabled = true;
     }
 
+    // innate smart targeting: still resolves via the player's chosen targeting mode (First/
+    // Nearest/Last/Strongest), but prefers candidates that don't have Fungal Glow yet, so
+    // attacks spread the glow around instead of piling it onto whichever insect got hit first.
+    // only falls back to a glowing target when every valid insect already has it
+    protected override GameObject FindTarget()
+    {
+        List<Insect> withoutGlow = new List<Insect>();
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive || insect.HasEffect<FungalGlowEffect>()) continue;
+            withoutGlow.Add(insect);
+        }
+
+        GameObject target = FindByTargeting(withoutGlow);
+        return target != null ? target : FindByTargeting(Insect.allInsects);
+    }
+
+    private GameObject FindByTargeting(List<Insect> insects)
+    {
+        switch (targeting)
+        {
+            case TARGETING.First:     return FindFirst(insects);
+            case TARGETING.Nearest:   return FindNearest(insects);
+            case TARGETING.Last:      return FindLast(insects);
+            case TARGETING.Strongest: return FindStrongest(insects);
+            default:                  return null;
+        }
+    }
+
     protected override void Shoot(Vector3 target)
     {
         if (projectilePrefab == null) return;
@@ -64,6 +97,21 @@ public class Glowshroom : Shooter
             bolt.SetTarget(targetGO);
             bolt.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing,
                             damageType, elementalType, this, SplashRadius, SplashMult);
+        }
+    }
+
+    // called by FungalGlowEffect.OnTargetDied() whenever a glowing insect dies, regardless of
+    // cause. Sun generation always triggers; the blind flash is a Path2-max-only bonus
+    public void OnFungalGlowInsectDied(Vector3 position)
+    {
+        GenerateSun(DeathSunGeneration);
+
+        if (!IsPath2Maxed) return;
+        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            if (Vector3.Distance(position, insect.transform.position) > DeathBlindRadius) continue;
+            insect.ApplyEffect(new BlindEffect(insect, DeathBlindDuration, 1, this, BlindPenalty));
         }
     }
 
@@ -183,7 +231,7 @@ public class Glowshroom : Shooter
         $"Fires a fungal bolt dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the target, splashing <color=green><b>{SplashMultBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{SplashMultMP * 100f:F0}%</b></color>] of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
-        $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed.";
+        $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed. Whenever an insect affected by <color=#88FF88>Fungal Glow</color> dies, the {GetName()} generates <color=yellow><b>{DeathSunGeneration}</b></color> <color=yellow>Sun</color>.";
 
     public override string GetSkillDesription() =>
         $"Unleashes a blinding flash, tripling the illumination radius to <color=green><b>{lightEmissionRange * LightMult:F1}</b></color> for <color=green><b>{skillDuration:F0}s</b></color>. All insects caught in the expanded radius are <color=#DDDDDD><b>Blinded</b></color> for <color=green><b>{BlindDurationBase:F1}s</b></color> [<color=#FFB6C1><b>+{BlindDurationMP:F1}s</b></color>], causing their attacks to miss.";
@@ -207,12 +255,14 @@ public class Glowshroom : Shooter
     public override string GetPath2Description(bool details = false)
     {
         float durpl = GMData?.path2FungalGlowDurationPerLevel ?? 1f;
+        float sunpl = GMData?.path2SunGenerationPerLevel ?? 1f;
         string desc = details
-            ? $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>[({GMData?.fungalGlowDuration ?? 6f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed."
+            ? $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>[({GMData?.fungalGlowDuration ?? 6f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed. Whenever an insect affected by <color=#88FF88>Fungal Glow</color> dies, the {GetName()} generates <color=yellow><b>[({GMData?.deathSunGeneration ?? 3f:F0}) + ({sunpl:F0}/Lvl.)]</b></color> <color=yellow>Sun</color>."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#88FF88>Fungal Glow</color> duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "<color=#88FF88>Fungal Glow</color> reduces <color=green><b>Grass Resistance</b></color> and <color=#4FC3F7><b>Water Resistance</b></color> by <color=green><b>22%</b></color>.")}\n\n" +
+               $"Increase Sun generated per death by <color=green><b>{sunpl:F0}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(path2Level, $"Whenever an insect affected by <color=#88FF88>Fungal Glow</color> dies, it creates a flash which <color=#DDDDDD><b>Blinds</b></color> nearby insects for <color=green><b>{DeathBlindDuration:F0}s</b></color> in a <color=green><b>{DeathBlindRadius:F0}</b></color> radius.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
