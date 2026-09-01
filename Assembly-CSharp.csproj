@@ -52,6 +52,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\CarrotData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\DandelionProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearFireEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ShelterAggroEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
     <Compile Include="Assets\Scripts\PlantRegistry.cs" />
@@ -400,7 +401,6 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Glowshroom.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\StatusIndicator.cs" />
     <Compile Include="Assets\Scripts\DoTAggregator.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\DeliciousAcornEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\EmberProjectile.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DesertLocustData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Kelp.cs" />

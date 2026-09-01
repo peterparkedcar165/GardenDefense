@@ -60,9 +60,9 @@ public class FertilizerManager : MonoBehaviour
             if (activeFertilizer.targetElementalTypes != null)
                 foreach (var e in activeFertilizer.targetElementalTypes)
                     parts.Add(e.ToString());
-            if (activeFertilizer.targetCultivars != null)
-                foreach (var c in activeFertilizer.targetCultivars)
-                    parts.Add(c.ToString());
+            if (activeFertilizer.targetFamilies != null)
+                foreach (var f in activeFertilizer.targetFamilies)
+                    parts.Add(f.ToString());
             target = parts.Count > 0 ? string.Join(", ", parts) : "None";
         }
         sb.AppendLine($"<size=85%>Applies to: <color=#FFD700>{target}</color></size>");
@@ -106,9 +106,9 @@ public class FertilizerManager : MonoBehaviour
         if (activeFertilizer.targetElementalTypes != null)
             foreach (var e in activeFertilizer.targetElementalTypes)
                 if (plant.elementalType == e) return true;
-        if (activeFertilizer.targetCultivars != null)
-            foreach (var c in activeFertilizer.targetCultivars)
-                if (plant.data != null && plant.data.cultivar == c) return true;
+        if (activeFertilizer.targetFamilies != null)
+            foreach (var f in activeFertilizer.targetFamilies)
+                if (plant.data != null && plant.data.family == f) return true;
         return false;
     }
 

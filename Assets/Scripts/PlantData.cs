@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlantData : ScriptableObject
 {
@@ -7,7 +8,8 @@ public class PlantData : ScriptableObject
     public Sprite icon;
     public string plantName;
     public string displayName;
-    public PlantCultivar cultivar;
+    [FormerlySerializedAs("cultivar")]
+    public PlantFamily family;
     public ElementalType elementalType;
     public DamageType damageType;
     public int sunCost;
@@ -112,17 +114,17 @@ public class PlantData : ScriptableObject
         _                     => t.ToString()
     };
 
-    public static string CultivarTag(PlantCultivar c) => c switch
+    public static string FamilyTag(PlantFamily f) => f switch
     {
-        PlantCultivar.Chlorophyll => "<color=#FFD700>Chlorophyll</color>",
-        PlantCultivar.Verdance    => "<color=#FF6B81>Verdance</color>",
-        PlantCultivar.Symbiosis   => "<color=#20B2AA>Symbiosis</color>",
-        PlantCultivar.Shelter     => "<color=#A9A9A9>Shelter</color>",
-        PlantCultivar.Thorn       => "<color=#DC143C>Thorn</color>",
-        PlantCultivar.Wither      => "<color=#8B008B>Wither</color>",
-        PlantCultivar.Burgeon     => "<color=#DA70D6>Burgeon</color>",
-        PlantCultivar.Kinship     => "<color=#6495ED>Kinship</color>",
-        _                         => c.ToString()
+        PlantFamily.Photosynthesis => "<color=#FFD700>Photosynthesis</color>",
+        PlantFamily.Verdance       => "<color=#FF6B81>Verdance</color>",
+        PlantFamily.Symbiosis      => "<color=#20B2AA>Symbiosis</color>",
+        PlantFamily.Shelter        => "<color=#A9A9A9>Shelter</color>",
+        PlantFamily.Thorn          => "<color=#DC143C>Thorn</color>",
+        PlantFamily.Wither         => "<color=#8B008B>Wither</color>",
+        PlantFamily.Burgeon        => "<color=#DA70D6>Burgeon</color>",
+        PlantFamily.Kindred        => "<color=#6495ED>Kindred</color>",
+        _                          => f.ToString()
     };
 
     public static string DamageTypeTag(DamageType t) => t switch

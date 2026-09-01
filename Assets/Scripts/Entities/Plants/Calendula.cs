@@ -287,7 +287,7 @@ public class Calendula : Aura
         $"<color=green><b>Base Illumination Range</b></color> is equal to <color=green><b>Attack Range</b></color>.";
 
     public override string GetSkillDesription() =>
-        $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's attacks deal an additional <color=green><b>{attackDamage * FloralGlowDamageScaling:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>.";
+        $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>. The plant's projectile attacks deal an additional <color=green><b>{attackDamage * FloralGlowDamageScaling:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -321,7 +321,7 @@ public class Calendula : Aura
         float dmgScalingBase = CData?.floralGlowBaseDamageScaling ?? 0.25f;
         float dmgScalingPerLevel = CData?.floralGlowDamageScalingPerLevel ?? 0.05f;
         string desc = details
-            ? $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. The plant's attacks deal an additional <color=green><b>[({dmgScalingBase * 100f:F0}%) + ({dmgScalingPerLevel * 100f:F0}%/Lvl.) Attack Damage + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>."
+            ? $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. The plant's projectile attacks deal an additional <color=green><b>[({dmgScalingBase * 100f:F0}%) + ({dmgScalingPerLevel * 100f:F0}%/Lvl.) Attack Damage + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +

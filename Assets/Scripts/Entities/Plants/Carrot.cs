@@ -331,17 +331,14 @@ public class Carrot : Shooter
         $"The {GetName()} is an elderly root sage who commands the earth itself, hurling stone at its enemies and forging psionic links with its allies.";
 
     public override string GetAttackDescription() =>
-        $"Hurls earth at the target, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        $"Conjure a homing carrot projectile that seeks out insects and continuously pierces through the same target, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per hit. The projectile can hit <color=green><b>{1 + piercing}</b></color> times.";
 
     public override string GetPassiveDescription() =>
-        $"Forms a <color=#B266FF><b>Psionic Bond</b></color> with a chosen Shooter plant. Every time that plant fires, the {GetName()} also fires a " +
-        $"<color=#B266FF><b>Psionic Carrot</b></color> at the same target, dealing <color=green><b>{PsionicDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{PsionicDamageMP:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. " +
-        $"Cooldown: <color=green><b>{PsionicCooldown:F1}s</b></color>.";
+        $"Target a <color=green><b>Shooter</b></color> plant to form a <color=#B266FF><b>Psionic Bond</b></color>. When the targeted ally shoots, the {GetName()} unleashes a coordinated <color=#B266FF><b>Psionic Carrot</b></color>, behaving identically to the Attack, but dealing <color=green><b>{PsionicDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{PsionicDamageMP:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per hit.\n\n" +
+        $"Cooldown: <color=green><b>{PsionicCooldown:F1}</b></color> seconds.";
 
     public override string GetSkillDesription() =>
-        $"Aim a direction. A furrow of churned earth plows from the {GetName()}, sprouting <color=green><b>{CarrotCount}</b></color> carrots in a line, each covering one square, " +
-        $"striking each insect once for <color=green><b>{SkillDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{SkillDamageMP:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. " +
-        $"Insects struck are knocked up and pushed aside, away from the line of carrots.";
+        $"Aim in a direction. A line of <color=green><b>{CarrotCount}</b></color> carrots erupt from the ground, dealing <color=green><b>{SkillDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{SkillDamageMP:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and knocking insects aside.";
 
     public override string GetPath1Name() => "Upheaval";
     public override string GetPath2Name() => "Attunement";
@@ -353,13 +350,13 @@ public class Carrot : Shooter
         float rngpl = GData?.path1AttackRangePerLevel ?? 0.2f;
         int   ppl   = GData?.path1PiercingPerLevel ?? 1;
         string desc = details
-            ? $"Hurls earth at the target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            ? $"Conjure a homing carrot projectile that seeks out insects and continuously pierces through the same target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per hit. The projectile can hit <color=green><b>[(1) + Piercing]</b></color> times."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Piercing</b></color> by <color=green><b>{ppl}</b></color> per level. [<color=green><b>+{ppl * effectivePath1Level}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, $"Each hit against the same target increases damage by <color=green><b>{PsionicMarkEffect.DamagePerStack * 100f:F0}%</b></color>. Switching targets grants <color=green><b>+{TargetSwitchBonusHits}</b></color> additional hits.")}\n\n" +
+               $"{Level5Section(path1Level, $"Each hit against the same target increases damage by <color=green><b>{PsionicMarkEffect.DamagePerStack * 100f:F0}%</b></color>.\n\nSwitching targets grants <color=green><b>+{TargetSwitchBonusHits}</b></color> additional hits.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -369,8 +366,9 @@ public class Carrot : Shooter
         float cdpl  = GData?.psionicCooldownReductionPerLevel ?? 0.3f;
         float dmgpl = GData?.psionicDamagePerLevel ?? 20f;
         string desc = details
-            ? $"Forms a <color=#B266FF><b>Psionic Bond</b></color> with a chosen Shooter plant. Every time that plant fires, the {GetName()} also fires a <color=#B266FF><b>Psionic Carrot</b></color> at the same target, " +
-              $"dealing <color=green><b>[({GData?.psionicDamageBase ?? 30f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{(GData?.psionicDamageMPScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            ? $"Target a <color=green><b>Shooter</b></color> plant to form a <color=#B266FF><b>Psionic Bond</b></color>. When the targeted ally shoots, the {GetName()} unleashes a coordinated <color=#B266FF><b>Psionic Carrot</b></color>, behaving identically to the Attack, but " +
+              $"dealing <color=green><b>[({GData?.psionicDamageBase ?? 30f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{(GData?.psionicDamageMPScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per hit.\n\n" +
+              $"Cooldown: <color=green><b>[({GData?.psionicCooldownBase ?? 3f:F1}) - ({cdpl:F1}/Lvl.)]</b></color> seconds."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Decrease Psionic Carrot cooldown by <color=green><b>{cdpl:F1}s</b></color> per level. [<color=green><b>-{cdpl * effectivePath2Level:F1}s</b></color>]\n\n" +
@@ -383,9 +381,8 @@ public class Carrot : Shooter
     public override string GetPath3Description(bool details = false)
     {
         string desc = details
-            ? $"Aim a direction. A furrow of churned earth plows from the {GetName()}, sprouting <color=green><b>[({GData?.carrotCountBase ?? 3}) + ({GData?.carrotsPerLevel ?? 1}/Lvl.)]</b></color> carrots in a line, each covering one square, " +
-              $"striking each insect once for <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage. " +
-              $"Insects struck are knocked up and pushed aside, away from the line of carrots."
+            ? $"Aim in a direction. A line of <color=green><b>[({GData?.carrotCountBase ?? 3}) + ({GData?.carrotsPerLevel ?? 1}/Lvl.)]</b></color> carrots erupt from the ground, " +
+              $"dealing <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage and knocking insects aside."
             : GetSkillDesription();
         float wpl = GData?.path3WidthPerLevel ?? 0.1f;
         return $"Skill:\n\n{desc}\n\n" +
@@ -393,7 +390,7 @@ public class Carrot : Shooter
                $"Increase <color=green><b>Base Damage</b></color> by <color=green><b>{GData?.path3SkillDamagePerLevel ?? 8f:F0}</b></color> per level. [<color=green><b>+{(GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase carrot width by <color=green><b>{wpl * 100f:F0}%</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Each carrot further down the line deals <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> more damage and grows <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> larger than the last, calculated from the first carrot.")}\n\n" +
+               $"{Level5Section(path3Level, $"The eruption deals an extra <color=green><b>{CarrotFurrow.MaxHealthDamagePercent * 100f:F0}%</b></color> Max Health {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to insects.\n\nEach carrot further down the line deals <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> more damage and grows <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> larger than the one before it, compounding down the line.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

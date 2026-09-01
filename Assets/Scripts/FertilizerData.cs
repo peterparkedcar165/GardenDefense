@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "FertilizerData", menuName = "Scriptable Objects/FertilizerData")]
 public class FertilizerData : ScriptableObject
@@ -7,7 +8,8 @@ public class FertilizerData : ScriptableObject
     public FertilizerStat[] stats;
     public Sprite icon;
     public ElementalType[] targetElementalTypes;
-    public PlantCultivar[] targetCultivars;
+    [FormerlySerializedAs("targetCultivars")]
+    public PlantFamily[] targetFamilies;
     public bool appliesToAll;
     public FertilizerTier tier;
 }

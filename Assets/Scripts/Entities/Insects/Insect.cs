@@ -159,12 +159,15 @@ public abstract class Insect : Entity, IAttackable
             switch (aggressivity)
             {
                 case Aggressivity.High:
-                    return FindNearestPlantInRange();
+                {
+                    IAttackable highTarget = FindNearestPlantInRange();
+                    TryApplyShelterAggro(highTarget);
+                    return highTarget;
+                }
                 case Aggressivity.Medium:
                     if (_plantAttackCooldown > 0) return null;
                     IAttackable mediumTarget = FindNearestPlantInRange();
-                    if (mediumTarget is AcornSprout sprout && sprout.IsAlive && sprout.health > sprout.maxHealth * DeliciousAcornEffect.HealthThreshold)
-                        ApplyEffect(new DeliciousAcornEffect(this, sprout, sprout));
+                    TryApplyShelterAggro(mediumTarget);
                     return mediumTarget;
                 default:
                     return null;
@@ -734,22 +737,51 @@ public abstract class Insect : Entity, IAttackable
         target.ReceiveAttack(attackDamage, this);
     }
 
+    // Verdance family passive: if the nearest candidate is a Verdance plant, a non-Verdance
+    // plant also in range is preferred instead (complete skip, no roll needed) - but if the
+    // Verdance plant is the only one in range, there's only a 50% chance it's picked at all
     private IAttackable FindNearestPlantInRange()
     {
         Plant nearest = null;
+        Plant nearestNonVerdance = null;
         float nearestDist = Mathf.Infinity;
+        float nearestNonVerdanceDist = Mathf.Infinity;
+
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
             if (!CanReachPlant(plant)) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
-            if (dist <= targetingRange && dist < nearestDist)
+            if (dist > targetingRange) continue;
+
+            if (dist < nearestDist)
             {
                 nearestDist = dist;
                 nearest = plant;
             }
+            bool isVerdance = plant.data != null && plant.data.family == PlantFamily.Verdance;
+            if (!isVerdance && dist < nearestNonVerdanceDist)
+            {
+                nearestNonVerdanceDist = dist;
+                nearestNonVerdance = plant;
+            }
         }
-        return nearest;
+
+        if (nearest == null) return null;
+        bool nearestIsVerdance = nearest.data != null && nearest.data.family == PlantFamily.Verdance;
+        if (!nearestIsVerdance) return nearest;
+        if (nearestNonVerdance != null) return nearestNonVerdance;
+        return Random.value < 0.5f ? null : nearest;
+    }
+
+    // Shelter family passive: forces this insect to keep attacking the given plant (if it's a
+    // Shelter-family plant above the health threshold) instead of retargeting elsewhere later
+    private void TryApplyShelterAggro(IAttackable candidate)
+    {
+        if (candidate is not Plant plant || !plant.IsAlive || plant.data == null) return;
+        if (plant.data.family != PlantFamily.Shelter) return;
+        if (plant.health <= plant.maxHealth * ShelterAggroEffect.HealthThreshold) return;
+        ApplyEffect(new ShelterAggroEffect(this, plant, plant));
     }
 
     // same terrain rules FindNearestPlantInRange uses, shared so a taunted target (which

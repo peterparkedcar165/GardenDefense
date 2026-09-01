@@ -30,6 +30,11 @@ public class Anemone : Shooter
         VortexRadius = AData?.baseVortexRadius ?? 1.5f;
     }
 
+    // path1 max: 3 extra wind balls on top of the base 3 - total damage across all of them
+    // always sums to 100% Attack Damage, so each individual shot deals less (attackDamage /
+    // ProjectileCount) once there are 6 instead of 3
+    private int ProjectileCount => IsPath1Maxed ? 6 : 3;
+
     protected override void Shoot(Vector3 target)
     {
         StartCoroutine(TripleShot(target));
@@ -37,10 +42,11 @@ public class Anemone : Shooter
 
     private IEnumerator TripleShot(Vector3 target)
     {
-        for (int i = 0; i < 3; i++)
+        int count = ProjectileCount;
+        for (int i = 0; i < count; i++)
         {
             FireProjectile(target);
-            if (i < 2) yield return new WaitForSeconds(0.1f);
+            if (i < count - 1) yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -53,13 +59,7 @@ public class Anemone : Shooter
         AnemoneProjectile projectile = proj.GetComponent<AnemoneProjectile>();
         if (projectile == null) return;
         projectile.SetTarget(primaryTarget);
-        projectile.Initialize(target, attackDamage / 3f, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
-    }
-
-    protected override void OnShoot()
-    {
-        if (IsPath1Maxed && Random.value < 0.35f)
-            skillCooldownTimer = Mathf.Max(0f, skillCooldownTimer - 2f);
+        projectile.Initialize(target, attackDamage / ProjectileCount, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
     }
 
     public override void OnPath1Upgrade(int level)
@@ -121,7 +121,7 @@ public class Anemone : Shooter
         $"The {GetName()} commands the winds to erode and consume her foes, then pulls them into a devastating vortex.";
 
     public override string GetAttackDescription() =>
-        $"Launches <color=green><b>3</b></color> wind balls at the target, each dealing <color=green><b>{attackDamage / 3f:F0}</b></color> [<color=green><b>33%</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and <color=green><b>{attackDamage / 3f * 0.5f:F0}</b></color> to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius.";
+        $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color=green><b>{attackDamage / ProjectileCount:F0}</b></color> [<color=green><b>{100f / ProjectileCount:F0}%</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and <color=green><b>{attackDamage / ProjectileCount * 0.5f:F0}</b></color> to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
         $"Dealing Wind Damage has a <color=green><b>{ErosionProcChance * 100f:F0}%</b></color> chance to apply <color=green><b>{InitialErosionStacks}</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>{ErosionDuration:F0}s</b></color>, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)ErosionReductionPerStack}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead.";
@@ -138,12 +138,12 @@ public class Anemone : Shooter
         float aspl = AData?.path1AttackSpeedPerLevel ?? 0.05f;
         float rpl  = AData?.path1AttackRangePerLevel ?? 0.2f;
         string desc = details
-            ? $"Launches <color=green><b>3</b></color> wind balls at the target, each dealing <color=green><b>[33% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and half that to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius."
+            ? $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color=green><b>[{100f / ProjectileCount:F0}% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and half that to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rpl:F2}</b></color> per level. [<color=green><b>+{rpl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Attacks have a <color=green><b>35%</b></color> chance to reduce <color=#B2EBF2><b>Wind Vortex</b></color>'s cooldown by <color=green><b>2 seconds</b></color> per hit.")}\n\n" +
+               $"{Level5Section(path1Level, "Increase projectile count by <color=green><b>3</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }

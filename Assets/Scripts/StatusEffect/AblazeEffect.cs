@@ -11,6 +11,11 @@ public class AblazeEffect : StatusEffect
         this.maxHealthPercent = maxHealthPercent;
         effectType    = Type.positive;
         elementalType = ElementalType.Fire;
+        // several different Zinnias can each stack their own Ablaze onto the same plant; only
+        // the oldest one is ever the one that fires (see Trigger and HandleOnHitEffects, which
+        // both resolve to the first match in activeEffects - the earliest applied) so the newer
+        // ones just wait their turn instead of overwriting or firing alongside it
+        sourceStackable = true;
     }
 
     public override string GetName() => "<color=orange><b>Ablaze</b></color>";
@@ -27,7 +32,10 @@ public class AblazeEffect : StatusEffect
     public void Trigger(Insect insect, float effectiveness)
     {
         if (insect == null) return;
-        target.RemoveEffect<AblazeEffect>();
+        // removes THIS specific instance (by source), not just "an" Ablaze - the generic,
+        // source-less RemoveEffect<T>() searches activeEffects in reverse and would strip the
+        // newest instance instead of the one that actually fired
+        target.RemoveEffect<AblazeEffect>(source);
         target.StartCoroutine(DelayedBonusDamage(insect, effectiveness));
     }
 

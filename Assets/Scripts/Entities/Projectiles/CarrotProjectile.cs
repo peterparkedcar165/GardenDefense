@@ -15,6 +15,6 @@ public class CarrotProjectile : DashHomingProjectile
             damage *= carrot.ApplyPsionicMark(insect);
 
         insect.Damage(damage, damageType, elementalType, source, true,
-            new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget });
+            new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget, DamageTag.Projectile });
     }
 }

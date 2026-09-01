@@ -112,10 +112,9 @@ public class AcornSprout : Shooter
         float durBase    = AcornData?.stunDuration             ?? 0.5f;
         float chancepl   = AcornData?.path2StunChancePerLevel   ?? 0.05f;
         float durpl      = AcornData?.path2StunDurationPerLevel ?? 0.1f;
-        string stickyDesc = $"While the {GetName()} is above <color=green><b>{DeliciousAcornEffect.HealthThreshold * 100f:F0}%</b></color> Health, its delicious skin retains any attacker that would otherwise leave after a bite.";
         string desc = details
-            ? $"Attacks have a <color=green><b>[({chanceBase * 100f:F0}) + ({chancepl * 100f:F0}/Lvl.)]</b></color>% chance to stun targets for <color=green><b>[({durBase:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\n\n{stickyDesc}"
-            : $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{passiveDuration:F1}</b></color> seconds.\n\n{stickyDesc}";
+            ? $"Attacks have a <color=green><b>[({chanceBase * 100f:F0}) + ({chancepl * 100f:F0}/Lvl.)]</b></color>% chance to stun targets for <color=green><b>[({durBase:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
+            : $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{passiveDuration:F1}</b></color> seconds.";
         string passiveMaxBonus = "Attacks' <color=green><b>Piercing</b></color> instead bounce to nearby targets.\n\nIncrease <color=green><b>Piercing</b></color> by <color=green><b>1</b></color>.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Stun Chance</b></color> by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +

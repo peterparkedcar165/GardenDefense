@@ -30,17 +30,17 @@ public struct PlantBaseStats
 
 public enum TARGETING { Nearest, First, Last, Strongest }
 
-// a plant's cultivar defines its archetype/role in the garden
-public enum PlantCultivar
+// a plant's family defines its archetype/role in the garden
+public enum PlantFamily
 {
-    Chlorophyll,    // sun generator
+    Photosynthesis, // sun generator
     Verdance,       // healer
     Symbiosis,      // buffer
     Shelter,        // tank/shield
     Thorn,          // single target dps
     Wither,         // debuff/nihility
     Burgeon,        // summoning
-    Kinship,        // coordinated attacks (e.g. Calendula's skill)
+    Kindred,        // coordinated attacks (e.g. Calendula's skill)
 }
 
 // generic snapshot of a plant's auto-cast state, captured on death and restored on revival.
@@ -245,7 +245,15 @@ public abstract class Plant : Entity, IAttackable
 
     public override void UpdateStats()
     {
+        // Photosynthesis family passive: converts 100% of Sun Yield into Attack Speed. added
+        // before base.UpdateStats() (which is what actually folds attackSpeedMultiplier into
+        // attackSpeed) and subtracted back right after, so it contributes to this frame's
+        // attackSpeed without permanently accumulating on the field itself
+        bool isPhotosynthesis = data != null && data.family == PlantFamily.Photosynthesis;
+        float photosynthesisBonus = isPhotosynthesis ? sunYieldMultiplier : 0f;
+        attackSpeedMultiplier += photosynthesisBonus;
         base.UpdateStats();
+        attackSpeedMultiplier -= photosynthesisBonus;
         comfortMin = baseComfortMin + comfortMinAdder;
         comfortMax = baseComfortMax + comfortMaxAdder;
         temperatureMin = baseTemperatureMin + temperatureMinAdder;
@@ -1208,35 +1216,67 @@ public abstract class Plant : Entity, IAttackable
         }
     }
 
-    public virtual string GetCultivar() => PlantData.CultivarTag(data != null ? data.cultivar : default);
+    public virtual string GetFamily() => PlantData.FamilyTag(data != null ? data.family : default);
 
-    public virtual string GetCultivarDescription()
+    public virtual string GetFamilyDescription()
     {
-        switch (data != null ? data.cultivar : default)
+        switch (data != null ? data.family : default)
         {
-            case PlantCultivar.Chlorophyll:
-            return "Generates sun.";
+            case PlantFamily.Photosynthesis:
+            return "Enhances the growth of the garden by providing <color=yellow><b>Sun</b></color>.";
 
-            case PlantCultivar.Verdance:
-            return "Heals.";
+            case PlantFamily.Verdance:
+            return "Aids and provides health benefits to allied plants.";
 
-            case PlantCultivar.Symbiosis:
-            return "Enhances allies.";
+            case PlantFamily.Symbiosis:
+            return "Provides offensive benefits to allied plants.";
 
-            case PlantCultivar.Shelter:
-            return "Tank or shields allies.";
+            case PlantFamily.Shelter:
+            return "Provides defenses to the garden, and resistances to allied plants.";
 
-            case PlantCultivar.Thorn:
-            return "DPS.";
+            case PlantFamily.Thorn:
+            return "Eradicates pests from the garden, strong and powerful.";
 
-            case PlantCultivar.Wither:
-            return "Applies debuffs.";
+            case PlantFamily.Wither:
+            return "Aids the garden by inflicting debuffs on insects.";
 
-            case PlantCultivar.Burgeon:
+            case PlantFamily.Burgeon:
             return "Uses companions to fight.";
 
-            case PlantCultivar.Kinship:
-            return "Specializes in coordinated attacks, requiring the placement of other plants.";
+            case PlantFamily.Kindred:
+            return "A side-partner plant, who relies on allies to unleash their full potential.";
+
+            default:
+            return "";
+        }
+    }
+
+    // the mechanical effect every plant of this family shares, regardless of its own kit -
+    // shown alongside GetFamilyDescription() in the Family tooltip section
+    public virtual string GetFamilyPassiveDescription()
+    {
+        switch (data != null ? data.family : default)
+        {
+            case PlantFamily.Photosynthesis:
+            return "<b>Passive</b>: Converts 100% of Sun Yield into Attack Speed.";
+
+            case PlantFamily.Verdance:
+            return "<b>Passive</b>: Has a 50% chance to be completely ignored by insects.";
+
+            case PlantFamily.Symbiosis:
+            return "<b>Passive</b>: Attacks have a 50% chance to reduce Skill Cooldown by 1 second on hit.";
+
+            case PlantFamily.Shelter:
+            return $"<b>Passive</b>: While over {ShelterAggroEffect.HealthThreshold * 100f:F0}% Health, insects that initiate an Attack will retain aggro.";
+
+            case PlantFamily.Thorn:
+            return "<b>Passive</b>: Damage dealt against insects under 50% Health is increased by 10%.";
+
+            case PlantFamily.Wither:
+            return "<b>Passive</b>: Attacks have a 50% chance to reduce Skill Cooldown by 1 second on hit.";
+
+            case PlantFamily.Kindred:
+            return "<b>Passive</b>: Dealing Coordinated Damage has a 50% chance to reduce Skill Cooldown by 0.5 seconds.";
 
             default:
             return "";

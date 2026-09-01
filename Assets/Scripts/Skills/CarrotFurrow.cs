@@ -19,7 +19,10 @@ public class CarrotFurrow : MonoBehaviour
     private float speed;
     private int visualsSpawned;
 
-    public const float MaxLevelGrowthPerSegment = 0.1f;
+    public const float MaxLevelGrowthPerSegment = 0.07f;
+    // path3 max: scales with segmentScale just like the primary hit, so it naturally grows
+    // stronger down the line along with each carrot's own damage and size
+    public const float MaxHealthDamagePercent = 0.08f;
 
     private readonly HashSet<Insect> _hit = new HashSet<Insect>();
     private readonly List<Insect> _scratch = new List<Insect>();
@@ -69,10 +72,10 @@ public class CarrotFurrow : MonoBehaviour
     }
 
     // path3 max: each carrot further down the line hits harder and covers more ground than the
-    // last, scaled off the FIRST carrot (1st = base, 2nd = +10%, 3rd = +20%, ...) rather than
-    // compounding off the previous one, so it's a flat linear ramp rather than exponential
+    // one before it, compounding off the PREVIOUS carrot (1st = base, 2nd = +7%, 3rd = +7% on
+    // top of that, ...) rather than a flat ramp off the first, so it's exponential growth
     private float SegmentScale(int segmentIndex) =>
-        source.IsPath3Maxed ? 1f + MaxLevelGrowthPerSegment * segmentIndex : 1f;
+        source.IsPath3Maxed ? Mathf.Pow(1f + MaxLevelGrowthPerSegment, segmentIndex) : 1f;
 
     private void Update()
     {
@@ -103,6 +106,12 @@ public class CarrotFurrow : MonoBehaviour
 
             insect.Damage(damage * segmentScale, source.damageType, source.elementalType, source, true, furrowTags);
             if (!insect.IsAlive) continue;
+
+            if (source.IsPath3Maxed)
+            {
+                insect.Damage(insect.maxHealth * MaxHealthDamagePercent * segmentScale, source.damageType, source.elementalType, source, true, furrowTags);
+                if (!insect.IsAlive) continue;
+            }
 
             insect.ApplyEffect(new KnockUpEffect(insect, 30f, 1, source, knockUpForce));
             // pushed sideways, away from the line of carrots (whichever side of it the insect is

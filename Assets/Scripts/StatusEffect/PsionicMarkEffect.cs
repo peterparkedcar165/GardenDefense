@@ -1,13 +1,13 @@
 using UnityEngine;
 
 // Carrot's Path1 max: each hit from a specific Carrot's attack OR its Psionic Carrot stacks a
-// mark on the target, increasing that SAME Carrot's own subsequent damage on it by 3% per
+// mark on the target, increasing that SAME Carrot's own subsequent damage on it by 5% per
 // stack, uncapped, refreshing its duration on every hit so it fades if that Carrot stops
 // hitting this target for a while. source-stackable: several different Carrots hitting the
 // same insect each track their own independent mark rather than sharing one
 public class PsionicMarkEffect : StatusEffect
 {
-    public const float DamagePerStack = 0.03f;
+    public const float DamagePerStack = 0.05f;
 
     public int stacks;
     private const float StackDuration = 5f;

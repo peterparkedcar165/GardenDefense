@@ -50,7 +50,7 @@ public class FertilizerCard : MonoBehaviour
             var sb = new StringBuilder();
 
             bool hasElements  = data.targetElementalTypes != null && data.targetElementalTypes.Length > 0;
-            bool hasCultivars = data.targetCultivars       != null && data.targetCultivars.Length       > 0;
+            bool hasFamilies  = data.targetFamilies        != null && data.targetFamilies.Length        > 0;
 
             if (data.appliesToAll)
             {
@@ -60,8 +60,8 @@ public class FertilizerCard : MonoBehaviour
             {
                 if (hasElements)
                     sb.AppendLine($"Element: {string.Join(", ", data.targetElementalTypes)}");
-if (hasCultivars)
-                    sb.AppendLine($"Cultivar: {string.Join(", ", data.targetCultivars)}");
+                if (hasFamilies)
+                    sb.AppendLine($"Family: {string.Join(", ", data.targetFamilies)}");
             }
 
             sb.AppendLine();

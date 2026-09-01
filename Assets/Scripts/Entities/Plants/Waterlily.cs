@@ -163,7 +163,7 @@ public class Waterlily : Shooter
                $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"Increase max <color=#87CEEB><b>Slow</b></color> stacks by <color=green><b>{stackspl}</b></color> per level. [<color=green><b>+{stackspl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=#87CEEB><b>Slow</b></color> chance by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Splash damage now applies <color=green><b>On-Hit</b></color> effects at <color=green><b>{splashOnHitEffectiveness * 100f:F0}%</b></color> effectiveness.")}\n\n" +
+               $"{Level5Section(path2Level, $"Splash damage now applies <color=green><b>On-Hit</b></color> effects at <color=green><b>{splashOnHitEffectiveness * 100f:F0}%</b></color> effectiveness. Splash damage is now also considered a <color=green><b>Projectile</b></color> attack.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

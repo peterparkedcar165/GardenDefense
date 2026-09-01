@@ -119,6 +119,7 @@ public class AnemoneVortex : MonoBehaviour
                 float tenacityScale = Mathf.Sqrt(Mathf.Max(0f, 1f - insect.tenacity));
                 insect.windVelocity += away * knockbackForce * tenacityScale;
                 insect.ApplyEffect(new DisplacedEffect(insect, 0.5f, 1, source));
+                insect.ApplyEffect(new StunEffect(insect, 1f, 1, source));
             }
         }
         Destroy(gameObject);

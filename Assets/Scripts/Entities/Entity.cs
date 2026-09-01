@@ -118,6 +118,19 @@ public abstract class Entity : MonoBehaviour
         // so their overall on-hit output doesn't scale with attack speed the way base damage does
         float effectiveness = data.effectivenessOverride ?? data.source.onHitEffectiveness;
 
+        // Symbiosis/Wither family passive: attacks have a 50% chance to reduce this plant's own
+        // skill cooldown, scaled by on-hit effectiveness same as any other on-hit bonus. this
+        // only reaches HandleOnHitEffects at all when DamageTag.Attack is present (see
+        // Entity.Damage's OnHit?.Invoke gate), so no separate Attack-tag check is needed here
+        if (data.source is Plant attackerPlant && attackerPlant.data != null
+            && (attackerPlant.data.family == PlantFamily.Symbiosis || attackerPlant.data.family == PlantFamily.Wither)
+            && Random.value < 0.5f)
+            attackerPlant.skillCooldownTimer = Mathf.Max(0f, attackerPlant.skillCooldownTimer - 1f * effectiveness);
+
+        // Floral Glow and Ablaze only proc off projectile attacks - Waterlily's path2-max
+        // splash counts too, since it deliberately tags itself Projectile for exactly this
+        if (data.tags == null || !System.Array.Exists(data.tags, t => t == DamageTag.Projectile)) return;
+
         FloralGlowEffect floralGlow = data.source.GetEffect<FloralGlowEffect>();
         if (floralGlow != null)
             floralGlow.Trigger(insect, effectiveness);
@@ -629,6 +642,13 @@ public abstract class Entity : MonoBehaviour
         if (System.Array.Exists(damageTag, t => t == DamageTag.Coordinated))
         {
             coordinatedDamageMult = 1 + source.coordinatedDamage;
+            // Kindred family passive: dealing Coordinated damage has a 50% chance to reduce this
+            // plant's own skill cooldown, regardless of whether this hit also carries
+            // DamageTag.Attack (most Coordinated hits, e.g. Floral Glow's bonus poke or Psionic
+            // Carrot, don't)
+            if (source is Plant kindredPlant && kindredPlant.data != null && kindredPlant.data.family == PlantFamily.Kindred
+                && Random.value < 0.5f)
+                kindredPlant.skillCooldownTimer = Mathf.Max(0f, kindredPlant.skillCooldownTimer - 0.5f);
         } else
         {
             coordinatedDamageMult = 1;
@@ -642,7 +662,11 @@ public abstract class Entity : MonoBehaviour
             counterDamageMult = 1;
         }
 
-        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult;
+        // Thorn family passive: +10% damage against insects currently under 50% health
+        float thornMult = (source is Plant thornPlant && thornPlant.data != null && thornPlant.data.family == PlantFamily.Thorn
+            && this is Insect && health < maxHealth * 0.5f) ? 1.1f : 1f;
+
+        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult * thornMult;
 
         // damage variance roll, dot ticks stay flat so aggregated numbers remain stable
         // min always wins, when min surpasses max every roll lands on min
