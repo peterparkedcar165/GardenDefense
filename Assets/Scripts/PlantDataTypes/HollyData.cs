@@ -25,7 +25,7 @@ public class HollyData : PlantData
     public float path3SkillDurationPerLevel = 2f;
 
     public override string GetAttackDescription() =>
-        $"Releases icy thorns dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to all insects within range.";
+        $"Releases icy thorns dealing {DamageTypeLabel(damageType)} to all insects within range.";
 
     public override string GetPassiveDescription() =>
         "Insects that attack <b><color=#00FFFF>Holly</color></b> receive retaliatory damage. Max Health scales with <color=#FFB6C1><b>Magic Power</b></color>. " +

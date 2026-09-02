@@ -399,7 +399,7 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag) // damage with source
+    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false) // damage with source
     {
         if (this is Insect burrowedCheck && burrowedCheck.isBurrowed
             && !System.Array.Exists(damageTag, t => t == DamageTag.CanHitBurrowed)
@@ -677,9 +677,12 @@ public abstract class Entity : MonoBehaviour
             finalDamage *= Random.Range(minRoll, maxRoll);
         }
 
-        if (canCrit || System.Array.Exists(damageTag, t => t == DamageTag.SpecialCanCrit))
+        // forceCrit lets a caller pre-roll one shared crit check and guarantee the outcome here
+        // instead of letting each Damage call roll its own (e.g. Carrot's eruption: one roll,
+        // applied identically to every insect it hits)
+        if (canCrit || forceCrit || System.Array.Exists(damageTag, t => t == DamageTag.SpecialCanCrit))
         {
-            if (Random.value < source.criticalChance + bonusCritChanceReceived)
+            if (forceCrit || Random.value < source.criticalChance + bonusCritChanceReceived)
             {
                 finalDamage *= source.criticalDamage * (1f + bonusCritDamageReceived);
                 isCrit = true;

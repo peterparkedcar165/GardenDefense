@@ -30,7 +30,10 @@ public struct PlantBaseStats
 
 public enum TARGETING { Nearest, First, Last, Strongest }
 
-// a plant's family defines its archetype/role in the garden
+// a plant's family defines its archetype/role in the garden.
+// Burgeon (summoning) has been removed - ordinal 6 is intentionally left unused (rather than
+// letting Kindred slide down to it) so existing PlantData assets serialized as family: 7
+// (Kindred, e.g. Calendula/Carrot) don't silently point at the wrong value
 public enum PlantFamily
 {
     Photosynthesis, // sun generator
@@ -39,8 +42,7 @@ public enum PlantFamily
     Shelter,        // tank/shield
     Thorn,          // single target dps
     Wither,         // debuff/nihility
-    Burgeon,        // summoning
-    Kindred,        // coordinated attacks (e.g. Calendula's skill)
+    Kindred = 7,    // coordinated attacks (e.g. Calendula's skill)
 }
 
 // generic snapshot of a plant's auto-cast state, captured on death and restored on revival.
@@ -668,6 +670,15 @@ public abstract class Plant : Entity, IAttackable
         _isHighlighted = false;
     }
 
+    // lets another plant show/hide THIS plant's own range circle (e.g. Carrot highlighting its
+    // Soil Bond target while Carrot itself is selected) without marking this plant as selected -
+    // Select()/Deselect() are reserved for this plant's own actual selection state
+    public void ShowExternalRangeCircle(bool show)
+    {
+        if (ShowRangeCircle && circleRadius != null)
+            circleRadius.gameObject.SetActive(show);
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -1240,9 +1251,6 @@ public abstract class Plant : Entity, IAttackable
             case PlantFamily.Wither:
             return "Aids the garden by inflicting debuffs on insects.";
 
-            case PlantFamily.Burgeon:
-            return "Uses companions to fight.";
-
             case PlantFamily.Kindred:
             return "A side-partner plant, who relies on allies to unleash their full potential.";
 
@@ -1378,6 +1386,11 @@ public abstract class Plant : Entity, IAttackable
         return total;
     }
 
+    // hook for plants that can validly target insects beyond their own circle (e.g. Carrot's
+    // Soil Bond, which shares its bonded ally's range - a second circle centered on the ally,
+    // not just a bigger one centered on Carrot). default: the standard single-circle check
+    protected virtual bool IsWithinAttackRange(Insect insect, float distance) => distance <= attackRange;
+
     protected GameObject FindNearest(System.Collections.Generic.List<Insect> insects)
     {
         GameObject nearest = null;
@@ -1386,7 +1399,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
-            if (dist <= attackRange && dist < nearestDist && IsValidNightTarget(insect, dist))
+            if (IsWithinAttackRange(insect, dist) && dist < nearestDist && IsValidNightTarget(insect, dist))
             {
                 nearestDist = dist;
                 nearest = insect.gameObject;
@@ -1403,7 +1416,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
-            if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
             if (insect.maxHealth > highestMaxHealth)
             {
                 highestMaxHealth = insect.maxHealth;
@@ -1422,7 +1435,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
-            if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
             if (insect.currentWaypointIndex > highestWaypointIndex)
@@ -1449,7 +1462,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
-            if (dist > attackRange || !IsValidNightTarget(insect, dist)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
             if (insect.currentWaypointIndex < lowestWaypointIndex)

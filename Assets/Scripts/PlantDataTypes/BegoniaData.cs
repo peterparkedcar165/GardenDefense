@@ -23,7 +23,7 @@ public class BegoniaData : PlantData
     public float path3SkillDurationPerLevel = 1f;
 
     public override string GetAttackDescription() =>
-        $"Fires a magical bolt dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Fires a magical bolt dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         "Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, increasing <color=green><b>Elemental Affinity</b></color>. Scales with <color=#FFB6C1><b>Magic Power</b></color>.";

@@ -16,11 +16,11 @@ public class CalendulaData : PlantData
     public float floralGlowDamageScalingPerLevel = 0.05f;
 
     public override string GetAttackDescription() =>
-        $"Releases flaming petals dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to all insects within range.";
+        $"Releases flaming petals dealing {DamageTypeLabel(damageType)} to all insects within range.";
 
     public override string GetPassiveDescription() =>
         "Illuminates the surrounding area with a radius equal to her Attack Range.";
 
     public override string GetSkillDescription() =>
-        $"Target a plant anywhere on the field to grant it <color=orange>Floral Glow</color>. The plant's attacks deal additional {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
+        $"Target a plant anywhere on the field to grant it <color=orange>Floral Glow</color>. The plant's attacks deal additional {DamageTypeLabel(damageType)} on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s range.";
 }

@@ -18,13 +18,13 @@ MonoBehaviour:
   displayName: Carrot
   family: 7
   elementalType: 7
-  damageType: 1
+  damageType: 0
   sunCost: 225
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 32
+  baseAttackDamage: 102
   baseMagicPower: 0
-  baseAttackSpeed: 0.15
+  baseAttackSpeed: 0.2
   baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
   baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 3
+  baseProjectileSpeed: 999
   baseMaxRange: 99
   basePiercing: 0
   baseAoERadius: 0
@@ -84,15 +84,14 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  path1AttackDamagePerLevel: 8
-  path1AttackRangePerLevel: 0.2
-  path1PiercingPerLevel: 1
-  path1TargetSwitchBonusHits: 1
-  psionicCooldownBase: 4
-  psionicCooldownReductionPerLevel: 0.4
-  psionicDamageBase: 24
-  psionicDamagePerLevel: 8
-  psionicDamageMPScaling: 0.2
+  path1AttackDamagePerLevel: 32
+  path1CritChancePerLevel: 0.04
+  baseEruptionRadius: 1
+  path1RadiusPerLevel: 0.15
+  eruptionKnockUpForce: 6
+  bondCountdownBonus: 0.5
+  path2CountdownBonusPerLevel: 0.05
+  path2AttackRangePerLevel: 0.2
   carrotCountBase: 6
   carrotsPerLevel: 2
   pillarStartOffset: 0.5

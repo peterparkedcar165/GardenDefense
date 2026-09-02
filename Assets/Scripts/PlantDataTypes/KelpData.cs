@@ -29,7 +29,7 @@ public class KelpData : PlantData
     public float path3DurationPerLevel            = 2f;
 
     public override string GetAttackDescription() =>
-        $"Whips the target insect, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Whips the target insect, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         "Kelp's own Oxygen never depletes. Releases air bubbles when it hits a target, granting nearby plants Oxygen and producing Sun.";

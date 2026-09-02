@@ -17,7 +17,7 @@ MonoBehaviour:
   - type: 1
     intensity: 1
   temperature: 2
-  maxWaves: 26
+  maxWaves: 22
   startSunCount: 500
   startHealth: 200
   maxUpgradeLevel: 4

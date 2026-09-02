@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1f5bacec084f72b5e9efd88fafe9a8, type: 3}
+  m_Name: OldCarrotData
+  m_EditorClassIdentifier: Assembly-CSharp::OldCarrotData
+  plantPrefab: {fileID: 2387982406283412628, guid: 44ad94abde5a45ff89588dd0a8904bd4, type: 3}
+  icon: {fileID: 21300000, guid: 8d3eeae861e27694ab506d918cc5726a, type: 3}
+  plantName: OldCarrot
+  displayName: Old Carrot
+  family: 7
+  elementalType: 7
+  damageType: 1
+  sunCost: 225
+  skillTree: {fileID: 0}
+  baseMaxHealth: 200
+  baseAttackDamage: 32
+  baseMagicPower: 0
+  baseAttackSpeed: 0.15
+  baseAttackRange: 3
+  baseArmor: 0
+  baseMagicArmor: 0
+  baseElementalEffectChance: 0.1
+  baseOnHitEffectiveness: 1
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  startingShield: 0
+  baseTenacity: 0
+  baseFireResistance: 0
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseGrassResistance: 0
+  baseWindResistance: 0
+  baseGroundResistance: 0
+  baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
+  baseRespiration: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  baseLifesteal: 0
+  baseBonusEffectChance: 0
+  baseCriticalChance: 0.05
+  baseCriticalDamage: 1.75
+  baseDotDamage: 0
+  baseelementalAffinity: 0
+  baseCoordinatedDamage: 0
+  baseCounterDamage: 0
+  baseFireDamage: 0
+  baseWaterDamage: 0
+  baseGrassDamage: 0
+  baseWindDamage: 0
+  basePoisonDamage: 0
+  baseIceDamage: 0
+  baseGroundDamage: 0
+  baseLightEmissionRange: 0
+  baseMinionDamage: 0
+  baseProjectileSpeed: 3
+  baseMaxRange: 99
+  basePiercing: 0
+  baseAoERadius: 0
+  minFlightDuration: 0.5
+  projectileHeight: 1.2
+  basePassiveCooldown: 0
+  basePassiveDuration: 0
+  baseSkillCooldown: 0
+  baseSkillDuration: 0
+  channelDuration: 0
+  baseSkillRadius: 0
+  baseSkillDamageMultiplier: 0.5
+  baseSkillHealth: 0
+  basePassiveDamage: 0
+  baseSkillDamage: 0
+  path1AttackDamagePerLevel: 8
+  path1AttackRangePerLevel: 0.2
+  path1PiercingPerLevel: 1
+  path1TargetSwitchBonusHits: 1
+  psionicCooldownBase: 4
+  psionicCooldownReductionPerLevel: 0.4
+  psionicDamageBase: 24
+  psionicDamagePerLevel: 8
+  psionicDamageMPScaling: 0.2
+  oldCarrotCountBase: 6
+  oldCarrotsPerLevel: 2
+  pillarStartOffset: 0.5
+  pillarInterval: 0.1
+  pillarRadius: 0.3
+  pillarHitboxMultiplier: 2.5
+  skillBaseDamage: 83
+  path3SkillDamagePerLevel: 22
+  pillarKnockUpForce: 5
+  path3WidthPerLevel: 0.1
+  visualFadeIn: 0.1
+  visualHold: 0.7
+  visualFadeOut: 0.5
+  visualPositionJitter: 0.2

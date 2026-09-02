@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 225
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 32
+  baseAttackDamage: 48
   baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 2
@@ -76,7 +76,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 60
+  baseSkillCooldown: 120
   baseSkillDuration: 20
   channelDuration: 0
   baseSkillRadius: 2
@@ -84,15 +84,15 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseelementalAffinityBonus: 0.16
+  baseelementalAffinityBonus: 0.24
   baseElementalEffectChanceBonus: 0.01
-  baseAttackSpeedBonus: 0.12
+  baseAttackSpeedBonus: 0.18
   basePassiveMultiplier: 0.24
   baseSkillMultiplier: 0.16
-  path1AttackDamagePerLevel: 4
+  path1AttackDamagePerLevel: 6
   path1AttackRangePerLevel: 0.2
-  path2elementalAffinityPerLevel: 0.08
+  path2elementalAffinityPerLevel: 0.12
   path3ElementalEffectChancePerLevel: 0.01
-  path3AttackSpeedBonusPerLevel: 0.06
+  path3AttackSpeedBonusPerLevel: 0.09
   path3RadiusPerLevel: 0.15
   path3SkillDurationPerLevel: 3

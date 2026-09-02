@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3974951389667605070}
   - component: {fileID: 8957681408788208386}
   m_Layer: 3
-  m_Name: PsionicCarrotProjectile
+  m_Name: PsionicOldCarrotProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,9 +138,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7388594979766616069}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f33bddca4684974eb2cf06bc345b90b, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fbe6c9c397243ed90f64901bf883bec, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::PsionicCarrotProjectile
+  m_EditorClassIdentifier: Assembly-CSharp::PsionicOldCarrotProjectile
   audioSource: {fileID: 0}
   hit: {fileID: 0}
   minPitch: 0.9

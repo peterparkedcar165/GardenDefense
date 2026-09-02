@@ -288,20 +288,20 @@ public class Stargazer : Aura
         $"The {GetName()} sprays a cone of fire that leaves enemies <color=#FF6B1A>Flammable</color>, and can call down a sweeping wall of flame across the entire map.";
 
     public override string GetAttackDescription() =>
-        $"Sprays fire in a <color=green><b>{ConeAngle:F0}°</b></color> cone, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} damage to all insects within it.";
+        $"Sprays fire in a <color=green><b>{ConeAngle:F0}°</b></color> cone, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> damage to all insects within it.";
 
     public override string GetPassiveDescription() =>
         $"Dealing <color=orange><b>Fire Damage</b></color> has a <color=green><b>{PassiveProcChance * 100f:F0}%</b></color> chance to apply <color=green><b>{StacksPerHit}</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> to the target for <color=green><b>{FlammableDuration:F0}s</b></color>, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>{BurnDurationBonus * 100f:F0}%</b></color> longer.";
 
     public override string GetSkillDesription() =>
-        $"Aim a direction. After a brief delay, a <color=#FF6B1A><b>Fire Wave</b></color> sweeps across the entire map, dealing <color=green><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage to everything in its path, applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. The wave deals <color=green><b>{(SkillBurnMultiplier - 1f) * 100f:F0}%</b></color> increased damage against <color=orange>Burning</color> targets.\n\nInflicts <color=orange>Burn</color> on targets hit.";
+        $"Aim a direction. After a brief delay, a <color=#FF6B1A><b>Fire Wave</b></color> sweeps across the entire map, dealing <color={PlantData.ElementalColor(elementalType)}><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] damage to everything in its path, applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. The wave deals <color=green><b>{(SkillBurnMultiplier - 1f) * 100f:F0}%</b></color> increased damage against <color=orange>Burning</color> targets.\n\nInflicts <color=orange>Burn</color> on targets hit.";
 
     public override string GetPath1Description(bool details = false)
     {
         float adpl  = SData?.path1AttackDamagePerLevel ?? 3f;
         float rngpl = SData?.path1AttackRangePerLevel  ?? 0.2f;
         string desc = details
-            ? $"Sprays fire in a <color=green><b>{ConeAngle:F0}</b></color> degree cone, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} damage to all insects within it."
+            ? $"Sprays fire in a <color=green><b>{ConeAngle:F0}</b></color> degree cone, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> damage to all insects within it."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -335,7 +335,7 @@ public class Stargazer : Aura
         float bpl = SData?.path3BurnMultiplierPerLevel   ?? 0.1f;
         float fpl = SData?.path3FlammableStacksPerLevel  ?? 0.5f;
         string desc = details
-            ? $"Aim a direction. After a brief delay, a <color=#FF6B1A><b>Fire Wave</b></color> sweeps across the entire map, dealing <color=green><b>[({SData?.skillBaseDamage ?? 200f:F0}) + ({dpl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} damage to everything in its path, applying <color=green><b>[({SData?.skillFlammableStacks ?? 2}) + ({fpl:F1}/Lvl.)]</b></color> stacks of <color=#FF6B1A>Flammable</color>. The wave deals <color=green><b>[({SData?.skillBurnMultiplier ?? 2f:F1}) + ({bpl:F1}/Lvl.)]x</b></color> damage against <color=orange>Burning</color> targets.\n\nInflicts <color=orange>Burn</color> on targets hit."
+            ? $"Aim a direction. After a brief delay, a <color=#FF6B1A><b>Fire Wave</b></color> sweeps across the entire map, dealing <color={PlantData.ElementalColor(elementalType)}><b>[({SData?.skillBaseDamage ?? 200f:F0}) + ({dpl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> damage to everything in its path, applying <color=green><b>[({SData?.skillFlammableStacks ?? 2}) + ({fpl:F1}/Lvl.)]</b></color> stacks of <color=#FF6B1A>Flammable</color>. The wave deals <color=green><b>[({SData?.skillBurnMultiplier ?? 2f:F1}) + ({bpl:F1}/Lvl.)]x</b></color> damage against <color=orange>Burning</color> targets.\n\nInflicts <color=orange>Burn</color> on targets hit."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=#FF6B1A>Fire Wave</color> damage by <color=green><b>{dpl:F0}</b></color> per level. [<color=green><b>+{dpl * effectivePath3Level:F0}</b></color>]\n\n" +

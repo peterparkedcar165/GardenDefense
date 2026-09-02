@@ -146,7 +146,7 @@ public class MorningGlory : Shooter
         $"The {GetName()} is a swift wind support, hastening allies and suspending enemies helplessly in the air.";
 
     public override string GetAttackDescription() =>
-        $"Sends a wind blade at the first target, dealing <color=green><b>{BladeDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} damage.";
+        $"Sends a wind blade at the first target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{BladeDamage:F0}</b></color> damage.";
 
     public override string GetPassiveDescription() =>
         $"The {GetName()} and nearby other plants are granted <color=#B2EBF2><b>Tailwind</b></color>, which grants " +
@@ -162,7 +162,7 @@ public class MorningGlory : Shooter
         float adpl    = MGData?.path1AttackDamagePerLevel ?? 4f;
         float rangepl = MGData?.path1AttackRangePerLevel  ?? 0.2f;
         string desc = details
-            ? $"Sends a wind blade at the first target, dealing <color=green><b>[100% Attack Damage]</b></color> + <color=green><b>{MGData?.projectileSpeedDamageScale ?? 2.5f:F1}x</b></color> Projectile Speed {PlantData.ElementalTag(elementalType)} damage."
+            ? $"Sends a wind blade at the first target, dealing <color=green><b>[100% Attack Damage]</b></color> + <color=green><b>{MGData?.projectileSpeedDamageScale ?? 2.5f:F1}x</b></color> Projectile Speed damage."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +

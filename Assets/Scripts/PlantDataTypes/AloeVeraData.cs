@@ -26,7 +26,7 @@ public class AloeVeraData : PlantData
     public float path3RadiusPerLevel = 0.3f;
 
     public override string GetAttackDescription() =>
-        $"Lobs a water droplet that bursts on landing, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage in an area.";
+        $"Lobs a water droplet that bursts on landing, dealing {DamageTypeLabel(damageType)} in an area.";
 
     public override string GetPassiveDescription() =>
         "Water droplets also heal plants and reduce their temperature toward comfort. If an injured plant is within range, switches targeting to the one with the lowest Health.";

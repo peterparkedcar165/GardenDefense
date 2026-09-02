@@ -170,13 +170,13 @@ public class Cactus : Shooter
         int needleBase  = CactData?.path1NeedlesBase     ?? 8;
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
         return $"Fires <color=green><b>{needleBase + needleLevel * effectivePath1Level}</b></color> needles in equal angles around itself, dealing " +
-               $"<color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per needle. " +
+               $"<color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} per needle. " +
                $"Each hit applies <color=#A0522D><b>Punctured</b></color>.";
     }
 
     public override string GetPassiveDescription() =>
         $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as " +
-        $"{PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and receive " +
+        $"{PlantData.DamageTypeLabel(damageType)}, and receive " +
         $"<color=green><b>{1 + effectivePath2Level}</b></color> <color=#A0522D>Punctured</color> stack(s).";
 
     public override string GetSkillDesription() =>
@@ -188,7 +188,7 @@ public class Cactus : Shooter
         int needleBase  = CactData?.path1NeedlesBase     ?? 8;
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
         string desc = details
-            ? $"Fires <color=green><b>[({needleBase}) + ({needleLevel}/Lvl.)]</b></color> needles in equal angles around itself, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per needle. Each hit applies <color=#A0522D><b>Punctured</b></color>."
+            ? $"Fires <color=green><b>[({needleBase}) + ({needleLevel}/Lvl.)]</b></color> needles in equal angles around itself, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} per needle. Each hit applies <color=#A0522D><b>Punctured</b></color>."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]\n\n" +
@@ -201,7 +201,7 @@ public class Cactus : Shooter
     {
         float hppl = CactData?.path2HealthPerLevel ?? 60f;
         string desc = details
-            ? $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
+            ? $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as {PlantData.DamageTypeLabel(damageType)}, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"<color=#A0522D><b>Punctured</b></color>: reduces <color=#00CED1><b>Armor</b></color> by <color=red><b>1</b></color> per stack, lasts <color=green><b>{passiveDuration:F0}s</b></color>.\n\n" +

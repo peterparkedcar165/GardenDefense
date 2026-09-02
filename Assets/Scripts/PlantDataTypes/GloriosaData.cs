@@ -47,7 +47,7 @@ public class GloriosaData : PlantData
     public float path3LatchDurationPerLevel        = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Sends embers of soothing fire towards its target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Sends embers of soothing fire towards its target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         "Targets injured plants before insects. Embers heal the plant and increase its temperature toward comfort. Plants nearby also receive a weaker version of the effect.";

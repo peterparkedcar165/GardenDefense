@@ -443,15 +443,15 @@ MonoBehaviour:
   effectivePath3Level: 0
   path3Unlocked: 0
   mainRenderer: {fileID: 7028219029107938175}
-  projectilePrefab: {fileID: 7388594979766616069, guid: a8807140f07f2f34283d4990a5ba8575, type: 3}
+  projectilePrefab: {fileID: 0}
   baseMaxRange: 0
   maxRange: 0
   basePiercing: 0
   piercing: 0
   piercingAdder: 0
+  eruptionVisualPrefab: {fileID: 8482905087334200380, guid: 5d056d879cc10cc4e8773e174918925b, type: 3}
   pillarVisualPrefab: {fileID: 8482905087334200380, guid: 5d056d879cc10cc4e8773e174918925b, type: 3}
   skillIndicatorPrefab: {fileID: 2096060468615343360, guid: bbd82d20d4cd52a47a40db0f6590d7ba, type: 3}
-  psionicCarrotPrefab: {fileID: 7388594979766616069, guid: 57ed97c6692fc8240bd9fe3bdc57e08c, type: 3}
 --- !u!1 &4211631318131847547
 GameObject:
   m_ObjectHideFlags: 0

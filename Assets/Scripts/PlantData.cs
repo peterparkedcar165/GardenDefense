@@ -114,6 +114,26 @@ public class PlantData : ScriptableObject
         _                     => t.ToString()
     };
 
+    public static string ElementalColor(ElementalType t) => t switch
+    {
+        ElementalType.Fire    => "orange",
+        ElementalType.Water   => "#4FC3F7",
+        ElementalType.Grass  => "green",
+        ElementalType.Wind    => "#B2EBF2",
+        ElementalType.Poison  => "purple",
+        ElementalType.Ice     => "#00FFFF",
+        ElementalType.Ground  => "#79391F",
+        _                     => "white"
+    };
+
+    public static string DamageTypeLabel(DamageType t) => t switch
+    {
+        DamageType.Magic    => "<color=#FFB6C1><b>Magic Damage</b></color>",
+        DamageType.Physical => "<color=#A0522D><b>Physical Damage</b></color>",
+        DamageType.True     => "<color=white><b>True Damage</b></color>",
+        _                   => $"<b>{t} Damage</b>"
+    };
+
     public static string FamilyTag(PlantFamily f) => f switch
     {
         PlantFamily.Photosynthesis => "<color=#FFD700>Photosynthesis</color>",
@@ -122,16 +142,8 @@ public class PlantData : ScriptableObject
         PlantFamily.Shelter        => "<color=#A9A9A9>Shelter</color>",
         PlantFamily.Thorn          => "<color=#DC143C>Thorn</color>",
         PlantFamily.Wither         => "<color=#8B008B>Wither</color>",
-        PlantFamily.Burgeon        => "<color=#DA70D6>Burgeon</color>",
         PlantFamily.Kindred        => "<color=#6495ED>Kindred</color>",
         _                          => f.ToString()
     };
 
-    public static string DamageTypeTag(DamageType t) => t switch
-    {
-        DamageType.Magic    => "<color=#FFB6C1>Magic</color>",
-        DamageType.Physical => "<color=#A0522D>Physical</color>",
-        DamageType.True     => "<color=white>True</color>",
-        _                   => t.ToString()
-    };
 }

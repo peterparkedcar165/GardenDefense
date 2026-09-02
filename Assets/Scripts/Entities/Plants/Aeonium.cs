@@ -146,7 +146,7 @@ public class Aeonium : Shooter
         $"The {GetName()} is a radiant succulent that fuels the garden's economy , generating sun, and blessing nearby plants to reap far more of it.";
 
     public override string GetAttackDescription() =>
-        $"Launches an energy ball dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit.";
+        $"Launches an energy ball dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to the first insect hit.";
 
     public override string GetPassiveDescription() =>
         $"Generates <color=yellow><b>{_sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{SunGenInterval:F1}s</b></color>. Each projectile or melee attack hit by a plant within her radius reduces the timer by <color=green><b>{_sunTimerReductionBase:F1}s</b></color> [<color=#FFB6C1><b>+{_sunTimerReductionMP:F2}s</b></color>].";
@@ -160,7 +160,7 @@ public class Aeonium : Shooter
         float aspl   = AData?.path1AttackSpeedPerLevel  ?? 0.04f;
         float rngpl  = AData?.path1AttackRangePerLevel  ?? 0.2f;
         string desc = details
-            ? $"Launches an energy ball dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit."
+            ? $"Launches an energy ball dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to the first insect hit."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +

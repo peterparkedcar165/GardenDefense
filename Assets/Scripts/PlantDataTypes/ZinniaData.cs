@@ -32,7 +32,7 @@ public class ZinniaData : PlantData
     public float path3HeatingPerLevel       = 0.2f;
 
     public override string GetAttackDescription() =>
-        $"Releases fiery sparks dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to nearby insects. Nearby plants take no damage and are instead marked with <color=orange><b>Ablaze</b></color>.";
+        $"Releases fiery sparks dealing {DamageTypeLabel(damageType)} to nearby insects. Nearby plants take no damage and are instead marked with <color=orange><b>Ablaze</b></color>.";
 
     public override string GetPassiveDescription() =>
         "Plants within her radius gain <color=orange><b>Zinnia's Warmth</b></color>, increasing <color=orange><b>Fire Damage</b></color> and <color=#FFB6C1><b>Magic Power</b></color>.";

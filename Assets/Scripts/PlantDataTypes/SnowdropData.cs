@@ -32,12 +32,12 @@ public class SnowdropData : PlantData
     public float path3BlizzardRangePerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Continuously deals {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to all ground-level insects within range.";
+        $"Continuously deals {DamageTypeLabel(damageType)} to all ground-level insects within range.";
 
     public override string GetPassiveDescription() =>
         "Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement.\n\n" +
         "Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature toward comfort.";
 
     public override string GetSkillDescription() =>
-        $"Summons a strong blizzard aimed toward the targeted area, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second to insects caught within and applying a stronger <color=#00FFFF>Chill</color>. Plants within the blizzard also receive an enhanced <color=#00FFFF>Cooling</color> effect.";
+        $"Summons a strong blizzard aimed toward the targeted area, dealing {DamageTypeLabel(damageType)} per second to insects caught within and applying a stronger <color=#00FFFF>Chill</color>. Plants within the blizzard also receive an enhanced <color=#00FFFF>Cooling</color> effect.";
 }

@@ -228,7 +228,7 @@ public class Glowshroom : Shooter
         $"The {GetName()} is a bioluminescent cave fungus that illuminates the darkness, infects insects with a glow, and blinds them with a sudden flash of light.";
 
     public override string GetAttackDescription() =>
-        $"Fires a fungal bolt dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the target, splashing <color=green><b>{SplashMultBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{SplashMultMP * 100f:F0}%</b></color>] of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius.";
+        $"Fires a fungal bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to the target, splashing <color=green><b>{SplashMultBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{SplashMultMP * 100f:F0}%</b></color>] of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
         $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>{FungalGlowDuration:F0}s</b></color>. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed. Whenever an insect affected by <color=#88FF88>Fungal Glow</color> dies, the {GetName()} generates <color=yellow><b>{DeathSunGeneration}</b></color> <color=yellow>Sun</color>.";
@@ -242,7 +242,7 @@ public class Glowshroom : Shooter
         float rangepl = GMData?.path1AttackRangePerLevel  ?? 0.15f;
         float splashMP = GMData?.splashDamageMPMultiplier ?? 0.5f;
         string desc = details
-            ? $"Fires a fungal bolt dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the target, splashing <color=green><b>{(GMData?.splashDamageMultiplier ?? 0.5f) * 100f:F0}%</b></color> <color=#FFB6C1>[+{splashMP * 100f:F0}% Magic Power]</color> of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius."
+            ? $"Fires a fungal bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to the target, splashing <color=green><b>{(GMData?.splashDamageMultiplier ?? 0.5f) * 100f:F0}%</b></color> <color=#FFB6C1>[+{splashMP * 100f:F0}% Magic Power]</color> of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
