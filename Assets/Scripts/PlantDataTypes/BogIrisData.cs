@@ -29,7 +29,7 @@ public class BogIrisData : PlantData
     public float path3GeyserRadiusPerLevel = 0.15f;
 
     public override string GetAttackDescription() =>
-        $"Fires a water bolt at a single target dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Fires a water bolt at a single target dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         "Cycles between an <b><color=#4FC3F7>open</color></b> and <b><color=#4FC3F7>closed</color></b> state.\n\n" +
@@ -37,5 +37,5 @@ public class BogIrisData : PlantData
         "In <b><color=#4FC3F7>closed</color></b> form, she regenerates HP.";
 
     public override string GetSkillDescription() =>
-        $"Target a location. After a brief delay, a geyser erupts, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage and knocking all insects airborne.";
+        $"Target a location. After a brief delay, a geyser erupts, dealing {DamageTypeLabel(damageType)} and knocking all insects airborne.";
 }

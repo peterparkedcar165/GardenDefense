@@ -14,8 +14,9 @@ public abstract class Shooter : Plant
 
     // fires every time this specific Shooter actually looses a shot (right alongside Shoot()/
     // OnShoot(), regardless of whether a subclass's OnShoot override calls base), carrying the
-    // GameObject it aimed at. Carrot's Psionic Bond subscribes to a specific bound instance's
-    // OnFired rather than a global broadcast, so it only ever reacts to that one plant shooting
+    // GameObject it aimed at. Carrot's Soil Bond (and OldCarrot's Psionic Bond) subscribes to a
+    // specific bound instance's OnFired rather than a global broadcast, so it only ever reacts
+    // to that one plant shooting
     public event System.Action<GameObject> OnFired;
 
     public override void UpdateStats()

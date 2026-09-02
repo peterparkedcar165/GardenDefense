@@ -241,7 +241,7 @@ public class Kelp : Aura
         $"The {GetName()} whips insects with her fronds and keeps the garden breathing, releasing Oxygen-rich bubbles that also generate Sun.";
 
     public override string GetAttackDescription() =>
-        $"Whips the target insect, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        $"Whips the target insect, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         $"Hitting a target releases air bubbles, granting plants within range <color=green><b>{OxygenReplenishPerHit:F1}</b></color> <color=#4FC3F7><b>Oxygen</b></color>. For every <color=green><b>{OxygenRequirementPerSun:F0}</b></color> <color=#4FC3F7><b>Oxygen</b></color> provided, Kelp produces <color=yellow><b>{SunPerThreshold}</b></color> <color=yellow>Sun</color>.";
@@ -258,7 +258,7 @@ public class Kelp : Aura
         float adpl = KData?.path1AttackDamagePerLevel ?? 5f;
         float rpl  = KData?.path1AttackRangePerLevel  ?? 0.2f;
         string desc = details
-            ? $"Whips the target insect, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            ? $"Whips the target insect, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +

@@ -42,10 +42,10 @@ public class GhostFungusData : PlantData
     public float path3MoveSlowPerLevel     = 0.05f;  // extra movement slow per skill level
 
     public override string GetAttackDescription() =>
-        $"Fires a bolt of ice dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to the first insect hit.";
+        $"Fires a bolt of ice dealing {DamageTypeLabel(damageType)} to the first insect hit.";
 
     public override string GetPassiveDescription() =>
-        $"Conjures Ghost Shroomlets that hold position until an enemy comes into sight, then engage it with {ElementalTag(elementalType)} {DamageTypeTag(damageType)} attacks.";
+        $"Conjures Ghost Shroomlets that hold position until an enemy comes into sight, then engage it with {DamageTypeLabel(damageType)} attacks.";
 
     public override string GetSkillDescription() =>
         "Sends a spectral wave that inflicts <color=#00FFFF>Fungal Hypnosis</color> on the first insect hit, permanently turning it against its own with greatly increased Max Health and Attack Damage.";

@@ -66,7 +66,7 @@ public class Begonia : Shooter
     // by elementalAffinityBoostEffect itself (PlantAuraBuffEffect base)
     private void ApplyAuraToAllInRange()
     {
-        float magicPen = path2Level >= Plant.absoluteLevelCap ? 16f : 0f;
+        float magicPen = path2Level >= Plant.absoluteLevelCap ? 25f : 0f;
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
@@ -217,7 +217,7 @@ public class Begonia : Shooter
         float adpl    = BData?.path1AttackDamagePerLevel ?? 4f;
         float rangepl = BData?.path1AttackRangePerLevel  ?? 0.2f;
         string desc = details
-            ? $"Fire a magical bolt dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            ? $"Fire a magical bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -236,7 +236,7 @@ public class Begonia : Shooter
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase Elemental Affinity bonus by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Plants affected by <color=green><b>Begonia's Blessing</b></color> are also granted <color=green><b>16 Magic Penetration</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"Plants affected by <color=green><b>Begonia's Blessing</b></color> are also granted <color=green><b>25 Magic Penetration</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -259,13 +259,13 @@ public class Begonia : Shooter
                $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Also increases <color=green><b>Minimum Damage</b></color> by <color=green><b>10%</b></color>.")}\n\n" +
+               $"{Level5Section(path3Level, $"Also increases <color=green><b>Minimum Damage</b></color> by <color=green><b>20%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetAttackDescription() =>
-        $"Fire a magical bolt dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        $"Fire a magical bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, " +

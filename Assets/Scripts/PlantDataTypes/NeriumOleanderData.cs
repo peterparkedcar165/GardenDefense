@@ -25,7 +25,7 @@ public class NeriumOleanderData : PlantData
     public int path3MaxBounceBonus = 3;
 
     public override string GetAttackDescription() =>
-        $"Fires a toxic petal at the target dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage. The petal bounces to additional targets.";
+        $"Fires a toxic petal at the target dealing {DamageTypeLabel(damageType)}. The petal bounces to additional targets.";
 
     public override string GetPassiveDescription() =>
         "Each petal hit applies <color=#9B59B6>Oleandic Toxin</color>, immediately cleansing a random buff and immunizing the insect to it.";

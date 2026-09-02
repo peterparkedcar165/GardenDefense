@@ -34,7 +34,7 @@ public class HelleboreData : PlantData
     public float path3ReflectPerLevel  = 5f;
 
     public override string GetAttackDescription() =>
-        $"Fires a thorned projectile dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Fires a thorned projectile dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         "Each attack hit reduces skill cooldown. Hellebore gains bonus <color=#00CED1><b>Armor</b></color>, scaling with <color=#FFB6C1><b>Magic Power</b></color>. " +

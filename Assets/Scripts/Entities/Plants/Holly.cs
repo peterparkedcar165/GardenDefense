@@ -151,7 +151,7 @@ public class Holly : Aura
         $"The {GetName()} is a resilient ice tank that retaliates against attackers and can taunt insects into targeting her.";
 
     public override string GetAttackDescription() =>
-        $"Releases icy thorns dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range.";
+        $"Releases icy thorns dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range.";
 
     public override string GetPassiveDescription() =>
         $"Insects that attack {GetName()} retaliate for <color=green><b>{RetaliationHollyPct * 100f:F0}%</b></color> of {GetName()}'s Attack Damage + " +
@@ -171,7 +171,7 @@ public class Holly : Aura
         float adpl    = HData?.path1AttackDamagePerLevel ?? 4f;
         float armorpl = HData?.path1ArmorPerLevel        ?? 8;
         string desc = details
-            ? $"Releases icy thorns dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range."
+            ? $"Releases icy thorns dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +

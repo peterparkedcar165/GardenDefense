@@ -21,10 +21,10 @@ public class CactusData : PlantData
     public float path3ShieldArmorPerLevel = 5f;
 
     public override string GetAttackDescription() =>
-        $"Fires needles in all directions, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per needle hit. Each hit applies <color=#A0522D>Punctured</color>.";
+        $"Fires needles in all directions, dealing {DamageTypeLabel(damageType)} per needle hit. Each hit applies <color=#A0522D>Punctured</color>.";
 
     public override string GetPassiveDescription() =>
-        $"Insects that attack the Cactus take {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage in return. Applies <color=#A0522D>Punctured</color>.";
+        $"Insects that attack the Cactus take {DamageTypeLabel(damageType)} in return. Applies <color=#A0522D>Punctured</color>.";
 
     public override string GetSkillDescription() =>
         "Grants a shield for a duration. While shielded, the Cactus gains bonus Armor and nearby insects are forced to target it.";

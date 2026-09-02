@@ -212,6 +212,7 @@
     <Compile Include="Assets\Scripts\InsectDataTypes\HarvestmanData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AnemoneData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\OldCarrotData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearGrassEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\GhostFungus.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\StartingShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\SoothingRain.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\OldCarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SunderedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowingAllergenEffect.cs" />
@@ -308,10 +310,10 @@
     <Compile Include="Assets\Scripts\StatusEffect\ChillEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Duskdarter.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\PsionicOldCarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
     <Compile Include="Assets\Scripts\UI\StatsAreaHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
-    <Compile Include="Assets\Scripts\Entities\Projectiles\CarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlizzardCoolingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
@@ -326,10 +328,10 @@
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
-    <Compile Include="Assets\Scripts\Entities\Projectiles\PsionicCarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\JumpingSpiderData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AeoniumData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\OldCarrot.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GeyseredEffect.cs" />
@@ -391,7 +393,9 @@
     <Compile Include="Assets\Scripts\Encyclopedia\PlantEntry.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalPowerBoostEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DesertLocust.cs" />
+    <Compile Include="Assets\Scripts\Skills\OldCarrotFurrow.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VenomEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\SoilBondEffect.cs" />
     <Compile Include="Assets\Scripts\UI\WaterPotButton.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Mosquito.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AeoniumProjectile.cs" />

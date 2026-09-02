@@ -246,7 +246,7 @@ public class Cattail : Shooter
         float adpl = CData?.path1AttackDamagePerLevel ?? 5f;
         float aspl = CData?.path1AttackSpeedPerLevel ?? 0.05f;
         string desc = details
-            ? $"Fires a high-pressure water dart, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to a single target at any range."
+            ? $"Fires a high-pressure water dart, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to a single target at any range."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -257,7 +257,7 @@ public class Cattail : Shooter
     }
 
     public override string GetAttackDescription() =>
-        $"Fires a high-pressure water dart, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to a single target at any range.";
+        $"Fires a high-pressure water dart, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to a single target at any range.";
 
     public override string GetPath2Description(bool details = false)
     {

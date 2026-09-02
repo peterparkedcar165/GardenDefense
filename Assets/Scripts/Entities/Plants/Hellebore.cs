@@ -243,7 +243,7 @@ public class Hellebore : Shooter
         $"The {GetName()} weaves poison and shelter together, protecting allies while punishing those who dare attack them.";
 
     public override string GetAttackDescription() =>
-        $"Fires a thorned projectile dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        $"Fires a thorned projectile dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         $"Each attack hit reduces skill cooldown by <color=green><b>{CDRPerHit:F1}s</b></color>. " +
@@ -271,7 +271,7 @@ public class Hellebore : Shooter
         float mppl = HData?.path1MagicPowerPerLevel  ?? 5f;
         float rgpl = HData?.path1AttackRangePerLevel ?? 0.2f;
         string desc = details
-            ? $"Fires a thorned projectile dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            ? $"Fires a thorned projectile dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +

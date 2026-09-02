@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// shared movement for Carrot's attack and Psionic Carrot. homes in on a target and stays
+// shared movement for OldCarrot's attack and Psionic OldCarrot (the retired kit kept as a
+// placeholder - current Carrot doesn't use a projectile at all). homes in on a target and stays
 // locked onto it until it dies (only then does it look for the next nearest valid insect).
 // once close enough it commits to a straight dash through the target; on each hit, piercing
 // means "extra return passes on the SAME target" rather than "how many different targets to
@@ -169,10 +170,11 @@ public abstract class DashHomingProjectile : Projectile
         currentTarget = found;
         state = DashState.Approaching;
 
-        // Carrot's Path1 max: switching onto a genuinely new target grants extra hits, since
-        // the fresh target starts with no Psionic Mark stacks built up against it yet
-        if (source is Carrot carrot && carrot.IsPath1Maxed)
-            passesCompleted = Mathf.Max(0, passesCompleted - carrot.TargetSwitchBonusHits);
+        // OldCarrot's Path1 max (the retired kit kept as a placeholder - current Carrot no
+        // longer uses this class at all): switching onto a genuinely new target grants extra
+        // hits, since the fresh target starts with no Psionic Mark stacks built up against it yet
+        if (source is OldCarrot oldCarrot && oldCarrot.IsPath1Maxed)
+            passesCompleted = Mathf.Max(0, passesCompleted - oldCarrot.TargetSwitchBonusHits);
     }
 
     // accelerates back from a standstill toward the target, re-aiming each frame in case it

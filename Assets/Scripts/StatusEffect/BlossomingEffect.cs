@@ -5,7 +5,7 @@ public class BlossomingEffect : StatusEffect
     private readonly float elementalEffectChanceBonus;
     private readonly float attackSpeedBonus;
 
-    private const float MaxLevelMinimumDamageBonus = 0.1f;
+    private const float MaxLevelMinimumDamageBonus = 0.2f;
     private bool _maxLevelBonusActive;
 
     public BlossomingEffect(Entity target, float duration, int level, Entity source, float elementalEffectChanceBonus, float attackSpeedBonus)

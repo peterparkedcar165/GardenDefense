@@ -278,7 +278,7 @@ public class Gloriosa : Shooter
 
     public override string GetAttackDescription() =>
         $"Sends embers of soothing fire towards its target, dealing <color=green><b>{attackDamage:F0}</b></color> " +
-        $"{PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        $"{PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         $"Targets injured plants before insects. Embers heal plants for " +
@@ -308,7 +308,7 @@ public class Gloriosa : Shooter
         float speedpl = GData?.path1AttackSpeedPerLevel ?? 0.1f;
         float rangepl = GData?.path1AttackRangePerLevel ?? 0.15f;
         string desc = details
-            ? $"Sends embers of soothing fire towards its target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            ? $"Sends embers of soothing fire towards its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{speedpl:F2}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F2}</b></color>]\n\n" +

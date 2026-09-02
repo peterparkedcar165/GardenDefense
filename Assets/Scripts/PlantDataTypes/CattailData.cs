@@ -27,7 +27,7 @@ public class CattailData : PlantData
     public float path3DurationPerLevel     = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Fires a high-pressure water dart, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage to a single target at any range.";
+        $"Fires a high-pressure water dart, dealing {DamageTypeLabel(damageType)} to a single target at any range.";
 
     public override string GetPassiveDescription() =>
         "Every Critical Chance above 100% is converted into Critical Damage. Shots against flying insects will Ground them.";

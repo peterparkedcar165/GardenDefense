@@ -240,7 +240,7 @@ public class Snowdrop : Aura
         $"The {GetName()} is a frosty flower whose icy presence continuously damages and chills nearby insects, while cooling the plants around her.";
 
     public override string GetAttackDescription() =>
-        $"Continuously deals <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range.";
+        $"Continuously deals <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range.";
 
     public override string GetPassiveDescription() =>
         $"Increase <color=orange><b>Heat Resistance</b></color> by <color=green><b>{BonusHeatResistance * 100f:F0}%</b></color>.\n\n" +
@@ -249,7 +249,7 @@ public class Snowdrop : Aura
 
     public override string GetSkillDesription() =>
         $"Aim a powerful blizzard in a chosen direction, dealing <color=green><b>{(SData?.baseBlizzardDamage ?? 0f) + blizzardDamagePerLevel * effectivePath3Level:F0}</b></color> " +
-        $"[<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second " +
+        $"[<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second " +
         $"to all insects in its path for <color=green><b>{skillDuration:F0}s</b></color>. " +
         $"Applies <color=#00FFFF>Chill</color> at <color=green><b>{blizzardChillMultiplier:F1}x</b></color> strength. " +
         $"Plants within the Blizzard also receive <color=#00FFFF>Cooling</color> effect for <color=green><b>{blizzardCoolingMultiplier:F1}x</b></color> the effect.";
@@ -259,7 +259,7 @@ public class Snowdrop : Aura
         float adpl    = SData?.path1AttackDamagePerLevel ?? 1f;
         float rangepl = SData?.path1AttackRangePerLevel  ?? 0.1f;
         string desc = details
-            ? $"Continuously deals <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to all insects within range."
+            ? $"Continuously deals <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -289,7 +289,7 @@ public class Snowdrop : Aura
         float widthpl  = SData?.path3BlizzardWidthPerLevel ?? 0.5f;
         float rangepl  = SData?.path3BlizzardRangePerLevel ?? 0.5f;
         string desc = details
-            ? $"Aim a powerful blizzard in a chosen direction, dealing <color=green><b>[({SData?.baseBlizzardDamage ?? 0f:F0}) + ({blizzardDamagePerLevel:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second for <color=green><b>[({SData?.baseBlizzardDuration ?? 5f:F0}) + ({blizzardDurationPerLevel:F1}/Lvl.)]</b></color> seconds. Applies <color=#00FFFF>Chill</color> at <color=green><b>{blizzardChillMultiplier:F1}x</b></color> strength. Plants within the Blizzard also receive <color=#00FFFF>Cooling</color> at <color=green><b>{blizzardCoolingMultiplier:F1}x</b></color> strength."
+            ? $"Aim a powerful blizzard in a chosen direction, dealing <color=green><b>[({SData?.baseBlizzardDamage ?? 0f:F0}) + ({blizzardDamagePerLevel:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second for <color=green><b>[({SData?.baseBlizzardDuration ?? 5f:F0}) + ({blizzardDurationPerLevel:F1}/Lvl.)]</b></color> seconds. Applies <color=#00FFFF>Chill</color> at <color=green><b>{blizzardChillMultiplier:F1}x</b></color> strength. Plants within the Blizzard also receive <color=#00FFFF>Cooling</color> at <color=green><b>{blizzardCoolingMultiplier:F1}x</b></color> strength."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Blizzard Damage by <color=green><b>{blizzardDamagePerLevel:F0}</b></color> per second per level. [<color=green><b>+{blizzardDamagePerLevel * effectivePath3Level:F0}</b></color>]\n\n" +

@@ -18,7 +18,7 @@ public class LeafRangerData : PlantData
     public float path3SkillDurationPerLevel = 0.5f;
 
     public override string GetAttackDescription() =>
-        $"Shoots slow but precise and fierce arrows at his target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage.";
+        $"Shoots slow but precise and fierce arrows at his target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
         "The <color=green><b>Leaf Ranger</b></color> sees in the dark, gains bonus Critical Chance, and his attacks can pierce enemies.";

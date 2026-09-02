@@ -257,10 +257,10 @@ public class GhostFungus : Shooter
         $"The {GetName()} is a haunted summoner that fires ice bolts, raises Ghost Shroomlets to guard the lane, and can turn an insect against its own.";
 
     public override string GetAttackDescription() =>
-        $"Fires a bolt of ice dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit.";
+        $"Fires a bolt of ice dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to the first insect hit.";
 
     public override string GetPassiveDescription() =>
-        $"Conjures a Ghost Shroomlet every <color=green><b>{passiveCooldown:F1}s</b></color> (up to <color=green><b>{ShroomletTarget}</b></color>) that holds position until an enemy comes into sight, then engages with {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} attacks dealing <color=green><b>{ShroomletAttackDamage:F0}</b></color> damage. Each Shroomlet has <color=green><b>{ShroomletHealth:F0}</b></color> HP.";
+        $"Conjures a Ghost Shroomlet every <color=green><b>{passiveCooldown:F1}s</b></color> (up to <color=green><b>{ShroomletTarget}</b></color>) that holds position until an enemy comes into sight, then engages with {PlantData.DamageTypeLabel(damageType)} attacks dealing <color={PlantData.ElementalColor(elementalType)}><b>{ShroomletAttackDamage:F0}</b></color> damage. Each Shroomlet has <color=green><b>{ShroomletHealth:F0}</b></color> HP.";
 
     private static string SignedPct(float pct) =>
         pct >= 0f ? $"<color=green><b>+{pct:F0}%</b></color>" : $"<color=red><b>{pct:F0}%</b></color>";
@@ -277,7 +277,7 @@ public class GhostFungus : Shooter
         float sadpl = GData?.shroomletAttackDamagePerLevel  ?? 2f;
         float saspl = GData?.shroomletAttackSpeedPerLevel   ?? 0.05f;
         string desc = details
-            ? $"Fires a bolt of ice dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage to the first insect hit."
+            ? $"Fires a bolt of ice dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to the first insect hit."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -295,7 +295,7 @@ public class GhostFungus : Shooter
         float cdpl = GData?.path2SpawnCooldownReducerPerLevel    ?? 0.5f;
         float sadpl2 = GData?.shroomletAttackDamagePerLevel ?? 2f;
         string desc = details
-            ? $"Conjures a Ghost Shroomlet every <color=green><b>[({data.basePassiveCooldown:F1}) - ({cdpl:F1}/Lvl.)]</b></color> seconds (up to <color=green><b>[({GData?.baseShroomletCount ?? 1}) + ({spl}/Lvl.)]</b></color>) that holds position until an enemy comes into sight, then engages with {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} attacks dealing <color=green><b>[({GData?.shroomletBaseAttackDamage ?? 8f:F0}) + ({sadpl2:F0}/Lvl.)]</b></color> damage (<color=green><b>[({GData?.shroomletBaseHealth ?? 50f:F0}) + ({shpl:F0}/Lvl.)]</b></color> HP)."
+            ? $"Conjures a Ghost Shroomlet every <color=green><b>[({data.basePassiveCooldown:F1}) - ({cdpl:F1}/Lvl.)]</b></color> seconds (up to <color=green><b>[({GData?.baseShroomletCount ?? 1}) + ({spl}/Lvl.)]</b></color>) that holds position until an enemy comes into sight, then engages with {PlantData.DamageTypeLabel(damageType)} attacks dealing <color={PlantData.ElementalColor(elementalType)}><b>[({GData?.shroomletBaseAttackDamage ?? 8f:F0}) + ({sadpl2:F0}/Lvl.)]</b></color> damage (<color=green><b>[({GData?.shroomletBaseHealth ?? 50f:F0}) + ({shpl:F0}/Lvl.)]</b></color> HP)."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Conjure <color=green><b>{spl}</b></color> additional Ghost Shroomlet per level. [<color=green><b>+{spl * effectivePath2Level}</b></color>]\n\n" +

@@ -121,13 +121,13 @@ public class Anemone : Shooter
         $"The {GetName()} commands the winds to erode and consume her foes, then pulls them into a devastating vortex.";
 
     public override string GetAttackDescription() =>
-        $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color=green><b>{attackDamage / ProjectileCount:F0}</b></color> [<color=green><b>{100f / ProjectileCount:F0}%</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and <color=green><b>{attackDamage / ProjectileCount * 0.5f:F0}</b></color> to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius.";
+        $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color=green><b>{attackDamage / ProjectileCount:F0}</b></color> [<color=green><b>{100f / ProjectileCount:F0}%</b></color>] {PlantData.DamageTypeLabel(damageType)}, and <color=green><b>{attackDamage / ProjectileCount * 0.5f:F0}</b></color> to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
         $"Dealing Wind Damage has a <color=green><b>{ErosionProcChance * 100f:F0}%</b></color> chance to apply <color=green><b>{InitialErosionStacks}</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>{ErosionDuration:F0}s</b></color>, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)ErosionReductionPerStack}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead.";
 
     public override string GetSkillDesription() =>
-        $"Summon a vortex at target location, dragging insects toward its center while dealing <color=green><b>{VortexDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{VortexDamageMPBonus:F0}</b></color>] {PlantData.ElementalTag(elementalType)} damage every <color=green><b>{AData?.vortexTickInterval ?? 0.5f:F1}s</b></color> within a <color=green><b>{VortexRadius:F1}</b></color> radius, for <color=green><b>{skillDuration:F0}s</b></color>.";
+        $"Summon a vortex at target location, dragging insects toward its center while dealing <color={PlantData.ElementalColor(elementalType)}><b>{VortexDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{VortexDamageMPBonus:F0}</b></color>] damage every <color=green><b>{AData?.vortexTickInterval ?? 0.5f:F1}s</b></color> within a <color=green><b>{VortexRadius:F1}</b></color> radius, for <color=green><b>{skillDuration:F0}s</b></color>.";
 
     public override string GetPath1Name() => "Gale";
     public override string GetPath2Name() => "Erosion";
@@ -138,7 +138,7 @@ public class Anemone : Shooter
         float aspl = AData?.path1AttackSpeedPerLevel ?? 0.05f;
         float rpl  = AData?.path1AttackRangePerLevel ?? 0.2f;
         string desc = details
-            ? $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color=green><b>[{100f / ProjectileCount:F0}% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage, and half that to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius."
+            ? $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color={PlantData.ElementalColor(elementalType)}><b>[{100f / ProjectileCount:F0}% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, and half that to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
@@ -175,13 +175,13 @@ public class Anemone : Shooter
         float baseRadius   = AData?.baseVortexRadius      ?? 1.5f;
         float baseDrag     = AData?.vortexDragSpeed       ?? 0.8f;
         string desc = details
-            ? $"Summon a vortex at target location, dragging insects toward its center (Pull Strength: <color=green><b>[({baseDrag:F2}) + ({dpl:F2}/Lvl.)]</b></color>) while dealing <color=green><b>[({VortexDamageFlat:F0}) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} damage every <color=green><b>{tickInterval:F1}s</b></color> within a <color=green><b>[({baseRadius:F1}) + ({rpl:F2}/Lvl.)]</b></color> radius, for <color=green><b>{skillDuration:F0}s</b></color>."
+            ? $"Summon a vortex at target location, dragging insects toward its center (Pull Strength: <color=green><b>[({baseDrag:F2}) + ({dpl:F2}/Lvl.)]</b></color>) while dealing <color={PlantData.ElementalColor(elementalType)}><b>[({VortexDamageFlat:F0}) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> damage every <color=green><b>{tickInterval:F1}s</b></color> within a <color=green><b>[({baseRadius:F1}) + ({rpl:F2}/Lvl.)]</b></color> radius, for <color=green><b>{skillDuration:F0}s</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Vortex Radius</b></color> by <color=green><b>{rpl:F2}</b></color> per level. [<color=green><b>+{rpl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Pull Strength</b></color> by <color=green><b>{dpl:F2}</b></color> per level. [<color=green><b>+{dpl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"The Vortex becomes airborne.\n\nOn expiry, the vortex detonates, dealing <color=green><b>{VortexDetonationFlat:F0}</b></color> [<color=#FFB6C1><b>{(details ? $"{skillDamageMultiplier * 100f:F0}% Magic Power" : $"+{skillDamageMultiplier * magicPower:F0}")}</b></color>] {PlantData.ElementalTag(elementalType)} damage and pushing back all insects caught in it.")}\n\n" +
+               $"{Level5Section(path3Level, $"The Vortex becomes airborne.\n\nOn expiry, the vortex detonates, dealing <color={PlantData.ElementalColor(elementalType)}><b>{VortexDetonationFlat:F0}</b></color> [<color=#FFB6C1><b>{(details ? $"{skillDamageMultiplier * 100f:F0}% Magic Power" : $"+{skillDamageMultiplier * magicPower:F0}")}</b></color>] damage and pushing back all insects caught in it.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

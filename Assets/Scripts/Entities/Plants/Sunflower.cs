@@ -167,12 +167,12 @@ public class Sunflower : Shooter
         $"The {GetName()} shoots her targets with sun bolts and generate precious <color=yellow>Sun</color> for the garden.";
 
     public override string GetAttackDescription() =>
-        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=green><b>{attackDamage}</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage.";
+        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetSkillDesription()
     {
         float dpspl = SFData?.path3SunrayDPSPerLevel ?? 15f;
-        return $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.";
+        return $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color={PlantData.ElementalColor(elementalType)}><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.";
     }
 
     public override string GetPassiveDescription() =>
@@ -183,7 +183,7 @@ public class Sunflower : Shooter
         float adpl = SFData?.path1AttackDamagePerLevel ?? 5f;
         float aspl = SFData?.path1AttackSpeedPerLevel  ?? 0.05f;
         string desc = details
-            ? $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage."
+            ? $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -215,7 +215,7 @@ public class Sunflower : Shooter
         float dpspl = SFData?.path3SunrayDPSPerLevel    ?? 15f;
         float durpl = SFData?.path3SkillDurationPerLevel ?? 0.5f;
         string desc = details
-            ? $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.ElementalTag(elementalType)} {PlantData.DamageTypeTag(damageType)} damage per second to insects within the designated area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
+            ? $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within the designated area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Sunray Damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]\n\n" +

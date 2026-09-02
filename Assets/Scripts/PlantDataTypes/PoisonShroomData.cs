@@ -25,11 +25,11 @@ public class PoisonShroomData : PlantData
     public float path3RadiusPerLevel = 0.2f;
 
     public override string GetAttackDescription() =>
-        $"Fires Toxic Spores at the target, dealing {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage over time.";
+        $"Fires Toxic Spores at the target, dealing {DamageTypeLabel(damageType)} over time.";
 
     public override string GetPassiveDescription() =>
         "Can deal Critical Damage with its Damage Over Time effects, and gains bonus Critical Chance and Elemental Affinity.";
 
     public override string GetSkillDescription() =>
-        $"Hurls a toxic blob towards a targeted area, creating a poison field that lasts for a duration. Insects standing in the field take {ElementalTag(elementalType)} {DamageTypeTag(damageType)} damage per second, and any debuffs on them are frozen in time.";
+        $"Hurls a toxic blob towards a targeted area, creating a poison field that lasts for a duration. Insects standing in the field take {DamageTypeLabel(damageType)} per second, and any debuffs on them are frozen in time.";
 }
