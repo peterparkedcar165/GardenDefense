@@ -83,7 +83,7 @@ MonoBehaviour:
     unlockWave: 8
     budgetWeight: 0.1
     startDelay: 1
-  eliteWaveInterval: 6
+  eliteWaveInterval: 0
   eliteInsects: []
   fertilizerPool:
   - {fileID: 11400000, guid: 34229fd6526dadf4a914e970da50e8c4, type: 2}

@@ -18,6 +18,10 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
     private SpriteRenderer _carriedRenderer;
     private int _carriedOriginalSortingOrder;
     private bool _isLandingForPickup;
+    // true for the whole land->pause->carry->takeoff sequence, not just once carriedInsect is
+    // finally set at the end of it - without this, a periodic pickup check landing mid-sequence
+    // would see carriedInsect still null and start a second, competing PickUpSequence coroutine
+    private bool _isPickingUp;
 
     protected override bool FallDamageImmune => _isLandingForPickup;
 
@@ -47,7 +51,7 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
         if (carriedInsect != null && !carriedInsect.IsAlive)
             carriedInsect = null;
 
-        if (carriedInsect != null) return;
+        if (carriedInsect != null || _isPickingUp) return;
 
         pickupCheckTimer -= Time.deltaTime;
         if (pickupCheckTimer <= 0f)
@@ -80,10 +84,13 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
         if (!newState && !_isLandingForPickup) DropCarriedInsect();
     }
 
-    // targets the slowest un-carried ground insect ahead of it within range, then starts the
+    // targets the slowest un-carried ground insect within range, then starts the
     // land -> pause -> carry -> take off sequence instead of picking it up instantly. compares
     // baseMovementSpeed (not the buffed/total movementSpeed), since the intent is to pick up
-    // insects that are naturally slow-but-strong (e.g. Snail), not ones merely slowed by an effect
+    // insects that are naturally slow-but-strong (e.g. Snail), not ones merely slowed by an effect.
+    // no longer requires the candidate to be at/ahead of this Duskdarter's own path progress -
+    // an insect that stops periodically to attack (e.g. Bombardier Beetle) would otherwise fall
+    // behind and become permanently ineligible once a Duskdarter passes it
     private void TryPickUpNearbyInsect()
     {
         float range = DDData?.carryPickupRange ?? 3f;
@@ -93,7 +100,6 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
         {
             if (insect == null || !insect.IsAlive || insect == this) continue;
             if (insect is FlyingInsect || insect.carriedBy != null || insect.movementPaused) continue;
-            if (insect.currentWaypointIndex < currentWaypointIndex) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) > range) continue;
             if (insect.baseMovementSpeed < slowestSpeed) { slowestSpeed = insect.baseMovementSpeed; slowest = insect; }
         }
@@ -102,6 +108,7 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
 
     private IEnumerator PickUpSequence(Insect target)
     {
+        _isPickingUp = true;
         movementPaused = true;
         target.movementPaused = true;
 
@@ -123,6 +130,7 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
             SetFlight(true);
             movementPaused = false;
         }
+        _isPickingUp = false;
     }
 
     // public so a wave spawner can also call this right after spawning both insects, to have a

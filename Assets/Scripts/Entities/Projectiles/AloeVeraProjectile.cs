@@ -181,6 +181,10 @@ public class AloeVeraProjectile : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // hidden passive: every plant this heal touches (single target or splash alike) has its
+    // Scorch cut short by a fixed fraction of Scorch's own original duration
+    private const float ScorchReductionOnHeal = 0.33f;
+
     private void Explode()
     {
         bool path2Maxed = source != null && source.IsPath2Maxed;
@@ -192,6 +196,7 @@ public class AloeVeraProjectile : MonoBehaviour
                 float bonus = path2Maxed ? plant.MissingHealth * 0.12f : 0f;
                 plant.Heal(healAmount + bonus, source);
                 plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
+                plant.GetEffect<ScorchEffect>()?.ReduceByFraction(ScorchReductionOnHeal);
             }
         }
 

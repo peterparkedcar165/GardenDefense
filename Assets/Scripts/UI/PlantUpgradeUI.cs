@@ -30,7 +30,7 @@ public class PlantUpgradeUI : EntityInfoPanel
     // targets never lerps in from the previously-selected entity's leftover value
     private Entity _healthBarEntity;
     private float _displayedHealthPct = -1f;
-    private const float HealthBarLerpSpeed = 6f;
+    private const float HealthBarLerpSpeed = 12f;
 
     // trailing damage chunk overlay, matching Entity's world-space chunk bar - built at runtime
     // as a clone of healthBarFill inserted directly behind it, since the panel prefab has no
@@ -39,7 +39,7 @@ public class PlantUpgradeUI : EntityInfoPanel
     private float _chunkPct = -1f;
     private float _lastPctForChunk = -1f;
     private float _chunkDelayTimer;
-    private const float DamageChunkDelay = 0.5f;
+    private const float DamageChunkDelay = 0.25f;
     private static readonly Color AllyChunkColor  = Color.white;
     private static readonly Color EnemyChunkColor = new Color(1f, 0.55f, 0f);
 

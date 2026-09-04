@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 public class SoothingRain : MonoBehaviour
 {
+    // hidden passive: same anti-Scorch hook as Aloe Vera's own heal splash, but weaker per tick
+    // since the rain ticks repeatedly over its whole duration
+    private const float ScorchReductionPerTick = 0.10f;
+
     private float radius;
     private float duration;
     private float healPerTick;
@@ -44,6 +48,7 @@ public class SoothingRain : MonoBehaviour
             float overflow = path3Maxed ? Mathf.Max(0f, scaledHeal - plant.MissingHealth) : 0f;
             plant.Heal(healPerTick, source);
             plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
+            plant.GetEffect<ScorchEffect>()?.ReduceByFraction(ScorchReductionPerTick);
 
             // this is literally rain, apply the same exposure effect real rain weather grants.
             // short duration so it fades shortly after a plant leaves the rain, refreshed every
