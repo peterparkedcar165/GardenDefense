@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // applied to the Shooter Carrot is currently bonded to (Soil Bond). continuously grants Attack
-// Range equal to 50% of Carrot's own CURRENT total Attack Range, recalculated every tick so it
+// Range equal to 25% of Carrot's own CURRENT total Attack Range, recalculated every tick so it
 // tracks Carrot leveling up or gaining range from other sources while still bonded - rather than
 // a fixed effect duration racing a reapply interval, this is permanent and removes itself (and
 // unwinds its own bonus) the instant its source Carrot is gone, matching PsionicBondEffect's
@@ -15,6 +15,7 @@ public class SoilBondEffect : StatusEffect
     private readonly Shooter carrot;
     private float appliedRangeBonus;
     private bool maxBonusActive;
+    public const float RangeBonusFraction = 0.25f;
     public const float MaxLevelAttackSpeedBonus = 0.25f;
 
     public SoilBondEffect(Entity target, Entity source, Shooter carrot)
@@ -36,7 +37,7 @@ public class SoilBondEffect : StatusEffect
             return;
         }
 
-        float desiredRangeBonus = carrot.attackRange * 0.5f;
+        float desiredRangeBonus = carrot.attackRange * RangeBonusFraction;
         if (!Mathf.Approximately(desiredRangeBonus, appliedRangeBonus))
         {
             target.attackRangeAdder += desiredRangeBonus - appliedRangeBonus;

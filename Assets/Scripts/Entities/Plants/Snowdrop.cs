@@ -70,6 +70,7 @@ public class Snowdrop : Aura
         List<Insect> inRange = GetInsectsInRange();
         foreach (Insect insect in inRange)
         {
+            if (insect.isFlying) continue; // ground-level only, flying insects are unaffected
             insect.ApplyEffect(new ChillEffect(insect, 0.5f, chillLevel, this, baseSlow, scalingSlow));
         }
 
@@ -220,9 +221,12 @@ public class Snowdrop : Aura
     {
         base.Attack();
         List<Insect> inRange = GetInsectsInRange();
-        DamageTag[] tags = new DamageTag[] { DamageTag.Attack, DamageTag.AoE };
+        // CanHitBurrowed: the chill radiates through the ground itself, so it can still reach
+        // insects currently burrowed (e.g. mid-transit through an UndergroundTunnel)
+        DamageTag[] tags = new DamageTag[] { DamageTag.Attack, DamageTag.AoE, DamageTag.CanHitBurrowed };
         foreach (Insect insect in inRange)
         {
+            if (insect.isFlying) continue; // ground-level only, flying insects are unaffected
             insect.Damage(attackDamage, damageType, elementalType, this, false, tags);
         }
     }
@@ -240,11 +244,11 @@ public class Snowdrop : Aura
         $"The {GetName()} is a frosty flower whose icy presence continuously damages and chills nearby insects, while cooling the plants around her.";
 
     public override string GetAttackDescription() =>
-        $"Continuously deals <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range.";
+        $"Continuously deals <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all ground-level insects within range.";
 
     public override string GetPassiveDescription() =>
         $"Increase <color=orange><b>Heat Resistance</b></color> by <color=green><b>{BonusHeatResistance * 100f:F0}%</b></color>.\n\n" +
-        $"Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement and attack speed by <color=green><b>{(baseSlow + scalingSlow * effectivePath2Level) * 100f:F0}%</b></color>.\n\n" +
+        $"Applies <color=#00FFFF>Chill</color> to nearby ground-level insects, slowing their movement and attack speed by <color=green><b>{(baseSlow + scalingSlow * effectivePath2Level) * 100f:F0}%</b></color>.\n\n" +
         $"Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature by <color=green><b>{CoolingPerSecond:F1}</b></color> per second, until comfort.";
 
     public override string GetSkillDesription() =>
@@ -259,7 +263,7 @@ public class Snowdrop : Aura
         float adpl    = SData?.path1AttackDamagePerLevel ?? 1f;
         float rangepl = SData?.path1AttackRangePerLevel  ?? 0.1f;
         string desc = details
-            ? $"Continuously deals <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range."
+            ? $"Continuously deals <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all ground-level insects within range."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -273,13 +277,13 @@ public class Snowdrop : Aura
     {
         string desc = details
             ? $"Increase <color=orange><b>Heat Resistance</b></color> by <color=green><b>{BonusHeatResistance * 100f:F0}%</b></color>.\n\n" +
-              $"Applies <color=#00FFFF>Chill</color> to nearby insects at level <color=green><b>[1 + (1/Lvl.)]</b></color>, slowing their movement and attack speed by <color=green><b>[({baseSlow * 100f:F0}%) + ({scalingSlow * 100f:F0}%/Lvl.)]</b></color>.\n\n" +
+              $"Applies <color=#00FFFF>Chill</color> to nearby ground-level insects at level <color=green><b>[1 + (1/Lvl.)]</b></color>, slowing their movement and attack speed by <color=green><b>[({baseSlow * 100f:F0}%) + ({scalingSlow * 100f:F0}%/Lvl.)]</b></color>.\n\n" +
               $"Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature by <color=green><b>[({baseCoolingPerSecond:F1}) + ({coolingPerSecondPerLevel:F1}/Lvl.)]</b></color> per second, until comfort."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#00FFFF>Chill</color> level by <color=green><b>1</b></color> per level, adding <color=green><b>{scalingSlow * 100f:F0}%</b></color> slow per level. [<color=green><b>+{scalingSlow * 100f * effectivePath2Level:F0}%</b></color>]\n\n" +
                $"Increase <color=#00FFFF>Cooling</color> by <color=green><b>{coolingPerSecondPerLevel:F1}</b></color> per second per level. [<color=green><b>+{coolingPerSecondPerLevel * effectivePath2Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "<color=#00FFFF>Chill</color> also reduces <color=#00FFFF><b>Ice Resistance</b></color> by <color=red><b>24%</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"<color=#00FFFF>Chill</color> also reduces <color=#00FFFF><b>Ice Resistance</b></color> by <color=red><b>{ChillEffect.IceResReduction * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

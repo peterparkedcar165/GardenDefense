@@ -9,25 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21a96f36c3aff7842b3329d73a095180, type: 3}
-  m_Name: BegoniaData
-  m_EditorClassIdentifier: Assembly-CSharp::BegoniaData
-  plantPrefab: {fileID: -3248773622810050089, guid: 63eb5dc8f809acf4a84718b08a9a7eea, type: 3}
-  icon: {fileID: 21300000, guid: adc730a06fd32d1449e86eb5219c00bf, type: 3}
-  plantName: Begonia
-  displayName: Begonia
-  family: 2
-  elementalType: 2
-  damageType: 1
-  sunCost: 225
+  m_Script: {fileID: 11500000, guid: dbc3a382ad3d446c9713f0bed73d4b87, type: 3}
+  m_Name: BirdOfParadiseData
+  m_EditorClassIdentifier: Assembly-CSharp::BirdOfParadiseData
+  plantPrefab: {fileID: 5762182274418764317, guid: 27b755c3e6e887f42914d19d7aac4cb8, type: 3}
+  icon: {fileID: 21300000, guid: 8442b71e8fb63d0409c553fcf4c28db5, type: 3}
+  plantName: BirdOfParadise
+  displayName: Bird of Paradise
+  family: 4
+  elementalType: 5
+  damageType: 0
+  sunCost: 250
   placementLimit: 1
   category: 1
   skillTree: {fileID: 0}
   baseMaxHealth: 300
-  baseAttackDamage: 48
+  baseAttackDamage: 12
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
-  baseAttackRange: 3
+  baseAttackSpeed: 1
+  baseAttackRange: 2
   baseArmor: 0
   baseMagicArmor: 0
   baseElementalEffectChance: 0.1
@@ -70,33 +70,34 @@ MonoBehaviour:
   baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 4
-  baseMaxRange: 20
+  baseProjectileSpeed: 0
+  baseMaxRange: 0
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 120
-  baseSkillDuration: 20
+  baseSkillCooldown: 45
+  baseSkillDuration: 10
   channelDuration: 0
-  baseSkillRadius: 2
+  baseSkillRadius: 0
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseCritChanceBonus: 0.08
-  baseMaxDamageBonus: 0.12
-  baseAttackSpeedBonus: 0.18
-  baseAttackDamageBonus: 0.2
-  basePassiveMultiplier: 0.24
-  baseSkillMultiplier: 0.16
-  path1AttackDamagePerLevel: 6
+  path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.2
-  path2CritChancePerLevel: 0.04
-  path2MaxDamagePerLevel: 0.04
-  path3AttackDamagePerLevel: 0.06
-  path3AttackSpeedBonusPerLevel: 0.09
-  path3RadiusPerLevel: 0.15
-  path3SkillDurationPerLevel: 3
+  baseTalonFocusASPerStack: 0.04
+  path1TalonFocusASPerStackPerLevel: 0.02
+  baseTalonFocusStackCap: 10
+  maxStacksHealthPercentDamage: 0.04
+  maxStacksAttackSpeedBonus: 0.15
+  basePassiveDamagePerStack: 3
+  path2PassiveDamagePerStackPerLevel: 1
+  maxLevelArmorShredPerStack: 0.02
+  maxLevelExtraProcEveryNHits: 3
+  maxLevelExtraProcDelay: 0.15
+  baseSkillAttackSpeedBonus: 0.08
+  path3AttackSpeedBonusPerLevel: 0.04
+  path3SkillDurationPerLevel: 2

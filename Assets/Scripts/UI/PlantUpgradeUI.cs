@@ -25,6 +25,24 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private Image healthBarFill;
     [SerializeField] private TMP_Text healthText;
 
+    // fluid health bar, matching Entity's world-space bar: fillAmount eases toward the real
+    // percentage each frame instead of snapping. resets instantly on a new selection so switching
+    // targets never lerps in from the previously-selected entity's leftover value
+    private Entity _healthBarEntity;
+    private float _displayedHealthPct = -1f;
+    private const float HealthBarLerpSpeed = 6f;
+
+    // trailing damage chunk overlay, matching Entity's world-space chunk bar - built at runtime
+    // as a clone of healthBarFill inserted directly behind it, since the panel prefab has no
+    // dedicated chunk Image wired up in the Inspector
+    private Image _damageChunkFill;
+    private float _chunkPct = -1f;
+    private float _lastPctForChunk = -1f;
+    private float _chunkDelayTimer;
+    private const float DamageChunkDelay = 0.5f;
+    private static readonly Color AllyChunkColor  = Color.white;
+    private static readonly Color EnemyChunkColor = new Color(1f, 0.55f, 0f);
+
     [Header("Temperature Bar")]
     [SerializeField] private GameObject tempBarRoot;
     [SerializeField] private Image tempBarBackground;
@@ -283,34 +301,100 @@ public class PlantUpgradeUI : EntityInfoPanel
     private void RefreshHealthBar()
     {
         float health, maxHealth, shield = 0f;
+        Entity entity;
 
         if (selectedPlant != null)
         {
+            entity    = selectedPlant;
             health    = selectedPlant.health;
             maxHealth = selectedPlant.maxHealth;
             shield    = selectedPlant.TotalShield;
         }
         else if (selectedInsect != null)
         {
+            entity    = selectedInsect;
             health    = selectedInsect.health;
             maxHealth = selectedInsect.maxHealth;
             shield    = selectedInsect.TotalShield;
         }
         else return;
 
+        float pct = maxHealth > 0f ? Mathf.Clamp01(health / maxHealth) : 0f;
+        if (entity != _healthBarEntity)
+        {
+            _healthBarEntity = entity;
+            _displayedHealthPct = pct;
+            _chunkPct = pct;
+            _lastPctForChunk = pct;
+            _chunkDelayTimer = 0f;
+        }
+        else
+        {
+            _displayedHealthPct = Mathf.Lerp(_displayedHealthPct, pct, 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime));
+        }
+
         if (healthBarFill != null)
         {
-            float pct = maxHealth > 0f ? Mathf.Clamp01(health / maxHealth) : 0f;
-            healthBarFill.fillAmount = pct;
-            healthBarFill.color = pct <= 0.25f ? Color.red
-                                : pct <= 0.50f ? Color.yellow
+            healthBarFill.fillAmount = _displayedHealthPct;
+            healthBarFill.color = _displayedHealthPct <= 0.25f ? Color.red
+                                : _displayedHealthPct <= 0.50f ? Color.yellow
                                 : Color.green;
         }
+
+        RefreshDamageChunk(entity, pct);
+
         if (healthText != null)
         {
             string shieldSuffix = shield > 0f ? $" <b><color=#888888>(+{shield:F0})</color></b>" : "";
             healthText.text = $"{health:F0}/{maxHealth:F0}{shieldSuffix}";
         }
+    }
+
+    // clones healthBarFill the first time it's needed and inserts the clone directly behind it in
+    // the hierarchy (earlier sibling = drawn first = behind), so it inherits the same sprite,
+    // fill method and anchoring without needing a dedicated Image wired up in the Inspector
+    private void EnsureDamageChunkFill()
+    {
+        if (_damageChunkFill != null || healthBarFill == null) return;
+        GameObject obj = Instantiate(healthBarFill.gameObject, healthBarFill.transform.parent);
+        obj.name = "DamageChunkFill";
+        obj.transform.SetSiblingIndex(healthBarFill.transform.GetSiblingIndex());
+        _damageChunkFill = obj.GetComponent<Image>();
+        _damageChunkFill.raycastTarget = false;
+        _damageChunkFill.enabled = false;
+    }
+
+    // same hold-then-drain behavior as Entity.TickDamageChunkFill: freezes at the pre-hit
+    // percentage, waits DamageChunkDelay with no further drop, then eases down to the real
+    // percentage at the same speed as the main bar
+    private void RefreshDamageChunk(Entity entity, float pct)
+    {
+        EnsureDamageChunkFill();
+        if (_damageChunkFill == null) return;
+
+        if (pct < _lastPctForChunk)
+        {
+            _chunkDelayTimer = DamageChunkDelay;
+        }
+        else if (pct > _chunkPct)
+        {
+            _chunkPct = pct;
+            _chunkDelayTimer = 0f;
+        }
+        _lastPctForChunk = pct;
+
+        if (_chunkDelayTimer > 0f)
+            _chunkDelayTimer -= Time.unscaledDeltaTime;
+        else if (_chunkPct > pct)
+            _chunkPct = Mathf.Lerp(_chunkPct, pct, 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime));
+
+        bool visible = _chunkPct > pct + 0.001f;
+        _damageChunkFill.enabled = visible;
+        if (!visible) return;
+
+        _damageChunkFill.fillAmount = _chunkPct;
+        bool ally = entity is Plant || (entity is Insect insect && insect.team == Team.Friendly);
+        _damageChunkFill.color = ally ? AllyChunkColor : EnemyChunkColor;
     }
 
     // --- Paths ---

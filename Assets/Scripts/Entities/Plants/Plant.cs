@@ -158,6 +158,20 @@ public abstract class Plant : Entity, IAttackable
         return null;
     }
 
+    // how many currently-alive plants on the field share this exact PlantData asset - used to
+    // enforce PlantData.placementLimit (e.g. Elder plants capped at 1 live copy)
+    public static int CountAlive(PlantData data)
+    {
+        if (data == null) return 0;
+        int count = 0;
+        foreach (Plant p in allPlants)
+            if (p != null && p.IsAlive && p.data == data) count++;
+        return count;
+    }
+
+    public static bool AtPlacementLimit(PlantData data) =>
+        data != null && data.placementLimit > 0 && CountAlive(data) >= data.placementLimit;
+
     private void StoreDeadRecord()
     {
         if (occupiedTile == null || selfPrefab == null) return;
@@ -1478,6 +1492,19 @@ public abstract class Plant : Entity, IAttackable
             }
         }
         return last;
+    }
+
+    // can this plant, using its own complete targeting logic, actually reach this insect right
+    // now? default: the standard single circle plus this plant's own night-visibility rule.
+    // public (not protected) so a DIFFERENT plant can ask "would you be able to see this" without
+    // needing to know how targeting actually works for that specific plant - e.g. Carrot's Soil
+    // Bond calls this on its bonded ally rather than re-deriving a plain circle from its
+    // attackRange, so a plant with exotic reach (like Nerium Oleander's sprout-chain targeting,
+    // which bypasses the normal range circle entirely) is still seen correctly through the bond
+    public virtual bool CanReachInsect(Insect insect)
+    {
+        float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+        return IsWithinAttackRange(insect, dist) && IsValidNightTarget(insect, dist);
     }
 
     public virtual bool IsValidNightTarget(Insect insect, float distance)

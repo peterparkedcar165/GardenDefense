@@ -23,6 +23,13 @@ public class PlantButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     // Update is called once per frame
     void Update()
     {
+        if (Plant.AtPlacementLimit(plant.data))
+        {
+            costText.text = "MAX";
+            costText.fontStyle = FontStyles.Bold;
+            costText.color = Color.red;
+            return;
+        }
         costText.text = plant.sunCost.ToString();
         if (gameManager.SunCount >= plant.sunCost)
         {

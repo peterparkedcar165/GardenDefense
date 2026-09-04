@@ -18,6 +18,10 @@ public class SunflowerData : PlantData
     [Header("Path 3 Scaling")]
     public float path3SunrayDPSPerLevel = 15f;
     public float path3SkillDurationPerLevel = 0.5f;
+    public float path3RadiusPerLevel = 0.2f;
+    // purely cosmetic - the beam sprite grows faster than the actual hit radius per level, so it
+    // reads as a visibly bigger effect without the real hitbox tracking that far outward
+    public float path3VisualRadiusPerLevel = 0.3f;
 
     public override string GetAttackDescription() =>
         $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing {DamageTypeLabel(damageType)}.";

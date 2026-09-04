@@ -20,11 +20,13 @@ MonoBehaviour:
   elementalType: 7
   damageType: 0
   sunCost: 225
+  placementLimit: 1
+  category: 1
   skillTree: {fileID: 0}
-  baseMaxHealth: 200
-  baseAttackDamage: 102
+  baseMaxHealth: 300
+  baseAttackDamage: 122
   baseMagicPower: 0
-  baseAttackSpeed: 0.2
+  baseAttackSpeed: 0.3
   baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
@@ -84,7 +86,7 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  path1AttackDamagePerLevel: 32
+  path1AttackDamagePerLevel: 38
   path1CritChancePerLevel: 0.04
   baseEruptionRadius: 1
   path1RadiusPerLevel: 0.15
@@ -92,14 +94,14 @@ MonoBehaviour:
   bondCountdownBonus: 0.5
   path2CountdownBonusPerLevel: 0.05
   path2AttackRangePerLevel: 0.2
-  carrotCountBase: 6
+  carrotCountBase: 7
   carrotsPerLevel: 2
   pillarStartOffset: 0.5
-  pillarInterval: 0.1
+  pillarInterval: 0.3
   pillarRadius: 0.3
   pillarHitboxMultiplier: 2.5
-  skillBaseDamage: 83
-  path3SkillDamagePerLevel: 22
+  skillBaseDamage: 122
+  path3SkillDamagePerLevel: 42
   pillarKnockUpForce: 5
   path3WidthPerLevel: 0.1
   visualFadeIn: 0.1

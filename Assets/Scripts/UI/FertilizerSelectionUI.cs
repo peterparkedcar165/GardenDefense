@@ -61,10 +61,12 @@ public class FertilizerSelectionUI : MonoBehaviour
         LoadoutSelectionUI.instance?.ShowWithCurrentSelection();
     }
 
+    // leaves the game paused after fertilizer selection - wave 0 now waits for the player to
+    // press Space or the Pause/Resume button (labelled START while GameManager.HasStarted is
+    // false) instead of unpausing automatically the moment a fertilizer is picked
     public void CloseAfterSelect()
     {
         panel.SetActive(false);
-        GameManager.instance.SetPause(false);
         foreach (var card in activeCards)
             Destroy(card.gameObject);
         activeCards.Clear();

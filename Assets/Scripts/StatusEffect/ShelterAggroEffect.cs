@@ -14,6 +14,7 @@ public class ShelterAggroEffect : TauntEffect
         : base(target, float.MaxValue, 1, source, plant)
     {
         this.plant = plant;
+        visible = false;
     }
 
     public override string GetName() => "<color=#A9A9A9>Retained</color>";

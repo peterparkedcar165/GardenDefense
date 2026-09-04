@@ -89,7 +89,5 @@ MonoBehaviour:
   path2HealthPerLevel: 70
   path3ShieldPerLevel: 40
   path3SkillDurationPerLevel: 2
-  baseSkillHealBonus: 0.12
-  path3HealBonusPerLevel: 0.08
   baseShieldArmorBonus: 25
   path3ShieldArmorPerLevel: 5

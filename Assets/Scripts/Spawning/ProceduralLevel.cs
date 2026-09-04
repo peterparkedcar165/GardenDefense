@@ -50,8 +50,11 @@ public class ProceduralLevel : SpawnManager
 
     IEnumerator RunWaves()
     {
-        nextWaveTime = Time.time + 10f;
-        yield return new WaitForSeconds(10f);
+        // wave 0 is the placement phase: the level sits paused waiting for the player to press
+        // Start (see GameManager.HasStarted), so there's no fixed countdown here - wave 1 begins
+        // the instant they do, with no leftover delay
+        nextWaveTime = float.PositiveInfinity;
+        yield return new WaitUntil(() => GameManager.instance.HasStarted);
 
         while (wave < config.maxWaves)
         {

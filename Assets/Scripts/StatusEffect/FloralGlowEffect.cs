@@ -72,16 +72,16 @@ public class FloralGlowEffect : StatusEffect
     {
         yield return new UnityEngine.WaitForSeconds(0.03f);
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
-        float hitDamage = (calendula.attackDamage * DamageScaling + calendula.skillDamageMultiplier * calendula.magicPower) * effectiveness;
-        DamageTag[] tags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated };
-        insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false, tags);
+        float hitDamage = calendula.attackDamage * DamageScaling + calendula.skillDamageMultiplier * calendula.magicPower;
+        DamageTag[] tags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.OnHit };
+        insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false, tags, false, effectiveness);
 
         // max level, the hit explodes, catching other insects within a small radius
         if (!calendula.IsPath3Maxed) yield break;
         Vector3 origin = insect.transform.position;
         Vector3 visualOrigin = insect.visual != null ? insect.visual.position : origin;
         calendula.SpawnFireBurst(visualOrigin, ExplosionRadius);
-        DamageTag[] splashTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.AoE };
+        DamageTag[] splashTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.AoE, DamageTag.OnHit };
 
         // snapshot every target in the blast before any of them take damage, then delay each
         // hit to match how long the visual burst takes to actually reach that distance
@@ -97,15 +97,15 @@ public class FloralGlowEffect : StatusEffect
         {
             float dist = Vector3.Distance(origin, other.transform.position);
             float delay = ExplosionRadius > 0f ? (dist / ExplosionRadius) * burstLifetime : 0f;
-            calendula.StartCoroutine(DelayedSplashHit(other, hitDamage, splashTags, delay));
+            calendula.StartCoroutine(DelayedSplashHit(other, hitDamage, splashTags, delay, effectiveness));
         }
     }
 
-    private System.Collections.IEnumerator DelayedSplashHit(Insect other, float damage, DamageTag[] tags, float delay)
+    private System.Collections.IEnumerator DelayedSplashHit(Insect other, float damage, DamageTag[] tags, float delay, float effectiveness)
     {
         if (delay > 0f) yield return new UnityEngine.WaitForSeconds(delay);
         if (other == null || !other.IsAlive) yield break;
-        other.Damage(damage, DamageType.Magic, ElementalType.Fire, calendula, false, tags);
+        other.Damage(damage, DamageType.Magic, ElementalType.Fire, calendula, false, tags, false, effectiveness);
     }
 
     private float CoordinatedDamage =>

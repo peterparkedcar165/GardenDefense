@@ -142,7 +142,14 @@ public abstract class Insect : Entity, IAttackable
             if (team == Team.Friendly) return FindNearestEnemyInRange();
 
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
-            if ((taunted as UnityEngine.Object) != null) return taunted;   // ignore a destroyed taunter
+            if ((taunted as UnityEngine.Object) != null)
+            {
+                // Shelter family passive: a taunt (e.g. Cactus's pulse) forces every insect onto
+                // it regardless of aggressivity, so the Retained lock should apply the same way -
+                // TryApplyShelterAggro already no-ops for a non-Shelter or non-Plant taunter
+                TryApplyShelterAggro(taunted);
+                return taunted;   // ignore a destroyed taunter
+            }
 
             if (HasEffect<ObliviousEffect>() && aggressivity != Aggressivity.Low) return null;
 
@@ -798,7 +805,8 @@ public abstract class Insect : Entity, IAttackable
     // moves this insect between the enemy pool (allInsects) and the friendly pool. friendlies
     // are out of allInsects so every plant/AoE that iterates it ignores them (no friendly fire)
     // friendly units (minions, hypnotized) show a green health bar; enemies stay red
-    protected override Color HealthBarColor => team == Team.Friendly ? Color.green : Color.red;
+    protected override Color HealthBarColor => team == Team.Friendly ? Color.green : EnemyHealthBarColor;
+    protected override bool IsHealthBarAlly => team == Team.Friendly;
 
     public void SetTeam(Team newTeam)
     {

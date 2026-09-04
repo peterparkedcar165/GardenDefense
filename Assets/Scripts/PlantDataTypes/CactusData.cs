@@ -15,8 +15,6 @@ public class CactusData : PlantData
     [Header("Path 3 Scaling")]
     public float path3ShieldPerLevel = 10f;
     public float path3SkillDurationPerLevel = 2f;
-    public float baseSkillHealBonus = 0.16f;
-    public float path3HealBonusPerLevel = 0.04f;
     public float baseShieldArmorBonus = 25f;
     public float path3ShieldArmorPerLevel = 5f;
 

@@ -57,6 +57,11 @@ public class Carrot : Shooter
         };
     }
 
+    // shows the attack cooldown bar (like Aura/Gloriosa) under the health bar, alongside the
+    // skill bar - Carrot has no passive-cooldown bar of its own since Soil Bond isn't cooldown
+    // based, so this is the only bar occupying that slot
+    protected override bool GetAttackBarVisible() => attackCooldown > 0f;
+
     protected override void Update()
     {
         base.Update();
@@ -118,7 +123,7 @@ public class Carrot : Shooter
 
     // re-resolves whichever Shooter currently occupies boundTile every frame (cheap: a
     // reference compare, only doing real work when the occupant actually changed) and keeps
-    // the OnFired subscription + visible Soil Bond effect pointed at that live instance
+    // the Entity.OnHit subscription + visible Soil Bond effect pointed at that live instance
     private void ResyncBond()
     {
         Shooter current = boundTile != null ? Plant.GetPlantOnTile(boundTile) as Shooter : null;
@@ -131,7 +136,7 @@ public class Carrot : Shooter
         boundShooter = current;
         if (boundShooter != null)
         {
-            boundShooter.OnFired += HandleBoundShooterFired;
+            Entity.OnHit += HandleBoundShooterHit;
             boundShooter.ApplyEffect(new SoilBondEffect(boundShooter, this, this));
         }
     }
@@ -139,17 +144,23 @@ public class Carrot : Shooter
     private void Unbind()
     {
         if (boundShooter == null) return;
-        boundShooter.OnFired -= HandleBoundShooterFired;
+        Entity.OnHit -= HandleBoundShooterHit;
         // removes only this Carrot's own instance - SoilBondEffect is source-stackable, so
         // other Carrots bonded to the same plant keep theirs untouched
         boundShooter.RemoveEffect<SoilBondEffect>(this);
         boundShooter = null;
     }
 
-    // every time the bonded plant fires, Carrot's own attack countdown ticks forward - the
-    // faster the bonded plant attacks, the faster Carrot ends up attacking too
-    private void HandleBoundShooterFired(GameObject target)
+    // every time the bonded plant's attack actually lands (not just when it fires), Carrot's own
+    // attack countdown ticks forward - Entity.OnHit fires once per insect struck, so a piercing
+    // shooter hitting several insects with one shot advances the countdown that many times.
+    // requires the Attack tag specifically, so on-hit procs riding along on the same hit (Floral
+    // Glow, Ablaze, Talon Focus, etc.) don't also advance the countdown - only the bonded plant's
+    // actual attack damage counts
+    private void HandleBoundShooterHit(EntityEventData data)
     {
+        if (data.source != boundShooter) return;
+        if (data.tags == null || !System.Array.Exists(data.tags, t => t == DamageTag.Attack)) return;
         attackCooldownTimer = Mathf.Min(attackCooldown, attackCooldownTimer + CountdownBonus);
     }
 
@@ -172,15 +183,14 @@ public class Carrot : Shooter
         return insect != null ? insect.transform.position : target.transform.position;
     }
 
-    // Soil Bond: while linked, an insect is a valid target if it's within Carrot's own circle
-    // OR within the bonded plant's own circle - a second circle centered on the ally, not just a
-    // bigger one centered on Carrot, since the two plants usually sit on entirely different tiles
+    // Soil Bond: while linked, an insect is a valid target if it's within Carrot's own circle OR
+    // anything the bonded plant could itself target - deferred to the ally's own CanReachInsect
+    // rather than re-deriving a plain circle from its attackRange, so a plant with exotic reach
+    // (e.g. Nerium Oleander's sprout-chain targeting) is still seen correctly through the bond
     protected override bool IsWithinAttackRange(Insect insect, float distance)
     {
         if (distance <= attackRange) return true;
-        if (boundShooter == null || !boundShooter.IsAlive) return false;
-        float allyDistance = Vector3.Distance(boundShooter.transform.position, insect.GetAimPoint());
-        return allyDistance <= boundShooter.attackRange;
+        return boundShooter != null && boundShooter.IsAlive && boundShooter.CanReachInsect(insect);
     }
 
     // pushes an insect over a short time so the knockback reads as motion instead of a teleport.
@@ -349,7 +359,7 @@ public class Carrot : Shooter
         $"Erupts a chunk of earth beneath its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to it and any insects within <color=green><b>{EruptionRadius:F1}</b></color> of it.";
 
     public override string GetPassiveDescription() =>
-        $"Select a tile to form a <color=#B87333><b>Soil Bond</b></color> with the plant there. The bonded plant shares its targeting range with the {GetName()}, and grants it <color=green><b>+{CountdownBonus:F2}</b></color> Attack Countdown every time it fires. In return, the bonded plant gains Attack Range equal to <color=green><b>50%</b></color> of the {GetName()}'s own.";
+        $"Select a tile to form a <color=#B87333><b>Soil Bond</b></color> with the plant there. The bonded plant shares its targeting range with the {GetName()}. Every time the plant hits an attack, it reduces time before the {GetName()}'s next attack by <color=green><b>{CountdownBonus:F2}</b></color> seconds. In return, the bonded plant gains Attack Range equal to <color=green><b>{SoilBondEffect.RangeBonusFraction * 100f:F0}%</b></color> of the {GetName()}'s own.";
 
     public override string GetSkillDesription() =>
         $"Aim in a direction. A line of <color=green><b>{CarrotCount}</b></color> carrots erupt from the ground, dealing <color={PlantData.ElementalColor(elementalType)}><b>{SkillDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{SkillDamageMP:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} and knocking insects aside.";
@@ -380,7 +390,7 @@ public class Carrot : Shooter
         float cbpl  = GData?.path2CountdownBonusPerLevel ?? 0.05f;
         float rgpl  = GData?.path2AttackRangePerLevel ?? 0.15f;
         string desc = details
-            ? $"Select a tile to form a <color=#B87333><b>Soil Bond</b></color> with the plant there. The bonded plant shares its targeting range with the {GetName()}, and grants it <color=green><b>[({GData?.bondCountdownBonus ?? 0.3f:F2}) + ({cbpl:F2}/Lvl.)]</b></color> Attack Countdown every time it fires. In return, the bonded plant gains Attack Range equal to <color=green><b>50%</b></color> of the {GetName()}'s own."
+            ? $"Select a tile to form a <color=#B87333><b>Soil Bond</b></color> with the plant there. The bonded plant shares its targeting range with the {GetName()}. Every time the plant hits an attack, it reduces time before the {GetName()}'s next attack by <color=green><b>[({GData?.bondCountdownBonus ?? 0.3f:F2}) + ({cbpl:F2}/Lvl.)]</b></color> seconds. In return, the bonded plant gains Attack Range equal to <color=green><b>{SoilBondEffect.RangeBonusFraction * 100f:F0}%</b></color> of the {GetName()}'s own."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase Attack Countdown bonus by <color=green><b>{cbpl:F2}</b></color> per level. [<color=green><b>+{cbpl * effectivePath2Level:F2}</b></color>]\n\n" +

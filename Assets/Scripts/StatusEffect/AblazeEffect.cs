@@ -2,7 +2,7 @@ public class AblazeEffect : StatusEffect
 {
     private readonly float flatBonusDamage;
     private readonly float maxHealthPercent;
-    private static readonly DamageTag[] bonusDamageTags = { DamageTag.Coordinated };
+    private static readonly DamageTag[] bonusDamageTags = { DamageTag.Coordinated, DamageTag.OnHit };
 
     public AblazeEffect(Entity target, float duration, int level, Entity source, float flatBonusDamage, float maxHealthPercent)
         : base(target, duration, level, source)
@@ -43,8 +43,8 @@ public class AblazeEffect : StatusEffect
     {
         yield return new UnityEngine.WaitForSeconds(0.1f);
         if (insect == null || !insect.IsAlive) yield break;
-        float totalBonus = (flatBonusDamage + maxHealthPercent * insect.maxHealth) * effectiveness;
-        insect.Damage(totalBonus, DamageType.Magic, ElementalType.Fire, target, false, bonusDamageTags);
+        float totalBonus = flatBonusDamage + maxHealthPercent * insect.maxHealth;
+        insect.Damage(totalBonus, DamageType.Magic, ElementalType.Fire, target, false, bonusDamageTags, false, effectiveness);
     }
 
     public override void OnTick(float deltaTime) { }

@@ -24,6 +24,13 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
     void Update()
     {
         if (data == null || sunCostText == null || GameManager.instance == null) return;
+        if (Plant.AtPlacementLimit(data))
+        {
+            sunCostText.text = "MAX";
+            sunCostText.fontStyle = FontStyles.Bold;
+            sunCostText.color = Color.red;
+            return;
+        }
         sunCostText.text = data.sunCost.ToString();
         if (GameManager.instance.SunCount >= data.sunCost)
         {
@@ -40,6 +47,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnClicked()
     {
         if (GameManager.instance == null || GameManager.instance.SunCount < data.sunCost) return;
+        if (Plant.AtPlacementLimit(data)) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
         if (PlantSelector.instance == null) return;
         PlantSelector.instance.SelectPlant(data.plantPrefab.gameObject);

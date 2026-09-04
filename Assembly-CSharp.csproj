@@ -55,6 +55,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ShelterAggroEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\TalonFocusEffect.cs" />
     <Compile Include="Assets\Scripts\PlantRegistry.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\CaveSpiderData.cs" />
     <Compile Include="Assets\Scripts\GridManagers\SnowGridManager.cs" />
@@ -92,13 +93,13 @@
     <Compile Include="Assets\Scripts\StatusEffect\CalendulasLightEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\WaterPot.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\AquaticOvershieldEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeManager.cs" />
     <Compile Include="Assets\Scripts\Skills\OleanderSprout.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Harvestman.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\QueenAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\KnockUpEffect.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\BirdOfParadiseData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AloeVera.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BegoniaData.cs" />
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\PoisonShroomData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DuskdarterData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BegoniaBlessingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\FirePrimer.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\SunIndicator.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Skills\FireWave.cs" />
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\TalonHitCounterEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GroundPrimer.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
@@ -325,6 +328,7 @@
     <Compile Include="Assets\Scripts\MainMenu\SceneTransition.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\ZinniaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SubmergedEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\ThreeTalonStrikeEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
@@ -368,6 +372,7 @@
     <Compile Include="Assets\Scripts\UI\FlowerPotButton.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\EncyclopediaManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ObliviousEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\BirdOfParadise.cs" />
     <Compile Include="Assets\Scripts\Shop\ShopManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
@@ -389,9 +394,9 @@
     <Compile Include="Assets\Scripts\StatusEffect\TermiteSwarmEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FruitFly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\InCombatEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ScoutsEncouragementEffect.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantEntry.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\ElementalPowerBoostEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DesertLocust.cs" />
     <Compile Include="Assets\Scripts\Skills\OldCarrotFurrow.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VenomEffect.cs" />
