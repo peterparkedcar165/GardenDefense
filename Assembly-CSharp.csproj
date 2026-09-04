@@ -222,6 +222,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Zinnia.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SunMarkEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IRespirationEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\BombardierBeetle.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\UndergroundTunnel.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
@@ -236,6 +237,7 @@
     <Compile Include="Assets\Scripts\Spawning\LevelInsectEntry.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\ScorchEffect.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ICarrierInsect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
@@ -332,6 +334,7 @@
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\BombardierBeetleProjectile.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\JumpingSpiderData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AeoniumData.cs" />
@@ -339,6 +342,7 @@
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GeyseredEffect.cs" />
+    <Compile Include="Assets\Scripts\InsectDataTypes\BombardierBeetleData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\SnailData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantGuardianEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\FireAntData.cs" />

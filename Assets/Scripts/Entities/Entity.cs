@@ -954,16 +954,17 @@ public abstract class Entity : MonoBehaviour
     // every frame (see TickHealthBarFill, called from Update) so damage and healing read as motion
     private float _displayedHealth = -1f;
     private float _displayedShield = -1f;
-    private const float HealthBarLerpSpeed = 6f;
+    private const float HealthBarLerpSpeed = 12f;
 
     // trailing "damage chunk" bar: sits behind the main+shield fill holding the pre-hit total
     // protection (health + shield, so a shield-only hit still shows a chunk even though health
     // itself never moved), waits DamageChunkDelay before draining down to the real total at the
-    // same speed as the main bar, so a hit briefly shows the exact chunk just lost before it fades
+    // same HealthBarLerpSpeed as the main bar, so a hit briefly shows the exact chunk just lost
+    // before it fades
     private float _chunkProtection = -1f;
     private float _lastProtectionForChunk = -1f;
     private float _chunkDelayTimer;
-    private const float DamageChunkDelay = 0.5f;
+    private const float DamageChunkDelay = 0.25f;
 
     // set for one frame whenever a ShieldEffect is actually removed (duration ran out, or it was
     // fully depleted by damage) - a shield popping should just vanish, not fade/lerp out like a

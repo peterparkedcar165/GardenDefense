@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfc400b46a646efb3a9317fe93f78fd, type: 3}
+  m_Name: BombardierBeetleData
+  m_EditorClassIdentifier: Assembly-CSharp::BombardierBeetleData
+  displayName: Bombardier Beetle
+  nameColor: {r: 1, g: 0.27, b: 0, a: 1}
+  description: Lobs a fire bomb at whichever plant sits deepest in the garden, scorching
+    it and anything nearby.
+  passiveDescription: 
+  sprite: {fileID: 21300000, guid: 8cf784b12a5e432489efb6c03edc9524, type: 3}
+  insectPrefab: {fileID: 2279086888993795066, guid: 8f39b5b140f2b824187ff1937aa394eb, type: 3}
+  baseMaxHealth: 500
+  baseAttackDamage: 30
+  baseMagicPower: 0
+  baseAttackSpeed: 0.33
+  baseAttackRange: 6
+  baseMovementSpeed: 0.4
+  baseTargetingRange: 6
+  baseArmor: 8
+  baseMagicArmor: 24
+  attackDamageType: 1
+  attackElementalType: 0
+  baseLifesteal: 0
+  basePhysicalDamage: 0
+  baseMagicDamage: 0
+  baseArmorPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenFlat: 0
+  baseMagicPenPercent: 0
+  startingShield: 0
+  baseTenacity: 0
+  baseFireResistance: 0.75
+  baseWaterResistance: 0
+  basePoisonResistance: 0
+  baseIceResistance: 0
+  baseGrassResistance: 0
+  baseWindResistance: 0
+  baseGroundResistance: 0
+  baseDotResistance: 0
+  flatPhysicalDamageReduction: 0
+  threatValue: 5
+  threatType: 1
+  baseEvasion: 0
+  baseAccuracy: 0
+  sunDrop: 30
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
+  aggressivity: 2
+  baseLightEmissionRange: 0
+  baseHealingBonus: 0
+  baseHealingReceived: 0
+  projectilePrefab: {fileID: 7388594979766616069, guid: 8770deb38060d2d4283aa0e306231dda, type: 3}
+  projectileSpeed: 4
+  attackChargeTime: 0.75
+  postFireDelay: 0.35
+  splashDamagePercent: 0.5
+  splashRadius: 1
+  scorchChance: 0.75
+  scorchDuration: 8

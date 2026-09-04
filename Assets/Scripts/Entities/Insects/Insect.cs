@@ -34,8 +34,15 @@ public abstract class Insect : Entity, IAttackable
     public Insect carriedBy;
     private const float CarryVisualHeight = 0.9f;
     // generic movement freeze, e.g. Duskdarter pausing both itself and its about-to-be-carried
-    // passenger during the pickup sequence. only blocks Move(); attacking is unaffected
+    // passenger during the pickup sequence. only blocks Move(); attacking is unaffected.
+    // deliberately checked by Duskdarter's pickup eligibility scan (an insect paused this way,
+    // e.g. already mid-pickup by someone else, shouldn't be picked up again)
     public bool movementPaused;
+
+    // separate movement freeze specifically for an insect pausing to charge/recover its own
+    // attack (e.g. Bombardier Beetle). kept distinct from movementPaused so a beetle mid-attack
+    // still reads as pickup-eligible to Duskdarter, which only checks movementPaused
+    public bool attackMovementPaused;
 
     // true while underground (an Earthworm digging its own tunnel, or any ground insect currently
     // being routed through a completed UndergroundTunnel). still moves along its assigned path,
@@ -339,6 +346,13 @@ public abstract class Insect : Entity, IAttackable
     private void FollowCarrier()
     {
         transform.position = carriedBy.transform.position;
+
+        // stay in lockstep with the carrier's own path progress for as long as it's carried, so
+        // dropping doesn't snap it back onto its own stale route - which by then could be far
+        // behind, or on an entirely different lane, from wherever the carrier actually is
+        waypoints = carriedBy.waypoints;
+        currentWaypointIndex = carriedBy.currentWaypointIndex;
+
         if (visual == null) return;
         Vector3 pos = visual.localPosition;
         pos.y = CarryVisualHeight;
@@ -490,7 +504,7 @@ public abstract class Insect : Entity, IAttackable
     protected virtual void Move()
     {
         if (isDying) return;
-        if (movementPaused) return;
+        if (movementPaused || attackMovementPaused) return;
         if (waypoints == null) return;
 
         bool wasDisplaced = windMomentum.sqrMagnitude > 0.001f;
@@ -1066,8 +1080,9 @@ public abstract class Insect : Entity, IAttackable
 
     private IEnumerator DeathFade()
     {
-        healthBarInstance?.SetActive(false);
-
+        // the health bar is deliberately left active here (no more premature SetActive(false))
+        // so GetComponentsInChildren below picks up its sprites too - body and health bar fade
+        // out together, in sync, instead of the bar vanishing a frame ahead of everything else
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
         Color[] startColors = new Color[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
