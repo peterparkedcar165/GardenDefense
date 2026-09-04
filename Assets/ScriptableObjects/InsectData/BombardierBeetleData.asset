@@ -68,3 +68,5 @@ MonoBehaviour:
   splashRadius: 1
   scorchChance: 0.75
   scorchDuration: 8
+  scorchDPS: 16
+  scorchHealthPercent: 0.03
