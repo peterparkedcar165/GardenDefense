@@ -9,6 +9,9 @@ public class FreezeEffect : HardCrowdControl, IElementalAffinityEffect
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
 
+    // once Freeze lands on a target, Freeze specifically can't land again for duration + 3s
+    public override float InternalCooldownAfterExpiry => 3f;
+
     public FreezeEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         // being frozen solid blocks physical hits, but higher elemental affinity from the
@@ -28,6 +31,7 @@ public class FreezeEffect : HardCrowdControl, IElementalAffinityEffect
 
     public override void OnApply()
     {
+        base.OnApply(); // sets the internal cooldown via InternalCooldownAfterExpiry
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Freeze", new Color(0f, 1f, 1f));
 
         Insect insect = (Insect)target;

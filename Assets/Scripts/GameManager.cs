@@ -93,6 +93,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // true once the player has ever unpaused - the level sits paused at wave 0 waiting for this,
+    // so Space or the Pause/Resume button (labelled START until then) doubles as the start action
+    public bool HasStarted { get; private set; }
+
     public void TogglePause()
     {
         SetPause(!paused);
@@ -101,8 +105,9 @@ public class GameManager : MonoBehaviour
     public void SetPause(bool value)
     {
         paused = value;
+        if (!paused) HasStarted = true;
         Time.timeScale = paused ? 0f : gameSpeed;
-        GameHUD.instance?.SetPauseButton(paused);
+        GameHUD.instance?.SetPauseButton(paused, HasStarted);
     }
 
     public void ToggleSpeed()
@@ -118,6 +123,7 @@ public class GameManager : MonoBehaviour
     public void InitiateLevel(int sunCount, int health)
     {
         IsGameActive = true;
+        HasStarted = false;
         SunCount = sunCount;
         playerMaxHealth = health;
         playerHealth = playerMaxHealth;

@@ -22,12 +22,18 @@ public class Sunray : MonoBehaviour
         targetScale = transform.localScale;
     }
 
-    public void Initialize(float damagePerSecond, float aoeRadius, float duration, Plant source)
+    // visualScaleMultiplier is aoeRadius relative to the plant's base (level 0) skill radius, so
+    // the beam's rendered width grows proportionally with the actual hit radius as Path3 levels
+    // up, rather than always rendering at its authored default size regardless of level
+    public void Initialize(float damagePerSecond, float aoeRadius, float duration, Plant source, float visualScaleMultiplier = 1f)
     {
         this.damagePerSecond = damagePerSecond;
         this.aoeRadius = aoeRadius;
         this.duration = duration;
         this.source = source;
+
+        targetScale *= visualScaleMultiplier;
+        transform.localScale = targetScale;
 
         if (DarknessManager.instance != null)
         {

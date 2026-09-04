@@ -49,6 +49,9 @@ public class PlantSelector : MonoBehaviour
 
     public void SelectPlant(GameObject plant)
     {
+        Plant plantComponent = plant.GetComponent<Plant>();
+        if (plantComponent != null && Plant.AtPlacementLimit(plantComponent.data)) return; // no room left - selection rejected
+
         SkillTargetingManager.instance?.CancelAll();
         uprootMode    = false;
         flowerPotMode = false;

@@ -8,19 +8,26 @@ public class BogIris : Shooter
     [SerializeField] private SpriteRenderer openVisual;
 
     private SpriteRenderer _rootRenderer;
-    private bool isOpen = false;
-    private float cycleTimer = 0f;
     private float sunTickTimer = 0f;
-    private float healTickTimer = 0f;
-    private float openExtendChance;
-    private float TotalHeal => (BogData?.baseClosedHeal ?? 200f) + (BogData?.path2ClosedHealPerLevel ?? 20f) * effectivePath2Level;
-    private float StateTimeRemaining => Mathf.Max(0f, (isOpen ? OpenDuration : passiveCooldown) - cycleTimer);
+    private float regenTickTimer = 0f;
+    private const float RegenTickInterval = 1f;
+
+    // open/closed is HP-reactive ("healthy" = at full HP, closes the instant she takes damage),
+    // but the actual flip is rate-limited by _stateChangeCooldownTimer so hovering right at max
+    // HP (e.g. small chip damage racing the regen tick) can't flicker the state back and forth
+    private bool _isOpen;
+    private float _stateChangeCooldownTimer;
+    private const float StateChangeCooldown = 3f;
 
     private BogIrisData BogData => data as BogIrisData;
 
-    private float SunInterval => 2f * (1f + sunGenerationCooldown);
-    private float OpenDuration => ((BogData?.baseOpenDuration ?? 0f) + (BogData?.path2OpenDurationPerLevel ?? 2f) * effectivePath2Level) * (1 + passiveDuration);
-    private int SunGenerated => (BogData?.baseSunGenerated ?? 0) + (BogData?.path2SunPerLevel ?? 1) * effectivePath2Level;
+    private const float ClosedArmorBonus = 30f; // Path2 max, while closed
+
+    private float SunInterval => (BogData?.baseSunInterval ?? 4f) * (1f + sunGenerationCooldown);
+    private int   BaseSunGenerated => BogData?.baseSunGenerated ?? 2;
+    private int   OpenBonusSun => (BogData?.baseOpenBonusSun ?? 2) + (BogData?.path2OpenBonusSunPerLevel ?? 1) * effectivePath2Level;
+    private float RegenPercentPerSecond => (BogData?.baseRegenPercent ?? 0.02f) + (BogData?.path2RegenPercentPerLevel ?? 0.01f) * effectivePath2Level;
+    private float ReduceChance => (BogData?.baseReduceChance ?? 0.35f) + (BogData?.path2ReduceChancePerLevel ?? 0.05f) * effectivePath2Level;
     private float GeyserRadius => skillRadius + (BogData?.path3GeyserRadiusPerLevel ?? 0.15f) * effectivePath3Level;
     private float KnockUpHeight => ScaleCC(((BogData?.baseKnockUpHeight ?? 0f) + (BogData?.path3KnockUpPerLevel ?? 1f) * effectivePath3Level) * skillDuration);
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * KnockUpHeight);
@@ -31,8 +38,8 @@ public class BogIris : Shooter
         base.Awake();
         LoadData();
         _rootRenderer = GetComponent<SpriteRenderer>();
-        SetVisualState(false);
-        openExtendChance = BogData?.openExtendChance ?? 0.35f;
+        _isOpen = health >= maxHealth;
+        SetVisualState(_isOpen);
     }
 
     protected override void Update()
@@ -42,75 +49,58 @@ public class BogIris : Shooter
     }
 
     protected override bool GetPassiveBarVisible() => true;
-    protected override float GetPassiveBarFill()
-    {
-        if (isOpen)
-            return SunInterval > 0f ? Mathf.Clamp01(sunTickTimer / SunInterval) : 0f;
-        return passiveCooldown > 0f ? Mathf.Clamp01(cycleTimer / passiveCooldown) : 0f;
-    }
+    protected override float GetPassiveBarFill() =>
+        SunInterval > 0f ? Mathf.Clamp01(sunTickTimer / SunInterval) : 0f;
 
     private void UpdatePassive()
     {
-        cycleTimer += Time.deltaTime;
+        if (_stateChangeCooldownTimer > 0f) _stateChangeCooldownTimer -= Time.deltaTime;
 
-        if (!isOpen)
+        bool healthy = health >= maxHealth;
+        if (healthy != _isOpen && _stateChangeCooldownTimer <= 0f)
         {
-            healTickTimer += Time.deltaTime;
-            if (healTickTimer >= 1f)
+            _isOpen = healthy;
+            _stateChangeCooldownTimer = StateChangeCooldown;
+            SetVisualState(_isOpen);
+        }
+
+        if (!_isOpen)
+        {
+            regenTickTimer += Time.deltaTime;
+            if (regenTickTimer >= RegenTickInterval)
             {
-                healTickTimer -= 1f;
-                float healPerTick = TotalHeal / passiveCooldown;
-                float scaledHeal = healPerTick * (1f + healingReceived) * (1f + healingBonus);
-                float overflow = IsPath2Maxed ? Mathf.Max(0f, scaledHeal - (maxHealth - health)) : 0f;
-                Heal(healPerTick);
-                if (overflow > 0f && IsAlive)
-                {
-                    AquaticOvershieldEffect shield = GetEffect<AquaticOvershieldEffect>();
-                    if (shield == null)
-                    {
-                        shield = new AquaticOvershieldEffect(this, this);
-                        ApplyEffect(shield);
-                    }
-                    shield.AddShield(overflow);
-                }
-            }
-            if (cycleTimer >= passiveCooldown)
-            {
-                isOpen = true;
-                cycleTimer = 0f;
-                sunTickTimer = 0f;
-                SetVisualState(true);
+                regenTickTimer -= RegenTickInterval;
+                // Path2 max removes the out-of-combat requirement: the doubled rate is always active
+                bool doubled = IsPath2Maxed || !IsInCombat;
+                float regenPerTick = RegenPercentPerSecond * (doubled ? 2f : 1f);
+                Heal(maxHealth * regenPerTick * (1f + healingReceived) * (1f + healingBonus));
             }
         }
         else
         {
-            sunTickTimer += Time.deltaTime;
-            if (sunTickTimer >= SunInterval)
-            {
-                sunTickTimer -= SunInterval;
-                GenerateSun(SunGenerated);
-            }
-            if (cycleTimer >= OpenDuration)
-            {
-                isOpen = false;
-                cycleTimer = 0f;
-                healTickTimer = 0f;
-                SetVisualState(false);
-            }
+            regenTickTimer = 0f;
+        }
+
+        sunTickTimer += Time.deltaTime;
+        if (sunTickTimer >= SunInterval)
+        {
+            sunTickTimer -= SunInterval;
+            GenerateSun(BaseSunGenerated + (_isOpen ? OpenBonusSun : 0));
         }
     }
 
-    public void TryExtendOpenState()
+    // called on every attack hit (see BogIrisProjectile.OnHit) - a chance to advance the Sun
+    // timer by 1 second, making the next tick arrive sooner
+    public void TryReduceSunTimer()
     {
-        if (!isOpen) return;
-        float procChance = openExtendChance * (1f + bonusEffectChance);
+        float procChance = ReduceChance * (1f + bonusEffectChance);
         if (Random.value >= procChance) return;
-        cycleTimer = Mathf.Max(0f, cycleTimer - 1f);
+        sunTickTimer += 1f;
     }
 
     protected override SpriteRenderer GetMainRenderer()
     {
-        return isOpen ? openVisual : closedVisual;
+        return _isOpen ? openVisual : closedVisual;
     }
 
     private void SetVisualState(bool open)
@@ -177,15 +167,17 @@ public class BogIris : Shooter
         base.UpdateStats();
         if (IsPath1Maxed)
         {
-            attackDamage *= 1.33f;
-            projectileSpeed *= 1.45f;
+            bonusEffectChance += 0.5f;
+        }
+        if (IsPath2Maxed && !_isOpen)
+        {
+            armor += (int)ClosedArmorBonus;
         }
     }
 
-    public override void OnPath2Upgrade(int level)
-    {
-        openExtendChance = (BogData?.openExtendChance ?? 0.35f) + (BogData?.path2OpenExtendChancePerLevel ?? 0.03f) * level;
-    }
+    // no per-level side effects to apply here anymore - RegenPercentPerSecond, OpenBonusSun and
+    // ReduceChance are all computed live from effectivePath2Level
+    public override void OnPath2Upgrade(int level) { }
     public override void OnPath3Upgrade(int level) { }
 
     public override string GetName() => "<b><color=#4FC3F7>Bog Iris</color></b>";
@@ -202,31 +194,31 @@ public class BogIris : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Increase <color=green><b>Attack Damage</b></color> by <color=green><b>33%</b></color> and <color=green><b>Projectile Speed</b></color> by <color=green><b>45%</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=green><b>Bonus Effect Chance</b></color> by <color=green><b>50%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath2Description(bool details = false)
     {
-        float opendurpl = BogData?.path2OpenDurationPerLevel ?? 2f;
-        int   sunpl     = BogData?.path2SunPerLevel          ?? 1;
-        float healpl    = BogData?.path2ClosedHealPerLevel   ?? 20f;
-        float extendpl  = BogData?.path2OpenExtendChancePerLevel ?? 0.03f;
+        float regenpl  = BogData?.path2RegenPercentPerLevel ?? 0.01f;
+        int   sunpl    = BogData?.path2OpenBonusSunPerLevel ?? 1;
+        float reducepl = BogData?.path2ReduceChancePerLevel ?? 0.05f;
         string desc = details
-            ? $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>[({BogData?.baseOpenDuration:F0}) + ({opendurpl:F0}/Lvl.)]</b></color>) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}</b></color> seconds) state.\n\n" +
-              $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>[({BogData?.baseSunGenerated}) + ({sunpl}/Lvl.)]</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds, and attacks have a <color=green><b>[({(BogData?.openExtendChance ?? 0.35f) * 100f:F0}%) + ({extendpl * 100f:F0}%/Lvl.)]</b></color> chance to extend the <b><color=#4FC3F7>open</color></b> state by <color=green><b>1</b></color> second.\n\n" +
-              $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>[({BogData?.baseClosedHeal:F0}) + ({healpl:F0}/Lvl.)]</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds."
-            : $"Cycles between an <b><color=#4FC3F7>open</color></b> (<color=green><b>{OpenDuration:F0}</b></color> seconds) and <b><color=#4FC3F7>closed</color></b> (<color=green><b>{passiveCooldown:F1}</b></color> seconds) state.\n\n" +
-              $"In <b><color=#4FC3F7>open</color></b> form, generates <color=green><b>{SunGenerated}</b></color> Sun every <color=green><b>{SunInterval:F1}</b></color> seconds, and attacks have a <color=green><b>{openExtendChance * 100f:F0}%</b></color> chance to extend the <b><color=#4FC3F7>open</color></b> state by <color=green><b>1</b></color> second.\n\n" +
-              $"In <b><color=#4FC3F7>closed</color></b> form, regenerates <color=green><b>{TotalHeal}</b></color> HP over <color=green><b>{passiveCooldown:F1}</b></color> seconds.";
-        int stateSecondsRemaining = Mathf.CeilToInt(StateTimeRemaining);
-        string stateLine = $"<b><color=#4FC3F7>{(isOpen ? "OPEN" : "CLOSED")}</color></b>: [<color=green><b>{stateSecondsRemaining / 60:00}:{stateSecondsRemaining % 60:00}</b></color>]";
+            ? $"Every <color=green><b>{SunInterval:F0}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
+              $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>[({(BogData?.baseRegenPercent ?? 0.02f) * 100f:F0}%) + ({regenpl * 100f:F0}%/Lvl.)]</b></color> Max Health per second (doubled when out of combat).\n\n" +
+              $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>[({BogData?.baseOpenBonusSun ?? 2}) + ({sunpl}/Lvl.)]</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
+              $"Attacks have a <color=green><b>[({(BogData?.baseReduceChance ?? 0.35f) * 100f:F0}%) + ({reducepl * 100f:F0}%/Lvl.)]</b></color> chance to reduce the <color=yellow>Sun</color> generation timer by <color=green><b>1</b></color> second on hit."
+            : $"Every <color=green><b>{SunInterval:F0}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
+              $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>{RegenPercentPerSecond * 100f:F0}%</b></color> Max Health per second (doubled to <color=red><b>{RegenPercentPerSecond * 200f:F0}%</b></color> when out of combat).\n\n" +
+              $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>{OpenBonusSun}</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
+              $"Attacks have a <color=green><b>{ReduceChance * 100f:F0}%</b></color> chance to reduce the <color=yellow>Sun</color> generation timer by <color=green><b>1</b></color> second on hit.";
+        string stateLine = $"<b><color=#4FC3F7>{(_isOpen ? "OPEN" : "CLOSED")}</color></b>";
         return $"Passive:\n\n{stateLine}\n\n{desc}\n\n" +
-               $"Increase the duration of the <b><color=#4FC3F7>open</color></b> state by <color=green><b>{opendurpl:F0}</b></color> seconds per level. [<color=green><b>+{opendurpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"Increase Sun generated per tick by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
-               $"Increase <b><color=#4FC3F7>open</color></b> state extend chance by <color=green><b>{extendpl * 100f:F0}%</b></color> per level. [<color=green><b>+{extendpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "Overhealing while in the <b><color=#4FC3F7>closed</color></b> state grants <color=#4FC3F7><b>Aquatic Overshield</b></color> up to <color=green><b>100</b></color>.")}\n\n" +
+               $"Increase regeneration by <color=red><b>{regenpl * 100f:F0}%</b></color> per level. [<color=red><b>+{regenpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase open-state Sun production by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
+               $"Increase reduction chance by <color=green><b>{reducepl * 100f:F0}%</b></color> per level. [<color=green><b>+{reducepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(path2Level, $"Remove the out-of-combat condition from the regeneration (always doubled). Increase Armor by <color=green><b>{ClosedArmorBonus:F0}</b></color> when in <b><color=#4FC3F7>closed</color></b> state.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

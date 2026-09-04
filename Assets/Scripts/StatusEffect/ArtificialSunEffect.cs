@@ -84,6 +84,7 @@ public class ArtificialSunEffect : StatusEffect
         Plant.OnPlantPlaced -= HandlePlantPlaced;
         if (_lightObj != null)
         {
+            DarknessManager.UnregisterLightSource(_lightObj.transform);
             LightFader fader = _lightObj.GetComponent<LightFader>();
             if (fader != null) fader.FadeOut(1f, destroyOnComplete: true);
             else Object.Destroy(_lightObj);
@@ -108,6 +109,13 @@ public class ArtificialSunEffect : StatusEffect
 
     public override void OnTick(float deltaTime)
     {
+        // keep the light in sync if darkness toggles mid-duration, same as Fire Wave's own light
+        if (_lightObj != null && DarknessManager.instance != null)
+        {
+            Light2D light = _lightObj.GetComponent<Light2D>();
+            if (light != null) light.enabled = DarknessManager.instance.isDark;
+        }
+
         if (heatingPerSecond <= 0f) return;
         if (WeatherManager.instance == null) return;
         TemperatureType temp = WeatherManager.instance.temperature;
@@ -123,8 +131,12 @@ public class ArtificialSunEffect : StatusEffect
         }
     }
 
+    // only lit in dark biomes, like Burn/Glowshroom/Fire Wave - a map with no darkness support
+    // has no need for a light source at all
     private void SpawnLight()
     {
+        if (DarknessManager.instance == null) return;
+
         _lightObj = new GameObject("ArtificialSun");
         _lightObj.transform.SetParent(target.transform);
         _lightObj.transform.localPosition = Vector3.zero;
@@ -136,11 +148,14 @@ public class ArtificialSunEffect : StatusEffect
         light.pointLightOuterRadius = radius;
         light.pointLightInnerRadius = radius * 0.3f;
         light.targetSortingLayers   = GetAllSortingLayerIDs();
+        light.enabled               = DarknessManager.instance.isDark;   // only shine while it is actually dark
 
         // same fade in/out logic Plant.cs uses for every illuminated plant (Calendula, Floral Glow)
         LightFader fader = _lightObj.AddComponent<LightFader>();
         fader.Setup(light, lightIntensity);
         fader.FadeIn(1f);
+
+        DarknessManager.RegisterLightSource(_lightObj.transform, radius);
     }
 
     private int[] GetAllSortingLayerIDs()

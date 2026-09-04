@@ -103,6 +103,15 @@ public class NeriumOleander : Shooter
         return viaSprout.TryGetValue(winner, out OleanderSprout sprout) ? sprout.gameObject : winner.gameObject;
     }
 
+    // extends the base single-circle check with the same sprout-chain reach FindTarget() itself
+    // considers - used by FindTarget's own direct-visibility pass, and by anything else (e.g.
+    // Carrot's Soil Bond) asking whether this oleander could target a specific insect right now
+    public override bool CanReachInsect(Insect insect)
+    {
+        if (base.CanReachInsect(insect)) return true;
+        return GatherChainInsects().ContainsKey(insect);
+    }
+
     // BFS out from every sprout within attackRange (this oleander's own bounce search radius,
     // the same radius its petal uses once airborne), collecting every insect reachable through
     // that chain and which first-hop sprout leads to it

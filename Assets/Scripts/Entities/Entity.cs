@@ -30,7 +30,10 @@ public enum DamageTag
     Germinate,
     Brittle,
     SpecialCanCrit,
-    CanHitBurrowed
+    CanHitBurrowed,
+    // generic on-hit bonus damage (e.g. Bird of Paradise's per-stack bonus and its missing-health
+    // finisher) - deliberately excludes Attack so it doesn't re-trigger Entity.HandleOnHitEffects
+    OnHit
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -127,9 +130,23 @@ public abstract class Entity : MonoBehaviour
             && Random.value < 0.5f)
             attackerPlant.skillCooldownTimer = Mathf.Max(0f, attackerPlant.skillCooldownTimer - 1f * effectiveness);
 
-        // Floral Glow and Ablaze only proc off projectile attacks - Waterlily's path2-max
-        // splash counts too, since it deliberately tags itself Projectile for exactly this
-        if (data.tags == null || !System.Array.Exists(data.tags, t => t == DamageTag.Projectile)) return;
+        // Bird of Paradise: Talon Focus stack gain plus its per-stack on-hit bonus damage (and,
+        // at Path1 max with full stacks, the percent-current-health finisher). unlike Floral
+        // Glow/Ablaze below, this isn't gated to projectile attacks since Bird of Paradise is melee
+        if (data.source is BirdOfParadise bird)
+            bird.OnAttackHit(insect, effectiveness);
+
+        // Cactus: every needle attack hit applies 1 flat Punctured stack (the retaliation/counter
+        // damage applies its own separate, level-scaling amount directly in OnHitByInsect, since
+        // that damage isn't tagged Attack and so never reaches here)
+        if (data.source is Cactus cactus)
+            insect.ApplyEffect(new PuncturedEffect(insect, cactus.passiveDuration, 1, cactus));
+
+        // Floral Glow and Ablaze proc off projectile OR melee attacks (but not, say, a passive
+        // aura tick) - Waterlily's path2-max splash counts too, since it deliberately tags itself
+        // Projectile for exactly this, and Bird of Paradise's melee attacks (tagged Melee) now
+        // qualify the same way
+        if (data.tags == null || !System.Array.Exists(data.tags, t => t == DamageTag.Projectile || t == DamageTag.Melee)) return;
 
         FloralGlowEffect floralGlow = data.source.GetEffect<FloralGlowEffect>();
         if (floralGlow != null)
@@ -383,6 +400,7 @@ public abstract class Entity : MonoBehaviour
         bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield);
         health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, 0f, null, damageType) : finalDamage;
         health = Mathf.Max(0f, health);
+        RefreshCombatState();
         TriggerHitFlash();
         UpdateHealthBar();
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
@@ -399,7 +417,11 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false) // damage with source
+    // onHitEffectivenessOverride: when a DamageTag.OnHit hit's effectiveness should come from a
+    // different entity than source (e.g. Floral Glow's bonus hit is sourced from Calendula, but
+    // should scale with the blessed ally's own onHitEffectiveness, not Calendula's) - defaults to
+    // source.onHitEffectiveness when not provided
+    public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null) // damage with source
     {
         if (this is Insect burrowedCheck && burrowedCheck.isBurrowed
             && !System.Array.Exists(damageTag, t => t == DamageTag.CanHitBurrowed)
@@ -431,7 +453,7 @@ public abstract class Entity : MonoBehaviour
         if (this is Insect insect && source is Plant plant)
             insect.RegisterAttacker(plant);
 
-        float modifiedDamage, elementalMultiplier, finalDamage, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult;
+        float modifiedDamage, elementalMultiplier, finalDamage, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult, onHitMult;
         bool isCrit = false;
 
         // elemental effect procs: dot damage (burn/poison ticks etc) rolls at half chance, and
@@ -448,6 +470,15 @@ public abstract class Entity : MonoBehaviour
         if (this.HasEffect<FractureEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
             Damage(damageDealt * GetEffect<FractureEffect>().bonusMultiplier, DamageType.Physical, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+        }
+
+        // Punctured (Cactus passive): each stack deals 1 extra Physical/Grass damage whenever
+        // Physical damage is taken, sourced from whoever actually dealt that original damage (not
+        // necessarily the Cactus that applied the stacks) - tagged ElementalDebuff like
+        // Fracture/Brittle above so this bonus hit can't re-trigger itself
+        if (this.HasEffect<PuncturedEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
+        {
+            Damage(GetEffect<PuncturedEffect>().level, DamageType.Physical, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
         // windshear: any other element's damage consumes it and shreds that element's resistance, scaled
@@ -520,7 +551,7 @@ public abstract class Entity : MonoBehaviour
             */
 
                 if (canProcElementalEffect && Random.value < elementalEffectRoll)
-                    ApplyEffect(new FreezeEffect(this, 4f, 1, source));
+                    ApplyEffect(new FreezeEffect(this, 2f, 1, source));
             break;
 
             case ElementalType.Wind:
@@ -666,7 +697,19 @@ public abstract class Entity : MonoBehaviour
         float thornMult = (source is Plant thornPlant && thornPlant.data != null && thornPlant.data.family == PlantFamily.Thorn
             && this is Insect && health < maxHealth * 0.5f) ? 1.1f : 1f;
 
-        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult * thornMult;
+        // generic on-hit bonus damage (Floral Glow, Ablaze, Bird of Paradise's passive/finisher):
+        // scales with onHitEffectiveness same as base damage would, but sourced from whichever
+        // entity's effectiveness the caller specifies (see onHitEffectivenessOverride above),
+        // not necessarily the same entity as source
+        if (System.Array.Exists(damageTag, t => t == DamageTag.OnHit))
+        {
+            onHitMult = onHitEffectivenessOverride ?? source.onHitEffectiveness;
+        } else
+        {
+            onHitMult = 1;
+        }
+
+        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult * thornMult * onHitMult;
 
         // damage variance roll, dot ticks stay flat so aggregated numbers remain stable
         // min always wins, when min surpasses max every roll lands on min
@@ -694,6 +737,8 @@ public abstract class Entity : MonoBehaviour
         bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield) || source.bypassShields;
         health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, source.shieldBonusDamage, source, damageType) : finalDamage;
         health = Mathf.Max(0f, health);
+        RefreshCombatState();
+        source.RefreshCombatState();
         TriggerHitFlash();
         source.totalDamageDealt += finalDamage; // FOR DEBUG
         if (this is Insect damagedInsect) damagedInsect.lastSource = source;
@@ -811,6 +856,9 @@ public abstract class Entity : MonoBehaviour
         UpdateStats();
         timeAlive += Time.deltaTime;
         TickEffects();
+        TickHealthBarFill();
+        TickDamageChunkFill();
+        _shieldJustExpired = false;
 
         // keep current health in sync when maxHealth changes (buffs, effects, etc.): a maxHealth
         // increase carries the same gain into current health (so e.g. a plant that only gains its
@@ -870,29 +918,28 @@ public abstract class Entity : MonoBehaviour
         if (germinateInternalCooldown > 0)
             germinateInternalCooldown -= Time.deltaTime;
 
-        if (_ccStackTimer > 0f)
-        {
-            _ccStackTimer -= Time.deltaTime;
-            if (_ccStackTimer <= 0f) _ccStacks = 0;
-        }
     }
 
-    // diminishing returns on hard CC (see HardCrowdControl): each hard CC applied within
-    // CCDecayWindow seconds of the last one bumps the stack and shortens the NEXT hard CC's
-    // duration, floored at CCDurationMultipliers' last entry rather than reaching full immunity.
-    // one shared pool across every hard CC type, so alternating Stun/Freeze/KnockUp can't dodge it
-    private int _ccStacks;
-    private float _ccStackTimer;
-    private const float CCDecayWindow = 4f;
-    private static readonly float[] CCDurationMultipliers = { 1f, 0.9f, 0.8f, 0.7f, 0.6f, 0.5f };
+    // per-effect-type internal cooldown for hard CC effects that opt in (see
+    // HardCrowdControl.InternalCooldownAfterExpiry) - e.g. once Freeze lands on this entity,
+    // Freeze specifically can't land again until its own cooldown clears, independent of every
+    // other hard CC type. stored as an absolute end time rather than a countdown, so no per-frame
+    // decay bookkeeping is needed - replaced the old shared-pool diminishing-returns system
+    private readonly System.Collections.Generic.Dictionary<System.Type, float> _hardCCCooldownEndTimes = new System.Collections.Generic.Dictionary<System.Type, float>();
 
-    public float GetCCDurationMultiplier() => CCDurationMultipliers[Mathf.Min(_ccStacks, CCDurationMultipliers.Length - 1)];
+    public bool IsHardCCOnInternalCooldown(System.Type effectType) =>
+        _hardCCCooldownEndTimes.TryGetValue(effectType, out float endTime) && Time.time < endTime;
 
-    public void RegisterHardCC()
-    {
-        _ccStacks++;
-        _ccStackTimer = CCDecayWindow;
-    }
+    public void SetHardCCInternalCooldown(System.Type effectType, float cooldownDuration) =>
+        _hardCCCooldownEndTimes[effectType] = Time.time + cooldownDuration;
+
+    // generic "in combat" flag: refreshed on both the source and target of every Damage() call
+    // (see the two Damage overloads), lasting InCombatEffect.Duration. lets any system check
+    // "has this entity dealt or received damage recently" (e.g. Bog Iris's regen doubling) without
+    // tracking its own timer
+    public bool IsInCombat => HasEffect<InCombatEffect>();
+
+    public void RefreshCombatState() => ApplyEffect(new InCombatEffect(this));
 
     // HEALTH BAR
 
@@ -900,7 +947,28 @@ public abstract class Entity : MonoBehaviour
     protected GameObject healthBarInstance;
     private Transform healthBarFill;
     private Transform shieldFill;
+    private Transform damageChunkFill;
     private float _lastMaxHealth = -1f;
+
+    // fluid health bar: the fill doesn't snap straight to health/shield, it eases toward them
+    // every frame (see TickHealthBarFill, called from Update) so damage and healing read as motion
+    private float _displayedHealth = -1f;
+    private float _displayedShield = -1f;
+    private const float HealthBarLerpSpeed = 6f;
+
+    // trailing "damage chunk" bar: sits behind the main+shield fill holding the pre-hit total
+    // protection (health + shield, so a shield-only hit still shows a chunk even though health
+    // itself never moved), waits DamageChunkDelay before draining down to the real total at the
+    // same speed as the main bar, so a hit briefly shows the exact chunk just lost before it fades
+    private float _chunkProtection = -1f;
+    private float _lastProtectionForChunk = -1f;
+    private float _chunkDelayTimer;
+    private const float DamageChunkDelay = 0.5f;
+
+    // set for one frame whenever a ShieldEffect is actually removed (duration ran out, or it was
+    // fully depleted by damage) - a shield popping should just vanish, not fade/lerp out like a
+    // health chip, and shouldn't leave a "damage taken" afterimage on the chunk bar either
+    private bool _shieldJustExpired;
 
     private static GameObject _healthBarPrefab;
 
@@ -930,8 +998,15 @@ public abstract class Entity : MonoBehaviour
         SpriteRenderer fillRenderer = healthBarFill != null ? healthBarFill.GetComponent<SpriteRenderer>() : null;
         RefreshHealthBarColor();
 
+        _displayedHealth = health;
+        _displayedShield = TotalShield;
+        _chunkProtection = health + TotalShield;
+        _lastProtectionForChunk = _chunkProtection;
+
         if (healthBarFill != null)
         {
+            int baseOrder = fillRenderer != null ? fillRenderer.sortingOrder : 0;
+
             GameObject shieldFillObj = new GameObject("ShieldFill");
             shieldFillObj.transform.SetParent(healthBarInstance.transform, false);
             shieldFillObj.transform.localPosition = healthBarFill.localPosition;
@@ -943,45 +1018,90 @@ public abstract class Entity : MonoBehaviour
             {
                 shieldSR.sprite         = fillRenderer.sprite;
                 shieldSR.sortingLayerID = fillRenderer.sortingLayerID;
-                shieldSR.sortingOrder   = fillRenderer.sortingOrder;
-                fillRenderer.sortingOrder += 1;
+                shieldSR.sortingOrder   = baseOrder + 1;
             }
             shieldSR.color   = new Color(0.55f, 0.55f, 0.55f, 1f);
             shieldSR.enabled = false;
             shieldFill = shieldFillObj.transform;
+
+            GameObject chunkFillObj = new GameObject("DamageChunkFill");
+            chunkFillObj.transform.SetParent(healthBarInstance.transform, false);
+            chunkFillObj.transform.localPosition = healthBarFill.localPosition;
+            chunkFillObj.transform.localScale    = healthBarFill.localScale;
+            chunkFillObj.transform.localRotation = Quaternion.identity;
+
+            SpriteRenderer chunkSR = chunkFillObj.AddComponent<SpriteRenderer>();
+            if (fillRenderer != null)
+            {
+                chunkSR.sprite         = fillRenderer.sprite;
+                chunkSR.sortingLayerID = fillRenderer.sortingLayerID;
+                chunkSR.sortingOrder   = baseOrder;
+            }
+            chunkSR.color   = DamageChunkColor;
+            chunkSR.enabled = false;
+            damageChunkFill = chunkFillObj.transform;
+
+            // front-to-back: main Fill > Shield > DamageChunk. previously Shield and DamageChunk
+            // shared the same sortingOrder, an unresolved tie that could let either randomly win
+            if (fillRenderer != null) fillRenderer.sortingOrder = baseOrder + 2;
         }
 
         healthBarInstance.SetActive(false);
     }
 
     // plants and friendly units use a green fill, everything else red. overridable for teams
-    protected virtual Color HealthBarColor => this is Plant ? Color.green : Color.red;
+    protected static readonly Color EnemyHealthBarColor = new Color(0.6f, 0.05f, 0.05f);
+    protected virtual Color HealthBarColor => this is Plant ? Color.green : EnemyHealthBarColor;
 
-    // re-applies the fill color (call when the team changes, e.g. a hypnotized insect)
+    // same ally/enemy split as HealthBarColor, used to color the damage chunk bar
+    protected virtual bool IsHealthBarAlly => this is Plant;
+    private static readonly Color EnemyDamageChunkColor = new Color(1f, 0.55f, 0f);
+    private Color DamageChunkColor => IsHealthBarAlly ? Color.white : EnemyDamageChunkColor;
+
+    // re-applies the fill and chunk colors (call when the team changes, e.g. a hypnotized insect)
     protected void RefreshHealthBarColor()
     {
         SpriteRenderer fillRenderer = healthBarFill != null ? healthBarFill.GetComponent<SpriteRenderer>() : null;
         if (fillRenderer != null) fillRenderer.color = HealthBarColor;
+
+        SpriteRenderer chunkRenderer = damageChunkFill != null ? damageChunkFill.GetComponent<SpriteRenderer>() : null;
+        if (chunkRenderer != null) chunkRenderer.color = DamageChunkColor;
     }
 
+    // activation only - the fill itself is animated every frame by TickHealthBarFill, so a caller
+    // reporting a change (damage, heal, shield gained, etc.) just needs the bar to become visible
     protected void UpdateHealthBar()
+    {
+        if (healthBarFill == null) return;
+        if ((health < maxHealth || TotalShield > 0f) && healthBarInstance != null)
+            healthBarInstance.SetActive(true);
+    }
+
+    // eases the displayed fill toward the real health/shield every frame instead of snapping,
+    // so damage and healing read as motion on the bar rather than an instant jump
+    private void TickHealthBarFill()
     {
         if (healthBarFill == null) return;
 
         float totalShieldAmount = TotalShield;
         float totalDisplay      = maxHealth + totalShieldAmount;
+        if (totalDisplay <= 0f) return;
+
+        float t = 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime);
+        _displayedHealth = Mathf.Lerp(_displayedHealth, health, t);
+        _displayedShield = _shieldJustExpired ? totalShieldAmount : Mathf.Lerp(_displayedShield, totalShieldAmount, t);
 
         Vector3 hScale = healthBarFill.localScale;
-        hScale.x = Mathf.Clamp01(health / totalDisplay);
+        hScale.x = Mathf.Clamp01(_displayedHealth / totalDisplay);
         healthBarFill.localScale = hScale;
 
         if (shieldFill != null)
         {
             SpriteRenderer shieldSR = shieldFill.GetComponent<SpriteRenderer>();
-            if (totalShieldAmount > 0f)
+            if (_displayedShield > 0.001f || totalShieldAmount > 0f)
             {
                 Vector3 sScale = shieldFill.localScale;
-                sScale.x = Mathf.Clamp01((health + totalShieldAmount) / totalDisplay);
+                sScale.x = Mathf.Clamp01((_displayedHealth + _displayedShield) / totalDisplay);
                 shieldFill.localScale = sScale;
                 if (shieldSR != null) shieldSR.enabled = true;
             }
@@ -990,9 +1110,54 @@ public abstract class Entity : MonoBehaviour
                 shieldSR.enabled = false;
             }
         }
+    }
 
-        if ((health < maxHealth || totalShieldAmount > 0f) && healthBarInstance != null)
-            healthBarInstance.SetActive(true);
+    // holds the pre-hit total protection (health + shield) behind the main+shield fill, then -
+    // after DamageChunkDelay seconds with no further drop - eases it down to the real total at the
+    // same speed as the main bar. a fresh drop (another hit landing mid-drain, to either health or
+    // shield) restarts the hold from wherever the chunk currently sits, rather than snapping it
+    // back up to the original pre-hit value
+    private void TickDamageChunkFill()
+    {
+        if (damageChunkFill == null) return;
+
+        float currentProtection = health + TotalShield;
+
+        if (_shieldJustExpired)
+        {
+            // a shield popping (duration ran out, or fully depleted) isn't damage - snap straight
+            // to the new total instead of holding/draining an afterimage of it
+            _chunkProtection = currentProtection;
+            _chunkDelayTimer = 0f;
+        }
+        else if (currentProtection < _lastProtectionForChunk)
+        {
+            _chunkDelayTimer = DamageChunkDelay;
+        }
+        else if (currentProtection > _chunkProtection)
+        {
+            _chunkProtection = currentProtection;
+            _chunkDelayTimer = 0f;
+        }
+        _lastProtectionForChunk = currentProtection;
+
+        if (_chunkDelayTimer > 0f)
+            _chunkDelayTimer -= Time.unscaledDeltaTime;
+        else if (_chunkProtection > currentProtection)
+            _chunkProtection = Mathf.Lerp(_chunkProtection, currentProtection, 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime));
+
+        float totalDisplay = maxHealth + TotalShield;
+        if (totalDisplay <= 0f) return;
+
+        SpriteRenderer chunkSR = damageChunkFill.GetComponent<SpriteRenderer>();
+        bool visible = _chunkProtection > currentProtection + 0.001f;
+        if (chunkSR != null) chunkSR.enabled = visible;
+        if (visible)
+        {
+            Vector3 scale = damageChunkFill.localScale;
+            scale.x = Mathf.Clamp01(_chunkProtection / totalDisplay);
+            damageChunkFill.localScale = scale;
+        }
     }
 
     private void TriggerHitFlash()
@@ -1133,6 +1298,7 @@ public abstract class Entity : MonoBehaviour
             OnShieldBreak(shield);
             shield.OnExpire();
             activeEffects.RemoveAt(index);
+            _shieldJustExpired = true;
             return remaining;
         }
         shield.amount -= remaining * multiplier;
@@ -1146,6 +1312,13 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
+        // per-effect-type hard CC internal cooldown (see HardCrowdControl.InternalCooldownAfterExpiry)
+        // - only rejects effect types that actually opt in (currently just Freeze), skill-sourced
+        // hard CCs left at 0 are ungated here and rely on their own skill cooldown instead
+        if (effect is HardCrowdControl hardCC && hardCC.InternalCooldownAfterExpiry > 0f
+            && IsHardCCOnInternalCooldown(effect.GetType()))
+            return;
+
         // Hellebore Protection intercept: negative effects aimed at a shielded entity can be reflected
         if (effect.effectType == StatusEffect.Type.negative)
         {
@@ -1306,7 +1479,10 @@ public abstract class Entity : MonoBehaviour
                 effect.OnExpire();
                 activeEffects.Remove(effect);
                 if (effect is ShieldEffect expiredShield)
+                {
+                    _shieldJustExpired = true;
                     OnShieldExpire?.Invoke(new EntityEventData { target = this, source = expiredShield.source, position = transform.position, amount = expiredShield.amount });
+                }
             }
         }
     }

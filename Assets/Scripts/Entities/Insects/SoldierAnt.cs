@@ -8,7 +8,7 @@ public class SoldierAnt : Ant
         LoadData();
     }
 
-    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false) // sourced
+    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null) // sourced
     {
         float reducedDamage;
         // passive of the soldier ant, reduces physical damage taken by a flat amount
@@ -21,7 +21,7 @@ public class SoldierAnt : Ant
             reducedDamage = damageDealt;
         }
 
-        base.Damage(reducedDamage, damageType, elementalType, source, canCrit, damageTag, forceCrit); // calls up to parent for damage reduction
+        base.Damage(reducedDamage, damageType, elementalType, source, canCrit, damageTag, forceCrit, onHitEffectivenessOverride); // calls up to parent for damage reduction
     }
 
     public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag) // non-sourced

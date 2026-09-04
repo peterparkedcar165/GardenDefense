@@ -20,12 +20,14 @@ MonoBehaviour:
   elementalType: 2
   damageType: 1
   sunCost: 225
+  placementLimit: 1
+  category: 1
   skillTree: {fileID: 0}
-  baseMaxHealth: 200
+  baseMaxHealth: 300
   baseAttackDamage: 48
   baseMagicPower: 0
   baseAttackSpeed: 0.8
-  baseAttackRange: 2
+  baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
   baseElementalEffectChance: 0.1
@@ -84,15 +86,17 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseelementalAffinityBonus: 0.24
-  baseElementalEffectChanceBonus: 0.01
+  baseCritChanceBonus: 0.08
+  baseMaxDamageBonus: 0.12
   baseAttackSpeedBonus: 0.18
+  baseAttackDamageBonus: 0.2
   basePassiveMultiplier: 0.24
   baseSkillMultiplier: 0.16
   path1AttackDamagePerLevel: 6
   path1AttackRangePerLevel: 0.2
-  path2elementalAffinityPerLevel: 0.12
-  path3ElementalEffectChancePerLevel: 0.01
+  path2CritChancePerLevel: 0.04
+  path2MaxDamagePerLevel: 0.04
+  path3AttackDamagePerLevel: 0.06
   path3AttackSpeedBonusPerLevel: 0.09
   path3RadiusPerLevel: 0.15
   path3SkillDurationPerLevel: 3

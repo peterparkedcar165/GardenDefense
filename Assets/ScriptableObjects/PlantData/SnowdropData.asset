@@ -16,19 +16,21 @@ MonoBehaviour:
   icon: {fileID: 3997787884886350849, guid: 66cc86ab63224114c893b2c8e527b49d, type: 3}
   plantName: Snowdrop
   displayName: Snowdrop
-  cultivar: 5
+  family: 5
   elementalType: 4
   damageType: 1
   sunCost: 105
+  placementLimit: 0
+  category: 0
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 5
+  baseAttackDamage: 12
   baseMagicPower: 0
-  baseAttackSpeed: 2
+  baseAttackSpeed: 1
   baseAttackRange: 2
   baseArmor: 0
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.02
+  baseElementalEffectChance: 0.05
   baseOnHitEffectiveness: 0.1
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -88,7 +90,7 @@ MonoBehaviour:
   scalingSlow: 0.04
   coolingPerSecond: 0.75
   coolingPerSecondPerLevel: 0.1
-  baseBlizzardDamage: 20
+  baseBlizzardDamage: 15
   blizzardDamagePerLevel: 5
   baseBlizzardDuration: 5
   blizzardDurationPerLevel: 1
@@ -97,8 +99,8 @@ MonoBehaviour:
   baseBlizzardRange: 10
   path1AttackDamagePerLevel: 1
   path1AttackRangePerLevel: 0.2
-  path1MaxElementalEffectChanceBonus: 0.02
+  path1MaxElementalEffectChanceBonus: 0.03
   path1MaxAttackDamagePenalty: 0.5
-  path1MaxAttackSpeedBonus: 1
+  path1MaxAttackSpeedBonus: 0.5
   path3BlizzardWidthPerLevel: 0.5
   path3BlizzardRangePerLevel: 0.5

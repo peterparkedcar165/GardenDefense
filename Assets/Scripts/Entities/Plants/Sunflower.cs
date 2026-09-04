@@ -117,6 +117,7 @@ public class Sunflower : Shooter
     public override void OnPath3Upgrade(int level)
     {
         baseSkillDuration = data.baseSkillDuration + (SFData?.path3SkillDurationPerLevel ?? 0.5f) * level;
+        skillAoERadius    = data.baseSkillRadius   + (SFData?.path3RadiusPerLevel        ?? 0.2f) * level;
     }
 
     public override void ActivateSkill()
@@ -136,10 +137,15 @@ public class Sunflower : Shooter
     {
         yield return new WaitForSeconds(channelDuration);
 
+        // sprite scales off its own faster growth rate, not the actual (slower-growing) hit
+        // radius - see path3VisualRadiusPerLevel
+        float visualRadius = data.baseSkillRadius + (SFData?.path3VisualRadiusPerLevel ?? 0.3f) * effectivePath3Level;
+        float visualScale  = data.baseSkillRadius > 0f ? visualRadius / data.baseSkillRadius : 1f;
+
         GameObject obj = Instantiate(sunrayPrefab, position, Quaternion.identity);
         Sunray sunray = obj.GetComponent<Sunray>();
         if (sunray != null)
-            sunray.Initialize(sunrayDamagePerSecond, skillAoERadius, skillDuration, this);
+            sunray.Initialize(sunrayDamagePerSecond, skillAoERadius, skillDuration, this, visualScale);
 
         if (IsPath3Maxed)
         {
@@ -156,7 +162,7 @@ public class Sunflower : Shooter
                 GameObject obj2 = Instantiate(sunrayPrefab, target.transform.position, Quaternion.identity);
                 Sunray sunray2 = obj2.GetComponent<Sunray>();
                 if (sunray2 != null)
-                    sunray2.Initialize(sunrayDamagePerSecond, skillAoERadius, skillDuration, this);
+                    sunray2.Initialize(sunrayDamagePerSecond, skillAoERadius, skillDuration, this, visualScale);
             }
         }
     }
@@ -212,14 +218,16 @@ public class Sunflower : Shooter
 
     public override string GetPath3Description(bool details = false)
     {
-        float dpspl = SFData?.path3SunrayDPSPerLevel    ?? 15f;
-        float durpl = SFData?.path3SkillDurationPerLevel ?? 0.5f;
+        float dpspl    = SFData?.path3SunrayDPSPerLevel    ?? 15f;
+        float durpl    = SFData?.path3SkillDurationPerLevel ?? 0.5f;
+        float radiuspl = SFData?.path3RadiusPerLevel        ?? 0.2f;
         string desc = details
-            ? $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within the designated area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
+            ? $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color> radius for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Sunray Damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase Sunray duration by <color=green><b>{durpl:F1}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase Sunray radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "Unleashes an additional <color=orange><b>Sunray</b></color> at a random insect's location on the map.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +

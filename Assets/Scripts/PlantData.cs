@@ -13,6 +13,15 @@ public class PlantData : ScriptableObject
     public ElementalType elementalType;
     public DamageType damageType;
     public int sunCost;
+    // max number of this plant that can be alive on the field at once. 0 = unlimited
+    public int placementLimit = 0;
+
+    // dev-only label, never surfaced to players anywhere - just a way to tag which plants are
+    // "elder" tier (currently Begonia and Carrot) versus the normal roster, for our own reference
+    public enum PlantCategory { Normal, Elder }
+
+    [Header("Dev Only")]
+    public PlantCategory category = PlantCategory.Normal;
 
     [Header("Skill Tree")]
     public SkillTreeData skillTree;

@@ -26,11 +26,14 @@ public abstract class FlyingInsect : Insect
         }
     }
 
+    public const float FlightEvasionBonus = 0.10f;
+
     public override void UpdateStats()
     {
         base.UpdateStats();
         {
             flightSpeed = 2f * movementSpeed;
+            if (isFlying) evasion += FlightEvasionBonus;
         }
     }
 

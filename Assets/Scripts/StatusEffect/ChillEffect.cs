@@ -6,7 +6,7 @@ public class ChillEffect : StatusEffect
     private readonly float slowPerLevel;
 
     private float TotalSlow => baseSlow + slowPerLevel * (level - 1);
-    private const float IceResReduction = 0.24f;
+    public const float IceResReduction = 0.12f;
     private bool ReducesIceResistance => source is Snowdrop sd && sd.IsPath2Maxed;
 
     public ChillEffect(Entity target, float duration, int level, Entity source,

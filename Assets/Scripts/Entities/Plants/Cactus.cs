@@ -85,26 +85,18 @@ public class Cactus : Shooter
     {
         if (!IsAlive || !attacker.IsAlive) return;
         float armorBonus = IsPath2Maxed ? armor * 0.33f : 0f;
-        attacker.Damage(attacker.attackDamage * 1.5f + armorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.PassiveDamage, DamageTag.Counter });
-        ApplyPunctured(attacker, 1 + effectivePath2Level);
+        attacker.Damage(attacker.attackDamage * 1f + armorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.PassiveDamage, DamageTag.Counter });
+        attacker.ApplyEffect(new PuncturedEffect(attacker, passiveDuration, 1 + effectivePath2Level, this));
     }
 
+    // Punctured from this hit is applied by Entity.HandleOnHitEffects (the centralized on-hit
+    // dispatcher), which sees data.source is Cactus once this Damage call (tagged Attack) fires
     public void OnNeedleHit(Insect insect, float baseDamage)
     {
         if (!insect.IsAlive) return;
         float dmg = _volleyHit.Contains(insect) ? baseDamage * 0.5f : baseDamage;
         _volleyHit.Add(insect);
         insect.Damage(dmg, damageType, elementalType, this, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
-        ApplyPunctured(insect, 1 + effectivePath2Level);
-    }
-
-    private void ApplyPunctured(Insect insect, int stacks)
-    {
-        if (!insect.IsAlive) return;
-        int current = insect.GetEffect<PuncturedEffect>()?.level ?? 0;
-        int total = Mathf.Min(current + stacks, 100);
-        if (total <= current) return;
-        insect.ApplyEffect(new PuncturedEffect(insect, passiveDuration, total, this));
     }
 
     private void ApplyTauntInRange()
@@ -171,11 +163,11 @@ public class Cactus : Shooter
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
         return $"Fires <color=green><b>{needleBase + needleLevel * effectivePath1Level}</b></color> needles in equal angles around itself, dealing " +
                $"<color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} per needle. " +
-               $"Each hit applies <color=#A0522D><b>Punctured</b></color>.";
+               $"Each hit applies <color=green><b>1</b></color> <color=#A0522D><b>Punctured</b></color> stack.";
     }
 
     public override string GetPassiveDescription() =>
-        $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as " +
+        $"Insects that attack the {GetName()} take damage equal to <color=green><b>100%</b></color> of their own Attack Damage as " +
         $"{PlantData.DamageTypeLabel(damageType)}, and receive " +
         $"<color=green><b>{1 + effectivePath2Level}</b></color> <color=#A0522D>Punctured</color> stack(s).";
 
@@ -188,7 +180,7 @@ public class Cactus : Shooter
         int needleBase  = CactData?.path1NeedlesBase     ?? 8;
         int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
         string desc = details
-            ? $"Fires <color=green><b>[({needleBase}) + ({needleLevel}/Lvl.)]</b></color> needles in equal angles around itself, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} per needle. Each hit applies <color=#A0522D><b>Punctured</b></color>."
+            ? $"Fires <color=green><b>[({needleBase}) + ({needleLevel}/Lvl.)]</b></color> needles in equal angles around itself, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} per needle. Each hit applies <color=green><b>1</b></color> <color=#A0522D><b>Punctured</b></color> stack."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]\n\n" +
@@ -201,11 +193,11 @@ public class Cactus : Shooter
     {
         float hppl = CactData?.path2HealthPerLevel ?? 60f;
         string desc = details
-            ? $"Insects that attack the {GetName()} take damage equal to <color=green><b>150%</b></color> of their own Attack Damage as {PlantData.DamageTypeLabel(damageType)}, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
+            ? $"Insects that attack the {GetName()} take damage equal to <color=green><b>100%</b></color> of their own Attack Damage as {PlantData.DamageTypeLabel(damageType)}, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"<color=#A0522D><b>Punctured</b></color>: reduces <color=#00CED1><b>Armor</b></color> by <color=red><b>1</b></color> per stack, lasts <color=green><b>{passiveDuration:F0}s</b></color>.\n\n" +
-               $"Increase <color=#A0522D><b>Punctured</b></color> stacks per hit by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+               $"<color=#A0522D><b>Punctured</b></color>: taking Physical damage deals an extra <color=green><b>1</b></color> Grass damage per stack, lasts <color=green><b>{passiveDuration:F0}s</b></color>.\n\n" +
+               $"Increase <color=#A0522D><b>Punctured</b></color> stacks per retaliation by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, details ? $"Retaliation damage is increased by <color=#00CED1><b>33%</b></color> of the {GetName()}'s <color=#00CED1><b>Armor</b></color>." : $"Retaliation deals <color=#00CED1><b>+{armor * 0.33f:F0}</b></color> bonus damage.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
@@ -216,7 +208,6 @@ public class Cactus : Shooter
     {
         float shieldpl  = CactData?.path3ShieldPerLevel        ?? 10f;
         float durpl     = CactData?.path3SkillDurationPerLevel ?? 2f;
-        float healpl    = CactData?.path3HealBonusPerLevel     ?? 0.04f;
         float shieldBase = CactData?.baseShieldAmount ?? 100f;
         float armorpl   = CactData?.path3ShieldArmorPerLevel  ?? 5f;
         float armorBase = CactData?.baseShieldArmorBonus      ?? 25f;
@@ -226,7 +217,6 @@ public class Cactus : Shooter
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase healing received by <color=green><b>{healpl * 100f:F0}%</b></color> per level. [<color=green><b>+{healpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"While <color=grey><b>Shielded</b></color> by any source, gain <color=#00CED1><b>[({armorBase:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor. [<color=#00CED1><b>{ShieldArmorBonus:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"While <color=grey><b>Shielded</b></color>, <color=green><b>Total Attack Speed</b></color> is increased by <color=green><b>35%</b></color>.")}\n\n" +

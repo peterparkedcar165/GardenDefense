@@ -16,8 +16,11 @@ public class Geyser : MonoBehaviour
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(position, insect.transform.position) > radius) continue;
 
+            // CanHitBurrowed: the geyser erupts from underground itself, so it can damage and
+            // knock up insects currently burrowed (e.g. mid-transit through an UndergroundTunnel),
+            // same as CarrotFurrow
             insect.Damage(damage, source.damageType, source.elementalType, source, true,
-                new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
+                new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage, DamageTag.CanHitBurrowed });
             insect.ApplyEffect(new KnockUpEffect(insect, 30f, 1, source, knockUpForce));
         }
 
