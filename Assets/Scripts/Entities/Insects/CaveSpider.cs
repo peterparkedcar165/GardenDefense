@@ -19,4 +19,8 @@ public class CaveSpider : Insect
         if (hit && current.IsAlive && current is Entity victim)
             victim.ApplyEffect(new WebbedEffect(victim, CSData?.webbedDuration ?? 3f, 1, this));
     }
+
+    public override string GetDescription() =>
+        $"Mildy aggressive arachnid. Attacks inflict Webbed for <b>{(CSData?.webbedDuration ?? 3f):F0}</b> seconds, " +
+        "restricting any attacks or skill usage." + AggressivityLine();
 }

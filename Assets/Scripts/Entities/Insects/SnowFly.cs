@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SnowFly : FlyingInsect
+public class SnowFly : FlyingInsect, ICryotolerant
 {
     public float snowArmorBonus = 25f;
 
@@ -29,9 +29,7 @@ public class SnowFly : FlyingInsect
         flightSpeed = 2f * movementSpeed;
     }
 
-    public override void ApplyEffect(StatusEffect effect)
-    {
-        if (effect is FreezeEffect) return;
-        base.ApplyEffect(effect);
-    }
+    public override string GetDescription() =>
+        $"Increase Armor and Magic Resist by <color=#00CED1><b>{(SFData?.snowArmorBonus ?? snowArmorBonus):F0}</b></color> when it snows." +
+        "\n\nCannot be slowed past its base Movement Speed." + CryotoleranceLine() + FlyingLine() + AggressivityLine();
 }

@@ -10,4 +10,7 @@ public class WorkerAnt : Ant
     }
 
     public override float eatMultiplier => 1.5f;
+
+    public override string GetDescription() =>
+        $"Average insect that deals <b>{eatMultiplier:F1}x</b> damage to path blockers." + AggressivityLine();
 }

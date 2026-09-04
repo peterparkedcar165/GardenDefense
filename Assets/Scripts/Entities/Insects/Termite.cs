@@ -73,4 +73,8 @@ public class Termite : Insect
         else
             ApplyEffect(new TermiteSwarmEffect(this, buffDuration, nearbyCount, this));
     }
+
+    public override string GetDescription() =>
+        $"Aggresive insect. Increase Attack Damage by <color=green><b>{TermiteSwarmEffect.attackBonusPerLevel:F0}</b></color> for every other Termite within a " +
+        $"<b>{(TData?.swarmRange ?? 3f):F0}</b>-radius." + AggressivityLine();
 }

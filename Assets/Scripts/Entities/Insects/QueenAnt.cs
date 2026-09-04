@@ -10,6 +10,22 @@ public class QueenAnt : Ant
     private float spawnTimer;
     private bool isSpawning;
 
+    public override string GetDescription()
+    {
+        string list = "none configured";
+        if (antPrefabs != null && antPrefabs.Length > 0)
+        {
+            var names = new System.Collections.Generic.List<string>();
+            foreach (GameObject prefab in antPrefabs)
+            {
+                Insect ant = prefab != null ? prefab.GetComponent<Insect>() : null;
+                if (ant != null) names.Add(ant.GetName());
+            }
+            list = string.Join(", ", names);
+        }
+        return $"Every <b>{spawnInterval:F0}</b> seconds, gives birth to <b>{antsPerSpawn}</b> ants, randomly chosen between {list}." + AggressivityLine();
+    }
+
     protected override void Awake()
     {
         base.Awake();

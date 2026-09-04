@@ -49,6 +49,7 @@ MonoBehaviour:
   flatPhysicalDamageReduction: 0
   threatValue: 2
   threatType: 1
+  carryPriority: 2
   baseEvasion: 0
   baseAccuracy: 0
   sunDrop: 27

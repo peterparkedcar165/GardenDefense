@@ -274,4 +274,8 @@ public class JumpingSpider : Insect
         _isPerchedOnHighground = false;   // landed on solid ground either way (return leap or a miss)
         _leapState  = LeapState.Walking;
     }
+
+    public override string GetDescription() =>
+        $"Aggressive arachnid. Leaps onto plants and apply Webbed for <b>{WebDuration:F0}</b> seconds, " +
+        "restricting any attacks or skill usage." + AggressivityLine();
 }

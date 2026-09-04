@@ -49,6 +49,7 @@ MonoBehaviour:
   flatPhysicalDamageReduction: 0
   threatValue: 6
   threatType: 1
+  carryPriority: 1
   baseEvasion: 0
   baseAccuracy: 0
   sunDrop: 32
@@ -61,5 +62,5 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
-  venomDPS: 6
-  venomDuration: 6
+  venomDPS: 16
+  venomDuration: 12

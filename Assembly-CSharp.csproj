@@ -353,6 +353,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\HealIndicator.cs" />
+    <Compile Include="Assets\Scripts\Entities\Insects\ICryotolerant.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\SnowAntData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cinderwisp.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aeonium.cs" />

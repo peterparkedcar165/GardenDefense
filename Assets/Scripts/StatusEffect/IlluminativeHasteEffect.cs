@@ -1,6 +1,6 @@
 public class IlluminativeHasteEffect : StatusEffect
 {
-    private const float speedBonus = 0.4f;
+    public const float speedBonus = 0.4f;
 
     public IlluminativeHasteEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)

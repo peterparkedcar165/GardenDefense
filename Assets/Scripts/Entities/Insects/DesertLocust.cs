@@ -30,4 +30,8 @@ public class DesertLocust : Insect
         }
         existing?.AddStack(attackDamage * (LData?.devourReductionPercent ?? 1f));
     }
+
+    public override string GetDescription() =>
+        $"Aggressive insect. Attacks inflict Devour, which reduces the target's Max Health equal to " +
+        $"<b>{(LData?.devourReductionPercent ?? 1f) * 100f:F0}%</b> of the attack's damage, for <color=green><b>{devourDuration:F0}</b></color> seconds." + AggressivityLine();
 }

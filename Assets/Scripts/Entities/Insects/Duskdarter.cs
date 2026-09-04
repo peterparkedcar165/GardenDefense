@@ -13,6 +13,7 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
 
     private Insect carriedInsect;
     public Insect CarriedInsect => carriedInsect;
+    public override float CarryPickupHeight => DDData?.carryPickupHeight ?? 0.9f;
 
     private float pickupCheckTimer;
     private SpriteRenderer _carriedRenderer;
@@ -43,6 +44,12 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
         movementSpeedMultiplier -= spdBonus;
         evasionAdder            -= evaBonus;
     }
+
+    public override string GetDescription() =>
+        "May pick up an insect, allowing it to travel at a quicker rate while flying. Gains " +
+        $"<color=green><b>{(DDData?.darkMovementSpeedBonus ?? 0.25f) * 100f:F0}%</b></color> Movement Speed, and " +
+        $"<color=green><b>{(DDData?.darkEvasionBonus ?? 0.15f) * 100f:F0}%</b></color> Evasion when in darkness. " +
+        "Immune to plant-based Taunt effects." + FlyingLine() + AggressivityLine();
 
     protected override void Update()
     {
@@ -84,26 +91,26 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
         if (!newState && !_isLandingForPickup) DropCarriedInsect();
     }
 
-    // targets the slowest un-carried ground insect within range, then starts the
-    // land -> pause -> carry -> take off sequence instead of picking it up instantly. compares
-    // baseMovementSpeed (not the buffed/total movementSpeed), since the intent is to pick up
-    // insects that are naturally slow-but-strong (e.g. Snail), not ones merely slowed by an effect.
+    // targets the highest carryPriority un-carried ground insect within range, then starts the
+    // land -> pause -> carry -> take off sequence instead of picking it up instantly. insects
+    // that should naturally get ferried past danger (slow, tanky, or otherwise worth protecting,
+    // e.g. Snail) are tuned via InsectData.carryPriority rather than being inferred from speed.
     // no longer requires the candidate to be at/ahead of this Duskdarter's own path progress -
     // an insect that stops periodically to attack (e.g. Bombardier Beetle) would otherwise fall
     // behind and become permanently ineligible once a Duskdarter passes it
     private void TryPickUpNearbyInsect()
     {
         float range = DDData?.carryPickupRange ?? 3f;
-        Insect slowest = null;
-        float slowestSpeed = float.MaxValue;
+        Insect best = null;
+        int bestPriority = int.MinValue;
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive || insect == this) continue;
-            if (insect is FlyingInsect || insect.carriedBy != null || insect.movementPaused) continue;
+            if (insect is FlyingInsect || insect is ICarrierInsect || insect.carriedBy != null || insect.movementPaused) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) > range) continue;
-            if (insect.baseMovementSpeed < slowestSpeed) { slowestSpeed = insect.baseMovementSpeed; slowest = insect; }
+            if (insect.carryPriority > bestPriority) { bestPriority = insect.carryPriority; best = insect; }
         }
-        if (slowest != null) StartCoroutine(PickUpSequence(slowest));
+        if (best != null) StartCoroutine(PickUpSequence(best));
     }
 
     private IEnumerator PickUpSequence(Insect target)

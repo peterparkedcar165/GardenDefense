@@ -90,9 +90,9 @@ MonoBehaviour:
   path1CritChancePerLevel: 0.04
   baseEruptionRadius: 1
   path1RadiusPerLevel: 0.15
-  eruptionKnockUpForce: 6
-  bondCountdownBonus: 0.5
-  path2CountdownBonusPerLevel: 0.05
+  eruptionKnockUpForce: 4
+  bondCountdownBonus: 0.3
+  path2CountdownBonusPerLevel: 0.06
   path2AttackRangePerLevel: 0.2
   carrotCountBase: 7
   carrotsPerLevel: 2

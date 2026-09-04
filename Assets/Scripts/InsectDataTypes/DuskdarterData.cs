@@ -11,4 +11,5 @@ public class DuskdarterData : InsectData
     public float carryPickupRange = 3f;
     public float carryPickupCheckInterval = 1f;
     public float carryPickupDelay = 0.5f;
+    public float carryPickupHeight = 0.9f;
 }

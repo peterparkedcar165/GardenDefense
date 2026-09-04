@@ -6,8 +6,6 @@ public class InsectData : ScriptableObject
     [Header("Display")]
     public string displayName;
     public Color nameColor = Color.white;
-    public string description;
-    public string passiveDescription;
     public Sprite sprite;
     public GameObject insectPrefab;
 
@@ -50,6 +48,10 @@ public class InsectData : ScriptableObject
     [Header("Threat")]
     public float threatValue = 1f;
     public ThreatType threatType = ThreatType.Basic;
+
+    [Header("Carry")]
+    [Tooltip("A carrier (e.g. Duskdarter) picks up the eligible ground insect with the highest carryPriority in range, rather than the slowest one. Insects that should naturally get ferried past danger (slow, tanky, or otherwise valuable to protect) should have this set higher than the default.")]
+    public int carryPriority = 0;
 
     [Header("Evasion / Accuracy")]
     public float baseEvasion;

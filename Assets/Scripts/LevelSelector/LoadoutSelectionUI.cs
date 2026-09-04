@@ -141,15 +141,15 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (insectTooltipPanel == null) return;
         insectTooltipPanel.SetActive(true);
 
+        // no live Insect instance exists on this screen - read GetDescription() straight off the
+        // prefab's Insect component, same trick the plant tooltip above uses via data.plantPrefab
+        Insect prefabInsect = data.insectPrefab != null ? data.insectPrefab.GetComponent<Insect>() : null;
         if (insectTooltipDescription != null)
-            insectTooltipDescription.text = data.description;
+            insectTooltipDescription.text = prefabInsect != null ? prefabInsect.GetDescription() : "";
 
-        bool hasPassive = !string.IsNullOrWhiteSpace(data.passiveDescription);
+        // insects no longer have a separate passive blurb - everything lives in GetDescription()
         if (insectTooltipPassiveDescription != null)
-        {
-            insectTooltipPassiveDescription.gameObject.SetActive(hasPassive);
-            insectTooltipPassiveDescription.text = data.passiveDescription;
-        }
+            insectTooltipPassiveDescription.gameObject.SetActive(false);
     }
 
     private void HideInsectTooltip()

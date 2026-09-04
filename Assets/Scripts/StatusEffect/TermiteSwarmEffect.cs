@@ -1,6 +1,6 @@
 public class TermiteSwarmEffect : StatusEffect
 {
-    private const float attackBonusPerLevel = 3f;
+    public const float attackBonusPerLevel = 3f;
 
     public TermiteSwarmEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)

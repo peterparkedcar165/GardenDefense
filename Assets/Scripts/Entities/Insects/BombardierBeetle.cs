@@ -138,18 +138,29 @@ public class BombardierBeetle : Insect
         GameObject prefab = BData != null ? BData.projectilePrefab : null;
         if (prefab == null) return;
 
-        GameObject obj = Instantiate(prefab, transform.position, Quaternion.identity);
+        // spawns from the visual (the actual sprite, which can sit above the root due to hover/
+        // knock-up/etc.), not the root transform - the root stays the anchor for all targeting
+        // and range logic above, this only affects where the thrown projectile visually emerges
+        Vector3 launchPosition = visual != null ? visual.position : transform.position;
+
+        GameObject obj = Instantiate(prefab, launchPosition, Quaternion.identity);
         BombardierBeetleProjectile proj = obj.GetComponent<BombardierBeetleProjectile>();
         if (proj == null) return;
 
-        float splashPercent  = BData != null ? BData.splashDamagePercent : 0.5f;
-        float splashRadius   = BData != null ? BData.splashRadius        : 1f;
-        float scorchChance   = BData != null ? BData.scorchChance        : 0.5f;
-        float scorchDuration = BData != null ? BData.scorchDuration      : 8f;
-        float projSpeed      = BData != null ? BData.projectileSpeed     : 4f;
+        float splashPercent       = BData != null ? BData.splashDamagePercent  : 0.5f;
+        float splashRadius        = BData != null ? BData.splashRadius        : 1f;
+        float scorchChance        = BData != null ? BData.scorchChance        : 0.5f;
+        float scorchDuration      = BData != null ? BData.scorchDuration      : 8f;
+        float scorchDPS           = BData != null ? BData.scorchDPS           : 16f;
+        float scorchHealthPercent = BData != null ? BData.scorchHealthPercent : 0.04f;
+        float projSpeed           = BData != null ? BData.projectileSpeed     : 4f;
 
-        proj.Initialize(transform.position, impactPosition, primaryTarget,
+        proj.Initialize(launchPosition, impactPosition, primaryTarget,
             attackDamage, attackDamage * splashPercent, splashRadius,
-            scorchChance, scorchDuration, attackDamageType, attackElementalType, this, projSpeed);
+            scorchChance, scorchDuration, scorchDPS, scorchHealthPercent,
+            attackDamageType, attackElementalType, this, projSpeed);
     }
+
+    public override string GetDescription() =>
+        "Lobs a fire bomb at whichever plant sits deepest in the garden, scorching it and anything nearby.";
 }

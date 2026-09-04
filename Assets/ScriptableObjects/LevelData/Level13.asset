@@ -107,9 +107,9 @@ MonoBehaviour:
     startDelay: 3
     minSpawnCount: 3
     maxSpawnCount: 7
-  - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+  - data: {fileID: 11400000, guid: 9d5a175ca97647f3ac538a3120a842a0, type: 2}
     unlockWave: 3
-    budgetWeight: 0.144
+    budgetWeight: 0.349
     startDelay: 2
     minSpawnCount: 3
     maxSpawnCount: 6
