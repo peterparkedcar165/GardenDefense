@@ -1,11 +1,11 @@
 using UnityEngine;
 
-// ranged artillery insect: ignores the normal aggressivity-driven target/UpdateAttack pipeline
-// entirely (target is overridden to always return null, so the base UpdateAttack() no-ops) and
-// instead runs its own scan/lock/charge/fire cycle every frame via Update(), independent of
-// whether it's currently being carried - this is what lets it fire while being carried without
-// the base Insect class needing to know anything about it
-public class BombardierBeetle : Insect
+// ranged artillery insect: implements IShooterInsect, so Insect.target's base getter already
+// returns null for it (base UpdateAttack() no-ops, never melees) without needing its own
+// override. instead it runs its own scan/lock/charge/fire cycle every frame via Update(),
+// independent of whether it's currently being carried - this is what lets it fire while being
+// carried without the base Insect class needing to know anything about it
+public class BombardierBeetle : Insect, IShooterInsect
 {
     private BombardierBeetleData BData => data as BombardierBeetleData;
 
@@ -16,9 +16,6 @@ public class BombardierBeetle : Insect
     private float postFireTimer;
     private Plant lockedTarget;
     private Vector3 lockedPosition;
-
-    // the base target/UpdateAttack pipeline is intentionally disabled - see class comment
-    public override IAttackable target => null;
 
     protected override void Awake()
     {
@@ -36,6 +33,17 @@ public class BombardierBeetle : Insect
 
     private void TickAttack()
     {
+        // while an active Taunt's taunter is a living Plant, it takes absolute priority over the
+        // normal backline scan and forces the beetle to root in place, per IShooterInsect's
+        // contract: forced to engage the taunter via its own shoot mechanism, never melee
+        Plant tauntTarget = GetTauntPlantTarget();
+        bool isTaunted = tauntTarget != null;
+
+        // taunted: stand completely still for as long as the taunt holds, not just during the
+        // charge/post-fire windows like the normal cycle allows
+        if (isTaunted && carriedBy == null)
+            attackMovementPaused = true;
+
         // stays rooted for a beat after firing before it starts walking again, then the attack
         // speed cooldown below plays out while it's free to move, until it's ready to stop again
         if (isPostFireDelay)
@@ -44,7 +52,7 @@ public class BombardierBeetle : Insect
             if (postFireTimer <= 0f)
             {
                 isPostFireDelay = false;
-                if (carriedBy == null)
+                if (carriedBy == null && !isTaunted)
                     attackMovementPaused = false;
             }
             return;
@@ -64,7 +72,9 @@ public class BombardierBeetle : Insect
         fireCooldownTimer += Time.deltaTime;
         if (fireCooldownTimer < 1f / attackSpeed) return;
 
-        Plant candidate = FindBacklineTarget();
+        // a taunt bypasses the backline scan (and its attackRange gate) entirely - being forced
+        // to engage something specific shouldn't depend on it happening to be in scan range
+        Plant candidate = isTaunted ? tauntTarget : FindBacklineTarget();
         if (candidate == null) return; // stays "ready" and keeps rescanning every frame until one appears
 
         fireCooldownTimer = 0f;

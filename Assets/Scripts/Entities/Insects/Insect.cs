@@ -176,6 +176,13 @@ public abstract class Insect : Entity, IAttackable
     {
         get
         {
+            // shooter insects never use the base melee/UpdateAttack pipeline - they run their own
+            // custom ranged attack cycle instead (see IShooterInsect). an insect with its own
+            // bespoke targeting (Moth, Wasp, Harvestman, etc.) overrides `target` itself, which
+            // takes precedence over this base getter entirely, so this only affects shooters that
+            // don't need anything fancier than "never melee, consult GetTauntPlantTarget() myself"
+            if (this is IShooterInsect) return null;
+
             // friendlies (minions, hypnotized) fight enemy insects and ignore taunts (which aim at plants)
             if (team == Team.Friendly) return FindNearestEnemyInRange();
 
@@ -1278,6 +1285,12 @@ public abstract class Insect : Entity, IAttackable
     // itself is enforced below in ApplyEffect, not per-insect
     protected string CryotoleranceLine() =>
         "\n\n<b>Cryotolerance:</b> Immune to Freeze effect.";
+
+    // shared utility for any IShooterInsect's own attack cycle: since its `target` always returns
+    // null (see above), it must consult this itself to still respect Taunt - forced to engage the
+    // taunter (via its own shoot mechanism, never melee) instead of its normal target-scan
+    protected Plant GetTauntPlantTarget() =>
+        GetEffect<TauntEffect>()?.taunter is Plant p && p.IsAlive ? p : null;
 
     // a taunt whose source is standing on a highground tile can't reach a grounded (non-flying,
     // non-highground) insect - mirrors the same line-of-sight rule Insect.CanReachPlant already
