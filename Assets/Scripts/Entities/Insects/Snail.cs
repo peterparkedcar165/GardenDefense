@@ -24,4 +24,9 @@ public class Snail : Insect
         armorAdder -= armorBonus;
         movementSpeedMultiplier -= moveSpeedBonus;
     }
+
+    public override string GetDescription() =>
+        $"Slow, passive, but tough insect. Spawns with a shield of <b>{(data != null ? data.startingShield : 0f):F0}</b>.\n\n" +
+        $"While Shielded, the Snail gains <color=#00CED1><b>{ArmorBonusWhileShielded:F0}</b></color> Armor.\n\n" +
+        $"While Unshielded, the Snail gains <color=green><b>{MoveSpeedBonusWhileUnshielded * 100f:F0}%</b></color> Movement Speed." + AggressivityLine();
 }

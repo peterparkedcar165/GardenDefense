@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SnowAnt : Ant
+public class SnowAnt : Ant, ICryotolerant
 {
     public float tempDecreasePerHit = 4f;
 
@@ -25,9 +25,7 @@ public class SnowAnt : Ant
             plant.temperature = Mathf.Max(plant.temperature - tempDecreasePerHit, plant.temperatureMin);
     }
 
-    public override void ApplyEffect(StatusEffect effect)
-    {
-        if (effect is FreezeEffect) return;
-        base.ApplyEffect(effect);
-    }
+    public override string GetDescription() =>
+        $"Mildly aggressive insect. Attacks decrease temperature of plants by <color=#00FFFF><b>{(SAData?.tempDecreasePerHit ?? tempDecreasePerHit):F0}</b></color>." +
+        CryotoleranceLine() + AggressivityLine();
 }

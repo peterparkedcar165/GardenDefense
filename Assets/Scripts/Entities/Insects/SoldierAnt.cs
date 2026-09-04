@@ -8,6 +8,10 @@ public class SoldierAnt : Ant
         LoadData();
     }
 
+    public override string GetDescription() =>
+        "Bulkier insect with increased Physical and Nature resistances. The Soldier Ant takes " +
+        $"<b>{(data != null ? data.flatPhysicalDamageReduction : 0f):F0}</b> reduced damage from Physical Attacks." + AggressivityLine();
+
     public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null) // sourced
     {
         float reducedDamage;

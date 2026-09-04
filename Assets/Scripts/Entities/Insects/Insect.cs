@@ -32,7 +32,35 @@ public abstract class Insect : Entity, IAttackable
     // movement/attacking/gravity are all suspended and it just rides at the carrier's position,
     // resuming everything normally the instant it's dropped (carriedBy set back to null)
     public Insect carriedBy;
-    private const float CarryVisualHeight = 0.9f;
+
+    // read off the CARRIER (see Duskdarter/DarklingBeetle overrides) by whichever insect it's
+    // carrying, in FollowCarrier() below - lets each carrier tune how high its passenger rides
+    // on its back independently, e.g. via its own InsectData field
+    public virtual float CarryPickupHeight => 0.9f;
+
+    // true for a carrier (e.g. Darkling Beetle) whose passenger is fully immune to new incoming
+    // damage while carried - checked in the Damage() overrides just below. any DoT already
+    // ticking on the passenger before pickup keeps ticking (its damage is tagged DoT), but no new
+    // hit of any kind, single-target or AoE, can land. Duskdarter does NOT set this - its
+    // passenger is merely excluded from single-target selection (see Plant.FindNearest etc.),
+    // still vulnerable to AoE/splash like ICarrierInsect.cs's own doc comment describes
+    protected virtual bool ShieldsCarriedPassenger => false;
+
+    private bool IsShieldedFromDamage(DamageTag[] damageTag) =>
+        carriedBy != null && carriedBy.ShieldsCarriedPassenger &&
+        !System.Array.Exists(damageTag, t => t == DamageTag.DoT);
+
+    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null)
+    {
+        if (IsShieldedFromDamage(damageTag)) return;
+        base.Damage(damageDealt, damageType, elementalType, source, canCrit, damageTag, forceCrit, onHitEffectivenessOverride);
+    }
+
+    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
+    {
+        if (IsShieldedFromDamage(damageTag)) return;
+        base.Damage(damageDealt, damageType, elementalType, damageTag);
+    }
     // generic movement freeze, e.g. Duskdarter pausing both itself and its about-to-be-carried
     // passenger during the pickup sequence. only blocks Move(); attacking is unaffected.
     // deliberately checked by Duskdarter's pickup eligibility scan (an insect paused this way,
@@ -118,6 +146,9 @@ public abstract class Insect : Entity, IAttackable
     public Entity lastSource;
     public Aggressivity aggressivity = Aggressivity.Low;
     public float targetingRange = 0f;
+    // a carrier (e.g. Duskdarter) picks the eligible candidate with the highest value here,
+    // rather than the slowest one - see InsectData.carryPriority
+    public int carryPriority = 0;
     private float _plantAttackCooldown = 0f;
 
     // combat side. Friendly = minion / hypnotized: seeks enemy insects, holds or walks back.
@@ -221,6 +252,7 @@ public abstract class Insect : Entity, IAttackable
     private GameManager gameManager;
     private Transform aimPoint;
     public Transform visual;
+    private Transform _shadow;
     private Vector2 pathOffset;
 
     protected override void Awake()
@@ -287,6 +319,7 @@ public abstract class Insect : Entity, IAttackable
         expDrop = sunDrop/2;
         aimPoint = transform.Find("AimPoint");
         visual = transform.Find("Visual");
+        _shadow = transform.Find("Shadow");
         _spriteRenderer = visual?.GetComponent<SpriteRenderer>();
         _prevPosition = transform.position;
         _spawnPosition = transform.position;   // captured at spawn (the SpawnPoint it came from)
@@ -321,10 +354,14 @@ public abstract class Insect : Entity, IAttackable
         }
         else if (carriedBy != null)
         {
+            // the carrier already casts a shadow at this same ground position - showing the
+            // passenger's own shadow too would just double it up directly underneath
+            if (_shadow != null && _shadow.gameObject.activeSelf) _shadow.gameObject.SetActive(false);
             FollowCarrier();
         }
         else
         {
+            if (_shadow != null && !_shadow.gameObject.activeSelf) _shadow.gameObject.SetActive(true);
             Move();
             // burrowed: still travels its (tunnel) path, but can't fight or be off-path slowed
             // while underground and undetectable
@@ -342,7 +379,9 @@ public abstract class Insect : Entity, IAttackable
     }
 
     // while carried: no pathing, targeting, or attacking of its own, just riding along at a
-    // fixed visual height (as if sitting on the carrier's back) instead of on the ground
+    // fixed height above the carrier's own visual (as if sitting on its back) instead of on the
+    // ground - tracking the carrier's VISUAL, not its root, so a knock-up or any other effect
+    // that bounces the carrier's sprite up carries the passenger's sprite up right along with it
     private void FollowCarrier()
     {
         transform.position = carriedBy.transform.position;
@@ -354,8 +393,9 @@ public abstract class Insect : Entity, IAttackable
         currentWaypointIndex = carriedBy.currentWaypointIndex;
 
         if (visual == null) return;
+        float carrierVisualY = carriedBy.visual != null ? carriedBy.visual.localPosition.y : 0f;
         Vector3 pos = visual.localPosition;
-        pos.y = CarryVisualHeight;
+        pos.y = carrierVisualY + carriedBy.CarryPickupHeight;
         visual.localPosition = pos;
     }
 
@@ -1208,6 +1248,7 @@ public abstract class Insect : Entity, IAttackable
         currencyDropAdder      = data.currencyDropAdder;
         currencyDropMultiplier = data.currencyDropMultiplier;
         aggressivity           = data.aggressivity;
+        carryPriority          = data.carryPriority;
         attackDamageType       = data.attackDamageType;
         attackElementalType    = data.attackElementalType;
         baseLightEmissionRange = data.baseLightEmissionRange;
@@ -1223,14 +1264,44 @@ public abstract class Insect : Entity, IAttackable
         return data != null ? data.displayName : "";
     }
 
-    public virtual string GetDescription()
+    // no longer backed by an Inspector string - each insect overrides this with its own
+    // code-written text (flavor + passive folded into one, no separate passive concept anymore)
+    public virtual string GetDescription() => "";
+
+    // appended to the end of every insect's GetDescription() - reads the data asset directly
+    // (rather than the live instance field) so it reads correctly both in-battle and from the
+    // loadout screen's uninstantiated prefab preview
+    protected string AggressivityLine() =>
+        $"\n\n<b>Aggressivity:</b> {(data != null ? data.aggressivity : Aggressivity.Low)}";
+
+    // shared line for any ICryotolerant insect (Winter Moth, Snow Ant, Snow Fly) - the immunity
+    // itself is enforced below in ApplyEffect, not per-insect
+    protected string CryotoleranceLine() =>
+        "\n\n<b>Cryotolerance:</b> Immune to Freeze effect.";
+
+    // a taunt whose source is standing on a highground tile can't reach a grounded (non-flying,
+    // non-highground) insect - mirrors the same line-of-sight rule Insect.CanReachPlant already
+    // enforces for ordinary attacks, just applied in the opposite direction (highground source ->
+    // grounded target). flying insects are exempt entirely, and a grounded insect that happens to
+    // also be standing on highground (isOnGround is false while elevated, same convention
+    // CanReachPlant relies on) is exempt too
+    private bool IsTauntBlockedByHighground(TauntEffect taunt)
     {
-        return data != null ? data.description : "";
+        bool sourceOnHighground = taunt.source is Plant plant && plant.occupiedTile != null && plant.occupiedTile.isHighground;
+        if (!sourceOnHighground) return false;
+        if (isFlying) return false;
+        if (!isOnGround) return false;
+        return true;
     }
 
-    public virtual string GetPassiveDescription()
+    // centralized Freeze immunity for any ICryotolerant insect, flying or not - FlyingInsect's
+    // own ApplyEffect override guards its Grounded-on-hard-CC logic against this same case, so a
+    // Freeze that gets blocked here can't still ground a cryotolerant flyer on its way through
+    public override void ApplyEffect(StatusEffect effect)
     {
-        return data != null ? data.passiveDescription : "";
+        if (this is ICryotolerant && effect is FreezeEffect) return;
+        if (effect is TauntEffect taunt && IsTauntBlockedByHighground(taunt)) return;
+        base.ApplyEffect(effect);
     }
 
     public string GetActiveEffectsString()

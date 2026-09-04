@@ -26,4 +26,7 @@ public class Firefly : FlyingInsect
             _light2D.pointLightInnerRadius = lightEmissionRange * 0.3f;
         }
     }
+
+    public override string GetDescription() =>
+        $"Passive insect. Emits a faint <b>{(data != null ? data.baseLightEmissionRange : lightEmissionRange):F1}</b>-radius light." + FlyingLine() + AggressivityLine();
 }

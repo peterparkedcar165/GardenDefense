@@ -26,6 +26,10 @@ public class ScoutAnt : Ant
 
     public override string GetName() => "<color=#8B4513>Scout Ant</color>";
 
+    public override string GetDescription() =>
+        "Fast insect that grants <color=green><b>Scout's Encouragement</b></color> to all other insects in the garden, " +
+        "increasing Movement Speed by <color=green><b>+0.2</b></color>." + AggressivityLine();
+
     private void EncourageInsects()
     {
         foreach (Insect insect in Insect.allInsects)

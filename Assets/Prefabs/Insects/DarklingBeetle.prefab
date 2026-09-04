@@ -81,28 +81,39 @@ MonoBehaviour:
   baseAttackRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
-  basePhysicalResistance: 0
-  baseMagicResistance: 0
+  baseArmor: 0
+  baseMagicArmor: 0
+  baseArmorPenFlat: 0
+  baseMagicPenFlat: 0
+  baseArmorPenPercent: 0
+  baseMagicPenPercent: 0
   baseFireResistance: 0
   baseWaterResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
+  baseGroundResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
+  baseFallDamage: 0
   baseBonusEffectChance: 0
+  baseElementalEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
+  baseGroundDamage: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
+  baseMinimumDamage: 0.8
+  baseMaximumDamage: 1.2
   baseDotResistance: 0
   baseDotDamage: 0
-  baseElementalPower: 0
+  baseFallDamageResistance: 0
+  baseelementalAffinity: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   baseCoordinatedDamage: 0
@@ -111,6 +122,20 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseLifesteal: 0
   baseCounterDamage: 0
+  baseDebuffGivenDuration: 0
+  baseBuffGivenDuration: 0
+  baseBuffReceivedDuration: 0
+  baseDebuffReceivedDuration: 0
+  baseDotDuration: 0
+  baseRegenerationDuration: 0
+  baseShieldDuration: 0
+  baseSunGenerationCooldown: 0
+  baseEvasion: 0
+  baseAccuracy: 0
+  baseBonusCritChanceReceived: 0
+  baseBonusCritDamageReceived: 0
+  baseProjectileSpeed: 0
+  baseOnHitEffectiveness: 1
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -123,26 +148,39 @@ MonoBehaviour:
   healingReceived: 0
   physicalResistance: 0
   magicResistance: 0
+  armor: 0
+  magicArmor: 0
+  armorPenFlat: 0
+  magicPenFlat: 0
+  armorPenPercent: 0
+  magicPenPercent: 0
   fireResistance: 0
   waterResistance: 0
-  natureResistance: 0
+  grassResistance: 0
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
+  groundResistance: 0
   physicalDamage: 0
   magicDamage: 0
+  fallDamage: 0
   bonusEffectChance: 0
+  elementalEffectChance: 0
   fireDamage: 0
   waterDamage: 0
-  natureDamage: 0
+  grassDamage: 0
   windDamage: 0
   poisonDamage: 0
   iceDamage: 0
+  groundDamage: 0
   criticalChance: 0
   criticalDamage: 0
+  minimumDamage: 0
+  maximumDamage: 0
   dotResistance: 0
   dotDamage: 0
-  elementalPower: 0
+  fallDamageResistance: 0
+  elementalAffinity: 0
   passiveDamage: 0
   skillDamage: 0
   coordinatedDamage: 0
@@ -151,10 +189,28 @@ MonoBehaviour:
   lifesteal: 0
   counterDamage: 0
   tenacity: 0
+  debuffGivenDuration: 0
+  buffGivenDuration: 0
+  buffReceivedDuration: 0
+  debuffReceivedDuration: 0
+  dotDuration: 0
+  regenerationDuration: 0
+  shieldDuration: 0
+  sunGenerationCooldown: 0
+  burnDurationBonus: 0
+  baseMinionDamage: 0
+  minionDamage: 0
   shieldBonusDamage: 0
   shieldToughness: 0
   startingShield: 0
   debuffsFrozen: 0
+  bypassShields: 0
+  evasion: 0
+  accuracy: 0
+  bonusCritChanceReceived: 0
+  bonusCritDamageReceived: 0
+  projectileSpeed: 0
+  onHitEffectiveness: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicPowerAdder: 0
@@ -162,28 +218,39 @@ MonoBehaviour:
   attackRangeAdder: 0
   healingBonusAdder: 0
   healingReceivedAdder: 0
-  physicalResistanceAdder: 0
-  magicResistanceAdder: 0
+  armorAdder: 0
+  magicArmorAdder: 0
+  armorPenFlatAdder: 0
+  magicPenFlatAdder: 0
+  armorPenPercentAdder: 0
+  magicPenPercentAdder: 0
   fireResistanceAdder: 0
   waterResistanceAdder: 0
-  natureResistanceAdder: 0
+  grassResistanceAdder: 0
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
+  groundResistanceAdder: 0
   physicalDamageAdder: 0
   magicDamageAdder: 0
+  fallDamageAdder: 0
   bonusEffectChanceAdder: 0
+  elementalEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
-  natureDamageAdder: 0
+  grassDamageAdder: 0
   windDamageAdder: 0
   poisonDamageAdder: 0
   iceDamageAdder: 0
+  groundDamageAdder: 0
   criticalChanceAdder: 0
   criticalDamageAdder: 0
+  minimumDamageAdder: 0
+  maximumDamageAdder: 0
   dotResistanceAdder: 0
   dotDamageAdder: 0
-  elementalPowerAdder: 0
+  fallDamageResistanceAdder: 0
+  elementalAffinityAdder: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
   coordinatedDamageAdder: 0
@@ -194,7 +261,24 @@ MonoBehaviour:
   shieldToughnessAdder: 0
   lightEmissionRangeAdder: 0
   lifestealAdder: 0
+  minionDamageAdder: 0
   counterDamageAdder: 0
+  debuffGivenDurationAdder: 0
+  buffGivenDurationAdder: 0
+  buffReceivedDurationAdder: 0
+  debuffReceivedDurationAdder: 0
+  dotDurationAdder: 0
+  regenerationDurationAdder: 0
+  shieldDurationAdder: 0
+  sunGenerationCooldownMultiplier: 0
+  evasionAdder: 0
+  accuracyAdder: 0
+  bonusCritChanceReceivedAdder: 0
+  bonusCritDamageReceivedAdder: 0
+  projectileSpeedAdder: 0
+  sunYieldAdder: 0
+  currencyYieldAdder: 0
+  onHitEffectivenessAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -202,28 +286,35 @@ MonoBehaviour:
   attackRangeMultiplier: 0
   healingBonusMultiplier: 0
   healingReceivedMultiplier: 0
-  physicalResistanceMultiplier: 0
-  magicResistanceMultiplier: 0
+  armorMultiplier: 0
+  magicArmorMultiplier: 0
+  armorPenFlatMultiplier: 0
+  magicPenFlatMultiplier: 0
+  armorPenPercentMultiplier: 0
+  magicPenPercentMultiplier: 0
   fireResistanceMultiplier: 0
   waterResistanceMultiplier: 0
-  natureResistanceMultiplier: 0
+  grassResistanceMultiplier: 0
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
+  groundResistanceMultiplier: 0
   physicalDamageMultiplier: 0
   magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
+  elementalEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
-  natureDamageMultiplier: 0
+  grassDamageMultiplier: 0
   windDamageMultiplier: 0
   poisonDamageMultiplier: 0
   iceDamageMultiplier: 0
+  groundDamageMultiplier: 0
   criticalChanceMultiplier: 0
   criticalDamageMultiplier: 0
   dotResistanceMultiplier: 0
   dotDamageMultiplier: 0
-  elementalPowerMultiplier: 0
+  elementalAffinityMultiplier: 0
   passiveDamageMultiplier: 0
   coordinatedDamageMultiplier: 0
   skillDurationMultiplier: 0
@@ -232,12 +323,35 @@ MonoBehaviour:
   lightEmissionRangeMultiplier: 0
   lifestealMultiplier: 0
   counterDamageMultiplier: 0
+  debuffGivenDurationMultiplier: 0
+  buffGivenDurationMultiplier: 0
+  buffReceivedDurationMultiplier: 0
+  debuffReceivedDurationMultiplier: 0
+  evasionMultiplier: 0
+  accuracyMultiplier: 0
+  bonusCritChanceReceivedMultiplier: 0
+  projectileSpeedMultiplier: 0
+  sunYieldMultiplier: 0
+  currencyYieldMultiplier: 0
+  maxHealthTotalMultiplier: 1
+  attackDamageTotalMultiplier: 1
+  magicPowerTotalMultiplier: 1
+  attackSpeedTotalMultiplier: 1
+  attackRangeTotalMultiplier: 1
+  criticalChanceTotalMultiplier: 1
+  criticalDamageTotalMultiplier: 1
+  armorTotalMultiplier: 1
+  magicArmorTotalMultiplier: 1
+  armorPenFlatTotalMultiplier: 1
+  magicPenFlatTotalMultiplier: 1
   internalCooldown: 1
-  blazeInternalCooldown: 0
-  wetInternalCooldown: 0
-  sproutInternalCooldown: 0
-  coldInternalCooldown: 0
-  taintedInternalCooldown: 0
+  fireInternalCooldown: 0
+  waterInternalCooldown: 0
+  grassInternalCooldown: 0
+  iceInternalCooldown: 0
+  poisonInternalCooldown: 0
+  windInternalCooldown: 0
+  groundInternalCooldown: 0
   freezeInternalCooldown: 0
   germinateInternalCooldown: 0
   timeAlive: 0
@@ -246,6 +360,9 @@ MonoBehaviour:
   isFlying: 0
   verticalVelocity: 0
   fallDamageSource: {fileID: 0}
+  carriedBy: {fileID: 0}
+  movementPaused: 0
+  attackMovementPaused: 0
   data: {fileID: 11400000, guid: bcb40fc124df64b418795190ef28d515, type: 2}
   movementSpeed: 0
   baseMovementSpeed: 0
@@ -254,13 +371,28 @@ MonoBehaviour:
   lastSource: {fileID: 0}
   aggressivity: 0
   targetingRange: 0
+  carryPriority: 0
+  team: 0
+  movingBackward: 0
   spriteRight: {fileID: 21300000, guid: 63ae3b408d0632343903a487d5824302, type: 3}
   spriteLeft: {fileID: 21300000, guid: 8aa9df4e61659e6468ea6f2bfdaebaf6, type: 3}
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
   sunDrop: 0
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   expDrop: 0
+  attackDamageType: 0
+  attackElementalType: 6
+  attackSourceOverride: {fileID: 0}
+  attackSlowPercent: 0
+  attackSlowDuration: 0
   visual: {fileID: 1931747644552815499}
+  reversesAtSpawn: 0
+  advancingAsFriendly: 0
 --- !u!1 &4515215125339047355
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,8 +472,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1018753133
-  m_SortingLayer: 3
-  m_SortingOrder: 1
+  m_SortingLayer: 5
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 63ae3b408d0632343903a487d5824302, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -467,7 +599,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1690330125
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: d852e9b01c514a1498e3348a6b17926f, type: 3}

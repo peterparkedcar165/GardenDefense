@@ -12,4 +12,6 @@ public class BombardierBeetleData : InsectData
     public float splashRadius = 1f;
     public float scorchChance = 0.5f;
     public float scorchDuration = 8f;
+    public float scorchDPS = 16f;
+    public float scorchHealthPercent = 0.04f;
 }

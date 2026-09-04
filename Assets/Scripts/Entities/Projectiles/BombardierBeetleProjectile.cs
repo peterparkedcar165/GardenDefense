@@ -13,14 +13,14 @@ public class BombardierBeetleProjectile : MonoBehaviour
 
     private Vector3 startPos, targetPos;
     private Plant primaryTarget;
-    private float primaryDamage, splashDamage, splashRadius, scorchChance, scorchDuration, travelDuration;
+    private float primaryDamage, splashDamage, splashRadius, scorchChance, scorchDuration, scorchDPS, scorchHealthPercent, travelDuration;
     private DamageType damageType;
     private ElementalType elementalType;
     private Entity source;
 
     public void Initialize(Vector3 start, Vector3 target, Plant primaryTarget,
         float primaryDamage, float splashDamage, float splashRadius,
-        float scorchChance, float scorchDuration,
+        float scorchChance, float scorchDuration, float scorchDPS, float scorchHealthPercent,
         DamageType damageType, ElementalType elementalType, Entity source, float projectileSpeed)
     {
         startPos = start;
@@ -31,6 +31,8 @@ public class BombardierBeetleProjectile : MonoBehaviour
         this.splashRadius = splashRadius;
         this.scorchChance = scorchChance;
         this.scorchDuration = scorchDuration;
+        this.scorchDPS = scorchDPS;
+        this.scorchHealthPercent = scorchHealthPercent;
         this.damageType = damageType;
         this.elementalType = elementalType;
         this.source = source;
@@ -81,6 +83,6 @@ public class BombardierBeetleProjectile : MonoBehaviour
             new DamageTag[] { DamageTag.Attack, DamageTag.Projectile, rangeTag });
 
         if (plant.IsAlive && Random.value < scorchChance)
-            plant.ApplyEffect(new ScorchEffect(plant, scorchDuration, 1, source));
+            plant.ApplyEffect(new ScorchEffect(plant, scorchDuration, 1, source, scorchDPS, scorchHealthPercent));
     }
 }

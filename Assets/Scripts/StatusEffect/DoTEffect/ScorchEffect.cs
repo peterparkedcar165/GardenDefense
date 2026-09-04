@@ -3,13 +3,15 @@ using UnityEngine;
 // same shape/logic as BurnEffect (water weather quartering the duration, source.burnDurationBonus
 // extension, particles/light) minus the parts that only ever make sense for a plant-sourced
 // effect landing on an insect: no elemental affinity scaling and no Flammable amplification,
-// since Scorch's source is always an insect and its target is always a plant. flat 12 Fire Magic
-// damage per second, 8s duration, 1s tick interval
+// since Scorch's source is always an insect and its target is always a plant. flat Fire Magic
+// damage plus a percent-max-health component per second (both tunable per-source, e.g. from
+// BombardierBeetleData), 8s duration, 1s tick interval
 public class ScorchEffect : DoTEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float damagePerTick = 12f;
+    public float damagePerTick = 16f;
+    public float healthPercentPerSecond = 0.04f;
     private LightFader _scorchFader;
     private const float ScorchLightRadius = 1.25f;
     private ParticleSystem _scorchParticles;
@@ -19,8 +21,11 @@ public class ScorchEffect : DoTEffect
     // hidden anti-Scorch passive/skill) always shave off a fixed amount, not a shrinking one
     public readonly float originalDuration;
 
-    public ScorchEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
+    public ScorchEffect(Entity target, float duration, int level, Entity source, float? damagePerTick = null, float? healthPercentPerSecond = null)
+        : base(target, duration, level, source)
     {
+        if (damagePerTick.HasValue) this.damagePerTick = damagePerTick.Value;
+        if (healthPercentPerSecond.HasValue) this.healthPercentPerSecond = healthPercentPerSecond.Value;
         effectType = Type.negative;
         elementalType = ElementalType.Fire;
         tickInterval = 1f;
@@ -38,7 +43,8 @@ public class ScorchEffect : DoTEffect
 
     public override string GetName() => "<color=#FF4500>Scorch</color>";
     public override string GetDescription() =>
-        $"Deal <color=#FF4500><b>{damagePerTick:F0}</b></color> <color=#FF4500>Fire</color> <color=#FFB6C1>Magic</color> damage per second.";
+        $"Deal <color=#FF4500><b>{damagePerTick:F0}</b></color> <color=#FF4500>Fire</color> <color=#FFB6C1>Magic</color> damage " +
+        $"and <color=red><b>{healthPercentPerSecond * 100f:F0}%</b></color> Max Health per second.";
 
     public override void OnApply()
     {
@@ -138,11 +144,18 @@ public class ScorchEffect : DoTEffect
         tickTimer += deltaTime;
         if (tickTimer >= tickInterval)
         {
-            float tick = damagePerSecond * tickInterval;
+            float tick = (damagePerSecond + target.maxHealth * healthPercentPerSecond) * tickInterval;
             if (source != null)
                 target.Damage(tick, DamageType.Magic, ElementalType.Fire, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
             else
                 target.Damage(tick, DamageType.Magic, ElementalType.Fire, tickTags);
+
+            // hidden: while the level's ambient temperature is Hot or Cold, Scorch also nudges
+            // the plant's own temperature up by 1 per tick - not mentioned in any tooltip
+            if (target is Plant plant && WeatherManager.instance != null &&
+                (WeatherManager.instance.temperature == TemperatureType.Hot || WeatherManager.instance.temperature == TemperatureType.Cold))
+                plant.temperature = Mathf.Min(plant.temperature + 1f, plant.temperatureMax);
+
             tickTimer -= tickInterval;
         }
     }

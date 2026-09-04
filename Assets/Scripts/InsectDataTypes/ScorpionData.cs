@@ -4,6 +4,6 @@ using UnityEngine;
 public class ScorpionData : InsectData
 {
     [Header("Scorpion")]
-    public float venomDPS      = 5f;
-    public float venomDuration = 4f;
+    public float venomDPS      = 16f;
+    public float venomDuration = 12f;
 }

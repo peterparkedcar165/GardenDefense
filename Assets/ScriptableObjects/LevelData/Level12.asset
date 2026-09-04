@@ -79,20 +79,20 @@ MonoBehaviour:
     unlockWave: 0
     budgetWeight: 0.4
     startDelay: 2
-  - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
-    unlockWave: 2
+  - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
+    unlockWave: 1
     budgetWeight: 0.4
     startDelay: 3
-  - data: {fileID: 11400000, guid: fcae65d742c98db4891fe31a2f2e0d64, type: 2}
+  - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
     unlockWave: 3
     budgetWeight: 0.4
     startDelay: 3
   - data: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
-    unlockWave: 4
+    unlockWave: 6
     budgetWeight: 0.2
     startDelay: 6
   - data: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
-    unlockWave: 6
+    unlockWave: 9
     budgetWeight: 0.2
     startDelay: 6
   eliteWaveInterval: 3

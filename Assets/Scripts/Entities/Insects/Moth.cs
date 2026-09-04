@@ -81,4 +81,12 @@ public class Moth : FlyingInsect
         }
         return nearest;
     }
+
+    // split out so WinterMoth can inherit this exact text and append its own extra lines while
+    // still letting Moth.GetDescription() control the final Flying/Aggressivity ordering
+    protected virtual string DescriptionCore() =>
+        "Passive insect. Becomes highly aggressive against plants emitting light. Increase Movement Speed by " +
+        $"<color=green><b>{IlluminativeHasteEffect.speedBonus * 100f:F0}%</b></color> when illuminated.";
+
+    public override string GetDescription() => DescriptionCore() + FlyingLine() + AggressivityLine();
 }

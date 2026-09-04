@@ -55,7 +55,10 @@ public abstract class FlyingInsect : Insect
 
     public override void ApplyEffect(StatusEffect effect)
     {
-        if (effect is HardCrowdControl and not BubblePrisonEffect)
+        // a Freeze that Insect.ApplyEffect is about to block outright for an ICryotolerant flyer
+        // shouldn't still ground it on the way through
+        bool blockedByCryotolerance = this is ICryotolerant && effect is FreezeEffect;
+        if (effect is HardCrowdControl and not BubblePrisonEffect && !blockedByCryotolerance)
         {
             float groundDuration = effect is KnockUpEffect ? 5f : effect.duration + 4f;
             base.ApplyEffect(new GroundedEffect(this, groundDuration, 1, effect.source));
@@ -74,6 +77,11 @@ public abstract class FlyingInsect : Insect
             visual.localPosition = pos;
         }
     }
+
+    // appended by every flying insect's GetDescription(), before the (always-last) AggressivityLine
+    protected string FlyingLine() =>
+        $"\n\n<b>Flying:</b> Immobilization effects ground it for the effect's duration + 4 seconds " +
+        $"(5 seconds if Knocked Up).\n\nIncreases Evasion by <color=green><b>{FlightEvasionBonus * 100f:F0}%</b></color> while flying.";
 }
 
 // whenever a flying insect is HARD CC'ed, they get grounded, bringing their visual down to their original position

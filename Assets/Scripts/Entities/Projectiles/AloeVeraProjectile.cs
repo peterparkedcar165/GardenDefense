@@ -31,6 +31,10 @@ public class AloeVeraProjectile : MonoBehaviour
     public float bobAmplitude = 0.10f;  // height of the hover oscillation
     public float bobFrequency = 8f;     // oscillations per second
 
+    // how close the projectile must be to its (possibly still-moving) target before it's allowed
+    // to leave the bob and start falling
+    public float FallAllowedRadius = 1f;
+
     private void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
@@ -146,9 +150,16 @@ public class AloeVeraProjectile : MonoBehaviour
         // Root continues tracking in case the target is still alive and moving.
         // Visual hovers and bobs gently at arcPeakHeight.
         // For attack-mode projectiles, hold the bob until the target insect is on the ground.
+        // it's only allowed to fall once it's actually within FallAllowedRadius of the target -
+        // if the target has drifted further than that (moved away, got knocked back, etc.) it
+        // keeps bobbing and following rather than dropping somewhere far from its landing spot
+        // a plain "!= null" (not "?."), since Unity's overloaded equality correctly detects a
+        // destroyed-but-still-referenced target - "?." bypasses that and would throw
+        // MissingReferenceException once the target insect's GameObject is actually destroyed
         elapsed = 0f;
-        Insect trackedInsect = !isHealMode ? trackedTarget?.GetComponent<Insect>() : null;
-        while (elapsed < bobDuration || (trackedInsect != null && !trackedInsect.isOnGround))
+        Insect trackedInsect = (!isHealMode && trackedTarget != null) ? trackedTarget.GetComponent<Insect>() : null;
+        while (elapsed < bobDuration || (trackedInsect != null && !trackedInsect.isOnGround)
+               || Vector3.Distance(transform.position, GetTargetPosition()) > FallAllowedRadius)
         {
             elapsed += Time.deltaTime;
 
