@@ -12,5 +12,7 @@ public class DandelionProjectile : Projectile
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
         PlaySound(hit);
         trackedTarget = null;
+        // rolled independently for every insect the pierce hits, not just the first
+        (source as Dandelion)?.TryApplyBlindingPollen(insect);
     }
 }

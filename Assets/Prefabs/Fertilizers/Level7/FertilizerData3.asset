@@ -15,13 +15,13 @@ MonoBehaviour:
   fertilizerName: Geyser
   stats:
   - statType: 22
-    value: 0.26
+    value: 0.25
   - statType: 14
-    value: 0.33
+    value: 0.35
   - statType: 18
-    value: 0.16
+    value: 0.15
   icon: {fileID: 0}
   targetElementalTypes: 01000000
-  targetCultivars: 
+  targetFamilies: 
   appliesToAll: 0
   tier: 0

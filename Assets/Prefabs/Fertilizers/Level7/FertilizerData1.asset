@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Soaker
   stats:
   - statType: 56
-    value: 0.43
+    value: 0.03
   - statType: 11
-    value: 0.33
+    value: 0.35
   icon: {fileID: 0}
   targetElementalTypes: 01000000
-  targetCultivars: 
+  targetFamilies: 
   appliesToAll: 0
   tier: 0

@@ -1,13 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
 
 public class ShopManager : MonoBehaviour
 {
-    // plant slot: 4 purchases to go from 4 → 8 slots
-    private static readonly int[] PlantSlotCosts    = { 1500, 3500, 7500, 15000 };
-
     // flower pot: unlock + 3 upgrades (sun cost drops 25 → 20 → 15 → 10)
     private static readonly int[] FlowerPotCosts    = { 750, 1500, 3000, 6000 };
     private static readonly int[] FlowerPotSunCosts = { 25, 20, 15, 10 };
@@ -63,16 +59,6 @@ public class ShopManager : MonoBehaviour
         return sr != null ? sr.sprite : null;
     }
 
-    public void BuyPlantSlot()
-    {
-        int level = Data.plantSlotLevel;
-        if (level >= PlantSlotCosts.Length) return;
-        if (!TrySpend(PlantSlotCosts[level])) return;
-        Data.plantSlotLevel++;
-        SaveManager.instance.Save();
-        RefreshAll();
-    }
-
     public void BuyFlowerPot()
     {
         int level = Data.flowerPotLevel;
@@ -112,12 +98,7 @@ public class ShopManager : MonoBehaviour
         if (currencyText != null)
             currencyText.text = $"${Data.currency}";
 
-        RefreshItem(
-            plantSlotStatusText, plantSlotCostText, plantSlotBuyButton,
-            Data.plantSlotLevel, PlantSlotCosts,
-            l => $"Plant Slots: {4 + l} / 8",
-            l => $"→ {4 + l + 1} slots"
-        );
+        RefreshPlantSlotItem();
 
         RefreshPotItem(
             flowerPotStatusText, flowerPotCostText, flowerPotBuyButton,
@@ -132,13 +113,14 @@ public class ShopManager : MonoBehaviour
         );
     }
 
-    private void RefreshItem(TMP_Text statusText, TMP_Text costText, Button buyButton,
-        int level, int[] costs, Func<int, string> statusLabel, Func<int, string> upgradeLabel)
+    // no longer purchasable - slots unlock automatically via level progression (see
+    // SaveData.MaxLoadoutSize). shown read-only so the row isn't left blank in the shop
+    private void RefreshPlantSlotItem()
     {
-        bool maxed = level >= costs.Length;
-        if (statusText != null) statusText.text = statusLabel(level);
-        if (costText   != null) costText.text   = maxed ? "MAX" : $"${costs[level]}  ({upgradeLabel(level)})";
-        if (buyButton  != null) buyButton.interactable = !maxed && Data.currency >= costs[level];
+        int slots = Data.MaxLoadoutSize;
+        if (plantSlotStatusText != null) plantSlotStatusText.text = $"Plant Slots: {slots} / 8";
+        if (plantSlotCostText   != null) plantSlotCostText.text   = slots >= 8 ? "MAX" : "Unlocks via levels";
+        if (plantSlotBuyButton  != null) plantSlotBuyButton.interactable = false;
     }
 
     private void RefreshPotItem(TMP_Text statusText, TMP_Text costText, Button buyButton,

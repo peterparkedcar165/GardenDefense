@@ -10,6 +10,7 @@ public class WindGust : MonoBehaviour
     private float damage;
     private float pushForce;
     private Plant source;
+    private float blindDuration;
 
     private float tickTimer;
     private const float tickInterval = 0.25f;
@@ -28,8 +29,9 @@ public class WindGust : MonoBehaviour
 
     private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.DoT, DamageTag.SkillDamage };
 
-    public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float damage, float pushForce, Plant source, float maxRange, bool isGlobal = false)
+    public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float damage, float pushForce, Plant source, float maxRange, bool isGlobal = false, float blindDuration = 0f)
     {
+        this.blindDuration = blindDuration;
         if (obstacleLayer == 0)
         {
             foreach (Tile t in FindObjectsByType<Tile>(FindObjectsInactive.Exclude))
@@ -91,6 +93,10 @@ public class WindGust : MonoBehaviour
             {
                 insect.Damage(damage * tickInterval, source.damageType, source.elementalType, source, false, damageTags);
                 insect.ApplyEffect(new DisplacedEffect(insect, 0.5f, 1, source));
+                // guaranteed, unlike the passive's chance-based proc - every tick that lands
+                // applies it, using the same duration the passive is currently tuned to
+                if (blindDuration > 0f)
+                    insect.ApplyEffect(new BlindingPollenEffect(insect, blindDuration, 1, source));
             }
         }
 

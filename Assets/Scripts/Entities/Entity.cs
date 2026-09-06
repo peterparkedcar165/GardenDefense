@@ -954,7 +954,8 @@ public abstract class Entity : MonoBehaviour
     // every frame (see TickHealthBarFill, called from Update) so damage and healing read as motion
     private float _displayedHealth = -1f;
     private float _displayedShield = -1f;
-    private const float HealthBarLerpSpeed = 12f;
+    // shared with Plant's own attack/passive/skill cooldown bars, for a consistent feel
+    protected const float HealthBarLerpSpeed = 12f;
 
     // trailing "damage chunk" bar: sits behind the main+shield fill holding the pre-hit total
     // protection (health + shield, so a shield-only hit still shows a chunk even though health
