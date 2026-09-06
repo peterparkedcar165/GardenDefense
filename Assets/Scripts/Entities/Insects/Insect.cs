@@ -9,7 +9,7 @@ public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();          // enemies only (the wave)
     public static List<Insect> friendlyInsects = new List<Insect>();     // minions + hypnotized insects
-    private static int ObstacleLayer => LayerMask.GetMask("Obstacle");
+    protected static int ObstacleLayer => LayerMask.GetMask("Obstacle");
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
@@ -150,6 +150,17 @@ public abstract class Insect : Entity, IAttackable
     // rather than the slowest one - see InsectData.carryPriority
     public int carryPriority = 0;
     private float _plantAttackCooldown = 0f;
+
+    // "stuck" detection for a melee insect chasing a plant target: if it's actively trying to
+    // close the distance (not yet in attack range) but genuinely can't move - not immobilized,
+    // just physically blocked by an obstacle it spotted the plant through/behind and can't path
+    // around - for StuckDropDuration seconds straight, it gives up on that specific plant so it
+    // falls back to normal path-walking instead of beelining into a wall forever
+    private float _stuckTimer;
+    private Plant _stuckIgnoredPlant;
+    private float _stuckIgnoreTimer;
+    private const float StuckDropDuration = 3f;
+    private const float StuckIgnoreCooldown = 5f;
 
     // combat side. Friendly = minion / hypnotized: seeks enemy insects, holds or walks back.
     public Team team = Team.Enemy;
@@ -343,8 +354,8 @@ public abstract class Insect : Entity, IAttackable
         {
             int waveNumber = GameManager.instance.currentWave;
             baseMaxHealth   *= 1f + ((waveNumber-1) * 0.12f);
-            armorAdder      += (waveNumber - 1) * 2f;
-            magicArmorAdder += (waveNumber - 1) * 2f;
+            armorAdder      += (waveNumber - 1) * 1f;
+            magicArmorAdder += (waveNumber - 1) * 1f;
         }
         UpdateStats();
         health = maxHealth;
@@ -550,6 +561,9 @@ public abstract class Insect : Entity, IAttackable
 
     protected virtual void Move()
     {
+        if (_stuckIgnoreTimer > 0f) _stuckIgnoreTimer -= Time.deltaTime;
+        TickVerdanceIgnoreCooldowns();
+
         if (isDying) return;
         if (movementPaused || attackMovementPaused) return;
         if (waypoints == null) return;
@@ -649,10 +663,37 @@ public abstract class Insect : Entity, IAttackable
                     // unreachable terrain like highground for ground insects). it still tries to
                     // walk there, but real obstacle colliders (e.g. a highground cliff edge) stop
                     // it just like they would any other movement, instead of it climbing straight
-                    // through terrain it has no business reaching
+                    // through terrain it has no business reaching. flying insects ignore obstacle
+                    // collision entirely here too, same as their normal path-walking already does
                     Vector3 dir = (approachPoint - transform.position).normalized;
                     Vector3 step = dir * GetMoveSpeed() * Time.deltaTime;
-                    transform.position += ClampStepAgainstObstacles(transform.position, step);
+                    Vector3 beforePos = transform.position;
+                    transform.position += isFlying ? step : ClampStepAgainstObstacles(transform.position, step);
+
+                    // stuck: genuinely trying to close in on a melee plant target - every early
+                    // return above already ruled out being immobilized - but making no real
+                    // progress, because it spotted the plant through/behind an obstacle it has no
+                    // way to path around. give up on this one specific plant for a while instead
+                    // of beelining into a wall forever
+                    if (target is Plant stuckPlant && (transform.position - beforePos).sqrMagnitude < 0.0001f)
+                    {
+                        _stuckTimer += Time.deltaTime;
+                        if (_stuckTimer >= StuckDropDuration)
+                        {
+                            _stuckIgnoredPlant = stuckPlant;
+                            _stuckIgnoreTimer = StuckIgnoreCooldown;
+                            RemoveEffect<TauntEffect>();
+                            _stuckTimer = 0f;
+                        }
+                    }
+                    else
+                    {
+                        _stuckTimer = 0f;
+                    }
+                }
+                else
+                {
+                    _stuckTimer = 0f; // already in range and attacking - not stuck
                 }
                 return;
             }
@@ -805,9 +846,33 @@ public abstract class Insect : Entity, IAttackable
         target.ReceiveAttack(attackDamage, this);
     }
 
-    // Verdance family passive: if the nearest candidate is a Verdance plant, a non-Verdance
-    // plant also in range is preferred instead (complete skip, no roll needed) - but if the
-    // Verdance plant is the only one in range, there's only a 50% chance it's picked at all
+    // per-insect cooldown on a specific Verdance plant it already failed the ignore-roll against
+    // with no alternative to fall back on - without this, a failed roll only lasts one frame
+    // (target is recomputed fresh every frame), so at 60fps it would re-roll and effectively
+    // succeed within a fraction of a second, making "50% chance to be ignored" nearly meaningless
+    // in real time. lazily created since most insects never trigger it
+    private Dictionary<Plant, float> _verdanceIgnoreCooldowns;
+    private const float VerdanceIgnoreCooldown = 6f;
+
+    private bool IsVerdanceOnCooldown(Plant plant) =>
+        _verdanceIgnoreCooldowns != null && _verdanceIgnoreCooldowns.TryGetValue(plant, out float remaining) && remaining > 0f;
+
+    private void TickVerdanceIgnoreCooldowns()
+    {
+        if (_verdanceIgnoreCooldowns == null || _verdanceIgnoreCooldowns.Count == 0) return;
+        List<Plant> keys = new List<Plant>(_verdanceIgnoreCooldowns.Keys);
+        foreach (Plant p in keys)
+        {
+            float remaining = _verdanceIgnoreCooldowns[p] - Time.deltaTime;
+            if (remaining <= 0f) _verdanceIgnoreCooldowns.Remove(p);
+            else _verdanceIgnoreCooldowns[p] = remaining;
+        }
+    }
+
+    // Verdance family passive: every attempt to target a Verdance plant rolls a 50% chance to be
+    // ignored. on a failed roll it immediately falls back to another plant in range instead of
+    // just giving up for the frame; only if there's truly no alternative does it lock that
+    // specific plant out for VerdanceIgnoreCooldown seconds
     private IAttackable FindNearestPlantInRange()
     {
         Plant nearest = null;
@@ -819,6 +884,8 @@ public abstract class Insect : Entity, IAttackable
         {
             if (plant == null || !plant.IsAlive) continue;
             if (!CanReachPlant(plant)) continue;
+            if (plant == _stuckIgnoredPlant && _stuckIgnoreTimer > 0f) continue;
+            if (IsVerdanceOnCooldown(plant)) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
             if (dist > targetingRange) continue;
 
@@ -838,8 +905,14 @@ public abstract class Insect : Entity, IAttackable
         if (nearest == null) return null;
         bool nearestIsVerdance = nearest.data != null && nearest.data.family == PlantFamily.Verdance;
         if (!nearestIsVerdance) return nearest;
+
+        if (Random.value >= 0.5f) return nearest; // roll succeeded - targets it as normal
+
         if (nearestNonVerdance != null) return nearestNonVerdance;
-        return Random.value < 0.5f ? null : nearest;
+
+        _verdanceIgnoreCooldowns ??= new Dictionary<Plant, float>();
+        _verdanceIgnoreCooldowns[nearest] = VerdanceIgnoreCooldown;
+        return null;
     }
 
     // Shelter family passive: forces this insect to keep attacking the given plant (if it's a
@@ -1292,16 +1365,27 @@ public abstract class Insect : Entity, IAttackable
     protected Plant GetTauntPlantTarget() =>
         GetEffect<TauntEffect>()?.taunter is Plant p && p.IsAlive ? p : null;
 
-    // a taunt whose source is standing on a highground tile can't reach a grounded (non-flying,
-    // non-highground) insect - mirrors the same line-of-sight rule Insect.CanReachPlant already
-    // enforces for ordinary attacks, just applied in the opposite direction (highground source ->
-    // grounded target). flying insects are exempt entirely, and a grounded insect that happens to
-    // also be standing on highground (isOnGround is false while elevated, same convention
-    // CanReachPlant relies on) is exempt too
+    // checks the TAUNTER's own location, not the effect's source - e.g. Acorn Sprout (source) can
+    // sit on highground while the Acorn Bomb it spawned (taunter) is down on lowground right next
+    // to its victim, and that taunt must still land. Plants use their cached occupiedTile; a
+    // taunter that's itself an Insect (e.g. Acorn Bomb) has no such tile, so it falls back to the
+    // same isOnGround convention CanReachPlant already uses as a highground proxy
+    private static bool IsOnHighground(IAttackable entity)
+    {
+        if (entity is Plant plant) return plant.occupiedTile != null && plant.occupiedTile.isHighground;
+        if (entity is Insect insect) return !insect.isOnGround;
+        return false;
+    }
+
+    // a taunter standing on a highground tile can't reach a grounded (non-flying, non-highground)
+    // insect - mirrors the same line-of-sight rule Insect.CanReachPlant already enforces for
+    // ordinary attacks, just applied in the opposite direction (highground taunter -> grounded
+    // target). flying insects are exempt entirely, and a grounded insect that happens to also be
+    // standing on highground (isOnGround is false while elevated, same convention CanReachPlant
+    // relies on) is exempt too
     private bool IsTauntBlockedByHighground(TauntEffect taunt)
     {
-        bool sourceOnHighground = taunt.source is Plant plant && plant.occupiedTile != null && plant.occupiedTile.isHighground;
-        if (!sourceOnHighground) return false;
+        if (!IsOnHighground(taunt.taunter)) return false;
         if (isFlying) return false;
         if (!isOnGround) return false;
         return true;

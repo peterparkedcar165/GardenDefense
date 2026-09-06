@@ -41,7 +41,28 @@ public abstract class FlyingInsect : Insect
 
     public virtual void SetFlight(bool newState)
     {
+        bool wasFlying = isFlying;
         isFlying = newState;
+
+        // while flying, obstacle collision is ignored entirely (see Insect.Move's isFlying
+        // bypass), so landing can leave it positioned directly on top of one - push it clear from
+        // the obstacle tile's own center so it doesn't end up stuck inside solid geometry
+        if (wasFlying && !newState)
+            PushOffObstacleIfLanded();
+    }
+
+    private void PushOffObstacleIfLanded()
+    {
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, 0.15f, ObstacleLayer);
+        if (hit == null) return;
+
+        Vector3 obstacleCenter = hit.bounds.center;
+        Vector2 pushDir = transform.position - obstacleCenter;
+        if (pushDir.sqrMagnitude < 0.0001f) pushDir = Vector2.up;
+        else pushDir.Normalize();
+
+        float pushDistance = Mathf.Max(hit.bounds.extents.x, hit.bounds.extents.y) + 0.2f;
+        transform.position = obstacleCenter + (Vector3)(pushDir * pushDistance);
     }
 
     protected override void UpdateFacingSprite()

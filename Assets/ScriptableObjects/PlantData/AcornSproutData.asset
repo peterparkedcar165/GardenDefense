@@ -16,10 +16,12 @@ MonoBehaviour:
   icon: {fileID: 5622665880769766919, guid: 61ed802b81b693c4fba4309505d4eaaf, type: 3}
   plantName: AcornSprout
   displayName: Acorn Sprout
-  cultivar: 3
+  family: 3
   elementalType: 2
   damageType: 0
-  sunCost: 75
+  sunCost: 70
+  placementLimit: 0
+  category: 0
   skillTree: {fileID: 0}
   baseMaxHealth: 250
   baseAttackDamage: 31
@@ -42,6 +44,9 @@ MonoBehaviour:
   baseWindResistance: 0
   baseGroundResistance: 0
   baseDotResistance: 0
+  baseHeatResistance: 0
+  baseColdResistance: 0
+  baseRespiration: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0

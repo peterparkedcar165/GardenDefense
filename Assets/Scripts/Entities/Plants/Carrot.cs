@@ -9,8 +9,11 @@ public class Carrot : Shooter
     [SerializeField] private GameObject skillIndicatorPrefab; // rectangle sprite shown while aiming the furrow
 
     private GameObject _skillIndicatorInstance;
+    // path3 max: a second indicator/furrow cast from the bonded plant's position, alongside the
+    // normal one - only exists while targeting if IsPath3Maxed and a bonded Shooter is present
+    private GameObject _bondSkillIndicatorInstance;
     private readonly List<Insect> _scratch = new List<Insect>();
-    private static readonly DamageTag[] eruptTags = { DamageTag.Attack, DamageTag.AoE, DamageTag.CanHitBurrowed };
+    private static readonly DamageTag[] eruptTags = { DamageTag.Attack, DamageTag.AoE, DamageTag.CanHitBurrowed, DamageTag.Coordinated };
 
     private CarrotData GData => data as CarrotData;
 
@@ -258,17 +261,27 @@ public class Carrot : Shooter
         visual.AddComponent<SpriteFadeInOut>().Play(VisualFadeIn, VisualHold, VisualFadeOut);
     }
 
+    // path3 max: a secondary line also erupts from the bonded plant's position, converging on
+    // the same clicked point - only while a Soil Bond is actually active
+    private bool HasBondSecondLine => IsPath3Maxed && boundShooter != null;
+
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
         if (_skillIndicatorInstance != null) return;
         SkillTargetingManager.instance.BeginTargeting(0f, OnSkillTargetConfirmed);
-        if (skillIndicatorPrefab != null)
-        {
-            _skillIndicatorInstance = Instantiate(skillIndicatorPrefab, transform.position, Quaternion.identity);
-            SpriteRenderer sr = _skillIndicatorInstance.GetComponentInChildren<SpriteRenderer>();
-            if (sr != null) sr.enabled = false;   // hidden until the first aim update positions it
-        }
+        _skillIndicatorInstance = SpawnSkillIndicator();
+        if (HasBondSecondLine)
+            _bondSkillIndicatorInstance = SpawnSkillIndicator();
+    }
+
+    private GameObject SpawnSkillIndicator()
+    {
+        if (skillIndicatorPrefab == null) return null;
+        GameObject instance = Instantiate(skillIndicatorPrefab, transform.position, Quaternion.identity);
+        SpriteRenderer sr = instance.GetComponentInChildren<SpriteRenderer>();
+        if (sr != null) sr.enabled = false;   // hidden until the first aim update positions it
+        return instance;
     }
 
     // a rectangle pivoted at the plant, matching the exact footprint of the furrow,
@@ -281,11 +294,21 @@ public class Carrot : Shooter
         {
             Destroy(_skillIndicatorInstance);
             _skillIndicatorInstance = null;
+            if (_bondSkillIndicatorInstance != null) Destroy(_bondSkillIndicatorInstance);
+            _bondSkillIndicatorInstance = null;
             return;
         }
 
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Vector2 dir = ((Vector2)mouseWorld - (Vector2)transform.position).normalized;
+
+        PositionSkillIndicator(_skillIndicatorInstance, transform.position, mouseWorld);
+        if (_bondSkillIndicatorInstance != null && boundShooter != null)
+            PositionSkillIndicator(_bondSkillIndicatorInstance, boundShooter.transform.position, mouseWorld);
+    }
+
+    private void PositionSkillIndicator(GameObject indicator, Vector3 origin, Vector3 aimAt)
+    {
+        Vector2 dir = ((Vector2)aimAt - (Vector2)origin).normalized;
         if (dir.sqrMagnitude < 0.0001f) dir = Vector2.right;
 
         float squareSize   = CarrotFurrow.VisualSquareSize(pillarVisualPrefab, SquareRadius * 2f) * SquareWidthMultiplier;
@@ -295,15 +318,15 @@ public class Carrot : Shooter
         float farEdge      = startOffset + squareSize * (CarrotCount - 1) + half;
         float length       = farEdge - frontEdge;
 
-        _skillIndicatorInstance.transform.position = transform.position + (Vector3)(dir * (frontEdge + length * 0.5f));
-        _skillIndicatorInstance.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        indicator.transform.position = origin + (Vector3)(dir * (frontEdge + length * 0.5f));
+        indicator.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
 
-        SpriteRenderer sr = _skillIndicatorInstance.GetComponentInChildren<SpriteRenderer>();
+        SpriteRenderer sr = indicator.GetComponentInChildren<SpriteRenderer>();
         if (sr != null && sr.sprite != null)
         {
             Vector2 spriteSize = sr.sprite.bounds.size;
             if (spriteSize.x > 0f && spriteSize.y > 0f)
-                _skillIndicatorInstance.transform.localScale = new Vector3(length / spriteSize.x, squareSize / spriteSize.y, 1f);
+                indicator.transform.localScale = new Vector3(length / spriteSize.x, squareSize / spriteSize.y, 1f);
             sr.enabled = true;
         }
     }
@@ -315,17 +338,24 @@ public class Carrot : Shooter
 
         Vector2 direction = ((Vector2)target - (Vector2)transform.position).normalized;
         if (direction.sqrMagnitude < 0.0001f) direction = Vector2.right;
+        SpawnFurrow(transform.position, direction);
 
-        SpawnFurrow(direction);
+        // secondary line, converging on the same clicked point from the bonded plant's position
+        if (HasBondSecondLine)
+        {
+            Vector2 bondDirection = ((Vector2)target - (Vector2)boundShooter.transform.position).normalized;
+            if (bondDirection.sqrMagnitude < 0.0001f) bondDirection = direction;
+            SpawnFurrow(boundShooter.transform.position, bondDirection);
+        }
     }
 
-    private void SpawnFurrow(Vector2 direction)
+    private void SpawnFurrow(Vector3 origin, Vector2 direction)
     {
         GameObject waveObj = new GameObject("CarrotFurrow");
-        waveObj.transform.position = transform.position;
+        waveObj.transform.position = origin;
         CarrotFurrow wave = waveObj.AddComponent<CarrotFurrow>();
         wave.Initialize(
-            transform.position,
+            origin,
             direction,
             CarrotCount,
             GData?.pillarStartOffset ?? 1f,
@@ -356,6 +386,7 @@ public class Carrot : Shooter
         $"The {GetName()} is an elderly root sage who commands the earth itself, striking its enemies from below and forging bonds with its allies.";
 
     public override string GetAttackDescription() =>
+        $"Attacks are also considered to be <b>Coordinated Attacks</b>.\n\n" +
         $"Erupts a chunk of earth beneath its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to it and any insects within <color=green><b>{EruptionRadius:F1}</b></color> of it.";
 
     public override string GetPassiveDescription() =>
@@ -374,7 +405,8 @@ public class Carrot : Shooter
         float ccpl  = GData?.path1CritChancePerLevel ?? 0.05f;
         float rpl   = GData?.path1RadiusPerLevel ?? 0.15f;
         string desc = details
-            ? $"Erupts a chunk of earth beneath its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to it and any insects within <color=green><b>[({GData?.baseEruptionRadius ?? 1f:F1}) + ({rpl:F2}/Lvl.)]</b></color> of it."
+            ? $"Attacks are also considered to be <b>Coordinated Attacks</b>.\n\n" +
+              $"Erupts a chunk of earth beneath its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to it and any insects within <color=green><b>[({GData?.baseEruptionRadius ?? 1f:F1}) + ({rpl:F2}/Lvl.)]</b></color> of it."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -412,7 +444,7 @@ public class Carrot : Shooter
                $"Increase <color=green><b>Base Damage</b></color> by <color=green><b>{GData?.path3SkillDamagePerLevel ?? 8f:F0}</b></color> per level. [<color=green><b>+{(GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase carrot width by <color=green><b>{wpl * 100f:F0}%</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"The eruption deals an extra <color=green><b>{CarrotFurrow.MaxHealthDamagePercent * 100f:F0}%</b></color> Max Health {PlantData.DamageTypeLabel(damageType)} to insects.\n\nEach carrot further down the line deals <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> more damage and grows <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> larger than the one before it, compounding down the line.")}\n\n" +
+               $"{Level5Section(path3Level, $"The eruption deals an extra <color=green><b>{CarrotFurrow.MaxHealthDamagePercent * 100f:F0}%</b></color> Max Health {PlantData.DamageTypeLabel(damageType)} to insects.\n\nEach carrot further down the line deals <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> more damage and grows <color=green><b>{CarrotFurrow.MaxLevelGrowthPerSegment * 100f:F0}%</b></color> larger than the one before it, compounding down the line.\n\nA secondary line of carrots emerges from the bonded plant.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }
