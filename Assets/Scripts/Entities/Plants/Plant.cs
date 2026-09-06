@@ -115,6 +115,21 @@ public abstract class Plant : Entity, IAttackable
     private Transform _passiveBarFill;
     private GameObject _attackBarInstance;
     private Transform _attackBarFill;
+
+    // eases each bar's fill toward its real fraction every frame instead of snapping, same
+    // formula as the health bar's own lerp - just the one layer, no trailing damage-chunk here.
+    // -1 sentinel so each bar snaps instantly the first time it's ever computed, not ease from 0
+    private float _displayedAttackFill = -1f;
+    private float _displayedPassiveFill = -1f;
+    private float _displayedSkillFill = -1f;
+
+    // only eases upward (recharging) - a drop (e.g. a skill/attack just firing and resetting its
+    // cooldown bar back down) snaps instantly instead of draining smoothly
+    private float EaseBarFillUpOnly(float displayed, float target)
+    {
+        if (displayed < 0f || target <= displayed) return target;
+        return Mathf.Lerp(displayed, target, 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime));
+    }
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
     protected virtual bool ShowLight => DarknessManager.instance != null;
@@ -847,8 +862,10 @@ public abstract class Plant : Entity, IAttackable
                     stackY -= barHalfH * 2f;
                     if (_attackBarFill != null)
                     {
+                        float target = GetAttackBarFill();
+                        _displayedAttackFill = EaseBarFillUpOnly(_displayedAttackFill, target);
                         Vector3 s = _attackBarFill.localScale;
-                        s.x = GetAttackBarFill();
+                        s.x = _displayedAttackFill;
                         _attackBarFill.localScale = s;
                     }
                 }
@@ -866,8 +883,10 @@ public abstract class Plant : Entity, IAttackable
                     stackY -= barHalfH * 2f;
                     if (_passiveBarFill != null)
                     {
+                        float target = GetPassiveBarFill();
+                        _displayedPassiveFill = EaseBarFillUpOnly(_displayedPassiveFill, target);
                         Vector3 s = _passiveBarFill.localScale;
-                        s.x = GetPassiveBarFill();
+                        s.x = _displayedPassiveFill;
                         _passiveBarFill.localScale = s;
                     }
                 }
@@ -884,9 +903,10 @@ public abstract class Plant : Entity, IAttackable
                     _skillBarInstance.transform.localPosition = p;
                     if (_skillBarFill != null)
                     {
-                        float fill = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;
+                        float target = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;
+                        _displayedSkillFill = EaseBarFillUpOnly(_displayedSkillFill, target);
                         Vector3 s = _skillBarFill.localScale;
-                        s.x = fill;
+                        s.x = _displayedSkillFill;
                         _skillBarFill.localScale = s;
                     }
                 }

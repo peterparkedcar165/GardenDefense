@@ -185,6 +185,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\SnowFly.cs" />
     <Compile Include="Assets\Scripts\UI\GameButtons.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BlindingPollenEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ChannelingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PathHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SoakedEffect.cs" />
@@ -292,7 +293,6 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\OldCarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SunderedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\SlowingAllergenEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingBurgeonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OleandicCurseEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />

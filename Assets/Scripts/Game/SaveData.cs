@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class SaveData
@@ -7,14 +8,15 @@ public class SaveData
     public List<string> unlockedPlants = new List<string>();
     public int currency = 0;
 
-    // 0 = 4 slots, 1 = 5, 2 = 6, 3 = 7, 4 = 8
-    public int plantSlotLevel = 0;
-
     // 0 = locked, 1 = unlocked (25 sun), 2 = 20 sun, 3 = 15 sun, 4 = 10 sun
     public int flowerPotLevel = 0;
     public int waterPotLevel  = 0;
 
-    public int MaxLoadoutSize => 4 + plantSlotLevel;
+    // plant slots unlock through level progression, not purchase: +1 slot (past the base 4) for
+    // every 5 levels unlocked - level 6 unlocked (highestLevelUnlocked >= 5) grants slot 5, level
+    // 11 (>= 10) grants slot 6, level 16 (>= 15) grants slot 7, level 21 (>= 20) grants slot 8,
+    // capped there for now
+    public int MaxLoadoutSize => 4 + Mathf.Clamp(highestLevelUnlocked / 5, 0, 4);
 
     // skill tree meta progression, points earned from level clears
     public int skillPoints = 0;

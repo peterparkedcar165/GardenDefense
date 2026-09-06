@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 
 public class Dandelion : Shooter
 {
@@ -12,9 +11,16 @@ public class Dandelion : Shooter
     private int _obstacleMask;
     private float PushPower => ((DandelionData)data)?.basePushPower ?? 1.5f;
 
+    // ignores this Shooter's own `piercing` stat entirely - the wind naturally pierces through
+    // everything in its path, so upgrading piercing on Dandelion would otherwise do nothing
+    private const int InfinitePiercing = int.MaxValue;
+
     private float WindGustDamage => data.baseSkillDamage + attackDamage + skillDamageMultiplier * magicPower;
     private float WindGustRange  => (DData?.baseWindGustRange ?? 10f) + (DData?.path3WindGustRangePerLevel ?? 0.5f) * effectivePath3Level;
     private const float GlobalGustRange = 30f;
+
+    private float BlindingChance   => (DData?.baseBlindingChance ?? 0.5f) + (DData?.path2BlindingChancePerLevel ?? 0.05f) * effectivePath2Level;
+    private float BlindingDuration => (DData?.baseBlindingDuration ?? 2f) + (DData?.path2BlindingDurationPerLevel ?? 1f) * effectivePath2Level;
 
     private DandelionData DData => data as DandelionData;
 
@@ -23,31 +29,16 @@ public class Dandelion : Shooter
         base.Awake();
         LoadData();
         _obstacleMask = LayerMask.GetMask("Obstacle");
-        basePassiveDuration = 5f;
-    }
-
-    private void OnEnable()  { Entity.OnEffectApplied += HandleEffectApplied; }
-    private void OnDisable() { Entity.OnEffectApplied -= HandleEffectApplied; }
-
-    private void HandleEffectApplied(StatusEffect effect)
-    {
-        if (effect is not WindshearEffect || effect.source != this || effect.target is not Insect primed) return;
-        if (!IsPath2Maxed) return;
-        const float radius = 1.5f;
-        Vector3 center = primed.transform.position;
-        foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
-        {
-            if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(center, insect.transform.position) <= radius)
-                insect.ApplyEffect(new SlowingAllergenEffect(insect, passiveDuration, 1, this));
-        }
     }
 
     public override void UpdateStats()
     {
         base.UpdateStats();
         if (IsPath1Maxed)
-            magicPenFlat += 30f;
+        {
+            bonusEffectChance += 0.35f;
+            accuracyAdder += 1f; // +100% Accuracy - can no longer miss from a target's evasion
+        }
     }
 
     protected override void Update()
@@ -56,85 +47,36 @@ public class Dandelion : Shooter
         UpdateWindGustIndicator();
     }
 
-    protected override void Shoot(Vector3 _)
-    {
-        int count = (DData?.baseSeedCount ?? 2) + effectivePath2Level;
-        List<Insect> targets = FindMultipleTargets(count);
-        if (targets.Count == 0) return;
-
-        for (int i = 0; i < count; i++)
-        {
-            Insect target = targets[i % targets.Count];
-            Vector3 predicted = PredictTargetPosition(target.gameObject);
-            FireProjectile(predicted, target);
-        }
-    }
-
-    private void FireProjectile(Vector3 targetPos, Insect target)
+    protected override void Shoot(Vector3 target)
     {
         if (projectilePrefab == null) return;
+        GameObject targetGO = FindTarget();
         GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         DandelionProjectile seed = proj.GetComponent<DandelionProjectile>();
         if (seed != null)
         {
-            seed.SetTarget(target.gameObject);
-            seed.Initialize(targetPos, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
+            seed.SetTarget(targetGO);
+            seed.Initialize(target, attackDamage, projectileSpeed, maxRange, InfinitePiercing, damageType, elementalType, this);
         }
     }
 
-    private List<Insect> FindMultipleTargets(int count)
+    // called by DandelionProjectile on every insect it hits along its path (piercing means this
+    // can fire several times per shot, once independently per insect struck)
+    public void TryApplyBlindingPollen(Insect insect)
     {
-        List<Insect> inRange = new List<Insect>();
-        foreach (Insect insect in Insect.allInsects)
-        {
-            if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(transform.position, insect.GetAimPoint()) <= attackRange)
-                inRange.Add(insect);
-        }
+        if (!insect.IsAlive) return;
+        if (Random.value >= BlindingChance * (1f + bonusEffectChance)) return;
+        insect.ApplyEffect(new BlindingPollenEffect(insect, BlindingDuration, 1, this));
 
-        switch (targeting)
-        {
-            case TARGETING.First:
-                inRange.Sort((a, b) =>
-                {
-                    if (a.currentWaypointIndex != b.currentWaypointIndex)
-                        return b.currentWaypointIndex.CompareTo(a.currentWaypointIndex);
-                    Transform wpA = a.GetCurrentWaypoint();
-                    Transform wpB = b.GetCurrentWaypoint();
-                    if (wpA == null || wpB == null) return 0;
-                    return Vector3.Distance(a.transform.position, wpA.position)
-                                  .CompareTo(Vector3.Distance(b.transform.position, wpB.position));
-                });
-                break;
-            case TARGETING.Last:
-                inRange.Sort((a, b) =>
-                {
-                    if (a.currentWaypointIndex != b.currentWaypointIndex)
-                        return a.currentWaypointIndex.CompareTo(b.currentWaypointIndex);
-                    Transform wpA = a.GetCurrentWaypoint();
-                    Transform wpB = b.GetCurrentWaypoint();
-                    if (wpA == null || wpB == null) return 0;
-                    return Vector3.Distance(b.transform.position, wpB.position)
-                                  .CompareTo(Vector3.Distance(a.transform.position, wpA.position));
-                });
-                break;
-            case TARGETING.Nearest:
-                inRange.Sort((a, b) =>
-                    Vector3.Distance(transform.position, a.transform.position)
-                           .CompareTo(Vector3.Distance(transform.position, b.transform.position)));
-                break;
-            case TARGETING.Strongest:
-                inRange.Sort((a, b) => b.maxHealth.CompareTo(a.maxHealth));
-                break;
-        }
-
-        return inRange.Count <= count ? inRange : inRange.GetRange(0, count);
+        // path2 max: Blinding Pollen also briefly stuns flying insects
+        if (IsPath2Maxed && insect.isFlying)
+            insect.ApplyEffect(new StunEffect(insect, DData?.minorStunDuration ?? 1f, 1, this));
     }
 
     public override void OnPath1Upgrade(int level)
     {
-        baseelementalAffinity = level * (DData?.path1elementalAffinityPerLevel ?? 0.06f);
-        baseAttackRange    = data.baseAttackRange + level * (DData?.path1AttackRangePerLevel ?? 0.25f);
+        baseAttackDamage = data.baseAttackDamage + level * (DData?.path1AttackDamagePerLevel ?? 4f);
+        baseAttackRange  = data.baseAttackRange  + level * (DData?.path1AttackRangePerLevel  ?? 0.25f);
     }
 
     public override void OnPath2Upgrade(int level) { }
@@ -165,7 +107,7 @@ public class Dandelion : Shooter
         float gustRange = isGlobal ? GlobalGustRange : WindGustRange;
         if (windGustPrefab == null) return;
         _windGustInstance = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
-        _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this, gustRange, isGlobal);
+        _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, beamWidth, skillDuration, WindGustDamage, PushPower, this, gustRange, isGlobal, BlindingDuration);
     }
 
     private void UpdateWindGustIndicator()
@@ -251,33 +193,34 @@ public class Dandelion : Shooter
     public override string GetName() => $"<b><color=#B2EBF2>{(data != null ? data.displayName : "Dandelion")}</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} releases waves of seeds that ride the wind, striking multiple targets at once.";
+        $"The {GetName()} blows gusts of pollen-laden wind, blinding and disorienting its enemies.";
 
     public override string GetPath1Description(bool details = false)
     {
-        float eppl    = DData?.path1elementalAffinityPerLevel ?? 0.06f;
-        float rangepl = DData?.path1AttackRangePerLevel       ?? 0.25f;
+        float dmgpl   = DData?.path1AttackDamagePerLevel ?? 4f;
+        float rangepl = DData?.path1AttackRangePerLevel  ?? 0.25f;
         string desc = details
-            ? $"Each seed deals <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
-            : $"Each seed deals <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+            ? $"Blows a slow moving wind of pollen at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}. The wind pierces through everything in its path."
+            : $"Blows a slow moving wind of pollen at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}. The wind pierces through everything in its path.";
         return $"Attack:\n\n{desc}\n\n" +
-               $"Increase Elemental Affinity by <color=green><b>{eppl * 100f:F0}%</b></color> per level. [<color=green><b>+{eppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Increase <color=green><b>Magic Penetration</b></color> by <color=green><b>30</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=green><b>Bonus Effect Chance</b></color> by <color=green><b>35%</b></color>, and <color=green><b>Accuracy</b></color> by <color=green><b>100%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath2Description(bool details = false)
     {
-        int baseSeeds = DData?.baseSeedCount ?? 2;
-        int seeds = baseSeeds + effectivePath2Level;
+        float chancepl = DData?.path2BlindingChancePerLevel   ?? 0.05f;
+        float durpl    = DData?.path2BlindingDurationPerLevel ?? 1f;
         string desc = details
-            ? $"Fires <color=green><b>[({baseSeeds}) + (1/Lvl.)]</b></color> seeds per attack, targeting the highest-priority insects in range."
-            : $"Fires <color=green><b>{seeds}</b></color> seeds per attack, targeting the <color=green><b>{seeds}</b></color> highest-priority insects in range.";
+            ? $"Attacks have a <color=green><b>[({(DData?.baseBlindingChance ?? 0.5f) * 100f:F0}%) + ({chancepl * 100f:F0}%/Lvl.)]</b></color> chance of applying <color=#B2EBF2><b>Blinding Pollen</b></color>, reducing the target's Accuracy by <color=red><b>{BlindingPollenEffect.DefaultReduction * 100f:F0}%</b></color> for <color=green><b>[({(DData?.baseBlindingDuration ?? 2f):F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds."
+            : $"Attacks have a <color=green><b>{BlindingChance * 100f:F0}%</b></color> chance of applying <color=#B2EBF2><b>Blinding Pollen</b></color>, reducing the target's Accuracy by <color=red><b>{BlindingPollenEffect.DefaultReduction * 100f:F0}%</b></color> for <color=green><b>{BlindingDuration:F0}</b></color> seconds.";
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase target count by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Upon inflicting <color=#B2EBF2><b>Windshear</b></color>, nearby insects are also inflicted <color=#B2EBF2><b>Slowing Allergen</b></color> for <color=green><b>{passiveDuration:F0}s</b></color>, reducing their <color=green><b>Movement Speed</b></color> by <color=green><b>27%</b></color> and <color=#E0E0E0><b>Wind Resistance</b></color> by <color=green><b>23%</b></color>.")}\n\n" +
+               $"Increase chance by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F0}</b></color> second(s) per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(path2Level, $"<color=#B2EBF2><b>Blinding Pollen</b></color> inflicts a minor <color=#FFD700><b>Stun</b></color> on flying insects.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -290,8 +233,8 @@ public class Dandelion : Shooter
         float baseBeam = DData?.baseBeamWidth ?? 1f;
         float baseRange = DData?.baseWindGustRange ?? 10f;
         string desc = details
-            ? $"Blows a powerful gust of pollen wind <color=green><b>[({baseBeam:F2}) + ({beampl:F2}/Lvl.)]</b></color> units wide towards the targeted direction, reaching <color=green><b>[({baseRange:F1}) + ({rangepl:F1}/Lvl.)]</b></color> units, lasting <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Insects caught in the gust take <color=green><b>[100% Attack Damage]</b></color> + <color=green><b>{data.baseSkillDamage:F0}</b></color> <color=#FFB6C1>[+{skillDamageMultiplier * 100f:F0}% Magic Power]</color> {PlantData.DamageTypeLabel(damageType)} per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>."
-            : $"Blows a powerful gust of pollen wind <color=green><b>{(baseBeam + beampl * effectivePath3Level):F2}</b></color> units wide towards the targeted direction, reaching <color=green><b>{WindGustRange:F1}</b></color> units, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color={PlantData.ElementalColor(elementalType)}><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second, are pushed in the wind's direction, and are <color=#E0E0E0>Displaced</color>.";
+            ? $"Blows a powerful gust of pollen wind <color=green><b>[({baseBeam:F2}) + ({beampl:F2}/Lvl.)]</b></color> units wide towards the targeted direction, reaching <color=green><b>[({baseRange:F1}) + ({rangepl:F1}/Lvl.)]</b></color> units, lasting <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Insects caught in the gust take <color=green><b>[100% Attack Damage]</b></color> + <color=green><b>{data.baseSkillDamage:F0}</b></color> <color=#FFB6C1>[+{skillDamageMultiplier * 100f:F0}% Magic Power]</color> {PlantData.DamageTypeLabel(damageType)} per second, are pushed in the wind's direction, are <color=#E0E0E0>Displaced</color>, and every tick applies <color=#B2EBF2><b>Blinding Pollen</b></color> for the passive's current duration."
+            : $"Blows a powerful gust of pollen wind <color=green><b>{(baseBeam + beampl * effectivePath3Level):F2}</b></color> units wide towards the targeted direction, reaching <color=green><b>{WindGustRange:F1}</b></color> units, lasting <color=green><b>{skillDuration}</b></color> seconds. Insects caught in the gust take <color={PlantData.ElementalColor(elementalType)}><b>{data.baseSkillDamage + attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second, are pushed in the wind's direction, are <color=#E0E0E0>Displaced</color>, and every tick applies <color=#B2EBF2><b>Blinding Pollen</b></color> for <color=green><b>{BlindingDuration:F0}</b></color> seconds.";
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase gust width by <color=green><b>{beampl:F2}</b></color> per level. [<color=green><b>+{beampl * effectivePath3Level:F2}</b></color>]\n\n" +

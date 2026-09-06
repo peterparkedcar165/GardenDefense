@@ -120,7 +120,6 @@ public class SaveManager : MonoBehaviour
         {
             saveData.flowerPotLevel = 0;
             saveData.waterPotLevel  = 0;
-            saveData.plantSlotLevel = 0;
             Save();
             Debug.Log("Reset shop upgrades");
         }
