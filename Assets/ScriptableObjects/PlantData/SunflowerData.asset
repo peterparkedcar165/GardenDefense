@@ -16,10 +16,12 @@ MonoBehaviour:
   icon: {fileID: 7367808777163505026, guid: e470d82d1a72b284db0fc11d7825e607, type: 3}
   plantName: Sunflower
   displayName: Sunflower
-  cultivar: 0
+  family: 0
   elementalType: 0
   damageType: 1
-  sunCost: 95
+  sunCost: 100
+  placementLimit: 0
+  category: 0
   skillTree: {fileID: 0}
   baseMaxHealth: 200
   baseAttackDamage: 32
@@ -44,6 +46,7 @@ MonoBehaviour:
   baseDotResistance: 0
   baseHeatResistance: 0
   baseColdResistance: 0
+  baseRespiration: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -92,3 +95,5 @@ MonoBehaviour:
   path2ProcChancePerLevel: 0.03
   path3SunrayDPSPerLevel: 15
   path3SkillDurationPerLevel: 0.5
+  path3RadiusPerLevel: 0.2
+  path3VisualRadiusPerLevel: 0.3
