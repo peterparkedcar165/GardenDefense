@@ -31,7 +31,7 @@ public class DarklingBeetle : Insect, ICarrierInsect
     {
         base.Awake();
         LoadData();
-        aggressivity = Aggressivity.Medium;
+        aggressivity = Aggressivity.Low;
     }
 
     protected override void Update()

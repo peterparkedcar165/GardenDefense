@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum Aggressivity { Low, Medium, High }
+public enum Aggressivity { None, Low, High }
 
 public abstract class Insect : Entity, IAttackable
 {
@@ -144,7 +144,7 @@ public abstract class Insect : Entity, IAttackable
     public Vector2 windMomentum;
     private Vector2 windBlockMask = Vector2.one;
     public Entity lastSource;
-    public Aggressivity aggressivity = Aggressivity.Low;
+    public Aggressivity aggressivity = Aggressivity.None;
     public float targetingRange = 0f;
     // a carrier (e.g. Duskdarter) picks the eligible candidate with the highest value here,
     // rather than the slowest one - see InsectData.carryPriority
@@ -207,7 +207,7 @@ public abstract class Insect : Entity, IAttackable
                 return taunted;   // ignore a destroyed taunter
             }
 
-            if (HasEffect<ObliviousEffect>() && aggressivity != Aggressivity.Low) return null;
+            if (HasEffect<ObliviousEffect>() && aggressivity != Aggressivity.None) return null;
 
             // if a flying friendly is attacking this ground enemy, stop in place (can't fight back)
             if (_engagedByFriendly != null)
@@ -227,7 +227,7 @@ public abstract class Insect : Entity, IAttackable
                     TryApplyShelterAggro(highTarget);
                     return highTarget;
                 }
-                case Aggressivity.Medium:
+                case Aggressivity.Low:
                     if (_plantAttackCooldown > 0) return null;
                     IAttackable mediumTarget = FindNearestPlantInRange();
                     TryApplyShelterAggro(mediumTarget);
@@ -835,7 +835,7 @@ public abstract class Insect : Entity, IAttackable
             attackTimer = 0f;
             IAttackable currentTarget = target;
             Attack();
-            if (aggressivity == Aggressivity.Medium && currentTarget is Plant)
+            if (aggressivity == Aggressivity.Low && currentTarget is Plant)
                 _plantAttackCooldown = 4f;
         }
     }
@@ -1352,7 +1352,7 @@ public abstract class Insect : Entity, IAttackable
     // (rather than the live instance field) so it reads correctly both in-battle and from the
     // loadout screen's uninstantiated prefab preview
     protected string AggressivityLine() =>
-        $"\n\n<b>Aggressivity:</b> {(data != null ? data.aggressivity : Aggressivity.Low)}";
+        $"\n\n<b>Aggressivity:</b> {(data != null ? data.aggressivity : Aggressivity.None)}";
 
     // shared line for any ICryotolerant insect (Winter Moth, Snow Ant, Snow Fly) - the immunity
     // itself is enforced below in ApplyEffect, not per-insect

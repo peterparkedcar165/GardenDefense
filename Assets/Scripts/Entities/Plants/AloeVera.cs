@@ -123,7 +123,25 @@ public class AloeVera : Lobber
         }
         if (bestAlly != null) return bestAlly.gameObject;
 
-        return base.FindLobberTarget();
+        GameObject enemyTarget = base.FindLobberTarget();
+        if (enemyTarget != null) return enemyTarget;
+
+        // last resort: nothing hurt to heal and nothing to attack - while it's Hot, proactively
+        // cool down whichever plant in range is currently running the highest temperature
+        if (WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Hot)
+        {
+            Plant hottest = null;
+            float highestTemp = Mathf.NegativeInfinity;
+            foreach (Plant plant in Plant.allPlants)
+            {
+                if (plant == this || plant == null || !plant.IsAlive) continue;
+                if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+                if (plant.temperature > highestTemp) { highestTemp = plant.temperature; hottest = plant; }
+            }
+            if (hottest != null) return hottest.gameObject;
+        }
+
+        return null;
     }
 
     protected override void Fire(GameObject target, Vector3 landingPos)

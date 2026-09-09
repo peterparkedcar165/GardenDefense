@@ -35,8 +35,20 @@ public class LeafRanger : Shooter
         base.Update();
         basePiercing = data.basePiercing + effectivePath2Level;
 
-        if (autoCastEnabled && SkillReady)
+        if (autoCastEnabled && SkillReady && HasValidTarget())
             ActivateSkill();
+    }
+
+    // only auto-casts while at least one actual enemy insect is alive anywhere on the map - no
+    // point spending the cooldown on an attack speed buff with nothing around to shoot
+    private bool HasValidTarget()
+    {
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect != null && insect.IsAlive && insect.team != Team.Friendly)
+                return true;
+        }
+        return false;
     }
 
     // click Auto Cast to toggle it on, click again to turn it off — no target to pick

@@ -10,7 +10,7 @@ public class SnowAnt : Ant, ICryotolerant
     {
         base.Awake();
         LoadData();
-        aggressivity = Aggressivity.Medium;
+        aggressivity = Aggressivity.Low;
         if (SAData != null)
             tempDecreasePerHit = SAData.tempDecreasePerHit;
     }

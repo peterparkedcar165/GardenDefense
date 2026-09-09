@@ -8,7 +8,7 @@ public class CaveSpider : Insect
     {
         base.Awake();
         LoadData();
-        aggressivity = Aggressivity.Medium;
+        aggressivity = Aggressivity.Low;
     }
 
     public override void Attack()

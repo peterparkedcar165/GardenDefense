@@ -11,7 +11,7 @@ public class Scorpion : Insect
     {
         base.Awake();
         LoadData();
-        aggressivity   = Aggressivity.Medium;
+        aggressivity   = Aggressivity.Low;
         if (SData != null)
         {
             venomDPS      = SData.venomDPS;
