@@ -19,7 +19,7 @@ MonoBehaviour:
   family: 2
   elementalType: 2
   damageType: 1
-  sunCost: 225
+  sunCost: 200
   placementLimit: 1
   category: 1
   skillTree: {fileID: 0}

@@ -58,7 +58,9 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
         if (carriedInsect != null && !carriedInsect.IsAlive)
             carriedInsect = null;
 
-        if (carriedInsect != null || _isPickingUp) return;
+        // only begins looking for a pickup while actually flying (e.g. not while grounded by a
+        // hard CC, or already mid-landing-for-pickup)
+        if (carriedInsect != null || _isPickingUp || !isFlying) return;
 
         pickupCheckTimer -= Time.deltaTime;
         if (pickupCheckTimer <= 0f)

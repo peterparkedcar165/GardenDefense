@@ -123,7 +123,7 @@ MonoBehaviour:
     unlockWave: 5
     budgetWeight: 0.193
     startDelay: 2
-    minSpawnCount: 8
+    minSpawnCount: 4
     maxSpawnCount: 24
   fertilizerPool:
   - {fileID: 11400000, guid: 193b3643c86fdce4cacc09775f4190eb, type: 2}

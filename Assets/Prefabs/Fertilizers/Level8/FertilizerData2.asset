@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Cyclone
   stats:
   - statType: 11
-    value: 0.33
+    value: 0.35
   - statType: 56
-    value: 0.52
+    value: 0.04
   icon: {fileID: 0}
   targetElementalTypes: 
-  targetCultivars: 
+  targetFamilies: 
   appliesToAll: 1
   tier: 0

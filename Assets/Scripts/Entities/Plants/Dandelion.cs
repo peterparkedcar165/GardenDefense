@@ -200,8 +200,8 @@ public class Dandelion : Shooter
         float dmgpl   = DData?.path1AttackDamagePerLevel ?? 4f;
         float rangepl = DData?.path1AttackRangePerLevel  ?? 0.25f;
         string desc = details
-            ? $"Blows a slow moving wind of pollen at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}. The wind pierces through everything in its path."
-            : $"Blows a slow moving wind of pollen at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}. The wind pierces through everything in its path.";
+            ? $"Blows a slow moving wind of pollen at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
+            : $"Blows a slow moving wind of pollen at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +

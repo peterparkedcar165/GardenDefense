@@ -10,7 +10,7 @@ public class FireAnt : Ant
     {
         base.Awake();
         LoadData();
-        aggressivity   = Aggressivity.Medium;
+        aggressivity   = Aggressivity.Low;
         if (FAData != null)
             tempIncreasePerHit = FAData.tempIncreasePerHit;
     }

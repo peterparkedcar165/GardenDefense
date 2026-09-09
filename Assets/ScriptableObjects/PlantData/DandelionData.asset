@@ -24,10 +24,10 @@ MonoBehaviour:
   category: 0
   skillTree: {fileID: 0}
   baseMaxHealth: 200
-  baseAttackDamage: 12
+  baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 1
-  baseAttackRange: 2
+  baseAttackSpeed: 0.6
+  baseAttackRange: 3
   baseArmor: 0
   baseMagicArmor: 0
   baseElementalEffectChance: 0.1
@@ -70,16 +70,16 @@ MonoBehaviour:
   baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 3
-  baseMaxRange: 20
+  baseProjectileSpeed: 2.4
+  baseMaxRange: 33
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 90
-  baseSkillDuration: 4
+  baseSkillCooldown: 120
+  baseSkillDuration: 6
   channelDuration: 0
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0.25
@@ -88,7 +88,13 @@ MonoBehaviour:
   baseSkillDamage: 0
   baseBeamWidth: 1.6
   basePushPower: 1.35
-  path1AttackRangePerLevel: 0.2
+  path1AttackDamagePerLevel: 6
+  path1AttackRangePerLevel: 0.3
+  baseBlindingChance: 0.5
+  path2BlindingChancePerLevel: 0.05
+  baseBlindingDuration: 2
+  path2BlindingDurationPerLevel: 1
+  minorStunDuration: 1
   baseWindGustRange: 10
   path3BeamWidthPerLevel: 0.25
   path3SkillDurationPerLevel: 1
