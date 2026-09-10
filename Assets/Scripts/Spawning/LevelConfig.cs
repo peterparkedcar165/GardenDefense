@@ -54,10 +54,43 @@ public class LevelConfig : ScriptableObject
     [Tooltip("looping background sounds, share one profile asset across a biome")]
     public AmbienceProfile ambience;
 
+    private void OnValidate()
+    {
+        SyncSubWaveDurations();
+        SyncMaxWaves();
+    }
+
+    // each sub-wave's duration is derived, not authored: the finish time of its own last spawn,
+    // plus the pause before the next sub-wave. keeps it from silently desyncing as spawns are edited
+    private void SyncSubWaveDurations()
+    {
+        if (waves == null) return;
+        foreach (WaveDefinition wave in waves)
+        {
+            if (wave?.subWaves == null) continue;
+            foreach (SubWaveDefinition sub in wave.subWaves)
+            {
+                if (sub == null) continue;
+
+                float spawnFinish = 0f;
+                if (sub.spawns != null)
+                {
+                    foreach (WaveSpawnEntry entry in sub.spawns)
+                    {
+                        if (entry == null || entry.insectData == null || entry.count <= 0) continue;
+                        float entryFinish = entry.startDelay + entry.timeBetweenSpawns * Mathf.Max(0, entry.count - 1);
+                        if (entryFinish > spawnFinish) spawnFinish = entryFinish;
+                    }
+                }
+                sub.subWaveDuration = spawnFinish + sub.delayBeforeNext;
+            }
+        }
+    }
+
     // keeps maxWaves synced to the highest hand-authored wave number, so the level always runs
     // through its last scripted wave. uses the highest waveNumber rather than waves.Length since
     // authoring is sparse (e.g. only wave 15 and wave 30 defined)
-    private void OnValidate()
+    private void SyncMaxWaves()
     {
         if (waves == null || waves.Length == 0) return;
 

@@ -27,6 +27,13 @@ public class GameHUD : MonoBehaviour
                                 : t < 0f ? "Final Wave"
                                 : $"Next Wave: {Mathf.CeilToInt(Mathf.Max(0, t))}s";
     }
+    // final wave has no next wave to count down to, so this counts down to its last insect spawn instead
+    public void SetFinalWaveTimer(float t)
+    {
+        NextWaveCountdown = t;
+        if (!nextWaveTimerText) return;
+        nextWaveTimerText.text = t <= 0f ? "" : $"Last Spawn: {Mathf.CeilToInt(t)}s";
+    }
     public void SetPauseButton(bool paused, bool hasStarted)
     {
         if (!pauseButtonText) return;

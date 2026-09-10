@@ -2,30 +2,33 @@ using UnityEngine;
 
 // a hand-authored wave: an ordered sequence of sub-waves plus optional background trickle
 // spawns. leave both subWaves and trickleSpawns empty to fall back to the procedural
-// budget/weight system for this specific wave number (see ProceduralLevel.RunWave)
+// budget/weight system for this specific wave number (see ProceduralLevel.RunWave).
+// waveDuration is not authored directly - it's the sum of every sub-wave's subWaveDuration
 [System.Serializable]
 public class WaveDefinition
 {
     [Tooltip("which wave number this hand-authored definition applies to")]
     public int waveNumber = 1;
 
-    [Tooltip("scripted burst sequence for this wave")]
+    [Tooltip("scripted burst sequence for this wave, run back to back")]
     public SubWaveDefinition[] subWaves;
 
     [Tooltip("background spawns that run for the wave's whole computed duration, independent of the sub-wave timeline")]
     public TrickleEntry[] trickleSpawns;
 }
 
-// one scripted burst within a wave. delayBeforeNext is measured from THIS sub-wave's own
-// start, not from when it finishes - so sub-waves can overlap (delayBeforeNext = 0 means the
-// next sub-wave starts at the same time as this one) instead of only ever running in sequence
+// one scripted burst within a wave. sub-waves run strictly back to back: this one starts
+// right where the previous one's subWaveDuration ends
 [System.Serializable]
 public class SubWaveDefinition
 {
-    [Tooltip("offset until the NEXT sub-wave starts, measured from this sub-wave's own start. 0 = the next sub-wave starts at the same time as this one")]
-    public float delayBeforeNext = 3f;
+    [Tooltip("computed automatically (see LevelConfig.OnValidate): the last spawn in this sub-wave's finish time, plus delay before next. the next sub-wave starts after this many seconds")]
+    public float subWaveDuration;
 
     public WaveSpawnEntry[] spawns;
+
+    [Tooltip("pause after this sub-wave's last insect spawns, before the next sub-wave begins")]
+    public float delayBeforeNext = 3f;
 }
 
 // one insect type spawned some number of times within a sub-wave. named WaveSpawnEntry (not

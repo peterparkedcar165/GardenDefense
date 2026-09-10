@@ -11,6 +11,8 @@ public class ProceduralLevel : SpawnManager
     private int wave = 0;
     // absolute (scaled) time at which the next wave begins; negative = no next wave
     private float nextWaveTime = -1f;
+    // absolute (scaled) time the current (final) wave's last insect spawns; negative = not the final wave
+    private float finalWaveSpawnTime = -1f;
 
     protected override void Start()
     {
@@ -91,29 +93,40 @@ public class ProceduralLevel : SpawnManager
 
         float waveDuration;
         var streams = new List<Coroutine>();
+        // tracks the latest point (relative to wave start) any insect actually spawns, for the
+        // final wave's "time until last insect" HUD countdown
+        float lastSpawnOffset = 0f;
 
         if (useScripted)
         {
-            // duration is derived from the content itself (latest sub-wave finish time), not a
-            // separately-tuned number that would silently desync as the script changes. a
+            // duration is derived from the content itself (sum of each sub-wave's own duration),
+            // not a separately-tuned number that would silently desync as the script changes. a
             // trickle-only wave (no sub-waves) has nothing to derive a duration from, so it
             // falls back to the same curve the procedural system uses
             waveDuration = ComputeScriptedDuration(scripted);
             if (waveDuration <= 0f)
                 waveDuration = Mathf.Lerp(config.minWaveDuration, config.maxWaveDuration, config.waveDurationCurve.Evaluate(t));
 
+            // sub-waves run strictly back to back: each one starts where the previous one's
+            // subWaveDuration ends
             float cumulativeStart = 0f;
             if (scripted.subWaves != null)
             {
                 foreach (SubWaveDefinition sub in scripted.subWaves)
                 {
                     streams.Add(StartCoroutine(RunSubWave(sub, cumulativeStart)));
-                    cumulativeStart += sub.delayBeforeNext;
+                    lastSpawnOffset = Mathf.Max(lastSpawnOffset, cumulativeStart + SubWaveSpawnFinish(sub));
+                    cumulativeStart += sub.subWaveDuration;
                 }
             }
             if (scripted.trickleSpawns != null)
+            {
                 foreach (TrickleEntry trickle in scripted.trickleSpawns)
+                {
                     streams.Add(StartCoroutine(RunTrickle(trickle, waveDuration)));
+                    lastSpawnOffset = Mathf.Max(lastSpawnOffset, LastRepeatingSpawnOffset(trickle.startDelay, trickle.interval, waveDuration));
+                }
+            }
         }
         else
         {
@@ -150,6 +163,7 @@ public class ProceduralLevel : SpawnManager
 
                     streams.Add(StartCoroutine(
                         SpawnStream(entry.data.insectPrefab, entry.startDelay, interval, waveDuration)));
+                    lastSpawnOffset = Mathf.Max(lastSpawnOffset, LastRepeatingSpawnOffset(entry.startDelay, interval, waveDuration));
                 }
             }
         }
@@ -161,15 +175,31 @@ public class ProceduralLevel : SpawnManager
         {
             LevelEliteEntry chosenElite = PickWeightedElite(waveNumber);
             if (chosenElite != null)
+            {
                 streams.Add(StartCoroutine(
                     SpawnEliteGroup(chosenElite, waveDuration, t)));
+
+                int eliteCount = Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(chosenElite.minSpawnCount, chosenElite.maxSpawnCount, t)));
+                float eliteLastSpawn = eliteCount <= 1
+                    ? chosenElite.startDelay
+                    : chosenElite.startDelay + ((waveDuration - chosenElite.startDelay) / eliteCount) * (eliteCount - 1);
+                lastSpawnOffset = Mathf.Max(lastSpawnOffset, eliteLastSpawn);
+            }
         }
 
         // schedule the next wave: this wave's remaining spawn time plus the rest after it.
-        // the final wave has no successor, so clear the countdown
-        nextWaveTime = waveNumber < config.maxWaves
-            ? Time.time + waveDuration + config.restDuration
-            : -1f;
+        // the final wave has no successor - instead track when its last insect spawns, for the
+        // HUD countdown
+        if (waveNumber < config.maxWaves)
+        {
+            nextWaveTime = Time.time + waveDuration + config.restDuration;
+            finalWaveSpawnTime = -1f;
+        }
+        else
+        {
+            nextWaveTime = -1f;
+            finalWaveSpawnTime = Time.time + lastSpawnOffset;
+        }
         yield return new WaitForSeconds(waveDuration);
 
         // stop any streams still running (they self-terminate via elapsed check but
@@ -221,35 +251,40 @@ public class ProceduralLevel : SpawnManager
         return null;
     }
 
-    // the wave's duration is derived from its content rather than authored separately, so it
-    // can never silently desync from the sub-waves as they're edited: it's the latest point at
-    // which any sub-wave finishes its own last spawn, accounting for each sub-wave's start
-    // offset (cumulative sum of delayBeforeNext before it)
+    // the wave's duration is derived from its content rather than authored separately: sub-waves
+    // run strictly back to back, so it's simply the sum of each sub-wave's own duration
+    // (subWaveDuration is kept in sync with its spawns by LevelConfig.OnValidate)
     private float ComputeScriptedDuration(WaveDefinition def)
     {
         float duration = 0f;
-        float cumulativeStart = 0f;
-        if (def.subWaves == null) return 0f;
-
-        foreach (SubWaveDefinition sub in def.subWaves)
-        {
-            float subFinish = 0f;
-            if (sub.spawns != null)
-            {
-                foreach (WaveSpawnEntry entry in sub.spawns)
-                {
-                    if (entry.insectData == null || entry.count <= 0) continue;
-                    float entryFinish = entry.startDelay + entry.timeBetweenSpawns * Mathf.Max(0, entry.count - 1);
-                    if (entryFinish > subFinish) subFinish = entryFinish;
-                }
-            }
-
-            float subWaveAbsoluteFinish = cumulativeStart + subFinish;
-            if (subWaveAbsoluteFinish > duration) duration = subWaveAbsoluteFinish;
-
-            cumulativeStart += sub.delayBeforeNext;
-        }
+        if (def.subWaves != null)
+            foreach (SubWaveDefinition sub in def.subWaves)
+                duration += sub.subWaveDuration;
         return duration;
+    }
+
+    // the point within a sub-wave (relative to the sub-wave's own start) that its last insect
+    // spawns - not including the trailing delayBeforeNext pause
+    private float SubWaveSpawnFinish(SubWaveDefinition sub)
+    {
+        float finish = 0f;
+        if (sub.spawns == null) return finish;
+        foreach (WaveSpawnEntry entry in sub.spawns)
+        {
+            if (entry.insectData == null || entry.count <= 0) continue;
+            float entryFinish = entry.startDelay + entry.timeBetweenSpawns * Mathf.Max(0, entry.count - 1);
+            if (entryFinish > finish) finish = entryFinish;
+        }
+        return finish;
+    }
+
+    // the last tick (relative to wave start) of a spawner that repeats every interval seconds,
+    // starting at startDelay, for as long as the wave runs
+    private float LastRepeatingSpawnOffset(float startDelay, float interval, float waveDuration)
+    {
+        if (interval <= 0f || waveDuration <= startDelay) return startDelay;
+        int ticks = Mathf.FloorToInt((waveDuration - startDelay) / interval);
+        return startDelay + ticks * interval;
     }
 
     // waits startOffset (this sub-wave's own start time within the wave), then fires every
@@ -373,7 +408,9 @@ public class ProceduralLevel : SpawnManager
 
     protected override void Update()
     {
-        float remaining = nextWaveTime < 0f ? -1f : nextWaveTime - Time.time;
-        GameHUD.instance?.SetNextWaveTimer(remaining);
+        if (nextWaveTime < 0f && finalWaveSpawnTime >= 0f)
+            GameHUD.instance?.SetFinalWaveTimer(Mathf.Max(0f, finalWaveSpawnTime - Time.time));
+        else
+            GameHUD.instance?.SetNextWaveTimer(nextWaveTime < 0f ? -1f : nextWaveTime - Time.time);
     }
 }
