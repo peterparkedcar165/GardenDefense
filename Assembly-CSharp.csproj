@@ -338,6 +338,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\BombardierBeetleProjectile.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\JumpingSpiderData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
+    <Compile Include="Assets\Scripts\Spawning\WaveDefinition.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AeoniumData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\OldCarrot.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
