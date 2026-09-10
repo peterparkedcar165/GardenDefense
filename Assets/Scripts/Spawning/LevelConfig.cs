@@ -37,6 +37,10 @@ public class LevelConfig : ScriptableObject
     [Tooltip("all insect types available in this level. each entry defines when it unlocks and how much of the budget it uses")]
     public LevelInsectEntry[] insects;
 
+    [Header("hand-authored waves")]
+    [Tooltip("optional exact spawn scripting for specific wave numbers. a wave number with no entry here (or an entry with no sub-waves/trickle spawns) falls back to the procedural budget system above")]
+    public WaveDefinition[] waves;
+
     [Header("elite waves")]
     [Tooltip("a bonus elite insect spawns every N waves (set to 0 to disable)")]
     public int eliteWaveInterval = 5;
@@ -49,4 +53,21 @@ public class LevelConfig : ScriptableObject
     [Header("ambience")]
     [Tooltip("looping background sounds, share one profile asset across a biome")]
     public AmbienceProfile ambience;
+
+    // keeps maxWaves synced to the highest hand-authored wave number, so the level always runs
+    // through its last scripted wave. uses the highest waveNumber rather than waves.Length since
+    // authoring is sparse (e.g. only wave 15 and wave 30 defined)
+    private void OnValidate()
+    {
+        if (waves == null || waves.Length == 0) return;
+
+        int highest = 0;
+        foreach (WaveDefinition wave in waves)
+        {
+            if (wave != null && wave.waveNumber > highest)
+                highest = wave.waveNumber;
+        }
+        if (highest > 0)
+            maxWaves = highest;
+    }
 }

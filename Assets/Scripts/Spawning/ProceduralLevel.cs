@@ -82,42 +82,75 @@ public class ProceduralLevel : SpawnManager
             ? (float)(waveNumber - 1) / (config.maxWaves - 1)
             : 1f;
 
-        float waveDuration = Mathf.Lerp(
-            config.minWaveDuration,
-            config.maxWaveDuration,
-            config.waveDurationCurve.Evaluate(t));
+        // hand-authored waves take priority - a wave number with no definition, or one with
+        // no sub-waves/trickle spawns, falls straight through to the procedural budget system
+        WaveDefinition scripted = FindWaveDefinition(waveNumber);
+        bool useScripted = scripted != null &&
+            ((scripted.subWaves != null && scripted.subWaves.Length > 0) ||
+             (scripted.trickleSpawns != null && scripted.trickleSpawns.Length > 0));
 
-        float budget = Mathf.Lerp(
-            config.minThreatBudget,
-            config.maxThreatBudget,
-            config.budgetCurve.Evaluate(t));
-
-        // collect insects unlocked by this wave
-        var available = new List<LevelInsectEntry>();
-        foreach (var e in config.insects)
-            if (e.data != null && e.unlockWave <= waveNumber)
-                available.Add(e);
-
-        // normalize weights
-        float totalWeight = 0f;
-        foreach (var e in available) totalWeight += e.budgetWeight;
-
-        // start one spawn stream per insect type
+        float waveDuration;
         var streams = new List<Coroutine>();
 
-        if (totalWeight > 0f)
+        if (useScripted)
         {
-            foreach (var entry in available)
+            // duration is derived from the content itself (latest sub-wave finish time), not a
+            // separately-tuned number that would silently desync as the script changes. a
+            // trickle-only wave (no sub-waves) has nothing to derive a duration from, so it
+            // falls back to the same curve the procedural system uses
+            waveDuration = ComputeScriptedDuration(scripted);
+            if (waveDuration <= 0f)
+                waveDuration = Mathf.Lerp(config.minWaveDuration, config.maxWaveDuration, config.waveDurationCurve.Evaluate(t));
+
+            float cumulativeStart = 0f;
+            if (scripted.subWaves != null)
             {
-                if (entry.budgetWeight <= 0f) continue;
+                foreach (SubWaveDefinition sub in scripted.subWaves)
+                {
+                    streams.Add(StartCoroutine(RunSubWave(sub, cumulativeStart)));
+                    cumulativeStart += sub.delayBeforeNext;
+                }
+            }
+            if (scripted.trickleSpawns != null)
+                foreach (TrickleEntry trickle in scripted.trickleSpawns)
+                    streams.Add(StartCoroutine(RunTrickle(trickle, waveDuration)));
+        }
+        else
+        {
+            waveDuration = Mathf.Lerp(
+                config.minWaveDuration,
+                config.maxWaveDuration,
+                config.waveDurationCurve.Evaluate(t));
 
-                float share    = budget * (entry.budgetWeight / totalWeight);
-                float spawns   = share / Mathf.Max(entry.data.threatValue, 0.01f);
-                // clamp interval: at least 0.5s between spawns of the same type
-                float interval = Mathf.Max(0.5f, waveDuration / Mathf.Max(spawns, 0.01f));
+            float budget = Mathf.Lerp(
+                config.minThreatBudget,
+                config.maxThreatBudget,
+                config.budgetCurve.Evaluate(t));
 
-                streams.Add(StartCoroutine(
-                    SpawnStream(entry.data.insectPrefab, entry.startDelay, interval, waveDuration)));
+            // collect insects unlocked by this wave
+            var available = new List<LevelInsectEntry>();
+            foreach (var e in config.insects)
+                if (e.data != null && e.unlockWave <= waveNumber)
+                    available.Add(e);
+
+            // normalize weights
+            float totalWeight = 0f;
+            foreach (var e in available) totalWeight += e.budgetWeight;
+
+            if (totalWeight > 0f)
+            {
+                foreach (var entry in available)
+                {
+                    if (entry.budgetWeight <= 0f) continue;
+
+                    float share    = budget * (entry.budgetWeight / totalWeight);
+                    float spawns   = share / Mathf.Max(entry.data.threatValue, 0.01f);
+                    // clamp interval: at least 0.5s between spawns of the same type
+                    float interval = Mathf.Max(0.5f, waveDuration / Mathf.Max(spawns, 0.01f));
+
+                    streams.Add(StartCoroutine(
+                        SpawnStream(entry.data.insectPrefab, entry.startDelay, interval, waveDuration)));
+                }
             }
         }
 
@@ -175,6 +208,96 @@ public class ProceduralLevel : SpawnManager
 
         // fallback: return last (handles floating point edge cases)
         return pool[pool.Count - 1];
+    }
+
+    // ── hand-authored waves ───────────────────────────────────────────────────
+
+    private WaveDefinition FindWaveDefinition(int waveNumber)
+    {
+        if (config.waves == null) return null;
+        foreach (WaveDefinition w in config.waves)
+            if (w != null && w.waveNumber == waveNumber)
+                return w;
+        return null;
+    }
+
+    // the wave's duration is derived from its content rather than authored separately, so it
+    // can never silently desync from the sub-waves as they're edited: it's the latest point at
+    // which any sub-wave finishes its own last spawn, accounting for each sub-wave's start
+    // offset (cumulative sum of delayBeforeNext before it)
+    private float ComputeScriptedDuration(WaveDefinition def)
+    {
+        float duration = 0f;
+        float cumulativeStart = 0f;
+        if (def.subWaves == null) return 0f;
+
+        foreach (SubWaveDefinition sub in def.subWaves)
+        {
+            float subFinish = 0f;
+            if (sub.spawns != null)
+            {
+                foreach (WaveSpawnEntry entry in sub.spawns)
+                {
+                    if (entry.insectData == null || entry.count <= 0) continue;
+                    float entryFinish = entry.startDelay + entry.timeBetweenSpawns * Mathf.Max(0, entry.count - 1);
+                    if (entryFinish > subFinish) subFinish = entryFinish;
+                }
+            }
+
+            float subWaveAbsoluteFinish = cumulativeStart + subFinish;
+            if (subWaveAbsoluteFinish > duration) duration = subWaveAbsoluteFinish;
+
+            cumulativeStart += sub.delayBeforeNext;
+        }
+        return duration;
+    }
+
+    // waits startOffset (this sub-wave's own start time within the wave), then fires every
+    // spawn entry in this sub-wave concurrently - each entry runs its own count/timing
+    // independently, so multiple entries in one sub-wave can overlap too
+    IEnumerator RunSubWave(SubWaveDefinition sub, float startOffset)
+    {
+        if (startOffset > 0f)
+            yield return new WaitForSeconds(startOffset);
+
+        if (sub.spawns == null) yield break;
+        foreach (WaveSpawnEntry entry in sub.spawns)
+            StartCoroutine(RunWaveSpawnEntry(entry));
+    }
+
+    IEnumerator RunWaveSpawnEntry(WaveSpawnEntry entry)
+    {
+        if (entry.insectData == null || entry.insectData.insectPrefab == null || entry.count <= 0)
+            yield break;
+
+        if (entry.startDelay > 0f)
+            yield return new WaitForSeconds(entry.startDelay);
+
+        for (int i = 0; i < entry.count; i++)
+        {
+            Spawn(entry.insectData.insectPrefab);
+            if (i < entry.count - 1)
+                yield return new WaitForSeconds(entry.timeBetweenSpawns);
+        }
+    }
+
+    // background spawner: loops for the wave's whole (computed) duration, independent of
+    // whatever the scripted sub-waves are doing
+    IEnumerator RunTrickle(TrickleEntry trickle, float waveDuration)
+    {
+        if (trickle.insectData == null || trickle.insectData.insectPrefab == null)
+            yield break;
+
+        if (trickle.startDelay > 0f)
+            yield return new WaitForSeconds(trickle.startDelay);
+
+        float elapsed = trickle.startDelay;
+        while (elapsed < waveDuration)
+        {
+            Spawn(trickle.insectData.insectPrefab);
+            yield return new WaitForSeconds(trickle.interval);
+            elapsed += trickle.interval;
+        }
     }
 
     // ── spawn helpers ─────────────────────────────────────────────────────────
