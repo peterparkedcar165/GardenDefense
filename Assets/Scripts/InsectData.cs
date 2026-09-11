@@ -69,4 +69,8 @@ public class InsectData : ScriptableObject
     public float baseHealingBonus;
     public float baseHealingReceived;
 
+    [Header("Audio")]
+    [Tooltip("played on this insect when it takes a direct hit (not a DoT tick)")]
+    public SoundEffect hitSound;
+
 }

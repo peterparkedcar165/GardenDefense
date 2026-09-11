@@ -107,6 +107,12 @@ public class PlantData : ScriptableObject
     public float basePassiveDamage;
     public float baseSkillDamage;
 
+    [Header("Audio")]
+    [Tooltip("played when this plant unleashes its attack (shot fired, melee swing, lob thrown)")]
+    public SoundEffect attackSound;
+    [Tooltip("played on the target when this plant's attack actually lands on it")]
+    public SoundEffect impactSound;
+
     public virtual string GetAttackDescription() => "";
     public virtual string GetPassiveDescription() => "";
     public virtual string GetSkillDescription() => "";
@@ -148,7 +154,7 @@ public class PlantData : ScriptableObject
         PlantFamily.Photosynthesis => "<color=#FFD700>Photosynthesis</color>",
         PlantFamily.Verdance       => "<color=#FF6B81>Verdance</color>",
         PlantFamily.Symbiosis      => "<color=#20B2AA>Symbiosis</color>",
-        PlantFamily.Shelter        => "<color=#A9A9A9>Shelter</color>",
+        PlantFamily.Ironbark       => "<color=#A9A9A9>Ironbark</color>",
         PlantFamily.Thorn          => "<color=#DC143C>Thorn</color>",
         PlantFamily.Wither         => "<color=#8B008B>Wither</color>",
         PlantFamily.Kindred        => "<color=#6495ED>Kindred</color>",

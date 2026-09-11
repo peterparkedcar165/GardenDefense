@@ -47,6 +47,7 @@ public abstract class Lobber : Plant
             {
                 attackCooldownTimer = 0f;
                 Fire(target, GetLandingPosition(target));
+                if (data != null) SfxPlayer.Play(data.attackSound, transform.position);
             }
         }
     }
