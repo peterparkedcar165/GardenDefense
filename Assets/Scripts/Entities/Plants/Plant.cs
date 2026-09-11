@@ -39,7 +39,7 @@ public enum PlantFamily
     Photosynthesis, // sun generator
     Verdance,       // healer
     Symbiosis,      // buffer
-    Shelter,        // tank/shield
+    Ironbark,       // tank/shield
     Thorn,          // single target dps
     Wither,         // debuff/nihility
     Kindred = 7,    // coordinated attacks (e.g. Calendula's skill)
@@ -1276,7 +1276,7 @@ public abstract class Plant : Entity, IAttackable
             case PlantFamily.Symbiosis:
             return "Provides offensive benefits to allied plants.";
 
-            case PlantFamily.Shelter:
+            case PlantFamily.Ironbark:
             return "Provides defenses to the garden, and resistances to allied plants.";
 
             case PlantFamily.Thorn:
@@ -1308,8 +1308,8 @@ public abstract class Plant : Entity, IAttackable
             case PlantFamily.Symbiosis:
             return "<b>Passive</b>: Attacks have a 50% chance to reduce Skill Cooldown by 1 second on hit.";
 
-            case PlantFamily.Shelter:
-            return $"<b>Passive</b>: While over {ShelterAggroEffect.HealthThreshold * 100f:F0}% Health, insects that initiate an Attack will retain aggro.";
+            case PlantFamily.Ironbark:
+            return $"<b>Passive</b>: While over {IronbarkAggroEffect.HealthThreshold * 100f:F0}% Health, insects that initiate an Attack will retain aggro.";
 
             case PlantFamily.Thorn:
             return "<b>Passive</b>: Damage dealt against insects under 50% Health is increased by 10%.";

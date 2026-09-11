@@ -1,16 +1,16 @@
-// Shelter family passive: while a Shelter-family plant remains above HealthThreshold, any
+// Ironbark family passive: while an Ironbark-family plant remains above HealthThreshold, any
 // insect that targets it (High or Medium aggressivity) is forced to keep attacking it instead
 // of retargeting elsewhere. extends TauntEffect so it's picked up by the same taunter-checking
 // logic in Insect.target, but self-removes once the plant drops to or below the threshold,
 // letting the insect target normally again. generalizes what used to be Acorn Sprout's own
-// DeliciousAcornEffect (now removed, redundant since Acorn Sprout is itself Shelter family)
-public class ShelterAggroEffect : TauntEffect
+// DeliciousAcornEffect (now removed, redundant since Acorn Sprout is itself Ironbark family)
+public class IronbarkAggroEffect : TauntEffect
 {
     public const float HealthThreshold = 0.25f;
 
     private readonly Plant plant;
 
-    public ShelterAggroEffect(Entity target, Entity source, Plant plant)
+    public IronbarkAggroEffect(Entity target, Entity source, Plant plant)
         : base(target, float.MaxValue, 1, source, plant)
     {
         this.plant = plant;
@@ -24,6 +24,6 @@ public class ShelterAggroEffect : TauntEffect
     public override void OnTick(float deltaTime)
     {
         if (plant == null || !plant.IsAlive || plant.health <= plant.maxHealth * HealthThreshold)
-            target.RemoveEffect<ShelterAggroEffect>();
+            target.RemoveEffect<IronbarkAggroEffect>();
     }
 }

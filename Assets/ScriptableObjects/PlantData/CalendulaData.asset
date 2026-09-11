@@ -86,6 +86,18 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  attackSound:
+    clips:
+    - clip: {fileID: 8300000, guid: cc0a2fe1aef87d74cbcb62a4562f3187, type: 3}
+      volume: 0.2
+      minPitch: 0.8
+      maxPitch: 1.2
+  impactSound:
+    clips:
+    - clip: {fileID: 8300000, guid: 214ad9e63942f6a40b433630ea6c6c17, type: 3}
+      volume: 0.2
+      minPitch: 0.8
+      maxPitch: 1.2
   path1AttackDamagePerLevel: 6
   path1FireDamagePerLevel: 0.02
   path2AttackRangePerLevel: 0.2

@@ -402,6 +402,8 @@ public abstract class Entity : MonoBehaviour
         health = Mathf.Max(0f, health);
         RefreshCombatState();
         TriggerHitFlash();
+        if (this is Insect soundInsect && soundInsect.data != null && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+            SfxPlayer.Play(soundInsect.data.hitSound, transform.position);
         UpdateHealthBar();
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
             e.OnDamageReceived(elementalType, null, damageTag);
@@ -740,6 +742,10 @@ public abstract class Entity : MonoBehaviour
         RefreshCombatState();
         source.RefreshCombatState();
         TriggerHitFlash();
+        if (source is Plant impactPlant && impactPlant.data != null && System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+            SfxPlayer.Play(impactPlant.data.impactSound, transform.position);
+        if (this is Insect soundInsect && soundInsect.data != null && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+            SfxPlayer.Play(soundInsect.data.hitSound, transform.position);
         source.totalDamageDealt += finalDamage; // FOR DEBUG
         if (this is Insect damagedInsect) damagedInsect.lastSource = source;
         if (source.lifesteal > 0f) source.Heal(finalDamage * source.lifesteal);

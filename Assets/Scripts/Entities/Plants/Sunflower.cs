@@ -67,6 +67,10 @@ public class Sunflower : Shooter
         channelDuration = HasEffect<SunlightExposedEffect>() ? 1f : 2f;
     }
 
+    // triple shot at max Path 1 fires 3 projectiles from a single Shoot() call, so the attack
+    // sound is played per projectile (in FireProjectile) instead of the usual once-per-Shoot()
+    protected override bool PlaysOwnAttackSound => true;
+
     protected override void Shoot(Vector3 target)
     {
         if (IsPath1Maxed)
@@ -93,6 +97,7 @@ public class Sunflower : Shooter
             petal.SetTarget(FindTarget());
             petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
+        if (data != null) SfxPlayer.Play(data.attackSound, transform.position);
     }
 
     public void ReduceSunTimer()

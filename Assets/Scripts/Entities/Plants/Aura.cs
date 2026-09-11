@@ -27,6 +27,7 @@ public abstract class Aura : Plant
     protected virtual void Attack()
     {
         attackCooldownTimer = 0; // reset attack timer
+        if (data != null) SfxPlayer.Play(data.attackSound, transform.position);
     }
 
     protected List<Insect> GetInsectsInRange()

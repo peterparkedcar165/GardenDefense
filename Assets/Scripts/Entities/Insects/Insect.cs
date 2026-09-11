@@ -200,10 +200,10 @@ public abstract class Insect : Entity, IAttackable
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
             if ((taunted as UnityEngine.Object) != null)
             {
-                // Shelter family passive: a taunt (e.g. Cactus's pulse) forces every insect onto
+                // Ironbark family passive: a taunt (e.g. Cactus's pulse) forces every insect onto
                 // it regardless of aggressivity, so the Retained lock should apply the same way -
-                // TryApplyShelterAggro already no-ops for a non-Shelter or non-Plant taunter
-                TryApplyShelterAggro(taunted);
+                // TryApplyIronbarkAggro already no-ops for a non-Ironbark or non-Plant taunter
+                TryApplyIronbarkAggro(taunted);
                 return taunted;   // ignore a destroyed taunter
             }
 
@@ -224,13 +224,13 @@ public abstract class Insect : Entity, IAttackable
                 case Aggressivity.High:
                 {
                     IAttackable highTarget = FindNearestPlantInRange();
-                    TryApplyShelterAggro(highTarget);
+                    TryApplyIronbarkAggro(highTarget);
                     return highTarget;
                 }
                 case Aggressivity.Low:
                     if (_plantAttackCooldown > 0) return null;
                     IAttackable mediumTarget = FindNearestPlantInRange();
-                    TryApplyShelterAggro(mediumTarget);
+                    TryApplyIronbarkAggro(mediumTarget);
                     return mediumTarget;
                 default:
                     return null;
@@ -915,14 +915,14 @@ public abstract class Insect : Entity, IAttackable
         return null;
     }
 
-    // Shelter family passive: forces this insect to keep attacking the given plant (if it's a
-    // Shelter-family plant above the health threshold) instead of retargeting elsewhere later
-    private void TryApplyShelterAggro(IAttackable candidate)
+    // Ironbark family passive: forces this insect to keep attacking the given plant (if it's an
+    // Ironbark-family plant above the health threshold) instead of retargeting elsewhere later
+    private void TryApplyIronbarkAggro(IAttackable candidate)
     {
         if (candidate is not Plant plant || !plant.IsAlive || plant.data == null) return;
-        if (plant.data.family != PlantFamily.Shelter) return;
-        if (plant.health <= plant.maxHealth * ShelterAggroEffect.HealthThreshold) return;
-        ApplyEffect(new ShelterAggroEffect(this, plant, plant));
+        if (plant.data.family != PlantFamily.Ironbark) return;
+        if (plant.health <= plant.maxHealth * IronbarkAggroEffect.HealthThreshold) return;
+        ApplyEffect(new IronbarkAggroEffect(this, plant, plant));
     }
 
     // same terrain rules FindNearestPlantInRange uses, shared so a taunted target (which
