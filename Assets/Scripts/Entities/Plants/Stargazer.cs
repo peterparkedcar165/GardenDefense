@@ -62,17 +62,14 @@ public class Stargazer : Aura
     public override void UpdateStats()
     {
         float fireDamageBonus = IsPath1Maxed ? (SData?.path1MaxFireDamageBonus ?? 0.25f) : 0f;
-        float eaBonus  = IsPath2Maxed ? (SData?.path2MaxElementalAffinityBonus     ?? 0.2f)  : 0f;
-        float eecBonus = IsPath2Maxed ? (SData?.path2MaxElementalEffectChanceBonus ?? 0.06f) : 0f;
+        float eaBonus  = IsPath2Maxed ? (SData?.path2MaxElementalAffinityBonus ?? 0.35f) : 0f;
         if (IsPath1Maxed) attackDamageTotalMultiplier *= 0.67f;
         fireDamageAdder += fireDamageBonus;
         elementalAffinityAdder += eaBonus;
-        elementalEffectChanceAdder += eecBonus;
         base.UpdateStats();
         if (IsPath1Maxed) attackDamageTotalMultiplier /= 0.67f;
         fireDamageAdder -= fireDamageBonus;
         elementalAffinityAdder -= eaBonus;
-        elementalEffectChanceAdder -= eecBonus;
         burnDurationBonus = BurnDurationBonus;
     }
 
@@ -323,7 +320,7 @@ public class Stargazer : Aura
                $"Increase Proc Chance by <color=green><b>{ppl * 100f:F0}%</b></color> per level. [<color=green><b>+{ppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#FF6B1A>Flammable</color> stacks applied per hit by <color=green><b>{spl}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(spl * effectivePath2Level)}</b></color>]\n\n" +
                $"Increase <color=orange>Burn</color> duration by <color=green><b>{bdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Increase <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>{(SData?.path2MaxElementalAffinityBonus ?? 0.2f) * 100f:F0}%</b></color>, and <color=green><b>Elemental Effect Chance</b></color> by <color=green><b>{(SData?.path2MaxElementalEffectChanceBonus ?? 0.06f) * 100f:F0}%</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"Increase <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>{(SData?.path2MaxElementalAffinityBonus ?? 0.35f) * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

@@ -18,7 +18,7 @@ public class IcePrimer : ElementalDebuff
         {
             insect.RemoveEffect<IcePrimer>();
             insect.RemoveEffect<FirePrimer>();
-            insect.ApplyEffect(new FractureEffect(insect, 6f, 1, source));
+            insect.ApplyEffect(new FractureEffect(insect, 8f, 1, source));
         }
         else if (insect.HasEffect<GrassPrimer>())
         {

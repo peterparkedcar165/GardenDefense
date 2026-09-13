@@ -258,6 +258,9 @@ public abstract class Entity : MonoBehaviour
 
     [Header("Internal Cooldowns")]
     public float internalCooldown = 6f, fireInternalCooldown, waterInternalCooldown, grassInternalCooldown, iceInternalCooldown, poisonInternalCooldown, windInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    // how long a lone Primer (e.g. Fire with no partner yet) sits on a target waiting for a second
+    // element to land and react with it, before expiring on its own with no effect
+    public float elementalDebuffDuration = 6f;
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;
@@ -468,11 +471,6 @@ public abstract class Entity : MonoBehaviour
             Damage(brittleDamage, damageType, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
-        if (this.HasEffect<FractureEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
-        {
-            Damage(damageDealt * GetEffect<FractureEffect>().bonusMultiplier, DamageType.Physical, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
-        }
-
         // Punctured (Cactus passive): each stack deals 1 extra Physical/Grass damage whenever
         // Physical damage is taken, sourced from whoever actually dealt that original damage (not
         // necessarily the Cactus that applied the stacks) - tagged ElementalDebuff like
@@ -492,6 +490,8 @@ public abstract class Entity : MonoBehaviour
             Damage(damageDealt * 1.5f * source.elementalAffinity, damageType, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
+        // windshear detonation replaced by the Primer combo system (Wind now uses WindPrimer)
+        /*
         // windshear: any other element's damage consumes it and shreds that element's resistance, scaled
         // by the elemental affinity of whichever plant originally applied the Windshear primer (not the
         // plant landing this detonating hit). one subclass per element, so multiple Windsheared debuffs
@@ -513,63 +513,62 @@ public abstract class Entity : MonoBehaviour
             if (windsheared != null)
                 ApplyEffect(windsheared);
         }
+        */
 
         switch (elementalType)
         {
             case ElementalType.Fire:
             elementalMultiplier = Mathf.Max(0f, 1 - fireResistance) * (1 + source.fireDamage);
-            // elemental reactions temporarily disabled
-            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && fireInternalCooldown <= 0)
                 {
                     fireInternalCooldown = internalCooldown;
                     ApplyEffect(new FirePrimer(this, elementalDebuffDuration, 1, source));
                 }
-            */
 
                 if (this.HasEffect<GerminateEffect>())
                 RemoveEffect<GerminateEffect>();
 
+                // single-element proc replaced by the Primer combo system above
+                /*
                 if (canProcElementalEffect && Random.value < elementalEffectRoll)
                     ApplyEffect(new BurnEffect(this, 6f, 1, source));
+                */
             break;
 
             case ElementalType.Water:
             elementalMultiplier = Mathf.Max(0f, 1 - waterResistance) * (1 + source.waterDamage);
-            // elemental reactions temporarily disabled
-            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && waterInternalCooldown <= 0)
                 {
                     waterInternalCooldown = internalCooldown;
                     ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
                 }
-            */
 
+                // single-element proc replaced by the Primer combo system above
+                /*
                 if (canProcElementalEffect && Random.value < elementalEffectRoll)
                     ApplyEffect(new SoakedEffect(this, 8f, 1, source));
+                */
             break;
 
             case ElementalType.Ice:
             elementalMultiplier = Mathf.Max(0f, 1 - iceResistance) * (1 + source.iceDamage);
-            // elemental reactions temporarily disabled
-            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && iceInternalCooldown <= 0)
                 {
                     iceInternalCooldown = internalCooldown;
                     ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
                 }
-            */
 
+                // single-element proc replaced by the Primer combo system above
+                /*
                 if (canProcElementalEffect && Random.value < elementalEffectRoll)
                     ApplyEffect(new FreezeEffect(this, 2f, 1, source));
+                */
             break;
 
             case ElementalType.Wind:
             elementalMultiplier = Mathf.Max(0f, 1 - windResistance) * (1 + source.windDamage);
             if (this is Insect windInsect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
-                    // elemental reactions temporarily disabled
-                    /*
                     if (windInternalCooldown <= 0 &&
                         (windInsect.HasEffect<FirePrimer>() || windInsect.HasEffect<IcePrimer>() ||
                          windInsect.HasEffect<WaterPrimer>()   || windInsect.HasEffect<PoisonPrimer>() ||
@@ -578,43 +577,45 @@ public abstract class Entity : MonoBehaviour
                         windInternalCooldown = internalCooldown;
                         ApplyEffect(new WindPrimer(this, 0.5f, 1, source));
                     }
-                    */
                     if (source is Anemone anemone)
                         anemone.ApplyWindErosion(windInsect);
                 }
 
+                // single-element proc replaced by the Primer combo system above
+                /*
                 if (canProcElementalEffect && Random.value < elementalEffectRoll)
                     ApplyEffect(new WindshearEffect(this, 8f, 1, source));
+                */
             break;
 
             case ElementalType.Grass:
             elementalMultiplier = Mathf.Max(0f, 1 - grassResistance) * (1 + source.grassDamage);
-            // elemental reactions temporarily disabled
-            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && grassInternalCooldown <= 0)
                 {
                     grassInternalCooldown = internalCooldown;
                     ApplyEffect(new GrassPrimer(this, elementalDebuffDuration, 1, source));
                 }
-            */
 
+                // single-element proc replaced by the Primer combo system above
+                /*
                 if (canProcElementalEffect && Random.value < elementalEffectRoll)
                     ApplyEffect(new SeededEffect(this, 8f, 1, source));
+                */
             break;
 
             case ElementalType.Poison:
             elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance) * (1 + source.poisonDamage);
-            // elemental reactions temporarily disabled
-            /*
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && poisonInternalCooldown <= 0)
                 {
                     poisonInternalCooldown = internalCooldown;
                     ApplyEffect(new PoisonPrimer(this, elementalDebuffDuration, 1, source));
                 }
-            */
 
+                // single-element proc replaced by the Primer combo system above
+                /*
                 if (canProcElementalEffect && Random.value < elementalEffectRoll)
                     ApplyEffect(new PoisonedEffect(this, 6f, 1, source));
+                */
             break;
 
             default:

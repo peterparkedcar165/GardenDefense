@@ -17,8 +17,7 @@ public class PoisonShroomData : PlantData
     public float path2CritChancePerLevel = 0.03f;
     public float baseElementalAffinityBonus = 0.15f;
     public float path2ElementalAffinityPerLevel = 0.04f;
-    public float path2MaxElementalEffectChanceBonus = 0.1f;
-    public float path2MaxDotDurationBonus = 0.5f;
+    public float path2MaxDotDurationBonus = 0.75f;
 
     [Header("Path 3 Scaling")]
     public float path3SkillDurationPerLevel = 1f;

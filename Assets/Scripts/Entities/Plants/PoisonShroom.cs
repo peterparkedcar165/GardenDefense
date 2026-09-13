@@ -104,12 +104,9 @@ public class PoisonShroom : Shooter
     {
         baseCriticalChance    = data.baseCriticalChance    + (PSData?.baseCritChanceBonus ?? 0.1f)         + (PSData?.path2CritChancePerLevel ?? 0.03f) * effectivePath2Level;
         baseelementalAffinity = data.baseelementalAffinity + (PSData?.baseElementalAffinityBonus ?? 0.15f) + (PSData?.path2ElementalAffinityPerLevel ?? 0.04f) * effectivePath2Level;
-        float eecBonus    = IsPath2Maxed ? (PSData?.path2MaxElementalEffectChanceBonus ?? 0.1f) : 0f;
-        float dotDurBonus = IsPath2Maxed ? (PSData?.path2MaxDotDurationBonus           ?? 0.5f)  : 0f;
-        elementalEffectChanceAdder += eecBonus;
+        float dotDurBonus = IsPath2Maxed ? (PSData?.path2MaxDotDurationBonus ?? 0.75f) : 0f;
         dotDurationAdder += dotDurBonus;
         base.UpdateStats();
-        elementalEffectChanceAdder -= eecBonus;
         dotDurationAdder -= dotDurBonus;
     }
 
@@ -171,7 +168,7 @@ public class PoisonShroom : Shooter
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Critical Chance</b></color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#FFD700><b>Base Elemental Affinity</b></color> by <color=green><b>{eapl * 100f:F0}%</b></color> per level. [<color=green><b>+{eapl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Increase <color=green><b>Elemental Effect Chance</b></color> by <color=green><b>{(PSData?.path2MaxElementalEffectChanceBonus ?? 0.1f) * 100f:F0}%</b></color>, and <color=#9400D3><b>DoT Duration</b></color> by <color=green><b>{(PSData?.path2MaxDotDurationBonus ?? 0.5f) * 100f:F0}%</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"Increase <color=#9400D3><b>DoT Duration</b></color> by <color=green><b>{(PSData?.path2MaxDotDurationBonus ?? 0.75f) * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

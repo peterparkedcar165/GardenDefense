@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Poisonous
   stats:
-  - statType: 56
-    value: 0.2
+  - statType: 11
+    value: 0.35
   - statType: 1
     value: 0.35
   - statType: 15
     value: 0.25
   icon: {fileID: 0}
   targetElementalTypes: 03000000
-  targetCultivars: 
+  targetFamilies: 
   appliesToAll: 0
   tier: 0
