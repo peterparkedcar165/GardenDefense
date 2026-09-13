@@ -19,7 +19,7 @@ public class WindPrimer : ElementalDebuff
         return $"Reacts with an existing primer, dealing <color=#E0E0E0><b>{halfDamage:F0}</b></color> Wind + <color=#E0E0E0><b>{halfDamage:F0}</b></color> elemental Magic damage to all insects within a <color=#E0E0E0><b>{WindshearRadius:F1}</b></color> radius. (52 × (1 + 0.6× <color=#FFD700>{source.elementalAffinity * 100:F0}% Elemental Affinity</color>))";
     }
 
-    public override void OnApply()
+    protected override void OnPrimerApply()
     {
         Insect insect = (Insect)target;
 
@@ -89,6 +89,4 @@ public class WindPrimer : ElementalDebuff
         }
     }
 
-    public override void OnTick(float deltaTime) { }
-    public override void OnExpire() { }
 }

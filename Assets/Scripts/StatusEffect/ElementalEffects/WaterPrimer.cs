@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class WaterPrimer : ElementalDebuff
 {
@@ -10,7 +10,7 @@ public class WaterPrimer : ElementalDebuff
     public override string GetName() => "<color=#4FC3F7>Water</color>";
     public override string GetDescription() => "Used as a primer to react with other elements";
 
-    public override void OnApply()
+    protected override void OnPrimerApply()
     {
         Insect insect = (Insect)target;
 
@@ -47,7 +47,4 @@ public class WaterPrimer : ElementalDebuff
             }
         }
     }
-
-    public override void OnTick(float deltaTime) { }
-    public override void OnExpire() { }
 }

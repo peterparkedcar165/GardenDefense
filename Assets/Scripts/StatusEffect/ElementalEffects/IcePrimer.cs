@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class IcePrimer : ElementalDebuff
 {
@@ -10,7 +10,7 @@ public class IcePrimer : ElementalDebuff
     public override string GetName() => "<color=#00FFFF>Ice</color>";
     public override string GetDescription() => "Used as a primer to react with other elements";
 
-    public override void OnApply()
+    protected override void OnPrimerApply()
     {
         Insect insect = (Insect)target;
 
@@ -43,7 +43,4 @@ public class IcePrimer : ElementalDebuff
             }
         }
     }
-
-    public override void OnTick(float deltaTime) { }
-    public override void OnExpire() { }
 }

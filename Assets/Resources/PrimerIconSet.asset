@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a49392729d19dc240bdceaa576c73311, type: 3}
+  m_Name: PrimerIconSet
+  m_EditorClassIdentifier: Assembly-CSharp::PrimerIconSet
+  fire: {fileID: 1650776026769636170, guid: 6ce95a409bfba6f4997cfb36c7187687, type: 3}
+  water: {fileID: -3730317744956221475, guid: bdd461e80d2e87549a53764323ba3cf1, type: 3}
+  grass: {fileID: -5395247607937181553, guid: e392073d0da84ee4ea0167742b35cc5e, type: 3}
+  poison: {fileID: -8890770634116632233, guid: 2d63d3169d396444a847b8c98b173f60, type: 3}
+  ice: {fileID: -223853020034190254, guid: 954d4312a1b446f4182593f63f3e63f2, type: 3}
+  wind: {fileID: -5733726539818152725, guid: aada4dc6ea980f84f95b8814446fa98d, type: 3}
