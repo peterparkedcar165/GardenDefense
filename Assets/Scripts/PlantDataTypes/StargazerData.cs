@@ -34,8 +34,7 @@ public class StargazerData : PlantData
     public int   path2StacksPerLevel       = 1;     // extra Flammable stacks applied per hit per passive level
     public float path2BurnDurationPerLevel = 0.1f;  // Burn duration multiplier gained per passive level
     public float path2ProcChancePerLevel   = 0.05f; // proc chance gained per passive level
-    public float path2MaxElementalAffinityBonus     = 0.2f;
-    public float path2MaxElementalEffectChanceBonus = 0.06f;
+    public float path2MaxElementalAffinityBonus     = 0.35f;
 
     [Header("Path 3 Scaling")]
     public float path3SkillDamagePerLevel       = 40f;

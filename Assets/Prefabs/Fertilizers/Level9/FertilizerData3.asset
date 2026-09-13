@@ -16,10 +16,10 @@ MonoBehaviour:
   stats:
   - statType: 11
     value: 0.35
-  - statType: 56
+  - statType: 33
     value: 0.35
   icon: {fileID: 0}
   targetElementalTypes: 
-  targetCultivars: 
+  targetFamilies: 
   appliesToAll: 1
   tier: 0

@@ -16,8 +16,8 @@ MonoBehaviour:
   stats:
   - statType: 11
     value: 0.35
-  - statType: 56
-    value: 0.04
+  - statType: 1
+    value: 0.25
   icon: {fileID: 0}
   targetElementalTypes: 
   targetFamilies: 

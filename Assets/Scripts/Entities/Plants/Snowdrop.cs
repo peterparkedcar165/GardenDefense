@@ -170,16 +170,10 @@ public class Snowdrop : Aura
 
     public override void UpdateStats()
     {
-        float eeCBonus   = IsPath1Maxed ? (SData?.path1MaxElementalEffectChanceBonus ?? 0.04f) : 0f;
-        float dmgPenalty = IsPath1Maxed ? (SData?.path1MaxAttackDamagePenalty        ?? 0.5f)  : 0f;
-        float asBonus    = IsPath1Maxed ? (SData?.path1MaxAttackSpeedBonus           ?? 1f)    : 0f;
-        elementalEffectChanceAdder  += eeCBonus;
-        attackDamageTotalMultiplier -= dmgPenalty;
-        attackSpeedTotalMultiplier  += asBonus;
+        float eaBonus = IsPath1Maxed ? (SData?.path1MaxElementalAffinityBonus ?? 0.35f) : 0f;
+        elementalAffinityAdder += eaBonus;
         base.UpdateStats();
-        elementalEffectChanceAdder  -= eeCBonus;
-        attackDamageTotalMultiplier += dmgPenalty;
-        attackSpeedTotalMultiplier  -= asBonus;
+        elementalAffinityAdder -= eaBonus;
         blizzardDamage = (SData?.baseBlizzardDamage ?? 0f) + blizzardDamagePerLevel * effectivePath3Level + skillDamageMultiplier * magicPower;
     }
 
@@ -268,7 +262,7 @@ public class Snowdrop : Aura
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, $"Increase <color=green><b>Elemental Effect Chance</b></color> by <color=green><b>{(SData?.path1MaxElementalEffectChanceBonus ?? 0.04f) * 100f:F0}%</b></color>, reduce <color=green><b>Total Attack Damage</b></color> by <color=green><b>{(SData?.path1MaxAttackDamagePenalty ?? 0.5f) * 100f:F0}%</b></color>, and increase <color=green><b>Attack Speed</b></color> by <color=green><b>{(SData?.path1MaxAttackSpeedBonus ?? 1f) * 100f:F0}%</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, $"Increase <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>{(SData?.path1MaxElementalAffinityBonus ?? 0.35f) * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }

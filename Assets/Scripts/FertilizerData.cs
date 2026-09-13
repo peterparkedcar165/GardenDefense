@@ -86,6 +86,9 @@ public enum StatType
     BonusEffectChance,
     MinimumDamage,
     MaximumDamage,
+    // unused: the elemental-proc roll this stat fed (elementalEffectRoll in Entity.cs) was
+    // replaced by the deterministic Primer combo system. kept in place (not deleted) so
+    // HeatResistance/ColdResistance/Respiration below keep their serialized ordinals
     ElementalEffectChance,
     HeatResistance,
     ColdResistance,
