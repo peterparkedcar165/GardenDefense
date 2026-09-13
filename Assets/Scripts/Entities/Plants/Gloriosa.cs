@@ -60,7 +60,7 @@ public class Gloriosa : Shooter
         UpdateHighlights();
 
         if (autoCastEnabled && SkillReady)
-            ActivateSkill();
+            TriggerSkill();
     }
 
     // click Auto Cast to toggle it on, click again to turn it off — no target to pick

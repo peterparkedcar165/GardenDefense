@@ -22,8 +22,11 @@ public abstract class HardCrowdControl : StatusEffect
 
     public override void OnApply()
     {
+        // hard CC internal cooldown temporarily disabled
+        /*
         if (InternalCooldownAfterExpiry > 0f && target != null)
             target.SetHardCCInternalCooldown(GetType(), duration + InternalCooldownAfterExpiry);
+        */
         Debug.Log("Hard cc applied");
     }
 

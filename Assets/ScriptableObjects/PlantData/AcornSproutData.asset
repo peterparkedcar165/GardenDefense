@@ -86,7 +86,13 @@ MonoBehaviour:
   baseSkillHealth: 300
   basePassiveDamage: 0
   baseSkillDamage: 0
-  stunChance: 0.3
+  attackSound:
+    clips: []
+  impactSound:
+    clips: []
+  skillSound:
+    clips: []
+  stunChance: 1
   stunDuration: 0.4
   path1AttackDamagePerLevel: 13
   path1AttackSpeedPerLevel: 0.11

@@ -86,6 +86,20 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  attackSound:
+    clips:
+    - clip: {fileID: 8300000, guid: 2c476d4951eacdd46a5ed49e4ad0ef18, type: 3}
+      volume: 0.15
+      minPitch: 0.8
+      maxPitch: 1.2
+  impactSound:
+    clips:
+    - clip: {fileID: 8300000, guid: 879b35f7c55f0a549853fcc517714014, type: 3}
+      volume: 0.1
+      minPitch: 0.5
+      maxPitch: 0.8
+  skillSound:
+    clips: []
   baseAoERange: 1.5
   baseSplashDamage: 6
   baseBubblePrisonImpactDamage: 42

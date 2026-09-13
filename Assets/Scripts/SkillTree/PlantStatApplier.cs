@@ -17,7 +17,6 @@ public static class PlantStatApplier
             case StatType.GrassDamage:    plant.grassDamageAdder           += value; break;
             case StatType.PoisonDamage:    plant.poisonDamageAdder           += value; break;
             case StatType.WindDamage:      plant.windDamageAdder             += value; break;
-            case StatType.GroundDamage:    plant.groundDamageAdder           += value; break;
             case StatType.BonusEffectChance: plant.bonusEffectChanceAdder    += value; break;
             case StatType.ElementalEffectChance: plant.elementalEffectChanceAdder += value; break;
             case StatType.MinimumDamage:   plant.minimumDamageAdder          += value; break;

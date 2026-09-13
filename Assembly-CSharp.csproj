@@ -121,7 +121,6 @@
     <Compile Include="Assets\Scripts\Skills\FireWave.cs" />
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TalonHitCounterEffect.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\GroundPrimer.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TailwindEffect.cs" />
@@ -157,8 +156,8 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\HollyData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\SummonerPlant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Carrot.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\WindshearGroundEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Lobber.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\CorrosionEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WinterMoth.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />

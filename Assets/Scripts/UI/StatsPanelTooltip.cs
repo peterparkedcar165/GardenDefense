@@ -13,7 +13,6 @@ public class StatsPanelTooltip : MonoBehaviour
     private const string Ice      = "<color=#00FFFF>";
     private const string Poison   = "<color=purple>";
     private const string Wind     = "<color=#B2EBF2>";
-    private const string Ground   = "<color=#79391F>";
     private const string Effect   = "<color=#B3FFFF>";
     private const string Magic    = "<color=#FFB6C1>";
     private const string Physical = "<color=#A0522D>";
@@ -107,7 +106,6 @@ public class StatsPanelTooltip : MonoBehaviour
             ElemLine(sb, Ice,    "Ice Resistance:",    $"{e.iceResistance * 100:F0}%",    e.iceResistance,    e.baseIceResistance);
             ElemLine(sb, Poison, "Poison Resistance:", $"{e.poisonResistance * 100:F0}%", e.poisonResistance, e.basePoisonResistance);
             ElemLine(sb, Wind,   "Wind Resistance:",   $"{e.windResistance * 100:F0}%",   e.windResistance,   e.baseWindResistance);
-            ElemLine(sb, Ground, "Ground Resistance:", $"{e.groundResistance * 100:F0}%", e.groundResistance, e.baseGroundResistance);
         }
         else
         {
@@ -118,7 +116,6 @@ public class StatsPanelTooltip : MonoBehaviour
             ElemLine(sb, Ice,    "Ice Damage:",    $"{e.iceDamage * 100:F0}%",    e.iceDamage,    e.baseIceDamage);
             ElemLine(sb, Poison, "Poison Damage:", $"{e.poisonDamage * 100:F0}%", e.poisonDamage, e.basePoisonDamage);
             ElemLine(sb, Wind,   "Wind Damage:",   $"{e.windDamage * 100:F0}%",   e.windDamage,   e.baseWindDamage);
-            ElemLine(sb, Ground, "Ground Damage:", $"{e.groundDamage * 100:F0}%", e.groundDamage, e.baseGroundDamage);
         }
         return sb.ToString().TrimEnd();
     }

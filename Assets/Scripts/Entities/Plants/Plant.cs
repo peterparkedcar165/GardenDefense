@@ -184,8 +184,15 @@ public abstract class Plant : Entity, IAttackable
         return count;
     }
 
-    public static bool AtPlacementLimit(PlantData data) =>
-        data != null && data.placementLimit > 0 && CountAlive(data) >= data.placementLimit;
+    // Elder plants are capped at 1 live copy even when placementLimit is left at 0 (unset) - no
+    // need to remember to author placementLimit separately for every Elder plant
+    public static bool AtPlacementLimit(PlantData data)
+    {
+        if (data == null) return false;
+        int limit = data.placementLimit > 0 ? data.placementLimit
+            : data.category == PlantData.PlantCategory.Elder ? 1 : 0;
+        return limit > 0 && CountAlive(data) >= limit;
+    }
 
     private void StoreDeadRecord()
     {
@@ -226,6 +233,24 @@ public abstract class Plant : Entity, IAttackable
             sr.sortingOrder   = record.sortingOrder;
             sr.color = new Color(1f, 1f, 1f, 0.6f);
             _ghosts.Add(ghost);
+        }
+    }
+
+    // called right after placing a new plant: if it's Elder-tier (capped at 1 live copy) and an
+    // older dead copy of that exact same plant is still sitting as a revivable ghost elsewhere,
+    // that ghost has to be invalidated - reviving it later would create a second live copy of a
+    // plant that's only ever supposed to have one
+    public static void ClearGhostsOfSameType(Plant placed)
+    {
+        if (placed == null || placed.selfPrefab == null || placed.data == null) return;
+        if (placed.data.category != PlantData.PlantCategory.Elder) return;
+
+        foreach (var kvp in Tile.allTiles)
+        {
+            Tile other = kvp.Value;
+            if (other == placed.occupiedTile) continue;
+            if (other.deadPlant != null && other.deadPlant.prefab == placed.selfPrefab)
+                other.deadPlant = null;
         }
     }
 
@@ -431,7 +456,6 @@ public abstract class Plant : Entity, IAttackable
         baseIceResistance      = data.baseIceResistance;
         baseGrassResistance   = data.baseGrassResistance;
         baseWindResistance     = data.baseWindResistance;
-        baseGroundResistance   = data.baseGroundResistance;
         baseDotResistance      = data.baseDotResistance;
         baseHeatResistance     = data.baseHeatResistance;
         baseColdResistance     = data.baseColdResistance;
@@ -452,7 +476,6 @@ public abstract class Plant : Entity, IAttackable
         baseWindDamage         = data.baseWindDamage;
         basePoisonDamage       = data.basePoisonDamage;
         baseIceDamage          = data.baseIceDamage;
-        baseGroundDamage       = data.baseGroundDamage;
         baseCriticalChance     = data.baseCriticalChance;
         baseCriticalDamage     = data.baseCriticalDamage;
         baseDotDamage          = data.baseDotDamage;
@@ -1052,6 +1075,15 @@ public abstract class Plant : Entity, IAttackable
 
     public virtual void ActivateSkill() {}
 
+    // every caller (UI button/hotkey, auto-cast plants) should call this instead of ActivateSkill()
+    // directly, so the skill sound plays uniformly regardless of which plant/path triggers it -
+    // ActivateSkill() itself stays the per-plant override point for the actual skill behaviour
+    public void TriggerSkill()
+    {
+        if (data != null) SfxPlayer.Play(data.skillSound, transform.position);
+        ActivateSkill();
+    }
+
     private void RecomputeEffectivePathLevels()
     {
         effectivePath1Level = path1Level + path1LevelAdder;
@@ -1071,10 +1103,6 @@ public abstract class Plant : Entity, IAttackable
         }
 
         if (elementalType == ElementalType.Grass && occupiedTile != null && occupiedTile.tileType == TileType.Grass)
-            return 1;
-
-        if (elementalType == ElementalType.Ground && occupiedTile != null
-            && (occupiedTile.tileType == TileType.Dirt || occupiedTile.tileType == TileType.Potted))
             return 1;
 
         if (elementalType == ElementalType.Wind && occupiedTile != null && occupiedTile.isHighground)
@@ -1252,9 +1280,6 @@ public abstract class Plant : Entity, IAttackable
 
             case ElementalType.Wind:
             return $"Increase Passive tree level by <color=green>1</color> when in high altitude";
-
-            case ElementalType.Ground:
-            return $"Can be placed on any non-water, non-obstacle tile.\nIncrease Passive tree level by <color=green>1</color> when placed on <color=#79391F>Dirt</color>";
 
             default:
             return "";

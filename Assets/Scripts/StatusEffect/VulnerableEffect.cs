@@ -1,6 +1,8 @@
 using UnityEngine;
 
-// ground elemental effect proc: reduces physical resistance, scaled by the source's elemental affinity
+// Fire+Poison primer combo reaction (currently disabled, see Entity.cs): reduces physical
+// resistance, scaled by the source's elemental affinity. was formerly also Ground's own elemental
+// proc before Ground was removed from the game
 public class VulnerableEffect : StatusEffect, IElementalAffinityEffect
 {
     private float shred;
@@ -13,16 +15,16 @@ public class VulnerableEffect : StatusEffect, IElementalAffinityEffect
         shred = 0.2f * (1f + source.elementalAffinity);
         armorReduction = 100f * shred / (1f - Mathf.Min(shred, 0.99f));
         effectType = Type.negative;
-        elementalType = ElementalType.Ground;
+        elementalType = ElementalType.Poison;
     }
 
-    public override string GetName() => "<color=#79391F>Vulnerable</color>";
+    public override string GetName() => "<color=purple>Vulnerable</color>";
     public override string GetDescription() =>
         $"Reduce <color=#00CED1><b>Physical Resistance</b></color> by <color=red><b>{shred * 100f:F0}%</b></color>.";
 
     public override void OnApply()
     {
-        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Vulnerable", new Color(0.47f, 0.22f, 0.12f));
+        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Vulnerable", new Color(0.6f, 0.1f, 0.8f));
 
         Insect insect = (Insect)target;
         insect.armorAdder -= armorReduction;

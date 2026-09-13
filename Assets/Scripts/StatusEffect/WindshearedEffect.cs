@@ -41,7 +41,6 @@ public abstract class WindshearedEffect : StatusEffect, IElementalAffinityEffect
         ElementalType.Grass  => new Color(0.3f, 0.7f, 0.3f),
         ElementalType.Poison => new Color(0.6f, 0.1f, 0.8f),
         ElementalType.Ice    => new Color(0f, 1f, 1f),
-        ElementalType.Ground => new Color(0.47f, 0.22f, 0.12f),
         _                    => new Color(0.7f, 0.95f, 0.95f)
     };
 }

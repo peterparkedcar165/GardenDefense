@@ -171,7 +171,7 @@ public class PlantUpgradeUI : EntityInfoPanel
             RefreshAutoCastButton();
             RefreshPaths();
             if (Keyboard.current.qKey.wasPressedThisFrame && selectedPlant.SkillReady)
-                selectedPlant.ActivateSkill();
+                selectedPlant.TriggerSkill();
         }
     }
 
@@ -522,7 +522,7 @@ public class PlantUpgradeUI : EntityInfoPanel
     public void OnSkillButtonClicked()
     {
         if (selectedPlant == null || !selectedPlant.SkillReady) return;
-        selectedPlant.ActivateSkill();
+        selectedPlant.TriggerSkill();
     }
 
     public void OnAutoCastButtonClicked()

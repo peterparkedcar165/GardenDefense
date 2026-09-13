@@ -45,7 +45,7 @@ public enum DamageTag
 
 public enum ElementalType
 {
-    Fire, Water, Grass, Poison, Ice, Wind, Neutral, Ground
+    Fire, Water, Grass, Poison, Ice, Wind, Neutral
 }
 
 public struct EntityEventData
@@ -74,9 +74,9 @@ public abstract class Entity : MonoBehaviour
     public int baseArmor, baseMagicArmor;
     public int baseArmorPenFlat, baseMagicPenFlat;
     public float baseArmorPenPercent, baseMagicPenPercent;
-    public float baseFireResistance, baseWaterResistance, baseGrassResistance, baseWindResistance, basePoisonResistance, baseIceResistance, baseGroundResistance;
+    public float baseFireResistance, baseWaterResistance, baseGrassResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
     public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance, baseElementalEffectChance;
-    public float baseFireDamage, baseWaterDamage, baseGrassDamage, baseWindDamage, basePoisonDamage, baseIceDamage, baseGroundDamage;
+    public float baseFireDamage, baseWaterDamage, baseGrassDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseMinimumDamage = 0.8f, baseMaximumDamage = 1.2f;
     public float baseDotResistance, baseDotDamage, baseFallDamageResistance;
@@ -163,9 +163,9 @@ public abstract class Entity : MonoBehaviour
     public float physicalResistance, magicResistance;
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
-    public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance, groundResistance;
+    public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance;
     public float physicalDamage, magicDamage, fallDamage, bonusEffectChance, elementalEffectChance;
-    public float fireDamage, waterDamage, grassDamage, windDamage, poisonDamage, iceDamage, groundDamage;
+    public float fireDamage, waterDamage, grassDamage, windDamage, poisonDamage, iceDamage;
     public float criticalChance, criticalDamage;
     public float minimumDamage, maximumDamage;
     public float dotResistance, dotDamage, fallDamageResistance;
@@ -208,9 +208,9 @@ public abstract class Entity : MonoBehaviour
     public float maxHealthAdder, attackDamageAdder, magicPowerAdder, attackSpeedAdder, attackRangeAdder, healingBonusAdder, healingReceivedAdder;
     public float armorAdder, magicArmorAdder;
     public float armorPenFlatAdder, magicPenFlatAdder, armorPenPercentAdder, magicPenPercentAdder;
-    public float fireResistanceAdder, waterResistanceAdder, grassResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder, groundResistanceAdder;
+    public float fireResistanceAdder, waterResistanceAdder, grassResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
     public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder, elementalEffectChanceAdder;
-    public float fireDamageAdder, waterDamageAdder, grassDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder, groundDamageAdder;
+    public float fireDamageAdder, waterDamageAdder, grassDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
     public float minimumDamageAdder, maximumDamageAdder;
     public float dotResistanceAdder, dotDamageAdder, fallDamageResistanceAdder;
@@ -234,9 +234,9 @@ public abstract class Entity : MonoBehaviour
     public float maxHealthMultiplier, attackDamageMultiplier, magicPowerMultiplier, attackSpeedMultiplier, attackRangeMultiplier, healingBonusMultiplier, healingReceivedMultiplier;
     public float armorMultiplier, magicArmorMultiplier;
     public float armorPenFlatMultiplier, magicPenFlatMultiplier, armorPenPercentMultiplier, magicPenPercentMultiplier;
-    public float fireResistanceMultiplier, waterResistanceMultiplier, grassResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier, groundResistanceMultiplier;
+    public float fireResistanceMultiplier, waterResistanceMultiplier, grassResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
     public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier, elementalEffectChanceMultiplier;
-    public float fireDamageMultiplier, waterDamageMultiplier, grassDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier, groundDamageMultiplier;
+    public float fireDamageMultiplier, waterDamageMultiplier, grassDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier;
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
     public float elementalAffinityMultiplier;
@@ -257,7 +257,7 @@ public abstract class Entity : MonoBehaviour
     public float armorPenFlatTotalMultiplier = 1f, magicPenFlatTotalMultiplier = 1f;
 
     [Header("Internal Cooldowns")]
-    public float internalCooldown = 4f, fireInternalCooldown, waterInternalCooldown, grassInternalCooldown, iceInternalCooldown, poisonInternalCooldown, windInternalCooldown, groundInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    public float internalCooldown = 6f, fireInternalCooldown, waterInternalCooldown, grassInternalCooldown, iceInternalCooldown, poisonInternalCooldown, windInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;
@@ -276,7 +276,6 @@ public abstract class Entity : MonoBehaviour
         windResistance = baseWindResistance + windResistanceAdder + (baseWindResistance * windResistanceMultiplier);
         poisonResistance = basePoisonResistance + poisonResistanceAdder + (basePoisonResistance * poisonResistanceMultiplier);
         iceResistance = baseIceResistance + iceResistanceAdder + (baseIceResistance * iceResistanceMultiplier);
-        groundResistance = baseGroundResistance + groundResistanceAdder + (baseGroundResistance * groundResistanceMultiplier);
         physicalDamage = basePhysicalDamage + physicalDamageAdder + (basePhysicalDamage * physicalDamageMultiplier);
         magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
         fallDamage = baseFallDamage + fallDamageAdder;
@@ -288,7 +287,6 @@ public abstract class Entity : MonoBehaviour
         windDamage = baseWindDamage + windDamageAdder + (baseWindDamage * windDamageMultiplier);
         poisonDamage = basePoisonDamage + poisonDamageAdder + (basePoisonDamage * poisonDamageMultiplier);
         iceDamage = baseIceDamage + iceDamageAdder + (baseIceDamage * iceDamageMultiplier);
-        groundDamage = baseGroundDamage + groundDamageAdder + (baseGroundDamage * groundDamageMultiplier);
         minimumDamage = baseMinimumDamage + minimumDamageAdder;
         maximumDamage = baseMaximumDamage + maximumDamageAdder;
         criticalChance = (baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier)) * criticalChanceTotalMultiplier;
@@ -366,9 +364,6 @@ public abstract class Entity : MonoBehaviour
             break;
             case ElementalType.Poison:
             elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance);
-            break;
-            case ElementalType.Ground:
-            elementalMultiplier = Mathf.Max(0f, 1 - groundResistance);
             break;
             default:
             elementalMultiplier = 1;
@@ -466,7 +461,11 @@ public abstract class Entity : MonoBehaviour
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
-            Damage(GetEffect<BrittleEffect>().bonusDamage, damageType, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+            // tripled if the target is currently shielded - checked before this hit drains any
+            // shield below, so it reflects whether it was protected at the moment it got hit
+            float brittleDamage = GetEffect<BrittleEffect>().bonusDamage;
+            if (this.HasShield()) brittleDamage *= 3f;
+            Damage(brittleDamage, damageType, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
         if (this.HasEffect<FractureEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
@@ -481,6 +480,16 @@ public abstract class Entity : MonoBehaviour
         if (this.HasEffect<PuncturedEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
             Damage(GetEffect<PuncturedEffect>().level, DamageType.Physical, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+        }
+
+        // Freeze + Fire: a non-DoT Fire hit instantly thaws a frozen target, and the thermal shock
+        // deals bonus damage equal to the hit multiplied by 1.5x the attacker's elemental affinity
+        if (this.HasEffect<FreezeEffect>() && elementalType == ElementalType.Fire
+            && !System.Array.Exists(damageTag, t => t == DamageTag.DoT)
+            && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
+        {
+            RemoveEffect<FreezeEffect>();
+            Damage(damageDealt * 1.5f * source.elementalAffinity, damageType, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
         // windshear: any other element's damage consumes it and shreds that element's resistance, scaled
@@ -499,7 +508,6 @@ public abstract class Entity : MonoBehaviour
                 ElementalType.Grass  => new WindshearGrassEffect(this, 4f, 1, windshearSource),
                 ElementalType.Poison => new WindshearPoisonEffect(this, 4f, 1, windshearSource),
                 ElementalType.Ice    => new WindshearIceEffect(this, 4f, 1, windshearSource),
-                ElementalType.Ground => new WindshearGroundEffect(this, 4f, 1, windshearSource),
                 _ => null
             };
             if (windsheared != null)
@@ -607,21 +615,6 @@ public abstract class Entity : MonoBehaviour
 
                 if (canProcElementalEffect && Random.value < elementalEffectRoll)
                     ApplyEffect(new PoisonedEffect(this, 6f, 1, source));
-            break;
-
-            case ElementalType.Ground:
-            elementalMultiplier = Mathf.Max(0f, 1 - groundResistance) * (1 + source.groundDamage);
-            // elemental reactions temporarily disabled
-            /*
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && groundInternalCooldown <= 0)
-                {
-                    groundInternalCooldown = internalCooldown;
-                    ApplyEffect(new GroundPrimer(this, elementalDebuffDuration, 1, source));
-                }
-            */
-
-                if (canProcElementalEffect && Random.value < elementalEffectRoll)
-                    ApplyEffect(new VulnerableEffect(this, 8f, 1, source));
             break;
 
             default:
@@ -913,11 +906,6 @@ public abstract class Entity : MonoBehaviour
             windInternalCooldown -= Time.deltaTime;
         }
 
-        if (groundInternalCooldown > 0)
-        {
-            groundInternalCooldown -= Time.deltaTime;
-        }
-
         if (freezeInternalCooldown > 0)
             freezeInternalCooldown -= Time.deltaTime;
 
@@ -926,6 +914,8 @@ public abstract class Entity : MonoBehaviour
 
     }
 
+    // hard CC internal cooldowns temporarily disabled
+    /*
     // per-effect-type internal cooldown for hard CC effects that opt in (see
     // HardCrowdControl.InternalCooldownAfterExpiry) - e.g. once Freeze lands on this entity,
     // Freeze specifically can't land again until its own cooldown clears, independent of every
@@ -938,6 +928,7 @@ public abstract class Entity : MonoBehaviour
 
     public void SetHardCCInternalCooldown(System.Type effectType, float cooldownDuration) =>
         _hardCCCooldownEndTimes[effectType] = Time.time + cooldownDuration;
+    */
 
     // generic "in combat" flag: refreshed on both the source and target of every Damage() call
     // (see the two Damage overloads), lasting InCombatEffect.Duration. lets any system check
@@ -1320,12 +1311,15 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
+        // hard CC internal cooldown temporarily disabled
+        /*
         // per-effect-type hard CC internal cooldown (see HardCrowdControl.InternalCooldownAfterExpiry)
         // - only rejects effect types that actually opt in (currently just Freeze), skill-sourced
         // hard CCs left at 0 are ungated here and rely on their own skill cooldown instead
         if (effect is HardCrowdControl hardCC && hardCC.InternalCooldownAfterExpiry > 0f
             && IsHardCCOnInternalCooldown(effect.GetType()))
             return;
+        */
 
         // Hellebore Protection intercept: negative effects aimed at a shielded entity can be reflected
         if (effect.effectType == StatusEffect.Type.negative)

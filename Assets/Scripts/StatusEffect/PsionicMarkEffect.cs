@@ -17,7 +17,7 @@ public class PsionicMarkEffect : StatusEffect
         : base(target, StackDuration, 1, source)
     {
         effectType = Type.negative;
-        elementalType = ElementalType.Ground;
+        elementalType = ElementalType.Grass;
         sourceStackable = true;
         visible = false;
     }

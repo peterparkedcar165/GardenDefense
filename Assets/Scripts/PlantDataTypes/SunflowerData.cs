@@ -23,6 +23,18 @@ public class SunflowerData : PlantData
     // reads as a visibly bigger effect without the real hitbox tracking that far outward
     public float path3VisualRadiusPerLevel = 0.3f;
 
+    [Header("Sunray Audio")]
+    [Tooltip("played this many seconds before the sunray actually appears (not the skill activation sound)")]
+    public SoundEffect sunraySpawnSound;
+    [Tooltip("how long before the sunray appears its spawn sound plays")]
+    public float sunraySpawnLeadTime = 0.1f;
+    [Tooltip("loops for as long as the sunray is active, until sunrayEndLeadTime before it expires")]
+    public SoundEffect sunrayLoopSound;
+    [Tooltip("played once, sunrayEndLeadTime before the sunray expires")]
+    public SoundEffect sunrayEndSound;
+    [Tooltip("how long before the sunray expires the loop sound stops and the end sound plays")]
+    public float sunrayEndLeadTime = 0.2f;
+
     public override string GetAttackDescription() =>
         $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing {DamageTypeLabel(damageType)}.";
 

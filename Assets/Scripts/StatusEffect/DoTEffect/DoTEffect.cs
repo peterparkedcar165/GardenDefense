@@ -18,9 +18,10 @@ public abstract class DoTEffect : StatusEffect
 
     public override void OnApply()
     {
-        if (target.HasEffect<SludgeEffect>())
+        SludgeEffect sludge = target.GetEffect<SludgeEffect>();
+        if (sludge != null)
         {
-            duration += 4f;
+            duration += sludge.bonusDuration;
             target.RemoveEffect<SludgeEffect>();
         }
     }

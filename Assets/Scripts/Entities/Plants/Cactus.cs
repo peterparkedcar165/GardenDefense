@@ -31,7 +31,7 @@ public class Cactus : Shooter
         base.Update();
 
         if (autoCastEnabled && SkillReady && HasInsectsInRange())
-            ActivateSkill();
+            TriggerSkill();
 
         if (HasEffect<ShieldEffect>())
         {

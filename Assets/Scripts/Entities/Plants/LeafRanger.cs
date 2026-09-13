@@ -36,7 +36,7 @@ public class LeafRanger : Shooter
         basePiercing = data.basePiercing + effectivePath2Level;
 
         if (autoCastEnabled && SkillReady && HasValidTarget())
-            ActivateSkill();
+            TriggerSkill();
     }
 
     // only auto-casts while at least one actual enemy insect is alive anywhere on the map - no

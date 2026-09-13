@@ -136,7 +136,6 @@ public class FertilizerManager : MonoBehaviour
             case StatType.GrassDamage:    return (0.06f, 0.08f);
             case StatType.PoisonDamage:    return (0.06f, 0.08f);
             case StatType.WindDamage:      return (0.06f, 0.08f);
-            case StatType.GroundDamage:    return (0.06f, 0.08f);
             case StatType.BonusEffectChance: return (0.04f, 0.06f);
             case StatType.ElementalEffectChance: return (0.04f, 0.06f);
             case StatType.MinimumDamage:   return (0.04f, 0.06f);
