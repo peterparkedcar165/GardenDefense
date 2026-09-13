@@ -1319,7 +1319,6 @@ public abstract class Insect : Entity, IAttackable
         baseWindResistance     = data.baseWindResistance;
         basePoisonResistance   = data.basePoisonResistance;
         baseIceResistance      = data.baseIceResistance;
-        baseGroundResistance   = data.baseGroundResistance;
         baseDotResistance      = data.baseDotResistance;
         sunDrop                = data.sunDrop;
         sunDropAdder           = data.sunDropAdder;

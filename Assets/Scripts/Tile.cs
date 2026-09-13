@@ -226,6 +226,7 @@ public class Tile : MonoBehaviour
             plant.selfPrefab = selector.SelectedPlant;
             plant.totalSunSpent += cost;
             plant.occupiedTile = this;
+            Plant.ClearGhostsOfSameType(plant);
             if (isHighground)
             {
                 plant.attackRangeMultiplier += 0.5f;

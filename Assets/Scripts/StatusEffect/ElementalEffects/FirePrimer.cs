@@ -30,7 +30,7 @@ public class FirePrimer : ElementalDebuff
         {
             insect.RemoveEffect<FirePrimer>();
             insect.RemoveEffect<PoisonPrimer>();
-            insect.ApplyEffect(new VulnerableEffect(insect, 8f, 1, source));
+            insect.ApplyEffect(new CorrosionEffect(insect, 12f, 1, source));
         }
         else if (insect.HasEffect<WaterPrimer>())
         {

@@ -89,15 +89,17 @@ MonoBehaviour:
   attackSound:
     clips:
     - clip: {fileID: 8300000, guid: a5c40baecbc862b4da1607b988c5782d, type: 3}
-      volume: 0.2
+      volume: 0.1
       minPitch: 0.8
       maxPitch: 1.2
   impactSound:
     clips:
     - clip: {fileID: 8300000, guid: 7474fd9bd668de845acb8bb11383f135, type: 3}
-      volume: 0.2
+      volume: 0.1
       minPitch: 1.4
       maxPitch: 1.7
+  skillSound:
+    clips: []
   baseSunGenerated: 6
   baseSunrayDPS: 75
   sunProcChance: 0.35
@@ -109,3 +111,23 @@ MonoBehaviour:
   path3SkillDurationPerLevel: 0.5
   path3RadiusPerLevel: 0.2
   path3VisualRadiusPerLevel: 0.3
+  sunraySpawnSound:
+    clips:
+    - clip: {fileID: 8300000, guid: 8c1d281c2537c854481083de9a319de7, type: 3}
+      volume: 0.2
+      minPitch: 0.9
+      maxPitch: 1.1
+  sunraySpawnLeadTime: 0.35
+  sunrayLoopSound:
+    clips:
+    - clip: {fileID: 8300000, guid: 258a0b9fe59f90247860567391c203e2, type: 3}
+      volume: 0.2
+      minPitch: 0.9
+      maxPitch: 1.1
+  sunrayEndSound:
+    clips:
+    - clip: {fileID: 8300000, guid: a5e6fecf2b7877e42b55fb0989db4c34, type: 3}
+      volume: 0.2
+      minPitch: 0.9
+      maxPitch: 1.1
+  sunrayEndLeadTime: 0.3

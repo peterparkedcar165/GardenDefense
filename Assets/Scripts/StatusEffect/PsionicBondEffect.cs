@@ -24,7 +24,7 @@ public class PsionicBondEffect : StatusEffect
     {
         this.carrot = carrot;
         effectType = Type.positive;
-        elementalType = ElementalType.Ground;
+        elementalType = ElementalType.Grass;
         sourceStackable = true;
     }
 

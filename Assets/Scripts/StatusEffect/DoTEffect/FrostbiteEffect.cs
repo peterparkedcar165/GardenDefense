@@ -1,21 +1,21 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class FrostbiteEffect : DoTEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.01f, adPerSecond = 0.08f;
-    private float tenacityReduction = 0.33f;
+    public float healthPerSecond = 0.075f, flatPerSecond = 8f;
+    private float baseMovementSlow = 0.10f;
+    private float movementSlow;
     private float cachedelementalAffinity;
     private float cachedMaxHealth;
-    private float cachedAttackDamage;
 
     public FrostbiteEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
+        movementSlow = baseMovementSlow * (1f + cachedelementalAffinity);
         effectType = Type.negative;
         elementalType = ElementalType.Ice;
-        sourceStackable = true;
         tickInterval = 1f;
     }
 
@@ -23,23 +23,22 @@ public class FrostbiteEffect : DoTEffect
     public override string GetDescription()
     {
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
-        float ad = cachedAttackDamage > 0 ? cachedAttackDamage : (source?.attackDamage ?? 0f);
         float ep = cachedelementalAffinity;
-        float total = ((healthPerSecond * hp) + (adPerSecond * ad) + 7f) * (1f + ep);
+        float total = (healthPerSecond * hp + flatPerSecond) * (1f + 0.33f * ep);
         return $"Deal <color=#00BFFF><b>{total:F0}</b></color> <color=#00BFFF>Ice</color> Physical damage per second. " +
-               $"Reduces Tenacity by <color=green>{tenacityReduction * 100:F0}%</color>.";
+               $"Reduces Movement Speed by <color=green>{movementSlow * 100f:F0}%</color>.";
     }
 
     public override void OnApply()
     {
         base.OnApply();
-        cachedMaxHealth    = target.maxHealth;
-        cachedAttackDamage = source?.attackDamage ?? 0f;
-        damagePerSecond = ((healthPerSecond * cachedMaxHealth) + (adPerSecond * cachedAttackDamage) + 7f) * (1f + cachedelementalAffinity);
+        cachedMaxHealth = target.maxHealth;
+        damagePerSecond = (healthPerSecond * cachedMaxHealth + flatPerSecond) * (1f + 0.33f * cachedelementalAffinity);
 
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Frostbite", new Color(0f, 1f, 1f));
 
-        target.tenacityMultiplier -= tenacityReduction;
+        if (target is Insect insect)
+            insect.movementSpeedMultiplier -= movementSlow;
     }
 
     public override void OnTick(float deltaTime)
@@ -57,6 +56,7 @@ public class FrostbiteEffect : DoTEffect
 
     public override void OnExpire()
     {
-        target.tenacityMultiplier += tenacityReduction;
+        if (target is Insect insect)
+            insect.movementSpeedMultiplier += movementSlow;
     }
 }

@@ -2,7 +2,7 @@
 
 public class SludgeEffect : StatusEffect
 {
-    private float bonusDuration;
+    public float bonusDuration;
 
     public SludgeEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {

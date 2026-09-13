@@ -26,7 +26,6 @@ public class DamageIndicator : TextIndicator
             case ElementalType.Ice:     color = new Color(0f, 1f, 1f);      break;
             case ElementalType.Poison:  color = new Color(0.6f, 0.1f, 0.8f); break;
             case ElementalType.Wind:    color = new Color(0.85f, 1f, 0.85f); break;
-            case ElementalType.Ground:  color = new Color(0.475f, 0.224f, 0.122f); break;
             default:                    color = new Color(0.9f, 0.9f, 0.9f); break;
         }
 

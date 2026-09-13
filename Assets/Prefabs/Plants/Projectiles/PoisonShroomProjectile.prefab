@@ -80,15 +80,15 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1018753133
-  m_SortingLayer: 3
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5551470910554678171, guid: 853e5a4f55e8c8c4b8cd5b3e0f799d78, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 853e5a4f55e8c8c4b8cd5b3e0f799d78, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.83, y: 5.4}
+  m_Size: {x: 0.5, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -145,6 +145,7 @@ MonoBehaviour:
   hit: {fileID: 0}
   minPitch: 0.9
   maxPitch: 1.1
+  hitVolume: 0.5
   projectileDamage: 0
   projectileSpeed: 0
   maxRange: 0

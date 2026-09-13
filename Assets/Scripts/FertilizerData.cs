@@ -79,6 +79,9 @@ public enum StatType
     MaxHealth,
     SunYield,
     CurrencyYield,
+    // unused: Ground element was removed from the game. kept in place (not deleted) so every
+    // member below keeps its serialized ordinal - existing fertilizer assets reference these by
+    // that raw int, not by name
     GroundDamage,
     BonusEffectChance,
     MinimumDamage,

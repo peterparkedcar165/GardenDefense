@@ -56,7 +56,7 @@ public class Zinnia : Aura
             Attack();
 
         if (autoCastEnabled && SkillReady)
-            ActivateSkill();
+            TriggerSkill();
 
         UpdateHighlights();
     }

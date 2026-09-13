@@ -47,7 +47,7 @@ public class Holly : Aura
         base.Update();
 
         if (autoCastEnabled && SkillReady && HasInsectsInRange())
-            ActivateSkill();
+            TriggerSkill();
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;

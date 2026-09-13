@@ -15,6 +15,10 @@ public class Sunray : MonoBehaviour
 
     private Vector3 targetScale;
 
+    private SoundEffect loopSound, endSound;
+    private float endLeadTime;
+    private AudioSource activeLoop;
+
     private static readonly DamageTag[] damageTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.AoE, DamageTag.DoT };
 
     private void Awake()
@@ -25,15 +29,24 @@ public class Sunray : MonoBehaviour
     // visualScaleMultiplier is aoeRadius relative to the plant's base (level 0) skill radius, so
     // the beam's rendered width grows proportionally with the actual hit radius as Path3 levels
     // up, rather than always rendering at its authored default size regardless of level
-    public void Initialize(float damagePerSecond, float aoeRadius, float duration, Plant source, float visualScaleMultiplier = 1f)
+    // the spawn sound itself is played by the caller shortly before this object is even
+    // instantiated (see Sunflower.SpawnSunray) - this only owns the sunray's own lifetime, so it
+    // just picks up the loop/end sounds
+    public void Initialize(float damagePerSecond, float aoeRadius, float duration, Plant source, float visualScaleMultiplier = 1f,
+        SoundEffect loopSound = null, SoundEffect endSound = null, float endLeadTime = 0.2f)
     {
         this.damagePerSecond = damagePerSecond;
         this.aoeRadius = aoeRadius;
         this.duration = duration;
         this.source = source;
+        this.loopSound = loopSound;
+        this.endSound = endSound;
+        this.endLeadTime = endLeadTime;
 
         targetScale *= visualScaleMultiplier;
         transform.localScale = targetScale;
+
+        activeLoop = SfxPlayer.PlayLooping(loopSound, transform);
 
         if (DarknessManager.instance != null)
         {
@@ -58,6 +71,7 @@ public class Sunray : MonoBehaviour
     {
         float elapsed = 0f;
         float nextTick = 0f;
+        bool endSoundPlayed = false;
 
         while (elapsed < duration && source != null && source.IsAlive)
         {
@@ -76,7 +90,23 @@ public class Sunray : MonoBehaviour
                 }
                 nextTick += tickInterval;
             }
+
+            if (!endSoundPlayed && elapsed >= duration - endLeadTime)
+            {
+                endSoundPlayed = true;
+                SfxPlayer.StopLooping(activeLoop);
+                SfxPlayer.Play(endSound, transform.position);
+            }
+
             yield return null;
+        }
+
+        // covers an early exit (source died before reaching the lead window above) - the loop and
+        // end sound still need to resolve exactly once regardless of how the sunray ended
+        if (!endSoundPlayed)
+        {
+            SfxPlayer.StopLooping(activeLoop);
+            SfxPlayer.Play(endSound, transform.position);
         }
 
         // shrink X to 0 and fade light out together

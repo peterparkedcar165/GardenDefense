@@ -50,7 +50,6 @@ public class PlantData : ScriptableObject
     public float baseIceResistance;
     public float baseGrassResistance;
     public float baseWindResistance;
-    public float baseGroundResistance;
     public float baseDotResistance;
     public float baseHeatResistance;   // slows temperature rise in Hot weather, does not reduce the resulting damage
     public float baseColdResistance;   // slows temperature drop in Cold weather, does not reduce the resulting damage
@@ -79,7 +78,6 @@ public class PlantData : ScriptableObject
     public float baseWindDamage;
     public float basePoisonDamage;
     public float baseIceDamage;
-    public float baseGroundDamage;
 
     [Header("Misc")]
     public float baseLightEmissionRange;
@@ -112,6 +110,8 @@ public class PlantData : ScriptableObject
     public SoundEffect attackSound;
     [Tooltip("played on the target when this plant's attack actually lands on it")]
     public SoundEffect impactSound;
+    [Tooltip("played when this plant's skill is activated (every plant should have one)")]
+    public SoundEffect skillSound;
 
     public virtual string GetAttackDescription() => "";
     public virtual string GetPassiveDescription() => "";
@@ -125,7 +125,6 @@ public class PlantData : ScriptableObject
         ElementalType.Wind    => "<color=#B2EBF2>Wind</color>",
         ElementalType.Poison  => "<color=purple>Poison</color>",
         ElementalType.Ice     => "<color=#00FFFF>Ice</color>",
-        ElementalType.Ground  => "<color=#79391F>Ground</color>",
         _                     => t.ToString()
     };
 
@@ -137,7 +136,6 @@ public class PlantData : ScriptableObject
         ElementalType.Wind    => "#B2EBF2",
         ElementalType.Poison  => "purple",
         ElementalType.Ice     => "#00FFFF",
-        ElementalType.Ground  => "#79391F",
         _                     => "white"
     };
 

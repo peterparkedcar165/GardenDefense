@@ -147,10 +147,7 @@ public class Sunflower : Shooter
         float visualRadius = data.baseSkillRadius + (SFData?.path3VisualRadiusPerLevel ?? 0.3f) * effectivePath3Level;
         float visualScale  = data.baseSkillRadius > 0f ? visualRadius / data.baseSkillRadius : 1f;
 
-        GameObject obj = Instantiate(sunrayPrefab, position, Quaternion.identity);
-        Sunray sunray = obj.GetComponent<Sunray>();
-        if (sunray != null)
-            sunray.Initialize(sunrayDamagePerSecond, skillAoERadius, skillDuration, this, visualScale);
+        StartCoroutine(SpawnSunray(position, visualScale));
 
         if (IsPath3Maxed)
         {
@@ -164,12 +161,23 @@ public class Sunflower : Shooter
             if (valid.Count > 0)
             {
                 Insect target = valid[Random.Range(0, valid.Count)];
-                GameObject obj2 = Instantiate(sunrayPrefab, target.transform.position, Quaternion.identity);
-                Sunray sunray2 = obj2.GetComponent<Sunray>();
-                if (sunray2 != null)
-                    sunray2.Initialize(sunrayDamagePerSecond, skillAoERadius, skillDuration, this, visualScale);
+                StartCoroutine(SpawnSunray(target.transform.position, visualScale));
             }
         }
+    }
+
+    // plays the spawn sound sunraySpawnLeadTime seconds before the sunray itself is instantiated -
+    // this lead-in is separate from (and not) the skill's own activation sound
+    private IEnumerator SpawnSunray(Vector3 spawnPosition, float visualScale)
+    {
+        SfxPlayer.Play(SFData?.sunraySpawnSound, spawnPosition);
+        yield return new WaitForSeconds(SFData?.sunraySpawnLeadTime ?? 0.1f);
+
+        GameObject obj = Instantiate(sunrayPrefab, spawnPosition, Quaternion.identity);
+        Sunray sunray = obj.GetComponent<Sunray>();
+        if (sunray != null)
+            sunray.Initialize(sunrayDamagePerSecond, skillAoERadius, skillDuration, this, visualScale,
+                SFData?.sunrayLoopSound, SFData?.sunrayEndSound, SFData?.sunrayEndLeadTime ?? 0.2f);
     }
 
     public override string GetName() => "<b><color=orange>Sunflower</color></b>";

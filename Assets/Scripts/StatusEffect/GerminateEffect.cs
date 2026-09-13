@@ -6,19 +6,17 @@ public class GerminateEffect : StatusEffect
 
     private float aoeRadius = 2.5f;
     public float delay = 1f;
-    private float cachedAttackDamage;
     private float cachedelementalAffinity;
 
     public GerminateEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        cachedAttackDamage = source?.attackDamage ?? 0f;
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
         elementalType = ElementalType.Grass;
     }
 
-    // (42 + 43% attack damage) × (1 + 213% elemental affinity), snapshotted from the source on apply
-    private float ComputeDamage() => (42f + cachedAttackDamage * 0.43f) * (1f + 2.13f * cachedelementalAffinity);
+    // 32 × (1 + 150% elemental affinity), snapshotted from the source on apply
+    private float ComputeDamage() => 32f * (1f + 1.5f * cachedelementalAffinity);
 
     public override string GetName() => "<color=green>Germinate</color>";
     public override string GetDescription()

@@ -17,7 +17,7 @@ MonoBehaviour:
   plantName: Carrot
   displayName: Carrot
   family: 7
-  elementalType: 7
+  elementalType: 2
   damageType: 0
   sunCost: 185
   placementLimit: 1

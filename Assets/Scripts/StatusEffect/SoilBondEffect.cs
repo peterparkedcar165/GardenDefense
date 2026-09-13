@@ -23,7 +23,7 @@ public class SoilBondEffect : StatusEffect
     {
         this.carrot = carrot;
         effectType = Type.positive;
-        elementalType = ElementalType.Ground;
+        elementalType = ElementalType.Grass;
         sourceStackable = true;
     }
 

@@ -17,7 +17,7 @@ MonoBehaviour:
   plantName: OldCarrot
   displayName: Old Carrot
   family: 7
-  elementalType: 7
+  elementalType: 2
   damageType: 1
   sunCost: 225
   skillTree: {fileID: 0}

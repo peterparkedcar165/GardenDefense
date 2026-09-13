@@ -53,7 +53,7 @@ public class Carrot : Shooter
     {
         base.Awake();
         LoadData();
-        // ground element perk, placeable on any non water non obstacle tile
+        // placeable on any non water non obstacle tile
         allowedTiles = new TileType[]
         {
             TileType.Grass, TileType.Dirt, TileType.Potted, TileType.Cave, TileType.Sand, TileType.Snow

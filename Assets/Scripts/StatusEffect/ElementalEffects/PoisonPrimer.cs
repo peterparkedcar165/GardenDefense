@@ -24,7 +24,7 @@ public class PoisonPrimer : ElementalDebuff
         {
             insect.RemoveEffect<PoisonPrimer>();
             insect.RemoveEffect<FirePrimer>();
-            insect.ApplyEffect(new VulnerableEffect(insect, 8f, 1, source));
+            insect.ApplyEffect(new CorrosionEffect(insect, 12f, 1, source));
         }
         else if (insect.HasEffect<GrassPrimer>())
         {
