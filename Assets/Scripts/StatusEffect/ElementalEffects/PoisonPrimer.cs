@@ -10,7 +10,7 @@ public class PoisonPrimer : ElementalDebuff
     public override string GetName() => "<color=purple>Poison</color>";
     public override string GetDescription() => "Used as a primer to react with other elements";
 
-    public override void OnApply()
+    protected override void OnPrimerApply()
     {
         Insect insect = (Insect)target;
 
@@ -39,7 +39,4 @@ public class PoisonPrimer : ElementalDebuff
             insect.ApplyEffect(new SludgeEffect(insect, 4f, 1, source));
         }
     }
-
-    public override void OnTick(float deltaTime) { }
-    public override void OnExpire() { }
 }

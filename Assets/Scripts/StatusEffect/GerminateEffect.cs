@@ -15,8 +15,8 @@ public class GerminateEffect : StatusEffect
         elementalType = ElementalType.Grass;
     }
 
-    // 32 × (1 + 150% elemental affinity), snapshotted from the source on apply
-    private float ComputeDamage() => 32f * (1f + 1.5f * cachedelementalAffinity);
+    // 42 × (1 + 225% elemental affinity), snapshotted from the source on apply
+    private float ComputeDamage() => 42f * (1f + 2.25f * cachedelementalAffinity);
 
     public override string GetName() => "<color=green>Germinate</color>";
     public override string GetDescription()

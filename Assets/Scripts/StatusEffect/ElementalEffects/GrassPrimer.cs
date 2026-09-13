@@ -10,7 +10,7 @@ public class GrassPrimer : ElementalDebuff
     public override string GetName() => "<color=green>Grass</color>";
     public override string GetDescription() => "Used as a primer to react with other elements";
 
-    public override void OnApply()
+    protected override void OnPrimerApply()
     {
         Insect insect = (Insect)target;
 
@@ -43,7 +43,4 @@ public class GrassPrimer : ElementalDebuff
             }
         }
     }
-
-    public override void OnTick(float deltaTime) { }
-    public override void OnExpire() { }
 }
