@@ -2,16 +2,20 @@ using UnityEngine;
 
 public class BlossomingEffect : StatusEffect
 {
-    private readonly float attackDamageBonus;
+    private readonly float grassDamageBonus;
     private readonly float attackSpeedBonus;
 
-    private const float MaxLevelMinimumDamageBonus = 0.2f;
-    private bool _maxLevelBonusActive;
+    public const float GerminateRadiusMultiplier = 1.5f;
 
-    public BlossomingEffect(Entity target, float duration, int level, Entity source, float attackDamageBonus, float attackSpeedBonus)
+    // read by GerminateEffect on construction, so a Germinate this plant causes snapshots the
+    // radius bonus at the moment it's applied - it keeps the bigger radius even if Blossoming
+    // itself expires before that Germinate detonates
+    public bool GrantsGerminateRadiusBonus { get; private set; }
+
+    public BlossomingEffect(Entity target, float duration, int level, Entity source, float grassDamageBonus, float attackSpeedBonus)
         : base(target, duration, level, source)
     {
-        this.attackDamageBonus = attackDamageBonus;
+        this.grassDamageBonus = grassDamageBonus;
         this.attackSpeedBonus = attackSpeedBonus;
         effectType      = Type.positive;
         elementalType   = ElementalType.Grass;
@@ -21,20 +25,16 @@ public class BlossomingEffect : StatusEffect
     public override void OnApply()
     {
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Blossoming", new Color(0.3f, 1f, 0.2f));
-        target.attackDamageMultiplier += attackDamageBonus;
+        target.grassDamageAdder += grassDamageBonus;
         target.attackSpeedMultiplier += attackSpeedBonus;
 
-        _maxLevelBonusActive = source is Begonia beg && beg.path3Level >= Plant.absoluteLevelCap;
-        if (_maxLevelBonusActive)
-            target.minimumDamageAdder += MaxLevelMinimumDamageBonus;
+        GrantsGerminateRadiusBonus = source is Begonia beg && beg.path3Level >= Plant.absoluteLevelCap;
     }
 
     public override void OnExpire()
     {
-        target.attackDamageMultiplier -= attackDamageBonus;
+        target.grassDamageAdder -= grassDamageBonus;
         target.attackSpeedMultiplier -= attackSpeedBonus;
-        if (_maxLevelBonusActive)
-            target.minimumDamageAdder -= MaxLevelMinimumDamageBonus;
     }
 
     public override void OnTick(float deltaTime) { }
@@ -42,9 +42,9 @@ public class BlossomingEffect : StatusEffect
     public override string GetName() => "<color=green>Blossoming</color>";
     public override string GetDescription()
     {
-        string desc = $"Increase <color=green><b>Attack Damage</b></color> by <color=green><b>{attackDamageBonus * 100f:F0}%</b></color>, and <color=green><b>Attack Speed</b></color> by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color>.";
-        if (_maxLevelBonusActive)
-            desc += $" Also increases <color=green><b>Minimum Damage</b></color> by <color=green><b>{MaxLevelMinimumDamageBonus * 100f:F0}%</b></color>.";
+        string desc = $"Increase <color=green><b>Grass Damage</b></color> by <color=green><b>{grassDamageBonus * 100f:F0}%</b></color>, and <color=green><b>Attack Speed</b></color> by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color>.";
+        if (GrantsGerminateRadiusBonus)
+            desc += $" Also increases <color=green><b>Germinate</b></color> radius by <color=green><b>{(GerminateRadiusMultiplier - 1f) * 100f:F0}%</b></color>.";
         return desc;
     }
 }

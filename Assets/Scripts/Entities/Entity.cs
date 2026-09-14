@@ -75,7 +75,10 @@ public abstract class Entity : MonoBehaviour
     public int baseArmorPenFlat, baseMagicPenFlat;
     public float baseArmorPenPercent, baseMagicPenPercent;
     public float baseFireResistance, baseWaterResistance, baseGrassResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
-    public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance, baseElementalEffectChance;
+    public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance;
+    // disabled: had zero effect on proc frequency since the Primer swap (Primers proc
+    // deterministically on cooldown, not this roll) and no writer/reader anywhere touches it now
+    // public float baseElementalEffectChance;
     public float baseFireDamage, baseWaterDamage, baseGrassDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseMinimumDamage = 0.8f, baseMaximumDamage = 1.2f;
@@ -140,7 +143,7 @@ public abstract class Entity : MonoBehaviour
         // damage applies its own separate, level-scaling amount directly in OnHitByInsect, since
         // that damage isn't tagged Attack and so never reaches here)
         if (data.source is Cactus cactus)
-            insect.ApplyEffect(new PuncturedEffect(insect, cactus.passiveDuration, 1, cactus));
+            insect.ApplyEffect(new PuncturedEffect(insect, cactus.passiveDuration, cactus.IsPath1Maxed ? 2 : 1, cactus));
 
         // Floral Glow and Ablaze proc off projectile OR melee attacks (but not, say, a passive
         // aura tick) - Waterlily's path2-max splash counts too, since it deliberately tags itself
@@ -164,7 +167,8 @@ public abstract class Entity : MonoBehaviour
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
     public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance;
-    public float physicalDamage, magicDamage, fallDamage, bonusEffectChance, elementalEffectChance;
+    public float physicalDamage, magicDamage, fallDamage, bonusEffectChance;
+    // public float elementalEffectChance; (disabled, see baseElementalEffectChance)
     public float fireDamage, waterDamage, grassDamage, windDamage, poisonDamage, iceDamage;
     public float criticalChance, criticalDamage;
     public float minimumDamage, maximumDamage;
@@ -209,7 +213,8 @@ public abstract class Entity : MonoBehaviour
     public float armorAdder, magicArmorAdder;
     public float armorPenFlatAdder, magicPenFlatAdder, armorPenPercentAdder, magicPenPercentAdder;
     public float fireResistanceAdder, waterResistanceAdder, grassResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
-    public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder, elementalEffectChanceAdder;
+    public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder;
+    // public float elementalEffectChanceAdder; (disabled, see baseElementalEffectChance)
     public float fireDamageAdder, waterDamageAdder, grassDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
     public float minimumDamageAdder, maximumDamageAdder;
@@ -235,7 +240,8 @@ public abstract class Entity : MonoBehaviour
     public float armorMultiplier, magicArmorMultiplier;
     public float armorPenFlatMultiplier, magicPenFlatMultiplier, armorPenPercentMultiplier, magicPenPercentMultiplier;
     public float fireResistanceMultiplier, waterResistanceMultiplier, grassResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
-    public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier, elementalEffectChanceMultiplier;
+    public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier;
+    // public float elementalEffectChanceMultiplier; (disabled, see baseElementalEffectChance)
     public float fireDamageMultiplier, waterDamageMultiplier, grassDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier;
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
@@ -283,7 +289,6 @@ public abstract class Entity : MonoBehaviour
         magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
         fallDamage = baseFallDamage + fallDamageAdder;
         bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
-        elementalEffectChance = baseElementalEffectChance + elementalEffectChanceAdder + (baseElementalEffectChance * elementalEffectChanceMultiplier);
         fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
         waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
         grassDamage = baseGrassDamage + grassDamageAdder + (baseGrassDamage * grassDamageMultiplier);
@@ -456,11 +461,8 @@ public abstract class Entity : MonoBehaviour
         float modifiedDamage, elementalMultiplier, finalDamage, dotMultiplier, passiveDamageMult, skillDamageMult, coordinatedDamageMult, counterDamageMult, onHitMult;
         bool isCrit = false;
 
-        // elemental effect procs: dot damage (burn/poison ticks etc) rolls at half chance, and
-        // damage already tagged as a reaction/debuff proc (e.g. a burn tick) cannot itself proc a new effect
-        bool canProcElementalEffect = this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff);
-        bool isDoTDamage = System.Array.Exists(damageTag, t => t == DamageTag.DoT);
-        float elementalEffectRoll = source.elementalEffectChance * (1f + source.bonusEffectChance) * (isDoTDamage ? 0.5f : 1f);
+        // elemental effect procs/elementalEffectChance disabled - Primers proc deterministically
+        // on cooldown now instead of this roll
 
         if (this.HasEffect<BrittleEffect>() && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
@@ -590,7 +592,8 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Grass:
             elementalMultiplier = Mathf.Max(0f, 1 - grassResistance) * (1 + source.grassDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && grassInternalCooldown <= 0)
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
+                && (grassInternalCooldown <= 0 || (source is Begonia begonia && begonia.IsPath1Maxed)))
                 {
                     grassInternalCooldown = internalCooldown;
                     ApplyEffect(new GrassPrimer(this, elementalDebuffDuration, 1, source));

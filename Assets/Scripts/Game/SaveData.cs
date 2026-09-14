@@ -19,7 +19,10 @@ public class SaveData
     public int MaxLoadoutSize => 4 + Mathf.Clamp(highestLevelUnlocked / 5, 0, 4);
 
     // skill tree meta progression, points earned from level clears
+    // skillPoints is the current spendable balance; totalSkillPointsEarned only ever grows and
+    // is never spent directly - it's what a full tree reset refunds back into skillPoints
     public int skillPoints = 0;
+    public int totalSkillPointsEarned = 0;
     public List<SkillNodePurchase> skillPurchases = new List<SkillNodePurchase>();
 
     public int GetSkillRank(string plantName, string nodeId)

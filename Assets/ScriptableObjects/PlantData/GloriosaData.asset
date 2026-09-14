@@ -53,7 +53,7 @@ MonoBehaviour:
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
-  baseCriticalDamage: 1.75
+  baseCriticalDamage: 1.5
   baseDotDamage: 0
   baseelementalAffinity: 0
   baseCoordinatedDamage: 0

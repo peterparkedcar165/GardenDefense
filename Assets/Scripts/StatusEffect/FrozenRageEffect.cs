@@ -7,6 +7,7 @@ public class FrozenRageEffect : TauntEffect
     {
         this.resistanceReduction = resistanceReduction;
         elementalType = ElementalType.Ice;
+        tauntStrength = 2;
     }
 
     public override void OnApply()

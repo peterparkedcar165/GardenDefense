@@ -66,6 +66,8 @@ public static class PlantStatApplier
             case StatType.HeatResistance:                plant.heatResistanceAdder          += value; break;
             case StatType.ColdResistance:                plant.coldResistanceAdder          += value; break;
             case StatType.Respiration:                   plant.respirationAdder             += value; break;
+            case StatType.AttackDamageFlat:              plant.attackDamageAdder            += value; break;
+            case StatType.AttackSpeedFlat:                plant.attackSpeedAdder             += value; break;
         }
     }
 }

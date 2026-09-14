@@ -72,6 +72,8 @@ public abstract class Projectile : MonoBehaviour
 
         if (!Tile.IsInsideGrid(transform.position))
             Destroy(gameObject);
+        else if (maxRange > 0f && Vector3.Distance(spawnPosition, transform.position) >= maxRange)
+            Destroy(gameObject);
     }
 
     protected virtual void OnHit(Insect insect)

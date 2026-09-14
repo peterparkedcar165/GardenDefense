@@ -3240,7 +3240,6 @@ MonoBehaviour:
     highestLevelUnlocked: 1
     unlockedPlants: []
     currency: 0
-    plantSlotLevel: 0
     flowerPotLevel: 0
     waterPotLevel: 0
     skillPoints: 0

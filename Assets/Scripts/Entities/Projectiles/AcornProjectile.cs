@@ -8,6 +8,9 @@ public class AcornProjectile : Projectile
     private readonly List<Insect> _alreadyHit = new List<Insect>();
     private const float bounceSearchRadius = 3f;
     private const float bounceDamageReduction = 0.1f;
+    private const float stunSpecialistSplashRadius = 1.5f;
+    private const float stunSpecialistSplashDamage = 0.5f;
+    private const float piercerStunnedDamageBonus = 0.33f;
 
     // brief freeze on every bounce hit before jumping to the next target, matching the
     // Oleander's bounce pacing
@@ -121,13 +124,36 @@ public class AcornProjectile : Projectile
             int bouncesDone = _alreadyHit.Count - 1;
             effectiveDamage = projectileDamage * Mathf.Max(0f, 1f - bouncesDone * bounceDamageReduction);
         }
+
+        AcornSprout acorn = source as AcornSprout;
+
+        if (acorn != null && SkillTreeManager.HasUnlock(acorn, AcornSprout.PiercerUnlock) && insect.HasEffect<StunEffect>())
+            effectiveDamage *= 1f + piercerStunnedDamageBonus;
+
         insect.Damage(effectiveDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
 
-        if (source != null && source is AcornSprout acorn)
+        bool stunned = false;
+        if (acorn != null)
         {
-            float procChance = acorn.stunChance * (1 + acorn.bonusEffectChance);
+            float procChance = acorn.EffectiveStunChance * (1 + acorn.bonusEffectChance);
             if (Random.value < procChance)
+            {
                 insect.ApplyEffect(new StunEffect(insect, acorn.passiveDuration, 1, source));
+                stunned = true;
+            }
+        }
+
+        if (acorn != null && SkillTreeManager.HasUnlock(acorn, AcornSprout.StunSpecialistUnlock))
+        {
+            float splashDamage = effectiveDamage * stunSpecialistSplashDamage;
+            foreach (Insect other in new List<Insect>(Insect.allInsects))
+            {
+                if (other == null || !other.IsAlive || other == insect || other.team == Team.Friendly) continue;
+                if (Vector3.Distance(transform.position, other.GetAimPoint()) > stunSpecialistSplashRadius) continue;
+                other.Damage(splashDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+                if (stunned)
+                    other.ApplyEffect(new StunEffect(other, acorn.passiveDuration, 1, source));
+            }
         }
     }
 }

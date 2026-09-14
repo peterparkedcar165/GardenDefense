@@ -137,19 +137,32 @@ public class SaveManager : MonoBehaviour
         }
         if (UnityEngine.InputSystem.Keyboard.current.semicolonKey.wasPressedThisFrame)
         {
-            saveData.skillPoints += 20;
+            GrantSkillPoints(20);
             Save();
             SkillTreeUI.instance?.RefreshAll();
             Debug.Log("Added 20 skill points");
         }
         if (UnityEngine.InputSystem.Keyboard.current.quoteKey.wasPressedThisFrame)
         {
-            saveData.skillPoints = 0;
-            saveData.skillPurchases.Clear();
-            Save();
-            SkillTreeUI.instance?.RefreshAll();
-            Debug.Log("Reset skill points and purchases");
+            ResetSkillTrees();
+            Debug.Log("Reset all skill trees and refunded skill points");
         }
+    }
+
+    private void GrantSkillPoints(int amount)
+    {
+        saveData.skillPoints += amount;
+        saveData.totalSkillPointsEarned += amount;
+    }
+
+    // refunds every spent skill point and wipes every plant's purchased nodes - wired to the
+    // quote-key debug shortcut for now, later becomes a UI reset button
+    public void ResetSkillTrees()
+    {
+        saveData.skillPoints = saveData.totalSkillPointsEarned;
+        saveData.skillPurchases.Clear();
+        Save();
+        SkillTreeUI.instance?.RefreshAll();
     }
 
     public void CompleteLevel(int level)
@@ -161,7 +174,7 @@ public class SaveManager : MonoBehaviour
         if (plant != null && !saveData.unlockedPlants.Contains(plant))
             saveData.unlockedPlants.Add(plant);
         saveData.currency += 200 + level * 40;
-        saveData.skillPoints += firstClear ? 3 : 1;
+        GrantSkillPoints(firstClear ? 3 : 1);
         Save();
         Debug.Log($"Level {level} completed. Unlocked: {plant ?? "none"}. highestLevelUnlocked={saveData.highestLevelUnlocked}");
     }

@@ -92,5 +92,10 @@ public enum StatType
     ElementalEffectChance,
     HeatResistance,
     ColdResistance,
-    Respiration
+    Respiration,
+    // flat (non-percentage) versions of AttackDamage/AttackSpeed, added for skill tree nodes that
+    // grant a plain "Increase Base X by Y" bonus rather than a percentage multiplier - appended
+    // here rather than next to their percentage counterparts to keep every ordinal above stable
+    AttackDamageFlat,
+    AttackSpeedFlat
 }

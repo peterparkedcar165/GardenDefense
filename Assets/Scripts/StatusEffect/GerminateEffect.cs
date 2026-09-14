@@ -4,19 +4,24 @@ public class GerminateEffect : StatusEffect
 {
     public static GameObject bloomPrefab;
 
-    private float aoeRadius = 2.5f;
+    private const float BaseAoERadius = 2.5f;
+    private readonly float aoeRadius;
     public float delay = 1f;
     private float cachedelementalAffinity;
 
     public GerminateEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
+        // snapshotted here, at application - a Blossoming plant's Germinate keeps the larger
+        // radius even if Blossoming expires before this Germinate detonates
+        bool radiusBonus = source?.GetEffect<BlossomingEffect>()?.GrantsGerminateRadiusBonus ?? false;
+        aoeRadius = radiusBonus ? BaseAoERadius * BlossomingEffect.GerminateRadiusMultiplier : BaseAoERadius;
         effectType = Type.negative;
         elementalType = ElementalType.Grass;
     }
 
-    // 42 × (1 + 225% elemental affinity), snapshotted from the source on apply
-    private float ComputeDamage() => 42f * (1f + 2.25f * cachedelementalAffinity);
+    // 32 × (1 + 275% elemental affinity), snapshotted from the source on apply
+    private float ComputeDamage() => 32f * (1f + 2.75f * cachedelementalAffinity);
 
     public override string GetName() => "<color=green>Germinate</color>";
     public override string GetDescription()

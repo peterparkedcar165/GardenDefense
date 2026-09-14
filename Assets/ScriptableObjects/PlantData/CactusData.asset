@@ -16,19 +16,20 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 3b781c891ce3af945a263882517b3b80, type: 3}
   plantName: Cactus
   displayName: Cactus
-  cultivar: 3
+  family: 3
   elementalType: 2
   damageType: 0
   sunCost: 95
+  placementLimit: 0
+  category: 0
   skillTree: {fileID: 0}
   baseMaxHealth: 300
   baseAttackDamage: 12
   baseMagicPower: 0
   baseAttackSpeed: 0.7
-  baseAttackRange: 3
+  baseAttackRange: 2
   baseArmor: 30
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.1
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -40,10 +41,10 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   baseHeatResistance: 0
   baseColdResistance: 0
+  baseRespiration: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -53,7 +54,7 @@ MonoBehaviour:
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
-  baseCriticalDamage: 1.75
+  baseCriticalDamage: 1.5
   baseDotDamage: 0
   baseelementalAffinity: 0
   baseCoordinatedDamage: 0
@@ -64,11 +65,10 @@ MonoBehaviour:
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
-  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 7
-  baseMaxRange: 8
+  baseMaxRange: 4
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -83,9 +83,15 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  attackSound:
+    clips: []
+  impactSound:
+    clips: []
+  skillSound:
+    clips: []
   baseShieldAmount: 100
-  path1NeedlesBase: 8
-  path1NeedlesPerLevel: 4
+  path1NeedlesBase: 6
+  path1NeedlesPerLevel: 6
   path2HealthPerLevel: 70
   path3ShieldPerLevel: 40
   path3SkillDurationPerLevel: 2

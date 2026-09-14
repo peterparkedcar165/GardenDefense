@@ -43,13 +43,13 @@ public class AloeVera : Lobber
 
     public override void UpdateStats()
     {
-        float path1MPBonus = IsPath1Maxed ? 50f : 0f;
-        magicPowerAdder += path1MPBonus;
+        float path1RadiusBonus = IsPath1Maxed ? baseAoERadius : 0f;
+        aoERadiusAdder += path1RadiusBonus;
         // hidden, undocumented, skill charges faster per level of rain exposure
         int rainLevel = GetEffect<RainExposedEffect>()?.level ?? 0;
         skillChargeRateAdder = 0.2f * rainLevel;
         base.UpdateStats();
-        magicPowerAdder -= path1MPBonus;
+        aoERadiusAdder -= path1RadiusBonus;
         temperatureMax = comfortMax;
         float healpl  = AVData?.path2HealPerLevel           ?? 8f;
         float temppl  = AVData?.path2TempReductionPerLevel  ?? 0.5f;
@@ -284,7 +284,7 @@ public class AloeVera : Lobber
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Increase <color=#FFB6C1><b>Magic Power</b></color> by <color=green><b>50</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, $"Increase the splash radius to <color=green><b>{baseAoERadius * 2f:F1}</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }

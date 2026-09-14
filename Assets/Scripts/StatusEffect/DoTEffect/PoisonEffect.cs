@@ -5,8 +5,8 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     private ParticleSystem poisonParticles;
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    private float currentHealthPercent = 0.01f;
-    private float currentFlatDamage = 1f;
+    private float currentHealthPercent = 0.005f;
+    private float currentFlatDamage = 2f;
     private float cachedElementalAffinity;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
@@ -56,7 +56,7 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
         else
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
 
-        currentHealthPercent += 0.001f;
+        currentHealthPercent += 0.0025f;
         currentFlatDamage    += 1f;
         tickTimer            -= tickInterval;
     }

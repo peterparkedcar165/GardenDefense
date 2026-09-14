@@ -24,13 +24,12 @@ MonoBehaviour:
   category: 1
   skillTree: {fileID: 0}
   baseMaxHealth: 300
-  baseAttackDamage: 28
+  baseAttackDamage: 24
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 2.5
   baseArmor: 0
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.1
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -55,7 +54,7 @@ MonoBehaviour:
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
-  baseCriticalDamage: 1.75
+  baseCriticalDamage: 1.5
   baseDotDamage: 0
   baseelementalAffinity: 0
   baseCoordinatedDamage: 0
@@ -92,7 +91,7 @@ MonoBehaviour:
     clips: []
   basePoisonDPS: 8
   baseToxicSporeDuration: 3
-  path1AttackDamagePerLevel: 4
+  path1AttackDamagePerLevel: 3
   path1AttackSpeedPerLevel: 0.08
   path1AttackRangePerLevel: 0.18
   path1ToxicSporeDurationPerLevel: 0.6
@@ -100,7 +99,6 @@ MonoBehaviour:
   path2CritChancePerLevel: 0.04
   baseElementalAffinityBonus: 0.15
   path2ElementalAffinityPerLevel: 0.05
-  path2MaxElementalEffectChanceBonus: 0.1
   path2MaxDotDurationBonus: 0.5
   path3SkillDurationPerLevel: 3
   path3RadiusPerLevel: 0.3

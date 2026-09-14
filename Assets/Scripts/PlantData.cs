@@ -34,7 +34,7 @@ public class PlantData : ScriptableObject
     public float baseAttackRange;
     public int baseArmor;
     public int baseMagicArmor;
-    public float baseElementalEffectChance = 0.1f;
+    // public float baseElementalEffectChance = 0.1f; (disabled, see Entity.cs)
     public float baseOnHitEffectiveness = 1f;
 
     [Header("Healing")]
@@ -65,7 +65,7 @@ public class PlantData : ScriptableObject
     public float baseLifesteal;
     public float baseBonusEffectChance;
     public float baseCriticalChance = 0.05f;
-    public float baseCriticalDamage = 1.75f;
+    public float baseCriticalDamage = 1.5f;
     public float baseDotDamage;
     public float baseelementalAffinity;
     public float baseCoordinatedDamage;

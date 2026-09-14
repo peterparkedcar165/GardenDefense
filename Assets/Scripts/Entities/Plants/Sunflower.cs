@@ -15,6 +15,16 @@ public class Sunflower : Shooter
     private float SunMarkDuration => passiveDuration;
     private float SunGenInterval  => passiveCooldown * (1f + sunGenerationCooldown);
 
+    // skill tree node unlock ids
+    public const string AmbientSunProcUnlock = "sunflower_ambient_sun_proc";
+    public const string SunMarkResistUnlock  = "sunflower_sunmark_resist";
+    public const string ExtraProjectileUnlock = "sunflower_extra_projectile";
+    public const string HomingSunrayUnlock    = "sunflower_homing_sunray";
+    public const string SunrayRefreshUnlock   = "sunflower_sunray_refresh";
+    public const string InstantSkillUnlock    = "sunflower_instant_skill";
+
+    private const float AmbientSunProcReduction = 0.02f;
+
     protected override void Awake()
     {
         base.Awake();
@@ -24,6 +34,12 @@ public class Sunflower : Shooter
         passiveCooldownTimer = data.basePassiveCooldown;
         sunProcChance        = SFData?.sunProcChance ?? 0.35f;
         Entity.OnEntityHit += OnAnyEntityHit;
+
+        // free level 1 of every path on placement - deliberately bypasses the sun-spending
+        // Upgrade/Unlock methods (via GrantFreePathLevels) so this can't be abused for an
+        // inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+            GrantFreePathLevels();
     }
 
     protected override void OnDestroy()
@@ -81,10 +97,11 @@ public class Sunflower : Shooter
 
     private IEnumerator TripleShot(Vector3 target)
     {
-        for (int i = 0; i < 3; i++)
+        int shotCount = SkillTreeManager.HasUnlock(this, ExtraProjectileUnlock) ? 4 : 3;
+        for (int i = 0; i < shotCount; i++)
         {
             FireProjectile(target);
-            if (i < 2) yield return new WaitForSeconds(0.1f);
+            if (i < shotCount - 1) yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -105,6 +122,16 @@ public class Sunflower : Shooter
         float procChance = sunProcChance * (1f + bonusEffectChance);
         if (Random.value >= procChance) return;
         passiveCooldownTimer -= 1f;
+    }
+
+    // skill tree node 3.1: non-attack Fire damage (the Sunray's DoT ticks) rolls the same proc
+    // chance as ReduceSunTimer, but for a much smaller reduction, since a beam can tick many
+    // times a second across several targets
+    public void TryReduceSunTimerSmall()
+    {
+        float procChance = sunProcChance * (1f + bonusEffectChance);
+        if (Random.value >= procChance) return;
+        passiveCooldownTimer -= AmbientSunProcReduction;
     }
 
     public override void OnPath1Upgrade(int level)
@@ -201,13 +228,14 @@ public class Sunflower : Shooter
     {
         float adpl = SFData?.path1AttackDamagePerLevel ?? 5f;
         float aspl = SFData?.path1AttackSpeedPerLevel  ?? 0.05f;
+        int projectileCount = SkillTreeManager.HasUnlock(this, ExtraProjectileUnlock) ? 4 : 3;
         string desc = details
             ? $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Reduce <color=green><b>Total Attack Damage</b></color> by <color=green><b>50%</b></color>. Attacks now shoot <color=green><b>3</b></color> projectiles to the target.")}\n\n" +
+               $"{Level5Section(path1Level, $"Reduce <color=green><b>Total Attack Damage</b></color> by <color=green><b>50%</b></color>. Attacks now shoot <color=green><b>{projectileCount}</b></color> projectiles to the target.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
