@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 100
   placementLimit: 0
   category: 0
-  skillTree: {fileID: 0}
+  skillTree: {fileID: 11400000, guid: 7dc2623ca4fd4aeca582b4a4a604da71, type: 3}
   baseMaxHealth: 200
   baseAttackDamage: 32
   baseMagicPower: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
-  baseCriticalDamage: 1.75
+  baseCriticalDamage: 1.5
   baseDotDamage: 0
   baseelementalAffinity: 0
   baseCoordinatedDamage: 0

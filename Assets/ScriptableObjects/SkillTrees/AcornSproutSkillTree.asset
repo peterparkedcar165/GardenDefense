@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb196e4e86362842ab9d48e27a8f2f8, type: 3}
+  m_Name: AcornSproutSkillTree
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
+  steps:
+  - nodes:
+    - id: node1_attackdamage
+      nodeName: Sharpened Acorns
+      description: Increase Base Attack Damage by 12.
+      maxRank: 1
+      costPerRank: 1
+      effects:
+      - statType: 60
+        valuePerRank: 12
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node2_armor
+      nodeName: Hardened Shell
+      description: Increase Base Armor by 18.
+      maxRank: 1
+      costPerRank: 1
+      effects:
+      - statType: 39
+        valuePerRank: 18
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node3a_bombgrassdot
+      nodeName: Thorned Husk
+      description: The Acorn Sprout periodically deals Grass Physical damage, from the Acorn Bomb's location within its taunt radius, equal to 25% of the Acorn Bomb's Armor, every second.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: acorn_bomb_grass_dot
+    - id: node3b_bombmagicarmor
+      nodeName: Reinforced Husk
+      description: The Acorn Bomb gains 100 Magic Armor.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: acorn_bomb_magic_armor
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node4_critchance
+      nodeName: Focused Aim
+      description: Increase Base Critical Chance by 8%.
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 9
+        valuePerRank: 0.08
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node5_attackspeed
+      nodeName: Quickdraw
+      description: Increase Base Attack Speed by 0.12.
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 61
+        valuePerRank: 0.12
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node6a_stunspecialist
+      nodeName: Stun Specialist
+      description: Attack Damage increased by 25%, Total Attack Speed reduced by 50%, Stun Chance increased by 15%. Attacks deal AoE damage (50% of the original damage to secondary targets), and can also stun - if the main target gets stunned, all targets in the AoE get stunned too.
+      maxRank: 1
+      costPerRank: 3
+      effects: []
+      unlockId: acorn_stun_specialist
+    - id: node6b_piercer
+      nodeName: Piercing Shot
+      description: '+2 Piercing, +12% Total Attack Speed. Stunning insects take an additional 33% damage from attacks.'
+      maxRank: 1
+      costPerRank: 3
+      effects: []
+      unlockId: acorn_piercer
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node7_instantskill
+      nodeName: Ready to Bloom
+      description: Automatically unlocks 1 level of Attack, Passive, and Skill upon placement.
+      maxRank: 1
+      costPerRank: 4
+      effects: []
+      unlockId: acorn_instant_skill
+    ranksToUnlockNext: 1

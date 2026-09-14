@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb196e4e86362842ab9d48e27a8f2f8, type: 3}
+  m_Name: SunflowerSkillTree
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
+  steps:
+  - nodes:
+    - id: node1_attackspeed
+      nodeName: Quickdraw
+      description: Increase Base Attack Speed by 0.12.
+      maxRank: 1
+      costPerRank: 1
+      effects:
+      - statType: 61
+        valuePerRank: 0.12
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node2_sunyield
+      nodeName: Radiant Harvest
+      description: Increase Sun Yield by 22%.
+      maxRank: 1
+      costPerRank: 1
+      effects:
+      - statType: 50
+        valuePerRank: 0.22
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node3a_ambientsunproc
+      nodeName: Lingering Warmth
+      description: Non-attack Fire damage has the same chance as the passive to reduce the Sun generation cooldown, by 0.02 seconds.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: sunflower_ambient_sun_proc
+    - id: node3b_sunmarkresist
+      nodeName: Scorching Mark
+      description: Sun Mark reduces the target's Fire Resistance by 18%.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: sunflower_sunmark_resist
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node4_magicpower
+      nodeName: Solar Focus
+      description: Increase Magic Power by 40.
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 32
+        valuePerRank: 40
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node5_extraprojectile
+      nodeName: Overload
+      description: The Attack's max level bonus fires an additional projectile.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: sunflower_extra_projectile
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node6a_homingsunray
+      nodeName: Guided Beam
+      description: The Sunray beam can move at 0.6 movement speed, targeting the nearest insect upon cast and following it until it dies, then seeking a new target.
+      maxRank: 1
+      costPerRank: 3
+      effects: []
+      unlockId: sunflower_homing_sunray
+    - id: node6b_sunrayrefresh
+      nodeName: Feeding Flame
+      description: Killing an insect with the Sunray refreshes its duration by 0.4 seconds.
+      maxRank: 1
+      costPerRank: 3
+      effects: []
+      unlockId: sunflower_sunray_refresh
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node7_instantskill
+      nodeName: Ready to Bloom
+      description: Automatically unlocks 1 level of Attack, Passive, and Skill upon placement.
+      maxRank: 1
+      costPerRank: 4
+      effects: []
+      unlockId: sunflower_instant_skill
+    ranksToUnlockNext: 1

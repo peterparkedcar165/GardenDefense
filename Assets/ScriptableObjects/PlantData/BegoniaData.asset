@@ -56,7 +56,7 @@ MonoBehaviour:
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
-  baseCriticalDamage: 1.75
+  baseCriticalDamage: 1.5
   baseDotDamage: 0
   baseelementalAffinity: 0
   baseCoordinatedDamage: 0
@@ -86,17 +86,16 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseCritChanceBonus: 0.08
-  baseMaxDamageBonus: 0.12
+  baseElementalAffinityBonus: 0.24
   baseAttackSpeedBonus: 0.18
-  baseAttackDamageBonus: 0.2
+  baseGrassDamageBonus: 0.2
   basePassiveMultiplier: 0.24
   baseSkillMultiplier: 0.16
   path1AttackDamagePerLevel: 6
   path1AttackRangePerLevel: 0.2
-  path2CritChancePerLevel: 0.04
-  path2MaxDamagePerLevel: 0.04
-  path3AttackDamagePerLevel: 0.06
+  path1AttackSpeedPerLevel: 0.02
+  path2ElementalAffinityPerLevel: 0.08
+  path3GrassDamagePerLevel: 0.04
   path3AttackSpeedBonusPerLevel: 0.09
   path3RadiusPerLevel: 0.15
   path3SkillDurationPerLevel: 3

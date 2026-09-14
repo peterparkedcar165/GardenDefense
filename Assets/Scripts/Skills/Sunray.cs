@@ -21,6 +21,14 @@ public class Sunray : MonoBehaviour
 
     private static readonly DamageTag[] damageTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.AoE, DamageTag.DoT };
 
+    // skill tree nodes 3.1, 6.1, 6.2
+    private const float HomingSpeed = 0.6f;
+    private const float KillRefreshDuration = 0.4f;
+    private bool _ambientSunProc;
+    private bool _homing;
+    private bool _refreshOnKill;
+    private Insect _trackedInsect;
+
     private void Awake()
     {
         targetScale = transform.localScale;
@@ -45,6 +53,14 @@ public class Sunray : MonoBehaviour
 
         targetScale *= visualScaleMultiplier;
         transform.localScale = targetScale;
+
+        if (source is Sunflower sunflower)
+        {
+            _ambientSunProc = SkillTreeManager.HasUnlock(sunflower, Sunflower.AmbientSunProcUnlock);
+            _refreshOnKill  = SkillTreeManager.HasUnlock(sunflower, Sunflower.SunrayRefreshUnlock);
+            _homing         = SkillTreeManager.HasUnlock(sunflower, Sunflower.HomingSunrayUnlock);
+            if (_homing) _trackedInsect = FindNearestInsect();
+        }
 
         activeLoop = SfxPlayer.PlayLooping(loopSound, transform);
 
@@ -79,6 +95,19 @@ public class Sunray : MonoBehaviour
             float rotY = Mathf.Sin(elapsed * oscillationSpeed) * oscillationAngle;
             transform.rotation = Quaternion.Euler(0f, rotY, 0f);
 
+            if (_homing)
+            {
+                if (_trackedInsect == null || !_trackedInsect.IsAlive)
+                    _trackedInsect = FindNearestInsect();
+                if (_trackedInsect != null)
+                {
+                    Vector3 toTarget = _trackedInsect.transform.position - transform.position;
+                    float dist = toTarget.magnitude;
+                    if (dist > 0.01f)
+                        transform.position += toTarget.normalized * Mathf.Min(HomingSpeed * Time.deltaTime, dist);
+                }
+            }
+
             if (elapsed >= nextTick)
             {
                 List<Insect> snapshot = new List<Insect>(Insect.allInsects);
@@ -86,7 +115,13 @@ public class Sunray : MonoBehaviour
                 {
                     if (insect == null || !insect.IsAlive) continue;
                     if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
+                    {
                         insect.Damage(damagePerSecond * tickInterval, source.damageType, source.elementalType, source, true, damageTags);
+                        if (_ambientSunProc && source is Sunflower ambientSunflower)
+                            ambientSunflower.TryReduceSunTimerSmall();
+                        if (_refreshOnKill && !insect.IsAlive)
+                            duration += KillRefreshDuration;
+                    }
                 }
                 nextTick += tickInterval;
             }
@@ -124,5 +159,18 @@ public class Sunray : MonoBehaviour
 
         DarknessManager.UnregisterLightSource(transform);
         Destroy(gameObject);
+    }
+
+    private Insect FindNearestInsect()
+    {
+        Insect nearest = null;
+        float nearestDist = float.MaxValue;
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive || insect.team == Team.Friendly) continue;
+            float dist = Vector3.Distance(transform.position, insect.transform.position);
+            if (dist < nearestDist) { nearestDist = dist; nearest = insect; }
+        }
+        return nearest;
     }
 }

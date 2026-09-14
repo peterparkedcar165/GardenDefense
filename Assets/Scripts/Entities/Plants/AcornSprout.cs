@@ -7,6 +7,16 @@ public class AcornSprout : Shooter
 
     private AcornSproutData AcornData => data as AcornSproutData;
 
+    // skill tree node unlock ids
+    public const string StunSpecialistUnlock = "acorn_stun_specialist";
+    public const string PiercerUnlock        = "acorn_piercer";
+    public const string InstantSkillUnlock   = "acorn_instant_skill";
+
+    // read by AcornProjectile, so the stun roll itself always reflects the skill tree bonus
+    // without stunChance (a plain field, only recomputed on a Path2 upgrade) ever needing to
+    // accumulate the bonus into itself
+    public float EffectiveStunChance => stunChance + (SkillTreeManager.HasUnlock(this, StunSpecialistUnlock) ? 0.15f : 0f);
+
     protected override void Awake()
     {
         base.Awake();
@@ -19,6 +29,12 @@ public class AcornSprout : Shooter
         activeDamageMultiplier = data.baseSkillDamageMultiplier;
         acornBombHealth        = data.baseSkillHealth;
         activeRadius           = data.baseSkillRadius;
+
+        // free level 1 of every path on placement - deliberately bypasses the sun-spending
+        // Upgrade/Unlock methods (via GrantFreePathLevels) so this can't be abused for an
+        // inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+            GrantFreePathLevels();
     }
 
     protected override void Shoot(Vector3 target)
@@ -36,11 +52,29 @@ public class AcornSprout : Shooter
 
     public override void UpdateStats()
     {
+        bool stunSpecialist = SkillTreeManager.HasUnlock(this, StunSpecialistUnlock);
+        bool piercer        = SkillTreeManager.HasUnlock(this, PiercerUnlock);
+
+        // total-attack-speed changes go through attackSpeedTotalMultiplier (bumped around
+        // base.UpdateStats(), like every other total-multiplier bonus in this codebase) rather
+        // than post-multiplying the already-computed attackSpeed, so they compose correctly
+        // instead of also scaling flat adders applied below
+        float speedTotalBonus = 0f;
+        if (stunSpecialist) speedTotalBonus -= 0.5f;
+        if (piercer)         speedTotalBonus += 0.12f;
+        attackSpeedTotalMultiplier += speedTotalBonus;
         base.UpdateStats();
+        attackSpeedTotalMultiplier -= speedTotalBonus;
+
         if (IsPath1Maxed)
             attackDamage += armor * 0.33f;
         if (IsPath2Maxed)
             piercing += 1;
+
+        if (stunSpecialist)
+            attackDamage *= 1.25f;
+        if (piercer)
+            piercing += 2;
     }
 
     public override void OnPath1Upgrade(int level)
@@ -114,7 +148,7 @@ public class AcornSprout : Shooter
         float durpl      = AcornData?.path2StunDurationPerLevel ?? 0.1f;
         string desc = details
             ? $"Attacks have a <color=green><b>[({chanceBase * 100f:F0}) + ({chancepl * 100f:F0}/Lvl.)]</b></color>% chance to stun targets for <color=green><b>[({durBase:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
-            : $"Attacks have a <color=green><b>{stunChance * 100f}%</b></color> chance to stun targets for <color=green><b>{passiveDuration:F1}</b></color> seconds.";
+            : $"Attacks have a <color=green><b>{EffectiveStunChance * 100f:F0}%</b></color> chance to stun targets for <color=green><b>{passiveDuration:F1}</b></color> seconds.";
         string passiveMaxBonus = "Attacks' <color=green><b>Piercing</b></color> instead bounce to nearby targets.\n\nIncrease <color=green><b>Piercing</b></color> by <color=green><b>1</b></color>.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Stun Chance</b></color> by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +

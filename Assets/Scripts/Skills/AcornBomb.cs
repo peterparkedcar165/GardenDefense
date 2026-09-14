@@ -17,6 +17,16 @@ public class AcornBomb : Minion
     private float tauntTickTimer = 0f;
     private static readonly DamageTag[] impactTags = { DamageTag.AoE, DamageTag.SkillDamage };
 
+    // skill tree nodes 3.1/3.2
+    private const string GrassDotUnlock = "acorn_bomb_grass_dot";
+    private const string MagicArmorUnlock = "acorn_bomb_magic_armor";
+    private const float GrassDotTickInterval = 1f;
+    private const float GrassDotArmorPercent = 0.25f;
+    private const int MagicArmorBonus = 100;
+    private bool _hasGrassDot;
+    private float _grassDotTimer;
+    private static readonly DamageTag[] grassDotTags = { DamageTag.SkillDamage, DamageTag.AoE };
+
     private Collider2D _clickCollider;
     private SpriteRenderer _visualSR;
     private SpriteRenderer[] _outlineRenderers;
@@ -46,6 +56,10 @@ public class AcornBomb : Minion
         baseArmor = (sprout != null && sprout.IsPath3Maxed) ? (int)source.armor : 0;
         baseMovementSpeed = 0f;
         isFlying = true;
+
+        _hasGrassDot = SkillTreeManager.HasUnlock(source, GrassDotUnlock);
+        if (SkillTreeManager.HasUnlock(source, MagicArmorUnlock))
+            baseMagicArmor = MagicArmorBonus;
 
         visual = transform.Find("Visual");
         if (visual != null)
@@ -189,6 +203,7 @@ public class AcornBomb : Minion
         base.Update();
         _lifetimeElapsed += Time.deltaTime;
         UpdateTaunt();
+        if (_hasGrassDot) UpdateGrassDot();
 
         // keep circle centered at ground position, not tilted visual
         if (rangeCircle != null)
@@ -279,6 +294,21 @@ public class AcornBomb : Minion
         return false;
     }
 
+    private void UpdateGrassDot()
+    {
+        _grassDotTimer -= Time.deltaTime;
+        if (_grassDotTimer > 0f) return;
+        _grassDotTimer = GrassDotTickInterval;
+
+        float tickDamage = armor * GrassDotArmorPercent;
+        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
+                insect.Damage(tickDamage, DamageType.Physical, ElementalType.Grass, owner, false, grassDotTags);
+        }
+    }
+
     private void UpdateTaunt()
     {
         tauntedInsects.RemoveWhere(i => i == null || i.gameObject == null);
@@ -294,7 +324,7 @@ public class AcornBomb : Minion
             if (existing != null && existing.taunter != (IAttackable)this) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
             {
-                insect.ApplyEffect(new TauntEffect(insect, 0.5f, 1, owner, this));
+                insect.ApplyEffect(new TauntEffect(insect, 0.5f, 1, owner, this) { tauntStrength = 3 });
                 tauntedInsects.Add(insect);
             }
         }

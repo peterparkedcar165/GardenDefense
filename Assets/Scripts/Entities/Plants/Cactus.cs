@@ -105,7 +105,7 @@ public class Cactus : Shooter
         {
             if (!insect.IsAlive) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= attackRange)
-                insect.ApplyEffect(new TauntEffect(insect, TauntEffectDuration, 1, this, this));
+                insect.ApplyEffect(new TauntEffect(insect, TauntEffectDuration, 1, this, this) { tauntStrength = 2 });
         }
     }
 
@@ -129,14 +129,12 @@ public class Cactus : Shooter
 
     public override void UpdateStats()
     {
-        if (IsPath1Maxed) piercingAdder += 2;
         bool shielded = HasEffect<ShieldEffect>();
         float asBonus = IsPath3Maxed && shielded ? 0.35f : 0f;
         float armorBonus = shielded ? ShieldArmorBonus : 0f;
         attackSpeedTotalMultiplier += asBonus;
         armorAdder += armorBonus;
         base.UpdateStats();
-        if (IsPath1Maxed) piercingAdder -= 2;
         attackSpeedTotalMultiplier -= asBonus;
         armorAdder -= armorBonus;
         temperatureMax = comfortMax;
@@ -167,7 +165,7 @@ public class Cactus : Shooter
     }
 
     public override string GetPassiveDescription() =>
-        $"Insects that attack the {GetName()} take damage equal to <color=green><b>100%</b></color> of their own Attack Damage as " +
+        $"Insects that deal melee damage to the {GetName()} take damage equal to <color=green><b>100%</b></color> of their own Attack Damage as " +
         $"{PlantData.DamageTypeLabel(damageType)}, and receive " +
         $"<color=green><b>{1 + effectivePath2Level}</b></color> <color=#A0522D>Punctured</color> stack(s).";
 
@@ -184,7 +182,7 @@ public class Cactus : Shooter
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Increase <color=green><b>Piercing</b></color> by <color=green><b>2</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, "Attacks now apply <color=green><b>2</b></color> <color=#A0522D>Punctured</color> stacks.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -193,7 +191,7 @@ public class Cactus : Shooter
     {
         float hppl = CactData?.path2HealthPerLevel ?? 60f;
         string desc = details
-            ? $"Insects that attack the {GetName()} take damage equal to <color=green><b>100%</b></color> of their own Attack Damage as {PlantData.DamageTypeLabel(damageType)}, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
+            ? $"Insects that deal melee damage to the {GetName()} take damage equal to <color=green><b>100%</b></color> of their own Attack Damage as {PlantData.DamageTypeLabel(damageType)}, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"<color=#A0522D><b>Punctured</b></color>: taking Physical damage deals an extra <color=green><b>1</b></color> Grass damage per stack, lasts <color=green><b>{passiveDuration:F0}s</b></color>.\n\n" +

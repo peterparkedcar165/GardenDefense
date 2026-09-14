@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 70
   placementLimit: 0
   category: 0
-  skillTree: {fileID: 0}
+  skillTree: {fileID: 11400000, guid: 5b35df63d07143619c7e5ab5202c1e5d, type: 2}
   baseMaxHealth: 250
   baseAttackDamage: 31
   baseMagicPower: 0
@@ -30,7 +30,6 @@ MonoBehaviour:
   baseAttackRange: 3
   baseArmor: 49
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.1
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -42,7 +41,6 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   baseHeatResistance: 0
   baseColdResistance: 0
@@ -56,7 +54,7 @@ MonoBehaviour:
   baseLifesteal: 0
   baseBonusEffectChance: 0
   baseCriticalChance: 0.05
-  baseCriticalDamage: 1.75
+  baseCriticalDamage: 1.5
   baseDotDamage: 0
   baseelementalAffinity: 0
   baseCoordinatedDamage: 0
@@ -67,7 +65,6 @@ MonoBehaviour:
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
-  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 8
@@ -92,7 +89,7 @@ MonoBehaviour:
     clips: []
   skillSound:
     clips: []
-  stunChance: 1
+  stunChance: 0.35
   stunDuration: 0.4
   path1AttackDamagePerLevel: 13
   path1AttackSpeedPerLevel: 0.11

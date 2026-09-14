@@ -433,7 +433,7 @@ public abstract class Plant : Entity, IAttackable
         SpawnSkillBar();
         SpawnPassiveBar();
         baseCriticalChance = 0.05f;
-        baseCriticalDamage = 1.75f;
+        baseCriticalDamage = 1.5f;
         allPlants.Add(this);
     }
 
@@ -468,7 +468,6 @@ public abstract class Plant : Entity, IAttackable
         baseMagicPenPercent    = data.baseMagicPenPercent;
         baseLifesteal          = data.baseLifesteal;
         baseBonusEffectChance  = data.baseBonusEffectChance;
-        baseElementalEffectChance = data.baseElementalEffectChance;
         baseOnHitEffectiveness = data.baseOnHitEffectiveness;
         baseFireDamage         = data.baseFireDamage;
         baseWaterDamage        = data.baseWaterDamage;
@@ -1204,6 +1203,37 @@ public abstract class Plant : Entity, IAttackable
         effectivePath3Level = path3Level + path3LevelAdder;
         OnPath3Upgrade(effectivePath3Level);
         return true;
+    }
+
+    // grants one free level of every path (unlocking Path3 if needed) without spending sun or
+    // touching totalSunSpent - used by skill tree "instant" capstone nodes. call at most once per
+    // plant instance (from Awake, before UpdateStats), since it directly increments the level
+    // counters rather than going through the sun-spending Upgrade methods above
+    public void GrantFreePathLevels()
+    {
+        if (path1Level < pathLevelCap)
+        {
+            path1Level++;
+            effectivePath1Level = path1Level + path1LevelAdder;
+            OnPath1Upgrade(effectivePath1Level);
+        }
+        if (path2Level < pathLevelCap)
+        {
+            path2Level++;
+            effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
+            OnPath2Upgrade(effectivePath2Level);
+        }
+        if (!path3Unlocked)
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
+        if (path3Level < pathLevelCap)
+        {
+            path3Level++;
+            effectivePath3Level = path3Level + path3LevelAdder;
+            OnPath3Upgrade(effectivePath3Level);
+        }
     }
 
     // FIELD SELECTION

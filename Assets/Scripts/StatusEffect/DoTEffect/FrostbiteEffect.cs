@@ -4,7 +4,7 @@ public class FrostbiteEffect : DoTEffect
 {
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    public float healthPerSecond = 0.075f, flatPerSecond = 8f;
+    public float healthPerSecond = 0.01f, flatPerSecond = 10f;
     private float baseMovementSlow = 0.10f;
     private float movementSlow;
     private float cachedelementalAffinity;
