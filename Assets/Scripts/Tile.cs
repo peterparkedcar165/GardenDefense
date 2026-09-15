@@ -214,7 +214,7 @@ public class Tile : MonoBehaviour
             return;
         }
 
-        int cost = selector.SelectedPlant.GetComponent<Plant>().data.sunCost;
+        int cost = SkillTreeManager.GetEffectiveSunCost(selectedPlant.data);
         Debug.Log("Cost of selected plant is: " + cost);
 
         if (gm.SpendSun(cost))

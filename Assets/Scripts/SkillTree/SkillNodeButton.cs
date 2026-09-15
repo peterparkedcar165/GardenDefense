@@ -4,80 +4,105 @@ using UnityEngine.EventSystems;
 using TMPro;
 using System.Text;
 
-// one node in the chain, shows name and rank, buys a rank on click, tooltip on hover
-public class SkillNodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+// one node in a plant's chain. spawned at runtime by SkillTreePlantPanel (one shared prefab for
+// every plant), which passes in which slot of the tree this instance represents - so editing
+// this prefab's look, or the panel's layout, changes every plant's tree at once instead of
+// needing per-plant hand-duplicated copies
+//
+// left click stages a purchase (SkillTreeSession.TryStage); right click un-stages it if it
+// hasn't been confirmed yet. a confirmed node no longer responds to right click at all
+public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private Button button;
+    [Header("Refs")]
     [SerializeField] private Image background;
-    [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text rankText;
 
     [Header("State Colors")]
     [SerializeField] private Color lockedColor = new Color(0.4f, 0.4f, 0.4f);
     [SerializeField] private Color availableColor = Color.white;
-    [SerializeField] private Color maxedColor = new Color(1f, 0.85f, 0.3f);
+    [SerializeField] private Color pendingColor = new Color(0.4f, 0.7f, 1f);
+    [SerializeField] private Color confirmedColor = new Color(1f, 0.85f, 0.3f);
 
     private SkillTreeUI ui;
     private SkillTreeData tree;
     private string plantName;
     private int stepIndex;
     private SkillTreeNode node;
-    private bool hovering;
 
-    public void Init(SkillTreeUI ui, SkillTreeData tree, string plantName, int stepIndex, SkillTreeNode node)
+    // called by SkillTreePlantPanel right after Instantiate, with the exact slot this instance
+    // represents in the plant's tree
+    public void Init(SkillTreeUI ui, SkillTreeData tree, string plantName, int stepIndex, int nodeIndexInStep)
     {
         this.ui = ui;
         this.tree = tree;
         this.plantName = plantName;
         this.stepIndex = stepIndex;
-        this.node = node;
-        if (nameText != null) nameText.text = node.nodeName;
-        if (button != null) button.onClick.AddListener(OnClick);
+        node = tree.steps[stepIndex].nodes[nodeIndexInStep];
     }
 
-    private void OnClick()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (!SkillTreeManager.TryPurchase(tree, plantName, stepIndex, node)) return;
-        ui.RefreshAll();
-        if (hovering) ui.ShowTooltip(BuildTooltip());
+        if (node == null) return;
+
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            if (!SkillTreeSession.TryStage(tree, plantName, stepIndex, node)) return;
+        }
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (!SkillTreeSession.TryUnstage(plantName, node.id)) return;
+        }
+        else return;
+
+        Refresh();
+        if (hovering) ui?.ShowTooltip(BuildTooltip());
     }
 
     public void Refresh()
     {
-        int rank = SkillTreeManager.GetRank(plantName, node.id);
-        bool maxed = rank >= node.maxRank;
-        bool locked = !SkillTreeManager.IsStepUnlocked(tree, plantName, stepIndex)
-                   || SkillTreeManager.IsExclusiveLocked(tree.steps[stepIndex], plantName, node);
+        if (node == null) return;
 
-        if (rankText != null) rankText.text = $"{rank}/{node.maxRank}";
-        if (background != null) background.color = locked ? lockedColor : maxed ? maxedColor : availableColor;
-        if (button != null) button.interactable = !locked && !maxed;
+        bool confirmed = SkillTreeSession.IsConfirmed(plantName, node.id);
+        bool pendingPick = !confirmed && SkillTreeSession.IsPending(plantName, node.id);
+        bool locked = !confirmed && !pendingPick &&
+                      (!SkillTreeSession.IsStepUnlockedDisplay(tree, plantName, stepIndex)
+                    || SkillTreeSession.IsExclusiveLockedDisplay(tree.steps[stepIndex], plantName, node));
+
+        int displayRank = SkillTreeSession.GetDisplayRank(plantName, node.id);
+        if (rankText != null) rankText.text = $"{displayRank}/{node.maxRank}";
+
+        if (background != null)
+            background.color = confirmed ? confirmedColor
+                              : pendingPick ? pendingColor
+                              : locked ? lockedColor
+                              : availableColor;
     }
 
+    private bool hovering;
+
+    // name, description, and a locked/unlocked line - matches the same three things the
+    // in-level skill/passive tooltip shows, nothing more
     private string BuildTooltip()
     {
-        int rank = SkillTreeManager.GetRank(plantName, node.id);
+        bool confirmed = SkillTreeSession.IsConfirmed(plantName, node.id);
+        bool pendingPick = !confirmed && SkillTreeSession.IsPending(plantName, node.id);
+
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"<b><color=#FFD700>{node.nodeName}</color></b>  [{rank}/{node.maxRank}]");
+        sb.AppendLine($"<b><color=#FFD700>{node.nodeName}</color></b>");
         if (!string.IsNullOrEmpty(node.description))
             sb.AppendLine(node.description);
         sb.AppendLine();
 
-        foreach (SkillNodeEffect effect in node.effects)
-        {
-            string perRank = FertilizerFormat.FormatValue(effect.statType, effect.valuePerRank);
-            string current = FertilizerFormat.FormatValue(effect.statType, effect.valuePerRank * rank);
-            sb.AppendLine($"{FertilizerFormat.FormatStatName(effect.statType)}: <b><color=green>{perRank}</color></b> per rank [<b><color=green>{current}</color></b>]");
-        }
-
-        if (SkillTreeManager.IsExclusiveLocked(tree.steps[stepIndex], plantName, node))
+        if (confirmed)
+            sb.AppendLine("<color=#FFD700>Unlocked (confirmed) - reset the tree to change this</color>");
+        else if (pendingPick)
+            sb.AppendLine("<color=#66B2FF>Unlocked (pending) - right click to undo</color>");
+        else if (SkillTreeSession.IsExclusiveLockedDisplay(tree.steps[stepIndex], plantName, node))
             sb.AppendLine("<color=red>Locked: the other path was chosen</color>");
-        else if (!SkillTreeManager.IsStepUnlocked(tree, plantName, stepIndex))
+        else if (!SkillTreeSession.IsStepUnlockedDisplay(tree, plantName, stepIndex))
             sb.AppendLine("<color=red>Locked: invest in the previous node first</color>");
-        else if (rank >= node.maxRank)
-            sb.AppendLine("<color=#FFD700>MAX</color>");
         else
-            sb.AppendLine($"Cost: <b><color=green>{node.costPerRank}</color></b> skill point{(node.costPerRank == 1 ? "" : "s")}");
+            sb.AppendLine($"<color=grey>Locked - costs <b><color=green>{node.costPerRank}</color></b> skill point{(node.costPerRank == 1 ? "" : "s")} to unlock</color>");
 
         return sb.ToString().TrimEnd();
     }
@@ -85,12 +110,12 @@ public class SkillNodeButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerEnter(PointerEventData eventData)
     {
         hovering = true;
-        ui.ShowTooltip(BuildTooltip());
+        ui?.ShowTooltip(BuildTooltip());
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         hovering = false;
-        ui.HideTooltip();
+        ui?.HideTooltip();
     }
 }

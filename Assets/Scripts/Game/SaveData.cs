@@ -38,6 +38,25 @@ public class SaveData
             if (p.plantName == plantName && p.nodeId == nodeId) { p.rank = rank; return; }
         skillPurchases.Add(new SkillNodePurchase { plantName = plantName, nodeId = nodeId, rank = rank });
     }
+
+    // persistent per-species exp, banked from a plant's own (session-scoped) exp whenever it
+    // dies, is uprooted, or survives to a level's completion - shown on the Skill Tree screen
+    public List<PlantExpRecord> plantExp = new List<PlantExpRecord>();
+
+    public int GetPlantExp(string plantName)
+    {
+        foreach (PlantExpRecord r in plantExp)
+            if (r.plantName == plantName) return r.totalExp;
+        return 0;
+    }
+
+    public void AddPlantExp(string plantName, int amount)
+    {
+        if (amount <= 0) return;
+        foreach (PlantExpRecord r in plantExp)
+            if (r.plantName == plantName) { r.totalExp += amount; return; }
+        plantExp.Add(new PlantExpRecord { plantName = plantName, totalExp = amount });
+    }
 }
 
 [System.Serializable]
@@ -46,4 +65,11 @@ public class SkillNodePurchase
     public string plantName;
     public string nodeId;
     public int rank;
+}
+
+[System.Serializable]
+public class PlantExpRecord
+{
+    public string plantName;
+    public int totalExp;
 }

@@ -72,6 +72,7 @@ public class ProceduralLevel : SpawnManager
         nextWaveTime = -1f;
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
         yield return new WaitForSeconds(3f);
+        Plant.BankAllExpForLevelEnd();
         SaveManager.instance.CompleteLevel(config.levelNumber);
         Debug.Log("level " + config.levelNumber + " completed");
     }

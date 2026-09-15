@@ -30,8 +30,9 @@ public class PlantButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             costText.color = Color.red;
             return;
         }
-        costText.text = plant.sunCost.ToString();
-        if (gameManager.SunCount >= plant.sunCost)
+        int effectiveCost = SkillTreeManager.GetEffectiveSunCost(plant.data);
+        costText.text = effectiveCost.ToString();
+        if (gameManager.SunCount >= effectiveCost)
         {
             costText.fontStyle = FontStyles.Bold;
             costText.color = Color.green;

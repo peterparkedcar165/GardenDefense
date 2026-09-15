@@ -21,20 +21,24 @@ public class AcornSprout : Shooter
     {
         base.Awake();
         LoadData();
-        if (AcornData != null)
-        {
-            stunChance = AcornData.stunChance;
-            basePassiveDuration = AcornData.stunDuration;
-        }
-        activeDamageMultiplier = data.baseSkillDamageMultiplier;
-        acornBombHealth        = data.baseSkillHealth;
-        activeRadius           = data.baseSkillRadius;
 
-        // free level 1 of every path on placement - deliberately bypasses the sun-spending
-        // Upgrade/Unlock methods (via GrantFreePathLevels) so this can't be abused for an
-        // inflated uproot refund
+        // LoadData already applied any skill tree path1LevelAdder/path2LevelAdder/
+        // path3LevelAdder ("+1 Effective X Point" nodes) and recomputed
+        // effectivePath1/2/3Level from them, so re-running these three hooks here bakes that
+        // virtual level straight into stunChance/activeDamageMultiplier/etc. - at level 0
+        // (the common case with no adder) this reduces to exactly the plain base values these
+        // three lines used to assign directly
+        OnPath1Upgrade(effectivePath1Level);
+        OnPath2Upgrade(effectivePath2Level);
+        OnPath3Upgrade(effectivePath3Level);
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
         if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
-            GrantFreePathLevels();
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     protected override void Shoot(Vector3 target)

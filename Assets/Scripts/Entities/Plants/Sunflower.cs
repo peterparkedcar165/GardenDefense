@@ -16,30 +16,60 @@ public class Sunflower : Shooter
     private float SunGenInterval  => passiveCooldown * (1f + sunGenerationCooldown);
 
     // skill tree node unlock ids
+    public const string LowHealthMitigationUnlock = "sunflower_low_health_mitigation";
     public const string AmbientSunProcUnlock = "sunflower_ambient_sun_proc";
-    public const string SunMarkResistUnlock  = "sunflower_sunmark_resist";
+    public const string SunSkillCooldownUnlock = "sunflower_sun_skillcd";
     public const string ExtraProjectileUnlock = "sunflower_extra_projectile";
     public const string HomingSunrayUnlock    = "sunflower_homing_sunray";
     public const string SunrayRefreshUnlock   = "sunflower_sunray_refresh";
     public const string InstantSkillUnlock    = "sunflower_instant_skill";
 
     private const float AmbientSunProcReduction = 0.02f;
+    private const float LowHealthThreshold = 0.5f;
+    private const float LowHealthDamageReduction = 0.2f;
+    private bool _hasLowHealthMitigation;
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
         basePassiveDuration  = 6f;
-        skillAoERadius       = data.baseSkillRadius;
         passiveCooldownTimer = data.basePassiveCooldown;
-        sunProcChance        = SFData?.sunProcChance ?? 0.35f;
         Entity.OnEntityHit += OnAnyEntityHit;
 
-        // free level 1 of every path on placement - deliberately bypasses the sun-spending
-        // Upgrade/Unlock methods (via GrantFreePathLevels) so this can't be abused for an
-        // inflated uproot refund
+        _hasLowHealthMitigation = SkillTreeManager.HasUnlock(this, LowHealthMitigationUnlock);
+
+        // LoadData already applied any skill tree path1LevelAdder/path2LevelAdder/
+        // path3LevelAdder ("+1 Effective X Point" nodes) and recomputed
+        // effectivePath1/2/3Level from them, so re-running these three hooks here bakes that
+        // virtual level straight into sunProcChance/skillAoERadius/etc.
+        OnPath1Upgrade(effectivePath1Level);
+        OnPath2Upgrade(effectivePath2Level);
+        OnPath3Upgrade(effectivePath3Level);
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
         if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
-            GrantFreePathLevels();
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
+    }
+
+    // skill tree node 1: while below 50% health, the Sunflower takes 20% reduced damage from
+    // any source
+    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null)
+    {
+        if (_hasLowHealthMitigation && health <= maxHealth * LowHealthThreshold)
+            damageDealt *= 1f - LowHealthDamageReduction;
+        base.Damage(damageDealt, damageType, elementalType, source, canCrit, damageTag, forceCrit, onHitEffectivenessOverride);
+    }
+
+    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
+    {
+        if (_hasLowHealthMitigation && health <= maxHealth * LowHealthThreshold)
+            damageDealt *= 1f - LowHealthDamageReduction;
+        base.Damage(damageDealt, damageType, elementalType, damageTag);
     }
 
     protected override void OnDestroy()
@@ -68,6 +98,10 @@ public class Sunflower : Shooter
         {
             GenerateSun(sunGenerated);
             passiveCooldownTimer += passiveCooldown * (1f + sunGenerationCooldown);
+
+            // skill tree node 3.2
+            if (SkillTreeManager.HasUnlock(this, SunSkillCooldownUnlock))
+                skillCooldownTimer = Mathf.Max(0f, skillCooldownTimer - 1f);
         }
     }
 

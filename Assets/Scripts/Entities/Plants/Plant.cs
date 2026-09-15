@@ -377,7 +377,10 @@ public abstract class Plant : Entity, IAttackable
     // overridable label for the auto-cast button, since it isn't always about "casting" a
     // skill on a timer (e.g. Carrot's is a one-time, permanent link, so it reads better as "Bond")
     public virtual string AutoCastLabel => "Auto Cast";
-    public int sunCost, totalSunSpent = 0;
+    // sunCost is the final, actually-charged placement cost: baseSunCost minus any
+    // sunCostReductionAdder from skill tree nodes or fertilizers (StatType.SunCostReduction),
+    // computed once in LoadData after those effects are applied
+    public int sunCost, baseSunCost, sunCostReductionAdder, totalSunSpent = 0;
     [System.NonSerialized] public ElementalType elementalType;
     [System.NonSerialized] public DamageType damageType;
     public int exp = 0;
@@ -486,7 +489,7 @@ public abstract class Plant : Entity, IAttackable
         baseMinionDamage              = data.baseMinionDamage;
         baseCounterDamage             = data.baseCounterDamage;
         startingShield                = data.startingShield;
-        sunCost                       = data.sunCost;
+        baseSunCost                   = data.sunCost;
         basePassiveCooldown           = data.basePassiveCooldown;
         basePassiveDuration           = data.basePassiveDuration;
         baseSkillCooldown             = data.baseSkillCooldown;
@@ -500,6 +503,10 @@ public abstract class Plant : Entity, IAttackable
         if (elementalType == ElementalType.Ice)  coldResistanceAdder += 0.5f; // 50% resistance to cold-driven cooling, not full immunity
         FertilizerManager.instance?.ApplyTo(this);
         SkillTreeManager.ApplyTo(this);
+        // baseSunCost is fixed above; sunCostReductionAdder only ever comes from the two calls
+        // just above (fertilizer/skill tree StatType.SunCostReduction effects), so this always
+        // reflects both sources once they've run
+        sunCost = Mathf.Max(0, baseSunCost - sunCostReductionAdder);
         RecomputeEffectivePathLevels();
         UpdateStats();
         health = maxHealth;
@@ -1119,6 +1126,7 @@ public abstract class Plant : Entity, IAttackable
         GameManager.instance.SunCount += (int)(totalSunSpent * refundRate);
         Debug.Log("Uprooted " + GetName() + " and refunded " + (int)(totalSunSpent * refundRate));
         GameManager.instance.UpdateSun();
+        BankExp();
         // need some sound effects eventually
         occupiedTile.isOccupied = false;
         occupiedTile.GetComponent<Collider2D>().enabled = true;
@@ -1131,6 +1139,37 @@ public abstract class Plant : Entity, IAttackable
     public void GainExp(float amount)
     {
         exp += (int)(amount * (1 + expBoost));
+    }
+
+    // banks this plant's session exp into the persistent per-species total shown on the Skill
+    // Tree screen. not saved to disk here - it rides along whenever something else (currently
+    // SaveManager.CompleteLevel) next calls Save(), matching how currency/sun already behave
+    private void BankExp()
+    {
+        if (exp <= 0 || data == null || SaveManager.instance == null) return;
+        SaveManager.instance.saveData.AddPlantExp(data.plantName, exp);
+        exp = 0;
+    }
+
+    // called once from ProceduralLevel when a level completes, so plants that survive to the
+    // end still bank their exp (Uproot banks it individually, see Uproot() above). also sweeps
+    // dead-but-not-yet-revived ghosts' stored exp, since Kill() deliberately leaves it on the
+    // DeadPlantRecord (in case of revival) rather than banking it immediately
+    public static void BankAllExpForLevelEnd()
+    {
+        foreach (Plant plant in new List<Plant>(allPlants))
+            plant?.BankExp();
+
+        if (SaveManager.instance == null) return;
+        foreach (var kvp in Tile.allTiles)
+        {
+            DeadPlantRecord record = kvp.Value.deadPlant;
+            if (record == null || record.exp <= 0 || record.prefab == null) continue;
+            PlantData recordData = record.prefab.GetComponent<Plant>()?.data;
+            if (recordData == null) continue;
+            SaveManager.instance.saveData.AddPlantExp(recordData.plantName, record.exp);
+            record.exp = 0;
+        }
     }
 
     public virtual void OnPath1Upgrade(int level) {}
@@ -1417,6 +1456,8 @@ public abstract class Plant : Entity, IAttackable
 
     public override void Kill()
     {
+        // exp is NOT banked here - StoreDeadRecord keeps it on the DeadPlantRecord in case this
+        // plant is revived, and a revived plant needs its exp intact rather than zeroed out
         StoreDeadRecord();
         FreeTile();
         DetachAndFadeLight();
