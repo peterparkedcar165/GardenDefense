@@ -68,6 +68,16 @@ public static class PlantStatApplier
             case StatType.Respiration:                   plant.respirationAdder             += value; break;
             case StatType.AttackDamageFlat:              plant.attackDamageAdder            += value; break;
             case StatType.AttackSpeedFlat:                plant.attackSpeedAdder             += value; break;
+            case StatType.Path1LevelAdder:                plant.path1LevelAdder              += Mathf.RoundToInt(value); break;
+            case StatType.Path2LevelAdder:                plant.path2LevelAdder              += Mathf.RoundToInt(value); break;
+            case StatType.Path3LevelAdder:                plant.path3LevelAdder              += Mathf.RoundToInt(value); break;
+            // feeds Plant.sunCostReductionAdder, which Plant.LoadData folds into sunCost right
+            // after both FertilizerManager.ApplyTo and SkillTreeManager.ApplyTo have run - so
+            // this covers a fertilizer applied to this specific instance. the pre-placement cost
+            // shown before a plant even exists (shop/loadout UI, Tile's placement charge) instead
+            // reads SkillTreeManager.GetSunCostReduction/GetEffectiveSunCost directly, since only
+            // the skill tree's reduction is known before an instance exists to fertilize
+            case StatType.SunCostReduction:              plant.sunCostReductionAdder        += Mathf.RoundToInt(value); break;
         }
     }
 }

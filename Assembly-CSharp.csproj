@@ -130,6 +130,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\RegenerationEffect.cs" />
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SnowdropData.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillTreeSession.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalGlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\BogIrisProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />
     <Compile Include="Assets\Scripts\Audio\AmbienceProfile.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillTreeLineConnector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\FreezeEffect.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerCard.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
@@ -244,6 +246,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\ICarrierInsect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoonOfTheWispEffect.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillTreePlantPanel.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HypnotizedEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />

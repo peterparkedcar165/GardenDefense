@@ -17,12 +17,16 @@ public class AcornBomb : Minion
     private float tauntTickTimer = 0f;
     private static readonly DamageTag[] impactTags = { DamageTag.AoE, DamageTag.SkillDamage };
 
-    // skill tree nodes 3.1/3.2
+    // skill tree nodes 1/3.1/3.2
+    private const string LowHealthMitigationUnlock = "acorn_bomb_low_health_mitigation";
     private const string GrassDotUnlock = "acorn_bomb_grass_dot";
     private const string MagicArmorUnlock = "acorn_bomb_magic_armor";
     private const float GrassDotTickInterval = 1f;
     private const float GrassDotArmorPercent = 0.25f;
     private const int MagicArmorBonus = 100;
+    private const float LowHealthThreshold = 0.5f;
+    private const float LowHealthDamageReduction = 0.2f;
+    private bool _hasLowHealthMitigation;
     private bool _hasGrassDot;
     private float _grassDotTimer;
     private static readonly DamageTag[] grassDotTags = { DamageTag.SkillDamage, DamageTag.AoE };
@@ -57,6 +61,7 @@ public class AcornBomb : Minion
         baseMovementSpeed = 0f;
         isFlying = true;
 
+        _hasLowHealthMitigation = SkillTreeManager.HasUnlock(source, LowHealthMitigationUnlock);
         _hasGrassDot = SkillTreeManager.HasUnlock(source, GrassDotUnlock);
         if (SkillTreeManager.HasUnlock(source, MagicArmorUnlock))
             baseMagicArmor = MagicArmorBonus;
@@ -190,6 +195,23 @@ public class AcornBomb : Minion
     }
 
     public override void Attack() { }
+
+    // skill tree node 1: while below 50% health, the Acorn takes 20% reduced damage from any
+    // source - covers both Damage overloads since insects hitting a blocking Minion normally go
+    // through the sourced one, but this stays correct for any tagged/no-source damage too
+    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null)
+    {
+        if (_hasLowHealthMitigation && health <= maxHealth * LowHealthThreshold)
+            damageDealt *= 1f - LowHealthDamageReduction;
+        base.Damage(damageDealt, damageType, elementalType, source, canCrit, damageTag, forceCrit, onHitEffectivenessOverride);
+    }
+
+    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
+    {
+        if (_hasLowHealthMitigation && health <= maxHealth * LowHealthThreshold)
+            damageDealt *= 1f - LowHealthDamageReduction;
+        base.Damage(damageDealt, damageType, elementalType, damageTag);
+    }
 
     protected override void Update()
     {

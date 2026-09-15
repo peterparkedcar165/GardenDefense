@@ -66,10 +66,44 @@ public static class SkillTreeManager
     public static bool HasUnlock(Plant plant, string unlockId)
     {
         if (plant == null || plant.data == null || plant.data.skillTree == null) return false;
-        string plantName = plant.data.plantName;
-        foreach (SkillTreeStep step in plant.data.skillTree.steps)
+        return HasUnlock(plant.data.plantName, plant.data.skillTree, unlockId);
+    }
+
+    public static bool HasUnlock(string plantName, SkillTreeData tree, string unlockId)
+    {
+        if (tree == null) return false;
+        foreach (SkillTreeStep step in tree.steps)
             foreach (SkillTreeNode node in step.nodes)
                 if (node.unlockId == unlockId && GetRank(plantName, node.id) > 0) return true;
         return false;
+    }
+
+    // sums confirmed StatType.SunCostReduction effects for this plant - queried at Tile
+    // placement time, before any Plant instance exists, since sun is spent off the prefab's own
+    // PlantData.sunCost right before Instantiate
+    public static int GetSunCostReduction(string plantName, SkillTreeData tree)
+    {
+        if (tree == null) return 0;
+        int total = 0;
+        foreach (SkillTreeStep step in tree.steps)
+            foreach (SkillTreeNode node in step.nodes)
+            {
+                int rank = GetRank(plantName, node.id);
+                if (rank <= 0) continue;
+                foreach (SkillNodeEffect effect in node.effects)
+                    if (effect.statType == StatType.SunCostReduction)
+                        total += UnityEngine.Mathf.RoundToInt(effect.valuePerRank * rank);
+            }
+        return total;
+    }
+
+    // the actual sun cost to charge/display for placing a fresh plant of this species right
+    // now - only the skill tree's reduction applies here, since a not-yet-placed plant can't
+    // have been fertilized. shared by Tile (placement charge) and the shop/loadout UI
+    // (PlantButton, PlantSlotButton) so the displayed and charged cost always agree
+    public static int GetEffectiveSunCost(PlantData data)
+    {
+        if (data == null) return 0;
+        return UnityEngine.Mathf.Max(0, data.sunCost - GetSunCostReduction(data.plantName, data.skillTree));
     }
 }

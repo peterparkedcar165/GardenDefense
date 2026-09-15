@@ -14,25 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
   steps:
   - nodes:
-    - id: node1_attackdamage
-      nodeName: Sharpened Acorns
-      description: Increase Base Attack Damage by 12.
+    - id: node1_lowhealthmitigation
+      nodeName: Hardy Shell
+      description: Under 50% Health, the Acorn takes 20% reduced damage.
       maxRank: 1
       costPerRank: 1
-      effects:
-      - statType: 60
-        valuePerRank: 12
-      unlockId:
+      effects: []
+      unlockId: acorn_bomb_low_health_mitigation
     ranksToUnlockNext: 1
   - nodes:
-    - id: node2_armor
-      nodeName: Hardened Shell
-      description: Increase Base Armor by 18.
+    - id: node2_path1adder
+      nodeName: Attack Insight
+      description: '+1 Effective Attack Point.'
       maxRank: 1
       costPerRank: 1
       effects:
-      - statType: 39
-        valuePerRank: 18
+      - statType: 62
+        valuePerRank: 1
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
@@ -52,25 +50,25 @@ MonoBehaviour:
       unlockId: acorn_bomb_magic_armor
     ranksToUnlockNext: 1
   - nodes:
-    - id: node4_critchance
-      nodeName: Focused Aim
-      description: Increase Base Critical Chance by 8%.
+    - id: node4_path2adder
+      nodeName: Passive Insight
+      description: '+1 Effective Passive Point.'
       maxRank: 1
       costPerRank: 2
       effects:
-      - statType: 9
-        valuePerRank: 0.08
+      - statType: 63
+        valuePerRank: 1
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5_attackspeed
-      nodeName: Quickdraw
-      description: Increase Base Attack Speed by 0.12.
+    - id: node5_path3adder
+      nodeName: Skill Insight
+      description: '+1 Effective Skill Point.'
       maxRank: 1
       costPerRank: 2
       effects:
-      - statType: 61
-        valuePerRank: 0.12
+      - statType: 64
+        valuePerRank: 1
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
@@ -92,9 +90,11 @@ MonoBehaviour:
   - nodes:
     - id: node7_instantskill
       nodeName: Ready to Bloom
-      description: Automatically unlocks 1 level of Attack, Passive, and Skill upon placement.
+      description: Reduce Sun cost by 10. Automatically unlocks Skill.
       maxRank: 1
       costPerRank: 4
-      effects: []
+      effects:
+      - statType: 65
+        valuePerRank: 10
       unlockId: acorn_instant_skill
     ranksToUnlockNext: 1

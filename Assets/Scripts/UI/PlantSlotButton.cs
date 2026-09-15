@@ -18,7 +18,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         data = plantData;
         plant = plantData.plantPrefab;
         if (icon != null) icon.sprite = plantData.icon;
-        if (sunCostText != null) sunCostText.text = data.sunCost.ToString();
+        if (sunCostText != null) sunCostText.text = SkillTreeManager.GetEffectiveSunCost(data).ToString();
     }
 
     void Update()
@@ -31,8 +31,9 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
             sunCostText.color = Color.red;
             return;
         }
-        sunCostText.text = data.sunCost.ToString();
-        if (GameManager.instance.SunCount >= data.sunCost)
+        int effectiveCost = SkillTreeManager.GetEffectiveSunCost(data);
+        sunCostText.text = effectiveCost.ToString();
+        if (GameManager.instance.SunCount >= effectiveCost)
         {
             sunCostText.fontStyle = FontStyles.Bold;
             sunCostText.color = Color.green;
@@ -46,7 +47,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnClicked()
     {
-        if (GameManager.instance == null || GameManager.instance.SunCount < data.sunCost) return;
+        if (GameManager.instance == null || GameManager.instance.SunCount < SkillTreeManager.GetEffectiveSunCost(data)) return;
         if (Plant.AtPlacementLimit(data)) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
         if (PlantSelector.instance == null) return;

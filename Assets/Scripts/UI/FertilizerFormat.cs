@@ -28,7 +28,14 @@ public static class FertilizerFormat
             case StatType.MagicArmor:
             case StatType.ArmorPenetration:
             case StatType.MagicPenetration:
+            case StatType.AttackDamageFlat:
+            case StatType.Path1LevelAdder:
+            case StatType.Path2LevelAdder:
+            case StatType.Path3LevelAdder:
+            case StatType.SunCostReduction:
                 return $"{sign}{UnityEngine.Mathf.RoundToInt(value)}";
+            case StatType.AttackSpeedFlat:
+                return $"{sign}{value:F2}";
             default:
                 return $"{sign}{value * 100f:F0}%";
         }
@@ -96,6 +103,12 @@ public static class FertilizerFormat
             case StatType.HeatResistance:                   return "Heat Resistance";
             case StatType.ColdResistance:                   return "Cold Resistance";
             case StatType.Respiration:                      return "Respiration";
+            case StatType.AttackDamageFlat:                 return "Attack Damage";
+            case StatType.AttackSpeedFlat:                  return "Attack Speed";
+            case StatType.Path1LevelAdder:                  return "Effective Attack Point";
+            case StatType.Path2LevelAdder:                  return "Effective Passive Point";
+            case StatType.Path3LevelAdder:                  return "Effective Skill Point";
+            case StatType.SunCostReduction:                 return "Sun Cost";
             default:                                        return statType.ToString();
         }
     }

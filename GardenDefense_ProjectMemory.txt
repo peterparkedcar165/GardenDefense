@@ -1,0 +1,273 @@
+GARDEN DEFENSE - PROJECT MEMORY DUMP
+(compiled from Claude Code's persistent memory files for this project)
+
+NOTE: Several of these entries are old (many 60-140+ days) and are point-in-time
+notes, not live state. Some are already stale against the current code (e.g.
+"Nature" element was renamed to Grass long ago, the "Ground" element type was
+removed, Begonia is listed as "skill TBD" when it has since been reworked
+multiple times, and the Entity Architecture doc predates the entire elemental
+Primer/reaction system). This dump also does NOT include a huge amount of very
+recent work done in the most recent session: a full elemental reactions
+rebuild, Begonia's complete redesign, a Taunt priority/strength system, full
+skill trees authored for Acorn Sprout and Sunflower, and the Skill Tree scene
+UI (staged purchases, Confirm/Reset, dynamic per-plant panels). Treat this as
+historical background context, not a current spec.
+
+==================================================
+PROJECT OVERVIEW
+==================================================
+Garden Defense is a tower defense game in Unity (C#). Player places plants on
+a grid to defend against waves of insects following a fixed waypoint path;
+reaching the end damages the player.
+
+Tech stack: Unity 2D, orthographic camera, C# MonoBehaviour pattern,
+TextMeshPro, Collider2D/OnTriggerEnter2D for projectiles, JSON save to
+Application.persistentDataPath/save.json.
+
+Core economy: Sun currency (starts 125), player health (starts 20, game over
+at 0 via timeScale=0).
+
+Scene flow: MainMenu -> LevelSelector -> Level scene. SceneTransition
+(DontDestroyOnLoad) fades between scenes. SaveManager (DontDestroyOnLoad)
+persists highestLevelUnlocked, unlockedPlants, and (as of much later
+development) skillPoints, skillPurchases, plantExp, and more.
+
+==================================================
+ENTITY ARCHITECTURE (118 days old - likely stale)
+==================================================
+MonoBehaviour
+- Entity (abstract)
+  - Plant (abstract)
+    - Shooter (abstract) -> AcornSprout, Sunflower, PoisonShroom, LeafRanger
+    - Aura (abstract) -> Snowdrop, Calendula
+  - Insect (abstract) -> Ant (abstract) -> ScoutAnt, SoldierAnt, WorkerAnt
+- Projectile (abstract) -> AcornProjectile, PoisonShroomProjectile,
+  SunflowerProjectile, LeafRangerProjectile
+StatusEffect (plain C#) -> HardCrowdControl -> StunEffect; ChillEffect;
+SlowEffect; PoisonEffect
+
+Stat formula: finalStat = (base + adder) * multiplier, recomputed every frame
+in UpdateStats().
+
+Damage: two Entity.Damage() overloads (no-source/no-crit vs.
+with-source/canCrit/registers attacker/shred/crit/indicator). DamageType:
+Physical/Magic/True. Tags: Projectile/SingleTarget/AoE/DoT/Melee/Attack/Skill.
+
+Plant fields: sunCost, totalSunSpent (refund basis), occupiedTile,
+elementalType/damageType (Inspector-set). Uproot() refunds 50%.
+
+Path upgrades: 3 paths, cap 5. Path1/2 always open; Path3 needs
+UnlockPath3(). Cost: Path1/2 = sunCost/2 + 28*level, Path3 = sunCost*0.75 +
+28*level. Virtual hooks: OnPath1Upgrade, OnPath2Upgrade, OnPath3Unlock,
+OnPath3Upgrade.
+
+Insect death: attackerSet (HashSet<Plant>) via RegisterAttacker; on kill, sun
+to GameManager, exp split among attackers (min 25% share each), expDrop =
+sunDrop/2.
+
+==================================================
+KEY SCRIPTS REFERENCE (134 days old - likely stale on some paths)
+==================================================
+Singletons: GameManager, SaveManager (JSON persistence), PathManager
+(waypoints), SceneTransition.
+
+Grid: GridManager, Tile (OnMouseDown handles placement), PlantSelector
+(selection/uproot mode), PlantButton.
+
+PlantUpgradeUI - singleton panel: name/icon/stats/3 paths/tooltips/targeting
+toggle.
+
+CameraFit - auto-sizes orthographic camera to backdrop.
+
+DamageIndicator - floating damage numbers, elemental-colored, bold crits.
+
+Spawning: SpawnManager (abstract base), Level1 (coroutine/InvokeRepeating
+wave spawner - now superseded by ProceduralLevel / hand-authored waves in
+later sessions).
+
+SaveData - highestLevelUnlocked, unlockedPlants (this has grown enormously
+since - skillPoints, skillPurchases, plantExp, etc. now exist too).
+
+MainMenu, LevelSelector.
+
+==================================================
+PLANTS AND INSECTS REFERENCE (118 days old - very stale, predates most
+rebalancing)
+==================================================
+Old base stats/kits for AcornSprout, Sunflower, PoisonShroom, LeafRanger,
+Snowdrop, Calendula, and an early "Begonia (PLANNED)" stub. Insect stats for
+WorkerAnt/ScoutAnt/SoldierAnt. Not worth relying on - all of this has since
+been substantially reworked (confirmed extensively for Acorn/Sunflower/Begonia
+specifically).
+
+==================================================
+UPGRADE, DESCRIPTION, AND UI SYSTEM (133 days old)
+==================================================
+PlantData SO holds plantPrefab/icon. Description methods per plant: GetName,
+GetDescription, GetAttackDescription, GetPassiveDescription,
+GetSkillDesription (typo preserved intentionally), GetPathXDescription. Rich
+text convention: <b><color=X>text</color></b>. Established format:
+"Increase X by <b><color=green>N</color></b> per level.
+[<b><color=green>+CURRENT</color></b>]" plus a "Level: [...]" tracker line.
+Tooltip system: PlantIconTooltip, PathHoverTrigger, shared panel in
+PlantUpgradeUI.
+
+==================================================
+MAGIC POWER SCALING PATTERN (feedback)
+==================================================
+When a bonus lives in decimal-percentage stat space, divide magic power
+contribution by 100: multiplier * magicPower / 100f. Split into
+Base/MP/total properties for description display (green base, pink [+MP]
+bracket). Store the multiplier in the plant's Data SO (basePassiveMultiplier,
+baseSkillMultiplier).
+
+==================================================
+DATA ARCHITECTURE (feedback)
+==================================================
+Insects: use base InsectData directly; only get a subclass (e.g.
+FireAntData, TermiteData) when they have meaningful unique configurable
+data. Plants: always get their own PlantData subclass.
+
+==================================================
+COMMENT STYLE (feedback)
+==================================================
+Comments: plain words and numbers only, all lowercase, no
+hyphens/dashes/decorative dividers/sectioning.
+
+==================================================
+INPUT SYSTEM (feedback)
+==================================================
+Always use the new Input System (Keyboard.current, Mouse.current) - never
+UnityEngine.Input (throws at runtime).
+
+==================================================
+GRID NOT IN CANVAS (feedback)
+==================================================
+Grid/GridManager and other world-space objects must never be inside the
+Canvas hierarchy - Canvas renders on top of everything in screen space and
+intercepts clicks meant for world objects.
+
+==================================================
+INSECT TARGETING: USE APPROACH POINT (feedback)
+==================================================
+Both targeting and attack-range checks must use GetApproachPoint() (collider
+edge), never the plant's center position - otherwise insects either never
+attack or immediately lose their target at the boundary.
+
+==================================================
+DON'T AUTO-APPLY EDITS -> SUPERSEDED
+==================================================
+User later explicitly switched to auto-edit mode: apply changes directly via
+Edit/Write tools, no need to present code blocks for manual copy-paste.
+
+==================================================
+DEFERRED: BASE STAT ORDER IN AWAKE (125 days old)
+==================================================
+All plant subclasses set base stats after base.Awake(), but Entity.Awake()
+calls UpdateStats() before those are assigned, so the first frame computes
+off zeros (self-corrects next frame). Deliberately deferred by the user
+during a 2026-05-12 code audit - remind when touching Awake-related code.
+
+==================================================
+DEFERRED: UPDATESTATS DIRTY FLAG (120 days old)
+==================================================
+UpdateStats() runs every frame for every entity - flagged as the single
+highest-impact perf fix in a 2026-05-17 audit. Deliberately deferred until
+final polish; add a _statsDirty bool then.
+
+==================================================
+DEFERRED: FERTILIZERCARD ICON (118 days old)
+==================================================
+FertilizerCard.cs's icon.sprite = data.icon is commented out (placeholder
+prefab icon used instead) until real fertilizer sprites exist.
+
+==================================================
+PROGRESSION SYSTEM PLAN (63 days old)
+==================================================
+"Daytime" biome = first biome, 5 levels. Unlock order: Acorn Sprout (start)
+-> Sunflower (beat L1) -> TBD wind plant (beat L2) -> Waterlily (beat L3) ->
+LeafRanger (beat L4); PoisonShroom/Snowdrop saved for later. Plant slots: 4
+max; auto-available under 4 unlocked, loadout selection required at 4+.
+Boss levels every 5th level, no plant unlock on those. Difficulty tiers
+(Easy/Medium/Hard) per level, sequentially unlocked - details TBD. Skill
+trees mentioned as planned (later fully designed/built - see below).
+Endless mode planned (see separate entry).
+
+==================================================
+DROP STAT SYSTEM (86 days old)
+==================================================
+Kill rewards: sun = baseSunDrop + sunDropAdder + sunYieldAdder +
+baseSunDrop*sunDropMultiplier + baseSunDrop*sunYieldMultiplier (currency
+mirrors this). Insect-side: sunDrop/sunDropAdder/sunDropMultiplier
+(+currency mirrors). Plant-side: sunYieldAdder/sunYieldMultiplier (+currency
+mirrors) - sunYieldMultiplier also drives Plant.GenerateSun()'s passive
+generation. BlessingOfTheSunEffect (Aeonium) is the reference implementation
+for a status effect that buffs sunYieldMultiplier.
+
+==================================================
+REVIVAL SYSTEM (94 days old)
+==================================================
+On death, Plant.Kill() stores a DeadPlantRecord on the tile (prefab, sprite,
+path levels, path3Unlocked, totalSunSpent, exp) instead of a dormant
+GameObject; tile frees immediately. ShowDeadPlantGhosts()/
+HideDeadPlantGhosts() render translucent ghosts; RevivePlant(tile,
+healthPercent) reinstantiates and restores state. Not yet built: the actual
+reviver plant/skill, highground-bonus reapplication on revival,
+totalDamageDealt tracking.
+
+==================================================
+SKILL TREE SYSTEM (63 days old - now substantially built further this
+session)
+==================================================
+Original design: one tree per plant, horizontal chain of steps, a step holds
+1 node or a 2-node exclusive fork (buying one permanently locks the other),
+ranksToUnlockNext gates the next step, shared skillPoints currency earned via
+SaveManager.CompleteLevel (+3 first clear/+1 repeat). Files: SkillTreeData.cs,
+SkillTreeManager.cs, PlantStatApplier.cs, SkillTreeUI.cs, SkillNodeButton.cs.
+PlantData.skillTree links a plant to its tree; Plant.LoadData calls
+SkillTreeManager.ApplyTo(this). Debug hotkeys on SaveManager: semicolon = +20
+points, quote = reset.
+
+(This has since been extended substantially: totalSkillPointsEarned
+tracking, a full staged-purchase session layer with Confirm/Reset, dynamic
+per-plant panel spawning, and fully authored trees for Acorn Sprout and
+Sunflower - none of that is reflected in this old memory entry, only in the
+most recent development session.)
+
+==================================================
+TUTORIAL SYSTEM (83 days old, not yet implemented)
+==================================================
+Planned: SaveData.seenTutorials (List<string>), TutorialManager.TryShow("id")
+singleton, shown-once popups triggerable from anywhere.
+
+==================================================
+ENCYCLOPEDIA SCENE (121 days old, not yet implemented)
+==================================================
+Planned separate scene: hierarchical reference for Status Effects, Elemental
+Reactions, Maps/Weather, Plants, Insects. Open questions: navigation style,
+per-type entry depth, progressive vs. full unlock.
+
+==================================================
+ENDLESS MODE PLAN (116 days old, not yet implemented)
+==================================================
+Post-game roguelike mode: threat-budget wave generation, between-wave choice
+offers (new plant/stat buff/curse-reward trade), biome rotation. Hard
+prerequisite: migrate hand-placed grid levels to Unity's Tilemap system
+first - current level format doesn't support procedural generation.
+
+==================================================
+FOG SYSTEM (116 days old, not yet implemented)
+==================================================
+Planned mountain-biome mechanic: global fog overlay, wind plant punches
+clear holes (inverse of Calendula's light system), insects in fog invisible
+to player and untargetable by plants, possible insect stat bonuses in fog
+(TBD). Build fog overlay -> targeting logic -> insect bonuses, in that
+order.
+
+==================================================
+DEPRECATED PLANTS (63 days old)
+==================================================
+As of 2026-07-13: Cattail, Morning Glory, Ghost Fungus, Aeonium are frozen -
+keep their code/assets, but no further edits, rebalancing, descriptions, or
+skill trees for them unless a global refactor forces minimal compile-only
+changes.

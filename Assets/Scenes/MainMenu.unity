@@ -2166,7 +2166,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 927440203}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: OnEncyclopedia
+        m_MethodName: OnSkillTree
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3243,7 +3243,9 @@ MonoBehaviour:
     flowerPotLevel: 0
     waterPotLevel: 0
     skillPoints: 0
+    totalSkillPointsEarned: 0
     skillPurchases: []
+    plantExp: []
   selectedLevel: 0
   plantRegistry: {fileID: 11400000, guid: 16efee928f1a12a4ca9d8b9e30207fb2, type: 2}
 --- !u!4 &1900346993

@@ -14,17 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
   steps:
   - nodes:
-    - id: node1_attackspeed
-      nodeName: Quickdraw
-      description: Increase Base Attack Speed by 0.12.
-      maxRank: 1
-      costPerRank: 1
-      effects:
-      - statType: 61
-        valuePerRank: 0.12
-      unlockId:
-    ranksToUnlockNext: 1
-  - nodes:
     - id: node2_sunyield
       nodeName: Radiant Harvest
       description: Increase Sun Yield by 22%.
@@ -36,6 +25,17 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
+    - id: node1_path1adder
+      nodeName: Attack Insight
+      description: '+1 Effective Attack Point.'
+      maxRank: 1
+      costPerRank: 1
+      effects:
+      - statType: 62
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
     - id: node3a_ambientsunproc
       nodeName: Lingering Warmth
       description: Non-attack Fire damage has the same chance as the passive to reduce the Sun generation cooldown, by 0.02 seconds.
@@ -43,33 +43,35 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: sunflower_ambient_sun_proc
-    - id: node3b_sunmarkresist
+    - id: node3b_sunskillcd
       nodeName: Scorching Mark
-      description: Sun Mark reduces the target's Fire Resistance by 18%.
+      description: Whenever the Sunflower produces Sun via the passive, Skill Cooldown is reduced by 1.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: sunflower_sunmark_resist
+      unlockId: sunflower_sun_skillcd
     ranksToUnlockNext: 1
   - nodes:
-    - id: node4_magicpower
-      nodeName: Solar Focus
-      description: Increase Magic Power by 40.
+    - id: node4_path2adder
+      nodeName: Passive Insight
+      description: '+1 Effective Passive Point.'
       maxRank: 1
       costPerRank: 2
       effects:
-      - statType: 32
-        valuePerRank: 40
+      - statType: 63
+        valuePerRank: 1
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5_extraprojectile
-      nodeName: Overload
-      description: The Attack's max level bonus fires an additional projectile.
+    - id: node5_path3adder
+      nodeName: Skill Insight
+      description: '+1 Effective Skill Point.'
       maxRank: 1
       costPerRank: 2
-      effects: []
-      unlockId: sunflower_extra_projectile
+      effects:
+      - statType: 64
+        valuePerRank: 1
+      unlockId:
     ranksToUnlockNext: 1
   - nodes:
     - id: node6a_homingsunray
@@ -90,9 +92,11 @@ MonoBehaviour:
   - nodes:
     - id: node7_instantskill
       nodeName: Ready to Bloom
-      description: Automatically unlocks 1 level of Attack, Passive, and Skill upon placement.
+      description: Reduce Sun cost by 10. Automatically unlocks Skill.
       maxRank: 1
       costPerRank: 4
-      effects: []
+      effects:
+      - statType: 65
+        valuePerRank: 10
       unlockId: sunflower_instant_skill
     ranksToUnlockNext: 1

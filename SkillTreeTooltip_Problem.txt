@@ -1,0 +1,119 @@
+PROBLEM: Skill Tree node tooltip panel won't shrink to fit its content
+
+CONTEXT
+-------
+Unity project, "Garden Defense" (2D tower defense game). Building a Skill Tree
+meta-progression screen (a separate scene from gameplay levels) where players
+spend skill points on per-plant upgrade nodes.
+
+Each node (a UI Image + a "SkillNodeButton" script) shows a tooltip on hover,
+built to visually match an existing in-game tooltip panel that's reused from
+Assets/Prefabs/Canvas/Canvas.prefab. That panel was copied into the Skill Tree
+scene's hierarchy. Its structure is:
+
+Scroll View
+  TooltipPanel          (outer wrapper, RectTransform only - the object the
+                          code positions at the mouse cursor)
+    HoverDescriptionPanel  (an Image - the visible background box)
+      StatsText             (a TMP_Text - the actual tooltip text content)
+    StatsPanels           (deactivated, unrelated to this - used elsewhere
+                          for a different, richer plant/insect stat tooltip)
+
+The C# side (SkillTreeUI.ShowTooltip) just sets StatsText.text and positions
+TooltipPanel at the mouse cursor every frame - it does NOT do any manual
+resizing in code anymore. All sizing-to-content was intentionally moved to
+pure Unity UI components (ContentSizeFitter / VerticalLayoutGroup) instead of
+code, per explicit request.
+
+GOAL
+----
+1. TooltipPanel's pivot is set to (0,0) so that wherever the code positions it
+   (at the mouse cursor), the panel's bottom-left corner sits exactly on the
+   cursor and the panel grows up-and-right from there.
+2. The panel (both HoverDescriptionPanel and the outer TooltipPanel) should
+   automatically shrink/grow to exactly fit whatever text is currently in
+   StatsText - no more, no less.
+
+WHAT HAS BEEN CONFIGURED SO FAR
+--------------------------------
+- HoverDescriptionPanel: Anchors Min/Max (0,0)-(0,0) [point anchor, not
+  stretched], Pivot (0,0), Pos X/Y (0,0) - so it sits exactly at TooltipPanel's
+  own origin/pivot corner.
+- HoverDescriptionPanel has a Vertical Layout Group (padding set) and a
+  Content Size Fitter (Horizontal Fit = Preferred Size, Vertical Fit =
+  Preferred Size). "Child Controls Size" (Width and Height) is checked on
+  this Vertical Layout Group.
+- TooltipPanel also now has its own Vertical Layout Group (padding 0) and
+  Content Size Fitter (both axes Preferred Size), with Child Controls Size
+  (Width/Height) also checked, so it should hug HoverDescriptionPanel's size
+  the same way HoverDescriptionPanel hugs StatsText.
+- Most recently: told the user to also check/uncheck "Child Force Expand
+  Width/Height" on both Vertical Layout Groups (a common Unity gotcha where
+  Force Expand fights ContentSizeFitter's shrink-to-fit behavior) - result of
+  that change is not yet confirmed back to me.
+
+CURRENT SYMPTOM
+----------------
+Despite the above, the panel (as seen in the Scene view, with the default
+placeholder text "New Text" in StatsText) is still rendering far larger than
+the text actually needs - a large black box, several times bigger than the
+tiny bit of text inside it.
+
+Earlier in this same troubleshooting session, we already fixed one related
+issue: initially "Child Controls Size" was unchecked on HoverDescriptionPanel's
+Vertical Layout Group, which meant the layout group wasn't forcing StatsText's
+own RectTransform to match its true rendered size, so the ContentSizeFitter
+above it was just hugging StatsText's old/stale (large) existing size instead
+of its real content size. Enabling Child Controls Size was the fix for that
+specific symptom, but the panel is reportedly STILL oversized now even after
+also applying the same fix chain one level up on TooltipPanel.
+
+NOT YET CONFIRMED / OPEN QUESTIONS
+------------------------------------
+1. Was "Child Force Expand Width/Height" actually checked or unchecked before
+   the most recent instruction to turn it off? Not yet confirmed by the user.
+2. What is StatsText's own RectTransform Width/Height currently showing
+   (and are those fields greyed out, indicating a parent layout group is
+   controlling them, or still editable, indicating nothing is)?
+3. Does StatsText have its own Content Size Fitter or Layout Element
+   component? (It shouldn't - only the parent panels should have these -
+   but this hasn't been explicitly confirmed.)
+4. Is the observed size coming from HoverDescriptionPanel itself still not
+   shrinking, or from TooltipPanel (the outer wrapper) not shrinking to
+   match an already-correctly-sized HoverDescriptionPanel? This distinction
+   was asked for but not yet answered.
+5. Testing has all been done in the Unity Editor's Scene view (not Play
+   mode) - it's possible ContentSizeFitter recalculation is just stale in
+   the editor and would look correct in actual Play mode, but this has not
+   been verified either.
+
+RELEVANT SCRIPT (for context, likely not the cause since sizing was moved
+out of code, but included for completeness)
+--------------------------------------------------------------------------
+public void ShowTooltip(string text)
+{
+    if (tooltipPanel == null) return;
+    tooltipPanel.SetActive(true);
+    if (tooltipText == null) return;
+    tooltipText.text = text;
+
+    Canvas.ForceUpdateCanvases();
+    PositionTooltipAtCursor();
+}
+
+PositionTooltipAtCursor() converts the mouse screen position into the
+TooltipPanel's parent's local space via
+RectTransformUtility.ScreenPointToLocalPointInRectangle and sets
+panelRect.anchoredPosition directly, then clamps the panel to stay within
+the screen bounds on all four edges by reading panelRect.GetWorldCorners().
+
+WHAT WOULD HELP
+----------------
+A clear explanation of why a nested
+TooltipPanel(VerticalLayoutGroup+ContentSizeFitter) >
+HoverDescriptionPanel(VerticalLayoutGroup+ContentSizeFitter) > StatsText(TMP)
+chain, with Child Controls Size enabled at both levels, would still fail to
+shrink to fit content - and the specific fix. Also open to a simpler
+alternative structure if the two-level nested Layout Group approach is
+overcomplicated for what is fundamentally "one background box that hugs one
+text element."

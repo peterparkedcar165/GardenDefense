@@ -97,5 +97,15 @@ public enum StatType
     // grant a plain "Increase Base X by Y" bonus rather than a percentage multiplier - appended
     // here rather than next to their percentage counterparts to keep every ordinal above stable
     AttackDamageFlat,
-    AttackSpeedFlat
+    AttackSpeedFlat,
+    // virtual per-path level bonuses (skill tree "+1 Effective X Point" nodes) - added to
+    // path1LevelAdder/path2LevelAdder/path3LevelAdder rather than the real purchased level, so
+    // they boost a plant's OnPathXUpgrade output without costing sun or counting as a real level
+    Path1LevelAdder,
+    Path2LevelAdder,
+    Path3LevelAdder,
+    // flat reduction to a plant's placement sun cost, applied at Tile placement time (before the
+    // plant even exists) via SkillTreeManager.GetSunCostReduction - never applied through
+    // PlantStatApplier since there is no live plant instance yet when it matters
+    SunCostReduction
 }

@@ -91,8 +91,8 @@ MonoBehaviour:
     clips: []
   stunChance: 0.35
   stunDuration: 0.4
-  path1AttackDamagePerLevel: 13
-  path1AttackSpeedPerLevel: 0.11
+  path1AttackDamagePerLevel: 9
+  path1AttackSpeedPerLevel: 0.09
   path1ArmorPerLevel: 4
   path2StunChancePerLevel: 0.03
   path2StunDurationPerLevel: 0.2
