@@ -53,7 +53,10 @@ public class FertilizerCard : MonoBehaviour
         highlight.SetActive(false);
 
         if (rerollButton != null)
+        {
             rerollButton.gameObject.SetActive(true);
+            rerollButton.interactable = true;
+        }
 
         RefreshDisplayGenerated();
         StartCoroutine(AnimateIn());
@@ -61,11 +64,13 @@ public class FertilizerCard : MonoBehaviour
 
     // rerolls just this card's bundle at the same tier, independent of the other 2 cards and of
     // the queue itself - nothing is consumed by a reroll, only by an actual selection.
-    // wired via the Reroll button's OnClick() in the Inspector, same as OnSelectClicked
+    // wired via the Reroll button's OnClick() in the Inspector, same as OnSelectClicked.
+    // limited to a single use per card - disabled immediately after firing
     public void OnRerollClicked()
     {
         generatedData = FertilizerManager.instance.RerollSingle(generatedData.tier);
         RefreshDisplayGenerated();
+        if (rerollButton != null) rerollButton.interactable = false;
     }
 
     private void Roll()
