@@ -49,6 +49,8 @@ public class LevelConfig : ScriptableObject
 
     [Header("fertilizers")]
     public FertilizerData[] fertilizerPool;
+    [Tooltip("mid-level fertilizer grants - after each listed wave completes, the player's fertilizer queue gains one entry of that rarity")]
+    public FertilizerGrant[] fertilizerGrants;
 
     [Header("ambience")]
     [Tooltip("looping background sounds, share one profile asset across a biome")]

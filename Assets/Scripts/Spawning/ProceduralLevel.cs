@@ -23,6 +23,7 @@ public class ProceduralLevel : SpawnManager
         }
 
         FertilizerSelectionUI.instance?.Configure(config.fertilizerPool);
+        FertilizerManager.instance?.ResetFertilizerQueue();
         Plant.pathLevelCap = config.maxUpgradeLevel;
         StartAmbience();
         GameManager.instance?.InitiateLevel(config.startSunCount, config.startHealth);
@@ -64,6 +65,7 @@ public class ProceduralLevel : SpawnManager
             GameManager.instance.currentWave = wave;
             GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
             yield return StartCoroutine(RunWave(wave));
+            GrantFertilizersForCompletedWave(wave);
 
             if (wave < config.maxWaves)
                 yield return StartCoroutine(RestPeriod(config.restDuration));
@@ -75,6 +77,16 @@ public class ProceduralLevel : SpawnManager
         Plant.BankAllExpForLevelEnd();
         SaveManager.instance.CompleteLevel(config.levelNumber);
         Debug.Log("level " + config.levelNumber + " completed");
+    }
+
+    // "after wave X" means once wave X's spawning phase has fully concluded - this fires right
+    // as the loop transitions into that wave's rest period, before the next wave begins
+    private void GrantFertilizersForCompletedWave(int completedWave)
+    {
+        if (config.fertilizerGrants == null || FertilizerManager.instance == null) return;
+        foreach (FertilizerGrant grant in config.fertilizerGrants)
+            if (grant != null && grant.afterWave == completedWave)
+                FertilizerManager.instance.GrantFertilizer(grant.rarity);
     }
 
     // ── wave runner ───────────────────────────────────────────────────────────

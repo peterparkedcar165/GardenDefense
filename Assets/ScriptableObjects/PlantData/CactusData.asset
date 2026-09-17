@@ -23,6 +23,7 @@ MonoBehaviour:
   placementLimit: 0
   category: 0
   skillTree: {fileID: 0}
+  fertilizerPossibleStats: 2f000000
   baseMaxHealth: 300
   baseAttackDamage: 12
   baseMagicPower: 0

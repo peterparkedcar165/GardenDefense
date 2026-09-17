@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Slower
   stats:
   - statType: 33
-    value: 0.5
+    value: 0.12
   - statType: 1
-    value: 0.36
+    value: 0.14
   icon: {fileID: 0}
   targetElementalTypes: 
-  targetCultivars: 
+  targetFamilies: 
   appliesToAll: 1
   tier: 0

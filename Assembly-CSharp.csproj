@@ -120,6 +120,7 @@
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Skills\FireWave.cs" />
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
+    <Compile Include="Assets\Scripts\Fertilizer\GeneratedFertilizer.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TalonHitCounterEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\CorrosionEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WinterMoth.cs" />
+    <Compile Include="Assets\Scripts\Spawning\FertilizerGrant.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\KelpData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\HardCrowdControl.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\IcePrimer.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DarklingBeetle.cs" />
     <Compile Include="Assets\Scripts\InsectData.cs" />
+    <Compile Include="Assets\Scripts\Fertilizer\FertilizerStatRules.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\CattailProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WarmingEffect.cs" />
@@ -321,6 +324,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Duskdarter.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PsionicOldCarrotProjectile.cs" />
+    <Compile Include="Assets\Scripts\UI\FertilizerQueueButton.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
     <Compile Include="Assets\Scripts\UI\StatsAreaHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
@@ -422,6 +426,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Glowshroom.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\StatusIndicator.cs" />
     <Compile Include="Assets\Scripts\DoTAggregator.cs" />
+    <Compile Include="Assets\Scripts\Fertilizer\RestrictedStatTypeAttribute.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\EmberProjectile.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DesertLocustData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Kelp.cs" />

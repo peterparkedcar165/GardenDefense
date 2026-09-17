@@ -12,6 +12,7 @@ public class FertilizerCard : MonoBehaviour
     [SerializeField] private Button selectButton;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private GameObject highlight;
+    [SerializeField] private Button rerollButton;
 
     private FertilizerData data;
     private FertilizerStat[] rolledStats;
@@ -20,17 +21,51 @@ public class FertilizerCard : MonoBehaviour
     private RectTransform rectTransform;
     private Vector2 targetPosition;
 
+    // mid-level ("generated") mode - a procedurally rolled bundle rather than a hand-authored
+    // FertilizerData asset. isGeneratedMode picks which branch RefreshDisplay/OnSelectClicked use
+    private bool isGeneratedMode;
+    private GeneratedFertilizer generatedData;
+
     public void Initialize(FertilizerData fertilizer, FertilizerSelectionUI selectionUI)
     {
+        isGeneratedMode = false;
         data = fertilizer;
         ui = selectionUI;
         rectTransform = GetComponent<RectTransform>();
         canvasGroup.interactable = false;
         canvasGroup.alpha = 1f;
         highlight.SetActive(false);
+        // reroll only ever applies to mid-level procedural choices, never the pre-level pool pick
+        if (rerollButton != null) rerollButton.gameObject.SetActive(false);
 
         Roll();
         StartCoroutine(AnimateIn());
+    }
+
+    public void InitializeGenerated(GeneratedFertilizer fertilizer, FertilizerSelectionUI selectionUI)
+    {
+        isGeneratedMode = true;
+        generatedData = fertilizer;
+        ui = selectionUI;
+        rectTransform = GetComponent<RectTransform>();
+        canvasGroup.interactable = false;
+        canvasGroup.alpha = 1f;
+        highlight.SetActive(false);
+
+        if (rerollButton != null)
+            rerollButton.gameObject.SetActive(true);
+
+        RefreshDisplayGenerated();
+        StartCoroutine(AnimateIn());
+    }
+
+    // rerolls just this card's bundle at the same tier, independent of the other 2 cards and of
+    // the queue itself - nothing is consumed by a reroll, only by an actual selection.
+    // wired via the Reroll button's OnClick() in the Inspector, same as OnSelectClicked
+    public void OnRerollClicked()
+    {
+        generatedData = FertilizerManager.instance.RerollSingle(generatedData.tier);
+        RefreshDisplayGenerated();
     }
 
     private void Roll()
@@ -77,8 +112,34 @@ public class FertilizerCard : MonoBehaviour
         }
     }
 
+    // tier name + rolled stat list for a mid-level procedural bundle - no element/family
+    // targeting to show, since GeneratedFertilizerStat's scope isn't a single fertilizer-wide tag
+    private void RefreshDisplayGenerated()
+    {
+        if (tierText != null) tierText.text = generatedData.tier.ToString();
+
+        if (statsText != null)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (GeneratedFertilizerStat stat in generatedData.stats)
+            {
+                bool isGood = stat.value >= 0f;
+                if (FertilizerFormat.IsInvertedStat(stat.statType)) isGood = !isGood;
+                string color = isGood ? "green" : "red";
+                sb.AppendLine($"{FertilizerFormat.FormatStatName(stat.statType)}: <color={color}><b>{FertilizerFormat.FormatValue(stat.statType, stat.value)}</b></color>");
+            }
+            statsText.text = sb.ToString().TrimEnd();
+        }
+    }
+
     public void OnSelectClicked()
     {
+        if (isGeneratedMode)
+        {
+            FertilizerManager.instance.CommitGenerated(generatedData);
+            ui.CloseAfterSelect();
+            return;
+        }
         FertilizerManager.instance.Commit(data, rolledStats, rolledValues);
         ui.CloseAfterSelect();
     }
