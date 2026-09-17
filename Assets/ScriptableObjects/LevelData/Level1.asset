@@ -248,4 +248,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 34229fd6526dadf4a914e970da50e8c4, type: 2}
   - {fileID: 11400000, guid: 5281a5372cce3ed4590c07fe6edfca00, type: 2}
   - {fileID: 11400000, guid: 29b27bf494b9dd04e9b7220ee21fd41c, type: 2}
+  fertilizerGrants:
+  - afterWave: 1
+    rarity: 0
+  - afterWave: 2
+    rarity: 1
+  - afterWave: 3
+    rarity: 2
   ambience: {fileID: 11400000, guid: d1804b1344ff0b341aff0c11181dc078, type: 2}

@@ -26,6 +26,14 @@ public class PlantData : ScriptableObject
     [Header("Skill Tree")]
     public SkillTreeData skillTree;
 
+    // extra stats THIS plant specifically can offer through fertilizers, on top of whatever the
+    // generic pool / elemental presence / family already grant automatically. the picker only
+    // lists stats not already covered by those automatic rules (see FertilizerStatRules) so this
+    // never ends up duplicating something the plant would already offer anyway
+    [Header("Fertilizer")]
+    [RestrictedStatType]
+    public StatType[] fertilizerPossibleStats;
+
     [Header("Core")]
     public float baseMaxHealth = 200f;
     public float baseAttackDamage;

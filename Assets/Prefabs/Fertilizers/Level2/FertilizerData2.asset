@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Generator
   stats:
   - statType: 1
-    value: 0.35
+    value: 0.14
   - statType: 48
-    value: -0.25
+    value: -0.08
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   targetElementalTypes: 
-  targetCultivars: 00000000
+  targetFamilies: 00000000
   appliesToAll: 0
   tier: 0

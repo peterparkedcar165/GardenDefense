@@ -23,6 +23,7 @@ MonoBehaviour:
   placementLimit: 0
   category: 0
   skillTree: {fileID: 0}
+  fertilizerPossibleStats: 2f000000
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0
@@ -30,7 +31,6 @@ MonoBehaviour:
   baseAttackRange: 2.5
   baseArmor: 0
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.1
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -42,7 +42,6 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   baseHeatResistance: 0
   baseColdResistance: 0
@@ -67,7 +66,6 @@ MonoBehaviour:
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
-  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
   baseProjectileSpeed: 0
@@ -86,6 +84,12 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
+  attackSound:
+    clips: []
+  impactSound:
+    clips: []
+  skillSound:
+    clips: []
   baseHealPerSecond: 8
   attackHealMPScaling: 0.05
   healTickInterval: 0.5
