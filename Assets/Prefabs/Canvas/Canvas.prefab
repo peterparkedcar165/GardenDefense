@@ -5211,7 +5211,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5238,15 +5238,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 48
+  m_fontSizeBase: 48
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -7993,6 +7993,8 @@ MonoBehaviour:
   button: {fileID: 3578057520076882450}
   litColor: {r: 1, g: 1, b: 1, a: 1}
   blackedOutColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
+  flashColor: {r: 1, g: 0.85, b: 0.2, a: 1}
+  flashSpeed: 3
 --- !u!1 &7140764132019058436
 GameObject:
   m_ObjectHideFlags: 0
@@ -8773,7 +8775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerSelectionUI
   panel: {fileID: 7718629993252600417}
-  cardPrefab: {fileID: 5982727409875557757, guid: 0a8171987b0d17a4298f6b30e44cd8a2, type: 3}
+  cardPrefab: {fileID: 8999073706943533573, guid: 0a8171987b0d17a4298f6b30e44cd8a2, type: 3}
   cardContainer: {fileID: 8834488389505230084}
   fertilizerPool: []
 --- !u!1 &7779747437503419323

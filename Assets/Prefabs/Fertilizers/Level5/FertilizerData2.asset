@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Sun Generator
   stats:
   - statType: 1
-    value: 0.25
+    value: 0.12
   - statType: 48
-    value: -0.25
+    value: -0.12
   icon: {fileID: 0}
   targetElementalTypes: 
-  targetCultivars: 
+  targetFamilies: 
   appliesToAll: 1
   tier: 0
