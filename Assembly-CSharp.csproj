@@ -176,8 +176,8 @@
     <Compile Include="Assets\Scripts\StatusEffect\FungalHypnosisEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\IcePrimer.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DarklingBeetle.cs" />
-    <Compile Include="Assets\Scripts\InsectData.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\FertilizerStatRules.cs" />
+    <Compile Include="Assets\Scripts\InsectData.cs" />
     <Compile Include="Assets\Scripts\UI\GameHUD.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\CattailProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WarmingEffect.cs" />

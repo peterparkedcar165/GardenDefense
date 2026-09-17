@@ -15,11 +15,11 @@ MonoBehaviour:
   fertilizerName: Healer
   stats:
   - statType: 24
-    value: 0.25
+    value: 0.12
   - statType: 2
-    value: 0.5
+    value: 0.12
   icon: {fileID: 0}
   targetElementalTypes: 
-  targetCultivars: 
+  targetFamilies: 
   appliesToAll: 1
   tier: 0

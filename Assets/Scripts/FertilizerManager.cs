@@ -256,6 +256,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.DoTDamage:       return (0.03f, 0.04f);
             case StatType.DoTDuration:     return (0.03f, 0.05f);
             case StatType.MaxHealth:       return (0.03f, 0.05f);
+            case StatType.SunYield:        return (0.03f, 0.05f);
             case StatType.Piercing:                    return (1f,  1f);
             case StatType.ImmobilizeDurationAdder:     return (0.25f, 0.5f);
             case StatType.ImmobilizeDurationMultiplier: return (0.05f, 0.15f);
@@ -279,10 +280,10 @@ public class FertilizerManager : MonoBehaviour
             case StatType.DebuffReceivedDuration:       return (0.03f, 0.05f);
             case StatType.MinionDamage:                 return (0.03f, 0.04f);
             case StatType.FallDamage:                   return (0.03f, 0.04f);
-            case StatType.Armor:                        return (2.5f,  5f);
-            case StatType.MagicArmor:                   return (2.5f,  5f);
-            case StatType.ArmorPenetration:             return (1.5f,  3f);
-            case StatType.MagicPenetration:             return (1.5f,  3f);
+            case StatType.Armor:                        return (6f,  8f);
+            case StatType.MagicArmor:                   return (6f,  8f);
+            case StatType.ArmorPenetration:             return (2f,  3f);
+            case StatType.MagicPenetration:             return (2f,  3f);
             case StatType.ArmorShred:                   return (0.02f, 0.03f);
             case StatType.MagicArmorShred:              return (0.02f, 0.03f);
             case StatType.SunGenerationCooldownMultiplier: return (-0.05f, -0.03f);

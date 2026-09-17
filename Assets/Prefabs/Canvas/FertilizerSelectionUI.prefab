@@ -314,6 +314,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerSelectionUI
   panel: {fileID: 6836337692533368614}
-  cardPrefab: {fileID: 5982727409875557757, guid: 0a8171987b0d17a4298f6b30e44cd8a2, type: 3}
+  cardPrefab: {fileID: 8999073706943533573, guid: 0a8171987b0d17a4298f6b30e44cd8a2, type: 3}
   cardContainer: {fileID: 5718429814137436227}
   fertilizerPool: []

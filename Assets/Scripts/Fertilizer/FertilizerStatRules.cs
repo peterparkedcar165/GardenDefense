@@ -17,8 +17,6 @@ public static class FertilizerStatRules
         StatType.CriticalChance,
         StatType.CriticalDamage,
         StatType.MaxHealth,
-        StatType.Armor,
-        StatType.MagicArmor,
         StatType.MagicPower,
         StatType.BonusEffectChance,
         StatType.MinimumDamage,
@@ -65,6 +63,60 @@ public static class FertilizerStatRules
 
     private static readonly StatType[] DotStats = { StatType.DoTDamage, StatType.DoTDuration };
 
+    // FallDamage/Armor/MagicArmor aren't unlocked by the player's own loadout alone - they react
+    // to what's actually spawning in the current level (flying insects, aggressive insects, magic
+    // insects), read from ProceduralLevel.CurrentConfig since FertilizerStatRules is static and
+    // has no scene reference of its own. plantName set matches BogIris/Carrot/Anemone, whose kits
+    // make FallDamage useful even with no flying insects around
+    private static readonly HashSet<string> FallDamagePlantNames = new HashSet<string> { "BogIris", "Carrot", "Anemone" };
+
+    private static IEnumerable<InsectData> GetLevelInsectPool()
+    {
+        LevelConfig config = ProceduralLevel.CurrentConfig;
+        if (config == null) yield break;
+
+        if (config.insects != null)
+            foreach (LevelInsectEntry entry in config.insects)
+                if (entry != null && entry.data != null) yield return entry.data;
+
+        if (config.eliteInsects != null)
+            foreach (LevelEliteEntry entry in config.eliteInsects)
+                if (entry != null && entry.data != null) yield return entry.data;
+
+        if (config.waves != null)
+            foreach (WaveDefinition wave in config.waves)
+                if (wave != null && wave.subWaves != null)
+                    foreach (SubWaveDefinition sub in wave.subWaves)
+                        if (sub != null && sub.spawns != null)
+                            foreach (WaveSpawnEntry spawn in sub.spawns)
+                                if (spawn != null && spawn.insectData != null) yield return spawn.insectData;
+    }
+
+    private static bool HasFlyingInsectInLevel()
+    {
+        foreach (InsectData data in GetLevelInsectPool())
+            if (data.insectPrefab != null && data.insectPrefab.GetComponent<FlyingInsect>() != null)
+                return true;
+        return false;
+    }
+
+    // Aggressivity only has None/Low/High - "medium/high" maps to High, the highest tier that exists
+    private static bool HasHighAggressivityInsectInLevel()
+    {
+        foreach (InsectData data in GetLevelInsectPool())
+            if (data.aggressivity == Aggressivity.High)
+                return true;
+        return false;
+    }
+
+    private static bool HasMagicInsectInLevel()
+    {
+        foreach (InsectData data in GetLevelInsectPool())
+            if (data.attackDamageType == DamageType.Magic)
+                return true;
+        return false;
+    }
+
     private static readonly Dictionary<PlantFamily, StatType[]> FamilyStats = new Dictionary<PlantFamily, StatType[]>
     {
         { PlantFamily.Verdance,       new[] { StatType.HealingBonus } },
@@ -104,6 +156,8 @@ public static class FertilizerStatRules
     {
         HashSet<StatType> available = new HashSet<StatType>(GenericStats);
         HashSet<ElementalType> elementsSeen = new HashSet<ElementalType>();
+        bool hasFallDamagePlant = false;
+        bool hasIronbark = false;
 
         foreach (PlantData plant in loadout)
         {
@@ -121,11 +175,18 @@ public static class FertilizerStatRules
 
             if (plant.fertilizerPossibleStats != null)
                 foreach (StatType stat in plant.fertilizerPossibleStats) available.Add(stat);
+
+            if (FallDamagePlantNames.Contains(plant.plantName)) hasFallDamagePlant = true;
+            if (plant.family == PlantFamily.Ironbark) hasIronbark = true;
         }
 
         if (elementsSeen.Count >= 2) available.Add(StatType.elementalAffinity);
         if (HasDotPair(elementsSeen))
             foreach (StatType stat in DotStats) available.Add(stat);
+
+        if (hasFallDamagePlant || HasFlyingInsectInLevel()) available.Add(StatType.FallDamage);
+        if (hasIronbark || HasHighAggressivityInsectInLevel()) available.Add(StatType.Armor);
+        if (HasMagicInsectInLevel()) available.Add(StatType.MagicArmor);
 
         return available;
     }
@@ -171,6 +232,8 @@ public static class FertilizerStatRules
         foreach (StatType stat in GenericStats) result[stat] = StatScope.All;
 
         HashSet<ElementalType> elementsSeen = new HashSet<ElementalType>();
+        bool hasFallDamagePlant = false;
+        bool hasIronbark = false;
 
         foreach (PlantData plant in loadout)
         {
@@ -191,11 +254,18 @@ public static class FertilizerStatRules
             if (plant.fertilizerPossibleStats != null)
                 foreach (StatType stat in plant.fertilizerPossibleStats)
                     MergeInto(result, stat, new StatScope { requiredPlantNames = new HashSet<string> { plant.plantName } });
+
+            if (FallDamagePlantNames.Contains(plant.plantName)) hasFallDamagePlant = true;
+            if (plant.family == PlantFamily.Ironbark) hasIronbark = true;
         }
 
         if (elementsSeen.Count >= 2) result[StatType.elementalAffinity] = StatScope.All;
         if (HasDotPair(elementsSeen))
             foreach (StatType stat in DotStats) MergeInto(result, stat, StatScope.All);
+
+        if (hasFallDamagePlant || HasFlyingInsectInLevel()) MergeInto(result, StatType.FallDamage, StatScope.All);
+        if (hasIronbark || HasHighAggressivityInsectInLevel()) MergeInto(result, StatType.Armor, StatScope.All);
+        if (HasMagicInsectInLevel()) MergeInto(result, StatType.MagicArmor, StatScope.All);
 
         return result;
     }

@@ -8,6 +8,10 @@ public class ProceduralLevel : SpawnManager
 {
     public LevelConfig config;
 
+    // the level actually running, readable statically so systems with no scene reference (like
+    // FertilizerStatRules, which needs to know what insects can appear) can query it
+    public static LevelConfig CurrentConfig;
+
     private int wave = 0;
     // absolute (scaled) time at which the next wave begins; negative = no next wave
     private float nextWaveTime = -1f;
@@ -16,6 +20,8 @@ public class ProceduralLevel : SpawnManager
 
     protected override void Start()
     {
+        CurrentConfig = config;
+
         if (WeatherManager.instance)
         {
             WeatherManager.instance.SetBaseWeather(config.weather);
@@ -30,6 +36,11 @@ public class ProceduralLevel : SpawnManager
         GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
 
         StartCoroutine(RunWaves());
+    }
+
+    private void OnDestroy()
+    {
+        if (CurrentConfig == config) CurrentConfig = null;
     }
 
     // spawns one looping audio source per ambience clip, destroyed with the scene
