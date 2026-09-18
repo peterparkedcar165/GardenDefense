@@ -151,7 +151,7 @@ public class PoisonShroom : Shooter
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=purple><b>Toxic Spore</b></color> duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Attacks splash onto nearby insects within a <color=green><b>1.5</b></color> radius, applying <color=purple><b>Toxic Spores</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, "Attacks splash onto nearby insects within a <color=green><b>1</b></color> radius, applying <color=purple><b>Toxic Spores</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }

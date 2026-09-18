@@ -107,5 +107,19 @@ public enum StatType
     // flat reduction to a plant's placement sun cost, applied at Tile placement time (before the
     // plant even exists) via SkillTreeManager.GetSunCostReduction - never applied through
     // PlantStatApplier since there is no live plant instance yet when it matters
-    SunCostReduction
+    SunCostReduction,
+    // flat (non-percentage) skill cooldown reduction, for skill tree nodes that grant a plain
+    // "reduce cooldown by N seconds" bonus rather than a percentage multiplier - feeds
+    // Plant.skillCooldownReductionAdder, appended here to keep every ordinal above stable
+    SkillCooldownFlat,
+    // same idea as SkillCooldownFlat but for passive cooldown (e.g. Sunflower's sun generation
+    // timer) - feeds Plant.passiveCooldownAdder
+    PassiveCooldownFlat,
+    // flat (non-percentage) attack range, same idea as AttackDamageFlat/AttackSpeedFlat above -
+    // feeds Plant.attackRangeAdder
+    AttackRangeFlat,
+    // Waterlily-specific: raises her stacking Slow's cap by a flat amount per rank. plant-specific
+    // (cast in PlantStatApplier, same pattern as Piercing/Shooter) since MaxSlowStacks isn't a
+    // generic Entity/Plant field
+    MaxSlowStacksFlat
 }

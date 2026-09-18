@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class Waterlily : Shooter
 {
@@ -13,9 +14,22 @@ public class Waterlily : Shooter
 
     private WaterlilyData WLData => data as WaterlilyData;
 
+    // skill tree node unlock ids
+    public const string InstantSkillUnlock = "waterlily_instant_skill";
+    public const string BubbleBacktrackUnlock = "waterlily_bubble_backtrack";
+    public const string BubblePopDamageUnlock = "waterlily_bubble_pop_damage";
+    public const string ExtraTargetUnlock = "waterlily_extra_target";
+    public const string ExtendBubbleDurationUnlock = "waterlily_extend_bubble_duration";
+
+    private const float ExtraTargetDamageMultiplier = 0.5f;
+    private const float ExtraTargetOnHitReduction = 0.35f;
+    private const float BubbleDurationExtension = 0.2f;
+
     public float SlowDuration => WLData?.baseSlowDuration ?? 6f;
-    // base stack is 1, each passive level raises the cap
-    public int MaxSlowStacks => 1 + (WLData?.path2MaxSlowStacksPerLevel ?? 1) * effectivePath2Level;
+    // base stack is 1, each passive level raises the cap; maxSlowStacksAdder is the skill tree's
+    // flat bonus on top (see PlantStatApplier.MaxSlowStacksFlat)
+    public int maxSlowStacksAdder;
+    public int MaxSlowStacks => 1 + (WLData?.path2MaxSlowStacksPerLevel ?? 1) * effectivePath2Level + maxSlowStacksAdder;
 
     // applies or refreshes the stacking slow, called on both the direct hit and splash damage.
     // if this waterlily's own cap can't push the stack any higher (e.g. a lower level waterlily
@@ -39,6 +53,29 @@ public class Waterlily : Shooter
         baseAoERange   = WLData?.baseAoERange ?? 0.75f;
         skillAoERadius = data.baseSkillRadius;
         slowProcChance = WLData?.slowProcChance ?? 0.5f;
+        Entity.OnEntityHit += OnAnyEntityHit;
+
+        // LoadData already applied any skill tree path1LevelAdder/path2LevelAdder/
+        // path3LevelAdder ("+1 Effective X Point" nodes) and recomputed
+        // effectivePath1/2/3Level from them, so re-running these three hooks here bakes that
+        // virtual level straight into the relevant stats
+        OnPath1Upgrade(effectivePath1Level);
+        OnPath2Upgrade(effectivePath2Level);
+        OnPath3Upgrade(effectivePath3Level);
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Entity.OnEntityHit -= OnAnyEntityHit;
     }
 
     protected override void Update()
@@ -47,11 +84,27 @@ public class Waterlily : Shooter
         AoERange = baseAoERange + AoERangeAdder + (baseAoERange * AoERangeMultiplier);
     }
 
+    // skill tree node 10.2: any Water damage this Waterlily deals to an insect currently caught
+    // in one of her own Bubble Prisons extends that bubble's remaining duration
+    private void OnAnyEntityHit(EntityEventData hit)
+    {
+        if (hit.source != this) return;
+        if (hit.elementalType != ElementalType.Water) return;
+        if (!SkillTreeManager.HasUnlock(this, ExtendBubbleDurationUnlock)) return;
+        if (hit.target is not Insect insect) return;
+        BubblePrisonEffect bubble = insect.GetEffect<BubblePrisonEffect>();
+        if (bubble != null) bubble.duration += BubbleDurationExtension;
+    }
+
     public override void UpdateStats()
     {
+        bool extraTarget = SkillTreeManager.HasUnlock(this, ExtraTargetUnlock);
+        attackDamageTotalMultiplier = extraTarget ? ExtraTargetDamageMultiplier : 1f;
         base.UpdateStats();
         if (IsPath1Maxed)
             onHitEffectiveness *= 1f + (WLData?.path1MaxOnHitEffectivenessBonus ?? 0.5f);
+        if (extraTarget)
+            onHitEffectiveness *= 1f - ExtraTargetOnHitReduction;
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
         float bubblepl = WLData?.path3BubbleDamagePerLevel        ?? 12f;
         splashDamage = WLData.baseSplashDamage + attackDamage * splashpl * effectivePath2Level + skillDamageMultiplier * magicPower;
@@ -62,7 +115,35 @@ public class Waterlily : Shooter
 
     protected override void Shoot(Vector3 target)
     {
-        FireBubble(FindTarget(), target);
+        GameObject primary = FindTarget();
+        FireBubble(primary, target);
+
+        // skill tree node 10.1: an extra bubble at the next-most-valid target under the same
+        // targeting rule, excluding whichever insect the primary shot already picked
+        if (SkillTreeManager.HasUnlock(this, ExtraTargetUnlock))
+        {
+            GameObject secondary = FindSecondTarget(primary);
+            if (secondary != null)
+                FireBubble(secondary, PredictTargetPosition(secondary));
+        }
+    }
+
+    private GameObject FindSecondTarget(GameObject exclude)
+    {
+        List<Insect> pool = new List<Insect>(Insect.allInsects);
+        if (exclude != null)
+        {
+            Insect excludeInsect = exclude.GetComponent<Insect>();
+            if (excludeInsect != null) pool.Remove(excludeInsect);
+        }
+        switch (targeting)
+        {
+            case TARGETING.First:     return FindFirst(pool);
+            case TARGETING.Nearest:   return FindNearest(pool);
+            case TARGETING.Last:      return FindLast(pool);
+            case TARGETING.Strongest: return FindStrongest(pool);
+            default:                  return null;
+        }
     }
 
     private void FireBubble(GameObject targetObj, Vector3 targetPos)

@@ -16,7 +16,6 @@ public class Sunflower : Shooter
     private float SunGenInterval  => passiveCooldown * (1f + sunGenerationCooldown);
 
     // skill tree node unlock ids
-    public const string LowHealthMitigationUnlock = "sunflower_low_health_mitigation";
     public const string AmbientSunProcUnlock = "sunflower_ambient_sun_proc";
     public const string SunSkillCooldownUnlock = "sunflower_sun_skillcd";
     public const string ExtraProjectileUnlock = "sunflower_extra_projectile";
@@ -25,9 +24,6 @@ public class Sunflower : Shooter
     public const string InstantSkillUnlock    = "sunflower_instant_skill";
 
     private const float AmbientSunProcReduction = 0.02f;
-    private const float LowHealthThreshold = 0.5f;
-    private const float LowHealthDamageReduction = 0.2f;
-    private bool _hasLowHealthMitigation;
 
     protected override void Awake()
     {
@@ -36,8 +32,6 @@ public class Sunflower : Shooter
         basePassiveDuration  = 6f;
         passiveCooldownTimer = data.basePassiveCooldown;
         Entity.OnEntityHit += OnAnyEntityHit;
-
-        _hasLowHealthMitigation = SkillTreeManager.HasUnlock(this, LowHealthMitigationUnlock);
 
         // LoadData already applied any skill tree path1LevelAdder/path2LevelAdder/
         // path3LevelAdder ("+1 Effective X Point" nodes) and recomputed
@@ -54,22 +48,6 @@ public class Sunflower : Shooter
             path3Unlocked = true;
             OnPath3Unlock();
         }
-    }
-
-    // skill tree node 1: while below 50% health, the Sunflower takes 20% reduced damage from
-    // any source
-    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null)
-    {
-        if (_hasLowHealthMitigation && health <= maxHealth * LowHealthThreshold)
-            damageDealt *= 1f - LowHealthDamageReduction;
-        base.Damage(damageDealt, damageType, elementalType, source, canCrit, damageTag, forceCrit, onHitEffectivenessOverride);
-    }
-
-    public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
-    {
-        if (_hasLowHealthMitigation && health <= maxHealth * LowHealthThreshold)
-            damageDealt *= 1f - LowHealthDamageReduction;
-        base.Damage(damageDealt, damageType, elementalType, damageTag);
     }
 
     protected override void OnDestroy()

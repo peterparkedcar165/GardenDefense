@@ -51,7 +51,8 @@ public class SettingsManager : MonoBehaviour
         bool inEncyclopedia = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Encyclopedia";
         bool inLevelSelector = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "LevelSelector";
         bool inShop = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Shop";
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !fertilizerOpen && !inEncyclopedia && !inLevelSelector && !inShop && !SceneTransition.IsTransitioning)
+        bool inSkillTree = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "SkillTree";
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !fertilizerOpen && !inEncyclopedia && !inLevelSelector && !inShop && !inSkillTree && !SceneTransition.IsTransitioning)
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);
