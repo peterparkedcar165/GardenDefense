@@ -21,6 +21,7 @@ public class ProceduralLevel : SpawnManager
     protected override void Start()
     {
         CurrentConfig = config;
+        Plant.ResetPendingExpForNewLevel(); // discard any exp left over from a game-over'd attempt
 
         if (WeatherManager.instance)
         {
@@ -86,6 +87,7 @@ public class ProceduralLevel : SpawnManager
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
         yield return new WaitForSeconds(3f);
         Plant.BankAllExpForLevelEnd();
+        Plant.CommitPendingExpToSave(); // level actually won - exp becomes persistent here
         SaveManager.instance.CompleteLevel(config.levelNumber);
         Debug.Log("level " + config.levelNumber + " completed");
     }

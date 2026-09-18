@@ -125,6 +125,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\TalonHitCounterEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
+    <Compile Include="Assets\Scripts\Game\PlantLevelCurve.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TailwindEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\EatingAcornEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\Projectile.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PsionicBondEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\StargazerData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\VerdantEmpowermentEffect.cs" />
     <Compile Include="Assets\Scripts\UI\GameInfoPanel.cs" />
     <Compile Include="Assets\Scripts\ConeParticleEmitter.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />

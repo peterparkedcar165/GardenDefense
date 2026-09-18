@@ -28,24 +28,6 @@ public static class SkillTreeManager
         return false;
     }
 
-    public static bool CanPurchase(SkillTreeData tree, string plantName, int stepIndex, SkillTreeNode node)
-    {
-        if (Data == null) return false;
-        if (!IsStepUnlocked(tree, plantName, stepIndex)) return false;
-        if (IsExclusiveLocked(tree.steps[stepIndex], plantName, node)) return false;
-        if (GetRank(plantName, node.id) >= node.maxRank) return false;
-        return Data.skillPoints >= node.costPerRank;
-    }
-
-    public static bool TryPurchase(SkillTreeData tree, string plantName, int stepIndex, SkillTreeNode node)
-    {
-        if (!CanPurchase(tree, plantName, stepIndex, node)) return false;
-        Data.skillPoints -= node.costPerRank;
-        Data.SetSkillRank(plantName, node.id, GetRank(plantName, node.id) + 1);
-        SaveManager.instance.Save();
-        return true;
-    }
-
     // pushes purchased bonuses into the plants stat fields, called from Plant.LoadData before UpdateStats
     public static void ApplyTo(Plant plant)
     {

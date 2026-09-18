@@ -802,6 +802,10 @@ public abstract class Entity : MonoBehaviour
             isCrit = true;
         }
         health += actual;
+        // skill-tree assist credit: a real (non-zero) heal opens an 8-second assist window on the
+        // healed plant for the healer - see Plant.RegisterHeal/RecentHealers
+        if (this is Plant healedPlant && source is Plant healSource)
+            healedPlant.RegisterHeal(healSource);
         OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual });
         UpdateHealthBar();
         HealIndicator.Spawn(GetIndicatorPosition(), actual, isCrit);
@@ -1351,6 +1355,12 @@ public abstract class Entity : MonoBehaviour
             if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.debuffGivenDuration);
             effect.duration *= Mathf.Max(0f, 1f + debuffReceivedDuration);
         }
+
+        // skill-tree assist credit: a debuff actually landing on an insect counts as an assist
+        // just like dealing damage does (buffs/shields are credited live off activeEffects, and
+        // heals off their own timed window - see Insect.RegisterAttacker and Plant.BuffSupporters)
+        if (effect.effectType == StatusEffect.Type.negative && this is Insect debuffedInsect && effect.source is Plant debuffSource)
+            debuffedInsect.RegisterAttacker(debuffSource);
 
         if (effect is ShieldEffect newShield)
         {

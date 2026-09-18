@@ -25,7 +25,7 @@ MonoBehaviour:
   skillTree: {fileID: 0}
   fertilizerPossibleStats: 0f0000002d000000
   baseMaxHealth: 300
-  baseAttackDamage: 24
+  baseAttackDamage: 18
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 2.5
@@ -94,10 +94,10 @@ MonoBehaviour:
   baseToxicSporeDuration: 3
   path1AttackDamagePerLevel: 3
   path1AttackSpeedPerLevel: 0.08
-  path1AttackRangePerLevel: 0.18
+  path1AttackRangePerLevel: 0.14
   path1ToxicSporeDurationPerLevel: 0.6
   baseCritChanceBonus: 0.1
-  path2CritChancePerLevel: 0.04
+  path2CritChancePerLevel: 0.03
   baseElementalAffinityBonus: 0.15
   path2ElementalAffinityPerLevel: 0.05
   path2MaxDotDurationBonus: 0.5

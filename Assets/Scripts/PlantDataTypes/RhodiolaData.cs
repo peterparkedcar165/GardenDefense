@@ -3,16 +3,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RhodiolaData", menuName = "Scriptable Objects/PlantData/Rhodiola")]
 public class RhodiolaData : PlantData
 {
+    // healing is driven by the standard AttackDamage/AttackSpeed stats (see Rhodiola.HealAmount and
+    // Update()) rather than a bespoke heal-per-second/tick-interval pair, so generic Attack Damage
+    // and Attack Speed sources (fertilizers, skill tree, etc.) affect her healing for free
     [Header("Attack")]
-    public float baseHealPerSecond = 8f;
     public float attackHealMPScaling = 0.05f;
-    public float healTickInterval = 0.5f;
     public float coneAngle = 40f;
     public float splashHealMultiplier = 0.5f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackRangePerLevel = 0.2f;
-    public float path1HealPerSecondPerLevel = 2f;
+    public float path1AttackDamagePerLevel = 2f;
     public float maxMissingHealthPerSecond = 0.08f;
 
     [Header("Path 2 Scaling")]
