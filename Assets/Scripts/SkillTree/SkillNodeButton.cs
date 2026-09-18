@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 using System.Text;
+using System.Text.RegularExpressions;
 
 // one node in a plant's chain. spawned at runtime by SkillTreePlantPanel (one shared prefab for
 // every plant), which passes in which slot of the tree this instance represents - so editing
@@ -58,15 +59,25 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         if (hovering) ui?.ShowTooltip(BuildTooltip());
     }
 
+    // a multi-rank node can already have some ranks confirmed while further ranks sit staged
+    // on top - it must still read as "pending", not "confirmed", until those extra ranks are
+    // actually confirmed too, or the button falsely looks auto-saved
+    private bool IsLocked(out bool confirmed, out bool pendingPick)
+    {
+        pendingPick = SkillTreeSession.IsPending(plantName, node.id);
+        confirmed = !pendingPick && SkillTreeSession.IsConfirmed(plantName, node.id);
+        return !confirmed && !pendingPick &&
+               (!SkillTreeSession.IsStepUnlockedDisplay(tree, plantName, stepIndex)
+             || SkillTreeSession.IsExclusiveLockedDisplay(tree.steps[stepIndex], plantName, node));
+    }
+
+    private static string StripRichText(string text) => Regex.Replace(text, "<.*?>", "");
+
     public void Refresh()
     {
         if (node == null) return;
 
-        bool confirmed = SkillTreeSession.IsConfirmed(plantName, node.id);
-        bool pendingPick = !confirmed && SkillTreeSession.IsPending(plantName, node.id);
-        bool locked = !confirmed && !pendingPick &&
-                      (!SkillTreeSession.IsStepUnlockedDisplay(tree, plantName, stepIndex)
-                    || SkillTreeSession.IsExclusiveLockedDisplay(tree.steps[stepIndex], plantName, node));
+        bool locked = IsLocked(out bool confirmed, out bool pendingPick);
 
         int displayRank = SkillTreeSession.GetDisplayRank(plantName, node.id);
         if (rankText != null) rankText.text = $"{displayRank}/{node.maxRank}";
@@ -80,29 +91,23 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     private bool hovering;
 
-    // name, description, and a locked/unlocked line - matches the same three things the
-    // in-level skill/passive tooltip shows, nothing more
+    // name, description, and a cost line - matches the same things the in-level skill/passive
+    // tooltip shows, nothing more
     private string BuildTooltip()
     {
-        bool confirmed = SkillTreeSession.IsConfirmed(plantName, node.id);
-        bool pendingPick = !confirmed && SkillTreeSession.IsPending(plantName, node.id);
+        bool locked = IsLocked(out _, out _);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"<b><color=#FFD700>{node.nodeName}</color></b>");
+        sb.AppendLine(locked
+            ? $"<b><color=#6E6E6E>{StripRichText(node.nodeName)}</color></b>"
+            : $"<b><color=#FFD700>{node.nodeName}</color></b>");
         if (!string.IsNullOrEmpty(node.description))
-            sb.AppendLine(node.description);
+            sb.AppendLine(locked ? $"<color=#6E6E6E>{StripRichText(node.description)}</color>" : node.description);
         sb.AppendLine();
 
-        if (confirmed)
-            sb.AppendLine("<color=#FFD700>Unlocked (confirmed) - reset the tree to change this</color>");
-        else if (pendingPick)
-            sb.AppendLine("<color=#66B2FF>Unlocked (pending) - right click to undo</color>");
-        else if (SkillTreeSession.IsExclusiveLockedDisplay(tree.steps[stepIndex], plantName, node))
-            sb.AppendLine("<color=red>Locked: the other path was chosen</color>");
-        else if (!SkillTreeSession.IsStepUnlockedDisplay(tree, plantName, stepIndex))
-            sb.AppendLine("<color=red>Locked: invest in the previous node first</color>");
-        else
-            sb.AppendLine($"<color=grey>Locked - costs <b><color=green>{node.costPerRank}</color></b> skill point{(node.costPerRank == 1 ? "" : "s")} to unlock</color>");
+        bool canAfford = SkillTreeSession.DisplaySkillPoints >= node.costPerRank;
+        string cost = canAfford ? $"<color=green><b>{node.costPerRank}</b></color>" : $"<color=red>{node.costPerRank}</color>";
+        sb.AppendLine($"[COST]: {cost} point{(node.costPerRank == 1 ? "" : "s")}.");
 
         return sb.ToString().TrimEnd();
     }

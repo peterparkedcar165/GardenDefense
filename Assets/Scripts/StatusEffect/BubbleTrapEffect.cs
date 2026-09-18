@@ -13,12 +13,22 @@ public class BubblePrisonEffect : Airborne
     private readonly bool _rising;
     private const float riseSpeed = 0.5f;
 
+    // skill tree nodes 5.1/5.2
+    private const float BacktrackSpeed = 0.3f;
+    private const float PopDamagePercentMaxHealth = 0.1f;
+    private readonly bool _hasBacktrack;
+    private readonly bool _hasPopDamage;
+    private static readonly DamageTag[] popDamageTags = { DamageTag.SkillDamage };
+
     public BubblePrisonEffect(Entity target, float duration, int level, Entity source, bool rising = false)
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
         elementalType = ElementalType.Water;
         _rising = rising;
+        Plant sourcePlant = source as Plant;
+        _hasBacktrack = sourcePlant != null && SkillTreeManager.HasUnlock(sourcePlant, Waterlily.BubbleBacktrackUnlock);
+        _hasPopDamage = sourcePlant != null && SkillTreeManager.HasUnlock(sourcePlant, Waterlily.BubblePopDamageUnlock);
     }
 
     public override string GetName() => "<color=#4FC3F7>Bubble Prison</color>";
@@ -63,6 +73,9 @@ public class BubblePrisonEffect : Airborne
 
     public override void OnTick(float deltaTime)
     {
+        if (_hasBacktrack && target is Insect backtrackInsect)
+            backtrackInsect.PullBackTowardPreviousWaypoint(BacktrackSpeed);
+
         if (visual == null) return;
 
         Insect insect = target as Insect;
@@ -107,6 +120,18 @@ public class BubblePrisonEffect : Airborne
     {
         if (bubbleVisual != null)
             UnityEngine.Object.Destroy(bubbleVisual);
+
+        // skill tree node 5.2: an extra hit of 10% max health when the bubble pops, on top of
+        // whatever damage the skill's own impact already dealt on cast
+        if (_hasPopDamage && target is Insect popInsect && popInsect.IsAlive)
+        {
+            float popDamage = target.maxHealth * PopDamagePercentMaxHealth;
+            Plant sourcePlant = source as Plant;
+            if (sourcePlant != null)
+                target.Damage(popDamage, sourcePlant.damageType, sourcePlant.elementalType, source, true, popDamageTags);
+            else
+                target.Damage(popDamage, DamageType.Physical, elementalType, popDamageTags);
+        }
 
         if (visual == null) return;
 

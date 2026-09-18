@@ -1,0 +1,103 @@
+WATERLILY — FULL KIT + SKILL TREE REFERENCE
+=============================================
+
+BASICS
+------
+Family: Wither (debuff / nihility)
+Element: Water
+Damage type: Magic
+Sun cost: 100
+Base stats: 200 HP, 16 Attack Damage, 0.6 Attack Speed, 4 Attack Range, 0 Armor/Magic Armor,
+projectile speed 2.6, max range 20.
+
+ATTACK (Path 1)
+---------------
+Blows a small bubble at her target for {AttackDamage} Magic damage (Water element).
+Per Path 1 level: +3 Attack Damage, +0.3 Attack Range, +0.2 Attack Speed.
+Path 1 max level bonus: +50% On-Hit effect effectiveness (path1MaxOnHitEffectivenessBonus).
+
+PASSIVE (Path 2)
+----------------
+Every attack (and its splash) also deals splash damage to surrounding insects within an AoE
+radius (base 1.5, +0.1/level), equal to a base amount (6) plus a % of Attack Damage that scales
+per level (+5%/level), plus Skill Damage Multiplier * Magic Power.
+
+Both the direct hit AND the splash damage have a chance (base 50%, +5%/level) to apply a
+STACKING SLOW debuff (SlowEffect) for 6 seconds (baseSlowDuration), up to a max stack cap.
+- Stack cap = 1 (base) + 1 per Path 2 level (path2MaxSlowStacksPerLevel) + skill tree bonus
+  (Waterlily.maxSlowStacksAdder, see node 3 below).
+- If a target already has more stacks than this Waterlily could apply, the stack count never
+  goes DOWN — only the slow's duration gets refreshed.
+Path 2 max level bonus: splash damage now also applies On-Hit effects (at 33% effectiveness,
+scaled by onHitEffectiveness) and is treated as a Projectile attack (matters for effects/skills
+that specifically care about projectile-tagged damage).
+
+SKILL — Bubble Prison (Path 3)
+-------------------------------
+Targeted AoE. Spawns a "BubblePrison" projectile that arcs to the target point, then on impact:
+- Deals base 42 (+12/level) impact damage to every insect within the skill radius (base 2,
+  +0.2/level), typed as her own damageType/elementalType (Magic/Water) — plus Skill Damage
+  Multiplier * Magic Power.
+- Applies BubblePrisonEffect (a HardCrowdControl / Airborne effect) to every insect hit, for a
+  duration of base 8s (+2/level). While bubbled:
+  - The insect is lifted, floats/bobs in place, and cannot move or attack (HardCrowdControl
+    blocks its normal Move()).
+  - Flying insects are grounded (GroundedEffect, 5s) once the bubble pops.
+Path 3 max level bonus ("Imprisoned insects slowly rise during the effect"): sets rising=true on
+the BubblePrisonEffect, so the trapped insect's visual height slowly climbs for the duration
+(riseSpeed 0.5), and fallDamageSource is set to Waterlily — meaning if the bubble pops while the
+insect is elevated, it can take fall damage on landing.
+Skill cooldown: 90s base.
+
+SKILL TREE (10 nodes, forks at 5 and 10 — same shared chain architecture as Acorn Sprout /
+Sunflower: each step must have enough total ranks bought in it before the next step unlocks;
+every multi-rank node only needs 1 rank invested to open the next step; the two fork nodes in
+each fork step are mutually exclusive — picking one locks the other forever, short of a full
+tree reset)
+
+1. Reaching Roots — Increase Attack Range by 0.3 per level. (3 ranks, 1 point/rank)
+   New flat stat: StatType.AttackRangeFlat -> Plant.attackRangeAdder.
+
+2. Attack Insight — +1 Effective Attack Point. (1 rank, 2 points)
+
+3. Deepening Chill — Increase Slow stack cap by 1 per level. (3 ranks, 1 point/rank)
+   New stat: StatType.MaxSlowStacksFlat -> Waterlily.maxSlowStacksAdder (plant-specific, folded
+   directly into MaxSlowStacks).
+
+4. Passive Insight — +1 Effective Passive Point. (1 rank, 2 points)
+
+5. FORK (2 points each) — Bubble Prison upgrades:
+   5a. Undertow — Bubble trapped insects are brought back along the path, at a movement speed
+       of 0.3. (Implemented: BubblePrisonEffect pulls the insect backward toward its previous
+       waypoint each tick while bubbled; every waypoint it's dragged back past gets un-crossed,
+       i.e. currentWaypointIndex decrements, floor of 0 — it never goes all the way back to the
+       spawn point or despawns, just stalls at the start of the path.)
+   5b. Bursting Pressure — Bubble Prison deals an extra instance of 10% max health damage when
+       it pops. (Implemented: on BubblePrisonEffect.OnExpire, deals target.maxHealth * 10% as
+       Magic/Water damage from the Waterlily, tagged SkillDamage, in addition to whatever the
+       initial impact damage already did on cast.)
+
+6. Quick Bloom — Reduce Skill Cooldown by 2 seconds per level. (5 ranks, 1 point/rank)
+   Same StatType.SkillCooldownFlat used by Acorn/Sunflower's equivalent node.
+
+7. Ready to Bloom — Automatically unlocks Skill (skill is ready to use immediately on
+   placement, bypassing the normal sun-spend unlock). (1 rank, 2 points)
+
+8. Skill Insight — +1 Effective Skill Point. (1 rank, 2 points)
+
+9. Frugal Bloom — Reduce Sun cost by 10. (1 rank, 2 points)
+
+10. FORK (2 points each) — CURRENTLY EMPTY, NOT YET DESIGNED.
+    This is the pair I need ideas for. For reference, here's what the analogous "10" fork looks
+    like on the other two trees, to match power level/scope:
+    - Acorn Sprout's fork 10: Stun Specialist (+50% Attack Damage, -40% Attack Speed, +10% Stun
+      Chance, attacks AoE 50% splash damage in a 1.5 radius and can chain-stun the whole group)
+      vs Piercing Shot (+2 Piercing, +12% Attack Speed, stunned insects take +33% damage).
+    - Sunflower's fork 10: Guided Beam (Sunray beam homes at 0.6 speed, retargets on kill) vs
+      Feeding Flame (killing with Sunray refreshes its duration by 0.4s).
+    Waterlily's kit themes to build off of: Water/Magic damage, splash AoE, stacking Slow debuff,
+    the Bubble Prison hard-CC skill (now with an optional backtrack-along-path or bonus pop-
+    damage flavor from fork 5), and On-Hit effect application via splash at max Path 2. A "10"
+    fork here should probably be a meaningful, exclusive identity choice like the other two -
+    e.g. leaning further into Slow-stacking control vs. leaning into raw splash/AoE damage, or
+    a Bubble Prison utility angle vs. an attack/passive angle.

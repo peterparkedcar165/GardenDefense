@@ -15,7 +15,7 @@ public class AcornSprout : Shooter
     // read by AcornProjectile, so the stun roll itself always reflects the skill tree bonus
     // without stunChance (a plain field, only recomputed on a Path2 upgrade) ever needing to
     // accumulate the bonus into itself
-    public float EffectiveStunChance => stunChance + (SkillTreeManager.HasUnlock(this, StunSpecialistUnlock) ? 0.15f : 0f);
+    public float EffectiveStunChance => stunChance + (SkillTreeManager.HasUnlock(this, StunSpecialistUnlock) ? 0.10f : 0f);
 
     protected override void Awake()
     {
@@ -64,7 +64,7 @@ public class AcornSprout : Shooter
         // than post-multiplying the already-computed attackSpeed, so they compose correctly
         // instead of also scaling flat adders applied below
         float speedTotalBonus = 0f;
-        if (stunSpecialist) speedTotalBonus -= 0.5f;
+        if (stunSpecialist) speedTotalBonus -= 0.4f;
         if (piercer)         speedTotalBonus += 0.12f;
         attackSpeedTotalMultiplier += speedTotalBonus;
         base.UpdateStats();
@@ -76,7 +76,7 @@ public class AcornSprout : Shooter
             piercing += 1;
 
         if (stunSpecialist)
-            attackDamage *= 1.25f;
+            attackDamage *= 1.5f;
         if (piercer)
             piercing += 2;
     }

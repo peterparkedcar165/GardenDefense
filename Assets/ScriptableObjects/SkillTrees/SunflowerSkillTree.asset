@@ -14,47 +14,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
   steps:
   - nodes:
-    - id: node2_sunyield
-      nodeName: Radiant Harvest
-      description: Increase Sun Yield by 22%.
-      maxRank: 1
+    - id: node1_attackspeed
+      nodeName: Warming Rays
+      description: Increase <color=green><b>Attack Speed</b></color> by <color=green><b>0.04</b></color> per level.
+      maxRank: 3
       costPerRank: 1
       effects:
-      - statType: 50
-        valuePerRank: 0.22
+      - statType: 61
+        valuePerRank: 0.04
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node1_path1adder
+    - id: node2_path1adder
       nodeName: Attack Insight
-      description: '+1 Effective Attack Point.'
+      description: <color=green><b>+1 Effective Attack Point.</b></color>
       maxRank: 1
-      costPerRank: 1
+      costPerRank: 2
       effects:
       - statType: 62
         valuePerRank: 1
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node3a_ambientsunproc
-      nodeName: Lingering Warmth
-      description: Non-attack Fire damage has the same chance as the passive to reduce the Sun generation cooldown, by 0.02 seconds.
-      maxRank: 1
-      costPerRank: 2
-      effects: []
-      unlockId: sunflower_ambient_sun_proc
-    - id: node3b_sunskillcd
-      nodeName: Scorching Mark
-      description: Whenever the Sunflower produces Sun via the passive, Skill Cooldown is reduced by 1.
-      maxRank: 1
-      costPerRank: 2
-      effects: []
-      unlockId: sunflower_sun_skillcd
+    - id: node3_sungencooldown
+      nodeName: Radiant Efficiency
+      description: Reduce <color=green><b>Sun Generation Cooldown</b></color> by <color=green><b>1</b></color> second per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 67
+        valuePerRank: 1
+      unlockId:
     ranksToUnlockNext: 1
   - nodes:
     - id: node4_path2adder
       nodeName: Passive Insight
-      description: '+1 Effective Passive Point.'
+      description: <color=green><b>+1 Effective Passive Point.</b></color>
       maxRank: 1
       costPerRank: 2
       effects:
@@ -63,9 +58,45 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5_path3adder
+    - id: node5a_ambientsunproc
+      nodeName: Lingering Warmth
+      description: Non-attack Fire damage has the same chance as the passive to reduce the Sun generation cooldown, by 0.02 seconds.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: sunflower_ambient_sun_proc
+    - id: node5b_sunskillcd
+      nodeName: Scorching Mark
+      description: Whenever the Sunflower produces Sun via the passive, Skill Cooldown is reduced by 1.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: sunflower_sun_skillcd
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node6_skillcooldown
+      nodeName: Quick Bloom
+      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>2</b></color> seconds per level.
+      maxRank: 5
+      costPerRank: 1
+      effects:
+      - statType: 66
+        valuePerRank: 2
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node7_instantskill
+      nodeName: Ready to Bloom
+      description: Automatically unlocks Skill.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: sunflower_instant_skill
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node8_path3adder
       nodeName: Skill Insight
-      description: '+1 Effective Skill Point.'
+      description: <color=green><b>+1 Effective Skill Point.</b></color>
       maxRank: 1
       costPerRank: 2
       effects:
@@ -74,29 +105,29 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node6a_homingsunray
-      nodeName: Guided Beam
-      description: The Sunray beam can move at 0.6 movement speed, targeting the nearest insect upon cast and following it until it dies, then seeking a new target.
+    - id: node9_suncost
+      nodeName: Frugal Bloom
+      description: Reduce <color=#FFD700><b>Sun cost</b></color> by <color=#FFD700><b>10</b></color>.
       maxRank: 1
-      costPerRank: 3
-      effects: []
-      unlockId: sunflower_homing_sunray
-    - id: node6b_sunrayrefresh
-      nodeName: Feeding Flame
-      description: Killing an insect with the Sunray refreshes its duration by 0.4 seconds.
-      maxRank: 1
-      costPerRank: 3
-      effects: []
-      unlockId: sunflower_sunray_refresh
-    ranksToUnlockNext: 1
-  - nodes:
-    - id: node7_instantskill
-      nodeName: Ready to Bloom
-      description: Reduce Sun cost by 10. Automatically unlocks Skill.
-      maxRank: 1
-      costPerRank: 4
+      costPerRank: 2
       effects:
       - statType: 65
         valuePerRank: 10
-      unlockId: sunflower_instant_skill
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node10a_homingsunray
+      nodeName: Guided Beam
+      description: The Sunray beam can move at 0.6 movement speed, targeting the nearest insect upon cast and following it until it dies, then seeking a new target.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: sunflower_homing_sunray
+    - id: node10b_sunrayrefresh
+      nodeName: Feeding Flame
+      description: Killing an insect with the Sunray refreshes its duration by 0.4 seconds.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: sunflower_sunray_refresh
     ranksToUnlockNext: 1

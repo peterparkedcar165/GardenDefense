@@ -1045,6 +1045,35 @@ public abstract class Insect : Entity, IAttackable
         else if (advancingAsFriendly) MoveForwardAsFriendly();
     }
 
+    // pulled backward while trapped in a Bubble Prison with Waterlily's backtrack skill tree
+    // node unlocked - same waypoint walk-back idea as a hypnotized friendly's retreat, but
+    // clamped at waypoint 0 instead of continuing on to the spawn point and despawning, since
+    // this insect is still hostile and just temporarily crowd-controlled. safe to call every
+    // tick: HardCrowdControl already blocks the insect's normal Move() while this is active, so
+    // there's no competing movement to fight over
+    public void PullBackTowardPreviousWaypoint(float speed)
+    {
+        if (waypoints == null || waypoints.Length == 0) return;
+
+        Vector3 targetPos;
+        if (currentWaypointIndex > 0)
+        {
+            Transform wp = waypoints[currentWaypointIndex - 1];
+            if (wp == null) return;
+            targetPos = wp.position + new Vector3(pathOffset.x, pathOffset.y, 0);
+        }
+        else
+        {
+            targetPos = _spawnPosition;   // no earlier waypoint left: head for the spawn point
+        }
+
+        Vector3 dir = (targetPos - transform.position).normalized;
+        transform.position += dir * speed * Time.deltaTime;
+
+        if (currentWaypointIndex > 0 && Vector3.Distance(transform.position, targetPos) < 0.1f)
+            currentWaypointIndex--;
+    }
+
     // friendlies that retreat walk back toward the previous waypoint, looking for a fight. once
     // they pass waypoint 0 they head for the spawn point they came from, and despawn on arrival
     private void MoveBackward()

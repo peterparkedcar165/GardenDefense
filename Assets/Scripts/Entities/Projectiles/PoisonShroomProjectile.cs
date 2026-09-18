@@ -22,7 +22,7 @@ public class PoisonShroomProjectile : Projectile
             foreach (Insect nearby in new System.Collections.Generic.List<Insect>(Insect.allInsects))
             {
                 if (nearby == null || !nearby.IsAlive || nearby == insect) continue;
-                if (Vector3.Distance(insect.transform.position, nearby.transform.position) <= 1.5f)
+                if (Vector3.Distance(insect.transform.position, nearby.transform.position) <= 1f)
                     nearby.ApplyEffect(new ToxicSporeEffect(nearby, cs.ToxicSporeDuration, 1, source));
             }
         }

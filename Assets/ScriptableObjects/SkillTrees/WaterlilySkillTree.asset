@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cb196e4e86362842ab9d48e27a8f2f8, type: 3}
-  m_Name: AcornSproutSkillTree
+  m_Name: WaterlilySkillTree
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
   steps:
   - nodes:
-    - id: node1_attackdamage
-      nodeName: Sharpened Acorn
-      description: Increase <color=green><b>Attack Damage</b></color> by <color=green><b>3</b></color> per level.
+    - id: node1_attackrange
+      nodeName: Reaching Roots
+      description: Increase <color=green><b>Attack Range</b></color> by <color=green><b>0.3</b></color> per level.
       maxRank: 3
       costPerRank: 1
       effects:
-      - statType: 60
-        valuePerRank: 3
+      - statType: 68
+        valuePerRank: 0.3
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
@@ -36,14 +36,14 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node3_armor
-      nodeName: Hardened Shell
-      description: Increase <color=#00CED1><b>Armor</b></color> by <color=green><b>4</b></color> per level.
+    - id: node3_slowcap
+      nodeName: Deepening Chill
+      description: Increase <color=#87CEEB><b>Slow</b></color> stack cap by <color=green><b>1</b></color> per level.
       maxRank: 3
       costPerRank: 1
       effects:
-      - statType: 39
-        valuePerRank: 4
+      - statType: 69
+        valuePerRank: 1
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
@@ -58,20 +58,20 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5a_bombgrassdot
-      nodeName: Thorned Husk
-      description: The <color=green><b>Acorn Sprout</b></color> periodically deals <color=green><b>Grass Physical damage</b></color>, from the <color=green><b>Acorn Bomb</b></color>'s location within its taunt radius, equal to 25% of the <color=green><b>Acorn Bomb</b></color>'s <color=#00CED1><b>Armor</b></color>, every second.
+    - id: node5a_bubblebacktrack
+      nodeName: Undertow
+      description: Bubble trapped insects are brought back along the path, at a movement speed of 0.3.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_bomb_grass_dot
-    - id: node5b_bombmagicarmor
-      nodeName: Reinforced Husk
-      description: The <color=green><b>Acorn Bomb</b></color> gains <color=green><b>100</b></color> <color=#FF69B4><b>Magic Armor</b></color>.
+      unlockId: waterlily_bubble_backtrack
+    - id: node5b_bubblepopdamage
+      nodeName: Bursting Pressure
+      description: Bubble Prison deals an extra instance of 10% max health damage when it pops.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_bomb_magic_armor
+      unlockId: waterlily_bubble_pop_damage
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown
@@ -91,7 +91,7 @@ MonoBehaviour:
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_instant_skill
+      unlockId: waterlily_instant_skill
     ranksToUnlockNext: 1
   - nodes:
     - id: node8_path3adder
@@ -106,7 +106,7 @@ MonoBehaviour:
     ranksToUnlockNext: 1
   - nodes:
     - id: node9_suncost
-      nodeName: Frugal Sprout
+      nodeName: Frugal Bloom
       description: Reduce <color=#FFD700><b>Sun cost</b></color> by <color=#FFD700><b>10</b></color>.
       maxRank: 1
       costPerRank: 2
@@ -116,18 +116,18 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node10a_stunspecialist
-      nodeName: Stun Specialist
-      description: <color=green><b>Attack Damage</b></color> increased by <color=green><b>50%</b></color>, <color=green><b>Total Attack Speed</b></color> reduced by <color=green><b>40%</b></color>, <color=green><b>Stun Chance</b></color> increased by <color=green><b>10%</b></color>. Attacks deal AoE damage within a <color=green><b>1.5</b></color> radius (<color=green><b>50%</b></color> of the original damage to secondary targets), and can also stun - if the main target gets stunned, all targets in the AoE get stunned too.
+    - id: node10a_extratarget
+      nodeName: Twin Bloom
+      description: Reduce Attack Damage by 50% total, reduce On-Hit effectiveness by 35%. Waterlily can now target an extra most-valid target and shoot at it.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_stun_specialist
-    - id: node10b_piercer
-      nodeName: Piercing Shot
-      description: '+<color=green><b>2</b></color> <color=green><b>Piercing</b></color>, +<color=green><b>12%</b></color> <color=green><b>Total Attack Speed</b></color>. Stunning insects take an additional <color=green><b>33%</b></color> damage from attacks.'
+      unlockId: waterlily_extra_target
+    - id: node10b_extendbubble
+      nodeName: Lingering Tide
+      description: Dealing Water damage against a Bubble Prisoned insect extends its duration by 0.2 seconds.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_piercer
+      unlockId: waterlily_extend_bubble_duration
     ranksToUnlockNext: 1

@@ -32,21 +32,23 @@ public static class SkillTreeSession
 
     public static int DisplaySkillPoints => Data != null ? Data.skillPoints - PendingSpent : 0;
 
-    // real (confirmed) rank plus 1 if currently staged - every node in this tree shape is
-    // maxRank 1, so "staged or confirmed" is all display logic ever needs
+    // real (confirmed) rank plus however many additional ranks are currently staged on top of
+    // it - multi-rank nodes (e.g. maxRank 3) need every staged click counted, not just whether
+    // any stage exists, or the display (and CanStage's maxRank check) would freeze at rank 1
     public static int GetDisplayRank(string plantName, string nodeId)
     {
-        int savedRank = SkillTreeManager.GetRank(plantName, nodeId);
-        if (savedRank > 0) return savedRank;
-        return IsPending(plantName, nodeId) ? 1 : 0;
+        return SkillTreeManager.GetRank(plantName, nodeId) + PendingCount(plantName, nodeId);
     }
 
-    public static bool IsPending(string plantName, string nodeId)
+    private static int PendingCount(string plantName, string nodeId)
     {
+        int count = 0;
         foreach (Pending p in pending)
-            if (p.plantName == plantName && p.nodeId == nodeId) return true;
-        return false;
+            if (p.plantName == plantName && p.nodeId == nodeId) count++;
+        return count;
     }
+
+    public static bool IsPending(string plantName, string nodeId) => PendingCount(plantName, nodeId) > 0;
 
     public static bool IsConfirmed(string plantName, string nodeId) =>
         SkillTreeManager.GetRank(plantName, nodeId) > 0;
@@ -110,7 +112,8 @@ public static class SkillTreeSession
         foreach (Pending p in pending)
         {
             Data.skillPoints -= p.cost;
-            Data.SetSkillRank(p.plantName, p.nodeId, 1);
+            int current = SkillTreeManager.GetRank(p.plantName, p.nodeId);
+            Data.SetSkillRank(p.plantName, p.nodeId, current + 1);
         }
         pending.Clear();
         SaveManager.instance.Save();

@@ -78,6 +78,13 @@ public static class PlantStatApplier
             // reads SkillTreeManager.GetSunCostReduction/GetEffectiveSunCost directly, since only
             // the skill tree's reduction is known before an instance exists to fertilize
             case StatType.SunCostReduction:              plant.sunCostReductionAdder        += Mathf.RoundToInt(value); break;
+            case StatType.SkillCooldownFlat:             plant.skillCooldownReductionAdder  += value; break;
+            // passiveCooldown's formula ADDS its adder directly (unlike skillCooldown, which
+            // subtracts its reduction adder) - so this stat represents a reduction of N per
+            // rank, and is negated here to match Plant.passiveCooldownAdder's own convention
+            case StatType.PassiveCooldownFlat:           plant.passiveCooldownAdder         -= value; break;
+            case StatType.AttackRangeFlat:                plant.attackRangeAdder             += value; break;
+            case StatType.MaxSlowStacksFlat:               if (plant is Waterlily wl) wl.maxSlowStacksAdder += Mathf.RoundToInt(value); break;
         }
     }
 }
