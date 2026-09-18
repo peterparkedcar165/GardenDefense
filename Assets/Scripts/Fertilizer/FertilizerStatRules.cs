@@ -70,26 +70,28 @@ public static class FertilizerStatRules
     // make FallDamage useful even with no flying insects around
     private static readonly HashSet<string> FallDamagePlantNames = new HashSet<string> { "BogIris", "Carrot", "Anemone" };
 
+    // reads only the hand-authored wave slots (not the procedural roster/elite arrays) - what's
+    // actually placed in a wave's sub-wave spawns is what the player will really fight, so that's
+    // what these level-driven stat unlocks should react to
     private static IEnumerable<InsectData> GetLevelInsectPool()
     {
         LevelConfig config = ProceduralLevel.CurrentConfig;
-        if (config == null) yield break;
+        if (config == null || config.waves == null) yield break;
 
-        if (config.insects != null)
-            foreach (LevelInsectEntry entry in config.insects)
-                if (entry != null && entry.data != null) yield return entry.data;
+        foreach (WaveDefinition wave in config.waves)
+        {
+            if (wave == null) continue;
 
-        if (config.eliteInsects != null)
-            foreach (LevelEliteEntry entry in config.eliteInsects)
-                if (entry != null && entry.data != null) yield return entry.data;
+            if (wave.subWaves != null)
+                foreach (SubWaveDefinition sub in wave.subWaves)
+                    if (sub != null && sub.spawns != null)
+                        foreach (WaveSpawnEntry spawn in sub.spawns)
+                            if (spawn != null && spawn.insectData != null) yield return spawn.insectData;
 
-        if (config.waves != null)
-            foreach (WaveDefinition wave in config.waves)
-                if (wave != null && wave.subWaves != null)
-                    foreach (SubWaveDefinition sub in wave.subWaves)
-                        if (sub != null && sub.spawns != null)
-                            foreach (WaveSpawnEntry spawn in sub.spawns)
-                                if (spawn != null && spawn.insectData != null) yield return spawn.insectData;
+            if (wave.trickleSpawns != null)
+                foreach (TrickleEntry trickle in wave.trickleSpawns)
+                    if (trickle != null && trickle.insectData != null) yield return trickle.insectData;
+        }
     }
 
     private static bool HasFlyingInsectInLevel()

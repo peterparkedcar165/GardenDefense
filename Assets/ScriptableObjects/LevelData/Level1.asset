@@ -74,15 +74,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  insects:
-  - data: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
-    unlockWave: 0
-    budgetWeight: 0.5
-    startDelay: 1
-  - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
-    unlockWave: 8
-    budgetWeight: 0.1
-    startDelay: 1
+  insects: []
   waves:
   - waveNumber: 1
     subWaves:

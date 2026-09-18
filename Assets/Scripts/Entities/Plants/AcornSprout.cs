@@ -134,7 +134,7 @@ public class AcornSprout : Shooter
         int   armorpl = AcornData?.path1ArmorPerLevel     ?? 4;
         string desc = details
             ? $"Shoots acorns towards his target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
-            : $"Shoots acorns towards his target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+            : $"Shoots acorns towards his target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +

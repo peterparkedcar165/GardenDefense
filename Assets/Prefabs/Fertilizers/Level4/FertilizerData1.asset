@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Shooter
   stats:
-  - statType: 11
+  - statType: 0
     value: 0.12
   - statType: 2
     value: 0.12
