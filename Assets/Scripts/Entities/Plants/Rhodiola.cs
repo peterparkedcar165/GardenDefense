@@ -13,11 +13,26 @@ public class Rhodiola : Aura
     private Vector2 _facingDir = Vector2.right;
     private ConeParticleEmitter _healCone;
 
-    public float HealPerSecondFlat => (RData?.baseHealPerSecond ?? 8f) + (RData?.path1HealPerSecondPerLevel ?? 2f) * effectivePath1Level;
-    public float HealPerSecondMP   => (RData?.attackHealMPScaling ?? 0.05f) * magicPower;
-    public float HealPerSecond     => HealPerSecondFlat + HealPerSecondMP;
-    public float TickInterval      => RData?.healTickInterval ?? 0.5f;
-    public float ConeAngle         => RData?.coneAngle ?? 40f;
+    // skill tree node unlock ids
+    public const string RevivalAoeUnlock      = "rhodiola_revival_aoe";
+    public const string RevivalEmpowerUnlock  = "rhodiola_revival_empower";
+    public const string InstantSkillUnlock    = "rhodiola_instant_skill";
+    public const string OvergrowthUnlock      = "rhodiola_overgrowth";
+    public const string WidespreadBloomUnlock = "rhodiola_widespread_bloom";
+
+    // counts attacks toward Overgrowth's every-8th-attack healing burst
+    private int _overgrowthAttackCount = 0;
+
+    // healing is just attackDamage (the standard stat, scaled per level via OnPath1Upgrade below)
+    // plus a flat magic power contribution, applied once per attack - attack cadence is the
+    // standard 1/attackSpeed (see Update()), no separate tick-interval stat anymore
+    public float HealMP     => (RData?.attackHealMPScaling ?? 0.05f) * magicPower;
+    public float HealAmount => attackDamage + HealMP;
+    // Widespread Bloom turns the cone into a full circle; Overgrowth narrows it by 30% instead
+    public float ConeAngle =>
+        SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? 360f :
+        SkillTreeManager.HasUnlock(this, OvergrowthUnlock) ? (RData?.coneAngle ?? 40f) * 0.7f :
+        (RData?.coneAngle ?? 40f);
     public float SplashMultiplier  => RData?.splashHealMultiplier ?? 0.5f;
     public float MissingHealthPerSecond => RData?.maxMissingHealthPerSecond ?? 0.08f;
 
@@ -40,6 +55,14 @@ public class Rhodiola : Aura
         base.Awake();
         LoadData();
         Entity.OnHeal += OnAnyHeal;
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     protected override void OnDestroy()
@@ -59,15 +82,22 @@ public class Rhodiola : Aura
 
     public override void UpdateStats()
     {
+        // Widespread Bloom trades Attack Damage for full-circle coverage - attackDamageMultiplier
+        // is an INPUT to the attackDamage formula computed inside base.UpdateStats(), so it has to
+        // be adjusted before that call (then reverted after) rather than after, unlike a plain
+        // output stat - same temp-toggle pattern AcornSprout uses for attackSpeedTotalMultiplier
+        float widespreadPenalty = SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? -0.35f : 0f;
+        attackDamageMultiplier += widespreadPenalty;
         base.UpdateStats();
+        attackDamageMultiplier -= widespreadPenalty;
+
         // passive, heals and shields given are increased by a portion of grass damage
         healingBonus += grassDamage * GrassConversion;
     }
 
     protected override void Update()
     {
-        base.Update();
-        attackCooldown = TickInterval;
+        base.Update(); // Aura.Update() already sets attackCooldown = 1 / attackSpeed
 
         _mainTarget = FindMostInjuredHealable();
         if (_mainTarget != null)
@@ -142,7 +172,21 @@ public class Rhodiola : Aura
 
         HealTick(_mainTarget, 1f);
 
+        // Overgrowth: every 8th attack, the current target gets a burst of bonus healing on top
+        // of its normal tick, worth 4 attacks' worth of healing
+        if (SkillTreeManager.HasUnlock(this, OvergrowthUnlock))
+        {
+            _overgrowthAttackCount++;
+            if (_overgrowthAttackCount >= 8)
+            {
+                _overgrowthAttackCount = 0;
+                _mainTarget.Heal(HealAmount * 4f, this);
+            }
+        }
+
         float halfAngle = ConeAngle * 0.5f;
+        // Widespread Bloom: every plant in the cone receives full healing, not a reduced splash share
+        float splashMultiplier = SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? 1f : SplashMultiplier;
 
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
@@ -151,7 +195,7 @@ public class Rhodiola : Aura
             Vector2 to = (Vector2)plant.transform.position - (Vector2)transform.position;
             if (to.magnitude > attackRange) continue;
             if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
-            HealTick(plant, SplashMultiplier);
+            HealTick(plant, splashMultiplier);
         }
 
         foreach (Insect ally in new List<Insect>(Insect.friendlyInsects))
@@ -161,16 +205,19 @@ public class Rhodiola : Aura
             Vector2 to = (Vector2)ally.transform.position - (Vector2)transform.position;
             if (to.magnitude > attackRange) continue;
             if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
-            HealTick(ally, SplashMultiplier);
+            HealTick(ally, splashMultiplier);
         }
     }
 
-    // heals one plant, friendly insect, or minion for one tick, the healing return is handled by the OnHeal hook
+    // heals one plant, friendly insect, or minion for one hit, the healing return is handled by the OnHeal hook
     private void HealTick(Entity entity, float multiplier)
     {
-        float amount = HealPerSecond * TickInterval * multiplier;
+        float amount = HealAmount * multiplier;
         if (IsPath1Maxed)
-            amount += (entity.maxHealth - entity.health) * MissingHealthPerSecond * TickInterval * multiplier;
+            // MissingHealthPerSecond is a per-second rate, converted into a per-hit amount using
+            // the actual current interval between hits (1/attackSpeed) rather than a fixed value,
+            // so it stays proportional to however fast Rhodiola is currently attacking
+            amount += (entity.maxHealth - entity.health) * MissingHealthPerSecond * attackCooldown * multiplier;
 
         entity.Heal(amount, this);
 
@@ -180,7 +227,8 @@ public class Rhodiola : Aura
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackRange = data.baseAttackRange + level * (RData?.path1AttackRangePerLevel ?? 0.2f);
+        baseAttackRange  = data.baseAttackRange  + level * (RData?.path1AttackRangePerLevel  ?? 0.2f);
+        baseAttackDamage = data.baseAttackDamage + level * (RData?.path1AttackDamagePerLevel ?? 4f);
     }
 
     public override void OnPath3Upgrade(int level)
@@ -204,11 +252,37 @@ public class Rhodiola : Aura
         Plant revived = Plant.RevivePlant(tile);
         if (revived != null)
             revived.Heal(RevivalHeal, this);
+
+        if (revived != null && SkillTreeManager.HasUnlock(this, RevivalAoeUnlock))
+            ReviveNeighbors(tile);
+
+        if (revived != null && SkillTreeManager.HasUnlock(this, RevivalEmpowerUnlock))
+            revived.ApplyEffect(new VerdantEmpowermentEffect(revived, 8f, 1, this));
+
         if (revived != null && IsPath3Maxed)
         {
             float shield = RData?.verdantGuardianShield ?? 200f;
             float regen  = RData?.verdantGuardianRegen  ?? 20f;
             revived.ApplyEffect(new VerdantGuardianEffect(revived, skillDuration, this, shield, regen));
+        }
+    }
+
+    // Verdant Resurgence: also revives any fallen plant on the 8 tiles surrounding the target
+    private void ReviveNeighbors(Tile centerTile)
+    {
+        Vector3 center = centerTile.transform.position;
+        Vector3[] offsets =
+        {
+            Vector3.right, Vector3.left, Vector3.up, Vector3.down,
+            new Vector3(1, 1, 0), new Vector3(1, -1, 0), new Vector3(-1, 1, 0), new Vector3(-1, -1, 0)
+        };
+        foreach (Vector3 offset in offsets)
+        {
+            if (!Tile.allTiles.TryGetValue(Tile.TileKey(center + offset), out Tile neighbor)) continue;
+            if (neighbor.deadPlant == null) continue;
+            Plant revivedNeighbor = Plant.RevivePlant(neighbor);
+            if (revivedNeighbor != null)
+                revivedNeighbor.Heal(RevivalHeal, this);
         }
     }
 
@@ -219,7 +293,7 @@ public class Rhodiola : Aura
 
     public override string GetAttackDescription() =>
         $"Breathes rejuvenating energy in a <color=green><b>{ConeAngle:F0}°</b></color> cone towards the most injured plant, " +
-        $"healing it for <color=green><b>{HealPerSecondFlat:F0}</b></color> [<color=#FFB6C1><b>+{HealPerSecondMP:F0}</b></color>] health per second. " +
+        $"healing it for <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{HealMP:F0}</b></color>] health per hit. " +
         $"Other plants within the cone are healed for <color=green><b>{SplashMultiplier * 100f:F0}%</b></color> of the amount.";
 
     public override string GetPassiveDescription() =>
@@ -235,17 +309,16 @@ public class Rhodiola : Aura
 
     public override string GetPath1Description(bool details = false)
     {
-        float rngpl  = RData?.path1AttackRangePerLevel   ?? 0.2f;
-        float healpl = RData?.path1HealPerSecondPerLevel ?? 2f;
-        float baseHeal = RData?.baseHealPerSecond ?? 8f;
+        float rngpl = RData?.path1AttackRangePerLevel  ?? 0.2f;
+        float dmgpl = RData?.path1AttackDamagePerLevel ?? 4f;
         string desc = details
             ? $"Breathes rejuvenating energy in a <color=green><b>{ConeAngle:F0}°</b></color> cone towards the most injured plant, " +
-              $"healing <color=green><b>[({baseHeal:F0}) + ({healpl:F0}/Lvl.) + <color=#FFB6C1>{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</color>]</b></color> health per second. " +
+              $"healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per hit. " +
               $"Other plants within the cone are healed for <color=green><b>{SplashMultiplier * 100f:F0}%</b></color> of the amount."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Increase <color=green><b>Healing</b></color> by <color=green><b>{healpl:F0}</b></color> per second per level. [<color=green><b>+{healpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Heals an additional <color=green><b>{MissingHealthPerSecond * 100f:F0}%</b></color> of the target's missing health per second.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);

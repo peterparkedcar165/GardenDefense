@@ -3242,8 +3242,6 @@ MonoBehaviour:
     currency: 0
     flowerPotLevel: 0
     waterPotLevel: 0
-    skillPoints: 0
-    totalSkillPointsEarned: 0
     skillPurchases: []
     plantExp: []
   selectedLevel: 0

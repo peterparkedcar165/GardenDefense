@@ -1137,19 +1137,44 @@ public abstract class Plant : Entity, IAttackable
         Destroy(gameObject);
     }
 
-    public void GainExp(float amount)
+    public void GainExp(int amount)
     {
-        exp += (int)(amount * (1 + expBoost));
+        int gained = (int)(amount * (1 + expBoost));
+        exp += gained;
+        Debug.Log($"[Exp] {GetName()} gained {gained} exp from a kill/assist (session total: {exp})");
     }
 
-    // banks this plant's session exp into the persistent per-species total shown on the Skill
-    // Tree screen. not saved to disk here - it rides along whenever something else (currently
-    // SaveManager.CompleteLevel) next calls Save(), matching how currency/sun already behave
+    // exp banked mid-level (via Uproot, or a level ending) but not yet committed to the
+    // persistent save - only CommitPendingExpToSave() (called on an actual level win) writes this
+    // into saveData, so a game over losing mid-level simply discards whatever's sitting here
+    private static readonly Dictionary<string, int> pendingLevelExp = new Dictionary<string, int>();
+
+    // clears any exp left over from a previous attempt at this level (e.g. after a game over and
+    // retry) - called once per level load, see ProceduralLevel.Start
+    public static void ResetPendingExpForNewLevel() => pendingLevelExp.Clear();
+
+    // banks this plant's session exp into pendingLevelExp, staged until the level is actually won
     private void BankExp()
     {
-        if (exp <= 0 || data == null || SaveManager.instance == null) return;
-        SaveManager.instance.saveData.AddPlantExp(data.plantName, exp);
+        if (exp <= 0 || data == null) return;
+        pendingLevelExp.TryGetValue(data.plantName, out int current);
+        pendingLevelExp[data.plantName] = current + exp;
         exp = 0;
+    }
+
+    // exp only ever becomes real (persistent) here, and this is only ever called on a completed
+    // level (see ProceduralLevel.RunWaves) - never on a game over, so exp earned in a lost level
+    // (including any banked mid-level via Uproot) never reaches the save file
+    public static void CommitPendingExpToSave()
+    {
+        Debug.Log($"[Exp] Level complete - total exp gained per plant this level ({pendingLevelExp.Count} plant type(s)):");
+        foreach (var kvp in pendingLevelExp)
+            Debug.Log($"[Exp]   {kvp.Key}: {kvp.Value} exp");
+
+        if (SaveManager.instance != null)
+            foreach (var kvp in pendingLevelExp)
+                SaveManager.instance.saveData.AddPlantExp(kvp.Key, kvp.Value);
+        pendingLevelExp.Clear();
     }
 
     // called once from ProceduralLevel when a level completes, so plants that survive to the
@@ -1161,14 +1186,14 @@ public abstract class Plant : Entity, IAttackable
         foreach (Plant plant in new List<Plant>(allPlants))
             plant?.BankExp();
 
-        if (SaveManager.instance == null) return;
         foreach (var kvp in Tile.allTiles)
         {
             DeadPlantRecord record = kvp.Value.deadPlant;
             if (record == null || record.exp <= 0 || record.prefab == null) continue;
             PlantData recordData = record.prefab.GetComponent<Plant>()?.data;
             if (recordData == null) continue;
-            SaveManager.instance.saveData.AddPlantExp(recordData.plantName, record.exp);
+            pendingLevelExp.TryGetValue(recordData.plantName, out int current);
+            pendingLevelExp[recordData.plantName] = current + record.exp;
             record.exp = 0;
         }
     }
@@ -1505,6 +1530,49 @@ public abstract class Plant : Entity, IAttackable
     protected virtual void OnHitByInsect(Insect attacker) {}
     public bool IsAlive => health > 0;
     public Vector3 Position => transform.position;
+
+    // skill-tree assist credit for buffs/shields/heals, pulled in by Insect.RegisterAttacker
+    // whenever this plant lands an attack or debuff. buffs/shields are NOT stored here at all -
+    // they only count if still active at the moment of attack, so they're checked live against
+    // activeEffects (see BuffSupporters below). heals are different: the heal itself is instant,
+    // so instead we remember who healed us and for how long the assist window stays open
+    private const float HealAssistWindow = 8f;
+    private readonly List<HealRecord> recentHeals = new List<HealRecord>();
+
+    private struct HealRecord
+    {
+        public Plant healer;
+        public float time;
+    }
+
+    public void RegisterHeal(Plant healer)
+    {
+        if (healer == null || healer == this) return;
+        recentHeals.RemoveAll(h => Time.time - h.time > HealAssistWindow);
+        recentHeals.Add(new HealRecord { healer = healer, time = Time.time });
+    }
+
+    public IEnumerable<Plant> RecentHealers
+    {
+        get
+        {
+            foreach (HealRecord h in recentHeals)
+                if (Time.time - h.time <= HealAssistWindow)
+                    yield return h.healer;
+        }
+    }
+
+    // buffs/shields (StatusEffect.Type.positive) currently active on this plant, sourced from
+    // other plants - only counts as an assist while the effect is still up, unlike heals above
+    public IEnumerable<Plant> BuffSupporters
+    {
+        get
+        {
+            foreach (StatusEffect e in activeEffects)
+                if (e.effectType == StatusEffect.Type.positive && e.source is Plant p && p != this)
+                    yield return p;
+        }
+    }
 
     // generates sun scaled by this plant's sunYieldMultiplier, rounded up (sun can't be decimal),
     // and pops the +Sun indicator at indicatorPosition (defaults to this plant's own position,

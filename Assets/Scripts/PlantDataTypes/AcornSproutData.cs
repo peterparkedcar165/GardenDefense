@@ -20,6 +20,8 @@ public class AcornSproutData : PlantData
     public float path3SkillDurationPerLevel = 2f;
     public float path3HealthPerLevel = 50f;
     public float path3RadiusPerLevel = 0.15f;
+    // seconds of skill (Acorn lifetime) duration granted per 1 point of Magic Power
+    public float skillDurationMPMultiplier = 0.10f;
 
     public override string GetAttackDescription() =>
         $"Shoots acorns towards his target, dealing {DamageTypeLabel(damageType)}.";

@@ -66,8 +66,17 @@ public class SkillTreeUI : MonoBehaviour
 
     public void RefreshAll()
     {
-        if (pointsText != null)
-            pointsText.text = $"Skill Points: <b><color=green>{SkillTreeSession.DisplaySkillPoints}</color></b>";
+        // skill points are per-plant now (see SaveData.PlantExpRecord) - this readout is just an
+        // at-a-glance sum across every plant's own balance (net of anything currently staged),
+        // not a spendable global pool. each panel shows its own plant's actual balance for the
+        // number that matters to a purchase
+        if (pointsText != null && SaveManager.instance != null)
+        {
+            int totalDisplay = 0;
+            foreach (PlantExpRecord record in SaveManager.instance.saveData.plantExp)
+                totalDisplay += SkillTreeSession.DisplaySkillPoints(record.plantName);
+            pointsText.text = $"Total Unspent Skill Points: <b><color=green>{totalDisplay}</color></b>";
+        }
         foreach (SkillTreePlantPanel panel in panels)
             if (panel != null) panel.Refresh();
     }

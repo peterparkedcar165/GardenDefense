@@ -137,46 +137,91 @@ public class SaveManager : MonoBehaviour
         }
         if (UnityEngine.InputSystem.Keyboard.current.semicolonKey.wasPressedThisFrame)
         {
-            GrantSkillPoints(20);
+            // no single "current plant" to target from here, so this dev shortcut just tops up
+            // every unlocked plant at once
+            foreach (string plantName in saveData.unlockedPlants)
+                saveData.AddPlantSkillPoints(plantName, 20);
             Save();
             SkillTreeUI.instance?.RefreshAll();
-            Debug.Log("Added 20 skill points");
+            Debug.Log("Added 20 skill points to every unlocked plant");
         }
         if (UnityEngine.InputSystem.Keyboard.current.quoteKey.wasPressedThisFrame)
         {
-            ResetSkillTrees();
+            ResetAllSkillTrees();
             Debug.Log("Reset all skill trees and refunded skill points");
         }
     }
 
-    private void GrantSkillPoints(int amount)
+    // refunds one plant's spent skill points (computed from its tree's own costPerRank * rank
+    // per purchased node, since points are per-species, not a global pool) and wipes its
+    // purchased nodes
+    private void ResetSkillTree(string plantName, SkillTreeData tree)
     {
-        saveData.skillPoints += amount;
-        saveData.totalSkillPointsEarned += amount;
+        if (tree == null) return;
+        int refund = 0;
+        foreach (SkillTreeStep step in tree.steps)
+            foreach (SkillTreeNode node in step.nodes)
+            {
+                int rank = SkillTreeManager.GetRank(plantName, node.id);
+                if (rank > 0) refund += node.costPerRank * rank;
+            }
+        saveData.AddPlantSkillPoints(plantName, refund);
+        saveData.skillPurchases.RemoveAll(p => p.plantName == plantName);
     }
 
-    // refunds every spent skill point and wipes every plant's purchased nodes - wired to the
-    // quote-key debug shortcut for now, later becomes a UI reset button
-    public void ResetSkillTrees()
+    // resets every plant that has any purchased nodes - wired to the quote-key debug shortcut
+    // for now, later becomes a UI reset button
+    public void ResetAllSkillTrees()
     {
-        saveData.skillPoints = saveData.totalSkillPointsEarned;
-        saveData.skillPurchases.Clear();
+        if (plantRegistry == null) return;
+        HashSet<string> plantNames = new HashSet<string>();
+        foreach (SkillNodePurchase p in saveData.skillPurchases) plantNames.Add(p.plantName);
+
+        foreach (string plantName in plantNames)
+        {
+            PlantData data = System.Array.Find(plantRegistry.plants, d => d != null && d.plantName == plantName);
+            if (data != null) ResetSkillTree(plantName, data.skillTree);
+        }
         Save();
         SkillTreeUI.instance?.RefreshAll();
     }
 
+    // checks every plant with any banked exp for level-ups earned since the last check, granting
+    // 1 skill point per level gained (up to PlantLevelCurve.MaxLevel) - called once per level
+    // completion, since leveling is deliberately a post-game event, not a live one.
+    // totalExp is progress within the CURRENT level, not a lifetime total - each level-up
+    // subtracts that level's threshold rather than resetting to 0, so overflow exp carries into
+    // the next level and a single big completion can chain multiple level-ups
+    private void ProcessPlantLevelUps()
+    {
+        foreach (PlantExpRecord record in saveData.plantExp)
+        {
+            while (record.level < PlantLevelCurve.MaxLevel &&
+                   record.totalExp >= PlantLevelCurve.ExpForNextLevel(record.level))
+            {
+                record.totalExp -= PlantLevelCurve.ExpForNextLevel(record.level);
+                record.level++;
+                saveData.AddPlantSkillPoints(record.plantName, 1);
+            }
+        }
+    }
+
     public void CompleteLevel(int level)
     {
-        // first clear grants bonus skill points
         bool firstClear = level > saveData.highestLevelUnlocked;
         saveData.highestLevelUnlocked = Mathf.Max(saveData.highestLevelUnlocked, level);
         string plant = GetPlantUnlockedByLevel(level);
         if (plant != null && !saveData.unlockedPlants.Contains(plant))
             saveData.unlockedPlants.Add(plant);
         saveData.currency += 200 + level * 40;
-        GrantSkillPoints(firstClear ? 3 : 1);
+        // plant exp was already banked and committed to saveData by Plant.BankAllExpForLevelEnd()
+        // and Plant.CommitPendingExpToSave() just before this call (see ProceduralLevel) - a game
+        // over never reaches this method, so exp only ever becomes persistent on an actual win.
+        // level-ups (and the skill points they grant) are processed here since leveling only ever
+        // happens on a completed level, never mid-level
+        ProcessPlantLevelUps();
         Save();
-        Debug.Log($"Level {level} completed. Unlocked: {plant ?? "none"}. highestLevelUnlocked={saveData.highestLevelUnlocked}");
+        Debug.Log($"Level {level} completed. Unlocked: {plant ?? "none"}. highestLevelUnlocked={saveData.highestLevelUnlocked}. firstClear={firstClear}");
     }
 
     private string GetPlantUnlockedByLevel(int level)

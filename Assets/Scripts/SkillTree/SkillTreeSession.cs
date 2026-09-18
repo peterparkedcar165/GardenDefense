@@ -3,10 +3,12 @@ using System.Collections.Generic;
 // staged-purchase layer for the Skill Tree screen. left-clicking a node stages it here (no
 // save-data mutation, no points actually spent yet); right-clicking a still-staged node unstages
 // it for a full refund. nothing is written to SaveData until Confirm is called - at that point
-// staged picks become real via SkillTreeManager.TryPurchase, and can no longer be undone short of
-// a full SaveManager.ResetSkillTrees(). SkillTreeManager itself is never given pending state, so
+// staged picks become real directly against SaveData, and can no longer be undone short of a
+// full SaveManager.ResetAllSkillTrees(). SkillTreeManager itself is never given pending state, so
 // gameplay's own SkillTreeManager.ApplyTo/HasUnlock calls (in actual level scenes) only ever see
-// confirmed purchases, never anything mid-decision on this screen
+// confirmed purchases, never anything mid-decision on this screen. skill points are per-plant
+// (SaveData.PlantExpRecord.skillPoints), not a global pool - every balance check/spend here is
+// scoped to the specific plant a node belongs to
 public static class SkillTreeSession
 {
     private struct Pending
@@ -20,17 +22,16 @@ public static class SkillTreeSession
 
     private static SaveData Data => SaveManager.instance != null ? SaveManager.instance.saveData : null;
 
-    public static int PendingSpent
+    public static int PendingSpent(string plantName)
     {
-        get
-        {
-            int total = 0;
-            foreach (Pending p in pending) total += p.cost;
-            return total;
-        }
+        int total = 0;
+        foreach (Pending p in pending)
+            if (p.plantName == plantName) total += p.cost;
+        return total;
     }
 
-    public static int DisplaySkillPoints => Data != null ? Data.skillPoints - PendingSpent : 0;
+    public static int DisplaySkillPoints(string plantName) =>
+        Data != null ? Data.GetPlantSkillPoints(plantName) - PendingSpent(plantName) : 0;
 
     // real (confirmed) rank plus however many additional ranks are currently staged on top of
     // it - multi-rank nodes (e.g. maxRank 3) need every staged click counted, not just whether
@@ -79,7 +80,7 @@ public static class SkillTreeSession
         if (GetDisplayRank(plantName, node.id) >= node.maxRank) return false;
         if (!IsStepUnlockedDisplay(tree, plantName, stepIndex)) return false;
         if (IsExclusiveLockedDisplay(tree.steps[stepIndex], plantName, node)) return false;
-        return DisplaySkillPoints >= node.costPerRank;
+        return DisplaySkillPoints(plantName) >= node.costPerRank;
     }
 
     public static bool TryStage(SkillTreeData tree, string plantName, int stepIndex, SkillTreeNode node)
@@ -111,7 +112,7 @@ public static class SkillTreeSession
         if (Data == null) return;
         foreach (Pending p in pending)
         {
-            Data.skillPoints -= p.cost;
+            Data.AddPlantSkillPoints(p.plantName, -p.cost);
             int current = SkillTreeManager.GetRank(p.plantName, p.nodeId);
             Data.SetSkillRank(p.plantName, p.nodeId, current + 1);
         }
@@ -125,6 +126,6 @@ public static class SkillTreeSession
     public static void ResetAll()
     {
         pending.Clear();
-        SaveManager.instance?.ResetSkillTrees();
+        SaveManager.instance?.ResetAllSkillTrees();
     }
 }

@@ -18,11 +18,8 @@ public class SaveData
     // capped there for now
     public int MaxLoadoutSize => 4 + Mathf.Clamp(highestLevelUnlocked / 5, 0, 4);
 
-    // skill tree meta progression, points earned from level clears
-    // skillPoints is the current spendable balance; totalSkillPointsEarned only ever grows and
-    // is never spent directly - it's what a full tree reset refunds back into skillPoints
-    public int skillPoints = 0;
-    public int totalSkillPointsEarned = 0;
+    // skill tree meta progression - skill points are earned per plant (see PlantExpRecord),
+    // not from a global pool, so using a plant more is what lets its own tree get built out
     public List<SkillNodePurchase> skillPurchases = new List<SkillNodePurchase>();
 
     public int GetSkillRank(string plantName, string nodeId)
@@ -39,9 +36,20 @@ public class SaveData
         skillPurchases.Add(new SkillNodePurchase { plantName = plantName, nodeId = nodeId, rank = rank });
     }
 
-    // persistent per-species exp, banked from a plant's own (session-scoped) exp whenever it
-    // dies, is uprooted, or survives to a level's completion - shown on the Skill Tree screen
+    // persistent per-species exp/level/skill points, banked from a plant's own (session-scoped)
+    // exp whenever it dies, is uprooted, or survives to a level's completion - shown on the
+    // Skill Tree screen. level and skillPoints are this plant species's OWN meta progression -
+    // there is no global skill point pool, so a plant only grows its tree by actually being used
     public List<PlantExpRecord> plantExp = new List<PlantExpRecord>();
+
+    private PlantExpRecord GetOrCreatePlantRecord(string plantName)
+    {
+        foreach (PlantExpRecord r in plantExp)
+            if (r.plantName == plantName) return r;
+        PlantExpRecord created = new PlantExpRecord { plantName = plantName };
+        plantExp.Add(created);
+        return created;
+    }
 
     public int GetPlantExp(string plantName)
     {
@@ -53,10 +61,30 @@ public class SaveData
     public void AddPlantExp(string plantName, int amount)
     {
         if (amount <= 0) return;
-        foreach (PlantExpRecord r in plantExp)
-            if (r.plantName == plantName) { r.totalExp += amount; return; }
-        plantExp.Add(new PlantExpRecord { plantName = plantName, totalExp = amount });
+        GetOrCreatePlantRecord(plantName).totalExp += amount;
     }
+
+    public int GetPlantLevel(string plantName)
+    {
+        foreach (PlantExpRecord r in plantExp)
+            if (r.plantName == plantName) return r.level;
+        return 1;
+    }
+
+    public int GetPlantSkillPoints(string plantName)
+    {
+        foreach (PlantExpRecord r in plantExp)
+            if (r.plantName == plantName) return r.skillPoints;
+        return 0;
+    }
+
+    // amount may be negative (spending); never lets a plant's balance go below 0
+    public void AddPlantSkillPoints(string plantName, int amount)
+    {
+        PlantExpRecord record = GetOrCreatePlantRecord(plantName);
+        record.skillPoints = Mathf.Max(0, record.skillPoints + amount);
+    }
+
 }
 
 [System.Serializable]
@@ -72,4 +100,6 @@ public class PlantExpRecord
 {
     public string plantName;
     public int totalExp;
+    public int level = 1;
+    public int skillPoints = 0;
 }

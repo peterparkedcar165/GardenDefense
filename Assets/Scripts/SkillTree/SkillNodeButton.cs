@@ -105,7 +105,7 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             sb.AppendLine(locked ? $"<color=#6E6E6E>{StripRichText(node.description)}</color>" : node.description);
         sb.AppendLine();
 
-        bool canAfford = SkillTreeSession.DisplaySkillPoints >= node.costPerRank;
+        bool canAfford = SkillTreeSession.DisplaySkillPoints(plantName) >= node.costPerRank;
         string cost = canAfford ? $"<color=green><b>{node.costPerRank}</b></color>" : $"<color=red>{node.costPerRank}</color>";
         sb.AppendLine($"[COST]: {cost} point{(node.costPerRank == 1 ? "" : "s")}.");
 

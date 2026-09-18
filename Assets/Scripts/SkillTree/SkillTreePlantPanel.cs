@@ -21,6 +21,7 @@ public class SkillTreePlantPanel : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text expText;
     [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text pointsText;
 
     [Header("Node Building")]
     [SerializeField] private Transform nodesContainer;
@@ -29,7 +30,6 @@ public class SkillTreePlantPanel : MonoBehaviour
     [SerializeField] private float forkNodeSpacing = 12f;
 
     private readonly List<SkillNodeButton> nodeButtons = new List<SkillNodeButton>();
-    private int totalNodeCount;
 
     // called by SkillTreeUI right after Instantiate, before this panel's own Start runs - lets a
     // spawner assign the plant instead of hand-setting it in the Inspector per duplicated panel
@@ -66,7 +66,6 @@ public class SkillTreePlantPanel : MonoBehaviour
     private void BuildNodes()
     {
         nodeButtons.Clear();
-        totalNodeCount = 0;
         SkillTreeData tree = plantData.skillTree;
 
         HorizontalLayoutGroup rowLayout = nodesContainer.GetComponent<HorizontalLayoutGroup>();
@@ -112,7 +111,6 @@ public class SkillTreePlantPanel : MonoBehaviour
                 SkillNodeButton button = Instantiate(nodeButtonPrefab, column.transform);
                 button.Init(SkillTreeUI.instance, tree, plantData.plantName, stepIndex, nodeIndex);
                 nodeButtons.Add(button);
-                totalNodeCount++;
             }
         }
     }
@@ -122,16 +120,18 @@ public class SkillTreePlantPanel : MonoBehaviour
         if (plantData == null) return;
 
         if (expText != null && SaveManager.instance != null)
-            expText.text = $"Exp: <b><color=green>{SaveManager.instance.saveData.GetPlantExp(plantData.plantName)}</color></b>";
-
-        if (levelText != null)
         {
-            int confirmedRanks = 0;
-            foreach (SkillTreeStep step in plantData.skillTree.steps)
-                foreach (SkillTreeNode node in step.nodes)
-                    if (SkillTreeSession.IsConfirmed(plantData.plantName, node.id)) confirmedRanks++;
-            levelText.text = $"Level: <b><color=green>{confirmedRanks}/{totalNodeCount}</color></b>";
+            int level = SaveManager.instance.saveData.GetPlantLevel(plantData.plantName);
+            int exp = SaveManager.instance.saveData.GetPlantExp(plantData.plantName);
+            string expValue = level >= PlantLevelCurve.MaxLevel ? $"{exp}" : $"{exp}/{PlantLevelCurve.ExpForNextLevel(level)}";
+            expText.text = $"Exp: <b><color=green>{expValue}</color></b>";
         }
+
+        if (levelText != null && SaveManager.instance != null)
+            levelText.text = $"Level: <b><color=green>{SaveManager.instance.saveData.GetPlantLevel(plantData.plantName)}/{PlantLevelCurve.MaxLevel}</color></b>";
+
+        if (pointsText != null)
+            pointsText.text = $"Skill Points: <b><color=green>{SkillTreeSession.DisplaySkillPoints(plantData.plantName)}</color></b>";
 
         foreach (SkillNodeButton button in nodeButtons)
             button.Refresh();

@@ -1265,6 +1265,15 @@ public abstract class Insect : Entity, IAttackable
     {
         if (source == null) return;
         attackerSet.Add(source); // if source already exists, the hashset automatically ignores it
+
+        // a plant currently buffing/shielding the attacker, or one that healed it within the last
+        // few seconds (Plant.HealAssistWindow), is credited as an assist too - see
+        // Plant.BuffSupporters/RecentHealers. unlike the attacker itself, this credit is
+        // conditional: it only fires while the buff is still up / the heal window hasn't closed
+        foreach (Plant supporter in source.BuffSupporters)
+            attackerSet.Add(supporter);
+        foreach (Plant healer in source.RecentHealers)
+            attackerSet.Add(healer);
     }
 
     private void DistributeExp()
@@ -1272,9 +1281,12 @@ public abstract class Insect : Entity, IAttackable
         int attackerCount = attackerSet.Count;
         if (attackerCount == 0) return;
 
-        // calculating the share per plant with a minimum of 25% obtained
-        float share = Mathf.Max(0.25f, 1f / attackerCount);
-        int expReward = (int)(expDrop*share);
+        // calculating the share per plant with a minimum of 10% obtained
+        float share = Mathf.Max(0.10f, 1f / attackerCount);
+        // round instead of truncate, and floor at 1 (not 0) whenever this insect actually carries
+        // exp - otherwise a low-expDrop insect split across many attackers (10% floor) rounds
+        // straight down to 0 and the kill/assist grants nothing at all
+        int expReward = expDrop > 0 ? Mathf.Max(1, Mathf.RoundToInt(expDrop * share)) : 0;
 
         foreach (Plant plant in attackerSet)
         {
