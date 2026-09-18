@@ -38,6 +38,7 @@ public class FertilizerSelectionUI : MonoBehaviour
         Debug.Log("[Restart] Fertilizer window opened");
         isMidLevelMode = false;
         panel.SetActive(true);
+        panel.transform.SetAsLastSibling();
         GameManager.instance.SetPause(true);
 
         ClearCards();
@@ -62,6 +63,7 @@ public class FertilizerSelectionUI : MonoBehaviour
 
         isMidLevelMode = true;
         panel.SetActive(true);
+        panel.transform.SetAsLastSibling();
         _timeScaleBeforeMidLevel = Time.timeScale;
         Time.timeScale = 0f;
 

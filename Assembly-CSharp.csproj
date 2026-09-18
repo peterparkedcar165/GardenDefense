@@ -100,6 +100,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\KnockUpEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BirdOfParadiseData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AloeVera.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\GhostFlicker.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BegoniaData.cs" />
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\VortexLiftEffect.cs" />

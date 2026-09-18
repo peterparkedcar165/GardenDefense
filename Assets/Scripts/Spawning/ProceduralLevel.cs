@@ -412,20 +412,32 @@ public class ProceduralLevel : SpawnManager
 
     // ── SpawnManager overrides ─────────────────────────────────────────────────
 
+    // reads the hand-authored wave slots directly rather than the procedural roster/elite
+    // arrays - what's actually placed in a wave's sub-wave spawns is what the player will really
+    // fight, so that's what the loadout screen's insect preview should reflect
     public override GameObject[] GetInsectPrefabs()
     {
         var prefabs = new List<GameObject>();
 
-        foreach (var e in config.insects)
-            if (e.data != null && e.data.insectPrefab != null)
-                if (!prefabs.Contains(e.data.insectPrefab))
-                    prefabs.Add(e.data.insectPrefab);
+        if (config.waves != null)
+            foreach (WaveDefinition wave in config.waves)
+            {
+                if (wave == null) continue;
 
-        if (config.eliteInsects != null)
-            foreach (var e in config.eliteInsects)
-                if (e.data != null && e.data.insectPrefab != null)
-                    if (!prefabs.Contains(e.data.insectPrefab))
-                        prefabs.Add(e.data.insectPrefab);
+                if (wave.subWaves != null)
+                    foreach (SubWaveDefinition sub in wave.subWaves)
+                        if (sub?.spawns != null)
+                            foreach (WaveSpawnEntry spawn in sub.spawns)
+                                if (spawn?.insectData != null && spawn.insectData.insectPrefab != null)
+                                    if (!prefabs.Contains(spawn.insectData.insectPrefab))
+                                        prefabs.Add(spawn.insectData.insectPrefab);
+
+                if (wave.trickleSpawns != null)
+                    foreach (TrickleEntry trickle in wave.trickleSpawns)
+                        if (trickle?.insectData != null && trickle.insectData.insectPrefab != null)
+                            if (!prefabs.Contains(trickle.insectData.insectPrefab))
+                                prefabs.Add(trickle.insectData.insectPrefab);
+            }
 
         return prefabs.ToArray();
     }

@@ -23,6 +23,7 @@ MonoBehaviour:
   placementLimit: 0
   category: 0
   skillTree: {fileID: 11400000, guid: 7dc2623ca4fd4aeca582b4a4a604da71, type: 2}
+  fertilizerPossibleStats: 
   baseMaxHealth: 200
   baseAttackDamage: 32
   baseMagicPower: 0
@@ -73,7 +74,7 @@ MonoBehaviour:
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
-  basePassiveCooldown: 16
+  basePassiveCooldown: 17
   basePassiveDuration: 0
   baseSkillCooldown: 75
   baseSkillDuration: 8
@@ -97,7 +98,7 @@ MonoBehaviour:
       maxPitch: 1.7
   skillSound:
     clips: []
-  baseSunGenerated: 6
+  baseSunGenerated: 5
   baseSunrayDPS: 75
   sunProcChance: 0.35
   path1AttackDamagePerLevel: 4

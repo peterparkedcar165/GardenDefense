@@ -103,6 +103,7 @@ MonoBehaviour:
     unlockWave: 5
     budgetWeight: 0.1
     startDelay: 2
+  waves: []
   eliteWaveInterval: 6
   eliteInsects:
   - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
@@ -118,7 +119,8 @@ MonoBehaviour:
     minSpawnCount: 3
     maxSpawnCount: 12
   fertilizerPool:
-  - {fileID: 11400000, guid: 3e13ef541c9f3cd4aba5f81c62f1e4de, type: 2}
-  - {fileID: 11400000, guid: b374faaf2b29af0428d4952befb3396b, type: 2}
-  - {fileID: 11400000, guid: 5e42fc420588248489301ae249f88930, type: 2}
+  - {fileID: 11400000, guid: a459790abe9b4a1419001264f87b5ec7, type: 2}
+  - {fileID: 11400000, guid: c20fa75212e0fab4e90ca3185c294d52, type: 2}
+  - {fileID: 11400000, guid: 08ca7efbce2cf594895fa6419120af9f, type: 2}
+  fertilizerGrants: []
   ambience: {fileID: 11400000, guid: a53efb8b7d84dfe438423cd008ebef91, type: 2}

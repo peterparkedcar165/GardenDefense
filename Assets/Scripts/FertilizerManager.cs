@@ -109,9 +109,28 @@ public class FertilizerManager : MonoBehaviour
             StatType stat = pool[i];
             (float min, float max) = GetBaseRange(stat);
             float rolled = Random.Range(min, max) * GetTierMultiplier(tier);
+            if (IsIntegerStat(stat)) rolled = Mathf.Round(rolled);
             stats[i] = new GeneratedFertilizerStat { statType = stat, value = rolled, scope = available[stat] };
         }
         return new GeneratedFertilizer { tier = tier, stats = stats };
+    }
+
+    // these stats are flat whole-number values (not percentages), so a rolled 6.83 armor or
+    // 2.41 piercing would look wrong - round them to the nearest int right at roll time
+    private static bool IsIntegerStat(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.MagicPower:
+            case StatType.Armor:
+            case StatType.MagicArmor:
+            case StatType.ArmorPenetration:
+            case StatType.MagicPenetration:
+            case StatType.Piercing:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private void ApplyGeneratedSingle(GeneratedFertilizer fert, Plant plant)
@@ -257,6 +276,9 @@ public class FertilizerManager : MonoBehaviour
             case StatType.DoTDuration:     return (0.03f, 0.05f);
             case StatType.MaxHealth:       return (0.03f, 0.05f);
             case StatType.SunYield:        return (0.03f, 0.05f);
+            case StatType.CurrencyYield:   return (0.03f, 0.05f);
+            case StatType.ShieldDuration:  return (0.03f, 0.05f);
+            case StatType.RegenerationDuration: return (0.03f, 0.05f);
             case StatType.Piercing:                    return (1f,  1f);
             case StatType.ImmobilizeDurationAdder:     return (0.25f, 0.5f);
             case StatType.ImmobilizeDurationMultiplier: return (0.05f, 0.15f);
@@ -273,7 +295,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.MagicDamage:                  return (0.03f, 0.04f);
             case StatType.PhysicalResistance:           return (0.02f, 0.03f);
             case StatType.MagicResistance:              return (0.02f, 0.03f);
-            case StatType.MagicPower:                   return (2.5f,  5f);
+            case StatType.MagicPower:                   return (12f,  16f);
             case StatType.DebuffGivenDuration:          return (0.03f, 0.05f);
             case StatType.BuffGivenDuration:            return (0.03f, 0.05f);
             case StatType.BuffReceivedDuration:         return (0.03f, 0.05f);
@@ -282,8 +304,8 @@ public class FertilizerManager : MonoBehaviour
             case StatType.FallDamage:                   return (0.03f, 0.04f);
             case StatType.Armor:                        return (6f,  8f);
             case StatType.MagicArmor:                   return (6f,  8f);
-            case StatType.ArmorPenetration:             return (2f,  3f);
-            case StatType.MagicPenetration:             return (2f,  3f);
+            case StatType.ArmorPenetration:             return (4f,  7f);
+            case StatType.MagicPenetration:             return (4f,  7f);
             case StatType.ArmorShred:                   return (0.02f, 0.03f);
             case StatType.MagicArmorShred:              return (0.02f, 0.03f);
             case StatType.SunGenerationCooldownMultiplier: return (-0.05f, -0.03f);

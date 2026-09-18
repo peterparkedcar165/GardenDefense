@@ -116,7 +116,7 @@ public class Waterlily : Shooter
         $"The {GetName()} shoots her targets with little bubbles that hurts surrounding insects. She can also imprison her foes with her larger bubble.";
 
     public override string GetAttackDescription() =>
-        $"Blow little bubbles towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+        $"Blow little bubbles towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetSkillDesription()
     {

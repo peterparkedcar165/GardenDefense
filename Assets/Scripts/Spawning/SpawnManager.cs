@@ -74,7 +74,7 @@ public abstract class SpawnManager : MonoBehaviour
             return;
         }
 
-        Vector3 pos = entry.spawnPoint.position + (Vector3)new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
+        Vector3 pos = entry.spawnPoint.position + (Vector3)new Vector2(Random.Range(-0.2f, 0.2f), Random.Range(-0.2f, 0.2f));
         GameObject go = Instantiate(insectPrefab, pos, Quaternion.identity);
 
         // build full path: lead-in waypoints (if any) + shared main path

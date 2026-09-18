@@ -231,7 +231,8 @@ public abstract class Plant : Entity, IAttackable
             sr.sprite = record.previewSprite;
             sr.sortingLayerID = record.sortingLayerID;
             sr.sortingOrder   = record.sortingOrder;
-            sr.color = new Color(1f, 1f, 1f, 0.6f);
+            sr.color = Color.white;
+            ghost.AddComponent<GhostFlicker>();
             _ghosts.Add(ghost);
         }
     }

@@ -247,7 +247,7 @@ public class Sunflower : Shooter
         $"The {GetName()} shoots her targets with sun bolts and generate precious <color=yellow>Sun</color> for the garden.";
 
     public override string GetAttackDescription() =>
-        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetSkillDesription()
     {
