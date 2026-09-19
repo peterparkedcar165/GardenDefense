@@ -80,7 +80,7 @@ MonoBehaviour:
   baseSkillDuration: 20
   channelDuration: 0
   baseSkillRadius: 1
-  baseSkillDamageMultiplier: 1.5
+  baseSkillDamageMultiplier: 0.5
   baseSkillHealth: 300
   basePassiveDamage: 0
   baseSkillDamage: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
   path1ArmorPerLevel: 4
   path2StunChancePerLevel: 0.03
   path2StunDurationPerLevel: 0.2
-  path3DamageMultiplierPerLevel: 0.25
+  path3FlatDamagePerLevel: 30
   path3SkillDurationPerLevel: 2
   path3HealthPerLevel: 60
   path3RadiusPerLevel: 0.15

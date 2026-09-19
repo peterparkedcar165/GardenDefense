@@ -86,7 +86,7 @@ public class Rhodiola : Aura
         // is an INPUT to the attackDamage formula computed inside base.UpdateStats(), so it has to
         // be adjusted before that call (then reverted after) rather than after, unlike a plain
         // output stat - same temp-toggle pattern AcornSprout uses for attackSpeedTotalMultiplier
-        float widespreadPenalty = SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? -0.35f : 0f;
+        float widespreadPenalty = SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? -0.50f : 0f;
         attackDamageMultiplier += widespreadPenalty;
         base.UpdateStats();
         attackDamageMultiplier -= widespreadPenalty;

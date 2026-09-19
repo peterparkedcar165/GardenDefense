@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb196e4e86362842ab9d48e27a8f2f8, type: 3}
+  m_Name: PoisonShroomSkillTree
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
+  steps:
+  - nodes:
+    - id: node1_attackdamage
+      nodeName: Toxic Bite
+      description: Increase <color=green><b>Attack Damage</b></color> by <color=green><b>2</b></color> per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 60
+        valuePerRank: 2
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node2_path1adder
+      nodeName: Blight Insight
+      description: <color=green><b>+1 Effective Attack Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 62
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node3_toxicsporeduration
+      nodeName: Festering Spores
+      description: Increase <color=purple><b>Toxic Spore</b></color> duration by <color=green><b>1</b></color> second per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 70
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node4_path2adder
+      nodeName: Virulent Insight
+      description: <color=green><b>+1 Effective Passive Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 63
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node5a_fieldlingering
+      nodeName: Lingering Toxins
+      description: Every damage tick, the <color=purple><b>Poison Field</b></color> extends each frozen debuff's remaining duration by <color=green><b>10%</b></color> of its original time, on top of freezing it.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: poison_field_lingering
+    - id: node5b_delayedbloom
+      nodeName: Delayed Bloom
+      description: The <color=purple><b>Poison Field</b></color> starts <color=green><b>25%</b></color> smaller, then blooms outward to <color=green><b>1.5x</b></color> that size over the first <color=green><b>60%</b></color> of its lifetime before holding. Increase <color=green><b>Skill Duration</b></color> by <color=green><b>4</b></color> seconds.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: poison_field_delayed_bloom
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node6_skillcooldown
+      nodeName: Quick Growth
+      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>4</b></color> seconds per level.
+      maxRank: 5
+      costPerRank: 1
+      effects:
+      - statType: 66
+        valuePerRank: 4
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node7_instantskill
+      nodeName: Ready to Sprout
+      description: Automatically unlocks Skill.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: poison_instant_skill
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node8_path3adder
+      nodeName: Toxic Insight
+      description: <color=green><b>+1 Effective Skill Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 64
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node9_suncost
+      nodeName: Frugal Spores
+      description: Reduce <color=#FFD700><b>Sun cost</b></color> by <color=#FFD700><b>25</b></color>.
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 65
+        valuePerRank: 25
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node10a_toxiccatalyst
+      nodeName: Toxic Catalyst
+      description: Each damage tick from <color=purple><b>Toxic Spore</b></color> reduces the target's <color=purple><b>Poison</b></color> internal cooldown by <color=green><b>1</b></color> second.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: poison_toxic_catalyst
+    - id: node10b_executionersbloom
+      nodeName: Executioner's Bloom
+      description: <color=purple><b>Toxic Spore</b></color> deals <color=green><b>66%</b></color> increased damage to insects below <color=green><b>33%</b></color> health. <color=green><b>Attack Damage</b></color> reduced by <color=green><b>25%</b></color>.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: poison_executioners_bloom
+    ranksToUnlockNext: 1

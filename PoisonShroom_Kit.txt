@@ -1,0 +1,194 @@
+================================================================================
+POISON SHROOM — FULL KIT REFERENCE
+================================================================================
+Family: Wither (debuff / nihility)
+Elemental Type: Poison
+Damage Type: Magic
+Sun Cost: 225
+
+Poison Shroom is a damage-over-time specialist. She deals no direct hit
+damage — every point of her Attack Damage is converted into a poison DoT
+(Toxic Spore) that ticks on the target over several seconds. Her passive
+makes that poison eat away at the target's Poison Resistance while it's
+active, her skill blankets an area in a damage field that freezes existing
+debuffs in place, and her fully-grown passive turns her into a genuine
+crit-based damage dealer on top of the poison.
+
+--------------------------------------------------------------------------------
+BASE STATS (Level 1, no path upgrades, no skill tree)
+--------------------------------------------------------------------------------
+Max Health:            300
+Attack Damage:         18
+Attack Speed:          0.6
+Attack Range:          2.5
+Projectile Speed:      2.6      Max Range: 20
+Critical Chance:       5%       Critical Damage: 150%
+Base Skill Cooldown:   120s
+Base Skill Duration:   9s       (Poison Field lifetime)
+Base Skill Radius:     2        (Poison Field radius)
+Base Poison Field DPS: 8        (+ 11% of Magic Power)
+Base Toxic Spore Duration: 3s
+
+--------------------------------------------------------------------------------
+ATTACK  (Path 1)
+--------------------------------------------------------------------------------
+Fires a Toxic Spore projectile at the target. It deals NO direct hit
+damage — instead it applies the Toxic Spore DoT effect, dealing 100% of
+Attack Damage as Poison Magic damage on application and every 0.5s after,
+for the current Toxic Spore Duration (base 3s, scaled by Path 2 — see
+Passive section below).
+
+Targeting quirk: Poison Shroom avoids re-poisoning insects that already
+carry her own Toxic Spore, spreading her attacks across the crowd instead
+of stacking onto one target. If every insect in range is already infected,
+she instead refreshes whichever one has the least time left on its spore,
+right before it would fall off anyway.
+
+Per-level scaling (Path 1, per point):
+  +3    Base Attack Damage
+  +0.08 Base Attack Speed
+  +0.14 Base Attack Range
+
+Level 5 (maxed) bonus:
+  Attacks splash onto nearby insects within a 1-unit radius, applying
+  Toxic Spore to them as well (implemented in PoisonShroomProjectile.OnHit).
+
+--------------------------------------------------------------------------------
+PASSIVE  (Path 2)
+--------------------------------------------------------------------------------
+Base kit (always active):
+  While Toxic Spore is active on an insect, it deals bonus damage each
+  tick equal to a percentage of the target's CURRENT health — base 1.2%
+  per second, +0.4% per Path 2 level. This is read fresh every tick, so
+  it naturally tapers off in absolute terms as the target's health drops
+  (a shrinking insect takes a shrinking chunk), unlike the flat Attack
+  Damage portion of the tick, which stays fixed for the effect's lifetime.
+
+Per-level scaling (Path 2, per point):
+  +0.4% Toxic Spore current-health damage per second (on top of the 1.2% base)
+  +0.6s Toxic Spore duration (on top of the 3s base)
+
+Level 5 (maxed) bonus:
+  Poison Shroom gains the ability to deal Critical Damage with her
+  Damage Over Time effects (Toxic Spore ticks and Poison Field ticks can
+  now crit) — this is off by default and only turns on once Path 2 is
+  fully maxed. She also gains a flat +15% Critical Chance.
+
+Note: this is a full rework from the plant's original kit. Originally,
+Path 2 granted a flat Critical Chance + Elemental Affinity bonus (always
+on) and the maxed bonus was "+75% DoT Duration". An intermediate revision
+had Toxic Spore shred Poison Resistance instead; that too has since been
+replaced by the current percent-current-health damage mechanic above.
+
+--------------------------------------------------------------------------------
+SKILL  (Path 3) — Poison Field
+--------------------------------------------------------------------------------
+Base Cooldown: 120s
+
+Hurls a toxic blob to a targeted area. It lands and creates a Poison
+Field with a radius of (Base Skill Radius + Path 3 Radius scaling) that
+lasts for (Base Skill Duration + Path 3 Duration scaling) seconds.
+
+Every insect standing inside the field:
+  - Takes (Base Poison DPS + 11% of Magic Power) Magic Poison damage
+    every 0.5s while inside.
+  - Has ALL of its existing negative status effects frozen in time for
+    as long as it remains inside the field (their durations stop ticking
+    down — they resume counting down again once the insect leaves).
+
+Per-level scaling (Path 3, per point):
+  +3   seconds of field duration
+  +0.3 field radius
+
+Level 5 (maxed) bonus:
+  Each tick of field damage also inflicts a fresh Toxic Spore on the
+  insect being hit, so the field seeds her own DoT onto everything
+  inside it, on top of the field's own damage.
+
+================================================================================
+SKILL TREE — "PoisonShroomSkillTree"
+================================================================================
+10 steps, 25 skill points total to fully max the tree (level 26 = 25 points).
+Node numbering below matches the in-editor node ids (node1..node10).
+
+  1. Toxic Bite                                  [rank 3, 1 pt/rank]
+     +2 Attack Damage per level.
+
+  2. Blight Insight                              [rank 1, 2 pts]
+     +1 Effective Attack (Path 1) Point — boosts Path 1's own per-level
+     scaling as if she'd bought one more real Attack level, without
+     spending sun or counting toward "maxed" checks.
+
+  3. Festering Spores                            [rank 3, 1 pt/rank]
+     +1 second of Toxic Spore duration per level (flat, stacks on top
+     of Path 2's own 0.6s/level duration scaling).
+
+  4. Virulent Insight                            [rank 1, 2 pts]
+     +1 Effective Passive (Path 2) Point.
+
+  5. FORK — choose one                           [rank 1, 2 pts each]
+     5a. Lingering Toxins
+         Insects that step out of the Poison Field early keep taking
+         its damage for 2 more seconds after leaving.
+     5b. Concentrated Blob
+         Poison Field damage +50%, but its radius is reduced by 30%.
+
+  6. Quick Growth                                [rank 5, 1 pt/rank]
+     -4 seconds Skill Cooldown per level (up to -20s at rank 5).
+
+  7. Ready to Sprout                             [rank 1, 2 pts]
+     Skill is automatically unlocked the instant she's placed (no need
+     to pay sun to unlock Path 3 first).
+
+  8. Toxic Insight                               [rank 1, 2 pts]
+     +1 Effective Skill (Path 3) Point.
+
+  9. Frugal Spores                               [rank 1, 2 pts]
+     -10 Sun cost to place her.
+
+  10. FORK — choose one                          [rank 1, 2 pts each]
+      10a. Wilting Grasp
+           Insects afflicted by Toxic Spore have their Movement Speed
+           reduced by 20% for as long as it lasts. Trade-off: her own
+           Attack Speed is reduced by 20%.
+      10b. Executioner's Bloom
+           Toxic Spore and Poison Field both deal +50% bonus damage to
+           insects already below 25% health (an execute). Trade-off:
+           her Attack Damage is reduced by 15%.
+
+Cost breakdown: 3 + 2 + 3 + 2 + 2 + 5 + 2 + 2 + 2 + 2 = 25 points.
+
+--------------------------------------------------------------------------------
+IMPLEMENTATION NOTES (for future reference)
+--------------------------------------------------------------------------------
+- Toxic Spore duration reads Path 2's effective level, a flat skill-tree
+  adder (toxicSporeDurationAdder, via StatType.ToxicSporeDurationFlat),
+  AND magic-power-independent passiveDuration multiplier:
+      ToxicSporeDuration = (baseToxicSporeDuration
+                             + path2ToxicSporeDurationPerLevel * effectivePath2Level
+                             + toxicSporeDurationAdder)
+                            * (1 + passiveDuration)
+
+- Toxic Spore's current-health bonus damage:
+      PercentHealthDPS = basePercentHealthDPS
+                          + path2PercentHealthDPSPerLevel * effectivePath2Level
+  Read once per ToxicSporeEffect instance (captured at application time
+  from the source PoisonShroom), then applied every tick in DealTick() as
+  target.health * PercentHealthDPS * tickInterval, added on top of the
+  flat Attack Damage portion before the Executioner's Bloom execute
+  multiplier (if any) is applied to the combined total.
+
+- "Can crit with DoT" is a reference-counted toggle on the entity
+  (AddDotCanCrit/RemoveDotCanCrit), only added/removed exactly once when
+  IsPath2Maxed flips, tracked via a private _dotCanCritFromPath2 flag so
+  it isn't re-added every frame.
+
+- Wilting Grasp's Attack Speed penalty and Executioner's Bloom's Attack
+  Damage penalty are both skill-tree unlocks checked live in UpdateStats()
+  every frame (SkillTreeManager.HasUnlock), not baked into a stat once.
+
+- Lingering Toxins and Executioner's Bloom's field-side bonus damage are
+  both implemented in PoisonField.cs (the skill's AoE damage tick loop);
+  Wilting Grasp's slow and Executioner's Bloom's DoT-side bonus damage are
+  implemented in ToxicSporeEffect.cs (the attack's DoT effect).
+================================================================================

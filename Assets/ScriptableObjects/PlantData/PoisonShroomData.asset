@@ -22,10 +22,10 @@ MonoBehaviour:
   sunCost: 225
   placementLimit: 0
   category: 1
-  skillTree: {fileID: 0}
+  skillTree: {fileID: 11400000, guid: cbe70921f14af7542941ad69f4ad25c9, type: 2}
   fertilizerPossibleStats: 0f0000002d000000
   baseMaxHealth: 300
-  baseAttackDamage: 18
+  baseAttackDamage: 16
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 2.5
@@ -92,14 +92,11 @@ MonoBehaviour:
     clips: []
   basePoisonDPS: 8
   baseToxicSporeDuration: 3
-  path1AttackDamagePerLevel: 3
+  path1AttackDamagePerLevel: 4
   path1AttackSpeedPerLevel: 0.08
   path1AttackRangePerLevel: 0.14
-  path1ToxicSporeDurationPerLevel: 0.6
-  baseCritChanceBonus: 0.1
-  path2CritChancePerLevel: 0.03
-  baseElementalAffinityBonus: 0.15
-  path2ElementalAffinityPerLevel: 0.05
-  path2MaxDotDurationBonus: 0.5
+  path2ToxicSporeDurationPerLevel: 0.6
+  basePercentHealthDPS: 0.006
+  path2PercentHealthDPSPerLevel: 0.003
   path3SkillDurationPerLevel: 3
   path3RadiusPerLevel: 0.3

@@ -5,23 +5,54 @@ public class PoisonShroom : Shooter
 {
     private PoisonShroomData PSData => data as PoisonShroomData;
     public float PoisonBaseDPS => PSData?.basePoisonDPS ?? 0f;
-    public float ToxicSporeDuration => ((PSData?.baseToxicSporeDuration ?? 3f) + (PSData?.path1ToxicSporeDurationPerLevel ?? 0.4f) * effectivePath1Level) * (1 + passiveDuration);
+    // duration scaling now lives on Path2 (passive), not Path1 (attack) - toxicSporeDurationAdder
+    // is a flat bonus from the skill tree (see PlantStatApplier.ToxicSporeDurationFlat)
+    public float toxicSporeDurationAdder;
+    public float ToxicSporeDuration => ((PSData?.baseToxicSporeDuration ?? 3f) + (PSData?.path2ToxicSporeDurationPerLevel ?? 0.4f) * effectivePath2Level + toxicSporeDurationAdder) * (1 + passiveDuration);
+    // fraction of the target's current health Toxic Spore deals as bonus damage per second
+    public float PercentHealthDPS => (PSData?.basePercentHealthDPS ?? 0.012f) + (PSData?.path2PercentHealthDPSPerLevel ?? 0.004f) * effectivePath2Level;
 
     public float activeRadius;
     [SerializeField] private GameObject poisonBlobPrefab;
+
+    // tracks whether this instance currently owns the DotCanCrit source granted by a maxed Path2,
+    // so UpdateStats (which runs every frame) adds/removes it exactly once on each state change
+    private bool _dotCanCritFromPath2;
+
+    // skill tree node unlock ids
+    public const string LingeringToxinsUnlock   = "poison_field_lingering";
+    public const string DelayedBloomUnlock      = "poison_field_delayed_bloom";
+    public const string InstantSkillUnlock      = "poison_instant_skill";
+    public const string ToxicCatalystUnlock     = "poison_toxic_catalyst";
+    public const string ExecutionersBloomUnlock = "poison_executioners_bloom";
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
-        activeRadius = data.baseSkillRadius;
-        AddDotCanCrit();
+
+        // LoadData already applied any skill tree path1LevelAdder/path3LevelAdder ("+1 Effective X
+        // Point" nodes) and recomputed effectivePath1/3Level from them, so re-running these hooks
+        // here bakes that virtual level straight into attackDamage/skillDuration/etc. - at level 0
+        // (the common case with no adder) this reduces to exactly the plain base values these
+        // lines used to assign directly. Path2Upgrade is a no-op for PoisonShroom (its Path2
+        // scaling reads effectivePath2Level live in UpdateStats instead), so it's skipped here
+        OnPath1Upgrade(effectivePath1Level);
+        OnPath3Upgrade(effectivePath3Level); // also sets activeRadius from data.baseSkillRadius
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        RemoveDotCanCrit();
+        if (_dotCanCritFromPath2) RemoveDotCanCrit();
     }
 
     protected override void Update()
@@ -102,12 +133,32 @@ public class PoisonShroom : Shooter
 
     public override void UpdateStats()
     {
-        baseCriticalChance    = data.baseCriticalChance    + (PSData?.baseCritChanceBonus ?? 0.1f)         + (PSData?.path2CritChancePerLevel ?? 0.03f) * effectivePath2Level;
-        baseelementalAffinity = data.baseelementalAffinity + (PSData?.baseElementalAffinityBonus ?? 0.15f) + (PSData?.path2ElementalAffinityPerLevel ?? 0.04f) * effectivePath2Level;
-        float dotDurBonus = IsPath2Maxed ? (PSData?.path2MaxDotDurationBonus ?? 0.75f) : 0f;
-        dotDurationAdder += dotDurBonus;
+        // Executioner's Bloom trades Total Attack Damage for bonus Toxic Spore damage against
+        // low-health insects (applied only in ToxicSporeEffect, not the Poison Field skill).
+        // attackDamageTotalMultiplier is an input to base.UpdateStats()'s formula, so it's
+        // toggled around the call like AcornSprout's Stun Specialist, rather than post-multiplying
+        // the already-computed attackDamage
+        bool executionersBloom = SkillTreeManager.HasUnlock(this, ExecutionersBloomUnlock);
+        float damagePenalty = executionersBloom ? -0.25f : 0f;
+        attackDamageTotalMultiplier += damagePenalty;
+
         base.UpdateStats();
-        dotDurationAdder -= dotDurBonus;
+
+        attackDamageTotalMultiplier -= damagePenalty;
+
+        // Path2 max bonus: can deal Critical Damage with DoT effects, plus bonus Critical Chance.
+        // DotCanCrit is a ref-counted toggle (other sources could grant it too), so it's only
+        // added/removed on an actual state change rather than every frame
+        if (IsPath2Maxed)
+        {
+            if (!_dotCanCritFromPath2) { AddDotCanCrit(); _dotCanCritFromPath2 = true; }
+            criticalChance += 0.15f;
+        }
+        else if (_dotCanCritFromPath2)
+        {
+            RemoveDotCanCrit();
+            _dotCanCritFromPath2 = false;
+        }
     }
 
     public override void OnPath3Upgrade(int level)
@@ -125,24 +176,35 @@ public class PoisonShroom : Shooter
     {
         if (poisonBlobPrefab == null) return;
         skillCooldownTimer = skillCooldown;
-        float fieldDPS = PoisonBaseDPS + skillDamageMultiplier * magicPower;
+        float fieldDPS      = PoisonBaseDPS + skillDamageMultiplier * magicPower;
+        float fieldRadius   = activeRadius;
+        float fieldDuration = skillDuration;
+
+        // Delayed Bloom: starts 25% smaller, then blooms outward to 1.5x that starting size
+        // over the first 60% of its lifetime (see PoisonField.Update), holding there afterward -
+        // lasts 4s longer to make up for the slow start
+        if (SkillTreeManager.HasUnlock(this, DelayedBloomUnlock))
+        {
+            fieldRadius   *= 0.75f;
+            fieldDuration += 4f;
+        }
+
         GameObject obj = Instantiate(poisonBlobPrefab, transform.position, Quaternion.identity);
         PoisonBlob blob = obj.GetComponent<PoisonBlob>();
         if (blob != null)
-            blob.Initialize(position, activeRadius, skillDuration, this, fieldDPS);
+            blob.Initialize(position, fieldRadius, fieldDuration, this, fieldDPS);
     }
 
     public override string GetName() => $"<b><color=purple>{(data != null ? data.displayName : "Poison Shroom")}</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} fires toxic spores that poison the target over time, and can inflict Critical Damage with its Damage Over Time effects.";
+        $"The {GetName()} fires toxic spores that poison the target over time.";
 
     public override string GetPath1Description(bool details = false)
     {
         float adpl    = PSData?.path1AttackDamagePerLevel ?? 8f;
         float aspl    = PSData?.path1AttackSpeedPerLevel ?? 0.08f;
         float rangepl = PSData?.path1AttackRangePerLevel ?? 0.1f;
-        float durpl   = PSData?.path1ToxicSporeDurationPerLevel ?? 0.4f;
         string desc = details
             ? $"Fires <color=purple><b>Toxic Spores</b></color> at the target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} per second for <color=green><b>{ToxicSporeDuration:F1}</b></color> seconds."
             : $"Fires <color=purple><b>Toxic Spores</b></color> at the target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} per second for <color=green><b>{ToxicSporeDuration:F1}</b></color> seconds.";
@@ -150,7 +212,6 @@ public class PoisonShroom : Shooter
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"Increase <color=purple><b>Toxic Spore</b></color> duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Attacks splash onto nearby insects within a <color=green><b>1</b></color> radius, applying <color=purple><b>Toxic Spores</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -158,17 +219,17 @@ public class PoisonShroom : Shooter
 
     public override string GetPath2Description(bool details = false)
     {
-        float critpl = PSData?.path2CritChancePerLevel        ?? 0.03f;
-        float eapl   = PSData?.path2ElementalAffinityPerLevel ?? 0.04f;
+        float durpl  = PSData?.path2ToxicSporeDurationPerLevel ?? 0.4f;
+        float pctBase = PSData?.basePercentHealthDPS ?? 0.012f;
+        float pctpl   = PSData?.path2PercentHealthDPSPerLevel  ?? 0.004f;
         string desc = details
-            ? $"The {GetName()} is able to deal <color=green><b>Critical Damage</b></color> with <color=#9400D3><b>Damage Over Time</b></color> effects.\n\n" +
-              $"Increase <color=green><b>Critical Chance</b></color> by <color=green><b>[({(PSData?.baseCritChanceBonus ?? 0.1f) * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color>, and <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>[({(PSData?.baseElementalAffinityBonus ?? 0.15f) * 100f:F0}%) + ({eapl * 100f:F0}%/Lvl.)]</b></color>."
-            : $"The {GetName()} is able to deal <color=green><b>Critical Damage</b></color> with <color=#9400D3><b>Damage Over Time</b></color> effects.\n\n" +
-              $"Increase <color=green><b>Critical Chance</b></color> by <color=green><b>{criticalChance * 100f:F0}%</b></color>, and <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>{elementalAffinity * 100f:F0}%</b></color>.";
+            ? $"While active, <color=purple><b>Toxic Spore</b></color> deals an additional <color=green><b>[({pctBase * 100f:F1}%) + ({pctpl * 100f:F1}%/Lvl.)]</b></color> of the target's current health per second."
+            : $"While active, <color=purple><b>Toxic Spore</b></color> deals an additional <color=green><b>{PercentHealthDPS * 100f:F1}%</b></color> of the target's current health per second.";
+        string maxBonus = $"The {GetName()} is able to deal <color=green><b>Critical Damage</b></color> with <color=#9400D3><b>Damage Over Time</b></color> effects. Increase <color=green><b>Critical Chance</b></color> by <color=green><b>15%</b></color>.";
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase <color=green><b>Base Critical Chance</b></color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase <color=#FFD700><b>Base Elemental Affinity</b></color> by <color=green><b>{eapl * 100f:F0}%</b></color> per level. [<color=green><b>+{eapl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Increase <color=#9400D3><b>DoT Duration</b></color> by <color=green><b>{(PSData?.path2MaxDotDurationBonus ?? 0.75f) * 100f:F0}%</b></color>.")}\n\n" +
+               $"Increase <color=purple><b>Toxic Spore</b></color>'s current health damage by <color=green><b>{pctpl * 100f:F1}%</b></color> per level. [<color=green><b>+{pctpl * effectivePath2Level * 100f:F1}%</b></color>]\n\n" +
+               $"Increase <color=purple><b>Toxic Spore</b></color> duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(path2Level, maxBonus)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
