@@ -58,24 +58,20 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5a_revivalaoe
-      nodeName: Verdant Resurgence
-      description: Reviving a plant now also revives any fallen plants on the surrounding tiles. Increase <color=green><b>Skill Cooldown</b></color> by <color=green><b>30</b></color> seconds.
+    - id: node5a_overgrowth
+      nodeName: Overgrowth
+      description: Narrow the healing cone's angle by <color=green><b>30%</b></color>. Every <color=green><b>8th</b></color> attack, the current target is met with a surge of bonus healing worth <color=green><b>4</b></color> attacks' worth.
       maxRank: 1
       costPerRank: 2
-      effects:
-      - statType: 66
-        valuePerRank: -30
-      unlockId: rhodiola_revival_aoe
-    - id: node5b_revivalempower
-      nodeName: Verdant Empowerment
-      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>15</b></color> seconds. The revived plant gains <color=green><b>15%</b></color> Attack Damage and <color=green><b>15%</b></color> Attack Speed for <color=green><b>8</b></color> seconds.
+      effects: []
+      unlockId: rhodiola_overgrowth
+    - id: node5b_widespreadbloom
+      nodeName: Widespread Bloom
+      description: Increase <color=green><b>Cone Angle</b></color> to <color=green><b>360°</b></color>, and every plant caught within it now receives full healing instead of a reduced splash amount. <color=green><b>Attack Damage</b></color> reduced by <color=green><b>50%</b></color>.
       maxRank: 1
       costPerRank: 2
-      effects:
-      - statType: 66
-        valuePerRank: 15
-      unlockId: rhodiola_revival_empower
+      effects: []
+      unlockId: rhodiola_widespread_bloom
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown
@@ -120,18 +116,22 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node10a_overgrowth
-      nodeName: Overgrowth
-      description: Narrow the healing cone's angle by <color=green><b>30%</b></color>. Every <color=green><b>8th</b></color> attack, the current target is met with a surge of bonus healing worth <color=green><b>4</b></color> attacks' worth.
+    - id: node10a_revivalaoe
+      nodeName: Verdant Resurgence
+      description: Reviving a plant now also revives any fallen plants on the surrounding tiles. Increase <color=green><b>Skill Cooldown</b></color> by <color=green><b>30</b></color> seconds.
       maxRank: 1
       costPerRank: 2
-      effects: []
-      unlockId: rhodiola_overgrowth
-    - id: node10b_widespreadbloom
-      nodeName: Widespread Bloom
-      description: Increase <color=green><b>Cone Angle</b></color> to <color=green><b>360°</b></color>, and every plant caught within it now receives full healing instead of a reduced splash amount. <color=green><b>Attack Damage</b></color> reduced by <color=green><b>35%</b></color>.
+      effects:
+      - statType: 66
+        valuePerRank: -30
+      unlockId: rhodiola_revival_aoe
+    - id: node10b_revivalempower
+      nodeName: Verdant Empowerment
+      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>15</b></color> seconds. The revived plant gains <color=green><b>15%</b></color> Attack Damage and <color=green><b>15%</b></color> Attack Speed for <color=green><b>8</b></color> seconds.
       maxRank: 1
       costPerRank: 2
-      effects: []
-      unlockId: rhodiola_widespread_bloom
+      effects:
+      - statType: 66
+        valuePerRank: 15
+      unlockId: rhodiola_revival_empower
     ranksToUnlockNext: 1

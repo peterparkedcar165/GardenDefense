@@ -121,5 +121,9 @@ public enum StatType
     // Waterlily-specific: raises her stacking Slow's cap by a flat amount per rank. plant-specific
     // (cast in PlantStatApplier, same pattern as Piercing/Shooter) since MaxSlowStacks isn't a
     // generic Entity/Plant field
-    MaxSlowStacksFlat
+    MaxSlowStacksFlat,
+    // PoisonShroom-specific: flat seconds added to Toxic Spore duration per rank, on top of her
+    // own path2ToxicSporeDurationPerLevel scaling - plant-specific since Toxic Spore duration
+    // isn't a generic Entity/Plant field
+    ToxicSporeDurationFlat
 }

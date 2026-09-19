@@ -85,6 +85,7 @@ public static class PlantStatApplier
             case StatType.PassiveCooldownFlat:           plant.passiveCooldownAdder         -= value; break;
             case StatType.AttackRangeFlat:                plant.attackRangeAdder             += value; break;
             case StatType.MaxSlowStacksFlat:               if (plant is Waterlily wl) wl.maxSlowStacksAdder += Mathf.RoundToInt(value); break;
+            case StatType.ToxicSporeDurationFlat:          if (plant is PoisonShroom ps) ps.toxicSporeDurationAdder += value; break;
         }
     }
 }

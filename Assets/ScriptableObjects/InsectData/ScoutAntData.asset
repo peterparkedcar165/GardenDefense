@@ -14,9 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InsectData
   displayName: Scout Ant
   nameColor: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
-  description: Faster than other Ants
-  passiveDescription: All non-Scout Ants gain a non-stackable 15% Movement Speed
-    bonus.
   sprite: {fileID: 21300000, guid: f3e61fc78903c504d92449fac31f25da, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: c3349ff3828f87047a2105c4748346ef, type: 3}
   baseMaxHealth: 240
@@ -43,13 +40,13 @@ MonoBehaviour:
   baseWaterResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseGrassResistance: 0
+  baseGrassResistance: 0.15
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   flatPhysicalDamageReduction: 0
   threatValue: 1.3
   threatType: 0
+  carryPriority: 0
   baseEvasion: 0
   baseAccuracy: 0
   sunDrop: 10
@@ -62,3 +59,5 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  hitSound:
+    clips: []

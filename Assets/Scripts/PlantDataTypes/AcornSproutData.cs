@@ -16,7 +16,9 @@ public class AcornSproutData : PlantData
     public float path2StunDurationPerLevel = 0.1f;
 
     [Header("Path 3 Scaling")]
-    public float path3DamageMultiplierPerLevel = 0.25f;
+    // impact damage is a flat 50% of Attack Damage (see baseSkillDamageMultiplier on the SO) and no
+    // longer scales with level - instead each level adds this much flat bonus damage on top
+    public float path3FlatDamagePerLevel = 30f;
     public float path3SkillDurationPerLevel = 2f;
     public float path3HealthPerLevel = 50f;
     public float path3RadiusPerLevel = 0.15f;

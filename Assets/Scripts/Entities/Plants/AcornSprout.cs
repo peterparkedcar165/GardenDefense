@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AcornSprout : Shooter
 {
-    public float stunChance, activeRadius, activeDamageMultiplier, acornBombHealth;
+    public float stunChance, activeRadius, activeDamageMultiplier, acornBombHealth, skillFlatDamage;
     [SerializeField] private GameObject acornBombPrefab;
 
     private AcornSproutData AcornData => data as AcornSproutData;
@@ -103,14 +103,17 @@ public class AcornSprout : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        float dmgPerLevel    = AcornData?.path3DamageMultiplierPerLevel ?? 0.25f;
-        float durPerLevel    = AcornData?.path3SkillDurationPerLevel    ?? 2f;
-        float hpPerLevel     = AcornData?.path3HealthPerLevel           ?? 50f;
-        float radiusPerLevel = AcornData?.path3RadiusPerLevel           ?? 0.15f;
-        activeDamageMultiplier = data.baseSkillDamageMultiplier + dmgPerLevel * level;
-        baseSkillDuration      = data.baseSkillDuration         + durPerLevel * level;
-        acornBombHealth        = data.baseSkillHealth           + hpPerLevel  * level;
-        activeRadius           = data.baseSkillRadius           * (1f + radiusPerLevel * level);
+        float flatDmgPerLevel = AcornData?.path3FlatDamagePerLevel ?? 30f;
+        float durPerLevel     = AcornData?.path3SkillDurationPerLevel ?? 2f;
+        float hpPerLevel      = AcornData?.path3HealthPerLevel        ?? 50f;
+        float radiusPerLevel  = AcornData?.path3RadiusPerLevel        ?? 0.15f;
+        // impact damage is a flat 50% of Attack Damage, not scaled by level - levels instead add
+        // flat bonus damage on top (see skillFlatDamage, used in OnTargetConfirmed)
+        activeDamageMultiplier = data.baseSkillDamageMultiplier;
+        skillFlatDamage        = flatDmgPerLevel * level;
+        baseSkillDuration      = data.baseSkillDuration + durPerLevel * level;
+        acornBombHealth        = data.baseSkillHealth   + hpPerLevel  * level;
+        activeRadius           = data.baseSkillRadius   * (1f + radiusPerLevel * level);
     }
 
     public override void ActivateSkill()
@@ -123,7 +126,7 @@ public class AcornSprout : Shooter
         if (acornBombPrefab == null) return;
         skillCooldownTimer = skillCooldown;
         GameObject obj = Instantiate(acornBombPrefab, position, Quaternion.identity);
-        obj.GetComponent<AcornBomb>()?.Initialize(activeRadius, attackDamage * activeDamageMultiplier, skillDuration, acornBombHealth, this);
+        obj.GetComponent<AcornBomb>()?.Initialize(activeRadius, attackDamage * activeDamageMultiplier + skillFlatDamage, skillDuration, acornBombHealth, this);
     }
 
     public override string GetName() => $"<b><color=green>{(data != null ? data.displayName : "Acorn Sprout")}</color></b>";
@@ -170,21 +173,21 @@ public class AcornSprout : Shooter
 
     public override string GetPath3Description(bool details = false)
     {
-        float dmgpl    = AcornData?.path3DamageMultiplierPerLevel ?? 0.25f;
-        float durpl    = AcornData?.path3SkillDurationPerLevel    ?? 2f;
-        float hppl     = AcornData?.path3HealthPerLevel           ?? 50f;
-        float radiuspl = AcornData?.path3RadiusPerLevel           ?? 0.15f;
-        float durMP    = AcornData?.skillDurationMPMultiplier     ?? 0.10f;
+        float flatDmgPl = AcornData?.path3FlatDamagePerLevel   ?? 30f;
+        float durpl     = AcornData?.path3SkillDurationPerLevel ?? 2f;
+        float hppl      = AcornData?.path3HealthPerLevel        ?? 50f;
+        float radiuspl  = AcornData?.path3RadiusPerLevel        ?? 0.15f;
+        float durMP     = AcornData?.skillDurationMPMultiplier  ?? 0.10f;
         string skillMaxBonus = details
             ? "Whenever the <color=green><b>Acorn</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Acorn</b></color> inherits the Acorn Sprout's <color=#00CED1><b>Armor</b></color>."
             : $"Whenever the <color=green><b>Acorn</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Acorn</b></color> gains <color=#00CED1><b>{armor:F0} Base Armor</b></color>.";
         string desc = details
-            ? $"Hurls a giant <color=green><b>Acorn</b></color> from the sky at a targeted location, dealing <color={PlantData.ElementalColor(elementalType)}><b>[{activeDamageMultiplier * 100f:F0}% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
+            ? $"Hurls a giant <color=green><b>Acorn</b></color> from the sky at a targeted location, dealing <color={PlantData.ElementalColor(elementalType)}><b>[{activeDamageMultiplier * 100f:F0}% Attack Damage]</b></color> [<color=green><b>+{flatDmgPl:F0}/Lvl.</b></color>] {PlantData.DamageTypeLabel(damageType)} and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
               $"The <color=green><b>Acorn</b></color> then sits on the ground for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> <color=#FFB6C1><b>[+{durMP * 100f:F0}% Magic Power]</b></color> seconds, blocking ground insects who stop to gnaw at it. The <color=green><b>Acorn</b></color> has <color=green><b>[({data.baseSkillHealth:F0}) + ({hppl:F0}/Lvl.)]</b></color> health."
-            : $"Hurls a giant <color=green><b>Acorn</b></color> from the sky at a targeted location, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * activeDamageMultiplier:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
+            : $"Hurls a giant <color=green><b>Acorn</b></color> from the sky at a targeted location, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * activeDamageMultiplier:F0}</b></color> [<color=green><b>+{skillFlatDamage:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} and stunning all insects in the impact radius for <color=green><b>2</b></color> seconds. " +
               $"The <color=green><b>Acorn</b></color> then sits on the ground for <color=green><b>{skillDuration - SkillDurationMP:F1}</b></color> [<color=#FFB6C1><b>+{SkillDurationMP:F1}</b></color>] seconds, blocking ground insects who stop to gnaw at it. The <color=green><b>Acorn</b></color> has <color=green><b>{acornBombHealth:F0}</b></color> health.";
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase impact damage multiplier by <color=green><b>{dmgpl * 100f:F0}%</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase impact damage by <color=green><b>{flatDmgPl:F0}</b></color> per level. [<color=green><b>+{flatDmgPl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Acorn</b></color> lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Acorn lifetime scaling: <color=#FFB6C1><b>{durMP * 100f:F0}%</b></color> Magic Power. [<color=#FFB6C1><b>+{SkillDurationMP:F1}s</b></color>]\n\n" +
                $"Increase <color=green><b>Acorn</b></color> health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath3Level:F0}</b></color>]\n\n" +

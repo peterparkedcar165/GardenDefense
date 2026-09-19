@@ -10,6 +10,10 @@ public class ToxicSporeEffect : DoTEffect
 
     private readonly float damagePerTick;
     private bool isContinuation;
+    private const float internalCooldownReductionPerTick = 1f;
+    private readonly bool toxicCatalystActive;
+    // fraction of the target's CURRENT health dealt as bonus damage per second while poisoned
+    private readonly float percentHealthDPS;
 
     public ToxicSporeEffect(Entity target, float duration, int level, Entity source)
         : base(target, duration, level, source)
@@ -19,6 +23,8 @@ public class ToxicSporeEffect : DoTEffect
         tickInterval = 0.5f;
         sourceStackable = true;
         damagePerTick = (source?.attackDamage ?? 0f) * tickInterval;
+        toxicCatalystActive = source is PoisonShroom ps && SkillTreeManager.HasUnlock(ps, PoisonShroom.ToxicCatalystUnlock);
+        percentHealthDPS = (source as PoisonShroom)?.PercentHealthDPS ?? 0f;
     }
 
     // called (on this new instance) only when the same source already had one running on this
@@ -45,13 +51,30 @@ public class ToxicSporeEffect : DoTEffect
 
     private void DealTick()
     {
+        // Executioner's Bloom: bonus damage finishing off insects already below 33% health
+        bool execute = source is PoisonShroom ps && SkillTreeManager.HasUnlock(ps, PoisonShroom.ExecutionersBloomUnlock)
+                       && target.health / target.maxHealth < 0.33f;
+
+        // percent-health damage reads the target's CURRENT health at each tick, so it naturally
+        // tapers off as the target dies rather than staying fixed like the flat portion
+        float percentDamage = target.health * percentHealthDPS * tickInterval;
+        float baseDamage = damagePerTick + percentDamage;
+        float finalDamage = execute ? baseDamage * 1.66f : baseDamage;
+
         if (source != null)
-            target.Damage(damagePerTick, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
+            target.Damage(finalDamage, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
         else
-            target.Damage(damagePerTick, DamageType.Magic, ElementalType.Poison, tickTags);
+            target.Damage(finalDamage, DamageType.Magic, ElementalType.Poison, tickTags);
+
+        // Toxic Catalyst: keeps Poison elemental reactions coming faster on this target
+        if (toxicCatalystActive)
+        {
+            target.poisonInternalCooldown -= internalCooldownReductionPerTick;
+            if (target.poisonInternalCooldown < 0f) target.poisonInternalCooldown = 0f;
+        }
     }
 
     public override string GetName() => "<color=purple>Toxic Spore</color>";
     public override string GetDescription() =>
-        $"Deals <color=green><b>{damagePerTick:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage on application and every <color=green><b>{tickInterval:F1}s</b></color> after.";
+        $"Deals <color=green><b>{damagePerTick:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage, plus <color=green><b>{percentHealthDPS * 100f:F1}%</b></color> of current health, on application and every <color=green><b>{tickInterval:F1}s</b></color> after.";
 }

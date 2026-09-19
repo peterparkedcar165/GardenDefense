@@ -105,7 +105,7 @@ MonoBehaviour:
   path1AttackSpeedPerLevel: 0.03
   path2SunPerLevel: 2
   path2ProcChancePerLevel: 0.03
-  path3SunrayDPSPerLevel: 15
+  path3SunrayDPSPerLevel: 10
   path3SkillDurationPerLevel: 0.5
   path3RadiusPerLevel: 0.2
   path3VisualRadiusPerLevel: 0.3
