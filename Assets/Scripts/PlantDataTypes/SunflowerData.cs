@@ -12,7 +12,9 @@ public class SunflowerData : PlantData
     public float path1AttackSpeedPerLevel = 0.05f;
 
     [Header("Path 2 Scaling")]
-    public int path2SunPerLevel = 2;
+    // Sun generation interval is fixed (see basePassiveCooldown on the base SO) - Path 2 only
+    // grows the amount generated per production, not the cadence
+    public int path2SunPerLevel = 3;
     public float path2ProcChancePerLevel = 0.03f;
 
     [Header("Path 3 Scaling")]

@@ -132,6 +132,15 @@ public abstract class Plant : Entity, IAttackable
     }
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
+
+    // lightInnerRadius is a fixed absolute distance, which works fine for the normal (larger)
+    // light radii most plants use - but for a small light (e.g. Glowing Swarm's 0.75), clamping
+    // straight to lightEmissionRange collapses inner == outer, killing the falloff gradient
+    // entirely and making the light render as a flat, hard-edged disc instead of fading out like
+    // Calendula's. only scale it down when the light is actually too small for the normal value
+    // to fit, so every existing (larger) light keeps its exact current look
+    private float ComputeLightInnerRadius(float outerRadius) =>
+        outerRadius <= lightInnerRadius ? outerRadius * 0.4f : lightInnerRadius;
     protected virtual bool ShowLight => DarknessManager.instance != null;
     protected virtual bool ShowDarkCircle => true;
 
@@ -852,7 +861,7 @@ public abstract class Plant : Entity, IAttackable
                 {
                     // turning on from fully off: pop the radius out, then fade intensity up from black
                     _light2D.pointLightOuterRadius = lightEmissionRange;
-                    _light2D.pointLightInnerRadius = Mathf.Min(lightInnerRadius, lightEmissionRange);
+                    _light2D.pointLightInnerRadius = ComputeLightInnerRadius(lightEmissionRange);
                     _lightFader?.FadeIn(1f);
                 }
                 else if (lightEmissionRange <= 0f)
@@ -864,7 +873,7 @@ public abstract class Plant : Entity, IAttackable
                 {
                     // already lit and resizing (e.g. Floral Glow changing an already-illuminated
                     // plant's range): fade the old radius out, swap it, fade the new one back in
-                    _lightFader?.CrossFadeTo(lightEmissionRange, Mathf.Min(lightInnerRadius, lightEmissionRange));
+                    _lightFader?.CrossFadeTo(lightEmissionRange, ComputeLightInnerRadius(lightEmissionRange));
                 }
 
                 _lastLightEmissionRange = lightEmissionRange;
@@ -1597,7 +1606,11 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
-            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+            // ground position, not GetAimPoint() - a knockup only bounces the insect's visual
+            // sprite upward (never its actual root position), and that visual offset shares the
+            // same world axis this 2D range check reads, so using the aim point here would let a
+            // plant "see" an insect that only looks airborne, never actually moved
+            float dist = Vector3.Distance(transform.position, insect.transform.position);
             if (IsWithinAttackRange(insect, dist) && dist < nearestDist && IsValidNightTarget(insect, dist))
             {
                 nearestDist = dist;
@@ -1614,7 +1627,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
-            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+            float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
             if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
             if (insect.maxHealth > highestMaxHealth)
             {
@@ -1633,7 +1646,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
-            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+            float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
             if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
@@ -1660,7 +1673,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
-            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+            float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
             if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
@@ -1688,7 +1701,7 @@ public abstract class Plant : Entity, IAttackable
     // which bypasses the normal range circle entirely) is still seen correctly through the bond
     public virtual bool CanReachInsect(Insect insect)
     {
-        float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+        float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
         return IsWithinAttackRange(insect, dist) && IsValidNightTarget(insect, dist);
     }
 

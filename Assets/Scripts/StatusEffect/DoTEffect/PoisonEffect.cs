@@ -5,8 +5,8 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     private ParticleSystem poisonParticles;
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
-    private float currentHealthPercent = 0.005f;
-    private float currentFlatDamage = 2f;
+    private const float missingHealthPercent = 0.04f;
+    private const float flatDamage = 6f;
     private float cachedElementalAffinity;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
@@ -16,24 +16,17 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     {
         effectType = Type.negative;
         elementalType = ElementalType.Poison;
-        tickInterval = 0.5f;
+        tickInterval = 1f;
     }
 
     public override string GetName() => "<color=purple>Poisoned</color>";
     public override string GetDescription() =>
-        $"Take escalating damage over time (<color=purple><b>{ComputeDamage():F0}</b></color>).";
+        $"Deal <color=purple><b>{ComputeDamage():F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.";
 
+    // reads missing health fresh every tick, so this naturally hits harder the more hurt the
+    // target already is - no separate escalation state needed like the old version had
     private float ComputeDamage() =>
-        (target.maxHealth * currentHealthPercent + currentFlatDamage) * (1f + 0.33f * cachedElementalAffinity);
-
-    public override void OnReapply(StatusEffect previous)
-    {
-        if (previous is PoisonedEffect old)
-        {
-            currentHealthPercent = old.currentHealthPercent + 0.01f;
-            currentFlatDamage    = old.currentFlatDamage + 1f;
-        }
-    }
+        ((target.maxHealth - target.health) * missingHealthPercent + flatDamage) * (1f + 0.33f * cachedElementalAffinity);
 
     public override void OnApply()
     {
@@ -56,9 +49,7 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
         else
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
 
-        currentHealthPercent += 0.0025f;
-        currentFlatDamage    += 1f;
-        tickTimer            -= tickInterval;
+        tickTimer -= tickInterval;
     }
 
     public override void OnExpire()

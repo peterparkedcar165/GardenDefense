@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 110
   placementLimit: 0
   category: 0
-  skillTree: {fileID: 0}
+  skillTree: {fileID: 11400000, guid: 61c63633f98d4c5bacb804a5f7faa4de, type: 2}
   fertilizerPossibleStats: 1a000000
   baseMaxHealth: 200
   baseAttackDamage: 54

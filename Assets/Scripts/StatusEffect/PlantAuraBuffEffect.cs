@@ -11,12 +11,16 @@ public abstract class PlantAuraBuffEffect : StatusEffect
 {
     protected readonly Plant sourcePlant;
     private readonly float range;
+    // when set, range is measured from this transform instead of sourcePlant (e.g. Calendula's
+    // Borrowed Light re-centers the aura on a Floral Glow target rather than Calendula herself)
+    private readonly Transform centerOverride;
 
-    protected PlantAuraBuffEffect(Entity target, int level, Plant source, float range)
+    protected PlantAuraBuffEffect(Entity target, int level, Plant source, float range, Transform centerOverride = null)
         : base(target, float.MaxValue, level, source)
     {
         sourcePlant = source;
         this.range = range;
+        this.centerOverride = centerOverride;
     }
 
     // subclasses that need extra per-tick work (e.g. Snowdrop's Cooling) override this instead of OnTick
@@ -24,8 +28,13 @@ public abstract class PlantAuraBuffEffect : StatusEffect
 
     public override void OnTick(float deltaTime)
     {
-        if (sourcePlant == null || !sourcePlant.IsAlive ||
-            Vector3.Distance(target.transform.position, sourcePlant.transform.position) > range)
+        if (sourcePlant == null || !sourcePlant.IsAlive)
+        {
+            duration = 0f;
+            return;
+        }
+        Vector3 center = centerOverride != null ? centerOverride.position : sourcePlant.transform.position;
+        if (Vector3.Distance(target.transform.position, center) > range)
         {
             duration = 0f;
             return;

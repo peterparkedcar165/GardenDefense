@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InsectData
   displayName: Firefly
   nameColor: {r: 0.8490566, g: 0.7346397, b: 0.28435388, a: 1}
-  description: Fragile flying insect but an easy target
-  passiveDescription: Emits a small light glow.
   sprite: {fileID: 8760434079162307657, guid: 9addbd6f45f48d046bd5a3e6058abae1, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d7a6800c607f5f146a2134c6f2bca15d, type: 3}
   baseMaxHealth: 320
@@ -28,7 +26,7 @@ MonoBehaviour:
   baseArmor: 12
   baseMagicArmor: 23
   attackDamageType: 0
-  attackElementalType: 6
+  attackElementalType: 0
   baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
@@ -38,17 +36,17 @@ MonoBehaviour:
   baseMagicPenPercent: 0
   startingShield: 0
   baseTenacity: 0
-  baseFireResistance: 0
-  baseWaterResistance: 0
+  baseFireResistance: 0.5
+  baseWaterResistance: -0.25
   basePoisonResistance: 0
-  baseIceResistance: 0
-  baseGrassResistance: 0
+  baseIceResistance: -0.25
+  baseGrassResistance: 0.2
   baseWindResistance: 0.5
-  baseGroundResistance: 0
   baseDotResistance: 0
   flatPhysicalDamageReduction: 0
   threatValue: 1.1
   threatType: 0
+  carryPriority: 0
   baseEvasion: 0
   baseAccuracy: 0
   sunDrop: 9
@@ -57,7 +55,9 @@ MonoBehaviour:
   currencyDrop: 0
   currencyDropAdder: 0
   currencyDropMultiplier: 0
-  aggressivity: 0
+  aggressivity: 1
   baseLightEmissionRange: 2
   baseHealingBonus: 0
   baseHealingReceived: 0
+  hitSound:
+    clips: []

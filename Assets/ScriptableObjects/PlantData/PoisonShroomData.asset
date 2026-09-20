@@ -96,7 +96,7 @@ MonoBehaviour:
   path1AttackSpeedPerLevel: 0.08
   path1AttackRangePerLevel: 0.14
   path2ToxicSporeDurationPerLevel: 0.6
-  basePercentHealthDPS: 0.006
-  path2PercentHealthDPSPerLevel: 0.003
+  basePercentHealthDPS: 0.005
+  path2PercentHealthDPSPerLevel: 0.002
   path3SkillDurationPerLevel: 3
   path3RadiusPerLevel: 0.3

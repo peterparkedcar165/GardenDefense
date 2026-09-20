@@ -8,6 +8,11 @@ public class SaveData
     public List<string> unlockedPlants = new List<string>();
     public int currency = 0;
 
+    // bumped by SaveManager.MigrateExpCurve whenever PlantLevelCurve's growth rate changes, so an
+    // already-saved plant's (level, totalExp) can be reconstructed and re-leveled under the new
+    // curve exactly once - 0 means still on the original GrowthRate 1.5 curve
+    public int expCurveVersion = 0;
+
     // 0 = locked, 1 = unlocked (25 sun), 2 = 20 sun, 3 = 15 sun, 4 = 10 sun
     public int flowerPotLevel = 0;
     public int waterPotLevel  = 0;

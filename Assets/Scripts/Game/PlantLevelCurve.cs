@@ -10,7 +10,7 @@ public static class PlantLevelCurve
     // exactly 1 point - so reaching 25 total points means leveling up 25 times, i.e. level 26
     public const int MaxLevel = 26;
     private const int BaseExp = 3500;
-    private const float GrowthRate = 1.5f;
+    private const float GrowthRate = 1.15f;
 
     // exp needed to go from `level` to `level + 1` - this is also the amount a plant's totalExp
     // (progress within the current level, reset to 0 on every level-up) must reach, since exp

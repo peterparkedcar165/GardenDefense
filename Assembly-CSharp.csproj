@@ -255,6 +255,7 @@
     <Compile Include="Assets\Scripts\SkillTree\SkillTreePlantPanel.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HypnotizedEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\GuardedBloomEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SilenceEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\NeriumOleanderData.cs" />
@@ -292,6 +293,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\StunEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GroundedEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\GlowwormData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\GuidingLightEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AeoniumBloomEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\NeriumOleanderProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HollyTauntingEffect.cs" />
@@ -364,6 +366,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WindPrimer.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\GlowingSwarmEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\HealIndicator.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ICryotolerant.cs" />

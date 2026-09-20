@@ -7,6 +7,12 @@ public class FloralGlowEffect : StatusEffect
 
     private readonly Calendula calendula;
     private float cachedLightRange;
+    private float healTickTimer;
+    private const float HealInterval = 0.5f;
+    // flat + percent max health healed per second - scaled by HealInterval at each tick so
+    // ticking more often (smoother health bar movement) doesn't change the actual heal rate
+    private const float HealFlat = 6f;
+    private const float HealPercent = 0.03f;
 
     public FloralGlowEffect(Entity target, float duration, int level, Entity source, Calendula calendula)
         : base(target, duration, level, source)
@@ -45,7 +51,18 @@ public class FloralGlowEffect : StatusEffect
         }
     }
 
-    public override void OnTick(float deltaTime) { }
+    // Nurturing Glow: while active, Floral Glow also sustains its target with a flat + percent heal
+    public override void OnTick(float deltaTime)
+    {
+        if (calendula == null || !calendula.NurturingGlowActive) return;
+        Plant plant = target as Plant;
+        if (plant == null || !plant.IsAlive) return;
+
+        healTickTimer += deltaTime;
+        if (healTickTimer < HealInterval) return;
+        healTickTimer -= HealInterval;
+        plant.Heal((HealFlat + plant.maxHealth * HealPercent) * HealInterval, calendula);
+    }
 
     public override void OnExpire()
     {
@@ -113,5 +130,15 @@ public class FloralGlowEffect : StatusEffect
         * (1f + (calendula?.coordinatedDamage ?? 0f));
 
     public override string GetName() => "<color=orange>Floral Glow</color>";
-    public override string GetDescription() => $"Attacks inflict a <color=orange><b>Coordinated</b></color> <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage hit from the <color=orange><b>Calendula</b></color>.";
+    public override string GetDescription()
+    {
+        string desc = $"Attacks inflict a <color=orange><b>Coordinated</b></color> <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage hit from the <color=orange><b>Calendula</b></color>.";
+        if (calendula != null && calendula.NurturingGlowActive)
+        {
+            Plant plant = target as Plant;
+            float heal = HealFlat + (plant?.maxHealth ?? 0f) * HealPercent;
+            desc += $"\n\nRegenerates <color=green><b>{heal:F0}</b></color> Health per second.";
+        }
+        return desc;
+    }
 }

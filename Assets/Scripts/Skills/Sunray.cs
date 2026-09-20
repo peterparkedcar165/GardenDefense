@@ -8,7 +8,7 @@ public class Sunray : MonoBehaviour
     private float aoeRadius;
     private float duration;
     private Plant source;
-    private const float tickInterval = 0.1f;
+    private const float tickInterval = 0.25f;
     private const float oscillationSpeed = 40f;
     private const float oscillationAngle = 40f;
     private const float shrinkDuration = 0.2f;
