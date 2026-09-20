@@ -7,9 +7,13 @@ public class Calendula : Aura
     private CalendulaData CData => data as CalendulaData;
     [SerializeField] private GameObject fireBurstPrefab;
 
-    // floral glow's on hit damage scaling, 25% base, +5% per level, 50% at max level
+    // floral glow's on hit damage scaling, 25% base, +5% per level, 50% at max level.
+    // Nurturing Glow trades 35% of this for a sustain heal on the target (see FloralGlowEffect)
     public float FloralGlowDamageScaling =>
-        (CData?.floralGlowBaseDamageScaling ?? 0.25f) + (CData?.floralGlowDamageScalingPerLevel ?? 0.05f) * effectivePath3Level;
+        ((CData?.floralGlowBaseDamageScaling ?? 0.25f) + (CData?.floralGlowDamageScalingPerLevel ?? 0.05f) * effectivePath3Level)
+        * (SkillTreeManager.HasUnlock(this, NurturingGlowUnlock) ? 0.65f : 1f);
+
+    public bool NurturingGlowActive => SkillTreeManager.HasUnlock(this, NurturingGlowUnlock);
 
     private bool autoCastEnabled = false;
     private Tile autoCastTargetTile = null;
@@ -17,12 +21,46 @@ public class Calendula : Aura
     public override bool UsesAutoCast => true;
     public override bool IsAutoCasting => autoCastEnabled;
 
+    // skill tree node unlock ids
+    public const string GuidingLightUnlock  = "calendula_guiding_light";
+    public const string RadiantAuraUnlock   = "calendula_radiant_aura";
+    public const string InstantSkillUnlock  = "calendula_instant_skill";
+    public const string BorrowedLightUnlock = "calendula_borrowed_light";
+    public const string NurturingGlowUnlock = "calendula_nurturing_glow";
+
+    private float _guidingLightTimer;
+    private float _radiantAuraTimer;
+    private float _borrowedLightTimer;
+    private const float GuidingLightInterval   = 0.25f;
+    private const float RadiantAuraInterval    = 0.5f;
+    private const float BorrowedLightInterval  = 0.25f;
+    // percent of max health healed per second - scaled by RadiantAuraInterval at each tick so
+    // ticking more often (smoother health bar movement) doesn't change the actual heal rate
+    private const float RadiantAuraHealPercent = 0.025f;
+
     protected override void Awake()
     {
         base.Awake();
         LoadData();
+
+        // LoadData already applied any skill tree path1LevelAdder/path2LevelAdder/
+        // path3LevelAdder ("+1 Effective X Point" nodes) and recomputed
+        // effectivePath1/2/3Level from them, so re-running these three hooks here bakes that
+        // virtual level straight into attackDamage/attackRange/skillDuration/etc.
+        OnPath1Upgrade(effectivePath1Level);
+        OnPath2Upgrade(effectivePath2Level);
+        OnPath3Upgrade(effectivePath3Level);
+
         Plant.OnPlantPlaced += HandlePlantPlaced;
         ApplyAuraToAllInRange();
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     private void HandlePlantPlaced(Plant plant)
@@ -45,6 +83,21 @@ public class Calendula : Aura
         }
     }
 
+    // Borrowed Light: every plant currently carrying a Floral Glow cast by this Calendula acts as
+    // a second illumination source, sharing its passive's max level bonus and Guiding Light/
+    // Radiant Aura fork with anything standing in range of the target instead of Calendula herself
+    private List<Plant> GetFloralGlowTargets()
+    {
+        List<Plant> targets = new List<Plant>();
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive) continue;
+            FloralGlowEffect fg = plant.GetEffect<FloralGlowEffect>();
+            if (fg != null && fg.source == this) targets.Add(plant);
+        }
+        return targets;
+    }
+
     protected override bool ShowLight => DarknessManager.instance != null && (DarknessManager.instance.isDark || DarknessManager.instance.pitchBlack);
     protected override bool ShowDarkCircle => false;
 
@@ -52,6 +105,7 @@ public class Calendula : Aura
     {
         baseLightEmissionRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
         coordinatedDamageAdder = IsPath1Maxed ? 0.33f : 0f;
+
         base.UpdateStats();
     }
 
@@ -63,6 +117,90 @@ public class Calendula : Aura
             attackCooldownTimer += Time.deltaTime;
         else if (!IsStunned && !IsChanneling && HasInsectsInRange())
             Attack();
+
+        bool borrowedLight = SkillTreeManager.HasUnlock(this, BorrowedLightUnlock);
+
+        // Guiding Light: periodically shreds Armor/Magic Armor on every insect currently
+        // illuminated, refreshed often enough that it never lapses while they stay in range.
+        // Borrowed Light extends the same shred to insects illuminated by a Floral Glow target
+        if (SkillTreeManager.HasUnlock(this, GuidingLightUnlock))
+        {
+            _guidingLightTimer += Time.deltaTime;
+            if (_guidingLightTimer >= GuidingLightInterval)
+            {
+                _guidingLightTimer = 0f;
+                List<Insect> insects = new List<Insect>(Insect.allInsects);
+                List<Plant> glowTargets = borrowedLight ? GetFloralGlowTargets() : null;
+
+                foreach (Insect insect in insects)
+                {
+                    if (insect == null || !insect.IsAlive) continue;
+                    if (Vector2.Distance(transform.position, insect.transform.position) > lightEmissionRange) continue;
+                    insect.ApplyEffect(new GuidingLightEffect(insect, GuidingLightInterval * 2f, 1, this));
+                }
+
+                if (glowTargets != null)
+                {
+                    foreach (Plant glowTarget in glowTargets)
+                    foreach (Insect insect in insects)
+                    {
+                        if (insect == null || !insect.IsAlive) continue;
+                        if (Vector2.Distance(glowTarget.transform.position, insect.transform.position) > lightEmissionRange) continue;
+                        insect.ApplyEffect(new GuidingLightEffect(insect, GuidingLightInterval * 2f, 1, this));
+                    }
+                }
+            }
+        }
+
+        // Radiant Aura: periodically heals every OTHER plant currently illuminated. Borrowed Light
+        // extends the same heal to plants illuminated by a Floral Glow target, deduplicated so a
+        // plant lit by both this Calendula and a glow target only gets healed once per tick
+        if (SkillTreeManager.HasUnlock(this, RadiantAuraUnlock))
+        {
+            _radiantAuraTimer += Time.deltaTime;
+            if (_radiantAuraTimer >= RadiantAuraInterval)
+            {
+                _radiantAuraTimer = 0f;
+                HashSet<Plant> healed = new HashSet<Plant>();
+                foreach (Plant plant in Plant.allPlants)
+                {
+                    if (plant == null || !plant.IsAlive || plant == this) continue;
+                    if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
+                    healed.Add(plant);
+                    plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this);
+                }
+
+                if (borrowedLight)
+                {
+                    foreach (Plant glowTarget in GetFloralGlowTargets())
+                    foreach (Plant plant in Plant.allPlants)
+                    {
+                        if (plant == null || !plant.IsAlive || plant == this || healed.Contains(plant)) continue;
+                        if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
+                        healed.Add(plant);
+                        plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this);
+                    }
+                }
+            }
+        }
+
+        // Borrowed Light: independent of the Guiding Light/Radiant Aura fork, Calendula's Light
+        // (the Path2-max attack speed aura) also radiates from every current Floral Glow target
+        if (borrowedLight && IsPath2Maxed)
+        {
+            _borrowedLightTimer += Time.deltaTime;
+            if (_borrowedLightTimer >= BorrowedLightInterval)
+            {
+                _borrowedLightTimer = 0f;
+                foreach (Plant glowTarget in GetFloralGlowTargets())
+                foreach (Plant plant in Plant.allPlants)
+                {
+                    if (plant == null || !plant.IsAlive) continue;
+                    if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
+                    plant.ApplyEffect(new CalendulasLightEffect(plant, 1, this, lightEmissionRange, 0.15f, glowTarget.transform));
+                }
+            }
+        }
 
         if (autoCastEnabled)
         {

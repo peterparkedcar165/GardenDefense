@@ -74,7 +74,7 @@ MonoBehaviour:
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
-  basePassiveCooldown: 17
+  basePassiveCooldown: 25
   basePassiveDuration: 0
   baseSkillCooldown: 75
   baseSkillDuration: 8
@@ -98,12 +98,12 @@ MonoBehaviour:
       maxPitch: 1.7
   skillSound:
     clips: []
-  baseSunGenerated: 5
+  baseSunGenerated: 10
   baseSunrayDPS: 75
   sunProcChance: 0.35
   path1AttackDamagePerLevel: 4
   path1AttackSpeedPerLevel: 0.03
-  path2SunPerLevel: 2
+  path2SunPerLevel: 3
   path2ProcChancePerLevel: 0.03
   path3SunrayDPSPerLevel: 10
   path3SkillDurationPerLevel: 0.5

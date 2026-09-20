@@ -88,7 +88,7 @@ public class NeriumOleander : Shooter
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+            float dist = Vector3.Distance(transform.position, insect.transform.position); // see Plant.FindNearest
             if (dist <= attackRange && IsValidNightTarget(insect, dist))
             {
                 candidates.Add(insect);
@@ -136,7 +136,7 @@ public class NeriumOleander : Shooter
                 foreach (Insect i in Insect.allInsects)
                 {
                     if (i == null || !i.IsAlive || result.ContainsKey(i)) continue;
-                    if (Vector3.Distance(current.transform.position, i.GetAimPoint()) <= range && IsVisibleToChain(i))
+                    if (Vector3.Distance(current.transform.position, i.transform.position) <= range && IsVisibleToChain(i))
                         result[i] = first;
                 }
 
@@ -167,7 +167,7 @@ public class NeriumOleander : Shooter
                 float bestDist = Mathf.Infinity;
                 foreach (Insect insect in candidates)
                 {
-                    float dist = Vector3.Distance(transform.position, insect.GetAimPoint());
+                    float dist = Vector3.Distance(transform.position, insect.transform.position);
                     if (dist < bestDist) { bestDist = dist; best = insect; }
                 }
                 return best;

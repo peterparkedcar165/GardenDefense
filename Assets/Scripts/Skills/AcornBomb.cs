@@ -55,6 +55,7 @@ public class AcornBomb : Minion
         AcornSprout sprout = source as AcornSprout;
         baseArmor = (sprout != null && sprout.IsPath3Maxed) ? (int)source.armor : 0;
         baseMovementSpeed = 0f;
+        baseFireResistance = -0.5f;
         isFlying = true;
 
         _hasGrassDot = SkillTreeManager.HasUnlock(source, GrassDotUnlock);

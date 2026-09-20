@@ -353,13 +353,28 @@ public abstract class Insect : Entity, IAttackable
         if (ScalesWithWave)
         {
             int waveNumber = GameManager.instance.currentWave;
-            baseMaxHealth   *= 1f + ((waveNumber-1) * Random.Range(0.16f, 0.24f));
+            baseMaxHealth   *= WaveHealthMultiplier(waveNumber);
             armorAdder      += (waveNumber - 1) * Random.Range(1, 2);
             magicArmorAdder += (waveNumber - 1) * Random.Range(1, 2);
         }
         UpdateStats();
         health = maxHealth;
         RefreshHealthBarVisibility();
+    }
+
+    // wave 1 gets no bonus; each wave after that compounds a bonus that itself grows by 1
+    // percentage point per wave (wave 2 = +8%, wave 3 = +9%, wave 4 = +10%, ...), multiplied
+    // on top of the already-scaled total from the previous wave rather than the original base -
+    // fixed/deterministic, no randomness, and uncapped
+    private static float WaveHealthMultiplier(int waveNumber)
+    {
+        float multiplier = 1f;
+        for (int w = 2; w <= waveNumber; w++)
+        {
+            float stepBonus = 0.18f + 0.01f * (w - 2);
+            multiplier *= 1f + stepBonus;
+        }
+        return multiplier;
     }
 
     protected override void Update()

@@ -20,7 +20,7 @@ public class ToxicSporeEffect : DoTEffect
     {
         effectType = Type.negative;
         elementalType = ElementalType.Poison;
-        tickInterval = 0.5f;
+        tickInterval = 1f;
         sourceStackable = true;
         damagePerTick = (source?.attackDamage ?? 0f) * tickInterval;
         toxicCatalystActive = source is PoisonShroom ps && SkillTreeManager.HasUnlock(ps, PoisonShroom.ToxicCatalystUnlock);

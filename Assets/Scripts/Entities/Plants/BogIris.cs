@@ -23,23 +23,56 @@ public class BogIris : Shooter
 
     private const float ClosedArmorBonus = 30f; // Path2 max, while closed
 
-    private float SunInterval => (BogData?.baseSunInterval ?? 4f) * (1f + sunGenerationCooldown);
+    // skill tree node unlock ids
+    public const string GuardedBloomUnlock  = "bogiris_guarded_bloom";
+    public const string FruitfulBloomUnlock = "bogiris_fruitful_bloom";
+    public const string InstantSkillUnlock  = "bogiris_instant_skill";
+    public const string OverflowUnlock      = "bogiris_overflow";
+    public const string EruptionUnlock      = "bogiris_eruption";
+
+    // Fruitful Bloom halves the sun interval, but only while actually open
+    private float SunInterval =>
+        (BogData?.baseSunInterval ?? 4f) * (1f + sunGenerationCooldown)
+        * (SkillTreeManager.HasUnlock(this, FruitfulBloomUnlock) && _isOpen ? 0.5f : 1f);
     private int   BaseSunGenerated => BogData?.baseSunGenerated ?? 2;
     private int   OpenBonusSun => (BogData?.baseOpenBonusSun ?? 2) + (BogData?.path2OpenBonusSunPerLevel ?? 1) * effectivePath2Level;
     private float RegenPercentPerSecond => (BogData?.baseRegenPercent ?? 0.02f) + (BogData?.path2RegenPercentPerLevel ?? 0.01f) * effectivePath2Level;
     private float ReduceChance => (BogData?.baseReduceChance ?? 0.35f) + (BogData?.path2ReduceChancePerLevel ?? 0.05f) * effectivePath2Level;
-    private float GeyserRadius => skillRadius + (BogData?.path3GeyserRadiusPerLevel ?? 0.15f) * effectivePath3Level;
+    // Overflow/Eruption trade Geyser radius for damage in opposite directions
+    private float GeyserRadius =>
+        (skillRadius + (BogData?.path3GeyserRadiusPerLevel ?? 0.15f) * effectivePath3Level)
+        * (SkillTreeManager.HasUnlock(this, OverflowUnlock) ? 1.3f
+           : SkillTreeManager.HasUnlock(this, EruptionUnlock) ? 0.8f : 1f);
     private float KnockUpHeight => ScaleCC(((BogData?.baseKnockUpHeight ?? 0f) + (BogData?.path3KnockUpPerLevel ?? 1f) * effectivePath3Level) * skillDuration);
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * KnockUpHeight);
-    private float GeyserDamage => (BogData?.baseGeyserDamage ?? 0f) + (BogData?.path3GeyserDamagePerLevel ?? 15f) * effectivePath3Level + skillDamageMultiplier * magicPower;
+    private float GeyserDamage =>
+        ((BogData?.baseGeyserDamage ?? 0f) + (BogData?.path3GeyserDamagePerLevel ?? 15f) * effectivePath3Level + skillDamageMultiplier * magicPower)
+        * (SkillTreeManager.HasUnlock(this, EruptionUnlock) ? 1.3f
+           : SkillTreeManager.HasUnlock(this, OverflowUnlock) ? 0.8f : 1f);
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
+
+        // LoadData already applied any skill tree path1LevelAdder ("+1 Effective Attack Point")
+        // and recomputed effectivePath1Level from it, so re-running this hook here bakes that
+        // virtual level straight into attackDamage/attackSpeed. Path2/Path3 don't need this -
+        // OnPath2Upgrade/OnPath3Upgrade are no-ops since all their scaling (OpenBonusSun,
+        // RegenPercentPerSecond, GeyserDamage, etc.) already reads effectivePath2/3Level live
+        OnPath1Upgrade(effectivePath1Level);
+
         _rootRenderer = GetComponent<SpriteRenderer>();
         _isOpen = health >= maxHealth;
         SetVisualState(_isOpen);
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     protected override void Update()
@@ -74,6 +107,10 @@ public class BogIris : Shooter
                 bool doubled = IsPath2Maxed || !IsInCombat;
                 float regenPerTick = RegenPercentPerSecond * (doubled ? 2f : 1f);
                 Heal(maxHealth * regenPerTick * (1f + healingReceived) * (1f + healingBonus));
+
+                // Guarded Bloom: each regen tick also refreshes a small shield while closed
+                if (SkillTreeManager.HasUnlock(this, GuardedBloomUnlock))
+                    ApplyEffect(new GuardedBloomEffect(this, this, maxHealth * 0.03f));
             }
         }
         else

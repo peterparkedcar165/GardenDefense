@@ -54,8 +54,50 @@ public class SaveManager : MonoBehaviour
             Debug.Log("Loaded save data");
         }
 
+        MigrateExpCurve();
+
         // on load, fill any plant gaps caused by levels already completed
         RepairPlantsFromLevels();
+    }
+
+    // legacy curve constants, kept only for MigrateExpCurve below - the live curve is now
+    // PlantLevelCurve (GrowthRate 1.15). exists purely so an already-saved (level, totalExp) pair
+    // can be reconstructed into a lifetime exp figure under the curve it was actually earned on
+    private const int LegacyBaseExp = 3500;
+    private const float LegacyGrowthRate = 1.5f;
+    private static int LegacyExpForNextLevel(int level) => Mathf.RoundToInt(LegacyBaseExp * Mathf.Pow(LegacyGrowthRate, level - 1));
+
+    // one-time migration: growth rate changed from 1.5 to 1.15, so every plant's already-saved
+    // (level, totalExp) pair is reconstructed into its lifetime exp total (under the OLD curve)
+    // and re-leveled under the NEW curve. a friendlier curve always requires <= the exp the old
+    // one did to reach any given level, so this only ever raises a plant's level, never lowers
+    // it - skill points are topped up by however many extra levels the migration grants
+    private void MigrateExpCurve()
+    {
+        if (saveData.expCurveVersion >= 1) return;
+
+        foreach (PlantExpRecord record in saveData.plantExp)
+        {
+            int lifetimeExp = record.totalExp;
+            for (int l = 1; l < record.level; l++)
+                lifetimeExp += LegacyExpForNextLevel(l);
+
+            int oldLevel = record.level;
+            record.level = 1;
+            int remaining = lifetimeExp;
+            while (record.level < PlantLevelCurve.MaxLevel && remaining >= PlantLevelCurve.ExpForNextLevel(record.level))
+            {
+                remaining -= PlantLevelCurve.ExpForNextLevel(record.level);
+                record.level++;
+            }
+            record.totalExp = remaining;
+
+            int levelsGained = record.level - oldLevel;
+            if (levelsGained > 0) saveData.AddPlantSkillPoints(record.plantName, levelsGained);
+        }
+
+        saveData.expCurveVersion = 1;
+        Save();
     }
 
     // derives plants strictly from highestLevelUnlocked, levels are the single source of truth

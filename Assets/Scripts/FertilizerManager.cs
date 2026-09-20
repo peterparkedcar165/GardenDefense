@@ -96,20 +96,39 @@ public class FertilizerManager : MonoBehaviour
     private GeneratedFertilizer RollGenerated(FertilizerTier tier, Dictionary<StatType, FertilizerStatRules.StatScope> available)
     {
         List<StatType> pool = new List<StatType>(available.Keys);
+        // Piercing is Rare/Epic exclusive - never offered on Common at all
+        if (tier == FertilizerTier.Common) pool.Remove(StatType.Piercing);
+
         for (int i = pool.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
             (pool[i], pool[j]) = (pool[j], pool[i]);
         }
 
-        int count = Mathf.Min(Random.Range(2, 4), pool.Count); // 2 or 3 stats per bundle
+        int baseCount = tier switch
+        {
+            FertilizerTier.Rare => 3,
+            FertilizerTier.Epic => 4,
+            _                   => 2,
+        };
+        int count = Mathf.Min(baseCount, pool.Count);
         GeneratedFertilizerStat[] stats = new GeneratedFertilizerStat[count];
         for (int i = 0; i < count; i++)
         {
             StatType stat = pool[i];
-            (float min, float max) = GetBaseRange(stat);
-            float rolled = Random.Range(min, max) * GetTierMultiplier(tier);
-            if (IsIntegerStat(stat)) rolled = Mathf.Round(rolled);
+            float rolled;
+            if (stat == StatType.Piercing)
+            {
+                // fixed per tier rather than the generic range*multiplier roll - Common never
+                // reaches here since it's excluded from the pool above
+                rolled = tier == FertilizerTier.Epic ? 2f : 1f;
+            }
+            else
+            {
+                (float min, float max) = GetBaseRange(stat);
+                rolled = Random.Range(min, max) * GetTierMultiplier(tier);
+                if (IsIntegerStat(stat)) rolled = Mathf.Round(rolled);
+            }
             stats[i] = new GeneratedFertilizerStat { statType = stat, value = rolled, scope = available[stat] };
         }
         return new GeneratedFertilizer { tier = tier, stats = stats };

@@ -17,7 +17,7 @@ MonoBehaviour:
   - type: 0
     intensity: 1
   temperature: 2
-  maxWaves: 24
+  maxWaves: 18
   startSunCount: 750
   startHealth: 200
   maxUpgradeLevel: 5
@@ -74,53 +74,946 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  insects:
-  - data: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
-    unlockWave: 0
-    budgetWeight: 0.35
-    startDelay: 1
-  - data: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
-    unlockWave: 1
-    budgetWeight: 0.3
-    startDelay: 2
-  - data: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
-    unlockWave: 2
-    budgetWeight: 0.3
-    startDelay: 2
-  - data: {fileID: 11400000, guid: 647ab323b77b9d949b24c742142f1010, type: 2}
-    unlockWave: 2
-    budgetWeight: 0.3
-    startDelay: 2
-  - data: {fileID: 11400000, guid: 39cb5390faf0d7e468c1921ab3466cf2, type: 2}
-    unlockWave: 3
-    budgetWeight: 0.25
-    startDelay: 6
-  - data: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
-    unlockWave: 4
-    budgetWeight: 0.1
-    startDelay: 5
-  - data: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
-    unlockWave: 5
-    budgetWeight: 0.1
-    startDelay: 2
-  waves: []
-  eliteWaveInterval: 6
-  eliteInsects:
-  - data: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
-    unlockWave: 6
-    budgetWeight: 0.193
-    startDelay: 2
-    minSpawnCount: 3
-    maxSpawnCount: 20
-  - data: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
-    unlockWave: 6
-    budgetWeight: 0.193
-    startDelay: 2
-    minSpawnCount: 3
-    maxSpawnCount: 12
+  insects: []
+  waves:
+  - waveNumber: 1
+    subWaves:
+    - subWaveDuration: 52.6456
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 13
+        timeBetweenSpawns: 3.5538
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 5
+        timeBetweenSpawns: 9.24
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 3
+        timeBetweenSpawns: 15.4
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 57.3844
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 13
+        timeBetweenSpawns: 3.9487
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 5
+        timeBetweenSpawns: 10.2667
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 4
+        timeBetweenSpawns: 12.8333
+        startDelay: 0
+      delayBeforeNext: 10
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 8.0333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 16.0667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 12.3333
+      startDelay: 0
+  - waveNumber: 2
+    subWaves:
+    - subWaveDuration: 54.4375
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 16
+        timeBetweenSpawns: 2.9625
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 8
+        timeBetweenSpawns: 5.925
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 5
+        timeBetweenSpawns: 9.48
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 59.568
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 17
+        timeBetweenSpawns: 3.098
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 8
+        timeBetweenSpawns: 6.5833
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 5
+        timeBetweenSpawns: 10.5333
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 4
+        timeBetweenSpawns: 13.1667
+        startDelay: 0
+      delayBeforeNext: 10
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 7.5667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 15.1333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 11.6667
+      startDelay: 0
+  - waveNumber: 3
+    subWaves:
+    - subWaveDuration: 56.0422
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 19
+        timeBetweenSpawns: 2.5579
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 10
+        timeBetweenSpawns: 4.86
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 6
+        timeBetweenSpawns: 8.1
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 2
+        timeBetweenSpawns: 24.3
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 61.3
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 20
+        timeBetweenSpawns: 2.7
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 12
+        timeBetweenSpawns: 4.5
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 7
+        timeBetweenSpawns: 7.7143
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 2
+        timeBetweenSpawns: 27
+        startDelay: 0
+      delayBeforeNext: 10
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 7.1
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 14.2
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 11
+      startDelay: 0
+  - waveNumber: 4
+    subWaves:
+    - subWaveDuration: 57.535603
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 22
+        timeBetweenSpawns: 2.2636
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 13
+        timeBetweenSpawns: 3.8308
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 8
+        timeBetweenSpawns: 6.225
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 3
+        timeBetweenSpawns: 16.6
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 57.9276
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 23
+        timeBetweenSpawns: 2.4058
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 15
+        timeBetweenSpawns: 3.6889
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 9
+        timeBetweenSpawns: 6.1481
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 4
+        timeBetweenSpawns: 13.8333
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 6.6333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 13.2667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 10.3333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 30
+      startDelay: 0
+  - waveNumber: 5
+    subWaves:
+    - subWaveDuration: 58.96
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 25
+        timeBetweenSpawns: 2.04
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 16
+        timeBetweenSpawns: 3.1875
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 9
+        timeBetweenSpawns: 5.6667
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 5
+        timeBetweenSpawns: 10.2
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 59.568798
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 27
+        timeBetweenSpawns: 2.0988
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 18
+        timeBetweenSpawns: 3.1481
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 10
+        timeBetweenSpawns: 5.6667
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 5
+        timeBetweenSpawns: 11.3333
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 6.1667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 12.3333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 9.6667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 28.6667
+      startDelay: 0
+  - waveNumber: 6
+    subWaves:
+    - subWaveDuration: 60.3361
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 28
+        timeBetweenSpawns: 1.8643
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 19
+        timeBetweenSpawns: 2.7474
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 11
+        timeBetweenSpawns: 4.7455
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 6
+        timeBetweenSpawns: 8.7
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 61.0657
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 30
+        timeBetweenSpawns: 1.9333
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 21
+        timeBetweenSpawns: 2.7619
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 12
+        timeBetweenSpawns: 4.8333
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 6
+        timeBetweenSpawns: 9.6667
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 5.7
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 11.4
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 9
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 27.3333
+      startDelay: 0
+  - waveNumber: 7
+    subWaves:
+    - subWaveDuration: 61.678
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 31
+        timeBetweenSpawns: 1.7226
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 22
+        timeBetweenSpawns: 2.4273
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 12
+        timeBetweenSpawns: 4.45
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 7
+        timeBetweenSpawns: 7.6286
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 62.536
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 33
+        timeBetweenSpawns: 1.798
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 24
+        timeBetweenSpawns: 2.4722
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 14
+        timeBetweenSpawns: 4.2381
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 8
+        timeBetweenSpawns: 7.4167
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 5.2333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 10.4667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 8.3333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 26
+      startDelay: 0
+  - waveNumber: 8
+    subWaves:
+    - subWaveDuration: 62.944
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 33
+        timeBetweenSpawns: 1.6545
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 24
+        timeBetweenSpawns: 2.275
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 14
+        timeBetweenSpawns: 3.9
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 8
+        timeBetweenSpawns: 6.825
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 64.025604
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 37
+        timeBetweenSpawns: 1.6396
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 28
+        timeBetweenSpawns: 2.1667
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 15
+        timeBetweenSpawns: 4.0444
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 9
+        timeBetweenSpawns: 6.7407
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 4.7667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 9.5333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 7.6667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 24.6667
+      startDelay: 0
+  - waveNumber: 9
+    subWaves:
+    - subWaveDuration: 64.25
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 36
+        timeBetweenSpawns: 1.55
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 27
+        timeBetweenSpawns: 2.0667
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 15
+        timeBetweenSpawns: 3.72
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 9
+        timeBetweenSpawns: 6.2
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 65.45
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 40
+        timeBetweenSpawns: 1.55
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 31
+        timeBetweenSpawns: 2
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 17
+        timeBetweenSpawns: 3.6471
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 10
+        timeBetweenSpawns: 6.2
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 4.3
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 8.6
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 7
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 23.3333
+      startDelay: 0
+  - waveNumber: 10
+    subWaves:
+    - subWaveDuration: 65.537
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 39
+        timeBetweenSpawns: 1.4615
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 30
+        timeBetweenSpawns: 1.9
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 17
+        timeBetweenSpawns: 3.3529
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 11
+        timeBetweenSpawns: 5.1818
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 66.8618
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 43
+        timeBetweenSpawns: 1.4729
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 34
+        timeBetweenSpawns: 1.8627
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 19
+        timeBetweenSpawns: 3.3333
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 12
+        timeBetweenSpawns: 5.2778
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 3.8333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 7.6667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 6.3333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 22
+      startDelay: 0
+  - waveNumber: 11
+    subWaves:
+    - subWaveDuration: 66.8137
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 42
+        timeBetweenSpawns: 1.3857
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 33
+        timeBetweenSpawns: 1.7636
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 18
+        timeBetweenSpawns: 3.2333
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 12
+        timeBetweenSpawns: 4.85
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 68.2914
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 47
+        timeBetweenSpawns: 1.3759
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 37
+        timeBetweenSpawns: 1.7477
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 20
+        timeBetweenSpawns: 3.2333
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 13
+        timeBetweenSpawns: 4.9744
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 3.3667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 6.7333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 5.6667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 20.6667
+      startDelay: 0
+  - waveNumber: 12
+    subWaves:
+    - subWaveDuration: 68.08
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 45
+        timeBetweenSpawns: 1.32
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 36
+        timeBetweenSpawns: 1.65
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 20
+        timeBetweenSpawns: 2.97
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 13
+        timeBetweenSpawns: 4.5692
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 69.68
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 50
+        timeBetweenSpawns: 1.32
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 40
+        timeBetweenSpawns: 1.65
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 22
+        timeBetweenSpawns: 3
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 14
+        timeBetweenSpawns: 4.7143
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 2.9
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 5.8
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 5
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 19.3333
+      startDelay: 0
+  - waveNumber: 13
+    subWaves:
+    - subWaveDuration: 69.3375
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 48
+        timeBetweenSpawns: 1.2625
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 38
+        timeBetweenSpawns: 1.5947
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 21
+        timeBetweenSpawns: 2.8857
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 14
+        timeBetweenSpawns: 4.3286
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 71.06081
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 53
+        timeBetweenSpawns: 1.2704
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 44
+        timeBetweenSpawns: 1.5303
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 24
+        timeBetweenSpawns: 2.8056
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 16
+        timeBetweenSpawns: 4.2083
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 2.4333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 4.8667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 4.3333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 18
+      startDelay: 0
+  - waveNumber: 14
+    subWaves:
+    - subWaveDuration: 70.59
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 51
+        timeBetweenSpawns: 1.2118
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 41
+        timeBetweenSpawns: 1.5073
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 23
+        timeBetweenSpawns: 2.687
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 15
+        timeBetweenSpawns: 4.12
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 72.463196
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 57
+        timeBetweenSpawns: 1.2047
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 47
+        timeBetweenSpawns: 1.461
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 25
+        timeBetweenSpawns: 2.7467
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 17
+        timeBetweenSpawns: 4.0392
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 1.9667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 3.9333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 3.6667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 16.6667
+      startDelay: 0
+  - waveNumber: 15
+    subWaves:
+    - subWaveDuration: 71.8351
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 54
+        timeBetweenSpawns: 1.1667
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 44
+        timeBetweenSpawns: 1.4318
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 24
+        timeBetweenSpawns: 2.625
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 17
+        timeBetweenSpawns: 3.7059
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 73.8353
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 60
+        timeBetweenSpawns: 1.1667
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 50
+        timeBetweenSpawns: 1.4
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 27
+        timeBetweenSpawns: 2.5926
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 18
+        timeBetweenSpawns: 3.8889
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 1.5
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 3
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 3
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 15.3333
+      startDelay: 0
+  - waveNumber: 16
+    subWaves:
+    - subWaveDuration: 73.0728
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 57
+        timeBetweenSpawns: 1.1263
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 47
+        timeBetweenSpawns: 1.366
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 25
+        timeBetweenSpawns: 2.568
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 18
+        timeBetweenSpawns: 3.5667
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 75.2026
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 63
+        timeBetweenSpawns: 1.1323
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 53
+        timeBetweenSpawns: 1.3459
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 29
+        timeBetweenSpawns: 2.4598
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 20
+        timeBetweenSpawns: 3.5667
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 1.0333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 2.0667
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 2.3333
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 14
+      startDelay: 0
+  - waveNumber: 17
+    subWaves:
+    - subWaveDuration: 74.310005
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 60
+        timeBetweenSpawns: 1.09
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 50
+        timeBetweenSpawns: 1.308
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 27
+        timeBetweenSpawns: 2.4222
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 19
+        timeBetweenSpawns: 3.4421
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 75.9236
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 67
+        timeBetweenSpawns: 1.0746
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 56
+        timeBetweenSpawns: 1.2857
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 30
+        timeBetweenSpawns: 2.4
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 21
+        timeBetweenSpawns: 3.4286
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 0.7
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 1.5
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 2
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 12.6667
+      startDelay: 0
+  - waveNumber: 18
+    subWaves:
+    - subWaveDuration: 74.9512
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 63
+        timeBetweenSpawns: 1.0476
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 52
+        timeBetweenSpawns: 1.2692
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 28
+        timeBetweenSpawns: 2.3571
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 20
+        timeBetweenSpawns: 3.3
+        startDelay: 0
+      delayBeforeNext: 10
+    - subWaveDuration: 75.9734
+      spawns:
+      - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
+        count: 70
+        timeBetweenSpawns: 1.0286
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
+        count: 60
+        timeBetweenSpawns: 1.2
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: c9826621161f29345af46da4e51a74ec, type: 2}
+        count: 32
+        timeBetweenSpawns: 2.25
+        startDelay: 0
+      - insectData: {fileID: 11400000, guid: 0d223d1878ff2db41b2015b1311e7672, type: 2}
+        count: 22
+        timeBetweenSpawns: 3.2727
+        startDelay: 0
+      delayBeforeNext: 5
+    trickleSpawns:
+    - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
+      interval: 0.7
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
+      interval: 1.5
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: 52aee1f9000349f409fbe1d8ac8cde46, type: 2}
+      interval: 2
+      startDelay: 0
+    - insectData: {fileID: 11400000, guid: bfaeec096dd4d294aa1a34cebfaa6ee4, type: 2}
+      interval: 11.3333
+      startDelay: 0
+  eliteWaveInterval: 0
+  eliteInsects: []
   fertilizerPool:
-  - {fileID: 11400000, guid: a459790abe9b4a1419001264f87b5ec7, type: 2}
-  - {fileID: 11400000, guid: c20fa75212e0fab4e90ca3185c294d52, type: 2}
-  - {fileID: 11400000, guid: 08ca7efbce2cf594895fa6419120af9f, type: 2}
+  - {fileID: 11400000, guid: 3e13ef541c9f3cd4aba5f81c62f1e4de, type: 2}
+  - {fileID: 11400000, guid: b374faaf2b29af0428d4952befb3396b, type: 2}
+  - {fileID: 11400000, guid: 5e42fc420588248489301ae249f88930, type: 2}
   fertilizerGrants: []
   ambience: {fileID: 11400000, guid: a53efb8b7d84dfe438423cd008ebef91, type: 2}

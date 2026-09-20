@@ -106,7 +106,7 @@ public class AcornProjectile : Projectile
         foreach (Insect i in Insect.allInsects)
         {
             if (i == null || !i.IsAlive || _alreadyHit.Contains(i)) continue;
-            float dist = Vector3.Distance(transform.position, i.GetAimPoint());
+            float dist = Vector3.Distance(transform.position, i.transform.position); // see Plant.FindNearest
             if (dist < nearestDist) { nearestDist = dist; nearest = i; }
         }
         return nearest;
@@ -149,7 +149,7 @@ public class AcornProjectile : Projectile
             foreach (Insect other in new List<Insect>(Insect.allInsects))
             {
                 if (other == null || !other.IsAlive || other == insect || other.team == Team.Friendly) continue;
-                if (Vector3.Distance(transform.position, other.GetAimPoint()) > stunSpecialistSplashRadius) continue;
+                if (Vector3.Distance(transform.position, other.transform.position) > stunSpecialistSplashRadius) continue;
                 other.Damage(splashDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
                 if (stunned)
                     other.ApplyEffect(new StunEffect(other, acorn.passiveDuration, 1, source));

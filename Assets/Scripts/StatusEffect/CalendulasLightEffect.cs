@@ -1,9 +1,11 @@
+using UnityEngine;
+
 public class CalendulasLightEffect : PlantAuraBuffEffect
 {
     private readonly float attackSpeedBonus;
 
-    public CalendulasLightEffect(Entity target, int level, Plant source, float range, float attackSpeedBonus)
-        : base(target, level, source, range)
+    public CalendulasLightEffect(Entity target, int level, Plant source, float range, float attackSpeedBonus, Transform centerOverride = null)
+        : base(target, level, source, range, centerOverride)
     {
         this.attackSpeedBonus = attackSpeedBonus;
         effectType      = Type.positive;
