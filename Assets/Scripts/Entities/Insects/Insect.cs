@@ -371,7 +371,7 @@ public abstract class Insect : Entity, IAttackable
         float multiplier = 1f;
         for (int w = 2; w <= waveNumber; w++)
         {
-            float stepBonus = 0.18f + 0.01f * (w - 2);
+            float stepBonus = 0.12f + 0.01f * (w - 2);
             multiplier *= 1f + stepBonus;
         }
         return multiplier;

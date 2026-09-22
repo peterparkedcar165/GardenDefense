@@ -210,12 +210,16 @@ public class FertilizerManager : MonoBehaviour
         sb.AppendLine($"<size=85%>Applies to: <color=#FFD700>{target}</color></size>");
         sb.AppendLine();
 
-        for (int i = 0; i < selectedStats.Length; i++)
+        StatType[] statTypes = new StatType[selectedStats.Length];
+        for (int i = 0; i < selectedStats.Length; i++) statTypes[i] = selectedStats[i].statType;
+
+        foreach (int i in FertilizerFormat.SortedIndicesByName(statTypes))
         {
             bool isGood = rolledValues[i] >= 0f;
             if (FertilizerFormat.IsInvertedStat(selectedStats[i].statType)) isGood = !isGood;
             string color = isGood ? "green" : "red";
-            sb.AppendLine($"{FertilizerFormat.FormatStatName(selectedStats[i].statType)}: <color={color}><b>{FertilizerFormat.FormatValue(selectedStats[i].statType, rolledValues[i])}</b></color>");
+            string statColor = FertilizerFormat.GetStatColor(selectedStats[i].statType);
+            sb.AppendLine($"<color={color}><b>{FertilizerFormat.FormatValue(selectedStats[i].statType, rolledValues[i])}</b></color> <color={statColor}><b>{FertilizerFormat.FormatStatName(selectedStats[i].statType)}</b></color>");
         }
 
         return sb.ToString().TrimEnd();
@@ -308,7 +312,7 @@ public class FertilizerManager : MonoBehaviour
             case StatType.CoordinatedDamage:            return (0.03f, 0.04f);
             case StatType.HealingBonus:                 return (0.03f, 0.04f);
             case StatType.IlluminationRangeAdder:       return (0.25f, 0.5f);
-            case StatType.IlluminationRangeMultiplier:  return (0.12f, 0.18f);
+            case StatType.IlluminationRangeMultiplier:  return (0.08f, 0.12f);
             case StatType.CounterDamage:                return (0.03f, 0.04f);
             case StatType.PhysicalDamage:               return (0.03f, 0.04f);
             case StatType.MagicDamage:                  return (0.03f, 0.04f);

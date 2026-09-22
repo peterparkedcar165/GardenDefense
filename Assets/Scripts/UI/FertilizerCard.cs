@@ -106,12 +106,16 @@ public class FertilizerCard : MonoBehaviour
 
             sb.AppendLine();
 
-            for (int i = 0; i < rolledStats.Length; i++)
+            StatType[] statTypes = new StatType[rolledStats.Length];
+            for (int i = 0; i < rolledStats.Length; i++) statTypes[i] = rolledStats[i].statType;
+
+            foreach (int i in FertilizerFormat.SortedIndicesByName(statTypes))
             {
                 bool isGood = rolledValues[i] >= 0f;
                 if (FertilizerFormat.IsInvertedStat(rolledStats[i].statType)) isGood = !isGood;
                 string color = isGood ? "green" : "red";
-                sb.AppendLine($"{FertilizerFormat.FormatStatName(rolledStats[i].statType)}: <color={color}><b>{FertilizerFormat.FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color>");
+                string statColor = FertilizerFormat.GetStatColor(rolledStats[i].statType);
+                sb.AppendLine($"<color={color}><b>{FertilizerFormat.FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color> <color={statColor}><b>{FertilizerFormat.FormatStatName(rolledStats[i].statType)}</b></color>");
             }
             statsText.text = sb.ToString().TrimEnd();
         }
@@ -126,12 +130,18 @@ public class FertilizerCard : MonoBehaviour
         if (statsText != null)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (GeneratedFertilizerStat stat in generatedData.stats)
+            GeneratedFertilizerStat[] stats = generatedData.stats;
+            StatType[] statTypes = new StatType[stats.Length];
+            for (int i = 0; i < stats.Length; i++) statTypes[i] = stats[i].statType;
+
+            foreach (int i in FertilizerFormat.SortedIndicesByName(statTypes))
             {
+                GeneratedFertilizerStat stat = stats[i];
                 bool isGood = stat.value >= 0f;
                 if (FertilizerFormat.IsInvertedStat(stat.statType)) isGood = !isGood;
                 string color = isGood ? "green" : "red";
-                sb.AppendLine($"{FertilizerFormat.FormatStatName(stat.statType)}: <color={color}><b>{FertilizerFormat.FormatValue(stat.statType, stat.value)}</b></color>");
+                string statColor = FertilizerFormat.GetStatColor(stat.statType);
+                sb.AppendLine($"<color={color}><b>{FertilizerFormat.FormatValue(stat.statType, stat.value)}</b></color> <color={statColor}><b>{FertilizerFormat.FormatStatName(stat.statType)}</b></color>");
             }
             statsText.text = sb.ToString().TrimEnd();
         }
