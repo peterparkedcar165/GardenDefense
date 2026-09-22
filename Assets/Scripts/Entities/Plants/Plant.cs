@@ -1447,7 +1447,7 @@ public abstract class Plant : Entity, IAttackable
             return "<b>Passive</b>: Attacks have a 50% chance to reduce Skill Cooldown by 1 second on hit.";
 
             case PlantFamily.Kindred:
-            return "<b>Passive</b>: Dealing Coordinated Damage has a 50% chance to reduce Skill Cooldown by 0.5 seconds.";
+            return "<b>Passive</b>: Dealing Coordinated Damage has a 25% chance to reduce Skill Cooldown by 0.5 seconds.";
 
             default:
             return "";

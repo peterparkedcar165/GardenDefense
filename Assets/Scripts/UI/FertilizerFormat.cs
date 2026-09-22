@@ -2,6 +2,18 @@
 // and FertilizerInfoTooltip (in game reminder) so both render identically
 public static class FertilizerFormat
 {
+    // indices into statTypes, ordered by each stat's displayed name (A to Z) rather than
+    // whatever order they were rolled in - every fertilizer stat list renders through this so
+    // the displayed order is consistent and predictable regardless of roll order
+    public static int[] SortedIndicesByName(StatType[] statTypes)
+    {
+        int[] indices = new int[statTypes.Length];
+        for (int i = 0; i < indices.Length; i++) indices[i] = i;
+        System.Array.Sort(indices, (a, b) =>
+            string.Compare(FormatStatName(statTypes[a]), FormatStatName(statTypes[b]), System.StringComparison.Ordinal));
+        return indices;
+    }
+
     public static bool IsInvertedStat(StatType statType)
     {
         switch (statType)
@@ -110,6 +122,94 @@ public static class FertilizerFormat
             case StatType.Path3LevelAdder:                  return "Effective Skill Point";
             case StatType.SunCostReduction:                 return "Sun Cost";
             default:                                        return statType.ToString();
+        }
+    }
+
+    // same palette StatsPanelTooltip.cs uses for these stats' own tooltip lines, so a fertilizer
+    // roll's stat name reads as the same "kind" of stat at a glance. stats with no clear
+    // counterpart there (pure utility/duration stats not tied to any element or category) fall
+    // back to plain white rather than an arbitrary invented color
+    private const string White = "white";
+    private const string Fire     = "orange";
+    private const string Water    = "#4FC3F7";
+    private const string Grass    = "green";
+    private const string Ice      = "#00FFFF";
+    private const string Poison   = "purple";
+    private const string Wind     = "#B2EBF2";
+    private const string Effect   = "#B3FFFF";
+    private const string Magic    = "#FFB6C1";
+    private const string Physical = "#A0522D";
+    private const string Crit     = "#FFD700";
+    private const string Heal     = "#FF6B81";
+    private const string Sun      = "#FFD700";
+    private const string ArmorCol = "#00CED1";
+    private const string MagicArmorCol = "#FF69B4";
+    private const string Coordinated = "#6495ED";
+
+    public static string GetStatColor(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.AttackDamage:
+            case StatType.AttackDamageFlat:
+            case StatType.AttackSpeed:
+            case StatType.AttackSpeedFlat:
+            case StatType.AttackRange:
+            case StatType.GrassDamage:
+            case StatType.elementalAffinity:
+            case StatType.Piercing:
+                return Grass;
+            case StatType.FireDamage:
+            case StatType.HeatResistance:
+                return Fire;
+            case StatType.IceDamage:
+            case StatType.ColdResistance:
+                return Ice;
+            case StatType.WaterDamage:
+                return Water;
+            case StatType.PoisonDamage:
+                return Poison;
+            case StatType.WindDamage:
+                return Wind;
+            case StatType.BonusEffectChance:
+                return Effect;
+            case StatType.MinimumDamage:
+            case StatType.MaximumDamage:
+            case StatType.MagicDamage:
+            case StatType.MagicResistance:
+            case StatType.MagicPower:
+            case StatType.MagicPenetration:
+            case StatType.MagicArmorShred:
+                return Magic;
+            case StatType.CriticalChance:
+            case StatType.CriticalDamage:
+                return Crit;
+            case StatType.CoordinatedDamage:
+                return Coordinated;
+            case StatType.HealingBonus:
+            case StatType.RegenerationDuration:
+            case StatType.ShieldDuration:
+            case StatType.MaxHealth:
+                return Heal;
+            case StatType.IlluminationRangeAdder:
+            case StatType.IlluminationRangeMultiplier:
+                return Fire;
+            case StatType.PhysicalDamage:
+            case StatType.PhysicalResistance:
+            case StatType.ArmorPenetration:
+            case StatType.ArmorShred:
+                return Physical;
+            case StatType.Armor:
+                return ArmorCol;
+            case StatType.MagicArmor:
+                return MagicArmorCol;
+            case StatType.SunGenerationCooldownMultiplier:
+            case StatType.SunYield:
+            case StatType.CurrencyYield:
+            case StatType.SunCostReduction:
+                return Sun;
+            default:
+                return White;
         }
     }
 }
