@@ -230,12 +230,41 @@ public class Carrot : Shooter
         float radius = EruptionRadius;
 
         _scratch.Clear();
-        _scratch.AddRange(Insect.allInsects);
-        foreach (Insect insect in _scratch)
+        foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive || insect.team == Team.Friendly) continue;
             if (Vector2.Distance(insect.transform.position, target) > radius) continue;
+            _scratch.Add(insect);
+        }
 
+        // Shooter's own targeting predicted this exact position from one specific insect (see
+        // PredictTargetPosition, which returns the target's position verbatim) - whichever
+        // insect sits closest to it is that main target, and always erupts unaffected by the
+        // cap below; only the OTHER insects caught in the blast are capped, nearest first
+        Insect mainTarget = null;
+        float closestDist = float.MaxValue;
+        foreach (Insect insect in _scratch)
+        {
+            float d = Vector2.Distance(insect.transform.position, target);
+            if (d < closestDist) { closestDist = d; mainTarget = insect; }
+        }
+
+        int maxExtraTargets = GData?.eruptionMaxExtraTargets ?? 3;
+        List<Insect> extras = new List<Insect>(_scratch.Count);
+        foreach (Insect insect in _scratch)
+            if (insect != mainTarget) extras.Add(insect);
+
+        if (extras.Count > maxExtraTargets)
+        {
+            extras.Sort((a, b) =>
+                Vector2.Distance(a.transform.position, target).CompareTo(Vector2.Distance(b.transform.position, target)));
+            extras.RemoveRange(maxExtraTargets, extras.Count - maxExtraTargets);
+        }
+
+        if (mainTarget != null) extras.Add(mainTarget);
+
+        foreach (Insect insect in extras)
+        {
             bool wasBurrowed = insect.isBurrowed;
             insect.Damage(attackDamage, damageType, elementalType, this, false, eruptTags, crit);
             if (!insect.IsAlive) continue;

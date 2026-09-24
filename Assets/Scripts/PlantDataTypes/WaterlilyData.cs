@@ -7,6 +7,8 @@ public class WaterlilyData : PlantData
     public float baseSplashDamage = 6f;
     public float baseBubblePrisonImpactDamage;
     public float slowProcChance = 0.5f;
+    [Tooltip("splash damage hits at most this many of the nearest insects around the main target (no cap on the main target)")]
+    public int splashMaxExtraTargets = 3;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 5f;

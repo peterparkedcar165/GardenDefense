@@ -19,7 +19,7 @@ MonoBehaviour:
   family: 7
   elementalType: 0
   damageType: 1
-  sunCost: 110
+  sunCost: 105
   placementLimit: 0
   category: 0
   skillTree: {fileID: 11400000, guid: 61c63633f98d4c5bacb804a5f7faa4de, type: 2}
@@ -104,3 +104,4 @@ MonoBehaviour:
   path3SkillDurationPerLevel: 2
   floralGlowBaseDamageScaling: 0.1
   floralGlowDamageScalingPerLevel: 0.02
+  floralGlowMaxSplashTargets: 4

@@ -115,7 +115,7 @@ public class FertilizerCard : MonoBehaviour
                 if (FertilizerFormat.IsInvertedStat(rolledStats[i].statType)) isGood = !isGood;
                 string color = isGood ? "green" : "red";
                 string statColor = FertilizerFormat.GetStatColor(rolledStats[i].statType);
-                sb.AppendLine($"<color={color}><b>{FertilizerFormat.FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color> <color={statColor}><b>{FertilizerFormat.FormatStatName(rolledStats[i].statType)}</b></color>");
+                sb.AppendLine($"<color={statColor}><b>{FertilizerFormat.FormatStatName(rolledStats[i].statType)}</b></color>: <color={color}><b>{FertilizerFormat.FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color>");
             }
             statsText.text = sb.ToString().TrimEnd();
         }
@@ -141,7 +141,7 @@ public class FertilizerCard : MonoBehaviour
                 if (FertilizerFormat.IsInvertedStat(stat.statType)) isGood = !isGood;
                 string color = isGood ? "green" : "red";
                 string statColor = FertilizerFormat.GetStatColor(stat.statType);
-                sb.AppendLine($"<color={color}><b>{FertilizerFormat.FormatValue(stat.statType, stat.value)}</b></color> <color={statColor}><b>{FertilizerFormat.FormatStatName(stat.statType)}</b></color>");
+                sb.AppendLine($"<color={statColor}><b>{FertilizerFormat.FormatStatName(stat.statType)}</b></color>: <color={color}><b>{FertilizerFormat.FormatValue(stat.statType, stat.value)}</b></color>");
             }
             statsText.text = sb.ToString().TrimEnd();
         }

@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class GerminateEffect : StatusEffect
 {
     public static GameObject bloomPrefab;
 
     private const float BaseAoERadius = 2.5f;
+    private const int BaseMaxAoeTargets = 4;
     private readonly float aoeRadius;
+    private readonly int maxAoeTargets;
     public float delay = 1f;
     private float cachedelementalAffinity;
 
@@ -13,9 +16,10 @@ public class GerminateEffect : StatusEffect
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         // snapshotted here, at application - a Blossoming plant's Germinate keeps the larger
-        // radius even if Blossoming expires before this Germinate detonates
+        // radius/target cap even if Blossoming expires before this Germinate detonates
         bool radiusBonus = source?.GetEffect<BlossomingEffect>()?.GrantsGerminateRadiusBonus ?? false;
         aoeRadius = radiusBonus ? BaseAoERadius * BlossomingEffect.GerminateRadiusMultiplier : BaseAoERadius;
+        maxAoeTargets = radiusBonus ? BlossomingEffect.GerminateMaxTargetsBonus : BaseMaxAoeTargets;
         effectType = Type.negative;
         elementalType = ElementalType.Grass;
     }
@@ -85,18 +89,34 @@ public class GerminateEffect : StatusEffect
         }
 
         float damage = ComputeDamage();
-
         Vector3 origin = target.transform.position;
-        foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
+
+        // the insect that actually carried Germinate always detonates on itself unconditionally;
+        // everyone else caught in the blast is capped at maxAoeTargets, nearest first
+        Insect mainTarget = target as Insect;
+        List<Insect> others = new List<Insect>();
+        foreach (Insect insect in Insect.allInsects)
         {
-            if (insect == null || !insect.IsAlive) continue;
+            if (insect == null || !insect.IsAlive || insect == mainTarget) continue;
             if (Vector3.Distance(origin, insect.transform.position) <= aoeRadius)
-            {
-                if (source != null)
-                    insect.Damage(damage, DamageType.Physical, ElementalType.Grass, source, source.ElementalReactionCanCrit, damageTags);
-                else
-                    insect.Damage(damage, DamageType.Physical, ElementalType.Grass, damageTags);
-            }
+                others.Add(insect);
+        }
+
+        if (others.Count > maxAoeTargets)
+        {
+            others.Sort((a, b) =>
+                Vector3.Distance(origin, a.transform.position).CompareTo(Vector3.Distance(origin, b.transform.position)));
+            others.RemoveRange(maxAoeTargets, others.Count - maxAoeTargets);
+        }
+
+        if (mainTarget != null && mainTarget.IsAlive) others.Add(mainTarget);
+
+        foreach (Insect insect in others)
+        {
+            if (source != null)
+                insect.Damage(damage, DamageType.Physical, ElementalType.Grass, source, source.ElementalReactionCanCrit, damageTags);
+            else
+                insect.Damage(damage, DamageType.Physical, ElementalType.Grass, damageTags);
         }
     }
 }

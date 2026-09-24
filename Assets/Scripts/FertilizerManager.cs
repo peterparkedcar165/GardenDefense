@@ -96,8 +96,8 @@ public class FertilizerManager : MonoBehaviour
     private GeneratedFertilizer RollGenerated(FertilizerTier tier, Dictionary<StatType, FertilizerStatRules.StatScope> available)
     {
         List<StatType> pool = new List<StatType>(available.Keys);
-        // Piercing is Rare/Epic exclusive - never offered on Common at all
-        if (tier == FertilizerTier.Common) pool.Remove(StatType.Piercing);
+        // Piercing is Epic exclusive - never offered on Common or Rare
+        if (tier != FertilizerTier.Epic) pool.Remove(StatType.Piercing);
 
         for (int i = pool.Count - 1; i > 0; i--)
         {
@@ -119,9 +119,9 @@ public class FertilizerManager : MonoBehaviour
             float rolled;
             if (stat == StatType.Piercing)
             {
-                // fixed per tier rather than the generic range*multiplier roll - Common never
-                // reaches here since it's excluded from the pool above
-                rolled = tier == FertilizerTier.Epic ? 2f : 1f;
+                // fixed rather than the generic range*multiplier roll - only Epic ever reaches
+                // here at all, since it's excluded from the pool above for every other tier
+                rolled = 1f;
             }
             else
             {
@@ -219,7 +219,7 @@ public class FertilizerManager : MonoBehaviour
             if (FertilizerFormat.IsInvertedStat(selectedStats[i].statType)) isGood = !isGood;
             string color = isGood ? "green" : "red";
             string statColor = FertilizerFormat.GetStatColor(selectedStats[i].statType);
-            sb.AppendLine($"<color={color}><b>{FertilizerFormat.FormatValue(selectedStats[i].statType, rolledValues[i])}</b></color> <color={statColor}><b>{FertilizerFormat.FormatStatName(selectedStats[i].statType)}</b></color>");
+            sb.AppendLine($"<color={statColor}><b>{FertilizerFormat.FormatStatName(selectedStats[i].statType)}</b></color>: <color={color}><b>{FertilizerFormat.FormatValue(selectedStats[i].statType, rolledValues[i])}</b></color>");
         }
 
         return sb.ToString().TrimEnd();

@@ -6,7 +6,7 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     private static readonly DamageTag[] tickTags = { DamageTag.DoT, DamageTag.ElementalDebuff };
 
     private const float missingHealthPercent = 0.04f;
-    private const float flatDamage = 6f;
+    private const float flatDamage = 4f;
     private float cachedElementalAffinity;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
