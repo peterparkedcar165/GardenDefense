@@ -60,7 +60,7 @@ MonoBehaviour:
   - nodes:
     - id: node5a_ambientsunproc
       nodeName: Lingering Warmth
-      description: Non-attack Fire damage has the same chance as the passive to reduce the Sun generation cooldown, by 0.02 seconds.
+      description: Non-attack Fire damage has the same chance as the passive to reduce the Sun generation cooldown, by 0.1 seconds.
       maxRank: 1
       costPerRank: 2
       effects: []

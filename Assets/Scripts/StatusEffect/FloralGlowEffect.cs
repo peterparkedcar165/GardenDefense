@@ -110,6 +110,17 @@ public class FloralGlowEffect : StatusEffect
             if (Vector3.Distance(origin, other.transform.position) > ExplosionRadius) continue;
             splashTargets.Add(other);
         }
+
+        // the explosion's splash only hits the nearest N insects (data-driven, tunable per
+        // plant) - the main hit above is unaffected by this cap, it always lands
+        int maxSplashTargets = (calendula.data as CalendulaData)?.floralGlowMaxSplashTargets ?? 4;
+        if (splashTargets.Count > maxSplashTargets)
+        {
+            splashTargets.Sort((a, b) =>
+                Vector3.Distance(origin, a.transform.position).CompareTo(Vector3.Distance(origin, b.transform.position)));
+            splashTargets.RemoveRange(maxSplashTargets, splashTargets.Count - maxSplashTargets);
+        }
+
         foreach (Insect other in splashTargets)
         {
             float dist = Vector3.Distance(origin, other.transform.position);

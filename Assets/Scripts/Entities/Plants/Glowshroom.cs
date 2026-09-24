@@ -121,19 +121,29 @@ public class Glowshroom : Shooter
         if (mainTarget != null && mainTarget.IsAlive)
             mainTarget.ApplyEffect(new FungalGlowEffect(mainTarget, FungalGlowDuration, 1, this));
 
-        // splash damage to nearby insects
-        List<Insect> snapshot = new List<Insect>(Insect.allInsects);
-        foreach (Insect insect in snapshot)
+        // splash damage to nearby insects, capped to the nearest N (data-driven, tunable per plant)
+        List<Insect> splashTargets = new List<Insect>();
+        foreach (Insect insect in Insect.allInsects)
         {
-            if (insect == null || !insect.IsAlive) continue;
-            if (insect == mainTarget) continue;
+            if (insect == null || !insect.IsAlive || insect == mainTarget) continue;
             if (Vector3.Distance(hitPosition, insect.transform.position) <= SplashRadius)
-            {
-                insect.Damage(attackDamage * SplashMult, damageType, elementalType, this, false,
-                    new DamageTag[] { DamageTag.AoE });
-                if (insect.IsAlive && IsPath1Maxed)
-                    insect.ApplyEffect(new FungalGlowEffect(insect, FungalGlowDuration, 1, this));
-            }
+                splashTargets.Add(insect);
+        }
+
+        int maxExtraTargets = GMData?.splashMaxExtraTargets ?? 3;
+        if (splashTargets.Count > maxExtraTargets)
+        {
+            splashTargets.Sort((a, b) =>
+                Vector3.Distance(hitPosition, a.transform.position).CompareTo(Vector3.Distance(hitPosition, b.transform.position)));
+            splashTargets.RemoveRange(maxExtraTargets, splashTargets.Count - maxExtraTargets);
+        }
+
+        foreach (Insect insect in splashTargets)
+        {
+            insect.Damage(attackDamage * SplashMult, damageType, elementalType, this, false,
+                new DamageTag[] { DamageTag.AoE });
+            if (insect.IsAlive && IsPath1Maxed)
+                insect.ApplyEffect(new FungalGlowEffect(insect, FungalGlowDuration, 1, this));
         }
     }
 

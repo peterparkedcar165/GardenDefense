@@ -11,6 +11,8 @@ public class CarrotData : PlantData
     public float path1RadiusPerLevel = 0.15f;
     [Tooltip("knock up force applied to burrowed insects hit (always) and to every insect hit on a critical strike (path1 max)")]
     public float eruptionKnockUpForce = 6f;
+    [Tooltip("eruption damage hits at most this many of the nearest insects around the struck target, in addition to the target itself (no cap on the main target)")]
+    public int eruptionMaxExtraTargets = 3;
 
     [Header("Path 2 Scaling (Soil Bond)")]
     [Tooltip("how much closer to its next attack Carrot gets every time the bonded plant fires")]

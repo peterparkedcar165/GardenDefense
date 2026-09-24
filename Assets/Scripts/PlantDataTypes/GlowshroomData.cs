@@ -7,6 +7,8 @@ public class GlowshroomData : PlantData
     public float splashRadius = 1.5f;
     public float splashDamageMultiplier = 0.5f;
     public float splashDamageMPMultiplier = 0.5f;   // +50% splash multiplier per 100 Magic Power
+    [Tooltip("splash damage hits at most this many of the nearest insects around the main target (no cap on the main target)")]
+    public int splashMaxExtraTargets = 3;
 
     [Header("Passive Fungal Glow")]
     public float fungalGlowDuration = 6f;

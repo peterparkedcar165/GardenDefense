@@ -5,6 +5,8 @@ public class AnemoneData : PlantData
 {
     [Header("Splash")]
     public float splashRadius = 1.2f;
+    [Tooltip("splash damage hits at most this many of the nearest insects around the main target (no cap on the main target)")]
+    public int splashMaxExtraTargets = 3;
 
     [Header("Path 1 Scaling")]
     public float path1AttackSpeedPerLevel = 0.05f;

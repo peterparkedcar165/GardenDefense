@@ -23,7 +23,7 @@ public class Sunflower : Shooter
     public const string SunrayRefreshUnlock   = "sunflower_sunray_refresh";
     public const string InstantSkillUnlock    = "sunflower_instant_skill";
 
-    private const float AmbientSunProcReduction = 0.02f;
+    private const float AmbientSunProcReduction = 0.1f;
 
     protected override void Awake()
     {

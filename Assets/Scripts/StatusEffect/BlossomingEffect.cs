@@ -6,6 +6,7 @@ public class BlossomingEffect : StatusEffect
     private readonly float attackSpeedBonus;
 
     public const float GerminateRadiusMultiplier = 1.5f;
+    public const int GerminateMaxTargetsBonus = 10;
 
     // read by GerminateEffect on construction, so a Germinate this plant causes snapshots the
     // radius bonus at the moment it's applied - it keeps the bigger radius even if Blossoming
@@ -44,7 +45,7 @@ public class BlossomingEffect : StatusEffect
     {
         string desc = $"Increase <color=green><b>Grass Damage</b></color> by <color=green><b>{grassDamageBonus * 100f:F0}%</b></color>, and <color=green><b>Attack Speed</b></color> by <color=green><b>{attackSpeedBonus * 100f:F0}%</b></color>.";
         if (GrantsGerminateRadiusBonus)
-            desc += $" Also increases <color=green><b>Germinate</b></color> radius by <color=green><b>{(GerminateRadiusMultiplier - 1f) * 100f:F0}%</b></color>.";
+            desc += $" Also increases <color=green><b>Germinate</b></color> radius by <color=green><b>{(GerminateRadiusMultiplier - 1f) * 100f:F0}%</b></color> and its max targets to <color=green><b>{GerminateMaxTargetsBonus}</b></color>.";
         return desc;
     }
 }

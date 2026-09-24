@@ -330,6 +330,11 @@ public abstract class Insect : Entity, IAttackable
 
     protected override void Start()
     {
+        // scale before base.Start() applies the starting shield effect, so an insect with a
+        // starting shield (e.g. Snail) gets a shield that grows with the wave the same way
+        // baseMaxHealth already does below
+        if (ScalesWithWave)
+            startingShield *= WaveHealthMultiplier(GameManager.instance.currentWave);
         base.Start();
         gameManager = FindAnyObjectByType<GameManager>();
         waypoints  = _pendingPath ?? PathManager.instance.waypoints;
@@ -371,7 +376,7 @@ public abstract class Insect : Entity, IAttackable
         float multiplier = 1f;
         for (int w = 2; w <= waveNumber; w++)
         {
-            float stepBonus = 0.12f + 0.01f * (w - 2);
+            float stepBonus = 0.03f + 0.005f * (w - 2);
             multiplier *= 1f + stepBonus;
         }
         return multiplier;

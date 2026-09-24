@@ -14,6 +14,8 @@ public class CalendulaData : PlantData
     public float path3SkillDurationPerLevel = 2f;
     public float floralGlowBaseDamageScaling = 0.25f;
     public float floralGlowDamageScalingPerLevel = 0.05f;
+    [Tooltip("Floral Glow's max-level explosion splashes to at most this many of the nearest insects (the main hit target is unaffected by this cap)")]
+    public int floralGlowMaxSplashTargets = 4;
 
     public override string GetAttackDescription() =>
         $"Releases flaming petals dealing {DamageTypeLabel(damageType)} to all insects within range.";
