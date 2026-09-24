@@ -99,12 +99,12 @@ public class Calendula : Aura
     }
 
     protected override bool ShowLight => DarknessManager.instance != null && (DarknessManager.instance.isDark || DarknessManager.instance.pitchBlack);
-    protected override bool ShowDarkCircle => false;
+    public override bool ShowDarkCircle => false;
 
     public override void UpdateStats()
     {
         baseLightEmissionRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
-        coordinatedDamageAdder = IsPath1Maxed ? 0.33f : 0f;
+        coordinatedDamageAdder = IsPath1Maxed ? 0.15f : 0f;
 
         base.UpdateStats();
     }
@@ -319,13 +319,32 @@ public class Calendula : Aura
         }
     }
 
-    // same fire burst visual used by the attack, reused at a smaller radius by Floral Glow's explosion
-    public void SpawnFireBurst(Vector3 position, float radius)
+    // same fire burst visual used by the attack, reused at a smaller radius (and, optionally,
+    // fewer particles) by Floral Glow's explosion
+    public void SpawnFireBurst(Vector3 position, float radius, float particleScale = 1f)
     {
         if (fireBurstPrefab == null) return;
         GameObject burst = Instantiate(fireBurstPrefab, position, Quaternion.identity);
         ParticleSystem ps = burst.GetComponent<ParticleSystem>();
         if (ps == null) return;
+
+        if (particleScale != 1f)
+        {
+            var emission = ps.emission;
+            int burstCount = emission.burstCount;
+            if (burstCount > 0)
+            {
+                ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[burstCount];
+                emission.GetBursts(bursts);
+                for (int i = 0; i < bursts.Length; i++)
+                {
+                    ParticleSystem.Burst b = bursts[i];
+                    b.count = new ParticleSystem.MinMaxCurve(b.count.constant * particleScale);
+                    bursts[i] = b;
+                }
+                emission.SetBursts(bursts);
+            }
+        }
 
         const float lifetime = FireBurstLifetime;
 
@@ -437,7 +456,7 @@ public class Calendula : Aura
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=orange><b>Fire Damage</b></color> by <color=green><b>{firepl * 100f:F0}%</b></color> per level. [<color=green><b>+{firepl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Increase <color=#6495ED><b>Coordinated Damage</b></color> by <color=green><b>33%</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=#6495ED><b>Coordinated Damage</b></color> by <color=green><b>15%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }

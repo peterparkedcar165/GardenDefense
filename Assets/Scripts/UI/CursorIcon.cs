@@ -16,6 +16,7 @@ public class CursorIcon : MonoBehaviour
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject rangePreviewPrefab;
     private Transform rangePreviewCircle;
+    private Transform darkRangePreviewCircle;
     private Camera  cam;
 
     private RectTransform rectTransform;
@@ -35,6 +36,15 @@ public class CursorIcon : MonoBehaviour
             DontDestroyOnLoad(obj);
             rangePreviewCircle = obj.transform;
             rangePreviewCircle.gameObject.SetActive(false);
+
+            // same gold recolor Plant.cs uses for its own placed-plant dark circle, so the
+            // placement preview reads as the same "reduced range at night" indicator
+            GameObject darkObj = Instantiate(rangePreviewPrefab);
+            DontDestroyOnLoad(darkObj);
+            darkRangePreviewCircle = darkObj.transform;
+            SpriteRenderer darkSr = darkRangePreviewCircle.GetComponentInChildren<SpriteRenderer>();
+            if (darkSr != null) darkSr.color = new Color(1f, 0.85f, 0f, darkSr.color.a);
+            darkRangePreviewCircle.gameObject.SetActive(false);
         }
     }
 
@@ -162,11 +172,28 @@ public class CursorIcon : MonoBehaviour
         rangePreviewCircle.gameObject.SetActive(true);
         rangePreviewCircle.position = new Vector3(tile.transform.position.x, tile.transform.position.y, rangePreviewCircle.position.z);
         rangePreviewCircle.localScale = new Vector3(range * 2f, range * 2f, 1f);
+
+        // same half-range darkness indicator placed plants show while selected (see Plant.cs's
+        // own circleRadius/darkCircleRadius pair) - otherwise the player only discovers the
+        // range cut after the plant is already down
+        bool showDark = darkRangePreviewCircle != null && cachedPlant.ShowDarkCircle
+            && DarknessManager.instance != null && DarknessManager.instance.isDark;
+        if (showDark)
+        {
+            darkRangePreviewCircle.gameObject.SetActive(true);
+            darkRangePreviewCircle.position = rangePreviewCircle.position;
+            darkRangePreviewCircle.localScale = new Vector3(range, range, 1f);
+        }
+        else if (darkRangePreviewCircle != null)
+        {
+            darkRangePreviewCircle.gameObject.SetActive(false);
+        }
     }
 
     private void HideRangePreview()
     {
         if (rangePreviewCircle != null) rangePreviewCircle.gameObject.SetActive(false);
+        if (darkRangePreviewCircle != null) darkRangePreviewCircle.gameObject.SetActive(false);
     }
 
     private void Show(Sprite sprite, Vector2 screenPos)

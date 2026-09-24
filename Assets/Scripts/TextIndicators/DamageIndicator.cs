@@ -29,8 +29,8 @@ public class DamageIndicator : TextIndicator
             default:                    color = new Color(0.9f, 0.9f, 0.9f); break;
         }
 
-        // size scales with damage, clamped to a 3-8 range
-        tmpText.fontSize = Mathf.Clamp(3f + damage * 0.02f, 3f, 8f);
+        // size scales with damage, clamped to a 3-10 range (cap reached at 350 damage)
+        tmpText.fontSize = Mathf.Clamp(3f + damage * 0.02f, 3f, 10f);
 
         if (isCrit)
         {

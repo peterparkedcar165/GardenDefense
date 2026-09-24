@@ -97,7 +97,7 @@ public class FloralGlowEffect : StatusEffect
         if (!calendula.IsPath3Maxed) yield break;
         Vector3 origin = insect.transform.position;
         Vector3 visualOrigin = insect.visual != null ? insect.visual.position : origin;
-        calendula.SpawnFireBurst(visualOrigin, ExplosionRadius);
+        calendula.SpawnFireBurst(visualOrigin, ExplosionRadius, 0.5f);
         DamageTag[] splashTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.AoE, DamageTag.OnHit };
 
         // snapshot every target in the blast before any of them take damage, then delay each
@@ -114,7 +114,8 @@ public class FloralGlowEffect : StatusEffect
         {
             float dist = Vector3.Distance(origin, other.transform.position);
             float delay = ExplosionRadius > 0f ? (dist / ExplosionRadius) * burstLifetime : 0f;
-            calendula.StartCoroutine(DelayedSplashHit(other, hitDamage, splashTags, delay, effectiveness));
+            // splash targets (anyone but the main hit insect) take half damage, flat - no falloff by distance
+            calendula.StartCoroutine(DelayedSplashHit(other, hitDamage * 0.5f, splashTags, delay, effectiveness));
         }
     }
 

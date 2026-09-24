@@ -142,7 +142,7 @@ public abstract class Plant : Entity, IAttackable
     private float ComputeLightInnerRadius(float outerRadius) =>
         outerRadius <= lightInnerRadius ? outerRadius * 0.4f : lightInnerRadius;
     protected virtual bool ShowLight => DarknessManager.instance != null;
-    protected virtual bool ShowDarkCircle => true;
+    public virtual bool ShowDarkCircle => true;
 
     // stunned plants (e.g. Webbed by a Cave Spider) cannot attack
     public bool IsStunned => HasEffect<HardCrowdControl>();

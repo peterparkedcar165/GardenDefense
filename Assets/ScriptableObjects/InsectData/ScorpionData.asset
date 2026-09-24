@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScorpionData
   displayName: Scorpion
   nameColor: {r: 0.33962262, g: 0.043253824, b: 0.33063844, a: 1}
-  description: Tough and deadly, can reach further
-  passiveDescription: Attacks inflict Venom on the plant, dealing damage over time
   sprite: {fileID: 21300000, guid: 5718fdb702b2cf1408aa3af255f89f80, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 3f24b5768444f7844b72d80407813b09, type: 3}
   baseMaxHealth: 1200
@@ -44,7 +42,6 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   flatPhysicalDamageReduction: 0
   threatValue: 6
@@ -52,7 +49,7 @@ MonoBehaviour:
   carryPriority: 1
   baseEvasion: 0
   baseAccuracy: 0
-  sunDrop: 32
+  sunDrop: 20
   sunDropAdder: 0
   sunDropMultiplier: 0
   currencyDrop: 0
@@ -62,5 +59,7 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  hitSound:
+    clips: []
   venomDPS: 16
   venomDuration: 12
