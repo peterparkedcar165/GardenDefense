@@ -10,6 +10,7 @@ public abstract class TextIndicator : MonoBehaviour
     protected float horizontalDrift;
     private float verticalSpeed;
     protected bool shrink = false;
+    private const float Lifetime = 0.6f;
 
     protected virtual void Awake()
     {
@@ -23,7 +24,7 @@ public abstract class TextIndicator : MonoBehaviour
     {
         transform.position += new Vector3(horizontalDrift, verticalSpeed, 0f) * Time.deltaTime;
         Color c = tmpText.color;
-        c.a -= 1f * Time.deltaTime;
+        c.a -= (1f / Lifetime) * Time.deltaTime;
         tmpText.color = c;
         if (shrink) transform.localScale = Vector3.one * c.a;
         if (c.a <= 0f) Destroy(gameObject);

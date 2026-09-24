@@ -494,28 +494,44 @@ public class PlantUpgradeUI : EntityInfoPanel
             autoCastButtonText.text = targeting ? "Pick a target..." : $"{selectedPlant.AutoCastLabel}: {(selectedPlant.IsAutoCasting ? "ON" : "OFF")}";
     }
 
+    // holding shift while clicking an upgrade button repeats it until it stops succeeding
+    // (level cap reached or sun runs out), instead of just the one level a plain click grants
+    private static bool IsShiftHeld() =>
+        Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed);
+
     // Button callbacks , wired in Inspector
     public void OnPath1UpgradeClicked()
     {
         if (selectedPlant == null) return;
-        selectedPlant.UpgradePath1();
+        if (IsShiftHeld())
+            while (selectedPlant.UpgradePath1()) { }
+        else
+            selectedPlant.UpgradePath1();
         RefreshPaths();
     }
 
     public void OnPath2UpgradeClicked()
     {
         if (selectedPlant == null) return;
-        selectedPlant.UpgradePath2();
+        if (IsShiftHeld())
+            while (selectedPlant.UpgradePath2()) { }
+        else
+            selectedPlant.UpgradePath2();
         RefreshPaths();
     }
 
     public void OnPath3UpgradeClicked()
     {
         if (selectedPlant == null) return;
+        bool shift = IsShiftHeld();
         if (!selectedPlant.path3Unlocked)
             selectedPlant.UnlockPath3();
-        else
+        else if (!shift)
             selectedPlant.UpgradePath3();
+
+        if (shift)
+            while (selectedPlant.UpgradePath3()) { }
+
         RefreshPaths();
     }
 

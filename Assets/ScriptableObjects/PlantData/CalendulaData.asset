@@ -77,10 +77,10 @@ MonoBehaviour:
   basePassiveCooldown: 0
   basePassiveDuration: 0
   baseSkillCooldown: 35
-  baseSkillDuration: 10
+  baseSkillDuration: 15
   channelDuration: 0
   baseSkillRadius: 0
-  baseSkillDamageMultiplier: 0.35
+  baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
@@ -101,6 +101,6 @@ MonoBehaviour:
   path1AttackDamagePerLevel: 6
   path1FireDamagePerLevel: 0.02
   path2AttackRangePerLevel: 0.2
-  path3SkillDurationPerLevel: 5
-  floralGlowBaseDamageScaling: 0.15
-  floralGlowDamageScalingPerLevel: 0.025
+  path3SkillDurationPerLevel: 2
+  floralGlowBaseDamageScaling: 0.1
+  floralGlowDamageScalingPerLevel: 0.02

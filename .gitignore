@@ -3,3 +3,15 @@ Logs/
 UserSettings/
 Temp/
 Builds.zip
+
+# non-project personal/reference files that don't belong in this repo (accidentally swept in by
+# a broad file-organizing tool once, see commit history around 2026-09-21) - not part of the
+# Unity project, kept out to avoid another oversized/unrelated push
+/ASEPRITE/
+/assetsforgardendefense/
+/designdocument/
+/gardenDefenseDocumentation/
+/gardenDefense_reels/
+/pixelart/
+/soundsforgame/
+/gdigpfp.png

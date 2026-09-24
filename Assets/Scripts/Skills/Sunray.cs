@@ -15,6 +15,9 @@ public class Sunray : MonoBehaviour
 
     private Vector3 targetScale;
 
+    private ParticleSystem sunParticles;
+    private float baseShapeRadius;
+
     private SoundEffect loopSound, endSound;
     private float endLeadTime;
     private AudioSource activeLoop;
@@ -32,6 +35,8 @@ public class Sunray : MonoBehaviour
     private void Awake()
     {
         targetScale = transform.localScale;
+        sunParticles = GetComponentInChildren<ParticleSystem>();
+        if (sunParticles != null) baseShapeRadius = sunParticles.shape.radius;
     }
 
     // visualScaleMultiplier is aoeRadius relative to the plant's base (level 0) skill radius, so
@@ -53,6 +58,15 @@ public class Sunray : MonoBehaviour
 
         targetScale *= visualScaleMultiplier;
         transform.localScale = targetScale;
+
+        // the particle system's own scaling mode is Local (ignores parent/hierarchy scale), so
+        // the edge shape it spawns particles along doesn't track the beam's width above on its
+        // own - keep it in sync manually with the same multiplier
+        if (sunParticles != null)
+        {
+            var shape = sunParticles.shape;
+            shape.radius = baseShapeRadius * visualScaleMultiplier;
+        }
 
         if (source is Sunflower sunflower)
         {
