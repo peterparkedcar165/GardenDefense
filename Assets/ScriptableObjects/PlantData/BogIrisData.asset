@@ -25,7 +25,7 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: 597fa17295da449db2708e4e15b31dc8, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 32
+  baseAttackDamage: 26
   baseMagicPower: 0
   baseAttackSpeed: 0.8
   baseAttackRange: 3
@@ -97,7 +97,7 @@ MonoBehaviour:
   geyseredDuration: 8
   geyseredArmorShred: 20
   geyseredFallDamageResistanceShred: 0.15
-  path1AttackDamagePerLevel: 4
+  path1AttackDamagePerLevel: 2
   path1AttackSpeedPerLevel: 0.03
   baseRegenPercent: 0.01
   path2RegenPercentPerLevel: 0.005

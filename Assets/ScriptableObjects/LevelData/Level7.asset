@@ -179,7 +179,7 @@ MonoBehaviour:
         timeBetweenSpawns: 32.0724
         startDelay: 0
       delayBeforeNext: 10
-    - subWaveDuration: 63.454
+    - subWaveDuration: 63.454002
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 16
@@ -263,7 +263,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 5
     subWaves:
-    - subWaveDuration: 62.4115
+    - subWaveDuration: 62.411503
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 20
@@ -282,7 +282,7 @@ MonoBehaviour:
         timeBetweenSpawns: 13.7925
         startDelay: 0
       delayBeforeNext: 10
-    - subWaveDuration: 61.76
+    - subWaveDuration: 61.760002
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 21
@@ -369,7 +369,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 7
     subWaves:
-    - subWaveDuration: 64.855
+    - subWaveDuration: 64.854996
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 24
@@ -706,7 +706,7 @@ MonoBehaviour:
         timeBetweenSpawns: 6.4133
         startDelay: 0
       delayBeforeNext: 10
-    - subWaveDuration: 75.2863
+    - subWaveDuration: 75.28629
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 38
@@ -1009,5 +1009,23 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3e13ef541c9f3cd4aba5f81c62f1e4de, type: 2}
   - {fileID: 11400000, guid: b374faaf2b29af0428d4952befb3396b, type: 2}
   - {fileID: 11400000, guid: 5e42fc420588248489301ae249f88930, type: 2}
-  fertilizerGrants: []
+  fertilizerGrants:
+  - afterWave: 1
+    rarity: 0
+  - afterWave: 3
+    rarity: 1
+  - afterWave: 5
+    rarity: 1
+  - afterWave: 7
+    rarity: 1
+  - afterWave: 9
+    rarity: 1
+  - afterWave: 11
+    rarity: 2
+  - afterWave: 13
+    rarity: 2
+  - afterWave: 15
+    rarity: 2
+  - afterWave: 17
+    rarity: 2
   ambience: {fileID: 11400000, guid: a53efb8b7d84dfe438423cd008ebef91, type: 2}

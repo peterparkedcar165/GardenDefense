@@ -746,11 +746,6 @@ public abstract class Entity : MonoBehaviour
         source.totalDamageDealt += finalDamage; // FOR DEBUG
         if (this is Insect damagedInsect) damagedInsect.lastSource = source;
         if (source.lifesteal > 0f) source.Heal(finalDamage * source.lifesteal);
-        if (this is Plant poisonPlant && poisonPlant.elementalType == ElementalType.Poison
-            && System.Array.Exists(damageTag, t => t == DamageTag.Attack))
-        {
-            source.Damage(damageDealt * 2f, DamageType.Physical, ElementalType.Poison, poisonPlant, false, new DamageTag[] { DamageTag.Counter });
-        }
 
         // damage indicator
 

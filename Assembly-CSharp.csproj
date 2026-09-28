@@ -173,6 +173,7 @@
     <Compile Include="Assets\Scripts\TextIndicators\TextIndicator.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\DashHomingProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\DandelionData.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\ShieldThrowProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HollyShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\CactusNeedleProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalHypnosisEffect.cs" />
@@ -299,6 +300,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HollyTauntingEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StartingShieldEffect.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutReworkData.cs" />
     <Compile Include="Assets\Scripts\Skills\SoothingRain.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\OldCarrotProjectile.cs" />
@@ -307,6 +309,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingBurgeonEffect.cs" />
     <Compile Include="Assets\Scripts\Audio\SoundEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OleandicCurseEffect.cs" />
+    <Compile Include="Assets\Scripts\Skills\AcornSproutReworkShield.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\LightFader.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CharredEffect.cs" />
@@ -336,6 +339,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlizzardCoolingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\AcornSproutRework.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearPoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />

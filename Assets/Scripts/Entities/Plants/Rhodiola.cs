@@ -248,18 +248,21 @@ public class Rhodiola : Aura
 
     private void OnTargetConfirmed(Tile tile)
     {
-        skillCooldownTimer = skillCooldown;
+        // nothing to revive at the targeted tile - don't consume the skill (the player can
+        // just re-target immediately, no cooldown/sun/cast wasted on an empty click)
         Plant revived = Plant.RevivePlant(tile);
-        if (revived != null)
-            revived.Heal(RevivalHeal, this);
+        if (revived == null) return;
 
-        if (revived != null && SkillTreeManager.HasUnlock(this, RevivalAoeUnlock))
+        skillCooldownTimer = skillCooldown;
+        revived.Heal(RevivalHeal, this);
+
+        if (SkillTreeManager.HasUnlock(this, RevivalAoeUnlock))
             ReviveNeighbors(tile);
 
-        if (revived != null && SkillTreeManager.HasUnlock(this, RevivalEmpowerUnlock))
+        if (SkillTreeManager.HasUnlock(this, RevivalEmpowerUnlock))
             revived.ApplyEffect(new VerdantEmpowermentEffect(revived, 8f, 1, this));
 
-        if (revived != null && IsPath3Maxed)
+        if (IsPath3Maxed)
         {
             float shield = RData?.verdantGuardianShield ?? 200f;
             float regen  = RData?.verdantGuardianRegen  ?? 20f;
