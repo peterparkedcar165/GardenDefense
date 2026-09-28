@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic;
 
 public struct PlantBaseStats
@@ -1127,6 +1128,13 @@ public abstract class Plant : Entity, IAttackable
         if (elementalType == ElementalType.Ice && HasEffect<SnowExposedEffect>())
             return 1;
 
+        // moonlight: dark enough for night to matter, but not the deeper pitch-black state -
+        // rain clouds block the moon out, so this doesn't count while it's raining
+        if (elementalType == ElementalType.Poison && DarknessManager.instance != null
+            && DarknessManager.instance.isDark && !DarknessManager.instance.pitchBlack
+            && (WeatherManager.instance == null || !WeatherManager.instance.HasWeather(WeatherType.Rain)))
+            return 1;
+
         return 0;
     }
 
@@ -1377,7 +1385,7 @@ public abstract class Plant : Entity, IAttackable
             return $"Increase Passive tree level by <color=green>1</color> when near natural water";
 
             case ElementalType.Poison:
-            return $"Taking damage returns <color=purple>Poison</color> damage equal to <color=purple><b>200%</b></color> of the hit to the attacker.";
+            return $"Increase Passive tree level by <color=green>1</color> when exposed to moonlight (dark, but not pitch black, and not raining)";
 
             case ElementalType.Ice:
             return $"Increase Passive tree level by <color=green>1</color> when in cold weather\n50% Cold Resistance";
@@ -1719,4 +1727,38 @@ public abstract class Plant : Entity, IAttackable
     // position is separately blocked by Entity.Damage's CanHitBurrowed tag requirement, since
     // that isn't gated by target selection at all
     public virtual bool DetectsBurrowed => false;
+
+    // generic windup/resolve split for attacks. call this from Attack()/Shoot() instead of
+    // dealing damage or spawning a projectile immediately, so a plant can have a charge-up before
+    // the actual hit lands. today, with no animations wired up on any plant yet, windupSeconds is
+    // just a plain timer read from data. once a plant has a real Animator, the same onResolve
+    // callback can instead be invoked from an Animation Event placed on the clip's hit/fire
+    // frame, so the calling code in Attack()/Shoot() never needs to change, only what drives the
+    // resolve does. onResolve should re-validate anything it closed over (is the target still
+    // alive, still in range) rather than trusting a snapshot taken back when the windup started
+    private Coroutine _attackWindupRoutine;
+    protected bool IsAttackWindingUp => _attackWindupRoutine != null;
+
+    protected void BeginAttackWindup(float windupSeconds, System.Action onResolve)
+    {
+        if (_attackWindupRoutine != null) return; // already mid windup, refuse a second one
+        _attackWindupRoutine = StartCoroutine(AttackWindupRoutine(windupSeconds, onResolve));
+    }
+
+    // for a plant that needs to abandon a committed attack early (stunned mid windup, killed,
+    // uprooted) rather than let it resolve
+    protected void CancelAttackWindup()
+    {
+        if (_attackWindupRoutine == null) return;
+        StopCoroutine(_attackWindupRoutine);
+        _attackWindupRoutine = null;
+    }
+
+    private IEnumerator AttackWindupRoutine(float windupSeconds, System.Action onResolve)
+    {
+        if (windupSeconds > 0f)
+            yield return new WaitForSeconds(windupSeconds);
+        _attackWindupRoutine = null;
+        onResolve?.Invoke();
+    }
 }

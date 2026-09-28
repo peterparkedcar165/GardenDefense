@@ -25,7 +25,7 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: d54d18bd8ced4e84a0d897668f0796d8, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 16
+  baseAttackDamage: 12
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 4
@@ -102,7 +102,8 @@ MonoBehaviour:
   baseSplashDamage: 6
   baseBubblePrisonImpactDamage: 42
   slowProcChance: 0.5
-  path1AttackDamagePerLevel: 3
+  splashMaxExtraTargets: 3
+  path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.3
   path1AttackSpeedPerLevel: 0.2
   path1MaxOnHitEffectivenessBonus: 0.5

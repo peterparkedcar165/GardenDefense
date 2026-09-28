@@ -9,27 +9,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7914f3fe5e589240a5cff5c35cd9b25, type: 3}
-  m_Name: BogIrisData
-  m_EditorClassIdentifier: Assembly-CSharp::BogIrisData
-  plantPrefab: {fileID: -2484804716350021914, guid: b28a384ec7715f24a801e47675e72dc9, type: 3}
-  icon: {fileID: 21300000, guid: 845c7e1cec88713438bf40dd26cd8d53, type: 3}
-  plantName: BogIris
-  displayName: Bog Iris
-  family: 0
-  elementalType: 1
-  damageType: 1
-  sunCost: 105
+  m_Script: {fileID: 11500000, guid: 060b59139b4b42708f8eaa3cd7756e23, type: 3}
+  m_Name: AcornSproutReworkData
+  m_EditorClassIdentifier: Assembly-CSharp::AcornSproutReworkData
+  plantPrefab: {fileID: 5277549953005779376, guid: b6ee896221d841969fe89db9a1f6738e, type: 3}
+  icon: {fileID: 5622665880769766919, guid: 61ed802b81b693c4fba4309505d4eaaf, type: 3}
+  plantName: AcornSproutRework
+  displayName: Acorn Sprout (Rework)
+  family: 3
+  elementalType: 2
+  damageType: 0
+  sunCost: 70
   placementLimit: 0
   category: 0
-  skillTree: {fileID: 11400000, guid: 597fa17295da449db2708e4e15b31dc8, type: 2}
-  fertilizerPossibleStats: 
-  baseMaxHealth: 200
-  baseAttackDamage: 26
+  skillTree: {fileID: 11400000, guid: 8455658481804204a3744ca87e9b4ec6, type: 2}
+  fertilizerPossibleStats: 1200000026000000
+  baseMaxHealth: 250
+  baseAttackDamage: 32
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
+  baseAttackSpeed: 0.6
   baseAttackRange: 3
-  baseArmor: 0
+  baseArmor: 49
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
@@ -68,20 +68,20 @@ MonoBehaviour:
   baseIceDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 3
+  baseProjectileSpeed: 8
   baseMaxRange: 20
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
-  basePassiveCooldown: 12
-  basePassiveDuration: 0
+  basePassiveCooldown: 0
+  basePassiveDuration: 0.75
   baseSkillCooldown: 90
-  baseSkillDuration: 1
+  baseSkillDuration: 20
   channelDuration: 0
-  baseSkillRadius: 2
-  baseSkillDamageMultiplier: 0.95
-  baseSkillHealth: 0
+  baseSkillRadius: 1
+  baseSkillDamageMultiplier: 0.5
+  baseSkillHealth: 300
   basePassiveDamage: 0
   baseSkillDamage: 0
   attackSound:
@@ -90,21 +90,15 @@ MonoBehaviour:
     clips: []
   skillSound:
     clips: []
-  baseSunInterval: 6
-  baseSunGenerated: 2
-  baseKnockUpHeight: 3.5
-  baseGeyserDamage: 85
-  geyseredDuration: 8
-  geyseredArmorShred: 20
-  geyseredFallDamageResistanceShred: 0.15
-  path1AttackDamagePerLevel: 2
-  path1AttackSpeedPerLevel: 0.03
-  baseRegenPercent: 0.01
-  path2RegenPercentPerLevel: 0.005
-  baseOpenBonusSun: 1
-  path2OpenBonusSunPerLevel: 1
-  baseReduceChance: 0.35
-  path2ReduceChancePerLevel: 0.03
-  path3GeyserDamagePerLevel: 15
-  path3KnockUpPerLevel: 1
-  path3GeyserRadiusPerLevel: 0.15
+  stunChance: 0.35
+  stunDuration: 0.4
+  path1AttackDamagePerLevel: 4
+  path1AttackSpeedPerLevel: 0.09
+  path1ArmorPerLevel: 4
+  path2StunChancePerLevel: 0.03
+  path2StunDurationPerLevel: 0.2
+  path3FlatDamagePerLevel: 30
+  path3SkillDurationPerLevel: 2
+  path3HealthPerLevel: 60
+  path3RadiusPerLevel: 0.15
+  skillDurationMPMultiplier: 0.1

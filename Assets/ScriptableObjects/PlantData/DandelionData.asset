@@ -92,7 +92,7 @@ MonoBehaviour:
     clips: []
   baseBeamWidth: 1.6
   basePushPower: 1.35
-  path1AttackDamagePerLevel: 6
+  path1AttackDamagePerLevel: 4
   path1AttackRangePerLevel: 0.3
   baseBlindingChance: 0.5
   path2BlindingChancePerLevel: 0.05
