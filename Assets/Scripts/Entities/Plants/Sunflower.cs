@@ -110,10 +110,14 @@ public class Sunflower : Shooter
     private IEnumerator TripleShot(Vector3 target)
     {
         int shotCount = SkillTreeManager.HasUnlock(this, ExtraProjectileUnlock) ? 4 : 3;
+        // 0.15s at base Attack Speed, scaling inversely with it - faster attack speed compresses
+        // the gap between bolts, slower attack speed stretches it, same as attackCooldown's own
+        // 1/attackSpeed relationship elsewhere
+        float boltDelay = 0.15f * (data.baseAttackSpeed / attackSpeed);
         for (int i = 0; i < shotCount; i++)
         {
             FireProjectile(target);
-            if (i < shotCount - 1) yield return new WaitForSeconds(0.1f);
+            if (i < shotCount - 1) yield return new WaitForSeconds(boltDelay);
         }
     }
 

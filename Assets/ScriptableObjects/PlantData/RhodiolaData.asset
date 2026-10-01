@@ -23,12 +23,12 @@ MonoBehaviour:
   placementLimit: 0
   category: 0
   skillTree: {fileID: 11400000, guid: b55fd20c624741a49c3958b5e412d10f, type: 2}
-  fertilizerPossibleStats:
+  fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 8
+  baseAttackDamage: 18
   baseMagicPower: 0
-  baseAttackSpeed: 2
-  baseAttackRange: 2.5
+  baseAttackSpeed: 0.7
+  baseAttackRange: 2
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
@@ -68,7 +68,7 @@ MonoBehaviour:
   baseIceDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 0
+  baseProjectileSpeed: 2
   baseMaxRange: 0
   basePiercing: 0
   baseAoERadius: 0
@@ -91,16 +91,15 @@ MonoBehaviour:
   skillSound:
     clips: []
   attackHealMPScaling: 0.05
-  coneAngle: 90
-  splashHealMultiplier: 0.5
-  path1AttackRangePerLevel: 0.2
-  path1AttackDamagePerLevel: 3
-  maxMissingHealthPerSecond: 0.07
+  path1AttackDamagePerLevel: 2
+  path1ProjectileSpeedPerLevel: 0.5
+  maxMissingHealthPercent: 0.05
   baseGrassConversion: 0.5
   path2GrassConversionPerLevel: 0.1
   baseHealingReturn: 0.25
   path2HealingReturnPerLevel: 0.05
   burgeonHealPerSecond: 12
+  path2BurgeonHealPerLevel: 2
   baseBurgeonDuration: 4
   burgeonTickInterval: 1
   revivalBaseHeal: 40

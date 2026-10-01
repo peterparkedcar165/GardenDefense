@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5323638503433831762}
   - component: {fileID: 549939264595078635}
   - component: {fileID: -8227268841667839266}
+  - component: {fileID: 8549837532108992831}
   m_Layer: 3
   m_Name: SunflowerProjectile
   m_TagString: Untagged
@@ -31,7 +32,8 @@ Transform:
   m_LocalPosition: {x: -4.15, y: -1.81, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 2651210110507577528}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5323638503433831762
@@ -81,10 +83,10 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1018753133
   m_SortingLayer: 5
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -6959759918091255618, guid: a64e29a2735a8f946ba8ee25fe35fbd4, type: 3}
-  m_Color: {r: 0.9622642, g: 0.94492316, b: 0.24964403, a: 1}
+  m_Sprite: {fileID: -1868142064, guid: 4b4251c96c58ee84e97fee328122d108, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -127,8 +129,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.21133332}
-  m_Radius: 0.49999997
+  m_Offset: {x: -0.107419536, y: 0.008700291}
+  m_Radius: 0.41455182
 --- !u!114 &-8227268841667839266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +147,7 @@ MonoBehaviour:
   hit: {fileID: 0}
   minPitch: 0.9
   maxPitch: 1.1
+  hitVolume: 0.5
   projectileDamage: 0
   projectileSpeed: 0
   maxRange: 0
@@ -152,3 +155,108 @@ MonoBehaviour:
   damageType: 0
   elementalType: 0
   source: {fileID: 0}
+  hitParticlePrefab: {fileID: 4511358385442513055, guid: c023ca74866aa14409546c98ee70cbfc, type: 3}
+--- !u!95 &8549837532108992831
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7388594979766616069}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 24a31eb431b272641936f6f433835d25, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!1001 &2916668577090165128
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4311319333377526007}
+    m_Modifications:
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511358385442513055, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+      propertyPath: m_Name
+      value: SunflowerProjectileFlyParticles
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+--- !u!4 &2651210110507577528 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+  m_PrefabInstance: {fileID: 2916668577090165128}
+  m_PrefabAsset: {fileID: 0}

@@ -125,5 +125,8 @@ public enum StatType
     // PoisonShroom-specific: flat seconds added to Toxic Spore duration per rank, on top of her
     // own path2ToxicSporeDurationPerLevel scaling - plant-specific since Toxic Spore duration
     // isn't a generic Entity/Plant field
-    ToxicSporeDurationFlat
+    ToxicSporeDurationFlat,
+    // flat projectile speed, same idea as AttackRangeFlat above - feeds Entity.projectileSpeedAdder.
+    // added for Rhodiola's reworked attack tree (Shooter-based healer)
+    ProjectileSpeedFlat
 }
