@@ -195,19 +195,16 @@ MonoBehaviour:
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseGroundResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseFallDamage: 0
   baseBonusEffectChance: 0
-  baseElementalEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
   baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
-  baseGroundDamage: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
   baseMinimumDamage: 0.8
@@ -262,19 +259,16 @@ MonoBehaviour:
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
-  groundResistance: 0
   physicalDamage: 0
   magicDamage: 0
   fallDamage: 0
   bonusEffectChance: 0
-  elementalEffectChance: 0
   fireDamage: 0
   waterDamage: 0
   grassDamage: 0
   windDamage: 0
   poisonDamage: 0
   iceDamage: 0
-  groundDamage: 0
   criticalChance: 0
   criticalDamage: 0
   minimumDamage: 0
@@ -332,19 +326,16 @@ MonoBehaviour:
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
-  groundResistanceAdder: 0
   physicalDamageAdder: 0
   magicDamageAdder: 0
   fallDamageAdder: 0
   bonusEffectChanceAdder: 0
-  elementalEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
   grassDamageAdder: 0
   windDamageAdder: 0
   poisonDamageAdder: 0
   iceDamageAdder: 0
-  groundDamageAdder: 0
   criticalChanceAdder: 0
   criticalDamageAdder: 0
   minimumDamageAdder: 0
@@ -400,18 +391,15 @@ MonoBehaviour:
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
-  groundResistanceMultiplier: 0
   physicalDamageMultiplier: 0
   magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
-  elementalEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
   grassDamageMultiplier: 0
   windDamageMultiplier: 0
   poisonDamageMultiplier: 0
   iceDamageMultiplier: 0
-  groundDamageMultiplier: 0
   criticalChanceMultiplier: 0
   criticalDamageMultiplier: 0
   dotResistanceMultiplier: 0
@@ -453,9 +441,9 @@ MonoBehaviour:
   iceInternalCooldown: 0
   poisonInternalCooldown: 0
   windInternalCooldown: 0
-  groundInternalCooldown: 0
   freezeInternalCooldown: 0
   germinateInternalCooldown: 0
+  elementalDebuffDuration: 6
   timeAlive: 0
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: 146abf62a7449d54eb1abc221e06d3d2, type: 2}
@@ -468,6 +456,8 @@ MonoBehaviour:
   targeting: 1
   prioritizeFlying: 0
   sunCost: 0
+  baseSunCost: 0
+  sunCostReductionAdder: 0
   totalSunSpent: 0
   exp: 0
   expBoost: 0
@@ -485,6 +475,18 @@ MonoBehaviour:
   baseTemperatureMax: 30
   temperatureMaxAdder: 0
   temperatureMax: 0
+  baseHeatResistance: 0
+  heatResistanceAdder: 0
+  heatResistanceMultiplier: 0
+  heatResistance: 0
+  baseColdResistance: 0
+  coldResistanceAdder: 0
+  coldResistanceMultiplier: 0
+  coldResistance: 0
+  air: 100
+  baseRespiration: 0
+  respirationAdder: 0
+  respiration: 0
   basePassiveCooldown: 0
   passiveCooldown: 0
   passiveCooldownAdder: 0
@@ -523,9 +525,13 @@ MonoBehaviour:
   effectivePath3Level: 0
   path3Unlocked: 0
   mainRenderer: {fileID: 5898074862566098166}
-  healConeParticles: {fileID: 5885430077570244459}
-  healConeTravelTime: 0.75
-  healConeRate: 50
+  projectilePrefab: {fileID: 0}
+  baseMaxRange: 0
+  maxRange: 0
+  basePiercing: 0
+  piercing: 0
+  piercingAdder: 0
+  healProjectilePrefab: {fileID: 7388594979766616069, guid: 2351dd7f98f144e418981a91f4da67b5, type: 3}
 --- !u!1 &5717149755680190109
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,11 +699,6 @@ PrefabInstance:
 --- !u!4 &1789716481019615213 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2286134516124833348, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
-  m_PrefabInstance: {fileID: 535825632483295657}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &5885430077570244459 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6251732868713553602, guid: afa98836def7fe94fb623f274db5bdd3, type: 3}
   m_PrefabInstance: {fileID: 535825632483295657}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6895912991125051674

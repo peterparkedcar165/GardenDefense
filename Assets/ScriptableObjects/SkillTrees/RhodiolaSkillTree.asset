@@ -15,13 +15,13 @@ MonoBehaviour:
   steps:
   - nodes:
     - id: node1_attackrange
-      nodeName: Reaching Bloom
-      description: Increase <color=green><b>Attack Range</b></color> by <color=green><b>0.3</b></color> per level.
+      nodeName: Swift Bloom
+      description: Increase <color=green><b>Projectile Speed</b></color> by <color=green><b>0.5</b></color> per level.
       maxRank: 3
       costPerRank: 1
       effects:
-      - statType: 68
-        valuePerRank: 0.3
+      - statType: 71
+        valuePerRank: 0.5
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
@@ -60,14 +60,14 @@ MonoBehaviour:
   - nodes:
     - id: node5a_overgrowth
       nodeName: Overgrowth
-      description: Narrow the healing cone's angle by <color=green><b>30%</b></color>. Every <color=green><b>8th</b></color> attack, the current target is met with a surge of bonus healing worth <color=green><b>4</b></color> attacks' worth.
+      description: Every <color=green><b>8th</b></color> attack, the current target is met with a surge of bonus healing worth <color=green><b>4</b></color> attacks' worth.
       maxRank: 1
       costPerRank: 2
       effects: []
       unlockId: rhodiola_overgrowth
     - id: node5b_widespreadbloom
       nodeName: Widespread Bloom
-      description: Increase <color=green><b>Cone Angle</b></color> to <color=green><b>360°</b></color>, and every plant caught within it now receives full healing instead of a reduced splash amount. <color=green><b>Attack Damage</b></color> reduced by <color=green><b>50%</b></color>.
+      description: After healing its target, the projectile blooms outward and seeks the next most injured plant or ally within range, healing it for the same amount.
       maxRank: 1
       costPerRank: 2
       effects: []

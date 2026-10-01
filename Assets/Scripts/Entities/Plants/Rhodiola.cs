@@ -1,17 +1,16 @@
 using UnityEngine;
-using System.Collections.Generic;
 
-public class Rhodiola : Aura
+public class Rhodiola : Shooter
 {
-    [SerializeField] private ParticleSystem healConeParticles;  // continuous cone of rejuvenating mist while healing
-    [SerializeField] private float healConeTravelTime = 0.25f;  // seconds for a particle to cross the attack range
-    [SerializeField] private float healConeRate = 100f;         // particles emitted per second while healing
+    [SerializeField] private GameObject healProjectilePrefab;
 
     private RhodiolaData RData => data as RhodiolaData;
 
     private Entity _mainTarget;
-    private Vector2 _facingDir = Vector2.right;
-    private ConeParticleEmitter _healCone;
+
+    // Shooter doesn't show an attack bar by default (most shooters don't need one) - Rhodiola
+    // did as an Aura before, so opt back in the same way Gloriosa does
+    protected override bool GetAttackBarVisible() => attackCooldown > 0f;
 
     // skill tree node unlock ids
     public const string RevivalAoeUnlock      = "rhodiola_revival_aoe";
@@ -24,25 +23,21 @@ public class Rhodiola : Aura
     private int _overgrowthAttackCount = 0;
 
     // healing is just attackDamage (the standard stat, scaled per level via OnPath1Upgrade below)
-    // plus a flat magic power contribution, applied once per attack - attack cadence is the
-    // standard 1/attackSpeed (see Update()), no separate tick-interval stat anymore
+    // plus a flat magic power contribution, applied once per shot - attack cadence is the
+    // standard 1/attackSpeed (handled by Shooter.Update())
     public float HealMP     => (RData?.attackHealMPScaling ?? 0.05f) * magicPower;
     public float HealAmount => attackDamage + HealMP;
-    // Widespread Bloom turns the cone into a full circle; Overgrowth narrows it by 30% instead
-    public float ConeAngle =>
-        SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? 360f :
-        SkillTreeManager.HasUnlock(this, OvergrowthUnlock) ? (RData?.coneAngle ?? 40f) * 0.7f :
-        (RData?.coneAngle ?? 40f);
-    public float SplashMultiplier  => RData?.splashHealMultiplier ?? 0.5f;
-    public float MissingHealthPerSecond => RData?.maxMissingHealthPerSecond ?? 0.08f;
 
     public float GrassConversion => (RData?.baseGrassConversion ?? 0.5f) + (RData?.path2GrassConversionPerLevel ?? 0.1f) * effectivePath2Level;
     public float HealingReturn   => (RData?.baseHealingReturn ?? 0.15f) + (RData?.path2HealingReturnPerLevel ?? 0.03f) * effectivePath2Level;
 
-    // fixed rate, does not scale with levels or magic power
-    public float BurgeonHealPerSecond => RData?.burgeonHealPerSecond ?? 12f;
+    // Rejuvenating Burgeon is baseline now (used to be a Path2 max-level-only bonus) and its
+    // potency scales per level, unlike the fixed-rate duration/tick interval below
+    public float BurgeonHealPerSecond => (RData?.burgeonHealPerSecond ?? 12f) + (RData?.path2BurgeonHealPerLevel ?? 2f) * effectivePath2Level;
     public float BurgeonDuration      => RData?.baseBurgeonDuration  ?? 4f;
     public float BurgeonTickInterval  => RData?.burgeonTickInterval   ?? 0.5f;
+
+    public float MissingHealthPercent => RData?.maxMissingHealthPercent ?? 0.05f;
 
     public float RevivalBaseHeal     => RData?.revivalBaseHeal     ?? 40f;
     public float RevivalHealPerLevel => RData?.revivalHealPerLevel ?? 20f;
@@ -82,45 +77,24 @@ public class Rhodiola : Aura
 
     public override void UpdateStats()
     {
-        // Widespread Bloom trades Attack Damage for full-circle coverage - attackDamageMultiplier
-        // is an INPUT to the attackDamage formula computed inside base.UpdateStats(), so it has to
-        // be adjusted before that call (then reverted after) rather than after, unlike a plain
-        // output stat - same temp-toggle pattern AcornSprout uses for attackSpeedTotalMultiplier
-        float widespreadPenalty = SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? -0.50f : 0f;
-        attackDamageMultiplier += widespreadPenalty;
         base.UpdateStats();
-        attackDamageMultiplier -= widespreadPenalty;
-
         // passive, heals and shields given are increased by a portion of grass damage
         healingBonus += grassDamage * GrassConversion;
     }
 
-    protected override void Update()
-    {
-        base.Update(); // Aura.Update() already sets attackCooldown = 1 / attackSpeed
-
-        _mainTarget = FindMostInjuredHealable();
-        if (_mainTarget != null)
-            _facingDir = ((Vector2)_mainTarget.transform.position - (Vector2)transform.position).normalized;
-
-        bool canAttack = _mainTarget != null && !IsStunned && !IsChanneling;
-
-        if (_healCone == null) _healCone = new ConeParticleEmitter(healConeParticles, healConeRate);
-        _healCone.Update(canAttack, _facingDir, ConeAngle, attackRange, healConeTravelTime);
-
-        if (attackCooldownTimer < attackCooldown)
-            attackCooldownTimer += Time.deltaTime;
-        else if (canAttack)
-            Attack();
-    }
-
+    // priority: 1) any plant under 25% health (lowest % wins), always overrides everything else.
+    // 2) whichever plant is already being healed, kept as the target until it reaches full
+    // health, so healing does not flicker between similarly injured plants. 3) the single lowest
+    // health plant, once no plant qualifies for the tiers above. 4) friendly insects, lowest
+    // health, only once no plant needs healing at all
     private const float CriticalHealthPercent = 0.25f;
 
-    // targeting priority: 1) any plant under 25% health (lowest % wins), always overrides
-    // everything else. 2) whichever plant is already being healed, kept as the target until
-    // it reaches full health, so healing does not flicker between similarly injured plants.
-    // 3) the single lowest health plant, once no plant qualifies for the tiers above.
-    // 4) friendly insects and minions, lowest health, only once no plant needs healing at all
+    protected override GameObject FindTarget()
+    {
+        _mainTarget = FindMostInjuredHealable();
+        return _mainTarget != null ? _mainTarget.gameObject : null;
+    }
+
     private Entity FindMostInjuredHealable()
     {
         Plant critical = null;
@@ -165,70 +139,58 @@ public class Rhodiola : Aura
         return lowestAlly;
     }
 
-    protected override void Attack()
+    protected override void Shoot(Vector3 target)
     {
-        base.Attack();
-        if (_mainTarget == null) return;
+        if (healProjectilePrefab == null || _mainTarget == null) return;
+        GameObject obj = Instantiate(healProjectilePrefab, transform.position, Quaternion.identity);
+        RhodiolaProjectile proj = obj.GetComponent<RhodiolaProjectile>();
+        proj?.Initialize(this, _mainTarget, projectileSpeed, HealAmount, SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock));
+    }
 
-        HealTick(_mainTarget, 1f);
+    // heals one plant or friendly insect. isPrimaryTarget gates the Path1 max bonus and
+    // Overgrowth's burst - both only ever applied to the shot's actual target, never to a
+    // Widespread Bloom bounce. Rejuvenating Burgeon (baseline) applies either way, the healing
+    // return itself is handled by the OnHeal hook
+    public void HealTick(Entity entity, bool isPrimaryTarget)
+    {
+        float amount = HealAmount;
+        if (isPrimaryTarget && IsPath1Maxed)
+            // flat percent of missing health, added on top of the normal heal for this one hit -
+            // not a per-second rate, so it doesn't scale with attack speed
+            amount += (entity.maxHealth - entity.health) * MissingHealthPercent;
 
-        // Overgrowth: every 8th attack, the current target gets a burst of bonus healing on top
-        // of its normal tick, worth 4 attacks' worth of healing
+        entity.Heal(amount, this);
+        entity.ApplyEffect(new RejuvenatingBurgeonEffect(entity, BurgeonDuration, 1, this, BurgeonHealPerSecond * BurgeonTickInterval, BurgeonTickInterval));
+
+        if (!isPrimaryTarget) return;
+
         if (SkillTreeManager.HasUnlock(this, OvergrowthUnlock))
         {
             _overgrowthAttackCount++;
             if (_overgrowthAttackCount >= 8)
             {
                 _overgrowthAttackCount = 0;
-                _mainTarget.Heal(HealAmount * 4f, this);
+                entity.Heal(HealAmount * 4f, this);
             }
-        }
-
-        float halfAngle = ConeAngle * 0.5f;
-        // Widespread Bloom: every plant in the cone receives full healing, not a reduced splash share
-        float splashMultiplier = SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? 1f : SplashMultiplier;
-
-        foreach (Plant plant in new List<Plant>(Plant.allPlants))
-        {
-            if (plant == null || plant == this || plant == _mainTarget || !plant.IsAlive) continue;
-            if (plant.health >= plant.maxHealth) continue;
-            Vector2 to = (Vector2)plant.transform.position - (Vector2)transform.position;
-            if (to.magnitude > attackRange) continue;
-            if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
-            HealTick(plant, splashMultiplier);
-        }
-
-        foreach (Insect ally in new List<Insect>(Insect.friendlyInsects))
-        {
-            if (ally == null || ally == _mainTarget || !ally.IsAlive) continue;
-            if (ally.health >= ally.maxHealth) continue;
-            Vector2 to = (Vector2)ally.transform.position - (Vector2)transform.position;
-            if (to.magnitude > attackRange) continue;
-            if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
-            HealTick(ally, splashMultiplier);
         }
     }
 
-    // heals one plant, friendly insect, or minion for one hit, the healing return is handled by the OnHeal hook
-    private void HealTick(Entity entity, float multiplier)
+    // Widespread Bloom: after landing on its real target, the projectile bounces once more to
+    // the next most injured plant/ally in range, healing it for the same amount
+    public void SpawnBounceProjectile(Vector3 fromPos, Entity target, float healAmount)
     {
-        float amount = HealAmount * multiplier;
-        if (IsPath1Maxed)
-            // MissingHealthPerSecond is a per-second rate, converted into a per-hit amount using
-            // the actual current interval between hits (1/attackSpeed) rather than a fixed value,
-            // so it stays proportional to however fast Rhodiola is currently attacking
-            amount += (entity.maxHealth - entity.health) * MissingHealthPerSecond * attackCooldown * multiplier;
-
-        entity.Heal(amount, this);
-
-        if (IsPath2Maxed)
-            entity.ApplyEffect(new RejuvenatingBurgeonEffect(entity, BurgeonDuration, 1, this, BurgeonHealPerSecond * BurgeonTickInterval, BurgeonTickInterval));
+        if (healProjectilePrefab == null || target == null) return;
+        GameObject obj = Instantiate(healProjectilePrefab, fromPos, Quaternion.identity);
+        RhodiolaProjectile proj = obj.GetComponent<RhodiolaProjectile>();
+        if (proj == null) return;
+        proj.Initialize(this, target, projectileSpeed, healAmount, false);
+        proj.MarkAsBounce();
     }
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackRange  = data.baseAttackRange  + level * (RData?.path1AttackRangePerLevel  ?? 0.2f);
-        baseAttackDamage = data.baseAttackDamage + level * (RData?.path1AttackDamagePerLevel ?? 4f);
+        baseAttackDamage    = data.baseAttackDamage    + level * (RData?.path1AttackDamagePerLevel    ?? 2f);
+        baseProjectileSpeed = data.baseProjectileSpeed + level * (RData?.path1ProjectileSpeedPerLevel ?? 0.5f);
     }
 
     public override void OnPath3Upgrade(int level)
@@ -295,13 +257,13 @@ public class Rhodiola : Aura
         $"The {GetName()} breathes life into its allies, mending wounds with rejuvenating energy.";
 
     public override string GetAttackDescription() =>
-        $"Breathes rejuvenating energy in a <color=green><b>{ConeAngle:F0}°</b></color> cone towards the most injured plant, " +
-        $"healing it for <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{HealMP:F0}</b></color>] health per hit. " +
-        $"Other plants within the cone are healed for <color=green><b>{SplashMultiplier * 100f:F0}%</b></color> of the amount.";
+        $"Fires a rejuvenating seed at the most injured nearby plant, healing it for <color=green><b>{attackDamage:F0}</b></color> " +
+        $"[<color=#FFB6C1><b>+{HealMP:F0}</b></color>] health and leaving behind a regenerating bloom.";
 
     public override string GetPassiveDescription() =>
         $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.\n\n" +
-        $"<color=green><b>{HealingReturn * 100f:F0}%</b></color> of healing given to others is returned to the {GetName()}.";
+        $"<color=green><b>{HealingReturn * 100f:F0}%</b></color> of healing given to others is returned to the {GetName()}.\n\n" +
+        $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color>.";
 
     public override string GetSkillDesription() =>
         $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
@@ -312,17 +274,15 @@ public class Rhodiola : Aura
 
     public override string GetPath1Description(bool details = false)
     {
-        float rngpl = RData?.path1AttackRangePerLevel  ?? 0.2f;
-        float dmgpl = RData?.path1AttackDamagePerLevel ?? 4f;
+        float speedpl = RData?.path1ProjectileSpeedPerLevel ?? 0.5f;
+        float dmgpl   = RData?.path1AttackDamagePerLevel    ?? 2f;
         string desc = details
-            ? $"Breathes rejuvenating energy in a <color=green><b>{ConeAngle:F0}°</b></color> cone towards the most injured plant, " +
-              $"healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per hit. " +
-              $"Other plants within the cone are healed for <color=green><b>{SplashMultiplier * 100f:F0}%</b></color> of the amount."
+            ? $"Fires a rejuvenating seed at the most injured nearby plant, healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health.\n\n*Unaffected by Piercing"
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
-               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, $"Heals an additional <color=green><b>{MissingHealthPerSecond * 100f:F0}%</b></color> of the target's missing health per second.")}\n\n" +
+               $"Increase <color=green><b>Base Projectile Speed</b></color> by <color=green><b>{speedpl:F1}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(path1Level, $"Each projectile heals an additional <color=green><b>{MissingHealthPercent * 100f:F0}%</b></color> of the target's missing health.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -331,14 +291,16 @@ public class Rhodiola : Aura
     {
         float convpl = RData?.path2GrassConversionPerLevel ?? 0.1f;
         float retpl  = RData?.path2HealingReturnPerLevel   ?? 0.03f;
+        float burgpl = RData?.path2BurgeonHealPerLevel      ?? 2f;
         string desc = details
             ? $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\n\n" +
-              $"<color=green><b>[({(RData?.baseHealingReturn ?? 0.15f) * 100f:F0}%) + ({retpl * 100f:F0}%/Lvl.)]</b></color> of healing given to others is returned to the {GetName()}."
+              $"<color=green><b>[({(RData?.baseHealingReturn ?? 0.15f) * 100f:F0}%) + ({retpl * 100f:F0}%/Lvl.)]</b></color> of healing given to others is returned to the {GetName()}.\n\n" +
+              $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color>."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Healing Returned</b></color> by <color=green><b>{retpl * 100f:F0}%</b></color> per level. [<color=green><b>+{retpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Healing from the attack applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color>.")}\n\n" +
+               $"Increase <color=green><b>Rejuvenating Burgeon</b></color> healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

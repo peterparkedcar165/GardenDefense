@@ -8,13 +8,11 @@ public class RhodiolaData : PlantData
     // and Attack Speed sources (fertilizers, skill tree, etc.) affect her healing for free
     [Header("Attack")]
     public float attackHealMPScaling = 0.05f;
-    public float coneAngle = 40f;
-    public float splashHealMultiplier = 0.5f;
 
     [Header("Path 1 Scaling")]
-    public float path1AttackRangePerLevel = 0.2f;
     public float path1AttackDamagePerLevel = 2f;
-    public float maxMissingHealthPerSecond = 0.08f;
+    public float path1ProjectileSpeedPerLevel = 0.5f;
+    public float maxMissingHealthPercent = 0.05f;
 
     [Header("Path 2 Scaling")]
     public float baseGrassConversion = 0.5f;
@@ -22,8 +20,9 @@ public class RhodiolaData : PlantData
     public float baseHealingReturn = 0.15f;
     public float path2HealingReturnPerLevel = 0.03f;
 
-    [Header("Burgeon (passive max bonus)")]
+    [Header("Rejuvenating Burgeon (baseline passive)")]
     public float burgeonHealPerSecond = 12f;
+    public float path2BurgeonHealPerLevel = 2f;
     public float baseBurgeonDuration  = 4f;
     public float burgeonTickInterval  = 0.5f;
 
@@ -37,7 +36,7 @@ public class RhodiolaData : PlantData
     public float verdantGuardianDuration        = 8f;
 
     public override string GetAttackDescription() =>
-        "Breathes rejuvenating energy in a cone towards the most injured plant, healing plants within it over time.";
+        "Fires a rejuvenating seed at the most injured nearby plant, healing it and leaving behind a regenerating bloom.";
 
     public override string GetPassiveDescription() =>
         "Heals & Shields given are increased by a portion of <color=green><b>Grass Damage</b></color>, and part of the healing given to others is returned to the Rhodiola.";

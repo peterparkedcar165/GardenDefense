@@ -71,16 +71,28 @@ public abstract class Projectile : MonoBehaviour
         transform.position += direction * projectileSpeed * Time.deltaTime;
 
         if (!Tile.IsInsideGrid(transform.position))
+        {
+            OnBeforeDestroy();
             Destroy(gameObject);
+        }
         else if (maxRange > 0f && Vector3.Distance(spawnPosition, transform.position) >= maxRange)
+        {
+            OnBeforeDestroy();
             Destroy(gameObject);
+        }
     }
 
     protected virtual void OnHit(Insect insect)
     {
         //EMPTY METHOD INTENTIONAL
     }
-    
+
+    // hook for a subclass to detach/release a child effect (e.g. a particle trail) right before
+    // this projectile's GameObject is destroyed. Unity destroys children along with the parent,
+    // and OnDestroy() runs too late/unreliably to rescue them once that's already underway, so
+    // this fires first, while the hierarchy is still fully intact
+    protected virtual void OnBeforeDestroy() { }
+
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
 
@@ -96,13 +108,19 @@ public abstract class Projectile : MonoBehaviour
                 trackedTarget = null;
                 trackedInsect = null;
                 if (hitCount > piercing)
+                {
+                    OnBeforeDestroy();
                     Destroy(gameObject);
+                }
             }
 
         }
 
         if (other.gameObject.CompareTag("Border"))
-        Destroy(gameObject);
+        {
+            OnBeforeDestroy();
+            Destroy(gameObject);
+        }
     }
 
     protected void PlaySound(AudioClip sound)

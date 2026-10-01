@@ -164,6 +164,9 @@ public abstract class Entity : MonoBehaviour
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
     public float MissingHealth => maxHealth - health;
     public float physicalResistance, magicResistance;
+    // armor value that yields exactly 50% damage reduction (resistance = armor / (ArmorCoefficient + armor))
+    // shared by both physical and magic mitigation, was 100
+    private const float ArmorCoefficient = 150f;
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
     public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance;
@@ -331,8 +334,8 @@ public abstract class Entity : MonoBehaviour
         accuracy = baseAccuracy + accuracyAdder + (baseAccuracy * accuracyMultiplier);
         armor      = (int)(((baseArmor      + armorAdder)      + (baseArmor      * armorMultiplier))      * armorTotalMultiplier);
         magicArmor = (int)(((baseMagicArmor + magicArmorAdder) + (baseMagicArmor * magicArmorMultiplier)) * magicArmorTotalMultiplier);
-        physicalResistance = armor      / (100f + armor);
-        magicResistance    = magicArmor / (100f + magicArmor);
+        physicalResistance = armor      / (ArmorCoefficient + armor);
+        magicResistance    = magicArmor / (ArmorCoefficient + magicArmor);
         armorPenFlat = (baseArmorPenFlat + armorPenFlatAdder + baseArmorPenFlat * armorPenFlatMultiplier) * armorPenFlatTotalMultiplier;
         magicPenFlat = (baseMagicPenFlat + magicPenFlatAdder + baseMagicPenFlat * magicPenFlatMultiplier) * magicPenFlatTotalMultiplier;
         armorPenPercent = baseArmorPenPercent  + armorPenPercentAdder  + (baseArmorPenPercent * armorPenPercentMultiplier);
@@ -631,13 +634,13 @@ public abstract class Entity : MonoBehaviour
             case DamageType.Physical:
             {
                 float effArmor = Mathf.Max(-99f, armor * (1f - source.armorPenPercent) - source.armorPenFlat);
-                modifiedDamage = damageDealt * (1f - effArmor / (100f + effArmor));
+                modifiedDamage = damageDealt * (1f - effArmor / (ArmorCoefficient + effArmor));
                 break;
             }
             case DamageType.Magic:
             {
                 float effMagicArmor = Mathf.Max(-99f, magicArmor * (1f - source.magicPenPercent) - source.magicPenFlat);
-                modifiedDamage = damageDealt * (1f - effMagicArmor / (100f + effMagicArmor));
+                modifiedDamage = damageDealt * (1f - effMagicArmor / (ArmorCoefficient + effMagicArmor));
                 break;
             }
             default:

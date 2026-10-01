@@ -61,5 +61,5 @@ MonoBehaviour:
   baseHealingReceived: 0
   hitSound:
     clips: []
-  armorBonusWhileShielded: 150
+  armorBonusWhileShielded: 225
   moveSpeedBonusWhileUnshielded: 0.5
