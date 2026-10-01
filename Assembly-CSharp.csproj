@@ -403,6 +403,7 @@
     <Compile Include="Assets\Scripts\Shop\ShopManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
+    <Compile Include="Assets\Scripts\AttackChargeAnimationRelay.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OleandicToxinEffect.cs" />
     <Compile Include="Assets\Scripts\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />

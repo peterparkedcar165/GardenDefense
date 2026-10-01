@@ -40,6 +40,9 @@ public class PlantData : ScriptableObject
     public float baseMagicPower;
     public float baseAttackSpeed;
     public float baseAttackRange;
+    // seconds of windup before an attack actually lands/fires, at this plant's base Attack Speed -
+    // see Plant.AttackChargeTime and Plant.BeginAnimatedAttackCharge
+    public float baseAttackChargeTime;
     public int baseArmor;
     public int baseMagicArmor;
     // public float baseElementalEffectChance = 0.1f; (disabled, see Entity.cs)
