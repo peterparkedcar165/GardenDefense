@@ -11,6 +11,25 @@ public class Sunflower : Shooter
     public float sunProcChance;
     [SerializeField] private GameObject sunrayPrefab;
 
+    [Header("Attack Charge Circle")]
+    [SerializeField] private GameObject attackCircle;
+    [SerializeField] private Animator circleAnimator;
+    // the circle clip's own authored Length in seconds, as shown in the Animation window - set
+    // this to match whatever that value actually is, so the whole clip is stretched or
+    // compressed to fit exactly inside AttackChargeTime (see Plant.BeginAnimatedAttackCharge).
+    // shared by the single circle above and the three max-level circles below, since they're all
+    // built from the same animation
+    [SerializeField] private float circleClipLength = 0.5f;
+
+    [Header("Max Level Side Circles")]
+    // attackCircle above doubles as the middle circle once Path1 is maxed - left and right are
+    // two more pre-placed child objects (same SpriteRenderer + Animator setup), positioned by
+    // hand in the Editor. firing order is always left, then middle, then right
+    [SerializeField] private GameObject leftCircle;
+    [SerializeField] private GameObject rightCircle;
+
+    private const string AttackChargeTrigger = "AttackCharge";
+
     private SunflowerData SFData => data as SunflowerData;
     private float SunMarkDuration => passiveDuration;
     private float SunGenInterval  => passiveCooldown * (1f + sunGenerationCooldown);
@@ -99,38 +118,113 @@ public class Sunflower : Shooter
     // sound is played per projectile (in FireProjectile) instead of the usual once-per-Shoot()
     protected override bool PlaysOwnAttackSound => true;
 
-    protected override void Shoot(Vector3 target)
+    // caches whatever FindTarget() actually picked, so the charge sequence below can keep firing
+    // at that exact insect later even if it has since walked outside attackRange - re-running
+    // FindTarget() at fire time would otherwise silently retarget (or find nothing) the moment the
+    // original target left range, breaking the lock
+    private Insect _currentTarget;
+
+    protected override GameObject FindTarget()
     {
-        if (IsPath1Maxed)
-            StartCoroutine(TripleShot(target));
-        else
-            FireProjectile(target);
+        GameObject target = base.FindTarget();
+        _currentTarget = target != null ? target.GetComponent<Insect>() : null;
+        return target;
     }
 
-    private IEnumerator TripleShot(Vector3 target)
+    // the attack is committed to (cooldown reset, FindTarget already resolved) the moment
+    // Shoot() is called, same as always - only the actual firing is deferred now, until an
+    // Animation Event calls back into OnAttackChargeFireFrame(). below the Path1 max-level bonus,
+    // the single attackCircle charges and the one bolt spawns from it; at max level, each of the
+    // three circles STARTS its own charge staggered by boltDelay - left starts immediately,
+    // middle (attackCircle) starts boltDelay later, right starts boltDelay after that - rather
+    // than waiting for the previous one to actually finish firing first. since every circle takes
+    // the same AttackChargeTime to charge, this still fires them boltDelay apart in the end, just
+    // without any of them sitting frozen on a finished pose waiting for their turn. the target is
+    // locked in right here (not re-resolved at fire time), so it keeps firing at the same insect
+    // through the whole sequence regardless of range - and since all three charges share the same
+    // captured lockedTarget/lastKnownPosition variables, whichever one first notices the target
+    // died and finds a replacement updates it for whichever circles haven't fired yet too
+    protected override void Shoot(Vector3 target)
     {
-        int shotCount = SkillTreeManager.HasUnlock(this, ExtraProjectileUnlock) ? 4 : 3;
-        // 0.15s at base Attack Speed, scaling inversely with it - faster attack speed compresses
-        // the gap between bolts, slower attack speed stretches it, same as attackCooldown's own
-        // 1/attackSpeed relationship elsewhere
-        float boltDelay = 0.15f * (data.baseAttackSpeed / attackSpeed);
-        for (int i = 0; i < shotCount; i++)
+        Insect lockedTarget = _currentTarget;
+
+        if (IsPath1Maxed)
         {
-            FireProjectile(target);
-            if (i < shotCount - 1) yield return new WaitForSeconds(boltDelay);
+            GameObject[] sequence = { leftCircle, attackCircle, rightCircle };
+            int shotCount = SkillTreeManager.HasUnlock(this, ExtraProjectileUnlock) ? 4 : 3;
+            Vector3 lastKnownPosition = lockedTarget != null ? lockedTarget.GetAimPoint() : transform.position;
+            // 0.3s at base Attack Speed, scaling inversely with it - the stagger between each
+            // circle's own charge starting, same 1/attackSpeed relationship attackCooldown uses
+            float boltDelay = 0.3f * (data.baseAttackSpeed / attackSpeed);
+
+            for (int shotIndex = 0; shotIndex < shotCount; shotIndex++)
+            {
+                int capturedIndex = shotIndex;
+                System.Action startCircle = () =>
+                {
+                    GameObject circle = sequence.Length > 0 ? sequence[capturedIndex % sequence.Length] : null;
+                    if (circle != null) circle.SetActive(true);
+                    Animator anim = circle != null ? circle.GetComponent<Animator>() : null;
+
+                    BeginAnimatedAttackCharge(anim, AttackChargeTrigger, circleClipLength, () =>
+                    {
+                        if (lockedTarget == null || !lockedTarget.IsAlive)
+                        {
+                            GameObject replacement = FindTarget();
+                            Insect replacementInsect = replacement != null ? replacement.GetComponent<Insect>() : null;
+                            if (replacementInsect != null) lockedTarget = replacementInsect;
+                        }
+                        if (lockedTarget != null && lockedTarget.IsAlive)
+                            lastKnownPosition = lockedTarget.GetAimPoint();
+
+                        Vector3 spawnPosition = circle != null ? circle.transform.position : transform.position;
+                        FireProjectile(lockedTarget, spawnPosition, circle, lastKnownPosition);
+                    });
+                };
+
+                float startDelay = capturedIndex * boltDelay;
+                if (startDelay <= 0f) startCircle();
+                else StartCoroutine(DelayThenInvoke(startDelay, startCircle));
+            }
+        }
+        else
+        {
+            if (attackCircle != null) attackCircle.SetActive(true);
+            BeginAnimatedAttackCharge(circleAnimator, AttackChargeTrigger, circleClipLength, () =>
+            {
+                Vector3 spawnPosition = attackCircle != null ? attackCircle.transform.position : transform.position;
+                FireProjectile(lockedTarget, spawnPosition, attackCircle);
+            });
         }
     }
 
-    private void FireProjectile(Vector3 target)
+    private IEnumerator DelayThenInvoke(float delay, System.Action action)
     {
-        GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(delay);
+        action?.Invoke();
+    }
+
+    // sourceCircle (if any) is deactivated the instant its bolt actually fires. fires at
+    // lockedTarget directly rather than re-resolving FindTarget() here, so it keeps homing on the
+    // same insect regardless of range. the single-shot attack doesn't pass a fallbackPosition, so
+    // a dead target there still just skips the shot; the max-level sequence passes the target's
+    // last known position so it can fire there instead of nothing
+    private void FireProjectile(Insect lockedTarget, Vector3 spawnPosition, GameObject sourceCircle = null, Vector3? fallbackPosition = null)
+    {
+        if (sourceCircle != null) sourceCircle.SetActive(false);
+
+        bool targetAlive = lockedTarget != null && lockedTarget.IsAlive;
+        if (!targetAlive && fallbackPosition == null) return;
+
+        GameObject projectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
         SunflowerProjectile petal = projectile.GetComponent<SunflowerProjectile>();
         if (petal != null)
         {
-            petal.SetTarget(FindTarget());
-            petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
+            Vector3 aimPoint = targetAlive ? lockedTarget.GetAimPoint() : fallbackPosition.Value;
+            if (targetAlive) petal.SetTarget(lockedTarget.gameObject);
+            petal.Initialize(aimPoint, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
-        if (data != null) SfxPlayer.Play(data.attackSound, transform.position);
+        if (data != null) SfxPlayer.Play(data.attackSound, spawnPosition);
     }
 
     public void ReduceSunTimer()

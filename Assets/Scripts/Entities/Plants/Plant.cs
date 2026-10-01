@@ -1761,4 +1761,56 @@ public abstract class Plant : Entity, IAttackable
         _attackWindupRoutine = null;
         onResolve?.Invoke();
     }
+
+    // seconds of windup before an attack fires, at the CURRENT attack speed - data.baseAttackChargeTime
+    // is authored against the plant's own base Attack Speed, same convention as Sunflower's bolt
+    // delay: scales inversely with attack speed, same 1/attackSpeed relationship attackCooldown uses
+    public float AttackChargeTime
+    {
+        get
+        {
+            if (data == null || data.baseAttackChargeTime <= 0f) return 0f;
+            float baseSpeed = data.baseAttackSpeed > 0f ? data.baseAttackSpeed : attackSpeed;
+            return data.baseAttackChargeTime * (baseSpeed / Mathf.Max(0.01f, attackSpeed));
+        }
+    }
+
+    // animation-driven counterpart to BeginAttackWindup, for a plant with a real attack charge
+    // animation (drawing a bow, swinging a sword, summoning a fireball): instead of a plain
+    // timer, this plays animator's clip at whatever speed makes its full clipLength fit exactly
+    // into AttackChargeTime, so the whole animation visibly speeds up or slows down with attack
+    // speed while an Animation Event placed on the exact frame the attack should fire (calling
+    // OnAttackChargeFireFrame()) still lands at a fixed fraction of the clip either way.
+    // clipLength is the clip's own authored Length in seconds (shown in the Animation window) -
+    // Unity doesn't expose this before the state is actually entered, so it's passed in rather
+    // than queried. falls back to firing immediately if no animator is wired up yet.
+    //
+    // keyed per-Animator rather than a single shared field: a plant can have multiple charge
+    // animations genuinely overlapping in time (e.g. Sunflower's three max-level circles, each
+    // starting on its own staggered timer rather than waiting for the previous one to finish) - a
+    // single shared "pending callback" would get clobbered by the second BeginAnimatedAttackCharge
+    // call before the first one's Animation Event ever fires, since each Animator is its own
+    // stable, never-reused-concurrently identity, this isolates them correctly
+    private readonly Dictionary<Animator, System.Action> _pendingChargeFireCallbacks = new Dictionary<Animator, System.Action>();
+
+    protected void BeginAnimatedAttackCharge(Animator animator, string triggerName, float clipLength, System.Action onFireFrame)
+    {
+        if (animator == null) { onFireFrame?.Invoke(); return; }
+        _pendingChargeFireCallbacks[animator] = onFireFrame;
+        float chargeTime = AttackChargeTime;
+        animator.speed = chargeTime > 0f && clipLength > 0f ? Mathf.Max(0.01f, clipLength / chargeTime) : 1f;
+        animator.SetTrigger(triggerName);
+    }
+
+    // hook this up (indirectly, via AttackChargeAnimationRelay on the same GameObject as the
+    // Animator) to an Animation Event on the attack charge clip's fire frame. sourceAnimator
+    // identifies which pending charge this is, so overlapping charges on different Animators
+    // never cross-resolve each other
+    public void OnAttackChargeFireFrame(Animator sourceAnimator)
+    {
+        if (sourceAnimator == null) return;
+        if (!_pendingChargeFireCallbacks.TryGetValue(sourceAnimator, out System.Action callback)) return;
+        _pendingChargeFireCallbacks.Remove(sourceAnimator);
+        callback?.Invoke();
+    }
 }

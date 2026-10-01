@@ -158,9 +158,18 @@ public class Sunray : MonoBehaviour
             SfxPlayer.Play(endSound, transform.position);
         }
 
+        // mechanical illumination ends the instant the skill's duration is up, independent of
+        // however long the visual fade-out animation below takes to finish - LightFader.FadeOut
+        // runs its own coroutine in parallel on this same GameObject and (without
+        // destroyOnComplete) disables it rather than destroying it once done, which would
+        // otherwise race this coroutine and kill it mid-cleanup if the fade finishes first,
+        // leaving this object disabled forever instead of unregistered and destroyed
+        DarknessManager.UnregisterLightSource(transform);
+
         // shrink X to 0 and fade light out together
         var fader = GetComponent<LightFader>();
-        if (fader != null) fader.FadeOut(shrinkDuration);
+        if (fader != null) fader.FadeOut(shrinkDuration, destroyOnComplete: true);
+        else Destroy(gameObject, shrinkDuration);
 
         float t = 0f;
         while (t < shrinkDuration)
@@ -170,9 +179,6 @@ public class Sunray : MonoBehaviour
             transform.localScale = new Vector3(scaleX, targetScale.y, targetScale.z);
             yield return null;
         }
-
-        DarknessManager.UnregisterLightSource(transform);
-        Destroy(gameObject);
     }
 
     private Insect FindNearestInsect()
