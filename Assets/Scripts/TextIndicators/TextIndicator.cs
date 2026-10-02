@@ -7,6 +7,8 @@ using TMPro;
 public abstract class TextIndicator : MonoBehaviour
 {
     protected TMP_Text tmpText;
+    // optional icon sitting next to the text (e.g. SunIndicator's sun icon); fades out with the text if assigned
+    [SerializeField] private SpriteRenderer icon;
     protected float horizontalDrift;
     private float verticalSpeed;
     protected bool shrink = false;
@@ -26,7 +28,25 @@ public abstract class TextIndicator : MonoBehaviour
         Color c = tmpText.color;
         c.a -= (1f / Lifetime) * Time.deltaTime;
         tmpText.color = c;
+        if (icon != null)
+        {
+            Color iconColor = icon.color;
+            iconColor.a = c.a;
+            icon.color = iconColor;
+        }
         if (shrink) transform.localScale = Vector3.one * c.a;
         if (c.a <= 0f) Destroy(gameObject);
+    }
+
+    // places the icon right after the text's current rendered width, so it tracks strings of any length
+    // (e.g. "+9" vs "+102") instead of sitting at a fixed offset. call once, after the final text is set
+    protected void PositionIconAfterText(float gap)
+    {
+        if (icon == null) return;
+        tmpText.ForceMeshUpdate();
+        float halfWidth = tmpText.textBounds.extents.x;
+        Vector3 pos = icon.transform.localPosition;
+        pos.x = halfWidth + gap;
+        icon.transform.localPosition = pos;
     }
 }

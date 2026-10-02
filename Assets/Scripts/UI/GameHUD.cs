@@ -14,8 +14,8 @@ public class GameHUD : MonoBehaviour
         instance = this;
     }
 
-    public void SetSun(int count)            { if (sunText)           sunText.text           = $"Sun: {count}"; }
-    public void SetHealth(int hp)            { if (healthText)        healthText.text        = $"HP: {hp}"; }
+    public void SetSun(int count)            { if (sunText)           sunText.text           = $"{count}"; }
+    public void SetHealth(int hp)            { if (healthText)        healthText.text        = $"{hp}"; }
     public void SetWaveCount(int w, int max) { if (waveCountText)     waveCountText.text     = $"Wave: {w}/{max}"; }
     // seconds until the next wave (set every frame by the level); +inf before the level starts tickingin
     public float NextWaveCountdown { get; private set; } = float.PositiveInfinity;

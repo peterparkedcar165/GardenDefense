@@ -12,6 +12,15 @@ public class RejuvenatingBurgeonEffect : RegenerationEffect
 
     public override void OnApply() { }
 
+    public override void OnTick(float deltaTime)
+    {
+        tickTimer += deltaTime;
+        if (tickTimer < tickInterval) return;
+        tickTimer -= tickInterval;
+        target.Heal(healingPerSecond, source);
+        if (source is Rhodiola rhodiola) rhodiola.ReturnMaxLevelHealing(healingPerSecond);
+    }
+
     public override string GetName()        => "<color=green><b>Rejuvenating Burgeon</b></color>";
     public override string GetDescription() =>
         $"Recovering <color=green><b>{Mathf.RoundToInt(healingPerSecond)}</b></color> health every <color=green><b>{tickInterval}s</b></color>.";

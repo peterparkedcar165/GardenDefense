@@ -28,7 +28,8 @@ MonoBehaviour:
   baseAttackDamage: 18
   baseMagicPower: 0
   baseAttackSpeed: 0.7
-  baseAttackRange: 2
+  baseAttackRange: 3
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
@@ -96,8 +97,8 @@ MonoBehaviour:
   maxMissingHealthPercent: 0.05
   baseGrassConversion: 0.5
   path2GrassConversionPerLevel: 0.1
-  baseHealingReturn: 0.25
-  path2HealingReturnPerLevel: 0.05
+  maxLevelGrassDamageBonus: 0.25
+  maxLevelHealingReturn: 0.33
   burgeonHealPerSecond: 12
   path2BurgeonHealPerLevel: 2
   baseBurgeonDuration: 4

@@ -6,6 +6,7 @@ using TMPro;
 public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image icon;
+    [SerializeField] private Image background;
     [SerializeField] private TMP_Text sunCostText;
 
     private PlantData data;
@@ -18,6 +19,8 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         data = plantData;
         plant = plantData.plantPrefab;
         if (icon != null) icon.sprite = plantData.icon;
+        if (background != null && ColorUtility.TryParseHtmlString(PlantData.ElementalColor(plantData.elementalType), out Color elementColor))
+            background.color = elementColor;
         if (sunCostText != null) sunCostText.text = SkillTreeManager.GetEffectiveSunCost(data).ToString();
     }
 
