@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 4311319333377526007}
   - component: {fileID: 5323638503433831762}
   - component: {fileID: 549939264595078635}
-  - component: {fileID: -8227268841667839266}
   - component: {fileID: 8549837532108992831}
+  - component: {fileID: 1142036615642768238}
   m_Layer: 3
-  m_Name: SunflowerProjectile
+  m_Name: CalendulaProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,10 +30,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.15, y: -1.81, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 2651210110507577528}
+  - {fileID: 6487040663856930088}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5323638503433831762
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -1868142064, guid: 4b4251c96c58ee84e97fee328122d108, type: 3}
+  m_Sprite: {fileID: -3446719796721242577, guid: 864974235090c5a4fbee17f09a9c43aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -129,33 +129,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.107419536, y: 0.008700291}
-  m_Radius: 0.41455182
---- !u!114 &-8227268841667839266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7388594979766616069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c90b93d025f649b5b4f02d815f96c8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SunflowerProjectile
-  audioSource: {fileID: 0}
-  hit: {fileID: 0}
-  minPitch: 0.9
-  maxPitch: 1.1
-  hitVolume: 0.5
-  projectileDamage: 0
-  projectileSpeed: 0
-  maxRange: 0
-  piercing: 0
-  damageType: 0
-  elementalType: 0
-  source: {fileID: 0}
-  hitParticlePrefab: {fileID: 4511358385442513055, guid: c023ca74866aa14409546c98ee70cbfc, type: 3}
+  m_Offset: {x: 0.08972426, y: 0.008700192}
+  m_Radius: 0.42702982
 --- !u!95 &8549837532108992831
 Animator:
   serializedVersion: 7
@@ -166,7 +141,7 @@ Animator:
   m_GameObject: {fileID: 7388594979766616069}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 24a31eb431b272641936f6f433835d25, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1f8702bc51c5aed478db773cd30e2a93, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -178,7 +153,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1001 &2916668577090165128
+--- !u!114 &1142036615642768238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7388594979766616069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f688db57f5b984baa07f4b20801b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CalendulaProjectile
+  hitParticlePrefab: {fileID: 4511358385442513055, guid: bcd34b388d815e04eb01f93e677c6bbe, type: 3}
+  spriteDefaultFacingAngle: 180
+--- !u!1001 &6248306943653213208
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -186,57 +175,65 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4311319333377526007}
     m_Modifications:
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4511358385442513055, guid: e896d728c66a15f488df4150c76a9635, type: 3}
+    - target: {fileID: 2239610904645482562, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511358385442513055, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
       propertyPath: m_Name
-      value: SunflowerProjectileFlyParticles
+      value: CalendulaProjectileFlyParticles
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e896d728c66a15f488df4150c76a9635, type: 3}
---- !u!4 &2651210110507577528 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
+--- !u!4 &6487040663856930088 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 914489188453886256, guid: e896d728c66a15f488df4150c76a9635, type: 3}
-  m_PrefabInstance: {fileID: 2916668577090165128}
+  m_CorrespondingSourceObject: {fileID: 914489188453886256, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
+  m_PrefabInstance: {fileID: 6248306943653213208}
   m_PrefabAsset: {fileID: 0}

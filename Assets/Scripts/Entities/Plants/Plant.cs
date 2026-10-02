@@ -74,6 +74,7 @@ public class DeadPlantRecord
     public float skillCooldownRemaining;
     public float deathTime;
     public AutoCastState autoCastState;
+    public int orbitRadius;
 }
 
 public abstract class Plant : Entity, IAttackable
@@ -224,6 +225,7 @@ public abstract class Plant : Entity, IAttackable
             skillCooldownRemaining = skillCooldownTimer,
             deathTime    = Time.time,
             autoCastState = CaptureAutoCastState(),
+            orbitRadius  = orbitRadius,
         };
     }
 
@@ -303,6 +305,7 @@ public abstract class Plant : Entity, IAttackable
         // the cooldown kept ticking while the plant was dead, resume as if it never died
         plant.skillCooldownTimer = Mathf.Max(0f, record.skillCooldownRemaining - (Time.time - record.deathTime));
         plant.RestoreAutoCastState(record.autoCastState);
+        plant.orbitRadius = record.orbitRadius > 0 ? record.orbitRadius : 1;
 
         tile.isOccupied = true;
         Collider2D tileCol = tile.GetComponent<Collider2D>();
@@ -374,6 +377,11 @@ public abstract class Plant : Entity, IAttackable
     // secondary "flying first" targeting toggle (Cattail). when on, the plant prefers flying targets
     public bool prioritizeFlying = false;
     public virtual bool UsesFlyingToggle => false;
+
+    // fixed orbit radius toggle (Calendula). cycles 1..MaxOrbitRadius, wrapping back to 1
+    public int orbitRadius = 1;
+    public virtual bool UsesRadiusToggle => false;
+    public virtual int MaxOrbitRadius => 1;
 
     // Burgeon plants that command minions: the info panel shows a "relocate formation" button,
     // and clicking it (after aiming a point) calls RelocateMinionFormation

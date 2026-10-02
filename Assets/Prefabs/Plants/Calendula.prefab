@@ -190,7 +190,7 @@ MonoBehaviour:
   baseMagicPenPercent: 0
   baseFireResistance: 0
   baseWaterResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
@@ -200,12 +200,14 @@ MonoBehaviour:
   baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
+  baseMinimumDamage: 0.8
+  baseMaximumDamage: 1.2
   baseDotResistance: 0
   baseDotDamage: 0
   baseFallDamageResistance: 0
@@ -231,6 +233,7 @@ MonoBehaviour:
   baseBonusCritChanceReceived: 0
   baseBonusCritDamageReceived: 0
   baseProjectileSpeed: 0
+  baseOnHitEffectiveness: 1
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -251,7 +254,7 @@ MonoBehaviour:
   magicPenPercent: 0
   fireResistance: 0
   waterResistance: 0
-  natureResistance: 0
+  grassResistance: 0
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
@@ -261,12 +264,14 @@ MonoBehaviour:
   bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
-  natureDamage: 0
+  grassDamage: 0
   windDamage: 0
   poisonDamage: 0
   iceDamage: 0
   criticalChance: 0
   criticalDamage: 0
+  minimumDamage: 0
+  maximumDamage: 0
   dotResistance: 0
   dotDamage: 0
   fallDamageResistance: 0
@@ -300,6 +305,7 @@ MonoBehaviour:
   bonusCritChanceReceived: 0
   bonusCritDamageReceived: 0
   projectileSpeed: 0
+  onHitEffectiveness: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicPowerAdder: 0
@@ -315,7 +321,7 @@ MonoBehaviour:
   magicPenPercentAdder: 0
   fireResistanceAdder: 0
   waterResistanceAdder: 0
-  natureResistanceAdder: 0
+  grassResistanceAdder: 0
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
@@ -325,12 +331,14 @@ MonoBehaviour:
   bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
-  natureDamageAdder: 0
+  grassDamageAdder: 0
   windDamageAdder: 0
   poisonDamageAdder: 0
   iceDamageAdder: 0
   criticalChanceAdder: 0
   criticalDamageAdder: 0
+  minimumDamageAdder: 0
+  maximumDamageAdder: 0
   dotResistanceAdder: 0
   dotDamageAdder: 0
   fallDamageResistanceAdder: 0
@@ -362,6 +370,7 @@ MonoBehaviour:
   projectileSpeedAdder: 0
   sunYieldAdder: 0
   currencyYieldAdder: 0
+  onHitEffectivenessAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -377,7 +386,7 @@ MonoBehaviour:
   magicPenPercentMultiplier: 0
   fireResistanceMultiplier: 0
   waterResistanceMultiplier: 0
-  natureResistanceMultiplier: 0
+  grassResistanceMultiplier: 0
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
@@ -386,7 +395,7 @@ MonoBehaviour:
   bonusEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
-  natureDamageMultiplier: 0
+  grassDamageMultiplier: 0
   windDamageMultiplier: 0
   poisonDamageMultiplier: 0
   iceDamageMultiplier: 0
@@ -425,13 +434,15 @@ MonoBehaviour:
   armorPenFlatTotalMultiplier: 1
   magicPenFlatTotalMultiplier: 1
   internalCooldown: 1
-  blazeInternalCooldown: 0
-  wetInternalCooldown: 0
-  sproutInternalCooldown: 0
-  coldInternalCooldown: 0
-  taintedInternalCooldown: 0
+  fireInternalCooldown: 0
+  waterInternalCooldown: 0
+  grassInternalCooldown: 0
+  iceInternalCooldown: 0
+  poisonInternalCooldown: 0
+  windInternalCooldown: 0
   freezeInternalCooldown: 0
   germinateInternalCooldown: 0
+  elementalDebuffDuration: 6
   timeAlive: 0
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: a87b905f63edb5f44940e6bc0460922c, type: 2}
@@ -444,6 +455,8 @@ MonoBehaviour:
   targeting: 1
   prioritizeFlying: 0
   sunCost: 125
+  baseSunCost: 0
+  sunCostReductionAdder: 0
   totalSunSpent: 0
   exp: 0
   expBoost: 0
@@ -461,6 +474,18 @@ MonoBehaviour:
   baseTemperatureMax: 30
   temperatureMaxAdder: 0
   temperatureMax: 0
+  baseHeatResistance: 0
+  heatResistanceAdder: 0
+  heatResistanceMultiplier: 0
+  heatResistance: 0
+  baseColdResistance: 0
+  coldResistanceAdder: 0
+  coldResistanceMultiplier: 0
+  coldResistance: 0
+  air: 100
+  baseRespiration: 0
+  respirationAdder: 0
+  respiration: 0
   basePassiveCooldown: 0
   passiveCooldown: 0
   passiveCooldownAdder: 0
@@ -476,6 +501,9 @@ MonoBehaviour:
   skillCooldownReductionAdder: 0
   skillCooldownReductionMultiplier: 0
   skillCooldownTimer: 0
+  baseSkillChargeRate: 1
+  skillChargeRate: 1
+  skillChargeRateAdder: 0
   baseSkillRadius: 0
   skillRadius: 0
   skillRadiusAdder: 0
@@ -496,8 +524,7 @@ MonoBehaviour:
   effectivePath3Level: 0
   path3Unlocked: 0
   mainRenderer: {fileID: 7028219029107938175}
-  skillHealingMultiplier: 0
-  fireBurstPrefab: {fileID: 6584693673283434052, guid: fb0ccfed77477a746a1e147f8910a8c8, type: 3}
+  orbitProjectilePrefab: {fileID: 7388594979766616069, guid: 8a3ec53e6e054bf4295d3bfd8bc6c873, type: 3}
 --- !u!1 &6784474226973136681
 GameObject:
   m_ObjectHideFlags: 0

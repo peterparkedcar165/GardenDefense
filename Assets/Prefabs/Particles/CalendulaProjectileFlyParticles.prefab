@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2239610904645482562}
   - component: {fileID: -8600531894901048057}
   m_Layer: 0
-  m_Name: SunflowerProjectileFlyParticles
+  m_Name: CalendulaProjectileFlyParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4782,7 +4782,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: afe74f5d65b05ab4d8527df2521b71cc, type: 2}
+  - {fileID: 2100000, guid: a933f4ed4ed22d148a55671c8c13ddc0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

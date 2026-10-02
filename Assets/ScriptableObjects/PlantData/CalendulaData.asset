@@ -25,10 +25,11 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: 61c63633f98d4c5bacb804a5f7faa4de, type: 2}
   fertilizerPossibleStats: 1a000000
   baseMaxHealth: 200
-  baseAttackDamage: 48
+  baseAttackDamage: 28
   baseMagicPower: 0
-  baseAttackSpeed: 0.3
+  baseAttackSpeed: 0.25
   baseAttackRange: 2.5
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 0.5
@@ -98,10 +99,11 @@ MonoBehaviour:
       maxPitch: 1.6
   skillSound:
     clips: []
-  path1AttackDamagePerLevel: 5
-  path1FireDamagePerLevel: 0.02
+  path1AttackDamagePerLevel: 2
+  path1AttackRangePerLevel: 0.2
   path2AttackRangePerLevel: 0.2
+  baseDistanceBonusDamagePerRadius: 0.06
+  path2DistanceBonusDamagePerLevel: 0.01
   path3SkillDurationPerLevel: 2
-  floralGlowBaseDamageScaling: 0.1
-  floralGlowDamageScalingPerLevel: 0.02
-  floralGlowMaxSplashTargets: 4
+  floralGlowBaseDamage: 20
+  floralGlowDamagePerLevel: 5
