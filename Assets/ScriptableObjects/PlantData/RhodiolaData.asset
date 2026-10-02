@@ -27,7 +27,7 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 18
   baseMagicPower: 0
-  baseAttackSpeed: 0.7
+  baseAttackSpeed: 0.5
   baseAttackRange: 3
   baseAttackChargeTime: 0
   baseArmor: 0

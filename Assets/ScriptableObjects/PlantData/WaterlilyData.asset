@@ -29,6 +29,7 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.6
   baseAttackRange: 4
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
@@ -98,21 +99,15 @@ MonoBehaviour:
       maxPitch: 0.8
   skillSound:
     clips: []
-  baseAoERange: 1.25
-  baseSplashDamage: 6
   baseBubblePrisonImpactDamage: 42
   slowProcChance: 0.5
-  splashMaxExtraTargets: 3
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.3
   path1AttackSpeedPerLevel: 0.2
   path1MaxOnHitEffectivenessBonus: 0.5
-  path2AoERangePerLevel: 0.1
-  path2SplashDamageScalingPerLevel: 0.05
   baseSlowDuration: 6
   path2MaxSlowStacksPerLevel: 1
   path2SlowProcChancePerLevel: 0.05
-  splashOnHitEffectiveness: 0.33
   path3BubbleDamagePerLevel: 12
   path3SkillDurationPerLevel: 2
   path3RadiusPerLevel: 0.15

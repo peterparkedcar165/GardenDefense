@@ -24,14 +24,26 @@ public class CalendulaProjectile : MonoBehaviour
     private bool _returningHome;
 
     private bool _isSkillMode; // true for a Floral Glow projectile, false for Calendula's own attack
+    private bool _reservedSlot; // true once PromoteNextWaiter has claimed a slot for it, before it arrives to actually take it
+
+    // at most this many Floral Glow projectiles may orbit any one plant at a time (so players can't
+    // stack Floral Glow from a crowd of Calendulas onto a single plant without limit). Calendula's
+    // own base-attack projectiles are NOT counted against this cap or queued - only Floral Glow is.
+    // the buff itself is never gated by this - see UpdateTravel, it's granted on arrival regardless
+    private const int MaxFloralGlowPerCenter = 3;
 
     private float _orbitAngle;
+    // remaining angular adjustment still being smoothly applied toward a newly (re)assigned slot -
+    // whenever the group's membership changes, RespaceOrbiters hands everyone a fresh target slot
+    // instead of snapping their angle there directly, so they glide into place over AngleLerpSpeed
+    private float _angleCorrection;
     private float _orbitRadius = 1f;
     private float _targetOrbitRadius = 1f; // player-chosen fixed radius, set via Calendula.SetOrbitRadius
     private Vector3 _direction; // current heading, maintained deliberately (see Update's rotation comment)
 
     private const float MinOrbitRadius = 0.3f;
     private const float RadiusLerpSpeed = 2f;
+    private const float AngleLerpSpeed = 4f; // radians/sec max rate for closing an _angleCorrection
     private const float TravelSpeed = 6f;
     private const float ArrivalThreshold = 0.15f;
 
@@ -45,12 +57,72 @@ public class CalendulaProjectile : MonoBehaviour
     // (additive), and this is what keeps the WHOLE set evenly spaced, recomputed every time any one
     // of them joins or leaves
     private static readonly Dictionary<Plant, List<CalendulaProjectile>> _orbitersByCenter = new Dictionary<Plant, List<CalendulaProjectile>>();
+    // abstract (no live GameObject) Floral Glow requests queued for a center that's already at
+    // MaxFloralGlowPerCenter, FIFO - the projectile that discovered the target full is destroyed
+    // immediately rather than sitting there with nowhere to go; the first entry here is respawned
+    // fresh (by its own Calendula) once a slot actually frees up there
+    private static readonly Dictionary<Plant, List<Calendula>> _queuedByCenter = new Dictionary<Plant, List<Calendula>>();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void InitStatics()
     {
         _orbitersByCenter.Clear();
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (_, __) => _orbitersByCenter.Clear();
+        _queuedByCenter.Clear();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (_, __) =>
+        {
+            _orbitersByCenter.Clear();
+            _queuedByCenter.Clear();
+        };
+    }
+
+    // true once a center already has MaxFloralGlowPerCenter Floral Glow projectiles orbiting it
+    private static bool IsFloralGlowFull(Plant center)
+    {
+        _orbitersByCenter.TryGetValue(center, out List<CalendulaProjectile> currentOrbiters);
+        if (currentOrbiters == null) return false;
+        int floralGlowCount = 0;
+        foreach (CalendulaProjectile p in currentOrbiters)
+            if (p != null && p._isSkillMode) floralGlowCount++;
+        return floralGlowCount >= MaxFloralGlowPerCenter;
+    }
+
+    // joins the orbit, claiming its slot. called once travel arrives at a new center - either for
+    // Calendula's own base attack (never capped/queued), or a Floral Glow projectile that already
+    // reserved a slot here via PromoteNextWaiter (so it skips the fullness check - that slot is
+    // already its own, re-checking could wrongly bounce it back into its own vacated queue spot)
+    private void TryJoinOrbit(Plant center)
+    {
+        _reservedSlot = false;
+        _traveling = false;
+        _center = center;
+        _pendingCenter = null;
+        _orbitRadius = _targetOrbitRadius;
+        RegisterOrbiter(center);
+    }
+
+    // records an abstract queue entry for center (no live GameObject - this projectile already
+    // completed its trip and is consumed/destroyed) so its Calendula gets another try once a slot
+    // there actually frees up
+    private static void EnqueueFloralGlowRequest(Calendula source, Plant center)
+    {
+        if (!_queuedByCenter.TryGetValue(center, out List<Calendula> queue))
+        {
+            queue = new List<Calendula>();
+            _queuedByCenter[center] = queue;
+        }
+        queue.Add(source);
+    }
+
+    // promotes whoever's been queued longest for this center, if anyone - called right after a
+    // Floral Glow projectile leaves it, so the count never drops below the cap while someone's
+    // still queued for a spot. has that Calendula spawn a brand new projectile to actually claim it
+    private static void PromoteNextWaiter(Plant center)
+    {
+        if (center == null || !_queuedByCenter.TryGetValue(center, out List<Calendula> queue) || queue.Count == 0) return;
+        Calendula next = queue[0];
+        queue.RemoveAt(0);
+        if (queue.Count == 0) _queuedByCenter.Remove(center);
+        if (next != null) next.SpawnReservedFloralGlowProjectile(center);
     }
 
     private void RegisterOrbiter(Plant center)
@@ -67,17 +139,33 @@ public class CalendulaProjectile : MonoBehaviour
 
     private void UnregisterOrbiter(Plant center)
     {
-        if (center == null || !_orbitersByCenter.TryGetValue(center, out List<CalendulaProjectile> list)) return;
-        list.Remove(this);
-        if (list.Count == 0) _orbitersByCenter.Remove(center);
-        else RespaceOrbiters(list);
+        if (center == null) return;
+        bool wasFloralGlowOrbiter = _isSkillMode;
+        if (_orbitersByCenter.TryGetValue(center, out List<CalendulaProjectile> list))
+        {
+            list.Remove(this);
+            if (list.Count == 0) _orbitersByCenter.Remove(center);
+            else RespaceOrbiters(list);
+        }
+        // a Floral Glow slot just freed up here - let the next waiter (if any) take it
+        if (wasFloralGlowOrbiter) PromoteNextWaiter(center);
     }
 
     private static void RespaceOrbiters(List<CalendulaProjectile> list)
     {
         float step = 2f * Mathf.PI / list.Count;
         for (int i = 0; i < list.Count; i++)
-            if (list[i] != null) list[i]._orbitAngle = i * step;
+        {
+            CalendulaProjectile p = list[i];
+            if (p == null) continue;
+            float targetAngle = i * step;
+            // shortest signed distance from the current angle to the new target, wrapped to
+            // (-pi, pi] - smoothly closed over time in UpdateOrbit instead of snapping here, and
+            // turning the short way around rather than potentially sweeping almost a full circle
+            float diff = targetAngle - p._orbitAngle;
+            diff = Mathf.Repeat(diff + Mathf.PI, 2f * Mathf.PI) - Mathf.PI;
+            p._angleCorrection = diff;
+        }
     }
 
     // counts simultaneously-overlapping colliders per insect (an insect can have more than one
@@ -107,7 +195,10 @@ public class CalendulaProjectile : MonoBehaviour
         RegisterOrbiter(calendula);
     }
 
-    // Floral Glow: spawns at Calendula and flies out to orbit the target plant instead
+    // Floral Glow: always spawns at Calendula and immediately flies out toward the target, no
+    // matter how many Floral Glow projectiles are already there - whether it actually gets to join
+    // the visible orbit once it arrives is decided later (see UpdateTravel); the buff itself is
+    // granted on arrival either way
     public void InitializeAsFloralGlow(Calendula calendula, Plant target)
     {
         _calendula = calendula;
@@ -116,13 +207,18 @@ public class CalendulaProjectile : MonoBehaviour
         TravelTo(target);
     }
 
+    // marks this freshly-spawned projectile as already owning a reserved slot at wherever it's
+    // currently headed, so it skips the fullness check on arrival (see Calendula.SpawnReservedFloralGlowProjectile)
+    public void ReserveSlot() => _reservedSlot = true;
+
     // retargets a live Floral Glow projectile to a different bearer without destroying/respawning it
     public void TravelTo(Plant newCenter)
     {
-        UnregisterOrbiter(_center); // vacate the old center's slot immediately, not once travel completes
+        UnregisterOrbiter(_center); // vacate the old center's orbit slot immediately, if it had one
         _center = null;
         _pendingCenter = newCenter;
         _speedSource = newCenter;
+        _reservedSlot = false; // an ordinary retarget never comes with a pre-claimed slot
         _traveling = true;
         _returningHome = false;
     }
@@ -171,11 +267,26 @@ public class CalendulaProjectile : MonoBehaviour
 
         if (_returningHome) { DestroySelf(); return; }
 
-        _center = _pendingCenter;
-        _pendingCenter = null;
-        _traveling = false;
-        _orbitRadius = _targetOrbitRadius;
-        RegisterOrbiter(_center);
+        Plant center = _pendingCenter;
+
+        // the buff is granted the moment the projectile reaches the target, whether or not there's
+        // room for it to actually join the visible orbit - the slot cap below only ever gates the
+        // damage-dealing projectile itself, never the buff
+        if (_isSkillMode) _calendula.GrantFloralGlowEffect(center);
+
+        // a reserved slot (promoted from the queue) always takes priority over a fresh fullness
+        // check - it's already its own slot. otherwise, if the target's orbit is already full, this
+        // projectile is consumed/destroyed here (the buff above still landed) and queued so its
+        // Calendula gets a fresh projectile sent out once a slot actually frees up
+        if (_isSkillMode && !_reservedSlot && IsFloralGlowFull(center))
+        {
+            _calendula.OnFloralGlowProjectileQueued(this);
+            EnqueueFloralGlowRequest(_calendula, center);
+            DestroySelf();
+            return;
+        }
+
+        TryJoinOrbit(center);
     }
 
     // the player-chosen radius this orbit should glide toward - pushed once at spawn (snapImmediately,
@@ -196,9 +307,33 @@ public class CalendulaProjectile : MonoBehaviour
         // doesn't make the projectile teleport
         _orbitRadius = Mathf.MoveTowards(_orbitRadius, _targetOrbitRadius, RadiusLerpSpeed * Time.deltaTime);
 
+        // angular speed is deliberately based on the shared TARGET radius, not this instance's own
+        // currently-gliding _orbitRadius - everyone orbiting the same center shares the same target
+        // radius, but can be at different points of their own visual glide toward it (e.g. one
+        // joined right after a radius toggle while another is still mid-transition), which would
+        // otherwise give them different angular speeds and permanently break the even spacing
+        // RespaceOrbiters set up, even though nothing ever re-breaks the angles themselves
         float attackSpeed = _speedSource != null ? _speedSource.attackSpeed : 1f;
-        float angularSpeed = (attackSpeed * Mathf.PI * 2f) / Mathf.Max(_orbitRadius, MinOrbitRadius);
+        float angularSpeed = (attackSpeed * Mathf.PI * 2f) / Mathf.Max(_targetOrbitRadius, MinOrbitRadius);
         _orbitAngle += angularSpeed * Time.deltaTime;
+
+        // smoothly close out any pending re-spacing correction (see RespaceOrbiters) on top of the
+        // ongoing rotation above, at a capped rate, instead of ever snapping straight to it
+        if (_angleCorrection != 0f)
+        {
+            float step = AngleLerpSpeed * Time.deltaTime;
+            if (Mathf.Abs(_angleCorrection) <= step)
+            {
+                _orbitAngle += _angleCorrection;
+                _angleCorrection = 0f;
+            }
+            else
+            {
+                float applied = Mathf.Sign(_angleCorrection) * step;
+                _orbitAngle += applied;
+                _angleCorrection -= applied;
+            }
+        }
 
         // exact tangential direction at the new angle (perpendicular to the radius, in the
         // direction of travel) - analytic, so it stays clean even while the radius is also gliding
@@ -211,9 +346,17 @@ public class CalendulaProjectile : MonoBehaviour
         center + new Vector3(Mathf.Cos(_orbitAngle), Mathf.Sin(_orbitAngle), 0f) * _orbitRadius;
 
     // safety net: covers every destruction path (DestroySelf, or Calendula directly Destroy()-ing
-    // one of her own projectiles to shrink her attack count) so the center it was last orbiting
-    // always re-spaces down, even if some future call site forgets to Unregister explicitly first
-    private void OnDestroy() => UnregisterOrbiter(_center);
+    // one of her own projectiles, e.g. to shrink her attack count or because she herself just died
+    // mid-orbit) so the center it was last sitting on always cleans up and re-spaces/promotes
+    // correctly, even if a call site forgets to do it explicitly.
+    // skipped entirely while the scene is unloading - UnregisterOrbiter can promote a queued
+    // request, which spawns a brand new GameObject, and doing that mid-teardown is exactly what
+    // Unity's "objects not cleaned up when closing the scene" warning is about
+    private void OnDestroy()
+    {
+        if (!gameObject.scene.isLoaded) return;
+        UnregisterOrbiter(_center);
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -226,9 +369,15 @@ public class CalendulaProjectile : MonoBehaviour
         if (count > 0) return; // already touching this insect through another collider - not a new pass
 
         if (!insect.IsAlive || insect.team == Team.Friendly) return;
-        float damage = _isSkillMode ? _calendula.EffectiveSkillDamage : _calendula.EffectiveAttackDamage;
+        float damage = _isSkillMode ? _calendula.EffectiveSkillDamage(_center) : _calendula.EffectiveAttackDamage(_center);
         DamageTag[] tags = _isSkillMode ? _skillDamageTags : _attackDamageTags;
         insect.Damage(damage, _calendula.damageType, _calendula.elementalType, _calendula, true, tags);
+
+        // Entity.Damage() only auto-plays the impact sound for DamageTag.Attack hits, and the skill
+        // is deliberately tagged SkillDamage instead (so it doesn't also pull in unrelated Attack-tag
+        // side effects like the Symbiosis/Wither cooldown-reduction passive) - so it's played here
+        // directly instead, to keep particles and sound identical between the attack and the skill
+        if (_isSkillMode) SfxPlayer.Play(_calendula.data?.impactSound, transform.position);
         PlayHitParticles();
     }
 

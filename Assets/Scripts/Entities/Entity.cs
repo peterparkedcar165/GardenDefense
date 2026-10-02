@@ -677,8 +677,8 @@ public abstract class Entity : MonoBehaviour
             // DamageTag.Attack (most Coordinated hits, e.g. Floral Glow's bonus poke or Psionic
             // Carrot, don't)
             if (source is Plant kindredPlant && kindredPlant.data != null && kindredPlant.data.family == PlantFamily.Kindred
-                && Random.value < 0.25f)
-                kindredPlant.skillCooldownTimer = Mathf.Max(0f, kindredPlant.skillCooldownTimer - 0.5f);
+                && Random.value < 0.33f)
+                kindredPlant.skillCooldownTimer = Mathf.Max(0f, kindredPlant.skillCooldownTimer - 0.75f);
         } else
         {
             coordinatedDamageMult = 1;

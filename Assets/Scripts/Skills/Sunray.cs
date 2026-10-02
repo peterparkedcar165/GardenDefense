@@ -26,7 +26,7 @@ public class Sunray : MonoBehaviour
 
     // skill tree nodes 3.1, 6.1, 6.2
     private const float HomingSpeed = 0.6f;
-    private const float KillRefreshDuration = 0.4f;
+    private const float KillRefreshDuration = 1f;
     private bool _ambientSunProc;
     private bool _homing;
     private bool _refreshOnKill;
