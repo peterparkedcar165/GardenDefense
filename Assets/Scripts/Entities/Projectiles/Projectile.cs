@@ -9,6 +9,11 @@ public abstract class Projectile : MonoBehaviour
     [SerializeField] private float hitVolume = 0.5f;
     private int hitCount = 0;
 
+    [Header("Hit Particles")]
+    // one-shot burst at the point of impact, shared by every projectile - optional, left null for
+    // the ones that don't have one yet
+    [SerializeField] protected GameObject hitParticlePrefab;
+
     [Header("Combat")]
     public float projectileDamage, projectileSpeed, maxRange;
     public int piercing;
@@ -37,7 +42,9 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void Awake()
     {
-        GetComponentInChildren<SpriteRenderer>().sortingOrder = 1;
+        // some projectiles are particles-only now (no sprite at all), so this has to be optional
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        if (sr != null) sr.sortingOrder = 1;
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
     }
 
@@ -104,6 +111,7 @@ public abstract class Projectile : MonoBehaviour
                 hitCount++;
                 if (hitCount == 2) projectileDamage *= 0.5f;
                 OnHit(insect);
+                PlayHitParticles();
 
                 trackedTarget = null;
                 trackedInsect = null;
@@ -121,6 +129,20 @@ public abstract class Projectile : MonoBehaviour
             OnBeforeDestroy();
             Destroy(gameObject);
         }
+    }
+
+    // one-shot burst at the point of impact - null-safe, since not every projectile has a prefab
+    // assigned yet. this prefab plays on its own (Play On Awake, non-looping) but doesn't
+    // self-destroy (Stop Action: None), so it has to be cleaned up manually once it's done, sized
+    // to whatever duration/lifetime are actually set on it
+    protected void PlayHitParticles()
+    {
+        if (hitParticlePrefab == null) return;
+
+        GameObject obj = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
+        ParticleSystem ps = obj.GetComponent<ParticleSystem>();
+        float lifetime = ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f;
+        Destroy(obj, lifetime);
     }
 
     protected void PlaySound(AudioClip sound)

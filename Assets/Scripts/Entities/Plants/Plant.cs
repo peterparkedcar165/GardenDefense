@@ -378,10 +378,13 @@ public abstract class Plant : Entity, IAttackable
     public bool prioritizeFlying = false;
     public virtual bool UsesFlyingToggle => false;
 
-    // fixed orbit radius toggle (Calendula). cycles 1..MaxOrbitRadius, wrapping back to 1
+    // fixed orbit radius toggle: available on every plant as long as Calendula is part of the
+    // player's selected roster for this level (her orbit projectiles read the specific orbited
+    // plant's own toggle, not hers), not just on Calendula herself. cycles 1..MaxOrbitRadius,
+    // wrapping back to 1
     public int orbitRadius = 1;
-    public virtual bool UsesRadiusToggle => false;
-    public virtual int MaxOrbitRadius => 1;
+    public bool UsesRadiusToggle => SaveManager.instance != null && SaveManager.instance.selectedLoadout.Contains("Calendula");
+    public virtual int MaxOrbitRadius => Mathf.Max(1, Mathf.FloorToInt(attackRange));
 
     // Burgeon plants that command minions: the info panel shows a "relocate formation" button,
     // and clicking it (after aiming a point) calls RelocateMinionFormation
@@ -1463,7 +1466,7 @@ public abstract class Plant : Entity, IAttackable
             return "<b>Passive</b>: Attacks have a 50% chance to reduce Skill Cooldown by 1 second on hit.";
 
             case PlantFamily.Kindred:
-            return "<b>Passive</b>: Dealing Coordinated Damage has a 25% chance to reduce Skill Cooldown by 0.5 seconds.";
+            return "<b>Passive</b>: Dealing Coordinated Damage has a 33% chance to reduce Skill Cooldown by 0.75 seconds.";
 
             default:
             return "";

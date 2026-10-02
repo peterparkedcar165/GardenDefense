@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class SunflowerProjectile : Projectile
 {
-    [SerializeField] private GameObject hitParticlePrefab;
-
     public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
     {
         base.Initialize(target, projectileDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, source);
@@ -27,20 +25,7 @@ public class SunflowerProjectile : Projectile
         if (sunflower != null)
             sunflower.ReduceSunTimer();
 
-        PlayHitParticles();
-    }
-
-    // one-shot burst at the point of impact - this prefab plays on its own (Play On Awake,
-    // non-looping) but doesn't self-destroy (Stop Action: None), so it has to be cleaned up
-    // manually once it's done, sized to whatever duration/lifetime are actually set on it
-    private void PlayHitParticles()
-    {
-        if (hitParticlePrefab == null) return;
-
-        GameObject obj = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
-        ParticleSystem ps = obj.GetComponent<ParticleSystem>();
-        float lifetime = ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f;
-        Destroy(obj, lifetime);
+        // hit particle spawn is now handled automatically by the base class right after OnHit()
     }
 
     protected override void Move()

@@ -96,9 +96,9 @@ public class Sunflower : Shooter
             GenerateSun(sunGenerated);
             passiveCooldownTimer += passiveCooldown * (1f + sunGenerationCooldown);
 
-            // skill tree node 3.2
+            // skill tree node 5.2
             if (SkillTreeManager.HasUnlock(this, SunSkillCooldownUnlock))
-                skillCooldownTimer = Mathf.Max(0f, skillCooldownTimer - 1f);
+                skillCooldownTimer = Mathf.Max(0f, skillCooldownTimer - 3f);
         }
     }
 
