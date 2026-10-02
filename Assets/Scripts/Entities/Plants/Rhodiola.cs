@@ -29,7 +29,11 @@ public class Rhodiola : Shooter
     public float HealAmount => attackDamage + HealMP;
 
     public float GrassConversion => (RData?.baseGrassConversion ?? 0.5f) + (RData?.path2GrassConversionPerLevel ?? 0.1f) * effectivePath2Level;
-    public float HealingReturn   => (RData?.baseHealingReturn ?? 0.15f) + (RData?.path2HealingReturnPerLevel ?? 0.03f) * effectivePath2Level;
+
+    // Symbiosis max level bonus: full health favors more Grass Damage (see UpdateStats), otherwise
+    // a portion of healing granted through the attack or Rejuvenating Burgeon returns to the Rhodiola
+    public float MaxLevelGrassDamageBonus => RData?.maxLevelGrassDamageBonus ?? 0.25f;
+    public float MaxLevelHealingReturn    => RData?.maxLevelHealingReturn    ?? 0.33f;
 
     // Rejuvenating Burgeon is baseline now (used to be a Path2 max-level-only bonus) and its
     // potency scales per level, unlike the fixed-rate duration/tick interval below
@@ -49,7 +53,6 @@ public class Rhodiola : Shooter
     {
         base.Awake();
         LoadData();
-        Entity.OnHeal += OnAnyHeal;
 
         // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
         // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
@@ -60,24 +63,24 @@ public class Rhodiola : Shooter
         }
     }
 
-    protected override void OnDestroy()
+    // Symbiosis max level bonus: while not fully healthy, a portion of healing granted through the
+    // attack or Rejuvenating Burgeon returns to the Rhodiola itself. called directly at those heal
+    // sites (rather than via the global OnHeal event) so the revival heal and skill-sourced regen
+    // are never included - the return itself is sourceless so it can never trigger another return
+    public void ReturnMaxLevelHealing(float amount)
     {
-        base.OnDestroy();
-        Entity.OnHeal -= OnAnyHeal;
-    }
-
-    // passive, a portion of any healing this rhodiola grants to others returns to it.
-    // covers the attack, burgeon ticks, the revival heal and any future regen it sources.
-    // the return itself is sourceless so it can never trigger another return
-    private void OnAnyHeal(EntityEventData data)
-    {
-        if (data.source != this || data.target == this) return;
-        Heal(data.amount * HealingReturn);
+        if (!IsPath2Maxed || health >= maxHealth) return;
+        Heal(amount * MaxLevelHealingReturn);
     }
 
     public override void UpdateStats()
     {
         base.UpdateStats();
+
+        // Symbiosis max level bonus: fully healthy favors more Grass Damage instead of the return above
+        if (IsPath2Maxed && health >= maxHealth)
+            grassDamage *= 1f + MaxLevelGrassDamageBonus;
+
         // passive, heals and shields given are increased by a portion of grass damage
         healingBonus += grassDamage * GrassConversion;
     }
@@ -149,8 +152,7 @@ public class Rhodiola : Shooter
 
     // heals one plant or friendly insect. isPrimaryTarget gates the Path1 max bonus and
     // Overgrowth's burst - both only ever applied to the shot's actual target, never to a
-    // Widespread Bloom bounce. Rejuvenating Burgeon (baseline) applies either way, the healing
-    // return itself is handled by the OnHeal hook
+    // Widespread Bloom bounce. Rejuvenating Burgeon (baseline) applies either way
     public void HealTick(Entity entity, bool isPrimaryTarget)
     {
         float amount = HealAmount;
@@ -160,6 +162,7 @@ public class Rhodiola : Shooter
             amount += (entity.maxHealth - entity.health) * MissingHealthPercent;
 
         entity.Heal(amount, this);
+        ReturnMaxLevelHealing(amount);
         entity.ApplyEffect(new RejuvenatingBurgeonEffect(entity, BurgeonDuration, 1, this, BurgeonHealPerSecond * BurgeonTickInterval, BurgeonTickInterval));
 
         if (!isPrimaryTarget) return;
@@ -170,7 +173,9 @@ public class Rhodiola : Shooter
             if (_overgrowthAttackCount >= 8)
             {
                 _overgrowthAttackCount = 0;
-                entity.Heal(HealAmount * 4f, this);
+                float burst = HealAmount * 4f;
+                entity.Heal(burst, this);
+                ReturnMaxLevelHealing(burst);
             }
         }
     }
@@ -262,7 +267,6 @@ public class Rhodiola : Shooter
 
     public override string GetPassiveDescription() =>
         $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.\n\n" +
-        $"<color=green><b>{HealingReturn * 100f:F0}%</b></color> of healing given to others is returned to the {GetName()}.\n\n" +
         $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color>.";
 
     public override string GetSkillDesription() =>
@@ -290,17 +294,15 @@ public class Rhodiola : Shooter
     public override string GetPath2Description(bool details = false)
     {
         float convpl = RData?.path2GrassConversionPerLevel ?? 0.1f;
-        float retpl  = RData?.path2HealingReturnPerLevel   ?? 0.03f;
         float burgpl = RData?.path2BurgeonHealPerLevel      ?? 2f;
         string desc = details
             ? $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\n\n" +
-              $"<color=green><b>[({(RData?.baseHealingReturn ?? 0.15f) * 100f:F0}%) + ({retpl * 100f:F0}%/Lvl.)]</b></color> of healing given to others is returned to the {GetName()}.\n\n" +
               $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color>."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase <color=green><b>Healing Returned</b></color> by <color=green><b>{retpl * 100f:F0}%</b></color> per level. [<color=green><b>+{retpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Rejuvenating Burgeon</b></color> healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"{Level5Section(path2Level, $"If fully healthy, increase <color=green><b>Grass Damage</b></color> by <color=green><b>{MaxLevelGrassDamageBonus * 100f:F0}%</b></color>. Otherwise, <color=green><b>{MaxLevelHealingReturn * 100f:F0}%</b></color> of healing granted through the attack and <color=green><b>Rejuvenating Burgeon</b></color> is returned to the {GetName()}.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

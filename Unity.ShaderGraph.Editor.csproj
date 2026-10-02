@@ -43,7 +43,7 @@
     <UnityVersion>6000.4.0f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Users\Tommy\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.3.1\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="C:\Users\Tommy\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.3.2\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.4.0f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.4.0f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.4.0f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
@@ -705,8 +705,8 @@
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Graphs\BooleanShaderProperty.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Nodes\Input\Gradient\SampleGradientNode.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Generation\Targets\Fullscreen\FullscreenMetaData.cs" />
-    <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Util\FunctionRegistry.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Nodes\Input\Geometry\TangentVectorNode.cs" />
+    <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Util\FunctionRegistry.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Graphs\TangentMaterialSlot.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Nodes\Math\Interpolation\InverseLerpNode.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@c6e5f4d3afa5\Editor\Data\Attributes\SGPropertyDrawerAttribute.cs" />

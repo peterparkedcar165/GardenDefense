@@ -17,8 +17,10 @@ public class RhodiolaData : PlantData
     [Header("Path 2 Scaling")]
     public float baseGrassConversion = 0.5f;
     public float path2GrassConversionPerLevel = 0.1f;
-    public float baseHealingReturn = 0.15f;
-    public float path2HealingReturnPerLevel = 0.03f;
+
+    [Header("Path 2 Max Level Bonus")]
+    public float maxLevelGrassDamageBonus = 0.25f;
+    public float maxLevelHealingReturn = 0.33f;
 
     [Header("Rejuvenating Burgeon (baseline passive)")]
     public float burgeonHealPerSecond = 12f;
@@ -39,7 +41,7 @@ public class RhodiolaData : PlantData
         "Fires a rejuvenating seed at the most injured nearby plant, healing it and leaving behind a regenerating bloom.";
 
     public override string GetPassiveDescription() =>
-        "Heals & Shields given are increased by a portion of <color=green><b>Grass Damage</b></color>, and part of the healing given to others is returned to the Rhodiola.";
+        "Heals & Shields given are increased by a portion of <color=green><b>Grass Damage</b></color>.";
 
     public override string GetSkillDescription() =>
         "Target a tile where a plant has fallen to resurrect it and restore a portion of its Health.";
