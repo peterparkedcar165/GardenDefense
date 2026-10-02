@@ -77,9 +77,11 @@ public class Rhodiola : Shooter
     {
         base.UpdateStats();
 
-        // Symbiosis max level bonus: fully healthy favors more Grass Damage instead of the return above
+        // Symbiosis max level bonus: fully healthy favors more Grass Damage instead of the return above.
+        // additive, like every other elemental damage bonus in the codebase - Rhodiola's base Grass
+        // Damage is 0, so a multiplier here would have nothing to scale and always be a no-op
         if (IsPath2Maxed && health >= maxHealth)
-            grassDamage *= 1f + MaxLevelGrassDamageBonus;
+            grassDamage += MaxLevelGrassDamageBonus;
 
         // passive, heals and shields given are increased by a portion of grass damage
         healingBonus += grassDamage * GrassConversion;

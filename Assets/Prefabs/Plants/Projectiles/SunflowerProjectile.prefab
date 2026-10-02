@@ -226,26 +226,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
-      propertyPath: ShapeModule.radius.value
-      value: 0.07
-      objectReference: {fileID: 0}
-    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
-      propertyPath: InitialModule.startSpeed.scalar
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 24
-      objectReference: {fileID: 0}
-    - target: {fileID: 2239610904645482562, guid: e896d728c66a15f488df4150c76a9635, type: 3}
-      propertyPath: InitialModule.startLifetime.scalar
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4511358385442513055, guid: e896d728c66a15f488df4150c76a9635, type: 3}
       propertyPath: m_Name
       value: SunflowerProjectileFlyParticles

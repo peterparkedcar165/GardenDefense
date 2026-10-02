@@ -20,6 +20,10 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private Button flyingToggleButton;      // visible only for plants with a flying-first toggle
     [SerializeField] private TMP_Text flyingToggleText;
 
+    [Header("Orbit Radius (Calendula)")]
+    [SerializeField] private Button radiusToggleButton;      // visible only for plants with a fixed-radius toggle
+    [SerializeField] private TMP_Text radiusToggleText;
+
     [Header("Health Bar")]
     [SerializeField] private GameObject healthBarRoot;
     [SerializeField] private Image healthBarFill;
@@ -205,6 +209,10 @@ public class PlantUpgradeUI : EntityInfoPanel
             flyingToggleButton.gameObject.SetActive(plant.UsesFlyingToggle);
         if (flyingToggleText != null)
             flyingToggleText.text = plant.prioritizeFlying ? "Flying First" : "Default";
+        if (radiusToggleButton != null)
+            radiusToggleButton.gameObject.SetActive(plant.UsesRadiusToggle);
+        if (radiusToggleText != null)
+            radiusToggleText.text = plant.orbitRadius.ToString();
         if (autoCastButton != null)
             autoCastButton.gameObject.SetActive(plant.UsesAutoCast);
 
@@ -237,6 +245,8 @@ public class PlantUpgradeUI : EntityInfoPanel
             relocateMinionsButton.gameObject.SetActive(false);
         if (flyingToggleButton != null)
             flyingToggleButton.gameObject.SetActive(false);
+        if (radiusToggleButton != null)
+            radiusToggleButton.gameObject.SetActive(false);
         if (autoCastButton != null)
             autoCastButton.gameObject.SetActive(false);
         if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
@@ -562,6 +572,16 @@ public class PlantUpgradeUI : EntityInfoPanel
         selectedPlant.prioritizeFlying = !selectedPlant.prioritizeFlying;
         if (flyingToggleText != null)
             flyingToggleText.text = selectedPlant.prioritizeFlying ? "Flying First" : "Default";
+    }
+
+    // cycle the selected plant's fixed orbit radius, wrapping back to 1 past its current max
+    public void OnRadiusToggleClicked()
+    {
+        if (selectedPlant == null || !selectedPlant.UsesRadiusToggle) return;
+        int max = Mathf.Max(1, selectedPlant.MaxOrbitRadius);
+        selectedPlant.orbitRadius = selectedPlant.orbitRadius >= max ? 1 : selectedPlant.orbitRadius + 1;
+        if (radiusToggleText != null)
+            radiusToggleText.text = selectedPlant.orbitRadius.ToString();
     }
 
     // aim a point, then relocate the selected plant's minion formation there

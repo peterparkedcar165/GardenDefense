@@ -1,8 +1,9 @@
 using UnityEngine;
 
-// homing heal projectile fired by Rhodiola. modeled on Gloriosa's EmberProjectile (no collider,
-// detonates only once it reaches its tracked target, retargets never happens since a dead target
-// just aborts the shot) but heals only - Rhodiola never attacks insects with this kit. Widespread
+// arcing heal projectile fired by Rhodiola. modeled on Gloriosa's EmberProjectile (no collider,
+// detonates only once it reaches its tracked target) but heals only - Rhodiola never attacks
+// insects with this kit. never retargets: if the target dies mid-flight it keeps flying to its
+// last known position and still gets destroyed there normally, it just heals nothing. Widespread
 // Bloom lets it bounce once more, to the next most injured plant/ally, after landing on its
 // primary target
 //
@@ -18,6 +19,25 @@ public class RhodiolaProjectile : MonoBehaviour
     private float    _healAmount;
     private bool     _canBounce;
     private bool     _isBounce;
+
+    // launches at a random angle off the straight line to the target, then curves back onto it -
+    // an arcing lob rather than an instant-turn homing shot. once the target dies mid-flight, the
+    // projectile keeps flying toward its last known position instead of aborting, so it always
+    // visually completes its arc (and is destroyed there normally) even though it heals nothing
+    [SerializeField] private float minAngleOffset = 50f;
+    [SerializeField] private float maxAngleOffset = 75f;
+    [SerializeField] private float turnSpeed = 4f;
+    private Vector3 _currentDirection;
+    private bool    _directionInitialized;
+    private Vector3 _lastKnownTargetPosition;
+
+    // if it's still chasing the target after this long (e.g. caught in a near-miss orbit around
+    // it), smoothly slow it down instead - the turn-toward-target correction can then actually
+    // catch up and line up a hit, rather than the projectile outrunning its own turn radius
+    [SerializeField] private float slowdownDelay = 1.2f;
+    [SerializeField] private float slowdownMinMultiplier = 0.3f;
+    [SerializeField] private float slowdownRampDuration = 1f;
+    private float _flightTime = 0f;
 
     // brief freeze on impact before spawning the bounce, matching the Oleander/Gloriosa bounce pacing
     private const float BounceHitPause = 0.05f;
@@ -37,6 +57,7 @@ public class RhodiolaProjectile : MonoBehaviour
         _speed      = speed;
         _healAmount = healAmount;
         _canBounce  = canBounce;
+        _lastKnownTargetPosition = target != null ? target.transform.position : transform.position;
     }
 
     public void MarkAsBounce() => _isBounce = true;
@@ -55,14 +76,28 @@ public class RhodiolaProjectile : MonoBehaviour
             return;
         }
 
-        if (_target == null || !(_target.health > 0))
+        if (_target != null && _target.health > 0)
+            _lastKnownTargetPosition = _target.transform.position;
+
+        Vector3 targetPos = _lastKnownTargetPosition;
+        Vector3 desiredDirection = (targetPos - transform.position).normalized;
+
+        if (!_directionInitialized)
         {
-            Destroy(gameObject);
-            return;
+            float angle = Random.Range(minAngleOffset, maxAngleOffset);
+            if (Random.value < 0.5f) angle = -angle;
+            _currentDirection = Quaternion.Euler(0f, 0f, angle) * desiredDirection;
+            _directionInitialized = true;
+        }
+        else
+        {
+            _currentDirection = Vector3.Slerp(_currentDirection, desiredDirection, turnSpeed * Time.deltaTime);
         }
 
-        Vector3 targetPos = _target.transform.position;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
+        _flightTime += Time.deltaTime;
+        float slowdownT = Mathf.Clamp01((_flightTime - slowdownDelay) / slowdownRampDuration);
+        float speed = _speed * Mathf.Lerp(1f, slowdownMinMultiplier, slowdownT);
+        transform.position += _currentDirection * (speed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, targetPos) < 0.15f)
             Detonate();
@@ -70,7 +105,8 @@ public class RhodiolaProjectile : MonoBehaviour
 
     private void Detonate()
     {
-        _source.HealTick(_target, !_isBounce);
+        if (_target != null && _target.health > 0)
+            _source.HealTick(_target, !_isBounce);
 
         if (!_isBounce && _canBounce)
         {

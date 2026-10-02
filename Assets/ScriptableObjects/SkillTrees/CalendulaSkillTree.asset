@@ -125,7 +125,7 @@ MonoBehaviour:
       unlockId: calendula_borrowed_light
     - id: node10b_nurturingglow
       nodeName: Nurturing Glow
-      description: <color=orange><b>Floral Glow</b></color>'s damage bonus reduced by <color=green><b>35%</b></color>. <color=orange><b>Floral Glow</b></color> now also heals its target for <color=green><b>6 + 3%</b></color> Max Health per second.
+      description: <color=orange><b>Floral Glow</b></color> now also heals its target for <color=green><b>6 + 3%</b></color> Max Health per second.
       maxRank: 1
       costPerRank: 2
       effects: []

@@ -102,7 +102,7 @@ MonoBehaviour:
   burgeonHealPerSecond: 12
   path2BurgeonHealPerLevel: 2
   baseBurgeonDuration: 4
-  burgeonTickInterval: 1
+  burgeonTickInterval: 0.5
   revivalBaseHeal: 40
   revivalHealPerLevel: 20
   skillHealMPScaling: 0.3
