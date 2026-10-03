@@ -263,7 +263,20 @@ public abstract class Entity : MonoBehaviour
     public float armorPenFlatTotalMultiplier = 1f, magicPenFlatTotalMultiplier = 1f;
 
     [Header("Internal Cooldowns")]
-    public float internalCooldown = 6f, fireInternalCooldown, waterInternalCooldown, grassInternalCooldown, iceInternalCooldown, poisonInternalCooldown, windInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    // how long each per-element Primer timer takes to clear before that element can primer the
+    // same target again - derived like every other stat below (base + adder + base*multiplier),
+    // so something (e.g. Begonia) can shorten it instead of only ever bypassing it outright
+    public float baseInternalCooldown = 10f;
+    public float internalCooldownAdder;
+    public float internalCooldownMultiplier;
+    public float internalCooldown, fireInternalCooldown, waterInternalCooldown, grassInternalCooldown, iceInternalCooldown, poisonInternalCooldown, windInternalCooldown, freezeInternalCooldown, germinateInternalCooldown;
+    // per-element adjustments on top of the shared internalCooldown above - e.g. a debuff that
+    // shortens only Water's cooldown on THIS entity, without touching Fire/Grass/etc, or
+    // anything else that only ever wants to affect one specific element's primer timer
+    public float fireInternalCooldownAdder, waterInternalCooldownAdder, grassInternalCooldownAdder,
+                 iceInternalCooldownAdder, poisonInternalCooldownAdder, windInternalCooldownAdder;
+    public float fireInternalCooldownMultiplier, waterInternalCooldownMultiplier, grassInternalCooldownMultiplier,
+                 iceInternalCooldownMultiplier, poisonInternalCooldownMultiplier, windInternalCooldownMultiplier;
     // how long a lone Primer (e.g. Fire with no partner yet) sits on a target waiting for a second
     // element to land and react with it, before expiring on its own with no effect
     public float elementalDebuffDuration = 6f;
@@ -337,8 +350,15 @@ public abstract class Entity : MonoBehaviour
         magicPenFlat = (baseMagicPenFlat + magicPenFlatAdder + baseMagicPenFlat * magicPenFlatMultiplier) * magicPenFlatTotalMultiplier;
         armorPenPercent = baseArmorPenPercent  + armorPenPercentAdder  + (baseArmorPenPercent * armorPenPercentMultiplier);
         magicPenPercent = baseMagicPenPercent  + magicPenPercentAdder  + (baseMagicPenPercent * magicPenPercentMultiplier);
+        internalCooldown = Mathf.Max(0f, baseInternalCooldown + internalCooldownAdder + (baseInternalCooldown * internalCooldownMultiplier));
         UpdateHealthBar();
     }
+
+    // the shared internalCooldown above, further adjusted per-element - e.g. a debuff that only
+    // shortens Water's cooldown on this entity sets waterInternalCooldownAdder/Multiplier without
+    // touching the other elements' own timers
+    private float ElementInternalCooldown(float adder, float multiplier) =>
+        Mathf.Max(0f, internalCooldown + adder + (internalCooldown * multiplier));
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
     {
@@ -523,7 +543,7 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - fireResistance) * (1 + source.fireDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && fireInternalCooldown <= 0)
                 {
-                    fireInternalCooldown = internalCooldown;
+                    fireInternalCooldown = ElementInternalCooldown(fireInternalCooldownAdder, fireInternalCooldownMultiplier);
                     ApplyEffect(new FirePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -539,11 +559,18 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Water:
             elementalMultiplier = Mathf.Max(0f, 1 - waterResistance) * (1 + source.waterDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && waterInternalCooldown <= 0)
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
+                && (waterInternalCooldown <= 0 || (source is Begonia begonia && begonia.IsPath1Maxed)))
                 {
-                    waterInternalCooldown = internalCooldown;
+                    waterInternalCooldown = ElementInternalCooldown(waterInternalCooldownAdder, waterInternalCooldownMultiplier);
                     ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
                 }
+
+                // Begonia's Blossoming: while the source carries it, Water damage shaves a flat
+                // amount off this insect's own Water primer timer, independent of the gate above
+                BlossomingEffect waterBlossoming = source.GetEffect<BlossomingEffect>();
+                if (waterBlossoming != null)
+                    waterInternalCooldown = Mathf.Max(0f, waterInternalCooldown - waterBlossoming.PrimerCooldownReduction);
 
                 // single-element proc replaced by the Primer combo system above
                 /*
@@ -556,7 +583,7 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - iceResistance) * (1 + source.iceDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && iceInternalCooldown <= 0)
                 {
-                    iceInternalCooldown = internalCooldown;
+                    iceInternalCooldown = ElementInternalCooldown(iceInternalCooldownAdder, iceInternalCooldownMultiplier);
                     ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -576,7 +603,7 @@ public abstract class Entity : MonoBehaviour
                          windInsect.HasEffect<WaterPrimer>()   || windInsect.HasEffect<PoisonPrimer>() ||
                          windInsect.HasEffect<GrassPrimer>()))
                     {
-                        windInternalCooldown = internalCooldown;
+                        windInternalCooldown = ElementInternalCooldown(windInternalCooldownAdder, windInternalCooldownMultiplier);
                         ApplyEffect(new WindPrimer(this, 0.5f, 1, source));
                     }
                     if (source is Anemone anemone)
@@ -592,12 +619,17 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Grass:
             elementalMultiplier = Mathf.Max(0f, 1 - grassResistance) * (1 + source.grassDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
-                && (grassInternalCooldown <= 0 || (source is Begonia begonia && begonia.IsPath1Maxed)))
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && grassInternalCooldown <= 0)
                 {
-                    grassInternalCooldown = internalCooldown;
+                    grassInternalCooldown = ElementInternalCooldown(grassInternalCooldownAdder, grassInternalCooldownMultiplier);
                     ApplyEffect(new GrassPrimer(this, elementalDebuffDuration, 1, source));
                 }
+
+                // Begonia's Blossoming: while the source carries it, Grass damage shaves a flat
+                // amount off this insect's own Grass primer timer, independent of the gate above
+                BlossomingEffect grassBlossoming = source.GetEffect<BlossomingEffect>();
+                if (grassBlossoming != null)
+                    grassInternalCooldown = Mathf.Max(0f, grassInternalCooldown - grassBlossoming.PrimerCooldownReduction);
 
                 // single-element proc replaced by the Primer combo system above
                 /*
@@ -610,7 +642,7 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance) * (1 + source.poisonDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && poisonInternalCooldown <= 0)
                 {
-                    poisonInternalCooldown = internalCooldown;
+                    poisonInternalCooldown = ElementInternalCooldown(poisonInternalCooldownAdder, poisonInternalCooldownMultiplier);
                     ApplyEffect(new PoisonPrimer(this, elementalDebuffDuration, 1, source));
                 }
 

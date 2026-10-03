@@ -198,6 +198,7 @@ public class Rhodiola : Shooter
     {
         baseAttackDamage    = data.baseAttackDamage    + level * (RData?.path1AttackDamagePerLevel    ?? 2f);
         baseProjectileSpeed = data.baseProjectileSpeed + level * (RData?.path1ProjectileSpeedPerLevel ?? 0.5f);
+        baseAttackRange     = data.baseAttackRange     + level * (RData?.path1AttackRangePerLevel     ?? 0.3f);
     }
 
     public override void OnPath3Upgrade(int level)
@@ -282,12 +283,14 @@ public class Rhodiola : Shooter
     {
         float speedpl = RData?.path1ProjectileSpeedPerLevel ?? 0.5f;
         float dmgpl   = RData?.path1AttackDamagePerLevel    ?? 2f;
+        float rangepl = RData?.path1AttackRangePerLevel     ?? 0.3f;
         string desc = details
             ? $"Fires a rejuvenating seed at the most injured nearby plant, healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health.\n\n*Unaffected by Piercing"
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Projectile Speed</b></color> by <color=green><b>{speedpl:F1}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Each projectile heals an additional <color=green><b>{MissingHealthPercent * 100f:F0}%</b></color> of the target's missing health.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);

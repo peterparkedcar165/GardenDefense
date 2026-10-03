@@ -65,6 +65,16 @@ public class LeafRanger : Shooter
 
     public override bool IsValidNightTarget(Insect insect, float distance) => true;
 
+    // his vision can never be impaired - blocks any accuracy-reducing debuff outright rather than
+    // just resisting it, so Accuracy can never be lowered below base no matter what lands on him.
+    // nothing in the game currently targets a plant with these (Blind/BlindingPollenEffect are
+    // only ever applied to insects right now), but this keeps him immune the moment anything ever does
+    public override void ApplyEffect(StatusEffect effect)
+    {
+        if (effect is BlindEffect || effect is BlindingPollenEffect) return;
+        base.ApplyEffect(effect);
+    }
+
     protected override void OnShoot()
     {
         if (!IsPath2Maxed) return;
@@ -166,8 +176,8 @@ public class LeafRanger : Shooter
         float critpl   = LRData?.path2CritChancePerLevel ?? 0.05f;
         float totalCrit = baseCrit + critpl * effectivePath2Level;
         string desc = details
-            ? $"The {GetName()} sees in the dark.\n\nGains <color=green><b>[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>[(0) + (1/Lvl.)]</b></color> <color=green>Piercing</color>."
-            : $"The {GetName()} sees in the dark.\n\nGains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.";
+            ? $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>[(0) + (1/Lvl.)]</b></color> <color=green>Piercing</color>."
+            : $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green>Piercing</color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +

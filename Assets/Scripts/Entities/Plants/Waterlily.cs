@@ -4,9 +4,12 @@ using System.Collections.Generic;
 
 public class Waterlily : Shooter
 {
+    public float AoERange, baseAoERange, AoERangeMultiplier, AoERangeAdder;
     public float skillAoERadius;
     public float bubbleDamage;
+    public float splashDamage;
     public float slowProcChance;
+    public float splashOnHitEffectiveness;
     [SerializeField] private GameObject bubbleTrapPrefab;
 
     private WaterlilyData WLData => data as WaterlilyData;
@@ -28,7 +31,7 @@ public class Waterlily : Shooter
     public int maxSlowStacksAdder;
     public int MaxSlowStacks => 1 + (WLData?.path2MaxSlowStacksPerLevel ?? 1) * effectivePath2Level + maxSlowStacksAdder;
 
-    // applies or refreshes the stacking slow on a direct hit.
+    // applies or refreshes the stacking slow, called on both the direct hit and splash damage.
     // if this waterlily's own cap can't push the stack any higher (e.g. a lower level waterlily
     // hitting a target already stacked up by a stronger one), the level never drops, only the
     // duration refreshes
@@ -36,11 +39,7 @@ public class Waterlily : Shooter
     {
         if (insect == null || !insect.IsAlive) return;
         float procChance = slowProcChance * (1f + bonusEffectChance);
-        bool proc = Random.value < procChance;
-        // max level passive: a failed roll gets a second attempt at the same chance
-        if (!proc && IsPath2Maxed)
-            proc = Random.value < procChance;
-        if (!proc) return;
+        if (Random.value >= procChance) return;
         int currentStacks = insect.GetEffect<SlowEffect>()?.level ?? 0;
         int attemptedStacks = Mathf.Min(currentStacks + 1, MaxSlowStacks);
         int newStacks = Mathf.Max(currentStacks, attemptedStacks);
@@ -51,6 +50,7 @@ public class Waterlily : Shooter
     {
         base.Awake();
         LoadData();
+        baseAoERange   = WLData?.baseAoERange ?? 0.75f;
         skillAoERadius = data.baseSkillRadius;
         slowProcChance = WLData?.slowProcChance ?? 0.5f;
         Entity.OnEntityHit += OnAnyEntityHit;
@@ -78,6 +78,12 @@ public class Waterlily : Shooter
         Entity.OnEntityHit -= OnAnyEntityHit;
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        AoERange = baseAoERange + AoERangeAdder + (baseAoERange * AoERangeMultiplier);
+    }
+
     // skill tree node 10.2: any Water damage this Waterlily deals to an insect currently caught
     // in one of her own Bubble Prisons extends that bubble's remaining duration
     private void OnAnyEntityHit(EntityEventData hit)
@@ -99,8 +105,12 @@ public class Waterlily : Shooter
             onHitEffectiveness *= 1f + (WLData?.path1MaxOnHitEffectivenessBonus ?? 0.5f);
         if (extraTarget)
             onHitEffectiveness *= 1f - ExtraTargetOnHitReduction;
-        float bubblepl = WLData?.path3BubbleDamagePerLevel ?? 12f;
+        float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
+        float bubblepl = WLData?.path3BubbleDamagePerLevel        ?? 12f;
+        splashDamage = WLData.baseSplashDamage + attackDamage * splashpl * effectivePath2Level + skillDamageMultiplier * magicPower;
         bubbleDamage = (WLData?.baseBubblePrisonImpactDamage ?? 0f) + bubblepl * effectivePath3Level + skillDamageMultiplier * magicPower;
+        // kept as a fraction of onHitEffectiveness, so it mirrors any bonus applied above instead of being a fixed value
+        splashOnHitEffectiveness = (WLData?.splashOnHitEffectiveness ?? 0.33f) * onHitEffectiveness;
     }
 
     protected override void Shoot(Vector3 target)
@@ -156,9 +166,8 @@ public class Waterlily : Shooter
 
     public override void OnPath2Upgrade(int level)
     {
+        baseAoERange = (WLData?.baseAoERange ?? 0.75f) + level * (WLData?.path2AoERangePerLevel ?? 0.05f);
         slowProcChance = (WLData?.slowProcChance ?? 0.5f) + level * (WLData?.path2SlowProcChancePerLevel ?? 0.05f);
-        // passive base effect: +1 Piercing always, plus +1 more per level
-        piercingAdder = 1 + level;
     }
 
     public override void OnPath3Upgrade(int level)
@@ -185,7 +194,7 @@ public class Waterlily : Shooter
     public override string GetName() => "<b><color=#3399FF>Waterlily</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} shoots her targets with little bubbles that can slow and pierce through them. She can also imprison her foes with her larger bubble.";
+        $"The {GetName()} shoots her targets with little bubbles that hurts surrounding insects. She can also imprison her foes with her larger bubble.";
 
     public override string GetAttackDescription() =>
         $"Blow little bubbles towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
@@ -198,8 +207,9 @@ public class Waterlily : Shooter
 
     public override string GetPassiveDescription()
     {
-        return $"Dealing damage with attacks has a <color=green><b>{slowProcChance * 100f:F0}%</b></color> chance to apply a stacking <color=#87CEEB><b>Slow</b></color> for <color=green><b>{SlowDuration:F1}s</b></color>, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks.\n\n" +
-               $"Attacks pierce through <color=green><b>{piercing}</b></color> additional target(s).";
+        float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
+        return $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>{WLData.baseSplashDamage + attackDamage * splashpl * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] {PlantData.DamageTypeLabel(damageType)} to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.\n\n" +
+               $"Dealing damage with attacks and the splash damage has a <color=green><b>{slowProcChance * 100f:F0}%</b></color> chance to apply a stacking <color=#87CEEB><b>Slow</b></color> for <color=green><b>{SlowDuration:F1}s</b></color>, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks.";
     }
 
     public override string GetPath1Description(bool details = false)
@@ -221,17 +231,20 @@ public class Waterlily : Shooter
 
     public override string GetPath2Description(bool details = false)
     {
-        int stackspl  = WLData?.path2MaxSlowStacksPerLevel   ?? 1;
-        float chancepl = WLData?.path2SlowProcChancePerLevel ?? 0.05f;
+        float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
+        float aoepl   = WLData?.path2AoERangePerLevel             ?? 0.05f;
+        int stackspl  = WLData?.path2MaxSlowStacksPerLevel        ?? 1;
+        float chancepl = WLData?.path2SlowProcChancePerLevel      ?? 0.05f;
         string desc = details
-            ? $"Dealing damage with attacks has a <color=green><b>[({(WLData?.slowProcChance ?? 0.5f) * 100f:F0}%) + ({chancepl * 100f:F0}%/Lvl.)]</b></color> chance to apply a stacking <color=#87CEEB><b>Slow</b></color> for <color=green><b>{SlowDuration:F1}s</b></color>, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks.\n\n" +
-              $"Attacks pierce through <color=green><b>1</b></color> additional target, plus <color=green><b>1</b></color> more per level."
+            ? $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>[({WLData.baseSplashDamage:F1}) + ({splashpl * 100f:F0}% <color=green><b>Attack Damage</b></color>/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} to surrounding insects within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius.\n\n" +
+              $"Dealing damage with attacks and the splash damage has a <color=green><b>[({(WLData?.slowProcChance ?? 0.5f) * 100f:F0}%) + ({chancepl * 100f:F0}%/Lvl.)]</b></color> chance to apply a stacking <color=#87CEEB><b>Slow</b></color> for <color=green><b>{SlowDuration:F1}s</b></color>, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
+               $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> <color=green><b>Attack Damage</b></color> per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"Increase max <color=#87CEEB><b>Slow</b></color> stacks by <color=green><b>{stackspl}</b></color> per level. [<color=green><b>+{stackspl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=#87CEEB><b>Slow</b></color> chance by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase <color=green><b>Piercing</b></color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"A failed <color=#87CEEB><b>Slow</b></color> proc gets a second chance to apply, at the same <color=green><b>{(WLData?.slowProcChance ?? 0.5f) * 100f + chancepl * 100f * effectivePath2Level:F0}%</b></color> chance.")}\n\n" +
+               $"{Level5Section(path2Level, $"Splash damage now applies <color=green><b>On-Hit</b></color> effects at <color=green><b>{splashOnHitEffectiveness * 100f:F0}%</b></color> effectiveness. Splash damage is now also considered a <color=green><b>Projectile</b></color> attack.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

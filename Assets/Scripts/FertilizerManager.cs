@@ -96,8 +96,6 @@ public class FertilizerManager : MonoBehaviour
     private GeneratedFertilizer RollGenerated(FertilizerTier tier, Dictionary<StatType, FertilizerStatRules.StatScope> available)
     {
         List<StatType> pool = new List<StatType>(available.Keys);
-        // Piercing is Epic exclusive - never offered on Common or Rare
-        if (tier != FertilizerTier.Epic) pool.Remove(StatType.Piercing);
 
         for (int i = pool.Count - 1; i > 0; i--)
         {
@@ -116,19 +114,9 @@ public class FertilizerManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             StatType stat = pool[i];
-            float rolled;
-            if (stat == StatType.Piercing)
-            {
-                // fixed rather than the generic range*multiplier roll - only Epic ever reaches
-                // here at all, since it's excluded from the pool above for every other tier
-                rolled = 1f;
-            }
-            else
-            {
-                (float min, float max) = GetBaseRange(stat);
-                rolled = Random.Range(min, max) * GetTierMultiplier(tier);
-                if (IsIntegerStat(stat)) rolled = Mathf.Round(rolled);
-            }
+            (float min, float max) = GetBaseRange(stat);
+            float rolled = Random.Range(min, max) * GetTierMultiplier(tier);
+            if (IsIntegerStat(stat)) rolled = Mathf.Round(rolled);
             stats[i] = new GeneratedFertilizerStat { statType = stat, value = rolled, scope = available[stat] };
         }
         return new GeneratedFertilizer { tier = tier, stats = stats };
@@ -145,7 +133,6 @@ public class FertilizerManager : MonoBehaviour
             case StatType.MagicArmor:
             case StatType.ArmorPenetration:
             case StatType.MagicPenetration:
-            case StatType.Piercing:
                 return true;
             default:
                 return false;
@@ -302,7 +289,6 @@ public class FertilizerManager : MonoBehaviour
             case StatType.CurrencyYield:   return (0.03f, 0.05f);
             case StatType.ShieldDuration:  return (0.03f, 0.05f);
             case StatType.RegenerationDuration: return (0.03f, 0.05f);
-            case StatType.Piercing:                    return (1f,  1f);
             case StatType.ImmobilizeDurationAdder:     return (0.25f, 0.5f);
             case StatType.ImmobilizeDurationMultiplier: return (0.05f, 0.15f);
             case StatType.PassiveCooldown:              return (0.03f, 0.04f);

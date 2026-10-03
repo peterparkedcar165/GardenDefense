@@ -25,10 +25,10 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: b55fd20c624741a49c3958b5e412d10f, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 18
+  baseAttackDamage: 20
   baseMagicPower: 0
-  baseAttackSpeed: 0.5
-  baseAttackRange: 3
+  baseAttackSpeed: 0.4
+  baseAttackRange: 2
   baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
@@ -93,7 +93,8 @@ MonoBehaviour:
     clips: []
   attackHealMPScaling: 0.05
   path1AttackDamagePerLevel: 2
-  path1ProjectileSpeedPerLevel: 0.5
+  path1ProjectileSpeedPerLevel: 0.4
+  path1AttackRangePerLevel: 0.3
   maxMissingHealthPercent: 0.05
   baseGrassConversion: 0.5
   path2GrassConversionPerLevel: 0.1

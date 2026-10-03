@@ -13,12 +13,19 @@ public class Begonia : Shooter
 
     private BegoniaData BData => data as BegoniaData;
 
+    // skill tree node unlock ids
+    public const string InstantSkillUnlock      = "begonia_instant_skill";
+    public const string BloomingAffinityUnlock  = "begonia_blooming_affinity";
+    public const string BloomingVigorUnlock     = "begonia_blooming_vigor";
+    public const string FertileWatersUnlock     = "begonia_fertile_waters";
+    public const string RebloomUnlock           = "begonia_rebloom";
+
     private float ElementalAffinityBonusBase => (BData?.baseElementalAffinityBonus ?? 0.24f) + (BData?.path2ElementalAffinityPerLevel ?? 0.08f) * effectivePath2Level;
     private float ElementalAffinityBonusMP   => (BData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
     private float ElementalAffinityBonus     => ElementalAffinityBonusBase + ElementalAffinityBonusMP;
 
-    private float GrassDamageBonusBase => (BData?.baseGrassDamageBonus ?? 0.2f) + (BData?.path3GrassDamagePerLevel ?? 0.04f) * effectivePath3Level;
-    private float GrassDamageBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
+    private float GrassDamageBonusBase => (BData?.baseGrassDamageBonus ?? 0.2f) + (BData?.path2GrassDamagePerLevel ?? 0.04f) * effectivePath2Level;
+    private float GrassDamageBonusMP   => (BData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
     private float GrassDamageBonus     => GrassDamageBonusBase + GrassDamageBonusMP;
 
     private float AttackSpeedBonusBase => (BData?.baseAttackSpeedBonus ?? 0f) + (BData?.path3AttackSpeedBonusPerLevel ?? 0.04f) * effectivePath3Level;
@@ -26,12 +33,24 @@ public class Begonia : Shooter
     private float AttackSpeedBonus     => AttackSpeedBonusBase + AttackSpeedBonusMP;
     private float BlossomRadius        => baseSkillRadius + (BData?.path3RadiusPerLevel ?? 0.15f) * effectivePath3Level;
 
+    private float PrimerCooldownReduction =>
+        (BData?.basePrimerCooldownReduction ?? 0.5f) + (BData?.path3PrimerCooldownReductionPerLevel ?? 0.1f) * effectivePath3Level
+        + (SkillTreeManager.HasUnlock(this, FertileWatersUnlock) ? 0.5f : 0f);
+
     protected override void Awake()
     {
         base.Awake();
         LoadData();
         Plant.OnPlantPlaced += HandlePlantPlaced;
         ApplyAuraToAllInRange();
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     private void HandlePlantPlaced(Plant plant)
@@ -63,7 +82,7 @@ public class Begonia : Shooter
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            plant.ApplyEffect(new BegoniaBlessingEffect(plant, 1, this, attackRange, ElementalAffinityBonus, grantsGerminateCrit));
+            plant.ApplyEffect(new BegoniaBlessingEffect(plant, 1, this, attackRange, ElementalAffinityBonus, GrassDamageBonus, grantsGerminateCrit));
         }
     }
 
@@ -94,7 +113,7 @@ public class Begonia : Shooter
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(position, plant.transform.position) <= BlossomRadius)
-                plant.ApplyEffect(new BlossomingEffect(plant, skillDuration, effectivePath3Level + 1, this, GrassDamageBonus, AttackSpeedBonus));
+                plant.ApplyEffect(new BlossomingEffect(plant, skillDuration, effectivePath3Level + 1, this, AttackSpeedBonus, PrimerCooldownReduction));
         }
     }
 
@@ -191,7 +210,6 @@ public class Begonia : Shooter
     {
         baseAttackDamage = data.baseAttackDamage + (BData?.path1AttackDamagePerLevel ?? 4f)  * level;
         baseAttackRange  = data.baseAttackRange  + (BData?.path1AttackRangePerLevel  ?? 0.2f) * level;
-        baseAttackSpeed  = data.baseAttackSpeed  + (BData?.path1AttackSpeedPerLevel  ?? 0.02f) * level;
         ApplyAuraToAllInRange();
     }
 
@@ -202,23 +220,21 @@ public class Begonia : Shooter
         baseSkillDuration = data.baseSkillDuration + (BData?.path3SkillDurationPerLevel ?? 1f) * level;
     }
 
-    public override string GetName() => "<b><color=green>Begonia</color></b>";
+    public override string GetName() => "<b><color=#4FC3F7>Begonia</color></b>";
     public override string GetDescription() =>
-        $"The {GetName()} sharpens nearby allies' precision and power, and can bless them with the strength of grass.";
+        $"The {GetName()} sharpens nearby allies' precision and power, and can bless them with the strength of water.";
 
     public override string GetPath1Description(bool details = false)
     {
         float adpl    = BData?.path1AttackDamagePerLevel ?? 4f;
         float rangepl = BData?.path1AttackRangePerLevel  ?? 0.2f;
-        float aspl    = BData?.path1AttackSpeedPerLevel  ?? 0.02f;
         string desc = details
             ? $"Fire a magical bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Attacks bypass the <color=green><b>Grass</b></color> primer's internal cooldown.")}\n\n" +
+               $"{Level5Section(path1Level, "Attacks bypass the <color=#4FC3F7><b>Water</b></color> primer's internal cooldown.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -226,34 +242,36 @@ public class Begonia : Shooter
     public override string GetPath2Description(bool details = false)
     {
         float eapl = BData?.path2ElementalAffinityPerLevel ?? 0.08f;
+        float gdpl = BData?.path2GrassDamagePerLevel ?? 0.04f;
         float mpMult = BData?.basePassiveMultiplier ?? 0f;
         string desc = details
-            ? $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, increasing <color=green><b>Elemental Affinity</b></color> by <color=green><b>[({(BData?.baseElementalAffinityBonus ?? 0.24f) * 100f:F0}%) + ({eapl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>."
+            ? $"Plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, increasing <color=green><b>Elemental Affinity</b></color> by <color=green><b>[({(BData?.baseElementalAffinityBonus ?? 0.24f) * 100f:F0}%) + ({eapl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> and <color=green><b>Grass Damage</b></color> by <color=green><b>[({(BData?.baseGrassDamageBonus ?? 0.2f) * 100f:F0}%) + ({gdpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Elemental Affinity</b></color> bonus by <color=green><b>{eapl * 100f:F0}%</b></color> per level. [<color=green><b>+{eapl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "Begonia's Blessing allows <color=green><b>Germinate</b></color> triggers to critically strike.")}\n\n" +
+               $"Increase <color=green><b>Grass Damage</b></color> bonus by <color=green><b>{gdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{gdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(path2Level, "<color=#4FC3F7><b>Begonia's Blessing</b></color> allows <color=green><b>Germinate</b></color> triggers to critically strike.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float adpl     = BData?.path3GrassDamagePerLevel ?? 0.04f;
         float aspl     = BData?.path3AttackSpeedBonusPerLevel  ?? 0.04f;
         float radiuspl = BData?.path3RadiusPerLevel            ?? 0.15f;
         float durpl    = BData?.path3SkillDurationPerLevel     ?? 1f;
+        float pcrpl    = BData?.path3PrimerCooldownReductionPerLevel ?? 0.1f;
         float mpMult   = BData?.baseSkillMultiplier ?? 0f;
         string desc = details
             ? $"Target an area on the field (radius <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color>). Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, " +
-              $"increasing <color=green><b>Grass Damage</b></color> by <color=green><b>[({(BData?.baseGrassDamageBonus ?? 0.2f) * 100f:F0}%) + ({adpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> " +
-              $"and <color=green><b>Attack Speed</b></color> by <color=green><b>[({(BData?.baseAttackSpeedBonus ?? 0f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>."
+              $"increasing <color=green><b>Attack Speed</b></color> by <color=green><b>[({(BData?.baseAttackSpeedBonus ?? 0f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>. " +
+              $"While active, dealing <color=#4FC3F7><b>Water</b></color> or <color=green><b>Grass</b></color> damage reduces that insect's own primer cooldown for that element by <color=green><b>[({(BData?.basePrimerCooldownReduction ?? 0.5f):F1}s) + ({pcrpl:F1}s/Lvl.)]</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase <color=green><b>Grass Damage</b></color> bonus by <color=green><b>{adpl * 100f:F0}%</b></color> per level. [<color=green><b>+{adpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase primer cooldown reduction by <color=green><b>{pcrpl:F1}s</b></color> per level. [<color=green><b>+{pcrpl * effectivePath3Level:F1}s</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "Blossoming plants' <color=green><b>Germinate</b></color> effect has its radius increased by <color=green><b>50%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
@@ -264,11 +282,12 @@ public class Begonia : Shooter
         $"Fire a magical bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        $"Plants within her attack radius are granted <color=green><b>Begonia's Blessing</b></color>, " +
-        $"increasing <color=green><b>Elemental Affinity</b></color> by <color=green><b>{ElementalAffinityBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ElementalAffinityBonusMP * 100f:F0}%</b></color>].";
+        $"Plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, " +
+        $"increasing <color=green><b>Elemental Affinity</b></color> by <color=green><b>{ElementalAffinityBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ElementalAffinityBonusMP * 100f:F0}%</b></color>] " +
+        $"and <color=green><b>Grass Damage</b></color> by <color=green><b>{GrassDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{GrassDamageBonusMP * 100f:F0}%</b></color>].";
 
     public override string GetSkillDesription() =>
         $"Target an area on the field. Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +
-        $"increasing <color=green><b>Grass Damage</b></color> by <color=green><b>{GrassDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{GrassDamageBonusMP * 100f:F0}%</b></color>] " +
-        $"and <color=green><b>Attack Speed</b></color> by <color=green><b>{AttackSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{AttackSpeedBonusMP * 100f:F0}%</b></color>].";
+        $"increasing <color=green><b>Attack Speed</b></color> by <color=green><b>{AttackSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{AttackSpeedBonusMP * 100f:F0}%</b></color>]. " +
+        $"While active, dealing <color=#4FC3F7><b>Water</b></color> or <color=green><b>Grass</b></color> damage reduces that insect's own primer cooldown for that element by <color=green><b>{PrimerCooldownReduction:F1}s</b></color>.";
 }
