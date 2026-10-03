@@ -31,7 +31,8 @@ Transform:
   m_LocalPosition: {x: -4.15, y: -1.81, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 7384798955888750844}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5323638503433831762
@@ -83,7 +84,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: aa00bc51ca63f3846b3ba083bd37b4a1, type: 3}
+  m_Sprite: {fileID: -2269908134559956715, guid: 4ec52f870206d3346b765ee02ad6b6e0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -91,7 +92,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!58 &549939264595078635
 CircleCollider2D:
@@ -141,3 +142,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4330e5e4e48c1e246acb69277d3c8df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RhodiolaProjectile
+--- !u!1001 &7695799179885812172
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4311319333377526007}
+    m_Modifications:
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.10566631
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4511358385442513055, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: m_Name
+      value: RhodiolaProjectileFlyParticles
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+--- !u!4 &7384798955888750844 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 914489188453886256, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+  m_PrefabInstance: {fileID: 7695799179885812172}
+  m_PrefabAsset: {fileID: 0}

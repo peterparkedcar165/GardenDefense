@@ -21,7 +21,6 @@ public static class FertilizerStatRules
         StatType.BonusEffectChance,
         StatType.MinimumDamage,
         StatType.MaximumDamage,
-        StatType.Piercing,
         StatType.SunYield,
         StatType.SkillDurationMultiplier,
         StatType.SkillDamage,

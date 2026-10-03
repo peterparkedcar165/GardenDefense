@@ -12,6 +12,7 @@ public class RhodiolaData : PlantData
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 2f;
     public float path1ProjectileSpeedPerLevel = 0.5f;
+    public float path1AttackRangePerLevel = 0.3f;
     public float maxMissingHealthPercent = 0.05f;
 
     [Header("Path 2 Scaling")]

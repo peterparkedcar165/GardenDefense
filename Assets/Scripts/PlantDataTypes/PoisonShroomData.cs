@@ -11,7 +11,7 @@ public class PoisonShroomData : PlantData
     public float path1AttackSpeedPerLevel = 0.08f;
     public float path1AttackRangePerLevel = 0.1f;
     [Tooltip("Path1 max: Toxic Spore splashes onto at most this many of the nearest OTHER insects (the main target is unaffected by this cap)")]
-    public int path1MaxSplashTargets = 3;
+    public int path1MaxSplashTargets = 2;
 
     [Header("Path 2 Scaling")]
     public float path2ToxicSporeDurationPerLevel = 0.4f;

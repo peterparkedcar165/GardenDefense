@@ -3,8 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WaterlilyData", menuName = "Scriptable Objects/PlantData/Waterlily")]
 public class WaterlilyData : PlantData
 {
+    public float baseAoERange;
+    public float baseSplashDamage = 6f;
     public float baseBubblePrisonImpactDamage;
     public float slowProcChance = 0.5f;
+    [Tooltip("splash damage hits at most this many of the nearest insects around the main target (no cap on the main target)")]
+    public int splashMaxExtraTargets = 3;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 5f;
@@ -13,9 +17,13 @@ public class WaterlilyData : PlantData
     public float path1MaxOnHitEffectivenessBonus = 0.5f;
 
     [Header("Path 2 Scaling")]
+    public float path2AoERangePerLevel = 0.05f;
+    public float path2SplashDamageScalingPerLevel = 0.05f;
     public float baseSlowDuration = 6f;
     public int path2MaxSlowStacksPerLevel = 1;
     public float path2SlowProcChancePerLevel = 0.05f;
+    // fraction of onHitEffectiveness that splash procs apply at, so it scales if onHitEffectiveness is buffed
+    public float splashOnHitEffectiveness = 0.33f;
 
     [Header("Path 3 Scaling")]
     public float path3BubbleDamagePerLevel = 12f;
@@ -26,7 +34,7 @@ public class WaterlilyData : PlantData
         $"Blows little bubbles towards her target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks have a chance to slow their target, and pierce through additional targets.";
+        $"Attacks deal splash damage to surrounding insects, with a chance to slow everyone hit.";
 
     public override string GetSkillDescription() =>
         "Blows a large bubble onto a targeted area, trapping insects within and keeping them airborne for a duration.";

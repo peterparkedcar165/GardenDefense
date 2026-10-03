@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class WaterlilyProjectile : Projectile
 {
@@ -48,7 +49,53 @@ public class WaterlilyProjectile : Projectile
         Waterlily waterlily = source as Waterlily;
 
         if (waterlily != null)
+        {
             waterlily.ApplyStackingSlow(insect);
+
+            bool path2Maxed = waterlily.IsPath2Maxed;
+            // at max level, splash damage also counts as a Projectile attack - otherwise it
+            // couldn't proc Floral Glow/Ablaze at all now that those require DamageTag.Projectile
+            DamageTag[] splashTags = path2Maxed
+                ? new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage, DamageTag.Projectile }
+                : new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage };
+
+            List<Insect> splashTargets = new List<Insect>();
+            foreach (Insect splashedInsect in Insect.allInsects)
+            {
+                if (splashedInsect == null || !splashedInsect.IsAlive || splashedInsect == insect) continue;
+                if (Vector3.Distance(transform.position, splashedInsect.transform.position) <= waterlily.AoERange)
+                    splashTargets.Add(splashedInsect);
+            }
+
+            // splash only hits the nearest N insects (data-driven, tunable per plant) - the
+            // main target above is unaffected by this cap, it always takes full damage
+            int maxSplashTargets = (waterlily.data as WaterlilyData)?.splashMaxExtraTargets ?? 3;
+            if (splashTargets.Count > maxSplashTargets)
+            {
+                splashTargets.Sort((a, b) =>
+                    Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
+                splashTargets.RemoveRange(maxSplashTargets, splashTargets.Count - maxSplashTargets);
+            }
+
+            foreach (Insect splashedInsect in splashTargets)
+            {
+                splashedInsect.Damage(waterlily.splashDamage, damageType, elementalType, source, true, splashTags);
+                waterlily.ApplyStackingSlow(splashedInsect);
+
+                if (path2Maxed)
+                    Entity.RaiseOnHit(new EntityEventData
+                    {
+                        target = splashedInsect,
+                        source = source,
+                        position = splashedInsect.transform.position,
+                        damage = waterlily.splashDamage,
+                        damageType = damageType,
+                        elementalType = elementalType,
+                        tags = splashTags,
+                        effectivenessOverride = waterlily.splashOnHitEffectiveness
+                    });
+            }
+        }
     }
 
     protected override void Move()

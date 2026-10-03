@@ -33,9 +33,12 @@ public class CalendulaProjectile : MonoBehaviour
     private const int MaxFloralGlowPerCenter = 3;
 
     private float _orbitAngle;
-    // remaining angular adjustment still being smoothly applied toward a newly (re)assigned slot -
-    // whenever the group's membership changes, RespaceOrbiters hands everyone a fresh target slot
-    // instead of snapping their angle there directly, so they glide into place over AngleLerpSpeed
+    // remaining angular gap toward a newly (re)assigned slot - whenever the group's membership
+    // changes, RespaceOrbiters hands everyone a fresh target slot. rather than snapping there or
+    // adding a flat extra rotation on top, this is closed by modulating THIS instance's own
+    // orbital speed: if the slot sits ahead (within 180 degrees, in the direction of travel) this
+    // projectile speeds up to catch up to it; if it sits behind, this projectile slows down so the
+    // slot (which keeps advancing at the shared base rate) catches back up to it. see UpdateOrbit
     private float _angleCorrection;
     private float _orbitRadius = 1f;
     private float _targetOrbitRadius = 1f; // player-chosen fixed radius, set via Calendula.SetOrbitRadius
@@ -43,7 +46,10 @@ public class CalendulaProjectile : MonoBehaviour
 
     private const float MinOrbitRadius = 0.3f;
     private const float RadiusLerpSpeed = 2f;
-    private const float AngleLerpSpeed = 4f; // radians/sec max rate for closing an _angleCorrection
+    // how much faster/slower (as a fraction of the base angular speed) this projectile moves while
+    // closing out a pending _angleCorrection - e.g. 0.5 means 50% faster when catching up ahead, or
+    // 50% slower when waiting for the slot to catch up from behind
+    private const float CorrectionSpeedFactor = 0.5f;
     private const float TravelSpeed = 6f;
     private const float ArrivalThreshold = 0.15f;
 
@@ -315,25 +321,22 @@ public class CalendulaProjectile : MonoBehaviour
         // RespaceOrbiters set up, even though nothing ever re-breaks the angles themselves
         float attackSpeed = _speedSource != null ? _speedSource.attackSpeed : 1f;
         float angularSpeed = (attackSpeed * Mathf.PI * 2f) / Mathf.Max(_targetOrbitRadius, MinOrbitRadius);
-        _orbitAngle += angularSpeed * Time.deltaTime;
+        float baseStep = angularSpeed * Time.deltaTime;
 
-        // smoothly close out any pending re-spacing correction (see RespaceOrbiters) on top of the
-        // ongoing rotation above, at a capped rate, instead of ever snapping straight to it
+        // close out any pending re-spacing correction (see RespaceOrbiters) by nudging THIS
+        // instance's own speed up or down for as long as the gap remains, rather than snapping or
+        // adding a flat extra rotation on top. the target slot advances every frame at exactly
+        // baseStep too (it shares the same angular speed), so the gap shrinks by precisely however
+        // much extra/less than baseStep this instance moves - once it's fully closed, speed
+        // reverts to normal
+        float extra = 0f;
         if (_angleCorrection != 0f)
         {
-            float step = AngleLerpSpeed * Time.deltaTime;
-            if (Mathf.Abs(_angleCorrection) <= step)
-            {
-                _orbitAngle += _angleCorrection;
-                _angleCorrection = 0f;
-            }
-            else
-            {
-                float applied = Mathf.Sign(_angleCorrection) * step;
-                _orbitAngle += applied;
-                _angleCorrection -= applied;
-            }
+            extra = Mathf.Sign(_angleCorrection) * CorrectionSpeedFactor * baseStep;
+            if (Mathf.Abs(extra) >= Mathf.Abs(_angleCorrection)) extra = _angleCorrection;
+            _angleCorrection -= extra;
         }
+        _orbitAngle += baseStep + extra;
 
         // exact tangential direction at the new angle (perpendicular to the radius, in the
         // direction of travel) - analytic, so it stays clean even while the radius is also gliding

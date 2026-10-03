@@ -30,7 +30,7 @@ public class PoisonShroomProjectile : Projectile
 
             // splash only reaches the nearest N OTHER insects (data-driven, tunable per plant) -
             // the main target above already got its Toxic Spore unconditionally, unaffected by this cap
-            int maxSplashTargets = (cs.data as PoisonShroomData)?.path1MaxSplashTargets ?? 3;
+            int maxSplashTargets = (cs.data as PoisonShroomData)?.path1MaxSplashTargets ?? 2;
             if (splashTargets.Count > maxSplashTargets)
             {
                 splashTargets.Sort((a, b) =>
