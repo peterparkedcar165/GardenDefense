@@ -28,7 +28,7 @@ MonoBehaviour:
   baseAttackDamage: 24
   baseMagicPower: 0
   baseAttackSpeed: 0.3
-  baseAttackRange: 3
+  baseAttackRange: 2.5
   baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
@@ -93,14 +93,14 @@ MonoBehaviour:
     clips: []
   baseElementalAffinityBonus: 0.24
   baseAttackSpeedBonus: 0.12
-  baseGrassDamageBonus: 0.16
+  baseGrassDamageBonus: 0.08
   basePassiveMultiplier: 0.24
   baseSkillMultiplier: 0.16
   basePrimerCooldownReduction: 0.5
-  path1AttackDamagePerLevel: 3
   path1AttackRangePerLevel: 0.1
-  path2ElementalAffinityPerLevel: 0.08
-  path2GrassDamagePerLevel: 0.04
+  path1AttackSpeedPerLevel: 0.1
+  path2ElementalAffinityPerLevel: 0.06
+  path2GrassDamagePerLevel: 0.02
   path3AttackSpeedBonusPerLevel: 0.06
   path3RadiusPerLevel: 0.15
   path3SkillDurationPerLevel: 3

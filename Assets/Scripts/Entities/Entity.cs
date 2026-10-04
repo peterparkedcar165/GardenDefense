@@ -559,11 +559,21 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Water:
             elementalMultiplier = Mathf.Max(0f, 1 - waterResistance) * (1 + source.waterDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
-                && (waterInternalCooldown <= 0 || (source is Begonia begonia && begonia.IsPath1Maxed)))
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
-                    waterInternalCooldown = ElementInternalCooldown(waterInternalCooldownAdder, waterInternalCooldownMultiplier);
-                    ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
+                    // Begonia's Path1 max: ignores the Water internal cooldown entirely - always
+                    // primers regardless of its state, and never reads/writes it at all, rather
+                    // than bypassing the gate but still resetting the timer like a normal hit would
+                    bool ignoresCooldown = source is Begonia begonia && begonia.IsPath1Maxed;
+                    if (waterInternalCooldown <= 0)
+                    {
+                        waterInternalCooldown = ElementInternalCooldown(waterInternalCooldownAdder, waterInternalCooldownMultiplier);
+                        ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
+                    }
+                    else if (ignoresCooldown)
+                    {
+                        ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
+                    }
                 }
 
                 // Begonia's Blossoming: while the source carries it, Water damage shaves a flat

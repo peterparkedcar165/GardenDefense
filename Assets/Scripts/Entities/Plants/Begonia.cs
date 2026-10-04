@@ -109,11 +109,19 @@ public class Begonia : Shooter
     {
         _isSkillTargeting = false;
         skillCooldownTimer = skillCooldown;
+
+        // Blooming Affinity/Vigor (skill tree): a snapshot of her own current Begonia's Blessing
+        // bonus, granted directly to Blossoming's targets regardless of whether they're actually
+        // within her Blessing's range - zero (no-op) when the matching unlock isn't picked
+        float blossomAffinityBonus = SkillTreeManager.HasUnlock(this, BloomingAffinityUnlock) ? ElementalAffinityBonus : 0f;
+        float blossomGrassBonus    = SkillTreeManager.HasUnlock(this, BloomingVigorUnlock)    ? GrassDamageBonus       : 0f;
+
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(position, plant.transform.position) <= BlossomRadius)
-                plant.ApplyEffect(new BlossomingEffect(plant, skillDuration, effectivePath3Level + 1, this, AttackSpeedBonus, PrimerCooldownReduction));
+                plant.ApplyEffect(new BlossomingEffect(plant, skillDuration, effectivePath3Level + 1, this, AttackSpeedBonus, PrimerCooldownReduction,
+                    blossomAffinityBonus, blossomGrassBonus));
         }
     }
 
@@ -208,8 +216,8 @@ public class Begonia : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = data.baseAttackDamage + (BData?.path1AttackDamagePerLevel ?? 4f)  * level;
         baseAttackRange  = data.baseAttackRange  + (BData?.path1AttackRangePerLevel  ?? 0.2f) * level;
+        baseAttackSpeed  = data.baseAttackSpeed  + (BData?.path1AttackSpeedPerLevel  ?? 0.1f) * level;
         ApplyAuraToAllInRange();
     }
 
@@ -226,15 +234,15 @@ public class Begonia : Shooter
 
     public override string GetPath1Description(bool details = false)
     {
-        float adpl    = BData?.path1AttackDamagePerLevel ?? 4f;
         float rangepl = BData?.path1AttackRangePerLevel  ?? 0.2f;
+        float aspl    = BData?.path1AttackSpeedPerLevel  ?? 0.1f;
         string desc = details
             ? $"Fire a magical bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
-               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Attacks bypass the <color=#4FC3F7><b>Water</b></color> primer's internal cooldown.")}\n\n" +
+               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"{Level5Section(path1Level, "Attacks ignore <color=#4FC3F7><b>Water</b></color> internal cooldowns.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
