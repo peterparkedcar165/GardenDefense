@@ -16,12 +16,12 @@ MonoBehaviour:
   - nodes:
     - id: node1_attackdamage
       nodeName: Reaching Vines
-      description: Increase <color=green><b>Attack Damage</b></color> by <color=green><b>2</b></color> per level.
+      description: Increase <color=#FFB6C1><b>Magic Power</b></color> by <color=green><b>10</b></color> per level.
       maxRank: 3
       costPerRank: 1
       effects:
-      - statType: 60
-        valuePerRank: 2
+      - statType: 32
+        valuePerRank: 10
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
@@ -60,14 +60,14 @@ MonoBehaviour:
   - nodes:
     - id: node5a_bloomingaffinity
       nodeName: Blooming Affinity
-      description: While the target also has <color=green><b>Blossoming</b></color>, <b><color=#4FC3F7>Begonia's Blessing</color></b>'s <color=green><b>Elemental Affinity</b></color> bonus is increased by <color=green><b>50%</b></color>.
+      description: <color=green><b>Blossoming</b></color> targets also benefit from <color=green><b>Elemental Affinity</b></color> equal to the current <b><color=#4FC3F7>Begonia's Blessing</color></b>.
       maxRank: 1
       costPerRank: 2
       effects: []
       unlockId: begonia_blooming_affinity
     - id: node5b_bloomingvigor
       nodeName: Blooming Vigor
-      description: While the target also has <color=green><b>Blossoming</b></color>, <b><color=#4FC3F7>Begonia's Blessing</color></b>'s <color=green><b>Grass Damage</b></color> bonus is increased by <color=green><b>50%</b></color>.
+      description: <color=green><b>Blossoming</b></color> targets also benefit from <color=green><b>Grass Damage</b></color> equal to the current <b><color=#4FC3F7>Begonia's Blessing</color></b>.
       maxRank: 1
       costPerRank: 2
       effects: []
@@ -76,12 +76,12 @@ MonoBehaviour:
   - nodes:
     - id: node6_skillcooldown
       nodeName: Quick Bloom
-      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>10</b></color> seconds per level.
+      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>5</b></color> seconds per level.
       maxRank: 5
       costPerRank: 1
       effects:
       - statType: 66
-        valuePerRank: 10
+        valuePerRank: 5
       unlockId:
     ranksToUnlockNext: 1
   - nodes:

@@ -11,8 +11,8 @@ public class BegoniaData : PlantData
     public float basePrimerCooldownReduction = 0.5f;
 
     [Header("Path 1 Scaling")]
-    public float path1AttackDamagePerLevel = 4f;
     public float path1AttackRangePerLevel = 0.2f;
+    public float path1AttackSpeedPerLevel = 0.1f;
 
     [Header("Path 2 Scaling")]
     public float path2ElementalAffinityPerLevel = 0.08f;
