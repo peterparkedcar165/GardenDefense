@@ -27,7 +27,7 @@ MonoBehaviour:
   baseMaxHealth: 250
   baseAttackDamage: 26
   baseMagicPower: 0
-  baseAttackSpeed: 1.1
+  baseAttackSpeed: 1
   baseAttackRange: 1.75
   baseAttackChargeTime: 0
   baseArmor: 32
@@ -102,19 +102,20 @@ MonoBehaviour:
   bashStunDuration: 1
   baseBashDamagePercent: 0.5
   path2BashDamagePercentPerLevel: 0.1
-  baseRegenPerSecond: 2
-  boostedRegenPerSecond: 6
+  counterStanceCooldownReduction: 0.2
+  defensiveEvasionBonus: 0.15
+  baseRegenPercentPerSecond: 0.005
+  boostedRegenPercentPerSecond: 0.02
   regenBoostDelay: 6
-  throwRangeMultiplier: 1.5
+  skillThrowRange: 7.5
   shieldThrowSpeed: 10
   shieldStunDuration: 1.5
-  skillAttackSpeedBonus: 0.4
+  baseSkillAttackSpeedBonus: 0.2
   shieldReequipDelay: 1
   path1AttackDamagePerLevel: 2
-  path1AttackSpeedPerLevel: 0.13
+  path1AttackSpeedPerLevel: 0.1
   path1ArmorPerLevel: 4
-  path3FlatDamagePerLevel: 30
   path3SkillDurationPerLevel: 2
   path3HealthPerLevel: 60
-  path3RadiusPerLevel: 0.15
+  path3AttackSpeedBonusPerLevel: 0.05
   skillDurationMPMultiplier: 0.1

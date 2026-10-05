@@ -28,18 +28,24 @@ public class AcornKnightData : PlantData
     // the 10%-per-extra-insect falloff that still applies on top for every insect beyond that one
     public float baseBashDamagePercent = 0.5f;
     public float path2BashDamagePercentPerLevel = 0.10f;
+    // skill tree node 5a (Vengeful Guard): Attack Cooldown refunded per Physical hit taken while
+    // in Guard Stance
+    public float counterStanceCooldownReduction = 0.2f;
+    // skill tree node 5b (Evasive Guard): flat Evasion while in Guard Stance
+    public float defensiveEvasionBonus = 0.15f;
 
-    [Header("Passive Regen - flat, no level scaling")]
-    public float baseRegenPerSecond = 2f;
-    public float boostedRegenPerSecond = 6f;
+    [Header("Passive Regen - percent of max health, ticks once per second, no level scaling")]
+    public float baseRegenPercentPerSecond = 0.005f;
+    public float boostedRegenPercentPerSecond = 0.02f;
     // seconds without taking damage before regen jumps from base to boosted
     public float regenBoostDelay = 6f;
 
     [Header("Skill: Shield Throw")]
-    public float throwRangeMultiplier = 1.5f;
+    // flat line skill shot range, independent of melee attackRange
+    public float skillThrowRange = 7.5f;
     public float shieldThrowSpeed = 10f;
     public float shieldStunDuration = 1.5f;
-    public float skillAttackSpeedBonus = 0.4f;
+    public float baseSkillAttackSpeedBonus = 0.2f;
     public float shieldReequipDelay = 1f;
 
     [Header("Path 1 Scaling")]
@@ -48,12 +54,9 @@ public class AcornKnightData : PlantData
     public int path1ArmorPerLevel = 4;
 
     [Header("Path 3 Scaling")]
-    // impact damage is a flat 50% of Attack Damage (see baseSkillDamageMultiplier on the SO) and no
-    // longer scales with level - instead each level adds this much flat bonus damage on top
-    public float path3FlatDamagePerLevel = 30f;
     public float path3SkillDurationPerLevel = 2f;
     public float path3HealthPerLevel = 50f;
-    public float path3RadiusPerLevel = 0.15f;
+    public float path3AttackSpeedBonusPerLevel = 0.05f;
     // seconds of shield lifetime granted per 1 point of Magic Power
     public float skillDurationMPMultiplier = 0.10f;
 

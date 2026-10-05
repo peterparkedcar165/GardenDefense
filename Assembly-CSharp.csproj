@@ -115,7 +115,6 @@
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\FirePrimer.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\SunIndicator.cs" />
     <Compile Include="Assets\Scripts\Spawning\SpawnManager.cs" />
-    <Compile Include="Assets\Scripts\Skills\AcornBomb.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ArtificialSunEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\ScorpionData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
@@ -269,6 +268,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Gloriosa.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
+    <Compile Include="Assets\Scripts\Skills\AcornShield.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\NeriumOleander.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearWaterEffect.cs" />

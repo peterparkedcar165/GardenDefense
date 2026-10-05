@@ -71,9 +71,9 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
     }
 
     // immune to a Taunt that redirects attacks onto a Plant directly (Cactus's shield taunt,
-    // etc: source and taunter are both the plant itself). AcornBomb's taunt still lands: its
-    // source is the AcornKnight that spawned it, but the taunter (what insects actually get
-    // redirected onto) is the AcornBomb minion prop, not a Plant, so it isn't a "taunt by a plant"
+    // etc: source and taunter are both the plant itself). AcornKnightShield's taunt still lands:
+    // its source is the AcornKnight that spawned it, but the taunter (what insects actually get
+    // redirected onto) is the shield minion prop, not a Plant, so it isn't a "taunt by a plant"
     // in the sense that matters here
     //
     // separately: a genuine hard CC landing mid-descent during its own voluntary pickup landing

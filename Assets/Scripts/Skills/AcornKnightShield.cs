@@ -1,10 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// the thrown shield, sitting on the path after its throw lands. clone of AcornBomb adapted for
+// the thrown shield, sitting on the path after its throw lands. clone of AcornShield adapted for
 // Acorn Knight: no fall-from-sky animation and no impact burst (the throw's projectile already
 // dealt its hit and stun before this spawns), just hp, lifetime, taunt and path blocking, same as
-// the old bomb. kept as its own class rather than editing AcornBomb.cs, which is now unused by
+// the old bomb. kept as its own class rather than editing AcornShield.cs, which is now unused by
 // the live AcornKnight but left in place rather than deleted outright
 public class AcornKnightShield : Minion
 {
