@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5277549953005779376}
   - component: {fileID: 3849591162661420664}
   m_Layer: 3
-  m_Name: AcornSprout
+  m_Name: AcornKnight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8121777306ee46845be040d164ea6463, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AcornSprout
+  m_EditorClassIdentifier: Assembly-CSharp::AcornKnight
   baseMaxHealth: 0
   baseAttackDamage: 0
   baseMagicPower: 0

@@ -1,12 +1,12 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "AcornSproutData", menuName = "Scriptable Objects/PlantData/AcornSprout")]
-public class AcornSproutData : PlantData
+[CreateAssetMenu(fileName = "AcornKnightData", menuName = "Scriptable Objects/PlantData/AcornKnight")]
+public class AcornKnightData : PlantData
 {
     [Header("Semicircle Swing And Bash")]
-    // both the sword swing and the shield bash hit up to 5 insects (fixed constant on the plant
-    // script, not tunable here, since no node or stat is ever meant to raise it) and share this
-    // same 10%-per-extra-target falloff
+    // both the sword swing and the shield bash hit any number of insects they geometrically
+    // reach - no cap on either - and share this same 10%-per-extra-target falloff, each with its
+    // own floor (see AcornKnight.SwingMinDamageMultiplier/BashMinDamageMultiplier)
     public float coneFalloffPerTarget = 0.10f;
     // seconds from the attack starting to the hit actually landing - stands in for an Animation
     // Event on the swing clip's hit frame until real art exists. should stay comfortably under
@@ -16,10 +16,24 @@ public class AcornSproutData : PlantData
     [Header("Defensive Stance And Bash")]
     public float baseDefensiveArmor = 20f;
     public float path2DefensiveArmorPerLevel = 6f;
-    public float defensiveAttackSpeedPenalty = 0.3f;
+    public float defensiveAttackSpeedPenalty = 0.75f;
     public float defensiveAttackRangePenalty = 0.25f;
     // grace period after no insect is targeting the Knight in melee, before the guard drops
-    public float stanceExitDelay = 2.5f;
+    public float stanceExitDelay = 1f;
+    // Shield Bash's own chance to stun each insect it hits - Path2 max only (see Level5Section),
+    // flat, no per-level scaling, independent of the skill's shield-throw stun
+    public float maxLevelBashStunChance = 0.75f;
+    public float bashStunDuration = 1f;
+    // Shield Bash's damage is this percent of Armor (for the closest insect hit), separate from
+    // the 10%-per-extra-insect falloff that still applies on top for every insect beyond that one
+    public float baseBashDamagePercent = 0.5f;
+    public float path2BashDamagePercentPerLevel = 0.10f;
+
+    [Header("Passive Regen - flat, no level scaling")]
+    public float baseRegenPerSecond = 2f;
+    public float boostedRegenPerSecond = 6f;
+    // seconds without taking damage before regen jumps from base to boosted
+    public float regenBoostDelay = 6f;
 
     [Header("Skill: Shield Throw")]
     public float throwRangeMultiplier = 1.5f;
@@ -47,7 +61,7 @@ public class AcornSproutData : PlantData
         $"Swings its sword in a cone, dealing {DamageTypeLabel(damageType)} to nearby insects.";
 
     public override string GetPassiveDescription() =>
-        "Entering combat with an attacker raises its guard, trading attack speed for armor and shield bashes back.";
+        "Regenerates health over time, faster once it's gone a while without being hit. Being targeted by a physical attacker also puts it into Guard Stance, trading attack speed and range for armor and an omnidirectional shield bash.";
 
     public override string GetSkillDescription() =>
         "Arms a shield throw. The next attack hurls the shield at the target, stunning it, then the shield falls to the ground, blocking the path and taunting insects.";

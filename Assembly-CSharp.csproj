@@ -170,7 +170,6 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WinterMoth.cs" />
     <Compile Include="Assets\Scripts\Spawning\FertilizerGrant.cs" />
-    <Compile Include="Assets\Scripts\PlantDataTypes\AcornSproutData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\KelpData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
@@ -303,7 +302,6 @@
     <Compile Include="Assets\Scripts\StatusEffect\AeoniumBloomEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\NeriumOleanderProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HollyTauntingEffect.cs" />
-    <Compile Include="Assets\Scripts\Entities\Plants\AcornSprout.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StartingShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\SoothingRain.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
@@ -360,6 +358,7 @@
     <Compile Include="Assets\Scripts\InsectDataTypes\JumpingSpiderData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
     <Compile Include="Assets\Scripts\Spawning\WaveDefinition.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\AcornKnight.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AeoniumData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\OldCarrot.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
@@ -373,7 +372,6 @@
     <Compile Include="Assets\Scripts\Entities\Insects\FireAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WindPrimer.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerSelectionUI.cs" />
-    <Compile Include="Assets\Scripts\Skills\AcornSproutShield.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FlyingInsect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GlowingSwarmEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\WindGust.cs" />
@@ -416,9 +414,11 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Glowworm.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Stargazer.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\AcornKnightData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cattail.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\PoisonPrimer.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SunflowerData.cs" />
+    <Compile Include="Assets\Scripts\Skills\AcornKnightShield.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WaterPrimer.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Rhodiola.cs" />
     <Compile Include="Assets\Scripts\UI\EntityInfoPanel.cs" />

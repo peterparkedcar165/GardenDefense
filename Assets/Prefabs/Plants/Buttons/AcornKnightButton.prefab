@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4113933570284819453}
   - component: {fileID: 8856467428121391946}
   m_Layer: 5
-  m_Name: AcornSproutButton
+  m_Name: AcornKnightButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

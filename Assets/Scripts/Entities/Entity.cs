@@ -287,6 +287,12 @@ public abstract class Entity : MonoBehaviour
 
     [Header("Debug")]
     public float timeAlive, totalDamageDealt;
+
+    // true for a melee attacker (currently Bird of Paradise and Acorn Knight) - caps attackRange
+    // at baseAttackRange in UpdateStats() below, since reaching farther than your own base melee
+    // range from a fertilizer/skill node/aura doesn't make sense the way it does for a shooter
+    public virtual bool IsMeleeAttacker => false;
+
     public virtual void UpdateStats()
     {
         maxHealth = (baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier)) * maxHealthTotalMultiplier;
@@ -294,6 +300,12 @@ public abstract class Entity : MonoBehaviour
         magicPower = (baseMagicPower + magicPowerAdder + (baseMagicPower * magicPowerMultiplier)) * magicPowerTotalMultiplier;
         attackSpeed = (baseAttackSpeed + attackSpeedAdder + (baseAttackSpeed * attackSpeedMultiplier)) * attackSpeedTotalMultiplier;
         attackRange = (baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier)) * attackRangeTotalMultiplier;
+        // melee attackers don't reach any farther than their own base range, no matter how much
+        // bonus range they pick up (fertilizers, skill nodes, auras) - attackRangeTotalMultiplier
+        // still applies below baseAttackRange though, so a plant's own range PENALTY (e.g. Acorn
+        // Knight's Guard Stance) still works normally, only increases past base get clamped off
+        if (IsMeleeAttacker)
+            attackRange = Mathf.Min(attackRange, baseAttackRange);
         healingBonus = baseHealingBonus + healingBonusAdder + (baseHealingBonus * healingBonusMultiplier);
         healingReceived = baseHealingReceived + healingReceivedAdder + (baseHealingReceived * healingReceivedMultiplier);
         fireResistance = baseFireResistance + fireResistanceAdder + (baseFireResistance * fireResistanceMultiplier);
@@ -1239,7 +1251,7 @@ public abstract class Entity : MonoBehaviour
     // radius highlight, or a red highlight on the insect a plant is currently targeting).
     // Plant/Insect each override GetMainRenderer() to point at their own specific sprite
     private SpriteRenderer _cachedOutlineRenderer;
-    // named distinctly from AcornBomb/AcornSproutShield's own unrelated _outlineRenderers
+    // named distinctly from AcornBomb/AcornKnightShield's own unrelated _outlineRenderers
     // fields (hover outlines on those Minion-derived obstacles) - Unity logs a "same field name
     // serialized multiple times" warning if a base and derived class share a field name, even
     // when neither is actually [SerializeField]

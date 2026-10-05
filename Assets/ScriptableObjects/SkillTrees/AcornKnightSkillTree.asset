@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cb196e4e86362842ab9d48e27a8f2f8, type: 3}
-  m_Name: AcornSproutSkillTree
+  m_Name: AcornKnightSkillTree
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
   steps:
   - nodes:
@@ -60,7 +60,7 @@ MonoBehaviour:
   - nodes:
     - id: node5a_bombgrassdot
       nodeName: Thorned Husk
-      description: The <color=green><b>Acorn Sprout</b></color> periodically deals <color=green><b>Grass Physical damage</b></color>, from the <color=green><b>Acorn Bomb</b></color>'s location within its taunt radius, equal to 25% of the <color=green><b>Acorn Bomb</b></color>'s <color=#00CED1><b>Armor</b></color>, every second.
+      description: The <color=green><b>Acorn Knight</b></color> periodically deals <color=green><b>Grass Physical damage</b></color>, from the <color=green><b>Acorn Bomb</b></color>'s location within its taunt radius, equal to 25% of the <color=green><b>Acorn Bomb</b></color>'s <color=#00CED1><b>Armor</b></color>, every second.
       maxRank: 1
       costPerRank: 2
       effects: []

@@ -136,7 +136,7 @@ public class PoisonShroom : Shooter
         // Executioner's Bloom trades Total Attack Damage for bonus Toxic Spore damage against
         // low-health insects (applied only in ToxicSporeEffect, not the Poison Field skill).
         // attackDamageTotalMultiplier is an input to base.UpdateStats()'s formula, so it's
-        // toggled around the call like AcornSprout's Stun Specialist, rather than post-multiplying
+        // toggled around the call like AcornKnight's defensive-stance speed penalty, rather than post-multiplying
         // the already-computed attackDamage
         bool executionersBloom = SkillTreeManager.HasUnlock(this, ExecutionersBloomUnlock);
         float damagePenalty = executionersBloom ? -0.25f : 0f;

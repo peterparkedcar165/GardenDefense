@@ -44,7 +44,7 @@ public class AcornBomb : Minion
         return $"Blocks path while it lasts\nTime remaining: {Mathf.CeilToInt(remaining)}s";
     }
 
-    // called by AcornSprout immediately after Instantiate
+    // called by AcornKnight immediately after Instantiate
     public void Initialize(float aoeRadius, float damage, float lifespan, float maxHp, Plant source)
     {
         this.aoeRadius = aoeRadius;
@@ -52,7 +52,7 @@ public class AcornBomb : Minion
         owner = source;
         lifetime = lifespan;
         baseMaxHealth = maxHp;
-        AcornSprout sprout = source as AcornSprout;
+        AcornKnight sprout = source as AcornKnight;
         baseArmor = (sprout != null && sprout.IsPath3Maxed) ? (int)source.armor : 0;
         baseMovementSpeed = 0f;
         baseFireResistance = -0.5f;
@@ -180,7 +180,7 @@ public class AcornBomb : Minion
     private void HandleHeal(EntityEventData data)
     {
         if (data.target != this) return;
-        AcornSprout sprout = owner as AcornSprout;
+        AcornKnight sprout = owner as AcornKnight;
         if (sprout == null || !sprout.IsPath3Maxed) return;
         lifetime += data.amount * 0.02f;
     }

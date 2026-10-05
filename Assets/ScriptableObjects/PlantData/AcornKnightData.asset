@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c16a88b325c9274c946ebb892ee0933, type: 3}
-  m_Name: AcornSproutData
-  m_EditorClassIdentifier: Assembly-CSharp::AcornSproutData
+  m_Name: AcornKnightData
+  m_EditorClassIdentifier: Assembly-CSharp::AcornKnightData
   plantPrefab: {fileID: 5277549953005779376, guid: 5b9d0894a6ad0cc458e0f317dbf13a44, type: 3}
   icon: {fileID: 5622665880769766919, guid: 61ed802b81b693c4fba4309505d4eaaf, type: 3}
-  plantName: AcornSprout
-  displayName: Acorn Sprout
+  plantName: AcornKnight
+  displayName: Acorn Knight
   family: 3
   elementalType: 2
   damageType: 0
@@ -25,12 +25,12 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: 5b35df63d07143619c7e5ab5202c1e5d, type: 2}
   fertilizerPossibleStats: 1200000026000000
   baseMaxHealth: 250
-  baseAttackDamage: 32
+  baseAttackDamage: 26
   baseMagicPower: 0
-  baseAttackSpeed: 0.6
-  baseAttackRange: 3
+  baseAttackSpeed: 1.1
+  baseAttackRange: 1.75
   baseAttackChargeTime: 0
-  baseArmor: 49
+  baseArmor: 32
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
@@ -95,16 +95,23 @@ MonoBehaviour:
   attackWindupTime: 0.1
   baseDefensiveArmor: 20
   path2DefensiveArmorPerLevel: 6
-  defensiveAttackSpeedPenalty: 0.3
+  defensiveAttackSpeedPenalty: 0.75
   defensiveAttackRangePenalty: 0.25
-  stanceExitDelay: 2.5
+  stanceExitDelay: 1
+  maxLevelBashStunChance: 0.75
+  bashStunDuration: 1
+  baseBashDamagePercent: 0.5
+  path2BashDamagePercentPerLevel: 0.1
+  baseRegenPerSecond: 2
+  boostedRegenPerSecond: 6
+  regenBoostDelay: 6
   throwRangeMultiplier: 1.5
   shieldThrowSpeed: 10
   shieldStunDuration: 1.5
   skillAttackSpeedBonus: 0.4
   shieldReequipDelay: 1
-  path1AttackDamagePerLevel: 4
-  path1AttackSpeedPerLevel: 0.09
+  path1AttackDamagePerLevel: 2
+  path1AttackSpeedPerLevel: 0.13
   path1ArmorPerLevel: 4
   path3FlatDamagePerLevel: 30
   path3SkillDurationPerLevel: 2
