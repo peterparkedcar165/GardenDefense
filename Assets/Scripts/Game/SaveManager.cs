@@ -122,7 +122,7 @@ public class SaveManager : MonoBehaviour
         {
             saveData.highestLevelUnlocked = plantRegistry != null ? plantRegistry.plants.Length - 1 : 40;
             saveData.unlockedPlants.Clear();
-            saveData.unlockedPlants.Add("AcornSprout");
+            saveData.unlockedPlants.Add("AcornKnight");
             RepairPlantsFromLevels();
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
@@ -132,7 +132,7 @@ public class SaveManager : MonoBehaviour
         {
             saveData.highestLevelUnlocked = 0;
             saveData.unlockedPlants.Clear();
-            saveData.unlockedPlants.Add("AcornSprout");
+            saveData.unlockedPlants.Add("AcornKnight");
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log("Reset to level 1 only");

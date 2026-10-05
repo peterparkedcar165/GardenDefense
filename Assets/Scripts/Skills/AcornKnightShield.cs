@@ -5,8 +5,8 @@ using System.Collections.Generic;
 // Acorn Knight: no fall-from-sky animation and no impact burst (the throw's projectile already
 // dealt its hit and stun before this spawns), just hp, lifetime, taunt and path blocking, same as
 // the old bomb. kept as its own class rather than editing AcornBomb.cs, which is now unused by
-// the live AcornSprout but left in place rather than deleted outright
-public class AcornSproutShield : Minion
+// the live AcornKnight but left in place rather than deleted outright
+public class AcornKnightShield : Minion
 {
     private float radius;
     private Transform shadow;
@@ -48,7 +48,7 @@ public class AcornSproutShield : Minion
         return $"Blocks path while it lasts\nTime remaining: {Mathf.CeilToInt(remaining)}s";
     }
 
-    // called by AcornSprout immediately after Instantiate, once the throw has landed
+    // called by AcornKnight immediately after Instantiate, once the throw has landed
     public void Initialize(float radius, float maxHp, float lifespan, Plant source)
     {
         this.radius = radius;
@@ -180,7 +180,7 @@ public class AcornSproutShield : Minion
     private void HandleHeal(EntityEventData data)
     {
         if (data.target != this) return;
-        AcornSprout knight = owner as AcornSprout;
+        AcornKnight knight = owner as AcornKnight;
         if (knight == null || !knight.IsPath3Maxed) return;
         lifetime += data.amount * 0.02f;
     }

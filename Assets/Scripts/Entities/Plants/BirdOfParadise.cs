@@ -15,6 +15,7 @@ public class BirdOfParadise : Aura
     private BirdOfParadiseData BOPData => data as BirdOfParadiseData;
 
     public override bool UsesTargeting => true;
+    public override bool IsMeleeAttacker => true;
 
     public float TalonFocusASPerStack     => (BOPData?.baseTalonFocusASPerStack ?? 0.04f) + (BOPData?.path1TalonFocusASPerStackPerLevel ?? 0.02f) * effectivePath1Level;
     public float ArmorShredPerStack       => BOPData?.maxLevelArmorShredPerStack ?? 0.02f;

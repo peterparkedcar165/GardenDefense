@@ -12,7 +12,6 @@ public static class FertilizerStatRules
     {
         StatType.AttackDamage,
         StatType.AttackSpeed,
-        StatType.AttackRange,
         StatType.SkillCooldown,
         StatType.CriticalChance,
         StatType.CriticalDamage,
@@ -68,6 +67,13 @@ public static class FertilizerStatRules
     // has no scene reference of its own. plantName set matches BogIris/Carrot/Anemone, whose kits
     // make FallDamage useful even with no flying insects around
     private static readonly HashSet<string> FallDamagePlantNames = new HashSet<string> { "BogIris", "Carrot", "Anemone" };
+
+    // AttackRange is only ever useful on a ranged attacker - melee plants clamp attackRange to
+    // baseAttackRange regardless (see Entity.IsMeleeAttacker), so fertilizer range bonuses do
+    // nothing for them. kept as a name set here too, same as FallDamagePlantNames above, since
+    // FertilizerStatRules only ever sees PlantData, never the live Plant/Entity instance that
+    // actually carries the IsMeleeAttacker override
+    private static readonly HashSet<string> MeleePlantNames = new HashSet<string> { "AcornKnight", "BirdOfParadise" };
 
     // reads only the hand-authored wave slots (not the procedural roster/elite arrays) - what's
     // actually placed in a wave's sub-wave spawns is what the player will really fight, so that's
@@ -145,7 +151,9 @@ public static class FertilizerStatRules
         get
         {
             if (_allGloballyHandled == null)
-                _allGloballyHandled = new HashSet<StatType>(GenericStats) { StatType.elementalAffinity };
+                // AttackRange is globally handled too, same as elementalAffinity: unlocked by
+                // loadout composition (any non-melee plant present), not a per-plant opt-in
+                _allGloballyHandled = new HashSet<StatType>(GenericStats) { StatType.elementalAffinity, StatType.AttackRange };
             return _allGloballyHandled;
         }
     }
@@ -159,6 +167,7 @@ public static class FertilizerStatRules
         HashSet<ElementalType> elementsSeen = new HashSet<ElementalType>();
         bool hasFallDamagePlant = false;
         bool hasIronbark = false;
+        bool hasRangedPlant = false;
 
         foreach (PlantData plant in loadout)
         {
@@ -179,11 +188,14 @@ public static class FertilizerStatRules
 
             if (FallDamagePlantNames.Contains(plant.plantName)) hasFallDamagePlant = true;
             if (plant.family == PlantFamily.Ironbark) hasIronbark = true;
+            if (!MeleePlantNames.Contains(plant.plantName)) hasRangedPlant = true;
         }
 
         if (elementsSeen.Count >= 2) available.Add(StatType.elementalAffinity);
         if (HasDotPair(elementsSeen))
             foreach (StatType stat in DotStats) available.Add(stat);
+
+        if (hasRangedPlant) available.Add(StatType.AttackRange);
 
         if (hasFallDamagePlant || HasFlyingInsectInLevel()) available.Add(StatType.FallDamage);
         if (hasIronbark || HasHighAggressivityInsectInLevel()) available.Add(StatType.Armor);
@@ -211,11 +223,16 @@ public static class FertilizerStatRules
         public PlantFamily? requiredFamily;
         public DamageType? requiredDamageType;
         public HashSet<string> requiredPlantNames; // by PlantData.plantName, for per-plant opt-ins
+        // AttackRange's scope: unlocked generically by any non-melee plant being present, but
+        // still shouldn't ever land on a melee plant even then (see Entity.IsMeleeAttacker) -
+        // checked ahead of every other criterion below, so it overrides any other match too
+        public bool excludeMelee;
 
         public static readonly StatScope All = new StatScope { appliesToAll = true };
 
         public bool Matches(Plant plant)
         {
+            if (excludeMelee && plant.IsMeleeAttacker) return false;
             if (appliesToAll) return true;
             if (requiredElement.HasValue && plant.elementalType == requiredElement.Value) return true;
             if (requiredFamily.HasValue && plant.data != null && plant.data.family == requiredFamily.Value) return true;
@@ -235,6 +252,7 @@ public static class FertilizerStatRules
         HashSet<ElementalType> elementsSeen = new HashSet<ElementalType>();
         bool hasFallDamagePlant = false;
         bool hasIronbark = false;
+        bool hasRangedPlant = false;
 
         foreach (PlantData plant in loadout)
         {
@@ -258,6 +276,7 @@ public static class FertilizerStatRules
 
             if (FallDamagePlantNames.Contains(plant.plantName)) hasFallDamagePlant = true;
             if (plant.family == PlantFamily.Ironbark) hasIronbark = true;
+            if (!MeleePlantNames.Contains(plant.plantName)) hasRangedPlant = true;
         }
 
         if (elementsSeen.Count >= 2) result[StatType.elementalAffinity] = StatScope.All;
@@ -267,6 +286,7 @@ public static class FertilizerStatRules
         if (hasFallDamagePlant || HasFlyingInsectInLevel()) MergeInto(result, StatType.FallDamage, StatScope.All);
         if (hasIronbark || HasHighAggressivityInsectInLevel()) MergeInto(result, StatType.Armor, StatScope.All);
         if (HasMagicInsectInLevel()) MergeInto(result, StatType.MagicArmor, StatScope.All);
+        if (hasRangedPlant) MergeInto(result, StatType.AttackRange, new StatScope { appliesToAll = true, excludeMelee = true });
 
         return result;
     }
@@ -282,9 +302,20 @@ public static class FertilizerStatRules
             result[stat] = addition;
             return;
         }
-        if (existing.appliesToAll) return;
-        if (addition.appliesToAll) { result[stat] = StatScope.All; return; }
 
+        // excludeMelee must survive regardless of which side is appliesToAll or which order
+        // merges happen in - the early appliesToAll shortcuts below would otherwise silently
+        // drop it (e.g. AttackRange's own exclusion getting lost if a plant also separately
+        // opts into it by name via fertilizerPossibleStats)
+        bool excludeMelee = existing.excludeMelee || addition.excludeMelee;
+
+        if (existing.appliesToAll || addition.appliesToAll)
+        {
+            result[stat] = new StatScope { appliesToAll = true, excludeMelee = excludeMelee };
+            return;
+        }
+
+        existing.excludeMelee = excludeMelee;
         if (existing.requiredElement == null) existing.requiredElement = addition.requiredElement;
         if (existing.requiredFamily == null) existing.requiredFamily = addition.requiredFamily;
         if (existing.requiredDamageType == null) existing.requiredDamageType = addition.requiredDamageType;

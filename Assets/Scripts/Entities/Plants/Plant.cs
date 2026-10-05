@@ -8,7 +8,8 @@ public struct PlantBaseStats
     // Common
     public float attackDamage, attackSpeed, attackRange, skillCooldown, passiveCooldown, skillDuration;
     public int piercing;
-    // AcornSprout
+    // stunChance/stunDuration: legacy AcornKnight ranged-kit fields, no longer read by anything.
+    // skillDamageMultiplier: shared, still used by many plants
     public float stunChance, stunDuration, skillDamageMultiplier;
     // Sunflower / BogIris
     public float sunGenerated, sunInterval, openDuration;

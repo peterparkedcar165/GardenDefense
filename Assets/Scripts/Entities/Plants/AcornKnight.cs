@@ -1,19 +1,56 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
-public class AcornSprout : Aura
+public class AcornKnight : Aura
 {
     [SerializeField] private Transform swordVisual;
     [SerializeField] private Transform shieldVisual;
     [SerializeField] private GameObject shieldProjectilePrefab;
     [SerializeField] private GameObject shieldPrefab;
 
-    private AcornSproutData AcornData => data as AcornSproutData;
+    private AcornKnightData AcornData => data as AcornKnightData;
 
-    // fixed constant, not a stat: no node or piercing stat may ever raise this
-    private const int ConeMaxTargets = 5;
     private const float SwingArcDegrees = 60f;
-    private const float SwingDuration = 0.18f;
+    // authored against data.baseAttackSpeed - scales inversely with current attackSpeed, same
+    // convention as Plant.AttackChargeTime, so a faster Knight physically swings faster instead
+    // of the hitbox sweep taking a fixed amount of real time regardless of attack speed
+    private const float BaseSwingDuration = 0.18f;
+    private float SwingDuration
+    {
+        get
+        {
+            float baseSpeed = data != null && data.baseAttackSpeed > 0f ? data.baseAttackSpeed : attackSpeed;
+            return BaseSwingDuration * (baseSpeed / Mathf.Max(0.01f, attackSpeed));
+        }
+    }
+
+    // "windshield wiper" sword hitbox: a thin rectangle, pivoted at the Knight's own position,
+    // extending out to 1.15x attackRange (a little past the stated range, like a real swing's
+    // reach). sweeps a full top-to-bottom semicircle on whichever side the target is on (same
+    // side-restriction the old static semicircle used), alternating direction every attack like a
+    // real wiper blade - one pass this attack, the reverse pass next attack
+    private const float SwingHitboxWidth = 0.075f;
+    private const float SwingHitboxLengthMultiplier = 1.15f;
+    private float SwingHitboxLength => attackRange * SwingHitboxLengthMultiplier;
+    // neither the sweep nor Bash cap how many insects they can hit - the 10%-per-extra falloff
+    // just bottoms out at each one's own floor instead of ever reaching 0
+    private const float SwingMinDamageMultiplier = 0.5f;
+    private const float BashMinDamageMultiplier = 0.5f;
+    private bool _nextSweepTopToBottom = true;
+    private Coroutine _swordSweepRoutine;
+
+    // fine enough that a thin insect can't get skipped between frames even at high game-speed
+    // multipliers, where Time.deltaTime (and so how far the sweep advances per frame) is larger
+    private const float MaxSweepAngleStepDegrees = 1f;
+
+    // visible placeholder for the hitbox itself (a plain colored rectangle) until real sword art
+    // exists - a 1x1 world-unit white sprite pivoted at its left edge, so scaling it by
+    // (SwingHitboxLength, SwingHitboxWidth) stretches it out exactly to the real hitbox's dimensions,
+    // pivoting from the Knight's own position same as the hitbox math does
+    private static Sprite _hitboxSprite;
+    private GameObject _hitboxVisualObj;
+    private SpriteRenderer _hitboxVisualRenderer;
 
     private Insect _mainTarget;
     private Vector2 _facingDir = Vector2.right;
@@ -28,7 +65,12 @@ public class AcornSprout : Aura
     private bool _shieldOut;
     private float _reequipTimer;
     private float shieldHealth, shieldRadius, shieldFlatDamage;
-    private AcornSproutShield _activeShield;
+    private AcornKnightShield _activeShield;
+
+    // passive regen, no level scaling at all: a slow trickle normally, picking up to a faster
+    // rate once nothing has damaged the Knight for a while. reset on every hit regardless of
+    // source/amount, via the shared OnEntityHit event (filtered to hits where this is the target)
+    private float _noDamageTimer;
 
     // skill tree node unlock ids, kept from the old ranged kit so existing skillPurchases stay valid
     public const string StunSpecialistUnlock = "acorn_stun_specialist";
@@ -37,7 +79,7 @@ public class AcornSprout : Aura
 
     public float ConeFalloffPerTarget   => AcornData?.coneFalloffPerTarget   ?? 0.10f;
     public float AttackWindupTime       => AcornData?.attackWindupTime       ?? 0.1f;
-    public float StanceExitDelay        => AcornData?.stanceExitDelay        ?? 2.5f;
+    public float StanceExitDelay        => AcornData?.stanceExitDelay        ?? 1f;
     public float ThrowRangeMultiplier   => AcornData?.throwRangeMultiplier   ?? 1.5f;
     public float ShieldThrowSpeed       => AcornData?.shieldThrowSpeed       ?? 10f;
     public float ShieldStunDuration     => AcornData?.shieldStunDuration     ?? 1.5f;
@@ -46,11 +88,27 @@ public class AcornSprout : Aura
 
     public float DefensiveArmor =>
         (AcornData?.baseDefensiveArmor ?? 20f) + (AcornData?.path2DefensiveArmorPerLevel ?? 6f) * effectivePath2Level;
-    public float DefensiveAttackSpeedPenalty => AcornData?.defensiveAttackSpeedPenalty ?? 0.3f;
+    public float DefensiveAttackSpeedPenalty => AcornData?.defensiveAttackSpeedPenalty ?? 0.75f;
     public float DefensiveAttackRangePenalty => AcornData?.defensiveAttackRangePenalty ?? 0.25f;
+
+    // Shield Bash's own stun chance - max-level (Path2) only, see Level5Section in
+    // GetPath2Description. flat, no per-level scaling, since it doesn't exist below max at all
+    public float MaxLevelBashStunChance => AcornData?.maxLevelBashStunChance ?? 0.75f;
+    public float BashStunDuration => AcornData?.bashStunDuration ?? 1f;
+    // Shield Bash's own damage is this percent of Armor (for the first/closest insect hit this
+    // cast) - the separate 10%-per-extra-insect falloff (see Bash()) still applies on top of this
+    public float BashDamagePercent =>
+        (AcornData?.baseBashDamagePercent ?? 0.5f) + (AcornData?.path2BashDamagePercentPerLevel ?? 0.10f) * effectivePath2Level;
+
+    // flat passive regen, no level scaling at all - picks up to the boosted rate once nothing has
+    // damaged the Knight for RegenBoostDelay seconds
+    public float BaseRegenPerSecond => AcornData?.baseRegenPerSecond ?? 2f;
+    public float BoostedRegenPerSecond => AcornData?.boostedRegenPerSecond ?? 6f;
+    public float RegenBoostDelay => AcornData?.regenBoostDelay ?? 6f;
 
     // toggle target like any Shooter (Nearest/First/Last/Strongest), same UI affordance
     public override bool UsesTargeting => true;
+    public override bool IsMeleeAttacker => true;
 
     // shield lifetime scales with Magic Power - a raw-seconds bonus, so no /100 division (see
     // feedback_magic_power_scaling memory: only decimal-percentage stats divide)
@@ -73,6 +131,25 @@ public class AcornSprout : Aura
             path3Unlocked = true;
             OnPath3Unlock();
         }
+
+        // stays visible permanently (not just mid-swing) so it's always on screen to tune against
+        EnsureHitboxVisual();
+        _hitboxVisualObj.SetActive(true);
+
+        _noDamageTimer = RegenBoostDelay; // starts already at the boosted rate, nothing's hit it yet
+        Entity.OnEntityHit += HandleAnyEntityHit;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Entity.OnEntityHit -= HandleAnyEntityHit;
+    }
+
+    private void HandleAnyEntityHit(EntityEventData data)
+    {
+        if (data.target != this) return;
+        _noDamageTimer = 0f;
     }
 
     protected override void Update()
@@ -80,6 +157,7 @@ public class AcornSprout : Aura
         base.Update(); // Aura sets attackCooldown = 1 / attackSpeed
 
         TickTimers(Time.deltaTime);
+        TickRegen(Time.deltaTime);
 
         _mainTarget = FindTarget();
         if (_mainTarget != null)
@@ -116,6 +194,17 @@ public class AcornSprout : Aura
             _stanceExitTimer = StanceExitDelay;
         else if (_stanceExitTimer > 0f)
             _stanceExitTimer -= dt;
+    }
+
+    // flat regen, no level scaling: BaseRegenPerSecond normally, bumping up to
+    // BoostedRegenPerSecond once nothing has damaged the Knight for RegenBoostDelay seconds
+    // straight - reset on every hit via HandleAnyEntityHit, regardless of source or amount
+    private void TickRegen(float dt)
+    {
+        if (!IsAlive) return;
+        _noDamageTimer += dt;
+        float rate = _noDamageTimer >= RegenBoostDelay ? BoostedRegenPerSecond : BaseRegenPerSecond;
+        if (rate > 0f) Heal(rate * dt, this);
     }
 
     // an insect "engages in targeting" the Knight when its own live target resolves to this
@@ -163,6 +252,12 @@ public class AcornSprout : Aura
             }
             shieldVisual.rotation = Quaternion.Euler(0f, 0f, angle);
         }
+
+        // the sword hitbox is irrelevant while in Guard Stance (attacks become Shield Bash
+        // instead), so hide it there and bring it back the instant the Knight returns to its
+        // normal sword-swinging stance
+        if (_hitboxVisualObj != null)
+            _hitboxVisualObj.SetActive(!IsDefensiveStance);
     }
 
     // same toggle-target helpers every Shooter uses (Plant.FindNearest/FindFirst/FindLast/
@@ -204,53 +299,158 @@ public class AcornSprout : Aura
         {
             if (target == null || !target.IsAlive) return;
             if (bash) Bash(target);
-            else      SwingSword(target);
+            else      StartSwordSweep(target);
         });
     }
 
-    // semicircle: whichever side (left or right) the target is on, relative to the Knight's own
-    // position. the target always counts as one of the up to 5 hits; up to 4 more of the nearest
-    // other insects on that same side, within range, fill the rest. same falloff as before
-    private void SwingSword(Insect target)
+    // kicks off the wiper sweep on whichever side (left/right) the target is on, relative to the
+    // Knight's own position - same side-restriction the old static semicircle used. direction
+    // alternates every attack (top-to-bottom, then bottom-to-top, then top-to-bottom again),
+    // like a real wiper blade rather than resetting to the same start every time
+    private void StartSwordSweep(Insect target)
     {
         Vector2 targetApproach = target.GetApproachPoint(transform.position);
         float facingSign = Mathf.Sign(targetApproach.x - transform.position.x);
         if (facingSign == 0f) facingSign = 1f;
 
-        List<Insect> others = new List<Insect>();
-        foreach (Insect insect in Insect.allInsects)
-        {
-            if (insect == null || !insect.IsAlive || insect == target) continue;
-            Vector2 approach = insect.GetApproachPoint(transform.position);
-            Vector2 to = approach - (Vector2)transform.position;
-            if (to.magnitude > attackRange) continue;
-            if (Mathf.Sign(to.x == 0f ? facingSign : to.x) != facingSign) continue;
-            others.Add(insect);
-        }
-        others.Sort((a, b) => Vector2.Distance(transform.position, a.GetApproachPoint(transform.position))
-            .CompareTo(Vector2.Distance(transform.position, b.GetApproachPoint(transform.position))));
+        bool topToBottom = _nextSweepTopToBottom;
+        _nextSweepTopToBottom = !_nextSweepTopToBottom;
 
-        List<Insect> candidates = new List<Insect> { target };
-        int extra = Mathf.Min(others.Count, ConeMaxTargets - 1);
-        for (int i = 0; i < extra; i++) candidates.Add(others[i]);
-
-        float multiplier = Mathf.Max(0f, 1f - ConeFalloffPerTarget * (candidates.Count - 1));
-        float damage = attackDamage * multiplier;
-
-        foreach (Insect insect in candidates)
-            insect.Damage(damage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        if (_swordSweepRoutine != null) StopCoroutine(_swordSweepRoutine);
+        _swordSweepRoutine = StartCoroutine(SwordSweepRoutine(facingSign, topToBottom));
     }
 
-    // omnidirectional: the same target as the sword swing, plus the 4 insects closest to THAT
-    // target (not to the Knight), as long as they're still within the Knight's own attack range.
-    // same 5-target cap and 10%-per-extra falloff as the swing, but scales off Armor instead of
-    // Attack Damage, and is tagged as counter damage
+    // sweeps a thin rectangle hitbox (pivoted at the Knight's own position, length
+    // SwingHitboxLength) through a 180-degree arc over SwingDuration. each insect can only be hit
+    // once per sweep (tracked in hit), with 10%-per-extra falloff bottoming out at
+    // SwingMinDamageMultiplier - no cap on how many insects can be hit in one sweep
+    private IEnumerator SwordSweepRoutine(float facingSign, bool topToBottom)
+    {
+        HashSet<Insect> hit = new HashSet<Insect>();
+        float elapsed = 0f;
+        float lastT = 0f;
+
+        float AngleAt(float t)
+        {
+            float angleFromTop = topToBottom ? Mathf.Lerp(0f, 180f, t) : Mathf.Lerp(180f, 0f, t);
+            return 90f - facingSign * angleFromTop;
+        }
+
+        void SampleAt(float t)
+        {
+            float worldAngle = AngleAt(Mathf.Clamp01(t));
+            UpdateHitboxVisual(worldAngle);
+            HitInsectsInWiper(worldAngle, hit);
+        }
+
+        SampleAt(0f);
+
+        while (elapsed < SwingDuration)
+        {
+            float duration = Mathf.Max(0.0001f, SwingDuration);
+            float newElapsed = Mathf.Min(duration, elapsed + Time.deltaTime);
+            float newT = newElapsed / duration;
+
+            // at high game-speed multipliers Time.deltaTime (and so how far the sweep advances
+            // in one frame) gets much larger - without this, a single big frame step could rotate
+            // straight past a thin insect without ever sampling an angle that overlapped it.
+            // substepping keeps the angular resolution the same regardless of frame size
+            int steps = Mathf.Max(1, Mathf.CeilToInt(Mathf.Abs(newT - lastT) * 180f / MaxSweepAngleStepDegrees));
+            for (int i = 1; i <= steps; i++)
+                SampleAt(Mathf.Lerp(lastT, newT, (float)i / steps));
+
+            lastT = newT;
+            elapsed = newElapsed;
+            yield return null;
+        }
+
+        _swordSweepRoutine = null;
+    }
+
+    // worldAngleDegrees: 0 = facing +X, 90 = straight up, 180/-180 = straight down's mirror,
+    // -90 = straight down - mirrors Calendula's own SweepAttackDamage falloff pattern (hit.Count
+    // at the moment an insect is reached doubles as the falloff index, no separate counter needed)
+    private void HitInsectsInWiper(float worldAngleDegrees, HashSet<Insect> hit)
+    {
+        float worldAngleRad = worldAngleDegrees * Mathf.Deg2Rad;
+        Vector2 dir = new Vector2(Mathf.Cos(worldAngleRad), Mathf.Sin(worldAngleRad));
+        Vector2 perp = new Vector2(-dir.y, dir.x);
+        float halfWidth = SwingHitboxWidth * 0.5f;
+
+        // snapshot first: Insect.Kill() removes the insect from allInsects synchronously, so
+        // killing one with this very hit would otherwise mutate the list mid-foreach and throw,
+        // silently killing this coroutine - which looked exactly like the swing "just stopping"
+        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        {
+            if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
+
+            Vector2 toInsect = (Vector2)insect.transform.position - (Vector2)transform.position;
+            float along = Vector2.Dot(toInsect, dir);
+            if (along < 0f || along > SwingHitboxLength) continue;
+            float across = Vector2.Dot(toInsect, perp);
+            if (Mathf.Abs(across) > halfWidth) continue;
+
+            float multiplier = Mathf.Max(SwingMinDamageMultiplier, 1f - ConeFalloffPerTarget * hit.Count);
+            hit.Add(insect);
+            insect.Damage(attackDamage * multiplier, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        }
+    }
+
+    private static Sprite GetHitboxSprite()
+    {
+        if (_hitboxSprite != null) return _hitboxSprite;
+        Texture2D tex = new Texture2D(1, 1);
+        tex.SetPixel(0, 0, Color.white);
+        tex.Apply();
+        // pivot at the left edge (0, 0.5) rather than center, so the sprite's own position IS
+        // the pivot point the hitbox math rotates around, and scaling along X only ever extends
+        // outward from there instead of growing in both directions
+        _hitboxSprite = Sprite.Create(tex, new Rect(0f, 0f, 1f, 1f), new Vector2(0f, 0.5f), 1f);
+        return _hitboxSprite;
+    }
+
+    private void EnsureHitboxVisual()
+    {
+        if (_hitboxVisualObj != null) return;
+        _hitboxVisualObj = new GameObject("SwordHitboxVisual");
+        _hitboxVisualObj.transform.SetParent(transform, false);
+        _hitboxVisualRenderer = _hitboxVisualObj.AddComponent<SpriteRenderer>();
+        _hitboxVisualRenderer.sprite = GetHitboxSprite();
+        _hitboxVisualRenderer.color = new Color(0.15f, 1f, 0.15f, 0.4f);
+        // same sorting layer the Knight's own body sprite uses - without this it defaults to
+        // "Default", which sits behind every other layer in this project's sorting order
+        // regardless of sortingOrder, so it was rendering fully hidden
+        _hitboxVisualRenderer.sortingLayerName = "Plants";
+        _hitboxVisualRenderer.sortingOrder = 1;
+
+        // starts parked at 12 o'clock (world angle 90) before any attack has ever fired, matching
+        // where the very first sweep (top-to-bottom) begins
+        UpdateHitboxVisual(90f);
+    }
+
+    private void UpdateHitboxVisual(float worldAngleDegrees)
+    {
+        if (_hitboxVisualObj == null) return;
+        _hitboxVisualObj.transform.localPosition = Vector3.zero;
+        _hitboxVisualObj.transform.localRotation = Quaternion.Euler(0f, 0f, worldAngleDegrees);
+        _hitboxVisualObj.transform.localScale = new Vector3(SwingHitboxLength, SwingHitboxWidth, 1f);
+    }
+
+    // omnidirectional: the target plus every insect within the Knight's own attack range, closest
+    // to THAT target (not to the Knight) first - no cap on how many can be hit. since this lands
+    // all at once instead of being discovered over time like the sweep, distance-to-target order
+    // stands in for "order hit": same 10%-per-extra falloff as the swing, down to its own floor,
+    // scaling off Armor instead of Attack Damage and tagged as counter damage. at Path2 max only,
+    // each insect hit also gets an independent roll at MaxLevelBashStunChance to be stunned for
+    // BashStunDuration - this doesn't exist at all below max level
     private void Bash(Insect target)
     {
         Vector2 targetApproach = target.GetApproachPoint(transform.position);
 
         List<Insect> others = new List<Insect>();
-        foreach (Insect insect in Insect.allInsects)
+        // snapshot: Insect.Kill() removes itself from allInsects synchronously, which would
+        // otherwise mutate this list mid-foreach if an earlier hit below kills something
+        foreach (Insect insect in new List<Insect>(Insect.allInsects))
         {
             if (insect == null || !insect.IsAlive || insect == target) continue;
             Vector2 approach = insect.GetApproachPoint(transform.position);
@@ -261,14 +461,17 @@ public class AcornSprout : Aura
             .CompareTo(Vector2.Distance(targetApproach, b.GetApproachPoint(transform.position))));
 
         List<Insect> candidates = new List<Insect> { target };
-        int extra = Mathf.Min(others.Count, ConeMaxTargets - 1);
-        for (int i = 0; i < extra; i++) candidates.Add(others[i]);
+        candidates.AddRange(others);
 
-        float multiplier = Mathf.Max(0f, 1f - ConeFalloffPerTarget * (candidates.Count - 1));
-        float damage = armor * multiplier;
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            Insect insect = candidates[i];
+            float falloff = Mathf.Max(BashMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
+            insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter });
 
-        foreach (Insect insect in candidates)
-            insect.Damage(damage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter });
+            if (insect.IsAlive && IsPath2Maxed && Random.value < MaxLevelBashStunChance)
+                insect.ApplyEffect(new StunEffect(insect, BashStunDuration, 1, this));
+        }
     }
 
     public override void UpdateStats()
@@ -362,7 +565,7 @@ public class AcornSprout : Aura
         if (shieldPrefab == null) { _shieldOut = false; return; }
 
         GameObject obj = Instantiate(shieldPrefab, position, Quaternion.identity);
-        AcornSproutShield shield = obj.GetComponent<AcornSproutShield>();
+        AcornKnightShield shield = obj.GetComponent<AcornKnightShield>();
         if (shield == null) { _shieldOut = false; return; }
 
         shield.Initialize(shieldRadius, shieldHealth, skillDuration, this);
@@ -381,18 +584,19 @@ public class AcornSprout : Aura
         _reequipTimer = ShieldReequipDelay;
     }
 
-    public override string GetName() => $"<b><color=green>{(data != null ? data.displayName : "Acorn Sprout")}</color></b>";
+    public override string GetName() => $"<b><color=green>{(data != null ? data.displayName : "Acorn Knight")}</color></b>";
 
     public override string GetDescription() =>
         $"The {GetName()} is a melee tank with a sword and shield, raising its guard under pressure and able to hurl its shield to stun a target and block the path.";
 
     public override string GetAttackDescription() =>
-        $"Swings its sword in a semicircle toward its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to up to <color=green><b>{ConeMaxTargets}</b></color> insects: its target plus the nearest others on that side. Each insect beyond the first reduces the swing's damage on every target hit by <color=green><b>{ConeFalloffPerTarget * 100f:F0}%</b></color>.";
+        $"Whenever {GetName()} is not being targeted by a Physical damaging insect, it holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
+        $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword in a semi-circle, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects caught in the swing.";
 
     public override string GetPassiveDescription() =>
-        $"While an insect is currently targeting {GetName()} to deal Physical damage, it raises its guard: gaining <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}%</b></color> Attack Speed, and losing <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}%</b></color> Attack Range. " +
-        $"While guarding, its attack becomes an omnidirectional <color=green><b>Shield Bash</b></color> that scales with <color=#00CED1><b>Armor</b></color> instead of Attack Damage, hitting its target plus the up to <color=green><b>{ConeMaxTargets - 1}</b></color> insects closest to that target, within its own attack range. " +
-        $"The guard drops <color=green><b>{StanceExitDelay:F1}s</b></color> after no insect is targeting it that way anymore.";
+        $"{GetName()} regenerates <color=green><b>{BaseRegenPerSecond:F0}</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPerSecond:F0}</b></color> per second.\n\n" +
+        $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}%</b></color> Attack Speed and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}%</b></color> Attack Range.\n\n" +
+        $"While in <color=orange><b>Guard Stance</b></color>, its attacks become an omnidirectional <color=green><b>Shield Bash</b></color> dealing <color={PlantData.ElementalColor(elementalType)}><b>{armor * BashDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetSkillDesription() =>
         $"Fires the shield in a line toward the targeted point, up to <color=green><b>{ThrowRangeMultiplier:F1}x</b></color> melee range. It stops at the first insect hit, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> [<color=green><b>+{shieldFlatDamage:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} and stunning it for <color=green><b>{ShieldStunDuration:F1}s</b></color>. " +
@@ -405,7 +609,8 @@ public class AcornSprout : Aura
         float aspl = AcornData?.path1AttackSpeedPerLevel  ?? 0.05f;
         int   armorpl = AcornData?.path1ArmorPerLevel     ?? 4;
         string desc = details
-            ? $"Swings its sword in a semicircle toward its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to up to <color=green><b>{ConeMaxTargets}</b></color> insects (its target plus the nearest others on that side), with <color=green><b>{ConeFalloffPerTarget * 100f:F0}%</b></color> falloff per extra insect hit."
+            ? $"Whenever {GetName()} is not being targeted by a Physical damaging insect, it holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
+              $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword in a semi-circle through the side its target is on, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects caught in the swing, with <color=green><b>{ConeFalloffPerTarget * 100f:F0}%</b></color> falloff per extra insect hit down to a <color=green><b>{SwingMinDamageMultiplier * 100f:F0}%</b></color> minimum."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -419,15 +624,16 @@ public class AcornSprout : Aura
     public override string GetPath2Description(bool details = false)
     {
         float armorpl = AcornData?.path2DefensiveArmorPerLevel ?? 6f;
+        float bashDmgPl = AcornData?.path2BashDamagePercentPerLevel ?? 0.10f;
         string desc = details
-            ? $"While an insect is targeting {GetName()} to deal Physical damage, it raises its guard, gaining <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}%</b></color> Attack Speed, and losing <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}%</b></color> Attack Range. " +
-              $"Its attack becomes an omnidirectional Shield Bash scaling with <color=#00CED1><b>Armor</b></color> instead of Attack Damage, hitting its target plus the up to <color=green><b>{ConeMaxTargets - 1}</b></color> insects closest to that target within its own attack range, with the same falloff as the sword swing but no stun. The guard drops <color=green><b>{StanceExitDelay:F1}s</b></color> after no insect is targeting it that way anymore."
+            ? $"{GetName()} regenerates <color=green><b>{BaseRegenPerSecond:F0}</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPerSecond:F0}</b></color> per second.\n\n" +
+              $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}%</b></color> Attack Speed and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}%</b></color> Attack Range.\n\n" +
+              $"While in <color=orange><b>Guard Stance</b></color>, its attacks become an omnidirectional Shield Bash dealing <color={PlantData.ElementalColor(elementalType)}><b>[({(AcornData?.baseBashDamagePercent ?? 0.5f) * 100f:F0}%) + ({bashDmgPl * 100f:F0}%/Lvl.)] Armor</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetPassiveDescription();
-        // path 2's old max bonus (piercing bounce) no longer applies to a melee kit - pending a
-        // wide-arc-vs-bash-focused redesign (TREE PENDING), left honest here in the meantime
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase guard <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=green><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, "Max Level bonus pending redesign for the new kit.")}\n\n" +
+               $"Increase <color=green><b>Shield Bash</b></color> Armor scaling by <color=green><b>{bashDmgPl * 100f:F0}%</b></color> per level. [<color=green><b>+{bashDmgPl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(path2Level, $"<color=green><b>Shield Bash</b></color> gains a <color=green><b>{MaxLevelBashStunChance * 100f:F0}%</b></color> chance to inflict a <color=green><b>{BashStunDuration:F0}</b></color> second Stun on insects hit.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -440,7 +646,7 @@ public class AcornSprout : Aura
         float radiuspl  = AcornData?.path3RadiusPerLevel        ?? 0.15f;
         float durMP     = AcornData?.skillDurationMPMultiplier  ?? 0.10f;
         string skillMaxBonus = details
-            ? "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> inherits the Acorn Sprout's <color=#00CED1><b>Armor</b></color>."
+            ? "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> inherits the Acorn Knight's <color=#00CED1><b>Armor</b></color>."
             : $"Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> gains <color=#00CED1><b>{armor:F0} Base Armor</b></color>.";
         string desc = details
             ? $"Fires the shield in a line toward the targeted point, up to <color=green><b>{ThrowRangeMultiplier:F1}x</b></color> melee range, stopping at the first insect hit and dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> [<color=green><b>+{flatDmgPl:F0}/Lvl.</b></color>] {PlantData.DamageTypeLabel(damageType)}, stunning it for <color=green><b>{ShieldStunDuration:F1}s</b></color>. " +
