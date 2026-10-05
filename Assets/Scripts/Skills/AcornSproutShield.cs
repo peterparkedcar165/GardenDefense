@@ -4,9 +4,9 @@ using System.Collections.Generic;
 // the thrown shield, sitting on the path after its throw lands. clone of AcornBomb adapted for
 // Acorn Knight: no fall-from-sky animation and no impact burst (the throw's projectile already
 // dealt its hit and stun before this spawns), just hp, lifetime, taunt and path blocking, same as
-// the old bomb. kept as its own class rather than editing AcornBomb.cs, since that file is still
-// used by the live AcornSprout
-public class AcornSproutReworkShield : Minion
+// the old bomb. kept as its own class rather than editing AcornBomb.cs, which is now unused by
+// the live AcornSprout but left in place rather than deleted outright
+public class AcornSproutShield : Minion
 {
     private float radius;
     private Transform shadow;
@@ -17,7 +17,7 @@ public class AcornSproutReworkShield : Minion
     private float tauntTickTimer = 0f;
 
     // skill tree node unlock ids, kept identical to the old bomb's so existing skillPurchases
-    // on the cloned tree asset still resolve to a working node
+    // on the shared tree asset still resolve to a working node
     private const string GrassDotUnlock = "acorn_bomb_grass_dot";
     private const string MagicArmorUnlock = "acorn_bomb_magic_armor";
     private const float GrassDotTickInterval = 1f;
@@ -48,7 +48,7 @@ public class AcornSproutReworkShield : Minion
         return $"Blocks path while it lasts\nTime remaining: {Mathf.CeilToInt(remaining)}s";
     }
 
-    // called by AcornSproutRework immediately after Instantiate, once the throw has landed
+    // called by AcornSprout immediately after Instantiate, once the throw has landed
     public void Initialize(float radius, float maxHp, float lifespan, Plant source)
     {
         this.radius = radius;
@@ -180,7 +180,7 @@ public class AcornSproutReworkShield : Minion
     private void HandleHeal(EntityEventData data)
     {
         if (data.target != this) return;
-        AcornSproutRework knight = owner as AcornSproutRework;
+        AcornSprout knight = owner as AcornSprout;
         if (knight == null || !knight.IsPath3Maxed) return;
         lifetime += data.amount * 0.02f;
     }

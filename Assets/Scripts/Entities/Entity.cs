@@ -145,12 +145,16 @@ public abstract class Entity : MonoBehaviour
         if (data.source is Cactus cactus)
             insect.ApplyEffect(new PuncturedEffect(insect, cactus.passiveDuration, cactus.IsPath1Maxed ? 2 : 1, cactus));
 
-        // Ablaze procs off projectile OR melee attacks (but not, say, a passive aura tick) -
-        // Waterlily's path2-max splash counts too, since it deliberately tags itself Projectile
-        // for exactly this, and Bird of Paradise's melee attacks (tagged Melee) now qualify the
-        // same way. Floral Glow no longer procs off its bearer's own attacks - it's now its own
-        // orbiting projectile instead (see Calendula/CalendulaProjectile)
+        // Floral Glow and Ablaze proc off projectile OR melee attacks (but not, say, a passive
+        // aura tick) - Waterlily's path2-max splash counts too, since it deliberately tags itself
+        // Projectile for exactly this, and Bird of Paradise's melee attacks (tagged Melee) now
+        // qualify the same way. Tansy's own Floral Glow (the orbiting-projectile version) doesn't
+        // proc through here - it deals its damage directly off the projectile instead
         if (data.tags == null || !System.Array.Exists(data.tags, t => t == DamageTag.Projectile || t == DamageTag.Melee)) return;
+
+        FloralGlowEffect floralGlow = data.source.GetEffect<FloralGlowEffect>();
+        if (floralGlow != null)
+            floralGlow.Trigger(insect, effectiveness);
 
         AblazeEffect ablaze = data.source.GetEffect<AblazeEffect>();
         if (ablaze != null)
@@ -1228,6 +1232,100 @@ public abstract class Entity : MonoBehaviour
 
         _flashRenderer.material = _originalMaterial;
         _flashCoroutine = null;
+    }
+
+    // shared outline-highlight system (colored silhouette duplicates ringed around the main
+    // sprite) - used for selection, hover, and any plant/insect highlight (e.g. Begonia's green
+    // radius highlight, or a red highlight on the insect a plant is currently targeting).
+    // Plant/Insect each override GetMainRenderer() to point at their own specific sprite
+    private SpriteRenderer _cachedOutlineRenderer;
+    // named distinctly from AcornBomb/AcornSproutShield's own unrelated _outlineRenderers
+    // fields (hover outlines on those Minion-derived obstacles) - Unity logs a "same field name
+    // serialized multiple times" warning if a base and derived class share a field name, even
+    // when neither is actually [SerializeField]
+    private SpriteRenderer[] _highlightOutlineRenderers;
+    private bool _isHighlighted;
+    private const int OutlineCount = 8;
+    private const float OutlineWidth = 0.05f;
+
+    private static Material _outlineMaterial;
+    private static Material GetOutlineMaterial()
+    {
+        if (_outlineMaterial != null) return _outlineMaterial;
+        Shader shader = Shader.Find("Custom/SpriteSilhouette");
+        if (shader != null) _outlineMaterial = new Material(shader);
+        return _outlineMaterial;
+    }
+
+    protected virtual SpriteRenderer GetMainRenderer()
+    {
+        if (_cachedOutlineRenderer != null) return _cachedOutlineRenderer;
+        _cachedOutlineRenderer = GetComponentInChildren<SpriteRenderer>();
+        return _cachedOutlineRenderer;
+    }
+
+    protected void ResetOutlineRenderers()
+    {
+        if (_highlightOutlineRenderers != null)
+        {
+            foreach (var r in _highlightOutlineRenderers)
+                if (r != null) Destroy(r.gameObject);
+            _highlightOutlineRenderers = null;
+        }
+        _cachedOutlineRenderer = null;
+        _isHighlighted = false;
+    }
+
+    private void EnsureOutlineRenderers()
+    {
+        if (_highlightOutlineRenderers != null) return;
+        SpriteRenderer sr = GetMainRenderer();
+        if (sr == null) return;
+
+        _highlightOutlineRenderers = new SpriteRenderer[OutlineCount];
+        for (int i = 0; i < OutlineCount; i++)
+        {
+            float angle = i * (360f / OutlineCount) * Mathf.Deg2Rad;
+            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * OutlineWidth;
+
+            GameObject obj = new GameObject("Outline");
+            obj.transform.SetParent(sr.transform);
+            obj.transform.localPosition = offset;
+            obj.transform.localScale = Vector3.one;
+            obj.transform.localRotation = Quaternion.identity;
+            obj.layer = gameObject.layer;
+
+            SpriteRenderer outlineSR = obj.AddComponent<SpriteRenderer>();
+            outlineSR.sortingLayerID = sr.sortingLayerID;
+            outlineSR.sortingOrder = sr.sortingOrder - 1;
+            outlineSR.enabled = false;
+            Material mat = GetOutlineMaterial();
+            if (mat != null) outlineSR.material = mat;
+            _highlightOutlineRenderers[i] = outlineSR;
+        }
+    }
+
+    public virtual void SetHighlight(Color color)
+    {
+        EnsureOutlineRenderers();
+        if (_highlightOutlineRenderers == null) return;
+        SpriteRenderer sr = GetMainRenderer();
+        foreach (SpriteRenderer outline in _highlightOutlineRenderers)
+        {
+            if (outline == null) continue;
+            if (sr != null) outline.sprite = sr.sprite;
+            outline.color = color;
+            outline.enabled = true;
+        }
+        _isHighlighted = true;
+    }
+
+    public virtual void ClearHighlight()
+    {
+        if (!_isHighlighted || _highlightOutlineRenderers == null) return;
+        foreach (SpriteRenderer outline in _highlightOutlineRenderers)
+            outline.enabled = false;
+        _isHighlighted = false;
     }
 
     public void ShowHealthBar()

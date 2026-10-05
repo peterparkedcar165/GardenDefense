@@ -64,6 +64,8 @@ public abstract class Lobber : Plant
         }
     }
 
+    protected override GameObject GetHighlightTarget() => FindLobberTarget();
+
     protected virtual Vector3 GetLandingPosition(GameObject target)
     {
         Insect insect = target.GetComponent<Insect>();

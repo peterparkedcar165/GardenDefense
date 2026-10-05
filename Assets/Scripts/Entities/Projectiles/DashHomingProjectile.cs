@@ -95,7 +95,10 @@ public abstract class DashHomingProjectile : Projectile
         // same despawn rule every other projectile in the game uses now: gone once it leaves
         // the playable tile grid, regardless of how much back-and-forth dashing it took to get there
         if (!Tile.IsInsideGrid(transform.position))
+        {
+            OnBeforeDestroy();
             Destroy(gameObject);
+        }
     }
 
     private Insect FindNearestValidTarget()
@@ -200,6 +203,7 @@ public abstract class DashHomingProjectile : Projectile
 
         if (passesCompleted > piercing)
         {
+            OnBeforeDestroy();
             Destroy(gameObject);
             return;
         }
@@ -228,6 +232,9 @@ public abstract class DashHomingProjectile : Projectile
         }
 
         if (other.gameObject.CompareTag("Border"))
+        {
+            OnBeforeDestroy();
             Destroy(gameObject);
+        }
     }
 }

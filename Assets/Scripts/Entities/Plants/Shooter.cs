@@ -66,6 +66,8 @@ public abstract class Shooter : Plant
     protected abstract void Shoot(Vector3 target);
     protected virtual void OnShoot() {}
 
+    protected override GameObject GetHighlightTarget() => FindTarget();
+
     // opt out of the automatic once-per-Shoot() attack sound above, for plants (e.g. Sunflower's
     // triple shot) where a single Shoot() call can fire multiple projectiles and each one should
     // get its own sound instead - such plants play data.attackSound themselves per projectile

@@ -9,25 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d5a522a064968440a8c98088fd8998b, type: 3}
-  m_Name: CalendulaData
-  m_EditorClassIdentifier: Assembly-CSharp::CalendulaData
-  plantPrefab: {fileID: 2313208142184574248, guid: d754ad34374555643b41eeb79a822a40, type: 3}
+  m_Script: {fileID: 11500000, guid: aa4a3e76a45441d88ee040ae036dee7b, type: 3}
+  m_Name: TansyData
+  m_EditorClassIdentifier: Assembly-CSharp::TansyData
+  plantPrefab: {fileID: 2313208142184574248, guid: 7cb6ca6c9dfa4b2fb828ee37d8991bef, type: 3}
   icon: {fileID: 21300000, guid: e03661c495ef09249a4c5cef07bf5a92, type: 3}
-  plantName: Calendula
-  displayName: Calendula
+  plantName: Tansy
+  displayName: Tansy
   family: 7
   elementalType: 0
   damageType: 1
   sunCost: 105
   placementLimit: 0
   category: 0
-  skillTree: {fileID: 11400000, guid: 61c63633f98d4c5bacb804a5f7faa4de, type: 2}
+  skillTree: {fileID: 11400000, guid: c16817c593a04d3e849953ec987b7116, type: 2}
   fertilizerPossibleStats: 1a000000
   baseMaxHealth: 200
-  baseAttackDamage: 48
+  baseAttackDamage: 10
   baseMagicPower: 0
-  baseAttackSpeed: 0.15
+  baseAttackSpeed: 0.25
   baseAttackRange: 2.5
   baseAttackChargeTime: 0
   baseArmor: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
   baseSkillDuration: 15
   channelDuration: 0
   baseSkillRadius: 0
-  baseSkillDamageMultiplier: 0.25
+  baseSkillDamageMultiplier: 0.15
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
@@ -94,17 +94,20 @@ MonoBehaviour:
   impactSound:
     clips:
     - clip: {fileID: 8300000, guid: 214ad9e63942f6a40b433630ea6c6c17, type: 3}
-      volume: 0.1
+      volume: 0.052
       minPitch: 1.4
       maxPitch: 1.6
   skillSound:
-    clips: []
-  path1AttackDamagePerLevel: 5
-  path1FireDamagePerLevel: 0.01
+    clips:
+    - clip: {fileID: 8300000, guid: cc0a2fe1aef87d74cbcb62a4562f3187, type: 3}
+      volume: 0.136
+      minPitch: 1.4
+      maxPitch: 1.6
+  path1AttackDamagePerLevel: 1
+  path1AttackRangePerLevel: 0.2
   path2AttackRangePerLevel: 0.2
-  maxLevelFireDamageBonus: 0.06
+  baseDistanceBonusDamagePerRadius: 0.15
+  path2DistanceBonusDamagePerLevel: 0.075
   path3SkillDurationPerLevel: 2
-  floralGlowBaseDamageScaling: 0.1
-  floralGlowDamageScalingPerLevel: 0.02
-  floralGlowMaxLevelAttackSpeedBonus: 0.15
-  floralGlowProjectileSpeed: 6
+  floralGlowBaseDamage: 6
+  floralGlowDamagePerLevel: 1

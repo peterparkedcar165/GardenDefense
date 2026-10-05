@@ -353,18 +353,10 @@ MonoBehaviour:
   effectivePath3Level: 0
   path3Unlocked: 0
   mainRenderer: {fileID: 5898074862566098166}
-  projectilePrefab: {fileID: 7388594979766616069, guid: 03a502cc3f8834f848d54eaba677c39f, type: 3}
-  baseMaxRange: 0
-  maxRange: 0
-  basePiercing: 0
-  piercing: 0
-  piercingAdder: 0
-  stunChance: 0.25
-  stunDuration: 0.5
-  activeRadius: 0
-  activeDamageMultiplier: 1.5
-  acornBombHealth: 250
-  acornBombPrefab: {fileID: 3542048050096898586, guid: 6c61b21aac776a64287215483b0370cb, type: 3}
+  swordVisual: {fileID: 0}
+  shieldVisual: {fileID: 0}
+  shieldProjectilePrefab: {fileID: 0}
+  shieldPrefab: {fileID: 0}
 --- !u!58 &3849591162661420664
 CircleCollider2D:
   m_ObjectHideFlags: 0

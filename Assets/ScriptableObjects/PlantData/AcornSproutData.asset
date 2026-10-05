@@ -25,9 +25,9 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: 5b35df63d07143619c7e5ab5202c1e5d, type: 2}
   fertilizerPossibleStats: 1200000026000000
   baseMaxHealth: 250
-  baseAttackDamage: 36
+  baseAttackDamage: 32
   baseMagicPower: 0
-  baseAttackSpeed: 0.4
+  baseAttackSpeed: 0.6
   baseAttackRange: 3
   baseAttackChargeTime: 0
   baseArmor: 49
@@ -91,13 +91,21 @@ MonoBehaviour:
     clips: []
   skillSound:
     clips: []
-  stunChance: 0.35
-  stunDuration: 0.4
-  path1AttackDamagePerLevel: 6
-  path1AttackSpeedPerLevel: 0.06
+  coneFalloffPerTarget: 0.1
+  attackWindupTime: 0.1
+  baseDefensiveArmor: 20
+  path2DefensiveArmorPerLevel: 6
+  defensiveAttackSpeedPenalty: 0.3
+  defensiveAttackRangePenalty: 0.25
+  stanceExitDelay: 2.5
+  throwRangeMultiplier: 1.5
+  shieldThrowSpeed: 10
+  shieldStunDuration: 1.5
+  skillAttackSpeedBonus: 0.4
+  shieldReequipDelay: 1
+  path1AttackDamagePerLevel: 4
+  path1AttackSpeedPerLevel: 0.09
   path1ArmorPerLevel: 4
-  path2StunChancePerLevel: 0.03
-  path2StunDurationPerLevel: 0.2
   path3FlatDamagePerLevel: 30
   path3SkillDurationPerLevel: 2
   path3HealthPerLevel: 60

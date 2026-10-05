@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 5323638503433831762}
   - component: {fileID: 549939264595078635}
   - component: {fileID: 8549837532108992831}
-  - component: {fileID: 1142036615642768238}
+  - component: {fileID: 8048943759725189707}
   m_Layer: 3
-  m_Name: CalendulaProjectile
+  m_Name: FloralGlowProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,7 +153,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1142036615642768238
+--- !u!114 &8048943759725189707
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,11 +162,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7388594979766616069}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9f688db57f5b984baa07f4b20801b7c, type: 3}
+  m_Script: {fileID: 11500000, guid: f60c0c909f1f4d60a8f26e3ea6c58ed6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CalendulaProjectile
+  m_EditorClassIdentifier: Assembly-CSharp::FloralGlowProjectile
   hitParticlePrefab: {fileID: 4511358385442513055, guid: bcd34b388d815e04eb01f93e677c6bbe, type: 3}
   spriteDefaultFacingAngle: 180
+  speed: 8
 --- !u!1001 &6248306943653213208
 PrefabInstance:
   m_ObjectHideFlags: 0

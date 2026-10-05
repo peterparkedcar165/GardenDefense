@@ -135,6 +135,8 @@ public class BirdOfParadise : Aura
         }
     }
 
+    protected override GameObject GetHighlightTarget() => FindTarget();
+
     // called by Entity.HandleOnHitEffects for every landed hit (primary or cleave). applies the
     // on-hit package (see ApplyOnHitPackage), then tracks hits against this specific target for
     // Path2 max's every-Nth-hit extra proc
