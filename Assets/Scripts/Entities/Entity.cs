@@ -1251,7 +1251,7 @@ public abstract class Entity : MonoBehaviour
     // radius highlight, or a red highlight on the insect a plant is currently targeting).
     // Plant/Insect each override GetMainRenderer() to point at their own specific sprite
     private SpriteRenderer _cachedOutlineRenderer;
-    // named distinctly from AcornBomb/AcornKnightShield's own unrelated _outlineRenderers
+    // named distinctly from AcornShield/AcornKnightShield's own unrelated _outlineRenderers
     // fields (hover outlines on those Minion-derived obstacles) - Unity logs a "same field name
     // serialized multiple times" warning if a base and derived class share a field name, even
     // when neither is actually [SerializeField]

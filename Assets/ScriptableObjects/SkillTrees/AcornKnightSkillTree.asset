@@ -58,20 +58,20 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5a_bombgrassdot
-      nodeName: Thorned Husk
-      description: The <color=green><b>Acorn Knight</b></color> periodically deals <color=green><b>Grass Physical damage</b></color>, from the <color=green><b>Acorn Bomb</b></color>'s location within its taunt radius, equal to 25% of the <color=green><b>Acorn Bomb</b></color>'s <color=#00CED1><b>Armor</b></color>, every second.
+    - id: node5a_counterstance
+      nodeName: Vengeful Guard
+      description: While in <color=orange><b>Guard Stance</b></color>, taking <color=green><b>Physical</b></color> damage reduces <color=green><b>Attack Cooldown</b></color> by <color=green><b>0.2</b></color> seconds.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_bomb_grass_dot
-    - id: node5b_bombmagicarmor
-      nodeName: Reinforced Husk
-      description: The <color=green><b>Acorn Bomb</b></color> gains <color=green><b>100</b></color> <color=#FF69B4><b>Magic Armor</b></color>.
+      unlockId: acorn_counter_stance
+    - id: node5b_evasiveguard
+      nodeName: Evasive Guard
+      description: While in <color=orange><b>Guard Stance</b></color>, increase <color=green><b>Evasion</b></color> by <color=green><b>15%</b></color>.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_bomb_magic_armor
+      unlockId: acorn_evasive_guard
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown
@@ -116,18 +116,18 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node10a_stunspecialist
-      nodeName: Stun Specialist
-      description: <color=green><b>Attack Damage</b></color> increased by <color=green><b>50%</b></color>, <color=green><b>Total Attack Speed</b></color> reduced by <color=green><b>40%</b></color>, <color=green><b>Stun Chance</b></color> increased by <color=green><b>10%</b></color>. Attacks deal AoE damage within a <color=green><b>1.5</b></color> radius (<color=green><b>50%</b></color> of the original damage to secondary targets), and can also stun - if the main target gets stunned, all targets in the AoE get stunned too.
+    - id: node10a_cleavingswings
+      nodeName: Cleaving Strikes
+      description: Sword swings no longer lose <color=green><b>Damage</b></color> per extra insect hit.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_stun_specialist
-    - id: node10b_piercer
-      nodeName: Piercing Shot
-      description: '+<color=green><b>2</b></color> <color=green><b>Piercing</b></color>, +<color=green><b>12%</b></color> <color=green><b>Total Attack Speed</b></color>. Stunning insects take an additional <color=green><b>33%</b></color> damage from attacks.'
+      unlockId: acorn_cleaving_swings
+    - id: node10b_relentlessbash
+      nodeName: Relentless Bash
+      description: <color=green><b>Shield Bash</b></color> no longer loses <color=green><b>Damage</b></color> per extra insect hit.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: acorn_piercer
+      unlockId: acorn_relentless_bash
     ranksToUnlockNext: 1

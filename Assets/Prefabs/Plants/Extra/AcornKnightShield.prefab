@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8075440602679846077}
   - component: {fileID: 4744854626490557143}
   m_Layer: 0
-  m_Name: AcornBomb
+  m_Name: AcornKnightShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,9 +44,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3542048050096898586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e78bbb28c66d0a74fbed256d65780e75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AcornBomb
+  m_Script: {fileID: 11500000, guid: 85f9ac9e571ca684397fe0884b16b665, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::AcornKnightShield
   baseMaxHealth: 0
   baseAttackDamage: 0
   baseMagicPower: 0

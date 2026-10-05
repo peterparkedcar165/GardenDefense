@@ -440,7 +440,7 @@ public abstract class Plant : Entity, IAttackable
     public float baseSkillRadius, skillRadius, skillRadiusAdder, skillRadiusMultiplier;
     public float baseSkillDamageMultiplier, skillDamageMultiplier, skillDamageMultiplierAdder;
     public float baseSkillHealth, skillHealth;
-    public bool SkillReady => path3Unlocked && skillCooldownTimer <= 0 && !IsSilenced && !IsChanneling;
+    public virtual bool SkillReady => path3Unlocked && skillCooldownTimer <= 0 && !IsSilenced && !IsChanneling;
 
 
     [Header("Paths")]

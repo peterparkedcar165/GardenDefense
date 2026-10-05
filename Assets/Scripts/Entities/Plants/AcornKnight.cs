@@ -64,32 +64,43 @@ public class AcornKnight : Aura
 
     private bool _shieldOut;
     private float _reequipTimer;
-    private float shieldHealth, shieldRadius, shieldFlatDamage;
+    private float shieldHealth, shieldRadius;
+    // skill damage is a flat percent of Armor, no level scaling at all
+    private const float SkillDamageArmorPercent = 1.5f;
     private AcornKnightShield _activeShield;
 
     // passive regen, no level scaling at all: a slow trickle normally, picking up to a faster
     // rate once nothing has damaged the Knight for a while. reset on every hit regardless of
     // source/amount, via the shared OnEntityHit event (filtered to hits where this is the target)
     private float _noDamageTimer;
+    private float _regenTickTimer;
+    private const float RegenTickInterval = 1f;
 
-    // skill tree node unlock ids, kept from the old ranged kit so existing skillPurchases stay valid
-    public const string StunSpecialistUnlock = "acorn_stun_specialist";
-    public const string PiercerUnlock        = "acorn_piercer";
-    public const string InstantSkillUnlock   = "acorn_instant_skill";
+    // skill tree node unlock ids
+    public const string InstantSkillUnlock    = "acorn_instant_skill";
+    public const string CounterStanceUnlock   = "acorn_counter_stance";
+    public const string EvasiveGuardUnlock    = "acorn_evasive_guard";
+    public const string CleavingSwingsUnlock  = "acorn_cleaving_swings";
+    public const string RelentlessBashUnlock  = "acorn_relentless_bash";
 
     public float ConeFalloffPerTarget   => AcornData?.coneFalloffPerTarget   ?? 0.10f;
     public float AttackWindupTime       => AcornData?.attackWindupTime       ?? 0.1f;
     public float StanceExitDelay        => AcornData?.stanceExitDelay        ?? 1f;
-    public float ThrowRangeMultiplier   => AcornData?.throwRangeMultiplier   ?? 1.5f;
+    public float SkillThrowRange        => AcornData?.skillThrowRange       ?? 7.5f;
     public float ShieldThrowSpeed       => AcornData?.shieldThrowSpeed       ?? 10f;
     public float ShieldStunDuration     => AcornData?.shieldStunDuration     ?? 1.5f;
-    public float SkillAttackSpeedBonus  => AcornData?.skillAttackSpeedBonus  ?? 0.4f;
+    public float SkillAttackSpeedBonus =>
+        (AcornData?.baseSkillAttackSpeedBonus ?? 0.2f) + (AcornData?.path3AttackSpeedBonusPerLevel ?? 0.05f) * effectivePath3Level;
     public float ShieldReequipDelay     => AcornData?.shieldReequipDelay     ?? 1f;
 
     public float DefensiveArmor =>
         (AcornData?.baseDefensiveArmor ?? 20f) + (AcornData?.path2DefensiveArmorPerLevel ?? 6f) * effectivePath2Level;
     public float DefensiveAttackSpeedPenalty => AcornData?.defensiveAttackSpeedPenalty ?? 0.75f;
     public float DefensiveAttackRangePenalty => AcornData?.defensiveAttackRangePenalty ?? 0.25f;
+
+    // Path1's own Armor bonus (not Path2's Guard Stance bonus, which is already unavailable while
+    // the shield is out) - lost entirely for as long as the shield is out
+    public float AttackPathArmorBonus => (AcornData?.path1ArmorPerLevel ?? 4) * effectivePath1Level;
 
     // Shield Bash's own stun chance - max-level (Path2) only, see Level5Section in
     // GetPath2Description. flat, no per-level scaling, since it doesn't exist below max at all
@@ -100,11 +111,17 @@ public class AcornKnight : Aura
     public float BashDamagePercent =>
         (AcornData?.baseBashDamagePercent ?? 0.5f) + (AcornData?.path2BashDamagePercentPerLevel ?? 0.10f) * effectivePath2Level;
 
-    // flat passive regen, no level scaling at all - picks up to the boosted rate once nothing has
-    // damaged the Knight for RegenBoostDelay seconds
-    public float BaseRegenPerSecond => AcornData?.baseRegenPerSecond ?? 2f;
-    public float BoostedRegenPerSecond => AcornData?.boostedRegenPerSecond ?? 6f;
+    // percent of max health, ticking once per second, no level scaling at all - picks up to the
+    // boosted rate once nothing has damaged the Knight for RegenBoostDelay seconds
+    public float BaseRegenPercent => AcornData?.baseRegenPercentPerSecond ?? 0.01f;
+    public float BoostedRegenPercent => AcornData?.boostedRegenPercentPerSecond ?? 0.03f;
     public float RegenBoostDelay => AcornData?.regenBoostDelay ?? 6f;
+
+    // skill tree node 5a (Vengeful Guard): taking Physical damage while in Guard Stance refunds
+    // a slice of Attack Cooldown, rewarding tanking hits instead of just sitting on the bonus armor
+    public float CounterStanceCooldownReduction => AcornData?.counterStanceCooldownReduction ?? 0.2f;
+    // skill tree node 5b (Evasive Guard): flat Evasion while in Guard Stance
+    public float DefensiveEvasionBonus => AcornData?.defensiveEvasionBonus ?? 0.15f;
 
     // toggle target like any Shooter (Nearest/First/Last/Strongest), same UI affordance
     public override bool UsesTargeting => true;
@@ -115,6 +132,12 @@ public class AcornKnight : Aura
     public float SkillDurationMP => (AcornData?.skillDurationMPMultiplier ?? 0.10f) * magicPower;
 
     public bool IsDefensiveStance => !_shieldOut && _stanceExitTimer > 0f;
+
+    // cooldown starts the instant the shield is thrown (see OnTargetConfirmed), but the skill
+    // button must also stay locked out past that if the shield is still alive on the field -
+    // cooldown alone isn't enough once skill cooldown reduction (skill tree, etc) brings it below
+    // the shield's own lifetime
+    public override bool SkillReady => base.SkillReady && _activeShield == null;
 
     protected override void Awake()
     {
@@ -150,6 +173,9 @@ public class AcornKnight : Aura
     {
         if (data.target != this) return;
         _noDamageTimer = 0f;
+
+        if (IsDefensiveStance && data.damageType == DamageType.Physical && SkillTreeManager.HasUnlock(this, CounterStanceUnlock))
+            attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - CounterStanceCooldownReduction);
     }
 
     protected override void Update()
@@ -196,15 +222,24 @@ public class AcornKnight : Aura
             _stanceExitTimer -= dt;
     }
 
-    // flat regen, no level scaling: BaseRegenPerSecond normally, bumping up to
-    // BoostedRegenPerSecond once nothing has damaged the Knight for RegenBoostDelay seconds
-    // straight - reset on every hit via HandleAnyEntityHit, regardless of source or amount
+    // percent-of-max-health regen, no level scaling: BaseRegenPercent normally, bumping up to
+    // BoostedRegenPercent once nothing has damaged the Knight for RegenBoostDelay seconds
+    // straight - reset on every hit via HandleAnyEntityHit, regardless of source or amount.
+    // ticks once per RegenTickInterval (a real heal pulse, not a smooth per-frame trickle) - a
+    // while loop in case a single frame's dt ever spans more than one full tick (lag spike, very
+    // high game-speed multiplier)
     private void TickRegen(float dt)
     {
         if (!IsAlive) return;
         _noDamageTimer += dt;
-        float rate = _noDamageTimer >= RegenBoostDelay ? BoostedRegenPerSecond : BaseRegenPerSecond;
-        if (rate > 0f) Heal(rate * dt, this);
+        _regenTickTimer += dt;
+
+        while (_regenTickTimer >= RegenTickInterval)
+        {
+            _regenTickTimer -= RegenTickInterval;
+            float ratePercent = _noDamageTimer >= RegenBoostDelay ? BoostedRegenPercent : BaseRegenPercent;
+            if (ratePercent > 0f) Heal(maxHealth * ratePercent, this);
+        }
     }
 
     // an insect "engages in targeting" the Knight when its own live target resolves to this
@@ -376,6 +411,7 @@ public class AcornKnight : Aura
         Vector2 dir = new Vector2(Mathf.Cos(worldAngleRad), Mathf.Sin(worldAngleRad));
         Vector2 perp = new Vector2(-dir.y, dir.x);
         float halfWidth = SwingHitboxWidth * 0.5f;
+        bool noFalloff = SkillTreeManager.HasUnlock(this, CleavingSwingsUnlock);
 
         // snapshot first: Insect.Kill() removes the insect from allInsects synchronously, so
         // killing one with this very hit would otherwise mutate the list mid-foreach and throw,
@@ -390,7 +426,7 @@ public class AcornKnight : Aura
             float across = Vector2.Dot(toInsect, perp);
             if (Mathf.Abs(across) > halfWidth) continue;
 
-            float multiplier = Mathf.Max(SwingMinDamageMultiplier, 1f - ConeFalloffPerTarget * hit.Count);
+            float multiplier = noFalloff ? 1f : Mathf.Max(SwingMinDamageMultiplier, 1f - ConeFalloffPerTarget * hit.Count);
             hit.Add(insect);
             insect.Damage(attackDamage * multiplier, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
         }
@@ -462,11 +498,12 @@ public class AcornKnight : Aura
 
         List<Insect> candidates = new List<Insect> { target };
         candidates.AddRange(others);
+        bool noFalloff = SkillTreeManager.HasUnlock(this, RelentlessBashUnlock);
 
         for (int i = 0; i < candidates.Count; i++)
         {
             Insect insect = candidates[i];
-            float falloff = Mathf.Max(BashMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
+            float falloff = noFalloff ? 1f : Mathf.Max(BashMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
             insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter });
 
             if (insect.IsAlive && IsPath2Maxed && Random.value < MaxLevelBashStunChance)
@@ -487,12 +524,22 @@ public class AcornKnight : Aura
         if (_shieldOut) speedBonus += SkillAttackSpeedBonus;
 
         float rangeMultiplierDelta = defensive ? -DefensiveAttackRangePenalty : 0f;
+        // goes through armorAdder (bumped around base.UpdateStats(), same convention as every
+        // other temporary stat change here) rather than subtracting from the already-computed
+        // armor directly, so it composes correctly with armor from other sources instead of
+        // clobbering them
+        float armorAdderDelta = _shieldOut ? -AttackPathArmorBonus : 0f;
+        float evasionAdderDelta = (defensive && SkillTreeManager.HasUnlock(this, EvasiveGuardUnlock)) ? DefensiveEvasionBonus : 0f;
 
         attackSpeedTotalMultiplier += speedBonus;
         attackRangeTotalMultiplier += rangeMultiplierDelta;
+        armorAdder += armorAdderDelta;
+        evasionAdder += evasionAdderDelta;
         base.UpdateStats();
         attackSpeedTotalMultiplier -= speedBonus;
         attackRangeTotalMultiplier -= rangeMultiplierDelta;
+        armorAdder -= armorAdderDelta;
+        evasionAdder -= evasionAdderDelta;
 
         if (defensive)
             armor += Mathf.RoundToInt(DefensiveArmor);
@@ -512,38 +559,47 @@ public class AcornKnight : Aura
 
     public override void OnPath3Upgrade(int level)
     {
-        float flatDmgPerLevel = AcornData?.path3FlatDamagePerLevel    ?? 30f;
         float durPerLevel     = AcornData?.path3SkillDurationPerLevel ?? 2f;
         float hpPerLevel      = AcornData?.path3HealthPerLevel        ?? 50f;
-        float radiusPerLevel  = AcornData?.path3RadiusPerLevel        ?? 0.15f;
 
-        shieldFlatDamage  = flatDmgPerLevel * level;
         baseSkillDuration = data.baseSkillDuration + durPerLevel * level;
         shieldHealth      = data.baseSkillHealth   + hpPerLevel  * level;
-        shieldRadius      = data.baseSkillRadius   * (1f + radiusPerLevel * level);
+        shieldRadius      = data.baseSkillRadius; // flat, no longer scales with level
     }
 
-    // line skill shot: player aims a point (clamped to throw range), the shield is fired
-    // straight at it and stops at the first insect it touches (ShieldThrowProjectile has no
-    // piercing), or at the clamped point itself if it hits nothing
+    // line skill shot: player aims a point (clamped to SkillThrowRange, a flat distance
+    // independent of melee attackRange), the shield is fired straight at it and stops at the
+    // first insect it touches (ShieldThrowProjectile has no piercing), or at the clamped point
+    // itself (max range) if it hits nothing - either way it then falls to the ground there
     public override void ActivateSkill()
     {
         if (!SkillReady || _shieldOut) return;
-        float throwRange = attackRange * ThrowRangeMultiplier;
-        SkillTargetingManager.instance.BeginTargeting(throwRange, OnTargetConfirmed, transform.position, throwRange);
+        SkillTargetingManager.instance.BeginTargeting(SkillThrowRange, OnTargetConfirmed, transform.position, SkillThrowRange, asLine: true, lineWidth: GetProjectileLineWidth());
+    }
+
+    // reads straight off the projectile prefab's own CircleCollider2D so the targeting line always
+    // matches whatever the projectile's actual hit width is tuned to, rather than a second
+    // hardcoded number that can silently drift out of sync with it
+    private float GetProjectileLineWidth()
+    {
+        CircleCollider2D col = shieldProjectilePrefab != null ? shieldProjectilePrefab.GetComponent<CircleCollider2D>() : null;
+        return col != null ? col.radius * 2f : 0.08f;
     }
 
     private void OnTargetConfirmed(Vector3 position)
     {
         if (shieldProjectilePrefab == null) return;
 
-        float throwRange = attackRange * ThrowRangeMultiplier;
         Vector2 toTarget = (Vector2)position - (Vector2)transform.position;
-        Vector2 landPos = toTarget.magnitude > throwRange
-            ? (Vector2)transform.position + toTarget.normalized * throwRange
+        Vector2 landPos = toTarget.magnitude > SkillThrowRange
+            ? (Vector2)transform.position + toTarget.normalized * SkillThrowRange
             : (Vector2)position;
 
-        float damage = attackDamage + shieldFlatDamage;
+        // flat percent of current Armor, no level scaling - captured right now before _shieldOut
+        // flips true below, since Guard Stance's armor bonus (if currently up) drops out of armor
+        // the instant the shield is out, so reading it after that point would silently undercut
+        // the throw's own damage
+        float damage = armor * SkillDamageArmorPercent;
 
         GameObject obj = Instantiate(shieldProjectilePrefab, transform.position, Quaternion.identity);
         ShieldThrowProjectile proj = obj.GetComponent<ShieldThrowProjectile>();
@@ -552,6 +608,7 @@ public class AcornKnight : Aura
         SetFacing(landPos);
         _shieldOut = true;
         _shieldSwingTimer = SwingDuration;
+        skillCooldownTimer = skillCooldown; // cooldown starts the instant the shield is thrown
     }
 
     // called by the flying shield once it hits an insect or reaches its clamped landing point.
@@ -573,14 +630,15 @@ public class AcornKnight : Aura
         shield.OnShieldGone += HandleShieldGone;
     }
 
-    // cooldown starts only once the shield is actually gone (destroyed or expired), never on
-    // toggle or cast, then the re-equip delay holds the Knight in the shield-out state a little
-    // longer before it can enter defensive stance or lose the skill's attack speed bonus
+    // cooldown itself already started the instant the shield was thrown (see OnTargetConfirmed) -
+    // this just clears the active-shield reference (which SkillReady also gates on, so the skill
+    // stays locked out even if the cooldown already ran out while the shield was still up) and
+    // starts the re-equip delay, which holds the Knight in the shield-out state a little longer
+    // before it can enter defensive stance or lose the skill's attack speed bonus
     private void HandleShieldGone()
     {
         if (_activeShield != null) _activeShield.OnShieldGone -= HandleShieldGone;
         _activeShield = null;
-        skillCooldownTimer = skillCooldown;
         _reequipTimer = ShieldReequipDelay;
     }
 
@@ -594,14 +652,14 @@ public class AcornKnight : Aura
         $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword in a semi-circle, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects caught in the swing.";
 
     public override string GetPassiveDescription() =>
-        $"{GetName()} regenerates <color=green><b>{BaseRegenPerSecond:F0}</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPerSecond:F0}</b></color> per second.\n\n" +
+        $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
         $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}%</b></color> Attack Speed and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}%</b></color> Attack Range.\n\n" +
         $"While in <color=orange><b>Guard Stance</b></color>, its attacks become an omnidirectional <color=green><b>Shield Bash</b></color> dealing <color={PlantData.ElementalColor(elementalType)}><b>{armor * BashDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetSkillDesription() =>
-        $"Fires the shield in a line toward the targeted point, up to <color=green><b>{ThrowRangeMultiplier:F1}x</b></color> melee range. It stops at the first insect hit, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> [<color=green><b>+{shieldFlatDamage:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} and stunning it for <color=green><b>{ShieldStunDuration:F1}s</b></color>. " +
-        $"The shield then sits at the hit location for <color=green><b>{skillDuration:F1}</b></color> [<color=#FFB6C1><b>+{SkillDurationMP:F1}</b></color>] seconds, blocking and taunting insects, with <color=green><b>{shieldHealth:F0}</b></color> health. " +
-        $"While the shield is out, {GetName()} cannot guard, loses its guard's armor bonus, and gains <color=green><b>+{SkillAttackSpeedBonus * 100f:F0}%</b></color> Attack Speed.";
+        $"The {GetName()} throws his shield, stopping at the first insect hit and dealing <color={PlantData.ElementalColor(elementalType)}><b>{armor * SkillDamageArmorPercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} and stunning it for <color=green><b>{ShieldStunDuration:F1}s</b></color>. " +
+        $"The shield then sits at the hit location for <color=green><b>{skillDuration:F1}</b></color> [<color=#FFB6C1><b>+{SkillDurationMP:F1}</b></color>] seconds, blocking and taunting insects, with <color=green><b>{shieldHealth:F0}</b></color> health.\n\n" +
+        $"While the shield is out, {GetName()} cannot guard, loses <color=#00CED1><b>{AttackPathArmorBonus:F0} Armor</b></color>, and gains <color=green><b>+{SkillAttackSpeedBonus * 100f:F0}%</b></color> Attack Speed.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -626,7 +684,7 @@ public class AcornKnight : Aura
         float armorpl = AcornData?.path2DefensiveArmorPerLevel ?? 6f;
         float bashDmgPl = AcornData?.path2BashDamagePercentPerLevel ?? 0.10f;
         string desc = details
-            ? $"{GetName()} regenerates <color=green><b>{BaseRegenPerSecond:F0}</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPerSecond:F0}</b></color> per second.\n\n" +
+            ? $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
               $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}%</b></color> Attack Speed and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}%</b></color> Attack Range.\n\n" +
               $"While in <color=orange><b>Guard Stance</b></color>, its attacks become an omnidirectional Shield Bash dealing <color={PlantData.ElementalColor(elementalType)}><b>[({(AcornData?.baseBashDamagePercent ?? 0.5f) * 100f:F0}%) + ({bashDmgPl * 100f:F0}%/Lvl.)] Armor</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetPassiveDescription();
@@ -640,24 +698,22 @@ public class AcornKnight : Aura
 
     public override string GetPath3Description(bool details = false)
     {
-        float flatDmgPl = AcornData?.path3FlatDamagePerLevel    ?? 30f;
         float durpl     = AcornData?.path3SkillDurationPerLevel ?? 2f;
         float hppl      = AcornData?.path3HealthPerLevel        ?? 50f;
-        float radiuspl  = AcornData?.path3RadiusPerLevel        ?? 0.15f;
         float durMP     = AcornData?.skillDurationMPMultiplier  ?? 0.10f;
         string skillMaxBonus = details
             ? "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> inherits the Acorn Knight's <color=#00CED1><b>Armor</b></color>."
             : $"Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> gains <color=#00CED1><b>{armor:F0} Base Armor</b></color>.";
+        float aspl = AcornData?.path3AttackSpeedBonusPerLevel ?? 0.05f;
         string desc = details
-            ? $"Fires the shield in a line toward the targeted point, up to <color=green><b>{ThrowRangeMultiplier:F1}x</b></color> melee range, stopping at the first insect hit and dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> [<color=green><b>+{flatDmgPl:F0}/Lvl.</b></color>] {PlantData.DamageTypeLabel(damageType)}, stunning it for <color=green><b>{ShieldStunDuration:F1}s</b></color>. " +
-              $"The <color=green><b>Shield</b></color> then sits at the hit location for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> <color=#FFB6C1><b>[+{durMP * 100f:F0}% Magic Power]</b></color> seconds, blocking and taunting insects who stop at it. The <color=green><b>Shield</b></color> has <color=green><b>[({data.baseSkillHealth:F0}) + ({hppl:F0}/Lvl.)]</b></color> health."
+            ? $"The {GetName()} throws his shield, stopping at the first insect hit and dealing <color={PlantData.ElementalColor(elementalType)}><b>[{SkillDamageArmorPercent * 100f:F0}% Armor]</b></color> {PlantData.DamageTypeLabel(damageType)}, stunning it for <color=green><b>{ShieldStunDuration:F1}s</b></color>. " +
+              $"The <color=green><b>Shield</b></color> then sits at the hit location for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> <color=#FFB6C1><b>[+{durMP * 100f:F0}% Magic Power]</b></color> seconds, blocking and taunting insects who stop at it. The <color=green><b>Shield</b></color> has <color=green><b>[({data.baseSkillHealth:F0}) + ({hppl:F0}/Lvl.)]</b></color> health.\n\n" +
+              $"While the shield is out, {GetName()} cannot guard, loses <color=#00CED1><b>{AttackPathArmorBonus:F0} Armor</b></color>, and gains <color=green><b>[({(AcornData?.baseSkillAttackSpeedBonus ?? 0.2f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.)]</b></color> Attack Speed."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase impact damage by <color=green><b>{flatDmgPl:F0}</b></color> per level. [<color=green><b>+{flatDmgPl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Shield</b></color> lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Shield lifetime scaling: <color=#FFB6C1><b>{durMP * 100f:F0}%</b></color> Magic Power. [<color=#FFB6C1><b>+{SkillDurationMP:F1}s</b></color>]\n\n" +
                $"Increase <color=green><b>Shield</b></color> health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase <color=green><b>Shield</b></color> taunt radius by <color=green><b>{radiuspl * 100f:F0}%</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, skillMaxBonus)}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +

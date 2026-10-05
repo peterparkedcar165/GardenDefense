@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class AcornBomb : Minion
+public class AcornShield : Minion
 {
     private float aoeRadius;
     private float damage;
