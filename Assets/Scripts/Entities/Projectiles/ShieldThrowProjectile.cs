@@ -1,10 +1,8 @@
 using UnityEngine;
 
-// the shield in flight during Acorn Knight's skill. straight line to a fixed, already clamped
-// landing point, no homing and no piercing (deliberately not built on AcornProjectile, which
-// carries bounce/piercing logic this attack explicitly excludes). whatever it touches first, or
-// the landing point itself if it touches nothing, is where the shield comes to rest and spawns
-// AcornSproutReworkShield
+// the shield in flight during Acorn Sprout's skill. straight line to a fixed, already clamped
+// landing point, no homing and no piercing. whatever it touches first, or the landing point
+// itself if it touches nothing, is where the shield comes to rest and spawns AcornSproutShield
 public class ShieldThrowProjectile : Projectile
 {
     private Vector3 landPosition;
@@ -56,6 +54,7 @@ public class ShieldThrowProjectile : Projectile
         }
 
         onLanded?.Invoke(position, hitInsect);
+        OnBeforeDestroy();
         Destroy(gameObject);
     }
 }

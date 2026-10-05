@@ -134,6 +134,8 @@ public class Stargazer : Aura
         return go != null ? go.GetComponent<Insect>() : null;
     }
 
+    protected override GameObject GetHighlightTarget() => FacingTarget()?.gameObject;
+
     protected override void Attack()
     {
         base.Attack();   // resets the attack timer

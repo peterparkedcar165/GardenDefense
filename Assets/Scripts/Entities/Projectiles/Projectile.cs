@@ -38,6 +38,15 @@ public abstract class Projectile : MonoBehaviour
         this.elementalType = elementalType;
         this.source = source;
         this.spawnPosition = transform.position;
+
+        // Floral Glow: whichever plant currently carries it gets a fire trail on its own
+        // projectiles too, regardless of which plant's projectile this actually is - read
+        // generically off the effect rather than any particular plant's own particle setup.
+        // parented so it travels with the projectile; left to be destroyed along with it, same
+        // as any other purely cosmetic trail (only the one-shot hit burst below needs to outlive it)
+        GameObject flyPrefab = this.source?.GetEffect<FloralGlowEffect>()?.FlyParticlePrefab;
+        if (flyPrefab != null)
+            Instantiate(flyPrefab, transform.position, transform.rotation, transform);
     }
 
     protected virtual void Awake()
@@ -94,11 +103,36 @@ public abstract class Projectile : MonoBehaviour
         //EMPTY METHOD INTENTIONAL
     }
 
-    // hook for a subclass to detach/release a child effect (e.g. a particle trail) right before
-    // this projectile's GameObject is destroyed. Unity destroys children along with the parent,
-    // and OnDestroy() runs too late/unreliably to rescue them once that's already underway, so
-    // this fires first, while the hierarchy is still fully intact
-    protected virtual void OnBeforeDestroy() { }
+    // detaches every child particle system (a plant's own trail, Floral Glow's fly particle,
+    // etc.) right before this projectile's GameObject is destroyed, so each one survives and
+    // finishes fading out naturally instead of popping out of existence along with the parent.
+    // Unity destroys children together with the parent, and OnDestroy() runs too late/unreliably
+    // to rescue them once that's already underway, so this has to run first, while the hierarchy
+    // is still fully intact - every destroy call site in this file calls it for exactly that
+    // reason. still virtual so a subclass can extend it, but every projectile gets this for free
+    // now rather than needing its own copy
+    protected virtual void OnBeforeDestroy()
+    {
+        foreach (ParticleSystem trail in GetComponentsInChildren<ParticleSystem>())
+        {
+            // SetParent(null, true) would preserve world position by rewriting localScale to
+            // cancel out the parent's own scale - but a particle system using Local Scaling Mode
+            // reads localScale directly as its particle-size multiplier, so that rewrite would
+            // make every particle instantly snap to a smaller size the moment it detaches.
+            // reparenting with worldPositionStays: false leaves localScale untouched, so
+            // position/rotation have to be restored manually instead
+            Transform t = trail.transform;
+            Vector3 worldPos = t.position;
+            Quaternion worldRot = t.rotation;
+
+            t.SetParent(null, false);
+            t.position = worldPos;
+            t.rotation = worldRot;
+
+            trail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            Destroy(trail.gameObject, trail.main.startLifetime.constantMax);
+        }
+    }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
@@ -112,6 +146,7 @@ public abstract class Projectile : MonoBehaviour
                 if (hitCount == 2) projectileDamage *= 0.5f;
                 OnHit(insect);
                 PlayHitParticles();
+                PlayFloralGlowHitParticles();
 
                 trackedTarget = null;
                 trackedInsect = null;
@@ -140,6 +175,20 @@ public abstract class Projectile : MonoBehaviour
         if (hitParticlePrefab == null) return;
 
         GameObject obj = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
+        ParticleSystem ps = obj.GetComponent<ParticleSystem>();
+        float lifetime = ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f;
+        Destroy(obj, lifetime);
+    }
+
+    // Floral Glow: layered on top of whatever hit particle this projectile already has (if any),
+    // same one-shot/independent-of-the-projectile pattern as PlayHitParticles above - read
+    // generically off the effect, so it shows up regardless of which plant's projectile this is
+    private void PlayFloralGlowHitParticles()
+    {
+        GameObject prefab = source?.GetEffect<FloralGlowEffect>()?.HitParticlePrefab;
+        if (prefab == null) return;
+
+        GameObject obj = Instantiate(prefab, transform.position, Quaternion.identity);
         ParticleSystem ps = obj.GetComponent<ParticleSystem>();
         float lifetime = ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f;
         Destroy(obj, lifetime);

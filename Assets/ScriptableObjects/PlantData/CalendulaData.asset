@@ -25,9 +25,9 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: 61c63633f98d4c5bacb804a5f7faa4de, type: 2}
   fertilizerPossibleStats: 1a000000
   baseMaxHealth: 200
-  baseAttackDamage: 10
+  baseAttackDamage: 48
   baseMagicPower: 0
-  baseAttackSpeed: 0.25
+  baseAttackSpeed: 0.15
   baseAttackRange: 2.5
   baseAttackChargeTime: 0
   baseArmor: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
   baseSkillDuration: 15
   channelDuration: 0
   baseSkillRadius: 0
-  baseSkillDamageMultiplier: 0.15
+  baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
@@ -94,20 +94,17 @@ MonoBehaviour:
   impactSound:
     clips:
     - clip: {fileID: 8300000, guid: 214ad9e63942f6a40b433630ea6c6c17, type: 3}
-      volume: 0.052
+      volume: 0.1
       minPitch: 1.4
       maxPitch: 1.6
   skillSound:
-    clips:
-    - clip: {fileID: 8300000, guid: cc0a2fe1aef87d74cbcb62a4562f3187, type: 3}
-      volume: 0.136
-      minPitch: 1.4
-      maxPitch: 1.6
-  path1AttackDamagePerLevel: 1
-  path1AttackRangePerLevel: 0.2
+    clips: []
+  path1AttackDamagePerLevel: 5
+  path1FireDamagePerLevel: 0.01
   path2AttackRangePerLevel: 0.2
-  baseDistanceBonusDamagePerRadius: 0.15
-  path2DistanceBonusDamagePerLevel: 0.075
+  maxLevelFireDamageBonus: 0.06
   path3SkillDurationPerLevel: 2
-  floralGlowBaseDamage: 6
-  floralGlowDamagePerLevel: 1
+  floralGlowBaseDamageScaling: 0.1
+  floralGlowDamageScalingPerLevel: 0.02
+  floralGlowMaxLevelAttackSpeedBonus: 0.15
+  floralGlowProjectileSpeed: 6

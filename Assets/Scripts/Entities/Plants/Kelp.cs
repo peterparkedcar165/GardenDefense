@@ -126,6 +126,8 @@ public class Kelp : Aura
         }
     }
 
+    protected override GameObject GetHighlightTarget() => FindTarget();
+
     // fires on every attack hit: a burst of Oxygen to nearby plants (scaled by each receiving
     // plant's own Respiration, same as every other Oxygen-replenishing source), credited toward
     // Kelp's own cumulative-Oxygen Sun tracker via AccumulateOxygen

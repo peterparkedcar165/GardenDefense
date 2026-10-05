@@ -1,28 +1,31 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Calendula : Aura
 {
     private CalendulaData CData => data as CalendulaData;
-    [SerializeField] private GameObject orbitProjectilePrefab;
+    [SerializeField] private GameObject fireBurstPrefab;
 
-    // base attack: always-present orbiting projectile(s), see CalendulaProjectile. base count is 2,
-    // +1 (3 total) at Path1 max level, always evenly spaced (360/count degrees apart)
-    private readonly List<CalendulaProjectile> _orbitProjectiles = new List<CalendulaProjectile>();
-    private int AttackProjectileCount => IsPath1Maxed ? 3 : 2;
+    [Header("Floral Glow Delivery")]
+    // casting the skill no longer applies Floral Glow instantly - this is fired from Calendula at
+    // the targeted plant, and the buff is only granted once it actually arrives (see CastFloralGlow)
+    [SerializeField] private GameObject floralGlowProjectilePrefab;
 
-    // Floral Glow: the single projectile that currently orbits whichever plant has Floral Glow,
-    // plus its Path3-max second projectile. _floralGlowBearer tracks who it's orbiting (or heading
-    // toward) so Update() can notice when that plant dies or the effect lapses and call it home.
-    // _primaryQueued/_secondaryQueued track whether that slot's projectile was consumed and is
-    // sitting in the target's abstract wait queue (see OnFloralGlowProjectileQueued) - without
-    // this, UpdateFloralGlowProjectiles can't tell "queued, waiting for a slot" apart from "never
-    // spawned" and would otherwise spawn a brand new one every single frame forever
-    private CalendulaProjectile _floralGlowProjectile;
-    private CalendulaProjectile _floralGlowProjectileSecondary;
-    private bool _primaryQueued;
-    private bool _secondaryQueued;
-    private Plant _floralGlowBearer;
+    [Header("Floral Glow Particles")]
+    // whichever plant currently carries Floral Glow has these attached to its own projectiles
+    // (see Projectile.Initialize/OnTriggerEnter2D) - read generically off the FloralGlowEffect
+    // instance, so any plant's projectile can pick them up regardless of its own particle setup
+    [SerializeField] private GameObject floralGlowFlyParticlePrefab;
+    [SerializeField] private GameObject floralGlowHitParticlePrefab;
+    public GameObject FloralGlowFlyParticlePrefab => floralGlowFlyParticlePrefab;
+    public GameObject FloralGlowHitParticlePrefab => floralGlowHitParticlePrefab;
+
+    // floral glow's on hit damage scaling, 25% base, +5% per level, 50% at max level.
+    // Nurturing Glow trades 35% of this for a sustain heal on the target (see FloralGlowEffect)
+    public float FloralGlowDamageScaling =>
+        ((CData?.floralGlowBaseDamageScaling ?? 0.25f) + (CData?.floralGlowDamageScalingPerLevel ?? 0.05f) * effectivePath3Level)
+        * (SkillTreeManager.HasUnlock(this, NurturingGlowUnlock) ? 0.65f : 1f);
 
     public bool NurturingGlowActive => SkillTreeManager.HasUnlock(this, NurturingGlowUnlock);
 
@@ -72,70 +75,7 @@ public class Calendula : Aura
             path3Unlocked = true;
             OnPath3Unlock();
         }
-
-        EnsureOrbitProjectileCount();
     }
-
-    private CalendulaProjectile SpawnOrbitProjectile()
-    {
-        if (orbitProjectilePrefab == null) return null;
-        GameObject obj = Instantiate(orbitProjectilePrefab, transform.position, Quaternion.identity);
-        CalendulaProjectile proj = obj.GetComponent<CalendulaProjectile>();
-        proj?.InitializeOrbitingCalendula(this);
-        proj?.SetOrbitRadius(ClampedRadiusFor(this), snapImmediately: true);
-        return proj;
-    }
-
-    // adds/removes one projectile at a time to reach the desired count (Path1 reaching/losing max
-    // level) - CalendulaProjectile's own registry handles re-spacing the whole set evenly every
-    // time one is added or removed, including anyone else's Floral Glow projectiles also orbiting
-    // this Calendula, so there's no need to tear down and respawn everything here any more
-    private void EnsureOrbitProjectileCount()
-    {
-        int desired = AttackProjectileCount;
-        while (_orbitProjectiles.Count < desired)
-            _orbitProjectiles.Add(SpawnOrbitProjectile());
-        while (_orbitProjectiles.Count > desired)
-        {
-            int last = _orbitProjectiles.Count - 1;
-            if (_orbitProjectiles[last] != null) Destroy(_orbitProjectiles[last].gameObject);
-            _orbitProjectiles.RemoveAt(last);
-        }
-    }
-
-    // a plant's own raw toggled value, clamped live against ITS OWN current Attack Range so a
-    // skill tree respec (or attackRange simply changing) can't leave it stuck above MaxOrbitRadius
-    // without the UI being open to notice. used for whichever plant a projectile is actually
-    // orbiting, not necessarily Calendula herself
-    private static int ClampedRadiusFor(Plant plant) =>
-        plant != null ? Mathf.Clamp(plant.orbitRadius, 1, plant.MaxOrbitRadius) : 1;
-
-    // Path2 base effect: each integer of orbit radius above 1 increases damage by this much (base
-    // 6%, +1%/level) - a larger radius means slower revolutions (fewer hits/sec, see
-    // CalendulaProjectile) but each hit deals more, a risk/reward tradeoff tied to the radius toggle.
-    // applies to both the attack and the skill below, using whichever plant is actually being
-    // orbited's own radius setting - so the damage bonus always matches the radius it's visibly
-    // orbiting at, never Calendula's own setting when she's not the one being orbited
-    public float DistanceBonusDamagePerRadius =>
-        (CData?.baseDistanceBonusDamagePerRadius ?? 0.06f) + (CData?.path2DistanceBonusDamagePerLevel ?? 0.01f) * effectivePath2Level;
-
-    private float DistanceBonusMultiplier(Plant orbitedPlant) =>
-        1f + DistanceBonusDamagePerRadius * (ClampedRadiusFor(orbitedPlant ?? this) - 1);
-
-    // what Calendula's own attack projectile(s) deal on hit - attackDamage plus the live distance
-    // bonus above. orbitedPlant defaults to Calendula herself (the attack always orbits her), but
-    // tooltips may omit it to just preview off her own current radius setting
-    public float EffectiveAttackDamage(Plant orbitedPlant = null) => attackDamage * DistanceBonusMultiplier(orbitedPlant);
-
-    // Floral Glow's own independent damage, separate from the attack: a flat base plus a flat
-    // per-level amount (Path3), also scaled by the same distance bonus above - orbitedPlant should
-    // be the actual bearer at hit time, or omitted for a tooltip preview off Calendula's own radius
-    public float EffectiveSkillDamage(Plant orbitedPlant = null) =>
-        ((CData?.floralGlowBaseDamage ?? 20f) + (CData?.floralGlowDamagePerLevel ?? 5f) * effectivePath3Level) * DistanceBonusMultiplier(orbitedPlant);
-
-    // tagged Coordinated (see CalendulaProjectile), so Entity.Damage() applies this multiplier
-    // automatically at hit time - this is just the same number for display in tooltips
-    public float EffectiveSkillDamageCoordinated(Plant orbitedPlant = null) => EffectiveSkillDamage(orbitedPlant) * (1f + coordinatedDamage);
 
     private void HandlePlantPlaced(Plant plant)
     {
@@ -145,15 +85,16 @@ public class Calendula : Aura
 
     // applied once on placement, on reaching Path2 max, or whenever any new plant appears on
     // the field (via Plant.OnPlantPlaced) — not re-scanned every tick. removal is handled
-    // entirely by CalendulasLightEffect itself (PlantAuraBuffEffect base)
+    // entirely by CalendulasEmberEffect itself (PlantAuraBuffEffect base)
     private void ApplyAuraToAllInRange()
     {
         if (!IsPath2Maxed) return;
+        float fireDamageBonus = CData?.maxLevelFireDamageBonus ?? 0.06f;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
-            plant.ApplyEffect(new CalendulasLightEffect(plant, 1, this, lightEmissionRange, 0.15f));
+            plant.ApplyEffect(new CalendulasEmberEffect(plant, 1, this, lightEmissionRange, fireDamageBonus));
         }
     }
 
@@ -178,6 +119,7 @@ public class Calendula : Aura
     public override void UpdateStats()
     {
         baseLightEmissionRange = baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier);
+        coordinatedDamageAdder = IsPath1Maxed ? 0.15f : 0f;
 
         base.UpdateStats();
     }
@@ -186,21 +128,10 @@ public class Calendula : Aura
     {
         base.Update();
 
-        // Path1 max level: a third orbit projectile, all re-spaced evenly. spawned/removed lazily
-        // here so a respec or in-progress level up is picked up without any extra event plumbing
-        EnsureOrbitProjectileCount();
-
-        UpdateFloralGlowProjectiles();
-
-        // pushes each orbit's actual center's own radius toggle (clamped live) to its projectiles
-        // every frame - cheap, and means a live toggle (by Calendula for her own attack, or by the
-        // bearer for Floral Glow) or an attackRange change just takes effect on its own
-        int ownRadius = ClampedRadiusFor(this);
-        foreach (CalendulaProjectile proj in _orbitProjectiles)
-            proj?.SetOrbitRadius(ownRadius);
-        int bearerRadius = ClampedRadiusFor(_floralGlowBearer);
-        _floralGlowProjectile?.SetOrbitRadius(bearerRadius);
-        _floralGlowProjectileSecondary?.SetOrbitRadius(bearerRadius);
+        if (attackCooldownTimer < attackCooldown)
+            attackCooldownTimer += Time.deltaTime;
+        else if (!IsStunned && !IsChanneling && HasInsectsInRange())
+            Attack();
 
         bool borrowedLight = SkillTreeManager.HasUnlock(this, BorrowedLightUnlock);
 
@@ -268,20 +199,21 @@ public class Calendula : Aura
             }
         }
 
-        // Borrowed Light: independent of the Guiding Light/Radiant Aura fork, Calendula's Light
-        // (the Path2-max attack speed aura) also radiates from every current Floral Glow target
+        // Borrowed Light: independent of the Guiding Light/Radiant Aura fork, Calendula's Ember
+        // (the Path2-max Fire Damage aura) also radiates from every current Floral Glow target
         if (borrowedLight && IsPath2Maxed)
         {
             _borrowedLightTimer += Time.deltaTime;
             if (_borrowedLightTimer >= BorrowedLightInterval)
             {
                 _borrowedLightTimer = 0f;
+                float fireDamageBonus = CData?.maxLevelFireDamageBonus ?? 0.06f;
                 foreach (Plant glowTarget in GetFloralGlowTargets())
                 foreach (Plant plant in Plant.allPlants)
                 {
                     if (plant == null || !plant.IsAlive) continue;
                     if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
-                    plant.ApplyEffect(new CalendulasLightEffect(plant, 1, this, lightEmissionRange, 0.15f, glowTarget.transform));
+                    plant.ApplyEffect(new CalendulasEmberEffect(plant, 1, this, lightEmissionRange, fireDamageBonus, glowTarget.transform));
                 }
             }
         }
@@ -291,15 +223,8 @@ public class Calendula : Aura
             // resolved live from the tile (not a pinned instance), so if the target plant dies
             // and gets revived, the auto-cast picks the new instance back up on its own
             Plant currentTarget = Plant.GetPlantOnTile(autoCastTargetTile);
-            if (currentTarget != null && currentTarget.IsAlive && SkillReady)
-            {
-                int myLevel = effectivePath3Level + 1;
-                // filtered to THIS Calendula's own instance (see OnTargetConfirmed) - another
-                // Calendula's instance on the same target stacks additively, it never gets waited out
-                FloralGlowEffect existing = currentTarget.GetEffect<FloralGlowEffect>(this);
-                if (existing == null || existing.level <= myLevel)
-                    CastFloralGlow(currentTarget);
-            }
+            if (currentTarget != null && currentTarget.IsAlive && SkillReady && !HasForeignFloralGlow(currentTarget))
+                CastFloralGlow(currentTarget, effectivePath3Level + 1);
         }
 
         UpdateAutoCastHighlight();
@@ -331,11 +256,6 @@ public class Calendula : Aura
         base.OnDestroy();
         Plant.OnPlantPlaced -= HandlePlantPlaced;
         _autoCastHighlighted?.ClearHighlight();
-
-        foreach (CalendulaProjectile proj in _orbitProjectiles)
-            if (proj != null) Destroy(proj.gameObject);
-        if (_floralGlowProjectile != null) Destroy(_floralGlowProjectile.gameObject);
-        if (_floralGlowProjectileSecondary != null) Destroy(_floralGlowProjectileSecondary.gameObject);
     }
 
     // click Auto Cast to pick a target, click again to turn it off
@@ -353,11 +273,130 @@ public class Calendula : Aura
     private void OnAutoCastTargetConfirmed(Plant targetPlant)
     {
         if (targetPlant == null) return;
-        // can't lock auto-cast onto herself - silently ignore and keep waiting for a real target,
-        // as if nothing was clicked
-        if (targetPlant == this) { SkillTargetingManager.instance.BeginPlantTargeting(OnAutoCastTargetConfirmed, this); return; }
         autoCastEnabled = true;
         autoCastTargetTile = targetPlant.occupiedTile;
+    }
+
+    // drives both the visual burst's travel time (SpawnFireBurst) and how long the live damage
+    // sweep takes to expand from 0 to attackRange
+    private const float FireBurstLifetime = 0.3f;
+
+    protected override void Attack()
+    {
+        base.Attack();
+        SpawnFireBurst(transform.position, attackRange);
+
+        // snapshot only the damage values (so a mid-burst attackDamage change can't retroactively
+        // affect it), not the target list — who gets hit is decided live, frame by frame, below
+        float snapshotDamage = attackDamage;
+        DamageType snapshotDamageType = damageType;
+        ElementalType snapshotElementalType = elementalType;
+        StartCoroutine(SweepAttackDamage(snapshotDamage, snapshotDamageType, snapshotElementalType));
+    }
+
+    // each insect beyond the first hit by one sweep costs 10% damage, down to a floor of 40% -
+    // e.g. 1st insect = 100%, 2nd = 90%, 3rd = 80%, ... 7th+ = 40%. hit.Count at the moment an
+    // insect is reached is exactly how many were already hit before it this sweep, so it doubles
+    // as the falloff index with no separate counter needed
+    private const float MultiTargetDamageReductionPerInsect = 0.1f;
+    private const float MinMultiTargetDamageMultiplier = 0.4f;
+
+    // the fire spreads outward from Calendula over FireBurstLifetime. every frame, ANY insect
+    // currently within the growing radius is damaged — including one that wasn't even in range
+    // when the attack fired but wanders into the expanding burst zone partway through. each
+    // insect can only be hit once per attack
+    private IEnumerator SweepAttackDamage(float damage, DamageType dmgType, ElementalType elemType)
+    {
+        DamageTag[] tags = new DamageTag[] { DamageTag.AoE, DamageTag.Attack };
+        HashSet<Insect> hit = new HashSet<Insect>();
+        float elapsed = 0f;
+
+        while (elapsed < FireBurstLifetime)
+        {
+            float currentRadius = (elapsed / FireBurstLifetime) * attackRange;
+            foreach (Insect insect in new List<Insect>(Insect.allInsects))
+            {
+                if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
+                if (Vector3.Distance(transform.position, insect.transform.position) > currentRadius) continue;
+                float multiplier = Mathf.Max(MinMultiTargetDamageMultiplier, 1f - hit.Count * MultiTargetDamageReductionPerInsect);
+                hit.Add(insect);
+                insect.Damage(damage * multiplier, dmgType, elemType, this, true, tags);
+            }
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+
+        // catch anyone the wavefront should have reached by now but a frame gap missed
+        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        {
+            if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) > attackRange) continue;
+            float multiplier = Mathf.Max(MinMultiTargetDamageMultiplier, 1f - hit.Count * MultiTargetDamageReductionPerInsect);
+            hit.Add(insect);
+            insect.Damage(damage * multiplier, dmgType, elemType, this, true, tags);
+        }
+    }
+
+    // same fire burst visual used by the attack
+    private void SpawnFireBurst(Vector3 position, float radius, float particleScale = 1f)
+    {
+        if (fireBurstPrefab == null) return;
+        GameObject burst = Instantiate(fireBurstPrefab, position, Quaternion.identity);
+        ParticleSystem ps = burst.GetComponent<ParticleSystem>();
+        if (ps == null) return;
+
+        if (particleScale != 1f)
+        {
+            var emission = ps.emission;
+            int burstCount = emission.burstCount;
+            if (burstCount > 0)
+            {
+                ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[burstCount];
+                emission.GetBursts(bursts);
+                for (int i = 0; i < bursts.Length; i++)
+                {
+                    ParticleSystem.Burst b = bursts[i];
+                    b.count = new ParticleSystem.MinMaxCurve(b.count.constant * particleScale);
+                    bursts[i] = b;
+                }
+                emission.SetBursts(bursts);
+            }
+        }
+
+        const float lifetime = FireBurstLifetime;
+
+        var main = ps.main;
+        main.startLifetime = lifetime;
+        main.startSpeed = new ParticleSystem.MinMaxCurve(
+            radius * 0.7f / lifetime,
+            radius        / lifetime);
+
+        var lvol = ps.limitVelocityOverLifetime;
+        lvol.enabled = true;
+        lvol.separateAxes = false;
+        lvol.dampen = 0.4f;
+        AnimationCurve limitCurve = new AnimationCurve(
+            new Keyframe(0f,   1f, 0f, 0f),
+            new Keyframe(0.5f, 1f, 0f, 0f),
+            new Keyframe(1f,   0f, 0f, 0f)
+        );
+        lvol.limit = new ParticleSystem.MinMaxCurve(radius / lifetime, limitCurve);
+
+        var col = ps.colorOverLifetime;
+        col.enabled = true;
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] {
+                new GradientColorKey(Color.white, 0f),
+                new GradientColorKey(Color.white, 1f)
+            },
+            new GradientAlphaKey[] {
+                new GradientAlphaKey(1f, 0f),
+                new GradientAlphaKey(1f, 0.5f),
+                new GradientAlphaKey(0f, 1f)
+            }
+        );
+        col.color = new ParticleSystem.MinMaxGradient(gradient);
     }
 
     public override void ActivateSkill()
@@ -369,149 +408,56 @@ public class Calendula : Aura
     private void OnTargetConfirmed(Plant targetPlant)
     {
         if (targetPlant == null) return;
-        // can't cast Floral Glow on herself - silently ignore and keep targeting active, as if
-        // nothing was clicked (no cooldown spent, no retry message, just wait for a real target)
-        if (targetPlant == this) { SkillTargetingManager.instance.BeginPlantTargeting(OnTargetConfirmed, this); return; }
-        int myLevel = effectivePath3Level + 1;
-        // filtered to THIS Calendula's own instance - Floral Glow projectiles from different
-        // Calendulas (or a target's own base-attack orbit, if it's a Calendula) stack additively,
-        // so a stronger instance from someone else must never block this cast from landing too
-        FloralGlowEffect existing = targetPlant.GetEffect<FloralGlowEffect>(this);
-        if (existing != null && existing.level > myLevel)
+
+        // can't target a plant that's already glowing from another Calendula - the click simply
+        // doesn't go through, same as any other invalid target, and targeting stays open so the
+        // player can immediately pick a different plant without re-clicking the skill
+        if (HasForeignFloralGlow(targetPlant))
         {
             SkillTargetingManager.instance.BeginPlantTargeting(OnTargetConfirmed, this);
             return;
         }
-        CastFloralGlow(targetPlant);
+
+        CastFloralGlow(targetPlant, effectivePath3Level + 1);
+    }
+
+    private bool HasForeignFloralGlow(Plant plant)
+    {
+        FloralGlowEffect existing = plant.GetEffect<FloralGlowEffect>();
+        return existing != null && existing.source != this;
     }
 
     // shared by the manual skill cast and auto cast, does not reopen targeting on its own. the
-    // actual Floral Glow buff is NOT granted here - only once the projectile physically reaches
-    // the target and claims an orbit slot there (see GrantFloralGlowEffect), so the level it ends
-    // up applied at is whatever effectivePath3Level is at that later moment, not at cast time
-    private void CastFloralGlow(Plant targetPlant)
+    // buff is no longer granted here directly - a projectile is fired at the target instead, and
+    // FloralGlowProjectile.Arrive() is what actually applies it once it physically gets there
+    private void CastFloralGlow(Plant targetPlant, int level)
     {
         skillCooldownTimer = skillCooldown;
-        RetargetFloralGlowProjectiles(targetPlant);
-    }
 
-    // moves Floral Glow's projectile(s) onto their new bearer: spawned fresh the first time this
-    // Calendula ever casts the skill, or simply redirected in flight/orbit if it's being recast on
-    // a different plant - there is only ever one bearer (and its projectile(s)) at a time
-    private void RetargetFloralGlowProjectiles(Plant targetPlant)
-    {
-        if (_floralGlowProjectile == null)
-            _floralGlowProjectile = SpawnFloralGlowProjectile(targetPlant);
-        else
-            _floralGlowProjectile.TravelTo(targetPlant);
-
-        if (!IsPath3Maxed) return;
-        if (_floralGlowProjectileSecondary == null)
-            _floralGlowProjectileSecondary = SpawnFloralGlowProjectile(targetPlant);
-        else
-            _floralGlowProjectileSecondary.TravelTo(targetPlant);
-    }
-
-    private CalendulaProjectile SpawnFloralGlowProjectile(Plant target)
-    {
-        if (orbitProjectilePrefab == null) return null;
-        GameObject obj = Instantiate(orbitProjectilePrefab, transform.position, Quaternion.identity);
-        CalendulaProjectile proj = obj.GetComponent<CalendulaProjectile>();
-        proj?.InitializeAsFloralGlow(this, target);
-        proj?.SetOrbitRadius(ClampedRadiusFor(target), snapImmediately: true);
-        return proj;
-    }
-
-    // called by CalendulaProjectile the instant it actually claims an orbit slot on target - this
-    // is the only moment the Floral Glow buff is granted, never at cast time, since the projectile
-    // may still be traveling (or sitting in a full target's queue) for a while after the cast
-    public void GrantFloralGlowEffect(Plant target)
-    {
-        if (target == null || !target.IsAlive) return;
-        // already granted - the primary and secondary (Path3 max) projectiles travel in parallel
-        // and can both successfully claim a slot moments apart, which would otherwise re-apply
-        // (and re-trigger OnApply/the status popup) a second time for no reason
-        if (_floralGlowBearer == target) return;
-        _floralGlowBearer = target;
-        int myLevel = effectivePath3Level + 1;
-        target.ApplyEffect(new FloralGlowEffect(target, skillDuration, myLevel, this, this));
-    }
-
-    // called by a projectile right before it's consumed/destroyed because the target's orbit is
-    // full, so this Calendula knows which slot (primary/secondary) is now sitting in that target's
-    // abstract wait queue instead of just "missing" - critical so UpdateFloralGlowProjectiles can
-    // tell that apart from "never spawned" and doesn't spawn a new one every frame forever
-    public void OnFloralGlowProjectileQueued(CalendulaProjectile proj)
-    {
-        if (proj == _floralGlowProjectile) _primaryQueued = true;
-        else if (proj == _floralGlowProjectileSecondary) _secondaryQueued = true;
-    }
-
-    // a slot on target just freed up and was reserved for this Calendula's queued request - respawn
-    // a fresh projectile (the original was consumed/destroyed when it first found the target full)
-    // and send it there, filling whichever of the primary/secondary slots was the one queued
-    public void SpawnReservedFloralGlowProjectile(Plant target)
-    {
-        CalendulaProjectile proj = SpawnFloralGlowProjectile(target);
-        proj?.ReserveSlot();
-        if (_primaryQueued) { _primaryQueued = false; _floralGlowProjectile = proj; }
-        else { _secondaryQueued = false; _floralGlowProjectileSecondary = proj; }
-    }
-
-    // polls the current bearer every frame: if it died, or this Calendula's own instance of Floral
-    // Glow lapsed without a recast landing elsewhere, the projectile(s) fly home and self-destruct.
-    // also grants/revokes the Path3 max level second projectile lazily, same as Path1's
-    private void UpdateFloralGlowProjectiles()
-    {
-        if (_floralGlowBearer != null)
+        if (floralGlowProjectilePrefab == null)
         {
-            // filtered to THIS Calendula's own instance - with multiple sources now able to stack
-            // additively on the same target, the unfiltered GetEffect() could return a DIFFERENT
-            // Calendula's instance and wrongly conclude this one expired while it's still active
-            FloralGlowEffect active = _floralGlowBearer.IsAlive ? _floralGlowBearer.GetEffect<FloralGlowEffect>(this) : null;
-            if (active == null)
-            {
-                _floralGlowBearer = null;
-                _floralGlowProjectile?.ReturnHomeAndDestroy();
-                _floralGlowProjectile = null;
-                _floralGlowProjectileSecondary?.ReturnHomeAndDestroy();
-                _floralGlowProjectileSecondary = null;
-                // this Calendula no longer cares about either slot - any outstanding queue entries
-                // for them would otherwise sit around and get wastefully promoted later for nothing
-                _primaryQueued = false;
-                _secondaryQueued = false;
-            }
+            // safety fallback so the skill still does something if the delivery prefab hasn't
+            // been assigned yet, rather than silently consuming the cooldown for nothing
+            targetPlant.ApplyEffect(new FloralGlowEffect(targetPlant, skillDuration, level, this, this));
+            return;
         }
 
-        if (_floralGlowBearer == null) return;
-
-        if (IsPath3Maxed && _floralGlowProjectileSecondary == null && !_secondaryQueued)
-            _floralGlowProjectileSecondary = SpawnFloralGlowProjectile(_floralGlowBearer);
-        else if (!IsPath3Maxed && _floralGlowProjectileSecondary != null)
-        {
-            Destroy(_floralGlowProjectileSecondary.gameObject);
-            _floralGlowProjectileSecondary = null;
-        }
+        GameObject obj = Instantiate(floralGlowProjectilePrefab, transform.position, Quaternion.identity);
+        FloralGlowProjectile proj = obj.GetComponent<FloralGlowProjectile>();
+        proj?.Initialize(this, targetPlant, skillDuration, level, CData?.floralGlowProjectileSpeed ?? 8f);
     }
 
     public override void OnPath1Upgrade(int level)
     {
         baseAttackDamage = data.baseAttackDamage + (CData?.path1AttackDamagePerLevel ?? 5f)  * level;
-        RecomputeAttackRange();
+        baseFireDamage   = (CData?.path1FireDamagePerLevel ?? 0.05f) * level;
     }
 
     public override void OnPath2Upgrade(int level)
     {
-        RecomputeAttackRange();
+        baseAttackRange = data.baseAttackRange + (CData?.path2AttackRangePerLevel ?? 0.175f) * level;
         ApplyAuraToAllInRange();
     }
-
-    // attack range is now fed by both Path1 and Path2 - recomputed from both live effective levels
-    // whenever either one upgrades, so neither path's contribution can clobber the other's
-    private void RecomputeAttackRange() =>
-        baseAttackRange = data.baseAttackRange
-                         + (CData?.path1AttackRangePerLevel ?? 0.1f)   * effectivePath1Level
-                         + (CData?.path2AttackRangePerLevel ?? 0.175f) * effectivePath2Level;
 
     public override void OnPath3Unlock()
     {
@@ -524,34 +470,32 @@ public class Calendula : Aura
     }
 
     public override string GetName() => "<b><color=orange>Calendula</color></b>";
-    public override string GetDescription() => $"The {GetName()} is circled by an orbiting petal projectile and can summon one to infuse allies with fire energy.";
+    public override string GetDescription() => $"The {GetName()} periodically releases waves of flaming petals and can infuse allies with fire energy.";
     public override string GetPath1Name() => "Petals";
     public override string GetPath2Name() => "Illuminate";
     public override string GetPath3Name() => "Floral Glow";
 
     public override string GetAttackDescription()
-        => $"Two orbiting petal projectiles, evenly spaced, each deal <color={PlantData.ElementalColor(elementalType)}><b>{EffectiveAttackDamage():F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to any insect they pass through.";
+        => $"Releases flaming petals dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range. Each insect beyond the first hit reduces damage by <color=green><b>10%</b></color>, down to a minimum of <color=green><b>40%</b></color>.";
 
     public override string GetPassiveDescription() =>
         $"Illuminate the surrounding area allowing plants to see insects.\n\n" +
-        $"<color=green><b>Base Illumination Range</b></color> is equal to <color=green><b>Attack Range</b></color>.\n\n" +
-        $"The radius of the orbital may be toggled from <color=green><b>1</b></color> to <color=green><b>{MaxOrbitRadius}</b></color>.\n\n" +
-        $"For each integer of radius above 1, increase <color=orange><b>Attack</b></color> and <color=orange><b>Skill</b></color> damage by <color=green><b>{DistanceBonusDamagePerRadius * 100f:F0}%</b></color>.";
+        $"<color=green><b>Base Illumination Range</b></color> is equal to <color=green><b>Attack Range</b></color>.";
 
     public override string GetSkillDesription() =>
-        $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color>, summoning an orbiting petal projectile around it that deals <color={PlantData.ElementalColor(elementalType)}><b>{EffectiveSkillDamageCoordinated():F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, sourced from the {GetName()}, to anything it passes through. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>.";
+        $"Target a plant anywhere on the field, sending a petal to it that grants <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color> on arrival. The plant's projectile attacks deal an additional <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * FloralGlowDamageScaling:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>.";
 
     public override string GetPath1Description(bool details = false)
     {
-        float adpl    = CData?.path1AttackDamagePerLevel ?? 5f;
-        float rangepl = CData?.path1AttackRangePerLevel  ?? 0.1f;
+        float adpl   = CData?.path1AttackDamagePerLevel ?? 5f;
+        float firepl = CData?.path1FireDamagePerLevel    ?? 0.05f;
         string desc = details
-            ? $"Two orbiting petal projectiles, evenly spaced, each deal <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to any insect they pass through. Their orbit radius is a fixed, togglable value from <color=green><b>1</b></color> up to <color=green><b>{MaxOrbitRadius}</b></color> (Attack Range, rounded down), completing <color=green><b>[100% Attack Speed]</b></color> revolutions per second at a 1-radius - a wider radius means slower revolutions, not faster-moving projectiles."
+            ? $"Releases flaming petals dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range. Each insect beyond the first hit reduces damage by <color=green><b>10%</b></color>, down to a minimum of <color=green><b>40%</b></color>."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "A third petal projectile joins the orbit, all three staying evenly spaced.")}\n\n" +
+               $"Increase <color=orange><b>Fire Damage</b></color> by <color=green><b>{firepl * 100f:F0}%</b></color> per level. [<color=green><b>+{firepl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(path1Level, "Increase <color=#6495ED><b>Coordinated Damage</b></color> by <color=green><b>15%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -559,11 +503,10 @@ public class Calendula : Aura
     public override string GetPath2Description(bool details = false)
     {
         float rangepl = CData?.path2AttackRangePerLevel ?? 0.175f;
-        float distpl  = CData?.path2DistanceBonusDamagePerLevel ?? 0.01f;
-        string p2Bonus = "Plants within illumination range gain <color=orange><b>Calendula's Light</b></color>, increasing <color=green><b>Attack Speed</b></color> by <color=green><b>15%</b></color>.";
+        float fireDamageBonus = CData?.maxLevelFireDamageBonus ?? 0.06f;
+        string p2Bonus = $"Plants within illumination range gain <color=orange><b>Calendula's Ember</b></color>, increasing <color=orange><b>Fire Damage</b></color> by <color=green><b>{fireDamageBonus * 100f:F0}%</b></color>.";
         return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath2Level:F1}</b></color>]\n\n" +
-               $"Increase <color=green><b>Distance Bonus Damage</b></color> by <color=green><b>{distpl * 100f:F0}%</b></color> per level. [<color=green><b>+{distpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path2Level, p2Bonus)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -571,16 +514,18 @@ public class Calendula : Aura
 
     public override string GetPath3Description(bool details = false)
     {
-        float durpl = CData?.path3SkillDurationPerLevel ?? 2f;
-        float dmgpl = CData?.floralGlowDamagePerLevel ?? 5f;
+        float durpl  = CData?.path3SkillDurationPerLevel ?? 2f;
+        float dmgScalingBase = CData?.floralGlowBaseDamageScaling ?? 0.25f;
+        float dmgScalingPerLevel = CData?.floralGlowDamageScalingPerLevel ?? 0.05f;
+        float maxLevelASBonus = CData?.floralGlowMaxLevelAttackSpeedBonus ?? 0.15f;
         string desc = details
-            ? $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, summoning an orbiting petal projectile around it that deals <color={PlantData.ElementalColor(elementalType)}><b>[({CData?.floralGlowBaseDamage ?? 20f:F0}) + ({dmgpl:F0}/Lvl.)]</b></color> {PlantData.DamageTypeLabel(damageType)}, sourced from the {GetName()}, to anything it passes through - its orbit speed is driven by the <b>bearer's</b> Attack Speed instead of Calendula's. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>."
+            ? $"Target a plant anywhere on the field, sending a petal to it that grants <color=orange>Floral Glow</color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds on arrival. The plant's projectile attacks deal an additional <color=green><b>[({dmgScalingBase * 100f:F0}%) + ({dmgScalingPerLevel * 100f:F0}%/Lvl.) Attack Damage + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase <color=green><b>Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Attack Damage</b></color> scaling by <color=green><b>{dmgScalingPerLevel * 100f:F0}%</b></color> per level. [<color=green><b>+{dmgScalingPerLevel * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, "A second petal projectile orbits the bearer opposite the first, equidistant at all times.")}\n\n" +
+               $"{Level5Section(path3Level, $"<color=orange><b>Floral Glow</b></color> now also increases <color=green><b>Attack Speed</b></color> by <color=green><b>{maxLevelASBonus * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

@@ -189,11 +189,22 @@ public class Sunflower : Shooter
         }
         else
         {
+            Vector3 lastKnownPosition = lockedTarget != null ? lockedTarget.GetAimPoint() : transform.position;
+
             if (attackCircle != null) attackCircle.SetActive(true);
             BeginAnimatedAttackCharge(circleAnimator, AttackChargeTrigger, circleClipLength, () =>
             {
+                if (lockedTarget == null || !lockedTarget.IsAlive)
+                {
+                    GameObject replacement = FindTarget();
+                    Insect replacementInsect = replacement != null ? replacement.GetComponent<Insect>() : null;
+                    if (replacementInsect != null) lockedTarget = replacementInsect;
+                }
+                if (lockedTarget != null && lockedTarget.IsAlive)
+                    lastKnownPosition = lockedTarget.GetAimPoint();
+
                 Vector3 spawnPosition = attackCircle != null ? attackCircle.transform.position : transform.position;
-                FireProjectile(lockedTarget, spawnPosition, attackCircle);
+                FireProjectile(lockedTarget, spawnPosition, attackCircle, lastKnownPosition);
             });
         }
     }
@@ -206,9 +217,9 @@ public class Sunflower : Shooter
 
     // sourceCircle (if any) is deactivated the instant its bolt actually fires. fires at
     // lockedTarget directly rather than re-resolving FindTarget() here, so it keeps homing on the
-    // same insect regardless of range. the single-shot attack doesn't pass a fallbackPosition, so
-    // a dead target there still just skips the shot; the max-level sequence passes the target's
-    // last known position so it can fire there instead of nothing
+    // same insect regardless of range. both the single-shot and max-level sequence pass the
+    // target's last known position as a fallback, so a target that died mid-charge still fires
+    // there instead of the attack silently doing nothing
     private void FireProjectile(Insect lockedTarget, Vector3 spawnPosition, GameObject sourceCircle = null, Vector3? fallbackPosition = null)
     {
         if (sourceCircle != null) sourceCircle.SetActive(false);

@@ -433,6 +433,9 @@ MonoBehaviour:
   magicArmorTotalMultiplier: 1
   armorPenFlatTotalMultiplier: 1
   magicPenFlatTotalMultiplier: 1
+  baseInternalCooldown: 10
+  internalCooldownAdder: 0
+  internalCooldownMultiplier: 0
   internalCooldown: 1
   fireInternalCooldown: 0
   waterInternalCooldown: 0
@@ -442,6 +445,18 @@ MonoBehaviour:
   windInternalCooldown: 0
   freezeInternalCooldown: 0
   germinateInternalCooldown: 0
+  fireInternalCooldownAdder: 0
+  waterInternalCooldownAdder: 0
+  grassInternalCooldownAdder: 0
+  iceInternalCooldownAdder: 0
+  poisonInternalCooldownAdder: 0
+  windInternalCooldownAdder: 0
+  fireInternalCooldownMultiplier: 0
+  waterInternalCooldownMultiplier: 0
+  grassInternalCooldownMultiplier: 0
+  iceInternalCooldownMultiplier: 0
+  poisonInternalCooldownMultiplier: 0
+  windInternalCooldownMultiplier: 0
   elementalDebuffDuration: 6
   timeAlive: 0
   totalDamageDealt: 0
@@ -454,6 +469,7 @@ MonoBehaviour:
   allowedTiles: 0100000004000000
   targeting: 1
   prioritizeFlying: 0
+  orbitRadius: 1
   sunCost: 125
   baseSunCost: 0
   sunCostReductionAdder: 0
@@ -524,7 +540,10 @@ MonoBehaviour:
   effectivePath3Level: 0
   path3Unlocked: 0
   mainRenderer: {fileID: 7028219029107938175}
-  orbitProjectilePrefab: {fileID: 7388594979766616069, guid: 8a3ec53e6e054bf4295d3bfd8bc6c873, type: 3}
+  fireBurstPrefab: {fileID: 6584693673283434052, guid: fb0ccfed77477a746a1e147f8910a8c8, type: 3}
+  floralGlowProjectilePrefab: {fileID: 7388594979766616069, guid: 0cbf4ae5f35798444a06e5f339aa9843, type: 3}
+  floralGlowFlyParticlePrefab: {fileID: 4511358385442513055, guid: 4e585ec476fb0d74e82875f46665bd3a, type: 3}
+  floralGlowHitParticlePrefab: {fileID: 4511358385442513055, guid: bcd34b388d815e04eb01f93e677c6bbe, type: 3}
 --- !u!1 &6784474226973136681
 GameObject:
   m_ObjectHideFlags: 0

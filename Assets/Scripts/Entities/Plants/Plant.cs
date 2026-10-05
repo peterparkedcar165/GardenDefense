@@ -378,12 +378,12 @@ public abstract class Plant : Entity, IAttackable
     public bool prioritizeFlying = false;
     public virtual bool UsesFlyingToggle => false;
 
-    // fixed orbit radius toggle: available on every plant as long as Calendula is part of the
+    // fixed orbit radius toggle: available on every plant as long as Tansy is part of the
     // player's selected roster for this level (her orbit projectiles read the specific orbited
-    // plant's own toggle, not hers), not just on Calendula herself. cycles 1..MaxOrbitRadius,
+    // plant's own toggle, not hers), not just on Tansy herself. cycles 1..MaxOrbitRadius,
     // wrapping back to 1
     public int orbitRadius = 1;
-    public bool UsesRadiusToggle => SaveManager.instance != null && SaveManager.instance.selectedLoadout.Contains("Calendula");
+    public bool UsesRadiusToggle => SaveManager.instance != null && SaveManager.instance.selectedLoadout.Contains("Tansy");
     public virtual int MaxOrbitRadius => Mathf.Max(1, Mathf.FloorToInt(attackRange));
 
     // Burgeon plants that command minions: the info panel shows a "relocate formation" button,
@@ -560,6 +560,7 @@ public abstract class Plant : Entity, IAttackable
     {
         WeatherManager.OnWeatherAdded   -= HandleWeatherAdded;
         WeatherManager.OnWeatherRemoved -= HandleWeatherRemoved;
+        ClearTargetHighlight();
         allPlants.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this)
             PlantUpgradeUI.instance.HidePanel();
@@ -657,97 +658,81 @@ public abstract class Plant : Entity, IAttackable
     }
 
     [SerializeField] private SpriteRenderer mainRenderer;
-    private SpriteRenderer _cachedRenderer;
-    private SpriteRenderer[] _outlineRenderers;
-    private bool _isHighlighted;
     private bool _hoverHighlighted;
-    private const int OutlineCount = 8;
-    private const float OutlineWidth = 0.05f;
 
-    private static Material _outlineMaterial;
-    private static Material GetOutlineMaterial()
+    protected override SpriteRenderer GetMainRenderer() => mainRenderer != null ? mainRenderer : base.GetMainRenderer();
+
+    public override void SetHighlight(Color color)
     {
-        if (_outlineMaterial != null) return _outlineMaterial;
-        Shader shader = Shader.Find("Custom/SpriteSilhouette");
-        if (shader != null) _outlineMaterial = new Material(shader);
-        return _outlineMaterial;
-    }
-
-    protected virtual SpriteRenderer GetMainRenderer()
-    {
-        if (_cachedRenderer != null) return _cachedRenderer;
-        _cachedRenderer = mainRenderer ?? GetComponentInChildren<SpriteRenderer>();
-        return _cachedRenderer;
-    }
-
-    protected void ResetOutlineRenderers()
-    {
-        if (_outlineRenderers != null)
-        {
-            foreach (var r in _outlineRenderers)
-                if (r != null) Destroy(r.gameObject);
-            _outlineRenderers = null;
-        }
-        _cachedRenderer = null;
-        _isHighlighted = false;
-    }
-
-    private void EnsureOutlineRenderers()
-    {
-        if (_outlineRenderers != null) return;
-        SpriteRenderer sr = GetMainRenderer();
-        if (sr == null) return;
-
-        _outlineRenderers = new SpriteRenderer[OutlineCount];
-        for (int i = 0; i < OutlineCount; i++)
-        {
-            float angle = i * (360f / OutlineCount) * Mathf.Deg2Rad;
-            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * OutlineWidth;
-
-            GameObject obj = new GameObject("Outline");
-            obj.transform.SetParent(sr.transform);
-            obj.transform.localPosition = offset;
-            obj.transform.localScale = Vector3.one;
-            obj.transform.localRotation = Quaternion.identity;
-            obj.layer = gameObject.layer;
-
-            SpriteRenderer outlineSR = obj.AddComponent<SpriteRenderer>();
-            outlineSR.sortingLayerID = sr.sortingLayerID;
-            outlineSR.sortingOrder = sr.sortingOrder - 1;
-            outlineSR.enabled = false;
-            Material mat = GetOutlineMaterial();
-            if (mat != null) outlineSR.material = mat;
-            _outlineRenderers[i] = outlineSR;
-        }
-    }
-
-    public void SetHighlight(Color color)
-    {
-        EnsureOutlineRenderers();
-        if (_outlineRenderers == null) return;
-        SpriteRenderer sr = GetMainRenderer();
         bool targeting = SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsPlantTargeting;
         if (_isSelected || (_hoverHighlighted && !targeting))
             color = Color.white;
         else if (_hoverHighlighted && targeting)
             color = Color.yellow;
-        foreach (SpriteRenderer outline in _outlineRenderers)
-        {
-            if (outline == null) continue;
-            if (sr != null) outline.sprite = sr.sprite;
-            outline.color = color;
-            outline.enabled = true;
-        }
-        _isHighlighted = true;
+        base.SetHighlight(color);
     }
 
-    public void ClearHighlight()
+    public override void ClearHighlight()
     {
         if (_isSelected || _hoverHighlighted) return;
-        if (!_isHighlighted || _outlineRenderers == null) return;
-        foreach (SpriteRenderer outline in _outlineRenderers)
-            outline.enabled = false;
-        _isHighlighted = false;
+        base.ClearHighlight();
+    }
+
+    // every targeting plant (UsesTargeting == true) overrides this with whatever it would
+    // currently pick as its target, purely for display - a read-only query, no side effects, so
+    // it's safe to poll every frame while this plant is selected. returning null (the default)
+    // simply shows no target highlight, so a plant with no meaningful "current single target"
+    // concept (e.g. an AoE-only attacker) doesn't need to override it at all
+    protected virtual GameObject GetHighlightTarget() => null;
+
+    private Insect _highlightedTarget;
+
+    private void UpdateTargetHighlight()
+    {
+        if (!UsesTargeting) return;
+
+        Insect desired = null;
+        if (_isSelected)
+        {
+            GameObject targetObj = GetHighlightTarget();
+            Insect candidate = targetObj != null ? targetObj.GetComponent<Insect>() : null;
+            if (candidate != null && candidate.IsAlive) desired = candidate;
+        }
+
+        if (_highlightedTarget == desired) return;
+        if (_highlightedTarget != null) _highlightedTarget.ClearHighlight();
+        if (desired != null) desired.SetHighlight(Color.red);
+        _highlightedTarget = desired;
+    }
+
+    private void ClearTargetHighlight()
+    {
+        if (_highlightedTarget == null) return;
+        _highlightedTarget.ClearHighlight();
+        _highlightedTarget = null;
+    }
+
+    // generic left/right facing for every targeting plant: mirrors GetMainRenderer()'s sprite
+    // via flipX toward whatever GetHighlightTarget() currently resolves to, so no separate
+    // left/right art is needed. convention: a plant's unflipped art faces LEFT by default, and
+    // flipX mirrors it to face right - holds its last facing (no snap to default) when there's
+    // no current target, so it doesn't flicker when insects momentarily clear out of range
+    private const float FacingFlipThreshold = 0.01f;
+
+    private void UpdateFacingFlip()
+    {
+        if (!UsesTargeting) return;
+
+        GameObject targetObj = GetHighlightTarget();
+        if (targetObj == null) return;
+
+        Insect insect = targetObj.GetComponent<Insect>();
+        Vector2 targetPos = insect != null ? insect.GetApproachPoint(transform.position) : (Vector2)targetObj.transform.position;
+        float dx = targetPos.x - transform.position.x;
+        if (Mathf.Abs(dx) < FacingFlipThreshold) return;
+
+        SpriteRenderer sr = GetMainRenderer();
+        if (sr != null) sr.flipX = dx > 0f;
     }
 
     // lets another plant show/hide THIS plant's own range circle (e.g. Carrot highlighting its
@@ -853,6 +838,7 @@ public abstract class Plant : Entity, IAttackable
     {
         _isSelected = false;
         ClearHighlight();
+        ClearTargetHighlight();
         if (ShowRangeCircle && circleRadius != null)
             circleRadius.gameObject.SetActive(false);
         if (darkCircleRadius != null)
@@ -864,6 +850,8 @@ public abstract class Plant : Entity, IAttackable
     {
         base.Update();
         RecomputeEffectivePathLevels();
+        UpdateTargetHighlight();
+        UpdateFacingFlip();
 
         if (_light2D != null)
         {

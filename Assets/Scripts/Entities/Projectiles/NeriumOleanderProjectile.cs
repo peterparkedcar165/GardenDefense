@@ -86,11 +86,15 @@ public class NeriumOleanderProjectile : Projectile
                 BeginBouncePause(insect);
                 return;
             }
+            OnBeforeDestroy();
             Destroy(gameObject);
         }
 
         if (other.gameObject.CompareTag("Border"))
+        {
+            OnBeforeDestroy();
             Destroy(gameObject);
+        }
     }
 
     // hitting a sprout is free: it doesn't cost a bounce charge, and can be rebounced off of
@@ -131,7 +135,10 @@ public class NeriumOleanderProjectile : Projectile
             {
                 awaitingRetarget = false;
                 if (!RetargetNextBounce(pendingJustHit))
+                {
+                    OnBeforeDestroy();
                     Destroy(gameObject);
+                }
                 pendingJustHit = null;
                 pendingJustHitSprout = null;
             }

@@ -180,6 +180,8 @@ public abstract class Insect : Entity, IAttackable
     [SerializeField] protected Sprite spriteLeft;
     [System.NonSerialized] protected SpriteRenderer _spriteRenderer;
     protected bool _facingRight = true;
+
+    protected override SpriteRenderer GetMainRenderer() => _spriteRenderer != null ? _spriteRenderer : base.GetMainRenderer();
     private Vector3 _prevPosition;
     private Vector3 _spawnPosition;   // where it spawned; friendlies retreat here and despawn
 
