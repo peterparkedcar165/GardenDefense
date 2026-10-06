@@ -838,24 +838,30 @@ public abstract class Insect : Entity, IAttackable
         if (_plantAttackCooldown > 0)
             _plantAttackCooldown -= Time.deltaTime;
 
-        if (target == null) return;
-        if (!target.IsAlive) { RemoveEffect<TauntEffect>(); return; }
-        if (target is Insect ti && !CanReach(this, ti)) return;   // cannot hit a flyer it can't reach
+        // target is a computed property (re-derives from the current taunt/aggressivity/etc every
+        // single access, by design - see Attack()'s own comment on why), so it can legitimately
+        // return something different on back-to-back reads. cache it once here instead of reading
+        // it repeatedly through this method, otherwise a target that stops qualifying (taunt
+        // expiring, etc) between two of those re-evaluations can slip a null/dead reference past
+        // the checks below and crash on the next line that reads it
+        IAttackable currentTarget = target;
+        if (currentTarget == null) return;
+        if (!currentTarget.IsAlive) { RemoveEffect<TauntEffect>(); return; }
+        if (currentTarget is Insect ti && !CanReach(this, ti)) return;   // cannot hit a flyer it can't reach
         // a taunt/forced target can put a plant on unreachable terrain (e.g. highground) within
         // attackRange by sheer distance even though the insect can't actually stand there; block
         // the attack itself as a last line of defense on top of the movement-side obstacle blocking
-        if (target is Plant tp && !CanReachPlant(tp)) return;
+        if (currentTarget is Plant tp && !CanReachPlant(tp)) return;
         if (HasEffect<HardCrowdControl>()) return;
         if (attackSpeed <= 0) return;
 
-        float dist = Vector3.Distance(transform.position, target.GetApproachPoint(transform.position));
+        float dist = Vector3.Distance(transform.position, currentTarget.GetApproachPoint(transform.position));
         if (dist > attackRange) return;
 
         attackTimer += Time.deltaTime;
         if (attackTimer >= 1f / attackSpeed)
         {
             attackTimer = 0f;
-            IAttackable currentTarget = target;
             Attack();
             if (aggressivity == Aggressivity.Low && currentTarget is Plant)
                 _plantAttackCooldown = 4f;

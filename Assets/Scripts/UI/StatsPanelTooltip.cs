@@ -67,12 +67,9 @@ public class StatsPanelTooltip : MonoBehaviour
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("<size=+8><color=white><b><u>Core</u></b></color></size>");
+        // attack damage, armor, and (plant: attack speed/range | insect: movement speed/magic
+        // armor) now show in the icon row above (QuickStatRow) - not duplicated here
         ElemLine(sb, HealCol, "Max Health:", $"{e.maxHealth:F0}", e.maxHealth, e.baseMaxHealth);
-        ElemLine(sb, Grass, "Attack Damage:",  $"{e.attackDamage:F0}",  e.attackDamage,  e.baseAttackDamage);
-        ElemLine(sb, Grass, "Attack Speed:",   $"{e.attackSpeed:F2}",   e.attackSpeed,   e.baseAttackSpeed);
-        ElemLine(sb, Grass, "Attack Range:",   $"{e.attackRange:F1}",   e.attackRange,   e.baseAttackRange);
-        if (e is Insect insect)
-            Line(sb, "Move Speed:", $"{insect.movementSpeed:F2}", insect.movementSpeed, insect.baseMovementSpeed);
         ElemLine(sb, Crit, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
         ElemLine(sb, Crit, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
         ElemLine(sb, Effect, "Bonus Effect Chance:", $"{e.bonusEffectChance * 100:F0}%", e.bonusEffectChance, e.baseBonusEffectChance);
@@ -82,8 +79,9 @@ public class StatsPanelTooltip : MonoBehaviour
         sb.AppendLine();
         ElemLine(sb, Magic, "Magic Power:", $"{e.magicPower:F0}", e.magicPower, e.baseMagicPower);
         sb.AppendLine();
-        Line(sb, "<color=#00CED1>Armor:</color>",       $"{e.armor}",      e.armor,      e.baseArmor);
-        Line(sb, "<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
+        // Armor shows in the icon row for both plants and insects; Magic Armor only for insects
+        if (e is Plant)
+            Line(sb, "<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
         sb.AppendLine();
         ElemLine(sb, Physical, "Armor Penetration:",     $"{e.armorPenFlat:F0}",           e.armorPenFlat,    e.baseArmorPenFlat);
         ElemLine(sb, Physical, "Armor Shred:",       $"{e.armorPenPercent * 100:F0}%", e.armorPenPercent, e.baseArmorPenPercent);

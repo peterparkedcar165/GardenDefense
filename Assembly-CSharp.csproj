@@ -381,6 +381,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Cinderwisp.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aeonium.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreAuraEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\QuickStatRow.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleMarker.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OffPathSlownessEffect.cs" />
