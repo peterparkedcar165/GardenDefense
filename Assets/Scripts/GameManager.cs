@@ -99,6 +99,20 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause()
     {
+        // Level1PlantInfo pauses the game the moment it opens (see ProceduralLevel.Update) and
+        // blocks Start/Space outright for its entire run, with no exception page - the player
+        // gets control back only once its last page closes and currentId clears
+        if (TutorialManager.instance != null && TutorialManager.instance.IsTutorialActive(TutorialIds.Level1PlantInfo))
+            return;
+
+        // Level1StartLevel blocks Start/Space for every page except its last, which is itself
+        // waiting on this exact action (see TutorialContent.Level1StartLevel) - so only that
+        // page lets the toggle through, and announces the event on the way
+        if (TutorialManager.instance != null && TutorialManager.instance.IsTutorialActive(TutorialIds.Level1StartLevel)
+            && !TutorialManager.instance.IsWaitingForEvent(TutorialEvents.ClickStartLevelButton))
+            return;
+
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.ClickStartLevelButton);
         SetPause(!paused);
     }
 

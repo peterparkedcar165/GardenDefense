@@ -42,7 +42,6 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   flatPhysicalDamageReduction: 0
   threatValue: 1
@@ -50,7 +49,7 @@ MonoBehaviour:
   carryPriority: 0
   baseEvasion: 0
   baseAccuracy: 0
-  sunDrop: 7
+  sunDrop: 5
   sunDropAdder: 0
   sunDropMultiplier: 0
   currencyDrop: 0
@@ -60,3 +59,5 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  hitSound:
+    clips: []

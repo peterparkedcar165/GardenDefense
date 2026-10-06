@@ -5,6 +5,8 @@ public class PlantIconTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExi
 {
     public void OnPointerEnter(PointerEventData eventData)
     {
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.HoverPlantInfoIcon);
+
         Plant plant = PlantUpgradeUI.instance?.GetSelectedPlant();
         if (plant != null)
         {

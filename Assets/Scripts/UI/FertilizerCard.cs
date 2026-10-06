@@ -155,6 +155,7 @@ public class FertilizerCard : MonoBehaviour
             ui.CloseAfterSelect();
             return;
         }
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.SelectFertilizer);
         FertilizerManager.instance.Commit(data, rolledStats, rolledValues);
         ui.CloseAfterSelect();
     }

@@ -25,7 +25,10 @@ public class SkillTreePlantPanel : MonoBehaviour
 
     [Header("Node Building")]
     [SerializeField] private Transform nodesContainer;
-    [SerializeField] private SkillNodeButton nodeButtonPrefab;
+    // the prefab's root is now the SkillNode wrapper (SkillNode -> SkillNodeButton/Rank/Outline),
+    // not the SkillNodeButton component itself - a GameObject reference here instantiates the
+    // whole wrapper (and its siblings) instead of just the SkillNodeButton child's own subtree
+    [SerializeField] private GameObject nodeButtonPrefab;
     [SerializeField] private float stepSpacing = 24f;
     [SerializeField] private float forkNodeSpacing = 12f;
 
@@ -108,7 +111,8 @@ public class SkillTreePlantPanel : MonoBehaviour
 
             for (int nodeIndex = 0; nodeIndex < step.nodes.Count; nodeIndex++)
             {
-                SkillNodeButton button = Instantiate(nodeButtonPrefab, column.transform);
+                GameObject nodeObj = Instantiate(nodeButtonPrefab, column.transform);
+                SkillNodeButton button = nodeObj.GetComponentInChildren<SkillNodeButton>();
                 button.Init(SkillTreeUI.instance, tree, plantData.plantName, stepIndex, nodeIndex);
                 nodeButtons.Add(button);
             }

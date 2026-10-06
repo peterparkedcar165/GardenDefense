@@ -100,7 +100,7 @@ MonoBehaviour:
   levelText: {fileID: 1698944291893084702}
   pointsText: {fileID: 3057213249736345289}
   nodesContainer: {fileID: 811571970669445415}
-  nodeButtonPrefab: {fileID: 4188108065828233577, guid: 1a77a0f4d252e5441819275147520b2b, type: 3}
+  nodeButtonPrefab: {fileID: 4139720260956860737, guid: 1a77a0f4d252e5441819275147520b2b, type: 3}
   stepSpacing: 50
   forkNodeSpacing: 32
 --- !u!1 &820000986241993516

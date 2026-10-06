@@ -46,7 +46,9 @@ public class PlantBar : MonoBehaviour
         if (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
 
-        for (int i = 0; i < slots.Count && i < digitKeys.Length; i++)
+        bool tutorialActive = TutorialManager.instance != null && TutorialManager.instance.IsAnyTutorialActive;
+
+        for (int i = 0; i < slots.Count && i < digitKeys.Length && !tutorialActive; i++)
         {
             if (Keyboard.current[digitKeys[i]].wasPressedThisFrame)
                 slots[i].OnClicked();

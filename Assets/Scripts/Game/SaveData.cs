@@ -17,6 +17,11 @@ public class SaveData
     public int flowerPotLevel = 0;
     public int waterPotLevel  = 0;
 
+    // tutorial popup ids already shown to this save - each one only ever shows once. ids follow a
+    // "level{N}_{moment}" convention (e.g. "level1_plantselection") so they stay easy to tell
+    // apart as more get added - see TutorialIds
+    public List<string> seenTutorials = new List<string>();
+
     // plant slots unlock through level progression, not purchase: +1 slot (past the base 4) for
     // every 5 levels unlocked - level 6 unlocked (highestLevelUnlocked >= 5) grants slot 5, level
     // 11 (>= 10) grants slot 6, level 16 (>= 15) grants slot 7, level 21 (>= 20) grants slot 8,

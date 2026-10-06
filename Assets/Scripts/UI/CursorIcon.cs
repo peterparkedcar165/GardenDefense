@@ -76,7 +76,10 @@ public class CursorIcon : MonoBehaviour
             Collider2D hit = Physics2D.OverlapPoint(worldPosition);
             Tile tile = hit != null ? hit.GetComponent<Tile>() : null;
 
-            if (tile != null && cachedPlant != null && cachedRenderer != null && System.Array.IndexOf(cachedPlant.allowedTiles, tile.tileType) != -1)
+            bool tutorialBlocked = tile != null && cachedPlant != null && cachedPlant.data != null && cachedPlant.data.plantName == "AcornKnight"
+                && TutorialManager.instance != null && TutorialManager.instance.BlocksAcornKnightPlacement(tile.tileType);
+
+            if (tile != null && cachedPlant != null && cachedRenderer != null && !tutorialBlocked && System.Array.IndexOf(cachedPlant.allowedTiles, tile.tileType) != -1)
             {
                 Vector2 visualOffset = cachedRenderer.bounds.center - cachedPlant.transform.position;
                 Vector2 tileScreenPos = cam.WorldToScreenPoint((Vector2)tile.transform.position + visualOffset);

@@ -41,6 +41,9 @@ public class FertilizerSelectionUI : MonoBehaviour
         panel.transform.SetAsLastSibling();
         GameManager.instance.SetPause(true);
 
+        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 1)
+            TutorialManager.instance?.TryShow(TutorialIds.Level1FertilizerSelection, TutorialContent.Level1FertilizerSelection);
+
         ClearCards();
 
         List<FertilizerData> picks = PickRandom(fertilizerPool, fertilizerPool.Length);
@@ -121,6 +124,10 @@ public class FertilizerSelectionUI : MonoBehaviour
         {
             Time.timeScale = _timeScaleBeforeMidLevel;
             FertilizerQueueButton.instance?.Refresh();
+        }
+        else if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 1)
+        {
+            TutorialManager.instance?.TryShow(TutorialIds.Level1StartLevel, TutorialContent.Level1StartLevel);
         }
     }
 

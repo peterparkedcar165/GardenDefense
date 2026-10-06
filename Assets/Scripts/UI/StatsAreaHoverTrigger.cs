@@ -7,6 +7,7 @@ public class StatsAreaHoverTrigger : MonoBehaviour, IPointerEnterHandler, IPoint
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.HoverStatsPanel);
         if (statsPanels != null) statsPanels.SetActive(true);
     }
 

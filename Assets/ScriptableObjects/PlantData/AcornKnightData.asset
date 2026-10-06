@@ -30,7 +30,7 @@ MonoBehaviour:
   baseAttackSpeed: 1
   baseAttackRange: 1.75
   baseAttackChargeTime: 0
-  baseArmor: 32
+  baseArmor: 36
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
@@ -98,7 +98,7 @@ MonoBehaviour:
   coneFalloffPerTarget: 0.1
   attackWindupTime: 0.1
   baseDefensiveArmor: 20
-  path2DefensiveArmorPerLevel: 6
+  path2DefensiveArmorPerLevel: 7
   defensiveAttackSpeedPenalty: 0.75
   defensiveAttackRangePenalty: 0.25
   stanceExitDelay: 1

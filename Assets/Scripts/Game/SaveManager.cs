@@ -192,6 +192,12 @@ public class SaveManager : MonoBehaviour
             ResetAllSkillTrees();
             Debug.Log("Reset all skill trees and refunded skill points");
         }
+        if (UnityEngine.InputSystem.Keyboard.current.tKey.wasPressedThisFrame)
+        {
+            saveData.seenTutorials.Clear();
+            Save();
+            Debug.Log("Cleared all seen tutorials");
+        }
     }
 
     // refunds one plant's spent skill points (computed from its tree's own costPerRank * rank

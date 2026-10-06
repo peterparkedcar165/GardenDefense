@@ -88,6 +88,7 @@ public class PlantSelector : MonoBehaviour
             uprootMode    = false;
             flowerPotMode = false;
             waterPotMode  = false;
+            CursorManager.instance?.SetMode(CursorState.Default);
         }
 
         if (Keyboard.current.fKey.wasPressedThisFrame && SaveManager.instance?.saveData.flowerPotLevel > 0)

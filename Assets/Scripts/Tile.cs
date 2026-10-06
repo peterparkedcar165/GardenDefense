@@ -214,6 +214,13 @@ public class Tile : MonoBehaviour
             return;
         }
 
+        if (selectedPlant.data.plantName == "AcornKnight" && TutorialManager.instance != null
+            && TutorialManager.instance.BlocksAcornKnightPlacement(tileType))
+        {
+            Debug.Log("Tutorial: cannot place the Acorn Knight on this tile type right now");
+            return;
+        }
+
         int cost = SkillTreeManager.GetEffectiveSunCost(selectedPlant.data);
         Debug.Log("Cost of selected plant is: " + cost);
 
@@ -237,6 +244,14 @@ public class Tile : MonoBehaviour
             GetComponent<Collider2D>().enabled = false;
             selector.ClearSelection();
             Debug.Log("Spent " + cost);
+
+            if (selectedPlant.data.plantName == "AcornKnight")
+            {
+                if (tileType == TileType.Dirt)
+                    TutorialManager.instance?.NotifyEvent(TutorialEvents.PlaceAcornKnightOnDirt);
+                else if (tileType == TileType.Grass)
+                    TutorialManager.instance?.NotifyEvent(TutorialEvents.PlaceAcornKnightOnGrass);
+            }
         }
     }
 }
