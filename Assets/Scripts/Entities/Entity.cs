@@ -798,7 +798,7 @@ public abstract class Entity : MonoBehaviour
         source.RefreshCombatState();
         TriggerHitFlash();
         if (source is Plant impactPlant && impactPlant.data != null && System.Array.Exists(damageTag, t => t == DamageTag.Attack))
-            SfxPlayer.Play(impactPlant.data.impactSound, transform.position);
+            SfxPlayer.Play(impactPlant.data.hitSound, transform.position);
         if (this is Insect soundInsect && soundInsect.data != null && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
             SfxPlayer.Play(soundInsect.data.hitSound, transform.position);
         source.totalDamageDealt += finalDamage; // FOR DEBUG
@@ -919,6 +919,7 @@ public abstract class Entity : MonoBehaviour
         TickHealthBarFill();
         TickDamageChunkFill();
         _shieldJustExpired = false;
+        if (_isHighlighted) SyncHighlightOutline();
 
         // keep current health in sync when maxHealth changes (buffs, effects, etc.): a maxHealth
         // increase carries the same gain into current health (so e.g. a plant that only gains its
@@ -1338,6 +1339,25 @@ public abstract class Entity : MonoBehaviour
         foreach (SpriteRenderer outline in _highlightOutlineRenderers)
             outline.enabled = false;
         _isHighlighted = false;
+    }
+
+    // keeps the outline's sprite/orientation in sync with the main renderer every frame while
+    // highlighted - without this, flipping direction (Plant.UpdateFacingFlip's flipX) or
+    // swapping left/right sprites (insects) after SetHighlight() was first called left the
+    // outline showing the stale, pre-flip silhouette until the next hover/select toggle
+    // happened to refresh it
+    private void SyncHighlightOutline()
+    {
+        if (_highlightOutlineRenderers == null) return;
+        SpriteRenderer sr = GetMainRenderer();
+        if (sr == null) return;
+        foreach (SpriteRenderer outline in _highlightOutlineRenderers)
+        {
+            if (outline == null) continue;
+            outline.sprite = sr.sprite;
+            outline.flipX = sr.flipX;
+            outline.flipY = sr.flipY;
+        }
     }
 
     public void ShowHealthBar()

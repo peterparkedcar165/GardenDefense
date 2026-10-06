@@ -504,7 +504,7 @@ public class AcornKnight : Aura
         {
             Insect insect = candidates[i];
             float falloff = noFalloff ? 1f : Mathf.Max(BashMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
-            insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter });
+            insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter, DamageTag.PassiveDamage });
 
             if (insect.IsAlive && IsPath2Maxed && Random.value < MaxLevelBashStunChance)
                 insect.ApplyEffect(new StunEffect(insect, BashStunDuration, 1, this));

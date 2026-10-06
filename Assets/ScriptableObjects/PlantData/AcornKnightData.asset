@@ -87,8 +87,12 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
-    clips: []
+  hitSound:
+    clips:
+    - clip: {fileID: 8300000, guid: 248877fbfe959d64ba85264a178e91b8, type: 3}
+      volume: 0.5
+      minPitch: 1
+      maxPitch: 1.5
   skillSound:
     clips: []
   coneFalloffPerTarget: 0.1

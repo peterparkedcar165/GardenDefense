@@ -413,7 +413,7 @@ public class TansyProjectile : MonoBehaviour
         // is deliberately tagged SkillDamage instead (so it doesn't also pull in unrelated Attack-tag
         // side effects like the Symbiosis/Wither cooldown-reduction passive) - so it's played here
         // directly instead, to keep particles and sound identical between the attack and the skill
-        if (_isSkillMode) SfxPlayer.Play(_tansy.data?.impactSound, transform.position);
+        if (_isSkillMode) SfxPlayer.Play(_tansy.data?.hitSound, transform.position);
         PlayHitParticles();
     }
 

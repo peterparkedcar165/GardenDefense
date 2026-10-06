@@ -58,12 +58,6 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private RectTransform tempMinIndicator;
     [SerializeField] private RectTransform tempMaxIndicator;
 
-    [Header("Stats (shared)")]
-    [SerializeField] private TMP_Text stat1Text;
-    [SerializeField] private TMP_Text stat2Text;
-    [SerializeField] private TMP_Text stat3Text;
-    [SerializeField] private TMP_Text stat4Text;
-
     [Header("Upgrades Section")]
     [SerializeField] private GameObject upgradesSection;
 
@@ -198,7 +192,6 @@ public class PlantUpgradeUI : EntityInfoPanel
 
         if (upgradesSection != null) upgradesSection.SetActive(true);
         if (healthBarRoot != null)   healthBarRoot.SetActive(true);
-        if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
         if (targetingToggleButton != null)
             targetingToggleButton.gameObject.SetActive(plant.UsesTargeting);
         if (targetingModeText != null)
@@ -249,7 +242,6 @@ public class PlantUpgradeUI : EntityInfoPanel
             radiusToggleButton.gameObject.SetActive(false);
         if (autoCastButton != null)
             autoCastButton.gameObject.SetActive(false);
-        if (stat4Text != null)       stat4Text.gameObject.SetActive(false);
 
         panel.SetActive(true);
         ApplyElementalTheme(ElementalType.Neutral);
@@ -289,9 +281,6 @@ public class PlantUpgradeUI : EntityInfoPanel
 
         if (selectedPlant != null)
         {
-            stat1Text.text = $"ATK: {selectedPlant.attackDamage:F0}";
-            stat2Text.text = $"SPD: {selectedPlant.attackSpeed:F2}";
-            stat3Text.text = $"RNG: {selectedPlant.attackRange:F1}";
             RefreshHealthBar();
             RefreshTemperatureBar(selectedPlant);
         }
@@ -301,9 +290,6 @@ public class PlantUpgradeUI : EntityInfoPanel
             entityNameText.text = string.IsNullOrEmpty(desc)
                 ? selectedInsect.GetName()
                 : $"{selectedInsect.GetName()}\n<size=70%><color=grey>{desc}</color></size>";
-            stat1Text.text = $"ATK: {selectedInsect.attackDamage:F0}";
-            stat2Text.text = $"SPD: {selectedInsect.movementSpeed:F2}";
-            stat3Text.text = $"SUN: {selectedInsect.sunDrop}";
             RefreshHealthBar();
         }
     }

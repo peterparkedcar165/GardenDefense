@@ -23,6 +23,7 @@ public class WaveDefinition
 public class SubWaveDefinition
 {
     [Tooltip("computed automatically (see LevelConfig.OnValidate): the last spawn in this sub-wave's finish time, plus delay before next. the next sub-wave starts after this many seconds")]
+    [InspectorName("Sub Wave Duration (Auto)")]
     public float subWaveDuration;
 
     public WaveSpawnEntry[] spawns;

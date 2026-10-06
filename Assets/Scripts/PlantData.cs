@@ -120,7 +120,8 @@ public class PlantData : ScriptableObject
     [Tooltip("played when this plant unleashes its attack (shot fired, melee swing, lob thrown)")]
     public SoundEffect attackSound;
     [Tooltip("played on the target when this plant's attack actually lands on it")]
-    public SoundEffect impactSound;
+    [FormerlySerializedAs("impactSound")]
+    public SoundEffect hitSound;
     [Tooltip("played when this plant's skill is activated (every plant should have one)")]
     public SoundEffect skillSound;
 

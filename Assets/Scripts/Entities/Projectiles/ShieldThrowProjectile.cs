@@ -49,7 +49,7 @@ public class ShieldThrowProjectile : Projectile
 
         if (hitInsect != null)
         {
-            hitInsect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Attack, DamageTag.Projectile, DamageTag.SingleTarget });
+            hitInsect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.SkillDamage, DamageTag.Projectile, DamageTag.SingleTarget });
             PlaySound(hit);
         }
 
