@@ -1145,10 +1145,12 @@ public abstract class Plant : Entity, IAttackable
         Debug.Log("Uprooted " + GetName() + " and refunded " + (int)(totalSunSpent * refundRate));
         GameManager.instance.UpdateSun();
         BankExp();
+        if (data.plantName == "AcornKnight" && occupiedTile.tileType == TileType.Dirt)
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.UprootAcornKnightFromDirt);
         // need some sound effects eventually
         occupiedTile.isOccupied = false;
         occupiedTile.GetComponent<Collider2D>().enabled = true;
-        PlantSelector.instance.uprootMode = false;
+        PlantSelector.instance.SetUprootMode(false);
         PlantUpgradeUI.instance.HidePanel();
         DetachAndFadeLight();
         Destroy(gameObject);
@@ -1330,6 +1332,8 @@ public abstract class Plant : Entity, IAttackable
             Uproot();
             return;
         }
+        if (data.plantName == "AcornKnight")
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.ClickPlacedAcornKnight);
         PlantUpgradeUI.instance.ShowPanel(this);
     }
 

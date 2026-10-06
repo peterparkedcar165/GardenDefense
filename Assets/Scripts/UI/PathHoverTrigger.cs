@@ -31,6 +31,7 @@ public class PathHoverTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExi
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovering = true;
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.HoverPlantPath);
     }
 
     public void OnPointerExit(PointerEventData eventData)

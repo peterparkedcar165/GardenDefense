@@ -200,6 +200,9 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (selectedLoadout.Contains(plantName) || selectedLoadout.Count >= SaveManager.instance.saveData.MaxLoadoutSize) return;
         selectedLoadout.Add(plantName);
         RefreshUI();
+
+        if (plantName == "AcornKnight")
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.SelectAcornKnightSlot);
     }
 
     private void OnSelectedSlotClicked(string plantName)
@@ -210,6 +213,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     public void Confirm()
     {
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.ClickConfirmButton);
         SaveManager.instance.selectedLoadout = new List<string>(selectedLoadout);
         panel.SetActive(false);
         HideTooltip();
@@ -218,6 +222,9 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     private void ShowTooltip(PlantData data)
     {
+        if (data.plantName == "AcornKnight")
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.HoverAcornKnightSlot);
+
         if (tooltipPanel == null) return;
         tooltipPanel.SetActive(true);
         Plant prefab = data.plantPrefab;

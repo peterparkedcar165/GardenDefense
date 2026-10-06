@@ -496,19 +496,34 @@ public class PlantUpgradeUI : EntityInfoPanel
         Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed);
 
     // Button callbacks , wired in Inspector
+    // true while Level1PlantInfo's upgrade page is up - it's specifically about the Attack
+    // (path 1) upgrade, so path 2/3 are blocked for the duration (see TutorialContent)
+    private static bool OtherPathsTutorialBlocked =>
+        TutorialManager.instance != null && TutorialManager.instance.IsWaitingForEvent(TutorialEvents.UpgradeAcornAttackPath);
+
     public void OnPath1UpgradeClicked()
     {
         if (selectedPlant == null) return;
+        bool success;
         if (IsShiftHeld())
-            while (selectedPlant.UpgradePath1()) { }
+        {
+            success = false;
+            while (selectedPlant.UpgradePath1()) success = true;
+        }
         else
-            selectedPlant.UpgradePath1();
+        {
+            success = selectedPlant.UpgradePath1();
+        }
+
+        if (success && selectedPlant.data.plantName == "AcornKnight")
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.UpgradeAcornAttackPath);
+
         RefreshPaths();
     }
 
     public void OnPath2UpgradeClicked()
     {
-        if (selectedPlant == null) return;
+        if (selectedPlant == null || OtherPathsTutorialBlocked) return;
         if (IsShiftHeld())
             while (selectedPlant.UpgradePath2()) { }
         else
@@ -518,7 +533,7 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     public void OnPath3UpgradeClicked()
     {
-        if (selectedPlant == null) return;
+        if (selectedPlant == null || OtherPathsTutorialBlocked) return;
         bool shift = IsShiftHeld();
         if (!selectedPlant.path3Unlocked)
             selectedPlant.UnlockPath3();

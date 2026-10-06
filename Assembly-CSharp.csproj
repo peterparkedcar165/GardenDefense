@@ -205,6 +205,7 @@
     <Compile Include="Assets\Scripts\SpriteFadeInOut.cs" />
     <Compile Include="Assets\Scripts\Audio\MusicManager.cs" />
     <Compile Include="Assets\Scripts\Audio\SfxPlayer.cs" />
+    <Compile Include="Assets\Scripts\Tutorial\TutorialEvents.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\WebbedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DaytimeGridManager.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="Assets\Scripts\GridManagers\UnderwaterGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SeededEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\HarvestmanData.cs" />
+    <Compile Include="Assets\Scripts\Tutorial\TutorialPopupUI.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AnemoneData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\OldCarrotData.cs" />
@@ -289,6 +291,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\AnemoneProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Wasp.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlessingOfTheSunEffect.cs" />
+    <Compile Include="Assets\Scripts\Tutorial\TutorialPage.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\HelleboreProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\JumpingSpider.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\WinterMothData.cs" />
@@ -308,6 +311,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\OldCarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SunderedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
+    <Compile Include="Assets\Scripts\Tutorial\TutorialContent.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingBurgeonEffect.cs" />
     <Compile Include="Assets\Scripts\Audio\SoundEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OleandicCurseEffect.cs" />
@@ -319,6 +323,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CattailData.cs" />
+    <Compile Include="Assets\Scripts\Tutorial\TutorialManager.cs" />
     <Compile Include="Assets\Scripts\Game\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreProtectionEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\WaterlilyProjectile.cs" />
@@ -390,6 +395,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\AttackSpeedSlowEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\MorningGloryData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SnowExposedEffect.cs" />
+    <Compile Include="Assets\Scripts\Tutorial\TutorialIds.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\LevitatingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\PrimerIconSet.cs" />
     <Compile Include="Assets\Scripts\Skills\CarrotFurrow.cs" />

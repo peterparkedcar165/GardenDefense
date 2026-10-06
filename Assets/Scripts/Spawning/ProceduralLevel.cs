@@ -18,6 +18,12 @@ public class ProceduralLevel : SpawnManager
     // absolute (scaled) time the current (final) wave's last insect spawns; negative = not the final wave
     private float finalWaveSpawnTime = -1f;
 
+    // Level1PlantInfo triggers once wave 1's 2nd sub-wave has begun and the player has over 18
+    // sun (enough to afford the Attack path upgrade it walks them through) - checked every frame
+    // from level start since sun accrues passively and may not already be over 18 by then
+    private bool triedLevel1PlantInfoTutorial;
+    private bool level1Wave1SubWave2Started;
+
     protected override void Start()
     {
         CurrentConfig = config;
@@ -35,6 +41,10 @@ public class ProceduralLevel : SpawnManager
         StartAmbience();
         GameManager.instance?.InitiateLevel(config.startSunCount, config.startHealth);
         GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
+
+        Debug.Log($"[Tutorial] ProceduralLevel.Start - levelNumber={config.levelNumber}, TutorialManager.instance={(TutorialManager.instance != null ? "OK" : "NULL")}");
+        if (config.levelNumber == 1)
+            TutorialManager.instance?.TryShow(TutorialIds.Level1PlantSelection, TutorialContent.Level1PlantSelection);
 
         StartCoroutine(RunWaves());
     }
@@ -138,9 +148,10 @@ public class ProceduralLevel : SpawnManager
             float cumulativeStart = 0f;
             if (scripted.subWaves != null)
             {
-                foreach (SubWaveDefinition sub in scripted.subWaves)
+                for (int i = 0; i < scripted.subWaves.Length; i++)
                 {
-                    streams.Add(StartCoroutine(RunSubWave(sub, cumulativeStart)));
+                    SubWaveDefinition sub = scripted.subWaves[i];
+                    streams.Add(StartCoroutine(RunSubWave(sub, cumulativeStart, waveNumber, i + 1)));
                     lastSpawnOffset = Mathf.Max(lastSpawnOffset, cumulativeStart + SubWaveSpawnFinish(sub));
                     cumulativeStart += sub.subWaveDuration;
                 }
@@ -316,10 +327,13 @@ public class ProceduralLevel : SpawnManager
     // waits startOffset (this sub-wave's own start time within the wave), then fires every
     // spawn entry in this sub-wave concurrently - each entry runs its own count/timing
     // independently, so multiple entries in one sub-wave can overlap too
-    IEnumerator RunSubWave(SubWaveDefinition sub, float startOffset)
+    IEnumerator RunSubWave(SubWaveDefinition sub, float startOffset, int waveNumber, int subWaveNumber)
     {
         if (startOffset > 0f)
             yield return new WaitForSeconds(startOffset);
+
+        if (config.levelNumber == 1 && waveNumber == 1 && subWaveNumber == 2)
+            level1Wave1SubWave2Started = true;
 
         if (sub.spawns == null) yield break;
         foreach (WaveSpawnEntry entry in sub.spawns)
@@ -450,5 +464,13 @@ public class ProceduralLevel : SpawnManager
             GameHUD.instance?.SetFinalWaveTimer(Mathf.Max(0f, finalWaveSpawnTime - Time.time));
         else
             GameHUD.instance?.SetNextWaveTimer(nextWaveTime < 0f ? -1f : nextWaveTime - Time.time);
+
+        if (!triedLevel1PlantInfoTutorial && level1Wave1SubWave2Started && GameManager.instance.SunCount > 18)
+        {
+            triedLevel1PlantInfoTutorial = true;
+            if (TutorialManager.instance != null && TutorialManager.instance.TryShow(TutorialIds.Level1PlantInfo, TutorialContent.Level1PlantInfo,
+                    () => GameManager.instance.SetPause(false)))
+                GameManager.instance.SetPause(true);
+        }
     }
 }
