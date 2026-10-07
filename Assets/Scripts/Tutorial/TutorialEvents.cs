@@ -17,4 +17,6 @@ public static class TutorialEvents
     public const string HoverStatsPanel = "hover_statspanel";
     public const string HoverPlantPath = "hover_plant_path";
     public const string UpgradeAcornAttackPath = "upgrade_acorn_attack_path";
+    public const string ClickFertilizerQueueButton = "click_fertilizer_queue_button";
+    public const string SelectRandomFertilizer = "select_random_fertilizer";
 }

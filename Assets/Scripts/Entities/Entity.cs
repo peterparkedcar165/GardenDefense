@@ -33,7 +33,11 @@ public enum DamageTag
     CanHitBurrowed,
     // generic on-hit bonus damage (e.g. Bird of Paradise's per-stack bonus and its missing-health
     // finisher) - deliberately excludes Attack so it doesn't re-trigger Entity.HandleOnHitEffects
-    OnHit
+    OnHit,
+    // suppresses just the hitSound played below (nothing else) - combine with Attack for a hit
+    // that should still miss-roll/trigger OnHit/etc normally but not add to the sound stack (e.g.
+    // Calendula capping how many of one AoE sweep's hits actually play the sound)
+    SilentHit
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -797,7 +801,8 @@ public abstract class Entity : MonoBehaviour
         RefreshCombatState();
         source.RefreshCombatState();
         TriggerHitFlash();
-        if (source is Plant impactPlant && impactPlant.data != null && System.Array.Exists(damageTag, t => t == DamageTag.Attack))
+        if (source is Plant impactPlant && impactPlant.data != null && System.Array.Exists(damageTag, t => t == DamageTag.Attack)
+            && !System.Array.Exists(damageTag, t => t == DamageTag.SilentHit))
             SfxPlayer.Play(impactPlant.data.hitSound, transform.position);
         if (this is Insect soundInsect && soundInsect.data != null && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
             SfxPlayer.Play(soundInsect.data.hitSound, transform.position);

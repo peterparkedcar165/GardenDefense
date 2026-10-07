@@ -214,7 +214,13 @@ public abstract class Plant : Entity, IAttackable
         {
             prefab              = selfPrefab,
             previewSprite       = sr != null ? sr.sprite                  : null,
-            spriteLocalPosition = sr != null ? sr.transform.localPosition : Vector3.zero,
+            // world-space offset from the plant root, not sr.transform.localPosition - for a
+            // plant like Waterlily whose sprite sits directly on the root (no separate "Visual"
+            // child like most plants), localPosition is relative to the plant's PARENT, which is
+            // null for a placed (unparented) plant, making it equal the plant's full world
+            // position instead of a small offset. ShowDeadPlantGhosts adds this straight onto
+            // the tile's position, so that bug alone used to roughly double the ghost's position
+            spriteLocalPosition = sr != null ? sr.transform.position - transform.position : Vector3.zero,
             sortingLayerID      = sr != null ? sr.sortingLayerID          : 0,
             sortingOrder        = sr != null ? sr.sortingOrder            : 0,
             path1Level   = path1Level,

@@ -24,6 +24,10 @@ public class ProceduralLevel : SpawnManager
     private bool triedLevel1PlantInfoTutorial;
     private bool level1Wave1SubWave2Started;
 
+    // Level1FirstFertilizer triggers the instant the level's first mid-level fertilizer grant
+    // fires, same moment the queue button lights up for the player to click
+    private bool triedLevel1FirstFertilizerTutorial;
+
     protected override void Start()
     {
         CurrentConfig = config;
@@ -108,8 +112,18 @@ public class ProceduralLevel : SpawnManager
     {
         if (config.fertilizerGrants == null || FertilizerManager.instance == null) return;
         foreach (FertilizerGrant grant in config.fertilizerGrants)
-            if (grant != null && grant.afterWave == completedWave)
-                FertilizerManager.instance.GrantFertilizer(grant.rarity);
+        {
+            if (grant == null || grant.afterWave != completedWave) continue;
+            FertilizerManager.instance.GrantFertilizer(grant.rarity);
+
+            if (!triedLevel1FirstFertilizerTutorial && config.levelNumber == 1)
+            {
+                triedLevel1FirstFertilizerTutorial = true;
+                if (TutorialManager.instance != null && TutorialManager.instance.TryShow(TutorialIds.Level1FirstFertilizer, TutorialContent.Level1FirstFertilizer,
+                        () => GameManager.instance.SetPause(false)))
+                    GameManager.instance.SetPause(true);
+            }
+        }
     }
 
     // ── wave runner ───────────────────────────────────────────────────────────

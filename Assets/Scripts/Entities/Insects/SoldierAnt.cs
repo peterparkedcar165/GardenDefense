@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SoldierAnt : Ant
@@ -6,6 +7,25 @@ public class SoldierAnt : Ant
     {
         base.Awake();
         LoadData();
+
+        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 1)
+            StartCoroutine(TriggerSoldierAntTutorialAfterDelay());
+    }
+
+    // first-ever Soldier Ant spawn pauses the game for a short explainer (see
+    // TutorialContent.Level1SoldierAntAppears), 4 seconds after it appears rather than
+    // instantly - harmless to attempt on every spawn since TryShow no-ops once seenTutorials
+    // already has it. Unity stops this coroutine automatically if this ant dies/despawns first
+    private IEnumerator TriggerSoldierAntTutorialAfterDelay()
+    {
+        yield return new WaitForSeconds(4f);
+
+        if (TutorialManager.instance != null
+            && TutorialManager.instance.TryShow(TutorialIds.Level1SoldierAntAppears, TutorialContent.Level1SoldierAntAppears,
+                () => GameManager.instance.SetPause(false)))
+        {
+            GameManager.instance.SetPause(true);
+        }
     }
 
     public override string GetDescription() =>

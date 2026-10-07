@@ -16,6 +16,11 @@ public class TutorialManager : MonoBehaviour
     // actions on a specific tutorial being active (see IsTutorialActive/IsWaitingForEvent)
     private string currentId;
 
+    // latches true (for the rest of this session) the first time Level1PlantInfo's Attack
+    // upgrade page is reached, or immediately if that tutorial was already completed in an
+    // earlier session - see Level1UpgradesLocked
+    private bool level1UpgradeGateReached;
+
     private void Awake()
     {
         instance = this;
@@ -84,6 +89,28 @@ public class TutorialManager : MonoBehaviour
         if (tileType == TileType.Grass && IsWaitingForEvent(TutorialEvents.PlaceAcornKnightOnDirt)) return true;
         if (tileType == TileType.Dirt && IsWaitingForEvent(TutorialEvents.PlaceAcornKnightOnGrass)) return true;
         return false;
+    }
+
+    // true while plant path upgrades (Attack/Passive/Skill, any plant) should be completely
+    // blocked because Level1PlantInfo hasn't yet taught the system - see PlantUpgradeUI's
+    // OnPathXUpgradeClicked. only ever applies during level 1, and latches permanently false
+    // the moment the tutorial's Attack-upgrade page is reached, so it never re-locks afterward
+    public bool Level1UpgradesLocked()
+    {
+        if (level1UpgradeGateReached) return false;
+        if (SaveManager.instance != null && SaveManager.instance.saveData.seenTutorials.Contains(TutorialIds.Level1PlantInfo))
+        {
+            level1UpgradeGateReached = true;
+            return false;
+        }
+        if (ProceduralLevel.CurrentConfig == null || ProceduralLevel.CurrentConfig.levelNumber != 1)
+            return false;
+        if (IsWaitingForEvent(TutorialEvents.UpgradeAcornAttackPath))
+        {
+            level1UpgradeGateReached = true;
+            return false;
+        }
+        return true;
     }
 
     private void MarkSeen(string id)
