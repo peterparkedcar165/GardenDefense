@@ -305,11 +305,26 @@ public class Calendula : Aura
     // currently within the growing radius is damaged — including one that wasn't even in range
     // when the attack fired but wanders into the expanding burst zone partway through. each
     // insect can only be hit once per attack
+    // one sweep can hit many insects at once - past this many, further hits still land normally
+    // but stop adding another overlapping copy of the hit sound on top of the rest
+    private const int MaxHitSoundsPerSweep = 3;
+    private static readonly DamageTag[] SweepTags       = { DamageTag.AoE, DamageTag.Attack };
+    private static readonly DamageTag[] SweepTagsSilent = { DamageTag.AoE, DamageTag.Attack, DamageTag.SilentHit };
+
     private IEnumerator SweepAttackDamage(float damage, DamageType dmgType, ElementalType elemType)
     {
-        DamageTag[] tags = new DamageTag[] { DamageTag.AoE, DamageTag.Attack };
         HashSet<Insect> hit = new HashSet<Insect>();
+        int soundsPlayed = 0;
         float elapsed = 0f;
+
+        void DamageInsect(Insect insect)
+        {
+            float multiplier = Mathf.Max(MinMultiTargetDamageMultiplier, 1f - hit.Count * MultiTargetDamageReductionPerInsect);
+            hit.Add(insect);
+            bool playSound = soundsPlayed < MaxHitSoundsPerSweep;
+            if (playSound) soundsPlayed++;
+            insect.Damage(damage * multiplier, dmgType, elemType, this, true, playSound ? SweepTags : SweepTagsSilent);
+        }
 
         while (elapsed < FireBurstLifetime)
         {
@@ -318,9 +333,7 @@ public class Calendula : Aura
             {
                 if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
                 if (Vector3.Distance(transform.position, insect.transform.position) > currentRadius) continue;
-                float multiplier = Mathf.Max(MinMultiTargetDamageMultiplier, 1f - hit.Count * MultiTargetDamageReductionPerInsect);
-                hit.Add(insect);
-                insect.Damage(damage * multiplier, dmgType, elemType, this, true, tags);
+                DamageInsect(insect);
             }
             yield return null;
             elapsed += Time.deltaTime;
@@ -331,9 +344,7 @@ public class Calendula : Aura
         {
             if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) > attackRange) continue;
-            float multiplier = Mathf.Max(MinMultiTargetDamageMultiplier, 1f - hit.Count * MultiTargetDamageReductionPerInsect);
-            hit.Add(insect);
-            insect.Damage(damage * multiplier, dmgType, elemType, this, true, tags);
+            DamageInsect(insect);
         }
     }
 

@@ -46,7 +46,12 @@ public class PlantBar : MonoBehaviour
         if (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
 
-        bool tutorialActive = TutorialManager.instance != null && TutorialManager.instance.IsAnyTutorialActive;
+        // Level1StartLevel's "place me on Dirt/Grass" pages explicitly tell the player they can
+        // press 1 instead of clicking (see TutorialContent), so number-key selection is let
+        // through only while one of those exact pages is up - every other tutorial page blocks it
+        bool tutorialActive = TutorialManager.instance != null && TutorialManager.instance.IsAnyTutorialActive
+            && !TutorialManager.instance.IsWaitingForEvent(TutorialEvents.PlaceAcornKnightOnDirt)
+            && !TutorialManager.instance.IsWaitingForEvent(TutorialEvents.PlaceAcornKnightOnGrass);
 
         for (int i = 0; i < slots.Count && i < digitKeys.Length && !tutorialActive; i++)
         {

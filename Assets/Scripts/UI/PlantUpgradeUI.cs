@@ -397,18 +397,21 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     private void RefreshPaths()
     {
+        bool allLocked = AllPathsLockedForLevel1Intro;
+        bool otherLocked = OtherPathsTutorialBlocked;
+
         // Path 1
         path1NameText.text = selectedPlant.GetPath1Name();
         RefreshPips(path1PipsContainer, selectedPlant.path1Level, selectedPlant.effectivePath1Level);
         bool path1Maxed = selectedPlant.path1Level >= Plant.pathLevelCap;
-        path1UpgradeButton.interactable = !path1Maxed;
+        path1UpgradeButton.interactable = !path1Maxed && !allLocked;
         path1CostText.text = path1Maxed ? CapLabel(selectedPlant.path1Level) : $"{selectedPlant.GetPath1Cost()} Sun";
 
         // Path 2
         path2NameText.text = selectedPlant.GetPath2Name();
         RefreshPips(path2PipsContainer, selectedPlant.path2Level, selectedPlant.effectivePath2Level);
         bool path2Maxed = selectedPlant.path2Level >= Plant.pathLevelCap;
-        path2UpgradeButton.interactable = !path2Maxed;
+        path2UpgradeButton.interactable = !path2Maxed && !otherLocked;
         path2CostText.text = path2Maxed ? CapLabel(selectedPlant.path2Level) : $"{selectedPlant.GetPath2Cost()} Sun";
 
         // Path 3
@@ -419,14 +422,14 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (!unlocked)
         {
             path3CostText.text = $"{selectedPlant.GetPath3Cost()} Sun to unlock.";
-            path3Button.interactable = true;
+            path3Button.interactable = !otherLocked;
             RefreshPips(path3PipsContainer, selectedPlant.path3Level, selectedPlant.effectivePath3Level);
         }
         else
         {
             RefreshPips(path3PipsContainer, selectedPlant.path3Level, selectedPlant.effectivePath3Level);
             bool path3Maxed = selectedPlant.path3Level >= Plant.pathLevelCap;
-            path3Button.interactable = !path3Maxed;
+            path3Button.interactable = !path3Maxed && !otherLocked;
             path3CostText.text = path3Maxed ? CapLabel(selectedPlant.path3Level) : $"{selectedPlant.GetPath3Cost()} Sun";
         }
     }
@@ -496,14 +499,21 @@ public class PlantUpgradeUI : EntityInfoPanel
         Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed);
 
     // Button callbacks , wired in Inspector
+    // true before Level1PlantInfo has taught the upgrade system at all - blocks every path,
+    // on any plant, until its Attack-upgrade page is reached (see TutorialManager)
+    private static bool AllPathsLockedForLevel1Intro =>
+        TutorialManager.instance != null && TutorialManager.instance.Level1UpgradesLocked();
+
     // true while Level1PlantInfo's upgrade page is up - it's specifically about the Attack
-    // (path 1) upgrade, so path 2/3 are blocked for the duration (see TutorialContent)
+    // (path 1) upgrade, so path 2/3 are blocked for the duration (see TutorialContent). also
+    // true for the stricter pre-gate lock above, since that blocks everything including path 1
     private static bool OtherPathsTutorialBlocked =>
-        TutorialManager.instance != null && TutorialManager.instance.IsWaitingForEvent(TutorialEvents.UpgradeAcornAttackPath);
+        AllPathsLockedForLevel1Intro ||
+        (TutorialManager.instance != null && TutorialManager.instance.IsWaitingForEvent(TutorialEvents.UpgradeAcornAttackPath));
 
     public void OnPath1UpgradeClicked()
     {
-        if (selectedPlant == null) return;
+        if (selectedPlant == null || AllPathsLockedForLevel1Intro) return;
         bool success;
         if (IsShiftHeld())
         {

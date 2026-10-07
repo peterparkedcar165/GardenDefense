@@ -60,6 +60,7 @@ public class FertilizerQueueButton : MonoBehaviour
 
     public void OnClicked()
     {
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.ClickFertilizerQueueButton);
         FertilizerSelectionUI.instance?.ShowMidLevel();
     }
 }

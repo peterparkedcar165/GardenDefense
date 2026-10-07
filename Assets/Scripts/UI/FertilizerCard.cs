@@ -152,6 +152,7 @@ public class FertilizerCard : MonoBehaviour
         if (isGeneratedMode)
         {
             FertilizerManager.instance.CommitGenerated(generatedData);
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.SelectRandomFertilizer);
             ui.CloseAfterSelect();
             return;
         }
