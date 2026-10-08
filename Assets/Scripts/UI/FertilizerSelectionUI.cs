@@ -129,6 +129,10 @@ public class FertilizerSelectionUI : MonoBehaviour
         {
             TutorialManager.instance?.TryShow(TutorialIds.Level1StartLevel, TutorialContent.Level1StartLevel);
         }
+        else if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2)
+        {
+            TutorialManager.instance?.TryShow(TutorialIds.Level2StartLevel, TutorialContent.Level2StartLevel);
+        }
     }
 
     private List<FertilizerData> PickRandom(FertilizerData[] pool, int count)

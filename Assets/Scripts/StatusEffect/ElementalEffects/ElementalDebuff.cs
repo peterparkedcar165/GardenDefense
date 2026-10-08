@@ -24,6 +24,14 @@ public abstract class ElementalDebuff : StatusEffect
     {
         SpawnIcon();
         OnPrimerApply();
+
+        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2
+            && TutorialManager.instance != null
+            && TutorialManager.instance.TryShow(TutorialIds.Level2Primers, TutorialContent.Level2Primers,
+                () => GameManager.instance.SetPause(false)))
+        {
+            GameManager.instance.SetPause(true);
+        }
     }
 
     public sealed override void OnExpire()

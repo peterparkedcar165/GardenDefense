@@ -252,6 +252,10 @@ public class Tile : MonoBehaviour
                 else if (tileType == TileType.Grass)
                     TutorialManager.instance?.NotifyEvent(TutorialEvents.PlaceAcornKnightOnGrass);
             }
+            else if (selectedPlant.data.plantName == "Sunflower" && tileType == TileType.Dirt)
+            {
+                TutorialManager.instance?.NotifyEvent(TutorialEvents.PlaceSunflowerOnDirt);
+            }
         }
     }
 }

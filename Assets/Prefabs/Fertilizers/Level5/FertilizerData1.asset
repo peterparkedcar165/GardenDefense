@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData1
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Poisonous
+  fertilizerName: Germinator
   stats:
-  - statType: 0
+  - statType: 6
     value: 0.12
-  - statType: 15
+  - statType: 11
     value: 0.12
   icon: {fileID: 0}
   targetElementalTypes: 

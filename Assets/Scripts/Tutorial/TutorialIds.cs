@@ -9,4 +9,6 @@ public static class TutorialIds
     public const string Level1PlantInfo = "level1_plantinfo";
     public const string Level1FirstFertilizer = "level1_firstfertilizer";
     public const string Level1SoldierAntAppears = "level1_soldierantappears";
+    public const string Level2StartLevel = "level2_startlevel";
+    public const string Level2Primers = "level2_primers";
 }
