@@ -27,8 +27,9 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 26
   baseMagicPower: 0
-  baseAttackSpeed: 0.8
+  baseAttackSpeed: 0.3
   baseAttackRange: 3
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
@@ -86,7 +87,7 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []
@@ -97,14 +98,16 @@ MonoBehaviour:
   geyseredDuration: 8
   geyseredArmorShred: 20
   geyseredFallDamageResistanceShred: 0.15
-  path1AttackDamagePerLevel: 2
-  path1AttackSpeedPerLevel: 0.03
+  baseHealthDamageScaling: 0.12
+  path1HealthScalingPerLevel: 0.02
+  path1AttackSpeedPerLevel: 0.02
   baseRegenPercent: 0.01
   path2RegenPercentPerLevel: 0.005
   baseOpenBonusSun: 1
   path2OpenBonusSunPerLevel: 1
   baseReduceChance: 0.35
   path2ReduceChancePerLevel: 0.03
+  path2MaxHealthPerLevel: 15
   path3GeyserDamagePerLevel: 15
   path3KnockUpPerLevel: 1
   path3GeyserRadiusPerLevel: 0.15

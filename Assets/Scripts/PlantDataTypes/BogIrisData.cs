@@ -12,7 +12,8 @@ public class BogIrisData : PlantData
     public float geyseredFallDamageResistanceShred = 0.15f;
 
     [Header("Path 1 Scaling")]
-    public float path1AttackDamagePerLevel = 8f;
+    public float baseHealthDamageScaling = 0.12f;
+    public float path1HealthScalingPerLevel = 0.02f;
     public float path1AttackSpeedPerLevel = 0.05f;
 
     [Header("Path 2 Scaling")]
@@ -22,6 +23,7 @@ public class BogIrisData : PlantData
     public int   path2OpenBonusSunPerLevel = 1;
     public float baseReduceChance = 0.35f;
     public float path2ReduceChancePerLevel = 0.05f;
+    public float path2MaxHealthPerLevel = 15f;
 
     [Header("Path 3 Scaling")]
     public float path3GeyserDamagePerLevel = 15f;

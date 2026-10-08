@@ -38,6 +38,13 @@ public class BogIris : Shooter
     private int   OpenBonusSun => (BogData?.baseOpenBonusSun ?? 2) + (BogData?.path2OpenBonusSunPerLevel ?? 1) * effectivePath2Level;
     private float RegenPercentPerSecond => (BogData?.baseRegenPercent ?? 0.02f) + (BogData?.path2RegenPercentPerLevel ?? 0.01f) * effectivePath2Level;
     private float ReduceChance => (BogData?.baseReduceChance ?? 0.35f) + (BogData?.path2ReduceChancePerLevel ?? 0.05f) * effectivePath2Level;
+    // attacks are 100% Attack Damage plus a percentage of Max Health on top - the percentage
+    // grows per Path1 level instead of a flat Attack Damage increase (see Shoot/OnPath1Upgrade)
+    public float HealthDamageScalingPercent => (BogData?.baseHealthDamageScaling ?? 0.12f) + (BogData?.path1HealthScalingPerLevel ?? 0.02f) * effectivePath1Level;
+    public float HealthScalingDamage => maxHealth * HealthDamageScalingPercent;
+    // flat Max Health granted per Path2 level - read live every UpdateStats tick (see below),
+    // same convention as this plant's other Path2 scalings (OpenBonusSun, RegenPercentPerSecond)
+    public float PassiveMaxHealthBonus => (BogData?.path2MaxHealthPerLevel ?? 15f) * effectivePath2Level;
     // Overflow/Eruption trade Geyser radius for damage in opposite directions
     private float GeyserRadius =>
         (skillRadius + (BogData?.path3GeyserRadiusPerLevel ?? 0.15f) * effectivePath3Level)
@@ -57,9 +64,9 @@ public class BogIris : Shooter
 
         // LoadData already applied any skill tree path1LevelAdder ("+1 Effective Attack Point")
         // and recomputed effectivePath1Level from it, so re-running this hook here bakes that
-        // virtual level straight into attackDamage/attackSpeed. Path2/Path3 don't need this -
-        // OnPath2Upgrade/OnPath3Upgrade are no-ops since all their scaling (OpenBonusSun,
-        // RegenPercentPerSecond, GeyserDamage, etc.) already reads effectivePath2/3Level live
+        // virtual level straight into attackSpeed. HealthDamageScalingPercent doesn't need this -
+        // like Path2/Path3, it reads effectivePath1Level live (OpenBonusSun, RegenPercentPerSecond,
+        // GeyserDamage, etc. do the same for effectivePath2/3Level)
         OnPath1Upgrade(effectivePath1Level);
 
         _rootRenderer = GetComponent<SpriteRenderer>();
@@ -156,7 +163,7 @@ public class BogIris : Shooter
         if (bogProj != null)
         {
             bogProj.SetTarget(FindTarget());
-            bogProj.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
+            bogProj.Initialize(target, attackDamage + HealthScalingDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
     }
 
@@ -192,8 +199,7 @@ public class BogIris : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = data.baseAttackDamage + (BogData?.path1AttackDamagePerLevel ?? 8f) * level;
-        baseAttackSpeed  = data.baseAttackSpeed  + (BogData?.path1AttackSpeedPerLevel  ?? 0.05f) * level;
+        baseAttackSpeed = data.baseAttackSpeed + (BogData?.path1AttackSpeedPerLevel ?? 0.05f) * level;
     }
 
     public override void UpdateStats()
@@ -202,6 +208,7 @@ public class BogIris : Shooter
         int rainLevel = GetEffect<RainExposedEffect>()?.level ?? 0;
         skillChargeRateAdder = 0.2f * rainLevel;
         base.UpdateStats();
+        maxHealth += PassiveMaxHealthBonus;
         if (IsPath1Maxed)
         {
             bonusEffectChance += 0.5f;
@@ -212,9 +219,14 @@ public class BogIris : Shooter
         }
     }
 
-    // no per-level side effects to apply here anymore - RegenPercentPerSecond, OpenBonusSun and
-    // ReduceChance are all computed live from effectivePath2Level
-    public override void OnPath2Upgrade(int level) { }
+    // RegenPercentPerSecond, OpenBonusSun, ReduceChance and PassiveMaxHealthBonus are all
+    // computed live from effectivePath2Level (see UpdateStats for the Max Health bonus) - this
+    // only needs to top up current health by the flat per-level amount at the moment it's granted
+    public override void OnPath2Upgrade(int level)
+    {
+        health += BogData?.path2MaxHealthPerLevel ?? 15f;
+        UpdateHealthBar();
+    }
     public override void OnPath3Upgrade(int level) { }
 
     public override string GetName() => "<b><color=#4FC3F7>Bog Iris</color></b>";
@@ -223,13 +235,13 @@ public class BogIris : Shooter
 
     public override string GetPath1Description(bool details = false)
     {
-        float adpl = BogData?.path1AttackDamagePerLevel ?? 8f;
-        float aspl = BogData?.path1AttackSpeedPerLevel  ?? 0.05f;
+        float hppl = BogData?.path1HealthScalingPerLevel ?? 0.02f;
+        float aspl = BogData?.path1AttackSpeedPerLevel    ?? 0.05f;
         string desc = details
-            ? $"Fires a water bolt at a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
-            : $"Fires a water bolt at a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+            ? $"Fires a water bolt at a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> [<color=green><b>+{HealthDamageScalingPercent * 100f:F0}% Max Health</b></color>] {PlantData.DamageTypeLabel(damageType)}."
+            : $"Fires a water bolt at a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage + HealthScalingDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
         return $"Attack:\n\n{desc}\n\n" +
-               $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Max Health</b></color> damage scaling by <color=green><b>{hppl * 100f:F0}%</b></color> per level. [<color=green><b>+{hppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Increase <color=green><b>Bonus Effect Chance</b></color> by <color=green><b>50%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
@@ -241,6 +253,7 @@ public class BogIris : Shooter
         float regenpl  = BogData?.path2RegenPercentPerLevel ?? 0.01f;
         int   sunpl    = BogData?.path2OpenBonusSunPerLevel ?? 1;
         float reducepl = BogData?.path2ReduceChancePerLevel ?? 0.05f;
+        float hppl     = BogData?.path2MaxHealthPerLevel    ?? 15f;
         string desc = details
             ? $"Every <color=green><b>{SunInterval:F0}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
               $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>[({(BogData?.baseRegenPercent ?? 0.02f) * 100f:F0}%) + ({regenpl * 100f:F0}%/Lvl.)]</b></color> Max Health per second (doubled when out of combat).\n\n" +
@@ -255,6 +268,7 @@ public class BogIris : Shooter
                $"Increase regeneration by <color=red><b>{regenpl * 100f:F0}%</b></color> per level. [<color=red><b>+{regenpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase open-state Sun production by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase reduction chance by <color=green><b>{reducepl * 100f:F0}%</b></color> per level. [<color=green><b>+{reducepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Remove the out-of-combat condition from the regeneration (always doubled). Increase Armor by <color=green><b>{ClosedArmorBonus:F0}</b></color> when in <b><color=#4FC3F7>closed</color></b> state.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
