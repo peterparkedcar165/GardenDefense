@@ -8,6 +8,7 @@ public class DandelionData : PlantData
 
     [Header("Path 1 Scaling")]
     public float path1AttackSpeedPerLevel = 0.05f;
+    public float path1AttackRangePerLevel = 0.2f;
     public float path1MagicPowerPerLevel = 5f;
 
     [Header("Path 2 Scaling - Pollinator's Pulse")]

@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb196e4e86362842ab9d48e27a8f2f8, type: 3}
+  m_Name: DandelionSkillTree
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
+  steps:
+  - nodes:
+    - id: node1_attackspeed
+      nodeName: Pollen Barrage
+      description: Increase <color=green><b>Attack Speed</b></color> by <color=green><b>0.05</b></color> per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 61
+        valuePerRank: 0.05
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node2_path1adder
+      nodeName: Keen Petals
+      description: <color=green><b>+1 Effective Attack Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 62
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node3_attackrange
+      nodeName: Far Reach
+      description: Increase <color=green><b>Attack Range</b></color> by <color=green><b>0.2</b></color> per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 68
+        valuePerRank: 0.2
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node4_path2adder
+      nodeName: Blooming Insight
+      description: <color=green><b>+1 Effective Passive Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 63
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node5a_windfall
+      nodeName: Windfall
+      description: Whenever <b>Pollinator's Pulse</b> reduces an allied plant's <color=green><b>Skill Cooldown</b></color>, that plant also gains <color=#B2EBF2><b>Pollen Haste</b></color> for <color=green><b>3</b></color> seconds.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: dandelion_windfall
+    - id: node5b_overgrowth
+      nodeName: Overgrowth
+      description: Dandelion regenerates <color=green><b>1%</b></color> of her <color=green><b>Max Health</b></color> every second.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: dandelion_overgrowth
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node6_skillcooldown
+      nodeName: Swift Gust
+      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>2</b></color> seconds per level.
+      maxRank: 5
+      costPerRank: 1
+      effects:
+      - statType: 66
+        valuePerRank: 2
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node7_instantskill
+      nodeName: Ready Gust
+      description: Automatically unlocks Skill.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: dandelion_instant_skill
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node8_path3adder
+      nodeName: Gust Insight
+      description: <color=green><b>+1 Effective Skill Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 64
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node9_suncost
+      nodeName: Light Seeds
+      description: Reduce <color=#FFD700><b>Sun cost</b></color> by <color=#FFD700><b>10</b></color>.
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 65
+        valuePerRank: 10
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node10a_tailwind
+      nodeName: Tailwind
+      description: The <color=green><b>Wind Gust</b></color> travels <color=green><b>50%</b></color> faster.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: dandelion_tailwind
+    - id: node10b_seedbomb
+      nodeName: Seed Bomb
+      description: When the <color=green><b>Wind Gust</b></color> reaches the end of its path, it detonates, dealing its damage again to every insect still caught within it.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: dandelion_seedbomb
+    ranksToUnlockNext: 1

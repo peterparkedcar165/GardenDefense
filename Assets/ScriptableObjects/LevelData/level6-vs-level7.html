@@ -1,0 +1,306 @@
+<title>Level 6 vs Level 7</title>
+<style>
+  /* layout: stacked report — header, line chart (wave-by-wave total), grouped bar chart (species totals), callouts */
+  :root{
+    --bg:#f8f7f4;
+    --surface:#ffffff;
+    --text-primary:#161511;
+    --text-secondary:#5c594f;
+    --text-muted:#948f80;
+    --grid:#e5e2d9;
+    --baseline:#cbc6b8;
+    --l6:#2a78d6;
+    --l7:#eb7a1f;
+    --border:#e5e2d9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121210;
+      --surface:#1b1a16;
+      --text-primary:#f3f1ea;
+      --text-secondary:#bdb8a8;
+      --text-muted:#857f6e;
+      --grid:#2d2b25;
+      --baseline:#3a3830;
+      --l6:#4f93e8;
+      --l7:#f29b4a;
+      --border:#2d2b25;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121210;
+    --surface:#1b1a16;
+    --text-primary:#f3f1ea;
+    --text-secondary:#bdb8a8;
+    --text-muted:#857f6e;
+    --grid:#2d2b25;
+    --baseline:#3a3830;
+    --l6:#4f93e8;
+    --l7:#f29b4a;
+    --border:#2d2b25;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text-primary);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    padding:28px 16px 40px;
+  }
+  .wrap{ max-width:880px; margin:0 auto; display:flex; flex-direction:column; gap:22px; }
+  h1{ font-size:1.3rem; font-weight:700; margin:0 0 2px; text-wrap:balance; }
+  p.sub{ font-size:0.88rem; color:var(--text-secondary); margin:0; max-width:65ch; }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px 18px 14px;
+  }
+  .card h2{ font-size:0.92rem; font-weight:650; margin:0 0 2px; }
+  .card p.note{ font-size:0.78rem; color:var(--text-muted); margin:0 0 14px; }
+  .legend{ display:flex; gap:18px; margin-bottom:10px; font-size:0.8rem; color:var(--text-secondary); }
+  .legend-item{ display:flex; align-items:center; gap:6px; }
+  .swatch{ width:11px; height:11px; border-radius:3px; display:inline-block; }
+  .chart{ position:relative; width:100%; }
+  svg{ display:block; width:100%; height:auto; overflow:visible; }
+  .gridline{ stroke:var(--grid); stroke-width:1; }
+  .baseline{ stroke:var(--baseline); stroke-width:1; }
+  .tick{ fill:var(--text-muted); font-size:11px; font-variant-numeric:tabular-nums; }
+  .wave-label{ fill:var(--text-muted); font-size:9.5px; text-anchor:middle; }
+  .line{ fill:none; stroke-width:2.25; stroke-linejoin:round; stroke-linecap:round; }
+  .l6{ stroke:var(--l6); } .l7{ stroke:var(--l7); }
+  .crosshair{ stroke:var(--baseline); stroke-width:1; opacity:0; }
+  .dot{ r:3.5; stroke:var(--surface); stroke-width:1.5; }
+  .hit{ fill:transparent; cursor:pointer; }
+  .tooltip{
+    position:absolute; pointer-events:none;
+    background:var(--text-primary); color:var(--bg);
+    font-size:12px; padding:8px 10px; border-radius:7px;
+    white-space:nowrap; opacity:0; transition:opacity 0.1s;
+    font-variant-numeric:tabular-nums; line-height:1.6;
+  }
+  .tooltip.show{ opacity:1; }
+  .tooltip .row{ display:flex; align-items:center; gap:6px; }
+  .tooltip .sw{ width:8px; height:8px; border-radius:2px; display:inline-block; }
+  .bars{ display:flex; flex-direction:column; gap:11px; }
+  .bar-row{ display:grid; grid-template-columns:84px 1fr 1fr; align-items:center; gap:10px; min-width:0; }
+  .bar-row .name{ font-size:0.82rem; color:var(--text-secondary); }
+  .bar-row .only6, .bar-row .only7{ font-size:0.68rem; color:var(--text-muted); font-style:italic; }
+  .bar-track{ position:relative; height:16px; background:var(--grid); border-radius:4px; overflow:hidden; min-width:0; }
+  .bar-fill{ position:absolute; top:0; left:0; height:100%; border-radius:4px; }
+  .bar-fill.l6{ background:var(--l6); }
+  .bar-fill.l7{ background:var(--l7); }
+  .bar-val{ font-size:0.72rem; color:var(--text-muted); font-variant-numeric:tabular-nums; margin-top:2px; }
+  .callouts{ display:flex; flex-direction:column; gap:9px; font-size:0.86rem; color:var(--text-secondary); }
+  .callouts li{ margin:0; }
+  .callouts ul{ margin:0; padding-left:1.1em; display:flex; flex-direction:column; gap:7px; }
+  .callouts b{ color:var(--text-primary); }
+</style>
+
+<div class="wrap">
+  <div>
+    <h1>Level 6 vs Level 7</h1>
+    <p class="sub">How the two wave sets compare: total pressure per wave and how much of each insect appears across the whole level.</p>
+  </div>
+
+  <div class="card">
+    <h2>Total insects per wave</h2>
+    <p class="note">Level 6 runs 16 waves; Level 7 runs 18 and pulls ahead by wave 9.</p>
+    <div class="legend">
+      <div class="legend-item"><span class="swatch" style="background:var(--l6)"></span>Level 6</div>
+      <div class="legend-item"><span class="swatch" style="background:var(--l7)"></span>Level 7</div>
+    </div>
+    <div class="chart">
+      <svg id="lineChart" viewBox="0 0 860 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line chart of total insects per wave for Level 6 and Level 7"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Total per species, across the whole level</h2>
+    <p class="note">Summed over every wave. Level 7 drops Wasp entirely and introduces Mosquito and Snail in its place.</p>
+    <div class="bars" id="bars"></div>
+  </div>
+
+  <div class="card">
+    <h2>What actually changes</h2>
+    <div class="callouts">
+      <ul>
+        <li><b>Roster swap:</b> Level 6 has Wasp (120 total) and no Mosquito/Snail. Level 7 drops Wasp entirely and adds Mosquito (229) and Snail (73) instead.</li>
+        <li><b>Length:</b> Level 7 runs 2 waves longer (18 vs 16), and those extra waves are its heaviest — wave 18 alone throws 367 insects, more than any single wave in Level 6.</li>
+        <li><b>Scout Ant spike:</b> both levels ramp Scout Ant sharply in their last few waves (75 by the final shared wave), but Level 7 keeps climbing afterward, reaching 110 for its last two waves.</li>
+        <li><b>Overall scale:</b> Level 7 totals 3,469 insects across its run versus Level 6's 2,569 — about 35% more, mostly from running longer and from Mosquito/Snail layering on top rather than replacing anything 1-for-1.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  var waveData = [
+    {wave:1,  l6:32,  l7:43},
+    {wave:2,  l6:56,  l7:57},
+    {wave:3,  l6:74,  l7:73},
+    {wave:4,  l6:90,  l7:89},
+    {wave:5,  l6:105, l7:109},
+    {wave:6,  l6:122, l7:127},
+    {wave:7,  l6:137, l7:145},
+    {wave:8,  l6:154, l7:159},
+    {wave:9,  l6:171, l7:177},
+    {wave:10, l6:187, l7:196},
+    {wave:11, l6:205, l7:216},
+    {wave:12, l6:224, l7:236},
+    {wave:13, l6:216, l7:257},
+    {wave:14, l6:236, l7:282},
+    {wave:15, l6:261, l7:277},
+    {wave:16, l6:299, l7:306},
+    {wave:17, l6:null, l7:353},
+    {wave:18, l6:null, l7:367}
+  ];
+
+  var W = 860, H = 320;
+  var padLeft = 36, padRight = 14, padTop = 18, padBottom = 30;
+  var plotW = W - padLeft - padRight;
+  var plotH = H - padTop - padBottom;
+  var maxVal = 380;
+  var ticks = [0, 100, 200, 300];
+
+  var svgNS = "http://www.w3.org/2000/svg";
+  var svg = document.getElementById("lineChart");
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+
+  function el(tag, attrs){
+    var n = document.createElementNS(svgNS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  function x(i){ return padLeft + (plotW / (waveData.length - 1)) * i; }
+  function y(v){ return padTop + plotH - (v / maxVal) * plotH; }
+
+  ticks.forEach(function(t){
+    var yy = y(t);
+    svg.appendChild(el("line", {x1: padLeft, x2: W - padRight, y1: yy, y2: yy, class: t === 0 ? "baseline" : "gridline"}));
+    var label = el("text", {x: padLeft - 7, y: yy + 3, class: "tick", "text-anchor": "end"});
+    label.textContent = t;
+    svg.appendChild(label);
+  });
+
+  waveData.forEach(function(d, i){
+    if (d.wave % 2 === 1) return;
+    var label = el("text", {x: x(i), y: H - padBottom + 15, class: "wave-label"});
+    label.textContent = "W" + d.wave;
+    svg.appendChild(label);
+  });
+
+  function pathFor(key, cls){
+    var pts = [];
+    waveData.forEach(function(d, i){
+      if (d[key] == null) return;
+      pts.push(x(i) + "," + y(d[key]));
+    });
+    svg.appendChild(el("polyline", {points: pts.join(" "), class: "line " + cls}));
+  }
+  pathFor("l6", "l6");
+  pathFor("l7", "l7");
+
+  var crosshair = el("line", {x1:0, x2:0, y1: padTop, y2: padTop + plotH, class: "crosshair"});
+  svg.appendChild(crosshair);
+  var dotL6 = el("circle", {class: "dot", fill: "var(--l6)"});
+  var dotL7 = el("circle", {class: "dot", fill: "var(--l7)"});
+  svg.appendChild(dotL6);
+  svg.appendChild(dotL7);
+
+  var tooltip = document.getElementById("tooltip");
+
+  function showAt(i){
+    var d = waveData[i];
+    var cx = x(i);
+    crosshair.setAttribute("x1", cx);
+    crosshair.setAttribute("x2", cx);
+    crosshair.style.opacity = 1;
+
+    var rows = '<div class="row"><span class="sw" style="background:var(--l6)"></span>Level 6: ' + (d.l6 == null ? "—" : d.l6) + '</div>' +
+               '<div class="row"><span class="sw" style="background:var(--l7)"></span>Level 7: ' + (d.l7 == null ? "—" : d.l7) + '</div>';
+    tooltip.innerHTML = "<b>Wave " + d.wave + "</b>" + rows;
+
+    if (d.l6 != null){ dotL6.setAttribute("cx", cx); dotL6.setAttribute("cy", y(d.l6)); dotL6.style.opacity = 1; }
+    else dotL6.style.opacity = 0;
+    if (d.l7 != null){ dotL7.setAttribute("cx", cx); dotL7.setAttribute("cy", y(d.l7)); dotL7.style.opacity = 1; }
+    else dotL7.style.opacity = 0;
+
+    var rect = svg.getBoundingClientRect();
+    var scale = rect.width / W;
+    var left = cx * scale + 12;
+    if (left + 130 > rect.width) left = cx * scale - 142;
+    tooltip.style.left = left + "px";
+    tooltip.style.top = (padTop * scale) + "px";
+    tooltip.classList.add("show");
+  }
+  function hide(){
+    tooltip.classList.remove("show");
+    crosshair.style.opacity = 0;
+    dotL6.style.opacity = 0;
+    dotL7.style.opacity = 0;
+  }
+
+  waveData.forEach(function(d, i){
+    var bandW = plotW / waveData.length;
+    var hit = el("rect", {x: x(i) - bandW/2, y: padTop, width: bandW, height: plotH, class: "hit"});
+    hit.addEventListener("mouseenter", function(){ showAt(i); });
+    hit.addEventListener("mousemove", function(){ showAt(i); });
+    hit.addEventListener("mouseleave", hide);
+    svg.appendChild(hit);
+  });
+
+  // species totals grouped bars
+  var species = [
+    {name:"Worker Ant", l6:834, l7:967},
+    {name:"Soldier Ant", l6:456, l7:567},
+    {name:"Scout Ant", l6:406, l7:678},
+    {name:"Queen Ant", l6:210, l7:272},
+    {name:"Wasp", l6:120, l7:0},
+    {name:"Firefly", l6:255, l7:323},
+    {name:"Moth", l6:288, l7:360},
+    {name:"Mosquito", l6:0, l7:229},
+    {name:"Snail", l6:0, l7:73}
+  ];
+  var maxSpecies = Math.max.apply(null, species.map(function(s){ return Math.max(s.l6, s.l7); }));
+  var barsEl = document.getElementById("bars");
+  species.forEach(function(s){
+    var row = document.createElement("div");
+    row.className = "bar-row";
+
+    var name = document.createElement("div");
+    name.className = "name";
+    name.textContent = s.name;
+    row.appendChild(name);
+
+    function makeTrack(value, cls, exclusiveLabel){
+      var col = document.createElement("div");
+      if (value === 0){
+        var ex = document.createElement("div");
+        ex.className = cls === "l6" ? "only7" : "only6";
+        ex.textContent = exclusiveLabel;
+        col.appendChild(ex);
+        return col;
+      }
+      var track = document.createElement("div");
+      track.className = "bar-track";
+      var fill = document.createElement("div");
+      fill.className = "bar-fill " + cls;
+      fill.style.width = (value / maxSpecies * 100) + "%";
+      track.appendChild(fill);
+      col.appendChild(track);
+      var val = document.createElement("div");
+      val.className = "bar-val";
+      val.textContent = value;
+      col.appendChild(val);
+      return col;
+    }
+
+    row.appendChild(makeTrack(s.l6, "l6", "Level 7 only"));
+    row.appendChild(makeTrack(s.l7, "l7", "Level 6 only"));
+    barsEl.appendChild(row);
+  });
+</script>

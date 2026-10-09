@@ -228,6 +228,9 @@ public abstract class Entity : MonoBehaviour
     public float minimumDamageAdder, maximumDamageAdder;
     public float dotResistanceAdder, dotDamageAdder, fallDamageResistanceAdder;
     public float elementalAffinityAdder;
+    // flat seconds knocked off a GerminateEffect's duration when this entity is its source (see
+    // GerminateEffect's constructor) - Begonia's Blessing is the only current contributor
+    public float germinateDetonationSpeedup;
     public float passiveDamageAdder, skillDamageAdder, coordinatedDamageAdder;
     public float skillDurationAdder;
     public float tenacityAdder, immobilizeDurationAdder;

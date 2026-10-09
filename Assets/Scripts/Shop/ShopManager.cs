@@ -38,7 +38,7 @@ public class ShopManager : MonoBehaviour
 
     private void Update()
     {
-        if (UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame && !TutorialManager.BlocksEscape)
             OnBack();
         RefreshAll();
     }

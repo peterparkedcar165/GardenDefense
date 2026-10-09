@@ -308,11 +308,11 @@ public class BogIris : Shooter
         float reducepl = BogData?.path2ReduceChancePerLevel ?? 0.05f;
         float hppl     = BogData?.path2MaxHealthPerLevel    ?? 15f;
         string desc = details
-            ? $"Every <color=green><b>{SunInterval:F0}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
+            ? $"Every <color=green><b>{SunInterval:F1}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
               $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>[({(BogData?.baseRegenPercent ?? 0.02f) * 100f:F0}%) + ({regenpl * 100f:F0}%/Lvl.)]</b></color> Max Health per second (doubled when out of combat).\n\n" +
               $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>[({BogData?.baseOpenBonusSun ?? 2}) + ({sunpl}/Lvl.)]</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
               $"Attacks have a <color=green><b>[({(BogData?.baseReduceChance ?? 0.35f) * 100f:F0}%) + ({reducepl * 100f:F0}%/Lvl.)]</b></color> chance to reduce the <color=yellow>Sun</color> generation timer by <color=green><b>1</b></color> second on hit."
-            : $"Every <color=green><b>{SunInterval:F0}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
+            : $"Every <color=green><b>{SunInterval:F1}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
               $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>{RegenPercentPerSecond * 100f:F0}%</b></color> Max Health per second (doubled to <color=red><b>{RegenPercentPerSecond * 200f:F0}%</b></color> when out of combat).\n\n" +
               $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>{OpenBonusSun}</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
               $"Attacks have a <color=green><b>{ReduceChance * 100f:F0}%</b></color> chance to reduce the <color=yellow>Sun</color> generation timer by <color=green><b>1</b></color> second on hit.";

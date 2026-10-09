@@ -19,6 +19,7 @@ public class WindGust : MonoBehaviour
     private float hasteBonus;
     private float hasteDuration;
     private float cooldownRefundPercent;
+    private bool seedBomb;
 
     private readonly HashSet<Insect> hitInsects = new HashSet<Insect>();
     private readonly HashSet<Plant> hitPlants = new HashSet<Plant>();
@@ -28,7 +29,7 @@ public class WindGust : MonoBehaviour
     private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.SkillDamage };
 
     public void Initialize(Vector2 origin, Vector2 direction, float hitboxSize, float speed, float damage, Plant source, float maxDistance,
-        float trapDuration, float hasteBonus, float hasteDuration, float cooldownRefundPercent)
+        float trapDuration, float hasteBonus, float hasteDuration, float cooldownRefundPercent, bool seedBomb = false)
     {
         transform.position = origin;
         this.direction = direction.normalized;
@@ -41,6 +42,7 @@ public class WindGust : MonoBehaviour
         this.hasteBonus = hasteBonus;
         this.hasteDuration = hasteDuration;
         this.cooldownRefundPercent = cooldownRefundPercent;
+        this.seedBomb = seedBomb;
 
         float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
@@ -81,6 +83,21 @@ public class WindGust : MonoBehaviour
                 plant.ReduceSkillCooldown(plant.skillCooldown * cooldownRefundPercent);
         }
 
-        if (distanceTraveled >= maxDistance) Destroy(gameObject);
+        if (distanceTraveled >= maxDistance)
+        {
+            // Seed Bomb (skill tree): one last damage pass over everything still caught in the
+            // hitbox at the moment it expires - including insects it already hit earlier
+            if (seedBomb)
+            {
+                List<Insect> finalSnapshot = new List<Insect>(Insect.allInsects);
+                foreach (Insect insect in finalSnapshot)
+                {
+                    if (insect == null || !insect.IsAlive) continue;
+                    if (Vector2.Distance(transform.position, insect.transform.position) > hitboxRadius) continue;
+                    insect.Damage(damage, source.damageType, source.elementalType, source, true, damageTags);
+                }
+            }
+            Destroy(gameObject);
+        }
     }
 }

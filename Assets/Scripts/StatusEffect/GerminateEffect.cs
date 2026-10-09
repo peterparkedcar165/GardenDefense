@@ -9,7 +9,6 @@ public class GerminateEffect : StatusEffect
     private const int BaseMaxAoeTargets = 4;
     private readonly float aoeRadius;
     private readonly int maxAoeTargets;
-    public float delay = 1f;
     private float cachedelementalAffinity;
 
     public GerminateEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
@@ -22,6 +21,11 @@ public class GerminateEffect : StatusEffect
         maxAoeTargets = radiusBonus ? BlossomingEffect.GerminateMaxTargetsBonus : BaseMaxAoeTargets;
         effectType = Type.negative;
         elementalType = ElementalType.Grass;
+
+        // Begonia's Blessing (base kit): detonates earlier for Germinates sourced from a
+        // blessed plant - never lets it go below a sliver of delay
+        if (source != null && source.germinateDetonationSpeedup > 0f)
+            this.duration = Mathf.Max(0.1f, this.duration - source.germinateDetonationSpeedup);
     }
 
     // 32 × (1 + 275% elemental affinity), snapshotted from the source on apply
@@ -30,7 +34,7 @@ public class GerminateEffect : StatusEffect
     public override string GetName() => "<color=green>Germinate</color>";
     public override string GetDescription()
     {
-        return $"Detonates in <color=green><b>{delay:F0}s</b></color>. Deals <color=green><b>{ComputeDamage():F0}</b></color> <color=green>Grass</color> Physical damage to nearby insects.";
+        return $"Detonates in <color=green><b>{duration:F1}s</b></color>. Deals <color=green><b>{ComputeDamage():F0}</b></color> <color=green>Grass</color> Physical damage to nearby insects.";
     }
 
     public override void OnApply()

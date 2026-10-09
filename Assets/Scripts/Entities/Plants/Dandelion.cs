@@ -13,11 +13,22 @@ public class Dandelion : Shooter
 
     private DandelionData DData => data as DandelionData;
 
+    // skill tree node unlock ids
+    public const string WindfallUnlock    = "dandelion_windfall";
+    public const string OvergrowthUnlock  = "dandelion_overgrowth";
+    public const string InstantSkillUnlock = "dandelion_instant_skill";
+    public const string TailwindUnlock    = "dandelion_tailwind";
+    public const string SeedBombUnlock    = "dandelion_seedbomb";
+
     // Wind Gust (Skill)
     private float WindGustDamage  => (DData?.baseGustDamage ?? 42f) + (DData?.path3GustDamagePerLevel ?? 12f) * effectivePath3Level + attackDamage + skillDamageMultiplier * magicPower;
     private float WindGustRange   => (DData?.baseWindGustRange ?? 10f) + (DData?.path3WindGustRangePerLevel ?? 0.5f) * effectivePath3Level;
     private float GustHitboxSize  => (DData?.baseBeamWidth ?? 1f) + (DData?.path3BeamWidthPerLevel ?? 0.25f) * effectivePath3Level;
-    private float GustSpeed       => DData?.baseGustSpeed ?? 2.5f; // deliberately flat/slow - no per-level scaling
+    // deliberately flat/slow, no per-level scaling - Tailwind (skill tree) is the only thing
+    // that speeds it up
+    private const float TailwindSpeedMultiplier = 1.5f;
+    private float GustSpeed =>
+        (DData?.baseGustSpeed ?? 2.5f) * (SkillTreeManager.HasUnlock(this, TailwindUnlock) ? TailwindSpeedMultiplier : 1f);
     private const float GlobalGustRange = 30f;
 
     // Pollen Haste - granted to allied plants (never herself) touched by the gust
@@ -51,6 +62,13 @@ public class Dandelion : Shooter
     // Path2 max: allied plants within her attack radius have increased Skill Damage
     private const float SkillDamageAuraBonus = 0.25f;
 
+    // Windfall (skill tree): Pollen Haste granted alongside a successful pulse reduction
+    private const float WindfallHasteDuration = 3f;
+
+    // Overgrowth (skill tree): flat self-regen while unlocked
+    private float overgrowthTickTimer;
+    private const float OvergrowthRegenPercent = 0.01f;
+
     protected override void Awake()
     {
         base.Awake();
@@ -58,6 +76,14 @@ public class Dandelion : Shooter
         _obstacleMask = LayerMask.GetMask("Obstacle");
         Plant.OnPlantPlaced += HandlePlantPlaced;
         ApplyAuraToAllInRange();
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     protected override void OnDestroy()
@@ -92,6 +118,17 @@ public class Dandelion : Shooter
         base.Update();
         UpdateWindGustIndicator();
         UpdatePassivePulse();
+        UpdateOvergrowth();
+    }
+
+    // Overgrowth (skill tree): flat 1%/second self-regen while unlocked
+    private void UpdateOvergrowth()
+    {
+        if (!SkillTreeManager.HasUnlock(this, OvergrowthUnlock)) return;
+        overgrowthTickTimer += Time.deltaTime;
+        if (overgrowthTickTimer < 1f) return;
+        overgrowthTickTimer -= 1f;
+        Heal(maxHealth * OvergrowthRegenPercent);
     }
 
     // shows progress toward the next passive pulse under the health bar, same as Photosynthesis
@@ -106,11 +143,15 @@ public class Dandelion : Shooter
         if (passiveTickTimer < PassiveInterval) return;
         passiveTickTimer -= PassiveInterval;
 
+        bool windfall = SkillTreeManager.HasUnlock(this, WindfallUnlock);
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive || plant == this) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
+            bool willReduce = plant.skillCooldownTimer > 0f;
             plant.ReduceSkillCooldown(PassiveTickReduction);
+            if (willReduce && windfall)
+                plant.ApplyEffect(new PollenHasteEffect(plant, WindfallHasteDuration, this, HasteBonus));
         }
     }
 
@@ -141,6 +182,7 @@ public class Dandelion : Shooter
     public override void OnPath1Upgrade(int level)
     {
         baseAttackSpeed = data.baseAttackSpeed + level * (DData?.path1AttackSpeedPerLevel ?? 0.05f);
+        baseAttackRange = data.baseAttackRange + level * (DData?.path1AttackRangePerLevel ?? 0.2f);
         baseMagicPower  = data.baseMagicPower  + level * (DData?.path1MagicPowerPerLevel  ?? 5f);
     }
 
@@ -172,7 +214,7 @@ public class Dandelion : Shooter
         if (windGustPrefab == null) return;
         _windGustInstance = Instantiate(windGustPrefab, transform.position, Quaternion.identity);
         _windGustInstance.GetComponent<WindGust>()?.Initialize(transform.position, direction, GustHitboxSize, GustSpeed, WindGustDamage, this, gustRange,
-            TrapDuration, HasteBonus, HasteDuration, CooldownRefundPercent);
+            TrapDuration, HasteBonus, HasteDuration, CooldownRefundPercent, SkillTreeManager.HasUnlock(this, SeedBombUnlock));
     }
 
     private void UpdateWindGustIndicator()
@@ -255,12 +297,14 @@ public class Dandelion : Shooter
     public override string GetPath1Description(bool details = false)
     {
         float aspl = DData?.path1AttackSpeedPerLevel ?? 0.05f;
+        float rapl = DData?.path1AttackRangePerLevel ?? 0.2f;
         float mppl = DData?.path1MagicPowerPerLevel  ?? 5f;
         string desc = details
             ? $"Fires a pollen seed at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : $"Fires a pollen seed at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rapl:F2}</b></color> per level. [<color=green><b>+{rapl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#FFB6C1><b>Magic Power</b></color> by <color=green><b>{mppl:F0}</b></color> per level. [<color=green><b>+{mppl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Attacks that successfully proc the passive's timer reduction now reduce it by an additional <color=green><b>1</b></color> second.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +

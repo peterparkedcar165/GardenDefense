@@ -50,7 +50,7 @@ public class SkillTreeUI : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !TutorialManager.BlocksEscape)
             OnBack();
 
         if (tooltipPanel != null && tooltipPanel.activeSelf)

@@ -52,7 +52,7 @@ public class SettingsManager : MonoBehaviour
         bool inLevelSelector = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "LevelSelector";
         bool inShop = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Shop";
         bool inSkillTree = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "SkillTree";
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !fertilizerOpen && !inEncyclopedia && !inLevelSelector && !inShop && !inSkillTree && !SceneTransition.IsTransitioning)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !fertilizerOpen && !inEncyclopedia && !inLevelSelector && !inShop && !inSkillTree && !SceneTransition.IsTransitioning && !TutorialManager.BlocksEscape)
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);
@@ -89,7 +89,7 @@ public class SettingsManager : MonoBehaviour
         Time.timeScale = 1f;
         settingsPanel.SetActive(false);
         LoadoutSelectionUI.instance?.Hide();
-        FertilizerSelectionUI.instance?.CloseAfterSelect();
+        FertilizerSelectionUI.instance?.CloseForSceneExit();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
         if (transition != null)
             transition.StartCoroutine(transition.FadeToScene("MainMenu"));

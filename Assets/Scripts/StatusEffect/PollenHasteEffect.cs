@@ -13,7 +13,12 @@ public class PollenHasteEffect : StatusEffect
         this.bonus = bonus;
     }
 
-    public override void OnApply()  => ((Plant)target).skillChargeRateAdder += bonus;
+    public override void OnApply()
+    {
+        StatusIndicator.Spawn(target.transform.position + new UnityEngine.Vector3(0.4f, 0f, 0f), "Pollen Haste", new UnityEngine.Color(0.85f, 1f, 0.85f));
+        ((Plant)target).skillChargeRateAdder += bonus;
+    }
+
     public override void OnExpire() => ((Plant)target).skillChargeRateAdder -= bonus;
 
     public override string GetName() => "<color=#B2EBF2>Pollen Haste</color>";

@@ -10,11 +10,45 @@ public class LeafRanger : Shooter
     public override bool UsesAutoCast => true;
     public override bool IsAutoCasting => autoCastEnabled;
 
+    // skill tree node unlock ids
+    public const string HuntersEyeUnlock      = "leafranger_hunters_eye";
+    public const string CamouflageUnlock      = "leafranger_camouflage";
+    public const string InstantSkillUnlock    = "leafranger_instant_skill";
+    public const string PiercingVolleyUnlock  = "leafranger_piercing_volley";
+    public const string AdrenalineRushUnlock  = "leafranger_adrenaline_rush";
+
+    private const float HuntersEyeHealthThreshold = 0.3f;
+    private const float CamouflageIdleWindow = 2f;
+    private const float CamouflageEvasionBonus = 0.5f;
+    private float _lastShotTime = float.NegativeInfinity;
+    private bool _camouflageActive;
+
     protected override void Awake()
     {
         base.Awake();
         LoadData();
         basePassiveDuration = 8f;
+        Entity.OnCriticalHit += OnAnyCriticalHit;
+
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Entity.OnCriticalHit -= OnAnyCriticalHit;
+    }
+
+    // Hunter's Eye: a crit of his own against a low-health insect finishes it off outright
+    private void OnAnyCriticalHit(Entity critSource, Entity target)
+    {
+        if (critSource != this || !SkillTreeManager.HasUnlock(this, HuntersEyeUnlock)) return;
+        if (target is not Insect insect || !insect.IsAlive) return;
+        if (insect.health / insect.maxHealth <= HuntersEyeHealthThreshold) insect.Kill(this);
     }
 
     public override void UpdateStats()
@@ -37,6 +71,18 @@ public class LeafRanger : Shooter
 
         if (autoCastEnabled && SkillReady && HasValidTarget())
             TriggerSkill();
+
+        UpdateCamouflage();
+    }
+
+    // Camouflage: gains a flat Evasion bonus while he hasn't fired in a while
+    private void UpdateCamouflage()
+    {
+        bool shouldBeActive = SkillTreeManager.HasUnlock(this, CamouflageUnlock)
+            && Time.time - _lastShotTime >= CamouflageIdleWindow;
+        if (shouldBeActive == _camouflageActive) return;
+        _camouflageActive = shouldBeActive;
+        evasionAdder += shouldBeActive ? CamouflageEvasionBonus : -CamouflageEvasionBonus;
     }
 
     // only auto-casts while at least one actual enemy insect is alive anywhere on the map - no
@@ -72,11 +118,15 @@ public class LeafRanger : Shooter
     public override void ApplyEffect(StatusEffect effect)
     {
         if (effect is BlindEffect || effect is BlindingPollenEffect) return;
+        // Adrenaline Rush: Rapid Focus also grants Crowd Control immunity
+        if (effect is HardCrowdControl && HasEffect<RapidFocusEffect>() && SkillTreeManager.HasUnlock(this, AdrenalineRushUnlock))
+            return;
         base.ApplyEffect(effect);
     }
 
     protected override void OnShoot()
     {
+        _lastShotTime = Time.time;
         if (!IsPath2Maxed) return;
         VerdantFervorEffect existing = GetEffect<VerdantFervorEffect>();
         if (existing != null)
@@ -121,7 +171,9 @@ public class LeafRanger : Shooter
         if (arrow != null)
         {
             arrow.SetTarget(targetObj);
-            arrow.Initialize(targetPos, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
+            // Piercing Volley: unlimited piercing while Rapid Focus is active
+            bool infinitePiercing = HasEffect<RapidFocusEffect>() && SkillTreeManager.HasUnlock(this, PiercingVolleyUnlock);
+            arrow.Initialize(targetPos, attackDamage, projectileSpeed, maxRange, infinitePiercing ? int.MaxValue : piercing, damageType, elementalType, this);
         }
     }
 

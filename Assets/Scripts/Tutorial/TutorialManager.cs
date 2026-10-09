@@ -77,6 +77,11 @@ public class TutorialManager : MonoBehaviour
     // (e.g. hotkey plant selection) that would let the player skip past what it's teaching
     public bool IsAnyTutorialActive => popup != null && popup.IsShowing;
 
+    // true while Escape should be swallowed instead of reaching Settings/Level Selector/Skill
+    // Tree/etc - every one of those systems' own Escape check ANDs this in, so a tutorial can
+    // never be backed out of or covered up before its last page is actually reached
+    public static bool BlocksEscape => instance != null && instance.IsAnyTutorialActive;
+
     // true while the active popup is sitting on a page waiting for this exact event id - lets
     // gameplay code temporarily restrict an action to only the one the tutorial is teaching
     // (e.g. only allow placing on Dirt while that page is up)
