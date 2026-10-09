@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb196e4e86362842ab9d48e27a8f2f8, type: 3}
+  m_Name: LeafRangerSkillTree
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
+  steps:
+  - nodes:
+    - id: node1_attackdamage
+      nodeName: Keen Shot
+      description: Increase <color=green><b>Attack Damage</b></color> by <color=green><b>4</b></color> per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 60
+        valuePerRank: 4
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node2_path1adder
+      nodeName: Ranger's Insight
+      description: <color=green><b>+1 Effective Attack Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 62
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node3_attackspeed
+      nodeName: Swift Draw
+      description: Increase <color=green><b>Attack Speed</b></color> by <color=green><b>0.05</b></color> per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 61
+        valuePerRank: 0.05
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node4_path2adder
+      nodeName: Verdant Insight
+      description: <color=green><b>+1 Effective Passive Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 63
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node5a_hunterseye
+      nodeName: Hunter's Eye
+      description: Critical hits against an insect below <color=green><b>30%</b></color> Health instantly kill it.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: leafranger_hunters_eye
+    - id: node5b_camouflage
+      nodeName: Camouflage
+      description: While he hasn't fired in the last <color=green><b>2</b></color> seconds, gain <color=green><b>50%</b></color> Evasion.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: leafranger_camouflage
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node6_skillcooldown
+      nodeName: Rapid Volley
+      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>3</b></color> seconds per level.
+      maxRank: 5
+      costPerRank: 1
+      effects:
+      - statType: 66
+        valuePerRank: 3
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node7_instantskill
+      nodeName: Focused Aim
+      description: Automatically unlocks Skill.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: leafranger_instant_skill
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node8_path3adder
+      nodeName: Marksman Insight
+      description: <color=green><b>+1 Effective Skill Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 64
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node9_suncost
+      nodeName: Thrifty Hunter
+      description: Reduce <color=#FFD700><b>Sun cost</b></color> by <color=#FFD700><b>10</b></color>.
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 65
+        valuePerRank: 10
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node10a_piercingvolley
+      nodeName: Piercing Volley
+      description: While <color=green><b>Rapid Focus</b></color> is active, arrows gain unlimited Piercing.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: leafranger_piercing_volley
+    - id: node10b_adrenalinerush
+      nodeName: Adrenaline Rush
+      description: While <color=green><b>Rapid Focus</b></color> is active, become immune to Crowd Control effects.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: leafranger_adrenaline_rush
+    ranksToUnlockNext: 1

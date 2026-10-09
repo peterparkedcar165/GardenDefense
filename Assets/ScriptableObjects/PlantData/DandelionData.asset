@@ -22,7 +22,7 @@ MonoBehaviour:
   sunCost: 85
   placementLimit: 0
   category: 0
-  skillTree: {fileID: 0}
+  skillTree: {fileID: 11400000, guid: 36343d93b7f640cf8cf14a07eb2d1ea9, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
   baseAttackDamage: 24
@@ -92,8 +92,9 @@ MonoBehaviour:
   skillSound:
     clips: []
   baseBeamWidth: 1.6
-  baseGustSpeed: 2.5
+  baseGustSpeed: 2
   path1AttackSpeedPerLevel: 0.05
+  path1AttackRangePerLevel: 0.2
   path1MagicPowerPerLevel: 5
   basePassiveInterval: 16
   path2IntervalReductionPerLevel: 1
@@ -104,7 +105,7 @@ MonoBehaviour:
   baseWindGustRange: 10
   baseGustDamage: 42
   path3GustDamagePerLevel: 12
-  path3BeamWidthPerLevel: 0.25
+  path3BeamWidthPerLevel: 0.5
   path3WindGustRangePerLevel: 0.5
   basePollenHasteBonus: 0.25
   path3HasteBonusPerLevel: 0.05

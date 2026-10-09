@@ -738,11 +738,22 @@ public abstract class Insect : Entity, IAttackable
         Transform waypoint = waypoints[currentWaypointIndex];
         Vector3 targetPos = waypoint.position + new Vector3(pathOffset.x, pathOffset.y, 0);
         Vector3 direction = (targetPos - transform.position).normalized;
-        transform.position += direction * GetMoveSpeed() * Time.deltaTime;
 
-        if (Vector3.Distance(transform.position, targetPos) < 0.1f)
+        // clamp the step to the remaining distance instead of always adding the full step -
+        // otherwise a large step (fast flyers, high game speed) can fly straight past the
+        // waypoint without ever landing within the advance threshold, so the next frame's
+        // direction flips back toward it and overshoots again the other way: an oscillation
+        // that's most visible at sharp path corners and reads as the insect being stuck
+        float waypointStep = GetMoveSpeed() * Time.deltaTime;
+        float distToWaypoint = Vector3.Distance(transform.position, targetPos);
+        if (waypointStep >= distToWaypoint)
         {
+            transform.position = targetPos;
             currentWaypointIndex++;
+        }
+        else
+        {
+            transform.position += direction * waypointStep;
         }
     }
 

@@ -47,7 +47,7 @@ public class LevelSelector : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !SceneTransition.IsTransitioning)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame && !SceneTransition.IsTransitioning && !TutorialManager.BlocksEscape)
             GoToMainMenu();
     }
 

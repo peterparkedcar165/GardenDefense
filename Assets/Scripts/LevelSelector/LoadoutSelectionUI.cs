@@ -58,7 +58,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     void Update()
     {
-        if (!IsOpen || SceneTransition.IsTransitioning) return;
+        if (!IsOpen || SceneTransition.IsTransitioning || TutorialManager.BlocksEscape) return;
         if (!UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame) return;
 
         if (SettingsManager.instance != null && SettingsManager.instance.IsOpen)

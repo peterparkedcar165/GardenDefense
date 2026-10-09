@@ -58,13 +58,20 @@ public class TutorialPopupUI : MonoBehaviour, IPointerClickHandler
         if (screenBlocker != null) screenBlocker.SetActive(!waitsForEvent);
 
         if (continueHintText != null)
+        {
+            continueHintText.gameObject.SetActive(!waitsForEvent);
             continueHintText.text = waitsForEvent ? "" : (pageIndex == pages.Length - 1 ? "(click to close)" : "(click to continue)");
+        }
 
         Debug.Log($"[Tutorial] Popup page {pageIndex + 1}/{pages.Length} - waitsForEvent={(waitsForEvent ? page.waitForEventId : "none")} - \"{page.text}\"");
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        // only left click advances the popup - right click is used elsewhere (deselecting a
+        // plant, canceling skill targeting) and shouldn't double as a way to click through this
+        if (eventData.button != PointerEventData.InputButton.Left) return;
+
         // pages can go null if a script recompile/domain reload happened while this popup was
         // still showing (editing a .cs file mid-Play-session resets non-serialized fields like
         // this one, but doesn't deactivate the GameObject or clear its stale text) - just hide it

@@ -19,16 +19,17 @@ MonoBehaviour:
   family: 4
   elementalType: 2
   damageType: 0
-  sunCost: 175
+  sunCost: 250
   placementLimit: 0
-  category: 0
-  skillTree: {fileID: 0}
+  category: 1
+  skillTree: {fileID: 11400000, guid: 1dcfd0f9c7e046b580ee7e432e13517c, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 128
+  baseAttackDamage: 158
   baseMagicPower: 0
-  baseAttackSpeed: 0.25
+  baseAttackSpeed: 0.2
   baseAttackRange: 99
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
@@ -86,14 +87,14 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []
   baseSkillAttackSpeedBonus: 3
-  path1AttackDamagePerLevel: 18
-  path1AttackSpeedPerLevel: 0.06
+  path1AttackDamagePerLevel: 22
+  path1AttackSpeedPerLevel: 0.08
   baseCritChanceBonus: 0.15
   path2CritChancePerLevel: 0.06
-  path3AttackSpeedBonusPerLevel: 0.3
+  path3AttackSpeedBonusPerLevel: 0.2
   path3SkillDurationPerLevel: 1

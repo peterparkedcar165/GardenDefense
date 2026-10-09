@@ -89,7 +89,7 @@ public class FertilizerSelectionUI : MonoBehaviour
 
     void Update()
     {
-        if (!IsOpen || !Keyboard.current.escapeKey.wasPressedThisFrame) return;
+        if (!IsOpen || !Keyboard.current.escapeKey.wasPressedThisFrame || TutorialManager.BlocksEscape) return;
         if (isMidLevelMode) CloseMidLevel();
         else BackToLoadout();
     }
@@ -129,9 +129,25 @@ public class FertilizerSelectionUI : MonoBehaviour
         {
             TutorialManager.instance?.TryShow(TutorialIds.Level1StartLevel, TutorialContent.Level1StartLevel);
         }
-        else if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2)
+        else if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2
+                 && SaveManager.instance != null && SaveManager.instance.selectedLoadout.Contains("Sunflower"))
         {
             TutorialManager.instance?.TryShow(TutorialIds.Level2StartLevel, TutorialContent.Level2StartLevel);
+        }
+    }
+
+    // cleanup used when leaving to the Main Menu (Escape -> Settings -> Main Menu, or Game
+    // Over) rather than from an actual fertilizer pick - closes the panel without
+    // CloseAfterSelect's tutorial-trigger side effects, which should only ever fire from a
+    // genuine selection at level start, not from bailing out to the main menu mid-pick
+    public void CloseForSceneExit()
+    {
+        panel.SetActive(false);
+        ClearCards();
+        if (isMidLevelMode)
+        {
+            Time.timeScale = _timeScaleBeforeMidLevel;
+            FertilizerQueueButton.instance?.Refresh();
         }
     }
 

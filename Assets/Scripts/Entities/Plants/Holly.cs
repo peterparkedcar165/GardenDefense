@@ -30,10 +30,27 @@ public class Holly : Aura
     public override bool UsesAutoCast => true;
     public override bool IsAutoCasting => autoCastEnabled;
 
+    // skill tree node unlock ids
+    public const string ThornedHideUnlock      = "holly_thorned_hide";
+    public const string IceboundWillUnlock     = "holly_icebound_will";
+    public const string InstantSkillUnlock     = "holly_instant_skill";
+    public const string ReinforcedShieldUnlock = "holly_reinforced_shield";
+    public const string ShatteringFrostUnlock  = "holly_shattering_frost";
+
+    private const float ThornedHideArmorReduction = 15f;
+    private const float ReinforcedShieldMultiplier = 1.25f;
+    private const float ShatteringFrostStunDuration = 1f;
+
     protected override void Awake()
     {
         base.Awake();
         LoadData();
+
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     public override void UpdateStats()
@@ -75,6 +92,17 @@ public class Holly : Aura
     public override void OnShieldBreak(ShieldEffect shield)
     {
         base.OnShieldBreak(shield);
+
+        // Shattering Frost: every shield break stuns nearby insects, independent of Path3 max
+        if (SkillTreeManager.HasUnlock(this, ShatteringFrostUnlock))
+        {
+            foreach (Insect insect in GetInsectsInRange())
+            {
+                if (insect == null || !insect.IsAlive) continue;
+                insect.ApplyEffect(new StunEffect(insect, ShatteringFrostStunDuration, 1, this));
+            }
+        }
+
         if (!IsPath3Maxed) return;
         float damage = shield.originalAmount * 0.5f;
         foreach (Insect insect in GetInsectsInRange())
@@ -97,14 +125,26 @@ public class Holly : Aura
         if (!IsAlive || !attacker.IsAlive) return;
         float retaliationDamage = RetaliationHollyPct * attackDamage + RetaliationInsectPct * attacker.attackDamage;
         attacker.Damage(retaliationDamage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Counter, DamageTag.PassiveDamage });
+
+        // Thorned Hide: retaliation also afflicts the attacker with Frozen Rage
+        if (SkillTreeManager.HasUnlock(this, ThornedHideUnlock))
+            attacker.ApplyEffect(new FrozenRageEffect(attacker, EffectDuration, 1, this, this, ThornedHideArmorReduction));
     }
 
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
         skillCooldownTimer = skillCooldown;
-        if (ShieldAmount > 0f)
-            ApplyEffect(new HollyShieldEffect(this, skillDuration, 1, this, ShieldAmount));
+        float shieldAmount = ShieldAmount * (SkillTreeManager.HasUnlock(this, ReinforcedShieldUnlock) ? ReinforcedShieldMultiplier : 1f);
+        if (shieldAmount > 0f)
+            ApplyEffect(new HollyShieldEffect(this, skillDuration, 1, this, shieldAmount));
+    }
+
+    // Icebound Will: immune to Slow effects outright
+    public override void ApplyEffect(StatusEffect effect)
+    {
+        if (effect is SlowEffect && SkillTreeManager.HasUnlock(this, IceboundWillUnlock)) return;
+        base.ApplyEffect(effect);
     }
 
     // click Auto Cast to toggle it on, click again to turn it off — no target to pick

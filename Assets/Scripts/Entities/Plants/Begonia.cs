@@ -28,6 +28,8 @@ public class Begonia : Shooter
     private float GrassDamageBonusMP   => (BData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
     private float GrassDamageBonus     => GrassDamageBonusBase + GrassDamageBonusMP;
 
+    private float GerminateSpeedupBonus => (BData?.baseGerminateSpeedup ?? 0.5f) + (BData?.path2GerminateSpeedupPerLevel ?? 0.1f) * effectivePath2Level;
+
     private float AttackSpeedBonusBase => (BData?.baseAttackSpeedBonus ?? 0f) + (BData?.path3AttackSpeedBonusPerLevel ?? 0.04f) * effectivePath3Level;
     private float AttackSpeedBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
     private float AttackSpeedBonus     => AttackSpeedBonusBase + AttackSpeedBonusMP;
@@ -82,7 +84,7 @@ public class Begonia : Shooter
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            plant.ApplyEffect(new BegoniaBlessingEffect(plant, 1, this, attackRange, ElementalAffinityBonus, GrassDamageBonus, grantsGerminateCrit));
+            plant.ApplyEffect(new BegoniaBlessingEffect(plant, 1, this, attackRange, ElementalAffinityBonus, GrassDamageBonus, grantsGerminateCrit, GerminateSpeedupBonus));
         }
     }
 
@@ -251,13 +253,15 @@ public class Begonia : Shooter
     {
         float eapl = BData?.path2ElementalAffinityPerLevel ?? 0.08f;
         float gdpl = BData?.path2GrassDamagePerLevel ?? 0.04f;
+        float gspl = BData?.path2GerminateSpeedupPerLevel ?? 0.1f;
         float mpMult = BData?.basePassiveMultiplier ?? 0f;
         string desc = details
-            ? $"Plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, increasing <color=green><b>Elemental Affinity</b></color> by <color=green><b>[({(BData?.baseElementalAffinityBonus ?? 0.24f) * 100f:F0}%) + ({eapl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> and <color=green><b>Grass Damage</b></color> by <color=green><b>[({(BData?.baseGrassDamageBonus ?? 0.2f) * 100f:F0}%) + ({gdpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>."
+            ? $"Plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, increasing <color=green><b>Elemental Affinity</b></color> by <color=green><b>[({(BData?.baseElementalAffinityBonus ?? 0.24f) * 100f:F0}%) + ({eapl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> and <color=green><b>Grass Damage</b></color> by <color=green><b>[({(BData?.baseGrassDamageBonus ?? 0.2f) * 100f:F0}%) + ({gdpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>. Their <color=green><b>Germinate</b></color> triggers detonate <color=green><b>[({(BData?.baseGerminateSpeedup ?? 0.5f):F1}s) + ({gspl:F1}s/Lvl.)]</b></color> earlier."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Elemental Affinity</b></color> bonus by <color=green><b>{eapl * 100f:F0}%</b></color> per level. [<color=green><b>+{eapl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Grass Damage</b></color> bonus by <color=green><b>{gdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{gdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green><b>Germinate</b></color> speedup by <color=green><b>{gspl:F1}s</b></color> per level. [<color=green><b>+{gspl * effectivePath2Level:F1}s</b></color>]\n\n" +
                $"{Level5Section(path2Level, "<color=#4FC3F7><b>Begonia's Blessing</b></color> allows <color=green><b>Germinate</b></color> triggers to critically strike.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -292,7 +296,8 @@ public class Begonia : Shooter
     public override string GetPassiveDescription() =>
         $"Plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, " +
         $"increasing <color=green><b>Elemental Affinity</b></color> by <color=green><b>{ElementalAffinityBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{ElementalAffinityBonusMP * 100f:F0}%</b></color>] " +
-        $"and <color=green><b>Grass Damage</b></color> by <color=green><b>{GrassDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{GrassDamageBonusMP * 100f:F0}%</b></color>].";
+        $"and <color=green><b>Grass Damage</b></color> by <color=green><b>{GrassDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{GrassDamageBonusMP * 100f:F0}%</b></color>]. " +
+        $"Their <color=green><b>Germinate</b></color> triggers detonate <color=green><b>{GerminateSpeedupBonus:F1}s</b></color> earlier.";
 
     public override string GetSkillDesription() =>
         $"Target an area on the field. Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +

@@ -22,7 +22,7 @@ public class DoTAggregator : MonoBehaviour
     private const float baseOffset = 1.1f;
     private const float stackSpacing = 0.3f;
     private const float offsetLerpSpeed = 8f;
-    private const float baseSize = 4f;
+    private const float baseSize = 2f;
     private const float sizeScale = 0.04f;
     private const float maxSize = 6f;
 

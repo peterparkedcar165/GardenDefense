@@ -69,7 +69,7 @@ public class SkillTargetingManager : MonoBehaviour
     {
         if (isPlantTargeting)
         {
-            if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
+            if (Mouse.current.rightButton.wasPressedThisFrame || (Keyboard.current.escapeKey.wasPressedThisFrame && !TutorialManager.BlocksEscape))
             {
                 CancelPlantTargeting();
                 return;
@@ -78,7 +78,7 @@ public class SkillTargetingManager : MonoBehaviour
 
         if (isDeadTileTargeting)
         {
-            if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
+            if (Mouse.current.rightButton.wasPressedThisFrame || (Keyboard.current.escapeKey.wasPressedThisFrame && !TutorialManager.BlocksEscape))
             {
                 CancelDeadTileTargeting();
                 return;
@@ -128,7 +128,7 @@ public class SkillTargetingManager : MonoBehaviour
             else
                 Confirm(mouseWorld);
         }
-        else if (Mouse.current.rightButton.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
+        else if (Mouse.current.rightButton.wasPressedThisFrame || (Keyboard.current.escapeKey.wasPressedThisFrame && !TutorialManager.BlocksEscape))
             Cancel();
     }
 
