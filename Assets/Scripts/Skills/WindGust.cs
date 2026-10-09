@@ -1,160 +1,86 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+// a single, slow-moving pollen-seed projectile with a huge hitbox (Dandelion's skill). flies
+// in a straight line: insects it touches take damage once and get swept along with the wind
+// (WindDisplacedEffect), while allied plants it touches gain Pollen Haste once - never hitting
+// the same entity twice, and never buffing Dandelion herself
 public class WindGust : MonoBehaviour
 {
-    private Vector2 origin;
     private Vector2 direction;
-    private float width;
-    private float duration;
+    private float speed;
+    private float hitboxRadius;
     private float damage;
-    private float pushForce;
     private Plant source;
-    private float blindDuration;
+    private float maxDistance;
+    private float distanceTraveled;
 
-    private float tickTimer;
-    private const float tickInterval = 0.25f;
-    private float maxRange;
-    private const float extendDuration = 0.6f;
-    private const float retractDuration = 1f;
-    private float currentLength = 0f;
-    private float beamStart = 0f;
-    private float beamEnd = 0f;
+    private float trapDuration;
+    private float hasteBonus;
+    private float hasteDuration;
+    private float cooldownRefundPercent;
 
-    private bool _isGlobal;
-    private Transform _sourceTransform;
+    private readonly HashSet<Insect> hitInsects = new HashSet<Insect>();
+    private readonly HashSet<Plant> hitPlants = new HashSet<Plant>();
 
     [SerializeField] private SpriteRenderer visualRenderer;
-    [SerializeField] private LayerMask obstacleLayer;
 
-    private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.DoT, DamageTag.SkillDamage };
+    private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.SkillDamage };
 
-    public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float damage, float pushForce, Plant source, float maxRange, bool isGlobal = false, float blindDuration = 0f)
+    public void Initialize(Vector2 origin, Vector2 direction, float hitboxSize, float speed, float damage, Plant source, float maxDistance,
+        float trapDuration, float hasteBonus, float hasteDuration, float cooldownRefundPercent)
     {
-        this.blindDuration = blindDuration;
-        if (obstacleLayer == 0)
-        {
-            foreach (Tile t in FindObjectsByType<Tile>(FindObjectsInactive.Exclude))
-            {
-                if (t.tileType == TileType.Obstacle)
-                {
-                    obstacleLayer = 1 << t.gameObject.layer;
-                    break;
-                }
-            }
-        }
-
-        this.origin = origin;
+        transform.position = origin;
         this.direction = direction.normalized;
-        this.width = width;
-        this.duration = duration;
+        this.hitboxRadius = hitboxSize * 0.5f;
+        this.speed = speed;
         this.damage = damage;
-        this.pushForce = pushForce;
         this.source = source;
-        this.maxRange = maxRange;
-        _isGlobal = isGlobal;
-        _sourceTransform = source != null ? source.transform : null;
+        this.maxDistance = maxDistance;
+        this.trapDuration = trapDuration;
+        this.hasteBonus = hasteBonus;
+        this.hasteDuration = hasteDuration;
+        this.cooldownRefundPercent = cooldownRefundPercent;
 
+        float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
         if (visualRenderer != null)
-        {
-            float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;
-            visualRenderer.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
-            visualRenderer.transform.localPosition = Vector3.zero;
-            visualRenderer.transform.localScale = new Vector3(0f, width, 1f);
-        }
+            visualRenderer.transform.localScale = new Vector3(hitboxSize, hitboxSize, 1f);
     }
 
     private void Update()
     {
         if (source == null || !source.IsAlive) { Destroy(gameObject); return; }
 
-        duration -= Time.deltaTime;
-        if (duration <= 0f) { Destroy(gameObject); return; }
+        float step = speed * Time.deltaTime;
+        transform.position += (Vector3)(direction * step);
+        distanceTraveled += step;
 
-        if (_isGlobal && _sourceTransform != null)
+        Vector2 windVelocity = direction * speed;
+
+        List<Insect> insectSnapshot = new List<Insect>(Insect.allInsects);
+        foreach (Insect insect in insectSnapshot)
         {
-            transform.position = _sourceTransform.position;
-            origin = _sourceTransform.position;
+            if (insect == null || !insect.IsAlive || hitInsects.Contains(insect)) continue;
+            if (Vector2.Distance(transform.position, insect.transform.position) > hitboxRadius) continue;
+
+            hitInsects.Add(insect);
+            insect.Damage(damage, source.damageType, source.elementalType, source, true, damageTags);
+            insect.ApplyEffect(new WindDisplacedEffect(insect, trapDuration, source, windVelocity));
         }
 
-        tickTimer += Time.deltaTime;
-
-        List<Insect> snapshot = new List<Insect>(Insect.allInsects);
-        foreach (Insect insect in snapshot)
+        List<Plant> plantSnapshot = new List<Plant>(Plant.allPlants);
+        foreach (Plant plant in plantSnapshot)
         {
-            if (insect == null || !insect.IsAlive) continue;
-            if (!IsInBeam(insect.transform.position)) continue;
+            if (plant == null || !plant.IsAlive || plant == source || hitPlants.Contains(plant)) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > hitboxRadius) continue;
 
-            float tenacityScale = Mathf.Sqrt(Mathf.Max(0f, 1f - insect.tenacity));
-            float force = (insect.isFlying ? pushForce * 1.25f : pushForce) * tenacityScale;
-            insect.windVelocity += direction * force;
-
-            if (tickTimer >= tickInterval)
-            {
-                insect.Damage(damage * tickInterval, source.damageType, source.elementalType, source, false, damageTags);
-                insect.ApplyEffect(new DisplacedEffect(insect, 0.5f, 1, source));
-                // guaranteed, unlike the passive's chance-based proc - every tick that lands
-                // applies it, using the same duration the passive is currently tuned to
-                if (blindDuration > 0f)
-                    insect.ApplyEffect(new BlindingPollenEffect(insect, blindDuration, 1, source));
-            }
+            hitPlants.Add(plant);
+            plant.ApplyEffect(new PollenHasteEffect(plant, hasteDuration, source, hasteBonus));
+            if (cooldownRefundPercent > 0f)
+                plant.ReduceSkillCooldown(plant.skillCooldown * cooldownRefundPercent);
         }
 
-        if (tickTimer >= tickInterval)
-            tickTimer -= tickInterval;
-
-        if (visualRenderer != null)
-        {
-            if (duration > retractDuration)
-            {
-                currentLength = Mathf.MoveTowards(currentLength, maxRange, (maxRange / extendDuration) * Time.deltaTime);
-                if (_isGlobal)
-                {
-                    beamStart = -currentLength;
-                    beamEnd = currentLength;
-                    visualRenderer.transform.localPosition = Vector3.zero;
-                    visualRenderer.transform.localScale = new Vector3(currentLength * 2f, width, 1f);
-                }
-                else
-                {
-                    beamStart = 0f;
-                    beamEnd = currentLength;
-                    visualRenderer.transform.localPosition = (Vector3)(direction * currentLength * 0.5f);
-                    visualRenderer.transform.localScale = new Vector3(currentLength, width, 1f);
-                }
-            }
-            else
-            {
-                float remainingLength = (duration / retractDuration) * maxRange;
-                if (_isGlobal)
-                {
-                    beamStart = -remainingLength;
-                    beamEnd = remainingLength;
-                    visualRenderer.transform.localPosition = Vector3.zero;
-                    visualRenderer.transform.localScale = new Vector3(remainingLength * 2f, width, 1f);
-                }
-                else
-                {
-                    float nearEdge = maxRange - remainingLength;
-                    beamStart = nearEdge;
-                    beamEnd = maxRange;
-                    visualRenderer.transform.localPosition = (Vector3)(direction * (nearEdge + remainingLength * 0.5f));
-                    visualRenderer.transform.localScale = new Vector3(remainingLength, width, 1f);
-                }
-            }
-
-            Color c = visualRenderer.color;
-            c.a = duration <= retractDuration ? (duration / retractDuration) * 0.5f : 0.5f;
-            visualRenderer.color = c;
-        }
-    }
-
-    private bool IsInBeam(Vector2 point)
-    {
-        Vector2 toPoint = point - origin;
-        float dot = Vector2.Dot(toPoint, direction);
-        if (dot < beamStart || dot > beamEnd) return false;
-        Vector2 perp = toPoint - direction * dot;
-        return perp.magnitude <= width * 0.5f;
+        if (distanceTraveled >= maxDistance) Destroy(gameObject);
     }
 }

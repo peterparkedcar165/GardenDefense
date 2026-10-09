@@ -196,7 +196,7 @@ public class Hellebore : Shooter
 
     public void OnProjectileHit()
     {
-        skillCooldownTimer = Mathf.Max(0f, skillCooldownTimer - CDRPerHit);
+        ReduceSkillCooldown(CDRPerHit);
         if (IsPath3Maxed)
             _autoShieldCooldownTimer = Mathf.Max(0f, _autoShieldCooldownTimer - CDRPerHit);
     }

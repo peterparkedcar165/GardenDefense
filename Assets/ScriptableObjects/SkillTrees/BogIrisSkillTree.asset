@@ -58,16 +58,16 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5a_guardedbloom
-      nodeName: Guarded Bloom
-      description: While <b><color=#4FC3F7>closed</color></b>, each regeneration tick also refreshes a <color=grey><b>Shield</b></color> equal to <color=green><b>3%</b></color> Max Health.
+    - id: node5a_boggedbarrier
+      nodeName: Bogged Barrier
+      description: While <b><color=#4FC3F7>closed</color></b>, healing that would overheal instead fills a <color=grey><b>Shield</b></color>, up to <color=green><b>10%</b></color> Max Health. While shielded, increase <color=orange><b>Fire</b></color> and <color=#4FC3F7><b>Water</b></color> Resistance by <color=green><b>35%</b></color>.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: bogiris_guarded_bloom
+      unlockId: bogiris_bogged_barrier
     - id: node5b_fruitfulbloom
       nodeName: Fruitful Bloom
-      description: While <b><color=#4FC3F7>open</color></b>, <color=yellow><b>Sun</b></color> production interval is halved.
+      description: While <b><color=#4FC3F7>open</color></b>, increase <color=yellow><b>Sun</b></color> Yield by <color=green><b>15%</b></color> and reduce <color=yellow><b>Sun</b></color> generation cooldown by <color=green><b>1</b></color> second.
       maxRank: 1
       costPerRank: 2
       effects: []
@@ -116,18 +116,18 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node10a_overflow
-      nodeName: Overflow
-      description: Increase <color=green><b>Geyser</b></color> radius by <color=green><b>30%</b></color>, but reduce its damage by <color=green><b>20%</b></color>.
+    - id: node10a_tidalsurge
+      nodeName: Tidal Surge
+      description: <color=green><b>Geyser</b></color> critical hits knock insects <color=green><b>35%</b></color> higher. Scoring an assist on an insect reduces <color=green><b>Geyser</b></color> cooldown by <color=green><b>1</b></color> second.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: bogiris_overflow
-    - id: node10b_eruption
-      nodeName: Eruption
-      description: Increase <color=green><b>Geyser</b></color> damage by <color=green><b>30%</b></color>, but reduce its radius by <color=green><b>20%</b></color>.
+      unlockId: bogiris_tidal_surge
+    - id: node10b_lingeringmire
+      nodeName: Lingering Mire
+      description: After detonating, the <color=green><b>Geyser</b></color> remains for <color=green><b>6</b></color> seconds, slowing down ground insects by <color=green><b>50%</b></color>.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: bogiris_eruption
+      unlockId: bogiris_lingering_mire
     ranksToUnlockNext: 1

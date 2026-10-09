@@ -448,6 +448,17 @@ public abstract class Plant : Entity, IAttackable
     public float baseSkillHealth, skillHealth;
     public virtual bool SkillReady => path3Unlocked && skillCooldownTimer <= 0 && !IsSilenced && !IsChanneling;
 
+    // call whenever something reduces this plant's Skill Cooldown by a fixed amount outside of
+    // its normal per-frame tick (Dandelion's passive pulse and skill, the Symbiosis/Wither family
+    // passive, Hellebore/Cattail/Sunflower/BogIris's Tidal Surge, etc.) - centralizes the floor-at-
+    // zero clamp and shows the shared wind-colored "-N" indicator so every source reads the same
+    public void ReduceSkillCooldown(float amount)
+    {
+        if (amount <= 0f || skillCooldownTimer <= 0f) return;
+        skillCooldownTimer = Mathf.Max(0f, skillCooldownTimer - amount);
+        SkillCooldownIndicator.Spawn(transform.position + Vector3.up * 0.25f, amount);
+    }
+
 
     [Header("Paths")]
     public int path1Level, path2Level, path3Level, path1LevelAdder, path2LevelAdder, path3LevelAdder, effectivePath1Level, effectivePath2Level, effectivePath3Level;

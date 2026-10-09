@@ -95,9 +95,9 @@ MonoBehaviour:
   baseSunGenerated: 2
   baseKnockUpHeight: 3.5
   baseGeyserDamage: 85
-  geyseredDuration: 8
-  geyseredArmorShred: 20
-  geyseredFallDamageResistanceShred: 0.15
+  waterweightDuration: 8
+  waterweightArmorShred: 20
+  waterweightFallDamageResistanceShred: 0.15
   baseHealthDamageScaling: 0.12
   path1HealthScalingPerLevel: 0.02
   path1AttackSpeedPerLevel: 0.02

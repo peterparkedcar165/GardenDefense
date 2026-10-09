@@ -7,9 +7,9 @@ public class BogIrisData : PlantData
     public int baseSunGenerated = 2;
     public float baseKnockUpHeight;
     public float baseGeyserDamage;
-    public float geyseredDuration = 8f;
-    public float geyseredArmorShred = 20f;
-    public float geyseredFallDamageResistanceShred = 0.15f;
+    public float waterweightDuration = 8f;
+    public float waterweightArmorShred = 20f;
+    public float waterweightFallDamageResistanceShred = 0.15f;
 
     [Header("Path 1 Scaling")]
     public float baseHealthDamageScaling = 0.12f;

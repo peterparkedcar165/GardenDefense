@@ -87,6 +87,9 @@ public static class PlantStatApplier
             case StatType.MaxSlowStacksFlat:               if (plant is Waterlily wl) wl.maxSlowStacksAdder += Mathf.RoundToInt(value); break;
             case StatType.ToxicSporeDurationFlat:          if (plant is PoisonShroom ps) ps.toxicSporeDurationAdder += value; break;
             case StatType.ProjectileSpeedFlat:             plant.projectileSpeedAdder          += value; break;
+            case StatType.AttackDamageTotalMultiplier:     plant.attackDamageTotalMultiplier  += value; break;
+            case StatType.ArmorTotalMultiplier:             plant.armorTotalMultiplier          += value; break;
+            case StatType.SkillChargeRate:                  plant.skillChargeRateAdder          += value; break;
         }
     }
 }
