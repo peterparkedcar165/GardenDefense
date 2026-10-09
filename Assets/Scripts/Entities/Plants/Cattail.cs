@@ -222,7 +222,7 @@ public class Cattail : Shooter
     private void OnAnyCritHit(Entity critSource, Entity target)
     {
         if (critSource != this || !IsPath2Maxed) return;
-        skillCooldownTimer = Mathf.Max(0f, skillCooldownTimer - 0.5f);
+        ReduceSkillCooldown(0.5f);
     }
 
     public void OnSkillHit()

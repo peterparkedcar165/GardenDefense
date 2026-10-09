@@ -13,6 +13,6 @@ public class DandelionProjectile : Projectile
         PlaySound(hit);
         trackedTarget = null;
         // rolled independently for every insect the pierce hits, not just the first
-        (source as Dandelion)?.TryApplyBlindingPollen(insect);
+        (source as Dandelion)?.TryAcceleratePassive(insect);
     }
 }

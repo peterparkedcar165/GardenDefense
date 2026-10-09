@@ -128,5 +128,14 @@ public enum StatType
     ToxicSporeDurationFlat,
     // flat projectile speed, same idea as AttackRangeFlat above - feeds Entity.projectileSpeedAdder.
     // added for Rhodiola's reworked attack tree (Shooter-based healer)
-    ProjectileSpeedFlat
+    ProjectileSpeedFlat,
+    // percentage of TOTAL (fully computed) Attack Damage/Armor, applied last via
+    // Entity.attackDamageTotalMultiplier/armorTotalMultiplier - distinct from the existing
+    // AttackDamage/Armor entries above, which only scale the base stat before adders
+    AttackDamageTotalMultiplier,
+    ArmorTotalMultiplier,
+    // feeds Plant.skillChargeRateAdder - a rate multiplier on how fast skillCooldownTimer counts
+    // down (1 = normal speed, +0.1 = 10% faster), not a flat/percentage reduction to the cooldown
+    // duration itself. League of Legends' Ability Haste is the reference point for this stat
+    SkillChargeRate
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 53de87a7c32790349918a051a46d6a60, type: 3}
   plantName: Dandelion
   displayName: Dandelion
-  family: 5
+  family: 2
   elementalType: 5
   damageType: 1
   sunCost: 85
@@ -27,8 +27,9 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 0.6
+  baseAttackSpeed: 0.3
   baseAttackRange: 3
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
@@ -76,8 +77,8 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 120
-  baseSkillDuration: 6
+  baseSkillCooldown: 60
+  baseSkillDuration: 8
   channelDuration: 0
   baseSkillRadius: 0
   baseSkillDamageMultiplier: 0.25
@@ -86,20 +87,25 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []
   baseBeamWidth: 1.6
-  basePushPower: 1.35
-  path1AttackDamagePerLevel: 4
-  path1AttackRangePerLevel: 0.3
-  baseBlindingChance: 0.5
-  path2BlindingChancePerLevel: 0.05
-  baseBlindingDuration: 2
-  path2BlindingDurationPerLevel: 1
-  minorStunDuration: 1
+  baseGustSpeed: 2.5
+  path1AttackSpeedPerLevel: 0.05
+  path1MagicPowerPerLevel: 5
+  basePassiveInterval: 16
+  path2IntervalReductionPerLevel: 1
+  basePassiveProcChance: 0.5
+  path2ProcChancePerLevel: 0.05
+  basePassiveTickReduction: 1
+  path2TickReductionPerLevel: 0.25
   baseWindGustRange: 10
+  baseGustDamage: 42
+  path3GustDamagePerLevel: 12
   path3BeamWidthPerLevel: 0.25
-  path3SkillDurationPerLevel: 1
   path3WindGustRangePerLevel: 0.5
+  basePollenHasteBonus: 0.25
+  path3HasteBonusPerLevel: 0.05
+  path3SkillDurationPerLevel: 2

@@ -135,7 +135,7 @@ public abstract class Entity : MonoBehaviour
         if (data.source is Plant attackerPlant && attackerPlant.data != null
             && (attackerPlant.data.family == PlantFamily.Symbiosis || attackerPlant.data.family == PlantFamily.Wither)
             && Random.value < 0.5f)
-            attackerPlant.skillCooldownTimer = Mathf.Max(0f, attackerPlant.skillCooldownTimer - 1f * effectiveness);
+            attackerPlant.ReduceSkillCooldown(1f * effectiveness);
 
         // Bird of Paradise: Talon Focus stack gain plus its per-stack on-hit bonus damage (and,
         // at Path1 max with full stacks, the percent-current-health finisher). unlike Floral
@@ -740,7 +740,7 @@ public abstract class Entity : MonoBehaviour
             // Carrot, don't)
             if (source is Plant kindredPlant && kindredPlant.data != null && kindredPlant.data.family == PlantFamily.Kindred
                 && Random.value < 0.33f)
-                kindredPlant.skillCooldownTimer = Mathf.Max(0f, kindredPlant.skillCooldownTimer - 0.75f);
+                kindredPlant.ReduceSkillCooldown(0.75f);
         } else
         {
             coordinatedDamageMult = 1;

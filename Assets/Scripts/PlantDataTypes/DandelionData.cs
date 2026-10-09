@@ -1,36 +1,42 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "DandelionData", menuName = "Scriptable Objects/PlantData/Dandelion")]
 public class DandelionData : PlantData
 {
     public float baseBeamWidth;
-    public float basePushPower;
+    public float baseGustSpeed = 2.5f;
 
     [Header("Path 1 Scaling")]
-    public float path1AttackDamagePerLevel = 4f;
-    public float path1AttackRangePerLevel = 0.25f;
+    public float path1AttackSpeedPerLevel = 0.05f;
+    public float path1MagicPowerPerLevel = 5f;
 
-    [Header("Path 2 Scaling - Blinding Pollen")]
-    public float baseBlindingChance = 0.5f;
-    public float path2BlindingChancePerLevel = 0.05f;
-    public float baseBlindingDuration = 2f;
-    public float path2BlindingDurationPerLevel = 1f;
-    // path2 max: Blinding Pollen also inflicts a brief Stun on flying insects
-    public float minorStunDuration = 1f;
+    [Header("Path 2 Scaling - Pollinator's Pulse")]
+    public float basePassiveInterval = 16f;
+    public float path2IntervalReductionPerLevel = 1f;
+    public float basePassiveProcChance = 0.5f;
+    public float path2ProcChancePerLevel = 0.05f;
+    public float basePassiveTickReduction = 1f;
+    public float path2TickReductionPerLevel = 0.25f;
 
     public float baseWindGustRange = 10f;
 
-    [Header("Path 3 Scaling")]
+    [Header("Path 3 Scaling - Wind Gust / Pollen Haste")]
+    public float baseGustDamage = 42f;
+    public float path3GustDamagePerLevel = 12f;
     public float path3BeamWidthPerLevel = 0.25f;
-    public float path3SkillDurationPerLevel = 1f;
     public float path3WindGustRangePerLevel = 0.5f;
+    public float basePollenHasteBonus = 0.10f;
+    public float path3HasteBonusPerLevel = 0.04f;
+    // drives the generic Plant.baseSkillDuration/skillDuration stat (see OnPath3Upgrade) -
+    // Pollen Haste's duration reads straight off skillDuration rather than its own field
+    public float path3SkillDurationPerLevel = 2f;
 
     public override string GetAttackDescription() =>
-        $"Blows a slow moving wind of pollen at a target, dealing {DamageTypeLabel(damageType)}. The wind pierces through everything in its path.";
+        $"Fires a pollen seed at a target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks have a chance to apply <color=#B2EBF2><b>Blinding Pollen</b></color>, reducing the target's Accuracy.";
+        "Periodically reduces the Skill Cooldown of allied plants within her attack radius, and her attacks have a chance to speed this up.";
 
     public override string GetSkillDescription() =>
-        $"Blows a powerful gust of pollen wind towards the targeted direction, crossing the entire map. Insects caught in the gust take {DamageTypeLabel(damageType)} per second, are pushed in the wind's direction, are <color=#E0E0E0>Displaced</color>, and afflicted with <color=#B2EBF2><b>Blinding Pollen</b></color>.";
+        $"Fires a slow, large pollen seed towards the targeted direction. On impact, deals {DamageTypeLabel(damageType)} to insects and sweeps them along with the wind, while granting allied plants touched by it <color=#B2EBF2><b>Pollen Haste</b></color>.";
 }

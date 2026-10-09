@@ -24,16 +24,33 @@ public class BogIris : Shooter
     private const float ClosedArmorBonus = 30f; // Path2 max, while closed
 
     // skill tree node unlock ids
-    public const string GuardedBloomUnlock  = "bogiris_guarded_bloom";
-    public const string FruitfulBloomUnlock = "bogiris_fruitful_bloom";
-    public const string InstantSkillUnlock  = "bogiris_instant_skill";
-    public const string OverflowUnlock      = "bogiris_overflow";
-    public const string EruptionUnlock      = "bogiris_eruption";
+    public const string BoggedBarrierUnlock   = "bogiris_bogged_barrier";
+    public const string FruitfulBloomUnlock  = "bogiris_fruitful_bloom";
+    public const string InstantSkillUnlock   = "bogiris_instant_skill";
+    public const string TidalSurgeUnlock     = "bogiris_tidal_surge";
+    public const string LingeringMireUnlock  = "bogiris_lingering_mire";
 
-    // Fruitful Bloom halves the sun interval, but only while actually open
-    private float SunInterval =>
-        (BogData?.baseSunInterval ?? 4f) * (1f + sunGenerationCooldown)
-        * (SkillTreeManager.HasUnlock(this, FruitfulBloomUnlock) && _isOpen ? 0.5f : 1f);
+    // Fruitful Bloom: while open, Sun generation ticks 1s sooner and yields 15% more Sun per tick
+    private const float FruitfulBloomCooldownReduction = 1f;
+    private const float FruitfulBloomSunYieldBonus     = 0.15f;
+    // Bogged Barrier: while closed, regen that would overheal becomes a shield instead, capped at
+    // this percent of Max Health (see UpdatePassive)
+    private const float BoggedBarrierShieldCapPercent = 0.10f;
+    // Tidal Surge: a Geyser crit knocks insects this much higher (see Geyser.cs), and any assist
+    // credit (see Insect.attackerSet) cuts the Skill cooldown by this many seconds
+    public const float TidalSurgeCritKnockUpBonus = 0.35f;
+    private const float TidalSurgeAssistCooldownReduction = 1f;
+
+    private float SunInterval
+    {
+        get
+        {
+            float interval = (BogData?.baseSunInterval ?? 4f) * (1f + sunGenerationCooldown);
+            if (SkillTreeManager.HasUnlock(this, FruitfulBloomUnlock) && _isOpen)
+                interval = Mathf.Max(0.5f, interval - FruitfulBloomCooldownReduction);
+            return interval;
+        }
+    }
     private int   BaseSunGenerated => BogData?.baseSunGenerated ?? 2;
     private int   OpenBonusSun => (BogData?.baseOpenBonusSun ?? 2) + (BogData?.path2OpenBonusSunPerLevel ?? 1) * effectivePath2Level;
     private float RegenPercentPerSecond => (BogData?.baseRegenPercent ?? 0.02f) + (BogData?.path2RegenPercentPerLevel ?? 0.01f) * effectivePath2Level;
@@ -45,17 +62,12 @@ public class BogIris : Shooter
     // flat Max Health granted per Path2 level - read live every UpdateStats tick (see below),
     // same convention as this plant's other Path2 scalings (OpenBonusSun, RegenPercentPerSecond)
     public float PassiveMaxHealthBonus => (BogData?.path2MaxHealthPerLevel ?? 15f) * effectivePath2Level;
-    // Overflow/Eruption trade Geyser radius for damage in opposite directions
     private float GeyserRadius =>
-        (skillRadius + (BogData?.path3GeyserRadiusPerLevel ?? 0.15f) * effectivePath3Level)
-        * (SkillTreeManager.HasUnlock(this, OverflowUnlock) ? 1.3f
-           : SkillTreeManager.HasUnlock(this, EruptionUnlock) ? 0.8f : 1f);
+        skillRadius + (BogData?.path3GeyserRadiusPerLevel ?? 0.15f) * effectivePath3Level;
     private float KnockUpHeight => ScaleCC(((BogData?.baseKnockUpHeight ?? 0f) + (BogData?.path3KnockUpPerLevel ?? 1f) * effectivePath3Level) * skillDuration);
     private float KnockUpForce => Mathf.Sqrt(2f * Insect.gravity * KnockUpHeight);
     private float GeyserDamage =>
-        ((BogData?.baseGeyserDamage ?? 0f) + (BogData?.path3GeyserDamagePerLevel ?? 15f) * effectivePath3Level + skillDamageMultiplier * magicPower)
-        * (SkillTreeManager.HasUnlock(this, EruptionUnlock) ? 1.3f
-           : SkillTreeManager.HasUnlock(this, OverflowUnlock) ? 0.8f : 1f);
+        (BogData?.baseGeyserDamage ?? 0f) + (BogData?.path3GeyserDamagePerLevel ?? 15f) * effectivePath3Level + skillDamageMultiplier * magicPower;
 
     protected override void Awake()
     {
@@ -80,6 +92,24 @@ public class BogIris : Shooter
             path3Unlocked = true;
             OnPath3Unlock();
         }
+
+        Entity.OnEntityKilled += OnAnyEntityKilled;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Entity.OnEntityKilled -= OnAnyEntityKilled;
+    }
+
+    // Tidal Surge: scoring an assist (she hit the insect at some point, but didn't land the
+    // killing blow herself) cuts the Geyser's cooldown
+    private void OnAnyEntityKilled(EntityEventData data)
+    {
+        if (!SkillTreeManager.HasUnlock(this, TidalSurgeUnlock)) return;
+        if (data.source == this) return;
+        if (data.target is not Insect insect || !insect.attackerSet.Contains(this)) return;
+        ReduceSkillCooldown(TidalSurgeAssistCooldownReduction);
     }
 
     protected override void Update()
@@ -113,11 +143,30 @@ public class BogIris : Shooter
                 // Path2 max removes the out-of-combat requirement: the doubled rate is always active
                 bool doubled = IsPath2Maxed || !IsInCombat;
                 float regenPerTick = RegenPercentPerSecond * (doubled ? 2f : 1f);
-                Heal(maxHealth * regenPerTick * (1f + healingReceived) * (1f + healingBonus));
+                float healAmount = maxHealth * regenPerTick * (1f + healingReceived) * (1f + healingBonus);
+                float missing = maxHealth - health;
+                Heal(healAmount);
 
-                // Guarded Bloom: each regen tick also refreshes a small shield while closed
-                if (SkillTreeManager.HasUnlock(this, GuardedBloomUnlock))
-                    ApplyEffect(new GuardedBloomEffect(this, this, maxHealth * 0.03f));
+                // Bogged Barrier: whatever portion of this tick's heal would have overhealed
+                // instead tops up a Shield, capped at BoggedBarrierShieldCapPercent of Max Health
+                if (SkillTreeManager.HasUnlock(this, BoggedBarrierUnlock))
+                {
+                    float overheal = Mathf.Max(0f, healAmount - missing);
+                    if (overheal > 0f)
+                    {
+                        float cap = maxHealth * BoggedBarrierShieldCapPercent;
+                        float currentShield = GetEffect<BoggedBarrierEffect>()?.amount ?? 0f;
+                        float newAmount = Mathf.Min(cap, currentShield + overheal);
+                        if (newAmount > currentShield)
+                        {
+                            // ShieldEffect's constructor rescales whatever amount is passed in by
+                            // (1 + healingReceived) * (1 + healingBonus) - divide it back out here
+                            // so the resulting shield lands exactly on newAmount
+                            float rescale = (1f + healingReceived) * (1f + healingBonus);
+                            ApplyEffect(new BoggedBarrierEffect(this, this, newAmount / rescale));
+                        }
+                    }
+                }
             }
         }
         else
@@ -191,8 +240,8 @@ public class BogIris : Shooter
             {
                 if (insect == null || !insect.IsAlive) continue;
                 if (Vector3.Distance(position, insect.transform.position) <= GeyserRadius)
-                    insect.ApplyEffect(new GeyseredEffect(insect, BogData?.geyseredDuration ?? 8f, 1, this,
-                        BogData?.geyseredArmorShred ?? 20f, BogData?.geyseredFallDamageResistanceShred ?? 0.15f));
+                    insect.ApplyEffect(new WaterweightEffect(insect, BogData?.waterweightDuration ?? 8f, 1, this,
+                        BogData?.waterweightArmorShred ?? 20f, BogData?.waterweightFallDamageResistanceShred ?? 0.15f));
             }
         }
     }
@@ -216,6 +265,10 @@ public class BogIris : Shooter
         if (IsPath2Maxed && !_isOpen)
         {
             armor += (int)ClosedArmorBonus;
+        }
+        if (SkillTreeManager.HasUnlock(this, FruitfulBloomUnlock) && _isOpen)
+        {
+            sunYieldMultiplier += FruitfulBloomSunYieldBonus;
         }
     }
 
@@ -287,7 +340,7 @@ public class BogIris : Shooter
                $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the radius of the geyser by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Successful <color=#4FC3F7><b>Geyser</b></color> hits inflict <color=#4FC3F7><b>Geysered</b></color> for <color=green><b>{BogData?.geyseredDuration ?? 8f:F0}</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> by <color=red><b>{BogData?.geyseredArmorShred ?? 20f:F0}</b></color> and <color=#A0522D><b>Fall Damage Resistance</b></color> by <color=red><b>{(BogData?.geyseredFallDamageResistanceShred ?? 0.15f) * 100f:F0}%</b></color>.")}\n\n" +
+               $"{Level5Section(path3Level, $"Successful <color=#4FC3F7><b>Geyser</b></color> hits inflict <color=#4FC3F7><b>Waterweight</b></color> for <color=green><b>{BogData?.waterweightDuration ?? 8f:F0}</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> by <color=red><b>{BogData?.waterweightArmorShred ?? 20f:F0}</b></color> and <color=#A0522D><b>Fall Damage Resistance</b></color> by <color=red><b>{(BogData?.waterweightFallDamageResistanceShred ?? 0.15f) * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

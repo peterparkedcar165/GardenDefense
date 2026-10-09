@@ -81,10 +81,12 @@
     <Compile Include="Assets\Scripts\InsectDataTypes\SnowFlyData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FlammableEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
+    <Compile Include="Assets\Scripts\TextIndicators\SkillCooldownIndicator.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DrizzleBarrierEffect.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\Scripts\Environment\WaterZone.cs" />
     <Compile Include="Assets\Scripts\Skills\UpdraftField.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BoggedBarrierEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\WeatherManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aura.cs" />
     <Compile Include="Assets\Scripts\UI\PlantBar.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlot.cs" />
     <Compile Include="Assets\Scripts\Entities\WaterPot.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\WindDisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\OleanderSprout.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Harvestman.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\QueenAnt.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\BogIrisProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />
     <Compile Include="Assets\Scripts\Audio\AmbienceProfile.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\PollenBoonEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeLineConnector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\FreezeEffect.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerCard.cs" />
@@ -179,6 +183,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HollyShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\FloralGlowProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\CactusNeedleProjectile.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\PollenHasteEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalHypnosisEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\IcePrimer.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DarklingBeetle.cs" />
@@ -213,6 +218,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\PsionicBondEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\StargazerData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantEmpowermentEffect.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\WaterweightEffect.cs" />
     <Compile Include="Assets\Scripts\UI\GameInfoPanel.cs" />
     <Compile Include="Assets\Scripts\ConeParticleEmitter.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
@@ -259,9 +265,9 @@
     <Compile Include="Assets\Scripts\StatusEffect\CoolingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoonOfTheWispEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreePlantPanel.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\MireSlowEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HypnotizedEffect.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\GuardedBloomEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SilenceEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\NeriumOleanderData.cs" />
@@ -368,7 +374,6 @@
     <Compile Include="Assets\Scripts\Entities\Plants\OldCarrot.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\GeyseredEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\BombardierBeetleData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\SnailData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantGuardianEffect.cs" />

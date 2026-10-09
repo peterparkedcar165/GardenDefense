@@ -1,0 +1,202 @@
+DANDELION - FULL KIT BREAKDOWN
+================================
+(as implemented in Dandelion.cs, DandelionData.cs, DandelionProjectile.cs, WindGust.cs,
+PollenHasteEffect.cs, WindDisplacedEffect.cs, PollenBoonEffect.cs - current state as of this
+writing. This is the THIRD major pass on this plant this session: tutorial/debuff kit ->
+projectile-skill rework -> full Symbiosis support rework, below)
+
+IDENTITY
+--------
+Symbiosis family ("buffer" archetype) support plant. Base class: Shooter.
+Elemental type: Wind (unchanged). Damage type: Physical (unchanged).
+No skill tree asset exists for Dandelion yet (skillTree field is empty in the data asset).
+
+Because she is now Symbiosis family, she automatically also gets the GENERIC, engine-wide
+Symbiosis/Wither family passive for free, with zero Dandelion-specific code:
+  "Attacks have a 50% chance to reduce Skill Cooldown by 1 second on hit" - this reduces HER
+  OWN Skill Cooldown (Entity.cs HandleOnHitEffects, gated on data.family == Symbiosis/Wither).
+This is DIFFERENT from and IN ADDITION TO her own hand-coded Path2 passive timer-acceleration
+roll described below (which reduces a completely different internal timer - the periodic
+"pulse" that buffs nearby allies' cooldowns, not her own skill's cooldown).
+
+BASE STATS (DandelionData.asset)
+---------------------------------
+Max Health: 200, Attack Damage: 24, Attack Speed: 0.6, Attack Range: 3
+Projectile Speed (basic attack): 2.4, Max Range: 33, Piercing: infinite (hardcoded, see below)
+Sun Cost: 85
+Skill Cooldown: 120s (raised back up from 60s once the skill gained team-wide utility)
+Skill Damage Multiplier: 0.25 (Magic Power scaling on the skill's one-shot damage)
+Gust hitbox width: 1.6 base, Gust travel speed: 2.5 units/sec (flat, intentionally slow,
+  does NOT scale per level)
+Wind Gust Range: 10 base
+
+===========================================================================
+PATH 1 - ATTACK
+===========================================================================
+Fires a slow-moving pollen-wind projectile (DandelionProjectile) at the nearest/targeted
+insect - mechanically unchanged from before this pass.
+
+- Deals 100% Attack Damage, Physical damage type, Wind elemental type.
+- Pierces EVERY insect in its path with no limit (Shoot() hardcodes InfinitePiercing,
+  ignoring this plant's own `piercing` stat entirely - unchanged quirk from before).
+- On every insect it pierces through, calls Dandelion.TryAcceleratePassive(insect) (renamed
+  from the old TryApplyBlindingPollen - Blinding Pollen is gone entirely from this kit). This
+  rolls a chance to accelerate the Path2 passive's internal pulse timer - see PATH 2.
+
+Per-level scaling (path1AttackSpeedPerLevel / path1MagicPowerPerLevel) - REPLACES the old
+Attack Damage/Range scaling entirely:
+- +0.05 Base Attack Speed per level (set via baseAttackSpeed in OnPath1Upgrade, same
+  convention as BogIris/Sunflower - NOT the generic attackSpeedAdder, to avoid colliding with
+  fertilizer/skill-tree-granted attack speed)
+- +5 Base Magic Power per level (same convention, via baseMagicPower)
+  Note: nothing in Path1 itself consumes this Magic Power - it feeds into the SKILL's damage
+  formula instead (WindGustDamage includes skillDamageMultiplier * magicPower), so leveling
+  Attack indirectly makes the Skill hit harder. This is the intended cross-path synergy.
+
+PATH 1 MAX BONUS (level 5, natural levels only):
+- Whenever the Path2 passive's attack-hit proc (see PATH 2) succeeds, it now reduces the
+  pulse timer by an ADDITIONAL 1 second (2 seconds total per successful proc instead of 1).
+
+===========================================================================
+PATH 2 - PASSIVE ("Pollinator's Pulse")
+===========================================================================
+A periodic pulse that buffs nearby allies, plus a chance-based accelerant off her own attacks.
+Completely replaces the old Blinding Pollen debuff passive.
+
+- Every PassiveInterval seconds (base 16, see per-level scaling below), reduces the Skill
+  Cooldown of every allied Plant within her ATTACK RADIUS (not a separate passive radius) by
+  a flat 1 second (PassiveTickReduction). Implemented via an internal passiveTickTimer that
+  counts up in Update() (UpdatePassivePulse) - same style as BogIris's sunTickTimer.
+- Separately, every attack hit (via TryAcceleratePassive, called once per insect the piercing
+  attack hits) has a 50% base chance (basePassiveProcChance, scaled by (1 + bonusEffectChance)
+  like every other proc in this codebase) to push the SAME internal timer 1 second closer to
+  firing (ProcTimerReduction) - i.e. a chance to make the next pulse arrive sooner. This does
+  NOT touch her own Skill Cooldown - that's the separate, automatic Symbiosis family passive
+  described under IDENTITY above.
+
+Per-level scaling (path2IntervalReductionPerLevel):
+- -1 second off the base 16s pulse interval per level (floored at a 1-second minimum via
+  Mathf.Max in the PassiveInterval property)
+
+PATH 2 MAX BONUS (level 5, natural levels only):
+- Every allied plant within her attack radius gets +25% Skill Damage (SkillDamageAuraBonus),
+  continuously, for as long as they stay in range - implemented as PollenBoonEffect, a
+  PlantAuraBuffEffect subclass (the same base class Zinnia/Hellebore/Begonia/Calendula/
+  Snowdrop use for their own continuous radius-based ally buffs: a permanent effect that
+  self-expires the instant the target leaves range or the source dies, so it needs no
+  explicit per-frame proximity polling). Dandelion reapplies it to everyone currently in
+  range (ApplyAuraToAllInRange) on Awake, whenever a new plant is placed nearby
+  (Plant.OnPlantPlaced), and whenever Path2 reaches max (OnPath2Upgrade) - she never needs to
+  re-scan existing plants since plants are stationary once placed. Explicitly excludes
+  herself (plant == this check).
+
+===========================================================================
+PATH 3 - SKILL ("Wind Gust") - a single slow projectile with a huge hitbox
+===========================================================================
+Unchanged targeting flow from the prior pass: directional aim (BeginTargeting with radius 0),
+a forward-facing rectangle preview indicator, confirm to fire. On confirm, skillCooldownTimer
+resets to 120s, BeginChannel() is called pre-max (still a no-op today - see OLD QUIRKS below),
+and a WindGust projectile is spawned and Initialize()'d with: origin, aimed direction, hitbox
+size, travel speed, one-shot damage, this plant as source, max travel distance, trap duration,
+Pollen Haste bonus, Pollen Haste duration, and a cooldown-refund percent (0 unless Path3 maxed).
+
+WindGust behavior (straight-line projectile, moves at a constant SLOW speed - see BASE STATS):
+- Tracks two separate HashSets (hitInsects, hitPlants) so nothing is ever affected twice by
+  the same cast.
+- Any live INSECT the hitbox touches, once:
+    - Takes one hit of damage: data.baseSkillDamage (0) + attackDamage +
+      skillDamageMultiplier(0.25) * magicPower. Can crit (canCrit = true). Tags: AoE,
+      SkillDamage (not DoT - this is a single hit, not a damage-over-time tick).
+    - Gets WindDisplacedEffect applied: a DisplacedEffect subclass (same HardCrowdControl
+      identity/tag as the base class - the insect genuinely reads as "Displaced") that also
+      continuously feeds the gust's own velocity (direction * speed) into the insect's
+      windVelocity every OnTick for the effect's duration. This is the exact mechanism
+      Insect.Move() already uses to convert windVelocity into real per-frame movement
+      (windMomentum), so the insect is dragged along AT THE GUST'S OWN SPEED while the effect
+      is active - "follows the wind's velocity," literally. HasEffect<HardCrowdControl>()
+      blocks the insect's own pathing/attacks for the same duration. When the effect expires
+      and windMomentum decays to ~0, Insect.Move()'s own generic "_returningToPath" logic
+      (unrelated to this effect's code) walks the insect back to its pre-displacement
+      position automatically - this existing generic behavior is what fulfills the older
+      DisplacedEffect class doc-comment's claim about snapping back, which a previous pass of
+      this document incorrectly said had no implementation anywhere.
+    - Base trap/Displaced duration: 1 second flat (BaseTrapDuration), no per-level scaling.
+- Any live PLANT the hitbox touches (excluding Dandelion herself, source == plant check), once:
+    - Gains PollenHasteEffect: a flat-duration buff that adds to the target's own
+      skillChargeRateAdder (see "NEW STAT" below) - i.e. makes THEIR skill cooldown count down
+      faster for the effect's duration. Base +10% (basePollenHasteBonus), scaling
+      +4%/level (path3HasteBonusPerLevel). Base duration 8s (basePollenHasteDuration),
+      scaling +2s/level (path3HasteDurationPerLevel).
+    - If Path3 is maxed: ALSO has a flat percentage of their own total Skill Cooldown
+      refunded immediately (skillCooldownTimer -= plant.skillCooldown * 0.15).
+- Despawns once it has traveled its max distance (WindGustRange, scaled +0.5/level, or the
+  flat GlobalGustRange = 30 if Path3 is maxed) or if Dandelion dies/is removed.
+
+Per-level scaling (path3BeamWidthPerLevel / path3WindGustRangePerLevel / path3HasteBonusPerLevel
+/ path3HasteDurationPerLevel):
+- +0.25 hitbox size per level (base 1.6)
+- +0.5 travel range per level (base 10) - irrelevant once maxed (see above)
+- +4% Pollen Haste Skill Charge Rate bonus per level (base 10%)
+- +2s Pollen Haste duration per level (base 8s)
+
+PATH 3 MAX BONUS (level 5, natural levels only):
+- The gust's max travel distance becomes a flat 30 units (GlobalGustRange) instead of the
+  level-scaled WindGustRange - effectively crosses the whole map in the fired direction.
+- Insects caught in the gust stay trapped/Displaced for 2 EXTRA seconds (Path3MaxTrapExtra-
+  Duration) - i.e. 3 seconds total instead of 1.
+- Allied plants touched by the gust additionally get 15% of their own total Skill Cooldown
+  refunded on top of Pollen Haste (see above).
+
+===========================================================================
+NEW STAT: SkillChargeRate (NOT Skill Haste - see below for why)
+===========================================================================
+Plant.cs already had baseSkillChargeRate/skillChargeRate/skillChargeRateAdder fields before
+this pass (used by AloeVera/BogIris's rain bonus and Sunflower's sunlight bonus) -
+skillChargeRate is a RATE MULTIPLIER (1 = normal) on how fast skillCooldownTimer counts down
+(Plant.cs: skillCooldownTimer -= Time.deltaTime * skillChargeRate), i.e. exactly League of
+Legends' Ability Haste, not a flat/percentage reduction to the cooldown's total duration.
+This pass added a StatType.SkillChargeRate entry (FertilizerData.cs) and a matching
+PlantStatApplier case feeding plant.skillChargeRateAdder, so fertilizers/skill tree nodes can
+now grant this generically, same as any other stat. Pollen Haste is built entirely on this
+existing mechanism rather than inventing a separate "Skill Haste" stat from scratch.
+
+===========================================================================
+STATUS EFFECTS USED
+===========================================================================
+PollenHasteEffect (StatusEffect, positive, elemental type Wind)
+  - Grants/removes skillChargeRateAdder for a flat duration. Used only by the Wind Gust skill,
+    on touched allied plants (never Dandelion herself).
+
+WindDisplacedEffect (extends DisplacedEffect, HardCrowdControl, negative, elemental type Wind)
+  - New subclass, lives alongside DisplacedEffect in StatusEffect/WeatherEffects/HardCC/.
+  - Deliberately does NOT touch DisplacedEffect.cs itself, since AnemoneVortex.cs also
+    constructs plain DisplacedEffect directly with a different, simpler constructor - adding
+    the velocity-following behavior as a subclass instead avoids any risk to that usage.
+  - Overrides OnTick to add a captured (direction * gust speed) vector into the target
+    insect's windVelocity every tick, for as long as the effect is active.
+
+PollenBoonEffect (extends PlantAuraBuffEffect, positive, elemental type Wind, sourceStackable)
+  - Path2 max only. Grants/removes skillDamageAdder on nearby allied plants, continuously,
+    for as long as they remain within Dandelion's attack radius.
+
+BlindingPollenEffect still exists as a class (used generically by LeafRanger.cs to filter it
+out of some effect list) but Dandelion no longer applies it anywhere - the entire Blinding
+Pollen passive from the previous kit is gone.
+
+===========================================================================
+OLD QUIRKS STILL PRESENT (carried over, not touched by this pass)
+===========================================================================
+1. channelDuration is 0 in DandelionData.asset, so BeginChannel() (called pre-Path3-max on
+   skill cast) still never actually disarms her - unchanged, not addressed by this pass.
+2. The basic attack's `piercing` stat is still fully irrelevant - Shoot() hardcodes infinite
+   piercing via a local constant.
+
+===========================================================================
+REMOVED FROM THE PREVIOUS KIT ENTIRELY (do not look for these anymore)
+===========================================================================
+- Blinding Pollen passive (chance-on-hit accuracy debuff) and its Path2-max flying-insect stun.
+- Path1's old Attack Damage/Attack Range per-level scaling.
+- The one-shot knockback via Carrot-style PushRoutine (replaced by WindDisplacedEffect).
+- basePushPower/PushPower (dead field, removed from both the .cs and the .asset).
+- path3SkillDurationPerLevel/baseSkillDuration's role as the gust's travel speed (the previous
+  pass's repurposing) - speed is now a flat, non-leveled DandelionData field (baseGustSpeed).

@@ -118,16 +118,20 @@ MonoBehaviour:
   - nodes:
     - id: node10a_cleavingswings
       nodeName: Cleaving Strikes
-      description: Sword swings no longer lose <color=green><b>Damage</b></color> per extra insect hit.
+      description: Sword swings no longer lose <color=green><b>Damage</b></color> per extra insect hit. Increase <color=green><b>Total Attack Damage</b></color> by <color=green><b>10%</b></color>.
       maxRank: 1
       costPerRank: 2
-      effects: []
+      effects:
+      - statType: 72
+        valuePerRank: 0.1
       unlockId: acorn_cleaving_swings
     - id: node10b_relentlessbash
       nodeName: Relentless Bash
-      description: <color=green><b>Shield Bash</b></color> no longer loses <color=green><b>Damage</b></color> per extra insect hit.
+      description: <color=green><b>Shield Bash</b></color> no longer loses <color=green><b>Damage</b></color> per extra insect hit. Increase <color=green><b>Total Armor</b></color> by <color=green><b>15%</b></color>.
       maxRank: 1
       costPerRank: 2
-      effects: []
+      effects:
+      - statType: 73
+        valuePerRank: 0.15
       unlockId: acorn_relentless_bash
     ranksToUnlockNext: 1
