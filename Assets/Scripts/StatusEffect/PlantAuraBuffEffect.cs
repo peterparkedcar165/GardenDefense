@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // shared base for continuous, radius based plant buffs (Hellebore's Protection, Begonia's
-// Blessing, Zinnia's Warmth, Calendula's Light, Snowdrop's Cooling). the source plant
+// Blessing, Zinnia's Warmth, Calendula's Light). the source plant
 // reapplies these every tick to whatever is currently in range; a short duration that races
 // against that reapply interval visibly flickers whenever multiple sources' independent
 // timers fall out of sync (each stacked instance expiring and reapplying on its own cadence),
@@ -23,7 +23,7 @@ public abstract class PlantAuraBuffEffect : StatusEffect
         this.centerOverride = centerOverride;
     }
 
-    // subclasses that need extra per-tick work (e.g. Snowdrop's Cooling) override this instead of OnTick
+    // subclasses that need extra per-tick work override this instead of OnTick
     protected virtual void OnAuraTick(float deltaTime) { }
 
     public override void OnTick(float deltaTime)

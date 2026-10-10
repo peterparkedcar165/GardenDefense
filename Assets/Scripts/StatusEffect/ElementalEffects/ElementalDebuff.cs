@@ -25,8 +25,16 @@ public abstract class ElementalDebuff : StatusEffect
         SpawnIcon();
         OnPrimerApply();
 
-        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2
-            && TutorialManager.instance != null
+        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2 && target != null)
+            target.StartCoroutine(DelayedPrimerTutorial());
+    }
+
+    // fires 1 second after the primer actually lands rather than instantly, so the player sees
+    // the primer icon appear on the insect first before the tutorial popup covers the screen
+    private System.Collections.IEnumerator DelayedPrimerTutorial()
+    {
+        yield return new UnityEngine.WaitForSeconds(1f);
+        if (TutorialManager.instance != null
             && TutorialManager.instance.TryShow(TutorialIds.Level2Primers, TutorialContent.Level2Primers,
                 () => GameManager.instance.SetPause(false)))
         {

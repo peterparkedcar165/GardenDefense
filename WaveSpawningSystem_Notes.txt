@@ -1,0 +1,149 @@
+HAND-AUTHORED WAVE SPAWNING — HOW IT ACTUALLY WORKS
+=====================================================
+Covers ProceduralLevel.cs, LevelConfig.cs, and WaveDefinition.cs. Written while reviewing
+Level9's scripted waves, but applies to every level that uses hand-authored waves (currently
+Levels 1-9).
+
+THE TWO SYSTEMS, AND WHICH ONE WINS
+------------------------------------
+Every LevelConfig can spawn insects two different ways:
+
+1. PROCEDURAL (budget-based) — the original system. Each wave gets a "threat budget" (lerped
+   between minThreatBudget and maxThreatBudget by wave progress, shaped by budgetCurve). That
+   budget is split across whatever insects in config.insects are unlocked by this wave number,
+   weighted by budgetWeight, and each type's spawn interval is derived from
+   (its share of the budget) / (its threatValue). Elites layer on top separately (see below).
+
+2. HAND-AUTHORED (scripted) — config.waves holds explicit WaveDefinition entries, each one
+   pinned to a specific waveNumber, containing an exact, manually-timed spawn script.
+
+RunWave(waveNumber) decides per wave, not per level:
+    WaveDefinition scripted = FindWaveDefinition(waveNumber);
+    bool useScripted = scripted != null &&
+        ((scripted.subWaves != null && scripted.subWaves.Length > 0) ||
+         (scripted.trickleSpawns != null && scripted.trickleSpawns.Length > 0));
+
+So a level can mix both: wave 5 might be hand-scripted while wave 6 (no entry in config.waves)
+falls through to the procedural budget system. In practice, every level we've touched (1-9)
+defines ALL of its waves by hand, so the procedural branch never actually runs for them — but
+the fallback exists per-wave, not as an all-or-nothing switch.
+
+THE SHAPE OF A HAND-AUTHORED WAVE
+------------------------------------
+WaveDefinition
+  waveNumber      — which wave this entry is for
+  subWaves[]       — an ordered sequence of scripted "bursts", run strictly back to back
+  trickleSpawns[]  — background spawners that run for the wave's WHOLE duration, in parallel
+
+A wave's total duration is never authored directly. It's simply the sum of every one of its
+sub-waves' subWaveDuration (ComputeScriptedDuration). Trickle spawns don't add to this — they
+just run for however long the sub-waves add up to.
+
+SUB-WAVES: THE SCRIPTED BURSTS
+------------------------------------
+SubWaveDefinition
+  subWaveDuration   — how long this burst lasts before the next one starts
+  spawns[]           — the actual insects spawned in this burst (WaveSpawnEntry[])
+  delayBeforeNext    — pause after the last insect of this burst, before the next burst begins
+
+Sub-waves run one after another with no gap or overlap: the Nth sub-wave starts exactly when
+the (N-1)th sub-wave's subWaveDuration has elapsed (RunWave just accumulates cumulativeStart +=
+sub.subWaveDuration as it launches each one's coroutine).
+
+WaveSpawnEntry (one line inside a sub-wave's spawns list)
+  insectData          — which insect
+  count                — how many to spawn
+  timeBetweenSpawns    — gap between each individual spawn of this entry
+  startDelay           — offset from the SUB-WAVE's own start before this entry begins
+
+Every entry in a sub-wave starts its own independent coroutine the moment the sub-wave begins
+(RunSubWave just loops over sub.spawns and calls StartCoroutine for each one — it doesn't wait
+for one entry to finish before starting the next). That means multiple insect types inside the
+same sub-wave can and do overlap freely; "count 15 Worker Ants, count 2 Fireflies" in one
+sub-wave doesn't mean Fireflies wait for the ants to finish, they're ticking at the same time,
+each on its own startDelay/timeBetweenSpawns schedule.
+
+THE CATCH: delayBeforeNext DOESN'T DO ANYTHING AT RUNTIME
+------------------------------------------------------------
+This is the part that's easy to miss. ProceduralLevel.cs — the code that actually runs the
+level — never reads delayBeforeNext. The entire sub-wave-to-sub-wave timing at runtime comes
+from subWaveDuration alone (cumulativeStart += sub.subWaveDuration). delayBeforeNext is only
+ever read by LevelConfig.OnValidate:
+
+    sub.subWaveDuration = spawnFinish + sub.delayBeforeNext;
+
+...where spawnFinish is "the moment this sub-wave's last insect actually spawns" (the highest
+startDelay + timeBetweenSpawns * (count-1) across all its WaveSpawnEntries). OnValidate is a
+Unity EDITOR-ONLY hook — it fires when the asset is modified through the Inspector, or when
+Unity reimports a changed .asset file while the Editor has it loaded. It does NOT fire when a
+script edits the .asset file on disk directly (the way the mass wave-balancing edits earlier in
+this project were done).
+
+So the real relationship is: delayBeforeNext is the INPUT a designer tunes in the Inspector,
+and subWaveDuration is the DERIVED value that actually drives spawning. If a tool (or a
+person) edits subWaveDuration and delayBeforeNext directly in the YAML without going through
+the Editor, the two numbers can drift out of sync with that formula — and whichever one is
+actually serialized as subWaveDuration is what the game will run with, regardless of what
+delayBeforeNext says. The next time Unity's Editor touches that asset (opening it, selecting
+it, or just reimporting after an external file change), OnValidate will silently recompute
+subWaveDuration from spawnFinish + delayBeforeNext and overwrite whatever was there — which
+could shift a wave's timing without anyone touching the Inspector by hand.
+Practical upshot: delayBeforeNext in the current Level1-9 assets should be read as "the gap the
+designer intended," not as a guaranteed description of what's live right now, unless
+subWaveDuration has been confirmed to already equal spawnFinish + delayBeforeNext for that
+sub-wave.
+
+TRICKLE SPAWNS: THE BACKGROUND LAYER
+------------------------------------------
+TrickleEntry
+  insectData   — which insect
+  interval     — spawn one every X seconds
+  startDelay   — offset from the WAVE's start (not the sub-wave's) before this trickle begins
+
+RunTrickle just loops: wait startDelay, then spawn / wait interval / spawn / wait interval...
+until elapsed >= waveDuration (the wave's total computed duration, i.e. the sum of all its
+sub-waves). It runs completely independently of whatever the sub-waves are doing — a trickle
+spawner doesn't care whether it's "inside" sub-wave 1 or sub-wave 2 at any given moment, it just
+keeps ticking against the wave's overall clock from start to finish. This is why Level 8/9's
+trickle entries (Soldier Ant, Duskdarter, Scout Ant, Moth, Snail) show one interval per WAVE,
+not one per sub-wave — there's only ever one trickle timeline per insect type per wave.
+
+ELITE WAVES (ORTHOGONAL TO ALL OF THE ABOVE)
+------------------------------------------------
+Completely separate system, layered on top after the scripted-or-procedural spawning is set up:
+  isEliteWave = eliteWaveInterval > 0 && waveNumber % eliteWaveInterval == 0
+If true, one entry from config.eliteInsects is chosen by weighted random (among those unlocked
+by this wave), its count is lerped between minSpawnCount and maxSpawnCount based on overall wave
+progress (t = (waveNumber-1)/(maxWaves-1)), and that many are spread evenly across the wave's
+duration. This applies to BOTH hand-authored and procedural waves — it's checked unconditionally
+after the useScripted/procedural branch. Levels 1-9 currently have eliteWaveInterval = 0, so
+none of this fires for them; Level 9's old procedural setup (before being rewritten to mimic
+Level 8) used to have eliteWaveInterval = 4 with Queen Ant as the elite.
+
+BETWEEN WAVES
+------------------
+After a wave's coroutine finishes (i.e. after waiting its full waveDuration), RunWaves grants
+any fertilizers scheduled for that wave number (config.fertilizerGrants, matched by afterWave),
+then runs a flat RestPeriod(config.restDuration) before incrementing to the next wave. This rest
+period is completely separate from delayBeforeNext/subWaveDuration — it's a single fixed pause
+the same for every wave in a level, sitting between one wave's last sub-wave and the next wave's
+first sub-wave.
+
+WHAT DECIDES "WHAT INSECTS APPEAR IN THIS LEVEL" ELSEWHERE IN THE GAME
+--------------------------------------------------------------------------
+GetInsectPrefabs() (used by the loadout/preview screen) reads directly off config.waves'
+subWaves[].spawns[] and trickleSpawns[] when they exist — NOT off config.insects/eliteInsects.
+So for a fully hand-authored level like Level 8 or Level 9, the procedural insects[] array
+being left as [] is correct and doesn't hide anything from the player-facing preview; the
+preview already pulls from the real scripted spawn list.
+
+QUICK MENTAL MODEL
+------------------------
+Think of a hand-authored wave as a timeline with two independent tracks running at once:
+  Track 1 (sub-waves): a strict sequence of scripted bursts, back to back, each burst able to
+                        fire several insect types concurrently within it.
+  Track 2 (trickle):   a flat background drizzle of extra insect types, ticking on their own
+                        clocks for the wave's entire length, oblivious to where Track 1 is.
+The wave ends when Track 1 runs out of sub-waves to play (Track 2 is simply cut off at that
+point, mid-interval if necessary). Then: grant fertilizer (if scheduled) -> fixed rest period
+-> next wave.

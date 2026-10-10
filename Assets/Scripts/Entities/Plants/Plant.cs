@@ -98,6 +98,13 @@ public abstract class Plant : Entity, IAttackable
     public Tile occupiedTile;
     public GameObject selfPrefab;
 
+    // generic hook: when set, FindNearest/FindFirst/FindLast/FindStrongest return this insect
+    // first (if still alive, hostile, and within whatever this plant's own IsWithinAttackRange
+    // allows) before falling back to their normal selection logic. null for every plant by
+    // default - currently only driven by Snowdrop, which points her bonded partner's own
+    // instance at the current Snow Mark carrier
+    public Insect forcedPriorityTarget;
+
     public virtual bool ShowRangeCircle => true;
     protected virtual bool GetPassiveBarVisible() => passiveCooldown > 0f && passiveCooldownTimer > 0f;
     protected virtual float GetPassiveBarFill() => passiveCooldown > 0f ? Mathf.Clamp01(1f - passiveCooldownTimer / passiveCooldown) : 1f;
@@ -1628,8 +1635,19 @@ public abstract class Plant : Entity, IAttackable
     // not just a bigger one centered on Carrot). default: the standard single-circle check
     protected virtual bool IsWithinAttackRange(Insect insect, float distance) => distance <= attackRange;
 
+    // forcedPriorityTarget short-circuit shared by every Find* method below - null for virtually
+    // every plant, so this is a cheap no-op in the common case
+    private GameObject ForcedPriorityTargetOrNull()
+    {
+        if (forcedPriorityTarget == null || !forcedPriorityTarget.IsAlive || forcedPriorityTarget.team == Team.Friendly) return null;
+        return CanReachInsect(forcedPriorityTarget) ? forcedPriorityTarget.gameObject : null;
+    }
+
     protected GameObject FindNearest(System.Collections.Generic.List<Insect> insects)
     {
+        GameObject forced = ForcedPriorityTargetOrNull();
+        if (forced != null) return forced;
+
         GameObject nearest = null;
         float nearestDist = Mathf.Infinity;
         foreach (Insect insect in insects)
@@ -1651,6 +1669,9 @@ public abstract class Plant : Entity, IAttackable
 
     protected GameObject FindStrongest(System.Collections.Generic.List<Insect> insects)
     {
+        GameObject forced = ForcedPriorityTargetOrNull();
+        if (forced != null) return forced;
+
         GameObject strongest = null;
         float highestMaxHealth = -1f;
         foreach (Insect insect in insects)
@@ -1669,6 +1690,9 @@ public abstract class Plant : Entity, IAttackable
 
     protected GameObject FindFirst(System.Collections.Generic.List<Insect> insects)
     {
+        GameObject forced = ForcedPriorityTargetOrNull();
+        if (forced != null) return forced;
+
         GameObject furthest = null;
         int highestWaypointIndex = -1;
         float closestDistToNext = Mathf.Infinity;
@@ -1696,6 +1720,9 @@ public abstract class Plant : Entity, IAttackable
 
     protected GameObject FindLast(System.Collections.Generic.List<Insect> insects)
     {
+        GameObject forced = ForcedPriorityTargetOrNull();
+        if (forced != null) return forced;
+
         GameObject last = null;
         int lowestWaypointIndex = int.MaxValue;
         float furthestDistToNext = -1f;

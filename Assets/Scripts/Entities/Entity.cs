@@ -37,7 +37,10 @@ public enum DamageTag
     // suppresses just the hitSound played below (nothing else) - combine with Attack for a hit
     // that should still miss-roll/trigger OnHit/etc normally but not add to the sound stack (e.g.
     // Calendula capping how many of one AoE sweep's hits actually play the sound)
-    SilentHit
+    SilentHit,
+    // this specific hit can never apply an elemental Primer, regardless of its ElementalType or
+    // internal cooldown state (e.g. Floral Glow's coordinated hit, unless Igniting Glow is unlocked)
+    NoPrimer
     // IgnoresPhysicalResistance,
     // IgnoresMagicResistance,
     // IgnoresIceResistance,
@@ -564,7 +567,8 @@ public abstract class Entity : MonoBehaviour
         {
             case ElementalType.Fire:
             elementalMultiplier = Mathf.Max(0f, 1 - fireResistance) * (1 + source.fireDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && fireInternalCooldown <= 0)
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
+                && !System.Array.Exists(damageTag, t => t == DamageTag.NoPrimer) && fireInternalCooldown <= 0)
                 {
                     fireInternalCooldown = ElementInternalCooldown(fireInternalCooldownAdder, fireInternalCooldownMultiplier);
                     ApplyEffect(new FirePrimer(this, elementalDebuffDuration, 1, source));
@@ -614,7 +618,8 @@ public abstract class Entity : MonoBehaviour
 
             case ElementalType.Ice:
             elementalMultiplier = Mathf.Max(0f, 1 - iceResistance) * (1 + source.iceDamage);
-            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && iceInternalCooldown <= 0)
+            if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
+                && !System.Array.Exists(damageTag, t => t == DamageTag.NoPrimer) && iceInternalCooldown <= 0)
                 {
                     iceInternalCooldown = ElementInternalCooldown(iceInternalCooldownAdder, iceInternalCooldownMultiplier);
                     ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
@@ -1525,7 +1530,7 @@ public abstract class Entity : MonoBehaviour
             if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.buffGivenDuration);
             effect.duration *= Mathf.Max(0f, 1f + buffReceivedDuration);
         }
-        else if (effect.effectType == StatusEffect.Type.negative)
+        else if (effect.effectType == StatusEffect.Type.negative && !(effect is GerminateEffect))
         {
             if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.debuffGivenDuration);
             effect.duration *= Mathf.Max(0f, 1f + debuffReceivedDuration);

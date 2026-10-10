@@ -4,12 +4,6 @@ public class FloralGlowEffect : StatusEffect
 {
     private readonly Calendula calendula;
     private float cachedLightRange;
-    private float healTickTimer;
-    private const float HealInterval = 0.5f;
-    // flat + percent max health healed per second - scaled by HealInterval at each tick so
-    // ticking more often (smoother health bar movement) doesn't change the actual heal rate
-    private const float HealFlat = 6f;
-    private const float HealPercent = 0.03f;
 
     // max-level (Path3) bonus: the carrier gains Attack Speed for as long as Floral Glow is
     // active, instead of the old on-hit AoE explosion - tracked so OnExpire only removes it if
@@ -68,19 +62,6 @@ public class FloralGlowEffect : StatusEffect
         }
     }
 
-    // Nurturing Glow: while active, Floral Glow also sustains its target with a flat + percent heal
-    public override void OnTick(float deltaTime)
-    {
-        if (calendula == null || !calendula.NurturingGlowActive) return;
-        Plant plant = target as Plant;
-        if (plant == null || !plant.IsAlive) return;
-
-        healTickTimer += deltaTime;
-        if (healTickTimer < HealInterval) return;
-        healTickTimer -= HealInterval;
-        plant.Heal((HealFlat + plant.maxHealth * HealPercent) * HealInterval, calendula);
-    }
-
     public override void OnExpire()
     {
         Plant plant = target as Plant;
@@ -113,7 +94,11 @@ public class FloralGlowEffect : StatusEffect
         yield return new UnityEngine.WaitForSeconds(0.03f);
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
         float hitDamage = calendula.attackDamage * DamageScaling + calendula.skillDamageMultiplier * calendula.magicPower;
-        DamageTag[] tags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.OnHit };
+        // Igniting Glow is the only thing that lets this hit apply a Fire Primer like any other
+        // Fire damage would - without it, NoPrimer suppresses that generic behavior entirely
+        DamageTag[] tags = calendula.IgnitingGlowActive
+            ? new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.OnHit }
+            : new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.OnHit, DamageTag.NoPrimer };
         insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false, tags, false, effectiveness);
     }
 
@@ -125,12 +110,8 @@ public class FloralGlowEffect : StatusEffect
     public override string GetDescription()
     {
         string desc = $"Attacks inflict a <color=orange><b>Coordinated</b></color> <color=green><b>{CoordinatedDamage:F0}</b></color> <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage hit from the <color=orange><b>Calendula</b></color>.";
-        if (calendula != null && calendula.NurturingGlowActive)
-        {
-            Plant plant = target as Plant;
-            float heal = HealFlat + (plant?.maxHealth ?? 0f) * HealPercent;
-            desc += $"\n\nRegenerates <color=green><b>{heal:F0}</b></color> Health per second.";
-        }
+        if (calendula != null && calendula.IgnitingGlowActive)
+            desc += $"\n\nApplies a <color=orange><b>Fire</b></color> Primer.";
         if (calendula != null && calendula.IsPath3Maxed)
             desc += $"\n\nIncreases <color=green><b>Attack Speed</b></color> by <color=green><b>{MaxLevelAttackSpeedBonus * 100f:F0}%</b></color>.";
         return desc;

@@ -20,4 +20,5 @@ public static class TutorialEvents
     public const string ClickFertilizerQueueButton = "click_fertilizer_queue_button";
     public const string SelectRandomFertilizer = "select_random_fertilizer";
     public const string PlaceSunflowerOnDirt = "place_sunflower_dirt";
+    public const string PlaceWaterlilyOnWater = "place_waterlily_water";
 }

@@ -21,13 +21,13 @@ public class Calendula : Aura
     public GameObject FloralGlowFlyParticlePrefab => floralGlowFlyParticlePrefab;
     public GameObject FloralGlowHitParticlePrefab => floralGlowHitParticlePrefab;
 
-    // floral glow's on hit damage scaling, 25% base, +5% per level, 50% at max level.
-    // Nurturing Glow trades 35% of this for a sustain heal on the target (see FloralGlowEffect)
+    // floral glow's on hit damage scaling, 25% base, +5% per level, 50% at max level
     public float FloralGlowDamageScaling =>
-        ((CData?.floralGlowBaseDamageScaling ?? 0.25f) + (CData?.floralGlowDamageScalingPerLevel ?? 0.05f) * effectivePath3Level)
-        * (SkillTreeManager.HasUnlock(this, NurturingGlowUnlock) ? 0.65f : 1f);
+        (CData?.floralGlowBaseDamageScaling ?? 0.25f) + (CData?.floralGlowDamageScalingPerLevel ?? 0.05f) * effectivePath3Level;
 
-    public bool NurturingGlowActive => SkillTreeManager.HasUnlock(this, NurturingGlowUnlock);
+    // Igniting Glow: Floral Glow's coordinated hit applies a Fire Primer like any other Fire
+    // damage would - without it, that hit is tagged NoPrimer so it never does (see FloralGlowEffect)
+    public bool IgnitingGlowActive => SkillTreeManager.HasUnlock(this, IgnitingGlowUnlock);
 
     private bool autoCastEnabled = false;
     private Tile autoCastTargetTile = null;
@@ -40,7 +40,7 @@ public class Calendula : Aura
     public const string RadiantAuraUnlock   = "calendula_radiant_aura";
     public const string InstantSkillUnlock  = "calendula_instant_skill";
     public const string BorrowedLightUnlock = "calendula_borrowed_light";
-    public const string NurturingGlowUnlock = "calendula_nurturing_glow";
+    public const string IgnitingGlowUnlock  = "calendula_igniting_glow";
 
     private float _guidingLightTimer;
     private float _radiantAuraTimer;

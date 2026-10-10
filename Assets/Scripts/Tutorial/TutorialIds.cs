@@ -11,4 +11,5 @@ public static class TutorialIds
     public const string Level1SoldierAntAppears = "level1_soldierantappears";
     public const string Level2StartLevel = "level2_startlevel";
     public const string Level2Primers = "level2_primers";
+    public const string Level3StartLevel = "level3_startlevel";
 }
