@@ -11,6 +11,7 @@ public class Snowdrop : Shooter
     public float SnowMarkPercent   => (SData?.snowMarkDamagePercentBase ?? 0.02f) + (SData?.snowMarkDamagePercentPerLevel ?? 0.01f) * effectivePath2Level;
     public float SnowMarkDuration  => SData?.snowMarkDuration ?? 6f;
     private float IceBeamAttackSpeed => SData?.iceBeamAttackSpeed ?? 4f;
+    private int IceBeamPiercingBonus => (SData?.iceBeamPiercingBase ?? 1) + (SData?.iceBeamPiercingPerLevel ?? 1) * effectivePath3Level;
 
     private static readonly DamageTag[] bonusTags = { DamageTag.Coordinated, DamageTag.OnHit, DamageTag.NoPrimer, DamageTag.PassiveDamage };
 
@@ -85,8 +86,10 @@ public class Snowdrop : Shooter
         Projectile proj = obj.GetComponent<Projectile>();
         if (proj == null) return;
 
+        int effectivePiercing = IceBeamActive ? piercing + IceBeamPiercingBonus : piercing;
+
         proj.SetTarget(targetObj);
-        proj.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
+        proj.Initialize(target, attackDamage, projectileSpeed, maxRange, effectivePiercing, damageType, elementalType, this);
     }
 
     // same selection rule as the plant's normal targeting, just run over a pool that leaves out
@@ -288,7 +291,7 @@ public class Snowdrop : Shooter
         $"Select a plant anywhere on the field to form a <color=#00FFFF><b>Snow Bond</b></color>. The bonded plant prioritizes the Snow Marked insect above all other targets, and detonating the Mark with an attack, passive, or skill hit deals the same bonus damage, sourced from {GetName()}. Only the bonded partner can detonate it.";
 
     public override string GetSkillDesription() =>
-        $"For <color=green><b>{skillDuration:F0}s</b></color>, {GetName()}'s attacks become a piercing <color=#00FFFF><b>Ice Beam</b></color>: it no longer loses damage against subsequent targets while piercing. Attack Speed becomes a fixed <color=green><b>{IceBeamAttackSpeed:F1}</b></color>, which cannot be increased or reduced while active.";
+        $"For <color=green><b>{skillDuration:F0}s</b></color>, {GetName()}'s attacks become a piercing <color=#00FFFF><b>Ice Beam</b></color>, gaining <color=green><b>{IceBeamPiercingBonus}</b></color> Piercing and no longer losing damage against subsequent targets while piercing. Attack Speed becomes a fixed <color=green><b>{IceBeamAttackSpeed:F1}</b></color>, which cannot be increased or reduced while active.";
 
     public override string GetPath1Name() => "Frost Shot";
     public override string GetPath2Name() => "Snow Mark";
@@ -329,11 +332,13 @@ public class Snowdrop : Shooter
     public override string GetPath3Description(bool details = false)
     {
         float durpl = SData?.iceBeamDurationPerLevel ?? 1f;
+        int piercepl = SData?.iceBeamPiercingPerLevel ?? 1;
         string desc = details
-            ? $"For <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, {GetName()}'s attacks become a piercing <color=#00FFFF><b>Ice Beam</b></color>: it no longer loses damage against subsequent targets while piercing. Attack Speed becomes a fixed <color=green><b>{IceBeamAttackSpeed:F1}</b></color>, which cannot be increased or reduced while active."
+            ? $"For <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, {GetName()}'s attacks become a piercing <color=#00FFFF><b>Ice Beam</b></color>, gaining <color=green><b>[({SData?.iceBeamPiercingBase ?? 1}) + ({piercepl}/Lvl.)]</b></color> Piercing and no longer losing damage against subsequent targets while piercing. Attack Speed becomes a fixed <color=green><b>{IceBeamAttackSpeed:F1}</b></color>, which cannot be increased or reduced while active."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase Ice Beam Piercing by <color=green><b>{piercepl}</b></color> per level. [<color=green><b>+{piercepl * effectivePath3Level}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);

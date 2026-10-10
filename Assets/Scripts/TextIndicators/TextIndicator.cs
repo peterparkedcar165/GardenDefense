@@ -10,23 +10,38 @@ public abstract class TextIndicator : MonoBehaviour
     // optional icon sitting next to the text (e.g. SunIndicator's sun icon); fades out with the text if assigned
     [SerializeField] private SpriteRenderer icon;
     protected float horizontalDrift;
-    private float verticalSpeed;
+    protected float verticalSpeed;
     protected bool shrink = false;
-    private const float Lifetime = 0.6f;
+    // downward acceleration applied to verticalSpeed every frame - 0 by default (pure constant
+    // upward drift, existing behavior for every indicator that doesn't opt in), set by a
+    // subclass (e.g. DamageIndicator) for a rise-then-fall arc instead
+    protected float gravity = 0f;
+    protected float lifetime = 0.6f;
+
+    // overridable initial upward speed range, rolled once in Awake - a subclass (e.g.
+    // DamageIndicator) can give itself a faster launch than the default float-up pace
+    protected virtual float MinVerticalSpeed => 0.25f;
+    protected virtual float MaxVerticalSpeed => 0.5f;
 
     protected virtual void Awake()
     {
         tmpText = GetComponent<TMP_Text>();
-        horizontalDrift = Random.Range(-0.5f, 0.5f);
-        verticalSpeed   = Random.Range(0.25f, 0.5f);
-        transform.position += new Vector3(Random.Range(-0.3f, 0.3f), 0f, 0f);
+
+        // the spawn jitter decides which side it lands on, and horizontalDrift always pushes
+        // further that same way - so this never drifts back the opposite way across center
+        float spawnOffsetX = Random.Range(-0.25f, 0.25f);
+        transform.position += new Vector3(spawnOffsetX, 0f, 0f);
+        horizontalDrift = Mathf.Sign(spawnOffsetX) * Random.Range(0f, 0.25f);
+
+        verticalSpeed = Random.Range(MinVerticalSpeed, MaxVerticalSpeed);
     }
 
     protected virtual void Update()
     {
+        verticalSpeed -= gravity * Time.deltaTime;
         transform.position += new Vector3(horizontalDrift, verticalSpeed, 0f) * Time.deltaTime;
         Color c = tmpText.color;
-        c.a -= (1f / Lifetime) * Time.deltaTime;
+        c.a -= (1f / lifetime) * Time.deltaTime;
         tmpText.color = c;
         if (icon != null)
         {

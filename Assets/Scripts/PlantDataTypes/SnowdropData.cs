@@ -18,6 +18,8 @@ public class SnowdropData : PlantData
     [Header("Path 3 - Ice Beam")]
     public float iceBeamDurationPerLevel = 1f;
     public float iceBeamAttackSpeed      = 4f;
+    public int   iceBeamPiercingBase     = 1;
+    public int   iceBeamPiercingPerLevel = 1;
 
     public override string GetAttackDescription() =>
         $"Fires an ice projectile at its target, dealing {DamageTypeLabel(damageType)}.";

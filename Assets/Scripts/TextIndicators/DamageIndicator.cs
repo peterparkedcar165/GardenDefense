@@ -3,6 +3,9 @@ using TMPro;
 
 public class DamageIndicator : TextIndicator
 {
+    protected override float MinVerticalSpeed => 1f;
+    protected override float MaxVerticalSpeed => 1.25f;
+
     public static void Spawn(Vector3 position, float damage, ElementalType elementalType, bool isCrit)
     {
         GameObject go = Object.Instantiate(
@@ -13,7 +16,8 @@ public class DamageIndicator : TextIndicator
     public void Initialize(float damage, ElementalType elementalType, bool isCrit)
     {
         shrink = false;
-        horizontalDrift = 0f;
+        gravity = 2f;
+        lifetime = 1f;
 
         if (damage <= 0.5f) { Destroy(gameObject); return; }
 
@@ -29,8 +33,8 @@ public class DamageIndicator : TextIndicator
             default:                    color = new Color(0.9f, 0.9f, 0.9f); break;
         }
 
-        // size scales with damage, clamped to a 3-7 range (cap reached at 200 damage)
-        tmpText.fontSize = Mathf.Clamp(3f + damage * 0.02f, 3f, 7f);
+        // size scales with damage, clamped to a 2.5-3.5 range (cap reached at 250 damage)
+        tmpText.fontSize = Mathf.Clamp(2.5f + damage * 0.004f, 2.5f, 3.5f);
 
         if (isCrit)
         {
