@@ -103,6 +103,10 @@ public abstract class Projectile : MonoBehaviour
         //EMPTY METHOD INTENTIONAL
     }
 
+    // override to stop the damage halving applied from the 2nd pierced hit onward (see
+    // OnTriggerEnter2D) - used by skill-tree nodes that remove piercing's damage falloff
+    protected virtual bool DisablePierceFalloff => false;
+
     // detaches every child particle system (a plant's own trail, Floral Glow's fly particle,
     // etc.) right before this projectile's GameObject is destroyed, so each one survives and
     // finishes fading out naturally instead of popping out of existence along with the parent.
@@ -143,7 +147,7 @@ public abstract class Projectile : MonoBehaviour
             if (insect != null && insect.IsAlive && insect.team != Team.Friendly)
             {
                 hitCount++;
-                if (hitCount == 2) projectileDamage *= 0.5f;
+                if (hitCount == 2 && !DisablePierceFalloff) projectileDamage *= 0.5f;
                 OnHit(insect);
                 PlayHitParticles();
                 PlayFloralGlowHitParticles();

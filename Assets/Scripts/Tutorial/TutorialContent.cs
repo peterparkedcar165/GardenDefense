@@ -73,6 +73,18 @@ public static class TutorialContent
         new TutorialPage("<b><color=green>Acorn Knight</color></b>: Notice the elemental icon above that insect? That means it's being primed with an elemental debuff!\n\nIf another elemental attack lands on it while primed, it triggers an <b>Elemental Reaction</b>!"),
         new TutorialPage("<b><color=green>Acorn Knight</color></b>: For example, if <b><color=green>Grass</color></b> comes in contact with <color=orange><b>Fire</b></color>, it inflicts a <color=orange><b>Burn</b></color> on the target, dealing <color=#FFB6C1><b>Magic</b></color> <color=orange><b>Fire</b></color> damage over time!"), // player can click on the panel to close the tutorial.
     };
+
+    // triggers the moment the player enters level 3's setup phase (the initial pre-level
+    // fertilizer selection), same hook point as Level1StartLevel/Level2StartLevel - see
+    // FertilizerSelectionUI
+    public static readonly TutorialPage[] Level3StartLevel =
+    {
+        new TutorialPage("<b><color=#3399FF>Waterlily</color></b>: Hi! I'm <b><color=#3399FF>Waterlily</color></b>, soooo nice to meet you!"),
+        new TutorialPage("<b><color=#3399FF>Waterlily</color></b>: Click on me, that'll select me.\n\nThen, place me on any <b><color=#4FC3F7>Water</color></b> tile on the map!", TutorialEvents.PlaceWaterlilyOnWater), // player is expected to select the waterlily and place her on any water tile, once done, proceed tutorial
+        new TutorialPage("<b><color=#3399FF>Waterlily</color></b>: Unlike the others, I can only be placed on <b><color=#4FC3F7>Water</color></b> tiles.\n\nMy bubbles deal <color=#4FC3F7><b>Water</b></color> damage, and splash onto nearby insects too, with a chance to <color=#87CEEB><b>Slow</b></color> them down!"),
+        new TutorialPage("<b><color=#3399FF>Waterlily</color></b>: My <color=#4FC3F7><b>Water</b></color> damage also reacts with other elements!\n\nMixed with <color=orange><b>Fire</b></color>, it creates <color=#1E90FF><b>Steam</b></color>. Mixed with <color=green><b>Grass</b></color>, it triggers <color=green><b>Germinate</b></color>, a delayed explosion that hits everything nearby!"),
+        new TutorialPage("<b><color=#3399FF>Waterlily</color></b>: My skill traps insects inside a giant bubble, keeping them airborne while dealing <color=#4FC3F7><b>Water</b></color> damage on impact!"), // player can click on the panel to close the tutorial.
+    };
 }
 // need tutorial for when soldier ant appears
 // fertilizer

@@ -3106,6 +3106,7 @@ MonoBehaviour:
     expCurveVersion: 0
     flowerPotLevel: 0
     waterPotLevel: 0
+    seenTutorials: []
     skillPurchases: []
     plantExp: []
   selectedLevel: 0

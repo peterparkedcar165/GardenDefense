@@ -36,14 +36,14 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node3_attackspeed
+    - id: node3_critchance
       nodeName: Swift Draw
-      description: Increase <color=green><b>Attack Speed</b></color> by <color=green><b>0.05</b></color> per level.
+      description: Increase <color=green><b>Critical Chance</b></color> by <color=green><b>3%</b></color> per level.
       maxRank: 3
       costPerRank: 1
       effects:
-      - statType: 61
-        valuePerRank: 0.05
+      - statType: 9
+        valuePerRank: 0.03
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
@@ -58,20 +58,20 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5a_hunterseye
-      nodeName: Hunter's Eye
-      description: Critical hits against an insect below <color=green><b>30%</b></color> Health instantly kill it.
+    - id: node5a_focusedstrikes
+      nodeName: Focused Strikes
+      description: While <color=green><b>Rapid Focus</b></color> is active, increase <color=green><b>Critical Chance</b></color> by <color=green><b>15%</b></color>, and <color=green><b>Critical Damage</b></color> by <color=green><b>20%</b></color>.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: leafranger_hunters_eye
-    - id: node5b_camouflage
-      nodeName: Camouflage
-      description: While he hasn't fired in the last <color=green><b>2</b></color> seconds, gain <color=green><b>50%</b></color> Evasion.
+      unlockId: leafranger_focused_strikes
+    - id: node5b_verdantfocus
+      nodeName: Verdant Focus
+      description: While <color=green><b>Rapid Focus</b></color> is active, increase <color=green><b>Grass Damage</b></color> and <color=green><b>Elemental Affinity</b></color> by <color=green><b>20%</b></color>.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: leafranger_camouflage
+      unlockId: leafranger_verdant_focus
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown
@@ -116,18 +116,18 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node10a_piercingvolley
-      nodeName: Piercing Volley
-      description: While <color=green><b>Rapid Focus</b></color> is active, arrows gain unlimited Piercing.
+    - id: node10a_executioner
+      nodeName: Executioner
+      description: When dealing damage that would reduce the target's Health to under <color=green><b>10%</b></color>, execute it.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: leafranger_piercing_volley
-    - id: node10b_adrenalinerush
-      nodeName: Adrenaline Rush
-      description: While <color=green><b>Rapid Focus</b></color> is active, become immune to Crowd Control effects.
+      unlockId: leafranger_executioner
+    - id: node10b_trueflight
+      nodeName: True Flight
+      description: <color=green><b>Piercing</b></color> no longer reduces damage to subsequent targets. Attacks deal <color=green><b>3%</b></color> bonus damage per unit of distance traveled.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: leafranger_adrenaline_rush
+      unlockId: leafranger_true_flight
     ranksToUnlockNext: 1

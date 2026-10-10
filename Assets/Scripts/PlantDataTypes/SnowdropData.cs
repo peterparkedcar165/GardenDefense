@@ -3,39 +3,28 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SnowdropData", menuName = "Scriptable Objects/PlantData/Snowdrop")]
 public class SnowdropData : PlantData
 {
-    [Header("Passive Chill")]
-    public float baseSlow    = 0.24f;
-    public float scalingSlow = 0.06f;
-
-    [Header("Passive Cooling")]
-    public float coolingPerSecond = 2f;
-    public float coolingPerSecondPerLevel = 0.1f;
-
-    [Header("Skill Blizzard")]
-    public float baseBlizzardDamage        = 0f;
-    public float blizzardDamagePerLevel    = 15f;
-    public float baseBlizzardDuration      = 5f;
-    public float blizzardDurationPerLevel  = 1f;
-    public float blizzardChillMultiplier   = 1.5f;
-    public float blizzardCoolingMultiplier = 2f;
-    public float baseBlizzardRange         = 10f;
-
     [Header("Path 1 Scaling")]
-    public float path1AttackDamagePerLevel = 1f;
-    public float path1AttackRangePerLevel  = 0.1f;
-    public float path1MaxElementalAffinityBonus     = 0.35f;
+    public float path1AttackDamagePerLevel = 3f;
+    public float path1AttackSpeedPerLevel  = 0.05f;
+    public float path1AttackRangePerLevel  = 0.2f;
 
-    [Header("Path 3 Scaling")]
-    public float path3BlizzardWidthPerLevel = 0.5f;
-    public float path3BlizzardRangePerLevel = 0.5f;
+    [Header("Path 2 - Snow Mark")]
+    public float snowMarkFlatDamageBase        = 12f;
+    public float snowMarkFlatDamagePerLevel    = 6f;
+    public float snowMarkDamagePercentBase     = 0.02f;
+    public float snowMarkDamagePercentPerLevel = 0.01f;
+    public float snowMarkDuration = 6f;
+
+    [Header("Path 3 - Ice Beam")]
+    public float iceBeamDurationPerLevel = 1f;
+    public float iceBeamAttackSpeed      = 4f;
 
     public override string GetAttackDescription() =>
-        $"Continuously deals {DamageTypeLabel(damageType)} to all ground-level insects within range.";
+        $"Fires an ice projectile at its target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        "Applies <color=#00FFFF>Chill</color> to nearby insects, slowing their movement.\n\n" +
-        "Plants within the radius receive <color=#00FFFF>Cooling</color>, reducing temperature toward comfort.";
+        "Attacks apply <color=#00FFFF>Snow Mark</color> and deal bonus <color=#00FFFF>Ice</color> Magic damage equal to a % of the target's Max Health. Can bond with any plant on the field, letting it detonate the Mark.";
 
     public override string GetSkillDescription() =>
-        $"Summons a strong blizzard aimed toward the targeted area, dealing {DamageTypeLabel(damageType)} per second to insects caught within and applying a stronger <color=#00FFFF>Chill</color>. Plants within the blizzard also receive an enhanced <color=#00FFFF>Cooling</color> effect.";
+        "Converts attacks into a piercing <color=#00FFFF>Ice Beam</color> with a fixed Attack Speed.";
 }

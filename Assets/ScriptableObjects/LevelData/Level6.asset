@@ -78,20 +78,20 @@ MonoBehaviour:
   waves:
   - waveNumber: 1
     subWaves:
-    - subWaveDuration: 55.657
+    - subWaveDuration: 63.657
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 11
         timeBetweenSpawns: 4.5657
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 61.8958
+    - subWaveDuration: 56.8958
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 12
         timeBetweenSpawns: 4.7178
         startDelay: 0
-      delayBeforeNext: 16
+      delayBeforeNext: 5
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
       interval: 21.3732
@@ -101,7 +101,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 2
     subWaves:
-    - subWaveDuration: 56.2264
+    - subWaveDuration: 64.2264
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 13
@@ -112,7 +112,7 @@ MonoBehaviour:
         timeBetweenSpawns: 56.2264
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 63.4226
+    - subWaveDuration: 55.4848
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 13
@@ -122,7 +122,7 @@ MonoBehaviour:
         count: 2
         timeBetweenSpawns: 31.7113
         startDelay: 0
-      delayBeforeNext: 16
+      delayBeforeNext: 7
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 10.4467
@@ -138,7 +138,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 3
     subWaves:
-    - subWaveDuration: 57.967
+    - subWaveDuration: 65.967
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 16
@@ -149,7 +149,7 @@ MonoBehaviour:
         timeBetweenSpawns: 28.9835
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 64.3808
+    - subWaveDuration: 63.3808
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 17
@@ -159,7 +159,7 @@ MonoBehaviour:
         count: 3
         timeBetweenSpawns: 21.4603
         startDelay: 0
-      delayBeforeNext: 16
+      delayBeforeNext: 9
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 9.9313
@@ -178,7 +178,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 4
     subWaves:
-    - subWaveDuration: 61.903
+    - subWaveDuration: 69.903
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 19
@@ -189,7 +189,7 @@ MonoBehaviour:
         timeBetweenSpawns: 20.6343
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 65.5804
+    - subWaveDuration: 66.5804
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 19
@@ -199,7 +199,7 @@ MonoBehaviour:
         count: 4
         timeBetweenSpawns: 16.3951
         startDelay: 0
-      delayBeforeNext: 16
+      delayBeforeNext: 11
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 9.3975
@@ -218,7 +218,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 5
     subWaves:
-    - subWaveDuration: 61.5412
+    - subWaveDuration: 68.2208
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 20
@@ -229,7 +229,7 @@ MonoBehaviour:
         timeBetweenSpawns: 15.3853
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 62.6681
+    - subWaveDuration: 70.6681
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 22
@@ -239,7 +239,7 @@ MonoBehaviour:
         count: 5
         timeBetweenSpawns: 12.5336
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 13
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 8.8454
@@ -258,7 +258,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 6
     subWaves:
-    - subWaveDuration: 63.9858
+    - subWaveDuration: 71.9858
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 23
@@ -269,7 +269,7 @@ MonoBehaviour:
         timeBetweenSpawns: 12.7972
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 64.787
+    - subWaveDuration: 74.7864
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 25
@@ -279,7 +279,7 @@ MonoBehaviour:
         count: 6
         timeBetweenSpawns: 10.7978
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 15
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 8.275
@@ -298,7 +298,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 7
     subWaves:
-    - subWaveDuration: 64.4357
+    - subWaveDuration: 71.6965
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 24
@@ -309,7 +309,7 @@ MonoBehaviour:
         timeBetweenSpawns: 10.7393
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 66.3574
+    - subWaveDuration: 78.3574
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 27
@@ -319,7 +319,7 @@ MonoBehaviour:
         count: 7
         timeBetweenSpawns: 9.4796
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 17
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 7.6863
@@ -338,7 +338,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 8
     subWaves:
-    - subWaveDuration: 67.1266
+    - subWaveDuration: 75.537
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 28
@@ -349,7 +349,7 @@ MonoBehaviour:
         timeBetweenSpawns: 9.5895
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 66.9269
+    - subWaveDuration: 80.3956
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 29
@@ -359,7 +359,7 @@ MonoBehaviour:
         count: 8
         timeBetweenSpawns: 8.3659
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 19
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 7.0792
@@ -378,7 +378,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 9
     subWaves:
-    - subWaveDuration: 67.015
+    - subWaveDuration: 76.6383
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 29
@@ -389,7 +389,7 @@ MonoBehaviour:
         timeBetweenSpawns: 8.3769
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 70.3108
+    - subWaveDuration: 86.3108
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 32
@@ -399,7 +399,7 @@ MonoBehaviour:
         count: 9
         timeBetweenSpawns: 7.8123
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 21
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 6.4538
@@ -418,7 +418,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 10
     subWaves:
-    - subWaveDuration: 68.098
+    - subWaveDuration: 78.5312
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 31
@@ -429,7 +429,7 @@ MonoBehaviour:
         timeBetweenSpawns: 7.5664
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 71.2634
+    - subWaveDuration: 88.6469
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 34
@@ -439,7 +439,7 @@ MonoBehaviour:
         count: 10
         timeBetweenSpawns: 7.1263
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 23
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 5.81
@@ -458,7 +458,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 11
     subWaves:
-    - subWaveDuration: 69.99
+    - subWaveDuration: 80.991
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 33
@@ -469,7 +469,7 @@ MonoBehaviour:
         timeBetweenSpawns: 6.999
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 71.2025
+    - subWaveDuration: 91.2025
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 36
@@ -479,7 +479,7 @@ MonoBehaviour:
         count: 11
         timeBetweenSpawns: 6.473
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 25
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 5.1479
@@ -498,7 +498,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 12
     subWaves:
-    - subWaveDuration: 71.3904
+    - subWaveDuration: 82.9
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 35
@@ -509,7 +509,7 @@ MonoBehaviour:
         timeBetweenSpawns: 6.49
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 73.9592
+    - subWaveDuration: 95.1947
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 38
@@ -519,7 +519,7 @@ MonoBehaviour:
         count: 12
         timeBetweenSpawns: 6.1633
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 27
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 4.4675
@@ -538,7 +538,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 13
     subWaves:
-    - subWaveDuration: 68.023
+    - subWaveDuration: 80.3546
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 28
@@ -549,7 +549,7 @@ MonoBehaviour:
         timeBetweenSpawns: 5.6686
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 71.5342
+    - subWaveDuration: 95.0312
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 30
@@ -559,7 +559,7 @@ MonoBehaviour:
         count: 13
         timeBetweenSpawns: 5.5026
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 29
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 4.7109
@@ -578,7 +578,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 14
     subWaves:
-    - subWaveDuration: 68.6488
+    - subWaveDuration: 81.3684
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 29
@@ -589,7 +589,7 @@ MonoBehaviour:
         timeBetweenSpawns: 5.2807
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 72.208
+    - subWaveDuration: 98.208
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 32
@@ -599,7 +599,7 @@ MonoBehaviour:
         count: 14
         timeBetweenSpawns: 5.1577
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 31
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 3.8146
@@ -618,7 +618,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 15
     subWaves:
-    - subWaveDuration: 69.3532
+    - subWaveDuration: 82.3994
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 30
@@ -629,7 +629,7 @@ MonoBehaviour:
         timeBetweenSpawns: 4.9538
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 73.337
+    - subWaveDuration: 101.4474
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 33
@@ -639,7 +639,7 @@ MonoBehaviour:
         count: 15
         timeBetweenSpawns: 4.8891
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 33
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 2.8954
@@ -658,7 +658,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 16
     subWaves:
-    - subWaveDuration: 72.1364
+    - subWaveDuration: 85.3274
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 32
@@ -669,7 +669,7 @@ MonoBehaviour:
         timeBetweenSpawns: 4.8091
         startDelay: 2
       delayBeforeNext: 16
-    - subWaveDuration: 72.5297
+    - subWaveDuration: 102.9965
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 34
@@ -679,7 +679,7 @@ MonoBehaviour:
         count: 16
         timeBetweenSpawns: 4.5331
         startDelay: 0
-      delayBeforeNext: 11
+      delayBeforeNext: 35
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
       interval: 1.9531

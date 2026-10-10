@@ -407,10 +407,8 @@ MonoBehaviour:
   effectivePath3Level: 0
   path3Unlocked: 0
   mainRenderer: {fileID: 3701729662317188319}
-  chillLevel: 1
-  blizzardPrefab: {fileID: 2201209173165394238, guid: 763451afad4dea34682acc02c93b0cd1, type: 3}
-  blizzardIndicatorPrefab: {fileID: 2096060468615343360, guid: 1718677659ce4b24da690f0eb188b557, type: 3}
-  blizzardDamage: 0
+  projectilePrefab: {fileID: 7388594979766616069, guid: 26b1d8b64e7ee9748be4aef05126850e, type: 3}
+  iceBeamProjectilePrefab: {fileID: 0}
 --- !u!58 &-5525797036898548761
 CircleCollider2D:
   m_ObjectHideFlags: 0

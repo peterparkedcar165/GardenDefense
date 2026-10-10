@@ -16,22 +16,23 @@ MonoBehaviour:
   icon: {fileID: 3997787884886350849, guid: 66cc86ab63224114c893b2c8e527b49d, type: 3}
   plantName: Snowdrop
   displayName: Snowdrop
-  family: 5
+  family: 7
   elementalType: 4
   damageType: 1
   sunCost: 105
   placementLimit: 0
   category: 0
   skillTree: {fileID: 0}
+  fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 12
+  baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 1
+  baseAttackSpeed: 0.3
   baseAttackRange: 2
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
-  baseElementalEffectChance: 0.05
-  baseOnHitEffectiveness: 0.1
+  baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
   startingShield: 0
@@ -42,7 +43,6 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   baseHeatResistance: 0
   baseColdResistance: 0
@@ -67,11 +67,10 @@ MonoBehaviour:
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
-  baseGroundDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 0
-  baseMaxRange: 0
+  baseProjectileSpeed: 3
+  baseMaxRange: 20
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -86,21 +85,19 @@ MonoBehaviour:
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
-  baseSlow: 0.08
-  scalingSlow: 0.04
-  coolingPerSecond: 0.75
-  coolingPerSecondPerLevel: 0.1
-  baseBlizzardDamage: 15
-  blizzardDamagePerLevel: 5
-  baseBlizzardDuration: 5
-  blizzardDurationPerLevel: 1
-  blizzardChillMultiplier: 1.5
-  blizzardCoolingMultiplier: 4
-  baseBlizzardRange: 10
-  path1AttackDamagePerLevel: 1
+  attackSound:
+    clips: []
+  hitSound:
+    clips: []
+  skillSound:
+    clips: []
+  path1AttackDamagePerLevel: 2
+  path1AttackSpeedPerLevel: 0.03
   path1AttackRangePerLevel: 0.2
-  path1MaxElementalEffectChanceBonus: 0.03
-  path1MaxAttackDamagePenalty: 0.5
-  path1MaxAttackSpeedBonus: 0.5
-  path3BlizzardWidthPerLevel: 0.5
-  path3BlizzardRangePerLevel: 0.5
+  snowMarkFlatDamageBase: 6
+  snowMarkFlatDamagePerLevel: 3
+  snowMarkDamagePercentBase: 0.02
+  snowMarkDamagePercentPerLevel: 0.004
+  snowMarkDuration: 8
+  iceBeamDurationPerLevel: 2
+  iceBeamAttackSpeed: 4

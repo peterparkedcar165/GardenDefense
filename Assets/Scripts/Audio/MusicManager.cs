@@ -18,7 +18,7 @@ public class MusicManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void Play(AudioClip clip, float crossfadeDuration = -1f)
+    public void Play(AudioClip clip, float crossfadeDuration = -1f, float volume = 1f)
     {
         if (clip == null) return;
 
@@ -28,7 +28,7 @@ public class MusicManager : MonoBehaviour
         float duration = crossfadeDuration < 0 ? defaultCrossfadeDuration : crossfadeDuration;
 
         if (crossfadeCoroutine != null) StopCoroutine(crossfadeCoroutine);
-        crossfadeCoroutine = StartCoroutine(Crossfade(clip, duration));
+        crossfadeCoroutine = StartCoroutine(Crossfade(clip, duration, volume));
     }
 
     public void Stop(float crossfadeDuration = -1f)
@@ -38,7 +38,7 @@ public class MusicManager : MonoBehaviour
         crossfadeCoroutine = StartCoroutine(FadeOut(duration));
     }
 
-    private IEnumerator Crossfade(AudioClip newClip, float duration)
+    private IEnumerator Crossfade(AudioClip newClip, float duration, float targetVolume)
     {
         AudioSource outgoing = aIsActive ? sourceA : sourceB;
         AudioSource incoming = aIsActive ? sourceB : sourceA;
@@ -55,13 +55,13 @@ public class MusicManager : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             outgoing.volume = Mathf.Lerp(startVolume, 0f, t);
-            incoming.volume = Mathf.Lerp(0f, 1f, t);
+            incoming.volume = Mathf.Lerp(0f, targetVolume, t);
             yield return null;
         }
 
         outgoing.Stop();
         outgoing.clip = null;
-        incoming.volume = 1f;
+        incoming.volume = targetVolume;
         aIsActive = !aIsActive;
     }
 

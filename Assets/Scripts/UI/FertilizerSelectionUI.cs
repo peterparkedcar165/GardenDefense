@@ -134,6 +134,11 @@ public class FertilizerSelectionUI : MonoBehaviour
         {
             TutorialManager.instance?.TryShow(TutorialIds.Level2StartLevel, TutorialContent.Level2StartLevel);
         }
+        else if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 3
+                 && SaveManager.instance != null && SaveManager.instance.selectedLoadout.Contains("Waterlily"))
+        {
+            TutorialManager.instance?.TryShow(TutorialIds.Level3StartLevel, TutorialContent.Level3StartLevel);
+        }
     }
 
     // cleanup used when leaving to the Main Menu (Escape -> Settings -> Main Menu, or Game

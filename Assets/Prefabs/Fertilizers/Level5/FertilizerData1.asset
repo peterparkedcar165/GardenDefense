@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
   fertilizerName: Germinator
   stats:
-  - statType: 6
-    value: 0.12
+  - statType: 41
+    value: 18
   - statType: 11
-    value: 0.12
+    value: 0.16
   icon: {fileID: 0}
   targetElementalTypes: 
   targetFamilies: 

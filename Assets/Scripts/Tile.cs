@@ -256,6 +256,10 @@ public class Tile : MonoBehaviour
             {
                 TutorialManager.instance?.NotifyEvent(TutorialEvents.PlaceSunflowerOnDirt);
             }
+            else if (selectedPlant.data.plantName == "Waterlily" && tileType == TileType.Water)
+            {
+                TutorialManager.instance?.NotifyEvent(TutorialEvents.PlaceWaterlilyOnWater);
+            }
         }
     }
 }

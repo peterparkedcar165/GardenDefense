@@ -123,11 +123,11 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: calendula_borrowed_light
-    - id: node10b_nurturingglow
-      nodeName: Nurturing Glow
-      description: <color=orange><b>Floral Glow</b></color>'s damage bonus reduced by <color=green><b>35%</b></color>. <color=orange><b>Floral Glow</b></color> now also heals its target for <color=green><b>6 + 3%</b></color> Max Health per second.
+    - id: node10b_ignitingglow
+      nodeName: Igniting Glow
+      description: <color=orange><b>Floral Glow</b></color> now applies <color=orange><b>Fire</b></color> Primer.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: calendula_nurturing_glow
+      unlockId: calendula_igniting_glow
     ranksToUnlockNext: 1
