@@ -152,12 +152,14 @@ public abstract class Entity : MonoBehaviour
         if (data.source is Cactus cactus)
             insect.ApplyEffect(new PuncturedEffect(insect, cactus.passiveDuration, cactus.IsPath1Maxed ? 2 : 1, cactus));
 
-        // Floral Glow and Ablaze proc off projectile OR melee attacks (but not, say, a passive
-        // aura tick) - Waterlily's path2-max splash counts too, since it deliberately tags itself
-        // Projectile for exactly this, and Bird of Paradise's melee attacks (tagged Melee) now
-        // qualify the same way. Tansy's own Floral Glow (the orbiting-projectile version) doesn't
-        // proc through here - it deals its damage directly off the projectile instead
-        if (data.tags == null || !System.Array.Exists(data.tags, t => t == DamageTag.Projectile || t == DamageTag.Melee)) return;
+        // Floral Glow and Ablaze proc off single-target attacks (but not, say, a passive aura
+        // tick or an AoE sweep) - requires both Attack (already guaranteed by the OnHit gate
+        // above, checked again here for clarity) and SingleTarget. Tansy's own Floral Glow (the
+        // orbiting-projectile version) doesn't proc through here - it deals its damage directly
+        // off the projectile instead
+        if (data.tags == null
+            || !System.Array.Exists(data.tags, t => t == DamageTag.Attack)
+            || !System.Array.Exists(data.tags, t => t == DamageTag.SingleTarget)) return;
 
         FloralGlowEffect floralGlow = data.source.GetEffect<FloralGlowEffect>();
         if (floralGlow != null)

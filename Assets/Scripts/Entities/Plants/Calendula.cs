@@ -494,7 +494,7 @@ public class Calendula : Aura
         $"<color=green><b>Base Illumination Range</b></color> is equal to <color=green><b>Attack Range</b></color>.";
 
     public override string GetSkillDesription() =>
-        $"Target a plant anywhere on the field, sending a petal to it that grants <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color> on arrival. The plant's projectile attacks deal an additional <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * FloralGlowDamageScaling:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>.";
+        $"Target a plant anywhere on the field, sending a petal to it that grants <color=orange>Floral Glow</color> for <color=green><b>{skillDuration:F0}s</b></color> on arrival. The plant's single target attacks deal an additional <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * FloralGlowDamageScaling:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -530,7 +530,7 @@ public class Calendula : Aura
         float dmgScalingPerLevel = CData?.floralGlowDamageScalingPerLevel ?? 0.05f;
         float maxLevelASBonus = CData?.floralGlowMaxLevelAttackSpeedBonus ?? 0.15f;
         string desc = details
-            ? $"Target a plant anywhere on the field, sending a petal to it that grants <color=orange>Floral Glow</color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds on arrival. The plant's projectile attacks deal an additional <color=green><b>[({dmgScalingBase * 100f:F0}%) + ({dmgScalingPerLevel * 100f:F0}%/Lvl.) Attack Damage + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>."
+            ? $"Target a plant anywhere on the field, sending a petal to it that grants <color=orange>Floral Glow</color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds on arrival. The plant's single target attacks deal an additional <color=green><b>[({dmgScalingBase * 100f:F0}%) + ({dmgScalingPerLevel * 100f:F0}%/Lvl.) Attack Damage + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +

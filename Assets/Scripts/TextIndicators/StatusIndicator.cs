@@ -5,6 +5,8 @@ public class StatusIndicator : TextIndicator
 {
     public static void Spawn(Vector3 position, string text, Color color)
     {
+        if (!SettingsManager.ShowStatusEffectIndicators) return;
+
         GameObject go = Object.Instantiate(
             Resources.Load<GameObject>("StatusIndicator"), position, Quaternion.identity);
         go.GetComponent<StatusIndicator>()?.Initialize(text, color);

@@ -42,7 +42,6 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   flatPhysicalDamageReduction: 0
   threatValue: 1
@@ -60,9 +59,11 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  hitSound:
+    clips: []
   darkMovementSpeedBonus: 0.4
   darkEvasionBonus: 0.15
-  carryPickupRange: 3
+  carryPickupRange: 1
   carryPickupCheckInterval: 0.3
   carryPickupDelay: 0.5
   carryPickupHeight: -0.7
