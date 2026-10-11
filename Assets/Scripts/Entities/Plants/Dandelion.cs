@@ -44,7 +44,7 @@ public class Dandelion : Shooter
 
     // Path3 max: allied plants touched by the gust also get a flat % of their own Skill
     // Cooldown refunded
-    private const float Path3MaxCooldownRefundPercent = 0.15f;
+    private const float Path3MaxCooldownRefundPercent = 0.25f;
     private float CooldownRefundPercent => IsPath3Maxed ? Path3MaxCooldownRefundPercent : 0f;
 
     // Passive - periodically reduces nearby allied plants' Skill Cooldown
@@ -60,7 +60,7 @@ public class Dandelion : Shooter
     private const float Path1MaxExtraProcReduction = 1f;
 
     // Path2 max: allied plants within her attack radius have increased Skill Damage
-    private const float SkillDamageAuraBonus = 0.25f;
+    private const float SkillDamageAuraBonus = 0.33f;
 
     // Windfall (skill tree): Pollen Haste granted alongside a successful pulse reduction
     private const float WindfallHasteDuration = 3f;

@@ -22,10 +22,10 @@ MonoBehaviour:
   sunCost: 125
   placementLimit: 0
   category: 0
-  skillTree: {fileID: 0}
+  skillTree: {fileID: 11400000, guid: 84f8614f737b4d32ac46ef913451db9c, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 12
+  baseAttackDamage: 16
   baseMagicPower: 0
   baseAttackSpeed: 0.3
   baseAttackRange: 2
@@ -91,13 +91,13 @@ MonoBehaviour:
     clips: []
   skillSound:
     clips: []
-  path1AttackDamagePerLevel: 1
+  path1AttackDamagePerLevel: 2
   path1AttackSpeedPerLevel: 0.04
   path1AttackRangePerLevel: 0.2
   snowMarkFlatDamageBase: 6
   snowMarkFlatDamagePerLevel: 3
-  snowMarkDamagePercentBase: 0.015
-  snowMarkDamagePercentPerLevel: 0.003
+  snowMarkDamagePercentBase: 0.01
+  snowMarkDamagePercentPerLevel: 0.002
   snowMarkDuration: 8
   iceBeamDurationPerLevel: 2
   iceBeamAttackSpeed: 2.5

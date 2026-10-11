@@ -91,7 +91,8 @@ public class PlantSelector : MonoBehaviour
             CursorManager.instance?.SetMode(CursorState.Default);
         }
 
-        if (Keyboard.current.fKey.wasPressedThisFrame && SaveManager.instance?.saveData.flowerPotLevel > 0)
+        if (Keyboard.current.fKey.wasPressedThisFrame && SaveManager.instance?.saveData.flowerPotLevel > 0
+            && SaveManager.instance.saveData.highestLevelUnlocked >= SaveData.FlowerPotRequiredHighestLevelUnlocked)
             SetFlowerPotMode(!flowerPotMode);
 
         if (Keyboard.current.wKey.wasPressedThisFrame && SaveManager.instance?.saveData.waterPotLevel > 0)

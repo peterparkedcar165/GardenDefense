@@ -137,5 +137,9 @@ public enum StatType
     // feeds Plant.skillChargeRateAdder - a rate multiplier on how fast skillCooldownTimer counts
     // down (1 = normal speed, +0.1 = 10% faster), not a flat/percentage reduction to the cooldown
     // duration itself. League of Legends' Ability Haste is the reference point for this stat
-    SkillChargeRate
+    SkillChargeRate,
+    // Snowdrop-specific: flat addition to SnowMarkPercent (the % Max Health portion of her Snow
+    // Mark bonus damage), same pattern as MaxSlowStacksFlat/ToxicSporeDurationFlat above - plant-
+    // specific since SnowMarkPercent isn't a generic Entity/Plant field
+    SnowMarkPercentFlat
 }

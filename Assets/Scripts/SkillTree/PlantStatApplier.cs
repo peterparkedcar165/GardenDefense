@@ -90,6 +90,7 @@ public static class PlantStatApplier
             case StatType.AttackDamageTotalMultiplier:     plant.attackDamageTotalMultiplier  += value; break;
             case StatType.ArmorTotalMultiplier:             plant.armorTotalMultiplier          += value; break;
             case StatType.SkillChargeRate:                  plant.skillChargeRateAdder          += value; break;
+            case StatType.SnowMarkPercentFlat:               if (plant is Snowdrop sd) sd.snowMarkPercentAdder += value; break;
         }
     }
 }
