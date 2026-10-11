@@ -16,7 +16,11 @@ public class PotButtonVisibility : MonoBehaviour
     private void Update()
     {
         if (SaveManager.instance == null) return;
-        _flowerPotButton?.SetActive(SaveManager.instance.saveData.flowerPotLevel > 0);
-        _waterPotButton?.SetActive(SaveManager.instance.saveData.waterPotLevel > 0);
+        SaveData data = SaveManager.instance.saveData;
+        // Flower Pot's unlock is tied directly to Level 11 (SaveManager.RepairFlowerPotFromLevel
+        // keeps flowerPotLevel in sync with that already) - checked again here too as a defensive
+        // backstop against any stale/older save state
+        _flowerPotButton?.SetActive(data.flowerPotLevel > 0 && data.highestLevelUnlocked >= SaveData.FlowerPotRequiredHighestLevelUnlocked);
+        _waterPotButton?.SetActive(data.waterPotLevel > 0);
     }
 }

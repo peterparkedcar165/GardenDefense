@@ -4,7 +4,10 @@ using TMPro;
 
 public class ShopManager : MonoBehaviour
 {
-    // flower pot: unlock + 3 upgrades (sun cost drops 25 → 20 → 15 → 10)
+    // flower pot: base unlock is free (see SaveManager.RepairFlowerPotFromLevel), then 3 paid
+    // upgrades (sun cost drops 25 → 20 → 15 → 10). costs[0]/sunCosts[0] (unlock, 750/25) are dead
+    // once Level 11 passes - flowerPotLevel jumps straight to 1 for free, never sitting at 0 long
+    // enough to be purchased - kept only so the two arrays stay index-aligned with Water Pot's
     private static readonly int[] FlowerPotCosts    = { 750, 1500, 3000, 6000 };
     private static readonly int[] FlowerPotSunCosts = { 25, 20, 15, 10 };
 
@@ -61,6 +64,7 @@ public class ShopManager : MonoBehaviour
 
     public void BuyFlowerPot()
     {
+        if (Data.highestLevelUnlocked < SaveData.FlowerPotRequiredHighestLevelUnlocked) return;
         int level = Data.flowerPotLevel;
         if (level >= FlowerPotCosts.Length) return;
         if (!TrySpend(FlowerPotCosts[level])) return;
@@ -103,7 +107,7 @@ public class ShopManager : MonoBehaviour
         RefreshPotItem(
             flowerPotStatusText, flowerPotCostText, flowerPotBuyButton,
             Data.flowerPotLevel, FlowerPotCosts, FlowerPotSunCosts,
-            "Flower Pot"
+            "Flower Pot", SaveData.FlowerPotRequiredHighestLevelUnlocked
         );
 
         RefreshPotItem(
@@ -123,19 +127,22 @@ public class ShopManager : MonoBehaviour
         if (plantSlotBuyButton  != null) plantSlotBuyButton.interactable = false;
     }
 
+    // requiredHighestLevelUnlocked = -1 means no level gate (Water Pot); otherwise the row stays
+    // locked - showing how many levels are left - regardless of currency, until that level is hit
     private void RefreshPotItem(TMP_Text statusText, TMP_Text costText, Button buyButton,
-        int level, int[] costs, int[] sunCosts, string label)
+        int level, int[] costs, int[] sunCosts, string label, int requiredHighestLevelUnlocked = -1)
     {
+        bool levelLocked = requiredHighestLevelUnlocked >= 0 && Data.highestLevelUnlocked < requiredHighestLevelUnlocked;
         bool maxed = level >= costs.Length;
-        string status = level == 0
+        string status = level == 0 || levelLocked
             ? $"{label}: Locked"
             : $"{label}: {sunCosts[level - 1]} Sun";
-        string upgrade = level == 0
-            ? "Unlock"
-            : (maxed ? "MAX" : $"→ {sunCosts[level]} Sun");
+        string upgrade = levelLocked
+            ? $"Reach Level {requiredHighestLevelUnlocked + 1}"
+            : (level == 0 ? "Unlock" : (maxed ? "MAX" : $"→ {sunCosts[level]} Sun"));
 
         if (statusText != null) statusText.text = status;
-        if (costText   != null) costText.text   = maxed ? "MAX" : $"${costs[level]}  ({upgrade})";
-        if (buyButton  != null) buyButton.interactable = !maxed && Data.currency >= costs[level];
+        if (costText   != null) costText.text   = levelLocked ? upgrade : (maxed ? "MAX" : $"${costs[level]}  ({upgrade})");
+        if (buyButton  != null) buyButton.interactable = !levelLocked && !maxed && Data.currency >= costs[level];
     }
 }

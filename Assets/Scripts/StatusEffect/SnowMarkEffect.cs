@@ -7,6 +7,9 @@ using UnityEngine;
 // Snowdrop.HandleBoundPartnerHit). source is always the Snowdrop that applied it
 public class SnowMarkEffect : StatusEffect
 {
+    private const float ChillingGraspSlowPercent = 0.25f;
+    private bool _slowApplied;
+
     public SnowMarkEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
@@ -18,6 +21,21 @@ public class SnowMarkEffect : StatusEffect
     public override string GetDescription() =>
         "Can be detonated by Snowdrop's bonded partner for bonus <color=#00FFFF>Ice</color> Magic damage equal to a % of Max Health.";
 
-    public override void OnApply() { }
-    public override void OnExpire() { }
+    // Chilling Grasp (skill tree): checked once on apply rather than every tick, since the
+    // unlock can't change mid-mark - re-checked fresh on every refresh/reapply too, since OnApply
+    // only ever fires on a genuinely new instance (the old one's OnExpire runs first on refresh)
+    public override void OnApply()
+    {
+        if (source is Snowdrop snowdrop && target is Insect insect && SkillTreeManager.HasUnlock(snowdrop, Snowdrop.ChillingGraspUnlock))
+        {
+            _slowApplied = true;
+            insect.movementSpeedMultiplier -= ChillingGraspSlowPercent;
+        }
+    }
+
+    public override void OnExpire()
+    {
+        if (_slowApplied && target is Insect insect)
+            insect.movementSpeedMultiplier += ChillingGraspSlowPercent;
+    }
 }

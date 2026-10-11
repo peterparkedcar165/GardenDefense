@@ -58,6 +58,7 @@ public class SaveManager : MonoBehaviour
 
         // on load, fill any plant gaps caused by levels already completed
         RepairPlantsFromLevels();
+        RepairFlowerPotFromLevel();
     }
 
     // legacy curve constants, kept only for MigrateExpCurve below - the live curve is now
@@ -116,6 +117,19 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    // Flower Pot's base unlock (flowerPotLevel 0->1) is free and tied directly to Level 11 being
+    // unlocked, not a Shop purchase - locked whenever the level isn't, unlocked the instant it is.
+    // called everywhere highestLevelUnlocked can change, mirroring RepairPlantsFromLevels. purchased
+    // upgrade tiers (1->2->3->4) are untouched here - only ever lost if the level requirement is no
+    // longer met, which in real gameplay never happens (highestLevelUnlocked only ever increases)
+    private void RepairFlowerPotFromLevel()
+    {
+        if (saveData.highestLevelUnlocked < SaveData.FlowerPotRequiredHighestLevelUnlocked)
+            saveData.flowerPotLevel = 0;
+        else if (saveData.flowerPotLevel < 1)
+            saveData.flowerPotLevel = 1;
+    }
+
     void Update()
     {
         if (UnityEngine.InputSystem.Keyboard.current.uKey.wasPressedThisFrame)
@@ -124,6 +138,7 @@ public class SaveManager : MonoBehaviour
             saveData.unlockedPlants.Clear();
             saveData.unlockedPlants.Add("AcornKnight");
             RepairPlantsFromLevels();
+            RepairFlowerPotFromLevel();
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log("Unlocked all levels and plants");
@@ -133,6 +148,7 @@ public class SaveManager : MonoBehaviour
             saveData.highestLevelUnlocked = 0;
             saveData.unlockedPlants.Clear();
             saveData.unlockedPlants.Add("AcornKnight");
+            RepairFlowerPotFromLevel();
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log("Reset to level 1 only");
@@ -145,6 +161,7 @@ public class SaveManager : MonoBehaviour
                 if (plant != null) saveData.unlockedPlants.Remove(plant);
                 saveData.highestLevelUnlocked--;
             }
+            RepairFlowerPotFromLevel();
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log($"highestLevelUnlocked decreased to {saveData.highestLevelUnlocked}");
@@ -154,6 +171,7 @@ public class SaveManager : MonoBehaviour
             int maxLevel = plantRegistry != null ? plantRegistry.plants.Length - 1 : 40;
             saveData.highestLevelUnlocked = Mathf.Min(maxLevel, saveData.highestLevelUnlocked + 1);
             RepairPlantsFromLevels();
+            RepairFlowerPotFromLevel();
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
             Debug.Log($"highestLevelUnlocked increased to {saveData.highestLevelUnlocked}");
@@ -258,6 +276,7 @@ public class SaveManager : MonoBehaviour
     {
         bool firstClear = level > saveData.highestLevelUnlocked;
         saveData.highestLevelUnlocked = Mathf.Max(saveData.highestLevelUnlocked, level);
+        RepairFlowerPotFromLevel();
         string plant = GetPlantUnlockedByLevel(level);
         if (plant != null && !saveData.unlockedPlants.Contains(plant))
             saveData.unlockedPlants.Add(plant);

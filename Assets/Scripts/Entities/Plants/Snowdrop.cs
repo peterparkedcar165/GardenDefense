@@ -12,13 +12,26 @@ public class Snowdrop : Shooter
     private SnowdropData SData => data as SnowdropData;
 
     public float SnowMarkFlatDamage => (SData?.snowMarkFlatDamageBase ?? 12f) + (SData?.snowMarkFlatDamagePerLevel ?? 6f) * effectivePath2Level;
-    public float SnowMarkPercent   => (SData?.snowMarkDamagePercentBase ?? 0.02f) + (SData?.snowMarkDamagePercentPerLevel ?? 0.01f) * effectivePath2Level;
+    // snowMarkPercentAdder is fed by the Chilling Shot skill tree node (StatType.SnowMarkPercentFlat)
+    public float snowMarkPercentAdder;
+    public float SnowMarkPercent   => (SData?.snowMarkDamagePercentBase ?? 0.02f) + (SData?.snowMarkDamagePercentPerLevel ?? 0.01f) * effectivePath2Level + snowMarkPercentAdder;
     public float SnowMarkDuration  => SData?.snowMarkDuration ?? 6f;
     private float IceBeamAttackSpeed => (SData?.iceBeamAttackSpeed ?? 3f) + (SData?.iceBeamAttackSpeedPerLevel ?? 0.4f) * effectivePath3Level;
     // Path3 max: bonus Attack Speed granted to the bonded partner while the Ice Beam is active
     public float PartnerHasteBonus => SData?.path3MaxBondedPartnerHasteBonus ?? 0.15f;
 
     private static readonly DamageTag[] bonusTags = { DamageTag.Coordinated, DamageTag.OnHit, DamageTag.NoPrimer, DamageTag.PassiveDamage };
+
+    // skill tree unlock ids
+    public const string ChillingGraspUnlock = "snowdrop_chilling_grasp";
+    public const string InstantSkillUnlock  = "snowdrop_instant_skill";
+    public const string SecondTargetUnlock  = "snowdrop_second_target";
+    public const string AssistRefundUnlock  = "snowdrop_assist_refund";
+    public const string MarkCritUnlock      = "snowdrop_mark_crit";
+
+    // Twin Shot (skill tree): grants the same bonus second shot Path1 max does, independently of
+    // her actual Path1 level
+    private bool HasSecondTarget => IsPath1Maxed || SkillTreeManager.HasUnlock(this, SecondTargetUnlock);
 
     // the generic effect system ages/expires this on its own - no separate timer needed
     public bool IceBeamActive => HasEffect<IceBeamEffect>();
@@ -59,6 +72,29 @@ public class Snowdrop : Shooter
         if (iceBeam2 != null) iceBeam2.gameObject.SetActive(false);
         _beamWasActive = false;
         _beam2WasActive = false;
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
+
+        Entity.OnEntityKilled += OnAnyEntityKilled;
+    }
+
+    // Lingering Frost (skill tree): scoring an assist (she hit the insect at some point, but
+    // didn't land the killing blow herself) while the Skill is active refunds 1 second of the
+    // Ice Beam's remaining duration
+    private void OnAnyEntityKilled(EntityEventData data)
+    {
+        if (!IceBeamActive) return;
+        if (!SkillTreeManager.HasUnlock(this, AssistRefundUnlock)) return;
+        if (data.source == this) return;
+        if (data.target is not Insect insect || !insect.attackerSet.Contains(this)) return;
+        IceBeamEffect beam = GetEffect<IceBeamEffect>();
+        if (beam != null) beam.duration += 1f;
     }
 
     protected override void Update()
@@ -98,10 +134,10 @@ public class Snowdrop : Shooter
             _beamWasActive = beamShouldBeActive;
         }
 
-        // Path1 max: the bonus second shot gets its own beam, aimed at whatever the next-most-
-        // valid target is (excluding whatever the primary beam is on) - only ever lit up while
-        // the primary beam is too, since there's no secondary shot without a primary one
-        GameObject secondaryTarget = (IsPath1Maxed && beamShouldBeActive) ? FindTarget(excluding: currentTarget) : null;
+        // Path1 max (or Twin Shot): the bonus second shot gets its own beam, aimed at whatever
+        // the next-most-valid target is (excluding whatever the primary beam is on) - only ever
+        // lit up while the primary beam is too, since there's no secondary shot without a primary one
+        GameObject secondaryTarget = (HasSecondTarget && beamShouldBeActive) ? FindTarget(excluding: currentTarget) : null;
         bool beam2ShouldBeActive = secondaryTarget != null;
         if (iceBeam2 != null)
         {
@@ -137,10 +173,10 @@ public class Snowdrop : Shooter
         GameObject primaryTarget = FindTarget();
         FireAttack(target, primaryTarget);
 
-        // Path1 max: a second hit lands on whatever the next-most-valid target is (same
-        // targeting rule as the primary shot, just excluding it), rather than hitting the same
-        // insect twice
-        if (!IsPath1Maxed) return;
+        // Path1 max (or Twin Shot): a second hit lands on whatever the next-most-valid target is
+        // (same targeting rule as the primary shot, just excluding it), rather than hitting the
+        // same insect twice
+        if (!HasSecondTarget) return;
         GameObject secondaryTarget = FindTarget(excluding: primaryTarget);
         if (secondaryTarget == null) return;
 
@@ -209,11 +245,16 @@ public class Snowdrop : Shooter
         }
 
         float bonus = SnowMarkFlatDamage + insect.maxHealth * SnowMarkPercent;
-        insect.Damage(bonus, DamageType.Magic, ElementalType.Ice, this, false, bonusTags);
+        insect.Damage(bonus, DamageType.Magic, ElementalType.Ice, this, SnowMarkCanCrit, bonusTags);
         if (!insect.IsAlive) return;
 
         insect.ApplyEffect(new SnowMarkEffect(insect, SnowMarkDuration, 1, this));
     }
+
+    // Shattering Mark (skill tree): Snow Mark damage (both the initial application above and the
+    // bonded partner's detonation below) can't critically strike by default - only this unlock
+    // allows it
+    private bool SnowMarkCanCrit => SkillTreeManager.HasUnlock(this, MarkCritUnlock);
 
     // Snow Bond: dealing the SAME bonus % Max Health hit, sourced from this Snowdrop, whenever
     // the bonded partner lands an Attack, PassiveDamage, or SkillDamage hit on the insect
@@ -237,7 +278,7 @@ public class Snowdrop : Shooter
         bool isAttack = System.Array.Exists(data.tags, t => t == DamageTag.Attack);
         float percentMultiplier = isAttack ? 2f : 1f;
         float bonus = SnowMarkFlatDamage + insect.maxHealth * SnowMarkPercent * percentMultiplier;
-        insect.Damage(bonus, DamageType.Magic, ElementalType.Ice, this, false, bonusTags);
+        insect.Damage(bonus, DamageType.Magic, ElementalType.Ice, this, SnowMarkCanCrit, bonusTags);
         insect.RemoveEffect<SnowMarkEffect>();
     }
 
@@ -353,6 +394,7 @@ public class Snowdrop : Shooter
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        Entity.OnEntityKilled -= OnAnyEntityKilled;
         Unbind();
         _bondHighlighted?.ClearHighlight();
         _bondHighlighted?.ShowExternalRangeCircle(false);

@@ -13,9 +13,16 @@ public class SaveData
     // curve exactly once - 0 means still on the original GrowthRate 1.5 curve
     public int expCurveVersion = 0;
 
-    // 0 = locked, 1 = unlocked (25 sun), 2 = 20 sun, 3 = 15 sun, 4 = 10 sun
+    // 0 = locked, 1 = unlocked (25 sun), 2 = 20 sun, 3 = 15 sun, 4 = 10 sun.
+    // unlike waterPotLevel (purchased from level 0 in the Shop), flowerPotLevel's 0->1 step is
+    // free and automatic the moment Level 11 is unlocked (see SaveManager.RepairFlowerPotFromLevel)
+    // - only the 1->2->3->4 sun-cost upgrades beyond that are purchased
     public int flowerPotLevel = 0;
     public int waterPotLevel  = 0;
+
+    // Level 11 unlocked == highestLevelUnlocked >= 10 (same off-by-one convention as
+    // LevelSelector/MaxLoadoutSize above)
+    public const int FlowerPotRequiredHighestLevelUnlocked = 10;
 
     // tutorial popup ids already shown to this save - each one only ever shows once. ids follow a
     // "level{N}_{moment}" convention (e.g. "level1_plantselection") so they stay easy to tell

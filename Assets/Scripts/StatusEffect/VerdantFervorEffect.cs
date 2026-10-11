@@ -2,7 +2,7 @@ public class VerdantFervorEffect : StatusEffect
 {
     private int _stacks;
     private const int maxStacks = 10;
-    private const float speedPerStack = 0.04f;
+    private const float speedPerStack = 0.03f;
     private const float stackDuration = 8f;
 
     public VerdantFervorEffect(Entity target, float duration, int level, Entity source)
