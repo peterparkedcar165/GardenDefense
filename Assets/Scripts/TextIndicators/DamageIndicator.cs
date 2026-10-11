@@ -8,6 +8,8 @@ public class DamageIndicator : TextIndicator
 
     public static void Spawn(Vector3 position, float damage, ElementalType elementalType, bool isCrit)
     {
+        if (!SettingsManager.ShowDamageIndicators) return;
+
         GameObject go = Object.Instantiate(
             Resources.Load<GameObject>("DamageIndicator"), position, Quaternion.identity);
         go.GetComponent<DamageIndicator>()?.Initialize(damage, elementalType, isCrit);

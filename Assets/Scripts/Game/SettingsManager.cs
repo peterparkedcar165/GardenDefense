@@ -17,8 +17,16 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject restartButton;
     [SerializeField] private GameObject mainMenuButton;
+    [SerializeField] private Toggle damageIndicatorsToggle, healingIndicatorsToggle, statusEffectIndicatorsToggle;
 
     public bool IsOpen => settingsPanel.activeSelf;
+
+    // read statically by DamageIndicator/HealIndicator/StatusIndicator.Spawn, so they don't need
+    // a SettingsManager reference of their own - default true (indicators on) if no save exists
+    // yet, or if this runs before SettingsManager.Start for any reason
+    public static bool ShowDamageIndicators = true;
+    public static bool ShowHealingIndicators = true;
+    public static bool ShowStatusEffectIndicators = true;
 
     private void Awake()
     {
@@ -123,6 +131,43 @@ public class SettingsManager : MonoBehaviour
         musicText.text  = $"Music: {Mathf.RoundToInt(music * 100)}%";
         gameText.text   = $"Game: {Mathf.RoundToInt(game * 100)}%";
         if (ambientText != null) ambientText.text = $"Ambient: {Mathf.RoundToInt(ambient * 100)}%";
+
+        ShowDamageIndicators      = PlayerPrefs.GetInt("ShowDamageIndicators", 1) == 1;
+        ShowHealingIndicators     = PlayerPrefs.GetInt("ShowHealingIndicators", 1) == 1;
+        ShowStatusEffectIndicators = PlayerPrefs.GetInt("ShowStatusEffectIndicators", 1) == 1;
+        if (damageIndicatorsToggle != null)
+        {
+            damageIndicatorsToggle.isOn = ShowDamageIndicators;
+            damageIndicatorsToggle.onValueChanged.AddListener(OnDamageIndicatorsChanged);
+        }
+        if (healingIndicatorsToggle != null)
+        {
+            healingIndicatorsToggle.isOn = ShowHealingIndicators;
+            healingIndicatorsToggle.onValueChanged.AddListener(OnHealingIndicatorsChanged);
+        }
+        if (statusEffectIndicatorsToggle != null)
+        {
+            statusEffectIndicatorsToggle.isOn = ShowStatusEffectIndicators;
+            statusEffectIndicatorsToggle.onValueChanged.AddListener(OnStatusEffectIndicatorsChanged);
+        }
+    }
+
+    public void OnDamageIndicatorsChanged(bool value)
+    {
+        ShowDamageIndicators = value;
+        PlayerPrefs.SetInt("ShowDamageIndicators", value ? 1 : 0);
+    }
+
+    public void OnHealingIndicatorsChanged(bool value)
+    {
+        ShowHealingIndicators = value;
+        PlayerPrefs.SetInt("ShowHealingIndicators", value ? 1 : 0);
+    }
+
+    public void OnStatusEffectIndicatorsChanged(bool value)
+    {
+        ShowStatusEffectIndicators = value;
+        PlayerPrefs.SetInt("ShowStatusEffectIndicators", value ? 1 : 0);
     }
 
     public void OnMasterChanged(float value)

@@ -34,6 +34,7 @@ Transform:
   - {fileID: 3304212838967152807}
   - {fileID: 9192307142141420377}
   - {fileID: 8140525433719464780}
+  - {fileID: 7931957674034539693}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-1218289086641490182
@@ -67,19 +68,16 @@ MonoBehaviour:
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
-  baseGroundResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseFallDamage: 0
   baseBonusEffectChance: 0
-  baseElementalEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
   baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
-  baseGroundDamage: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
   baseMinimumDamage: 0.8
@@ -134,19 +132,16 @@ MonoBehaviour:
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
-  groundResistance: 0
   physicalDamage: 0
   magicDamage: 0
   fallDamage: 0
   bonusEffectChance: 0
-  elementalEffectChance: 0
   fireDamage: 0
   waterDamage: 0
   grassDamage: 0
   windDamage: 0
   poisonDamage: 0
   iceDamage: 0
-  groundDamage: 0
   criticalChance: 0
   criticalDamage: 0
   minimumDamage: 0
@@ -204,19 +199,16 @@ MonoBehaviour:
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
-  groundResistanceAdder: 0
   physicalDamageAdder: 0
   magicDamageAdder: 0
   fallDamageAdder: 0
   bonusEffectChanceAdder: 0
-  elementalEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
   grassDamageAdder: 0
   windDamageAdder: 0
   poisonDamageAdder: 0
   iceDamageAdder: 0
-  groundDamageAdder: 0
   criticalChanceAdder: 0
   criticalDamageAdder: 0
   minimumDamageAdder: 0
@@ -225,6 +217,7 @@ MonoBehaviour:
   dotDamageAdder: 0
   fallDamageResistanceAdder: 0
   elementalAffinityAdder: 0
+  germinateDetonationSpeedup: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
   coordinatedDamageAdder: 0
@@ -272,18 +265,15 @@ MonoBehaviour:
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
-  groundResistanceMultiplier: 0
   physicalDamageMultiplier: 0
   magicDamageMultiplier: 0
   bonusEffectChanceMultiplier: 0
-  elementalEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
   grassDamageMultiplier: 0
   windDamageMultiplier: 0
   poisonDamageMultiplier: 0
   iceDamageMultiplier: 0
-  groundDamageMultiplier: 0
   criticalChanceMultiplier: 0
   criticalDamageMultiplier: 0
   dotResistanceMultiplier: 0
@@ -318,6 +308,9 @@ MonoBehaviour:
   magicArmorTotalMultiplier: 1
   armorPenFlatTotalMultiplier: 1
   magicPenFlatTotalMultiplier: 1
+  baseInternalCooldown: 10
+  internalCooldownAdder: 0
+  internalCooldownMultiplier: 0
   internalCooldown: 2
   fireInternalCooldown: 0
   waterInternalCooldown: 0
@@ -325,21 +318,37 @@ MonoBehaviour:
   iceInternalCooldown: 0
   poisonInternalCooldown: 0
   windInternalCooldown: 0
-  groundInternalCooldown: 0
   freezeInternalCooldown: 0
   germinateInternalCooldown: 0
+  fireInternalCooldownAdder: 0
+  waterInternalCooldownAdder: 0
+  grassInternalCooldownAdder: 0
+  iceInternalCooldownAdder: 0
+  poisonInternalCooldownAdder: 0
+  windInternalCooldownAdder: 0
+  fireInternalCooldownMultiplier: 0
+  waterInternalCooldownMultiplier: 0
+  grassInternalCooldownMultiplier: 0
+  iceInternalCooldownMultiplier: 0
+  poisonInternalCooldownMultiplier: 0
+  windInternalCooldownMultiplier: 0
+  elementalDebuffDuration: 6
   timeAlive: 0
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: d9a796e5c232ecc4491487e5dd5ef5e6, type: 2}
   occupiedTile: {fileID: 0}
   selfPrefab: {fileID: 2387982406283412628}
+  forcedPriorityTarget: {fileID: 0}
   circleRadius: {fileID: 8140525433719464780}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 010000000400000009000000
   targeting: 1
   prioritizeFlying: 0
+  orbitRadius: 1
   sunCost: 150
+  baseSunCost: 0
+  sunCostReductionAdder: 0
   totalSunSpent: 0
   exp: 0
   expBoost: 0
@@ -408,7 +417,13 @@ MonoBehaviour:
   path3Unlocked: 0
   mainRenderer: {fileID: 3701729662317188319}
   projectilePrefab: {fileID: 7388594979766616069, guid: 26b1d8b64e7ee9748be4aef05126850e, type: 3}
-  iceBeamProjectilePrefab: {fileID: 0}
+  baseMaxRange: 0
+  maxRange: 0
+  basePiercing: 0
+  piercing: 0
+  piercingAdder: 0
+  iceBeam: {fileID: 4469778362465428608}
+  iceBeam2: {fileID: 8385193222149552}
 --- !u!58 &-5525797036898548761
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -627,6 +642,176 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1001 &5109634433560601937
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1839221878583724804}
+    m_Modifications:
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393202984859150128, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_Name
+      value: IceBeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393202984859150128, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8714120921889194449, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: beamWidth
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125192334564780922, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+--- !u!114 &4469778362465428608 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8714120921889194449, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+  m_PrefabInstance: {fileID: 5109634433560601937}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a93fc3a8a7d48fd949ea0759d31b030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &7931957674034539693 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+  m_PrefabInstance: {fileID: 5109634433560601937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8972542998807524
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1839221878583724804}
+    m_Modifications:
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393202984859150128, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_Name
+      value: IceBeam2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393202984859150128, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8714120921889194449, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: beamWidth
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125192334564780922, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+--- !u!114 &8385193222149552 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8714120921889194449, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+  m_PrefabInstance: {fileID: 8972542998807524}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a93fc3a8a7d48fd949ea0759d31b030, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!4 &2130511704341243 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2952927629675121148, guid: 0bee123c16d84079902d2accab8b17ac, type: 3}
+  m_PrefabInstance: {fileID: 8972542998807524}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8130491033480714053
 PrefabInstance:
   m_ObjectHideFlags: 0

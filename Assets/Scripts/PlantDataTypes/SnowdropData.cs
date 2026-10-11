@@ -16,17 +16,18 @@ public class SnowdropData : PlantData
     public float snowMarkDuration = 6f;
 
     [Header("Path 3 - Ice Beam")]
-    public float iceBeamDurationPerLevel = 1f;
-    public float iceBeamAttackSpeed      = 4f;
-    public int   iceBeamPiercingBase     = 1;
-    public int   iceBeamPiercingPerLevel = 1;
+    public float iceBeamDurationPerLevel         = 1f;
+    public float iceBeamAttackSpeed              = 3f;
+    public float iceBeamAttackSpeedPerLevel      = 0.4f;
+    // Path3 max: while the beam is active, the bonded partner also gains this much Attack Speed
+    public float path3MaxBondedPartnerHasteBonus = 0.15f;
 
     public override string GetAttackDescription() =>
-        $"Fires an ice projectile at its target, dealing {DamageTypeLabel(damageType)}.";
+        $"Fires a magical snowball at her target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        "Attacks apply <color=#00FFFF>Snow Mark</color> and deal bonus <color=#00FFFF>Ice</color> Magic damage equal to a % of the target's Max Health. Can bond with any plant on the field, letting it detonate the Mark.";
+        $"Bond with a plant. Attacks apply <color=#00FFFF><b>Snow Mark</b></color> and deal bonus {DamageTypeLabel(damageType)} equal to a % of the target's <color=red><b>Max Health</b></color>. The bonded plant can detonate the <color=#00FFFF><b>Mark</b></color> for the same bonus damage.";
 
     public override string GetSkillDescription() =>
-        "Converts attacks into a piercing <color=#00FFFF>Ice Beam</color> with a fixed Attack Speed.";
+        "<color=#00FFFF><b>Snowdrop</b></color>'s attacks become an <color=#00FFFF><b>Ice Beam</b></color> with a fixed Attack Speed.";
 }

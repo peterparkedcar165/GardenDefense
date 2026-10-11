@@ -9,17 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7583304469d80404c865070d0ca44501, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ac802442ed6404eb55f305fe9c4d273, type: 3}
   m_Name: MosquitoData
-  m_EditorClassIdentifier: Assembly-CSharp::InsectData
+  m_EditorClassIdentifier: Assembly-CSharp::MosquitoData
   displayName: Mosquito
   nameColor: {r: 0.509434, g: 0.28180173, b: 0.12255251, a: 1}
-  description: Latches onto plants and drains their health
-  passiveDescription: Aggressively targets nearest plants. Heals while attacking
-    plants.
   sprite: {fileID: 21300000, guid: 64e952f1628f39d4281c0f3b34c4c909, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: aff6fd1b40eab2342bb9ae072042625a, type: 3}
-  baseMaxHealth: 280
+  baseMaxHealth: 360
   baseAttackDamage: 10
   baseMagicPower: 0
   baseAttackSpeed: 1.5
@@ -30,7 +27,7 @@ MonoBehaviour:
   baseMagicArmor: 12
   attackDamageType: 0
   attackElementalType: 6
-  baseLifesteal: 0.35
+  baseLifesteal: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseArmorPenFlat: 0
@@ -45,11 +42,11 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0
-  baseGroundResistance: 0
   baseDotResistance: 0
   flatPhysicalDamageReduction: 0
   threatValue: 3
   threatType: 0
+  carryPriority: 0
   baseEvasion: 0
   baseAccuracy: 0
   sunDrop: 16
@@ -58,7 +55,14 @@ MonoBehaviour:
   currencyDrop: 0
   currencyDropAdder: 0
   currencyDropMultiplier: 0
-  aggressivity: 2
+  aggressivity: 1
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  hitSound:
+    clips: []
+  biteDPS: 12
+  biteDuration: 4
+  biteHealingReductionPercent: 0.5
+  bloodsuckerHealPerSecond: 12
+  bloodsuckerHealPercent: 0.04

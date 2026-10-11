@@ -1,8 +1,9 @@
 using UnityEngine;
 
-// purely a visible marker so players can see Snowdrop's Ice Beam is active - the actual
-// mechanic (fixed Attack Speed, piercing without falloff) is driven by Snowdrop's own
-// _iceBeamTimer/IceBeamActive, not by this effect. self-applied, same duration as the timer
+// the authoritative source of truth for "is Ice Beam active" (Snowdrop.IceBeamActive just reads
+// HasEffect<IceBeamEffect>() off herself) - the generic effect system ages and expires this on
+// its own, so the fixed Attack Speed override needs to be un-done the instant that happens,
+// not just whenever Snowdrop next happens to check a timer
 public class IceBeamEffect : StatusEffect
 {
     public IceBeamEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
@@ -16,5 +17,5 @@ public class IceBeamEffect : StatusEffect
         "Attacks become a piercing Ice Beam with a fixed Attack Speed that cannot be increased or reduced.";
 
     public override void OnApply() { }
-    public override void OnExpire() { }
+    public override void OnExpire() => (target as Plant)?.UpdateStats();
 }

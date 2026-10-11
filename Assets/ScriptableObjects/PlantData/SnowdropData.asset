@@ -19,13 +19,13 @@ MonoBehaviour:
   family: 7
   elementalType: 4
   damageType: 1
-  sunCost: 105
+  sunCost: 125
   placementLimit: 0
   category: 0
   skillTree: {fileID: 0}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 24
+  baseAttackDamage: 12
   baseMagicPower: 0
   baseAttackSpeed: 0.3
   baseAttackRange: 2
@@ -69,8 +69,8 @@ MonoBehaviour:
   baseIceDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 3
-  baseMaxRange: 20
+  baseProjectileSpeed: 7
+  baseMaxRange: 33
   basePiercing: 0
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -78,7 +78,7 @@ MonoBehaviour:
   basePassiveCooldown: 0
   basePassiveDuration: 0
   baseSkillCooldown: 90
-  baseSkillDuration: 6
+  baseSkillDuration: 10
   channelDuration: 0
   baseSkillRadius: 1.5
   baseSkillDamageMultiplier: 0.35
@@ -91,13 +91,15 @@ MonoBehaviour:
     clips: []
   skillSound:
     clips: []
-  path1AttackDamagePerLevel: 2
-  path1AttackSpeedPerLevel: 0.03
+  path1AttackDamagePerLevel: 1
+  path1AttackSpeedPerLevel: 0.04
   path1AttackRangePerLevel: 0.2
   snowMarkFlatDamageBase: 6
   snowMarkFlatDamagePerLevel: 3
-  snowMarkDamagePercentBase: 0.02
-  snowMarkDamagePercentPerLevel: 0.004
+  snowMarkDamagePercentBase: 0.015
+  snowMarkDamagePercentPerLevel: 0.003
   snowMarkDuration: 8
   iceBeamDurationPerLevel: 2
-  iceBeamAttackSpeed: 4
+  iceBeamAttackSpeed: 2.5
+  iceBeamAttackSpeedPerLevel: 0.3
+  path3MaxBondedPartnerHasteBonus: 0.15

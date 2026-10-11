@@ -3,22 +3,25 @@ using System.Collections.Generic;
 
 public class Snowdrop : Shooter
 {
-    [SerializeField] private GameObject iceBeamProjectilePrefab;
+    // permanent children of this prefab (dragged in, starts inactive) - toggled active/inactive
+    // and driven every frame from Update, rather than instantiated/destroyed per shot. iceBeam2
+    // only ever lights up once Path1 max is granting a second shot while the skill is active
+    [SerializeField] private IceBeam iceBeam;
+    [SerializeField] private IceBeam iceBeam2;
 
     private SnowdropData SData => data as SnowdropData;
 
     public float SnowMarkFlatDamage => (SData?.snowMarkFlatDamageBase ?? 12f) + (SData?.snowMarkFlatDamagePerLevel ?? 6f) * effectivePath2Level;
     public float SnowMarkPercent   => (SData?.snowMarkDamagePercentBase ?? 0.02f) + (SData?.snowMarkDamagePercentPerLevel ?? 0.01f) * effectivePath2Level;
     public float SnowMarkDuration  => SData?.snowMarkDuration ?? 6f;
-    private float IceBeamAttackSpeed => SData?.iceBeamAttackSpeed ?? 4f;
-    private int IceBeamPiercingBonus => (SData?.iceBeamPiercingBase ?? 1) + (SData?.iceBeamPiercingPerLevel ?? 1) * effectivePath3Level;
+    private float IceBeamAttackSpeed => (SData?.iceBeamAttackSpeed ?? 3f) + (SData?.iceBeamAttackSpeedPerLevel ?? 0.4f) * effectivePath3Level;
+    // Path3 max: bonus Attack Speed granted to the bonded partner while the Ice Beam is active
+    public float PartnerHasteBonus => SData?.path3MaxBondedPartnerHasteBonus ?? 0.15f;
 
     private static readonly DamageTag[] bonusTags = { DamageTag.Coordinated, DamageTag.OnHit, DamageTag.NoPrimer, DamageTag.PassiveDamage };
 
-    // Ice Beam: a timer rather than a bool so ActivateSkill/Update have one single source of
-    // truth for "how much longer is this active" - ticks down in Update, never below 0
-    private float _iceBeamTimer;
-    public bool IceBeamActive => _iceBeamTimer > 0f;
+    // the generic effect system ages/expires this on its own - no separate timer needed
+    public bool IceBeamActive => HasEffect<IceBeamEffect>();
 
     // Snow Bond: a permanent link to any plant on the field, resolved live from the tile it sits
     // on (like Calendula's auto-cast target / Carrot's Soil Bond) so a bonded plant that dies and
@@ -29,24 +32,90 @@ public class Snowdrop : Shooter
     private Plant _bondHighlighted;
     private static readonly Color BondHighlightColor = new Color(0.4f, 0.9f, 1f);
 
+    public Plant BoundPartner => boundPartner;
+
     public override bool UsesAutoCast => true;
     public override bool IsAutoCasting => boundTile != null;
     public override string AutoCastLabel => "Bond";
+
+    // Path2 max: insects visible from the bonded plant's attack radius are also visible to
+    // this Snowdrop - mirrors Carrot's Soil Bond range-sharing pattern exactly
+    protected override bool IsWithinAttackRange(Insect insect, float distance)
+    {
+        if (distance <= attackRange) return true;
+        return IsPath2Maxed && boundPartner != null && boundPartner.IsAlive && boundPartner.CanReachInsect(insect);
+    }
+
+    // tracked ourselves rather than read back off iceBeam.gameObject.activeSelf, so a stale or
+    // unexpected read of Unity's own active-state can never silently skip the SetActive call
+    private bool _beamWasActive;
+    private bool _beam2WasActive;
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
+        if (iceBeam != null) iceBeam.gameObject.SetActive(false);
+        if (iceBeam2 != null) iceBeam2.gameObject.SetActive(false);
+        _beamWasActive = false;
+        _beam2WasActive = false;
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (_iceBeamTimer > 0f)
+        // strictly both: the skill has to be active AND she has to actually be attacking right
+        // now (a valid target, and not stunned/channeling - the same conditions Shooter.Update
+        // itself requires before it'll call Shoot at all) - fails either one and it's inactive,
+        // no partial state. toggled every frame rather than only on a shot, so it
+        // appears/disappears the instant either condition changes. SetActive is called
+        // unconditionally every frame (cheap/idempotent in Unity) rather than guarded behind a
+        // "did it change" check, so there's no way for that guard to end up skipping it
+        bool isAttacking = !IsStunned && !IsChanneling;
+        GameObject currentTarget = (IceBeamActive && isAttacking) ? FindTarget() : null;
+        bool beamShouldBeActive = currentTarget != null;
+        if (iceBeam != null)
         {
-            _iceBeamTimer -= Time.deltaTime;
-            if (_iceBeamTimer <= 0f) UpdateStats();
+            iceBeam.gameObject.SetActive(beamShouldBeActive);
+
+            if (beamShouldBeActive)
+            {
+                Insect targetInsect = currentTarget.GetComponent<Insect>();
+                Vector3 aimPoint = targetInsect != null ? targetInsect.GetAimPoint() : currentTarget.transform.position;
+                // just turned on this frame - snap to the target instantly rather than smoothly
+                // sweeping in from whatever direction it was left facing last time
+                if (!_beamWasActive) iceBeam.SnapToTarget(aimPoint);
+                // capped to attackRange, not maxRange (Shooter's own maxRange is a separate
+                // "furthest a projectile can travel" stat that can run longer than her actual
+                // targeting range) - the beam should never reach further than she can actually see.
+                // Path2 max removes that cap entirely (Mathf.Infinity, not just the current
+                // target's own distance - otherwise anything standing behind that target would
+                // get excluded from the piercing scan even though piercing should still reach it)
+                float beamMaxRange = IsPath2Maxed ? Mathf.Infinity : attackRange;
+                iceBeam.UpdateBeam(aimPoint, beamMaxRange);
+            }
+            _beamWasActive = beamShouldBeActive;
+        }
+
+        // Path1 max: the bonus second shot gets its own beam, aimed at whatever the next-most-
+        // valid target is (excluding whatever the primary beam is on) - only ever lit up while
+        // the primary beam is too, since there's no secondary shot without a primary one
+        GameObject secondaryTarget = (IsPath1Maxed && beamShouldBeActive) ? FindTarget(excluding: currentTarget) : null;
+        bool beam2ShouldBeActive = secondaryTarget != null;
+        if (iceBeam2 != null)
+        {
+            iceBeam2.gameObject.SetActive(beam2ShouldBeActive);
+
+            if (beam2ShouldBeActive)
+            {
+                Insect targetInsect2 = secondaryTarget.GetComponent<Insect>();
+                Vector3 aimPoint2 = targetInsect2 != null ? targetInsect2.GetAimPoint() : secondaryTarget.transform.position;
+                if (!_beam2WasActive) iceBeam2.SnapToTarget(aimPoint2);
+                float beam2MaxRange = IsPath2Maxed ? Mathf.Infinity : attackRange;
+                iceBeam2.UpdateBeam(aimPoint2, beam2MaxRange);
+            }
+            _beam2WasActive = beam2ShouldBeActive;
         }
 
         ResyncBond();
@@ -66,30 +135,43 @@ public class Snowdrop : Shooter
     protected override void Shoot(Vector3 target)
     {
         GameObject primaryTarget = FindTarget();
-        FireProjectile(target, primaryTarget);
+        FireAttack(target, primaryTarget);
 
-        // Path1 max: a second shot fires at whatever the next-most-valid target is (same
+        // Path1 max: a second hit lands on whatever the next-most-valid target is (same
         // targeting rule as the primary shot, just excluding it), rather than hitting the same
         // insect twice
         if (!IsPath1Maxed) return;
         GameObject secondaryTarget = FindTarget(excluding: primaryTarget);
         if (secondaryTarget == null) return;
-        FireProjectile(PredictTargetPosition(secondaryTarget), secondaryTarget);
+
+        if (IceBeamActive)
+        {
+            // the bonus shot gets its own persistent beam (iceBeam2, driven every frame from
+            // Update just like the primary one) - damage goes through it the same way FireAttack
+            // routes the primary hit through iceBeam, so it pierces/hits whatever it's currently
+            // touching rather than just the one insect FindTarget happened to pick this frame
+            iceBeam2?.DealDamage(attackDamage, damageType, elementalType, this);
+            return;
+        }
+
+        FireAttack(PredictTargetPosition(secondaryTarget), secondaryTarget);
     }
 
-    private void FireProjectile(Vector3 target, GameObject targetObj)
+    private void FireAttack(Vector3 target, GameObject targetObj)
     {
-        GameObject prefab = IceBeamActive ? iceBeamProjectilePrefab : projectilePrefab;
-        if (prefab == null) return;
+        if (IceBeamActive)
+        {
+            iceBeam?.DealDamage(attackDamage, damageType, elementalType, this);
+            return;
+        }
 
-        GameObject obj = Instantiate(prefab, transform.position, Quaternion.identity);
+        if (projectilePrefab == null) return;
+        GameObject obj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         Projectile proj = obj.GetComponent<Projectile>();
         if (proj == null) return;
 
-        int effectivePiercing = IceBeamActive ? piercing + IceBeamPiercingBonus : piercing;
-
         proj.SetTarget(targetObj);
-        proj.Initialize(target, attackDamage, projectileSpeed, maxRange, effectivePiercing, damageType, elementalType, this);
+        proj.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
     }
 
     // same selection rule as the plant's normal targeting, just run over a pool that leaves out
@@ -150,7 +232,11 @@ public class Snowdrop : Shooter
         SnowMarkEffect mark = insect.GetEffect<SnowMarkEffect>();
         if (mark == null || mark.source != this) return;
 
-        float bonus = SnowMarkFlatDamage + insect.maxHealth * SnowMarkPercent;
+        // detonating with an Attack specifically (as opposed to a Passive/Skill hit) doubles
+        // the % Max Health portion of the bonus - the flat portion is unaffected
+        bool isAttack = System.Array.Exists(data.tags, t => t == DamageTag.Attack);
+        float percentMultiplier = isAttack ? 2f : 1f;
+        float bonus = SnowMarkFlatDamage + insect.maxHealth * SnowMarkPercent * percentMultiplier;
         insect.Damage(bonus, DamageType.Magic, ElementalType.Ice, this, false, bonusTags);
         insect.RemoveEffect<SnowMarkEffect>();
     }
@@ -159,7 +245,6 @@ public class Snowdrop : Shooter
     {
         if (!SkillReady) return;
         skillCooldownTimer = skillCooldown;
-        _iceBeamTimer = skillDuration;
         ApplyEffect(new IceBeamEffect(this, skillDuration, 1, this));
         UpdateStats();
     }
@@ -180,12 +265,24 @@ public class Snowdrop : Shooter
     private void OnBondTargetConfirmed(Plant targetPlant)
     {
         if (targetPlant == null) return; // cancelled
-        if (targetPlant == this)
+        // Snow Bond is exclusive: can't bond another Snowdrop, and a plant already bonded to
+        // a DIFFERENT Snowdrop can't be bonded again until that bond is released
+        if (targetPlant == this || targetPlant is Snowdrop || IsBoundByAnotherSnowdrop(targetPlant))
         {
             SkillTargetingManager.instance.BeginPlantTargeting(OnBondTargetConfirmed, this);
             return;
         }
         boundTile = targetPlant.occupiedTile;
+    }
+
+    private bool IsBoundByAnotherSnowdrop(Plant candidate)
+    {
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == this || plant is not Snowdrop other) continue;
+            if (other.BoundPartner == candidate) return true;
+        }
+        return false;
     }
 
     // re-resolves whichever plant currently occupies boundTile every frame (cheap: a reference
@@ -203,7 +300,10 @@ public class Snowdrop : Shooter
             if (!boundPartnerGone) Unbind();
             boundPartner = current;
             if (boundPartner != null)
+            {
                 Entity.OnEntityHit += HandleBoundPartnerHit;
+                boundPartner.ApplyEffect(new SnowBondHasteEffect(boundPartner, this, this));
+            }
         }
 
         if (boundPartner != null)
@@ -228,6 +328,7 @@ public class Snowdrop : Shooter
         if (boundPartner == null) return;
         Entity.OnEntityHit -= HandleBoundPartnerHit;
         if (boundPartner.forcedPriorityTarget != null) boundPartner.forcedPriorityTarget = null;
+        boundPartner.RemoveEffect<SnowBondHasteEffect>(this);
         boundPartner = null;
     }
 
@@ -284,14 +385,15 @@ public class Snowdrop : Shooter
         $"The {GetName()} is a frosty flower who marks her prey for her bonded partner to finish off.";
 
     public override string GetAttackDescription() =>
-        $"Fires an ice projectile at its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+        $"Fires a magical snowball at her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks that hit an unmarked target also deal <color=green><b>{SnowMarkFlatDamage:F0}</b></color> + <color=green><b>{SnowMarkPercent * 100f:F0}%</b></color> of its Max Health as bonus <color=#00FFFF>Ice</color> Magic damage and apply <color=#00FFFF><b>Snow Mark</b></color> for <color=green><b>{SnowMarkDuration:F0}s</b></color>. Attacking an already-marked target refreshes the Mark instead of dealing the bonus again.\n\n" +
-        $"Select a plant anywhere on the field to form a <color=#00FFFF><b>Snow Bond</b></color>. The bonded plant prioritizes the Snow Marked insect above all other targets, and detonating the Mark with an attack, passive, or skill hit deals the same bonus damage, sourced from {GetName()}. Only the bonded partner can detonate it.";
+        $"Bond with a plant, excluding other <color=#00FFFF><b>Snowdrops</b></color> or other plants already bound.\n\n" +
+        $"Attacks against unmarked targets deal <color=#00FFFF><b>{SnowMarkFlatDamage:F0}</b></color> + <color=#00FFFF><b>{SnowMarkPercent * 100f:F1}%</b></color> of its <color=red><b>Max Health</b></color> as {PlantData.DamageTypeLabel(damageType)}, and apply <color=#00FFFF><b>Snow Mark</b></color> for <color=green><b>{SnowMarkDuration:F0}s</b></color>.\n\n" +
+        $"The bonded plant will target at highest priority the <color=#00FFFF><b>Snow Marked</b></color> insect. Direct damage inflicted by the bonded plant against the <color=#00FFFF><b>Marked</b></color> insect detonates the <color=#00FFFF><b>Snow Mark</b></color>, dealing <color=#00FFFF><b>{SnowMarkFlatDamage:F0}</b></color> + <color=#00FFFF><b>{SnowMarkPercent * 100f:F1}%</b></color> of the target's <color=red><b>Max Health</b></color> as {PlantData.DamageTypeLabel(damageType)}. If the detonation was dealt by an <color=#00FFFF><b>Attack</b></color>, deal <color=#00FFFF><b>{SnowMarkPercent * 200f:F1}%</b></color> <color=red><b>Max Health</b></color> instead.";
 
     public override string GetSkillDesription() =>
-        $"For <color=green><b>{skillDuration:F0}s</b></color>, {GetName()}'s attacks become a piercing <color=#00FFFF><b>Ice Beam</b></color>, gaining <color=green><b>{IceBeamPiercingBonus}</b></color> Piercing and no longer losing damage against subsequent targets while piercing. Attack Speed becomes a fixed <color=green><b>{IceBeamAttackSpeed:F1}</b></color>, which cannot be increased or reduced while active.";
+        $"{GetName()}'s attacks become an <color=#00FFFF><b>Ice Beam</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, within which her Attack Speed is fixed at <color=green><b>{IceBeamAttackSpeed:F1}</b></color>.";
 
     public override string GetPath1Name() => "Frost Shot";
     public override string GetPath2Name() => "Snow Mark";
@@ -303,13 +405,13 @@ public class Snowdrop : Shooter
         float aspl = SData?.path1AttackSpeedPerLevel ?? 0.05f;
         float arpl = SData?.path1AttackRangePerLevel ?? 0.2f;
         string desc = details
-            ? $"Fires an ice projectile at its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
+            ? $"Fires a magical snowball at her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{arpl:F1}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Fires an additional ice projectile at a second, next most valid target.")}\n\n" +
+               $"{Level5Section(path1Level, "+1 Attack target count.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -319,12 +421,14 @@ public class Snowdrop : Shooter
         float flatpl = SData?.snowMarkFlatDamagePerLevel ?? 6f;
         float pctpl  = SData?.snowMarkDamagePercentPerLevel ?? 0.01f;
         string desc = details
-            ? $"Attacks that hit an unmarked target also deal <color=green><b>[({SData?.snowMarkFlatDamageBase ?? 12f:F0}) + ({flatpl:F0}/Lvl.)]</b></color> + <color=green><b>[({(SData?.snowMarkDamagePercentBase ?? 0.02f) * 100f:F0}%) + ({pctpl * 100f:F1}%/Lvl.)]</b></color> of its Max Health as bonus <color=#00FFFF>Ice</color> Magic damage and apply <color=#00FFFF><b>Snow Mark</b></color> for <color=green><b>{SnowMarkDuration:F0}s</b></color>. Attacking an already-marked target refreshes the Mark instead of dealing the bonus again.\n\n" +
-              $"Select a plant anywhere on the field to form a <color=#00FFFF><b>Snow Bond</b></color>. The bonded plant prioritizes the Snow Marked insect above all other targets, and detonating the Mark with an attack, passive, or skill hit deals the same bonus damage, sourced from {GetName()}. Only the bonded partner can detonate it."
+            ? $"Bond with a plant, excluding other <color=#00FFFF><b>Snowdrops</b></color> or other plants already bound.\n\n" +
+              $"Attacks against unmarked targets deal <color=#00FFFF><b>[({SData?.snowMarkFlatDamageBase ?? 12f:F0}) + ({flatpl:F0}/Lvl.)]</b></color> + <color=#00FFFF><b>[({(SData?.snowMarkDamagePercentBase ?? 0.02f) * 100f:F1}%) + ({pctpl * 100f:F1}%/Lvl.)]</b></color> of its <color=red><b>Max Health</b></color> as {PlantData.DamageTypeLabel(damageType)}, and apply <color=#00FFFF><b>Snow Mark</b></color> for <color=green><b>{SnowMarkDuration:F0}s</b></color>.\n\n" +
+              $"The bonded plant will target at highest priority the <color=#00FFFF><b>Snow Marked</b></color> insect. Direct damage inflicted by the bonded plant against the <color=#00FFFF><b>Marked</b></color> insect detonates the <color=#00FFFF><b>Snow Mark</b></color>, dealing the same bonus as <color=red><b>Max Health</b></color> {PlantData.DamageTypeLabel(damageType)}. If the detonation was dealt by an <color=#00FFFF><b>Attack</b></color>, deal double that <color=red><b>Max Health</b></color> percentage instead."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase flat bonus damage by <color=green><b>{flatpl:F0}</b></color> per level. [<color=green><b>+{flatpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"Increase bonus damage by <color=green><b>{pctpl * 100f:F1}%</b></color> of Max Health per level. [<color=green><b>+{pctpl * effectivePath2Level * 100f:F1}%</b></color>]\n\n" +
+               $"Increase damage by <color=green><b>{flatpl:F0}</b></color> per level. [<color=green><b>+{flatpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"Increase <color=red><b>Max Health</b></color> damage by <color=green><b>{pctpl * 100f:F1}%</b></color> per level. [<color=green><b>+{pctpl * effectivePath2Level * 100f:F1}%</b></color>]\n\n" +
+               $"{Level5Section(path2Level, "Snowdrop can target insects within the bonded plant's attack radius.\n\n<color=#00FFFF><b>Ice Beam</b></color>'s range cap is removed.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -332,13 +436,14 @@ public class Snowdrop : Shooter
     public override string GetPath3Description(bool details = false)
     {
         float durpl = SData?.iceBeamDurationPerLevel ?? 1f;
-        int piercepl = SData?.iceBeamPiercingPerLevel ?? 1;
+        float aspl = SData?.iceBeamAttackSpeedPerLevel ?? 0.4f;
         string desc = details
-            ? $"For <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, {GetName()}'s attacks become a piercing <color=#00FFFF><b>Ice Beam</b></color>, gaining <color=green><b>[({SData?.iceBeamPiercingBase ?? 1}) + ({piercepl}/Lvl.)]</b></color> Piercing and no longer losing damage against subsequent targets while piercing. Attack Speed becomes a fixed <color=green><b>{IceBeamAttackSpeed:F1}</b></color>, which cannot be increased or reduced while active."
+            ? $"{GetName()}'s attacks become an <color=#00FFFF><b>Ice Beam</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, within which her Attack Speed is fixed at <color=green><b>[({(SData?.iceBeamAttackSpeed ?? 3f):F0}) + ({aspl:F1}/Lvl.)]</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase Ice Beam Piercing by <color=green><b>{piercepl}</b></color> per level. [<color=green><b>+{piercepl * effectivePath3Level}</b></color>]\n\n" +
+               $"Increase Attack Speed by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(path3Level, $"While the Skill is active, the bonded plant gains <color=green><b>{PartnerHasteBonus * 100f:F0}%</b></color> Attack Speed.")}\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
