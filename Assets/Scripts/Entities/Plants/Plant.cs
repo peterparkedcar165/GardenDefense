@@ -813,6 +813,7 @@ public abstract class Plant : Entity, IAttackable
             case WeatherType.Rain:       ApplyEffect(new RainExposedEffect(this, this, intensity));     break;
             case WeatherType.Snow:       ApplyEffect(new SnowExposedEffect(this, this, intensity));    break;
             case WeatherType.Underwater: ApplyEffect(new SubmergedEffect(this, this, intensity));      break;
+            case WeatherType.Sandstorm:  ApplyEffect(new SandstormExposedEffect(this, this, intensity)); break;
         }
     }
 
@@ -824,6 +825,7 @@ public abstract class Plant : Entity, IAttackable
             case WeatherType.Rain:       RemoveEffect<RainExposedEffect>();     break;
             case WeatherType.Snow:       RemoveEffect<SnowExposedEffect>();    break;
             case WeatherType.Underwater: RemoveEffect<SubmergedEffect>();      break;
+            case WeatherType.Sandstorm:  RemoveEffect<SandstormExposedEffect>(); break;
         }
     }
 

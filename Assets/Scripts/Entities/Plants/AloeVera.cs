@@ -9,6 +9,8 @@ public class AloeVera : Lobber
     public float baseTempReduction = 4.5f;
     public float healAmount;
     public float tempReduction;
+    // fed by the Restorative Mist skill tree node (StatType.HealAmountFlat)
+    public float healAmountAdder;
     public float baseSkillHealPerTick = 10f;
     public float baseSkillHealInterval = 1f;
     public float baseSkillTempReduction = 2f;
@@ -27,6 +29,13 @@ public class AloeVera : Lobber
     private AloeVeraData AVData => data as AloeVeraData;
     private float DrizzleBarrierDuration => 16f * (1f + skillDurationMultiplier) + skillDurationAdder;
 
+    // skill tree unlock ids
+    public const string FlashDropUnlock        = "aloevera_flash_drop";
+    public const string CoolingTouchUnlock     = "aloevera_cooling_touch";
+    public const string InstantSkillUnlock     = "aloevera_instant_skill";
+    public const string MonsoonUnlock          = "aloevera_monsoon";
+    public const string CleansingRainUnlock    = "aloevera_cleansing_rain";
+
     protected override void Awake()
     {
         base.Awake();
@@ -38,6 +47,14 @@ public class AloeVera : Lobber
             baseSkillHealPerTick   = AVData.baseSkillHealPerTick;
             baseSkillHealInterval  = AVData.baseSkillHealInterval;
             baseSkillTempReduction = AVData.baseSkillTempReduction;
+        }
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
         }
     }
 
@@ -54,7 +71,7 @@ public class AloeVera : Lobber
         float healpl  = AVData?.path2HealPerLevel           ?? 8f;
         float temppl  = AVData?.path2TempReductionPerLevel  ?? 0.5f;
         float healpl3 = AVData?.path3SkillHealPerLevel      ?? 2f;
-        healAmount       = baseHealAmount       + healpl  * effectivePath2Level + magicPower * 0.22f;
+        healAmount       = baseHealAmount       + healpl  * effectivePath2Level + magicPower * 0.22f + healAmountAdder;
         tempReduction    = baseTempReduction    + temppl  * effectivePath2Level;
         skillHealPerTick = baseSkillHealPerTick + healpl3 * effectivePath3Level + magicPower * 0.14f;
     }
@@ -151,7 +168,12 @@ public class AloeVera : Lobber
         bool isHealMode = target.GetComponent<Plant>() != null
                        || (target.GetComponent<Insect>() is Insect ins && ins.team == Team.Friendly);
 
-        float bobDuration = Mathf.Clamp(0.4f / Mathf.Max(attackSpeed, 0.01f), 0.1f, 0.8f);
+        // Flash Drop (skill tree): skips the hover/lingering phase entirely, landing instantly.
+        // no clamp otherwise - baseLobTime fully controls how long the droplet hovers, scaled
+        // down as Attack Speed rises
+        float bobDuration = SkillTreeManager.HasUnlock(this, FlashDropUnlock)
+            ? 0f
+            : (AVData?.baseLobTime ?? 0.4f) / Mathf.Max(attackSpeed, 0.01f);
 
         GameObject obj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         AloeVeraProjectile proj = obj.GetComponent<AloeVeraProjectile>();

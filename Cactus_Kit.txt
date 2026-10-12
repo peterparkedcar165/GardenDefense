@@ -1,0 +1,84 @@
+CACTUS - CURRENT KIT (as of this writing)
+===========================================
+
+Base type: Shooter
+Family: Ironbark (tank/shield)
+Element: Grass
+Damage type: Physical
+
+Base stats (CactusData.asset):
+  Max Health:     300
+  Attack Damage:  12 (per needle)
+  Attack Speed:   0.7
+  Attack Range:   2
+  Armor:          30
+  Needle max range: 4
+  Skill Cooldown: 35s
+  Skill Duration: 15s (base)
+
+-------------------------------------------
+PATH 1 - ATTACK: "Needles" (no sub-name set, uses default "Attack")
+-------------------------------------------
+Fires needles in equal angles around itself (a full 360-degree ring), dealing
+Attack Damage (Physical) per needle. Each needle that hits applies 1 stack of
+Punctured.
+
+  Needle count = 6 base + 6 per Path1 level (path1NeedlesBase / path1NeedlesPerLevel)
+  If an insect is hit by more than one needle in the same volley, every needle
+  after the first deals only 50% damage to it (_volleyHit tracking in Shoot/OnNeedleHit).
+
+  Path1 Max Level Bonus: Attacks now apply 2 Punctured stacks instead of 1.
+
+-------------------------------------------
+PATH 2 - PASSIVE: "Thorns" (no sub-name set, uses default "Passive")
+-------------------------------------------
+Whenever an insect deals MELEE damage to the Cactus, it is immediately countered:
+the attacker takes damage equal to 100% of its own Attack Damage (Physical,
+tagged PassiveDamage + Counter - so it benefits from any generic Counter Damage
+stat bonuses), and receives (1 + Path2 level) stacks of Punctured.
+
+  Punctured (the debuff itself, shared across the whole game, not Cactus-exclusive):
+  while it has any stacks, taking Physical damage deals an extra damage equal to
+  the stack count, as Grass damage. Lasts 8 seconds (Cactus.basePassiveDuration,
+  hardcoded in Awake, not read from data). Stacks are additive, capped at 100,
+  and refresh/add from any source that applies it.
+
+  Increase Punctured stacks per retaliation by 1 per level.
+  Increase Base Max Health by 70 per level (path2HealthPerLevel).
+
+  Path2 Max Level Bonus: Retaliation damage also gains bonus damage equal to
+  33% of the Cactus's current Armor.
+
+-------------------------------------------
+PATH 3 - SKILL: "Shield" (no sub-name set, uses default "Skill")
+-------------------------------------------
+Grants the Cactus a shield (CactusShieldEffect) worth 100 + 40 per Path3 level,
+lasting 15s + 2s per Path3 level. Can be toggled to Auto Cast: while enabled, the
+skill fires automatically the instant it's off cooldown AND at least one insect
+is within attack range (HasInsectsInRange check in Update).
+
+  While ANY shield effect holds (not just his own skill's - HasEffect<ShieldEffect>
+  is a generic check):
+    - Gains 25 + 5 per Path3 level bonus Armor (ShieldArmorBonus).
+    - Every 0.25s, every insect within attack range is forced to target the
+      Cactus via a brief Taunt effect (ApplyTauntInRange / TauntEffect,
+      tauntStrength 2, 0.35s duration, refreshed every tick while shielded).
+
+  Increase shield amount by 40 per level.
+  Increase duration by 2 seconds per level.
+
+  Path3 Max Level Bonus: While Shielded (by any source), Total Attack Speed is
+  increased by 35%.
+
+-------------------------------------------
+NOTES
+-------------------------------------------
+- Cactus has no skill tree yet (CactusData.asset's skillTree field is empty).
+- The "Counter" mechanic (Path2's retaliation) already runs through the game's
+  generic DamageTag.Counter pipeline in Entity.Damage(), so any Counter Damage
+  stat bonus (fertilizer, future skill tree node, etc.) already multiplies it -
+  this isn't wired up specially for Cactus, it's automatic.
+- The retaliation only triggers on MELEE hits (OnHitByInsect) - ranged attackers
+  are not countered by the current passive.
+- Punctured is a shared/global debuff type, not unique to Cactus - other sources
+  could in principle apply it too, though currently only Cactus does.

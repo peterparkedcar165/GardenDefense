@@ -17,7 +17,7 @@ MonoBehaviour:
   plantName: Cactus
   displayName: Cactus
   family: 3
-  elementalType: 2
+  elementalType: 3
   damageType: 0
   sunCost: 95
   placementLimit: 0
@@ -25,11 +25,12 @@ MonoBehaviour:
   skillTree: {fileID: 0}
   fertilizerPossibleStats: 2f000000
   baseMaxHealth: 300
-  baseAttackDamage: 12
+  baseAttackDamage: 32
   baseMagicPower: 0
-  baseAttackSpeed: 0.7
+  baseAttackSpeed: 0.12
   baseAttackRange: 2
-  baseArmor: 30
+  baseAttackChargeTime: 0
+  baseArmor: 42
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
@@ -86,15 +87,18 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []
   baseShieldAmount: 100
-  path1NeedlesBase: 6
-  path1NeedlesPerLevel: 6
+  baseArmorScalingPercent: 0.35
+  path1ArmorScalingPerLevel: 0.05
+  path1ArmorPerLevel: 8
   path2HealthPerLevel: 70
+  baseCooldownRefundOnHit: 0.3
+  path2CooldownRefundPerLevel: 0.05
   path3ShieldPerLevel: 40
   path3SkillDurationPerLevel: 2
-  baseShieldArmorBonus: 25
-  path3ShieldArmorPerLevel: 5
+  baseCounterReflectPercent: 1.5
+  path3CounterReflectPerLevel: 0.3

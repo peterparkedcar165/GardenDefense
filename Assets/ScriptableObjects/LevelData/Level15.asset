@@ -103,6 +103,7 @@ MonoBehaviour:
     unlockWave: 12
     budgetWeight: 0.3
     startDelay: 8
+  waves: []
   eliteWaveInterval: 8
   eliteInsects:
   - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}
@@ -121,4 +122,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bcb5810a18b62334d94597949f18f9d1, type: 2}
   - {fileID: 11400000, guid: 6dd3bd78e59d3804b8cb99705c8b6ef9, type: 2}
   - {fileID: 11400000, guid: a41a71ca40b1e7447aea8846e2f2ebda, type: 2}
+  fertilizerGrants: []
   ambience: {fileID: 0}

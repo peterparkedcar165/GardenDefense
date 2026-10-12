@@ -146,11 +146,9 @@ public abstract class Entity : MonoBehaviour
         if (data.source is BirdOfParadise bird)
             bird.OnAttackHit(insect, effectiveness);
 
-        // Cactus: every needle attack hit applies 1 flat Punctured stack (the retaliation/counter
-        // damage applies its own separate, level-scaling amount directly in OnHitByInsect, since
-        // that damage isn't tagged Attack and so never reaches here)
+        // Cactus: every melee AoE attack hit applies 1 flat Punctured stack (2 at Path2 max)
         if (data.source is Cactus cactus)
-            insect.ApplyEffect(new PuncturedEffect(insect, cactus.passiveDuration, cactus.IsPath1Maxed ? 2 : 1, cactus));
+            insect.ApplyEffect(new PuncturedEffect(insect, cactus.passiveDuration, cactus.IsPath2Maxed ? 2 : 1, cactus));
 
         // Floral Glow and Ablaze proc off single-target attacks (but not, say, a passive aura
         // tick or an AoE sweep) - requires both Attack (already guaranteed by the OnHit gate
@@ -176,7 +174,7 @@ public abstract class Entity : MonoBehaviour
     public float physicalResistance, magicResistance;
     // armor value that yields exactly 50% damage reduction (resistance = armor / (ArmorCoefficient + armor))
     // shared by both physical and magic mitigation, was 100
-    private const float ArmorCoefficient = 150f;
+    protected const float ArmorCoefficient = 150f;
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
     public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance;
@@ -308,7 +306,7 @@ public abstract class Entity : MonoBehaviour
     public virtual void UpdateStats()
     {
         maxHealth = (baseMaxHealth + maxHealthAdder + (baseMaxHealth * maxHealthMultiplier)) * maxHealthTotalMultiplier;
-        attackDamage = (baseAttackDamage + attackDamageAdder + (baseAttackDamage * attackDamageMultiplier)) * attackDamageTotalMultiplier;
+        attackDamage = Mathf.Max(0f, (baseAttackDamage + attackDamageAdder + (baseAttackDamage * attackDamageMultiplier)) * attackDamageTotalMultiplier);
         magicPower = (baseMagicPower + magicPowerAdder + (baseMagicPower * magicPowerMultiplier)) * magicPowerTotalMultiplier;
         attackSpeed = (baseAttackSpeed + attackSpeedAdder + (baseAttackSpeed * attackSpeedMultiplier)) * attackSpeedTotalMultiplier;
         attackRange = (baseAttackRange + attackRangeAdder + (baseAttackRange * attackRangeMultiplier)) * attackRangeTotalMultiplier;
@@ -459,7 +457,11 @@ public abstract class Entity : MonoBehaviour
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
             e.OnDamageReceived(elementalType, null, damageTag);
 
-        var evtData = new EntityEventData { target = this, position = transform.position, damage = finalDamage, damageType = damageType, elementalType = elementalType, tags = damageTag };
+        // amount carries the raw PRE-mitigation damage (the method's own input, before
+        // armor/resistance reduce it to finalDamage) - unused by heal-side listeners (which
+        // reuse this same struct for OnHeal), so safe to repurpose here for anything that needs
+        // to know what a hit would have dealt before defenses, e.g. a damage-reflection effect
+        var evtData = new EntityEventData { target = this, position = transform.position, damage = finalDamage, amount = damageDealt, damageType = damageType, elementalType = elementalType, tags = damageTag };
         if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
             OnHit?.Invoke(evtData);
         OnEntityHit?.Invoke(evtData);
@@ -519,15 +521,6 @@ public abstract class Entity : MonoBehaviour
             float brittleDamage = GetEffect<BrittleEffect>().bonusDamage;
             if (this.HasShield()) brittleDamage *= 3f;
             Damage(brittleDamage, damageType, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
-        }
-
-        // Punctured (Cactus passive): each stack deals 1 extra Physical/Grass damage whenever
-        // Physical damage is taken, sourced from whoever actually dealt that original damage (not
-        // necessarily the Cactus that applied the stacks) - tagged ElementalDebuff like
-        // Fracture/Brittle above so this bonus hit can't re-trigger itself
-        if (this.HasEffect<PuncturedEffect>() && damageType == DamageType.Physical && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
-        {
-            Damage(GetEffect<PuncturedEffect>().level, DamageType.Physical, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
         }
 
         // Freeze + Fire: a non-DoT Fire hit instantly thaws a frozen target, and the thermal shock
@@ -830,7 +823,10 @@ public abstract class Entity : MonoBehaviour
         foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
             e.OnDamageReceived(elementalType, source, damageTag);
 
-        var evtData = new EntityEventData { target = this, source = source, position = transform.position, damage = finalDamage, damageType = damageType, elementalType = elementalType, tags = damageTag };
+        // amount carries the raw PRE-mitigation damage (damageDealt as it stood right before
+        // armor/resistance reduced it to finalDamage) - see the non-sourced overload above for
+        // the full rationale
+        var evtData = new EntityEventData { target = this, source = source, position = transform.position, damage = finalDamage, amount = damageDealt, damageType = damageType, elementalType = elementalType, tags = damageTag };
         if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
             OnHit?.Invoke(evtData);
         OnEntityHit?.Invoke(evtData);

@@ -12,6 +12,12 @@ public class AloeVeraData : PlantData
     public float baseSkillHealInterval = 1f;
     public float baseSkillTempReduction = 2f;
 
+    // how long the water droplet hovers/bobs at the peak of its arc above the target before
+    // falling - scaled down by Attack Speed at runtime (see AloeVera.Fire), and reduced to 0
+    // outright by the Flash Drop skill tree node
+    [Header("Attack Arc")]
+    public float baseLobTime = 0.4f;
+
     [Header("Path 1 Scaling")]
     public float path1AttackSpeedPerLevel = 0.02f;
     public float path1AttackRangePerLevel = 0.2f;

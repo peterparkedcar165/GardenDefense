@@ -141,5 +141,9 @@ public enum StatType
     // Snowdrop-specific: flat addition to SnowMarkPercent (the % Max Health portion of her Snow
     // Mark bonus damage), same pattern as MaxSlowStacksFlat/ToxicSporeDurationFlat above - plant-
     // specific since SnowMarkPercent isn't a generic Entity/Plant field
-    SnowMarkPercentFlat
+    SnowMarkPercentFlat,
+    // Aloe Vera-specific: flat addition to her Passive's own heal amount (healAmount), same
+    // pattern as SnowMarkPercentFlat above - plant-specific since healAmount isn't a generic
+    // Entity/Plant field
+    HealAmountFlat
 }

@@ -6,24 +6,27 @@ public class CactusData : PlantData
     public float baseShieldAmount = 100f;
 
     [Header("Path 1 Scaling")]
-    public int path1NeedlesBase = 8;
-    public int path1NeedlesPerLevel = 3;
+    public float baseArmorScalingPercent = 0.5f;
+    public float path1ArmorScalingPerLevel = 0.05f;
+    public float path1ArmorPerLevel = 5f;
 
     [Header("Path 2 Scaling")]
     public float path2HealthPerLevel = 60f;
+    public float baseCooldownRefundOnHit = 0.3f;
+    public float path2CooldownRefundPerLevel = 0.05f;
 
     [Header("Path 3 Scaling")]
     public float path3ShieldPerLevel = 10f;
     public float path3SkillDurationPerLevel = 2f;
-    public float baseShieldArmorBonus = 25f;
-    public float path3ShieldArmorPerLevel = 5f;
+    public float baseCounterReflectPercent = 0.5f;
+    public float path3CounterReflectPerLevel = 0.05f;
 
     public override string GetAttackDescription() =>
-        $"Fires needles in all directions, dealing {DamageTypeLabel(damageType)} per needle hit. Each hit applies <color=#A0522D>Punctured</color>.";
+        $"Slams all insects in range, dealing {DamageTypeLabel(damageType)} plus a % of its Armor. Applies <color=#A0522D>Punctured</color>.";
 
     public override string GetPassiveDescription() =>
-        $"Insects that attack the Cactus take {DamageTypeLabel(damageType)} in return. Applies <color=#A0522D>Punctured</color>.";
+        "<color=#A0522D>Punctured</color> reduces Attack Damage instead of dealing bonus damage. Being shielded taunts nearby insects.";
 
     public override string GetSkillDescription() =>
-        "Grants a shield for a duration. While shielded, the Cactus gains bonus Armor and nearby insects are forced to target it.";
+        "Enters a countering stance and shields itself for a duration, gaining Physical Resistance and reflecting melee damage back at attackers.";
 }
