@@ -98,6 +98,8 @@ public class PlantData : ScriptableObject
     public float baseProjectileSpeed;
     public float baseMaxRange;
     public int basePiercing;
+    public float baseProjectileHitboxRadius = 0.1f;
+    public float baseProjectileVisualHitboxRadius = 0.1f;
 
     [Header("Lobber")]
     public float baseAoERadius;

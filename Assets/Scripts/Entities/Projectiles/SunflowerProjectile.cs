@@ -33,12 +33,13 @@ public class SunflowerProjectile : Projectile
         base.Move();
 
         // sprite art faces left by default (angle 180), so the rotation needed to point it along
-        // the current direction is the direction's own angle minus that 180 offset
-        if (direction.sqrMagnitude > 0.0001f)
-        {
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0f, 0f, angle - 180f);
-        }
+        // the current heading is the heading's own angle minus that 180 offset. only Visual
+        // rotates - Base stays unrotated so Shadow (also a child of Base) doesn't spin with it.
+        // reads VisualHeading (not "direction") so the sprite tilts up/down while climbing or
+        // diving toward a flying target instead of staying flat
+        Vector3 heading = VisualHeading;
+        float angle = Mathf.Atan2(heading.y, heading.x) * Mathf.Rad2Deg;
+        visual.rotation = Quaternion.Euler(0f, 0f, angle - 180f);
     }
 
     // particle-trail detach-before-destroy is now handled generically by the base class
