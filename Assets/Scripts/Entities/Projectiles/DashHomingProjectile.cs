@@ -81,15 +81,19 @@ public abstract class DashHomingProjectile : Projectile
         }
 
         // sprite is authored pointing right (tip = 0 degrees), so aligning its rotation to the
-        // current travel direction keeps the tip leading through every approach/dash/turn.
-        // rotates towards the target angle at a fast but finite rate rather than snapping, so a
-        // ~180 degree flip (e.g. the moment it starts returning to the target) swings around
-        // visibly instead of instantly flipping in place
-        if (direction.sqrMagnitude > 0.0001f)
+        // current heading keeps the tip leading through every approach/dash/turn. rotates towards
+        // the target angle at a fast but finite rate rather than snapping, so a ~180 degree flip
+        // (e.g. the moment it starts returning to the target) swings around visibly instead of
+        // instantly flipping in place. only Visual rotates - Base (this transform) stays unrotated
+        // so Shadow (also a child of Base) doesn't spin along with it. reads VisualHeading (not
+        // "direction") for consistency with every other rotating projectile, though this class
+        // doesn't use the height-offset system so it's currently equivalent to direction
+        Vector3 heading = VisualHeading;
+        if (heading.sqrMagnitude > 0.0001f)
         {
-            float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            float newAngle = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, RotationSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Euler(0f, 0f, newAngle);
+            float targetAngle = Mathf.Atan2(heading.y, heading.x) * Mathf.Rad2Deg;
+            float newAngle = Mathf.MoveTowardsAngle(visual.eulerAngles.z, targetAngle, RotationSpeed * Time.deltaTime);
+            visual.rotation = Quaternion.Euler(0f, 0f, newAngle);
         }
 
         // same despawn rule every other projectile in the game uses now: gone once it leaves

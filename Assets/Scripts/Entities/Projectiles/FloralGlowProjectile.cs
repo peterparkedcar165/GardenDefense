@@ -27,6 +27,11 @@ public class FloralGlowProjectile : MonoBehaviour
     // of the light's fade-out time delaying the projectile's own destruction
     private GameObject _lightObj;
 
+    // Visual is the sprite's own child (Base/Visual/Shadow split, same as Projectile.cs) - only
+    // it rotates to face the travel direction, so Shadow (also a child of Base) stays flat
+    // instead of spinning along with the sprite
+    private Transform _visual;
+
     // speed comes from CalendulaData.floralGlowProjectileSpeed, not a fixed value on this prefab,
     // so it's tunable the same way every other Floral Glow number is
     public void Initialize(Calendula calendula, Plant target, float duration, int level, float speed)
@@ -40,6 +45,8 @@ public class FloralGlowProjectile : MonoBehaviour
 
     private void Awake()
     {
+        _visual = transform.Find("Visual") ?? transform;
+
         if (DarknessManager.instance == null) return;
 
         _lightObj = new GameObject("FloralGlowLight");
@@ -94,7 +101,7 @@ public class FloralGlowProjectile : MonoBehaviour
         if (toDestination.sqrMagnitude > 0.0001f)
         {
             float angle = Mathf.Atan2(toDestination.y, toDestination.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0f, 0f, angle - spriteDefaultFacingAngle);
+            _visual.rotation = Quaternion.Euler(0f, 0f, angle - spriteDefaultFacingAngle);
         }
 
         transform.position = Vector3.MoveTowards(transform.position, destination, _speed * Time.deltaTime);

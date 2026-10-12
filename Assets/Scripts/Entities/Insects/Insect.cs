@@ -281,6 +281,18 @@ public abstract class Insect : Entity, IAttackable
     private Transform _shadow;
     private Vector2 pathOffset;
 
+    // Base/Visual hit radii for projectiles (see Projectile.cs): Base is this insect's own ground
+    // position (transform.position) - a projectile's Base must be within BaseHitboxRadius of it
+    // for a hit to even be considered, regardless of height. Visual is GetAimPoint() (follows
+    // flight/levitation) - the projectile's own Visual must ALSO actually be touching it there.
+    // both conditions have to hold, so a ground insect merely sharing a flying target's world-Y
+    // band can't steal a hit it was never actually in the way of on the ground
+    [Header("Hit Radii (Projectiles)")]
+    [SerializeField] private float baseHitboxRadius = 0.3f;
+    [SerializeField] private float visualHitboxRadius = 0.3f;
+    public float BaseHitboxRadius => baseHitboxRadius;
+    public float VisualHitboxRadius => visualHitboxRadius;
+
     protected override void Awake()
     {
         base.Awake();

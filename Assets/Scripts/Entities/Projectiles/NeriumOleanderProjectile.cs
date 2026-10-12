@@ -20,6 +20,11 @@ public class NeriumOleanderProjectile : Projectile
     private OleanderSprout pendingJustHitSprout = null;
     private bool awaitingRetarget = false;
 
+    // this petal already handles every insect/sprout hit itself via its own OnTriggerEnter2D
+    // (bounce chains, sprout priority, incidental pass-through) - letting the base class's
+    // automatic Base/Visual scan run too would hit the same insect a second time
+    protected override bool UseAutomaticInsectHits => false;
+
     public void SetBounceData(int bounces, float toxinDuration, int toxinLevel, float bounceSearchRadius, float bounceDamageReduction)
     {
         this.bouncesRemaining = bounces;
