@@ -25,9 +25,9 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: 1dcfd0f9c7e046b580ee7e432e13517c, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 152
+  baseAttackDamage: 122
   baseMagicPower: 0
-  baseAttackSpeed: 0.2
+  baseAttackSpeed: 0.15
   baseAttackRange: 99
   baseAttackChargeTime: 0
   baseArmor: 0
@@ -69,9 +69,11 @@ MonoBehaviour:
   baseIceDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 20
+  baseProjectileSpeed: 10
   baseMaxRange: 60
   basePiercing: 1
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
@@ -92,9 +94,11 @@ MonoBehaviour:
   skillSound:
     clips: []
   baseSkillAttackSpeedBonus: 2
-  path1AttackDamagePerLevel: 18
-  path1AttackSpeedPerLevel: 0.04
-  baseCritChanceBonus: 0.15
-  path2CritChancePerLevel: 0.04
+  path1AttackDamagePerLevel: 13
+  path1AttackSpeedPerLevel: 0.02
+  baseCritChanceBonus: 0.1
+  path2CritChancePerLevel: 0.03
+  baseBounceRadius: 1.5
+  path2BounceRadiusPerLevel: 0.3
   path3AttackSpeedBonusPerLevel: 0.2
   path3SkillDurationPerLevel: 1

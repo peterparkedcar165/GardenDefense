@@ -49,9 +49,11 @@ public abstract class Projectile : MonoBehaviour
     private Vector3 _visualRestLocalOffset;
     private Vector3 _shadowRestLocalOffset;
     private float _visualHeightOffset;
-    private float _visualHeightVelocity; // SmoothDamp's own velocity state, carried frame to frame
-    private const float VisualHeightSmoothTime = 0.25f; // seconds to settle into a new target height
-    private readonly HashSet<Insect> _alreadyHit = new HashSet<Insect>();
+    private float _visualHeightVelocity; // derived each frame for VisualHeading's rotation use
+    // protected rather than private so a subclass with its own post-hit behavior (e.g.
+    // LeafRangerProjectile's bounce-redirect) can still search "every live insect I haven't hit
+    // yet" using the exact same detection/record-keeping everyone else goes through
+    protected readonly HashSet<Insect> _alreadyHit = new HashSet<Insect>();
 
     // subclasses with their own bespoke insect-collision handling (bounce chains, orbit sweeps,
     // etc. - anything already calling OnHit/damage itself from its own OnTriggerEnter2D) set this
@@ -138,24 +140,47 @@ public abstract class Projectile : MonoBehaviour
             }
         }
 
-        transform.position += direction * projectileSpeed * Time.deltaTime;
+        // think of Base's own position as the "XZ" plane and the height offset below as the
+        // real "Y" - projectileSpeed is the hypotenuse of a right triangle whose two legs are
+        // however far Base still has to go on the ground (groundDist) and however big the
+        // height gap still is (heightGap). splitting projectileSpeed across both legs in that
+        // same ratio means the combined/diagonal speed of the actual visible shot is always
+        // exactly projectileSpeed (never faster just because it's also climbing), AND both legs
+        // always finish at the same moment by construction - fixing the old desync where Base
+        // could cross the target's ground footprint (satisfying the base-distance half of the
+        // hit check) before Visual had risen enough to satisfy the visual-distance half, or vice
+        // versa: a clean miss despite visually crossing the same space at some point
+        float groundSpeed = projectileSpeed;
+        float heightRate = 0f;
+        float targetHeight = 0f;
+        if (trackedInsect != null)
+        {
+            targetHeight = trackedInsect.GetAimPoint().y - trackedInsect.transform.position.y;
+            float groundDist = Vector3.Distance(transform.position, trackedInsect.transform.position);
+            float heightGap = targetHeight - _visualHeightOffset;
+            float totalRemaining = Mathf.Sqrt(groundDist * groundDist + heightGap * heightGap);
+            if (totalRemaining > 0.0001f)
+            {
+                groundSpeed = projectileSpeed * (groundDist / totalRemaining);
+                heightRate = projectileSpeed * (heightGap / totalRemaining); // signed: negative while descending
+            }
+        }
+
+        transform.position += direction * groundSpeed * Time.deltaTime;
 
         // cosmetic-only: Visual rises to mirror however high the tracked target currently is, so
         // the rendered sprite still visually arcs up to meet a flying insect even though Base
         // (this root) never leaves the ground plane. Shadow always stays glued to Base. both read
         // off the ORIGINAL authored local offset via TransformPoint (not plain parenting) so a
-        // rotating root doesn't swing them around - see the field comments above.
-        //
-        // only chases a height while there's actually a live target to chase - SmoothDamp eases
-        // into it naturally (accelerates in, decelerates out, no instant snap and no sudden stop
-        // at arrival) rather than a constant-rate approach. once the target's gone (died, out of
-        // range, already hit), the offset is simply left exactly where it is and never touched
-        // again instead of being pulled back to 0 - so a shot that was flying up at a bird keeps
-        // flying at that same height in a straight line, no sudden change in vertical motion
+        // rotating root doesn't swing them around - see the field comments above. once the
+        // target's gone (died, out of range, already hit), the offset is simply left exactly
+        // where it is and never touched again instead of being pulled back to 0 - so a shot that
+        // was flying up at a bird keeps flying at that same height in a straight line, no sudden
+        // change in vertical motion
         if (trackedInsect != null)
         {
-            float targetHeight = trackedInsect.GetAimPoint().y - trackedInsect.transform.position.y;
-            _visualHeightOffset = Mathf.SmoothDamp(_visualHeightOffset, targetHeight, ref _visualHeightVelocity, VisualHeightSmoothTime);
+            _visualHeightOffset = Mathf.MoveTowards(_visualHeightOffset, targetHeight, Mathf.Abs(heightRate) * Time.deltaTime);
+            _visualHeightVelocity = heightRate;
         }
         else
         {
@@ -207,9 +232,12 @@ public abstract class Projectile : MonoBehaviour
     {
         Vector3 basePos = transform.position;
         Vector3 visualPos = visual.position;
-        foreach (Insect insect in Insect.allInsects)
+        // snapshot first: RegisterHit() below can kill the insect synchronously (OnHit -> Damage),
+        // which removes it from the live allInsects list via its own OnDestroy - mutating the
+        // exact list this loop is enumerating and throwing InvalidOperationException otherwise
+        foreach (Insect insect in Insect.allInsects.ToArray())
         {
-            if (!insect.IsAlive || insect.team == Team.Friendly) continue;
+            if (insect == null || !insect.IsAlive || insect.team == Team.Friendly) continue;
             if (_alreadyHit.Contains(insect)) continue;
 
             float baseDist = Vector3.Distance(basePos, insect.transform.position);
@@ -238,6 +266,15 @@ public abstract class Projectile : MonoBehaviour
             trackedInsect = null;
         }
 
+        OnAfterHit(insect);
+    }
+
+    // runs after every registered hit, detection method aside. default: once piercing is used up
+    // (hitCount exceeds it), destroy - a normal pierce-through shot. LeafRangerProjectile
+    // overrides this to redirect toward its next bounce target instead of just dying, while still
+    // going through the exact same Base+Visual detection every other projectile uses
+    protected virtual void OnAfterHit(Insect insect)
+    {
         if (hitCount > piercing)
         {
             OnBeforeDestroy();

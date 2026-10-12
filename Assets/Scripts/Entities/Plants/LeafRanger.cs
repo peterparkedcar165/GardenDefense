@@ -5,6 +5,31 @@ public class LeafRanger : Shooter
     public override bool ShowRangeCircle => false;
     private LeafRangerData LRData => data as LeafRangerData;
 
+    // Passive: how far a bounced arrow can seek its next target - scales with Passive (Path2)
+    // level rather than Attack range, since bouncing is a passive-tree ability
+    private float BounceRadius => (LRData?.baseBounceRadius ?? 2f) + (LRData?.path2BounceRadiusPerLevel ?? 0.5f) * effectivePath2Level;
+
+    // Passive: projectile speed from the first bounce onward, as a % of the arrow's original speed
+    private float BounceSpeedMultiplier => LRData?.bounceSpeedMultiplier ?? 0.66f;
+
+    // shows the bounce radius stuck to whichever insect is currently highlighted (his own red
+    // target highlight), on top of it - ShowRangeCircle is false since his own attack range
+    // isn't shown on himself, but this is a separate indicator entirely, stuck to the target.
+    //
+    // BounceRadius is the hypotenuse of a right triangle (see RetargetNextBounce in
+    // LeafRangerProjectile), not a flat ground-plane radius: its two legs are the ground-plane
+    // distance to a candidate and however high that candidate is flying. this indicator sits
+    // flat on the ground under the CURRENT target, so what it should actually show is the
+    // ground-plane leg left over once this target's own height has "used up" part of that
+    // hypotenuse budget - a higher target leaves a smaller ground-radius for the next bounce to
+    // reach, same math RetargetNextBounce uses to decide what's actually in range
+    protected override float GetTargetRangeIndicatorRadius(Insect target)
+    {
+        float height = target.GetAimPoint().y - target.transform.position.y;
+        float groundRadiusSq = BounceRadius * BounceRadius - height * height;
+        return groundRadiusSq > 0f ? Mathf.Sqrt(groundRadiusSq) : 0f;
+    }
+
     // no targeting needed: the skill just buffs herself
     private bool autoCastEnabled = false;
     public override bool UsesAutoCast => true;
@@ -152,6 +177,8 @@ public class LeafRanger : Shooter
         {
             arrow.SetTarget(targetObj);
             arrow.Initialize(targetPos, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
+            arrow.SetBounceRadius(BounceRadius);
+            arrow.SetBounceSpeedMultiplier(BounceSpeedMultiplier);
         }
     }
 
@@ -179,7 +206,7 @@ public class LeafRanger : Shooter
     public override string GetName() => "<b><color=green>Leaf Ranger</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can pierce through his target.";
+        $"The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can bounce to another target instead of being destroyed.";
 
     public override string GetPath1Name() => "Attack";
     public override string GetPath2Name() => "Passive";
@@ -205,12 +232,15 @@ public class LeafRanger : Shooter
         float baseCrit = LRData?.baseCritChanceBonus    ?? 0.1f;
         float critpl   = LRData?.path2CritChancePerLevel ?? 0.05f;
         float totalCrit = baseCrit + critpl * effectivePath2Level;
+        float baseBounceRadius = LRData?.baseBounceRadius ?? 2f;
+        float bouncepl = LRData?.path2BounceRadiusPerLevel ?? 0.5f;
         string desc = details
-            ? $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>[(0) + (1/Lvl.)]</b></color> <color=green>Piercing</color>."
-            : $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.";
+            ? $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>[(0) + (1/Lvl.)]</b></color> <color=green>Piercing</color>.\n\n<color=green>Piercing</color> instead bounces from target to target, up to a maximum of <color=green><b>[(0) + (1/Lvl.)]</b></color> additional targets, within a <color=green><b>[({baseBounceRadius:F1}) + ({bouncepl:F1}/Lvl.)]</b></color> radius."
+            : $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.\n\n<color=green>Piercing</color> instead bounces from target to target, up to a maximum of <color=green><b>{piercing}</b></color> additional targets, within a <color=green><b>{BounceRadius:F1}</b></color> radius.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green>Piercing</color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=green>Bounce Radius</color> by <color=green><b>{bouncepl:F1}</b></color> per level. [<color=green><b>{BounceRadius:F1}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Upon shooting, grant a level of <color=green><b>Verdant Fervor</b></color>, increasing <b>Total Attack Speed</b> by <color=green><b>3%</b></color> per level for <color=green><b>{passiveDuration:F0}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);

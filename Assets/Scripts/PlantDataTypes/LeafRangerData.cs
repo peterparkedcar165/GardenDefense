@@ -12,6 +12,9 @@ public class LeafRangerData : PlantData
     [Header("Path 2 Scaling")]
     public float baseCritChanceBonus = 0.1f;       // bonus crit chance granted at level 0 before upgrades
     public float path2CritChancePerLevel = 0.05f;  // additional crit chance per passive level
+    public float baseBounceRadius = 2f;            // how far an arrow can seek its next bounce target
+    public float path2BounceRadiusPerLevel = 0.5f;
+    public float bounceSpeedMultiplier = 0.66f;    // projectile speed from the first bounce onward (% of original)
 
     [Header("Path 3 Scaling")]
     public float path3AttackSpeedBonusPerLevel = 0.25f;
@@ -21,7 +24,7 @@ public class LeafRangerData : PlantData
         $"Shoots slow but precise and fierce arrows at his target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        "The <color=green><b>Leaf Ranger</b></color> sees in the dark, gains bonus Critical Chance, and his attacks can pierce enemies.";
+        "The <color=green><b>Leaf Ranger</b></color> sees in the dark, gains bonus Critical Chance, and his arrows can bounce to another target instead of being destroyed.";
 
     public override string GetSkillDescription() =>
         "Enters a state of rapid focus, greatly increasing Attack Speed for a duration.";

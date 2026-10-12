@@ -710,7 +710,16 @@ public abstract class Plant : Entity, IAttackable
     // concept (e.g. an AoE-only attacker) doesn't need to override it at all
     protected virtual GameObject GetHighlightTarget() => null;
 
+    // > 0 shows a copy of this plant's own range-circle indicator stuck to its currently
+    // highlighted target instead of (or alongside) one centered on the plant itself - e.g.
+    // LeafRanger sticks his Passive's bounce radius onto whichever insect is currently
+    // highlighted/targeted. most plants don't need this (their own range circle already covers
+    // what they need to show), so the default is "don't show one". takes the target itself since
+    // a flat/ground-plane radius may need to depend on how high that specific target is flying
+    protected virtual float GetTargetRangeIndicatorRadius(Insect target) => -1f;
+
     private Insect _highlightedTarget;
+    private Transform _targetRangeIndicator;
 
     private void UpdateTargetHighlight()
     {
@@ -724,17 +733,49 @@ public abstract class Plant : Entity, IAttackable
             if (candidate != null && candidate.IsAlive) desired = candidate;
         }
 
-        if (_highlightedTarget == desired) return;
-        if (_highlightedTarget != null) _highlightedTarget.ClearHighlight();
-        if (desired != null) desired.SetHighlight(Color.red);
-        _highlightedTarget = desired;
+        if (_highlightedTarget != desired)
+        {
+            if (_highlightedTarget != null) _highlightedTarget.ClearHighlight();
+            if (desired != null) desired.SetHighlight(Color.red);
+            _highlightedTarget = desired;
+
+            if (_targetRangeIndicator != null)
+            {
+                Destroy(_targetRangeIndicator.gameObject);
+                _targetRangeIndicator = null;
+            }
+            if (desired != null && circleRadius != null && GetTargetRangeIndicatorRadius(desired) > 0f)
+            {
+                _targetRangeIndicator = Instantiate(circleRadius, desired.transform);
+                _targetRangeIndicator.name = "TargetRangeIndicator";
+                _targetRangeIndicator.localPosition = Vector3.zero;
+                SpriteRenderer sr = _targetRangeIndicator.GetComponentInChildren<SpriteRenderer>();
+                if (sr != null) sr.color = new Color(0f, 1f, 0f, sr.color.a * 0.6f);
+                _targetRangeIndicator.gameObject.SetActive(true);
+            }
+        }
+
+        // keeps the indicator's size current even while the same target stays highlighted - e.g.
+        // a Passive level bought mid-selection changes LeafRanger's bounce radius immediately
+        if (_targetRangeIndicator != null && _highlightedTarget != null)
+        {
+            float radius = GetTargetRangeIndicatorRadius(_highlightedTarget);
+            _targetRangeIndicator.localScale = new Vector3(radius * 2f, radius * 2f, 1f);
+        }
     }
 
     private void ClearTargetHighlight()
     {
-        if (_highlightedTarget == null) return;
-        _highlightedTarget.ClearHighlight();
-        _highlightedTarget = null;
+        if (_highlightedTarget != null)
+        {
+            _highlightedTarget.ClearHighlight();
+            _highlightedTarget = null;
+        }
+        if (_targetRangeIndicator != null)
+        {
+            Destroy(_targetRangeIndicator.gameObject);
+            _targetRangeIndicator = null;
+        }
     }
 
     // generic left/right facing for every targeting plant: mirrors GetMainRenderer()'s sprite
