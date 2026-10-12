@@ -1,20 +1,30 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine;
 
-public class Cactus : Shooter
+public class Cactus : Aura
 {
     private float _tauntTickTimer;
     private const float TauntTickInterval  = 0.25f;
     private const float TauntEffectDuration = 0.35f;
 
-    private readonly HashSet<Insect> _volleyHit = new HashSet<Insect>();
-
     private CactusData CactData => data as CactusData;
     private float ShieldAmount  => (CactData?.baseShieldAmount ?? 100f) + (CactData?.path3ShieldPerLevel ?? 10f) * effectivePath3Level;
     private float SkillDuration => data.baseSkillDuration + (CactData?.path3SkillDurationPerLevel ?? 2f) * effectivePath3Level;
-    private float ShieldArmorBonus => (CactData?.baseShieldArmorBonus ?? 25f) + (CactData?.path3ShieldArmorPerLevel ?? 5f) * effectivePath3Level;
 
-    // no targeting needed: the skill just shields Cactus herself
+    // Attack: melee AoE damage also scales with a % of his own Armor - both his Armor and the
+    // scaling percentage itself grow per Path1 level
+    private float ArmorScalingPercent => (CactData?.baseArmorScalingPercent ?? 0.5f) + (CactData?.path1ArmorScalingPerLevel ?? 0.05f) * effectivePath1Level;
+
+    // Skill: Countering Stance - the reflected % of incoming melee damage, grows per Path3 level
+    private float CounterReflectPercent => (CactData?.baseCounterReflectPercent ?? 0.5f) + (CactData?.path3CounterReflectPerLevel ?? 0.05f) * effectivePath3Level;
+
+    // Passive: taking Melee Physical Damage refunds part of his own attack cooldown
+    private float CooldownRefundOnHit => (CactData?.baseCooldownRefundOnHit ?? 0.3f) + (CactData?.path2CooldownRefundPerLevel ?? 0.05f) * effectivePath2Level;
+
+    // melee now - fertilizers/skill nodes/auras can't push his AoE radius past his own base
+    // range, same as Acorn Knight/Bird of Paradise
+    public override bool IsMeleeAttacker => true;
+
+    // no targeting needed: the skill just shields Cactus himself
     private bool autoCastEnabled = false;
     public override bool UsesAutoCast => true;
     public override bool IsAutoCasting => autoCastEnabled;
@@ -24,6 +34,39 @@ public class Cactus : Shooter
         base.Awake();
         LoadData();
         basePassiveDuration = 8f;
+        Entity.OnEntityHit += HandleIncomingHit;
+        Entity.OnEntityHit += HandleSelfDamaged;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        Entity.OnEntityHit -= HandleIncomingHit;
+        Entity.OnEntityHit -= HandleSelfDamaged;
+    }
+
+    // Countering Stance (skill): a melee hit landing on Cactus while the stance is active
+    // reflects a % of its RAW pre-mitigation damage back at the attacker
+    private void HandleIncomingHit(EntityEventData data)
+    {
+        // IsAlive itself is declared separately on Plant/Insect, not the shared Entity base -
+        // health > 0 is the one check both rely on, so it works regardless of which kind source is
+        if (data.target != this || !IsAlive || data.source == null || data.source.health <= 0) return;
+        if (!HasEffect<CounteringStanceEffect>()) return;
+        bool isMelee = data.tags != null && System.Array.Exists(data.tags, t => t == DamageTag.Melee);
+        if (!isMelee) return;
+        data.source.Damage(data.amount * CounterReflectPercent, DamageType.Physical, elementalType, this, false,
+            new DamageTag[] { DamageTag.SkillDamage, DamageTag.Counter });
+    }
+
+    // Passive: taking Melee Physical Damage refunds part of his own attack cooldown
+    private void HandleSelfDamaged(EntityEventData data)
+    {
+        if (data.target != this || !IsAlive) return;
+        if (data.damageType != DamageType.Physical) return;
+        bool isMelee = data.tags != null && System.Array.Exists(data.tags, t => t == DamageTag.Melee);
+        if (!isMelee) return;
+        attackCooldownTimer += CooldownRefundOnHit;
     }
 
     protected override void Update()
@@ -32,6 +75,11 @@ public class Cactus : Shooter
 
         if (autoCastEnabled && SkillReady && HasInsectsInRange())
             TriggerSkill();
+
+        if (attackCooldownTimer < attackCooldown)
+            attackCooldownTimer += Time.deltaTime;
+        else if (!IsStunned && !IsChanneling && HasInsectsInRange())
+            Attack();
 
         if (HasEffect<ShieldEffect>())
         {
@@ -60,45 +108,22 @@ public class Cactus : Shooter
         autoCastEnabled = true;
     }
 
-    protected override void Shoot(Vector3 target)
+    // melee AoE, same pattern as Holly: everything within attackRange gets hit at once, no
+    // targeting or projectile involved. tagged Counter so any Counter Damage bonus (fertilizer,
+    // skill tree, etc.) applies to his regular attack now, not just a separate retaliation hit.
+    // Punctured is still applied per hit automatically by Entity.HandleOnHitEffects (the
+    // centralized on-hit dispatcher already checks "data.source is Cactus" unconditionally)
+    protected override void Attack()
     {
-        if (projectilePrefab == null) return;
-        _volleyHit.Clear();
-        int needleBase  = CactData?.path1NeedlesBase      ?? 8;
-        int needleLevel = CactData?.path1NeedlesPerLevel  ?? 3;
-        int needleCount = needleBase + needleLevel * effectivePath1Level;
-        float angleStep = 360f / needleCount;
-
-        for (int i = 0; i < needleCount; i++)
-        {
-            float rad = i * angleStep * Mathf.Deg2Rad;
-            Vector3 dir = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0f);
-            Vector3 targetPos = transform.position + dir * maxRange;
-
-            GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            CactusNeedleProjectile needle = proj.GetComponent<CactusNeedleProjectile>();
-            needle?.Initialize(targetPos, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
-        }
+        base.Attack();
+        float armorBonus = armor * ArmorScalingPercent;
+        foreach (Insect insect in GetInsectsInRange())
+            insect.Damage(attackDamage + armorBonus, damageType, elementalType, this, false,
+                new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Melee, DamageTag.Counter });
     }
 
-    protected override void OnHitByInsect(Insect attacker)
-    {
-        if (!IsAlive || !attacker.IsAlive) return;
-        float armorBonus = IsPath2Maxed ? armor * 0.33f : 0f;
-        attacker.Damage(attacker.attackDamage * 1f + armorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.PassiveDamage, DamageTag.Counter });
-        attacker.ApplyEffect(new PuncturedEffect(attacker, passiveDuration, 1 + effectivePath2Level, this));
-    }
-
-    // Punctured from this hit is applied by Entity.HandleOnHitEffects (the centralized on-hit
-    // dispatcher), which sees data.source is Cactus once this Damage call (tagged Attack) fires
-    public void OnNeedleHit(Insect insect, float baseDamage)
-    {
-        if (!insect.IsAlive) return;
-        float dmg = _volleyHit.Contains(insect) ? baseDamage * 0.5f : baseDamage;
-        _volleyHit.Add(insect);
-        insect.Damage(dmg, damageType, elementalType, this, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
-    }
-
+    // Passive: whenever Cactus is protected by ANY shield (his own skill included), nearby
+    // insects are taunted onto him
     private void ApplyTauntInRange()
     {
         foreach (Insect insect in Insect.allInsects)
@@ -109,38 +134,38 @@ public class Cactus : Shooter
         }
     }
 
-    private bool HasInsectsInRange()
-    {
-        foreach (Insect insect in Insect.allInsects)
-        {
-            if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) <= attackRange)
-                return true;
-        }
-        return false;
-    }
-
+    // the self-shield is a separate effect with its own lifetime from the stance - draining it
+    // early doesn't cut the stance's resistance/reflection short, see CounteringStanceEffect
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
         skillCooldownTimer = skillCooldown;
+        ApplyEffect(new CounteringStanceEffect(this, SkillDuration, 1, this));
         ApplyEffect(new CactusShieldEffect(this, SkillDuration, 1, this, ShieldAmount));
     }
 
     public override void UpdateStats()
     {
-        bool shielded = HasEffect<ShieldEffect>();
-        float asBonus = IsPath3Maxed && shielded ? 0.35f : 0f;
-        float armorBonus = shielded ? ShieldArmorBonus : 0f;
-        attackSpeedTotalMultiplier += asBonus;
-        armorAdder += armorBonus;
         base.UpdateStats();
-        attackSpeedTotalMultiplier -= asBonus;
-        armorAdder -= armorBonus;
+        if (HasEffect<CounteringStanceEffect>())
+        {
+            physicalResistance += CounteringStanceEffect.PhysicalResistanceBonus;
+            // Skill Max Level Bonus: +25% total Armor while the stance is active
+            if (IsPath3Maxed)
+            {
+                armor = Mathf.RoundToInt(armor * 1.25f);
+                physicalResistance = armor / (ArmorCoefficient + armor);
+            }
+        }
         temperatureMax = comfortMax;
     }
 
-    public override void OnPath1Upgrade(int level) { }
+    public override void OnPath1Upgrade(int level)
+    {
+        baseArmor = data.baseArmor + Mathf.RoundToInt((CactData?.path1ArmorPerLevel ?? 5f) * level);
+        // Attack Max Level Bonus: +25% base Attack Range
+        baseAttackRange = IsPath1Maxed ? data.baseAttackRange * 1.25f : data.baseAttackRange;
+    }
 
     public override void OnPath2Upgrade(int level)
     {
@@ -153,36 +178,35 @@ public class Cactus : Shooter
     public override string GetName() => "<b><color=green>Cactus</color></b>";
 
     public override string GetDescription() =>
-        "A hardy desert plant that fires needles in all directions and retaliates against attackers.";
+        $"A hardy desert plant that slams everything around it and counters harder the more it's hit.";
 
-    public override string GetAttackDescription()
-    {
-        int needleBase  = CactData?.path1NeedlesBase     ?? 8;
-        int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
-        return $"Fires <color=green><b>{needleBase + needleLevel * effectivePath1Level}</b></color> needles in equal angles around itself, dealing " +
-               $"<color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} per needle. " +
-               $"Each hit applies <color=green><b>1</b></color> <color=#A0522D><b>Punctured</b></color> stack.";
-    }
+    // simple view: the combined total (Attack Damage + Armor bonus) as one number, tinted
+    // Cactus's own elemental colour (Poison) - the breakdown only shows up in the detailed
+    // (shift-held) Path1 description below
+    public override string GetAttackDescription() =>
+        $"Slams all insects within range, dealing <color=purple><b>{attackDamage + armor * ArmorScalingPercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}. Each hit applies <color=green><b>1</b></color> <color=purple><b>Punctured</b></color> stack.";
 
     public override string GetPassiveDescription() =>
-        $"Insects that deal melee damage to the {GetName()} take damage equal to <color=green><b>100%</b></color> of their own Attack Damage as " +
-        $"{PlantData.DamageTypeLabel(damageType)}, and receive " +
-        $"<color=green><b>{1 + effectivePath2Level}</b></color> <color=#A0522D>Punctured</color> stack(s).";
+        $"<color=purple><b>[Punctured]</b></color>: Reduce <color=green><b>Attack Damage</b></color> by <color=red><b>1</b></color>, up to <color=red><b>10</b></color>.\n\n" +
+        $"Whenever the {GetName()} is protected by a <color=#00CED1>Shield</color>, he taunts insects within his attack range.\n\n" +
+        $"Taking <color=green>Melee</color> <color=#A0522D>Physical Damage</color> refunds <color=green><b>{CooldownRefundOnHit:F1}s</b></color> of his attack cooldown.";
 
     public override string GetSkillDesription() =>
-        $"Grants the {GetName()} a <color=grey><b>{ShieldAmount:F0}</b></color> shield for <color=green><b>{SkillDuration:F0}s</b></color>. " +
-        $"While the shield holds, nearby insects are forced to target the {GetName()}, and it gains <color=#00CED1><b>{ShieldArmorBonus:F0} Armor</b></color>.";
+        $"The {GetName()} enters a <color=green><b>Countering</b></color> stance for <color=green><b>{SkillDuration:F0}s</b></color>, and gains a <color=#00CED1><b>Shield</b></color> for <color=grey><b>{ShieldAmount:F0}</b></color> health. " +
+        $"He gains <color=green><b>{CounteringStanceEffect.PhysicalResistanceBonus * 100f:F0}%</b></color> <color=#A0522D><b>Physical Resistance</b></color>. Taking <color=green>Melee Damage</color> while in this stance returns " +
+        $"<color=green><b>{CounterReflectPercent * 100f:F0}%</b></color> of the pre-mitigation damage back to the attacker.";
 
     public override string GetPath1Description(bool details = false)
     {
-        int needleBase  = CactData?.path1NeedlesBase     ?? 8;
-        int needleLevel = CactData?.path1NeedlesPerLevel ?? 3;
+        float armorpl   = CactData?.path1ArmorPerLevel        ?? 5f;
+        float scalingpl = CactData?.path1ArmorScalingPerLevel ?? 0.05f;
         string desc = details
-            ? $"Fires <color=green><b>[({needleBase}) + ({needleLevel}/Lvl.)]</b></color> needles in equal angles around itself, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} per needle. Each hit applies <color=green><b>1</b></color> <color=#A0522D><b>Punctured</b></color> stack."
+            ? $"Slams all insects within range, dealing <color=#00CED1><b>[100% Attack Damage + {ArmorScalingPercent * 100f:F0}% Armor]</b></color> {PlantData.DamageTypeLabel(damageType)}. Each hit applies <color=green><b>1</b></color> <color=purple><b>Punctured</b></color> stack."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
-               $"Increase needle count by <color=green><b>{needleLevel}</b></color> per level. [<color=green><b>+{needleLevel * effectivePath1Level}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Attacks now apply <color=green><b>2</b></color> <color=#A0522D>Punctured</color> stacks.")}\n\n" +
+               $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=#00CED1><b>Armor</b></color> scaling by <color=green><b>{scalingpl * 100f:F0}%</b></color> per level. [<color=green><b>+{scalingpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(path1Level, "Increase base <color=#00CED1><b>Attack Range</b></color> by <color=green><b>25%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -190,34 +214,26 @@ public class Cactus : Shooter
     public override string GetPath2Description(bool details = false)
     {
         float hppl = CactData?.path2HealthPerLevel ?? 60f;
-        string desc = details
-            ? $"Insects that deal melee damage to the {GetName()} take damage equal to <color=green><b>100%</b></color> of their own Attack Damage as {PlantData.DamageTypeLabel(damageType)}, and receive <color=green><b>[1 + (1/Lvl.)]</b></color> <color=#A0522D>Punctured</color> stack(s)."
-            : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
-               $"<color=#A0522D><b>Punctured</b></color>: taking Physical damage deals an extra <color=green><b>1</b></color> Grass damage per stack, lasts <color=green><b>{passiveDuration:F0}s</b></color>.\n\n" +
-               $"Increase <color=#A0522D><b>Punctured</b></color> stacks per retaliation by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
+        float cdrpl = CactData?.path2CooldownRefundPerLevel ?? 0.05f;
+        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
                $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, details ? $"Retaliation damage is increased by <color=#00CED1><b>33%</b></color> of the {GetName()}'s <color=#00CED1><b>Armor</b></color>." : $"Retaliation deals <color=#00CED1><b>+{armor * 0.33f:F0}</b></color> bonus damage.")}\n\n" +
+               $"Increase Cooldown Refund by <color=green><b>{cdrpl:F2}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath2Level:F2}s</b></color>]\n\n" +
+               $"{Level5Section(path2Level, "Attacks now apply <color=green><b>2</b></color> <color=purple><b>Punctured</b></color> stacks.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float shieldpl  = CactData?.path3ShieldPerLevel        ?? 10f;
-        float durpl     = CactData?.path3SkillDurationPerLevel ?? 2f;
-        float shieldBase = CactData?.baseShieldAmount ?? 100f;
-        float armorpl   = CactData?.path3ShieldArmorPerLevel  ?? 5f;
-        float armorBase = CactData?.baseShieldArmorBonus      ?? 25f;
-        string desc = details
-            ? $"Grants the {GetName()} a <color=grey><b>[({shieldBase:F0}) + ({shieldpl:F0}/Lvl.)]</b></color> shield for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. While the shield holds, nearby insects are forced to target the {GetName()}."
-            : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
-               $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
+        float shieldpl   = CactData?.path3ShieldPerLevel            ?? 10f;
+        float durpl      = CactData?.path3SkillDurationPerLevel     ?? 2f;
+        float reflectpl  = CactData?.path3CounterReflectPerLevel    ?? 0.05f;
+        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
+               $"Increase counter damage by <color=green><b>{reflectpl * 100f:F0}%</b></color> per level. [<color=green><b>+{reflectpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Shield by <color=grey><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"While <color=grey><b>Shielded</b></color> by any source, gain <color=#00CED1><b>[({armorBase:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor. [<color=#00CED1><b>{ShieldArmorBonus:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"While <color=grey><b>Shielded</b></color>, <color=green><b>Total Attack Speed</b></color> is increased by <color=green><b>35%</b></color>.")}\n\n" +
+               $"{Level5Section(path3Level, "Increase total <color=#00CED1><b>Armor</b></color> by <color=green><b>25%</b></color> while the skill is active.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

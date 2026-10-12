@@ -91,6 +91,7 @@ public static class PlantStatApplier
             case StatType.ArmorTotalMultiplier:             plant.armorTotalMultiplier          += value; break;
             case StatType.SkillChargeRate:                  plant.skillChargeRateAdder          += value; break;
             case StatType.SnowMarkPercentFlat:               if (plant is Snowdrop sd) sd.snowMarkPercentAdder += value; break;
+            case StatType.HealAmountFlat:                     if (plant is AloeVera av) av.healAmountAdder += value; break;
         }
     }
 }

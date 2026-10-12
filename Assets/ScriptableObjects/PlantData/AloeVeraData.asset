@@ -22,13 +22,14 @@ MonoBehaviour:
   sunCost: 95
   placementLimit: 0
   category: 0
-  skillTree: {fileID: 0}
+  skillTree: {fileID: 11400000, guid: 6d3e213aad0d4c48b25c53dcc865825a, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
   baseAttackDamage: 82
   baseMagicPower: 0
-  baseAttackSpeed: 0.16
+  baseAttackSpeed: 0.12
   baseAttackRange: 4
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 1
@@ -72,8 +73,8 @@ MonoBehaviour:
   baseMaxRange: 50
   basePiercing: 0
   baseAoERadius: 1.5
-  minFlightDuration: 1.5
-  projectileHeight: 4
+  minFlightDuration: 1.2
+  projectileHeight: 3
   basePassiveCooldown: 0
   basePassiveDuration: 0
   baseSkillCooldown: 60
@@ -86,16 +87,17 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []
-  baseHealAmount: 26
+  baseHealAmount: 32
   baseTempReduction: 5
   baseSkillHealPerTick: 9
   baseSkillHealInterval: 0.5
   baseSkillTempReduction: 1.6
-  path1AttackSpeedPerLevel: 0.04
+  baseLobTime: 0.4
+  path1AttackSpeedPerLevel: 0.02
   path1AttackRangePerLevel: 0.2
   path2HealPerLevel: 8
   path2TempReductionPerLevel: 1.2

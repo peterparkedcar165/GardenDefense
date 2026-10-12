@@ -221,6 +221,12 @@ public abstract class Insect : Entity, IAttackable
                 _engagedByFriendly = null;
             }
 
+            // Punctured (or anything else that zeroes out Attack Damage): an insect that can't
+            // deal damage has no reason to go pick a fight with a plant anymore, so it stops
+            // hunting via the aggression mechanic entirely - a Taunt (handled above, which
+            // already returned by this point) still drags it into one regardless
+            if (attackDamage <= 0f) return null;
+
             switch (aggressivity)
             {
                 case Aggressivity.High:
@@ -378,7 +384,7 @@ public abstract class Insect : Entity, IAttackable
         float multiplier = 1f;
         for (int w = 2; w <= waveNumber; w++)
         {
-            float stepBonus = 0.04f + 0.008f * (w - 2);
+            float stepBonus = 0.05f + 0.01f * (w - 2);
             multiplier *= 1f + stepBonus;
         }
         return multiplier;

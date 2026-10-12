@@ -199,15 +199,22 @@ public class AloeVeraProjectile : MonoBehaviour
     private void Explode()
     {
         bool path2Maxed = source != null && source.IsPath2Maxed;
+        bool coolingTouch = source != null && SkillTreeManager.HasUnlock(source, AloeVera.CoolingTouchUnlock);
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) <= aoERadius)
             {
                 float bonus = path2Maxed ? plant.MissingHealth * 0.12f : 0f;
-                plant.Heal(healAmount + bonus, source);
+                float totalHeal = healAmount + bonus;
+
+                plant.Heal(totalHeal, source);
                 plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
                 plant.GetEffect<ScorchEffect>()?.ReduceByFraction(ScorchReductionOnHeal);
+
+                // Cooling Touch: every plant this heal touches gets a brief Heat Resistance bump
+                if (coolingTouch && plant.IsAlive)
+                    plant.ApplyEffect(new CoolingTouchEffect(plant, source));
             }
         }
 

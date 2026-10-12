@@ -1525,6 +1525,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 70733413}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1602243991
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 184212325667159629, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5692e42ba29859f429173839a1ce31df, type: 2}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -17.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2712915376308916410, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+      propertyPath: m_Name
+      value: SandstormParticles
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 64957656f922a56409cd2aad883f845e, type: 3}
 --- !u!1001 &1692136932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19941,3 +20002,4 @@ SceneRoots:
   - {fileID: 754671023}
   - {fileID: 316370015}
   - {fileID: 8824879462835187088}
+  - {fileID: 1602243991}

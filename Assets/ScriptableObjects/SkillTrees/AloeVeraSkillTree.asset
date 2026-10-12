@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb196e4e86362842ab9d48e27a8f2f8, type: 3}
+  m_Name: AloeVeraSkillTree
+  m_EditorClassIdentifier: Assembly-CSharp::SkillTreeData
+  steps:
+  - nodes:
+    - id: node1_attackspeed
+      nodeName: Quick Droplets
+      description: Increase <color=green><b>Attack Speed</b></color> by <color=green><b>0.02</b></color> per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 61
+        valuePerRank: 0.02
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node2_path1adder
+      nodeName: Keen Droplet
+      description: <color=green><b>+1 Effective Attack Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 62
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node3_healamount
+      nodeName: Restorative Mist
+      description: Increase <color=green><b>Healing</b></color> by <color=green><b>4</b></color> per level.
+      maxRank: 3
+      costPerRank: 1
+      effects:
+      - statType: 76
+        valuePerRank: 4
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node4_path2adder
+      nodeName: Verdant Insight
+      description: <color=green><b>+1 Effective Passive Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 63
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node5a_flashdrop
+      nodeName: Flash Drop
+      description: Water droplets fall immediately on the target instead of lingering above them. Increase <color=green><b>Projectile Speed</b></color> by <color=green><b>2</b></color>.
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 71
+        valuePerRank: 2
+      unlockId: aloevera_flash_drop
+    - id: node5b_coolingtouch
+      nodeName: Cooling Touch
+      description: Healing a plant also grants <color=green><b>25%</b></color> Heat Resistance for <color=green><b>4s</b></color>.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: aloevera_cooling_touch
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node6_skillcooldown
+      nodeName: Clear Skies
+      description: Reduce <color=green><b>Skill Cooldown</b></color> by <color=green><b>2</b></color> seconds per level.
+      maxRank: 5
+      costPerRank: 1
+      effects:
+      - statType: 66
+        valuePerRank: 2
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node7_instantskill
+      nodeName: Early Rain
+      description: Automatically unlocks Skill.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: aloevera_instant_skill
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node8_path3adder
+      nodeName: Rain Insight
+      description: <color=green><b>+1 Effective Skill Point.</b></color>
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 64
+        valuePerRank: 1
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node9_suncost
+      nodeName: Thrifty Roots
+      description: Reduce <color=#FFD700><b>Sun cost</b></color> by <color=#FFD700><b>10</b></color>.
+      maxRank: 1
+      costPerRank: 2
+      effects:
+      - statType: 65
+        valuePerRank: 10
+      unlockId:
+    ranksToUnlockNext: 1
+  - nodes:
+    - id: node10a_monsoon
+      nodeName: Monsoon
+      description: <color=#4FC3F7><b>Soothing Rain</b></color> grants <color=green><b>12%</b></color> Water Damage, and its size increases over time, up to <color=green><b>1.3x</b></color> its base radius.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: aloevera_monsoon
+    - id: node10b_cleansingrain
+      nodeName: Cleansing Rain
+      description: Plants affected by <color=#4FC3F7><b>Soothing Rain</b></color> have their debuffs deplete <color=green><b>2x</b></color> as fast. <color=orange><b>Fire</b></color> elemental debuffs deplete <color=green><b>4x</b></color> as fast.
+      maxRank: 1
+      costPerRank: 2
+      effects: []
+      unlockId: aloevera_cleansing_rain
+    ranksToUnlockNext: 1

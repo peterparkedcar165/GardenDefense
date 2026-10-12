@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: Germinator
   stats:
   - statType: 11
-    value: 0.25
+    value: 0.12
   - statType: 6
-    value: 0.25
+    value: 0.12
   icon: {fileID: 0}
   targetElementalTypes: 
   targetFamilies: 
