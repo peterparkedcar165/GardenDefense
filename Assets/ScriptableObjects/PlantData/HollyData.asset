@@ -19,18 +19,19 @@ MonoBehaviour:
   family: 3
   elementalType: 4
   damageType: 0
-  sunCost: 95
+  sunCost: 105
   placementLimit: 0
   category: 0
   skillTree: {fileID: 11400000, guid: deef61eaf99145148d8c095dc15a1e80, type: 2}
   fertilizerPossibleStats: 2f000000
-  baseMaxHealth: 300
-  baseAttackDamage: 23
+  baseMaxHealth: 200
+  baseAttackDamage: 6
   baseMagicPower: 0
-  baseAttackSpeed: 0.5
+  baseAttackSpeed: 1.5
   baseAttackRange: 2
+  baseAttackChargeTime: 0
   baseArmor: 16
-  baseMagicArmor: 0
+  baseMagicArmor: 32
   baseOnHitEffectiveness: 1
   baseHealingBonus: 0
   baseHealingReceived: 0
@@ -71,36 +72,47 @@ MonoBehaviour:
   baseProjectileSpeed: 0
   baseMaxRange: 0
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
   baseSkillCooldown: 35
-  baseSkillDuration: 15
+  baseSkillDuration: 8
   channelDuration: 0
-  baseSkillRadius: 0
+  baseSkillRadius: 8
   baseSkillDamageMultiplier: 0
   baseSkillHealth: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []
-  baseRetaliationHollyPercent: 0.5
-  baseRetaliationInsectPercent: 0.5
-  baseHealthBonusMP: 0.3
-  baseFrozenRageReduction: 0.12
-  baseFrozenRageReductionMP: 0.08
-  baseSkillShield: 120
-  baseSkillShieldMP: 0.7
-  path1AttackDamagePerLevel: 3
-  path1ArmorPerLevel: 4
-  path2HealthPerLevel: 35
-  path2RetaliationPerLevel: 0.05
-  path3ShieldPerLevel: 20
-  path3FrozenRagePerLevel: 0.04
-  path3SkillDurationPerLevel: 3
+  baseShieldRampPerSecond: 4
+  path2ShieldRampPerLevel: 2
+  baseShieldMax: 20
+  path2ShieldMaxPerLevel: 10
+  shieldTickInterval: 0.5
+  snowWardLingerDuration: 1
+  path2MaxMagicResistanceBonus: 0.15
+  baseCoolingPerSecond: 0.9
+  path2CoolingPerLevel: 0.1
+  baseBlizzardDamagePerSecond: 20
+  path3BlizzardDamagePerLevel: 4
+  blizzardTickInterval: 0.5
+  baseBlizzardPowerMultiplier: 1.5
+  path3BlizzardPowerPerLevel: 0.2
+  path3SkillDurationPerLevel: 1
+  path3BlizzardLengthPerLevel: 2
+  path3BlizzardWidthPerLevel: 0.15
+  path1AttackDamagePerLevel: 1
+  path1MagicArmorPerLevel: 6
+  path1AttackRangePerLevel: 0.1

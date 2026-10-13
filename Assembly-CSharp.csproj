@@ -184,7 +184,6 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\DashHomingProjectile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\DandelionData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\ShieldThrowProjectile.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\HollyShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\FloralGlowProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PollenHasteEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalHypnosisEffect.cs" />
@@ -290,6 +289,7 @@
     <Compile Include="Assets\Scripts\Skills\GhostHypnosisWave.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Minion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlossomingEffect.cs" />
+    <Compile Include="Assets\Scripts\Skills\Blizzard.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\SandstormExposedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\LeafRangerProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\FlowerPot.cs" />
@@ -316,7 +316,6 @@
     <Compile Include="Assets\Scripts\StatusEffect\GuidingLightEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AeoniumBloomEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\NeriumOleanderProjectile.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\HollyTauntingEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\StartingShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\SoothingRain.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
@@ -346,6 +345,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\ToxicSporeEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\DahliaData.cs" />
     <Compile Include="Assets\Scripts\UI\PlantSlotButton.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\SnowWardEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\BurnEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\Sunray.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FrozenRageEffect.cs" />

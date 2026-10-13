@@ -172,6 +172,10 @@ public abstract class Entity : MonoBehaviour
     public float maxHealth, health, attackDamage, magicPower, attackSpeed, attackCooldown, attackCooldownTimer, attackRange, healingBonus, healingReceived;
     public float MissingHealth => maxHealth - health;
     public float physicalResistance, magicResistance;
+    // magicResistance has no base/multiplier of its own (it's purely derived from magicArmor
+    // below) - this is the one knob a status effect can use to grant flat bonus Magic Resistance
+    // without touching Magic Armor itself
+    public float magicResistanceAdder;
     // armor value that yields exactly 50% damage reduction (resistance = armor / (ArmorCoefficient + armor))
     // shared by both physical and magic mitigation, was 100
     protected const float ArmorCoefficient = 150f;
@@ -371,7 +375,7 @@ public abstract class Entity : MonoBehaviour
         armor      = (int)(((baseArmor      + armorAdder)      + (baseArmor      * armorMultiplier))      * armorTotalMultiplier);
         magicArmor = (int)(((baseMagicArmor + magicArmorAdder) + (baseMagicArmor * magicArmorMultiplier)) * magicArmorTotalMultiplier);
         physicalResistance = armor      / (ArmorCoefficient + armor);
-        magicResistance    = magicArmor / (ArmorCoefficient + magicArmor);
+        magicResistance    = magicArmor / (ArmorCoefficient + magicArmor) + magicResistanceAdder;
         armorPenFlat = (baseArmorPenFlat + armorPenFlatAdder + baseArmorPenFlat * armorPenFlatMultiplier) * armorPenFlatTotalMultiplier;
         magicPenFlat = (baseMagicPenFlat + magicPenFlatAdder + baseMagicPenFlat * magicPenFlatMultiplier) * magicPenFlatTotalMultiplier;
         armorPenPercent = baseArmorPenPercent  + armorPenPercentAdder  + (baseArmorPenPercent * armorPenPercentMultiplier);
@@ -1452,19 +1456,28 @@ public abstract class Entity : MonoBehaviour
         float multiplier = (1f + attackerShieldBonus) * (1f - shieldToughness);
         float remaining  = damage;
 
-        // Pass 1: finite shields first
+        // Pass 1: finite shields first (excluding Snow Ward, which is always drained last - see Pass 3)
         for (int i = 0; i < activeEffects.Count; i++)
         {
-            if (!(activeEffects[i] is ShieldEffect shield) || shield.IsInfinite) continue;
+            if (!(activeEffects[i] is ShieldEffect shield) || shield.IsInfinite || shield is SnowWardEffect) continue;
             remaining = DrainSingleShield(shield, i, remaining, multiplier, source, damageType);
             if (activeEffects.Count <= i || activeEffects[i] != shield) i--;
             if (remaining <= 0f) return 0f;
         }
 
-        // Pass 2: infinite shields last
+        // Pass 2: infinite shields next (excluding Snow Ward)
         for (int i = 0; i < activeEffects.Count; i++)
         {
-            if (!(activeEffects[i] is ShieldEffect shield) || !shield.IsInfinite) continue;
+            if (!(activeEffects[i] is ShieldEffect shield) || !shield.IsInfinite || shield is SnowWardEffect) continue;
+            remaining = DrainSingleShield(shield, i, remaining, multiplier, source, damageType);
+            if (activeEffects.Count <= i || activeEffects[i] != shield) i--;
+            if (remaining <= 0f) return 0f;
+        }
+
+        // Pass 3: Snow Ward absolutely last, regardless of what other shields are present
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            if (!(activeEffects[i] is SnowWardEffect shield)) continue;
             remaining = DrainSingleShield(shield, i, remaining, multiplier, source, damageType);
             if (activeEffects.Count <= i || activeEffects[i] != shield) i--;
             if (remaining <= 0f) return 0f;

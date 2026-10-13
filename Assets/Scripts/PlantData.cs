@@ -100,6 +100,13 @@ public class PlantData : ScriptableObject
     public int basePiercing;
     public float baseProjectileHitboxRadius = 0.1f;
     public float baseProjectileVisualHitboxRadius = 0.1f;
+    // this plant's own innate ability: its projectiles always emit light, regardless of Floral
+    // Glow - e.g. Sunflower. own dedicated radius/color rather than reusing
+    // baseLightEmissionRange, since a plant's own glow and its projectiles' glow may want to
+    // look different
+    public bool projectileEmitLight = false;
+    public float projectileLightRadius = 0.5f;
+    public Color projectileLightColor = Color.white;
 
     [Header("Lobber")]
     public float baseAoERadius;

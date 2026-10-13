@@ -20,13 +20,21 @@ public class SkillTargetingManager : MonoBehaviour
     private Vector3 clampCenter;
     private float clampRadius;
 
-    // line-shot mode (Acorn Knight's shield throw, etc): instead of a circle AoE preview centered
-    // on the mouse, draws a thin rectangle from clampCenter out to the live (already clamped) aim
-    // point - same stretched-1x1-sprite trick AcornKnight's own sword hitbox visual uses, pivoted
-    // at its left edge so position is the pivot and scaling X only ever extends outward from there
+    // line-shot mode (Acorn Knight's shield throw, Holly's blizzard, etc): instead of a circle AoE
+    // preview centered on the mouse, draws a thin rectangle from clampCenter out toward the aim
+    // point. by default this uses the same stretched-1x1-sprite trick AcornKnight's own sword
+    // hitbox visual uses, pivoted at its left edge so position is the pivot and scaling X only
+    // ever extends outward from there. a caller can instead pass its own (center-pivoted) sprite
+    // via lineSprite - in that case the indicator is positioned at the midpoint of the segment
+    // instead, matching a normal sprite's own default pivot. fixedLineLength locks the rectangle
+    // to always show that exact length regardless of how far the (already-clamped) aim point
+    // currently is - only its rotation follows the mouse - for a skill whose actual effect always
+    // travels the same fixed distance no matter where within range you click
     private bool lineMode;
     private const float DefaultLineIndicatorWidth = 0.08f;
     private float lineWidth = DefaultLineIndicatorWidth;
+    private Sprite customLineSprite;
+    private float? fixedLineLength;
     private static Sprite _lineSprite;
 
     private static Sprite GetLineSprite()
@@ -39,11 +47,11 @@ public class SkillTargetingManager : MonoBehaviour
         return _lineSprite;
     }
 
-    private GameObject CreateLineIndicator()
+    private GameObject CreateLineIndicator(Sprite sprite)
     {
         GameObject obj = new GameObject("SkillLineIndicator");
         SpriteRenderer sr = obj.AddComponent<SpriteRenderer>();
-        sr.sprite = GetLineSprite();
+        sr.sprite = sprite != null ? sprite : GetLineSprite();
         sr.color = new Color(1f, 1f, 1f, 0.5f);
         sr.sortingLayerName = "Indicators";
         return obj;
@@ -111,9 +119,20 @@ public class SkillTargetingManager : MonoBehaviour
             if (lineMode)
             {
                 Vector3 delta = mouseWorld - clampCenter;
-                indicatorInstance.transform.position = clampCenter;
+                float length = fixedLineLength ?? delta.magnitude;
                 indicatorInstance.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
-                indicatorInstance.transform.localScale = new Vector3(delta.magnitude, lineWidth, 1f);
+                if (customLineSprite != null)
+                {
+                    // standard center-pivoted sprite: position at the segment's midpoint, same
+                    // convention Blizzard's own live visual uses
+                    Vector3 dir = delta.sqrMagnitude > 0.0001f ? delta.normalized : Vector3.right;
+                    indicatorInstance.transform.position = clampCenter + dir * (length * 0.5f);
+                }
+                else
+                {
+                    indicatorInstance.transform.position = clampCenter;
+                }
+                indicatorInstance.transform.localScale = new Vector3(length, lineWidth, 1f);
             }
             else
             {
@@ -139,7 +158,7 @@ public class SkillTargetingManager : MonoBehaviour
         if (isDeadTileTargeting) CancelDeadTileTargeting();
     }
 
-    public void BeginTargeting(float radius, Action<Vector3> onConfirm, Vector3? clampCenter = null, float clampRadius = 0f, bool asLine = false, float lineWidth = DefaultLineIndicatorWidth)
+    public void BeginTargeting(float radius, Action<Vector3> onConfirm, Vector3? clampCenter = null, float clampRadius = 0f, bool asLine = false, float lineWidth = DefaultLineIndicatorWidth, Sprite lineSprite = null, float? fixedLineLength = null)
     {
         PlantSelector.instance?.ClearAll();
         if (isTargeting) Cancel();
@@ -153,8 +172,10 @@ public class SkillTargetingManager : MonoBehaviour
 
         lineMode = asLine;
         this.lineWidth = lineWidth;
+        customLineSprite = lineSprite;
+        this.fixedLineLength = fixedLineLength;
         if (lineMode)
-            indicatorInstance = CreateLineIndicator();
+            indicatorInstance = CreateLineIndicator(lineSprite);
         else if (targetIndicatorPrefab != null)
         {
             indicatorInstance = Instantiate(targetIndicatorPrefab);
