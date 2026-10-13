@@ -55,6 +55,17 @@ public abstract class Projectile : MonoBehaviour
     // yet" using the exact same detection/record-keeping everyone else goes through
     protected readonly HashSet<Insect> _alreadyHit = new HashSet<Insect>();
 
+    // light emission: either the firing plant currently has Floral Glow active (every
+    // projectile glows while that buff is up, same as Calendula's own FloralGlowProjectile
+    // already did on its own), or the plant has its own innate "Projectile Emit Light" ability
+    // (PlantData checkbox, e.g. Sunflower) - decided once at spawn in Initialize(), same
+    // one-shot-setup convention FloralGlowProjectile itself uses rather than re-checking every
+    // frame for a buff that's very unlikely to change mid-flight
+    private Transform _lightObj;
+    private LightFader _lightFader;
+    private const float LightFalloffStrength = 0.5f;
+    private const float LightFadeDuration = 0.3f;
+
     // subclasses with their own bespoke insect-collision handling (bounce chains, orbit sweeps,
     // etc. - anything already calling OnHit/damage itself from its own OnTriggerEnter2D) set this
     // false so they don't also get hit a second time by the automatic Base/Visual scan below
@@ -86,11 +97,72 @@ public abstract class Projectile : MonoBehaviour
         // Floral Glow: whichever plant currently carries it gets a fire trail on its own
         // projectiles too, regardless of which plant's projectile this actually is - read
         // generically off the effect rather than any particular plant's own particle setup.
-        // parented so it travels with the projectile; left to be destroyed along with it, same
-        // as any other purely cosmetic trail (only the one-shot hit burst below needs to outlive it)
+        // parented to Visual (not Base/this transform), same reasoning as SetupLight() below:
+        // Base never leaves the ground plane, so a trail stuck to it would visibly detach from
+        // the sprite while climbing toward a flying target. left to be destroyed along with it,
+        // same as any other purely cosmetic trail (only the one-shot hit burst below needs to
+        // outlive it)
         GameObject flyPrefab = this.source?.GetEffect<FloralGlowEffect>()?.FlyParticlePrefab;
         if (flyPrefab != null)
-            Instantiate(flyPrefab, transform.position, transform.rotation, transform);
+            Instantiate(flyPrefab, visual.position, visual.rotation, visual);
+
+        SetupLight();
+    }
+
+    // see the field comments above for the two conditions this checks. exactly one Light2D is
+    // ever created per projectile, never two/stacked - if both conditions apply at once (e.g. a
+    // Sunflower with his own innate Projectile Emit Light also catching a Floral Glow buff),
+    // radius+color are resolved as a single pair BEFORE anything is instantiated: whichever
+    // radius is larger wins outright, color included, rather than creating a light for each and
+    // layering them (which would double the effective brightness). both conditions default to
+    // the same DefaultProjectileLightRadius - Floral Glow intentionally does NOT scale with
+    // source.lightEmissionRange (that's the plant's own, often much larger, self-glow stat);
+    // every projectile's glow stays a small, consistent size regardless of which plant or buff
+    // is behind it, only the color differs (plain white for Floral Glow, PlantData's own
+    // projectileLightColor for the innate ability)
+    private const float DefaultProjectileLightRadius = 0.5f;
+
+    private void SetupLight()
+    {
+        if (DarknessManager.instance == null || source == null) return;
+
+        float radius = 0f;
+        Color color = Color.white;
+        if (source.data != null && source.data.projectileEmitLight)
+        {
+            radius = source.data.projectileLightRadius;
+            color = source.data.projectileLightColor;
+        }
+        if (source.HasEffect<FloralGlowEffect>() && DefaultProjectileLightRadius > radius)
+        {
+            radius = DefaultProjectileLightRadius;
+            color = Color.white;
+        }
+        if (radius <= 0f) return;
+
+        // parented to Visual (not Base/this transform) so the glow actually sits where the
+        // sprite visually is, including mid-flight while climbing toward a flying target - Base
+        // never leaves the ground plane, so a light stuck to it would visibly detach from the
+        // rising sprite. visual already falls back to this transform itself on any prefab
+        // without a real Visual child, so this is always safe
+        GameObject lightGO = new GameObject("ProjectileLight");
+        lightGO.transform.SetParent(visual, false);
+        lightGO.transform.localPosition = Vector3.zero;
+
+        var light = lightGO.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+        light.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
+        light.color = color;
+        light.intensity = 0f;
+        light.falloffIntensity = LightFalloffStrength;
+        light.pointLightOuterRadius = radius;
+        light.pointLightInnerRadius = radius * 0.3f;
+
+        _lightFader = lightGO.AddComponent<LightFader>();
+        _lightFader.Setup(light, 1f);
+        _lightFader.FadeIn(LightFadeDuration);
+
+        _lightObj = lightGO.transform;
+        DarknessManager.RegisterLightSource(_lightObj, radius);
     }
 
     protected virtual void Awake()
@@ -319,6 +391,19 @@ public abstract class Projectile : MonoBehaviour
 
             trail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             Destroy(trail.gameObject, trail.main.startLifetime.constantMax);
+        }
+
+        // same detach-and-outlive treatment as the particle trails above, but for the light (if
+        // any was set up): unregister immediately so darkness stops accounting for it right away,
+        // then let it fade out in place instead of popping off instantly alongside the projectile
+        if (_lightObj != null)
+        {
+            DarknessManager.UnregisterLightSource(_lightObj);
+            Vector3 worldPos = _lightObj.position;
+            _lightObj.SetParent(null, false);
+            _lightObj.position = worldPos;
+            _lightFader?.FadeOut(LightFadeDuration, destroyOnComplete: true);
+            _lightObj = null;
         }
     }
 

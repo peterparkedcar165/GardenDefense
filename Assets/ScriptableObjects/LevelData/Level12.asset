@@ -1697,7 +1697,7 @@ MonoBehaviour:
         timeBetweenSpawns: 0.3
         startDelay: 38
       delayBeforeNext: 8.1
-    - subWaveDuration: 102.67
+    - subWaveDuration: 105.4468
       spawns:
       - insectData: {fileID: 11400000, guid: 972f93f4d1bdccd46bde44c77d2d71ed, type: 2}
         count: 5
@@ -1849,7 +1849,7 @@ MonoBehaviour:
         timeBetweenSpawns: 0.3
         startDelay: 42
       delayBeforeNext: 8
-    - subWaveDuration: 94.869995
+    - subWaveDuration: 99.246796
       spawns:
       - insectData: {fileID: 11400000, guid: 972f93f4d1bdccd46bde44c77d2d71ed, type: 2}
         count: 2
@@ -1993,7 +1993,7 @@ MonoBehaviour:
         timeBetweenSpawns: 0.3
         startDelay: 38
       delayBeforeNext: 8.9
-    - subWaveDuration: 111.67
+    - subWaveDuration: 122.764496
       spawns:
       - insectData: {fileID: 11400000, guid: 972f93f4d1bdccd46bde44c77d2d71ed, type: 2}
         count: 6
@@ -2116,7 +2116,7 @@ MonoBehaviour:
     - insectData: {fileID: 11400000, guid: eef97bedbfb96a34792e956cd9f4ee08, type: 2}
       interval: 3.1
       startDelay: 0
-  eliteWaveInterval: 5
+  eliteWaveInterval: 0
   eliteInsects: []
   fertilizerPool:
   - {fileID: 11400000, guid: e3858c40a5803d34c922f3e3029df1af, type: 2}

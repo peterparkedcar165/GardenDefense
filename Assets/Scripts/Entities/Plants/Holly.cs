@@ -5,260 +5,227 @@ public class Holly : Aura
 {
     private HollyData HData => data as HollyData;
 
-    private float _tickTimer;
-    private bool _shieldArmorBonusActive = false;
-    private const float TickInterval = 0.25f;
-    private const float EffectDuration = 0.35f;
+    // continuous-presence refresh for the passive aura, same shape as the old taunt aura this
+    // kit replaced: every AuraTickInterval, every plant currently in range gets its Snow Ward
+    // (re)confirmed for SnowWardLingerDuration - leaving range simply lets it tick down and
+    // expire naturally after that many seconds instead of vanishing the instant you step out
+    private const float AuraTickInterval = 0.25f;
+    private float _auraTickTimer;
 
-    private float PassiveHealthBonus =>
-        (HData?.baseHealthBonusMP ?? 0f) * magicPower +
-        (HData?.path2HealthPerLevel ?? 40f) * effectivePath2Level;
+    [SerializeField] private GameObject blizzardPrefab;
+    private ParticleSystem _auraParticle;
 
-    public float RetaliationHollyPct  => (HData?.baseRetaliationHollyPercent  ?? 0.75f) + (HData?.path2RetaliationPerLevel ?? 0.05f) * effectivePath2Level;
-    public float RetaliationInsectPct => (HData?.baseRetaliationInsectPercent ?? 0.75f) + (HData?.path2RetaliationPerLevel ?? 0.05f) * effectivePath2Level;
+    private const string CannotStackNote = "\n\n<color=#888888><b>Cannot stack with other Hollies.</b></color>";
 
-    private float FrozenRageReductionBase => (HData?.baseFrozenRageReduction   ?? 0.12f) + (HData?.path3FrozenRagePerLevel ?? 0.04f) * effectivePath3Level;
-    private float FrozenRageReductionMP   => (HData?.baseFrozenRageReductionMP ?? 0f)    * magicPower / 100f;
-    private float FrozenRageReduction     => FrozenRageReductionBase + FrozenRageReductionMP;
+    // both the ramp rate and the cap scale with Holly's own Heals & Shield Bonus, same as any
+    // other outgoing shield in the game
+    private float ShieldRampPerSecond => ((HData?.baseShieldRampPerSecond ?? 4f) + (HData?.path2ShieldRampPerLevel ?? 2f) * effectivePath2Level) * (1f + healingBonus);
+    // Shield cap scales 100% with Holly's own Magic Armor - 100 Magic Armor grants +100 Shield cap
+    private float ShieldMaxCap        => ((HData?.baseShieldMax ?? 40f)          + (HData?.path2ShieldMaxPerLevel ?? 20f) * effectivePath2Level + magicArmor) * (1f + healingBonus);
+    private float CoolingPerSecond    => (HData?.baseCoolingPerSecond ?? 1f)    + (HData?.path2CoolingPerLevel ?? 0.2f) * effectivePath2Level;
+    private float ShieldTickInterval  => HData?.shieldTickInterval ?? 0.5f;
+    // how long Snow Ward lingers once it stops being refreshed (leaves the wind/blizzard)
+    private float SnowWardLingerDuration => HData?.snowWardLingerDuration ?? 1f;
+    private string SnowWardLingerText => $"{SnowWardLingerDuration:F0} second{(SnowWardLingerDuration == 1f ? "" : "s")}";
+    // Path2 max: Snow Ward also grants this much flat Magic Resistance to whatever it's holding
+    private float SnowWardMagicResistanceBonus => IsPath2Maxed ? (HData?.path2MaxMagicResistanceBonus ?? 0.15f) : 0f;
 
-    private float ShieldAmountBase => (HData?.baseSkillShield ?? 0f) + (HData?.path3ShieldPerLevel ?? 20f) * effectivePath3Level;
-    private float ShieldAmountMP   => (HData?.baseSkillShieldMP ?? 0f) * magicPower;
-    private float ShieldAmount     => ShieldAmountBase + ShieldAmountMP;
-
-    // no targeting needed: the skill just shields Holly herself
-    private bool autoCastEnabled = false;
-    public override bool UsesAutoCast => true;
-    public override bool IsAutoCasting => autoCastEnabled;
-
-    // skill tree node unlock ids
-    public const string ThornedHideUnlock      = "holly_thorned_hide";
-    public const string IceboundWillUnlock     = "holly_icebound_will";
-    public const string InstantSkillUnlock     = "holly_instant_skill";
-    public const string ReinforcedShieldUnlock = "holly_reinforced_shield";
-    public const string ShatteringFrostUnlock  = "holly_shattering_frost";
-
-    private const float ThornedHideArmorReduction = 15f;
-    private const float ReinforcedShieldMultiplier = 1.25f;
-    private const float ShatteringFrostStunDuration = 1f;
+    private float BlizzardDamagePerSecond   => (HData?.baseBlizzardDamagePerSecond ?? 20f) + (HData?.path3BlizzardDamagePerLevel ?? 4f) * effectivePath3Level;
+    // Path3 max: Blizzard's tick interval is halved, so it deals its damage twice as often
+    private float BlizzardTickInterval      => (HData?.blizzardTickInterval ?? 0.5f) * (IsPath3Maxed ? 0.5f : 1f);
+    private float BlizzardPowerMultiplier   => (HData?.baseBlizzardPowerMultiplier ?? 1.5f) + (HData?.path3BlizzardPowerPerLevel ?? 0.2f) * effectivePath3Level;
+    private float BlizzardWidth             => 2f + (HData?.path3BlizzardWidthPerLevel ?? 0.1f) * effectivePath3Level;
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
-
-        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
-        {
-            path3Unlocked = true;
-            OnPath3Unlock();
-        }
-    }
-
-    public override void UpdateStats()
-    {
-        base.UpdateStats();
-        maxHealth += PassiveHealthBonus;
+        _auraParticle = GetComponentInChildren<ParticleSystem>();
     }
 
     protected override void Update()
     {
         base.Update();
-
-        if (autoCastEnabled && SkillReady && HasInsectsInRange())
-            TriggerSkill();
-
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
         else if (!IsStunned && !IsChanneling && HasInsectsInRange())
             Attack();
 
-        if (IsPath2Maxed)
+        // the aura particle's shape radius always matches her current Attack Range, so the
+        // visual stays truthful across Path1 levels/buffs rather than being baked in at a fixed size
+        if (_auraParticle != null)
         {
-            bool shieldedNow = HasShield();
-            if (shieldedNow != _shieldArmorBonusActive)
-            {
-                armorAdder += shieldedNow ? 35f : -35f;
-                _shieldArmorBonusActive = shieldedNow;
-            }
+            ParticleSystem.ShapeModule shape = _auraParticle.shape;
+            shape.radius = attackRange;
         }
 
-        _tickTimer += Time.deltaTime;
-        if (_tickTimer >= TickInterval)
+        _auraTickTimer += Time.deltaTime;
+        if (_auraTickTimer >= AuraTickInterval)
         {
-            _tickTimer -= TickInterval;
-            if (HasEffect<ShieldEffect>()) ApplyFrozenRageInRange();
+            _auraTickTimer -= AuraTickInterval;
+            foreach (Plant plant in GetPlantsInRange())
+                ApplySnowWard(plant, this, SnowWardLingerDuration, ShieldRampPerSecond, ShieldMaxCap, CoolingPerSecond, ShieldTickInterval, SnowWardMagicResistanceBonus);
         }
     }
 
-    public override void OnShieldBreak(ShieldEffect shield)
+    private List<Plant> GetPlantsInRange()
     {
-        base.OnShieldBreak(shield);
-
-        // Shattering Frost: every shield break stuns nearby insects, independent of Path3 max
-        if (SkillTreeManager.HasUnlock(this, ShatteringFrostUnlock))
+        List<Plant> result = new List<Plant>();
+        foreach (Plant plant in Plant.allPlants)
         {
-            foreach (Insect insect in GetInsectsInRange())
+            if (plant == null || !plant.IsAlive) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) <= attackRange)
+                result.Add(plant);
+        }
+        return result;
+    }
+
+    // Holly's only job here is applying/refreshing the Snow Ward status effect on nearby plants -
+    // everything the ward actually does (shield ramp, cooling, Sandstorm immunity) lives entirely
+    // in SnowWardEffect itself, not here. shared by this Holly's own passive tick and by her
+    // Blizzard skill. exclusivity ("largest shield wins, no stacking, only the owning holly can
+    // update it") is resolved here by cap (Power), never by Entity.ApplyEffect's generic same-type
+    // shield comparison - see SnowWardEffect's own header comment for why that generic check is
+    // the wrong tool for a shield that ramps up instead of landing at full strength immediately
+    public static void ApplySnowWard(Plant plant, Holly source, float duration, float rampPerSecond, float shieldMax, float coolingPerSecond, float tickInterval, float magicResistanceBonus)
+    {
+        if (plant == null || !plant.IsAlive || source == null) return;
+
+        SnowWardEffect existing = plant.GetEffect<SnowWardEffect>();
+        if (existing != null)
+        {
+            if (existing.source == source)
             {
-                if (insect == null || !insect.IsAlive) continue;
-                insect.ApplyEffect(new StunEffect(insect, ShatteringFrostStunDuration, 1, this));
+                existing.RefreshPresence(duration, rampPerSecond, shieldMax, coolingPerSecond, tickInterval, magicResistanceBonus);
+                return;
             }
+            if (existing.Power >= shieldMax) return;
+            plant.RemoveEffect<SnowWardEffect>();
         }
 
-        if (!IsPath3Maxed) return;
-        float damage = shield.originalAmount * 0.5f;
-        foreach (Insect insect in GetInsectsInRange())
-        {
-            if (insect == null || !insect.IsAlive) continue;
-            insect.Damage(damage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
-        }
+        plant.ApplyEffect(new SnowWardEffect(plant, duration, 1, source, rampPerSecond, shieldMax, coolingPerSecond, tickInterval, magicResistanceBonus));
     }
 
     protected override void Attack()
     {
         base.Attack();
-        float armorBonus = IsPath1Maxed ? armor * 0.33f : 0f;
+        float magicArmorBonus = IsPath1Maxed ? magicArmor * 0.15f : 0f;
         foreach (Insect insect in GetInsectsInRange())
-            insect.Damage(attackDamage + armorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Melee });
-    }
-
-    protected override void OnHitByInsect(Insect attacker)
-    {
-        if (!IsAlive || !attacker.IsAlive) return;
-        float retaliationDamage = RetaliationHollyPct * attackDamage + RetaliationInsectPct * attacker.attackDamage;
-        attacker.Damage(retaliationDamage, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Counter, DamageTag.PassiveDamage });
-
-        // Thorned Hide: retaliation also afflicts the attacker with Frozen Rage
-        if (SkillTreeManager.HasUnlock(this, ThornedHideUnlock))
-            attacker.ApplyEffect(new FrozenRageEffect(attacker, EffectDuration, 1, this, this, ThornedHideArmorReduction));
+            insect.Damage(attackDamage + magicArmorBonus, damageType, elementalType, this, false, new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
     }
 
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
+        // preview matches the real Blizzard exactly: same sprite (pulled straight off the
+        // prefab's own visual, a plain white square) and a constant length equal to skillRadius -
+        // Blizzard always travels that full distance regardless of where within range you click,
+        // so the length should never vary with the live aim point either
+        Sprite blizzardSprite = blizzardPrefab != null ? blizzardPrefab.GetComponentInChildren<SpriteRenderer>()?.sprite : null;
+        SkillTargetingManager.instance.BeginTargeting(skillRadius, OnTargetConfirmed, transform.position, skillRadius,
+            asLine: true, lineWidth: BlizzardWidth, lineSprite: blizzardSprite, fixedLineLength: skillRadius);
+    }
+
+    private void OnTargetConfirmed(Vector3 position)
+    {
+        if (blizzardPrefab == null) return;
         skillCooldownTimer = skillCooldown;
-        float shieldAmount = ShieldAmount * (SkillTreeManager.HasUnlock(this, ReinforcedShieldUnlock) ? ReinforcedShieldMultiplier : 1f);
-        if (shieldAmount > 0f)
-            ApplyEffect(new HollyShieldEffect(this, skillDuration, 1, this, shieldAmount));
-    }
 
-    // Icebound Will: immune to Slow effects outright
-    public override void ApplyEffect(StatusEffect effect)
-    {
-        if (effect is SlowEffect && SkillTreeManager.HasUnlock(this, IceboundWillUnlock)) return;
-        base.ApplyEffect(effect);
-    }
+        Vector2 dir = (Vector2)position - (Vector2)transform.position;
+        if (dir.sqrMagnitude < 0.0001f) dir = Vector2.right;
 
-    // click Auto Cast to toggle it on, click again to turn it off — no target to pick
-    public override void ToggleAutoCast() => autoCastEnabled = !autoCastEnabled;
-
-    public override AutoCastState CaptureAutoCastState() =>
-        new AutoCastState { enabled = autoCastEnabled };
-
-    public override void RestoreAutoCastState(AutoCastState state)
-    {
-        if (!state.enabled) return;
-        autoCastEnabled = true;
-    }
-
-    private void ApplyFrozenRageInRange()
-    {
-        float r = Mathf.Clamp(FrozenRageReduction, 0f, 0.99f);
-        float armorReduction = 100f * r / (1f - r);
-        foreach (Insect insect in GetInsectsInRange())
-            insect.ApplyEffect(new FrozenRageEffect(insect, EffectDuration, 1, this, this, armorReduction));
+        GameObject obj = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
+        Blizzard blizzard = obj.GetComponent<Blizzard>();
+        blizzard?.Initialize(transform.position, dir, BlizzardWidth, skillDuration, skillRadius,
+            BlizzardDamagePerSecond, BlizzardTickInterval, this,
+            ShieldRampPerSecond * BlizzardPowerMultiplier, ShieldMaxCap * BlizzardPowerMultiplier,
+            CoolingPerSecond * BlizzardPowerMultiplier, ShieldTickInterval, SnowWardMagicResistanceBonus, SnowWardLingerDuration);
     }
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackDamage = data.baseAttackDamage + (HData?.path1AttackDamagePerLevel ?? 4f) * level;
-        baseArmor        = data.baseArmor        + (HData?.path1ArmorPerLevel        ?? 8) * level;
-    }
-
-    public override void OnPath2Upgrade(int level)
-    {
-        float hppl = HData?.path2HealthPerLevel ?? 40f;
-        health += hppl;
-        UpdateHealthBar();
+        baseAttackDamage = data.baseAttackDamage + (HData?.path1AttackDamagePerLevel ?? 3f) * level;
+        baseMagicArmor   = data.baseMagicArmor   + (HData?.path1MagicArmorPerLevel   ?? 4) * level;
+        baseAttackRange  = data.baseAttackRange  + (HData?.path1AttackRangePerLevel  ?? 0.2f) * level;
     }
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillDuration = data.baseSkillDuration + (HData?.path3SkillDurationPerLevel ?? 2f) * level;
+        baseSkillDuration = data.baseSkillDuration + (HData?.path3SkillDurationPerLevel ?? 1f) * level;
+        baseSkillRadius    = data.baseSkillRadius    + (HData?.path3BlizzardLengthPerLevel ?? 0.5f) * level;
     }
 
     public override string GetName() => "<b><color=#00FFFF>Holly</color></b>";
-
     public override string GetDescription() =>
-        $"The {GetName()} is a resilient ice tank that retaliates against attackers and can taunt insects into targeting her.";
-
+        $"The {GetName()} is a resilient ice bulwark who shields the plants around her from harm and the elements.";
     public override string GetAttackDescription() =>
-        $"Releases icy thorns dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range.";
+        $"Conjures a spiraling cold wind around herself, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range.";
 
     public override string GetPassiveDescription() =>
-        $"Insects that attack {GetName()} retaliate for <color=green><b>{RetaliationHollyPct * 100f:F0}%</b></color> of {GetName()}'s Attack Damage + " +
-        $"<color=green><b>{RetaliationInsectPct * 100f:F0}%</b></color> of the attacker's Attack Damage. " +
-        $"Increases Max Health by [<color=#FFB6C1><b>+{(HData?.baseHealthBonusMP ?? 0f) * magicPower:F0}</b></color>]. " +
-        $"\n\nWhile {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
-        $"forcing them to target {GetName()} and reducing their Armor by " +
-        $"<color=green><b>{FrozenRageReductionBase * 100f / (1f - FrozenRageReductionBase):F1}</b></color> " +
-        $"[<color=#FFB6C1><b>+{FrozenRageReductionMP * 100f / Mathf.Max(1f - FrozenRageReductionMP, 0.01f):F1}</b></color>]. " +
-        $"Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage.";
-
+        $"Plants within the spiraling wind are blessed with <color=#00FFFF><b>Snow Ward</b></color>, granting a rampant <color=#00CED1><b>Shield</b></color> of <color=green><b>{(int)ShieldRampPerSecond}</b></color>/s, up to <color=#00CED1><b>{ShieldMaxCap:F0}</b></color>, " +
+        $"cooling them from the hot weather by <color=green><b>{CoolingPerSecond:F1}</b></color>/s, and protecting them against the negative effects of <color=#E8D9A8><b>Sandstorm</b></color>.\n\n" +
+        $"The effect lingers for <color=green><b>{SnowWardLingerText}</b></color>. <color=#00CED1><b>Shield</b></color> ramp and cap scale with {GetName()}'s <color=#FF6B81><b>Heals & Shield Bonus</b></color>." +
+        CannotStackNote;
     public override string GetSkillDesription() =>
-        $"Grants {GetName()} a shield of <color=grey><b>{ShieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{ShieldAmountMP:F0}</b></color>] for <color=green><b>{skillDuration:F0}s</b></color>.";
+        $"Conjures a blizzard blowing toward a targeted location for <color=green><b>{skillDuration:F0}s</b></color>, dealing <color=green><b>{BlizzardDamagePerSecond:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within it, " +
+        $"and afflicting plants within it with <color=#00FFFF><b>Snow Ward</b></color>, granting <color=#00CED1><b>Shield</b></color> of <color=green><b>{(int)(ShieldRampPerSecond * BlizzardPowerMultiplier)}</b></color>/s and cooling of <color=green><b>{(CoolingPerSecond * BlizzardPowerMultiplier):F1}</b></color>/s.";
 
     public override string GetPath1Description(bool details = false)
     {
-        float adpl    = HData?.path1AttackDamagePerLevel ?? 4f;
-        float armorpl = HData?.path1ArmorPerLevel        ?? 8;
+        float adpl = HData?.path1AttackDamagePerLevel ?? 3f;
+        float arpl = HData?.path1MagicArmorPerLevel ?? 4;
+        float rgpl = HData?.path1AttackRangePerLevel ?? 0.2f;
         string desc = details
-            ? $"Releases icy thorns dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range."
+            ? $"Conjures a spiraling cold wind around herself, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, details ? $"Attacks deal increased damage equal to <color=green><b>33%</b></color> of {GetName()}'s <color=#00CED1><b>Armor</b></color>." : $"Attacks deal <color=#00CED1><b>+{armor * 0.33f:F0}</b></color> increased damage.")}\n\n" +
+               $"Increase <color=#FF69B4><b>Base Magic Armor</b></color> by <color=green><b>{arpl:F0}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F0}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rgpl:F1}</b></color> per level. [<color=green><b>+{rgpl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(path1Level, details ? $"Attacks deal increased damage equal to <color=green><b>15%</b></color> of {GetName()}'s <color=#FF69B4><b>Magic Armor</b></color>." : $"Attacks deal <color=#FF69B4><b>+{magicArmor * 0.15f:F0}</b></color> increased damage.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath2Description(bool details = false)
     {
-        float retalipl = HData?.path2RetaliationPerLevel ?? 0.05f;
-        float hppl     = HData?.path2HealthPerLevel      ?? 40f;
-        float shieldMP = HData?.baseSkillShieldMP        ?? 0f;
+        float ramppl = HData?.path2ShieldRampPerLevel ?? 2f;
+        float maxpl  = HData?.path2ShieldMaxPerLevel ?? 20f;
+        float coolpl = HData?.path2CoolingPerLevel ?? 0.2f;
         string desc = details
-            ? $"Insects that attack {GetName()} retaliate for <color=green><b>[({(HData?.baseRetaliationHollyPercent ?? 0.75f) * 100f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of {GetName()}'s Attack Damage + " +
-              $"<color=green><b>[({(HData?.baseRetaliationInsectPercent ?? 0.75f) * 100f:F0}%) + ({retalipl * 100f:F0}%/Lvl.)]</b></color> of the attacker's Attack Damage. " +
-              $"Increases Max Health <color=#FFB6C1>[+{(HData?.baseHealthBonusMP ?? 0f) * 100f:F0}% Magic Power]</color>. " +
-              $"\n\nWhile {GetName()} is shielded, insects within range are afflicted with <color=#00FFFF><b>Frozen Rage</b></color>, " +
-              $"forcing them to target {GetName()} and reducing their Armor. Taunted insects deal <color=#FF6666><b>50%</b></color> less Attack damage."
+            ? $"Plants within the spiraling wind are blessed with <color=#00FFFF><b>Snow Ward</b></color>, granting a rampant <color=#00CED1><b>Shield</b></color> of <color=green><b>[({HData?.baseShieldRampPerSecond ?? 4f:F0}) + ({ramppl:F0}/Lvl.)]</b></color>/s, up to <color=#00CED1><b>[({HData?.baseShieldMax ?? 40f:F0}) + ({maxpl:F0}/Lvl.)]</b></color>, " +
+              $"cooling them from the hot weather by <color=green><b>[({HData?.baseCoolingPerSecond ?? 1f:F1}) + ({coolpl:F1}/Lvl.)]</b></color>/s, and protecting them against the negative effects of <color=#E8D9A8><b>Sandstorm</b></color>.\n\n" +
+              $"The effect lingers for <color=green><b>{SnowWardLingerText}</b></color>. <color=#00CED1><b>Shield</b></color> ramp and cap scale with {GetName()}'s <color=#FF6B81><b>Heals & Shield Bonus</b></color>." +
+              CannotStackNote
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase retaliation percentages by <color=green><b>{retalipl * 100f:F0}%</b></color> per level for both. [<color=green><b>+{retalipl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"While {GetName()} is <color=grey><b>Shielded</b></color>, her <color=#00CED1><b>Armor</b></color> is increased by <color=green><b>35</b></color>.")}\n\n" +
+               $"Increase <color=#00CED1><b>Shield</b></color> ramp by <color=green><b>{ramppl:F1}</b></color>/s per level. [<color=green><b>+{ramppl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"Increase <color=#00CED1><b>Shield</b></color> cap by <color=green><b>{maxpl:F0}</b></color> per level. [<color=green><b>+{maxpl * effectivePath2Level:F0}</b></color>]\n\n" +
+               $"Increase cooling by <color=green><b>{coolpl:F1}</b></color>/s per level. [<color=green><b>+{coolpl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(path2Level, $"<color=#00FFFF><b>Snow Ward</b></color> also grants <color=#FF69B4><b>{(HData?.path2MaxMagicResistanceBonus ?? 0.15f) * 100f:F0}% Magic Resistance</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float shieldpl = HData?.path3ShieldPerLevel        ?? 20f;
-        float ragepl   = HData?.path3FrozenRagePerLevel    ?? 0.04f;
-        float durpl    = HData?.path3SkillDurationPerLevel ?? 2f;
-        float shieldMP = HData?.baseSkillShieldMP          ?? 0f;
-        float rageMP   = HData?.baseFrozenRageReductionMP  ?? 0f;
-        float rageArmorpl = ragepl * 100f / (1f - ragepl);
+        float dmgpl = HData?.path3BlizzardDamagePerLevel ?? 4f;
+        float powpl = HData?.path3BlizzardPowerPerLevel ?? 0.2f;
+        float durpl = HData?.path3SkillDurationPerLevel ?? 1f;
+        float lenpl = HData?.path3BlizzardLengthPerLevel ?? 0.5f;
+        float widpl = HData?.path3BlizzardWidthPerLevel ?? 0.1f;
         string desc = details
-            ? $"Grants {GetName()} a shield of <color=grey><b>[({HData?.baseSkillShield ?? 0f:F0}) + ({shieldpl:F0}/Lvl.) + <color=#FFB6C1>{shieldMP * 100f:F0}% Magic Power</color>]</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. " +
-              $"While the shield holds, nearby insects are forced to target {GetName()} via <color=#00FFFF><b>Frozen Rage</b></color> and have their Armor reduced."
+            ? $"Conjures a blizzard blowing toward a targeted location for <color=green><b>{skillDuration:F0}s</b></color>, dealing <color=green><b>[({HData?.baseBlizzardDamagePerSecond ?? 20f:F0}) + ({dmgpl:F0}/Lvl.)]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within it, " +
+              $"and afflicting plants within it with the same <color=#00FFFF><b>Snow Ward</b></color> as her Passive, at <color=green><b>[({HData?.baseBlizzardPowerMultiplier ?? 1.5f:F1}x) + ({powpl:F1}/Lvl.)]</b></color> the power."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Increase <color=#00CED1>Frozen Rage's Armor Reduction</color> by <color=green><b>{rageArmorpl:F1}</b></color> per level. [<color=green><b>+{rageArmorpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase damage by <color=green><b>{dmgpl:F0}</b></color> per second per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase power multiplier by <color=green><b>{powpl:F1}x</b></color> per level. [<color=green><b>+{powpl * effectivePath3Level:F1}x</b></color>]\n\n" +
+               $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase length by <color=green><b>{lenpl:F1}</b></color> per level. [<color=green><b>+{lenpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"Increase width by <color=green><b>{widpl:F1}</b></color> per level. [<color=green><b>+{widpl * effectivePath3Level:F1}</b></color>]\n\n" +
+               $"{Level5Section(path3Level, "Blizzard's tick interval is halved, dealing its damage twice as often.")}\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Whenever a Shield breaks, deal damage equal to <color=green><b>50%</b></color> of the Shield's amount to all insects within range. Each Shield break triggers this separately.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

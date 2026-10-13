@@ -74,6 +74,9 @@ MonoBehaviour:
   basePiercing: 1
   baseProjectileHitboxRadius: 0.1
   baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
@@ -100,5 +103,6 @@ MonoBehaviour:
   path2CritChancePerLevel: 0.03
   baseBounceRadius: 1.5
   path2BounceRadiusPerLevel: 0.3
+  bounceSpeedMultiplier: 0.66
   path3AttackSpeedBonusPerLevel: 0.2
   path3SkillDurationPerLevel: 1
