@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 4da87bb8db86c30418da3e4fc87aec3d, type: 3}
   plantName: Stargazer
   displayName: Stargazer
-  family: 5
+  family: 4
   elementalType: 0
   damageType: 1
   sunCost: 125
@@ -29,6 +29,7 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 3
   baseAttackRange: 2
+  baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
   baseOnHitEffectiveness: 0.1
@@ -71,6 +72,11 @@ MonoBehaviour:
   baseProjectileSpeed: 0
   baseMaxRange: 0
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
@@ -86,7 +92,7 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []

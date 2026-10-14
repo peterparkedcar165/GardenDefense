@@ -16,7 +16,7 @@ MonoBehaviour:
   nameColor: {r: 0.24528301, g: 0.06594873, b: 0.06594873, a: 1}
   sprite: {fileID: -2001639675669158682, guid: e31122e50668b2d42afb0fdfbff8a40e, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: af2c6674e6ccba140a62522caacce5fc, type: 3}
-  baseMaxHealth: 800
+  baseMaxHealth: 500
   baseAttackDamage: 42
   baseMagicPower: 0
   baseAttackSpeed: 0.7
@@ -42,7 +42,6 @@ MonoBehaviour:
   baseIceResistance: 0
   baseGrassResistance: 0
   baseWindResistance: 0.3
-  baseGroundResistance: 0
   baseDotResistance: 0
   flatPhysicalDamageReduction: 0
   threatValue: 4
@@ -60,6 +59,9 @@ MonoBehaviour:
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0
+  hitSound:
+    clips: []
   carryPickupRange: 3
   carryPickupCheckInterval: 1
+  carryPickupDelay: 0.5
   carryPickupHeight: 0.7

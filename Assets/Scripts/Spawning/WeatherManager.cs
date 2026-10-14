@@ -131,7 +131,7 @@ public class WeatherManager : MonoBehaviour
             case WeatherType.Rain:      return $"Rainfall empowers the <color=#4FC3F7>Water</color> damage of all plants by <color=green><b>{bonus}%</b></color> while weakening their <color=orange>Fire</color> damage by <color=red><b>{bonus}%</b></color>, and raises the Passive level of <color=#4FC3F7>Water</color> plants by <color=green><b>1</b></color>.";
             case WeatherType.Windy:     return "Strong winds sweep across the battlefield.";
             case WeatherType.Snow:      return $"Snowfall empowers the <color=#00FFFF>Ice</color> damage of all plants by <color=green><b>{bonus}%</b></color>.";
-            case WeatherType.Sandstorm: return $"A harsh sandstorm reduces the <color=green><b>Accuracy</b></color> of all plants by <color=red><b>{10 * intensity}%</b></color> and deals <color=red><b>{12 + 6 * intensity}</b></color> damage per second.";
+            case WeatherType.Sandstorm: return $"A harsh sandstorm reduces the <color=green><b>Accuracy</b></color> of all plants by <color=red><b>{10 * intensity}%</b></color> and deals <color=red><b>{2 * intensity}</b></color> damage per second.";
             case WeatherType.Underwater: return $"Plants are <color=#1B6CA8><b>Submerged</b></color>: their <color=green><b>Air</b></color> depletes over time unless mitigated by <color=green><b>Respiration</b></color>. Non-<color=#4FC3F7>Water</color> plants have their Projectile Speed halved, <color=orange>Fire</color> damage is reduced by <color=red><b>50%</b></color>, and <color=#4FC3F7>Water</color> damage is increased by <color=green><b>20%</b></color>.";
             default:                    return "";
         }
