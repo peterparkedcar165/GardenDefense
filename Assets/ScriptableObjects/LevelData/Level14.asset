@@ -17,12 +17,12 @@ MonoBehaviour:
   - type: 5
     intensity: 1
   temperature: 0
-  maxWaves: 36
+  maxWaves: 20
   startSunCount: 950
   startHealth: 200
   maxUpgradeLevel: 5
-  minWaveDuration: 20
-  maxWaveDuration: 100
+  minWaveDuration: 36
+  maxWaveDuration: 180
   waveDurationCurve:
     serializedVersion: 2
     m_Curve:

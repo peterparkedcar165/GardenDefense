@@ -13,6 +13,10 @@ public class HollyData : PlantData
     public float snowWardLingerDuration = 1f;
     // Path2 max level bonus: Snow Ward also grants this much flat Magic Resistance
     public float path2MaxMagicResistanceBonus = 0.15f;
+    // Magic Power scaling: flat bonus per point of Holly's own Magic Power, same convention as
+    // AloeVera's heal scaling (direct coefficient, not a per-100 normalization)
+    public float shieldRampMagicPowerScaling = 0.1f;
+    public float shieldMaxMagicPowerScaling  = 0.5f;
 
     [Header("Passive - Cooling")]
     public float baseCoolingPerSecond = 1f;
@@ -21,6 +25,7 @@ public class HollyData : PlantData
     [Header("Skill - Blizzard")]
     public float baseBlizzardDamagePerSecond = 20f;
     public float path3BlizzardDamagePerLevel = 4f;
+    public float blizzardDamageMagicPowerScaling = 0.5f;
     public float blizzardTickInterval = 0.5f;
     public float baseBlizzardPowerMultiplier = 1.5f;
     public float path3BlizzardPowerPerLevel = 0.2f;

@@ -21,6 +21,7 @@ MonoBehaviour:
   damageType: 0
   sunCost: 105
   placementLimit: 0
+  tauntValue: 6
   category: 0
   skillTree: {fileID: 11400000, guid: deef61eaf99145148d8c095dc15a1e80, type: 2}
   fertilizerPossibleStats: 2f000000
@@ -103,10 +104,13 @@ MonoBehaviour:
   shieldTickInterval: 0.5
   snowWardLingerDuration: 1
   path2MaxMagicResistanceBonus: 0.15
+  shieldRampMagicPowerScaling: 0.1
+  shieldMaxMagicPowerScaling: 0.5
   baseCoolingPerSecond: 0.9
   path2CoolingPerLevel: 0.1
   baseBlizzardDamagePerSecond: 20
   path3BlizzardDamagePerLevel: 4
+  blizzardDamageMagicPowerScaling: 0.5
   blizzardTickInterval: 0.5
   baseBlizzardPowerMultiplier: 1.5
   path3BlizzardPowerPerLevel: 0.2

@@ -1527,14 +1527,6 @@ public abstract class Entity : MonoBehaviour
                 if (e.TryBlockNegativeEffect(effect)) return;
         }
 
-        // OleandicToxin intercept: positive effects applied to a toxin-afflicted entity are captured and blocked
-        if (effect.effectType == StatusEffect.Type.positive)
-        {
-            OleandicToxinEffect toxin = GetEffect<OleandicToxinEffect>();
-            if (toxin != null && toxin.TryCapture(effect))
-                return;
-        }
-
         // scale duration by source's given-duration stat and this entity's received-duration stat
         if (effect.effectType == StatusEffect.Type.positive)
         {

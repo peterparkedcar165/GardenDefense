@@ -10,8 +10,8 @@ using UnityEngine;
 public class SandstormExposedEffect : StatusEffect
 {
     private const float PenaltyPerLevel = 0.1f;
-    private const float BaseDamagePerSecond = 2f;
-    private const float DamagePerSecondPerLevel = 2f;
+    private const float BaseDamagePerSecond = 4f;
+    private const float DamagePerSecondPerLevel = 4f;
     private const float DamageTickInterval = 1f;
 
     private readonly float basePenalty;

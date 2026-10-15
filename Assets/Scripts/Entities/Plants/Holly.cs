@@ -17,30 +17,55 @@ public class Holly : Aura
 
     private const string CannotStackNote = "\n\n<color=#888888><b>Cannot stack with other Hollies.</b></color>";
 
+    // skill tree unlock ids
+    public const string ResilientFrostUnlock = "holly_resilient_frost";
+    public const string InstantSkillUnlock   = "holly_instant_skill";
+
     // both the ramp rate and the cap scale with Holly's own Heals & Shield Bonus, same as any
-    // other outgoing shield in the game
-    private float ShieldRampPerSecond => ((HData?.baseShieldRampPerSecond ?? 4f) + (HData?.path2ShieldRampPerLevel ?? 2f) * effectivePath2Level) * (1f + healingBonus);
+    // other outgoing shield in the game - plus a flat Magic Power bonus each, inside the
+    // Heals & Shield Bonus multiplier same as every other source
+    private float ShieldRampPerSecond => ((HData?.baseShieldRampPerSecond ?? 4f) + (HData?.path2ShieldRampPerLevel ?? 2f) * effectivePath2Level + magicPower * (HData?.shieldRampMagicPowerScaling ?? 0.1f)) * (1f + healingBonus);
     // Shield cap scales 100% with Holly's own Magic Armor - 100 Magic Armor grants +100 Shield cap
-    private float ShieldMaxCap        => ((HData?.baseShieldMax ?? 40f)          + (HData?.path2ShieldMaxPerLevel ?? 20f) * effectivePath2Level + magicArmor) * (1f + healingBonus);
+    private float ShieldMaxCap        => ((HData?.baseShieldMax ?? 40f)          + (HData?.path2ShieldMaxPerLevel ?? 20f) * effectivePath2Level + magicArmor + magicPower * (HData?.shieldMaxMagicPowerScaling ?? 0.5f)) * (1f + healingBonus);
     private float CoolingPerSecond    => (HData?.baseCoolingPerSecond ?? 1f)    + (HData?.path2CoolingPerLevel ?? 0.2f) * effectivePath2Level;
     private float ShieldTickInterval  => HData?.shieldTickInterval ?? 0.5f;
-    // how long Snow Ward lingers once it stops being refreshed (leaves the wind/blizzard)
-    private float SnowWardLingerDuration => HData?.snowWardLingerDuration ?? 1f;
+    // how long Snow Ward lingers once it stops being refreshed (leaves the wind/blizzard) -
+    // Resilient Frost (skill tree) doubles it
+    private float SnowWardLingerDuration =>
+        (HData?.snowWardLingerDuration ?? 1f) * (SkillTreeManager.HasUnlock(this, ResilientFrostUnlock) ? 2f : 1f);
     private string SnowWardLingerText => $"{SnowWardLingerDuration:F0} second{(SnowWardLingerDuration == 1f ? "" : "s")}";
     // Path2 max: Snow Ward also grants this much flat Magic Resistance to whatever it's holding
     private float SnowWardMagicResistanceBonus => IsPath2Maxed ? (HData?.path2MaxMagicResistanceBonus ?? 0.15f) : 0f;
 
-    private float BlizzardDamagePerSecond   => (HData?.baseBlizzardDamagePerSecond ?? 20f) + (HData?.path3BlizzardDamagePerLevel ?? 4f) * effectivePath3Level;
+    // skillDamageAdder is generic (fed by the Reinforced Blizzard skill tree node) - Blizzard's
+    // damage is otherwise a fully bespoke computed value, so this is the only thing that makes
+    // that stat type do anything for her
+    private float BlizzardDamagePerSecond   => (HData?.baseBlizzardDamagePerSecond ?? 20f) + (HData?.path3BlizzardDamagePerLevel ?? 4f) * effectivePath3Level + magicPower * (HData?.blizzardDamageMagicPowerScaling ?? 0.5f) + skillDamageAdder;
     // Path3 max: Blizzard's tick interval is halved, so it deals its damage twice as often
     private float BlizzardTickInterval      => (HData?.blizzardTickInterval ?? 0.5f) * (IsPath3Maxed ? 0.5f : 1f);
     private float BlizzardPowerMultiplier   => (HData?.baseBlizzardPowerMultiplier ?? 1.5f) + (HData?.path3BlizzardPowerPerLevel ?? 0.2f) * effectivePath3Level;
     private float BlizzardWidth             => 2f + (HData?.path3BlizzardWidthPerLevel ?? 0.1f) * effectivePath3Level;
+
+    // display-only breakdowns: how much of the final ramp/cap/damage number above came from
+    // Magic Power specifically, for the "[+X]" annotations in her tooltips
+    private float ShieldRampMPBonus    => magicPower * (HData?.shieldRampMagicPowerScaling ?? 0.1f) * (1f + healingBonus);
+    private float ShieldMaxMPBonus     => magicPower * (HData?.shieldMaxMagicPowerScaling ?? 0.5f) * (1f + healingBonus);
+    private float BlizzardDamageMPBonus => magicPower * (HData?.blizzardDamageMagicPowerScaling ?? 0.5f);
 
     protected override void Awake()
     {
         base.Awake();
         LoadData();
         _auraParticle = GetComponentInChildren<ParticleSystem>();
+
+        // Frostguard Reflex (skill tree): free skill readiness on placement - bypasses
+        // UnlockPath3() (which spends sun and adds to totalSunSpent) so this can't be abused for
+        // an inflated uproot refund, same pattern Snowdrop/AloeVera use
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     protected override void Update()
@@ -136,9 +161,11 @@ public class Holly : Aura
 
         GameObject obj = Instantiate(blizzardPrefab, transform.position, Quaternion.identity);
         Blizzard blizzard = obj.GetComponent<Blizzard>();
+        // the power multiplier only boosts how fast Snow Ward's shield regenerates, not its cap -
+        // Blizzard grants the same shield ceiling as the passive, just filled in faster
         blizzard?.Initialize(transform.position, dir, BlizzardWidth, skillDuration, skillRadius,
             BlizzardDamagePerSecond, BlizzardTickInterval, this,
-            ShieldRampPerSecond * BlizzardPowerMultiplier, ShieldMaxCap * BlizzardPowerMultiplier,
+            ShieldRampPerSecond * BlizzardPowerMultiplier, ShieldMaxCap,
             CoolingPerSecond * BlizzardPowerMultiplier, ShieldTickInterval, SnowWardMagicResistanceBonus, SnowWardLingerDuration);
     }
 
@@ -162,12 +189,12 @@ public class Holly : Aura
         $"Conjures a spiraling cold wind around herself, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range.";
 
     public override string GetPassiveDescription() =>
-        $"Plants within the spiraling wind are blessed with <color=#00FFFF><b>Snow Ward</b></color>, granting a rampant <color=#00CED1><b>Shield</b></color> of <color=green><b>{(int)ShieldRampPerSecond}</b></color>/s, up to <color=#00CED1><b>{ShieldMaxCap:F0}</b></color>, " +
+        $"Plants within the spiraling wind are blessed with <color=#00FFFF><b>Snow Ward</b></color>, granting a rampant <color=#00CED1><b>Shield</b></color> of <color=green><b>{(int)ShieldRampPerSecond}</b></color>/s [<color=#FFB6C1><b>+{ShieldRampMPBonus:F0}</b></color>], up to <color=#00CED1><b>{ShieldMaxCap:F0}</b></color> [<color=#FFB6C1><b>+{ShieldMaxMPBonus:F0}</b></color>], " +
         $"cooling them from the hot weather by <color=green><b>{CoolingPerSecond:F1}</b></color>/s, and protecting them against the negative effects of <color=#E8D9A8><b>Sandstorm</b></color>.\n\n" +
         $"The effect lingers for <color=green><b>{SnowWardLingerText}</b></color>. <color=#00CED1><b>Shield</b></color> ramp and cap scale with {GetName()}'s <color=#FF6B81><b>Heals & Shield Bonus</b></color>." +
         CannotStackNote;
     public override string GetSkillDesription() =>
-        $"Conjures a blizzard blowing toward a targeted location for <color=green><b>{skillDuration:F0}s</b></color>, dealing <color=green><b>{BlizzardDamagePerSecond:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within it, " +
+        $"Conjures a blizzard blowing toward a targeted location for <color=green><b>{skillDuration:F0}s</b></color>, dealing <color=green><b>{BlizzardDamagePerSecond:F0}</b></color> [<color=#FFB6C1><b>+{BlizzardDamageMPBonus:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second to insects within it, " +
         $"and afflicting plants within it with <color=#00FFFF><b>Snow Ward</b></color>, granting <color=#00CED1><b>Shield</b></color> of <color=green><b>{(int)(ShieldRampPerSecond * BlizzardPowerMultiplier)}</b></color>/s and cooling of <color=green><b>{(CoolingPerSecond * BlizzardPowerMultiplier):F1}</b></color>/s.";
 
     public override string GetPath1Description(bool details = false)
@@ -193,7 +220,7 @@ public class Holly : Aura
         float maxpl  = HData?.path2ShieldMaxPerLevel ?? 20f;
         float coolpl = HData?.path2CoolingPerLevel ?? 0.2f;
         string desc = details
-            ? $"Plants within the spiraling wind are blessed with <color=#00FFFF><b>Snow Ward</b></color>, granting a rampant <color=#00CED1><b>Shield</b></color> of <color=green><b>[({HData?.baseShieldRampPerSecond ?? 4f:F0}) + ({ramppl:F0}/Lvl.)]</b></color>/s, up to <color=#00CED1><b>[({HData?.baseShieldMax ?? 40f:F0}) + ({maxpl:F0}/Lvl.)]</b></color>, " +
+            ? $"Plants within the spiraling wind are blessed with <color=#00FFFF><b>Snow Ward</b></color>, granting a rampant <color=#00CED1><b>Shield</b></color> of <color=green><b>[({HData?.baseShieldRampPerSecond ?? 4f:F0}) + ({ramppl:F0}/Lvl.) + <color=#FFB6C1>{(HData?.shieldRampMagicPowerScaling ?? 0.1f) * 100f:F0}% Magic Power</color>]</b></color>/s, up to <color=#00CED1><b>[({HData?.baseShieldMax ?? 40f:F0}) + ({maxpl:F0}/Lvl.) + <color=#FFB6C1>{(HData?.shieldMaxMagicPowerScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color>, " +
               $"cooling them from the hot weather by <color=green><b>[({HData?.baseCoolingPerSecond ?? 1f:F1}) + ({coolpl:F1}/Lvl.)]</b></color>/s, and protecting them against the negative effects of <color=#E8D9A8><b>Sandstorm</b></color>.\n\n" +
               $"The effect lingers for <color=green><b>{SnowWardLingerText}</b></color>. <color=#00CED1><b>Shield</b></color> ramp and cap scale with {GetName()}'s <color=#FF6B81><b>Heals & Shield Bonus</b></color>." +
               CannotStackNote
@@ -215,8 +242,8 @@ public class Holly : Aura
         float lenpl = HData?.path3BlizzardLengthPerLevel ?? 0.5f;
         float widpl = HData?.path3BlizzardWidthPerLevel ?? 0.1f;
         string desc = details
-            ? $"Conjures a blizzard blowing toward a targeted location for <color=green><b>{skillDuration:F0}s</b></color>, dealing <color=green><b>[({HData?.baseBlizzardDamagePerSecond ?? 20f:F0}) + ({dmgpl:F0}/Lvl.)]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within it, " +
-              $"and afflicting plants within it with the same <color=#00FFFF><b>Snow Ward</b></color> as her Passive, at <color=green><b>[({HData?.baseBlizzardPowerMultiplier ?? 1.5f:F1}x) + ({powpl:F1}/Lvl.)]</b></color> the power."
+            ? $"Conjures a blizzard blowing toward a targeted location for <color=green><b>{skillDuration:F0}s</b></color>, dealing <color=green><b>[({HData?.baseBlizzardDamagePerSecond ?? 20f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{(HData?.blizzardDamageMagicPowerScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within it, " +
+              $"and afflicting plants within it with the same <color=#00FFFF><b>Snow Ward</b></color> as her Passive, with its <color=#00CED1><b>Shield</b></color> regenerating at <color=green><b>[({HData?.baseBlizzardPowerMultiplier ?? 1.5f:F1}x) + ({powpl:F1}/Lvl.)]</b></color> the rate (its cap is unaffected)."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase damage by <color=green><b>{dmgpl:F0}</b></color> per second per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +

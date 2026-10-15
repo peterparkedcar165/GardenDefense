@@ -24,12 +24,26 @@ public class Zinnia : Aura
     private int   SunIntensity        => (ZData?.baseSkillIntensity ?? 0) + (ZData?.path3SunIntensityPerLevel ?? 1) * effectivePath3Level;
     private float SunHeatingPerSecond => (ZData?.baseSunHeatingPerSecond ?? 1f) + (ZData?.path3HeatingPerLevel ?? 0.2f) * effectivePath3Level;
 
+    // skill tree unlock ids
+    public const string SmolderingCoreUnlock = "zinnia_smoldering_core";
+    public const string SolarFlareUnlock     = "zinnia_solar_flare";
+    public const string InstantSkillUnlock   = "zinnia_instant_skill";
+    private const float SolarFlareAttackSpeedBonus = 0.3f;
+
     protected override void Awake()
     {
         base.Awake();
         LoadData();
         Plant.OnPlantPlaced += HandlePlantPlaced;
         ApplyAuraToAllInRange();
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     private void HandlePlantPlaced(Plant plant)
@@ -41,9 +55,14 @@ public class Zinnia : Aura
     public override void UpdateStats()
     {
         float path1ASBonus = IsPath1Maxed ? (ZData?.path1MaxAttackSpeedBonus ?? 0.4f) : 0f;
-        attackSpeedTotalMultiplier += path1ASBonus;
+        // Solar Flare (skill tree): bonus Attack Speed while her own Artificial Sun is up
+        // (ActivateSkill applies the effect to herself, same self-targeting IceBeamEffect/
+        // RainExposedEffect use elsewhere for "while skill is active" checks)
+        bool solarFlareActive = HasEffect<ArtificialSunEffect>() && SkillTreeManager.HasUnlock(this, SolarFlareUnlock);
+        float solarFlareBonus = solarFlareActive ? SolarFlareAttackSpeedBonus : 0f;
+        attackSpeedTotalMultiplier += path1ASBonus + solarFlareBonus;
         base.UpdateStats();
-        attackSpeedTotalMultiplier -= path1ASBonus;
+        attackSpeedTotalMultiplier -= path1ASBonus + solarFlareBonus;
     }
 
     protected override void Update()
@@ -118,10 +137,13 @@ public class Zinnia : Aura
                 col.color = new ParticleSystem.MinMaxGradient(gradient);
             }
         }
+        // Smoldering Core (skill tree): bonus damage against Ice-elemental insects specifically
+        bool smolderingCore = SkillTreeManager.HasUnlock(this, SmolderingCoreUnlock);
         List<Insect> insects = GetInsectsInRange();
         foreach (Insect insect in insects)
         {
-            insect.Damage(attackDamage, damageType, elementalType, this, true,
+            float dmg = (smolderingCore && insect.attackElementalType == ElementalType.Ice) ? attackDamage * 1.5f : attackDamage;
+            insect.Damage(dmg, damageType, elementalType, this, true,
                 new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
         }
 

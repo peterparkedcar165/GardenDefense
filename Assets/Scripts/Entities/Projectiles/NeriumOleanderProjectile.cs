@@ -6,8 +6,6 @@ public class NeriumOleanderProjectile : Projectile
     private int bouncesRemaining;
     private int bouncesHit = 0;
     private float bounceDamageReduction = 0.1f;
-    private float toxinDuration;
-    private int toxinLevel;
     private float bounceSearchRadius = 6f;
     private List<Insect> alreadyHit = new List<Insect>();
     private HashSet<OleanderSprout> hitSprouts = new HashSet<OleanderSprout>();
@@ -25,11 +23,9 @@ public class NeriumOleanderProjectile : Projectile
     // automatic Base/Visual scan run too would hit the same insect a second time
     protected override bool UseAutomaticInsectHits => false;
 
-    public void SetBounceData(int bounces, float toxinDuration, int toxinLevel, float bounceSearchRadius, float bounceDamageReduction)
+    public void SetBounceData(int bounces, float bounceSearchRadius, float bounceDamageReduction)
     {
         this.bouncesRemaining = bounces;
-        this.toxinDuration = toxinDuration;
-        this.toxinLevel = toxinLevel;
         this.bounceSearchRadius = bounceSearchRadius;
         this.bounceDamageReduction = bounceDamageReduction;
     }
@@ -42,7 +38,6 @@ public class NeriumOleanderProjectile : Projectile
 
         insect.Damage(effectiveDamage, damageType, elementalType, source, true,
             new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
-        ApplyToxin(insect);
 
         if (source is NeriumOleander oleander && oleander.IsPath1Maxed)
         {
@@ -51,16 +46,6 @@ public class NeriumOleanderProjectile : Projectile
                 if (e.elementalType == ElementalType.Poison && e.effectType == StatusEffect.Type.negative)
                     e.duration += extend;
         }
-    }
-
-    private void ApplyToxin(Insect insect)
-    {
-        if (source == null) return;
-        OleandicToxinEffect existing = insect.GetEffect<OleandicToxinEffect>();
-        if (existing != null)
-            existing.RefreshAndStack(source);
-        else
-            insect.ApplyEffect(new OleandicToxinEffect(insect, toxinDuration, toxinLevel, source));
     }
 
     protected override void OnTriggerEnter2D(Collider2D other)

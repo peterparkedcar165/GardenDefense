@@ -98,6 +98,15 @@ public abstract class Plant : Entity, IAttackable
     public Tile occupiedTile;
     public GameObject selfPrefab;
 
+    // how many "tickets" this plant holds in an insect's weighted-random target roll (see
+    // Insect.FindTauntWeightedPlantInRange). baseTauntValue is author-set per plant in its
+    // PlantData asset (defaulting to its family's baseline there) - tauntValueAdder is the only
+    // way to shift it at runtime from there (no multiplier, by design). floored at 0: a plant
+    // at 0 tickets can never be rolled, i.e. unselectable
+    public float baseTauntValue;
+    public float tauntValueAdder;
+    public float tauntValue;
+
     // generic hook: when set, FindNearest/FindFirst/FindLast/FindStrongest return this insect
     // first (if still alive, hostile, and within whatever this plant's own IsWithinAttackRange
     // allows) before falling back to their normal selection logic. null for every plant by
@@ -338,6 +347,7 @@ public abstract class Plant : Entity, IAttackable
         attackSpeedMultiplier += photosynthesisBonus;
         base.UpdateStats();
         attackSpeedMultiplier -= photosynthesisBonus;
+        tauntValue = Mathf.Max(0f, baseTauntValue + tauntValueAdder);
         comfortMin = baseComfortMin + comfortMinAdder;
         comfortMax = baseComfortMax + comfortMaxAdder;
         temperatureMin = baseTemperatureMin + temperatureMinAdder;
@@ -490,6 +500,7 @@ public abstract class Plant : Entity, IAttackable
     protected void LoadData()
     {
         if (data == null) return;
+        baseTauntValue         = data.tauntValue;
         baseMaxHealth          = data.baseMaxHealth;
         baseAttackDamage       = data.baseAttackDamage;
         baseMagicPower        = data.baseMagicPower;

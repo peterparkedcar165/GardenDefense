@@ -20,6 +20,7 @@ MonoBehaviour:
   elementalType: 4
   damageType: 0
   sunCost: 125
+  tauntValue: 3
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0

@@ -4,10 +4,15 @@ using UnityEngine;
 public class NeriumOleanderData : PlantData
 {
     public int baseBounceCount = 1;
-    public float baseToxinDuration = 6f;
     public float bounceDamageReduction = 0.1f;
     public float baseSproutDuration = 15f;
     public float baseCursePoisonResistReduction = 0.04f;
+
+    [Header("Passive - Oleandic Ward")]
+    public float baseWardDuration = 6f;
+    // weak on purpose - the real value is wardRegenPerLock, below
+    public float baseWardHealAmount = 5f;
+    public float wardRegenPerLock = 3f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 10f;
@@ -16,8 +21,9 @@ public class NeriumOleanderData : PlantData
     public float path1MaxPoisonExtendPerHit = 1f;
 
     [Header("Path 2 Scaling")]
-    public float path2ToxinDurationPerLevel = 2f;
-    public float path2MaxMagicArmorPerLock = 12f;
+    public float path2WardDurationPerLevel = 2f;
+    // Path2 max level bonus: Ward also grants this much flat Magic Resistance per debuff locked
+    public float path2MaxMagicResistancePerLock = 0.05f;
 
     [Header("Path 3 Scaling")]
     public float path3SproutDurationPerLevel = 3f;
@@ -28,7 +34,7 @@ public class NeriumOleanderData : PlantData
         $"Fires a toxic petal at the target dealing {DamageTypeLabel(damageType)}. The petal bounces to additional targets.";
 
     public override string GetPassiveDescription() =>
-        "Each petal hit applies <color=#9B59B6>Oleandic Toxin</color>, immediately cleansing a random buff and immunizing the insect to it.";
+        "Nearby allies are granted <color=#2ECC71>Oleandic Ward</color>, immediately cleansing a random debuff and locking it out, with a weak heal and a regeneration that scales with how many debuffs are locked.";
 
     public override string GetSkillDescription() =>
         "Places an Oleander Sprout that petals can freely bounce through, cursing nearby insects with reduced <color=purple>Poison Resistance</color> for as long as it stands.";

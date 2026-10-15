@@ -21,13 +21,14 @@ MonoBehaviour:
   damageType: 1
   sunCost: 95
   placementLimit: 0
+  tauntValue: 1
   category: 0
   skillTree: {fileID: 11400000, guid: 6d3e213aad0d4c48b25c53dcc865825a, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 82
+  baseAttackDamage: 42
   baseMagicPower: 0
-  baseAttackSpeed: 0.12
+  baseAttackSpeed: 0.14
   baseAttackRange: 4
   baseAttackChargeTime: 0
   baseArmor: 0
@@ -72,6 +73,11 @@ MonoBehaviour:
   baseProjectileSpeed: 4
   baseMaxRange: 50
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 1.5
   minFlightDuration: 1.2
   projectileHeight: 3
@@ -97,8 +103,12 @@ MonoBehaviour:
   baseSkillHealInterval: 0.5
   baseSkillTempReduction: 1.6
   baseLobTime: 0.4
+  healMaxHealthScaling: 0.04
+  attackMaxHealthScaling: 0.05
+  skillHealMaxHealthScaling: 0.02
   path1AttackSpeedPerLevel: 0.02
   path1AttackRangePerLevel: 0.2
+  path1MaxHealthPerLevel: 20
   path2HealPerLevel: 8
   path2TempReductionPerLevel: 1.2
   path3SkillHealPerLevel: 4
