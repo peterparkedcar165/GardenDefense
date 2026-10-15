@@ -15,7 +15,7 @@ MonoBehaviour:
   steps:
   - nodes:
     - id: node1_attackdamage
-      nodeName: Thorn Barrage
+      nodeName: Icy Resolve
       description: Increase <color=green><b>Attack Damage</b></color> by <color=green><b>4</b></color> per level.
       maxRank: 3
       costPerRank: 1
@@ -36,14 +36,14 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node3_armor
-      nodeName: Hardened Bark
-      description: Increase <color=#00CED1><b>Armor</b></color> by <color=#00CED1><b>15</b></color> per level.
+    - id: node3_healingbonus
+      nodeName: Winter's Embrace
+      description: Increase <color=#FF6B81><b>Heals & Shield Bonus</b></color> by <color=green><b>5%</b></color> per level. Snow Ward's Shield ramp and cap scale with this.
       maxRank: 3
       costPerRank: 1
       effects:
-      - statType: 39
-        valuePerRank: 15
+      - statType: 24
+        valuePerRank: 0.05
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
@@ -58,20 +58,22 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node5a_thornedhide
-      nodeName: Thorned Hide
-      description: Retaliation damage also afflicts the attacker with <color=#00FFFF><b>Frozen Rage</b></color>.
+    - id: node5a_resilientfrost
+      nodeName: Resilient Frost
+      description: <color=#00FFFF><b>Snow Ward</b></color>'s lingering duration is doubled.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: holly_thorned_hide
-    - id: node5b_iceboundwill
-      nodeName: Icebound Will
-      description: Holly is immune to <color=#87CEEB><b>Slow</b></color> effects.
+      unlockId: holly_resilient_frost
+    - id: node5b_frozenreach
+      nodeName: Frozen Reach
+      description: Increase <color=green><b>Attack Range</b></color> by <color=green><b>20%</b></color>.
       maxRank: 1
       costPerRank: 2
-      effects: []
-      unlockId: holly_icebound_will
+      effects:
+      - statType: 2
+        valuePerRank: 0.2
+      unlockId:
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown
@@ -116,18 +118,22 @@ MonoBehaviour:
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
-    - id: node10a_reinforcedshield
-      nodeName: Reinforced Shield
-      description: Increase the <color=green><b>Skill</b></color>'s Shield amount by <color=green><b>25%</b></color>.
+    - id: node10a_reinforcedblizzard
+      nodeName: Reinforced Blizzard
+      description: Increase <color=#00FFFF><b>Blizzard</b></color>'s damage per second by <color=green><b>15</b></color>.
       maxRank: 1
       costPerRank: 2
-      effects: []
-      unlockId: holly_reinforced_shield
-    - id: node10b_shatteringfrost
-      nodeName: Shattering Frost
-      description: When the Shield breaks, all insects within range are <color=#FFD700><b>Stunned</b></color> for <color=green><b>1</b></color> second.
+      effects:
+      - statType: 13
+        valuePerRank: 15
+      unlockId:
+    - id: node10b_wintersfortitude
+      nodeName: Winter's Fortitude
+      description: Increase <color=green><b>Max Health</b></color> by <color=green><b>15%</b></color>.
       maxRank: 1
       costPerRank: 2
-      effects: []
-      unlockId: holly_shattering_frost
+      effects:
+      - statType: 49
+        valuePerRank: 0.15
+      unlockId:
     ranksToUnlockNext: 1

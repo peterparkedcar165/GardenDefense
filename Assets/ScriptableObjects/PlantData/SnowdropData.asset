@@ -21,6 +21,7 @@ MonoBehaviour:
   damageType: 1
   sunCost: 125
   placementLimit: 0
+  tauntValue: 3
   category: 0
   skillTree: {fileID: 11400000, guid: 84f8614f737b4d32ac46ef913451db9c, type: 2}
   fertilizerPossibleStats: 
@@ -98,6 +99,7 @@ MonoBehaviour:
   snowMarkFlatDamagePerLevel: 3
   snowMarkDamagePercentBase: 0.01
   snowMarkDamagePercentPerLevel: 0.002
+  snowMarkDamagePercentMP: 0.01
   snowMarkDuration: 8
   iceBeamDurationPerLevel: 2
   iceBeamAttackSpeed: 2.5

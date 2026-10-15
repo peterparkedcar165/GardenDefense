@@ -21,8 +21,9 @@ MonoBehaviour:
   damageType: 0
   sunCost: 95
   placementLimit: 0
+  tauntValue: 6
   category: 0
-  skillTree: {fileID: 0}
+  skillTree: {fileID: 11400000, guid: c80c59d7184bec434beca536fef8c3d3, type: 2}
   fertilizerPossibleStats: 2f000000
   baseMaxHealth: 300
   baseAttackDamage: 32
@@ -92,6 +93,7 @@ MonoBehaviour:
   skillSound:
     clips: []
   baseShieldAmount: 100
+  shieldMagicPowerScaling: 0.5
   baseArmorScalingPercent: 0.35
   path1ArmorScalingPerLevel: 0.05
   path1ArmorPerLevel: 8
@@ -100,5 +102,6 @@ MonoBehaviour:
   path2CooldownRefundPerLevel: 0.05
   path3ShieldPerLevel: 40
   path3SkillDurationPerLevel: 2
-  baseCounterReflectPercent: 1.5
-  path3CounterReflectPerLevel: 0.3
+  baseCounterReflectPercent: 0.5
+  path3CounterReflectPerLevel: 0.1
+  counterArmorScalingPercent: 0.5

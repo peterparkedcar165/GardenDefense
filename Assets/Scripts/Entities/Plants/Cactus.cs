@@ -7,15 +7,28 @@ public class Cactus : Aura
     private const float TauntEffectDuration = 0.35f;
 
     private CactusData CactData => data as CactusData;
-    private float ShieldAmount  => (CactData?.baseShieldAmount ?? 100f) + (CactData?.path3ShieldPerLevel ?? 10f) * effectivePath3Level;
-    private float SkillDuration => data.baseSkillDuration + (CactData?.path3SkillDurationPerLevel ?? 2f) * effectivePath3Level;
+    // Shield also scales with his own Magic Power, on top of the flat per-level Path3 growth
+    private float ShieldAmount  => (CactData?.baseShieldAmount ?? 100f) + (CactData?.path3ShieldPerLevel ?? 10f) * effectivePath3Level + magicPower * ShieldMagicPowerScaling;
+    private float ShieldMagicPowerScaling => CactData?.shieldMagicPowerScaling ?? 0.5f;
+    // skillDurationAdder is generic (fed by the Fortified Stance skill tree node) - SkillDuration
+    // is otherwise a fully bespoke computed value (doesn't read the generic skillDuration field
+    // at all), so this is the only thing that makes that stat type do anything for him
+    private float SkillDuration => data.baseSkillDuration + (CactData?.path3SkillDurationPerLevel ?? 2f) * effectivePath3Level + skillDurationAdder;
+
+    // skill tree unlock ids
+    public const string BarbedRetortUnlock = "cactus_barbed_retort";
+    public const string RetaliatorySpikesUnlock = "cactus_retaliatory_spikes";
+    public const string InstantSkillUnlock = "cactus_instant_skill";
 
     // Attack: melee AoE damage also scales with a % of his own Armor - both his Armor and the
     // scaling percentage itself grow per Path1 level
     private float ArmorScalingPercent => (CactData?.baseArmorScalingPercent ?? 0.5f) + (CactData?.path1ArmorScalingPerLevel ?? 0.05f) * effectivePath1Level;
 
-    // Skill: Countering Stance - the reflected % of incoming melee damage, grows per Path3 level
-    private float CounterReflectPercent => (CactData?.baseCounterReflectPercent ?? 0.5f) + (CactData?.path3CounterReflectPerLevel ?? 0.05f) * effectivePath3Level;
+    // Skill: Countering Stance - counter damage dealt as a % of the attacker's own base Attack
+    // Damage (not a % of the damage Cactus actually received), grows per Path3 level, plus a flat
+    // % of his own Armor on top (same idea as his Attack's own Armor scaling)
+    private float CounterReflectPercent => (CactData?.baseCounterReflectPercent ?? 0.5f) + (CactData?.path3CounterReflectPerLevel ?? 0.1f) * effectivePath3Level;
+    private float CounterArmorScalingPercent => CactData?.counterArmorScalingPercent ?? 0.5f;
 
     // Passive: taking Melee Physical Damage refunds part of his own attack cooldown
     private float CooldownRefundOnHit => (CactData?.baseCooldownRefundOnHit ?? 0.3f) + (CactData?.path2CooldownRefundPerLevel ?? 0.05f) * effectivePath2Level;
@@ -36,6 +49,14 @@ public class Cactus : Aura
         basePassiveDuration = 8f;
         Entity.OnEntityHit += HandleIncomingHit;
         Entity.OnEntityHit += HandleSelfDamaged;
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     protected override void OnDestroy()
@@ -46,7 +67,8 @@ public class Cactus : Aura
     }
 
     // Countering Stance (skill): a melee hit landing on Cactus while the stance is active
-    // reflects a % of its RAW pre-mitigation damage back at the attacker
+    // reflects a % of the attacker's own base Attack Damage, plus a flat % of his own Armor, back
+    // at them - regardless of how much damage the hit itself actually dealt
     private void HandleIncomingHit(EntityEventData data)
     {
         // IsAlive itself is declared separately on Plant/Insect, not the shared Entity base -
@@ -55,8 +77,13 @@ public class Cactus : Aura
         if (!HasEffect<CounteringStanceEffect>()) return;
         bool isMelee = data.tags != null && System.Array.Exists(data.tags, t => t == DamageTag.Melee);
         if (!isMelee) return;
-        data.source.Damage(data.amount * CounterReflectPercent, DamageType.Physical, elementalType, this, false,
+        float reflectedDamage = data.source.baseAttackDamage * CounterReflectPercent + armor * CounterArmorScalingPercent;
+        data.source.Damage(reflectedDamage, DamageType.Physical, elementalType, this, false,
             new DamageTag[] { DamageTag.SkillDamage, DamageTag.Counter });
+
+        // Retaliatory Spikes (skill tree): the reflected hit also leaves a Punctured stack
+        if (SkillTreeManager.HasUnlock(this, RetaliatorySpikesUnlock))
+            data.source.ApplyEffect(new PuncturedEffect(data.source, passiveDuration, 1, this));
     }
 
     // Passive: taking Melee Physical Damage refunds part of his own attack cooldown
@@ -67,6 +94,12 @@ public class Cactus : Aura
         bool isMelee = data.tags != null && System.Array.Exists(data.tags, t => t == DamageTag.Melee);
         if (!isMelee) return;
         attackCooldownTimer += CooldownRefundOnHit;
+
+        // Barbed Retort (skill tree): any melee hit taken also leaves a Punctured stack on the
+        // attacker, stance active or not - unlike Retaliatory Spikes, which only fires off the
+        // reflected damage during Countering Stance
+        if (SkillTreeManager.HasUnlock(this, BarbedRetortUnlock) && data.source != null && data.source.health > 0)
+            data.source.ApplyEffect(new PuncturedEffect(data.source, passiveDuration, 1, this));
     }
 
     protected override void Update()
@@ -192,9 +225,9 @@ public class Cactus : Aura
         $"Taking <color=green>Melee</color> <color=#A0522D>Physical Damage</color> refunds <color=green><b>{CooldownRefundOnHit:F1}s</b></color> of his attack cooldown.";
 
     public override string GetSkillDesription() =>
-        $"The {GetName()} enters a <color=green><b>Countering</b></color> stance for <color=green><b>{SkillDuration:F0}s</b></color>, and gains a <color=#00CED1><b>Shield</b></color> for <color=grey><b>{ShieldAmount:F0}</b></color> health. " +
-        $"He gains <color=green><b>{CounteringStanceEffect.PhysicalResistanceBonus * 100f:F0}%</b></color> <color=#A0522D><b>Physical Resistance</b></color>. Taking <color=green>Melee Damage</color> while in this stance returns " +
-        $"<color=green><b>{CounterReflectPercent * 100f:F0}%</b></color> of the pre-mitigation damage back to the attacker.";
+        $"The {GetName()} enters a <color=green><b>Countering</b></color> stance for <color=green><b>{SkillDuration:F0}s</b></color>, and gains a <color=#00CED1><b>Shield</b></color> for <color=grey><b>{ShieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * ShieldMagicPowerScaling:F0}</b></color>] health. " +
+        $"He gains <color=green><b>{CounteringStanceEffect.PhysicalResistanceBonus * 100f:F0}%</b></color> <color=#A0522D><b>Physical Resistance</b></color>. Taking <color=green>Melee Damage</color> while in this stance deals " +
+        $"<color=green><b>{CounterReflectPercent * 100f:F0}%</b></color> of the attacker's own <color=green><b>Base Attack Damage</b></color>, plus <color=#00CED1><b>{CounterArmorScalingPercent * 100f:F0}%</b></color> of his own <color=#00CED1><b>Armor</b></color> [<color=#00CED1><b>+{armor * CounterArmorScalingPercent:F0}</b></color>], back to them.";
 
     public override string GetPath1Description(bool details = false)
     {

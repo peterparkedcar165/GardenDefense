@@ -15,6 +15,10 @@ public class PlantData : ScriptableObject
     public int sunCost;
     // max number of this plant that can be alive on the field at once. 0 = unlimited
     public int placementLimit = 0;
+    // "tickets" this plant holds in an insect's weighted-random target roll (see
+    // Insect.FindTauntWeightedPlantInRange / Plant.tauntValue) - defaults to its family's
+    // baseline (3, or 1/6 for Verdance/Ironbark) but is author-overridable per plant from here
+    public float tauntValue = 3f;
 
     // dev-only label, never surfaced to players anywhere - just a way to tag which plants are
     // "elder" tier (currently Begonia and Carrot) versus the normal roster, for our own reference

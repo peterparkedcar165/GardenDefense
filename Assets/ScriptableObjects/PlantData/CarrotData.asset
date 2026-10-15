@@ -21,6 +21,7 @@ MonoBehaviour:
   damageType: 0
   sunCost: 185
   placementLimit: 1
+  tauntValue: 3
   category: 1
   skillTree: {fileID: 0}
   fertilizerPossibleStats: 26000000

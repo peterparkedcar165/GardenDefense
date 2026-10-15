@@ -58,6 +58,16 @@ public class AloeVera : Lobber
         }
     }
 
+    // Max Health scaling: her own bulk feeds back into everything she outputs - healing, attack
+    // damage, and skill healing all take a flat % of her current Max Health on top of their
+    // other sources (Magic Power included). each independently tunable from the inspector
+    private float HealMaxHealthScaling       => AVData?.healMaxHealthScaling       ?? 0.05f;
+    private float AttackMaxHealthScaling     => AVData?.attackMaxHealthScaling     ?? 0.05f;
+    private float SkillHealMaxHealthScaling  => AVData?.skillHealMaxHealthScaling  ?? 0.05f;
+    private float HealMaxHealthBonus       => maxHealth * HealMaxHealthScaling;
+    private float AttackMaxHealthBonus     => maxHealth * AttackMaxHealthScaling;
+    private float SkillHealMaxHealthBonus  => maxHealth * SkillHealMaxHealthScaling;
+
     public override void UpdateStats()
     {
         float path1RadiusBonus = IsPath1Maxed ? baseAoERadius : 0f;
@@ -65,15 +75,24 @@ public class AloeVera : Lobber
         // hidden, undocumented, skill charges faster per level of rain exposure
         int rainLevel = GetEffect<RainExposedEffect>()?.level ?? 0;
         skillChargeRateAdder = 0.2f * rainLevel;
+
+        // attackDamage is computed inside base.UpdateStats() itself, so the Max Health bonus has
+        // to go in via the adder before that call (same trick Photosynthesis uses for Attack
+        // Speed in Plant.cs) rather than added on afterward like the two heal values below -
+        // uses last frame's maxHealth, same one-frame lag that trick always has
+        float attackMaxHealthBonus = AttackMaxHealthBonus;
+        attackDamageAdder += attackMaxHealthBonus;
         base.UpdateStats();
+        attackDamageAdder -= attackMaxHealthBonus;
+
         aoERadiusAdder -= path1RadiusBonus;
         temperatureMax = comfortMax;
         float healpl  = AVData?.path2HealPerLevel           ?? 8f;
         float temppl  = AVData?.path2TempReductionPerLevel  ?? 0.5f;
         float healpl3 = AVData?.path3SkillHealPerLevel      ?? 2f;
-        healAmount       = baseHealAmount       + healpl  * effectivePath2Level + magicPower * 0.22f + healAmountAdder;
+        healAmount       = baseHealAmount       + healpl  * effectivePath2Level + magicPower * 0.22f + HealMaxHealthBonus + healAmountAdder;
         tempReduction    = baseTempReduction    + temppl  * effectivePath2Level;
-        skillHealPerTick = baseSkillHealPerTick + healpl3 * effectivePath3Level + magicPower * 0.14f;
+        skillHealPerTick = baseSkillHealPerTick + healpl3 * effectivePath3Level + magicPower * 0.14f + SkillHealMaxHealthBonus;
     }
 
     protected override void Update()
@@ -189,6 +208,14 @@ public class AloeVera : Lobber
     {
         baseAttackSpeed = data.baseAttackSpeed + level * (AVData?.path1AttackSpeedPerLevel ?? 0.02f);
         baseAttackRange = data.baseAttackRange + level * (AVData?.path1AttackRangePerLevel ?? 0.2f);
+
+        // same pattern Cactus.OnPath2Upgrade uses: baseMaxHealth is recomputed from scratch off
+        // the full level each call, but health only ever receives the flat per-level increment -
+        // correct as long as this fires once per level-up transition, same assumption that
+        // pattern already relies on
+        float hppl = AVData?.path1MaxHealthPerLevel ?? 20f;
+        baseMaxHealth = data.baseMaxHealth + hppl * level;
+        health += hppl;
     }
 
     public override void OnPath3Upgrade(int level)
@@ -291,21 +318,23 @@ public class AloeVera : Lobber
         $"The {GetName()} lobs arcing water droplets that burst on impact. She prioritizes healing injured allies before engaging insects.";
 
     public override string GetAttackDescription() =>
-        $"Lob a water droplet that bursts on landing, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within <color=green><b>{aoERadius:F1}</b></color> radius.";
+        $"Lob a water droplet that bursts on landing, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{AttackMaxHealthBonus:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} to all insects within <color=green><b>{aoERadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
-        $"Water droplets also heal plants, restoring <color=green><b>{healAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.22f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{tempReduction:F1}</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius. If an injured plant is within range, switch targetting to the one with the lowest Health.";
+        $"Water droplets also heal plants, restoring <color=green><b>{healAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.22f + HealMaxHealthBonus:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{tempReduction:F1}</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius. If an injured plant is within range, switch targetting to the one with the lowest Health.";
 
     public override string GetPath1Description(bool details = false)
     {
         float aspl    = AVData?.path1AttackSpeedPerLevel ?? 0.02f;
         float rangepl = AVData?.path1AttackRangePerLevel ?? 0.2f;
+        float hppl    = AVData?.path1MaxHealthPerLevel   ?? 20f;
         string desc = details
-            ? $"Lob a water droplet that bursts on landing, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within <color=green><b>{aoERadius:F1}</b></color> radius."
+            ? $"Lob a water droplet that bursts on landing, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage + <color=#FFB6C1>{AttackMaxHealthScaling * 100f:F0}% Max Health</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within <color=green><b>{aoERadius:F1}</b></color> radius."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"Increase <color=red><b>Base Max Health</b></color> by <color=red><b>{hppl:F0}</b></color> per level. [<color=red><b>+{hppl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Increase the splash radius to <color=green><b>{baseAoERadius * 2f:F1}</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -316,7 +345,7 @@ public class AloeVera : Lobber
         float healpl = AVData?.path2HealPerLevel          ?? 8f;
         float temppl = AVData?.path2TempReductionPerLevel ?? 0.5f;
         string desc = details
-            ? $"Water droplets also heal plants, restoring <color=green><b>[({baseHealAmount:F0}) + ({healpl:F0}/Lvl.) + <color=#FFB6C1>22% Magic Power</color>]</b></color> Health and reducing temperature by <color=#4FC3F7><b>[({baseTempReduction:F1}) + ({temppl:F1}/Lvl.)]</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius. If an injured plant is within range, switch targetting to the one with the lowest Health."
+            ? $"Water droplets also heal plants, restoring <color=green><b>[({baseHealAmount:F0}) + ({healpl:F0}/Lvl.) + <color=#FFB6C1>22% Magic Power</color> + <color=#FFB6C1>{HealMaxHealthScaling * 100f:F0}% Max Health</color>]</b></color> Health and reducing temperature by <color=#4FC3F7><b>[({baseTempReduction:F1}) + ({temppl:F1}/Lvl.)]</b></color>, until comfort, for all plants within <color=green><b>{aoERadius:F1}</b></color> radius. If an injured plant is within range, switch targetting to the one with the lowest Health."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Healing</b></color> by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
@@ -329,7 +358,7 @@ public class AloeVera : Lobber
     public override string GetSkillDesription()
     {
         float totalHealing = skillHealPerTick * Mathf.Floor(skillDuration / baseSkillHealInterval);
-        return $"Channels for <color=green><b>{channelDuration:F1}s</b></color>, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>{baseSkillRadius:F1}</b></color> radius for <color=green><b>{skillHealPerTick:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.14f:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}s</b></color> over <color=green><b>{skillDuration:F0}</b></color> seconds. " +
+        return $"Channels for <color=green><b>{channelDuration:F1}s</b></color>, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>{baseSkillRadius:F1}</b></color> radius for <color=green><b>{skillHealPerTick:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * 0.14f + SkillHealMaxHealthBonus:F0}</b></color>] Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}s</b></color> over <color=green><b>{skillDuration:F0}</b></color> seconds. " +
                $"For a total of <color=green><b>{totalHealing:F0}</b></color> Health.";
     }
 
@@ -339,7 +368,7 @@ public class AloeVera : Lobber
         float durpl    = AVData?.path3SkillDurationPerLevel ?? 1f;
         float radiuspl = AVData?.path3RadiusPerLevel        ?? 0.3f;
         string desc = details
-            ? $"Channels for <color=green><b>{channelDuration:F1}</b></color> seconds, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius for <color=green><b>[({baseSkillHealPerTick:F0}) + ({healpl3:F0}/Lvl.) + <color=#FFB6C1>14% Magic Power</color>]</b></color> Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}</b></color> seconds over <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds."
+            ? $"Channels for <color=green><b>{channelDuration:F1}</b></color> seconds, then calls down a Soothing Rain on a targeted area, healing all plants within <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius for <color=green><b>[({baseSkillHealPerTick:F0}) + ({healpl3:F0}/Lvl.) + <color=#FFB6C1>14% Magic Power</color> + <color=#FFB6C1>{SkillHealMaxHealthScaling * 100f:F0}% Max Health</color>]</b></color> Health and reducing temperature by <color=#4FC3F7><b>{baseSkillTempReduction:F1}</b></color>, until comfort, every <color=green><b>{baseSkillHealInterval:F1}</b></color> seconds over <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Healing</b></color> by <color=green><b>{healpl3:F0}</b></color> per tick per level. [<color=green><b>+{healpl3 * effectivePath3Level:F0}</b></color>]\n\n" +

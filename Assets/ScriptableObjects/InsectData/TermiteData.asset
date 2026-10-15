@@ -63,4 +63,4 @@ MonoBehaviour:
     clips: []
   bonusPerTermite: 3
   swarmRange: 2
-  companionCount: 1
+  companionCount: 2

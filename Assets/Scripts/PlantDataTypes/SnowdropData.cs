@@ -13,6 +13,8 @@ public class SnowdropData : PlantData
     public float snowMarkFlatDamagePerLevel    = 6f;
     public float snowMarkDamagePercentBase     = 0.02f;
     public float snowMarkDamagePercentPerLevel = 0.01f;
+    // Magic Power scaling: +1% per 100 Magic Power, same convention as every other MP-scaled stat
+    public float snowMarkDamagePercentMP       = 0.01f;
     public float snowMarkDuration = 6f;
 
     [Header("Path 3 - Ice Beam")]

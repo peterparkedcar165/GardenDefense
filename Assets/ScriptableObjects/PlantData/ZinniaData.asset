@@ -20,7 +20,8 @@ MonoBehaviour:
   elementalType: 0
   damageType: 1
   sunCost: 95
-  skillTree: {fileID: 0}
+  tauntValue: 3
+  skillTree: {fileID: 11400000, guid: ac164a1bd5edeb2ef6f5a2dc8526a9bd, type: 2}
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0

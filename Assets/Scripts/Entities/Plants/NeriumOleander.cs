@@ -7,7 +7,6 @@ public class NeriumOleander : Shooter
 
     [SerializeField] private GameObject sproutPrefab;
 
-    private float toxinDuration;
     private OleanderSprout currentSprout;
 
     private bool autoCastEnabled = false;
@@ -20,16 +19,48 @@ public class NeriumOleander : Shooter
     private float SproutDuration   => (OleanderData?.baseSproutDuration ?? 15f) + (OleanderData?.path3SproutDurationPerLevel ?? 3f) * effectivePath3Level;
     private float CurseReduction   => (OleanderData?.baseCursePoisonResistReduction ?? 0.04f) + (OleanderData?.path3CurseReductionPerLevel ?? 0.01f) * effectivePath3Level;
 
+    // Passive - Oleandic Ward: protects nearby allies instead of afflicting insects. duration
+    // scales the same way the old Toxin duration did (Path2 flat growth, times the generic
+    // passiveDuration multiplier); the heal on application is deliberately weak, the real
+    // value is WardRegenPerLock (see OleandicWardEffect.OnTick)
+    private float WardDuration     => ((OleanderData?.baseWardDuration ?? 6f) + (OleanderData?.path2WardDurationPerLevel ?? 2f) * effectivePath2Level) * (1 + passiveDuration);
+    private float WardHealAmount   => OleanderData?.baseWardHealAmount ?? 5f;
+    private float WardRegenPerLock => OleanderData?.wardRegenPerLock ?? 3f;
+
+    private const float WardAuraTickInterval = 0.5f;
+    private float _wardAuraTickTimer;
+
+    // skill tree unlock ids
+    public const string VenomChainUnlock   = "oleander_venom_chain";
+    public const string ThornedPetalsUnlock = "oleander_thorned_petals";
+    public const string InstantSkillUnlock  = "oleander_instant_skill";
+    private const float ThornedPetalsAttackSpeedBonus = 0.25f;
+
     protected override void Awake()
     {
         base.Awake();
         LoadData();
+
+        // free skill readiness on placement - deliberately bypasses UnlockPath3() (which spends
+        // sun and adds to totalSunSpent) so this can't be abused for an inflated uproot refund
+        if (SkillTreeManager.HasUnlock(this, InstantSkillUnlock))
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
     }
 
     protected override void Update()
     {
         base.Update();
         UpdateAutoCast();
+
+        _wardAuraTickTimer += Time.deltaTime;
+        if (_wardAuraTickTimer >= WardAuraTickInterval)
+        {
+            _wardAuraTickTimer -= WardAuraTickInterval;
+            ApplyWardToAllInRange();
+        }
     }
 
     private void UpdateAutoCast()
@@ -38,12 +69,35 @@ public class NeriumOleander : Shooter
         if (SkillReady) OnTargetConfirmed(autoCastPosition);
     }
 
+    // Passive - Oleandic Ward: every allied plant within attack range gets its Ward
+    // (re)confirmed, same continuous-presence shape Holly's Snow Ward aura uses
+    private void ApplyWardToAllInRange()
+    {
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive) continue;
+            if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+
+            OleandicWardEffect existing = plant.GetEffect<OleandicWardEffect>();
+            if (existing != null)
+                existing.RefreshPresence(this);
+            else
+                plant.ApplyEffect(new OleandicWardEffect(plant, WardDuration, 1, this, WardHealAmount, WardRegenPerLock));
+        }
+    }
+
     public override void UpdateStats()
     {
+        // Thorned Petals (skill tree): bonus Attack Speed while her own Oleander Sprout stands -
+        // has to go in before base.UpdateStats() actually folds attackSpeedTotalMultiplier into
+        // attackSpeed, same trick Zinnia's Solar Flare uses
+        bool thornedPetalsActive = currentSprout != null && SkillTreeManager.HasUnlock(this, ThornedPetalsUnlock);
+        float thornedPetalsBonus = thornedPetalsActive ? ThornedPetalsAttackSpeedBonus : 0f;
+        attackSpeedTotalMultiplier += thornedPetalsBonus;
         base.UpdateStats();
+        attackSpeedTotalMultiplier -= thornedPetalsBonus;
+
         piercing      += (OleanderData?.path1BouncePerLevel ?? 1) * effectivePath1Level;
-        float durpl    = OleanderData?.path2ToxinDurationPerLevel ?? 2f;
-        toxinDuration  = ((OleanderData?.baseToxinDuration ?? 6f) + durpl * effectivePath2Level) * (1 + passiveDuration);
     }
 
     // a dead oleander can't sustain its sprout: it must go with it. Kill() catches death
@@ -247,7 +301,9 @@ public class NeriumOleander : Shooter
         {
             petal.SetTarget(FindTarget());
             petal.Initialize(target, attackDamage, projectileSpeed, maxRange, 0, damageType, elementalType, this);
-            petal.SetBounceData(1 + piercing, toxinDuration, 1, BounceSearchRadius, OleanderData?.bounceDamageReduction ?? 0.1f);
+            // Venom Chain (skill tree): +1 bounce whenever her own Oleander Sprout is standing
+            int venomChainBonus = (currentSprout != null && SkillTreeManager.HasUnlock(this, VenomChainUnlock)) ? 1 : 0;
+            petal.SetBounceData(1 + piercing + venomChainBonus, BounceSearchRadius, OleanderData?.bounceDamageReduction ?? 0.1f);
         }
     }
 
@@ -311,7 +367,7 @@ public class NeriumOleander : Shooter
     public override string GetName() => $"<b><color=purple>{(data != null ? data.displayName : "Nerium Oleander")}</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} fires toxic petals that bounce between insects, applying <color=#9B59B6>Oleandic Toxin</color> which strips and immunizes them to their own buffs.";
+        $"The {GetName()} fires toxic petals that bounce between insects, while nearby allies are granted <color=#2ECC71>Oleandic Ward</color>, which strips and locks out their debuffs - a dedicated answer to debuffer insects.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -332,17 +388,17 @@ public class NeriumOleander : Shooter
 
     public override string GetPath2Description(bool details = false)
     {
-        float durpl = OleanderData?.path2ToxinDurationPerLevel ?? 2f;
+        float durpl = OleanderData?.path2WardDurationPerLevel ?? 2f;
         string desc = details
-            ? $"Each petal hit applies <color=#9B59B6><b>Oleandic Toxin</b></color> for <color=green><b>[({OleanderData?.baseToxinDuration ?? 6f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds.\n\n" +
-              $"<color=#9B59B6><b><u>Oleandic Toxin</u></b></color>\n" +
-              $"Cleanses a random buff, and prevents them from receiving that buff while the effect is active."
-            : $"Each petal hit applies <color=#9B59B6><b>Oleandic Toxin</b></color> for <color=green><b>{toxinDuration:F1}</b></color> seconds.\n\n" +
-              $"<color=#9B59B6><b><u>Oleandic Toxin</u></b></color>\n" +
-              $"Cleanses a random buff, and prevents them from receiving that buff while the effect is active.";
+            ? $"Allies within <color=green><b>Attack Range</b></color> are granted <color=#2ECC71><b>Oleandic Ward</b></color> for <color=green><b>[({OleanderData?.baseWardDuration ?? 6f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds.\n\n" +
+              $"<color=#2ECC71><b><u>Oleandic Ward</u></b></color>\n" +
+              $"Cleanses a random debuff, and locks them out of receiving that debuff while the effect is active. Grants a weak heal of <color=green><b>{WardHealAmount:F0}</b></color> on application, and regenerates <color=green><b>{WardRegenPerLock:F0}</b></color> Health per second for every debuff currently locked."
+            : $"Allies within <color=green><b>Attack Range</b></color> are granted <color=#2ECC71><b>Oleandic Ward</b></color> for <color=green><b>{WardDuration:F1}</b></color> seconds.\n\n" +
+              $"<color=#2ECC71><b><u>Oleandic Ward</u></b></color>\n" +
+              $"Cleanses a random debuff, and locks them out of receiving that debuff while the effect is active. Grants a weak heal of <color=green><b>{WardHealAmount:F0}</b></color> on application, and regenerates <color=green><b>{WardRegenPerLock:F0}</b></color> Health per second for every debuff currently locked.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"For each positive effect locked, the target loses <color=#FF69B4><b>{OleanderData?.path2MaxMagicArmorPerLock ?? 12f:F0} Magic Armor</b></color>.")}\n\n" +
+               $"{Level5Section(path2Level, $"For each debuff locked, also grant <color=#FF69B4><b>{(OleanderData?.path2MaxMagicResistancePerLock ?? 0.05f) * 100f:F0}% Magic Resistance</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

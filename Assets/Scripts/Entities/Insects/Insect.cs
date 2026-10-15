@@ -231,13 +231,13 @@ public abstract class Insect : Entity, IAttackable
             {
                 case Aggressivity.High:
                 {
-                    IAttackable highTarget = FindNearestPlantInRange();
+                    IAttackable highTarget = FindTauntWeightedPlantInRange();
                     TryApplyIronbarkAggro(highTarget);
                     return highTarget;
                 }
                 case Aggressivity.Low:
                     if (_plantAttackCooldown > 0) return null;
-                    IAttackable mediumTarget = FindNearestPlantInRange();
+                    IAttackable mediumTarget = FindTauntWeightedPlantInRange();
                     TryApplyIronbarkAggro(mediumTarget);
                     return mediumTarget;
                 default:
@@ -602,7 +602,6 @@ public abstract class Insect : Entity, IAttackable
     protected virtual void Move()
     {
         if (_stuckIgnoreTimer > 0f) _stuckIgnoreTimer -= Time.deltaTime;
-        TickVerdanceIgnoreCooldowns();
 
         if (isDying) return;
         if (movementPaused || attackMovementPaused) return;
@@ -903,73 +902,46 @@ public abstract class Insect : Entity, IAttackable
         target.ReceiveAttack(attackDamage, this);
     }
 
-    // per-insect cooldown on a specific Verdance plant it already failed the ignore-roll against
-    // with no alternative to fall back on - without this, a failed roll only lasts one frame
-    // (target is recomputed fresh every frame), so at 60fps it would re-roll and effectively
-    // succeed within a fraction of a second, making "50% chance to be ignored" nearly meaningless
-    // in real time. lazily created since most insects never trigger it
-    private Dictionary<Plant, float> _verdanceIgnoreCooldowns;
-    private const float VerdanceIgnoreCooldown = 6f;
+    // per-species targeting preference: multiplies a candidate plant's tauntValue before the
+    // weighted roll below. 1 (no preference) for everyone except species that override it, e.g.
+    // Wasp favoring Photosynthesis plants
+    protected virtual float GetTauntAffinity(Plant plant) => 1f;
 
-    private bool IsVerdanceOnCooldown(Plant plant) =>
-        _verdanceIgnoreCooldowns != null && _verdanceIgnoreCooldowns.TryGetValue(plant, out float remaining) && remaining > 0f;
+    private readonly List<(Plant plant, float tickets)> _tauntCandidates = new List<(Plant plant, float tickets)>();
 
-    private void TickVerdanceIgnoreCooldowns()
+    // every reachable plant in range enters a weighted lottery: its ticket count is
+    // tauntValue * GetTauntAffinity, so family (Verdance low, Ironbark high) and species
+    // preference (Wasp -> Photosynthesis) both shift the odds without ever being a hard
+    // guarantee - replaces the old pure-nearest selection
+    private IAttackable FindTauntWeightedPlantInRange()
     {
-        if (_verdanceIgnoreCooldowns == null || _verdanceIgnoreCooldowns.Count == 0) return;
-        List<Plant> keys = new List<Plant>(_verdanceIgnoreCooldowns.Keys);
-        foreach (Plant p in keys)
-        {
-            float remaining = _verdanceIgnoreCooldowns[p] - Time.deltaTime;
-            if (remaining <= 0f) _verdanceIgnoreCooldowns.Remove(p);
-            else _verdanceIgnoreCooldowns[p] = remaining;
-        }
-    }
-
-    // Verdance family passive: every attempt to target a Verdance plant rolls a 50% chance to be
-    // ignored. on a failed roll it immediately falls back to another plant in range instead of
-    // just giving up for the frame; only if there's truly no alternative does it lock that
-    // specific plant out for VerdanceIgnoreCooldown seconds
-    private IAttackable FindNearestPlantInRange()
-    {
-        Plant nearest = null;
-        Plant nearestNonVerdance = null;
-        float nearestDist = Mathf.Infinity;
-        float nearestNonVerdanceDist = Mathf.Infinity;
+        _tauntCandidates.Clear();
+        float totalTickets = 0f;
 
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
             if (!CanReachPlant(plant)) continue;
             if (plant == _stuckIgnoredPlant && _stuckIgnoreTimer > 0f) continue;
-            if (IsVerdanceOnCooldown(plant)) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
             if (dist > targetingRange) continue;
 
-            if (dist < nearestDist)
-            {
-                nearestDist = dist;
-                nearest = plant;
-            }
-            bool isVerdance = plant.data != null && plant.data.family == PlantFamily.Verdance;
-            if (!isVerdance && dist < nearestNonVerdanceDist)
-            {
-                nearestNonVerdanceDist = dist;
-                nearestNonVerdance = plant;
-            }
+            float tickets = plant.tauntValue * GetTauntAffinity(plant);
+            if (tickets <= 0f) continue;
+
+            _tauntCandidates.Add((plant, tickets));
+            totalTickets += tickets;
         }
 
-        if (nearest == null) return null;
-        bool nearestIsVerdance = nearest.data != null && nearest.data.family == PlantFamily.Verdance;
-        if (!nearestIsVerdance) return nearest;
+        if (_tauntCandidates.Count == 0 || totalTickets <= 0f) return null;
 
-        if (Random.value >= 0.5f) return nearest; // roll succeeded - targets it as normal
-
-        if (nearestNonVerdance != null) return nearestNonVerdance;
-
-        _verdanceIgnoreCooldowns ??= new Dictionary<Plant, float>();
-        _verdanceIgnoreCooldowns[nearest] = VerdanceIgnoreCooldown;
-        return null;
+        float roll = Random.Range(0f, totalTickets);
+        foreach ((Plant plant, float tickets) in _tauntCandidates)
+        {
+            roll -= tickets;
+            if (roll <= 0f) return plant;
+        }
+        return _tauntCandidates[_tauntCandidates.Count - 1].plant; // floating point fallback
     }
 
     // Ironbark family passive: forces this insect to keep attacking the given plant (if it's an
