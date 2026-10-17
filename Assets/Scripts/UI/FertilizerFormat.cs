@@ -66,7 +66,6 @@ public static class FertilizerFormat
             case StatType.GrassDamage:   return "Grass Damage";
             case StatType.PoisonDamage:   return "Poison Damage";
             case StatType.WindDamage:     return "Wind Damage";
-            case StatType.BonusEffectChance: return "Bonus Effect Chance";
             case StatType.MinimumDamage:  return "Minimum Damage";
             case StatType.MaximumDamage:  return "Maximum Damage";
             case StatType.CriticalChance: return "Critical Chance";
@@ -136,7 +135,6 @@ public static class FertilizerFormat
     private const string Ice      = "#00FFFF";
     private const string Poison   = "purple";
     private const string Wind     = "#B2EBF2";
-    private const string Effect   = "#B3FFFF";
     private const string Magic    = "#FFB6C1";
     private const string Physical = "#A0522D";
     private const string Crit     = "#FFD700";
@@ -171,8 +169,6 @@ public static class FertilizerFormat
                 return Poison;
             case StatType.WindDamage:
                 return Wind;
-            case StatType.BonusEffectChance:
-                return Effect;
             case StatType.MinimumDamage:
             case StatType.MaximumDamage:
             case StatType.MagicDamage:

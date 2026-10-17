@@ -19,7 +19,7 @@ MonoBehaviour:
   family: 3
   elementalType: 3
   damageType: 0
-  sunCost: 95
+  sunCost: 125
   placementLimit: 0
   tauntValue: 6
   category: 0
@@ -73,6 +73,11 @@ MonoBehaviour:
   baseProjectileSpeed: 7
   baseMaxRange: 4
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2

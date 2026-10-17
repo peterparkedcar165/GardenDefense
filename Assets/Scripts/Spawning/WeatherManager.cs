@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
 public enum WeatherType { Clear, Sunny, Rain, Windy, Snow, Sandstorm, Underwater }
@@ -19,6 +20,16 @@ public class WeatherManager : MonoBehaviour
     public static event System.Action<WeatherType, int> OnWeatherAdded;
     // fires with (type) when a weather condition is removed
     public static event System.Action<WeatherType>      OnWeatherRemoved;
+
+    [Header("Visuals")]
+    [Tooltip("assign the scene's active biome light (DayLight/NightLight/DesertLight/UnderwaterDaylight)")]
+    [SerializeField] private Light2D sceneLight;
+    [Tooltip("the single place every weather's look (light tint + particle effect) is authored")]
+    [SerializeField] private WeatherVisualLibrary visualLibrary;
+
+    private Color _baseLightColor = Color.white;
+    private float _baseLightIntensity = 1f;
+    private readonly Dictionary<WeatherType, GameObject> _particleInstances = new();
 
     private TemperatureType _temperature;
 
@@ -50,6 +61,30 @@ public class WeatherManager : MonoBehaviour
         instance = this;
     }
 
+    void Start()
+    {
+        // the hand-assigned Inspector reference is kept as an optional override, but every
+        // level's biome light (DayLight/NightLight/DesertLight/UnderwaterDaylight) is the
+        // scene's one Light2D of type Global, so find it automatically rather than requiring
+        // it to be dragged in per scene
+        if (sceneLight == null)
+        {
+            foreach (Light2D light in FindObjectsByType<Light2D>(FindObjectsInactive.Exclude))
+            {
+                if (light.lightType != Light2D.LightType.Global) continue;
+                sceneLight = light;
+                break;
+            }
+        }
+
+        if (sceneLight != null)
+        {
+            _baseLightColor = sceneLight.color;
+            _baseLightIntensity = sceneLight.intensity;
+        }
+        RefreshVisuals();
+    }
+
     // add or update a weather type; fires OnWeatherAdded
     public void SetWeather(WeatherType type, int intensity)
     {
@@ -57,6 +92,7 @@ public class WeatherManager : MonoBehaviour
         activeWeather[type] = intensity;
         Debug.Log($"[Weather] {type} set to intensity {intensity}");
         OnWeatherAdded?.Invoke(type, intensity);
+        RefreshVisuals();
     }
 
     // remove a weather type; fires OnWeatherRemoved, then restores the level's base weather
@@ -67,6 +103,7 @@ public class WeatherManager : MonoBehaviour
         activeWeather.Remove(type);
         Debug.Log($"[Weather] {type} removed");
         OnWeatherRemoved?.Invoke(type);
+        RefreshVisuals();
         RestoreBaseWeatherIfEmpty();
     }
 
@@ -82,7 +119,56 @@ public class WeatherManager : MonoBehaviour
             Debug.Log($"[Weather] {type} removed");
             OnWeatherRemoved?.Invoke(type);
         }
+        RefreshVisuals();
     }
+
+    // blends the scene light toward every currently active weather's authored tint/intensity,
+    // and enables/disables each weather's particle prefab (instantiated lazily, the first time
+    // it's actually needed, then just toggled from then on) - see WeatherVisualLibrary
+    private void RefreshVisuals()
+    {
+        Color color = _baseLightColor;
+        float intensityMult = 1f;
+
+        if (visualLibrary != null)
+            foreach (var kvp in activeWeather)
+            {
+                WeatherVisualEntry entry = visualLibrary.Find(kvp.Key);
+                if (entry == null) continue;
+                color = Color.Lerp(color, entry.tintColor, entry.tintStrength);
+                intensityMult *= entry.lightIntensityMultiplier;
+            }
+
+        if (sceneLight != null)
+        {
+            sceneLight.color = color;
+            sceneLight.intensity = _baseLightIntensity * intensityMult;
+        }
+
+        if (visualLibrary?.entries == null) return;
+        foreach (WeatherVisualEntry entry in visualLibrary.entries)
+        {
+            if (entry.particlePrefab == null) continue;
+            bool shouldBeActive = activeWeather.ContainsKey(entry.weather);
+
+            if (!_particleInstances.TryGetValue(entry.weather, out GameObject instance))
+            {
+                if (!shouldBeActive) continue;
+                instance = Instantiate(entry.particlePrefab, transform);
+                if (entry.nightMaterial != null && IsNightScene())
+                {
+                    Renderer renderer = instance.GetComponent<Renderer>();
+                    if (renderer != null) renderer.material = entry.nightMaterial;
+                }
+                _particleInstances[entry.weather] = instance;
+            }
+            instance.SetActive(shouldBeActive);
+        }
+    }
+
+    // the light prefabs (DayLight/NightLight/DesertLight/UnderwaterDaylight) keep their prefab's
+    // own name on the instance, so this needs no per-scene wiring of its own
+    private bool IsNightScene() => sceneLight != null && sceneLight.gameObject.name.Contains("Night");
 
     // defines the natural weather this level reverts to once every active weather effect
     // has expired, and immediately applies it

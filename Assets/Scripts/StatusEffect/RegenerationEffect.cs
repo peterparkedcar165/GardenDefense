@@ -35,7 +35,7 @@ public class RegenerationEffect : StatusEffect
         if (tickTimer >= tickInterval)
         {
             tickTimer -= tickInterval;
-            target.Heal(healingPerSecond, source);
+            target.Heal(healingPerSecond, source, isRegeneration: true);
         }
     }
 

@@ -67,6 +67,9 @@ public struct EntityEventData
     public DamageTag[] tags;
     // overrides source.onHitEffectiveness for this specific event (e.g. a weaker proc from splash/AoE damage)
     public float? effectivenessOverride;
+    // true when this OnHeal event came from a RegenerationEffect tick rather than an active
+    // heal (attack/passive/skill) - lets a subscriber exclude pure regeneration if it needs to
+    public bool isRegeneration;
 }
 
 public abstract class Entity : MonoBehaviour
@@ -82,10 +85,15 @@ public abstract class Entity : MonoBehaviour
     public int baseArmorPenFlat, baseMagicPenFlat;
     public float baseArmorPenPercent, baseMagicPenPercent;
     public float baseFireResistance, baseWaterResistance, baseGrassResistance, baseWindResistance, basePoisonResistance, baseIceResistance;
-    public float basePhysicalDamage, baseMagicDamage, baseFallDamage, baseBonusEffectChance;
+    public float basePhysicalDamage, baseMagicDamage, baseFallDamage;
     // disabled: had zero effect on proc frequency since the Primer swap (Primers proc
     // deterministically on cooldown, not this roll) and no writer/reader anywhere touches it now
     // public float baseElementalEffectChance;
+    // disabled: every chance-based proc that used to read this (Sunflower/BogIris/Dandelion sun
+    // and skill timers, Waterlily's slow, Stargazer's flammable) was converted to a deterministic
+    // equivalent, so this has no reader left - kept out, not deleted, so the BonusEffectChance
+    // ordinal in StatType and any already-serialized fertilizer roll stay valid
+    // public float baseBonusEffectChance;
     public float baseFireDamage, baseWaterDamage, baseGrassDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
     public float baseCriticalChance, baseCriticalDamage;
     public float baseMinimumDamage = 0.8f, baseMaximumDamage = 1.2f;
@@ -182,8 +190,9 @@ public abstract class Entity : MonoBehaviour
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
     public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance;
-    public float physicalDamage, magicDamage, fallDamage, bonusEffectChance;
+    public float physicalDamage, magicDamage, fallDamage;
     // public float elementalEffectChance; (disabled, see baseElementalEffectChance)
+    // public float bonusEffectChance; (disabled, see baseBonusEffectChance)
     public float fireDamage, waterDamage, grassDamage, windDamage, poisonDamage, iceDamage;
     public float criticalChance, criticalDamage;
     public float minimumDamage, maximumDamage;
@@ -228,8 +237,9 @@ public abstract class Entity : MonoBehaviour
     public float armorAdder, magicArmorAdder;
     public float armorPenFlatAdder, magicPenFlatAdder, armorPenPercentAdder, magicPenPercentAdder;
     public float fireResistanceAdder, waterResistanceAdder, grassResistanceAdder, windResistanceAdder, poisonResistanceAdder, iceResistanceAdder;
-    public float physicalDamageAdder, magicDamageAdder, fallDamageAdder, bonusEffectChanceAdder;
+    public float physicalDamageAdder, magicDamageAdder, fallDamageAdder;
     // public float elementalEffectChanceAdder; (disabled, see baseElementalEffectChance)
+    // public float bonusEffectChanceAdder; (disabled, see baseBonusEffectChance)
     public float fireDamageAdder, waterDamageAdder, grassDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
     public float minimumDamageAdder, maximumDamageAdder;
@@ -258,8 +268,9 @@ public abstract class Entity : MonoBehaviour
     public float armorMultiplier, magicArmorMultiplier;
     public float armorPenFlatMultiplier, magicPenFlatMultiplier, armorPenPercentMultiplier, magicPenPercentMultiplier;
     public float fireResistanceMultiplier, waterResistanceMultiplier, grassResistanceMultiplier, windResistanceMultiplier, poisonResistanceMultiplier, iceResistanceMultiplier;
-    public float physicalDamageMultiplier, magicDamageMultiplier, bonusEffectChanceMultiplier;
+    public float physicalDamageMultiplier, magicDamageMultiplier;
     // public float elementalEffectChanceMultiplier; (disabled, see baseElementalEffectChance)
+    // public float bonusEffectChanceMultiplier; (disabled, see baseBonusEffectChance)
     public float fireDamageMultiplier, waterDamageMultiplier, grassDamageMultiplier, windDamageMultiplier, poisonDamageMultiplier, iceDamageMultiplier;
     public float criticalChanceMultiplier, criticalDamageMultiplier;
     public float dotResistanceMultiplier, dotDamageMultiplier;
@@ -331,7 +342,6 @@ public abstract class Entity : MonoBehaviour
         physicalDamage = basePhysicalDamage + physicalDamageAdder + (basePhysicalDamage * physicalDamageMultiplier);
         magicDamage = baseMagicDamage + magicDamageAdder + (baseMagicDamage * magicDamageMultiplier);
         fallDamage = baseFallDamage + fallDamageAdder;
-        bonusEffectChance = baseBonusEffectChance + bonusEffectChanceAdder + (baseBonusEffectChance * bonusEffectChanceMultiplier);
         fireDamage = baseFireDamage + fireDamageAdder + (baseFireDamage * fireDamageMultiplier);
         waterDamage = baseWaterDamage + waterDamageAdder + (baseWaterDamage * waterDamageMultiplier);
         grassDamage = baseGrassDamage + grassDamageAdder + (baseGrassDamage * grassDamageMultiplier);
@@ -380,7 +390,7 @@ public abstract class Entity : MonoBehaviour
         magicPenFlat = (baseMagicPenFlat + magicPenFlatAdder + baseMagicPenFlat * magicPenFlatMultiplier) * magicPenFlatTotalMultiplier;
         armorPenPercent = baseArmorPenPercent  + armorPenPercentAdder  + (baseArmorPenPercent * armorPenPercentMultiplier);
         magicPenPercent = baseMagicPenPercent  + magicPenPercentAdder  + (baseMagicPenPercent * magicPenPercentMultiplier);
-        internalCooldown = Mathf.Max(0f, baseInternalCooldown + internalCooldownAdder + (baseInternalCooldown * internalCooldownMultiplier));
+        internalCooldown = Mathf.Max(0f, (baseInternalCooldown + internalCooldownAdder + (baseInternalCooldown * internalCooldownMultiplier)) * MulchManager.PrimerCooldownMultiplier);
         UpdateHealthBar();
     }
 
@@ -842,7 +852,7 @@ public abstract class Entity : MonoBehaviour
     }
 
 // method for healing
-    public virtual void Heal(float healingAmount, Entity source = null)
+    public virtual void Heal(float healingAmount, Entity source = null, bool isRegeneration = false)
     {
         DecayEffect decay = GetEffect<DecayEffect>();
         if (decay != null)
@@ -874,7 +884,7 @@ public abstract class Entity : MonoBehaviour
         // healed plant for the healer - see Plant.RegisterHeal/RecentHealers
         if (this is Plant healedPlant && source is Plant healSource)
             healedPlant.RegisterHeal(healSource);
-        OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual });
+        OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual, isRegeneration = isRegeneration });
         UpdateHealthBar();
         HealIndicator.Spawn(GetIndicatorPosition(), actual, isCrit);
     }

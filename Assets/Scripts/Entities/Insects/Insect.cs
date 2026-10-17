@@ -1161,13 +1161,14 @@ public abstract class Insect : Entity, IAttackable
 
     protected virtual void ReachObjective()
     {
-        gameManager.Damage((int)baseAttackDamage);
+        DamagePlayerBase((int)baseAttackDamage);
         Destroy(gameObject);
     }
 
     // exposes gameManager (private, cached in Start) to subclasses that need to damage the
-    // player's base outside of ReachObjective itself (e.g. Duskdarter's carried passenger)
-    protected void DamagePlayerBase(int amount) => gameManager.Damage(amount);
+    // player's base outside of ReachObjective itself (e.g. Duskdarter's carried passenger).
+    // every leak routes through here, so MulchManager.LeakDamageMultiplier covers both
+    protected void DamagePlayerBase(int amount) => gameManager.Damage(Mathf.RoundToInt(amount * MulchManager.LeakDamageMultiplier));
 
     protected virtual float GetMoveSpeed() => movementSpeed;
 

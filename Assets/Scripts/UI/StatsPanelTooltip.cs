@@ -13,7 +13,6 @@ public class StatsPanelTooltip : MonoBehaviour
     private const string Ice      = "<color=#00FFFF>";
     private const string Poison   = "<color=purple>";
     private const string Wind     = "<color=#B2EBF2>";
-    private const string Effect   = "<color=#B3FFFF>";
     private const string Magic    = "<color=#FFB6C1>";
     private const string Physical = "<color=#A0522D>";
     private const string Crit     = "<color=#FFD700>";
@@ -72,7 +71,6 @@ public class StatsPanelTooltip : MonoBehaviour
         ElemLine(sb, HealCol, "Max Health:", $"{e.maxHealth:F0}", e.maxHealth, e.baseMaxHealth);
         ElemLine(sb, Crit, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
         ElemLine(sb, Crit, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
-        ElemLine(sb, Effect, "Bonus Effect Chance:", $"{e.bonusEffectChance * 100:F0}%", e.bonusEffectChance, e.baseBonusEffectChance);
         sb.AppendLine();
         ElemLine(sb, Magic, "Maximum Damage:", $"{e.maximumDamage * 100:F0}%", e.maximumDamage, e.baseMaximumDamage);
         ElemLine(sb, Magic, "Minimum Damage:", $"{e.minimumDamage * 100:F0}%", e.minimumDamage, e.baseMinimumDamage);

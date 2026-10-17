@@ -4,12 +4,16 @@ using UnityEngine;
 public class SoakedEffect : StatusEffect, IElementalAffinityEffect
 {
     private float reduction;
+    private float movementReduction;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
 
     public SoakedEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         reduction = 0.2f * (1f + source.elementalAffinity);
+        // movement speed specifically gets the global slow bonus on top - attack speed does not,
+        // since that bonus is meant for "slowing effects" (movement) only
+        movementReduction = reduction + MulchManager.GlobalSlowBonus;
         effectType = Type.negative;
         elementalType = ElementalType.Water;
     }
@@ -23,7 +27,7 @@ public class SoakedEffect : StatusEffect, IElementalAffinityEffect
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Soaked", new Color(0.31f, 0.76f, 0.97f));
 
         Insect insect = (Insect)target;
-        insect.movementSpeedMultiplier -= reduction;
+        insect.movementSpeedMultiplier -= movementReduction;
         insect.attackSpeedMultiplier -= reduction;
     }
 
@@ -32,7 +36,7 @@ public class SoakedEffect : StatusEffect, IElementalAffinityEffect
     public override void OnExpire()
     {
         Insect insect = (Insect)target;
-        insect.movementSpeedMultiplier += reduction;
+        insect.movementSpeedMultiplier += movementReduction;
         insect.attackSpeedMultiplier += reduction;
     }
 }

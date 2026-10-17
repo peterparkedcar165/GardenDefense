@@ -100,10 +100,11 @@ public class Anemone : Shooter
             this);
     }
 
+    // always applies now (used to be an ErosionProcChance roll); the duration is scaled by
+    // ErosionProcChance instead so the long-run erosion uptime stays the same
     public void ApplyWindErosion(Insect insect)
     {
         if (insect == null || !insect.IsAlive) return;
-        if (Random.value >= ErosionProcChance) return;
         WindErosionEffect existing = insect.GetEffect<WindErosionEffect>();
         int newStacks;
         if (existing == null)
@@ -112,7 +113,7 @@ public class Anemone : Shooter
             newStacks = InitialErosionStacks;
         else
             newStacks = existing.level + (IsPath2Maxed ? 2 : 1);
-        insect.ApplyEffect(new WindErosionEffect(insect, ErosionDuration, newStacks, this, ErosionReductionPerStack));
+        insect.ApplyEffect(new WindErosionEffect(insect, ErosionDuration * ErosionProcChance, newStacks, this, ErosionReductionPerStack));
     }
 
     public override string GetName() => "<b><color=#D0E8FF>Anemone</color></b>";
@@ -124,7 +125,7 @@ public class Anemone : Shooter
         $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color=green><b>{attackDamage / ProjectileCount:F0}</b></color> [<color=green><b>{100f / ProjectileCount:F0}%</b></color>] {PlantData.DamageTypeLabel(damageType)}, and <color=green><b>{attackDamage / ProjectileCount * 0.5f:F0}</b></color> to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
-        $"Dealing Wind Damage has a <color=green><b>{ErosionProcChance * 100f:F0}%</b></color> chance to apply <color=green><b>{InitialErosionStacks}</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>{ErosionDuration:F0}s</b></color>, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)ErosionReductionPerStack}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead.";
+        $"Dealing Wind Damage applies <color=green><b>{InitialErosionStacks}</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>{ErosionDuration * ErosionProcChance:F1}s</b></color>, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)ErosionReductionPerStack}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead.";
 
     public override string GetSkillDesription() =>
         $"Summon a vortex at target location, dragging insects toward its center while dealing <color={PlantData.ElementalColor(elementalType)}><b>{VortexDamageFlat:F0}</b></color> [<color=#FFB6C1><b>+{VortexDamageMPBonus:F0}</b></color>] damage every <color=green><b>{AData?.vortexTickInterval ?? 0.5f:F1}s</b></color> within a <color=green><b>{VortexRadius:F1}</b></color> radius, for <color=green><b>{skillDuration:F0}s</b></color>.";
@@ -153,14 +154,13 @@ public class Anemone : Shooter
         int   spl        = AData?.path2InitialStacksPerLevel ?? 1;
         int   baseStacks = AData?.baseInitialErosionStacks   ?? 3;
         float baseRed    = AData?.baseReductionPerStack      ?? 0.5f;
-        float baseProc   = AData?.baseErosionProcChance      ?? 0.5f;
         float procpl     = AData?.path2ProcChancePerLevel    ?? 0.05f;
         string desc = details
-            ? $"Dealing Wind Damage has a <color=green><b>[({baseProc * 100f:F0}%) + ({procpl * 100f:F0}%/Lvl.)]</b></color> chance to apply <color=green><b>[({baseStacks}) + ({spl}/Lvl.)]</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>[({passiveDuration:F0}) + ({ErosionDurationPerLevel:F0}/Lvl.)]</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)baseRed}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead."
+            ? $"Dealing Wind Damage applies <color=green><b>[({baseStacks}) + ({spl}/Lvl.)]</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>{ErosionDuration * ErosionProcChance:F1}</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)baseRed}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase initial <color=#E0E0E0>Wind Erosion</color> application by <color=green><b>{spl}</b></color> per level. [<color=green><b>+{spl * effectivePath2Level}</b></color>]\n\n" +
-               $"Increase proc chance by <color=green><b>{procpl * 100f:F0}%</b></color> per level. [<color=green><b>+{procpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=#E0E0E0>Wind Erosion</color> application duration by <color=green><b>{procpl * 100f:F0}%</b></color> per level. [<color=green><b>+{procpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#E0E0E0>Wind Erosion</color> duration by <color=green><b>{ErosionDurationPerLevel:F0}s</b></color> per level. [<color=green><b>+{ErosionDurationPerLevel * effectivePath2Level:F0}s</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Applies <color=green><b>2</b></color> stacks of <color=#E0E0E0>Wind Erosion</color> instead of <color=green><b>1</b></color> when refreshing.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +

@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe25a532237cad447ab16e5798aa0c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
+  visualLibrary: {fileID: 11400000, guid: 79ecdd6abe1740ed84ec7c0233fcd8e6, type: 2}
 --- !u!4 &29017237
 Transform:
   m_ObjectHideFlags: 0
@@ -88047,6 +88048,7 @@ GameObject:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 384828051}
   - {fileID: 1709538198}
   - {fileID: 1520426562}
   - {fileID: 6243178594257213099}
@@ -88061,3 +88063,47 @@ SceneRoots:
   - {fileID: 7166455377271710429}
   - {fileID: 1692136932}
   - {fileID: 1499672997}
+--- !u!1 &330992302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 384828051}
+  - component: {fileID: 453565894}
+  m_Layer: 0
+  m_Name: MulchManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &453565894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330992302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a6aa453bd66854fa32b5918a61b7eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MulchManager
+--- !u!4 &384828051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330992302}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

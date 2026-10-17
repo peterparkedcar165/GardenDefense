@@ -104,4 +104,4 @@ MonoBehaviour:
   iceBeamDurationPerLevel: 2
   iceBeamAttackSpeed: 2.5
   iceBeamAttackSpeedPerLevel: 0.3
-  path3MaxBondedPartnerHasteBonus: 0.15
+  path3MaxBondedPartnerHasteBonus: 0.35

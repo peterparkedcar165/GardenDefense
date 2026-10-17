@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b901b8de8224415da903a57565893f78, type: 3}
+  m_Name: WeatherVisualLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::WeatherVisualLibrary
+  entries:
+  - weather: 1
+    tintColor: {r: 1, g: 0.95, b: 0.75, a: 1}
+    tintStrength: 0.3
+    lightIntensityMultiplier: 1.1
+    particlePrefab: {fileID: 0}
+  - weather: 2
+    tintColor: {r: 0.25, g: 0.3, b: 0.4, a: 1}
+    tintStrength: 0.4
+    lightIntensityMultiplier: 0.65
+    particlePrefab: {fileID: 2712915376308916410, guid: 3709f080df7fe5e47a609dcfec35776b, type: 3}
+  - weather: 3
+    tintColor: {r: 0.9, g: 0.95, b: 0.95, a: 1}
+    tintStrength: 0.15
+    lightIntensityMultiplier: 1
+    particlePrefab: {fileID: 0}
+  - weather: 4
+    tintColor: {r: 0.85, g: 0.92, b: 1, a: 1}
+    tintStrength: 0.4
+    lightIntensityMultiplier: 1.05
+    particlePrefab: {fileID: 2712915376308916410, guid: 90bb2d02519818748ae700928472a3bc, type: 3}
+  - weather: 5
+    tintColor: {r: 0.82, g: 0.68, b: 0.45, a: 1}
+    tintStrength: 0.6
+    lightIntensityMultiplier: 0.75
+    particlePrefab: {fileID: 2712915376308916410, guid: 64957656f922a56409cd2aad883f845e, type: 3}
+    nightMaterial: {fileID: 2100000, guid: 5692e42ba29859f429173839a1ce31df, type: 2}
+  - weather: 6
+    tintColor: {r: 0.3, g: 0.55, b: 0.65, a: 1}
+    tintStrength: 0.5
+    lightIntensityMultiplier: 0.85
+    particlePrefab: {fileID: 0}

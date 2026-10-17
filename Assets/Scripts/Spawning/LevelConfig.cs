@@ -52,6 +52,12 @@ public class LevelConfig : ScriptableObject
     [Tooltip("mid-level fertilizer grants - after each listed wave completes, the player's fertilizer queue gains one entry of that rarity")]
     public FertilizerGrant[] fertilizerGrants;
 
+    [Header("mulch")]
+    [Tooltip("every mulch eligible to be drafted in this level, regardless of tier")]
+    public MulchData[] mulchPool;
+    [Tooltip("mulch grants - after each listed wave completes, the player's mulch queue gains one entry of that tier")]
+    public MulchGrant[] mulchGrants;
+
     [Header("ambience")]
     [Tooltip("looping background sounds, share one profile asset across a biome")]
     public AmbienceProfile ambience;

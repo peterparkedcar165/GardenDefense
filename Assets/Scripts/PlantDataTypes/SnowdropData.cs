@@ -22,7 +22,7 @@ public class SnowdropData : PlantData
     public float iceBeamAttackSpeed              = 3f;
     public float iceBeamAttackSpeedPerLevel      = 0.4f;
     // Path3 max: while the beam is active, the bonded partner also gains this much Attack Speed
-    public float path3MaxBondedPartnerHasteBonus = 0.15f;
+    public float path3MaxBondedPartnerHasteBonus = 0.35f;
 
     public override string GetAttackDescription() =>
         $"Fires a magical snowball at her target, dealing {DamageTypeLabel(damageType)}.";

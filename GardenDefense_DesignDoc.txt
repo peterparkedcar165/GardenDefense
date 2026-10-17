@@ -1,0 +1,386 @@
+GARDEN DEFENSE - GAME DESIGN DOC SUMMARY
+Generated 2026-10-17
+
+============================================================
+1. PLANTS
+============================================================
+
+Base architecture (Plant.cs): path1Level/path2Level/path3Level each capped at
+5 (no overcap). tauntValue is a real stat - baseTauntValue (author-set per
+PlantData asset, default 3) + tauntValueAdder, floored at 0, feeding the
+weighted-lottery targeting system. Every plant also tracks Temperature/comfort
+and Air/respiration.
+
+26 active plants (Family | Element/DamageType | cost/HP/AD/AS/Range from the
+live .asset, not just the C# default):
+
+ACORN KNIGHT - Ironbark | Grass/Physical | 70/250/26/1/1.75, skillCD 100
+(tuned up from code's 90). Semicircle sword sweep, falls back to Armor-scaled
+Shield Bash in Guard Stance. Passive: HP regen (1%/s, 3%/s after 6s
+undamaged), auto-Guard Stance vs melee. Skill: thrown shield that
+blocks/taunts. Max bonuses: +33% Armor->AD (P1), 75% stun chance on Shield
+Bash (P2), shield heals extend its own life + inherits Armor (P3).
+
+ALOE VERA - Verdance | Water/Magic | 95/200/42/0.14/4, skillCD 120 (doubled
+from code's 60). Lobbed droplets heal allies/splash insects; heal+attack now
+scale with 5% of her own Max Health on top of 22%/14% Magic Power (new this
+session). Max bonuses: splash radius x2 (P1), heals restore +12% missing
+health (P2), overheal becomes a Drizzle Barrier shield (P3).
+
+ANEMONE - Wither | Wind/Magic | 95/200/18/0.6/3 (baseOnHitEffectiveness
+deliberately 0.33 so the triple-shot doesn't over-proc). 3 wind balls (6 at P1
+max), chance to stack Wind Erosion (Armor/MR shred). Skill: Vortex pull+tick,
+airborne+detonate at P3 max.
+
+BEGONIA - Symbiosis | Water/Magic | 200/300/24/0.3/2.5, Elder (limit 1). Aura
+buffs nearby Elemental Affinity/Grass Damage + speeds Germinate. Skill
+"Blossoming" buffs AS + shaves primer cooldowns. Max: ignores Water's
+internal-cooldown gate (P1), Germinate can crit (P2), Blossoming's Germinate
+radius +50% (P3).
+
+BIRD OF PARADISE - Thorn | Wind/Physical | 250/300/12/1/2 (melee). Talon Focus
+stacks (cap 10, +AS/stack) + flat on-hit bonus per stack. Skill "Three Talon
+Strike" cleaves 2 extra targets. Max: missing-health finisher at full stacks
+(P1), stacks shred Armor + every 3rd hit double-procs (P2), permanent
+1-extra-target cleave (P3).
+
+BOG IRIS - Photosynthesis | Water/Magic | 105/200/26/0.3/3, passiveCD 12,
+skillCD 90. Water bolt + %MaxHP bonus; "open" (full HP) generates Sun,
+"closed" (damaged) regens HP (doubled out of combat). Skill: Geyser AoE +
+knock-up. Max: +50% Bonus Effect Chance (P1), regen always doubled + Armor
+while closed (P2).
+
+CACTUS - Ironbark | Poison/Physical | 125 (tuned up from 95)/300/32/0.12/2
+(melee), Armor 42. Melee AoE + %Armor bonus damage, applies Punctured.
+Passive: melee-hit refunds cooldown, shield taunts nearby. Skill "Countering
+Stance" reworked this session: counter damage is now % of attacker's own base
+Attack Damage + flat % of Cactus's own Armor (was % of damage received);
+shield now scales with Magic Power. New skill tree (CactusSkillTree.asset),
+confirmed wired (cactus_barbed_retort, cactus_retaliatory_spikes,
+cactus_instant_skill). Max: +25% base Attack Range (P1), 2 Punctured stacks
+per hit (P2), +25% total Armor during stance (P3).
+
+CALENDULA - Kindred | Fire/Magic | 105/200/48/0.15/2.5, skillCD 35. Expanding
+fire burst (10%/hit falloff, 40% floor), illuminates attack range. Skill
+"Floral Glow" buffs a chosen plant's single-target attacks with Coordinated
+fire damage. Max: +15% Coordinated Damage (P1), Ember aura (P2), Floral Glow
++15% AS (P3).
+
+CARROT - Kindred, Elder (limit 1) | Grass/Physical | 185/300/156/0.3/4,
+skillCD 60. Ground eruption AoE (Coordinated-tagged), knocks up burrowed
+insects. Passive "Soil Bond" links to a Shooter ally. Skill "Fault Line"
+pillar row. Max: crits knock up everything (P1), bonded plant gains AS too
+(P2), bonus %MaxHP damage + bonded plant gets its own pillar line (P3).
+
+DANDELION - Symbiosis | Wind/Magic | 85/200/24/0.3/3. Pollen seed; passive
+periodically cuts nearby allies' Skill Cooldown. Skill "Wind Gust" beam grants
+Skill Charge Rate. Max: -1s extra on passive procs (P1), +33% Skill Damage
+nearby (P2), Wind Gust traps 2s longer + refunds 25% cooldown (P3).
+
+GLORIOSA - Verdance | Fire/Magic | 95/200/32/1.15/3, skillCD 45. Homing ember
+heals most-injured ally or damages insects as fallback. Skill summons 2 (3 at
+P3 max) Cinderwisp helpers (plain MonoBehaviour, not its own Plant -
+heals/warms, "latches" for a stronger buff). Max: embers bounce between
+injured allies + Piercing (P1), heal applies regen-over-time (P2), +1
+Cinderwisp (P3).
+
+GLOWSHROOM - Photosynthesis | Grass/Magic | 95/200/20/0.5/3, skillCD 45.
+Fungal bolt splashes %dmg, prefers un-glowing targets; Fungal Glow debuff
+generates Sun on kill. Skill triples light radius + Blinds. Max: splash also
+applies Glow (P1), Glow-death also Blinds nearby (P2), Blind re-applies
+continuously during skill (P3).
+
+HELLEBORE - Ironbark | Poison/Magic | 105/200/32/0.8/2.3, skillCD 30. Thorned
+bolt; attacks cut her own skill CD; aura grants nearby plants %Armor as
+"Protection." Skill "Thorned Guard" shield reflects Poison Magic damage +
+negative effects. Max: +28% Armor as bonus damage (P1), aura also grants half
+that as Magic Armor (P2), shield self-regens 6%/s + auto-applies below 25% HP
+(P3).
+
+HOLLY - Ironbark | Ice/Physical | 105/200/6/1.5/2, skillCD 35, skillDur 8.
+Spiraling cold-wind AoE. Passive "Snow Ward" reworked this session: now scales
+with Magic Power, Magic Armor, and Heals & Shield Bonus; also cools in Hot
+weather + grants Sandstorm immunity. Skill "Blizzard" - its power multiplier
+now only speeds shield ramp rate, not the cap (also reworked). New skill tree
+(HollySkillTree.asset) rebuilt from scratch - the old one was stale/orphaned
+from a pre-rework kit. Max: +15% Magic Armor as bonus damage (P1), flat Magic
+Resistance from Snow Ward (P2), Blizzard tick interval halved (P3).
+
+KELP - Photosynthesis | listed as Wind/Physical - flagged as possibly a
+stale/unused field, since her actual kit is pure melee-whip + Oxygen, no
+elemental damage anywhere | 95/200/35/0.8/2, skillCD 45, skillDur 12. Melee
+whip releases Oxygen; enough cumulative Oxygen produces Sun. Skill grants an
+Air Bubble. Max: whips splash (P1), +1 Sun per threshold (P2), Air Bubble
+grants 100% Sun Yield (P3).
+
+LEAF RANGER - Thorn | Grass/Physical | 250/200/122/0.15/99 (screen-wide),
+skillCD 90, skillDur 8. Slow heavy arrows; immune to Blind; Piercing now
+bounces target-to-target instead of passing through (per commit 706b5db).
+Skill "Rapid Focus" AS buff. Max: +30 Armor Pen (P1), stacking AS buff per
+shot (P2), Rapid Focus becomes a 5-arrow 30 degree volley (P3).
+
+NERIUM OLEANDER - family changed Wither->Verdance this session, tauntValue->1
+| Poison/Physical | 85/200/24/0.6/3, skillCD 30, skillDur 3. Bouncing toxic
+petal. Passive reworked this session from "Oleandic Toxin" (locked buffs off
+insects) to "Oleandic Ward": periodic aura cleansing + locking one debuff off
+nearby allies, weak flat heal + regen scaling with lock count. Old
+OleandicToxinEffect.cs deleted; replaced by the generic
+StatusEffect.TryBlockNegativeEffect hook. Skill places an Oleander Sprout
+(bounce relay + curses insects). New skill tree
+(NeriumOleanderSkillTree.asset), confirmed wired. Max: extends Poison debuffs
++ old-target bounce-back (P1), locked debuffs grant Magic Resistance (P2),
+sprout-hit bonus bounce (P3).
+
+OLD CARROT - Kindred | Grass/Magic | 225/200/32/0.15/3, skillCD listed as 0 in
+the asset, no skill tree assigned. Flagged as a likely stale legacy
+predecessor to Carrot - still compiles/selectable but reads as unmaintained.
+"Psionic Bond" homing projectile + mark-stacking, pillar-line skill.
+
+POISON SHROOM - Wither | Poison/Magic | 225/300/14/0.6/2.5, skillCD 120,
+skillDur 9. Toxic Spores DoT spreads to uninfected first; also deals %current-
+health/s. Skill "Poison Field" DPS zone + freezes debuff timers. Max: splashes
+to 2 extra targets (P1), DoT can crit +15% (P2), field ticks also apply Spores
+(P3).
+
+RHODIOLA - Verdance | Grass/Magic | 95/200/20/0.4/2, skillCD 160, skillDur 20.
+Homing seed heals most-injured (<25% HP priority). Passive: Heal/Shield
+scales with %Grass Damage; heals apply regen-over-time. Skill revives a fallen
+plant + heals. Max: heals restore %missing-health (P1), full-HP converts to
+Grass Damage else heal-return (P2), revived plants get shield+regen (P3).
+
+SNOWDROP - Kindred | Ice/Magic | 125/200/16/0.3/2, skillCD 90 (tuned up),
+skillDur 10. Snowball bolt; unmarked targets get bonus %MaxHP Ice damage +
+mark; bonded partner auto-targets marks for detonation (2x if Attack-tagged).
+Skill "Ice Beam" fixed-AS continuous beam. Confirmed this session: Path3 max
+bonus (bonded partner AS during Ice Beam) raised 15%->35%, in both the C#
+default and the live asset. Max: +1 target (P1), range-share with bonded
+plant + beam range cap removed (P2).
+
+STARGAZER - Thorn | Fire/Magic | 125/200/11/3/2, skillCD 120. Cone fire
+spray; Fire hits can stack "Flammable" (+Burn damage taken); her own Burns
+last longer. Skill "Fire Wave" full-map sweep. Max: -33% AD for +25% Fire
+Damage + wider cone (P1), +35% Elemental Affinity (P2), Fire Wave sweeps back
+(P3).
+
+SUNFLOWER - Photosynthesis | Fire/Magic | 100/200/42/0.3/3, chargeTime 1,
+skillCD 100 (tuned up from 90). Charged sun-bolt; generates Sun on a timer,
+chance to shave a second per hit. Skill "Sunray" stationary DPS beam. Max:
+-50% AD for 3 (4 w/ skill tree) simultaneous projectiles (P1), Fire kills
+grant +27% Sun Yield via "Sun Mark" (P2), extra random-location Sunray (P3).
+
+TANSY - Kindred | Fire/Magic | 105/200/10/0.25/2.5, skillCD 35, skillDur 15. 2
+(3 at P1 max) orbiting petals, player-togglable orbit radius. Skill sends an
+orbiting petal to buff another plant. Max: +1 petal (P1), nearby allies +15%
+AS (P2), skill gets a second opposite-side petal (P3).
+
+WATERLILY - Wither | Water/Magic | 100/200/14/0.5/4, skillCD 100 (tuned up),
+skillDur 8. Bubble bolt splashes + stacking Slow chance. Skill "Bubble Prison"
+traps airborne. Max: +50% On-Hit effectiveness (P1), splash applies On-Hit
+effects too (P2), imprisoned insects slowly rise (P3).
+
+ZINNIA - Symbiosis | Fire/Magic | 95/200/24/0.3/1.25, skillCD 90, skillDur 30.
+Fire AoE damages insects, marks allies "Ablaze" instead. Aura grants Fire
+Damage + flat Magic Power. Skill "Artificial Sun" grants Sunlight Exposure +
+warmth. New skill tree (ZinniaSkillTree.asset), confirmed wired. Max: +40%
+own AS (P1), Warmth also grants Elemental Affinity (P2), Fire plants under
+the sun get extra Passive level (P3).
+
+Deprecated (kept, no further edits): Cattail (Thorn, Water Sniper -
+single-target no-pierce, grounds flyers), Morning Glory (Thorn, Updraft aura +
+Levitate crit skill), Ghost Fungus (Wither, summons Ghost Shroomlets, Fungal
+Hypnosis mind-control skill), Aeonium (Photosynthesis, combat-proc-driven Sun
+gen).
+
+Stray non-plant files: Dahlia.cs is a 1-line dead stub ("renamed to
+Rhodiola.cs"). Cinderwisp.cs/GhostShroomlet.cs are summon-only helpers, not
+independent plants.
+
+============================================================
+2. INSECTS
+============================================================
+
+(HP / AD / Speed / carryPriority / aggressivity, where set)
+
+WORKER ANT 200/17/0.6, None - baseline melee, 1.5x damage to path blockers.
+SCOUT ANT 240/15/1.4, None - pulses +0.2 Movement Speed to every insect on the
+field.
+SOLDIER ANT 420/24/0.6, priority 1, Low - flat physical damage reduction
+(Magic/True ignores it).
+FIRE ANT 200/24/0.6, Low - attacks raise target plant's Temperature by 4.
+SNOW ANT 200/24/0.6, Low, cryotolerant - attacks lower target plant's
+Temperature by 4.
+QUEEN ANT 700/30/0.3, None - spawns 2 random ants every 12s; if hypnotized,
+her babies are friendly too.
+WASP 360/38/0.8, Low (flying) - 5x targeting weight toward Photosynthesis-
+family plants.
+MOSQUITO 360/10/1, Low (flying) - bite = 4s DoT (12 DPS, -50% healing
+received) + self-heal "Bloodsucker." Confirmed this session: self-heal 4%->2%
+max HP/s, in script, data class, and asset simultaneously.
+MOTH 340/14/0.8, None (flying) - seeks light-emitting plants specifically,
+speeds up near light.
+WINTER MOTH 280/14/0.6, cryotolerant - inherits Moth's light-seeking; Cold
+Aura + 15% Evasion while snowing.
+FIREFLY 360/15/0.9, Low (flying) - attacks inflict "Glowing Swarm" (lights up
+the target).
+GLOWWORM 400/0/0.5, priority 2, None - stops to heal+buff the most-injured
+nearby insect. (Comment says aggressivity "should be Low," but None achieves
+the same no-plant-targeting result - minor stale comment, not a bug.)
+SNOW FLY 140/10/1, cryotolerant (flying) - +25 Armor/MR while snowing, can't
+be slowed below base speed.
+DUSKDARTER 600/20/0.9, priority 0, None (flying carrier) - picks up the
+highest-priority ground insect, passenger excluded from single-target but
+still AoE-vulnerable.
+DARKLING BEETLE 500/42/0.4, priority 0, Low (ground carrier) - passenger
+fully immune to ALL damage while carried (stronger than Duskdarter's).
+BOMBARDIER BEETLE 320/30/0.4, priority 4 (highest in the game), High - lobs
+bombs at the deepest/"backline" plant, splash + Scorch chance, fires even
+while carried.
+CAVE SPIDER 240/20/1, Low - attacks apply "Webbed" (blocks attacks/skills,
+3s).
+SCORPION 800/34/0.5, priority 1, None - Venom DoT (16 DPS Magic, 12s).
+DESERT LOCUST 300/32/0.6, High - stacking "Devour" permanently shrinks
+target's Max Health.
+JUMPING SPIDER 160/18/0.9, High - leaps with real gravity, can reach
+highground, Webs on landing.
+HARVESTMAN 600/32/1, priority 2, Low - ignores plants, hunts friendly
+minions/hypnotized insects.
+SILVERFISH 350/22/1.3, Low - doubles total Evasion in darkness.
+EARTHWORM - cycles burrowed/surfaced, leaves an UndergroundTunnel shortcut on
+resurfacing.
+TERMITE 160/7/0.8, High - spawns 2 companions on start (companions don't
+spawn further companions); stacking Attack Damage per nearby Termite.
+FRUIT FLY 160/10/1, None (flying) - plain weak flyer, no special behavior.
+SNAIL 2200 (tankiest regular insect)/40/0.4, priority 3, None - starts
+shielded (+150 Armor while shielded), +50% Movement Speed once it pops.
+
+Not independent roster entries: Ant/FlyingInsect/Minion (abstract bases),
+GhostShroomlet (Ghost Fungus's summon), UndergroundTunnel, and marker
+interfaces ICarrierInsect/ICryotolerant/IShooterInsect.
+
+============================================================
+3. SYSTEMS
+============================================================
+
+ECONOMY/SUN - fully working. GameManager.AddSun/SpendSun + BonusSunGain
+multiplier; new this session: cumulative totalSunGenerated/totalSunSpent
+counters feeding the info panel. Generation itself is per-plant (no central
+"sun system" class).
+
+LEVELING/EXP - fully working, unchanged. Kill exp = sunDrop/2, split among
+attackers (10% floor share).
+
+UPGRADE PATHS - fully working. Cap 5/5/5, no overcap, every active plant
+implements all three.
+
+SKILL TREES - infrastructure fully working, content partial: 17 of 26 active
+plants have a populated, wired tree (Acorn Knight, Aloe Vera, Begonia, Bog
+Iris, Cactus, Calendula, Dandelion, Holly, Leaf Ranger, Nerium Oleander,
+Poison Shroom, Rhodiola, Snowdrop, Sunflower, Tansy, Waterlily, Zinnia). 9
+have none at all (fileID: 0, not even stale): Bird of Paradise, Anemone,
+Kelp, Hellebore, Glowshroom, Gloriosa, Stargazer, Carrot, Old Carrot. Skill
+points are per-species (banked from that species' own session exp), not a
+global pool.
+
+FERTILIZERS - fully working, two mechanisms: single pre-level pick +
+session-only mid-level procedural queue (Common/Rare/Epic = 2/3/4 stats at
+1x/2x/3x roll magnitude). New this session: GetCombinedActiveStats() sums
+both sources for display.
+
+STATUS EFFECTS/REACTIONS - fully working, deterministic Primer system (the
+old random-roll version is dead code). Full matrix confirmed: Fire+Ice =
+Fracture, Fire+Grass = Burn, Fire+Poison = Corrosion, Fire+Water = Steam,
+Water+Ice = Freeze, Water+Poison = Sludge, Water+Grass = Germinate, Grass+Ice
+= Brittle, Grass+Poison = Poisoned, Poison+Ice = Frostbite, Wind+anything =
+Windshear.
+
+WEATHER - mostly working, one gap: Sunny/Rain/Snow/Sandstorm/Underwater all
+have real mechanical hooks; Windy is flavor-text only, zero mechanical effect
+in Plant.ApplyWeatherEffect.
+
+DAY/NIGHT - fully working (DarknessManager), drives night-targeting, Moth's
+light-seeking, Oleander's sprout visibility, etc.
+
+LOADOUT - fully working, and not a flat 4 slots: 4 + clamp(highestLevel
+Unlocked/5, 0, 4) - 5 slots at level 6 unlocked, up to 8 from level 21 on.
+
+LIVES/HEALTH - fully working, standard.
+
+WAVES/SPAWNING - two coexisting mechanisms confirmed directly: Levels 1-13
+are hand-authored (waves[] populated, insects[] empty); Levels 14-27 are
+procedural budget/roster-based (insects[]/eliteInsects[] populated, waves[]
+empty).
+
+IN-GAME INFO PANEL - new this session, fully working: GameInfoPanel.cs,
+self-bootstrapping (zero scene wiring), toggled with G, shows weather,
+combined fertilizer stats (alphabetical), and sun totals.
+
+============================================================
+4. BIOMES AND LEVELS
+============================================================
+
+Grouped by Ambience asset + GridManager evidence (no explicit "Biome" enum
+exists in code - this grouping is inferred but consistent):
+
+DAYTIME (L1-5): maxWaves 7/8/10/12/16, sun 70/170/250/450/750, Sunny->Clear,
+Normal temp. Hand-authored.
+
+NIGHTTIME (L6-10): maxWaves 16/18/20/20/20, sun 650/750/750/750/1050,
+Clear->Rain, Normal temp. Hand-authored.
+
+DESERT (L11-15, no ambience asset yet): maxWaves all 20. L11 Sunny/950, L12
+Sandstorm/1500, L13 Sandstorm/1500 - all three hand-authored. L14
+Sandstorm/950, L15 Sandstorm/1250 - both procedural. All Hot.
+
+CAVE (L16-20, no ambience asset): maxWaves 30/32/36/40/45, sun
+1250/1250/1250/1250/1500, Clear, Normal temp. All procedural.
+
+SNOW (L21-25): maxWaves 35/40/45/50/55, sun 1250x4/1750, Clear->Snow, Cold
+temp. All procedural.
+
+UNDERWATER (L26-27): maxWaves 55/55, sun 1500/1500, Underwater weather,
+Normal temp. All procedural.
+
+============================================================
+5. RECENT CHANGES
+============================================================
+
+Everything from this session's work list was cross-checked and confirmed
+live, including: Mosquito's heal cut, the full taunt-weighted targeting
+system, Holly's and Cactus's reworks + new skill trees, Aloe Vera's Max Health
+scaling, Snowdrop's 15%->35% bump, Zinnia's skill tree, Oleander's full
+passive rework + family change, the Level10-13 overhauls, Termite's
+count-to-1 fix, and the new info panel. One sub-claim (Level11's breather
+waves specifically landing on 4/9/14/19) wasn't independently re-derived from
+scratch during the review pass - treat that one detail as very likely true,
+but not freshly re-verified.
+
+New things found that weren't on the original change list, worth attention:
+
+1. A handful of skill-cooldown values have been hand-tuned in the .asset
+files independent of any code change, and are currently uncommitted: Acorn
+Knight 90->100, Sunflower 90->100, Waterlily 90->100, Aloe Vera 60->120
+(doubled), Snowdrop 90->100. These read like direct Editor tweaks layered on
+top of this session's work - flagging in case any were accidental.
+
+2. In-progress, currently-inert infrastructure: Acorn Knight, Cactus, and
+Waterlily's PlantData gained new projectile-glow fields
+(projectileEmitLight, projectileLightRadius, projectileLightColor, hitbox
+radius fields) that are fully wired into Projectile.cs but switched off
+(projectileEmitLight: 0) for all three right now.
+
+3. Git hygiene issue: the most recent commit (3c34e78, message "lots of
+changes man...") bundles in some things that probably shouldn't be tracked -
+two editor crash-recovery/backup files
+(Level12.0.backup-20261010-205001.bak, Level12.unity.current-
+20261010-205001.bak) and what look like personal design scratch notes
+(Cactus_Kit.txt, DandelionKit.txt, WaveSpawningSystem_Notes.txt) at the repo
+root. Worth a .gitignore pass if those weren't meant to be committed.
+
+4. Old Carrot reads as a stale, unmaintained predecessor to Carrot (zero
+skill cooldown in its asset, no skill tree, same flavor as Carrot but an
+older "Psionic Bond" kit) - still fully compiles and is selectable, just
+looks forgotten.
+
+5. Kelp's elementalType is set to Wind despite her kit being pure melee/
+Oxygen with no elemental damage anywhere - possibly a leftover/unused field
+rather than a bug, but worth a glance.

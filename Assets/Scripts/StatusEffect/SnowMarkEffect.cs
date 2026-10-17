@@ -9,6 +9,7 @@ public class SnowMarkEffect : StatusEffect
 {
     private const float ChillingGraspSlowPercent = 0.25f;
     private bool _slowApplied;
+    private float _appliedAmount;
 
     public SnowMarkEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
@@ -29,13 +30,14 @@ public class SnowMarkEffect : StatusEffect
         if (source is Snowdrop snowdrop && target is Insect insect && SkillTreeManager.HasUnlock(snowdrop, Snowdrop.ChillingGraspUnlock))
         {
             _slowApplied = true;
-            insect.movementSpeedMultiplier -= ChillingGraspSlowPercent;
+            _appliedAmount = ChillingGraspSlowPercent + MulchManager.GlobalSlowBonus;
+            insect.movementSpeedMultiplier -= _appliedAmount;
         }
     }
 
     public override void OnExpire()
     {
         if (_slowApplied && target is Insect insect)
-            insect.movementSpeedMultiplier += ChillingGraspSlowPercent;
+            insect.movementSpeedMultiplier += _appliedAmount;
     }
 }
