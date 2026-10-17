@@ -17,7 +17,6 @@ public static class FertilizerStatRules
         StatType.CriticalDamage,
         StatType.MaxHealth,
         StatType.MagicPower,
-        StatType.BonusEffectChance,
         StatType.MinimumDamage,
         StatType.MaximumDamage,
         StatType.SunYield,

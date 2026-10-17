@@ -21,10 +21,9 @@ public class Stargazer : Aura
     private float ConeAngle              => (SData?.coneAngle ?? 60f) + (IsPath1Maxed ? (SData?.path1MaxConeAngleBonus ?? 15f) : 0f);
     private float FlammableBonusPerStack => SData?.flammableBonusPerStack ?? 0.01f;
     private int   FlammableMaxStacks     => SData?.flammableMaxStacks ?? 5;
-    private float FlammableDuration       => passiveDuration;
+    private float FlammableDuration       => passiveDuration * (1f + (SData?.path2ProcChancePerLevel ?? 0.05f) * effectivePath2Level);
     private int   StacksPerHit           => (SData?.baseStacksPerHit ?? 1) + Mathf.RoundToInt((SData?.path2StacksPerLevel ?? 1) * effectivePath2Level);
     private float BurnDurationBonus       => (SData?.baseBurnDurationBonus ?? 0.5f) + (SData?.path2BurnDurationPerLevel ?? 0.1f) * effectivePath2Level;
-    private float PassiveProcChance       => (SData?.passiveProcChance ?? 0.25f) + (SData?.path2ProcChancePerLevel ?? 0.05f) * effectivePath2Level;
 
     private float SkillLength       => SData?.skillLength ?? 50f;
     private float SkillWaveWidth    => (SData?.skillWaveWidth ?? 4f) + (SData?.path3WaveWidthPerLevel ?? 0.5f) * effectivePath3Level;
@@ -179,10 +178,9 @@ public class Stargazer : Aura
         _fireCone.Update(active, _facingDir, ConeAngle, attackRange, fireConeTravelTime);
     }
 
+    // always applies now (used to be a PassiveProcChance roll)
     private void ApplyFlammable(Insect insect)
     {
-        float procChance = PassiveProcChance * (1f + bonusEffectChance);
-        if (Random.value >= procChance) return;
         AddFlammable(insect, StacksPerHit);
     }
 
@@ -290,7 +288,7 @@ public class Stargazer : Aura
         $"Sprays fire in a <color=green><b>{ConeAngle:F0}°</b></color> cone, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> damage to all insects within it.";
 
     public override string GetPassiveDescription() =>
-        $"Dealing <color=orange><b>Fire Damage</b></color> has a <color=green><b>{PassiveProcChance * 100f:F0}%</b></color> chance to apply <color=green><b>{StacksPerHit}</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> to the target for <color=green><b>{FlammableDuration:F0}s</b></color>, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>{BurnDurationBonus * 100f:F0}%</b></color> longer.";
+        $"Dealing <color=orange><b>Fire Damage</b></color> applies <color=green><b>{StacksPerHit}</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> to the target for <color=green><b>{FlammableDuration:F1}s</b></color>, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>{BurnDurationBonus * 100f:F0}%</b></color> longer.";
 
     public override string GetSkillDesription() =>
         $"Aim a direction. After a brief delay, a <color=#FF6B1A><b>Fire Wave</b></color> sweeps across the entire map, dealing <color={PlantData.ElementalColor(elementalType)}><b>{(SData?.skillBaseDamage ?? 200f) + (SData?.path3SkillDamagePerLevel ?? 40f) * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] damage to everything in its path, applying <color=green><b>{SkillFlammableStacks}</b></color> stack{(SkillFlammableStacks == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color>. The wave deals <color=green><b>{(SkillBurnMultiplier - 1f) * 100f:F0}%</b></color> increased damage against <color=orange>Burning</color> targets.\n\nInflicts <color=orange>Burn</color> on targets hit.";
@@ -316,10 +314,10 @@ public class Stargazer : Aura
         float bdpl = SData?.path2BurnDurationPerLevel  ?? 0.1f;
         float ppl  = SData?.path2ProcChancePerLevel    ?? 0.05f;
         string desc = details
-            ? $"Dealing <color=orange><b>Fire Damage</b></color> has a <color=green><b>[({(SData?.passiveProcChance ?? 0.25f) * 100f:F0}%) + ({ppl * 100f:F0}%/Lvl.)]</b></color> chance to apply <color=green><b>[({SData?.baseStacksPerHit ?? 1}) + ({spl}/Lvl.)]</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> to the target for <color=green><b>{FlammableDuration:F0}</b></color> seconds, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>[({SData?.baseBurnDurationBonus ?? 0.5f:F0}%) + ({bdpl * 100f:F0}%/Lvl.)]</b></color> longer."
+            ? $"Dealing <color=orange><b>Fire Damage</b></color> applies <color=green><b>[({SData?.baseStacksPerHit ?? 1}) + ({spl}/Lvl.)]</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> to the target for <color=green><b>[({passiveDuration:F1}) + ({ppl * 100f:F0}%/Lvl.)]</b></color> seconds, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>[({SData?.baseBurnDurationBonus ?? 0.5f:F0}%) + ({bdpl * 100f:F0}%/Lvl.)]</b></color> longer."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase Proc Chance by <color=green><b>{ppl * 100f:F0}%</b></color> per level. [<color=green><b>+{ppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=#FF6B1A>Flammable</color> application duration by <color=green><b>{ppl * 100f:F0}%</b></color> per level. [<color=green><b>+{ppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#FF6B1A>Flammable</color> stacks applied per hit by <color=green><b>{spl}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(spl * effectivePath2Level)}</b></color>]\n\n" +
                $"Increase <color=orange>Burn</color> duration by <color=green><b>{bdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Increase <color=#FFD700><b>Elemental Affinity</b></color> by <color=green><b>{(SData?.path2MaxElementalAffinityBonus ?? 0.35f) * 100f:F0}%</b></color>.")}\n\n" +

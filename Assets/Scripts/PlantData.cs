@@ -78,7 +78,10 @@ public class PlantData : ScriptableObject
     public int baseMagicPenFlat;
     public float baseMagicPenPercent;
     public float baseLifesteal;
-    public float baseBonusEffectChance;
+    // disabled: every chance-based proc that used to read this was converted to a deterministic
+    // equivalent, so this has no reader left - kept out, not deleted, so already-serialized
+    // fertilizer rolls and the BonusEffectChance ordinal in StatType stay valid
+    // public float baseBonusEffectChance;
     public float baseCriticalChance = 0.05f;
     public float baseCriticalDamage = 1.5f;
     public float baseDotDamage;

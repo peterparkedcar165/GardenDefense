@@ -528,7 +528,6 @@ public abstract class Plant : Entity, IAttackable
         baseMagicPenFlat       = data.baseMagicPenFlat;
         baseMagicPenPercent    = data.baseMagicPenPercent;
         baseLifesteal          = data.baseLifesteal;
-        baseBonusEffectChance  = data.baseBonusEffectChance;
         baseOnHitEffectiveness = data.baseOnHitEffectiveness;
         baseFireDamage         = data.baseFireDamage;
         baseWaterDamage        = data.baseWaterDamage;
@@ -561,6 +560,7 @@ public abstract class Plant : Entity, IAttackable
         if (elementalType == ElementalType.Ice)  coldResistanceAdder += 0.5f; // 50% resistance to cold-driven cooling, not full immunity
         FertilizerManager.instance?.ApplyTo(this);
         SkillTreeManager.ApplyTo(this);
+        MulchManager.instance?.NotifyPlantPlaced(this);
         // baseSunCost is fixed above; sunCostReductionAdder only ever comes from the two calls
         // just above (fertilizer/skill tree StatType.SunCostReduction effects), so this always
         // reflects both sources once they've run

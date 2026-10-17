@@ -71,10 +71,13 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Tansy.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SnowdropProjectile.cs" />
     <Compile Include="Assets\Scripts\Skills\KelpBubbleProjectile.cs" />
+    <Compile Include="Assets\Scripts\Mulch\MulchData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\MosquitoBiteEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CactusData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ColdAuraEffect.cs" />
+    <Compile Include="Assets\Scripts\Mulch\WeatherMulchData.cs" />
+    <Compile Include="Assets\Scripts\Mulch\GreedyGrowthMulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PuncturedEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ScoutAnt.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\EngagedEffect.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="Assets\Scripts\UI\PlantBar.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\RhodiolaProjectile.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\ShieldIndicator.cs" />
+    <Compile Include="Assets\Scripts\Mulch\MulchGrant.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SnowAnt.cs" />
     <Compile Include="Assets\Scripts\UI\CursorManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantFervorEffect.cs" />
@@ -103,10 +107,12 @@
     <Compile Include="Assets\Scripts\Entities\WaterPot.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\WindDisplacedEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\MulchSelectionUI.cs" />
     <Compile Include="Assets\Scripts\Skills\OleanderSprout.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Harvestman.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\QueenAnt.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
+    <Compile Include="Assets\Scripts\Mulch\GreedyGrowthMulchData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\KnockUpEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BirdOfParadiseData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AloeVera.cs" />
@@ -127,8 +133,10 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\BogIrisData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BubbleTrapEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GhostFungusData.cs" />
+    <Compile Include="Assets\Scripts\Mulch\PrimerCooldownMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Skills\FireWave.cs" />
+    <Compile Include="Assets\Scripts\Mulch\PrimerCooldownMulchData.cs" />
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GeneratedFertilizer.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TalonHitCounterEffect.cs" />
@@ -189,6 +197,8 @@
     <Compile Include="Assets\Scripts\StatusEffect\PollenHasteEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalHypnosisEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\IcePrimer.cs" />
+    <Compile Include="Assets\Scripts\Spawning\WeatherVisualLibrary.cs" />
+    <Compile Include="Assets\Scripts\UI\MulchCard.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DarklingBeetle.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\FertilizerStatRules.cs" />
     <Compile Include="Assets\Scripts\InsectData.cs" />
@@ -228,6 +238,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\Airborne.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Calendula.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
+    <Compile Include="Assets\Scripts\Mulch\MulchTier.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GloriosaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AeoniumBlessedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntEffect.cs" />
@@ -267,6 +278,7 @@
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Snowdrop.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\ScorchEffect.cs" />
+    <Compile Include="Assets\Scripts\Mulch\SlowBonusMulchEffect.cs" />
     <Compile Include="Assets\Scripts\PathManager\PathManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\ICarrierInsect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoonOfTheWispEffect.cs" />
@@ -284,6 +296,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Skills\AcornShield.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
+    <Compile Include="Assets\Scripts\Mulch\WeatherMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\NeriumOleander.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearWaterEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\HelleboreData.cs" />
@@ -331,6 +344,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\IlluminativeHasteEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CalendulasEmberEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\TansyProjectile.cs" />
+    <Compile Include="Assets\Scripts\Mulch\HealSplashMulchData.cs" />
     <Compile Include="Assets\Scripts\Skills\LightFader.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CharredEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Sunflower.cs" />
@@ -355,11 +369,14 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\PsionicOldCarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerQueueButton.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
+    <Compile Include="Assets\Scripts\Mulch\MulchManager.cs" />
     <Compile Include="Assets\Scripts\UI\StatsAreaHoverTrigger.cs" />
+    <Compile Include="Assets\Scripts\Mulch\SlowBonusMulchData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SnowBondHasteEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
+    <Compile Include="Assets\Scripts\Mulch\HealSplashMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearPoisonEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelConfig.cs" />
@@ -401,6 +418,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreAuraEffect.cs" />
     <Compile Include="Assets\Scripts\UI\QuickStatRow.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />
+    <Compile Include="Assets\Scripts\UI\MulchQueueButton.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleMarker.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OffPathSlownessEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PsionicMarkEffect.cs" />
@@ -431,6 +449,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\CaveSpider.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AirBubbleEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Glowworm.cs" />
+    <Compile Include="Assets\Scripts\Mulch\MulchCondition.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Stargazer.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AcornKnightData.cs" />
@@ -446,6 +465,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\FruitFly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\InCombatEffect.cs" />
+    <Compile Include="Assets\Scripts\Mulch\MulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ScoutsEncouragementEffect.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantEntry.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DesertLocust.cs" />

@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     public int SunCount;
+    // cumulative totals for the current playthrough, read by the in-game info panel (G)
+    public int totalSunGenerated;
+    public int totalSunSpent;
     public int playerHealth;
     [SerializeField] private GameObject germinateBloomPrefab;
     [System.NonSerialized] public int playerMaxHealth = 200;
@@ -27,7 +30,9 @@ public class GameManager : MonoBehaviour
 
     public void AddSun(int amount)
     {
-        SunCount += Mathf.RoundToInt(amount * (1 + BonusSunGain));
+        int gained = Mathf.RoundToInt(amount * (1 + BonusSunGain));
+        SunCount += gained;
+        totalSunGenerated += gained;
         UpdateSun();
     }
 
@@ -36,6 +41,7 @@ public class GameManager : MonoBehaviour
         if (SunCount >= amount)
         {
             SunCount -= amount;
+            totalSunSpent += amount;
             Debug.Log("Successfully spent: " + amount + " of suns");
             UpdateSun();
             return true;
@@ -143,6 +149,8 @@ public class GameManager : MonoBehaviour
         IsGameActive = true;
         HasStarted = false;
         SunCount = sunCount;
+        totalSunGenerated = 0;
+        totalSunSpent = 0;
         playerMaxHealth = health;
         playerHealth = playerMaxHealth;
         UpdateSun();

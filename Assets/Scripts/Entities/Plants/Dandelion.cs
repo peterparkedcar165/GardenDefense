@@ -58,6 +58,8 @@ public class Dandelion : Shooter
         (DData?.basePassiveTickReduction ?? 1f) + (DData?.path2TickReductionPerLevel ?? 0.25f) * effectivePath2Level + PassiveTickReductionMP;
     private const float ProcTimerReduction = 1f;   // seconds the attack-hit proc adds toward the next pulse
     private const float Path1MaxExtraProcReduction = 1f;
+    // deterministic per-attack-hit timer reduction (see TryAcceleratePassive)
+    private float AttackProcReduction => PassiveProcChance * (ProcTimerReduction + (IsPath1Maxed ? Path1MaxExtraProcReduction : 0f));
 
     // Path2 max: allied plants within her attack radius have increased Skill Damage
     private const float SkillDamageAuraBonus = 0.33f;
@@ -169,14 +171,14 @@ public class Dandelion : Shooter
     }
 
     // called by DandelionProjectile on every insect it hits along its path (piercing means this
-    // can fire several times per shot, once independently per insect struck) - a chance to push
-    // the passive's own internal pulse timer closer to firing, same pattern as
-    // BogIris.TryReduceSunTimer
+    // can fire several times per shot, once independently per insect struck) - deterministically
+    // nudges the passive's own internal pulse timer closer to firing, same pattern as
+    // BogIris.TryReduceSunTimer. used to be a PassiveProcChance% roll for a full second of
+    // reduction; this is the RNG-free, expectation-preserving equivalent
     public void TryAcceleratePassive(Insect insect)
     {
         if (!insect.IsAlive) return;
-        if (Random.value >= PassiveProcChance * (1f + bonusEffectChance)) return;
-        passiveTickTimer += ProcTimerReduction + (IsPath1Maxed ? Path1MaxExtraProcReduction : 0f);
+        passiveTickTimer += AttackProcReduction;
     }
 
     public override void OnPath1Upgrade(int level)
@@ -306,7 +308,7 @@ public class Dandelion : Shooter
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rapl:F2}</b></color> per level. [<color=green><b>+{rapl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#FFB6C1><b>Magic Power</b></color> by <color=green><b>{mppl:F0}</b></color> per level. [<color=green><b>+{mppl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Attacks that successfully proc the passive's timer reduction now reduce it by an additional <color=green><b>1</b></color> second.")}\n\n" +
+               $"{Level5Section(path1Level, "Increase the per-attack timer reduction by an additional <color=green><b>1</b></color> second, scaled by proc rate.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -317,11 +319,11 @@ public class Dandelion : Shooter
         float chancepl    = DData?.path2ProcChancePerLevel ?? 0.05f;
         float reductionpl = DData?.path2TickReductionPerLevel ?? 0.25f;
         string desc = details
-            ? $"Every <color=green><b>[({DData?.basePassiveInterval ?? 16f:F0}) - ({intervalpl:F0}/Lvl.)]</b></color> seconds, reduces the <color=green><b>Skill Cooldown</b></color> of allied plants within her attack radius by <color=green><b>[({DData?.basePassiveTickReduction ?? 1f:F2}) + ({reductionpl:F2}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{PassiveTickReductionMPScaling * 100f:F0}% Magic Power</b></color>] seconds. Attacks have a <color=green><b>[({(DData?.basePassiveProcChance ?? 0.5f) * 100f:F0}%) + ({chancepl * 100f:F0}%/Lvl.)]</b></color> chance to reduce this timer by an additional <color=green><b>1</b></color> second."
-            : $"Every <color=green><b>{PassiveInterval:F0}</b></color> seconds, reduces the <color=green><b>Skill Cooldown</b></color> of allied plants within her attack radius by <color=green><b>{PassiveTickReduction:F2}</b></color> [<color=#FFB6C1><b>+{PassiveTickReductionMP:F2}</b></color>] seconds. Attacks have a <color=green><b>{PassiveProcChance * 100f:F0}%</b></color> chance to reduce this timer by an additional <color=green><b>1</b></color> second.";
+            ? $"Every <color=green><b>[({DData?.basePassiveInterval ?? 16f:F0}) - ({intervalpl:F0}/Lvl.)]</b></color> seconds, reduces the <color=green><b>Skill Cooldown</b></color> of allied plants within her attack radius by <color=green><b>[({DData?.basePassiveTickReduction ?? 1f:F2}) + ({reductionpl:F2}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{PassiveTickReductionMPScaling * 100f:F0}% Magic Power</b></color>] seconds. Attacks reduce this timer by an additional <color=green><b>[({(DData?.basePassiveProcChance ?? 0.5f):F2}) + ({chancepl:F2}/Lvl.)]</b></color> seconds."
+            : $"Every <color=green><b>{PassiveInterval:F0}</b></color> seconds, reduces the <color=green><b>Skill Cooldown</b></color> of allied plants within her attack radius by <color=green><b>{PassiveTickReduction:F2}</b></color> [<color=#FFB6C1><b>+{PassiveTickReductionMP:F2}</b></color>] seconds. Attacks reduce this timer by an additional <color=green><b>{AttackProcReduction:F2}</b></color> seconds.";
         return $"Passive:\n\n{desc}\n\n" +
                $"Decrease the timer by <color=green><b>{intervalpl:F0}</b></color> second per level. [<color=green><b>-{intervalpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"Increase chance by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase the per-attack timer reduction rate by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase the Skill Cooldown reduction by <color=green><b>{reductionpl:F2}</b></color> seconds per level. [<color=green><b>+{reductionpl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Allied plants within her attack radius have <color=green><b>Skill Damage</b></color> increased by <color=green><b>{SkillDamageAuraBonus * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +

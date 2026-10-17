@@ -13,7 +13,7 @@ public class FrostbiteEffect : DoTEffect
     public FrostbiteEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
-        movementSlow = baseMovementSlow * (1f + cachedelementalAffinity);
+        movementSlow = baseMovementSlow * (1f + cachedelementalAffinity) + MulchManager.GlobalSlowBonus;
         effectType = Type.negative;
         elementalType = ElementalType.Ice;
         tickInterval = 1f;

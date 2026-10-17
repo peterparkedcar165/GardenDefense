@@ -212,6 +212,36 @@ public class FertilizerManager : MonoBehaviour
         return sb.ToString().TrimEnd();
     }
 
+    // every fertilizer stat currently in effect - the single pre-level pick plus every mid-level
+    // grant already committed - summed per stat type (so two sources of the same stat combine
+    // into one line) and sorted alphabetically by display name. built for the in-game info panel
+    // (GameInfoPanel, toggled with G), which just renders this list as-is
+    public List<(StatType statType, float value)> GetCombinedActiveStats()
+    {
+        var totals = new Dictionary<StatType, float>();
+
+        if (HasActiveFertilizer)
+            for (int i = 0; i < selectedStats.Length; i++)
+            {
+                StatType st = selectedStats[i].statType;
+                totals[st] = totals.TryGetValue(st, out float existing) ? existing + rolledValues[i] : rolledValues[i];
+            }
+
+        foreach (GeneratedFertilizer fert in committedGenerated)
+            if (fert.stats != null)
+                foreach (GeneratedFertilizerStat stat in fert.stats)
+                    totals[stat.statType] = totals.TryGetValue(stat.statType, out float existing) ? existing + stat.value : stat.value;
+
+        StatType[] statTypes = new StatType[totals.Count];
+        totals.Keys.CopyTo(statTypes, 0);
+        int[] order = FertilizerFormat.SortedIndicesByName(statTypes);
+
+        var result = new List<(StatType statType, float value)>(statTypes.Length);
+        foreach (int i in order)
+            result.Add((statTypes[i], totals[statTypes[i]]));
+        return result;
+    }
+
     public float GetPreviewRangeMultiplier(ElementalType elementalType)
     {
         if (activeFertilizer == null || selectedStats == null) return 0f;
@@ -273,7 +303,6 @@ public class FertilizerManager : MonoBehaviour
             case StatType.GrassDamage:    return (0.03f, 0.04f);
             case StatType.PoisonDamage:    return (0.03f, 0.04f);
             case StatType.WindDamage:      return (0.03f, 0.04f);
-            case StatType.BonusEffectChance: return (0.02f, 0.03f);
             case StatType.MinimumDamage:   return (0.02f, 0.03f);
             case StatType.MaximumDamage:   return (0.03f, 0.04f);
             case StatType.CriticalChance:  return (0.02f, 0.03f);

@@ -41,6 +41,7 @@ public class ProceduralLevel : SpawnManager
 
         FertilizerSelectionUI.instance?.Configure(config.fertilizerPool);
         FertilizerManager.instance?.ResetFertilizerQueue();
+        MulchManager.instance?.ResetMulch(config.mulchPool);
         Plant.pathLevelCap = config.maxUpgradeLevel;
         StartAmbience();
         GameManager.instance?.InitiateLevel(config.startSunCount, config.startHealth);
@@ -92,6 +93,7 @@ public class ProceduralLevel : SpawnManager
             GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
             yield return StartCoroutine(RunWave(wave));
             GrantFertilizersForCompletedWave(wave);
+            GrantMulchForCompletedWave(wave);
 
             if (wave < config.maxWaves)
                 yield return StartCoroutine(RestPeriod(config.restDuration));
@@ -123,6 +125,17 @@ public class ProceduralLevel : SpawnManager
                         () => GameManager.instance.SetPause(false)))
                     GameManager.instance.SetPause(true);
             }
+        }
+    }
+
+    // same timing as GrantFertilizersForCompletedWave above, just for the mulch queue
+    private void GrantMulchForCompletedWave(int completedWave)
+    {
+        if (config.mulchGrants == null || MulchManager.instance == null) return;
+        foreach (MulchGrant grant in config.mulchGrants)
+        {
+            if (grant == null || grant.afterWave != completedWave) continue;
+            MulchManager.instance.GrantMulch(grant.tier);
         }
     }
 

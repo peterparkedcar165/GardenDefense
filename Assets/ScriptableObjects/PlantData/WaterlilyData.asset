@@ -73,12 +73,17 @@ MonoBehaviour:
   baseProjectileSpeed: 2.6
   baseMaxRange: 20
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 90
+  baseSkillCooldown: 100
   baseSkillDuration: 8
   channelDuration: 0
   baseSkillRadius: 2

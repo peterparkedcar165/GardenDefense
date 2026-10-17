@@ -65,4 +65,4 @@ MonoBehaviour:
   biteDuration: 4
   biteHealingReductionPercent: 0.5
   bloodsuckerHealPerSecond: 12
-  bloodsuckerHealPercent: 0.04
+  bloodsuckerHealPercent: 0.02

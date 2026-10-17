@@ -11,7 +11,7 @@ public class SlowEffect : StatusEffect
     public SlowEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
-        slowness = baseSlowness + slownessPerLevel * (level - 1);
+        slowness = baseSlowness + slownessPerLevel * (level - 1) + MulchManager.GlobalSlowBonus;
     }
 
     public override string GetName() => "<color=#87CEEB>Slow</color>";

@@ -1,10 +1,12 @@
 public class MireSlowEffect : StatusEffect
 {
     private const float SlowAmount = 0.5f;
+    private readonly float appliedAmount;
 
     public MireSlowEffect(Entity target, float duration, Entity source) : base(target, duration, 1, source)
     {
         effectType = Type.negative;
+        appliedAmount = SlowAmount + MulchManager.GlobalSlowBonus;
     }
 
     public override string GetName() => "<color=#6B8E23>Mire</color>";
@@ -13,12 +15,12 @@ public class MireSlowEffect : StatusEffect
     public override void OnApply()
     {
         Insect insect = (Insect)target;
-        insect.movementSpeedMultiplier -= SlowAmount;
+        insect.movementSpeedMultiplier -= appliedAmount;
     }
 
     public override void OnExpire()
     {
         Insect insect = (Insect)target;
-        insect.movementSpeedMultiplier += SlowAmount;
+        insect.movementSpeedMultiplier += appliedAmount;
     }
 }

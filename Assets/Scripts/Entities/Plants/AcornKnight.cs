@@ -477,8 +477,9 @@ public class AcornKnight : Aura
     // all at once instead of being discovered over time like the sweep, distance-to-target order
     // stands in for "order hit": same 10%-per-extra falloff as the swing, down to its own floor,
     // scaling off Armor instead of Attack Damage and tagged as counter damage. at Path2 max only,
-    // each insect hit also gets an independent roll at MaxLevelBashStunChance to be stunned for
-    // BashStunDuration - this doesn't exist at all below max level
+    // every insect hit also gets stunned for BashStunDuration scaled by MaxLevelBashStunChance
+    // (used to be a MaxLevelBashStunChance roll for the full duration) - this doesn't exist at
+    // all below max level
     private void Bash(Insect target)
     {
         Vector2 targetApproach = target.GetApproachPoint(transform.position);
@@ -506,8 +507,8 @@ public class AcornKnight : Aura
             float falloff = noFalloff ? 1f : Mathf.Max(BashMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
             insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter, DamageTag.PassiveDamage });
 
-            if (insect.IsAlive && IsPath2Maxed && Random.value < MaxLevelBashStunChance)
-                insect.ApplyEffect(new StunEffect(insect, BashStunDuration, 1, this));
+            if (insect.IsAlive && IsPath2Maxed)
+                insect.ApplyEffect(new StunEffect(insect, BashStunDuration * MaxLevelBashStunChance, 1, this));
         }
     }
 
@@ -691,7 +692,7 @@ public class AcornKnight : Aura
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase guard <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=green><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Shield Bash</b></color> Armor scaling by <color=green><b>{bashDmgPl * 100f:F0}%</b></color> per level. [<color=green><b>+{bashDmgPl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"<color=green><b>Shield Bash</b></color> gains a <color=green><b>{MaxLevelBashStunChance * 100f:F0}%</b></color> chance to inflict a <color=green><b>{BashStunDuration:F0}</b></color> second Stun on insects hit.")}\n\n" +
+               $"{Level5Section(path2Level, $"<color=green><b>Shield Bash</b></color> inflicts a <color=green><b>{BashStunDuration * MaxLevelBashStunChance:F2}</b></color> second Stun on insects hit.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

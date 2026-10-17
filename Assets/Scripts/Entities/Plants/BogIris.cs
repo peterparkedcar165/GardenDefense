@@ -182,13 +182,13 @@ public class BogIris : Shooter
         }
     }
 
-    // called on every attack hit (see BogIrisProjectile.OnHit) - a chance to advance the Sun
-    // timer by 1 second, making the next tick arrive sooner
+    // called on every attack hit (see BogIrisProjectile.OnHit) - deterministically advances the
+    // Sun timer by ReduceChance seconds, making the next tick arrive sooner. used to be a
+    // ReduceChance% roll to add a full second; this is the RNG-free, expectation-preserving
+    // equivalent (Path1 max applies the same 50% boost directly instead of through a roll)
     public void TryReduceSunTimer()
     {
-        float procChance = ReduceChance * (1f + bonusEffectChance);
-        if (Random.value >= procChance) return;
-        sunTickTimer += 1f;
+        sunTickTimer += ReduceChance * (IsPath1Maxed ? 1.5f : 1f);
     }
 
     protected override SpriteRenderer GetMainRenderer()
@@ -258,10 +258,6 @@ public class BogIris : Shooter
         skillChargeRateAdder = 0.2f * rainLevel;
         base.UpdateStats();
         maxHealth += PassiveMaxHealthBonus;
-        if (IsPath1Maxed)
-        {
-            bonusEffectChance += 0.5f;
-        }
         if (IsPath2Maxed && !_isOpen)
         {
             armor += (int)ClosedArmorBonus;
@@ -296,7 +292,7 @@ public class BogIris : Shooter
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Max Health</b></color> damage scaling by <color=green><b>{hppl * 100f:F0}%</b></color> per level. [<color=green><b>+{hppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Increase <color=green><b>Bonus Effect Chance</b></color> by <color=green><b>50%</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, "Increase the Sun timer advance per attack hit by <color=green><b>50%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -311,16 +307,16 @@ public class BogIris : Shooter
             ? $"Every <color=green><b>{SunInterval:F1}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
               $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>[({(BogData?.baseRegenPercent ?? 0.02f) * 100f:F0}%) + ({regenpl * 100f:F0}%/Lvl.)]</b></color> Max Health per second (doubled when out of combat).\n\n" +
               $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>[({BogData?.baseOpenBonusSun ?? 2}) + ({sunpl}/Lvl.)]</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
-              $"Attacks have a <color=green><b>[({(BogData?.baseReduceChance ?? 0.35f) * 100f:F0}%) + ({reducepl * 100f:F0}%/Lvl.)]</b></color> chance to reduce the <color=yellow>Sun</color> generation timer by <color=green><b>1</b></color> second on hit."
+              $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>[({(BogData?.baseReduceChance ?? 0.35f):F2}) + ({reducepl:F2}/Lvl.)]</b></color> seconds on hit."
             : $"Every <color=green><b>{SunInterval:F1}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
               $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>{RegenPercentPerSecond * 100f:F0}%</b></color> Max Health per second (doubled to <color=red><b>{RegenPercentPerSecond * 200f:F0}%</b></color> when out of combat).\n\n" +
               $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>{OpenBonusSun}</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
-              $"Attacks have a <color=green><b>{ReduceChance * 100f:F0}%</b></color> chance to reduce the <color=yellow>Sun</color> generation timer by <color=green><b>1</b></color> second on hit.";
+              $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>{ReduceChance:F2}</b></color> seconds on hit.";
         string stateLine = $"<b><color=#4FC3F7>{(_isOpen ? "OPEN" : "CLOSED")}</color></b>";
         return $"Passive:\n\n{stateLine}\n\n{desc}\n\n" +
                $"Increase regeneration by <color=red><b>{regenpl * 100f:F0}%</b></color> per level. [<color=red><b>+{regenpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase open-state Sun production by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
-               $"Increase reduction chance by <color=green><b>{reducepl * 100f:F0}%</b></color> per level. [<color=green><b>+{reducepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase the Sun timer reduction per hit by <color=green><b>{reducepl:F2}s</b></color> per level. [<color=green><b>+{reducepl * effectivePath2Level:F2}s</b></color>]\n\n" +
                $"Increase <color=green><b>Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Remove the out-of-combat condition from the regeneration (always doubled). Increase Armor by <color=green><b>{ClosedArmorBonus:F0}</b></color> when in <b><color=#4FC3F7>closed</color></b> state.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
