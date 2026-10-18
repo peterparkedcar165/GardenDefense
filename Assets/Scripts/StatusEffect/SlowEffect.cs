@@ -3,14 +3,15 @@ using UnityEngine;
 public class SlowEffect : StatusEffect
 {
 
-    private const float baseSlowness = 0.1f;
-    private const float slownessPerLevel = 0.05f;
+    public const float baseSlowness = 0.14f;
+    public const float slownessPerLevel = 0.07f;
 
-    // 10% at level 1, +5% per level after that
+    // 14% at level 1, +7% per level after that
     public float slowness;
     public SlowEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         effectType = Type.negative;
+        elementalType = ElementalType.Water;
         slowness = baseSlowness + slownessPerLevel * (level - 1) + MulchManager.GlobalSlowBonus;
     }
 

@@ -52,10 +52,10 @@ public class WaterlilyProjectile : Projectile
         {
             waterlily.ApplyStackingSlow(insect);
 
-            bool path2Maxed = waterlily.IsPath2Maxed;
+            bool path1Maxed = waterlily.IsPath1Maxed;
             // at max level, splash damage also counts as a Projectile attack - otherwise it
             // couldn't proc Floral Glow/Ablaze at all now that those require DamageTag.Projectile
-            DamageTag[] splashTags = path2Maxed
+            DamageTag[] splashTags = path1Maxed
                 ? new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage, DamageTag.Projectile }
                 : new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage };
 
@@ -82,7 +82,7 @@ public class WaterlilyProjectile : Projectile
                 splashedInsect.Damage(waterlily.splashDamage, damageType, elementalType, source, true, splashTags);
                 waterlily.ApplyStackingSlow(splashedInsect);
 
-                if (path2Maxed)
+                if (path1Maxed)
                     Entity.RaiseOnHit(new EntityEventData
                     {
                         target = splashedInsect,

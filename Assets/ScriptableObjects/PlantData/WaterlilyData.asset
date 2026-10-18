@@ -111,7 +111,6 @@ MonoBehaviour:
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.2
   path1AttackSpeedPerLevel: 0.1
-  path1MaxOnHitEffectivenessBonus: 0.5
   path2AoERangePerLevel: 0.05
   path2SplashDamageScalingPerLevel: 0.05
   baseSlowDuration: 6

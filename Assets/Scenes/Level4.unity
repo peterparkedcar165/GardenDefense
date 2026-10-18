@@ -150,6 +150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
   sceneLight: {fileID: 0}
   visualLibrary: {fileID: 11400000, guid: 79ecdd6abe1740ed84ec7c0233fcd8e6, type: 2}
+  colorLerpSpeed: 1.5
+  ambienceFadeDuration: 3
 --- !u!4 &29017237
 Transform:
   m_ObjectHideFlags: 0
@@ -13302,6 +13304,16 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 0
+  - first: {x: -4, y: -3, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 6
+      m_TileSpriteIndex: 6
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: 0, y: -3, z: 0}
     second:
       serializedVersion: 2
@@ -14523,7 +14535,7 @@ Tilemap:
     m_RefCount: 9
     m_Data: {fileID: 11400000, guid: b5c58a6e715d4f74d9266ea33152bc62, type: 2}
   - serializedVersion: 2
-    m_RefCount: 8
+    m_RefCount: 9
     m_Data: {fileID: 11400000, guid: b784f5bdc0f078e488711c797561dcc8, type: 2}
   - serializedVersion: 2
     m_RefCount: 5
@@ -14573,6 +14585,9 @@ Tilemap:
   - serializedVersion: 2
     m_RefCount: 3
     m_Data: {fileID: 11400000, guid: 0dd7eb5756b4d804aa25aecf3c289d20, type: 2}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: 11400000, guid: e8106ecf0ff61a64386c9826955a669e, type: 2}
   m_TileSpriteArray:
   - serializedVersion: 2
     m_RefCount: 11
@@ -14593,7 +14608,7 @@ Tilemap:
     m_RefCount: 9
     m_Data: {fileID: -2303733828986088179, guid: 022ddc2d93dfa0e489c75c3561cdec91, type: 3}
   - serializedVersion: 2
-    m_RefCount: 8
+    m_RefCount: 9
     m_Data: {fileID: 620779759, guid: 022ddc2d93dfa0e489c75c3561cdec91, type: 3}
   - serializedVersion: 2
     m_RefCount: 5
@@ -14643,9 +14658,12 @@ Tilemap:
   - serializedVersion: 2
     m_RefCount: 3
     m_Data: {fileID: 724402457, guid: 6be09a855559e4b43a2be0a05daa683b, type: 3}
+  - serializedVersion: 2
+    m_RefCount: 0
+    m_Data: {fileID: -3155580625666305983, guid: 9ab41374dfb3d204b96505f318cf7dec, type: 3}
   m_TileMatrixArray:
   - serializedVersion: 2
-    m_RefCount: 169
+    m_RefCount: 170
     m_Data:
       e00: 1
       e01: 0
@@ -14665,7 +14683,7 @@ Tilemap:
       e33: 1
   m_TileColorArray:
   - serializedVersion: 2
-    m_RefCount: 169
+    m_RefCount: 170
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
