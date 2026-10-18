@@ -396,8 +396,8 @@
     <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Controls\DeltaControl.cs" />
     <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Plugins\UI\ExtendedSubmitCancelEventData.cs" />
     <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Devices\Sensor.cs" />
-    <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Devices\Haptics\DualMotorRumbleCommand.cs" />
     <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Editor\ControlPicker\InputControlPathEditor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Devices\Haptics\DualMotorRumbleCommand.cs" />
     <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Events\TextEvent.cs" />
     <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Editor\AssetImporter\InputActionImporter.cs" />
     <Compile Include="Library\PackageCache\com.unity.inputsystem@21a28c3a6c83\InputSystem\Editor\UITKAssetEditor\Views\ActionMapsView.cs" />

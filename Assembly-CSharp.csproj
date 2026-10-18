@@ -152,6 +152,7 @@
     <Compile Include="Assets\Scripts\CameraFit.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\SnowdropData.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeSession.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\FruitFlySwarmEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalGlowEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TauntingEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
@@ -301,6 +302,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\WindshearWaterEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\HelleboreData.cs" />
     <Compile Include="Assets\Scripts\Skills\GhostHypnosisWave.cs" />
+    <Compile Include="Assets\Scripts\InsectDataTypes\FruitFlyData.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Minion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlossomingEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\Blizzard.cs" />

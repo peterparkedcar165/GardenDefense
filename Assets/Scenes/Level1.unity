@@ -158,6 +158,21 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 3
   m_ColliderType: 1
+--- !u!4 &104074670
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 430584745}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &119846904
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,10 +817,7 @@ PrefabInstance:
     - {fileID: 2018508753106936876, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
     - {fileID: 8902658371101449206, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 4069475746422670408, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1892019908}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4336965381066371071, guid: 7d19a77b87fb9f74da553290cc081c87, type: 3}
       insertIndex: -1
@@ -966,6 +978,23 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 3
   m_ColliderType: 1
+--- !u!1 &430584745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 104074670}
+  - component: {fileID: 705277767}
+  m_Layer: 0
+  m_Name: MulchManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!114 &462170498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46125,6 +46154,18 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &705277767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 430584745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a6aa453bd66854fa32b5918a61b7eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MulchManager
 --- !u!213 &842419776
 Sprite:
   m_ObjectHideFlags: 0
@@ -47759,11 +47800,11 @@ Transform:
   m_GameObject: {fileID: 1892019907}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11, y: -1, z: 0}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 221582619}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1892019909
 MonoBehaviour:
@@ -47777,6 +47818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe25a532237cad447ab16e5798aa0c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
+  sceneLight: {fileID: 0}
   visualLibrary: {fileID: 11400000, guid: 79ecdd6abe1740ed84ec7c0233fcd8e6, type: 2}
 --- !u!213 &1951648883
 Sprite:
@@ -57654,6 +57696,7 @@ SceneRoots:
   - {fileID: 1144383726533590365}
   - {fileID: 1527796765}
   - {fileID: 4842476870424576460}
+  - {fileID: 1892019908}
   - {fileID: 221582617}
   - {fileID: 119846907}
   - {fileID: 6553514718424843172}
@@ -57662,47 +57705,3 @@ SceneRoots:
   - {fileID: 1410315222}
   - {fileID: 358266828}
   - {fileID: 1841012220}
---- !u!1 &430584745
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 104074670}
-  - component: {fileID: 705277767}
-  m_Layer: 0
-  m_Name: MulchManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &705277767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 430584745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47a6aa453bd66854fa32b5918a61b7eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MulchManager
---- !u!4 &104074670
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 430584745}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

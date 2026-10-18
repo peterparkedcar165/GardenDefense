@@ -55,7 +55,6 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
-  baseBonusEffectChance: 0
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -106,7 +105,7 @@ MonoBehaviour:
   skillSound:
     clips: []
   baseAoERange: 1
-  baseSplashDamage: 6
+  baseSplashDamage: 9
   baseBubblePrisonImpactDamage: 42
   slowProcChance: 0.6
   splashMaxExtraTargets: 3

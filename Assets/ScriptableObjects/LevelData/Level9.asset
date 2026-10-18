@@ -1017,4 +1017,6 @@ MonoBehaviour:
     rarity: 2
   - afterWave: 19
     rarity: 2
-  ambience: {fileID: 11400000, guid: d0fcac010926b95498209523b9240970, type: 2}
+  mulchPool: []
+  mulchGrants: []
+  ambience: {fileID: 11400000, guid: a53efb8b7d84dfe438423cd008ebef91, type: 2}

@@ -31,4 +31,6 @@ public class WeatherVisualEntry
     public GameObject particlePrefab;
     [Tooltip("if set, swapped onto the particle instance's renderer when the scene's light is the Night one (e.g. Sandstorm looks different lit by NightLight vs DesertLight) - leave empty if this weather doesn't need a night variant")]
     public Material nightMaterial;
+    [Tooltip("looping ambience that fades in while this weather is active and fades out when it ends - leave empty for no sound")]
+    public AmbienceProfile ambience;
 }
