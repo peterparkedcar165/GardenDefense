@@ -24,7 +24,7 @@ public class Waterlily : Shooter
     private const float ExtraTargetOnHitReduction = 0.35f;
     private const float BubbleDurationExtension = 0.2f;
 
-    public float SlowDuration => (WLData?.baseSlowDuration ?? 6f) * (1f + (WLData?.path2SlowProcChancePerLevel ?? 0.05f) * effectivePath2Level);
+    public float SlowDuration => WLData?.baseSlowDuration ?? 6f;
     // base stack is 1, each passive level raises the cap; maxSlowStacksAdder is the skill tree's
     // flat bonus on top (see PlantStatApplier.MaxSlowStacksFlat)
     public int maxSlowStacksAdder;
@@ -229,16 +229,14 @@ public class Waterlily : Shooter
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
         float aoepl   = WLData?.path2AoERangePerLevel             ?? 0.05f;
         int stackspl  = WLData?.path2MaxSlowStacksPerLevel        ?? 1;
-        float chancepl = WLData?.path2SlowProcChancePerLevel      ?? 0.05f;
         string desc = details
             ? $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>[({WLData.baseSplashDamage:F1}) + ({splashpl * 100f:F0}% <color=green><b>Attack Damage</b></color>/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} to surrounding insects within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius.\n\n" +
-              $"Dealing damage with attacks and the splash damage applies a stacking <color=#87CEEB><b>Slow</b></color> for <color=green><b>[({WLData?.baseSlowDuration ?? 6f:F1}) + ({chancepl * 100f:F0}%/Lvl.)]</b></color> seconds, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks."
+              $"Dealing damage with attacks and the splash damage applies a stacking <color=#87CEEB><b>Slow</b></color> for <color=green><b>{SlowDuration:F1}s</b></color>, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> <color=green><b>Attack Damage</b></color> per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"Increase max <color=#87CEEB><b>Slow</b></color> stacks by <color=green><b>{stackspl}</b></color> per level. [<color=green><b>+{stackspl * effectivePath2Level}</b></color>]\n\n" +
-               $"Increase <color=#87CEEB><b>Slow</b></color> duration by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Splash damage now applies <color=green><b>On-Hit</b></color> effects at <color=green><b>{splashOnHitEffectiveness * 100f:F0}%</b></color> effectiveness. Splash damage is now also considered a <color=green><b>Projectile</b></color> attack.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);

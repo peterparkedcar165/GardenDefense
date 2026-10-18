@@ -28,7 +28,7 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0
-  baseAttackSpeed: 0.3
+  baseAttackSpeed: 0.4
   baseAttackRange: 2.5
   baseAttackChargeTime: 1
   baseArmor: 0
@@ -108,7 +108,7 @@ MonoBehaviour:
   baseSunrayDPS: 50
   baseCooldownReductionPerHit: 0.75
   path1AttackDamagePerLevel: 2
-  path1AttackSpeedPerLevel: 0.02
+  path1AttackSpeedPerLevel: 0.03
   path2SunPerLevel: 3
   path2CooldownReductionPerLevel: 0.05
   path3SunrayDPSPerLevel: 5

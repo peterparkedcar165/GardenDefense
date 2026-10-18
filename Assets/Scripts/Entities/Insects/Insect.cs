@@ -231,19 +231,43 @@ public abstract class Insect : Entity, IAttackable
             {
                 case Aggressivity.High:
                 {
-                    IAttackable highTarget = FindTauntWeightedPlantInRange();
+                    IAttackable highTarget = GetWeightedPlantTarget();
                     TryApplyIronbarkAggro(highTarget);
                     return highTarget;
                 }
                 case Aggressivity.Low:
                     if (_plantAttackCooldown > 0) return null;
-                    IAttackable mediumTarget = FindTauntWeightedPlantInRange();
+                    IAttackable mediumTarget = GetWeightedPlantTarget();
                     TryApplyIronbarkAggro(mediumTarget);
                     return mediumTarget;
                 default:
                     return null;
             }
         }
+    }
+
+    private IAttackable _cachedWeightedTarget;
+
+    // target is a property, read many times per frame (movement, attack, stuck-detection, etc) -
+    // FindTauntWeightedPlantInRange rolls a fresh random pick every call, so calling it directly
+    // from target's getter made an insect with 2+ comparable-weight plants in range flicker
+    // between different "chosen" plants within the same frame (move toward one, attack another),
+    // which read as the insect visibly spazzing out. caching the roll fixes that: it sticks with
+    // the same plant until that plant is no longer a valid pick (dead, out of range, unreachable),
+    // at which point it rerolls. a Low-aggressivity insect additionally gets its cache cleared the
+    // moment _plantAttackCooldown finishes (see UpdateAttack), so it picks a fresh target for its
+    // next approach instead of beelining back to the same one forever
+    private IAttackable GetWeightedPlantTarget()
+    {
+        bool cachedStillValid = _cachedWeightedTarget is Plant cachedPlant && cachedPlant.IsAlive
+            && CanReachPlant(cachedPlant)
+            && Vector3.Distance(transform.position, cachedPlant.GetApproachPoint(transform.position)) <= targetingRange;
+
+        if (cachedStillValid)
+            return _cachedWeightedTarget;
+
+        _cachedWeightedTarget = FindTauntWeightedPlantInRange();
+        return _cachedWeightedTarget;
     }
 
     private float attackTimer;
@@ -864,7 +888,13 @@ public abstract class Insect : Entity, IAttackable
     private void UpdateAttack()
     {
         if (_plantAttackCooldown > 0)
+        {
             _plantAttackCooldown -= Time.deltaTime;
+            // cooldown just finished - clear the cached target so Low aggressivity rerolls
+            // instead of beelining back to whatever it last attacked
+            if (_plantAttackCooldown <= 0f)
+                _cachedWeightedTarget = null;
+        }
 
         // target is a computed property (re-derives from the current taunt/aggressivity/etc every
         // single access, by design - see Attack()'s own comment on why), so it can legitimately

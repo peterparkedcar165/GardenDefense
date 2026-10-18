@@ -606,7 +606,6 @@ MonoBehaviour:
   skillAoERadius: 1.5
   bubbleDamage: 42
   splashDamage: 0
-  slowProcChance: 0
   splashOnHitEffectiveness: 0
   bubbleTrapPrefab: {fileID: 4808428213060228786, guid: a830149e57437094eaef662cd0131b60, type: 3}
 --- !u!1001 &5647022780338339901
