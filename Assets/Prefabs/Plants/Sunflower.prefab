@@ -538,7 +538,7 @@ MonoBehaviour:
   sunGenerated: 0
   skillAoERadius: 2.5
   sunrayDamagePerSecond: 0
-  sunProcChance: 0
+  cooldownReductionPerHit: 0
   sunrayPrefab: {fileID: 5428018812330015411, guid: d13991fe5493d6e44a08f371ea8e20b9, type: 3}
   attackCircle: {fileID: 3386231638132550106}
   circleAnimator: {fileID: 7259768069922267850}

@@ -5,7 +5,7 @@ public class SunflowerData : PlantData
 {
     public int baseSunGenerated;
     public float baseSunrayDPS;
-    public float sunProcChance = 0.35f;
+    public float baseCooldownReductionPerHit = 0.35f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 5f;
@@ -15,7 +15,7 @@ public class SunflowerData : PlantData
     // Sun generation interval is fixed (see basePassiveCooldown on the base SO) - Path 2 only
     // grows the amount generated per production, not the cadence
     public int path2SunPerLevel = 3;
-    public float path2ProcChancePerLevel = 0.03f;
+    public float path2CooldownReductionPerLevel = 0.03f;
 
     [Header("Path 3 Scaling")]
     public float path3SunrayDPSPerLevel = 15f;
@@ -41,7 +41,7 @@ public class SunflowerData : PlantData
         $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        "Passively generates <color=yellow>Sun</color> for the garden periodically. Attacks have a chance to reduce the generation cooldown.";
+        "Passively generates <color=yellow>Sun</color> for the garden periodically. Attacks reduce the generation cooldown.";
 
     public override string GetSkillDescription() =>
         $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals {DamageTypeLabel(damageType)} per second to insects within the designated area. Scales with <color=#FFB6C1>Magic Power</color>.";

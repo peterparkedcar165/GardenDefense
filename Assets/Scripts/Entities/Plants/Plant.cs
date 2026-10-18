@@ -1712,7 +1712,7 @@ public abstract class Plant : Entity, IAttackable
             // same world axis this 2D range check reads, so using the aim point here would let a
             // plant "see" an insect that only looks airborne, never actually moved
             float dist = Vector3.Distance(transform.position, insect.transform.position);
-            if (IsWithinAttackRange(insect, dist) && dist < nearestDist && IsValidNightTarget(insect, dist))
+            if (IsWithinAttackRange(insect, dist) && dist < nearestDist && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect))
             {
                 nearestDist = dist;
                 nearest = insect.gameObject;
@@ -1732,7 +1732,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
-            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
             if (insect.maxHealth > highestMaxHealth)
             {
                 highestMaxHealth = insect.maxHealth;
@@ -1754,7 +1754,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
-            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
             if (insect.currentWaypointIndex > highestWaypointIndex)
@@ -1784,7 +1784,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
-            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
             if (insect.currentWaypointIndex < lowestWaypointIndex)
@@ -1812,7 +1812,17 @@ public abstract class Plant : Entity, IAttackable
     public virtual bool CanReachInsect(Insect insect)
     {
         float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
-        return IsWithinAttackRange(insect, dist) && IsValidNightTarget(insect, dist);
+        return IsWithinAttackRange(insect, dist) && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect);
+    }
+
+    // a melee plant (see IsMeleeAttacker) can't normally pick a flying insect as a target - it
+    // has no way to reach one in melee. the one exception: an insect that has already chosen to
+    // attack THIS plant (see Insect.target) stays targetable, so the plant can fight back instead
+    // of standing there defenseless while something flying whittles it down
+    public virtual bool IsValidFlightTarget(Insect insect)
+    {
+        if (!IsMeleeAttacker || !insect.isFlying) return true;
+        return ReferenceEquals(insect.target, this);
     }
 
     public virtual bool IsValidNightTarget(Insect insect, float distance)

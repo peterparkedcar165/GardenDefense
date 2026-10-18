@@ -15,4 +15,4 @@ MonoBehaviour:
   output: {fileID: 3543315355722970724, guid: 9cddf2d9d90c06345bb9dc06f770e719, type: 2}
   sounds:
   - clip: {fileID: 8300000, guid: 84d6f97a9d872df4585fe9750052fd2e, type: 3}
-    volume: 0.03
+    volume: 0.23

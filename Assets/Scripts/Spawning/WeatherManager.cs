@@ -24,12 +24,26 @@ public class WeatherManager : MonoBehaviour
     [Header("Visuals")]
     [Tooltip("assign the scene's active biome light (DayLight/NightLight/DesertLight/UnderwaterDaylight)")]
     [SerializeField] private Light2D sceneLight;
-    [Tooltip("the single place every weather's look (light tint + particle effect) is authored")]
+    [Tooltip("the single place every weather's look (light tint + particle effect + ambience) is authored")]
     [SerializeField] private WeatherVisualLibrary visualLibrary;
+    [Tooltip("how quickly the scene light eases toward a weather change - higher is snappier")]
+    [SerializeField] private float colorLerpSpeed = 1.5f;
+    [Tooltip("seconds for a weather's ambience to fade fully in or out")]
+    [SerializeField] private float ambienceFadeDuration = 3f;
 
     private Color _baseLightColor = Color.white;
     private float _baseLightIntensity = 1f;
+    private Color _targetLightColor = Color.white;
+    private float _targetLightIntensity = 1f;
     private readonly Dictionary<WeatherType, GameObject> _particleInstances = new();
+
+    private class AmbienceVoice
+    {
+        public AudioSource source;
+        public float baseVolume;
+        public float targetVolume;
+    }
+    private readonly Dictionary<WeatherType, List<AmbienceVoice>> _ambienceVoices = new();
 
     private TemperatureType _temperature;
 
@@ -83,6 +97,60 @@ public class WeatherManager : MonoBehaviour
             _baseLightIntensity = sceneLight.intensity;
         }
         RefreshVisuals();
+
+        // snap to the starting weather's look instead of easing in from the base light
+        if (sceneLight != null)
+        {
+            sceneLight.color = _targetLightColor;
+            sceneLight.intensity = _targetLightIntensity;
+        }
+    }
+
+    void Update()
+    {
+        // unscaled so weather transitions keep easing even while Time.timeScale is 0
+        // (pre-wave pause, Settings, Fertilizer/Mulch popups)
+        float dt = Time.unscaledDeltaTime;
+
+        if (sceneLight != null)
+        {
+            float t = 1f - Mathf.Exp(-colorLerpSpeed * dt);
+            sceneLight.color = Color.Lerp(sceneLight.color, _targetLightColor, t);
+            sceneLight.intensity = Mathf.Lerp(sceneLight.intensity, _targetLightIntensity, t);
+        }
+        UpdateAmbienceFades(dt);
+    }
+
+    private void UpdateAmbienceFades(float dt)
+    {
+        if (_ambienceVoices.Count == 0) return;
+
+        List<WeatherType> finished = null;
+        foreach (var kvp in _ambienceVoices)
+        {
+            bool anyAlive = false;
+            foreach (AmbienceVoice voice in kvp.Value)
+            {
+                if (voice.source == null) continue;
+                float step = (voice.baseVolume / Mathf.Max(0.01f, ambienceFadeDuration)) * dt;
+                voice.source.volume = Mathf.MoveTowards(voice.source.volume, voice.targetVolume, step);
+
+                if (voice.targetVolume <= 0f && voice.source.volume <= 0.001f)
+                {
+                    Destroy(voice.source);
+                    voice.source = null;
+                }
+                else
+                {
+                    anyAlive = true;
+                }
+            }
+            if (!anyAlive) (finished ??= new List<WeatherType>()).Add(kvp.Key);
+        }
+
+        if (finished != null)
+            foreach (WeatherType type in finished)
+                _ambienceVoices.Remove(type);
     }
 
     // add or update a weather type; fires OnWeatherAdded
@@ -122,9 +190,10 @@ public class WeatherManager : MonoBehaviour
         RefreshVisuals();
     }
 
-    // blends the scene light toward every currently active weather's authored tint/intensity,
-    // and enables/disables each weather's particle prefab (instantiated lazily, the first time
-    // it's actually needed, then just toggled from then on) - see WeatherVisualLibrary
+    // recomputes the target scene light color/intensity (eased toward in Update, not snapped),
+    // enables/disables each weather's particle prefab (instantiated lazily, the first time it's
+    // actually needed, then just toggled from then on), and starts/stops each weather's ambience
+    // crossfade - see WeatherVisualLibrary
     private void RefreshVisuals()
     {
         Color color = _baseLightColor;
@@ -139,30 +208,69 @@ public class WeatherManager : MonoBehaviour
                 intensityMult *= entry.lightIntensityMultiplier;
             }
 
-        if (sceneLight != null)
-        {
-            sceneLight.color = color;
-            sceneLight.intensity = _baseLightIntensity * intensityMult;
-        }
+        _targetLightColor = color;
+        _targetLightIntensity = _baseLightIntensity * intensityMult;
 
         if (visualLibrary?.entries == null) return;
         foreach (WeatherVisualEntry entry in visualLibrary.entries)
         {
-            if (entry.particlePrefab == null) continue;
             bool shouldBeActive = activeWeather.ContainsKey(entry.weather);
 
-            if (!_particleInstances.TryGetValue(entry.weather, out GameObject instance))
+            if (entry.particlePrefab != null)
             {
-                if (!shouldBeActive) continue;
-                instance = Instantiate(entry.particlePrefab, transform);
-                if (entry.nightMaterial != null && IsNightScene())
+                if (!_particleInstances.TryGetValue(entry.weather, out GameObject instance))
                 {
-                    Renderer renderer = instance.GetComponent<Renderer>();
-                    if (renderer != null) renderer.material = entry.nightMaterial;
+                    if (shouldBeActive)
+                    {
+                        instance = Instantiate(entry.particlePrefab, transform);
+                        if (entry.nightMaterial != null && IsNightScene())
+                        {
+                            Renderer renderer = instance.GetComponent<Renderer>();
+                            if (renderer != null) renderer.material = entry.nightMaterial;
+                        }
+                        _particleInstances[entry.weather] = instance;
+                    }
                 }
-                _particleInstances[entry.weather] = instance;
+                else
+                {
+                    instance.SetActive(shouldBeActive);
+                }
             }
-            instance.SetActive(shouldBeActive);
+
+            UpdateAmbienceForEntry(entry, shouldBeActive);
+        }
+    }
+
+    // fades a weather's ambience sources in when it becomes active and out when it stops,
+    // re-targeting a still-fading-out set back up if the weather returns mid-fade
+    private void UpdateAmbienceForEntry(WeatherVisualEntry entry, bool shouldBeActive)
+    {
+        if (entry.ambience == null || entry.ambience.sounds == null) return;
+
+        bool alreadyPlaying = _ambienceVoices.TryGetValue(entry.weather, out List<AmbienceVoice> voices);
+
+        if (shouldBeActive && !alreadyPlaying)
+        {
+            voices = new List<AmbienceVoice>();
+            foreach (AmbienceEntry sound in entry.ambience.sounds)
+            {
+                if (sound.clip == null) continue;
+                AudioSource src = gameObject.AddComponent<AudioSource>();
+                src.clip = sound.clip;
+                src.outputAudioMixerGroup = entry.ambience.output;
+                src.loop = true;
+                src.playOnAwake = false;
+                src.volume = 0f;
+                src.Play();
+                voices.Add(new AmbienceVoice { source = src, baseVolume = sound.volume, targetVolume = sound.volume });
+            }
+            _ambienceVoices[entry.weather] = voices;
+        }
+        else if (alreadyPlaying)
+        {
+            float target = shouldBeActive ? 1f : 0f;
+            foreach (AmbienceVoice voice in voices)
+                voice.targetVolume = voice.baseVolume * target;
         }
     }
 

@@ -149,7 +149,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 29017237}
   - {fileID: 836844669}
   - {fileID: 1828323852}
   - {fileID: 664460522}
@@ -234,11 +233,11 @@ Transform:
   m_GameObject: {fileID: 29017235}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.3195696, y: 6.3827996, z: 0}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 330754}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &70733413 stripped
 Transform:
@@ -399,67 +398,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 836844669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &168978705
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 184212325667159629, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 5692e42ba29859f429173839a1ce31df, type: 2}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -17.52
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.38
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1659522495177139985, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 2712915376308916410, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-      propertyPath: m_Name
-      value: SandstormParticles
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 64957656f922a56409cd2aad883f845e, type: 3}
 --- !u!1 &251150387
 GameObject:
   m_ObjectHideFlags: 0
@@ -19356,6 +19294,7 @@ TilemapRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 29017237}
   - {fileID: 516955416}
   - {fileID: 1709538198}
   - {fileID: 1520426562}
@@ -19370,7 +19309,6 @@ SceneRoots:
   - {fileID: 754671023}
   - {fileID: 316370015}
   - {fileID: 1144383726692826245}
-  - {fileID: 168978705}
 --- !u!1 &660285066
 GameObject:
   m_ObjectHideFlags: 0

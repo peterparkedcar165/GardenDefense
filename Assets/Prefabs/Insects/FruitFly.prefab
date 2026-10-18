@@ -293,6 +293,8 @@ MonoBehaviour:
   spriteFlyLeft: {fileID: 21300000, guid: b36b0c2e5d5cb4c4e85243ec192b48df, type: 3}
   flightSpeed: 0
   flightHeight: 0
+  fruitFlyPrefab: {fileID: 2279086888993795066}
+  isCompanion: 0
 --- !u!1 &3949176022732913986
 GameObject:
   m_ObjectHideFlags: 0

@@ -82,7 +82,7 @@ MonoBehaviour:
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 4
-        timeBetweenSpawns: 6.6667
+        timeBetweenSpawns: 9.0001
         startDelay: 0
       delayBeforeNext: 11
     - subWaveDuration: 5
@@ -91,7 +91,7 @@ MonoBehaviour:
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
       interval: 121.3333
-      startDelay: 0
+      startDelay: 3
   - waveNumber: 2
     subWaves:
     - subWaveDuration: 42
@@ -186,6 +186,10 @@ MonoBehaviour:
         count: 15
         timeBetweenSpawns: 3.551
         startDelay: 0
+      - insectData: {fileID: 11400000, guid: 647ab323b77b9d949b24c742142f1010, type: 2}
+        count: 1
+        timeBetweenSpawns: 0.3
+        startDelay: 0.0000
       delayBeforeNext: 7.5429
     - subWaveDuration: 62.7426
       spawns:
@@ -209,6 +213,10 @@ MonoBehaviour:
         count: 16
         timeBetweenSpawns: 3.476
         startDelay: 0
+      - insectData: {fileID: 11400000, guid: 647ab323b77b9d949b24c742142f1010, type: 2}
+        count: 1
+        timeBetweenSpawns: 0.3
+        startDelay: 0.0000
       delayBeforeNext: 9.2013
     - subWaveDuration: 58.6576
       spawns:
@@ -232,6 +240,10 @@ MonoBehaviour:
         count: 20
         timeBetweenSpawns: 2.516
         startDelay: 0
+      - insectData: {fileID: 11400000, guid: 647ab323b77b9d949b24c742142f1010, type: 2}
+        count: 1
+        timeBetweenSpawns: 0.3
+        startDelay: 0.0000
       delayBeforeNext: 7.8049
     - subWaveDuration: 64.3902
       spawns:
@@ -239,6 +251,10 @@ MonoBehaviour:
         count: 26
         timeBetweenSpawns: 2.0813
         startDelay: 0
+      - insectData: {fileID: 11400000, guid: 647ab323b77b9d949b24c742142f1010, type: 2}
+        count: 1
+        timeBetweenSpawns: 0.3
+        startDelay: 62.3902
       delayBeforeNext: 12.3577
     trickleSpawns:
     - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
