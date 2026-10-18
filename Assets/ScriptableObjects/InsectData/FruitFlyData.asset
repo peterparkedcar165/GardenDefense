@@ -21,7 +21,7 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 1
   baseAttackRange: 0.3
-  baseMovementSpeed: 1
+  baseMovementSpeed: 0.85
   baseTargetingRange: 1
   baseArmor: 5
   baseMagicArmor: 5
@@ -49,7 +49,7 @@ MonoBehaviour:
   carryPriority: 0
   baseEvasion: 0
   baseAccuracy: 0
-  sunDrop: 4
+  sunDrop: 7
   sunDropAdder: 0
   sunDropMultiplier: 0
   currencyDrop: 0

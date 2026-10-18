@@ -107,7 +107,6 @@ MonoBehaviour:
   baseAoERange: 1
   baseSplashDamage: 9
   baseBubblePrisonImpactDamage: 42
-  slowProcChance: 0.6
   splashMaxExtraTargets: 3
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.2
@@ -117,7 +116,6 @@ MonoBehaviour:
   path2SplashDamageScalingPerLevel: 0.05
   baseSlowDuration: 6
   path2MaxSlowStacksPerLevel: 1
-  path2SlowProcChancePerLevel: 0.05
   splashOnHitEffectiveness: 0.33
   path3BubbleDamagePerLevel: 12
   path3SkillDurationPerLevel: 2

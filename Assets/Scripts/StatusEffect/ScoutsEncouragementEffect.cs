@@ -1,11 +1,12 @@
 public class ScoutsEncouragementEffect : StatusEffect
 {
-    private const float speedBonus = 0.2f;
+    private readonly float speedBonus;
 
-    public ScoutsEncouragementEffect(Entity target, float duration, int level, Entity source)
+    public ScoutsEncouragementEffect(Entity target, float duration, int level, Entity source, float speedBonus)
         : base(target, duration, level, source)
     {
         effectType = Type.positive;
+        this.speedBonus = speedBonus;
     }
 
     public override void OnApply()
