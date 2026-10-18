@@ -75,6 +75,6 @@ public class FruitFly : FlyingInsect
     }
 
     public override string GetDescription() =>
-        $"Increases Armor and Magic Resist by <color=green><b>{FruitFlySwarmEffect.resistBonusPerLevel:F0}</b></color> for every other Fruit Fly within a " +
+        $"Increases Movement Speed by <color=green><b>{FruitFlySwarmEffect.speedBonusPerLevel:F1}</b></color> for every other Fruit Fly within a " +
         $"<b>{(FData?.swarmRange ?? 3f):F0}</b>-radius." + FlyingLine() + AggressivityLine();
 }

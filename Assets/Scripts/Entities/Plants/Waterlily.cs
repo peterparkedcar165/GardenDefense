@@ -38,7 +38,10 @@ public class Waterlily : Shooter
     {
         if (insect == null || !insect.IsAlive) return;
         int currentStacks = insect.GetEffect<SlowEffect>()?.level ?? 0;
-        int attemptedStacks = Mathf.Min(currentStacks + 1, MaxSlowStacks);
+        // Path 2 max level: inflicts two stacks per hit instead of one - still clamped to
+        // MaxSlowStacks below, so it can never push a target past its actual stack cap
+        int stacksPerHit = IsPath2Maxed ? 2 : 1;
+        int attemptedStacks = Mathf.Min(currentStacks + stacksPerHit, MaxSlowStacks);
         int newStacks = Mathf.Max(currentStacks, attemptedStacks);
         insect.ApplyEffect(new SlowEffect(insect, SlowDuration, newStacks, this));
     }
@@ -97,8 +100,6 @@ public class Waterlily : Shooter
         bool extraTarget = SkillTreeManager.HasUnlock(this, ExtraTargetUnlock);
         attackDamageTotalMultiplier = extraTarget ? ExtraTargetDamageMultiplier : 1f;
         base.UpdateStats();
-        if (IsPath1Maxed)
-            onHitEffectiveness *= 1f + (WLData?.path1MaxOnHitEffectivenessBonus ?? 0.5f);
         if (extraTarget)
             onHitEffectiveness *= 1f - ExtraTargetOnHitReduction;
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
@@ -204,7 +205,7 @@ public class Waterlily : Shooter
     {
         float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
         return $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>{WLData.baseSplashDamage + attackDamage * splashpl * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] {PlantData.DamageTypeLabel(damageType)} to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.\n\n" +
-               $"Dealing damage with attacks and the splash damage applies a stacking <color=#87CEEB><b>Slow</b></color> for <color=green><b>{SlowDuration:F1}s</b></color>, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks.";
+               $"Dealing damage with attacks and splash damage applies a stacking <color=#87CEEB><b>Slow</b></color> of <color=green><b>{SlowDuration:F1}s</b></color>, for <color=green><b>{SlowEffect.baseSlowness * 100f:F0}%</b></color> + <color=green><b>{SlowEffect.slownessPerLevel * 100f:F0}%</b></color> per stack, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks.";
     }
 
     public override string GetPath1Description(bool details = false)
@@ -219,7 +220,7 @@ public class Waterlily : Shooter
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, $"Increase <color=green><b>On-Hit</b></color> effect effectiveness by <color=green><b>{(WLData?.path1MaxOnHitEffectivenessBonus ?? 0.5f) * 100f:F0}%</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, $"Splash damage now applies <color=green><b>On-Hit</b></color> effects at <color=green><b>{splashOnHitEffectiveness * 100f:F0}%</b></color> effectiveness. Splash damage is now also considered a <color=green><b>Projectile</b></color> attack.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -231,13 +232,13 @@ public class Waterlily : Shooter
         int stackspl  = WLData?.path2MaxSlowStacksPerLevel        ?? 1;
         string desc = details
             ? $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>[({WLData.baseSplashDamage:F1}) + ({splashpl * 100f:F0}% <color=green><b>Attack Damage</b></color>/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} to surrounding insects within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius.\n\n" +
-              $"Dealing damage with attacks and the splash damage applies a stacking <color=#87CEEB><b>Slow</b></color> for <color=green><b>{SlowDuration:F1}s</b></color>, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks."
+              $"Dealing damage with attacks and splash damage applies a stacking <color=#87CEEB><b>Slow</b></color> of <color=green><b>{SlowDuration:F1}s</b></color>, for <color=green><b>{SlowEffect.baseSlowness * 100f:F0}%</b></color> + <color=green><b>{SlowEffect.slownessPerLevel * 100f:F0}%</b></color> per stack, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> <color=green><b>Attack Damage</b></color> per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"Increase max <color=#87CEEB><b>Slow</b></color> stacks by <color=green><b>{stackspl}</b></color> per level. [<color=green><b>+{stackspl * effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Splash damage now applies <color=green><b>On-Hit</b></color> effects at <color=green><b>{splashOnHitEffectiveness * 100f:F0}%</b></color> effectiveness. Splash damage is now also considered a <color=green><b>Projectile</b></color> attack.")}\n\n" +
+               $"{Level5Section(path2Level, $"Inflicts two stacks of <color=#87CEEB><b>Slow</b></color> instead of one.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

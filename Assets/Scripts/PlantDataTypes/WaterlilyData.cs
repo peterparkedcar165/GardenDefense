@@ -13,7 +13,6 @@ public class WaterlilyData : PlantData
     public float path1AttackDamagePerLevel = 5f;
     public float path1AttackRangePerLevel = 0.5f;
     public float path1AttackSpeedPerLevel = 0.3f;
-    public float path1MaxOnHitEffectivenessBonus = 0.5f;
 
     [Header("Path 2 Scaling")]
     public float path2AoERangePerLevel = 0.05f;
