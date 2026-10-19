@@ -1829,6 +1829,9 @@ public abstract class Plant : Entity, IAttackable
     {
         if (insect.isBurrowed && !DetectsBurrowed) return false;
         if (DarknessManager.instance == null || !DarknessManager.instance.isDark) return true;
+        // melee plants fight at point-blank range regardless of visibility - darkness's halved
+        // sight range only matters for plants that actually need to see farther than arm's reach
+        if (IsMeleeAttacker) return true;
         if (distance <= attackRange * 0.5f) return true;
         return DarknessManager.instance.IsIlluminated(insect.transform.position);
     }

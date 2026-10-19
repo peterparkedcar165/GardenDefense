@@ -5,11 +5,52 @@ using System.Collections.Generic;
 
 public class Sunflower : Shooter
 {
-    public float channelDuration = 2f;
+    public float channelDuration = 1.5f;
     public int sunGenerated;
     public float skillAoERadius, sunrayDamagePerSecond;
     public float cooldownReductionPerHit;
     [SerializeField] private GameObject sunrayPrefab;
+
+    [Header("Body")]
+    // the Animator on the Visual child (her actual sprite) - separate from circleAnimator,
+    // which only drives the charge-up orb. "Attack"/"Skill" triggers switch her body pose;
+    // both transitions back to Idle via Has Exit Time, so nothing here needs to reset them
+    [SerializeField] private Animator bodyAnimator;
+    // the Attack clip's own authored Length in seconds, as shown in the Animation window - set
+    // this to match whatever that value actually is, same convention as circleClipLength, so the
+    // body's pose is stretched or compressed to fit exactly inside AttackChargeTime instead of
+    // drifting out of sync with it as attack speed changes
+    [SerializeField] private float bodyAttackClipLength = 0.5f;
+    // same idea, but stretched/compressed to fit the skill's channel time instead (see
+    // OnTargetConfirmed) - set to the SunflowerSkill clip's own authored Length
+    [SerializeField] private float bodySkillClipLength = 0.5f;
+    private const string BodyAttackTrigger = "Attack";
+    private const string BodySkillTrigger = "Skill";
+
+    // Animator.speed is a single global playback multiplier shared by every state on this
+    // Animator, not per-state - so once Attack/Skill scales it to fit their own duration, Idle
+    // would otherwise keep running at that same leftover speed forever after. this timer resets
+    // it back to 1 exactly when the clip would have finished, and gets replaced (not stacked)
+    // whenever a new body animation starts - e.g. Skill interrupting a still-charging Attack
+    private Coroutine _bodySpeedResetRoutine;
+
+    private void PlayBodyAnimation(string trigger, float clipLength, float targetDuration)
+    {
+        if (bodyAnimator == null) return;
+        if (_bodySpeedResetRoutine != null) StopCoroutine(_bodySpeedResetRoutine);
+
+        bodyAnimator.speed = targetDuration > 0f && clipLength > 0f
+            ? Mathf.Max(0.01f, clipLength / targetDuration) : 1f;
+        bodyAnimator.SetTrigger(trigger);
+        _bodySpeedResetRoutine = StartCoroutine(ResetBodySpeedAfter(targetDuration));
+    }
+
+    private IEnumerator ResetBodySpeedAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (bodyAnimator != null) bodyAnimator.speed = 1f;
+        _bodySpeedResetRoutine = null;
+    }
 
     [Header("Attack Charge Circle")]
     [SerializeField] private GameObject attackCircle;
@@ -108,7 +149,6 @@ public class Sunflower : Shooter
         base.UpdateStats();
         float dpspl = SFData?.path3SunrayDPSPerLevel ?? 15f;
         sunrayDamagePerSecond = (SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level + skillDamageMultiplier * magicPower;
-        channelDuration = HasEffect<SunlightExposedEffect>() ? 1f : 2f;
     }
 
     // triple shot at max Path 1 fires 3 projectiles from a single Shoot() call, so the attack
@@ -143,6 +183,7 @@ public class Sunflower : Shooter
     // died and finds a replacement updates it for whichever circles haven't fired yet too
     protected override void Shoot(Vector3 target)
     {
+        PlayBodyAnimation(BodyAttackTrigger, bodyAttackClipLength, AttackChargeTime);
         Insect lockedTarget = _currentTarget;
 
         if (IsPath1Maxed)
@@ -278,14 +319,24 @@ public class Sunflower : Shooter
     private void OnTargetConfirmed(Vector3 position)
     {
         if (sunrayPrefab == null) return;
+        // matches data.channelDuration specifically (not the dynamic channelDuration field below,
+        // which BeginChannel doesn't currently read) - see BeginChannel, this is the actual
+        // duration the attack lockout runs for right now
+        PlayBodyAnimation(BodySkillTrigger, bodySkillClipLength, data.channelDuration);
         skillCooldownTimer = skillCooldown;
         BeginChannel();   // can't attack until the sunray appears (set channelDuration in data)
         StartCoroutine(ChannelAndSpawn(position));
     }
 
+    // extra beat after the channel itself ends before the sunray actually appears - attack
+    // lockout and the skill animation both finish on their own schedule same as before, this
+    // just delays the spawn on top of that
+    private const float SunraySpawnExtraDelay = 1f;
+
     private IEnumerator ChannelAndSpawn(Vector3 position)
     {
         yield return new WaitForSeconds(channelDuration);
+        yield return new WaitForSeconds(SunraySpawnExtraDelay);
 
         // sprite scales off its own faster growth rate, not the actual (slower-growing) hit
         // radius - see path3VisualRadiusPerLevel
