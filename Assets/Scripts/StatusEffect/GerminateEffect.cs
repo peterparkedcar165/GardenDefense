@@ -28,8 +28,8 @@ public class GerminateEffect : StatusEffect
             this.duration = Mathf.Max(0.1f, this.duration - source.germinateDetonationSpeedup);
     }
 
-    // 32 × (1 + 275% elemental affinity), snapshotted from the source on apply
-    private float ComputeDamage() => 32f * (1f + 2.75f * cachedelementalAffinity);
+    // 22 × (1 + 225% elemental affinity), snapshotted from the source on apply
+    private float ComputeDamage() => 22f * (1f + 2.25f * cachedelementalAffinity);
 
     public override string GetName() => "<color=green>Germinate</color>";
     public override string GetDescription()

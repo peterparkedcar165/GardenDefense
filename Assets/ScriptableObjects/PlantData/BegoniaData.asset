@@ -29,7 +29,7 @@ MonoBehaviour:
   baseAttackDamage: 24
   baseMagicPower: 0
   baseAttackSpeed: 0.3
-  baseAttackRange: 2.5
+  baseAttackRange: 3
   baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
@@ -55,7 +55,6 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
-  baseBonusEffectChance: 0
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -73,6 +72,11 @@ MonoBehaviour:
   baseProjectileSpeed: 4
   baseMaxRange: 20
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
@@ -88,23 +92,24 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []
-  baseElementalAffinityBonus: 0.24
+  baseElementalAffinityBonus: 0.16
   baseAttackSpeedBonus: 0.12
   baseGrassDamageBonus: 0.08
   basePassiveMultiplier: 0.24
   baseSkillMultiplier: 0.16
   basePrimerCooldownReduction: 0.5
   baseGerminateSpeedup: 0.5
-  path1AttackRangePerLevel: 0.2
-  path1AttackSpeedPerLevel: 0.1
-  path2ElementalAffinityPerLevel: 0.06
+  path1AttackRangePerLevel: 0.3
+  baseWaterCooldownReduction: 2
+  path1CooldownReductionPerLevel: 0.4
+  maxLevelGrassResistanceShred: 0.35
+  path2ElementalAffinityPerLevel: 0.04
   path2GrassDamagePerLevel: 0.02
   path2GerminateSpeedupPerLevel: 0.1
   path3AttackSpeedBonusPerLevel: 0.06
-  path3RadiusPerLevel: 0.15
   path3SkillDurationPerLevel: 3
   path3PrimerCooldownReductionPerLevel: 0.1

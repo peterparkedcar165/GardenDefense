@@ -48,33 +48,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 15
-  minThreatBudget: 8
-  maxThreatBudget: 230
-  budgetCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  insects: []
   waves:
   - waveNumber: 1
     subWaves:
@@ -294,7 +267,7 @@ MonoBehaviour:
         timeBetweenSpawns: 0.3
         startDelay: 50
       delayBeforeNext: 22.6417
-    - subWaveDuration: 81.876
+    - subWaveDuration: 81.8760
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 6
@@ -534,7 +507,7 @@ MonoBehaviour:
         timeBetweenSpawns: 0.3
         startDelay: 50
       delayBeforeNext: 28.5492
-    - subWaveDuration: 83.425
+    - subWaveDuration: 83.4250
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 6
@@ -583,7 +556,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 8
     subWaves:
-    - subWaveDuration: 75.592
+    - subWaveDuration: 75.5920
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 6
@@ -686,7 +659,7 @@ MonoBehaviour:
         timeBetweenSpawns: 0.3
         startDelay: 42
       delayBeforeNext: 29.7702
-    - subWaveDuration: 83.423
+    - subWaveDuration: 83.4230
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 3
@@ -887,7 +860,7 @@ MonoBehaviour:
       startDelay: 0
   - waveNumber: 12
     subWaves:
-    - subWaveDuration: 70.291
+    - subWaveDuration: 70.2910
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 4

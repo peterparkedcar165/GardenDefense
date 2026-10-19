@@ -35,8 +35,8 @@ public class AcornKnight : Aura
     private float SwingHitboxLength => attackRange * SwingHitboxLengthMultiplier;
     // neither the sweep nor Bash cap how many insects they can hit - the 10%-per-extra falloff
     // just bottoms out at each one's own floor instead of ever reaching 0
-    private const float SwingMinDamageMultiplier = 0.5f;
-    private const float BashMinDamageMultiplier = 0.5f;
+    private const float SwingMinDamageMultiplier = 0.25f;
+    private const float BashMinDamageMultiplier = 0.25f;
     private bool _nextSweepTopToBottom = true;
     private Coroutine _swordSweepRoutine;
 
