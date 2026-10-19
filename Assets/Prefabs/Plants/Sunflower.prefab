@@ -201,7 +201,6 @@ MonoBehaviour:
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseFallDamage: 0
-  baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
   baseGrassDamage: 0
@@ -250,6 +249,7 @@ MonoBehaviour:
   healingReceived: 0
   physicalResistance: 0
   magicResistance: 0
+  magicResistanceAdder: 0
   armor: 0
   magicArmor: 0
   armorPenFlat: 0
@@ -265,7 +265,6 @@ MonoBehaviour:
   physicalDamage: 0
   magicDamage: 0
   fallDamage: 0
-  bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
   grassDamage: 0
@@ -332,7 +331,6 @@ MonoBehaviour:
   physicalDamageAdder: 0
   magicDamageAdder: 0
   fallDamageAdder: 0
-  bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
   grassDamageAdder: 0
@@ -347,6 +345,7 @@ MonoBehaviour:
   dotDamageAdder: 0
   fallDamageResistanceAdder: 0
   elementalAffinityAdder: 0
+  germinateDetonationSpeedup: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
   coordinatedDamageAdder: 0
@@ -396,7 +395,6 @@ MonoBehaviour:
   iceResistanceMultiplier: 0
   physicalDamageMultiplier: 0
   magicDamageMultiplier: 0
-  bonusEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
   grassDamageMultiplier: 0
@@ -437,6 +435,9 @@ MonoBehaviour:
   magicArmorTotalMultiplier: 1
   armorPenFlatTotalMultiplier: 1
   magicPenFlatTotalMultiplier: 1
+  baseInternalCooldown: 10
+  internalCooldownAdder: 0
+  internalCooldownMultiplier: 0
   internalCooldown: 2
   fireInternalCooldown: 0
   waterInternalCooldown: 0
@@ -446,18 +447,35 @@ MonoBehaviour:
   windInternalCooldown: 0
   freezeInternalCooldown: 0
   germinateInternalCooldown: 0
+  fireInternalCooldownAdder: 0
+  waterInternalCooldownAdder: 0
+  grassInternalCooldownAdder: 0
+  iceInternalCooldownAdder: 0
+  poisonInternalCooldownAdder: 0
+  windInternalCooldownAdder: 0
+  fireInternalCooldownMultiplier: 0
+  waterInternalCooldownMultiplier: 0
+  grassInternalCooldownMultiplier: 0
+  iceInternalCooldownMultiplier: 0
+  poisonInternalCooldownMultiplier: 0
+  windInternalCooldownMultiplier: 0
   elementalDebuffDuration: 6
   timeAlive: 0
   totalDamageDealt: 0
   data: {fileID: 11400000, guid: 092e0c61ed58c854fa604766eb0b0886, type: 2}
   occupiedTile: {fileID: 0}
   selfPrefab: {fileID: 0}
+  baseTauntValue: 0
+  tauntValueAdder: 0
+  tauntValue: 0
+  forcedPriorityTarget: {fileID: 0}
   circleRadius: {fileID: 957996977735989291}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
   allowedTiles: 0100000004000000
   targeting: 1
   prioritizeFlying: 0
+  orbitRadius: 1
   sunCost: 125
   baseSunCost: 0
   sunCostReductionAdder: 0
@@ -540,6 +558,8 @@ MonoBehaviour:
   sunrayDamagePerSecond: 0
   cooldownReductionPerHit: 0
   sunrayPrefab: {fileID: 5428018812330015411, guid: d13991fe5493d6e44a08f371ea8e20b9, type: 3}
+  bodyAnimator: {fileID: 4649086067540029771}
+  bodyAttackClipLength: 0.5
   attackCircle: {fileID: 3386231638132550106}
   circleAnimator: {fileID: 7259768069922267850}
   circleClipLength: 0.5
@@ -609,7 +629,7 @@ Transform:
   m_GameObject: {fileID: 3386231638132550106}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.069, z: 0}
+  m_LocalPosition: {x: 0, y: -0.2, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -938,6 +958,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8848138388022288820}
   - component: {fileID: 7028219029107938175}
+  - component: {fileID: 4649086067540029771}
   m_Layer: 3
   m_Name: Visual
   m_TagString: Untagged
@@ -1009,7 +1030,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7367808777163505026, guid: e470d82d1a72b284db0fc11d7825e607, type: 3}
+  m_Sprite: {fileID: -7978883999570900537, guid: 1e110a04f44af82408fc85aa82f0e30e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1019,6 +1040,28 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!95 &4649086067540029771
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6784474226973136681}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 88ab84e34c05b0a45b1bb2c249c855f1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &965678419946081314
 PrefabInstance:
   m_ObjectHideFlags: 0

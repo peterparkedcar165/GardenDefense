@@ -23,6 +23,12 @@ public class TutorialManager : MonoBehaviour
 
     private void Awake()
     {
+        // the whole Canvas this lives on persists across scene loads (see PersistentCanvas),
+        // and every level scene also carries its own throwaway copy that gets destroyed the
+        // instant it notices the real one already exists. that copy's Awake still runs once
+        // before it dies though - without this guard it would steal the static instance
+        // reference out from under the real, surviving TutorialManager
+        if (instance != null) return;
         instance = this;
         Debug.Log("[Tutorial] TutorialManager.Awake - instance set, popup=" + (popup != null ? popup.name : "NULL"));
     }

@@ -56,6 +56,7 @@ public static class TutorialContent
 
     // triggers the moment the player enters level 2's setup phase (the initial pre-level
     // fertilizer selection), same hook point as Level1StartLevel - see FertilizerSelectionUI
+    
     public static readonly TutorialPage[] Level2StartLevel =
     {
         new TutorialPage("<b><color=orange>Sunflower</color></b>: Hi there! I'm <b><color=orange>Sunflower</color></b>, nice to meet you!"),

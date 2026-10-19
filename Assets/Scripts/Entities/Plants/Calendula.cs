@@ -294,12 +294,13 @@ public class Calendula : Aura
         StartCoroutine(SweepAttackDamage(snapshotDamage, snapshotDamageType, snapshotElementalType));
     }
 
-    // each insect beyond the first hit by one sweep costs 10% damage, down to a floor of 40% -
-    // e.g. 1st insect = 100%, 2nd = 90%, 3rd = 80%, ... 7th+ = 40%. hit.Count at the moment an
+    // each insect beyond the first hit by one sweep costs 25% damage, down to a floor of 25% -
+    // e.g. 1st insect = 100%, 2nd = 75%, 3rd = 50%, 4th+ = 25%. hit.Count at the moment an
     // insect is reached is exactly how many were already hit before it this sweep, so it doubles
-    // as the falloff index with no separate counter needed
-    private const float MultiTargetDamageReductionPerInsect = 0.1f;
-    private const float MinMultiTargetDamageMultiplier = 0.4f;
+    // as the falloff index with no separate counter needed. the burst expands outward from
+    // Calendula, so the closest insect is always reached first and takes the most damage
+    private const float MultiTargetDamageReductionPerInsect = 0.25f;
+    private const float MinMultiTargetDamageMultiplier = 0.25f;
 
     // the fire spreads outward from Calendula over FireBurstLifetime. every frame, ANY insect
     // currently within the growing radius is damaged — including one that wasn't even in range

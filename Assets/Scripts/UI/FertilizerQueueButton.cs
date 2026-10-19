@@ -18,6 +18,10 @@ public class FertilizerQueueButton : MonoBehaviour
 
     void Awake()
     {
+        // lives on the persistent Canvas (see PersistentCanvas) - every level scene also carries
+        // its own throwaway copy whose Awake still runs once before PersistentCanvas destroys it,
+        // so this guard keeps it from stealing the static reference from the real, surviving one
+        if (instance != null) return;
         instance = this;
     }
 

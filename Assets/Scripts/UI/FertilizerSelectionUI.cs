@@ -139,6 +139,14 @@ public class FertilizerSelectionUI : MonoBehaviour
         {
             TutorialManager.instance?.TryShow(TutorialIds.Level3StartLevel, TutorialContent.Level3StartLevel);
         }
+        else
+        {
+            // none of the above branches fired - log exactly why, so an intermittent "tutorial
+            // didn't appear" report can be traced to the real cause instead of guessed at
+            int levelNumber = ProceduralLevel.CurrentConfig != null ? ProceduralLevel.CurrentConfig.levelNumber : -1;
+            string loadout = SaveManager.instance != null ? string.Join(",", SaveManager.instance.selectedLoadout) : "NULL";
+            Debug.Log($"[Tutorial] CloseAfterSelect - no start tutorial branch matched. levelNumber={levelNumber}, selectedLoadout=[{loadout}]");
+        }
     }
 
     // cleanup used when leaving to the Main Menu (Escape -> Settings -> Main Menu, or Game

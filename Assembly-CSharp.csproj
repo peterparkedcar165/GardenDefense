@@ -121,6 +121,7 @@
     <Compile Include="Assets\Scripts\UI\PlantIconTooltip.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\VortexLiftEffect.cs" />
     <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
+    <Compile Include="Assets\Scripts\UI\SpeedButtonRightClick.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\PoisonShroomData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DuskdarterData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BegoniaBlessingEffect.cs" />

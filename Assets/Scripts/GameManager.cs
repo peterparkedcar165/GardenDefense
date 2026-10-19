@@ -142,6 +142,14 @@ public class GameManager : MonoBehaviour
         GameHUD.instance?.SetSpeedButton(gameSpeed);
     }
 
+    public void DecreaseSpeed()
+    {
+        speedIndex = (speedIndex - 1 + speeds.Length) % speeds.Length;
+        gameSpeed = speeds[speedIndex];
+        if (!paused) Time.timeScale = gameSpeed;
+        GameHUD.instance?.SetSpeedButton(gameSpeed);
+    }
+
     public bool IsGameActive { get; private set; }
 
     public void InitiateLevel(int sunCount, int health)
