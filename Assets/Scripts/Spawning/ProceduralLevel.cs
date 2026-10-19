@@ -147,8 +147,8 @@ public class ProceduralLevel : SpawnManager
             ? (float)(waveNumber - 1) / (config.maxWaves - 1)
             : 1f;
 
-        // hand-authored waves take priority - a wave number with no definition, or one with
-        // no sub-waves/trickle spawns, falls straight through to the procedural budget system
+        // every wave is hand-authored now - a wave number with no definition (or an entry with
+        // no sub-waves/trickle spawns) simply spawns nothing and just runs out its duration
         WaveDefinition scripted = FindWaveDefinition(waveNumber);
         bool useScripted = scripted != null &&
             ((scripted.subWaves != null && scripted.subWaves.Length > 0) ||
@@ -194,42 +194,13 @@ public class ProceduralLevel : SpawnManager
         }
         else
         {
+            // no hand-authored wave for this number - nothing spawns, but the wave still runs
+            // out its duration so the game keeps progressing (sun generation, the rest period
+            // after, etc.) instead of instantly skipping past it
             waveDuration = Mathf.Lerp(
                 config.minWaveDuration,
                 config.maxWaveDuration,
                 config.waveDurationCurve.Evaluate(t));
-
-            float budget = Mathf.Lerp(
-                config.minThreatBudget,
-                config.maxThreatBudget,
-                config.budgetCurve.Evaluate(t));
-
-            // collect insects unlocked by this wave
-            var available = new List<LevelInsectEntry>();
-            foreach (var e in config.insects)
-                if (e.data != null && e.unlockWave <= waveNumber)
-                    available.Add(e);
-
-            // normalize weights
-            float totalWeight = 0f;
-            foreach (var e in available) totalWeight += e.budgetWeight;
-
-            if (totalWeight > 0f)
-            {
-                foreach (var entry in available)
-                {
-                    if (entry.budgetWeight <= 0f) continue;
-
-                    float share    = budget * (entry.budgetWeight / totalWeight);
-                    float spawns   = share / Mathf.Max(entry.data.threatValue, 0.01f);
-                    // clamp interval: at least 0.5s between spawns of the same type
-                    float interval = Mathf.Max(0.5f, waveDuration / Mathf.Max(spawns, 0.01f));
-
-                    streams.Add(StartCoroutine(
-                        SpawnStream(entry.data.insectPrefab, entry.startDelay, interval, waveDuration)));
-                    lastSpawnOffset = Mathf.Max(lastSpawnOffset, LastRepeatingSpawnOffset(entry.startDelay, interval, waveDuration));
-                }
-            }
         }
 
         // elite wave bonus - one elite is chosen by weighted random among unlocked entries
@@ -403,21 +374,6 @@ public class ProceduralLevel : SpawnManager
     }
 
     // ── spawn helpers ─────────────────────────────────────────────────────────
-
-    // repeatedly spawns a single insect type for the duration of a wave
-    IEnumerator SpawnStream(GameObject prefab, float startDelay, float interval, float waveDuration)
-    {
-        if (startDelay > 0f)
-            yield return new WaitForSeconds(startDelay);
-
-        float elapsed = startDelay;
-        while (elapsed < waveDuration)
-        {
-            Spawn(prefab);
-            yield return new WaitForSeconds(interval);
-            elapsed += interval;
-        }
-    }
 
     // spawns the elite group for an elite wave
     // count scales between minSpawnCount and maxSpawnCount based on wave progress (t = 0 to 1)

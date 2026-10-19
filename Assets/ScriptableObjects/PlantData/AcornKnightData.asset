@@ -100,7 +100,7 @@ MonoBehaviour:
       maxPitch: 1.5
   skillSound:
     clips: []
-  coneFalloffPerTarget: 0.1
+  coneFalloffPerTarget: 0.2
   attackWindupTime: 0.1
   baseDefensiveArmor: 20
   path2DefensiveArmorPerLevel: 7

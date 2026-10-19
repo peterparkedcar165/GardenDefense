@@ -25,20 +25,8 @@ public class LevelConfig : ScriptableObject
     [Header("rest period")]
     public float restDuration = 12f;
 
-    [Header("threat budget")]
-    [Tooltip("total threat spawned on wave 1")]
-    public float minThreatBudget = 15f;
-    [Tooltip("total threat spawned on the final wave")]
-    public float maxThreatBudget = 120f;
-    [Tooltip("shape of the budget ramp. x axis = wave progress (0 to 1), y axis = 0 to 1 (lerped between min and max)")]
-    public AnimationCurve budgetCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
-
-    [Header("insect roster")]
-    [Tooltip("all insect types available in this level. each entry defines when it unlocks and how much of the budget it uses")]
-    public LevelInsectEntry[] insects;
-
     [Header("hand-authored waves")]
-    [Tooltip("optional exact spawn scripting for specific wave numbers. a wave number with no entry here (or an entry with no sub-waves/trickle spawns) falls back to the procedural budget system above")]
+    [Tooltip("exact spawn scripting for specific wave numbers. a wave number with no entry here (or an entry with no sub-waves/trickle spawns) simply spawns nothing")]
     public WaveDefinition[] waves;
 
     [Header("elite waves")]

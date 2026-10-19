@@ -1,17 +1,27 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Begonia : Shooter
+public class Begonia : Aura
 {
-    private bool _isSkillTargeting = false;
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
 
+    // no target to remember anymore - just whether to auto-recast on herself every time ready
     private bool autoCastEnabled = false;
-    private Vector3 autoCastPosition;
     public override bool UsesAutoCast => true;
     public override bool IsAutoCasting => autoCastEnabled;
 
     private BegoniaData BData => data as BegoniaData;
+
+    // Attack: her flowers tick independently of the generic attackSpeed/attackCooldown cycle -
+    // she has no single target, so there's nothing for that cycle to drive here
+    private float _flowerTickTimer;
+    private const float FlowerTickInterval = 0.1f;
+    // short buffer so BegoniaFlowersEffect naturally lapses shortly after an insect leaves range,
+    // instead of needing to be manually removed - same trick Cactus's taunt pulse uses
+    private const float FlowerEffectRefreshDuration = 0.35f;
+
+    private float WaterCooldownReduction => (BData?.baseWaterCooldownReduction ?? 2f) + (BData?.path1CooldownReductionPerLevel ?? 0.6f) * effectivePath1Level;
+    private float GrassResistanceShredAmount => BData?.maxLevelGrassResistanceShred ?? 0.35f;
 
     // skill tree node unlock ids
     public const string InstantSkillUnlock      = "begonia_instant_skill";
@@ -33,7 +43,6 @@ public class Begonia : Shooter
     private float AttackSpeedBonusBase => (BData?.baseAttackSpeedBonus ?? 0f) + (BData?.path3AttackSpeedBonusPerLevel ?? 0.04f) * effectivePath3Level;
     private float AttackSpeedBonusMP   => (BData?.baseSkillMultiplier ?? 0f) * magicPower / 100f;
     private float AttackSpeedBonus     => AttackSpeedBonusBase + AttackSpeedBonusMP;
-    private float BlossomRadius        => baseSkillRadius + (BData?.path3RadiusPerLevel ?? 0.15f) * effectivePath3Level;
 
     private float PrimerCooldownReduction =>
         (BData?.basePrimerCooldownReduction ?? 0.5f) + (BData?.path3PrimerCooldownReductionPerLevel ?? 0.1f) * effectivePath3Level
@@ -65,13 +74,38 @@ public class Begonia : Shooter
     {
         base.Update();
         UpdateHighlights();
-        UpdateAutoCast();
+
+        if (autoCastEnabled && SkillReady) ActivateSkill();
+
+        _flowerTickTimer += Time.deltaTime;
+        if (_flowerTickTimer >= FlowerTickInterval)
+        {
+            _flowerTickTimer -= FlowerTickInterval;
+            TickFlowers();
+        }
     }
 
-    private void UpdateAutoCast()
+    // every tick: refresh (or apply) the standing-in-her-flowers debuff on every insect in range,
+    // and reprime with Water if that insect's (now-shortened) internal cooldown has lapsed
+    private void TickFlowers()
     {
-        if (!autoCastEnabled) return;
-        if (SkillReady) OnTargetConfirmed(autoCastPosition);
+        float reduction = WaterCooldownReduction;
+        float shred = IsPath1Maxed ? GrassResistanceShredAmount : 0f;
+
+        foreach (Insect insect in GetInsectsInRange())
+        {
+            BegoniaFlowersEffect existing = insect.GetEffect<BegoniaFlowersEffect>();
+            if (existing != null)
+                existing.duration = FlowerEffectRefreshDuration;
+            else
+                insect.ApplyEffect(new BegoniaFlowersEffect(insect, FlowerEffectRefreshDuration, this, reduction, shred));
+
+            if (insect.waterInternalCooldown <= 0f)
+            {
+                insect.waterInternalCooldown = insect.ElementInternalCooldown(insect.waterInternalCooldownAdder, insect.waterInternalCooldownMultiplier);
+                insect.ApplyEffect(new WaterPrimer(insect, insect.elementalDebuffDuration, 1, this));
+            }
+        }
     }
 
     // applied once on placement, on a Path2 upgrade, or whenever any new plant appears on the
@@ -88,105 +122,45 @@ public class Begonia : Shooter
         }
     }
 
-    protected override void Shoot(Vector3 target)
-    {
-        if (projectilePrefab == null) return;
-        GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        BegoniaProjectile petal = proj.GetComponent<BegoniaProjectile>();
-        if (petal != null)
-        {
-            petal.SetTarget(FindTarget());
-            petal.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
-        }
-    }
-
+    // immediate, self-centered: no more "click a point on the field" step. plants within her
+    // attack range (the same range her passive aura already uses) are granted Blossoming
     public override void ActivateSkill()
     {
         if (!SkillReady) return;
-        _isSkillTargeting = true;
-        SkillTargetingManager.instance.BeginTargeting(BlossomRadius, OnTargetConfirmed);
-    }
-
-    private void OnTargetConfirmed(Vector3 position)
-    {
-        _isSkillTargeting = false;
         skillCooldownTimer = skillCooldown;
 
         // Blooming Affinity/Vigor (skill tree): a snapshot of her own current Begonia's Blessing
-        // bonus, granted directly to Blossoming's targets regardless of whether they're actually
-        // within her Blessing's range - zero (no-op) when the matching unlock isn't picked
+        // bonus, granted directly to Blossoming's targets - zero (no-op) when the matching
+        // unlock isn't picked
         float blossomAffinityBonus = SkillTreeManager.HasUnlock(this, BloomingAffinityUnlock) ? ElementalAffinityBonus : 0f;
         float blossomGrassBonus    = SkillTreeManager.HasUnlock(this, BloomingVigorUnlock)    ? GrassDamageBonus       : 0f;
 
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
-            if (Vector2.Distance(position, plant.transform.position) <= BlossomRadius)
+            if (Vector2.Distance(transform.position, plant.transform.position) <= attackRange)
                 plant.ApplyEffect(new BlossomingEffect(plant, skillDuration, effectivePath3Level + 1, this, AttackSpeedBonus, PrimerCooldownReduction,
                     blossomAffinityBonus, blossomGrassBonus));
         }
     }
 
-    // click Auto Cast to lock in an area, click again to turn it off
-    public override void ToggleAutoCast()
-    {
-        if (autoCastEnabled)
-        {
-            autoCastEnabled = false;
-            return;
-        }
-        _isSkillTargeting = true;
-        SkillTargetingManager.instance.BeginTargeting(BlossomRadius, OnAutoCastTargetConfirmed);
-    }
-
-    private void OnAutoCastTargetConfirmed(Vector3 position)
-    {
-        _isSkillTargeting = false;
-        autoCastEnabled = true;
-        autoCastPosition = position;
-    }
+    // simple on/off now - no target to pick, so there's no targeting step to begin
+    public override void ToggleAutoCast() => autoCastEnabled = !autoCastEnabled;
 
     public override AutoCastState CaptureAutoCastState() =>
-        new AutoCastState { enabled = autoCastEnabled, targetPosition = autoCastPosition };
+        new AutoCastState { enabled = autoCastEnabled };
 
-    public override void RestoreAutoCastState(AutoCastState state)
-    {
-        if (!state.enabled) return;
-        autoCastEnabled = true;
-        autoCastPosition = state.targetPosition;
-    }
+    public override void RestoreAutoCastState(AutoCastState state) =>
+        autoCastEnabled = state.enabled;
 
     private void UpdateHighlights()
     {
-        if (!SkillTargetingManager.instance.IsTargeting) _isSkillTargeting = false;
-
         bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
 
         var desired = new HashSet<Plant>();
         Color highlightColor = Color.green;
 
-        if (_isSkillTargeting)
-        {
-            Vector3 mousePos = SkillTargetingManager.instance.GetMouseWorldPosition();
-            foreach (Plant plant in Plant.allPlants)
-            {
-                if (plant == null) continue;
-                if (Vector2.Distance(mousePos, plant.transform.position) <= BlossomRadius)
-                    desired.Add(plant);
-            }
-            highlightColor = Color.red;
-        }
-        else if (autoCastEnabled && isSelected)
-        {
-            foreach (Plant plant in Plant.allPlants)
-            {
-                if (plant == null) continue;
-                if (Vector2.Distance(autoCastPosition, plant.transform.position) <= BlossomRadius)
-                    desired.Add(plant);
-            }
-            highlightColor = Color.yellow;
-        }
-        else if (isSelected)
+        if (isSelected)
         {
             foreach (Plant plant in Plant.allPlants)
             {
@@ -218,8 +192,7 @@ public class Begonia : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        baseAttackRange  = data.baseAttackRange  + (BData?.path1AttackRangePerLevel  ?? 0.2f) * level;
-        baseAttackSpeed  = data.baseAttackSpeed  + (BData?.path1AttackSpeedPerLevel  ?? 0.1f) * level;
+        baseAttackRange = data.baseAttackRange + (BData?.path1AttackRangePerLevel ?? 0.2f) * level;
         ApplyAuraToAllInRange();
     }
 
@@ -232,19 +205,19 @@ public class Begonia : Shooter
 
     public override string GetName() => "<b><color=#4FC3F7>Begonia</color></b>";
     public override string GetDescription() =>
-        $"The {GetName()} sharpens nearby allies' precision and power, and can bless them with the strength of water.";
+        $"The {GetName()} grows wet flowers that prime nearby insects with water, and sharpens nearby allies' precision and power, blessing them with the strength of water.";
 
     public override string GetPath1Description(bool details = false)
     {
-        float rangepl = BData?.path1AttackRangePerLevel  ?? 0.2f;
-        float aspl    = BData?.path1AttackSpeedPerLevel  ?? 0.1f;
+        float rangepl = BData?.path1AttackRangePerLevel ?? 0.2f;
+        float cdrpl   = BData?.path1CooldownReductionPerLevel ?? 0.6f;
         string desc = details
-            ? $"Fire a magical bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
+            ? $"Grows wet flowers around her, applying <color=#4FC3F7><b>Water</b></color> primer to insects in contact with them and reducing its internal cooldown by <color=green><b>[({(BData?.baseWaterCooldownReduction ?? 2f):F1}s) + ({cdrpl:F1}s/Lvl.)]</b></color>."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "Attacks ignore <color=#4FC3F7><b>Water</b></color> internal cooldowns.")}\n\n" +
+               $"Increase <color=#4FC3F7><b>Water</b></color> internal cooldown reduction by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath1Level:F1}s</b></color>]\n\n" +
+               $"{Level5Section(path1Level, $"Insects in contact with her flowers have <color=green><b>{GrassResistanceShredAmount * 100f:F0}%</b></color> reduced <color=green><b>Grass Resistance</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -270,18 +243,16 @@ public class Begonia : Shooter
     public override string GetPath3Description(bool details = false)
     {
         float aspl     = BData?.path3AttackSpeedBonusPerLevel  ?? 0.04f;
-        float radiuspl = BData?.path3RadiusPerLevel            ?? 0.15f;
         float durpl    = BData?.path3SkillDurationPerLevel     ?? 1f;
         float pcrpl    = BData?.path3PrimerCooldownReductionPerLevel ?? 0.1f;
         float mpMult   = BData?.baseSkillMultiplier ?? 0f;
         string desc = details
-            ? $"Target an area on the field (radius <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color>). Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, " +
+            ? $"Plants within her attack range are granted <color=green><b>Blossoming</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, " +
               $"increasing <color=green><b>Attack Speed</b></color> by <color=green><b>[({(BData?.baseAttackSpeedBonus ?? 0f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>. " +
               $"While active, dealing <color=#4FC3F7><b>Water</b></color> or <color=green><b>Grass</b></color> damage reduces that insect's own primer cooldown for that element by <color=green><b>[({(BData?.basePrimerCooldownReduction ?? 0.5f):F1}s) + ({pcrpl:F1}s/Lvl.)]</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
-               $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase primer cooldown reduction by <color=green><b>{pcrpl:F1}s</b></color> per level. [<color=green><b>+{pcrpl * effectivePath3Level:F1}s</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
@@ -291,7 +262,7 @@ public class Begonia : Shooter
     }
 
     public override string GetAttackDescription() =>
-        $"Fire a magical bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+        $"Grows wet flowers around her, applying <color=#4FC3F7><b>Water</b></color> primer to insects in contact with them and reducing its internal cooldown by <color=green><b>{WaterCooldownReduction:F1}s</b></color>.";
 
     public override string GetPassiveDescription() =>
         $"Plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, " +
@@ -300,7 +271,7 @@ public class Begonia : Shooter
         $"Their <color=green><b>Germinate</b></color> triggers detonate <color=green><b>{GerminateSpeedupBonus:F1}s</b></color> earlier.";
 
     public override string GetSkillDesription() =>
-        $"Target an area on the field. Plants within are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +
+        $"Plants within her attack range are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +
         $"increasing <color=green><b>Attack Speed</b></color> by <color=green><b>{AttackSpeedBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{AttackSpeedBonusMP * 100f:F0}%</b></color>]. " +
         $"While active, dealing <color=#4FC3F7><b>Water</b></color> or <color=green><b>Grass</b></color> damage reduces that insect's own primer cooldown for that element by <color=green><b>{PrimerCooldownReduction:F1}s</b></color>.";
 }

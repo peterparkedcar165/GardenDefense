@@ -396,8 +396,9 @@ public abstract class Entity : MonoBehaviour
 
     // the shared internalCooldown above, further adjusted per-element - e.g. a debuff that only
     // shortens Water's cooldown on this entity sets waterInternalCooldownAdder/Multiplier without
-    // touching the other elements' own timers
-    private float ElementInternalCooldown(float adder, float multiplier) =>
+    // touching the other elements' own timers. public so a non-Entity source (e.g. Begonia's
+    // flower aura, which primers without ever dealing damage) can set a target's cooldown itself
+    public float ElementInternalCooldown(float adder, float multiplier) =>
         Mathf.Max(0f, internalCooldown + adder + (internalCooldown * multiplier));
 
     public virtual void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, DamageTag[] damageTag)
@@ -597,17 +598,9 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - waterResistance) * (1 + source.waterDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
                 {
-                    // Begonia's Path1 max: ignores the Water internal cooldown entirely - always
-                    // primers regardless of its state, and never reads/writes it at all, rather
-                    // than bypassing the gate but still resetting the timer like a normal hit would
-                    bool ignoresCooldown = source is Begonia begonia && begonia.IsPath1Maxed;
                     if (waterInternalCooldown <= 0)
                     {
                         waterInternalCooldown = ElementInternalCooldown(waterInternalCooldownAdder, waterInternalCooldownMultiplier);
-                        ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
-                    }
-                    else if (ignoresCooldown)
-                    {
                         ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
                     }
                 }

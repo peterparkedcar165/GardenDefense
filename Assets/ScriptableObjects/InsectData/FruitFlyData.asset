@@ -23,8 +23,8 @@ MonoBehaviour:
   baseAttackRange: 0.3
   baseMovementSpeed: 0.85
   baseTargetingRange: 1
-  baseArmor: 5
-  baseMagicArmor: 5
+  baseArmor: 0
+  baseMagicArmor: 0
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0

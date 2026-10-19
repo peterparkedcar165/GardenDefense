@@ -209,6 +209,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Moth.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\EarthwormData.cs" />
     <Compile Include="Assets\Scripts\FertilizerManager.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\BegoniaFlowersEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\AnemoneVortex.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SnowFly.cs" />
     <Compile Include="Assets\Scripts\UI\GameButtons.cs" />

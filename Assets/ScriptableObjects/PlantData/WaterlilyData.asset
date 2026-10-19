@@ -104,14 +104,14 @@ MonoBehaviour:
       maxPitch: 0.8
   skillSound:
     clips: []
-  baseAoERange: 1
+  baseAoERange: 1.5
   baseSplashDamage: 9
   baseBubblePrisonImpactDamage: 42
   splashMaxExtraTargets: 3
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.2
   path1AttackSpeedPerLevel: 0.1
-  path2AoERangePerLevel: 0.05
+  path2AoERangePerLevel: 0.1
   path2SplashDamageScalingPerLevel: 0.05
   baseSlowDuration: 6
   path2MaxSlowStacksPerLevel: 1
