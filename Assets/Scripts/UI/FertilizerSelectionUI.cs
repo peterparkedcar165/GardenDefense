@@ -42,7 +42,7 @@ public class FertilizerSelectionUI : MonoBehaviour
         GameManager.instance.SetPause(true);
 
         if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 1)
-            TutorialManager.instance?.TryShow(TutorialIds.Level1FertilizerSelection, TutorialContent.Level1FertilizerSelection);
+            TutorialManager.instance?.TryShow(TutorialIds.Level1FertilizerSelection, TutorialContent.Level1FertilizerSelection, TutorialSpeaker.AcornKnight);
 
         ClearCards();
 
@@ -127,17 +127,17 @@ public class FertilizerSelectionUI : MonoBehaviour
         }
         else if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 1)
         {
-            TutorialManager.instance?.TryShow(TutorialIds.Level1StartLevel, TutorialContent.Level1StartLevel);
+            TutorialManager.instance?.TryShow(TutorialIds.Level1StartLevel, TutorialContent.Level1StartLevel, TutorialSpeaker.AcornKnight);
         }
         else if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2
                  && SaveManager.instance != null && SaveManager.instance.selectedLoadout.Contains("Sunflower"))
         {
-            TutorialManager.instance?.TryShow(TutorialIds.Level2StartLevel, TutorialContent.Level2StartLevel);
+            TutorialManager.instance?.TryShow(TutorialIds.Level2StartLevel, TutorialContent.Level2StartLevel, TutorialSpeaker.Sunflower);
         }
         else if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 3
                  && SaveManager.instance != null && SaveManager.instance.selectedLoadout.Contains("Waterlily"))
         {
-            TutorialManager.instance?.TryShow(TutorialIds.Level3StartLevel, TutorialContent.Level3StartLevel);
+            TutorialManager.instance?.TryShow(TutorialIds.Level3StartLevel, TutorialContent.Level3StartLevel, TutorialSpeaker.Waterlily);
         }
         else
         {

@@ -36,7 +36,7 @@ public abstract class ElementalDebuff : StatusEffect
         yield return new UnityEngine.WaitForSeconds(1f);
         if (TutorialManager.instance != null
             && TutorialManager.instance.TryShow(TutorialIds.Level2Primers, TutorialContent.Level2Primers,
-                () => GameManager.instance.SetPause(false)))
+                TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
         {
             GameManager.instance.SetPause(true);
         }

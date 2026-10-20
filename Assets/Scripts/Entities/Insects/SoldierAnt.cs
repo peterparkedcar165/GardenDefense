@@ -22,7 +22,7 @@ public class SoldierAnt : Ant
 
         if (TutorialManager.instance != null
             && TutorialManager.instance.TryShow(TutorialIds.Level1SoldierAntAppears, TutorialContent.Level1SoldierAntAppears,
-                () => GameManager.instance.SetPause(false)))
+                TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
         {
             GameManager.instance.SetPause(true);
         }

@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\SnowdropProjectile.cs" />
     <Compile Include="Assets\Scripts\Skills\KelpBubbleProjectile.cs" />
     <Compile Include="Assets\Scripts\Mulch\MulchData.cs" />
+    <Compile Include="Assets\Scripts\Tutorial\TutorialSpeaker.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\MosquitoBiteEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Entity.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CactusData.cs" />

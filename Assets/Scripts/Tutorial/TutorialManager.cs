@@ -12,6 +12,22 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] private TutorialPopupUI popup;
 
+    // one PlantData reference per TutorialSpeaker - portrait/name shown on the popup come
+    // straight from the matching plant's own icon/displayName (see ResolveSpeaker), so there's
+    // no separate portrait art to maintain
+    [Header("Speakers")]
+    [SerializeField] private PlantData acornKnightSpeaker;
+    [SerializeField] private PlantData sunflowerSpeaker;
+    [SerializeField] private PlantData waterlilySpeaker;
+
+    private PlantData ResolveSpeaker(TutorialSpeaker speaker) => speaker switch
+    {
+        TutorialSpeaker.AcornKnight => acornKnightSpeaker,
+        TutorialSpeaker.Sunflower => sunflowerSpeaker,
+        TutorialSpeaker.Waterlily => waterlilySpeaker,
+        _ => null,
+    };
+
     // id of whichever tutorial the popup is currently running, so gameplay code can gate
     // actions on a specific tutorial being active (see IsTutorialActive/IsWaitingForEvent)
     private string currentId;
@@ -37,7 +53,7 @@ public class TutorialManager : MonoBehaviour
     // need a side effect tied to the tutorial genuinely appearing, e.g. pausing the game, avoid
     // doing that when it's already been seen). onComplete, if given, runs right after the
     // tutorial is marked seen - e.g. to resume play once its last page closes
-    public bool TryShow(string id, TutorialPage[] pages, System.Action onComplete = null)
+    public bool TryShow(string id, TutorialPage[] pages, TutorialSpeaker speaker, System.Action onComplete = null)
     {
         if (string.IsNullOrEmpty(id) || pages == null || pages.Length == 0)
         {
@@ -60,9 +76,20 @@ public class TutorialManager : MonoBehaviour
             return false;
         }
 
+        PlantData data = ResolveSpeaker(speaker);
+        if (data == null)
+            Debug.LogWarning($"[Tutorial] TryShow('{id}') - no PlantData wired for speaker {speaker} (portrait/name will be blank)");
+
+        // reuses the same named/hex color strings every elemental rich-text tag in the game
+        // already draws from (PlantData.ElementalColor), just parsed into an actual Color here
+        // instead of wrapped in a <color> tag
+        Color borderColor = Color.white;
+        if (data != null)
+            ColorUtility.TryParseHtmlString(PlantData.ElementalColor(data.elementalType), out borderColor);
+
         Debug.Log($"[Tutorial] TryShow('{id}') showing {pages.Length} page(s)");
         currentId = id;
-        popup.Show(pages, () => { MarkSeen(id); onComplete?.Invoke(); });
+        popup.Show(pages, data != null ? data.icon : null, data != null ? data.displayName : "", borderColor, () => { MarkSeen(id); onComplete?.Invoke(); });
         return true;
     }
 

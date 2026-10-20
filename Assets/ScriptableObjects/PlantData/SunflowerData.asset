@@ -84,7 +84,7 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 100
   baseSkillDuration: 8
-  channelDuration: 0
+  channelDuration: 1.5
   baseSkillRadius: 1.5
   baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0

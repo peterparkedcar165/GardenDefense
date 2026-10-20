@@ -52,6 +52,74 @@ public class Sunflower : Shooter
         _bodySpeedResetRoutine = null;
     }
 
+    [Header("Grimoire (cosmetic)")]
+    // the floating book - purely cosmetic, no gameplay effect. its unflipped art faces left, same
+    // convention Plant.UpdateFacingFlip already uses for the body itself, so its own flip state
+    // just mirrors whichever side of her it's currently sitting on
+    [SerializeField] private Transform bookTransform;
+    [SerializeField] private SpriteRenderer bookSpriteRenderer;
+    [SerializeField] private float bookBobAmplitude = 0.05f;
+    [SerializeField] private float bookBobSpeed = 2f;
+    // how quickly the book catches up to its target side when she flips facing - a flat Lerp
+    // factor per second, never an instant snap
+    [SerializeField] private float bookXLerpSpeed = 4f;
+    // the book's Animator has no idle state/clip at all - it normally just sits there as
+    // whatever static sprite is on bookSpriteRenderer. the Animator component itself stays
+    // disabled except for the moment it's actually playing the generate clip, so there's never a
+    // risk of it idling mid-animation - see PlayBookGenerateAnimation
+    [SerializeField] private Animator bookAnimator;
+    // the clip's own authored Length in seconds, as shown in the Animation window - same
+    // convention as circleClipLength/bodyAttackClipLength, set this once to match that real
+    // value and leave it alone
+    [SerializeField] private float bookGenerateAuthoredClipLength = 0.5f;
+    // how long the generate animation should actually take to play out - freely tunable to
+    // taste, independent of the clip's own real length. the Animator's speed is scaled so the
+    // authored clip stretches or compresses to fit exactly this duration
+    [SerializeField] private float bookGenerateClipLength = 0.5f;
+    private Coroutine _bookAnimatorDisableRoutine;
+
+    private const float BookBaseHeight = -0.1f;
+    private const float BookBaseXLeft = -0.35f;
+    private const float BookBaseXRight = 0.35f;
+
+    // called the instant the passive actually fires (see Update) - plays the one generate clip
+    // once, then disables the Animator again so the book goes back to its plain static sprite
+    // instead of holding on the clip's last frame
+    private void PlayBookGenerateAnimation()
+    {
+        if (bookAnimator == null) return;
+        if (_bookAnimatorDisableRoutine != null) StopCoroutine(_bookAnimatorDisableRoutine);
+
+        bookAnimator.enabled = true;
+        bookAnimator.speed = bookGenerateClipLength > 0f && bookGenerateAuthoredClipLength > 0f
+            ? Mathf.Max(0.01f, bookGenerateAuthoredClipLength / bookGenerateClipLength) : 1f;
+        bookAnimator.Play(0, 0, 0f);
+        _bookAnimatorDisableRoutine = StartCoroutine(DisableBookAnimatorAfter(bookGenerateClipLength));
+    }
+
+    private IEnumerator DisableBookAnimatorAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (bookAnimator != null) bookAnimator.enabled = false;
+        _bookAnimatorDisableRoutine = null;
+    }
+
+    private void UpdateBook()
+    {
+        if (bookTransform == null) return;
+
+        SpriteRenderer mainRenderer = GetMainRenderer();
+        bool facingRight = mainRenderer != null && mainRenderer.flipX;
+        float targetX = facingRight ? BookBaseXRight : BookBaseXLeft;
+
+        Vector3 local = bookTransform.localPosition;
+        float newX = Mathf.Lerp(local.x, targetX, bookXLerpSpeed * Time.deltaTime);
+        float bobY = BookBaseHeight + Mathf.Sin(Time.time * bookBobSpeed) * bookBobAmplitude;
+        bookTransform.localPosition = new Vector3(newX, bobY, local.z);
+
+        if (bookSpriteRenderer != null) bookSpriteRenderer.flipX = newX > 0f;
+    }
+
     [Header("Attack Charge Circle")]
     [SerializeField] private GameObject attackCircle;
     [SerializeField] private Animator circleAnimator;
@@ -93,6 +161,11 @@ public class Sunflower : Shooter
         passiveCooldownTimer = data.basePassiveCooldown;
         Entity.OnEntityHit += OnAnyEntityHit;
 
+        // the Animator defaults to enabled the instant the component exists, which would
+        // otherwise auto-play its one state (no idle to sit on) the moment she spawns - force it
+        // off here so it only ever plays during PlayBookGenerateAnimation's own window
+        if (bookAnimator != null) bookAnimator.enabled = false;
+
         // LoadData already applied any skill tree path1LevelAdder/path2LevelAdder/
         // path3LevelAdder ("+1 Effective X Point" nodes) and recomputed
         // effectivePath1/2/3Level from them, so re-running these three hooks here bakes that
@@ -129,12 +202,15 @@ public class Sunflower : Shooter
     {
         base.Update();
 
+        UpdateBook();
+
         int sunpl = SFData?.path2SunPerLevel ?? 3;
         sunGenerated = (SFData?.baseSunGenerated ?? 10) + sunpl * effectivePath2Level;
 
         if (passiveCooldownTimer <= 0)
         {
             GenerateSun(sunGenerated);
+            PlayBookGenerateAnimation();
             passiveCooldownTimer += passiveCooldown * (1f + sunGenerationCooldown);
 
             // skill tree node 5.2
@@ -161,6 +237,15 @@ public class Sunflower : Shooter
     // original target left range, breaking the lock
     private Insect _currentTarget;
 
+    // true from the moment an attack commits (Shoot() called) until every bolt it's going to
+    // fire actually has (see _pendingAttackShots) - lets a skill cast that comes in mid-attack
+    // queue instead of cutting the attack animation off, matching the Animator (Attack can't be
+    // interrupted by Skill there either)
+    private bool _attackInProgress;
+    private int _pendingAttackShots;
+    private bool _skillQueued;
+    private Vector3 _queuedSkillPosition;
+
     protected override GameObject FindTarget()
     {
         GameObject target = base.FindTarget();
@@ -181,15 +266,38 @@ public class Sunflower : Shooter
     // through the whole sequence regardless of range - and since all three charges share the same
     // captured lockedTarget/lastKnownPosition variables, whichever one first notices the target
     // died and finds a replacement updates it for whichever circles haven't fired yet too
+    // the body's Attack pose starts the instant Shoot() commits (see PlayBodyAnimation above),
+    // but the circle itself only appears this many seconds later - a small beat so the pose
+    // visibly leads the charge-up orb instead of both popping in on the same frame
+    private const float BallSpawnDelay = 0.1f;
+
+    // safeguard for WaitForBodyReadyThenInvoke below - name of the body Animator's Skill state,
+    // as it appears in the Animator window
+    private const string BodySkillStateName = "SunflowerSkill";
+    // never block the circle indefinitely if the body Animator is ever stuck/misconfigured -
+    // this is purely a safety cap, not an expected wait
+    private const float BodyReadyMaxExtraWait = 5f;
+
     protected override void Shoot(Vector3 target)
     {
+        // attackCooldownTimer resets the instant an attack commits (see Shooter.Update()), not
+        // when it actually finishes - so if one full charge-to-fire cycle ever takes longer than
+        // the cooldown between shots (easily true right after a skill channel, where the timer
+        // has been quietly building up the whole 1.5s), a second Shoot() can fire before the
+        // first one's animation/circle has resolved. without this guard that retriggers the
+        // Attack pose on top of the still-playing one instead of just skipping this tick
+        if (_attackInProgress) return;
+
         PlayBodyAnimation(BodyAttackTrigger, bodyAttackClipLength, AttackChargeTime);
         Insect lockedTarget = _currentTarget;
+
+        int shotCount = IsPath1Maxed ? (SkillTreeManager.HasUnlock(this, ExtraProjectileUnlock) ? 4 : 3) : 1;
+        _attackInProgress = true;
+        _pendingAttackShots = shotCount;
 
         if (IsPath1Maxed)
         {
             GameObject[] sequence = { leftCircle, attackCircle, rightCircle };
-            int shotCount = SkillTreeManager.HasUnlock(this, ExtraProjectileUnlock) ? 4 : 3;
             Vector3 lastKnownPosition = lockedTarget != null ? lockedTarget.GetAimPoint() : transform.position;
             // 0.3s at base Attack Speed, scaling inversely with it - the stagger between each
             // circle's own charge starting, same 1/attackSpeed relationship attackCooldown uses
@@ -220,36 +328,52 @@ public class Sunflower : Shooter
                     });
                 };
 
-                float startDelay = capturedIndex * boltDelay;
-                if (startDelay <= 0f) startCircle();
-                else StartCoroutine(DelayThenInvoke(startDelay, startCircle));
+                float startDelay = BallSpawnDelay + capturedIndex * boltDelay;
+                StartCoroutine(WaitForBodyReadyThenInvoke(startDelay, startCircle));
             }
         }
         else
         {
             Vector3 lastKnownPosition = lockedTarget != null ? lockedTarget.GetAimPoint() : transform.position;
 
-            if (attackCircle != null) attackCircle.SetActive(true);
-            BeginAnimatedAttackCharge(circleAnimator, AttackChargeTrigger, circleClipLength, () =>
+            StartCoroutine(WaitForBodyReadyThenInvoke(BallSpawnDelay, () =>
             {
-                if (lockedTarget == null || !lockedTarget.IsAlive)
+                if (attackCircle != null) attackCircle.SetActive(true);
+                BeginAnimatedAttackCharge(circleAnimator, AttackChargeTrigger, circleClipLength, () =>
                 {
-                    GameObject replacement = FindTarget();
-                    Insect replacementInsect = replacement != null ? replacement.GetComponent<Insect>() : null;
-                    if (replacementInsect != null) lockedTarget = replacementInsect;
-                }
-                if (lockedTarget != null && lockedTarget.IsAlive)
-                    lastKnownPosition = lockedTarget.GetAimPoint();
+                    if (lockedTarget == null || !lockedTarget.IsAlive)
+                    {
+                        GameObject replacement = FindTarget();
+                        Insect replacementInsect = replacement != null ? replacement.GetComponent<Insect>() : null;
+                        if (replacementInsect != null) lockedTarget = replacementInsect;
+                    }
+                    if (lockedTarget != null && lockedTarget.IsAlive)
+                        lastKnownPosition = lockedTarget.GetAimPoint();
 
-                Vector3 spawnPosition = attackCircle != null ? attackCircle.transform.position : transform.position;
-                FireProjectile(lockedTarget, spawnPosition, attackCircle, lastKnownPosition);
-            });
+                    Vector3 spawnPosition = attackCircle != null ? attackCircle.transform.position : transform.position;
+                    FireProjectile(lockedTarget, spawnPosition, attackCircle, lastKnownPosition);
+                });
+            }));
         }
     }
 
-    private IEnumerator DelayThenInvoke(float delay, System.Action action)
+    // waits delay seconds, then also waits for the body Animator to actually have
+    // left the Skill state before running action - the circle otherwise has no idea whether the
+    // body is still mid-Skill-animation (its real playtime can run longer than channelDuration if
+    // bodySkillClipLength doesn't exactly match the clip's authored Length), so without this a
+    // slow Skill animation could let the circle visibly get ahead of the body's own attack pose
+    private IEnumerator WaitForBodyReadyThenInvoke(float delay, System.Action action)
     {
         yield return new WaitForSeconds(delay);
+
+        float elapsed = 0f;
+        while (bodyAnimator != null && elapsed < BodyReadyMaxExtraWait
+               && bodyAnimator.GetCurrentAnimatorStateInfo(0).IsName(BodySkillStateName))
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
         action?.Invoke();
     }
 
@@ -263,7 +387,7 @@ public class Sunflower : Shooter
         if (sourceCircle != null) sourceCircle.SetActive(false);
 
         bool targetAlive = lockedTarget != null && lockedTarget.IsAlive;
-        if (!targetAlive && fallbackPosition == null) return;
+        if (!targetAlive && fallbackPosition == null) { NotifyAttackShotFired(); return; }
 
         GameObject projectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
         SunflowerProjectile petal = projectile.GetComponent<SunflowerProjectile>();
@@ -274,6 +398,21 @@ public class Sunflower : Shooter
             petal.Initialize(aimPoint, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
         }
         if (data != null) SfxPlayer.Play(data.attackSound, spawnPosition);
+        NotifyAttackShotFired();
+    }
+
+    // counts down the shots committed to back in Shoot() - once the last one has actually fired,
+    // the attack is considered fully done, and any skill cast that came in mid-attack (see
+    // OnTargetConfirmed) is free to start its channel now instead of staying queued
+    private void NotifyAttackShotFired()
+    {
+        _pendingAttackShots--;
+        if (_pendingAttackShots > 0) return;
+
+        _attackInProgress = false;
+        if (!_skillQueued) return;
+        _skillQueued = false;
+        StartSkillChannel(_queuedSkillPosition);
     }
 
     // deterministically shaves cooldownReductionPerHit seconds off the sun timer per attack hit -
@@ -316,14 +455,32 @@ public class Sunflower : Shooter
         SkillTargetingManager.instance.BeginTargeting(skillAoERadius, OnTargetConfirmed);
     }
 
+    // cooldown starts the instant the player casts, even if the channel itself ends up queued
+    // below - so re-casting is gated from this exact moment, not from whenever the attack
+    // actually finishes and the channel gets to start
     private void OnTargetConfirmed(Vector3 position)
     {
         if (sunrayPrefab == null) return;
-        // matches data.channelDuration specifically (not the dynamic channelDuration field below,
-        // which BeginChannel doesn't currently read) - see BeginChannel, this is the actual
-        // duration the attack lockout runs for right now
-        PlayBodyAnimation(BodySkillTrigger, bodySkillClipLength, data.channelDuration);
         skillCooldownTimer = skillCooldown;
+
+        // matches the Animator (Skill can't interrupt Attack there either) - if an attack is
+        // still mid-flight, hold the channel until NotifyAttackShotFired sees it finish
+        if (_attackInProgress)
+        {
+            _skillQueued = true;
+            _queuedSkillPosition = position;
+            return;
+        }
+
+        StartSkillChannel(position);
+    }
+
+    private void StartSkillChannel(Vector3 position)
+    {
+        // matches channelDuration (the flat 1.5s field actually used by ChannelAndSpawn's wait
+        // below) rather than data.channelDuration, which BeginChannel reads separately for the
+        // attack lockout and is currently 0 on the data asset - see BeginChannel
+        PlayBodyAnimation(BodySkillTrigger, bodySkillClipLength, channelDuration);
         BeginChannel();   // can't attack until the sunray appears (set channelDuration in data)
         StartCoroutine(ChannelAndSpawn(position));
     }
