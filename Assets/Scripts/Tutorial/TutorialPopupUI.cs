@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,18 +9,35 @@ using UnityEngine.UI;
 // without consuming clicks (see RefreshPage) and only advances when TutorialManager.NotifyEvent
 // is called with that id. clicking the last page's click (or its matching event) closes the
 // popup and fires onComplete (TutorialManager uses that to mark the tutorial seen)
-[RequireComponent(typeof(Image))]
 public class TutorialPopupUI : MonoBehaviour, IPointerClickHandler
 {
+    // the box's own Image now lives on a child ("TextBox"), not this GameObject - this is now
+    // just the logical container parenting Portrait/TextBox/Nameplate, so it's a plain reference
+    // instead of GetComponent<Image>()
+    [SerializeField] private Image background;
     [SerializeField] private TMP_Text bodyText;
     [SerializeField] private TMP_Text continueHintText;
+    // shown once per Show() call (every page within one tutorial is always the same speaker -
+    // see TutorialManager.ResolveSpeaker), not re-set per page. portraitFrameImage/nameplateImage
+    // are the tinted frame pieces; portraitIconImage is the actual plant art sitting inside
+    // PortraitFrame, left untinted so its own colors don't get washed out
+    [SerializeField] private Image portraitFrameImage;
+    [SerializeField] private Image portraitIconImage;
+    [SerializeField] private Image nameplateImage;
+    [SerializeField] private TMP_Text nameplateText;
     // full-screen invisible panel, siblings with this popup under TutorialSystem (not a child of
     // it, so it isn't confined to the popup's own small rect). active only on a non-waiting
     // ("click to continue") page, so nothing else on screen is clickable while that text is up -
     // a waiting page leaves it off so the player can freely interact with the game underneath
     [SerializeField] private GameObject screenBlocker;
 
-    private Image background;
+    // the GardenDefense font asset has this glyph baked in specifically for this - blinks on/off
+    // at a fixed real-time interval (WaitForSecondsRealtime, not Update/Time.deltaTime) so it
+    // keeps blinking even while a tutorial has the game paused (Time.timeScale = 0)
+    private const string ContinueHintGlyph = "▼";
+    private const float ContinueHintBlinkInterval = 0.5f;
+    private Coroutine _blinkRoutine;
+
     private TutorialPage[] pages;
     private int pageIndex;
     private System.Action onComplete;
@@ -27,16 +45,47 @@ public class TutorialPopupUI : MonoBehaviour, IPointerClickHandler
     public bool IsShowing => pages != null && gameObject.activeSelf;
     public string CurrentWaitEventId => (pages != null && pageIndex < pages.Length) ? pages[pageIndex].waitForEventId : null;
 
-    private void Awake()
+    private void OnEnable()
     {
-        background = GetComponent<Image>();
+        _blinkRoutine = StartCoroutine(BlinkContinueHint());
     }
 
-    public void Show(TutorialPage[] pages, System.Action onComplete)
+    private void OnDisable()
     {
-        Debug.Log($"[Tutorial] Popup.Show - {pages.Length} page(s)");
+        if (_blinkRoutine != null) StopCoroutine(_blinkRoutine);
+        _blinkRoutine = null;
+        // leave it visible rather than possibly disabled mid-blink the next time this re-enables
+        if (continueHintText != null) continueHintText.enabled = true;
+    }
+
+    private IEnumerator BlinkContinueHint()
+    {
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(ContinueHintBlinkInterval);
+            if (continueHintText != null) continueHintText.enabled = !continueHintText.enabled;
+        }
+    }
+
+    // borderColor tints the box/nameplate frame art (both built from the same 9-slice sprite) to
+    // match the speaker's element - the portrait keeps its own natural colors, only the frame
+    // pieces recolor, same as every other elemental-tinted UI accent in this project
+    public void Show(TutorialPage[] pages, Sprite portrait, string speakerName, Color borderColor, System.Action onComplete)
+    {
+        Debug.Log($"[Tutorial] Popup.Show - {pages.Length} page(s), speaker='{speakerName}'");
         this.pages = pages;
         this.onComplete = onComplete;
+
+        if (portraitIconImage != null)
+        {
+            portraitIconImage.sprite = portrait;
+            portraitIconImage.enabled = portrait != null;
+        }
+        if (nameplateText != null) nameplateText.text = speakerName;
+        if (background != null) background.color = borderColor;
+        if (portraitFrameImage != null) portraitFrameImage.color = borderColor;
+        if (nameplateImage != null) nameplateImage.color = borderColor;
+
         pageIndex = 0;
         gameObject.SetActive(true);
         RefreshPage();
@@ -60,7 +109,7 @@ public class TutorialPopupUI : MonoBehaviour, IPointerClickHandler
         if (continueHintText != null)
         {
             continueHintText.gameObject.SetActive(!waitsForEvent);
-            continueHintText.text = waitsForEvent ? "" : (pageIndex == pages.Length - 1 ? "(click to close)" : "(click to continue)");
+            continueHintText.text = waitsForEvent ? "" : ContinueHintGlyph;
         }
 
         Debug.Log($"[Tutorial] Popup page {pageIndex + 1}/{pages.Length} - waitsForEvent={(waitsForEvent ? page.waitForEventId : "none")} - \"{page.text}\"");

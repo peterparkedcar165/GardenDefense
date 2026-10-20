@@ -6,6 +6,19 @@ public class PlantData : ScriptableObject
     [Header("Display")]
     public Plant plantPrefab;
     public Sprite icon;
+
+    // keeps icon following whatever sprite is currently on the prefab's "Visual" child (the
+    // convention every plant prefab uses for its actual rendered sprite), so updating a plant's
+    // art on the prefab doesn't also require manually re-dragging it onto this asset every time.
+    // runs whenever this asset's Inspector validates (editor-only, never called in a build)
+    private void OnValidate()
+    {
+        if (plantPrefab == null) return;
+        Transform visual = plantPrefab.transform.Find("Visual");
+        SpriteRenderer sr = visual != null ? visual.GetComponent<SpriteRenderer>() : null;
+        if (sr != null && sr.sprite != null)
+            icon = sr.sprite;
+    }
     public string plantName;
     public string displayName;
     [FormerlySerializedAs("cultivar")]
@@ -113,6 +126,7 @@ public class PlantData : ScriptableObject
     // look different
     public bool projectileEmitLight = false;
     public float projectileLightRadius = 0.5f;
+    public float projectileLightIntensity = 0.4f;
     public Color projectileLightColor = Color.white;
 
     [Header("Lobber")]

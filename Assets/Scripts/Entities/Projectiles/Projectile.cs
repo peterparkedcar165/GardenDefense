@@ -112,30 +112,35 @@ public abstract class Projectile : MonoBehaviour
     // see the field comments above for the two conditions this checks. exactly one Light2D is
     // ever created per projectile, never two/stacked - if both conditions apply at once (e.g. a
     // Sunflower with his own innate Projectile Emit Light also catching a Floral Glow buff),
-    // radius+color are resolved as a single pair BEFORE anything is instantiated: whichever
-    // radius is larger wins outright, color included, rather than creating a light for each and
-    // layering them (which would double the effective brightness). both conditions default to
-    // the same DefaultProjectileLightRadius - Floral Glow intentionally does NOT scale with
-    // source.lightEmissionRange (that's the plant's own, often much larger, self-glow stat);
-    // every projectile's glow stays a small, consistent size regardless of which plant or buff
-    // is behind it, only the color differs (plain white for Floral Glow, PlantData's own
-    // projectileLightColor for the innate ability)
+    // radius+color+intensity are resolved as a single set BEFORE anything is instantiated:
+    // whichever radius is larger wins outright, color and intensity included, rather than
+    // creating a light for each and layering them (which would double the effective brightness).
+    // both conditions default to the same DefaultProjectileLightRadius/Intensity - Floral Glow
+    // intentionally does NOT scale with source.lightEmissionRange (that's the plant's own, often
+    // much larger, self-glow stat); every projectile's glow stays a small, consistent size
+    // regardless of which plant or buff is behind it, only the color/intensity differ (plain
+    // white at default intensity for Floral Glow, PlantData's own projectileLightColor/
+    // projectileLightIntensity for the innate ability)
     private const float DefaultProjectileLightRadius = 0.5f;
+    private const float DefaultProjectileLightIntensity = 0.4f;
 
     private void SetupLight()
     {
         if (DarknessManager.instance == null || source == null) return;
 
         float radius = 0f;
+        float intensity = DefaultProjectileLightIntensity;
         Color color = Color.white;
         if (source.data != null && source.data.projectileEmitLight)
         {
             radius = source.data.projectileLightRadius;
+            intensity = source.data.projectileLightIntensity;
             color = source.data.projectileLightColor;
         }
         if (source.HasEffect<FloralGlowEffect>() && DefaultProjectileLightRadius > radius)
         {
             radius = DefaultProjectileLightRadius;
+            intensity = DefaultProjectileLightIntensity;
             color = Color.white;
         }
         if (radius <= 0f) return;
@@ -158,7 +163,7 @@ public abstract class Projectile : MonoBehaviour
         light.pointLightInnerRadius = radius * 0.3f;
 
         _lightFader = lightGO.AddComponent<LightFader>();
-        _lightFader.Setup(light, 1f);
+        _lightFader.Setup(light, intensity);
         _lightFader.FadeIn(LightFadeDuration);
 
         _lightObj = lightGO.transform;

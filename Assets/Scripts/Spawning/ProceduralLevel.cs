@@ -49,7 +49,7 @@ public class ProceduralLevel : SpawnManager
 
         Debug.Log($"[Tutorial] ProceduralLevel.Start - levelNumber={config.levelNumber}, TutorialManager.instance={(TutorialManager.instance != null ? "OK" : "NULL")}");
         if (config.levelNumber == 1)
-            TutorialManager.instance?.TryShow(TutorialIds.Level1PlantSelection, TutorialContent.Level1PlantSelection);
+            TutorialManager.instance?.TryShow(TutorialIds.Level1PlantSelection, TutorialContent.Level1PlantSelection, TutorialSpeaker.AcornKnight);
 
         StartCoroutine(RunWaves());
     }
@@ -122,7 +122,7 @@ public class ProceduralLevel : SpawnManager
             {
                 triedLevel1FirstFertilizerTutorial = true;
                 if (TutorialManager.instance != null && TutorialManager.instance.TryShow(TutorialIds.Level1FirstFertilizer, TutorialContent.Level1FirstFertilizer,
-                        () => GameManager.instance.SetPause(false)))
+                        TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
                     GameManager.instance.SetPause(true);
             }
         }
@@ -452,7 +452,7 @@ public class ProceduralLevel : SpawnManager
         {
             triedLevel1PlantInfoTutorial = true;
             if (TutorialManager.instance != null && TutorialManager.instance.TryShow(TutorialIds.Level1PlantInfo, TutorialContent.Level1PlantInfo,
-                    () => GameManager.instance.SetPause(false)))
+                    TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
                 GameManager.instance.SetPause(true);
         }
     }
