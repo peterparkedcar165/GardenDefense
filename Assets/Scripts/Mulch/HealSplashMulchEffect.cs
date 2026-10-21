@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // whenever a plant heals ANOTHER plant (not itself, and not a pure regeneration-over-time tick -
-// see Entity.OnHeal's isRegeneration flag), deals damage to insects near the healed plant equal
-// to a percent of the healing done, using the healer's own damage type/element. gated by a
-// per-healer internal cooldown so a fast-ticking heal can't spam it
+// see HealTag.Regeneration/StatusEffect.HealTarget), deals damage to insects near the healed
+// plant equal to a percent of the healing done, using the healer's own damage type/element.
+// gated by a per-healer internal cooldown so a fast-ticking heal can't spam it
 public class HealSplashMulchEffect : MulchEffect
 {
     private readonly HealSplashMulchData typedData;
@@ -24,7 +24,7 @@ public class HealSplashMulchEffect : MulchEffect
 
     private void HandleHeal(EntityEventData heal)
     {
-        if (heal.isRegeneration) return;
+        if (Entity.HasHealTag(heal.healTags, HealTag.Regeneration)) return;
         if (heal.source is not Plant healer || heal.target is not Plant healed || healer == healed) return;
 
         if (lastTriggerTime.TryGetValue(healer, out float last) && Time.time - last < typedData.internalCooldown) return;

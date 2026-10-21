@@ -68,4 +68,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 837966cac67aa914eb3c89a9b6e676c0, type: 2}
   - {fileID: 11400000, guid: c4528a2f89197a142aa4a75ad4d9aebe, type: 2}
   fertilizerGrants: []
+  mulchPool: []
+  mulchGrants: []
   ambience: {fileID: 0}

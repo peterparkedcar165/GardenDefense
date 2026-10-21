@@ -87,8 +87,9 @@ public class GameManager : MonoBehaviour
         {
             if (SettingsManager.instance == null || !SettingsManager.instance.IsOpen)
                 if (FertilizerSelectionUI.instance == null || !FertilizerSelectionUI.instance.IsOpen)
-                    if (LoadoutSelectionUI.instance == null || !LoadoutSelectionUI.instance.IsOpen)
-                        TogglePause();
+                    if (MulchSelectionUI.instance == null || !MulchSelectionUI.instance.IsOpen)
+                        if (LoadoutSelectionUI.instance == null || !LoadoutSelectionUI.instance.IsOpen)
+                            TogglePause();
         }
 
         // cheatcode m grants 99999 sun while in a level
@@ -105,12 +106,14 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause()
     {
-        // Level1PlantInfo, Level1FirstFertilizer, Level1SoldierAntAppears and Level2Primers each
-        // pause the game the moment they open (see ProceduralLevel/SoldierAnt/ElementalDebuff)
-        // and block Start/Space outright for their entire run, with no exception page - the
-        // player gets control back only once the last page closes and currentId clears
+        // Level1PlantInfo, Level1FirstFertilizer, Level1FirstMulch, Level1SoldierAntAppears and
+        // Level2Primers each pause the game the moment they open (see
+        // ProceduralLevel/SoldierAnt/ElementalDebuff) and block Start/Space outright for their
+        // entire run, with no exception page - the player gets control back only once the last
+        // page closes and currentId clears
         if (TutorialManager.instance != null && (TutorialManager.instance.IsTutorialActive(TutorialIds.Level1PlantInfo)
             || TutorialManager.instance.IsTutorialActive(TutorialIds.Level1FirstFertilizer)
+            || TutorialManager.instance.IsTutorialActive(TutorialIds.Level1FirstMulch)
             || TutorialManager.instance.IsTutorialActive(TutorialIds.Level1SoldierAntAppears)
             || TutorialManager.instance.IsTutorialActive(TutorialIds.Level2Primers)))
             return;
@@ -190,6 +193,7 @@ public class GameManager : MonoBehaviour
         paused = false;
         LoadoutSelectionUI.instance?.Hide();
         FertilizerSelectionUI.instance?.CloseForSceneExit();
+        MulchSelectionUI.instance?.CloseForSceneExit();
         SceneManager.LoadScene("MainMenu");
     }
 

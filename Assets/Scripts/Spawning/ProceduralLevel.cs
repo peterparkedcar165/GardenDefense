@@ -28,6 +28,10 @@ public class ProceduralLevel : SpawnManager
     // fires, same moment the queue button lights up for the player to click
     private bool triedLevel1FirstFertilizerTutorial;
 
+    // same idea as triedLevel1FirstFertilizerTutorial, but for the mulch queue, which replaced
+    // the mid-level fertilizer queue as the thing that actually grants on level 1
+    private bool triedLevel1FirstMulchTutorial;
+
     protected override void Start()
     {
         CurrentConfig = config;
@@ -136,6 +140,14 @@ public class ProceduralLevel : SpawnManager
         {
             if (grant == null || grant.afterWave != completedWave) continue;
             MulchManager.instance.GrantMulch(grant.tier);
+
+            if (!triedLevel1FirstMulchTutorial && config.levelNumber == 1)
+            {
+                triedLevel1FirstMulchTutorial = true;
+                if (TutorialManager.instance != null && TutorialManager.instance.TryShow(TutorialIds.Level1FirstMulch, TutorialContent.Level1FirstMulch,
+                        TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
+                    GameManager.instance.SetPause(true);
+            }
         }
     }
 

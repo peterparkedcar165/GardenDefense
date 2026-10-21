@@ -17,7 +17,7 @@ public class RejuvenatingBurgeonEffect : RegenerationEffect
         tickTimer += deltaTime;
         if (tickTimer < tickInterval) return;
         tickTimer -= tickInterval;
-        target.Heal(healingPerSecond, source);
+        HealTarget(healingPerSecond);
         if (source is Rhodiola rhodiola) rhodiola.ReturnMaxLevelHealing(healingPerSecond);
     }
 

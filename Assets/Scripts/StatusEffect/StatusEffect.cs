@@ -50,6 +50,21 @@ public class StatusEffect
         return duration <= 0;
     }
 
+    // convenience for any effect's OnTick (or OnApply) that heals its target - automatically
+    // attaches HealTag.Regeneration if this effect itself carries EffectTag.Regenerative, so a
+    // mulch/stat that cares about "regenerative healing" specifically (e.g. Rejuvenator) doesn't
+    // need every such effect to remember to flag it by hand. use this instead of calling
+    // target.Heal() directly from any effect whose own tags include Regenerative
+    protected void HealTarget(float amount)
+    {
+        bool isRegen = false;
+        if (tags != null)
+            foreach (EffectTag t in tags)
+                if (t == EffectTag.Regenerative) { isRegen = true; break; }
+
+        target.Heal(amount, source, isRegen ? new HealTag[] { HealTag.Regeneration } : null);
+    }
+
     public virtual void Tick(float deltaTime)
     {
         duration -= deltaTime;

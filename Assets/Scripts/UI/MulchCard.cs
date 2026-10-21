@@ -21,9 +21,13 @@ public class MulchCard : MonoBehaviour
     private MulchSelectionUI ui;
     private RectTransform rectTransform;
     private Vector2 targetPosition;
+    // true for a padding card shown when fewer than DraftChoiceCount mulches were eligible this
+    // draft - purely decorative, so AnimateIn must never make it clickable like a real choice
+    private bool isEmpty;
 
     public void Initialize(MulchData mulch, MulchSelectionUI selectionUI)
     {
+        isEmpty = false;
         data = mulch;
         ui = selectionUI;
         rectTransform = GetComponent<RectTransform>();
@@ -40,13 +44,36 @@ public class MulchCard : MonoBehaviour
         StartCoroutine(AnimateIn());
     }
 
+    // shown in place of a real choice when the draft came up short (see MulchManager.GetEligible -
+    // mulches already picked, or that fail their own condition, are excluded entirely rather than
+    // replaced). nothing here is ever selectable or rerollable
+    public void InitializeEmpty()
+    {
+        isEmpty = true;
+        data = null;
+        ui = null;
+        rectTransform = GetComponent<RectTransform>();
+        canvasGroup.interactable = false;
+        canvasGroup.alpha = 1f;
+        highlight.SetActive(false);
+        if (rerollButton != null) rerollButton.gameObject.SetActive(false);
+
+        if (icon != null) icon.sprite = null;
+        if (background != null) background.color = Color.white;
+        if (nameText != null) nameText.text = "EMPTY";
+        if (descriptionText != null) descriptionText.text = "You've exhausted all of the available mulches!";
+
+        StartCoroutine(AnimateIn());
+    }
+
     // rerolls just this card at the same tier, independent of the other cards and of the queue
     // itself - nothing is consumed by a reroll, only by an actual selection. wired via the
     // Reroll button's OnClick() in the Inspector, same as OnSelectClicked. limited to a single
-    // use per card - disabled immediately after firing
+    // use per card - disabled immediately after firing. the mulch being rerolled away never
+    // comes back this level (see MulchManager.RerollSingle)
     public void OnRerollClicked()
     {
-        MulchData rerolled = MulchManager.instance.RerollSingle(data.tier);
+        MulchData rerolled = MulchManager.instance.RerollSingle(data);
         if (rerolled != null) data = rerolled;
         RefreshDisplay();
         if (rerollButton != null) rerollButton.interactable = false;
@@ -63,6 +90,7 @@ public class MulchCard : MonoBehaviour
     public void OnSelectClicked()
     {
         MulchManager.instance.CommitChosen(data);
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.SelectRandomMulch);
         ui.CloseAfterSelect();
     }
 
@@ -91,6 +119,6 @@ public class MulchCard : MonoBehaviour
         }
 
         rectTransform.anchoredPosition = targetPosition;
-        canvasGroup.interactable = true;
+        if (!isEmpty) canvasGroup.interactable = true;
     }
 }

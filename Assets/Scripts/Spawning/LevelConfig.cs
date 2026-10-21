@@ -41,7 +41,7 @@ public class LevelConfig : ScriptableObject
     public FertilizerGrant[] fertilizerGrants;
 
     [Header("mulch")]
-    [Tooltip("every mulch eligible to be drafted in this level, regardless of tier")]
+    [Tooltip("mulches exclusive to this level only - universal mulches come from MulchRegistry automatically and don't need to be listed here")]
     public MulchData[] mulchPool;
     [Tooltip("mulch grants - after each listed wave completes, the player's mulch queue gains one entry of that tier")]
     public MulchGrant[] mulchGrants;

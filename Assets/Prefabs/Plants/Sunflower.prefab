@@ -684,6 +684,9 @@ MonoBehaviour:
   bookAnimator: {fileID: 9201910069346249892}
   bookGenerateAuthoredClipLength: 0.7
   bookGenerateClipLength: 0.7
+  bookGeneratingColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  bookColorLerpSpeed: 3
+  bookGlowIntensity: 2
   attackCircle: {fileID: 3386231638132550106}
   circleAnimator: {fileID: 7259768069922267850}
   circleClipLength: 0.5

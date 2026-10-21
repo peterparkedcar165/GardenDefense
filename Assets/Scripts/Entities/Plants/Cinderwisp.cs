@@ -444,7 +444,7 @@ public class Cinderwisp : MonoBehaviour
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > _radius) continue;
-            plant.Heal(_healPerSecond * _tickInterval, _source);
+            plant.Heal(_healPerSecond * _tickInterval, _source, new HealTag[] { HealTag.Regeneration });
             if (WeatherManager.instance?.temperature == TemperatureType.Cold)
                 plant.temperature = Mathf.Min(plant.temperature + _temperaturePerSecond * _tickInterval, 10f);
         }

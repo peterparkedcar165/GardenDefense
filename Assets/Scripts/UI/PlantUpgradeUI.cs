@@ -84,6 +84,10 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private Button skillButton;
     [SerializeField] private TMP_Text skillCooldownText;
 
+    [Header("Transplant")]
+    [SerializeField] private Button transplantButton;         // visible only while the Transplant mulch is active
+    [SerializeField] private TMP_Text transplantCooldownText;
+
     [Header("Auto Cast")]
     [SerializeField] private Button autoCastButton;          // visible only for plants that support auto cast
     [SerializeField] private TMP_Text autoCastButtonText;
@@ -166,6 +170,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (selectedPlant != null)
         {
             RefreshSkillButton();
+            RefreshTransplantButton();
             RefreshAutoCastButton();
             RefreshPaths();
             if (Keyboard.current.qKey.wasPressedThisFrame && selectedPlant.SkillReady)
@@ -208,6 +213,8 @@ public class PlantUpgradeUI : EntityInfoPanel
             radiusToggleText.text = plant.orbitRadius.ToString();
         if (autoCastButton != null)
             autoCastButton.gameObject.SetActive(plant.UsesAutoCast);
+        if (transplantButton != null)
+            transplantButton.gameObject.SetActive(TransplantMulchEffect.IsActive);
 
         panel.SetActive(true);
         ApplyElementalTheme(plant.elementalType);
@@ -485,6 +492,20 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
+    private void RefreshTransplantButton()
+    {
+        if (transplantButton == null) return;
+        bool mulchActive = TransplantMulchEffect.IsActive;
+        if (transplantButton.gameObject.activeSelf != mulchActive)
+            transplantButton.gameObject.SetActive(mulchActive);
+        if (!mulchActive) return;
+
+        bool ready = selectedPlant.TransplantReady;
+        transplantButton.interactable = ready;
+        if (transplantCooldownText != null)
+            transplantCooldownText.text = ready ? "Transplant" : $"{Mathf.CeilToInt(selectedPlant.transplantCooldownTimer)}s";
+    }
+
     private void RefreshAutoCastButton()
     {
         if (autoCastButton == null || !selectedPlant.UsesAutoCast) return;
@@ -560,6 +581,15 @@ public class PlantUpgradeUI : EntityInfoPanel
     {
         if (selectedPlant == null || !selectedPlant.SkillReady) return;
         selectedPlant.TriggerSkill();
+    }
+
+    // enters transplant mode on the selected plant - the next tile click (if valid for this
+    // plant, see Tile.OnMouseDown) relocates it there for free. cancels like every other mode,
+    // via right-click/Escape (see PlantSelector.Update)
+    public void OnTransplantButtonClicked()
+    {
+        if (selectedPlant == null || !TransplantMulchEffect.IsActive || !selectedPlant.TransplantReady) return;
+        PlantSelector.instance?.SetTransplantMode(selectedPlant);
     }
 
     public void OnAutoCastButtonClicked()

@@ -47,6 +47,13 @@ public static class TutorialContent
         new TutorialPage("The stat bonuses will be applied to all of your plants for the rest of the level!"), // player can click on the panel to close the tutorial.
     };
 
+    public static readonly TutorialPage[] Level1FirstMulch =
+    {
+        new TutorialPage("After some waves, you'll collect <b>Mulches</b>. They will appear on the left side of the <b>Shovel</b>, click on it!", TutorialEvents.ClickMulchQueueButton), // player is expected to click on the mulch button, once done, proceed tutorial
+        new TutorialPage("You'll be met with three choices of <b>Mulches</b>, randomized! You get to select one that you like the most, but if you don't like any of them, you can <b>reroll</b> each one once!", TutorialEvents.SelectRandomMulch), // player is expected to click on a mulch, once done, proceed tutorial
+        new TutorialPage("Unlike <b>Fertilizers</b>, Mulches stack! Every one you pick stays active on top of the ones you already have, for the rest of the level."), // player can click on the panel to close the tutorial.
+    };
+
     public static readonly TutorialPage[] Level1SoldierAntAppears = // player is not expected to do anything, but simply read the tutorial and click to proceed, but the game is paused and non-unpausable while this tutorial holds active
     {
         new TutorialPage("<b>Soldier Ants</b> are tougher ants that take reduced damage from <color=#A0522D><b>Physical</b></color> attacks, but also <b><color=green>Grass</color></b> damage!"),

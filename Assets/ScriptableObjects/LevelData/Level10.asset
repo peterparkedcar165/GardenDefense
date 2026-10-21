@@ -967,29 +967,29 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 193b3643c86fdce4cacc09775f4190eb, type: 2}
   - {fileID: 11400000, guid: a844e3e1f18bb844ea388353436bf88e, type: 2}
   - {fileID: 11400000, guid: a6f42b4c9f233c340843d335a28bd870, type: 2}
-  fertilizerGrants:
-  - afterWave: 1
-    rarity: 0
-  - afterWave: 3
-    rarity: 1
-  - afterWave: 5
-    rarity: 1
-  - afterWave: 7
-    rarity: 1
-  - afterWave: 9
-    rarity: 2
-  - afterWave: 11
-    rarity: 2
-  - afterWave: 13
-    rarity: 2
-  - afterWave: 15
-    rarity: 2
-  - afterWave: 15
-    rarity: 2
-  - afterWave: 17
-    rarity: 2
-  - afterWave: 19
-    rarity: 2
+  fertilizerGrants: []
   mulchPool: []
-  mulchGrants: []
+  mulchGrants:
+  - afterWave: 1
+    tier: 0
+  - afterWave: 3
+    tier: 1
+  - afterWave: 5
+    tier: 1
+  - afterWave: 7
+    tier: 1
+  - afterWave: 9
+    tier: 2
+  - afterWave: 11
+    tier: 2
+  - afterWave: 13
+    tier: 2
+  - afterWave: 15
+    tier: 2
+  - afterWave: 15
+    tier: 2
+  - afterWave: 17
+    tier: 2
+  - afterWave: 19
+    tier: 2
   ambience: {fileID: 11400000, guid: a53efb8b7d84dfe438423cd008ebef91, type: 2}

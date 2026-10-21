@@ -53,6 +53,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (GameManager.instance == null || GameManager.instance.SunCount < SkillTreeManager.GetEffectiveSunCost(data)) return;
         if (Plant.AtPlacementLimit(data)) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
+        if (MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen) return;
         if (PlantSelector.instance == null) return;
         PlantSelector.instance.SelectPlant(data.plantPrefab.gameObject);
     }
