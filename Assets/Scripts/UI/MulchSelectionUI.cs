@@ -54,6 +54,20 @@ public class MulchSelectionUI : MonoBehaviour
         }
     }
 
+    // every mulch currently showing on another card in this draft - fed into RerollSingle so a
+    // reroll can never land on a duplicate of what's already displayed elsewhere on screen, even
+    // though that mulch is still otherwise eligible (it just hasn't been picked or rerolled away)
+    public List<MulchData> GetDisplayedMulches(MulchCard excluding)
+    {
+        List<MulchData> result = new List<MulchData>();
+        foreach (MulchCard card in activeCards)
+        {
+            if (card == null || card == excluding) continue;
+            if (card.CurrentData != null) result.Add(card.CurrentData);
+        }
+        return result;
+    }
+
     private void ClearCards()
     {
         foreach (MulchCard card in activeCards)

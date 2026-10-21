@@ -93,6 +93,31 @@ public class CursorIcon : MonoBehaviour
                 HideRangePreview();
             }
         }
+        else if (PlantSelector.instance.transplantMode)
+        {
+            // same preview as placing a brand-new plant (ghost sprite + range circle), just
+            // sourced from the live instance being relocated instead of a loadout-bar prefab
+            Plant transplanting = PlantSelector.instance.transplantingPlant;
+            SpriteRenderer transplantRenderer = transplanting != null ? transplanting.GetComponentInChildren<SpriteRenderer>() : null;
+
+            Collider2D hit = Physics2D.OverlapPoint(worldPosition);
+            Tile tile = hit != null ? hit.GetComponent<Tile>() : null;
+
+            if (tile != null && transplanting != null && transplantRenderer != null && System.Array.IndexOf(transplanting.allowedTiles, tile.tileType) != -1)
+            {
+                Vector2 visualOffset = transplantRenderer.bounds.center - transplanting.transform.position;
+                Vector2 tileScreenPos = cam.WorldToScreenPoint((Vector2)tile.transform.position + visualOffset);
+                Show(transplantRenderer.sprite, tileScreenPos);
+                MatchSizeToRenderer(transplantRenderer);
+                cachedPlant = transplanting;
+                ShowRangePreview(tile);
+            }
+            else
+            {
+                icon.enabled = false;
+                HideRangePreview();
+            }
+        }
         else if (PlantSelector.instance.flowerPotMode)
         {
             if (cachedPotRenderer == null && PlantSelector.instance.flowerPotPrefab != null)

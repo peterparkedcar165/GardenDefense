@@ -49,6 +49,7 @@ MonoBehaviour:
   carryPriority: 0
   baseEvasion: 0
   baseAccuracy: 0
+  baseFlightHeight: 1.58
   sunDrop: 7
   sunDropAdder: 0
   sunDropMultiplier: 0

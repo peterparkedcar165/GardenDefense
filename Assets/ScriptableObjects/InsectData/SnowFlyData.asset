@@ -52,6 +52,7 @@ MonoBehaviour:
   threatType: 0
   baseEvasion: 0
   baseAccuracy: 0
+  baseFlightHeight: 1.83
   sunDrop: 7
   sunDropAdder: 0
   sunDropMultiplier: 0

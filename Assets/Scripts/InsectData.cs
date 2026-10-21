@@ -56,6 +56,11 @@ public class InsectData : ScriptableObject
     public float baseEvasion;
     public float baseAccuracy;
 
+    [Header("Flight")]
+    [Tooltip("flying insects only - center of this species' flight-height range, so different " +
+        "species visibly hover at different altitudes instead of all flying at the same height")]
+    public float baseFlightHeight = 1.5f;
+
     [Header("Other")]
     public int sunDrop;
     public float sunDropAdder;

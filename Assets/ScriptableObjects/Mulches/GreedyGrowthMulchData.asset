@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: GreedyGrowthMulchData
   m_EditorClassIdentifier: Assembly-CSharp::GreedyGrowthMulchData
   mulchName: '<b><color=orange>Greedy Growth</color></b>'
-  description: Increase Sun yield from insect kills by 40%. Increase leak damage
-    by 100%.
+  description: 'Increase <b><color=#FFD700>Sun Yield</color></b> from insect kills
+    by <b><color=green>25%</color></b>. Increase <b><color=red>Leak Damage</color></b>
+    by <b><color=red>100%</color></b>.'
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 0
@@ -28,5 +29,5 @@ MonoBehaviour:
     excludedFamilies: []
     minWave: 0
     maxWave: 0
-  sunYieldBonus: 0.4
+  sunYieldBonus: 0.25
   leakDamageBonus: 1
