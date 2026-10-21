@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: HealSplashMulchData
   m_EditorClassIdentifier: Assembly-CSharp::HealSplashMulchData
   mulchName: '<b><color=green>Heal Splash</color></b>'
-  description: Whenever a plant heals another plant, deal damage to nearby insects
-    equal to 50% of the healing done.
+  description: 'Whenever a plant heals <b>another</b> plant, deal damage to nearby
+    insects equal to <b><color=green>50%</color></b> of the healing done.'
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 2

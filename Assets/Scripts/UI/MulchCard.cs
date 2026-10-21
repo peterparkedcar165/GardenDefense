@@ -82,7 +82,9 @@ public class MulchCard : MonoBehaviour
     private void RefreshDisplay()
     {
         if (icon != null) icon.sprite = data.icon;
-        if (background != null) background.color = data.color;
+        // frame/background is tier-colored, same across every mulch regardless of its own
+        // element - see MulchTierColors. MulchData.color is no longer read here
+        if (background != null) background.color = MulchTierColors.Get(data.tier);
         if (nameText != null) nameText.text = data.mulchName;
         if (descriptionText != null) descriptionText.text = data.description;
     }

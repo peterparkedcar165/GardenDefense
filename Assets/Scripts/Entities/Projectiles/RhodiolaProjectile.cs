@@ -53,6 +53,7 @@ public class RhodiolaProjectile : MonoBehaviour
             {
                 if (_pendingBounceTarget != null)
                     _source.SpawnBounceProjectile(transform.position, _pendingBounceTarget, _healAmount);
+                DetachParticles();
                 Destroy(gameObject);
             }
             return;
@@ -85,7 +86,30 @@ public class RhodiolaProjectile : MonoBehaviour
             }
         }
 
+        DetachParticles();
         Destroy(gameObject);
+    }
+
+    // detaches every child particle system (the fly/trail particles) right before this
+    // projectile's GameObject is destroyed, so each one survives and finishes fading out
+    // naturally instead of popping out of existence along with the parent - same treatment
+    // Projectile.OnBeforeDestroy gives every other projectile, duplicated here since this class
+    // deliberately isn't built on that base (see the class comment)
+    private void DetachParticles()
+    {
+        foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>())
+        {
+            Transform t = ps.transform;
+            Vector3 worldPos = t.position;
+            Quaternion worldRot = t.rotation;
+
+            t.SetParent(null, false);
+            t.position = worldPos;
+            t.rotation = worldRot;
+
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            Destroy(ps.gameObject, ps.main.startLifetime.constantMax);
+        }
     }
 
     // lowest health fraction among plants and friendly insects, excluding the primary target,

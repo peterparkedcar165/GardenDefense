@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: aa00bc51ca63f3846b3ba083bd37b4a1, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -316,12 +316,32 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: moveWithTransform
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
       propertyPath: InitialModule.startSize.scalar
-      value: 0.1
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 4511358385442513055, guid: dde43118bcb00784891464ed221ffa76, type: 3}
       propertyPath: m_Name
-      value: RhodiolaProjectileTrailParticles
+      value: RhodiolaProjectileFlyParticles
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -382,16 +402,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.1
+      propertyPath: ShapeModule.radius.value
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
       propertyPath: InitialModule.simulationSpace
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2239610904645482562, guid: dde43118bcb00784891464ed221ffa76, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 4511358385442513055, guid: dde43118bcb00784891464ed221ffa76, type: 3}
       propertyPath: m_Name
-      value: RhodiolaProjectileFlyParticles
+      value: RhodiolaProjectileTrailParticles
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

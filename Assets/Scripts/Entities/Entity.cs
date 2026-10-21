@@ -887,6 +887,7 @@ public abstract class Entity : MonoBehaviour
         OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual, healTags = tags });
         UpdateHealthBar();
         HealIndicator.Spawn(GetIndicatorPosition(), actual, isCrit);
+        HealParticleEffect.Spawn(this, GetVisualCenter(), actual);
     }
 
     // shared by Heal() above and any mulch/effect that needs to check a heal's own tags (e.g.
@@ -917,6 +918,14 @@ public abstract class Entity : MonoBehaviour
     protected virtual Vector3 GetIndicatorPosition()
     {
         return transform.position + Vector3.up * 0.25f;
+    }
+
+    // true visual center (no floating-text offset) - used for anything that should sit centered
+    // on the sprite itself, like HealParticleEffect. base falls back to transform.position since
+    // most plants have no separate visual child; Insect overrides to use its own visual transform
+    protected virtual Vector3 GetVisualCenter()
+    {
+        return transform.position;
     }
 
 // upon spawning, occurs before Start()

@@ -12,7 +12,9 @@ public abstract class MulchData : ScriptableObject
     public string mulchName;
     [TextArea] public string description;
     public Sprite icon;
-    [Tooltip("tints the card/panel background for this mulch")]
+    [Tooltip("unused by MulchCard - the card background is tier-colored instead (see " +
+        "MulchTierColors), the same way across every mulch regardless of element. kept in case " +
+        "something else wants a per-mulch tint later")]
     public Color color = Color.white;
     [Tooltip("every mulch has one, even if it's thematically Neutral - drives mulchName's color")]
     public ElementalType elementalType;

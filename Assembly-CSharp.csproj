@@ -260,6 +260,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\AnemoneData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\OldCarrotData.cs" />
+    <Compile Include="Assets\Scripts\Mulch\MulchTierColors.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearGrassEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\GhostFungus.cs" />
@@ -455,6 +456,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DevourEffect.cs" />
     <Compile Include="Assets\Scripts\UI\FlowerPotButton.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\EncyclopediaManager.cs" />
+    <Compile Include="Assets\Scripts\HealParticleEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ObliviousEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\RejuvenatorMulchData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BirdOfParadise.cs" />
