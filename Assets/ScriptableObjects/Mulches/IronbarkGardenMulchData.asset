@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: IronbarkGardenMulchData
   m_EditorClassIdentifier: Assembly-CSharp::FamilySkillCooldownMulchData
   mulchName: '<b><color=white>Ironbark Garden</color></b>'
-  description: Ironbark plants gain 25% Skill Cooldown Reduction.
+  description: '<b><color=#A9A9A9>Ironbark</color></b> plants gain <b><color=green>25%</color></b>
+    <b><color=white>Skill Cooldown Reduction</color></b>.'
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 6

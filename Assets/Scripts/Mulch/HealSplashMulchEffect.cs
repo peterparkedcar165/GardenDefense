@@ -1,12 +1,18 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // whenever a plant heals ANOTHER plant (not itself, and not a pure regeneration-over-time tick -
 // see HealTag.Regeneration/StatusEffect.HealTarget), deals damage to insects near the healed
 // plant equal to a percent of the healing done, using the healer's own damage type/element.
-// gated by a per-healer internal cooldown so a fast-ticking heal can't spam it
+// gated by a per-healer internal cooldown so a fast-ticking heal can't spam it. the damage itself
+// lands 0.1s after the heal, same delay convention as other on-hit effects (e.g. Bird of
+// Paradise's DelayedExtraProc) - hosted on MulchManager's MonoBehaviour since this effect has no
+// Plant/MonoBehaviour of its own to run a coroutine on
 public class HealSplashMulchEffect : MulchEffect
 {
+    private const float OnHitDelay = 0.1f;
+
     private readonly HealSplashMulchData typedData;
     private readonly Dictionary<Plant, float> lastTriggerTime = new Dictionary<Plant, float>();
 
@@ -33,7 +39,16 @@ public class HealSplashMulchEffect : MulchEffect
         float damage = heal.amount * typedData.damagePercent;
         if (damage <= 0f) return;
 
-        Vector3 center = healed.transform.position;
+        if (MulchManager.instance != null)
+            MulchManager.instance.StartCoroutine(DelayedSplash(healer, healed, damage));
+    }
+
+    private IEnumerator DelayedSplash(Plant healer, Plant healed, float damage)
+    {
+        yield return new WaitForSeconds(OnHitDelay);
+        if (healer == null || !healer.IsAlive) yield break;
+
+        Vector3 center = (healed != null && healed.IsAlive) ? healed.transform.position : healer.transform.position;
         foreach (Insect insect in new List<Insect>(Insect.allInsects))
         {
             if (insect == null || !insect.IsAlive) continue;

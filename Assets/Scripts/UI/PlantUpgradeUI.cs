@@ -500,10 +500,16 @@ public class PlantUpgradeUI : EntityInfoPanel
             transplantButton.gameObject.SetActive(mulchActive);
         if (!mulchActive) return;
 
+        // visible confirmation that the click actually registered - without this, picking a
+        // destination tile right after clicking Move looked like the button did nothing at all
+        bool targeting = PlantSelector.instance != null && PlantSelector.instance.transplantMode
+            && PlantSelector.instance.transplantingPlant == selectedPlant;
         bool ready = selectedPlant.TransplantReady;
-        transplantButton.interactable = ready;
+        transplantButton.interactable = ready && !targeting;
         if (transplantCooldownText != null)
-            transplantCooldownText.text = ready ? "Transplant" : $"{Mathf.CeilToInt(selectedPlant.transplantCooldownTimer)}s";
+            transplantCooldownText.text = targeting ? "Pick a tile..."
+                : ready ? "Move"
+                : $"{Mathf.CeilToInt(selectedPlant.transplantCooldownTimer)}s";
     }
 
     private void RefreshAutoCastButton()

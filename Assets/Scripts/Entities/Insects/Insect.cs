@@ -869,6 +869,11 @@ public abstract class Insect : Entity, IAttackable
         return visual != null ? visual.position + Vector3.up * 0.25f : base.GetIndicatorPosition();
     }
 
+    protected override Vector3 GetVisualCenter()
+    {
+        return visual != null ? visual.position : base.GetVisualCenter();
+    }
+
     public Vector3 GetAimPoint()
     {
         // aim at the visual's world position, which follows vertical displacement (e.g. levitation);

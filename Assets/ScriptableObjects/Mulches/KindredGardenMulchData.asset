@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: KindredGardenMulchData
   m_EditorClassIdentifier: Assembly-CSharp::FamilySkillCooldownMulchData
   mulchName: '<b><color=white>Kindred Garden</color></b>'
-  description: Kindred plants gain 25% Skill Cooldown Reduction.
+  description: '<b><color=#6495ED>Kindred</color></b> plants gain <b><color=green>25%</color></b>
+    <b><color=white>Skill Cooldown Reduction</color></b>.'
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 6

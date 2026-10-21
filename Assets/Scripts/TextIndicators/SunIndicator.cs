@@ -6,6 +6,10 @@ public class SunIndicator : TextIndicator
     // gap between the end of the text and the start of the icon; tune to taste
     private const float IconGap = 0.2f;
 
+    // same launch speed as DamageIndicator
+    protected override float MinVerticalSpeed => 1f;
+    protected override float MaxVerticalSpeed => 1.25f;
+
     public static void Spawn(Vector3 position, int amount)
     {
         GameObject go = Object.Instantiate(
@@ -18,6 +22,7 @@ public class SunIndicator : TextIndicator
 
     public void Initialize(int amount)
     {
+        shrink = false;
         tmpText.fontStyle = FontStyles.Bold;
         tmpText.color = new Color(1f, 0.95f, 0f);
         tmpText.text  = $"+{amount}";
