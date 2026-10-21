@@ -88,7 +88,7 @@ public class SoothingRain : MonoBehaviour
             if (Vector3.Distance(transform.position, plant.transform.position) > radius) continue;
             float scaledHeal = healPerTick * (1f + plant.healingReceived) * (1f + plant.healingBonus);
             float overflow = path3Maxed ? Mathf.Max(0f, scaledHeal - plant.MissingHealth) : 0f;
-            plant.Heal(healPerTick, source);
+            plant.Heal(healPerTick, source, new HealTag[] { HealTag.Regeneration });
             plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
             plant.GetEffect<ScorchEffect>()?.ReduceByFraction(ScorchReductionPerTick);
 

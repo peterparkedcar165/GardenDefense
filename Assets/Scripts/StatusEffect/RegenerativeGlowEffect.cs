@@ -37,7 +37,7 @@ public class RegenerativeGlowEffect : RegenerationEffect
         if (tickTimer >= tickInterval)
         {
             tickTimer -= tickInterval;
-            target.Heal(healingPerSecond + target.maxHealth * _regenPercent, source);
+            HealTarget(healingPerSecond + target.maxHealth * _regenPercent);
         }
     }
 

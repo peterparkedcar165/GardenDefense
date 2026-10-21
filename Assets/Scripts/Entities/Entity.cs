@@ -67,9 +67,10 @@ public struct EntityEventData
     public DamageTag[] tags;
     // overrides source.onHitEffectiveness for this specific event (e.g. a weaker proc from splash/AoE damage)
     public float? effectivenessOverride;
-    // true when this OnHeal event came from a RegenerationEffect tick rather than an active
-    // heal (attack/passive/skill) - lets a subscriber exclude pure regeneration if it needs to
-    public bool isRegeneration;
+    // OnHeal-only counterpart to tags above (DamageTag doesn't apply to heals) - set by
+    // Entity.Heal()'s own tags parameter, see StatusEffect.HealTarget for how an effect gets
+    // HealTag.Regeneration attached automatically
+    public HealTag[] healTags;
 }
 
 public abstract class Entity : MonoBehaviour
@@ -845,7 +846,7 @@ public abstract class Entity : MonoBehaviour
     }
 
 // method for healing
-    public virtual void Heal(float healingAmount, Entity source = null, bool isRegeneration = false)
+    public virtual void Heal(float healingAmount, Entity source = null, HealTag[] tags = null)
     {
         DecayEffect decay = GetEffect<DecayEffect>();
         if (decay != null)
@@ -862,6 +863,12 @@ public abstract class Entity : MonoBehaviour
             return;
         }
 
+        // board-wide heal-amount mulch (e.g. Rejuvenator) - plant-only like every other mulch,
+        // so an insect-targeted Regeneration-tagged heal (Glowworm buffing another insect) is
+        // never affected by it
+        if (this is Plant && HasHealTag(tags, HealTag.Regeneration))
+            healingAmount *= MulchManager.RegenerationHealMultiplier;
+
         float bonus = source != null ? source.healingBonus : 0f;
         float actual = Mathf.Min(healingAmount * (1f + healingReceived) * (1f + bonus), maxHealth - health);
         if (actual <= 0f) return;
@@ -877,9 +884,19 @@ public abstract class Entity : MonoBehaviour
         // healed plant for the healer - see Plant.RegisterHeal/RecentHealers
         if (this is Plant healedPlant && source is Plant healSource)
             healedPlant.RegisterHeal(healSource);
-        OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual, isRegeneration = isRegeneration });
+        OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual, healTags = tags });
         UpdateHealthBar();
         HealIndicator.Spawn(GetIndicatorPosition(), actual, isCrit);
+    }
+
+    // shared by Heal() above and any mulch/effect that needs to check a heal's own tags (e.g.
+    // RejuvenatorMulchEffect) - generic enough to reuse for DamageTag[] checks too
+    public static bool HasHealTag(HealTag[] tags, HealTag tag)
+    {
+        if (tags == null) return false;
+        foreach (HealTag t in tags)
+            if (t == tag) return true;
+        return false;
     }
 
 // method for death

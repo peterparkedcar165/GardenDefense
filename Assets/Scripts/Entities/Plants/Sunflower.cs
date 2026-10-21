@@ -78,6 +78,19 @@ public class Sunflower : Shooter
     [SerializeField] private float bookGenerateClipLength = 0.5f;
     private Coroutine _bookAnimatorDisableRoutine;
 
+    // tints from white (passive cooldown just reset) to this color (passive fully charged,
+    // about to generate) as GetPassiveBarFill() rises - and back down the same way when the
+    // timer resets, rather than snapping straight back to white the instant it does
+    [SerializeField] private Color bookGeneratingColor = Color.yellow;
+    [SerializeField] private float bookColorLerpSpeed = 3f;
+    // real texture-brightness, not a scene light: this project's URP Volume (see
+    // DefaultVolumeProfile.asset) already has Bloom active, so pushing the sprite's color channels
+    // past 1.0 (HDR) genuinely overexposes and blooms, same as dragging a Brightness slider past
+    // 100% in an art program - no separate light/shader needed, just the raw color value
+    [SerializeField] private float bookGlowIntensity = 2f;
+    // smoothed 0-1 "how charged" value, drives the sprite tint
+    private float _bookCharge;
+
     private const float BookBaseHeight = -0.1f;
     private const float BookBaseXLeft = -0.35f;
     private const float BookBaseXRight = 0.35f;
@@ -118,6 +131,33 @@ public class Sunflower : Shooter
         bookTransform.localPosition = new Vector3(newX, bobY, local.z);
 
         if (bookSpriteRenderer != null) bookSpriteRenderer.flipX = newX > 0f;
+    }
+
+    // GetPassiveBarFill() (Plant.cs) is already a smooth, continuously-rising ratio while the
+    // timer counts down normally - the one moment it ISN'T smooth is the instant the passive
+    // actually fires and passiveCooldownTimer hard-resets to full, snapping fill from 1 back to
+    // 0 in a single frame. lerping the displayed color toward the fill-based target (rather than
+    // just setting it directly) smooths over exactly that reset too, not just the rise
+    // the glow only actually starts climbing once GetPassiveBarFill() reaches this fraction of
+    // the way to full - fully charged still corresponds to fill = 1
+    private const float BookGlowStartFill = 0.75f;
+
+    private void UpdateBookColor()
+    {
+        if (bookSpriteRenderer == null) return;
+
+        // remaps fill so 0..0.75 all reads as "not glowing yet" (0) and 0.75..1 stretches across
+        // the full glow ramp (0 to 1) - InverseLerp already clamps, so fill below the threshold
+        // (including right after a reset) correctly lands on 0, not a negative value
+        float glowTarget = Mathf.InverseLerp(BookGlowStartFill, 1f, GetPassiveBarFill());
+        _bookCharge = Mathf.Lerp(_bookCharge, glowTarget, bookColorLerpSpeed * Time.deltaTime);
+
+        // white itself is left un-boosted (1,1,1,1) at zero charge - only the lerp TOWARD the
+        // glow color pushes past 1.0, so the brightness ramp starts normal and overexposes more
+        // as she gets closer to actually generating
+        Color boostedGlow = bookGeneratingColor * bookGlowIntensity;
+        boostedGlow.a = 1f;
+        bookSpriteRenderer.color = Color.Lerp(Color.white, boostedGlow, _bookCharge);
     }
 
     [Header("Attack Charge Circle")]
@@ -203,6 +243,7 @@ public class Sunflower : Shooter
         base.Update();
 
         UpdateBook();
+        UpdateBookColor();
 
         int sunpl = SFData?.path2SunPerLevel ?? 3;
         sunGenerated = (SFData?.baseSunGenerated ?? 10) + sunpl * effectivePath2Level;

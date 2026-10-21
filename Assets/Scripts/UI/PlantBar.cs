@@ -45,6 +45,7 @@ public class PlantBar : MonoBehaviour
     {
         if (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
+        if (MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen) return;
 
         // Level1StartLevel's "place me on Dirt/Grass" pages explicitly tell the player they can
         // press 1 instead of clicking (see TutorialContent), so number-key selection is let

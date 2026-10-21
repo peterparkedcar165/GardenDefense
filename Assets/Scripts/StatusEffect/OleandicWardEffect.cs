@@ -32,6 +32,7 @@ public class OleandicWardEffect : StatusEffect
     {
         effectType = Type.positive;
         elementalType = ElementalType.Poison;
+        tags = new EffectTag[] { EffectTag.Regenerative };
         baseDuration = duration;
         this.weakHealAmount = weakHealAmount;
         this.regenPerLockPerSecond = regenPerLockPerSecond;
@@ -112,7 +113,7 @@ public class OleandicWardEffect : StatusEffect
         regenTickTimer += deltaTime;
         if (regenTickTimer < RegenTickInterval) return;
         regenTickTimer -= RegenTickInterval;
-        target.Heal(regenPerLockPerSecond * immuneTypes.Count * RegenTickInterval, source);
+        HealTarget(regenPerLockPerSecond * immuneTypes.Count * RegenTickInterval);
     }
 
     public override void OnExpire()

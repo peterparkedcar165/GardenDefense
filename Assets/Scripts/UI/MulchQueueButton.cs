@@ -63,6 +63,7 @@ public class MulchQueueButton : MonoBehaviour
 
     public void OnClicked()
     {
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.ClickMulchQueueButton);
         MulchSelectionUI.instance?.Show();
     }
 }

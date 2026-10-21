@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f557f0783d5f4c0794de89a0cb4d054b, type: 3}
+  m_Name: MulchRegistry
+  m_EditorClassIdentifier: Assembly-CSharp::MulchRegistry
+  mulches:
+  - {fileID: 11400000, guid: f52e930ac9d6b4a46812feb61a267758, type: 2}
+  - {fileID: 11400000, guid: 91dc6b4c91484115abd193113d2414bb, type: 2}
+  - {fileID: 11400000, guid: fff2a01c359c4aed94478d5e2a839797, type: 2}
+  - {fileID: 11400000, guid: 5939dec221844e7fb65fc43c0fc6cab9, type: 2}
+  - {fileID: 11400000, guid: 78d52699487047579a4882b13490e22c, type: 2}
+  - {fileID: 11400000, guid: 0216155093dd48f3b989265d6ca90468, type: 2}
+  - {fileID: 11400000, guid: d32b0da33cb040eebdb2a8ade386d59d, type: 2}
+  - {fileID: 11400000, guid: 93fe3261e4ee4a75b7e062558f409969, type: 2}
+  - {fileID: 11400000, guid: 4166b214f2944a8797813a7bec4bea89, type: 2}
+  - {fileID: 11400000, guid: bdf796035402498a8ca57505b8a66683, type: 2}
+  - {fileID: 11400000, guid: 0ee0607f3bd24ae8ad6163adfe1fa58a, type: 2}
+  - {fileID: 11400000, guid: 41e11c5333fc4f05a291197cda6b72ce, type: 2}
+  - {fileID: 11400000, guid: 10f756fb591d43f0a948606c90c93ce3, type: 2}
+  - {fileID: 11400000, guid: 5135026d20564f70982f89d397f6d963, type: 2}
+  - {fileID: 11400000, guid: 79d2dc4cb653416eb6f3875a264c1a8a, type: 2}
+  - {fileID: 11400000, guid: ae9f84635e0147e2a88f1eb2314f4fe3, type: 2}

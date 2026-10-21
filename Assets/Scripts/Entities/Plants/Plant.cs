@@ -98,6 +98,22 @@ public abstract class Plant : Entity, IAttackable
     public Tile occupiedTile;
     public GameObject selfPrefab;
 
+    // tracks whether the +0.5 attack range (and Cattail/LeafRanger +15% crit) highground bonus
+    // is currently applied, so ApplyHighgroundBonus can add/remove it exactly once instead of
+    // stacking - set on initial placement (Tile.OnMouseDown) and recalculated on every
+    // TriggerTransplant, since relocating can move a plant on or off highground
+    public bool hasHighgroundBonus;
+
+    public void ApplyHighgroundBonus(bool shouldHaveBonus)
+    {
+        if (shouldHaveBonus == hasHighgroundBonus) return;
+        float sign = shouldHaveBonus ? 1f : -1f;
+        attackRangeMultiplier += 0.5f * sign;
+        if (this is Cattail || this is LeafRanger)
+            criticalChanceAdder += 0.15f * sign;
+        hasHighgroundBonus = shouldHaveBonus;
+    }
+
     // how many "tickets" this plant holds in an insect's weighted-random target roll (see
     // Insect.FindTauntWeightedPlantInRange). baseTauntValue is author-set per plant in its
     // PlantData asset (defaulting to its family's baseline there) - tauntValueAdder is the only
@@ -476,6 +492,14 @@ public abstract class Plant : Entity, IAttackable
         SkillCooldownIndicator.Spawn(transform.position + Vector3.up * 0.25f, amount);
     }
 
+
+    // Transplant mulch only - counts down from TransplantMulchEffect.CooldownSeconds after each
+    // use, same shape as skillCooldownTimer but independent of it (and of skillChargeRate -
+    // this is a utility cooldown, not a skill). stays at 0 (always ready) while the mulch isn't
+    // active, since the button itself is hidden in that case anyway
+    [Header("Transplant")]
+    public float transplantCooldownTimer;
+    public bool TransplantReady => transplantCooldownTimer <= 0f;
 
     [Header("Paths")]
     public int path1Level, path2Level, path3Level, path1LevelAdder, path2LevelAdder, path3LevelAdder, effectivePath1Level, effectivePath2Level, effectivePath3Level;
@@ -963,6 +987,8 @@ public abstract class Plant : Entity, IAttackable
             passiveCooldownTimer -= Time.deltaTime;
         if (skillCooldownTimer > 0)
             skillCooldownTimer -= Time.deltaTime * skillChargeRate;
+        if (transplantCooldownTimer > 0)
+            transplantCooldownTimer -= Time.deltaTime;
 
         {
             float stackY = healthBarOffset.y - 0.046875f;
@@ -1232,6 +1258,29 @@ public abstract class Plant : Entity, IAttackable
         PlantUpgradeUI.instance.HidePanel();
         DetachAndFadeLight();
         Destroy(gameObject);
+    }
+
+    // Transplant mulch: moves this exact instance (same stats/levels/active effects) onto a new
+    // tile, free of charge - unlike Uproot, nothing is destroyed or refunded. Tile.OnMouseDown
+    // already validated destination.tileType against allowedTiles and that it's unoccupied before
+    // calling this, same checks placement itself uses
+    public void TriggerTransplant(Tile destination)
+    {
+        if (!TransplantReady || occupiedTile == null || destination == null || destination == occupiedTile) return;
+
+        occupiedTile.isOccupied = false;
+        occupiedTile.GetComponent<Collider2D>().enabled = true;
+
+        // same as a fresh placement onto a tile that held a ghost - it can no longer be revived
+        destination.deadPlant = null;
+        destination.isOccupied = true;
+        destination.GetComponent<Collider2D>().enabled = false;
+
+        transform.position = destination.transform.position;
+        occupiedTile = destination;
+        ApplyHighgroundBonus(destination.isHighground);
+
+        transplantCooldownTimer = TransplantMulchEffect.CooldownSeconds;
     }
 
     public void GainExp(int amount)

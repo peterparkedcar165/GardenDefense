@@ -195,6 +195,20 @@ public class Tile : MonoBehaviour
             return;
         }
 
+        if (selector.transplantMode)
+        {
+            Plant transplanting = selector.transplantingPlant;
+            if (transplanting == null) { selector.CancelTransplantMode(); return; }
+            if (System.Array.IndexOf(transplanting.allowedTiles, tileType) == -1)
+            {
+                Debug.Log("Cannot transplant here!");
+                return;
+            }
+            transplanting.TriggerTransplant(this);
+            selector.CancelTransplantMode();
+            return;
+        }
+
         if (selector.SelectedPlant == null)
         return;
 
@@ -234,12 +248,7 @@ public class Tile : MonoBehaviour
             plant.totalSunSpent += cost;
             plant.occupiedTile = this;
             Plant.ClearGhostsOfSameType(plant);
-            if (isHighground)
-            {
-                plant.attackRangeMultiplier += 0.5f;
-                if (plant is Cattail || plant is LeafRanger)
-                    plant.criticalChanceAdder += 0.15f;
-            }
+            plant.ApplyHighgroundBonus(isHighground);
             isOccupied = true;
             GetComponent<Collider2D>().enabled = false;
             selector.ClearSelection();

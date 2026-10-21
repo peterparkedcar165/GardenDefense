@@ -6,11 +6,16 @@ using UnityEngine;
 // eligibility); subclasses add whatever tunables their paired MulchEffect needs
 public abstract class MulchData : ScriptableObject
 {
+    [Tooltip("rich-text formatted, e.g. '<b><color=orange>Rekindling</color></b>' - every mulch " +
+        "name is bolded and colored to its elementalType (PlantData.ElementalColor), even when " +
+        "that element is just Neutral/white")]
     public string mulchName;
     [TextArea] public string description;
     public Sprite icon;
     [Tooltip("tints the card/panel background for this mulch")]
     public Color color = Color.white;
+    [Tooltip("every mulch has one, even if it's thematically Neutral - drives mulchName's color")]
+    public ElementalType elementalType;
     public MulchTier tier;
 
     [Tooltip("relative weight when rolling a draft of this tier. higher rolls more often. " +

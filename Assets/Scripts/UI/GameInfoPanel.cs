@@ -6,7 +6,8 @@ using System.Text;
 using System.Collections.Generic;
 
 // in-game debug/info panel: press G to toggle. shows current weather, the combined fertilizer
-// stats currently in effect (alphabetical), and cumulative sun generated/spent this level.
+// stats currently in effect (alphabetical), every active mulch, and cumulative sun generated/
+// spent this level.
 // builds its own UI hierarchy at runtime rather than relying on a scene-dragged prefab, so it
 // needs no Editor wiring - just press play and press G
 public class GameInfoPanel : MonoBehaviour
@@ -59,6 +60,7 @@ public class GameInfoPanel : MonoBehaviour
         if (SettingsManager.instance != null && SettingsManager.instance.IsOpen) return false;
         if (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen) return false;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return false;
+        if (MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen) return false;
         return true;
     }
 
@@ -75,6 +77,8 @@ public class GameInfoPanel : MonoBehaviour
         AppendWeatherSection();
         sb.AppendLine();
         AppendFertilizerSection();
+        sb.AppendLine();
+        AppendMulchSection();
         sb.AppendLine();
         AppendSunSection();
 
@@ -129,6 +133,25 @@ public class GameInfoPanel : MonoBehaviour
             string statColor = FertilizerFormat.GetStatColor(statType);
             sb.AppendLine($"<color={statColor}><b>{FertilizerFormat.FormatStatName(statType)}</b></color>: <color={valueColor}><b>{FertilizerFormat.FormatValue(statType, value)}</b></color>");
         }
+    }
+
+    private void AppendMulchSection()
+    {
+        sb.AppendLine("<b><size=120%>Mulch Effects</size></b>");
+        if (MulchManager.instance == null)
+        {
+            sb.AppendLine("<color=#888888>No mulch manager in this scene.</color>");
+            return;
+        }
+
+        if (MulchManager.instance.ActiveMulches.Count == 0)
+        {
+            sb.AppendLine("<color=#888888>No mulches active.</color>");
+            return;
+        }
+
+        foreach (MulchData mulch in MulchManager.instance.ActiveMulches)
+            sb.AppendLine($"<b>{mulch.mulchName}</b>");
     }
 
     private void AppendSunSection()

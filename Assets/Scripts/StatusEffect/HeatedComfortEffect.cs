@@ -20,6 +20,7 @@ public class HeatedComfortEffect : StatusEffect
         effectType      = Type.positive;
         elementalType   = ElementalType.Fire;
         sourceStackable = true;
+        tags = new EffectTag[] { EffectTag.Regenerative };
     }
 
     public override void OnApply()  { }
@@ -30,7 +31,7 @@ public class HeatedComfortEffect : StatusEffect
         _tickTimer += deltaTime;
         if (_tickTimer < TickInterval) return;
         _tickTimer -= TickInterval;
-        target.Heal(_healPerTick, source);
+        HealTarget(_healPerTick);
         Plant plant = target as Plant;
         if (plant != null && WeatherManager.instance?.temperature == TemperatureType.Cold)
             plant.temperature = Mathf.Min(plant.temperature + _tempPerTick, plant.comfortMax);

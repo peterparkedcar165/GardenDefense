@@ -43,6 +43,15 @@ public class MulchSelectionUI : MonoBehaviour
             card.Initialize(choice, this);
             activeCards.Add(card);
         }
+
+        // fewer eligible mulches than a full draft (already-picked ones excluded, conditions not
+        // met, etc.) - pad the remaining slots with a placeholder instead of just showing fewer
+        for (int i = choices.Length; i < MulchManager.DraftChoiceCount; i++)
+        {
+            MulchCard card = Instantiate(cardPrefab, cardContainer);
+            card.InitializeEmpty();
+            activeCards.Add(card);
+        }
     }
 
     private void ClearCards()

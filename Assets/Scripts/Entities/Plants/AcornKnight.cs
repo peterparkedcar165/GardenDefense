@@ -238,7 +238,7 @@ public class AcornKnight : Aura
         {
             _regenTickTimer -= RegenTickInterval;
             float ratePercent = _noDamageTimer >= RegenBoostDelay ? BoostedRegenPercent : BaseRegenPercent;
-            if (ratePercent > 0f) Heal(maxHealth * ratePercent, this);
+            if (ratePercent > 0f) Heal(maxHealth * ratePercent, this, new HealTag[] { HealTag.Regeneration });
         }
     }
 

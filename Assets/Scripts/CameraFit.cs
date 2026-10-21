@@ -102,6 +102,7 @@ public class CameraFit : MonoBehaviour
         if (GameManager.instance == null || !GameManager.instance.IsGameActive) return true;
         if (SettingsManager.instance != null && SettingsManager.instance.IsOpen) return true;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return true;
+        if (MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen) return true;
         if (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen) return true;
         if (Mouse.current.position.ReadValue().x > Screen.width * (1f - rightPanelFraction)) return true;
         return false;

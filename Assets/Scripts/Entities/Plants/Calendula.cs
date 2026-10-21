@@ -182,7 +182,7 @@ public class Calendula : Aura
                     if (plant == null || !plant.IsAlive || plant == this) continue;
                     if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
                     healed.Add(plant);
-                    plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this);
+                    plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, new HealTag[] { HealTag.Regeneration });
                 }
 
                 if (borrowedLight)
@@ -193,7 +193,7 @@ public class Calendula : Aura
                         if (plant == null || !plant.IsAlive || plant == this || healed.Contains(plant)) continue;
                         if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
                         healed.Add(plant);
-                        plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this);
+                        plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, new HealTag[] { HealTag.Regeneration });
                     }
                 }
             }

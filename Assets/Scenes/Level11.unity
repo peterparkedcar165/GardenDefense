@@ -150,6 +150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeatherManager
   sceneLight: {fileID: 0}
   visualLibrary: {fileID: 11400000, guid: 79ecdd6abe1740ed84ec7c0233fcd8e6, type: 2}
+  colorLerpSpeed: 1.5
+  ambienceFadeDuration: 3
 --- !u!4 &29017237
 Transform:
   m_ObjectHideFlags: 0
@@ -870,6 +872,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2473620843044869097, guid: 136c598616de5e44882d5e62fc030c89, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: 136c598616de5e44882d5e62fc030c89, type: 3}
       propertyPath: m_Intensity
       value: 1.1

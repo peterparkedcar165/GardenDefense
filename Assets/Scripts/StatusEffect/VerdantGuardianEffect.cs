@@ -10,6 +10,7 @@ public class VerdantGuardianEffect : ShieldEffect
     {
         _regenPerSecond = regenPerSecond;
         elementalType = ElementalType.Grass;
+        tags = new EffectTag[] { EffectTag.Regenerative };
     }
 
     public override void OnTick(float deltaTime)
@@ -18,7 +19,7 @@ public class VerdantGuardianEffect : ShieldEffect
         _tickTimer += deltaTime;
         if (_tickTimer < 1f) return;
         _tickTimer -= 1f;
-        target.Heal(_regenPerSecond, source);
+        HealTarget(_regenPerSecond);
     }
 
     protected override string GetShieldDetails() =>
