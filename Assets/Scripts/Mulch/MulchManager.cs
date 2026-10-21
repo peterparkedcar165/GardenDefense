@@ -31,9 +31,10 @@ public class MulchManager : MonoBehaviour
     private readonly List<MulchData> pickedData = new List<MulchData>();
     private readonly List<MulchEffect> activeEffects = new List<MulchEffect>();
 
-    // mulches the player has rerolled away - treated as an accidental "no thanks", so they're
-    // excluded from every future draft and reroll for the rest of the level, same as an
-    // already-picked mulch (see AddEligibleFrom)
+    // mulches the player has rerolled away - excluded from every reroll for the rest of THIS
+    // selection screen (so rerolling one card can't bring back what another card just rerolled
+    // away), but cleared the next time a fresh draft is generated (see GenerateChoicesForOldest),
+    // so the same mulch is fair game again on a later screen
     private readonly HashSet<MulchData> rerolledAway = new HashSet<MulchData>();
 
     // level-exclusive mulches only - the universal pool lives in mulchRegistry instead, so
@@ -96,18 +97,24 @@ public class MulchManager : MonoBehaviour
     public MulchData[] GenerateChoicesForOldest()
     {
         if (pendingGrants.Count == 0) return null;
+        rerolledAway.Clear(); // a fresh screen - anything rerolled away on a previous one is fair game again
         MulchTier tier = pendingGrants.Peek();
         List<MulchData> eligible = GetEligible(tier);
         return WeightedPickDistinct(eligible, DraftChoiceCount).ToArray();
     }
 
-    // rerolls a single displayed choice in place, independent of the other cards and of the
-    // queue itself. the card being rerolled away is treated as a deliberate pass - it's excluded
-    // from every future draft/reroll this level, not just this one swap (see rerolledAway)
-    public MulchData RerollSingle(MulchData current)
+    // rerolls a single displayed choice in place. the card being rerolled away is treated as a
+    // deliberate pass for the rest of THIS screen - it won't come back on another card's reroll
+    // here, but it's fair game again once a fresh draft is generated (see rerolledAway).
+    // alsoDisplayed is whatever the OTHER cards in this same draft
+    // are currently showing - excluded for just this one roll (not blacklisted level-wide) so the
+    // replacement can never collide with a mulch already sitting on another card. without this,
+    // two cards could end up showing the same mulch at once (GetEligible has no way to know what
+    // the rest of the draft looks like on its own)
+    public MulchData RerollSingle(MulchData current, List<MulchData> alsoDisplayed = null)
     {
         if (current != null) rerolledAway.Add(current);
-        List<MulchData> eligible = GetEligible(current.tier);
+        List<MulchData> eligible = GetEligible(current.tier, alsoDisplayed);
         List<MulchData> picked = WeightedPickDistinct(eligible, 1);
         return picked.Count > 0 ? picked[0] : null;
     }
@@ -136,20 +143,20 @@ public class MulchManager : MonoBehaviour
     // excludes mulches already picked this level, so the same stacking mulch can't flood every
     // future draft - revisit if you ever want deliberate duplicate-stacking instead. pulls from
     // both the universal registry and this level's exclusive pool
-    private List<MulchData> GetEligible(MulchTier tier)
+    private List<MulchData> GetEligible(MulchTier tier, List<MulchData> alsoExclude = null)
     {
         List<MulchData> result = new List<MulchData>();
 
         List<PlantData> loadout = GetCurrentLoadout();
         int currentWave = GameManager.instance != null ? GameManager.instance.currentWave : 0;
 
-        AddEligibleFrom(mulchRegistry != null ? mulchRegistry.mulches : null, tier, loadout, currentWave, result);
-        AddEligibleFrom(levelPool, tier, loadout, currentWave, result);
+        AddEligibleFrom(mulchRegistry != null ? mulchRegistry.mulches : null, tier, loadout, currentWave, result, alsoExclude);
+        AddEligibleFrom(levelPool, tier, loadout, currentWave, result, alsoExclude);
 
         return result;
     }
 
-    private void AddEligibleFrom(MulchData[] source, MulchTier tier, List<PlantData> loadout, int currentWave, List<MulchData> result)
+    private void AddEligibleFrom(MulchData[] source, MulchTier tier, List<PlantData> loadout, int currentWave, List<MulchData> result, List<MulchData> alsoExclude)
     {
         if (source == null) return;
         foreach (MulchData data in source)
@@ -157,6 +164,7 @@ public class MulchManager : MonoBehaviour
             if (data == null || data.tier != tier) continue;
             if (pickedData.Contains(data)) continue;
             if (rerolledAway.Contains(data)) continue;
+            if (alsoExclude != null && alsoExclude.Contains(data)) continue;
             if (result.Contains(data)) continue;
             if (data.condition != null && !data.condition.IsEligible(loadout, currentWave)) continue;
             result.Add(data);

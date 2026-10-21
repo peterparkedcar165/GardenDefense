@@ -14,7 +14,8 @@ public abstract class FlyingInsect : Insect
     protected override void Awake()
     {
         base.Awake();
-        flightHeight = Random.Range(1.25f, 1.75f);
+        float baseHeight = data != null ? data.baseFlightHeight : 1.75f;
+        flightHeight = Random.Range(baseHeight - 0.2f, baseHeight + 0.2f);
         hoverSpeed = Random.Range(2f, 3f);
         hoverAmplitude = Random.Range(0.075f, 0.125f);
         hoverPhase = Random.Range(0f, Mathf.PI * 2f);
@@ -26,14 +27,11 @@ public abstract class FlyingInsect : Insect
         }
     }
 
-    public const float FlightEvasionBonus = 0.10f;
-
     public override void UpdateStats()
     {
         base.UpdateStats();
         {
             flightSpeed = 2f * movementSpeed;
-            if (isFlying) evasion += FlightEvasionBonus;
         }
     }
 
@@ -102,7 +100,7 @@ public abstract class FlyingInsect : Insect
     // appended by every flying insect's GetDescription(), before the (always-last) AggressivityLine
     protected string FlyingLine() =>
         $"\n\n<b>Flying:</b> Immobilization effects ground it for the effect's duration + 4 seconds " +
-        $"(5 seconds if Knocked Up).\n\nIncreases Evasion by <color=green><b>{FlightEvasionBonus * 100f:F0}%</b></color> while flying.";
+        $"(5 seconds if Knocked Up).";
 }
 
 // whenever a flying insect is HARD CC'ed, they get grounded, bringing their visual down to their original position

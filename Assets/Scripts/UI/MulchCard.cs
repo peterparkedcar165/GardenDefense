@@ -18,6 +18,7 @@ public class MulchCard : MonoBehaviour
     [SerializeField] private Button rerollButton;
 
     private MulchData data;
+    public MulchData CurrentData => data;
     private MulchSelectionUI ui;
     private RectTransform rectTransform;
     private Vector2 targetPosition;
@@ -73,7 +74,7 @@ public class MulchCard : MonoBehaviour
     // comes back this level (see MulchManager.RerollSingle)
     public void OnRerollClicked()
     {
-        MulchData rerolled = MulchManager.instance.RerollSingle(data);
+        MulchData rerolled = MulchManager.instance.RerollSingle(data, ui != null ? ui.GetDisplayedMulches(this) : null);
         if (rerolled != null) data = rerolled;
         RefreshDisplay();
         if (rerollButton != null) rerollButton.interactable = false;

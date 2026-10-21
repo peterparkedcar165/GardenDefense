@@ -226,9 +226,9 @@ MonoBehaviour:
   - afterWave: 1
     tier: 0
   - afterWave: 3
-    tier: 1
+    tier: 0
   - afterWave: 5
-    tier: 2
+    tier: 0
   - afterWave: 6
-    tier: 2
+    tier: 0
   ambience: {fileID: 11400000, guid: d1804b1344ff0b341aff0c11181dc078, type: 2}
