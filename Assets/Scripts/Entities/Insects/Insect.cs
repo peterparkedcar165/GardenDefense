@@ -259,7 +259,14 @@ public abstract class Insect : Entity, IAttackable
     // next approach instead of beelining back to the same one forever
     private IAttackable GetWeightedPlantTarget()
     {
-        bool cachedStillValid = _cachedWeightedTarget is Plant cachedPlant && cachedPlant.IsAlive
+        // cachedPlant != null uses Plant's own (UnityEngine.Object) overloaded operator, which
+        // correctly detects an already-destroyed GameObject - cachedPlant.IsAlive alone does NOT
+        // catch this, since IsAlive is just "health > 0" on the stale managed wrapper, which keeps
+        // reporting its last-known value even after the underlying plant's GameObject is gone.
+        // without this check, a plant destroyed while still cached here throws
+        // MissingReferenceException out of GetApproachPoint's own transform access below, which
+        // aborts Move() every frame from then on - the insect just stops in place for good
+        bool cachedStillValid = _cachedWeightedTarget is Plant cachedPlant && cachedPlant != null && cachedPlant.IsAlive
             && CanReachPlant(cachedPlant)
             && Vector3.Distance(transform.position, cachedPlant.GetApproachPoint(transform.position)) <= targetingRange;
 
@@ -1468,7 +1475,7 @@ public abstract class Insect : Entity, IAttackable
     // null (see above), it must consult this itself to still respect Taunt - forced to engage the
     // taunter (via its own shoot mechanism, never melee) instead of its normal target-scan
     protected Plant GetTauntPlantTarget() =>
-        GetEffect<TauntEffect>()?.taunter is Plant p && p.IsAlive ? p : null;
+        GetEffect<TauntEffect>()?.taunter is Plant p && p != null && p.IsAlive ? p : null;
 
     // checks the TAUNTER's own location, not the effect's source - e.g. Acorn Sprout (source) can
     // sit on highground while the Acorn Bomb it spawned (taunter) is down on lowground right next

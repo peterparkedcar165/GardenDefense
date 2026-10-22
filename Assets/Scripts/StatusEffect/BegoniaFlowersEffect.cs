@@ -1,8 +1,8 @@
 public class BegoniaFlowersEffect : StatusEffect
 {
-    private readonly float waterCooldownReduction;
-    // 0 unless Begonia's Path1 is maxed when this tick applied/refreshed it
-    private readonly float grassResistanceShred;
+    private float waterCooldownReduction;
+    // 0 unless Begonia's Path1 is maxed
+    private float grassResistanceShred;
 
     public BegoniaFlowersEffect(Entity target, float duration, Entity source, float waterCooldownReduction, float grassResistanceShred)
         : base(target, duration, 1, source)
@@ -23,6 +23,23 @@ public class BegoniaFlowersEffect : StatusEffect
     {
         target.waterInternalCooldownAdder += waterCooldownReduction;
         target.grassResistanceAdder += grassResistanceShred;
+    }
+
+    // called every tick Begonia refreshes this instead of creating a new one (see
+    // Begonia.TickFlowers) - without this, an insect primed BEFORE Path1 reached max level kept
+    // its stale (zero) shred forever, since refreshing only bumped duration and never re-ran
+    // OnApply with the current values. undoes the old contribution and reapplies the new one, so
+    // the live stat adders always match whatever Begonia's current bonuses actually are
+    public void UpdateValues(float newWaterCooldownReduction, float newGrassResistanceShred)
+    {
+        if (newWaterCooldownReduction == waterCooldownReduction && newGrassResistanceShred == grassResistanceShred)
+            return;
+        target.waterInternalCooldownAdder += waterCooldownReduction;
+        target.grassResistanceAdder += grassResistanceShred;
+        waterCooldownReduction = newWaterCooldownReduction;
+        grassResistanceShred = newGrassResistanceShred;
+        target.waterInternalCooldownAdder -= waterCooldownReduction;
+        target.grassResistanceAdder -= grassResistanceShred;
     }
 
     public override void OnTick(float deltaTime) { }

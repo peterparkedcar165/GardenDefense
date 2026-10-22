@@ -23,6 +23,13 @@ public class Begonia : Aura
     private float WaterCooldownReduction => (BData?.baseWaterCooldownReduction ?? 2f) + (BData?.path1CooldownReductionPerLevel ?? 0.6f) * effectivePath1Level;
     private float GrassResistanceShredAmount => BData?.maxLevelGrassResistanceShred ?? 0.35f;
 
+    // unaffected by darkness - her flower field and Blessing aura already scan via
+    // GetInsectsInRange/distance checks rather than CanReachInsect, so they were never actually
+    // mechanically halved at night, but this keeps her fully exempt (and drops the misleading
+    // half-range dark circle indicator) in case anything else ever calls CanReachInsect on her
+    public override bool ShowDarkCircle => false;
+    public override bool IsValidNightTarget(Insect insect, float distance) => true;
+
     // skill tree node unlock ids
     public const string InstantSkillUnlock      = "begonia_instant_skill";
     public const string BloomingAffinityUnlock  = "begonia_blooming_affinity";
@@ -70,6 +77,11 @@ public class Begonia : Aura
         ApplyAuraToAllInRange();
     }
 
+    // same reasoning as Calendula's own override - highground changes attackRange (the number
+    // itself recomputes every frame regardless), but the actual Blessing grant to everyone
+    // currently in range only runs on specific events, so it needs its own rescan here too
+    protected override void OnHighgroundBonusChanged() => ApplyAuraToAllInRange();
+
     protected override void Update()
     {
         base.Update();
@@ -96,7 +108,13 @@ public class Begonia : Aura
         {
             BegoniaFlowersEffect existing = insect.GetEffect<BegoniaFlowersEffect>();
             if (existing != null)
+            {
                 existing.duration = FlowerEffectRefreshDuration;
+                // keeps the shred/cooldown-reduction live - e.g. an insect already standing in
+                // her flowers when Path1 hits max level picks up the Grass Resistance shred
+                // immediately instead of only on its next fresh application
+                existing.UpdateValues(reduction, shred);
+            }
             else
                 insect.ApplyEffect(new BegoniaFlowersEffect(insect, FlowerEffectRefreshDuration, this, reduction, shred));
 

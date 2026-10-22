@@ -67,7 +67,7 @@ MonoBehaviour:
       unlockId: sunflower_ambient_sun_proc
     - id: node5b_sunskillcd
       nodeName: Scorching Mark
-      description: Whenever the Sunflower produces Sun via the passive, Skill Cooldown is reduced by 3.
+      description: Whenever the Sunflower applies Sun Mark, Skill Cooldown is reduced by 3.
       maxRank: 1
       costPerRank: 2
       effects: []
@@ -125,7 +125,7 @@ MonoBehaviour:
       unlockId: sunflower_homing_sunray
     - id: node10b_sunrayrefresh
       nodeName: Feeding Flame
-      description: Killing an insect with the Sunray refreshes its duration by 1 second.
+      description: Killing an insect with the Sunray refreshes its duration by 3 seconds.
       maxRank: 1
       costPerRank: 2
       effects: []

@@ -83,6 +83,11 @@ public class Calendula : Aura
         ApplyAuraToAllInRange();
     }
 
+    // highground changes her effective lightEmissionRange (it's derived from attackRange - see
+    // UpdateStats below), but that's just a number recomputed every frame; the actual buff grant
+    // to everyone in range is the once-per-event scan below, so it needs its own rescan here too
+    protected override void OnHighgroundBonusChanged() => ApplyAuraToAllInRange();
+
     // applied once on placement, on reaching Path2 max, or whenever any new plant appears on
     // the field (via Plant.OnPlantPlaced) — not re-scanned every tick. removal is handled
     // entirely by CalendulasEmberEffect itself (PlantAuraBuffEffect base)
@@ -299,8 +304,8 @@ public class Calendula : Aura
     // insect is reached is exactly how many were already hit before it this sweep, so it doubles
     // as the falloff index with no separate counter needed. the burst expands outward from
     // Calendula, so the closest insect is always reached first and takes the most damage
-    private const float MultiTargetDamageReductionPerInsect = 0.25f;
-    private const float MinMultiTargetDamageMultiplier = 0.25f;
+    private const float MultiTargetDamageReductionPerInsect = 0.1f;
+    private const float MinMultiTargetDamageMultiplier = 0.6f;
 
     // the fire spreads outward from Calendula over FireBurstLifetime. every frame, ANY insect
     // currently within the growing radius is damaged — including one that wasn't even in range
@@ -488,7 +493,7 @@ public class Calendula : Aura
     public override string GetPath3Name() => "Floral Glow";
 
     public override string GetAttackDescription()
-        => $"Releases flaming petals dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range. Each insect beyond the first hit reduces damage by <color=green><b>10%</b></color>, down to a minimum of <color=green><b>40%</b></color>.";
+        => $"Releases flaming petals dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range. Each insect beyond the first hit reduces damage by <color=green><b>10%</b></color>, down to a minimum of <color=green><b>60%</b></color>.";
 
     public override string GetPassiveDescription() =>
         $"Illuminate the surrounding area allowing plants to see insects.\n\n" +
@@ -502,7 +507,7 @@ public class Calendula : Aura
         float adpl   = CData?.path1AttackDamagePerLevel ?? 5f;
         float firepl = CData?.path1FireDamagePerLevel    ?? 0.05f;
         string desc = details
-            ? $"Releases flaming petals dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range. Each insect beyond the first hit reduces damage by <color=green><b>10%</b></color>, down to a minimum of <color=green><b>40%</b></color>."
+            ? $"Releases flaming petals dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range. Each insect beyond the first hit reduces damage by <color=green><b>10%</b></color>, down to a minimum of <color=green><b>60%</b></color>."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +

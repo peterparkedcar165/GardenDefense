@@ -62,14 +62,14 @@ MonoBehaviour:
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 4
-        timeBetweenSpawns: 0.6667
+        timeBetweenSpawns: 1.2
         startDelay: 0
       delayBeforeNext: 12
     - subWaveDuration: 19
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 5
-        timeBetweenSpawns: 1
+        timeBetweenSpawns: 1.2
         startDelay: 0
       delayBeforeNext: 15
     trickleSpawns: []
@@ -79,21 +79,21 @@ MonoBehaviour:
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 5
-        timeBetweenSpawns: 0.75
+        timeBetweenSpawns: 1.2
         startDelay: 0
       delayBeforeNext: 11
     - subWaveDuration: 13
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 5
-        timeBetweenSpawns: 1
+        timeBetweenSpawns: 1.2
         startDelay: 0
       delayBeforeNext: 9
     - subWaveDuration: 18.5
       spawns:
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 6
-        timeBetweenSpawns: 0.5
+        timeBetweenSpawns: 1.2
         startDelay: 0
       delayBeforeNext: 16
     trickleSpawns: []
@@ -142,7 +142,7 @@ MonoBehaviour:
       spawns:
       - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
         count: 1
-        timeBetweenSpawns: 1
+        timeBetweenSpawns: 1.2
         startDelay: 0
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 5
@@ -153,7 +153,7 @@ MonoBehaviour:
       spawns:
       - insectData: {fileID: 11400000, guid: da71fc5f5fcce834ca4c45852a63857d, type: 2}
         count: 1
-        timeBetweenSpawns: 1
+        timeBetweenSpawns: 1.2
         startDelay: 0
       - insectData: {fileID: 11400000, guid: e7fa793e774810a40a739d7b44431ee9, type: 2}
         count: 5

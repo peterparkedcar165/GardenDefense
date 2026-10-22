@@ -19,7 +19,7 @@ MonoBehaviour:
   family: 7
   elementalType: 0
   damageType: 1
-  sunCost: 105
+  sunCost: 100
   placementLimit: 0
   tauntValue: 3
   category: 0
@@ -76,6 +76,7 @@ MonoBehaviour:
   baseProjectileVisualHitboxRadius: 0.1
   projectileEmitLight: 0
   projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
   projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -107,9 +108,9 @@ MonoBehaviour:
   path1AttackDamagePerLevel: 2
   path1FireDamagePerLevel: 0.01
   path2AttackRangePerLevel: 0.2
-  maxLevelFireDamageBonus: 0.06
+  maxLevelFireDamageBonus: 0.12
   path3SkillDurationPerLevel: 2
-  floralGlowBaseDamageScaling: 0.1
-  floralGlowDamageScalingPerLevel: 0.02
+  floralGlowBaseDamageScaling: 0.15
+  floralGlowDamageScalingPerLevel: 0.03
   floralGlowMaxLevelAttackSpeedBonus: 0.15
   floralGlowProjectileSpeed: 6

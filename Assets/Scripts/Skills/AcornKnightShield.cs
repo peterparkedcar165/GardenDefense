@@ -55,7 +55,11 @@ public class AcornKnightShield : Minion
         owner = source;
         lifetime = lifespan;
         baseMaxHealth = maxHp;
-        baseArmor = source != null ? (int)source.armor : 0;
+        // max level (Path3): inherits the Knight's own BASE Armor (ignores Guard Stance's
+        // temporary bonus and any other adders/multipliers active at throw time). below max:
+        // unchanged, a snapshot of the Knight's current (fully computed) Armor
+        bool inheritsBaseArmor = source is AcornKnight maxedKnight && maxedKnight.IsPath3Maxed;
+        baseArmor = source != null ? (int)(inheritsBaseArmor ? source.baseArmor : source.armor) : 0;
         baseMovementSpeed = 0f;
         baseFireResistance = -0.5f;
         isFlying = false;

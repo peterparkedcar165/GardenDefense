@@ -23,7 +23,12 @@ public class HealIndicator : TextIndicator
         lifetime = 2f;
         tmpText.color     = isCrit ? new Color(0.4f, 1f, 0.4f) : new Color(0.2f, 1f, 0.2f);
         tmpText.fontStyle = FontStyles.Bold;
-        if (isCrit) tmpText.fontSize *= 1.5f;
+
+        // same size scaling as DamageIndicator: clamped to a 2.5-3.5 range (cap reached at 250
+        // healed), same crit bump
+        tmpText.fontSize = Mathf.Clamp(2.5f + amount * 0.004f, 2.5f, 3.5f);
+        if (isCrit) tmpText.fontSize *= 1.15f;
+
         int rounded = Mathf.RoundToInt(amount);
         tmpText.text = isCrit ? $"+{rounded}!" : $"+{rounded}";
     }

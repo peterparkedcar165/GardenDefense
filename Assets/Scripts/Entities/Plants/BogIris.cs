@@ -178,7 +178,8 @@ public class BogIris : Shooter
         if (sunTickTimer >= SunInterval)
         {
             sunTickTimer -= SunInterval;
-            GenerateSun(BaseSunGenerated + (_isOpen ? OpenBonusSun : 0));
+            int generatedTotal = GenerateSun(BaseSunGenerated + (_isOpen ? OpenBonusSun : 0));
+            SunGenerationParticleEffect.Spawn(GetVisualCenter(), generatedTotal, 0.5f);
         }
     }
 

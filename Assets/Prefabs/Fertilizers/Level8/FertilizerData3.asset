@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255db38a6ebbcc24ab79fce788eb165b, type: 3}
   m_Name: FertilizerData3
   m_EditorClassIdentifier: Assembly-CSharp::FertilizerData
-  fertilizerName: Quick Cast
+  fertilizerName: Tailwind
   stats:
-  - statType: 34
-    value: 0.33
+  - statType: 2
+    value: 0.35
   - statType: 14
     value: 0.25
   icon: {fileID: 0}

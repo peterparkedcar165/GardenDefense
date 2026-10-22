@@ -114,7 +114,7 @@ public class Rhodiola : Shooter
         }
         if (critical != null) return critical;
 
-        if (_mainTarget is Plant currentTarget && currentTarget.IsAlive
+        if (_mainTarget is Plant currentTarget && currentTarget != null && currentTarget.IsAlive
             && currentTarget.health < currentTarget.maxHealth
             && Vector2.Distance(transform.position, currentTarget.transform.position) <= attackRange)
             return currentTarget;

@@ -10,6 +10,19 @@ public class QueenAnt : Ant
     private float spawnTimer;
     private bool isSpawning;
 
+    // Queen's Aura: same aura shape as Scout Ant's own (3-radius), but regenerates 3% of max
+    // health per second and grants flat Armor/Magic Armor instead of Movement Speed - and only
+    // to fellow ants (any Ant subclass) other than Queen Ants themselves. scans much faster than
+    // Scout Ant's own 0.5s (0.1s) so the buff catches ants passing through the radius quickly.
+    // only one instance per target regardless of how many Queen Ants are in range - see
+    // QueensAuraEffect's own sourceStackable = false
+    [SerializeField] private float auraRadius = 3f;
+    [SerializeField] private float auraArmorBonus = 15f;
+    private const float AuraHealPercent = 0.03f;
+    private float auraScanTimer = 0f;
+    private const float AuraScanInterval = 0.1f;
+    private const float AuraBuffDuration = 0.5f;
+
     public override string GetDescription()
     {
         string list = "none configured";
@@ -23,7 +36,9 @@ public class QueenAnt : Ant
             }
             list = string.Join(", ", names);
         }
-        return $"Every <b>{spawnInterval:F0}</b> seconds, gives birth to <b>{antsPerSpawn}</b> ants, randomly chosen between {list}." + AggressivityLine();
+        return $"Every <b>{spawnInterval:F0}</b> seconds, gives birth to <b>{antsPerSpawn}</b> ants, randomly chosen between {list}.\n\n" +
+               $"Grants <color=#FFD700><b>Queen's Aura</b></color> to other ants within a <color=green><b>{auraRadius:F0}</b></color>-radius, " +
+               $"regenerating <color=green><b>{AuraHealPercent * 100f:F0}%</b></color> max health per second and granting <color=#00CED1><b>+{auraArmorBonus:F0} Armor</b></color> / Magic Armor." + AggressivityLine();
     }
 
     protected override void Awake()
@@ -45,6 +60,29 @@ public class QueenAnt : Ant
                 spawnTimer = 0f;
                 StartCoroutine(SpawnRoutine());
             }
+        }
+
+        auraScanTimer += Time.deltaTime;
+        if (auraScanTimer >= AuraScanInterval)
+        {
+            auraScanTimer = 0f;
+            ApplyQueensAura();
+        }
+    }
+
+    private void ApplyQueensAura()
+    {
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive || insect is QueenAnt || !(insect is Ant)) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) > auraRadius) continue;
+
+            QueensAuraEffect existing = insect.GetEffect<QueensAuraEffect>();
+            if (existing != null)
+                existing.duration = AuraBuffDuration;
+            else
+                insect.ApplyEffect(new QueensAuraEffect(insect, AuraBuffDuration, 1, this,
+                    insect.maxHealth * AuraHealPercent, auraArmorBonus));
         }
     }
 

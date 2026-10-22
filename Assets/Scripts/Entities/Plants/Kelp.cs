@@ -152,7 +152,8 @@ public class Kelp : Aura
         passiveCooldownTimer -= amount;
         while (passiveCooldownTimer <= 0f)
         {
-            GenerateSun(SunPerThreshold);
+            int generatedTotal = GenerateSun(SunPerThreshold);
+            SunGenerationParticleEffect.Spawn(GetVisualCenter(), generatedTotal, 0.5f);
             passiveCooldownTimer += passiveCooldown;
         }
     }

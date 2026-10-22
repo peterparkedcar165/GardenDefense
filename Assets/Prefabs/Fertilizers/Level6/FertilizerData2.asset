@@ -15,9 +15,9 @@ MonoBehaviour:
   fertilizerName: All-Seeing
   stats:
   - statType: 26
-    value: 0.33
-  - statType: 49
-    value: 0.23
+    value: 0.35
+  - statType: 22
+    value: 0.25
   icon: {fileID: 0}
   targetElementalTypes: 
   targetFamilies: 

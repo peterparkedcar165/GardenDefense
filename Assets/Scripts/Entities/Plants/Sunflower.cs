@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Sunflower : Shooter
 {
-    public float channelDuration = 1.5f;
+    public float channelDuration = 1f;
     public int sunGenerated;
     public float skillAoERadius, sunrayDamagePerSecond;
     public float cooldownReductionPerHit;
@@ -235,7 +235,14 @@ public class Sunflower : Shooter
         if (data.elementalType != ElementalType.Fire) return;
         if (!IsPath2Maxed) return;
         if (data.target is Insect insect)
+        {
             insect.ApplyEffect(new SunMarkEffect(insect, SunMarkDuration, 1, this));
+
+            // skill tree node 5.2 - keyed off applying Sun Mark itself now, not the passive's own
+            // sun-income tick (the two are unrelated systems; "Scorching Mark" is about the mark)
+            if (SkillTreeManager.HasUnlock(this, SunSkillCooldownUnlock))
+                ReduceSkillCooldown(3f);
+        }
     }
 
     protected override void Update()
@@ -250,13 +257,11 @@ public class Sunflower : Shooter
 
         if (passiveCooldownTimer <= 0)
         {
-            GenerateSun(sunGenerated);
+            int generatedTotal = GenerateSun(sunGenerated);
+            if (bookTransform != null)
+                SunGenerationParticleEffect.Spawn(bookTransform.position, generatedTotal, 0.25f);
             PlayBookGenerateAnimation();
             passiveCooldownTimer += passiveCooldown * (1f + sunGenerationCooldown);
-
-            // skill tree node 5.2
-            if (SkillTreeManager.HasUnlock(this, SunSkillCooldownUnlock))
-                ReduceSkillCooldown(3f);
         }
     }
 
@@ -518,9 +523,9 @@ public class Sunflower : Shooter
 
     private void StartSkillChannel(Vector3 position)
     {
-        // matches channelDuration (the flat 1.5s field actually used by ChannelAndSpawn's wait
+        // matches channelDuration (the flat 1s field actually used by ChannelAndSpawn's wait
         // below) rather than data.channelDuration, which BeginChannel reads separately for the
-        // attack lockout and is currently 0 on the data asset - see BeginChannel
+        // attack lockout - kept in sync manually on the data asset, see BeginChannel
         PlayBodyAnimation(BodySkillTrigger, bodySkillClipLength, channelDuration);
         BeginChannel();   // can't attack until the sunray appears (set channelDuration in data)
         StartCoroutine(ChannelAndSpawn(position));

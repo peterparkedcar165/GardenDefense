@@ -112,7 +112,17 @@ public abstract class Plant : Entity, IAttackable
         if (this is Cattail || this is LeafRanger)
             criticalChanceAdder += 0.15f * sign;
         hasHighgroundBonus = shouldHaveBonus;
+        OnHighgroundBonusChanged();
     }
+
+    // hook for a plant whose own "grant a buff to everyone currently in range" scan is only
+    // ever re-run on specific events (placement, a path upgrade, another plant appearing - see
+    // Calendula/Begonia's own ApplyAuraToAllInRange) rather than every frame. without this, such
+    // a plant's attackRange/lightEmissionRange NUMBER still correctly includes the highground
+    // bonus (that's computed fresh every UpdateStats tick regardless), but anyone only newly in
+    // range BECAUSE of that bonus never actually gets the buff until some unrelated plant
+    // happens to be placed somewhere else on the field and triggers a rescan. default: no-op
+    protected virtual void OnHighgroundBonusChanged() {}
 
     // how many "tickets" this plant holds in an insect's weighted-random target roll (see
     // Insect.FindTauntWeightedPlantInRange). baseTauntValue is author-set per plant in its
@@ -238,6 +248,16 @@ public abstract class Plant : Entity, IAttackable
         return limit > 0 && CountAlive(data) >= limit;
     }
 
+    // most plants keep their sprite on a separate "Visual" child rather than the root (see
+    // StoreDeadRecord's own comment on the same point) - centers on that child's SpriteRenderer
+    // instead, falling back to the base (transform.position) for the rare plant with none (e.g.
+    // Waterlily)
+    protected override Vector3 GetVisualCenter()
+    {
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        return sr != null ? sr.transform.position : base.GetVisualCenter();
+    }
+
     private void StoreDeadRecord()
     {
         if (occupiedTile == null || selfPrefab == null) return;
@@ -345,6 +365,7 @@ public abstract class Plant : Entity, IAttackable
         plant.skillCooldownTimer = Mathf.Max(0f, record.skillCooldownRemaining - (Time.time - record.deathTime));
         plant.RestoreAutoCastState(record.autoCastState);
         plant.orbitRadius = record.orbitRadius > 0 ? record.orbitRadius : 1;
+        plant.ApplyHighgroundBonus(tile.isHighground);
 
         tile.isOccupied = true;
         Collider2D tileCol = tile.GetComponent<Collider2D>();
@@ -1620,6 +1641,11 @@ public abstract class Plant : Entity, IAttackable
     {
         if (_light2D == null) return;
         GameObject lightObj = _light2D.gameObject;
+        // the light may already be disabled (see Update()'s own FadeOut when lightEmissionRange
+        // drops to 0, which leaves the object inactive rather than destroyed so it can fade back
+        // in later) - a coroutine can't start on an inactive object, so it has to be reactivated
+        // here before handing it a fresh FadeOut, or this whole detach-and-destroy silently no-ops
+        lightObj.SetActive(true);
         lightObj.transform.SetParent(null);
         LightFader fader = _lightFader ?? lightObj.AddComponent<LightFader>();
         fader.SetupForFadeOut(_light2D);
