@@ -667,7 +667,7 @@ MonoBehaviour:
   basePiercing: 0
   piercing: 0
   piercingAdder: 0
-  channelDuration: 1.5
+  channelDuration: 1
   sunGenerated: 0
   skillAoERadius: 2.5
   sunrayDamagePerSecond: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class FruitFly : FlyingInsect
 {
@@ -12,6 +13,7 @@ public class FruitFly : FlyingInsect
     private float scanTimer = 0f;
     private const float scanInterval = 0.3f;
     private const float buffDuration = 0.35f;
+    private const float companionSpawnInterval = 0.5f;
 
     protected override void Awake()
     {
@@ -23,7 +25,7 @@ public class FruitFly : FlyingInsect
     {
         base.Start();
         if (!isCompanion)
-            SpawnCompanions();
+            StartCoroutine(SpawnCompanions());
     }
 
     protected override void Update()
@@ -37,20 +39,23 @@ public class FruitFly : FlyingInsect
         }
     }
 
-    private void SpawnCompanions()
+    private IEnumerator SpawnCompanions()
     {
-        if (fruitFlyPrefab == null) return;
+        if (fruitFlyPrefab == null) yield break;
         int count = FData?.companionCount ?? 2;
         for (int i = 0; i < count; i++)
         {
             Vector3 offset = new Vector3(Random.Range(-0.7f, 0.7f), Random.Range(-0.4f, 0.4f), 0f);
             GameObject go = Instantiate(fruitFlyPrefab, transform.position + offset, Quaternion.identity);
             FruitFly companion = go.GetComponent<FruitFly>();
-            if (companion == null) continue;
-            // mark as companion before its Start() runs so it won't spawn more companions
-            companion.isCompanion = true;
-            companion.SetPath(waypoints);
-            companion.currentWaypointIndex = currentWaypointIndex;
+            if (companion != null)
+            {
+                // mark as companion before its Start() runs so it won't spawn more companions
+                companion.isCompanion = true;
+                companion.SetPath(waypoints);
+                companion.currentWaypointIndex = currentWaypointIndex;
+            }
+            if (i < count - 1) yield return new WaitForSeconds(companionSpawnInterval);
         }
     }
 

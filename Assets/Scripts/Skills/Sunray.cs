@@ -32,7 +32,7 @@ public class Sunray : MonoBehaviour
 
     // skill tree nodes 3.1, 6.1, 6.2
     private const float HomingSpeed = 0.6f;
-    private const float KillRefreshDuration = 1f;
+    private const float KillRefreshDuration = 3f;
     private bool _ambientSunProc;
     private bool _homing;
     private bool _refreshOnKill;
@@ -179,6 +179,13 @@ public class Sunray : MonoBehaviour
         // leaving this object disabled forever instead of unregistered and destroyed
         DarknessManager.UnregisterLightSource(transform);
 
+        // detach the particles before the shrink below starts squashing this transform's own
+        // scale to 0 - same reasoning as Projectile.OnBeforeDestroy(): a child particle system
+        // using Local scaling mode reads the parent's scale as its own particle-size multiplier,
+        // so left attached it would visibly squash/deform along with the beam instead of just
+        // finishing its own fade naturally
+        DetachParticles();
+
         // shrink X to 0 and fade light out together
         var fader = GetComponent<LightFader>();
         if (fader != null) fader.FadeOut(shrinkDuration, destroyOnComplete: true);
@@ -192,6 +199,26 @@ public class Sunray : MonoBehaviour
             transform.localScale = new Vector3(scaleX, targetScale.y, targetScale.z);
             yield return null;
         }
+    }
+
+    // reparenting with worldPositionStays: false leaves localScale untouched (SetParent(null, true)
+    // would rewrite it to cancel out the parent's scale, snapping particle size the instant it
+    // detaches), so position/rotation have to be restored manually instead - same pattern as
+    // Projectile.OnBeforeDestroy()
+    private void DetachParticles()
+    {
+        if (sunParticles == null) return;
+
+        Transform t = sunParticles.transform;
+        Vector3 worldPos = t.position;
+        Quaternion worldRot = t.rotation;
+
+        t.SetParent(null, false);
+        t.position = worldPos;
+        t.rotation = worldRot;
+
+        sunParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        Destroy(sunParticles.gameObject, sunParticles.main.startLifetime.constantMax);
     }
 
     private Insect FindNearestInsect()

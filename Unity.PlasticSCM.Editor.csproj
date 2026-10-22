@@ -485,9 +485,9 @@
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\FindWorkspace.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\CloudDrive\Workspaces\DirectoryContent\DeleteWorkspaceDialog.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\UI\SortOrderComparer.cs" />
-    <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\UI\ResponseType.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Configuration\CloudEdition\Welcome\SignInPanel.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\Diff\ClientDiffTreeViewItem.cs" />
+    <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\UI\ResponseType.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\PendingChanges\CommentTextArea.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\CloudDrive\Workspaces\Tree\CloudWorkspacesSelection.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\CreateWorkspace\Dialogs\RepositoryListViewItem.cs" />

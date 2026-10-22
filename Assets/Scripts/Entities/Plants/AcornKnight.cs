@@ -703,8 +703,8 @@ public class AcornKnight : Aura
         float hppl      = AcornData?.path3HealthPerLevel        ?? 50f;
         float durMP     = AcornData?.skillDurationMPMultiplier  ?? 0.10f;
         string skillMaxBonus = details
-            ? "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> inherits the Acorn Knight's <color=#00CED1><b>Armor</b></color>."
-            : $"Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> gains <color=#00CED1><b>{armor:F0} Base Armor</b></color>.";
+            ? "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> inherits the Acorn Knight's <color=#00CED1><b>Base Armor</b></color>."
+            : $"Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> gains <color=#00CED1><b>{baseArmor:F0} Base Armor</b></color>.";
         float aspl = AcornData?.path3AttackSpeedBonusPerLevel ?? 0.05f;
         string desc = details
             ? $"The {GetName()} throws his shield, stopping at the first insect hit and dealing <color={PlantData.ElementalColor(elementalType)}><b>[{SkillDamageArmorPercent * 100f:F0}% Armor]</b></color> {PlantData.DamageTypeLabel(damageType)}, stunning it for <color=green><b>{ShieldStunDuration:F1}s</b></color>. " +

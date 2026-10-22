@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SunflowerData
   m_EditorClassIdentifier: Assembly-CSharp::SunflowerData
   plantPrefab: {fileID: 7460911327647547872, guid: 530019c35e88f4345b4a1465a481b7ec, type: 3}
-  icon: {fileID: 7367808777163505026, guid: e470d82d1a72b284db0fc11d7825e607, type: 3}
+  icon: {fileID: -7978883999570900537, guid: 1e110a04f44af82408fc85aa82f0e30e, type: 3}
   plantName: Sunflower
   displayName: Sunflower
   family: 0
@@ -26,10 +26,10 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: 7dc2623ca4fd4aeca582b4a4a604da71, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 28
+  baseAttackDamage: 32
   baseMagicPower: 0
-  baseAttackSpeed: 0.4
-  baseAttackRange: 2.5
+  baseAttackSpeed: 0.3
+  baseAttackRange: 3
   baseAttackChargeTime: 1
   baseArmor: 0
   baseMagicArmor: 0
@@ -76,6 +76,7 @@ MonoBehaviour:
   baseProjectileVisualHitboxRadius: 0.1
   projectileEmitLight: 1
   projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
   projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -84,7 +85,7 @@ MonoBehaviour:
   basePassiveDuration: 0
   baseSkillCooldown: 100
   baseSkillDuration: 8
-  channelDuration: 1.5
+  channelDuration: 1
   baseSkillRadius: 1.5
   baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0
@@ -106,11 +107,11 @@ MonoBehaviour:
     clips: []
   baseSunGenerated: 10
   baseSunrayDPS: 50
-  baseCooldownReductionPerHit: 0.75
-  path1AttackDamagePerLevel: 2
-  path1AttackSpeedPerLevel: 0.03
+  baseCooldownReductionPerHit: 1
+  path1AttackDamagePerLevel: 3
+  path1AttackSpeedPerLevel: 0.02
   path2SunPerLevel: 3
-  path2CooldownReductionPerLevel: 0.05
+  path2CooldownReductionPerLevel: 0.1
   path3SunrayDPSPerLevel: 5
   path3SkillDurationPerLevel: 0.5
   path3RadiusPerLevel: 0.2
