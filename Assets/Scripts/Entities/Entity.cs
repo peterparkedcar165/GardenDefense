@@ -150,8 +150,8 @@ public abstract class Entity : MonoBehaviour
             attackerPlant.ReduceSkillCooldown(1f * effectiveness);
 
         // Bird of Paradise: Talon Focus stack gain plus its per-stack on-hit bonus damage (and,
-        // at Path1 max with full stacks, the percent-current-health finisher). unlike Floral
-        // Glow/Ablaze below, this isn't gated to projectile attacks since Bird of Paradise is melee
+        // at Path1 max with full stacks, the percent-current-health finisher). not gated to any
+        // particular attack tag combination, unlike Floral Glow/Ablaze below
         if (data.source is BirdOfParadise bird)
             bird.OnAttackHit(insect, effectiveness);
 
@@ -160,13 +160,16 @@ public abstract class Entity : MonoBehaviour
             insect.ApplyEffect(new PuncturedEffect(insect, cactus.passiveDuration, cactus.IsPath2Maxed ? 2 : 1, cactus));
 
         // Floral Glow and Ablaze proc off single-target attacks (but not, say, a passive aura
-        // tick or an AoE sweep) - requires both Attack (already guaranteed by the OnHit gate
-        // above, checked again here for clarity) and SingleTarget. Tansy's own Floral Glow (the
-        // orbiting-projectile version) doesn't proc through here - it deals its damage directly
-        // off the projectile instead
-        if (data.tags == null
-            || !System.Array.Exists(data.tags, t => t == DamageTag.Attack)
-            || !System.Array.Exists(data.tags, t => t == DamageTag.SingleTarget)) return;
+        // tick or an AoE sweep) - requires Attack (already guaranteed by the OnHit gate above,
+        // checked again here for clarity), plus either a melee hit, or a single-target
+        // projectile hit (SingleTarget alone doesn't qualify a non-projectile, non-melee hit).
+        // Tansy's own Floral Glow (the orbiting-projectile version) doesn't proc through here -
+        // it deals its damage directly off the projectile instead
+        if (data.tags == null || !System.Array.Exists(data.tags, t => t == DamageTag.Attack)) return;
+        bool isMelee = System.Array.Exists(data.tags, t => t == DamageTag.Melee);
+        bool isSingleTargetProjectile = System.Array.Exists(data.tags, t => t == DamageTag.Projectile)
+            && System.Array.Exists(data.tags, t => t == DamageTag.SingleTarget);
+        if (!isMelee && !isSingleTargetProjectile) return;
 
         FloralGlowEffect floralGlow = data.source.GetEffect<FloralGlowEffect>();
         if (floralGlow != null)

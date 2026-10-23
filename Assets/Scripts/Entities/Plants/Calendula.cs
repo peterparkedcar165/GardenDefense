@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Calendula : Aura
 {
+    protected override float LightIntensity => 1f;
+
     private CalendulaData CData => data as CalendulaData;
     [SerializeField] private GameObject fireBurstPrefab;
 
