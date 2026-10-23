@@ -66,7 +66,10 @@ public class FungalGlowEffect : StatusEffect
 
     public override void OnTargetDied()
     {
-        if (source is Glowshroom gm) gm.OnFungalGlowInsectDied(target.transform.position);
+        // gm can be a destroyed Glowshroom by the time its glowing target dies later (e.g. the
+        // mushroom itself died first) - Unity's overloaded null check catches that, a plain C#
+        // pattern-match null check would not
+        if (source is Glowshroom gm && gm != null) gm.OnFungalGlowInsectDied(target.transform.position);
 
         if (_fader == null) return;
         DarknessManager.UnregisterLightSource(_fader.transform);

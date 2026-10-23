@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RekindlingMulchData
   m_EditorClassIdentifier: Assembly-CSharp::RekindlingMulchData
   mulchName: '<b><color=orange>Rekindling</color></b>'
-  description: 'Reduce base <b><color=orange>Burn</color></b> duration by <b><color=green>50%</color></b>.
+  description: 'Reduce base <b><color=orange>Burn</color></b> duration by <b><color=green>25%</color></b>.
     Dealing <b><color=green>Grass Damage</color></b> against a <b><color=orange>Burning</color></b>
     target extends the <b><color=orange>Burn</color></b> by <b><color=green>2</color></b>
     seconds.'
@@ -37,5 +37,5 @@ MonoBehaviour:
     excludedFamilies: []
     minWave: 0
     maxWave: 0
-  durationReductionPercent: 0.5
+  durationReductionPercent: 0.25
   extendPerHit: 2

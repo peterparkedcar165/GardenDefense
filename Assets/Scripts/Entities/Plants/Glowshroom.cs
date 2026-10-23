@@ -6,7 +6,6 @@ using System.Collections.Generic;
 public class Glowshroom : Shooter
 {
     private GlowshroomData GMData => data as GlowshroomData;
-    protected override float LightIntensity => 1f;
 
     private bool _lightColored = false;
 
