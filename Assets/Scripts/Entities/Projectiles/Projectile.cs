@@ -54,6 +54,9 @@ public abstract class Projectile : MonoBehaviour
     // up right after it appears). while true, Move leaves the height alone and Base travels at full
     // speed, then the normal convergence below picks up from wherever the subclass left it
     protected bool holdVisualHeight;
+    // scales this frame's travel speed, 1 = full projectileSpeed. lets a subclass ease its speed in
+    // (waterlily's bubble speeding up after its rise) without touching projectileSpeed itself
+    protected float speedMultiplier = 1f;
     protected float VisualHeightOffset { get => _visualHeightOffset; set => _visualHeightOffset = value; }
     // protected rather than private so a subclass with its own post-hit behavior (e.g.
     // LeafRangerProjectile's bounce-redirect) can still search "every live insect I haven't hit
@@ -232,7 +235,8 @@ public abstract class Projectile : MonoBehaviour
         // could cross the target's ground footprint (satisfying the base-distance half of the
         // hit check) before Visual had risen enough to satisfy the visual-distance half, or vice
         // versa: a clean miss despite visually crossing the same space at some point
-        float groundSpeed = projectileSpeed;
+        float speed = projectileSpeed * speedMultiplier;
+        float groundSpeed = speed;
         float heightRate = 0f;
         float targetHeight = 0f;
         if (trackedInsect != null && !holdVisualHeight)
@@ -243,8 +247,8 @@ public abstract class Projectile : MonoBehaviour
             float totalRemaining = Mathf.Sqrt(groundDist * groundDist + heightGap * heightGap);
             if (totalRemaining > 0.0001f)
             {
-                groundSpeed = projectileSpeed * (groundDist / totalRemaining);
-                heightRate = projectileSpeed * (heightGap / totalRemaining); // signed: negative while descending
+                groundSpeed = speed * (groundDist / totalRemaining);
+                heightRate = speed * (heightGap / totalRemaining); // signed: negative while descending
             }
         }
 

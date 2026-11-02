@@ -114,6 +114,7 @@ MonoBehaviour:
   maxSoakStacks: 4
   projectileRiseHeight: 0.8
   projectileRiseDuration: 0.3
+  projectileLaunchAccelDuration: 0.3
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.2
   path1SplashTargetsPerLevel: 1

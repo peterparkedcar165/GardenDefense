@@ -18,6 +18,9 @@ public class WaterlilyProjectile : Projectile
     private bool _launched;
     private float _startHeight;
     private float _launchHeight;
+    // after launch the travel speed eases from 0 up to full projectile speed instead of snapping
+    private float _accelDuration;
+    private float _accelTimer;
     private float _traveled;
     private Vector3 _lastBasePos;
 
@@ -34,6 +37,7 @@ public class WaterlilyProjectile : Projectile
         WaterlilyData data = source != null ? source.data as WaterlilyData : null;
         _riseHeight = data != null ? data.projectileRiseHeight : 0.8f;
         _riseDuration = Mathf.Max(0.01f, data != null ? data.projectileRiseDuration : 0.3f);
+        _accelDuration = data != null ? data.projectileLaunchAccelDuration : 0.3f;
         _riseTimer = 0f;
         _launched = false;
         _startHeight = VisualHeightOffset;
@@ -114,6 +118,17 @@ public class WaterlilyProjectile : Projectile
             if (_riseTimer >= _riseDuration) Launch();
             return;
         }
+
+        // travel: speed eases in over _accelDuration, smooth at both ends (no snap at launch or
+        // when it reaches full speed)
+        if (_accelTimer < _accelDuration)
+        {
+            _accelTimer = Mathf.Min(_accelTimer + Time.deltaTime, _accelDuration);
+            float a = _accelTimer / _accelDuration;
+            speedMultiplier = a * a * (3f - 2f * a);
+        }
+        else speedMultiplier = 1f;
+
         base.Move();
     }
 
@@ -121,6 +136,8 @@ public class WaterlilyProjectile : Projectile
     {
         _launched = true;
         _launchHeight = VisualHeightOffset;
+        _accelTimer = 0f;
+        speedMultiplier = _accelDuration > 0f ? 0f : 1f;
         _traveled = 0f;
         _lastBasePos = transform.position;
         // re aim at where the target is now, it kept moving during the rise
