@@ -8,15 +8,18 @@ public class WaterlilyProjectile : Projectile
     private const float bobSpeed = 6f;
     private const float bobAmplitude = 0.12f;
 
-    // the bubble leaves from the waterlily herself and arcs to its target. Base travels straight
-    // along the ground at full speed while the visual follows one smooth curve: it shoots up first,
-    // peaks a third of the way there, and lands exactly on the target's height on arrival
-    private float _arcHeight;
+    // two steps. rise: the bubble leaves from the waterlily herself and the visual rises straight up,
+    // easing to a stop at the top, while Base waits on the ground. travel: it launches at the
+    // target and the height eases from the top of the rise down to the target's height, landing
+    // exactly on it however far it had to go
+    private float _riseHeight;
+    private float _riseDuration;
+    private float _riseTimer;
+    private bool _launched;
     private float _startHeight;
+    private float _launchHeight;
     private float _traveled;
     private Vector3 _lastBasePos;
-    // 27/4 * s * (1 - s)^2 peaks at exactly 1 when s is a third of the way, and is 0 at both ends
-    private const float ArcShapeScale = 6.75f;
 
     public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
     {
@@ -29,11 +32,12 @@ public class WaterlilyProjectile : Projectile
         bobPhase3 = Mathf.PI * 1.33f;
 
         WaterlilyData data = source != null ? source.data as WaterlilyData : null;
-        _arcHeight = data != null ? data.projectileArcHeight : 0.8f;
+        _riseHeight = data != null ? data.projectileRiseHeight : 0.8f;
+        _riseDuration = Mathf.Max(0.01f, data != null ? data.projectileRiseDuration : 0.3f);
+        _riseTimer = 0f;
+        _launched = false;
         _startHeight = VisualHeightOffset;
-        _traveled = 0f;
-        _lastBasePos = transform.position;
-        // the arc owns the visual height for the whole flight, Base keeps full ground speed
+        // this projectile sets the visual height itself for the whole flight
         holdVisualHeight = true;
     }
 
@@ -100,7 +104,31 @@ public class WaterlilyProjectile : Projectile
 
     protected override void Move()
     {
+        if (!_launched)
+        {
+            // rise: Base stays put, no movement, homing or hit checks until the bubble is up
+            _riseTimer = Mathf.Min(_riseTimer + Time.deltaTime, _riseDuration);
+            float t = _riseTimer / _riseDuration;
+            VisualHeightOffset = _startHeight + _riseHeight * (1f - (1f - t) * (1f - t));
+            PlaceVisualAndShadow();
+            if (_riseTimer >= _riseDuration) Launch();
+            return;
+        }
         base.Move();
+    }
+
+    private void Launch()
+    {
+        _launched = true;
+        _launchHeight = VisualHeightOffset;
+        _traveled = 0f;
+        _lastBasePos = transform.position;
+        // re aim at where the target is now, it kept moving during the rise
+        if (trackedInsect != null && trackedInsect.IsAlive)
+        {
+            Vector3 toTarget = trackedInsect.transform.position - transform.position;
+            if (toTarget.sqrMagnitude > 0.0001f) direction = toTarget.normalized;
+        }
     }
 
     protected override void OnBaseMoved()
@@ -111,13 +139,14 @@ public class WaterlilyProjectile : Projectile
         _traveled += Vector3.Distance(_lastBasePos, transform.position);
         _lastBasePos = transform.position;
 
-        // progress along the flight, measured against the target's current spot so it still lands
-        // right on a target that keeps moving
+        // progress along the travel, measured against the target's current spot so it still lands
+        // right on a target that keeps moving. eased at both ends, so it leaves the top of the rise
+        // without a jolt
         float remaining = Vector3.Distance(transform.position, trackedInsect.transform.position);
         float s = _traveled + remaining > 0.0001f ? _traveled / (_traveled + remaining) : 1f;
+        float eased = s * s * (3f - 2f * s);
         float targetHeight = trackedInsect.GetAimPoint().y - trackedInsect.transform.position.y;
-        float arc = ArcShapeScale * s * (1f - s) * (1f - s);
-        VisualHeightOffset = Mathf.Lerp(_startHeight, targetHeight, s) + _arcHeight * arc;
+        VisualHeightOffset = Mathf.Lerp(_launchHeight, targetHeight, eased);
     }
 
     // particle-trail detach-before-destroy is now handled generically by the base class
