@@ -103,10 +103,12 @@ MonoBehaviour:
   baseSkillMultiplier: 0.16
   basePrimerCooldownReduction: 0.5
   baseGerminateSpeedup: 0.5
+  blessingShare: 1
   path1AttackRangePerLevel: 0.3
   baseWaterCooldownReduction: 2
   path1CooldownReductionPerLevel: 0.4
-  maxLevelGrassResistanceShred: 0.35
+  baseGrassResistanceShred: 0.12
+  path1GrassResistanceShredPerLevel: 0.04
   path2ElementalAffinityPerLevel: 0.04
   path2GrassDamagePerLevel: 0.02
   path2GerminateSpeedupPerLevel: 0.1

@@ -1,7 +1,7 @@
 public class BegoniaFlowersEffect : StatusEffect
 {
     private float waterCooldownReduction;
-    // 0 unless Begonia's Path1 is maxed
+    // grows with Begonia's attack path
     private float grassResistanceShred;
 
     public BegoniaFlowersEffect(Entity target, float duration, Entity source, float waterCooldownReduction, float grassResistanceShred)

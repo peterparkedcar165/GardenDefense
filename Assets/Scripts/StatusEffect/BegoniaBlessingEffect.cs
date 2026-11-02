@@ -35,7 +35,11 @@ public class BegoniaBlessingEffect : PlantAuraBuffEffect
     public override string GetName() => "<color=#4FC3F7><b>Begonia's Blessing</b></color>";
     public override string GetDescription()
     {
-        string desc = $"Increase <color=green><b>Elemental Affinity</b></color> by <color=green><b>{elementalAffinityBonus * 100f:F0}%</b></color> and <color=green><b>Grass Damage</b></color> by <color=green><b>{grassDamageBonus * 100f:F0}%</b></color>. <color=green><b>Germinate</b></color> detonates <color=green><b>{germinateSpeedupBonus:F1}s</b></color> earlier.";
+        // Begonia's own copy carries no stat part (her passive gives her those directly)
+        string desc = elementalAffinityBonus > 0f || grassDamageBonus > 0f
+            ? $"Increase <color=green><b>Elemental Affinity</b></color> by <color=green><b>{elementalAffinityBonus * 100f:F0}%</b></color> and <color=green><b>Grass Damage</b></color> by <color=green><b>{grassDamageBonus * 100f:F0}%</b></color>. "
+            : "";
+        desc += $"<color=green><b>Germinate</b></color> detonates <color=green><b>{germinateSpeedupBonus:F1}s</b></color> earlier.";
         if (grantsGerminateCrit) desc += " Also allows <color=green><b>Germinate</b></color> triggers to critically strike.";
         return desc;
     }
