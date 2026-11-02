@@ -10,8 +10,8 @@ public class BegoniaData : PlantData
     public float baseSkillMultiplier;
     public float basePrimerCooldownReduction = 0.5f;
     public float baseGerminateSpeedup = 0.5f;
-    [Tooltip("share of her own total elemental affinity and grass damage that Begonia's Blessing gives other plants, 1 = 100%")]
-    public float blessingShare = 1f;
+    [Tooltip("share of her own total elemental affinity and grass damage that Begonia's Blessing gives other plants, 0.85 = 85%")]
+    public float baseBlessingShare = 0.85f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackRangePerLevel = 0.2f;
@@ -26,6 +26,7 @@ public class BegoniaData : PlantData
     public float path2ElementalAffinityPerLevel = 0.08f;
     public float path2GrassDamagePerLevel = 0.04f;
     public float path2GerminateSpeedupPerLevel = 0.1f;
+    public float path2BlessingSharePerLevel = 0.05f;
 
     [Header("Path 3 Scaling")]
     public float path3AttackSpeedBonusPerLevel = 0.04f;

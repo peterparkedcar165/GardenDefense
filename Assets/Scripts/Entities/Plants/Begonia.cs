@@ -51,9 +51,10 @@ public class Begonia : Aura
     private float GrassDamageBonusMP   => (BData?.basePassiveMultiplier ?? 0f) * magicPower / 100f;
     private float GrassDamageBonus     => GrassDamageBonusBase + GrassDamageBonusMP;
 
-    // Begonia's Blessing gives other plants a share of her own current totals, so anything that
-    // raises hers (fertilizers, skill nodes, blossoming) raises theirs too. she never blesses herself
-    private float BlessingShare       => BData?.blessingShare ?? 1f;
+    // Begonia's Blessing gives other plants a share of her own current totals (85% +5% per passive
+    // level), so anything that raises hers (fertilizers, skill nodes, blossoming) raises theirs too.
+    // she is never affected by her own blessing, germinate bonuses included
+    private float BlessingShare       => (BData?.baseBlessingShare ?? 0.85f) + (BData?.path2BlessingSharePerLevel ?? 0.05f) * effectivePath2Level;
     private float BlessingAffinity    => BlessingShare * elementalAffinity;
     private float BlessingGrassDamage => BlessingShare * grassDamage;
     // what the blessing currently on the field was built with, to reapply it only when hers change
@@ -169,11 +170,10 @@ public class Begonia : Aura
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
         {
             if (plant == null || !plant.IsAlive) continue;
+            if (plant == this) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            // the stat part goes to other plants only, she keeps the germinate speedup and crit
-            bool self = plant == this;
             plant.ApplyEffect(new BegoniaBlessingEffect(plant, 1, this, attackRange,
-                self ? 0f : _grantedAffinity, self ? 0f : _grantedGrass, grantsGerminateCrit, GerminateSpeedupBonus));
+                _grantedAffinity, _grantedGrass, grantsGerminateCrit, GerminateSpeedupBonus));
         }
     }
 
@@ -284,14 +284,16 @@ public class Begonia : Aura
         float eapl = BData?.path2ElementalAffinityPerLevel ?? 0.08f;
         float gdpl = BData?.path2GrassDamagePerLevel ?? 0.04f;
         float gspl = BData?.path2GerminateSpeedupPerLevel ?? 0.1f;
+        float sharepl = BData?.path2BlessingSharePerLevel ?? 0.05f;
         float mpMult = BData?.basePassiveMultiplier ?? 0f;
         string desc = details
             ? $"The {GetName()} gains <color=green><b>[({(BData?.baseElementalAffinityBonus ?? 0.24f) * 100f:F0}%) + ({eapl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> base <color=green><b>Elemental Affinity</b></color> and <color=green><b>[({(BData?.baseGrassDamageBonus ?? 0.2f) * 100f:F0}%) + ({gdpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> base <color=green><b>Grass Damage</b></color>.\n\n" +
-              $"Other plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, increasing their <color=green><b>Elemental Affinity</b></color> and <color=green><b>Grass Damage</b></color> by <color=green><b>{BlessingShare * 100f:F0}%</b></color> of her own. Germinate triggers in her radius detonate <color=green><b>[({(BData?.baseGerminateSpeedup ?? 0.5f):F1}s) + ({gspl:F1}s/Lvl.)]</b></color> earlier."
+              $"Other plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, increasing their <color=green><b>Elemental Affinity</b></color> and <color=green><b>Grass Damage</b></color> by <color=green><b>[({(BData?.baseBlessingShare ?? 0.85f) * 100f:F0}%) + ({sharepl * 100f:F0}%/Lvl.)]</b></color> of her own, and making their <color=green><b>Germinate</b></color> triggers detonate <color=green><b>[({(BData?.baseGerminateSpeedup ?? 0.5f):F1}s) + ({gspl:F1}s/Lvl.)]</b></color> earlier."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase her base <color=green><b>Elemental Affinity</b></color> by <color=green><b>{eapl * 100f:F0}%</b></color> per level. [<color=green><b>+{eapl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase her base <color=green><b>Grass Damage</b></color> by <color=green><b>{gdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{gdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase the <color=#4FC3F7><b>Begonia's Blessing</b></color> share by <color=green><b>{sharepl * 100f:F0}%</b></color> per level. [<color=green><b>+{sharepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Germinate</b></color> speedup by <color=green><b>{gspl:F1}s</b></color> per level. [<color=green><b>+{gspl * effectivePath2Level:F1}s</b></color>]\n\n" +
                $"{Level5Section(path2Level, "<color=#4FC3F7><b>Begonia's Blessing</b></color> allows <color=green><b>Germinate</b></color> triggers to critically strike.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
@@ -327,7 +329,7 @@ public class Begonia : Aura
         $"and <color=green><b>{GrassDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{GrassDamageBonusMP * 100f:F0}%</b></color>] base <color=green><b>Grass Damage</b></color>.\n\n" +
         $"Other plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, increasing their <color=green><b>Elemental Affinity</b></color> by <color=green><b>{BlessingAffinity * 100f:F0}%</b></color> " +
         $"and <color=green><b>Grass Damage</b></color> by <color=green><b>{BlessingGrassDamage * 100f:F0}%</b></color> ({BlessingShare * 100f:F0}% of her own). " +
-        $"<color=green><b>Germinate</b></color> triggers in her radius detonate <color=green><b>{GerminateSpeedupBonus:F1}s</b></color> earlier.";
+        $"Their <color=green><b>Germinate</b></color> triggers detonate <color=green><b>{GerminateSpeedupBonus:F1}s</b></color> earlier.";
 
     public override string GetSkillDesription() =>
         $"Plants within her attack range are granted <color=green><b>Blossoming</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, " +
