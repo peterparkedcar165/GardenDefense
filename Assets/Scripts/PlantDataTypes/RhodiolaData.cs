@@ -28,6 +28,9 @@ public class RhodiolaData : PlantData
     public float path2BurgeonHealPerLevel = 2f;
     public float baseBurgeonDuration  = 4f;
     public float burgeonTickInterval  = 0.5f;
+    [Tooltip("armor a plant holds while Rejuvenating Burgeon is on it")]
+    public float burgeonBaseArmor = 16f;
+    public float path2BurgeonArmorPerLevel = 8f;
 
     [Header("Path 3 Scaling")]
     public float revivalBaseHeal                = 40f;
@@ -42,7 +45,7 @@ public class RhodiolaData : PlantData
         "Fires a rejuvenating seed at the most injured nearby plant, healing it and leaving behind a regenerating bloom.";
 
     public override string GetPassiveDescription() =>
-        "Heals & Shields given are increased by a portion of <color=green><b>Grass Damage</b></color>.";
+        "Heals & Shields given are increased by a portion of <color=green><b>Grass Damage</b></color>. Healing applies Rejuvenating Burgeon, a heal over time that also grants Armor while it lasts.";
 
     public override string GetSkillDescription() =>
         "Target a tile where a plant has fallen to resurrect it and restore a portion of its Health.";
