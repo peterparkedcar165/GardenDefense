@@ -19,9 +19,11 @@ MonoBehaviour:
   role: 2
   elementalType: 2
   damageType: 1
-  sunCost: 95
+  sunCost: 85
   placementLimit: 0
   tauntValue: 1
+  retainsAggro: 0
+  generatesSun: 0
   category: 0
   skillTree: {fileID: 11400000, guid: b55fd20c624741a49c3958b5e412d10f, type: 2}
   fertilizerPossibleStats: 18000000
@@ -29,7 +31,7 @@ MonoBehaviour:
   baseAttackDamage: 20
   baseMagicPower: 0
   baseAttackSpeed: 0.4
-  baseAttackRange: 2
+  baseAttackRange: 2.5
   baseAttackChargeTime: 0
   baseArmor: 0
   baseMagicArmor: 0
@@ -55,7 +57,6 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
-  baseBonusEffectChance: 0
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -73,6 +74,12 @@ MonoBehaviour:
   baseProjectileSpeed: 2
   baseMaxRange: 0
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
@@ -88,13 +95,12 @@ MonoBehaviour:
   baseSkillDamage: 0
   attackSound:
     clips: []
-  impactSound:
+  hitSound:
     clips: []
   skillSound:
     clips: []
   attackHealMPScaling: 0.05
   path1AttackDamagePerLevel: 2
-  path1ProjectileSpeedPerLevel: 0.4
   path1AttackRangePerLevel: 0.3
   maxMissingHealthPercent: 0.05
   baseGrassConversion: 0.5
@@ -105,8 +111,8 @@ MonoBehaviour:
   path2BurgeonHealPerLevel: 2
   baseBurgeonDuration: 4
   burgeonTickInterval: 0.5
-  burgeonBaseArmor: 16
-  path2BurgeonArmorPerLevel: 8
+  burgeonBaseArmor: 8
+  path2BurgeonArmorPerLevel: 4
   revivalBaseHeal: 40
   revivalHealPerLevel: 20
   skillHealMPScaling: 0.3

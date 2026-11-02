@@ -40,7 +40,9 @@ public class Rhodiola : Shooter
     public float BurgeonHealPerSecond => (RData?.burgeonHealPerSecond ?? 12f) + (RData?.path2BurgeonHealPerLevel ?? 2f) * effectivePath2Level;
     public float BurgeonDuration      => RData?.baseBurgeonDuration  ?? 4f;
     public float BurgeonTickInterval  => RData?.burgeonTickInterval   ?? 0.5f;
-    public float BurgeonArmor         => (RData?.burgeonBaseArmor ?? 16f) + (RData?.path2BurgeonArmorPerLevel ?? 8f) * effectivePath2Level;
+    // burgeon armor scales straight with her grass damage: +100% grass damage doubles it
+    public float BurgeonArmorBase     => (RData?.burgeonBaseArmor ?? 16f) + (RData?.path2BurgeonArmorPerLevel ?? 8f) * effectivePath2Level;
+    public float BurgeonArmor         => BurgeonArmorBase * (1f + grassDamage);
 
     public float MissingHealthPercent => RData?.maxMissingHealthPercent ?? 0.05f;
 
@@ -198,7 +200,7 @@ public class Rhodiola : Shooter
     public override void OnPath1Upgrade(int level)
     {
         baseAttackDamage    = data.baseAttackDamage    + level * (RData?.path1AttackDamagePerLevel    ?? 2f);
-        baseProjectileSpeed = data.baseProjectileSpeed + level * (RData?.path1ProjectileSpeedPerLevel ?? 0.5f);
+        baseProjectileSpeed = data.baseProjectileSpeed;
         baseAttackRange     = data.baseAttackRange     + level * (RData?.path1AttackRangePerLevel     ?? 0.3f);
     }
 
@@ -271,7 +273,7 @@ public class Rhodiola : Shooter
 
     public override string GetPassiveDescription() =>
         $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.\n\n" +
-        $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> while it lasts.";
+        $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>) while it lasts.";
 
     public override string GetSkillDesription() =>
         $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
@@ -282,7 +284,6 @@ public class Rhodiola : Shooter
 
     public override string GetPath1Description(bool details = false)
     {
-        float speedpl = RData?.path1ProjectileSpeedPerLevel ?? 0.5f;
         float dmgpl   = RData?.path1AttackDamagePerLevel    ?? 2f;
         float rangepl = RData?.path1AttackRangePerLevel     ?? 0.3f;
         string desc = details
@@ -290,7 +291,6 @@ public class Rhodiola : Shooter
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase <color=green><b>Base Projectile Speed</b></color> by <color=green><b>{speedpl:F1}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Each projectile heals an additional <color=green><b>{MissingHealthPercent * 100f:F0}%</b></color> of the target's missing health.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
@@ -304,7 +304,7 @@ public class Rhodiola : Shooter
         float armorpl = RData?.path2BurgeonArmorPerLevel    ?? 8f;
         string desc = details
             ? $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\n\n" +
-              $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color> while it lasts."
+              $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>, while it lasts."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +

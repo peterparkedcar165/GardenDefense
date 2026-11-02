@@ -11,7 +11,6 @@ public class RhodiolaData : PlantData
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 2f;
-    public float path1ProjectileSpeedPerLevel = 0.5f;
     public float path1AttackRangePerLevel = 0.3f;
     public float maxMissingHealthPercent = 0.05f;
 
@@ -28,7 +27,7 @@ public class RhodiolaData : PlantData
     public float path2BurgeonHealPerLevel = 2f;
     public float baseBurgeonDuration  = 4f;
     public float burgeonTickInterval  = 0.5f;
-    [Tooltip("armor a plant holds while Rejuvenating Burgeon is on it")]
+    [Tooltip("armor a plant holds while Rejuvenating Burgeon is on it, before her Grass Damage multiplies it (+100% grass damage doubles it)")]
     public float burgeonBaseArmor = 16f;
     public float path2BurgeonArmorPerLevel = 8f;
 

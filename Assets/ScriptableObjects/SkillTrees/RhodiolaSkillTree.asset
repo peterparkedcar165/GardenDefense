@@ -15,13 +15,13 @@ MonoBehaviour:
   steps:
   - nodes:
     - id: node1_attackrange
-      nodeName: Swift Bloom
-      description: Increase <color=green><b>Projectile Speed</b></color> by <color=green><b>0.5</b></color> per level.
+      nodeName: Deep Roots
+      description: Increase <color=green><b>Grass Damage</b></color> by <color=green><b>5%</b></color> per level.
       maxRank: 3
       costPerRank: 1
       effects:
-      - statType: 71
-        valuePerRank: 0.5
+      - statType: 6
+        valuePerRank: 0.05
       unlockId:
     ranksToUnlockNext: 1
   - nodes:
