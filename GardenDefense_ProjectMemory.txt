@@ -1,5 +1,5 @@
 GARDEN DEFENSE - PROJECT MEMORY DUMP
-(compiled from Claude Code's persistent memory files for this project)
+(compiled from the persistent memory files for this project)
 
 NOTE: Several of these entries are old (many 60-140+ days) and are point-in-time
 notes, not live state. Some are already stale against the current code (e.g.
