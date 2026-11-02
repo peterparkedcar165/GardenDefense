@@ -50,6 +50,11 @@ public abstract class Projectile : MonoBehaviour
     private Vector3 _shadowRestLocalOffset;
     private float _visualHeightOffset;
     private float _visualHeightVelocity; // derived each frame for VisualHeading's rotation use
+    // lets a subclass take over the visual's height for a moment (e.g. waterlily's bubble drifting
+    // up right after it appears). while true, Move leaves the height alone and Base travels at full
+    // speed, then the normal convergence below picks up from wherever the subclass left it
+    protected bool holdVisualHeight;
+    protected float VisualHeightOffset { get => _visualHeightOffset; set => _visualHeightOffset = value; }
     // protected rather than private so a subclass with its own post-hit behavior (e.g.
     // LeafRangerProjectile's bounce-redirect) can still search "every live insect I haven't hit
     // yet" using the exact same detection/record-keeping everyone else goes through
@@ -230,7 +235,7 @@ public abstract class Projectile : MonoBehaviour
         float groundSpeed = projectileSpeed;
         float heightRate = 0f;
         float targetHeight = 0f;
-        if (trackedInsect != null)
+        if (trackedInsect != null && !holdVisualHeight)
         {
             targetHeight = trackedInsect.GetAimPoint().y - trackedInsect.transform.position.y;
             float groundDist = Vector3.Distance(transform.position, trackedInsect.transform.position);
@@ -254,7 +259,7 @@ public abstract class Projectile : MonoBehaviour
         // where it is and never touched again instead of being pulled back to 0 - so a shot that
         // was flying up at a bird keeps flying at that same height in a straight line, no sudden
         // change in vertical motion
-        if (trackedInsect != null)
+        if (trackedInsect != null && !holdVisualHeight)
         {
             _visualHeightOffset = Mathf.MoveTowards(_visualHeightOffset, targetHeight, Mathf.Abs(heightRate) * Time.deltaTime);
             _visualHeightVelocity = heightRate;
@@ -265,8 +270,7 @@ public abstract class Projectile : MonoBehaviour
             // correctly reports "no vertical motion" instead of a stale climb/dive rate
             _visualHeightVelocity = 0f;
         }
-        if (visual != transform) visual.position = transform.TransformPoint(_visualRestLocalOffset) + Vector3.up * _visualHeightOffset;
-        if (shadow != transform) shadow.position = transform.TransformPoint(_shadowRestLocalOffset);
+        PlaceVisualAndShadow();
 
         if (UseAutomaticInsectHits) HandleInsectHits();
 
@@ -280,6 +284,14 @@ public abstract class Projectile : MonoBehaviour
             OnBeforeDestroy();
             Destroy(gameObject);
         }
+    }
+
+    // puts Visual at its rest offset plus the current height, and Shadow on the ground under Base.
+    // also called by subclasses that change the height outside Move, so there's no frame at the old spot
+    protected void PlaceVisualAndShadow()
+    {
+        if (visual != transform) visual.position = transform.TransformPoint(_visualRestLocalOffset) + Vector3.up * _visualHeightOffset;
+        if (shadow != transform) shadow.position = transform.TransformPoint(_shadowRestLocalOffset);
     }
 
     // where Visual is actually heading this frame, as opposed to "direction" (Base's own,

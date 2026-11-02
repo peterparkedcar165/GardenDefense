@@ -8,6 +8,14 @@ public class WaterlilyProjectile : Projectile
     private const float bobSpeed = 6f;
     private const float bobAmplitude = 0.12f;
 
+    // the bubble appears above the waterlily, drifts up a little while Base already heads for the
+    // target, then the normal height convergence glides it down onto the target
+    private float _riseTimer;
+    private float _riseSpeed;
+    // the drift never takes more than this share of the expected flight time, so close targets
+    // still leave plenty of flight for the bubble to come back down and land the hit
+    private const float MaxRiseShareOfFlight = 0.3f;
+
     public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
     {
         base.Initialize(target, projectileDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, source);
@@ -17,6 +25,20 @@ public class WaterlilyProjectile : Projectile
         bobPhase1 = 0f;
         bobPhase2 = Mathf.PI * 0.66f;
         bobPhase3 = Mathf.PI * 1.33f;
+
+        WaterlilyData data = source != null ? source.data as WaterlilyData : null;
+        float spawnHeight   = data != null ? data.projectileSpawnHeight   : 0.6f;
+        float riseHeight    = data != null ? data.projectileRiseHeight    : 0.2f;
+        float riseDuration  = Mathf.Max(0.01f, data != null ? data.projectileRiseDuration : 0.25f);
+        _riseSpeed = riseHeight / riseDuration;
+
+        Vector3 aim = trackedInsect != null ? trackedInsect.transform.position : target;
+        float flightTime = projectileSpeed > 0f ? Vector3.Distance(transform.position, aim) / projectileSpeed : 0f;
+        _riseTimer = Mathf.Min(riseDuration, MaxRiseShareOfFlight * flightTime);
+        holdVisualHeight = _riseTimer > 0f;
+
+        VisualHeightOffset = spawnHeight;
+        PlaceVisualAndShadow();
     }
 
     protected override void Update()
@@ -82,6 +104,13 @@ public class WaterlilyProjectile : Projectile
 
     protected override void Move()
     {
+        if (_riseTimer > 0f)
+        {
+            float step = Mathf.Min(Time.deltaTime, _riseTimer);
+            _riseTimer -= Time.deltaTime;
+            VisualHeightOffset += _riseSpeed * step;
+            holdVisualHeight = _riseTimer > 0f;
+        }
         base.Move();
     }
 
