@@ -21,17 +21,20 @@ public class PlantData : ScriptableObject
     }
     public string plantName;
     public string displayName;
-    [FormerlySerializedAs("cultivar")]
-    public PlantFamily family;
+    public PlantRole role;
     public ElementalType elementalType;
     public DamageType damageType;
     public int sunCost;
     // max number of this plant that can be alive on the field at once. 0 = unlimited
     public int placementLimit = 0;
     // "tickets" this plant holds in an insect's weighted-random target roll (see
-    // Insect.FindTauntWeightedPlantInRange / Plant.tauntValue) - defaults to its family's
-    // baseline (3, or 1/6 for Verdance/Ironbark) but is author-overridable per plant from here
+    // Insect.FindTauntWeightedPlantInRange / Plant.tauntValue), default 3, set per plant here
     public float tauntValue = 3f;
+    // insects that start attacking this plant keep attacking it while it stays above
+    // IronbarkAggroEffect.HealthThreshold health (see Insect.TryApplyIronbarkAggro)
+    public bool retainsAggro;
+    // tags plants that produce sun, wasps prefer these as targets
+    public bool generatesSun;
 
     // dev-only label, never surfaced to players anywhere - just a way to tag which plants are
     // "elder" tier (currently Begonia and Carrot) versus the normal roster, for our own reference
@@ -44,7 +47,7 @@ public class PlantData : ScriptableObject
     public SkillTreeData skillTree;
 
     // extra stats THIS plant specifically can offer through fertilizers, on top of whatever the
-    // generic pool / elemental presence / family already grant automatically. the picker only
+    // generic pool / elemental presence already grant automatically. the picker only
     // lists stats not already covered by those automatic rules (see FertilizerStatRules) so this
     // never ends up duplicating something the plant would already offer anyway
     [Header("Fertilizer")]
@@ -189,16 +192,8 @@ public class PlantData : ScriptableObject
         _                   => $"<b>{t} Damage</b>"
     };
 
-    public static string FamilyTag(PlantFamily f) => f switch
-    {
-        PlantFamily.Photosynthesis => "<color=#FFD700>Photosynthesis</color>",
-        PlantFamily.Verdance       => "<color=#FF6B81>Verdance</color>",
-        PlantFamily.Symbiosis      => "<color=#20B2AA>Symbiosis</color>",
-        PlantFamily.Ironbark       => "<color=#A9A9A9>Ironbark</color>",
-        PlantFamily.Thorn          => "<color=#DC143C>Thorn</color>",
-        PlantFamily.Wither         => "<color=#8B008B>Wither</color>",
-        PlantFamily.Kindred        => "<color=#6495ED>Kindred</color>",
-        _                          => f.ToString()
-    };
+    // passive line shared by every plant with retainsAggro
+    public static string RetainAggroLine() =>
+        $"While over <color=green><b>{IronbarkAggroEffect.HealthThreshold * 100f:F0}%</b></color> Health, insects that initiate an Attack on this plant will retain aggro.";
 
 }

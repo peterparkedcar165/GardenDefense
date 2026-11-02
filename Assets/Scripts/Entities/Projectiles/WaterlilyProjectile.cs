@@ -50,14 +50,9 @@ public class WaterlilyProjectile : Projectile
 
         if (waterlily != null)
         {
-            waterlily.ApplyStackingSlow(insect);
+            waterlily.ApplyStackingSoak(insect);
 
-            bool path1Maxed = waterlily.IsPath1Maxed;
-            // at max level, splash damage also counts as a Projectile attack - otherwise it
-            // couldn't proc Floral Glow/Ablaze at all now that those require DamageTag.Projectile
-            DamageTag[] splashTags = path1Maxed
-                ? new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage, DamageTag.Projectile }
-                : new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage };
+            DamageTag[] splashTags = { DamageTag.AoE, DamageTag.PassiveDamage };
 
             List<Insect> splashTargets = new List<Insect>();
             foreach (Insect splashedInsect in Insect.allInsects)
@@ -67,9 +62,9 @@ public class WaterlilyProjectile : Projectile
                     splashTargets.Add(splashedInsect);
             }
 
-            // splash only hits the nearest N insects (data-driven, tunable per plant) - the
+            // splash only hits the nearest N insects (2 base, +1 per attack path level), the
             // main target above is unaffected by this cap, it always takes full damage
-            int maxSplashTargets = (waterlily.data as WaterlilyData)?.splashMaxExtraTargets ?? 3;
+            int maxSplashTargets = waterlily.SplashTargets;
             if (splashTargets.Count > maxSplashTargets)
             {
                 splashTargets.Sort((a, b) =>
@@ -80,20 +75,7 @@ public class WaterlilyProjectile : Projectile
             foreach (Insect splashedInsect in splashTargets)
             {
                 splashedInsect.Damage(waterlily.splashDamage, damageType, elementalType, source, true, splashTags);
-                waterlily.ApplyStackingSlow(splashedInsect);
-
-                if (path1Maxed)
-                    Entity.RaiseOnHit(new EntityEventData
-                    {
-                        target = splashedInsect,
-                        source = source,
-                        position = splashedInsect.transform.position,
-                        damage = waterlily.splashDamage,
-                        damageType = damageType,
-                        elementalType = elementalType,
-                        tags = splashTags,
-                        effectivenessOverride = waterlily.splashOnHitEffectiveness
-                    });
+                waterlily.ApplyStackingSoak(splashedInsect);
             }
         }
     }

@@ -21,7 +21,7 @@ public abstract class MulchData : ScriptableObject
     public MulchTier tier;
 
     [Tooltip("relative weight when rolling a draft of this tier. higher rolls more often. " +
-        "mulches scoped to one plant or family should usually sit lower than board-wide ones, " +
+        "mulches scoped to one plant should usually sit lower than board-wide ones, " +
         "since they do more but apply to less")]
     public float rollWeight = 1f;
 
@@ -35,4 +35,10 @@ public abstract class MulchData : ScriptableObject
 
     // builds the runtime behavior this mulch grants once picked. called once per pick
     public abstract MulchEffect CreateEffect();
+
+    // text shown on the mulch's card - override per subclass to interpolate its own tunables
+    // instead of hardcoding numbers that can drift out of sync with the actual values. the base
+    // description field still exists as a fallback/author-time placeholder for anything not yet
+    // overridden
+    public virtual string GetDescription() => description;
 }

@@ -3,21 +3,14 @@ using UnityEngine;
 
 // one "at least one of these" requirement - a bare array can't nest in the Inspector (no
 // array-of-arrays), so each OR group needs this thin wrapper. a single-entry group behaves as a
-// plain AND requirement for that one element/family/plant - see MulchCondition for how groups
-// combine. excludedPlants (element/family groups only) lets a specific plant NOT count toward
-// satisfying the group even though its element/family matches - e.g. a Grass requirement that
+// plain AND requirement for that one element/plant - see MulchCondition for how groups
+// combine. excludedPlants (element groups only) lets a specific plant NOT count toward
+// satisfying the group even though its element matches - e.g. a Grass requirement that
 // Rhodiola shouldn't be able to satisfy on her own, since she doesn't deal direct damage
 [System.Serializable]
 public class ElementGroup
 {
     public ElementalType[] anyOf;
-    public PlantData[] excludedPlants;
-}
-
-[System.Serializable]
-public class FamilyGroup
-{
-    public PlantFamily[] anyOf;
     public PlantData[] excludedPlants;
 }
 
@@ -90,7 +83,7 @@ public class PlantGroup
 // requiredPlantGroups' QualifiedPlant entries) live field state and persistent skill tree saves -
 // so "this plant is in the loadout" and "this plant has actually unlocked the specific mechanic
 // the mulch cares about" can be required separately. unlike FertilizerData's
-// targetFamilies/targetElementalTypes (an OR set used for a different purpose entirely - who an
+// targetElementalTypes (an OR set used for a different purpose entirely - who an
 // already-active fertilizer's bonus applies to), this is AND-of-ORs: every group listed must have
 // at least one match (AND between groups), and within one group only a single
 // match is needed (OR within that group). e.g. to require "Fire AND Grass", use two single-entry
@@ -101,35 +94,38 @@ public class MulchCondition
 {
     [Tooltip("every group must have at least one match (AND between groups, OR within a group). " +
         "leave empty to not require any")]
-    public FamilyGroup[] requiredFamilyGroups;
-    [Tooltip("every group must have at least one match (AND between groups, OR within a group). " +
-        "leave empty to not require any")]
     public ElementGroup[] requiredElementGroups;
     [Tooltip("every group must have at least one of its specific plants present and satisfying " +
         "its own optional unlock/maxed-path qualifier (AND between groups, OR within a group). " +
         "leave empty to not require any")]
     public PlantGroup[] requiredPlantGroups;
-    [Tooltip("none of these families may be present in the loadout")]
-    public PlantFamily[] excludedFamilies;
     [Tooltip("0 means no minimum")]
     public int minWave;
     [Tooltip("0 means no maximum")]
     public int maxWave;
 
+    [Tooltip("escape hatch for a true top-level OR: this condition is met if its own " +
+        "groups/wave/exclusions above all pass, OR if ANY one of these alternatives is fully " +
+        "satisfied on its own (each evaluated completely independently, including its own " +
+        "wave range) - e.g. Critical Rot's 'Grass+Fire/Ice/Poison OR Poison Shroom OR Stargazer' " +
+        "is one primary AND-of-ORs plus one alternative PlantGroup")]
+    public MulchCondition[] orAlternatives;
+
     public bool IsEligible(List<PlantData> loadout, int currentWave)
+    {
+        if (IsEligibleIgnoringAlternatives(loadout, currentWave)) return true;
+
+        if (orAlternatives != null)
+            foreach (MulchCondition alt in orAlternatives)
+                if (alt != null && alt.IsEligible(loadout, currentWave)) return true;
+
+        return false;
+    }
+
+    private bool IsEligibleIgnoringAlternatives(List<PlantData> loadout, int currentWave)
     {
         if (minWave > 0 && currentWave < minWave) return false;
         if (maxWave > 0 && currentWave > maxWave) return false;
-
-        if (requiredFamilyGroups != null)
-            foreach (FamilyGroup group in requiredFamilyGroups)
-            {
-                if (group == null || group.anyOf == null || group.anyOf.Length == 0) continue;
-                bool anyMatch = false;
-                foreach (PlantFamily family in group.anyOf)
-                    if (LoadoutHasFamily(loadout, family, group.excludedPlants)) { anyMatch = true; break; }
-                if (!anyMatch) return false;
-            }
 
         if (requiredElementGroups != null)
             foreach (ElementGroup group in requiredElementGroups)
@@ -151,22 +147,7 @@ public class MulchCondition
                 if (!anyMatch) return false;
             }
 
-        if (excludedFamilies != null)
-            foreach (PlantFamily family in excludedFamilies)
-                if (LoadoutHasFamily(loadout, family, null)) return false;
-
         return true;
-    }
-
-    private static bool LoadoutHasFamily(List<PlantData> loadout, PlantFamily family, PlantData[] excludedPlants)
-    {
-        foreach (PlantData data in loadout)
-        {
-            if (data == null || data.family != family) continue;
-            if (IsExcluded(data, excludedPlants)) continue;
-            return true;
-        }
-        return false;
     }
 
     private static bool LoadoutHasElement(List<PlantData> loadout, ElementalType element, PlantData[] excludedPlants)

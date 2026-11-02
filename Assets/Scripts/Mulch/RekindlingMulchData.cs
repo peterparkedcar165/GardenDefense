@@ -9,4 +9,9 @@ public class RekindlingMulchData : MulchData
     public float extendPerHit = 2f;
 
     public override MulchEffect CreateEffect() => new RekindlingMulchEffect(this);
+
+    public override string GetDescription() =>
+        $"Reduce base <b><color=orange>Burn</color></b> duration by <b><color=green>{durationReductionPercent * 100f:F0}%</color></b>. " +
+        $"Dealing <b><color=green>Grass Damage</color></b> against a <b><color=orange>Burning</color></b> target extends the " +
+        $"<b><color=orange>Burn</color></b> by <b><color=green>{extendPerHit:F0}</color></b> seconds.";
 }

@@ -7,4 +7,7 @@ public class RejuvenatorMulchData : MulchData
     public float effectivenessBonus = 0.35f;
 
     public override MulchEffect CreateEffect() => new RejuvenatorMulchEffect(this);
+
+    public override string GetDescription() =>
+        $"<b><color=#FF6B81>Regeneration</color></b> effects are <b><color=green>{effectivenessBonus * 100f:F0}%</color></b> more effective.";
 }

@@ -80,7 +80,10 @@ public abstract class FlyingInsect : Insect
         if (effect is HardCrowdControl and not BubblePrisonEffect && !blockedByCryotolerance)
         {
             float groundDuration = effect is KnockUpEffect ? 5f : effect.duration + 4f;
-            base.ApplyEffect(new GroundedEffect(this, groundDuration, 1, effect.source));
+            // never cut a longer ground that is already running short (e.g. Waterlily's Soaked)
+            GroundedEffect existingGround = GetEffect<GroundedEffect>();
+            if (existingGround == null || existingGround.duration < groundDuration)
+                base.ApplyEffect(new GroundedEffect(this, groundDuration, 1, effect.source));
         }
         base.ApplyEffect(effect);
     }

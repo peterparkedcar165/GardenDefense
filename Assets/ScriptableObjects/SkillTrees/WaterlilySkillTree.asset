@@ -38,7 +38,7 @@ MonoBehaviour:
   - nodes:
     - id: node3_slowcap
       nodeName: Deepening Chill
-      description: Increase <color=#87CEEB><b>Slow</b></color> stack cap by <color=green><b>1</b></color> per level.
+      description: Increase <color=#4FC3F7><b>Soaked</b></color> stack cap by <color=green><b>1</b></color> per level.
       maxRank: 3
       costPerRank: 1
       effects:

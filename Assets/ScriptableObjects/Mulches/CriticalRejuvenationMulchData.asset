@@ -27,3 +27,4 @@ MonoBehaviour:
     excludedFamilies: []
     minWave: 0
     maxWave: 0
+  healCritChanceBonus: 0.15

@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 7a5cb8d87f859974fbd7eb9e4b83c117, type: 3}
   plantName: NeriumOleander
   displayName: Oleander
-  family: 1
+  role: 2
   elementalType: 3
   damageType: 0
   sunCost: 85
@@ -24,7 +24,7 @@ MonoBehaviour:
   tauntValue: 1
   category: 0
   skillTree: {fileID: 11400000, guid: bc9405760b025af7a815db5378d93c3d, type: 2}
-  fertilizerPossibleStats: 
+  fertilizerPossibleStats: 18000000
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0

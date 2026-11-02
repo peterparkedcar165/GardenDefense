@@ -16,20 +16,22 @@ MonoBehaviour:
   icon: {fileID: -7978883999570900537, guid: 1e110a04f44af82408fc85aa82f0e30e, type: 3}
   plantName: Sunflower
   displayName: Sunflower
-  family: 0
+  role: 1
   elementalType: 0
   damageType: 1
   sunCost: 100
   placementLimit: 0
   tauntValue: 3
+  retainsAggro: 0
+  generatesSun: 1
   category: 0
   skillTree: {fileID: 11400000, guid: 7dc2623ca4fd4aeca582b4a4a604da71, type: 2}
-  fertilizerPossibleStats: 
+  fertilizerPossibleStats: 30000000
   baseMaxHealth: 200
-  baseAttackDamage: 32
+  baseAttackDamage: 42
   baseMagicPower: 0
   baseAttackSpeed: 0.3
-  baseAttackRange: 3
+  baseAttackRange: 2.5
   baseAttackChargeTime: 1
   baseArmor: 0
   baseMagicArmor: 0

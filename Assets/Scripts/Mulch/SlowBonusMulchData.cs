@@ -7,4 +7,7 @@ public class SlowBonusMulchData : MulchData
     public float flatBonus = 0.1f;
 
     public override MulchEffect CreateEffect() => new SlowBonusMulchEffect(this);
+
+    public override string GetDescription() =>
+        $"Increase every slowing effect's Movement Speed reduction by a flat <b><color=green>{flatBonus:F2}</color></b>.";
 }

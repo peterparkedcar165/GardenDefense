@@ -9,4 +9,8 @@ public class GreedyGrowthMulchData : MulchData
     public float leakDamageBonus = 1f;
 
     public override MulchEffect CreateEffect() => new GreedyGrowthMulchEffect(this);
+
+    public override string GetDescription() =>
+        $"Increase <b><color=#FFD700>Sun Yield</color></b> from insect kills by <b><color=green>{sunYieldBonus * 100f:F0}%</color></b>. " +
+        $"Increase <b><color=red>Leak Damage</color></b> by <b><color=red>{leakDamageBonus * 100f:F0}%</color></b>.";
 }

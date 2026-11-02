@@ -6,9 +6,13 @@ using System.Collections.Generic;
 // plant-only, like every other mulch, so an insect healing another insect is never affected
 public class CriticalRejuvenationMulchEffect : MulchEffect
 {
+    private readonly CriticalRejuvenationMulchData typedData;
     private readonly List<Plant> affected = new List<Plant>();
 
-    public CriticalRejuvenationMulchEffect(CriticalRejuvenationMulchData data) : base(data) {}
+    public CriticalRejuvenationMulchEffect(CriticalRejuvenationMulchData data) : base(data)
+    {
+        typedData = data;
+    }
 
     public override void Activate()
     {
@@ -20,7 +24,10 @@ public class CriticalRejuvenationMulchEffect : MulchEffect
     {
         foreach (Plant plant in affected)
             if (plant != null && plant.IsAlive)
+            {
                 plant.RemoveHealCanCrit();
+                plant.criticalHealChanceAdder -= typedData.healCritChanceBonus;
+            }
         affected.Clear();
     }
 
@@ -30,6 +37,7 @@ public class CriticalRejuvenationMulchEffect : MulchEffect
     {
         if (plant == null || !plant.IsAlive || affected.Contains(plant)) return;
         plant.AddHealCanCrit();
+        plant.criticalHealChanceAdder += typedData.healCritChanceBonus;
         affected.Add(plant);
     }
 }

@@ -257,15 +257,22 @@ public class BogIris : Shooter
         // hidden, undocumented, skill charges faster per level of rain exposure
         int rainLevel = GetEffect<RainExposedEffect>()?.level ?? 0;
         skillChargeRateAdder = 0.2f * rainLevel;
+
+        // sunYieldMultiplier is never reset by base.UpdateStats() (unlike armor, which is
+        // recomputed fresh from scratch every frame) - adding to it directly here would
+        // permanently accumulate every single frame instead of just this one. add before
+        // base.UpdateStats() and subtract right after
+        bool fruitfulBloomActive = SkillTreeManager.HasUnlock(this, FruitfulBloomUnlock) && _isOpen;
+        float sunYieldBonus = fruitfulBloomActive ? FruitfulBloomSunYieldBonus : 0f;
+        sunYieldMultiplier += sunYieldBonus;
+
         base.UpdateStats();
+
+        sunYieldMultiplier -= sunYieldBonus;
         maxHealth += PassiveMaxHealthBonus;
         if (IsPath2Maxed && !_isOpen)
         {
             armor += (int)ClosedArmorBonus;
-        }
-        if (SkillTreeManager.HasUnlock(this, FruitfulBloomUnlock) && _isOpen)
-        {
-            sunYieldMultiplier += FruitfulBloomSunYieldBonus;
         }
     }
 
@@ -308,11 +315,13 @@ public class BogIris : Shooter
             ? $"Every <color=green><b>{SunInterval:F1}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
               $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>[({(BogData?.baseRegenPercent ?? 0.02f) * 100f:F0}%) + ({regenpl * 100f:F0}%/Lvl.)]</b></color> Max Health per second (doubled when out of combat).\n\n" +
               $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>[({BogData?.baseOpenBonusSun ?? 2}) + ({sunpl}/Lvl.)]</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
-              $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>[({(BogData?.baseReduceChance ?? 0.35f):F2}) + ({reducepl:F2}/Lvl.)]</b></color> seconds on hit."
+              $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>[({(BogData?.baseReduceChance ?? 0.35f):F2}) + ({reducepl:F2}/Lvl.)]</b></color> seconds on hit.\n\n" +
+              PlantData.RetainAggroLine()
             : $"Every <color=green><b>{SunInterval:F1}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
               $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>{RegenPercentPerSecond * 100f:F0}%</b></color> Max Health per second (doubled to <color=red><b>{RegenPercentPerSecond * 200f:F0}%</b></color> when out of combat).\n\n" +
               $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>{OpenBonusSun}</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
-              $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>{ReduceChance:F2}</b></color> seconds on hit.";
+              $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>{ReduceChance:F2}</b></color> seconds on hit.\n\n" +
+              PlantData.RetainAggroLine();
         string stateLine = $"<b><color=#4FC3F7>{(_isOpen ? "OPEN" : "CLOSED")}</color></b>";
         return $"Passive:\n\n{stateLine}\n\n{desc}\n\n" +
                $"Increase regeneration by <color=red><b>{regenpl * 100f:F0}%</b></color> per level. [<color=red><b>+{regenpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +

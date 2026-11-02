@@ -946,14 +946,14 @@ public abstract class Insect : Entity, IAttackable
 
     // per-species targeting preference: multiplies a candidate plant's tauntValue before the
     // weighted roll below. 1 (no preference) for everyone except species that override it, e.g.
-    // Wasp favoring Photosynthesis plants
+    // Wasp favoring sun generating plants
     protected virtual float GetTauntAffinity(Plant plant) => 1f;
 
     private readonly List<(Plant plant, float tickets)> _tauntCandidates = new List<(Plant plant, float tickets)>();
 
     // every reachable plant in range enters a weighted lottery: its ticket count is
-    // tauntValue * GetTauntAffinity, so family (Verdance low, Ironbark high) and species
-    // preference (Wasp -> Photosynthesis) both shift the odds without ever being a hard
+    // tauntValue * GetTauntAffinity, so per plant tauntValue and species
+    // preference (Wasp -> sun generators) both shift the odds without ever being a hard
     // guarantee - replaces the old pure-nearest selection
     private IAttackable FindTauntWeightedPlantInRange()
     {
@@ -986,12 +986,12 @@ public abstract class Insect : Entity, IAttackable
         return _tauntCandidates[_tauntCandidates.Count - 1].plant; // floating point fallback
     }
 
-    // Ironbark family passive: forces this insect to keep attacking the given plant (if it's an
-    // Ironbark-family plant above the health threshold) instead of retargeting elsewhere later
+    // retained aggro passive: forces this insect to keep attacking the given plant (if its data
+    // has retainsAggro and it is above the health threshold) instead of retargeting elsewhere later
     private void TryApplyIronbarkAggro(IAttackable candidate)
     {
         if (candidate is not Plant plant || !plant.IsAlive || plant.data == null) return;
-        if (plant.data.family != PlantFamily.Ironbark) return;
+        if (!plant.data.retainsAggro) return;
         if (plant.health <= plant.maxHealth * IronbarkAggroEffect.HealthThreshold) return;
         ApplyEffect(new IronbarkAggroEffect(this, plant, plant));
     }

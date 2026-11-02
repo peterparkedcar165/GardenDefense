@@ -16,15 +16,17 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 45a5652c854f11244b9618c4866be32d, type: 3}
   plantName: Kelp
   displayName: Kelp
-  family: 0
+  role: 2
   elementalType: 5
   damageType: 0
   sunCost: 95
   placementLimit: 0
   tauntValue: 3
+  retainsAggro: 0
+  generatesSun: 1
   category: 0
   skillTree: {fileID: 0}
-  fertilizerPossibleStats: 
+  fertilizerPossibleStats: 30000000
   baseMaxHealth: 200
   baseAttackDamage: 35
   baseMagicPower: 0

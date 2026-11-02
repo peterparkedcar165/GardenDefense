@@ -58,7 +58,7 @@ public static class TutorialContent
     {
         new TutorialPage("<b>Soldier Ants</b> are tougher ants that take reduced damage from <color=#A0522D><b>Physical</b></color> attacks, but also <b><color=green>Grass</color></b> damage!"),
         new TutorialPage("They're also aggressive, but only a little bit...\n\nThey'll attack the closest plant to them, then continue onto their path!"),
-        new TutorialPage("However, since I am from the <color=#A9A9A9>Ironbark</color> family, I can keep them distracted while others tear them down!"),
+        new TutorialPage("However, once they start attacking me, they can't look away until I'm badly hurt. I can keep them distracted while others tear them down!"),
     };
 
     // triggers the moment the player enters level 2's setup phase (the initial pre-level

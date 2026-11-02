@@ -31,7 +31,7 @@ public class CactusData : PlantData
         $"Slams all insects in range, dealing {DamageTypeLabel(damageType)} plus a % of its Armor. Applies <color=#A0522D>Punctured</color>.";
 
     public override string GetPassiveDescription() =>
-        "<color=#A0522D>Punctured</color> reduces Attack Damage instead of dealing bonus damage. Being shielded taunts nearby insects.";
+        "<color=#A0522D>Punctured</color> reduces Attack Damage instead of dealing bonus damage. Being shielded taunts nearby insects.\n\n" + RetainAggroLine();
 
     public override string GetSkillDescription() =>
         "Enters a countering stance and shields itself for a duration, gaining Physical Resistance and reflecting melee damage back at attackers.";

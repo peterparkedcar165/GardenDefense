@@ -222,7 +222,8 @@ public class Cactus : Aura
     public override string GetPassiveDescription() =>
         $"<color=purple><b>[Punctured]</b></color>: Reduce <color=green><b>Attack Damage</b></color> by <color=red><b>1</b></color>, up to <color=red><b>10</b></color>.\n\n" +
         $"Whenever the {GetName()} is protected by a <color=#00CED1>Shield</color>, he taunts insects within his attack range.\n\n" +
-        $"Taking <color=green>Melee</color> <color=#A0522D>Physical Damage</color> refunds <color=green><b>{CooldownRefundOnHit:F1}s</b></color> of his attack cooldown.";
+        $"Taking <color=green>Melee</color> <color=#A0522D>Physical Damage</color> refunds <color=green><b>{CooldownRefundOnHit:F1}s</b></color> of his attack cooldown.\n\n" +
+        PlantData.RetainAggroLine();
 
     public override string GetSkillDesription() =>
         $"The {GetName()} enters a <color=green><b>Countering</b></color> stance for <color=green><b>{SkillDuration:F0}s</b></color>, and gains a <color=#00CED1><b>Shield</b></color> for <color=grey><b>{ShieldAmount:F0}</b></color> [<color=#FFB6C1><b>+{magicPower * ShieldMagicPowerScaling:F0}</b></color>] health. " +

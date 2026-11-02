@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 8d3eeae861e27694ab506d918cc5726a, type: 3}
   plantName: Carrot
   displayName: Carrot
-  family: 7
+  role: 1
   elementalType: 2
   damageType: 0
   sunCost: 185
@@ -24,7 +24,7 @@ MonoBehaviour:
   tauntValue: 3
   category: 1
   skillTree: {fileID: 0}
-  fertilizerPossibleStats: 26000000
+  fertilizerPossibleStats: 2600000017000000
   baseMaxHealth: 300
   baseAttackDamage: 156
   baseMagicPower: 0

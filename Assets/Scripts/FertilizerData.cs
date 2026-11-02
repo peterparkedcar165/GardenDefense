@@ -8,8 +8,6 @@ public class FertilizerData : ScriptableObject
     public FertilizerStat[] stats;
     public Sprite icon;
     public ElementalType[] targetElementalTypes;
-    [FormerlySerializedAs("targetCultivars")]
-    public PlantFamily[] targetFamilies;
     public bool appliesToAll;
     public FertilizerTier tier;
 }

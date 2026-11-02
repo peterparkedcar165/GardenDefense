@@ -1,9 +1,9 @@
-// Ironbark family passive: while an Ironbark-family plant remains above HealthThreshold, any
-// insect that targets it (High or Medium aggressivity) is forced to keep attacking it instead
-// of retargeting elsewhere. extends TauntEffect so it's picked up by the same taunter-checking
-// logic in Insect.target, but self-removes once the plant drops to or below the threshold,
-// letting the insect target normally again. generalizes what used to be Acorn Sprout's own
-// DeliciousAcornEffect (now removed, redundant since Acorn Sprout is itself Ironbark family)
+// retained aggro passive (PlantData.retainsAggro, currently Acorn Knight, Cactus and Bog Iris):
+// while the plant remains above HealthThreshold, any insect that targets it (High or Medium
+// aggressivity) is forced to keep attacking it instead of retargeting elsewhere. extends
+// TauntEffect so it's picked up by the same taunter checking logic in Insect.target, but
+// self removes once the plant drops to or below the threshold, letting the insect target
+// normally again. kept the old Ironbark name from when this was a family passive
 public class IronbarkAggroEffect : TauntEffect
 {
     public const float HealthThreshold = 0.25f;

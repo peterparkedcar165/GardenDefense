@@ -7,6 +7,7 @@ public class BubblePrison : MonoBehaviour
     private float trapRadius;
     private float duration;
     private float damagePerSecond;
+    private float damageTakenBonus;
     private Plant source;
     private Vector3 targetPosition;
     private Transform visual;
@@ -16,12 +17,13 @@ public class BubblePrison : MonoBehaviour
     private const float arcRiseEnd = 0.5f;
     private const float spawnScaleDuration = 0.3f;
 
-    public void Initialize(Vector3 target, float trapRadius, float duration, float damagePerSecond, Plant source)
+    public void Initialize(Vector3 target, float trapRadius, float duration, float damagePerSecond, float damageTakenBonus, Plant source)
     {
         this.targetPosition = target;
         this.trapRadius = trapRadius;
         this.duration = duration;
         this.damagePerSecond = damagePerSecond;
+        this.damageTakenBonus = damageTakenBonus;
         this.source = source;
         visual = transform.Find("Visual");
         int ignoreLayer = LayerMask.NameToLayer("Ignore Raycast");
@@ -94,8 +96,10 @@ public class BubblePrison : MonoBehaviour
             {
                 insect.Damage(damagePerSecond, source.damageType, source.elementalType, source, true,
                     new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage });
-                bool rising = source is Waterlily wl && wl.IsPath3Maxed;
-                insect.ApplyEffect(new BubblePrisonEffect(insect, duration, 1, source, rising));
+                // skill max bonus: insects rise while trapped (fall damage when it ends) and the
+                // pop leaves everything inside at full Soaked stacks
+                bool maxed = source is Waterlily wl && wl.IsPath3Maxed;
+                insect.ApplyEffect(new BubblePrisonEffect(insect, duration, 1, source, maxed, damageTakenBonus, maxed));
             }
         }
     }

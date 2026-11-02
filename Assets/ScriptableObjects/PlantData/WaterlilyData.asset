@@ -16,19 +16,21 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: b7a95b314b85b1f48a778c916f6762ef, type: 3}
   plantName: Waterlily
   displayName: Waterlily
-  family: 5
+  role: 2
   elementalType: 1
   damageType: 1
   sunCost: 100
   placementLimit: 0
   tauntValue: 3
+  retainsAggro: 0
+  generatesSun: 0
   category: 0
   skillTree: {fileID: 11400000, guid: d54d18bd8ced4e84a0d897668f0796d8, type: 2}
-  fertilizerPossibleStats: 
+  fertilizerPossibleStats: 21000000
   baseMaxHealth: 200
-  baseAttackDamage: 14
+  baseAttackDamage: 33
   baseMagicPower: 0
-  baseAttackSpeed: 0.5
+  baseAttackSpeed: 0.3
   baseAttackRange: 4
   baseAttackChargeTime: 0
   baseArmor: 0
@@ -69,13 +71,14 @@ MonoBehaviour:
   baseIceDamage: 0
   baseLightEmissionRange: 0
   baseMinionDamage: 0
-  baseProjectileSpeed: 2.6
-  baseMaxRange: 20
+  baseProjectileSpeed: 3.2
+  baseMaxRange: 24
   basePiercing: 0
   baseProjectileHitboxRadius: 0.1
   baseProjectileVisualHitboxRadius: 0.1
   projectileEmitLight: 0
   projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
   projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -105,17 +108,21 @@ MonoBehaviour:
   skillSound:
     clips: []
   baseAoERange: 1.5
-  baseSplashDamage: 9
-  baseBubblePrisonImpactDamage: 42
-  splashMaxExtraTargets: 3
+  splashDamageRatio: 0.5
+  baseBubblePrisonImpactDamage: 20
+  splashMaxExtraTargets: 2
+  maxSoakStacks: 4
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.2
-  path1AttackSpeedPerLevel: 0.1
+  path1SplashTargetsPerLevel: 1
+  maxSoakStunDuration: 0.5
   path2AoERangePerLevel: 0.1
-  path2SplashDamageScalingPerLevel: 0.05
-  baseSlowDuration: 6
-  path2MaxSlowStacksPerLevel: 1
-  splashOnHitEffectiveness: 0.33
-  path3BubbleDamagePerLevel: 12
+  baseSoakDuration: 4
+  path2SoakDurationPerLevel: 0.5
+  soakDurationMP: 1
+  baseBubbleDamageTaken: 0.08
+  path3DamageTakenPerLevel: 0.04
+  bubbleDamageTakenMP: 0.05
+  bubbleDurationMP: 2
   path3SkillDurationPerLevel: 2
   path3RadiusPerLevel: 0.15

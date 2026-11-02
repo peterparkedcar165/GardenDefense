@@ -97,6 +97,10 @@ public abstract class Entity : MonoBehaviour
     // public float baseBonusEffectChance;
     public float baseFireDamage, baseWaterDamage, baseGrassDamage, baseWindDamage, basePoisonDamage, baseIceDamage;
     public float baseCriticalChance, baseCriticalDamage;
+    // hidden from the stat panel on purpose (see StatsPanelTooltip, which lists stats by hand) -
+    // stack additively with criticalChance itself rather than getting their own multiplier
+    // pipeline, since nothing needs one yet (Critical Rejuvenation/Critical Rot mulches)
+    public float baseCriticalHealChance, baseCriticalDotChance, baseCriticalReactionChance;
     public float baseMinimumDamage = 0.8f, baseMaximumDamage = 1.2f;
     public float baseDotResistance, baseDotDamage, baseFallDamageResistance;
     public float baseelementalAffinity;
@@ -139,15 +143,6 @@ public abstract class Entity : MonoBehaviour
         // fast-attacking sources (Snowdrop, Stargazer) deal reduced on-hit effect damage per hit,
         // so their overall on-hit output doesn't scale with attack speed the way base damage does
         float effectiveness = data.effectivenessOverride ?? data.source.onHitEffectiveness;
-
-        // Symbiosis/Wither family passive: attacks have a 50% chance to reduce this plant's own
-        // skill cooldown, scaled by on-hit effectiveness same as any other on-hit bonus. this
-        // only reaches HandleOnHitEffects at all when DamageTag.Attack is present (see
-        // Entity.Damage's OnHit?.Invoke gate), so no separate Attack-tag check is needed here
-        if (data.source is Plant attackerPlant && attackerPlant.data != null
-            && (attackerPlant.data.family == PlantFamily.Symbiosis || attackerPlant.data.family == PlantFamily.Wither)
-            && Random.value < 0.5f)
-            attackerPlant.ReduceSkillCooldown(1f * effectiveness);
 
         // Bird of Paradise: Talon Focus stack gain plus its per-stack on-hit bonus damage (and,
         // at Path1 max with full stacks, the percent-current-health finisher). not gated to any
@@ -199,6 +194,7 @@ public abstract class Entity : MonoBehaviour
     // public float bonusEffectChance; (disabled, see baseBonusEffectChance)
     public float fireDamage, waterDamage, grassDamage, windDamage, poisonDamage, iceDamage;
     public float criticalChance, criticalDamage;
+    public float criticalHealChance, criticalDotChance, criticalReactionChance;
     public float minimumDamage, maximumDamage;
     public float dotResistance, dotDamage, fallDamageResistance;
     public float elementalAffinity;
@@ -209,6 +205,9 @@ public abstract class Entity : MonoBehaviour
     public float counterDamage;
     public float tenacity;
     public float debuffGivenDuration, buffGivenDuration, buffReceivedDuration, debuffReceivedDuration;
+    // extra damage this entity takes from every source, e.g. 0.08 = +8%. never recomputed by
+    // UpdateStats, effects add it in OnApply and take the same amount back in OnExpire (Bubble Prison)
+    public float damageTakenBonus;
     public float dotDuration, regenerationDuration, shieldDuration, sunGenerationCooldown;
     public float burnDurationBonus;   // multiplies the duration of Burns this entity causes (e.g. Stargazer)
     public float baseMinionDamage;    // the plant's inherent minion damage bonus
@@ -246,6 +245,7 @@ public abstract class Entity : MonoBehaviour
     // public float bonusEffectChanceAdder; (disabled, see baseBonusEffectChance)
     public float fireDamageAdder, waterDamageAdder, grassDamageAdder, windDamageAdder, poisonDamageAdder, iceDamageAdder;
     public float criticalChanceAdder, criticalDamageAdder;
+    public float criticalHealChanceAdder, criticalDotChanceAdder, criticalReactionChanceAdder;
     public float minimumDamageAdder, maximumDamageAdder;
     public float dotResistanceAdder, dotDamageAdder, fallDamageResistanceAdder;
     public float elementalAffinityAdder;
@@ -356,6 +356,9 @@ public abstract class Entity : MonoBehaviour
         maximumDamage = baseMaximumDamage + maximumDamageAdder;
         criticalChance = (baseCriticalChance + criticalChanceAdder + (baseCriticalChance * criticalChanceMultiplier)) * criticalChanceTotalMultiplier;
         criticalDamage = (baseCriticalDamage + criticalDamageAdder + (baseCriticalDamage * criticalDamageMultiplier)) * criticalDamageTotalMultiplier;
+        criticalHealChance = baseCriticalHealChance + criticalHealChanceAdder;
+        criticalDotChance = baseCriticalDotChance + criticalDotChanceAdder;
+        criticalReactionChance = baseCriticalReactionChance + criticalReactionChanceAdder;
         bonusCritChanceReceived = baseBonusCritChanceReceived + bonusCritChanceReceivedAdder + (baseBonusCritChanceReceived * bonusCritChanceReceivedMultiplier);
         bonusCritDamageReceived = baseBonusCritDamageReceived + bonusCritDamageReceivedAdder;
         projectileSpeed = baseProjectileSpeed + projectileSpeedAdder + (baseProjectileSpeed * projectileSpeedMultiplier);
@@ -464,7 +467,7 @@ public abstract class Entity : MonoBehaviour
             dotMultiplier = 1;
         }
         
-        finalDamage = Mathf.Round(modifiedDamage * elementalMultiplier * dotMultiplier);
+        finalDamage = Mathf.Round(modifiedDamage * elementalMultiplier * dotMultiplier * Mathf.Max(0f, 1f + damageTakenBonus));
         bool bypassShield = System.Array.Exists(damageTag, t => t == DamageTag.BypassShield);
         health -= (!bypassShield && HasShield()) ? DrainShields(finalDamage, 0f, null, damageType) : finalDamage;
         health = Mathf.Max(0f, health);
@@ -543,13 +546,23 @@ public abstract class Entity : MonoBehaviour
         }
 
         // Freeze + Fire: a non-DoT Fire hit instantly thaws a frozen target, and the thermal shock
-        // deals bonus damage equal to the hit multiplied by 1.5x the attacker's elemental affinity
+        // deals bonus damage equal to the hit multiplied by 1.5x the attacker's elemental affinity.
+        // Melt mulch replaces this outright: instead of one instant shatter, every qualifying Fire
+        // hit just chips the Freeze's remaining duration down and the hit itself deals bonus damage
         if (this.HasEffect<FreezeEffect>() && elementalType == ElementalType.Fire
             && !System.Array.Exists(damageTag, t => t == DamageTag.DoT)
             && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
-            RemoveEffect<FreezeEffect>();
-            Damage(damageDealt * 1.5f * source.elementalAffinity, damageType, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+            if (MulchManager.MeltActive)
+            {
+                GetEffect<FreezeEffect>().duration -= MulchManager.MeltFreezeDurationReduction;
+                damageDealt *= MulchManager.MeltDamageMultiplier;
+            }
+            else
+            {
+                RemoveEffect<FreezeEffect>();
+                Damage(damageDealt * 1.5f * source.elementalAffinity, damageType, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+            }
         }
 
         // windshear detonation replaced by the Primer combo system (Wind now uses WindPrimer)
@@ -748,13 +761,6 @@ public abstract class Entity : MonoBehaviour
         if (System.Array.Exists(damageTag, t => t == DamageTag.Coordinated))
         {
             coordinatedDamageMult = 1 + source.coordinatedDamage;
-            // Kindred family passive: dealing Coordinated damage has a 50% chance to reduce this
-            // plant's own skill cooldown, regardless of whether this hit also carries
-            // DamageTag.Attack (most Coordinated hits, e.g. Floral Glow's bonus poke or Psionic
-            // Carrot, don't)
-            if (source is Plant kindredPlant && kindredPlant.data != null && kindredPlant.data.family == PlantFamily.Kindred
-                && Random.value < 0.33f)
-                kindredPlant.ReduceSkillCooldown(0.75f);
         } else
         {
             coordinatedDamageMult = 1;
@@ -768,10 +774,6 @@ public abstract class Entity : MonoBehaviour
             counterDamageMult = 1;
         }
 
-        // Thorn family passive: +10% damage against insects currently under 50% health
-        float thornMult = (source is Plant thornPlant && thornPlant.data != null && thornPlant.data.family == PlantFamily.Thorn
-            && this is Insect && health < maxHealth * 0.5f) ? 1.1f : 1f;
-
         // generic on-hit bonus damage (Floral Glow, Ablaze, Bird of Paradise's passive/finisher):
         // scales with onHitEffectiveness same as base damage would, but sourced from whichever
         // entity's effectiveness the caller specifies (see onHitEffectivenessOverride above),
@@ -784,7 +786,8 @@ public abstract class Entity : MonoBehaviour
             onHitMult = 1;
         }
 
-        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult * thornMult * onHitMult;
+        finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult * onHitMult
+            * Mathf.Max(0f, 1f + damageTakenBonus);
 
         // damage variance roll, dot ticks stay flat so aggregated numbers remain stable
         // min always wins, when min surpasses max every roll lands on min
@@ -800,7 +803,13 @@ public abstract class Entity : MonoBehaviour
         // applied identically to every insect it hits)
         if (canCrit || forceCrit || System.Array.Exists(damageTag, t => t == DamageTag.SpecialCanCrit))
         {
-            if (forceCrit || Random.value < source.criticalChance + bonusCritChanceReceived)
+            // DoT hits get criticalDotChance stacked on top (Critical Rot). criticalReactionChance
+            // has no reader yet - ordinary attacks pass canCrit=true too, so it can't just piggyback
+            // on this same check without also buffing every normal attack crit roll; wire it up
+            // once something specifically needs it
+            bool isDoTHit = System.Array.Exists(damageTag, t => t == DamageTag.DoT);
+            float extraCritChance = isDoTHit ? source.criticalDotChance : 0f;
+            if (forceCrit || Random.value < source.criticalChance + bonusCritChanceReceived + extraCritChance)
             {
                 finalDamage *= source.criticalDamage * (1f + bonusCritDamageReceived);
                 isCrit = true;
@@ -876,7 +885,7 @@ public abstract class Entity : MonoBehaviour
         float actual = Mathf.Min(healingAmount * (1f + healingReceived) * (1f + bonus), maxHealth - health);
         if (actual <= 0f) return;
         bool isCrit = false;
-        if (source != null && source.HealCanCrit && Random.value < source.criticalChance)
+        if (source != null && source.HealCanCrit && Random.value < source.criticalChance + source.criticalHealChance)
         {
             actual *= 1.5f;
             actual = Mathf.Min(actual, maxHealth - health);

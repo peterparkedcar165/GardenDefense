@@ -9,4 +9,7 @@ public class TransplantMulchData : MulchData
     public float cooldownSeconds = 300f;
 
     public override MulchEffect CreateEffect() => new TransplantMulchEffect(this);
+
+    public override string GetDescription() =>
+        $"Gain the ability to relocate a plant. Cooldown <b><color=green>{cooldownSeconds:F0}</color></b> seconds.";
 }

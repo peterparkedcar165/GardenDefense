@@ -1,7 +1,7 @@
 // same static-flag convention as MulchManager's global multipliers (BurnDurationMultiplier, etc.)
 // - IsActive gates the Transplant button's visibility in PlantUpgradeUI, CooldownSeconds is read
 // directly by Plant.TriggerTransplant when resetting its per-plant cooldown timer. no per-plant
-// push needed, unlike FamilySkillCooldownMulchEffect/RapidStrikesMulchEffect - every plant always
+// push needed, unlike IronbarkCounterMulchEffect, every plant always
 // has transplantCooldownTimer, it's just meaningless (and the button hidden) while this is off
 public class TransplantMulchEffect : MulchEffect
 {
