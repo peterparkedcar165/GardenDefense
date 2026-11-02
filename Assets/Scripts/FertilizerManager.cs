@@ -239,15 +239,27 @@ public class FertilizerManager : MonoBehaviour
         return result;
     }
 
-    public float GetPreviewRangeMultiplier(ElementalType elementalType)
+    // how much of one stat a plant would get from fertilizers if placed right now: the pre level
+    // fertilizer plus every committed mid level one, matched the same way ApplyTo matches them
+    public float GetPreviewStat(PlantData data, bool isMeleeAttacker, StatType statType)
     {
-        if (activeFertilizer == null || selectedStats == null) return 0f;
-        if (!activeFertilizer.appliesToAll && (activeFertilizer.targetElementalTypes == null || System.Array.IndexOf(activeFertilizer.targetElementalTypes, elementalType) < 0)) return 0f;
-        float multiplier = 0f;
-        for (int i = 0; i < selectedStats.Length; i++)
-            if (selectedStats[i].statType == StatType.AttackRange)
-                multiplier += rolledValues[i];
-        return multiplier;
+        if (data == null) return 0f;
+        float total = 0f;
+
+        bool preLevelMatches = activeFertilizer != null && selectedStats != null
+            && (activeFertilizer.appliesToAll || (activeFertilizer.targetElementalTypes != null
+                && System.Array.IndexOf(activeFertilizer.targetElementalTypes, data.elementalType) >= 0));
+        if (preLevelMatches)
+            for (int i = 0; i < selectedStats.Length; i++)
+                if (selectedStats[i].statType == statType)
+                    total += rolledValues[i];
+
+        foreach (GeneratedFertilizer fert in committedGenerated)
+            foreach (GeneratedFertilizerStat stat in fert.stats)
+                if (stat.statType == statType && stat.scope.Matches(data, isMeleeAttacker))
+                    total += stat.value;
+
+        return total;
     }
 
     public void ApplyTo(Plant plant)

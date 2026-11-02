@@ -92,11 +92,14 @@ public abstract class Plant : Entity, IAttackable
     // TriggerTransplant, since relocating can move a plant on or off highground
     public bool hasHighgroundBonus;
 
+    // highground range bonus, added into the same percent pool as fertilizer and skill tree range
+    public const float HighgroundRangeBonus = 0.5f;
+
     public void ApplyHighgroundBonus(bool shouldHaveBonus)
     {
         if (shouldHaveBonus == hasHighgroundBonus) return;
         float sign = shouldHaveBonus ? 1f : -1f;
-        attackRangeMultiplier += 0.5f * sign;
+        attackRangeMultiplier += HighgroundRangeBonus * sign;
         if (this is Cattail || this is LeafRanger)
             criticalChanceAdder += 0.15f * sign;
         hasHighgroundBonus = shouldHaveBonus;
@@ -426,6 +429,59 @@ public abstract class Plant : Entity, IAttackable
     public int orbitRadius = 1;
     public bool UsesRadiusToggle => SaveManager.instance != null && SaveManager.instance.selectedLoadout.Contains("Tansy");
     public virtual int MaxOrbitRadius => Mathf.Max(1, Mathf.FloorToInt(attackRange));
+
+    // the attack range this plant will have the moment it is placed, for the placement preview.
+    // reads only data and the managers, never this component's own stat fields, so it is safe to
+    // call on the prefab. same formula as Entity.UpdateStats: (base + flat + base * percent) * total,
+    // where base already includes the path levels the skill tree's effective point nodes give
+    public float PreviewAttackRange(bool onHighground)
+    {
+        if (data == null) return 0f;
+        int p1 = Mathf.RoundToInt(SkillTreeManager.SumStat(data, StatType.Path1LevelAdder));
+        int p2 = Mathf.RoundToInt(SkillTreeManager.SumStat(data, StatType.Path2LevelAdder));
+        int p3 = Mathf.RoundToInt(SkillTreeManager.SumStat(data, StatType.Path3LevelAdder));
+        // same as GetWeatherPath2Bonus: fire plants in sunny weather get one extra passive level
+        if (data.elementalType == ElementalType.Fire && IsWeatherActive(WeatherType.Sunny)) p2 += 1;
+
+        float baseRange = data.baseAttackRange
+            + RangePerLevel(data, 1) * p1 + RangePerLevel(data, 2) * p2 + RangePerLevel(data, 3) * p3;
+        FertilizerManager fm = FertilizerManager.instance;
+        float flat = SkillTreeManager.SumStat(data, StatType.AttackRangeFlat)
+            + (fm != null ? fm.GetPreviewStat(data, IsMeleeAttacker, StatType.AttackRangeFlat) : 0f);
+        float percent = SkillTreeManager.SumStat(data, StatType.AttackRange)
+            + (fm != null ? fm.GetPreviewStat(data, IsMeleeAttacker, StatType.AttackRange) : 0f)
+            + (onHighground ? HighgroundRangeBonus : 0f);
+
+        float range = baseRange + flat + baseRange * percent;
+        // melee attackers never reach past their own base range, same clamp as UpdateStats
+        if (IsMeleeAttacker) range = Mathf.Min(range, baseRange);
+        return range;
+    }
+
+    private static bool IsWeatherActive(WeatherType type)
+    {
+        if (WeatherManager.instance == null) return false;
+        foreach (WeatherEntry entry in WeatherManager.instance.GetActiveWeather())
+            if (entry.type == type) return true;
+        return false;
+    }
+
+    // every plant names its per level range field pathNAttackRangePerLevel on its data (most use
+    // path 1, Calendula and Carrot path 2, Tansy both), 0 when that path doesn't add range
+    private static readonly System.Collections.Generic.Dictionary<(System.Type, int), System.Reflection.FieldInfo> _rangePerLevelFields
+        = new System.Collections.Generic.Dictionary<(System.Type, int), System.Reflection.FieldInfo>();
+
+    private static float RangePerLevel(PlantData data, int path)
+    {
+        var key = (data.GetType(), path);
+        if (!_rangePerLevelFields.TryGetValue(key, out System.Reflection.FieldInfo field))
+        {
+            field = data.GetType().GetField($"path{path}AttackRangePerLevel");
+            if (field != null && field.FieldType != typeof(float)) field = null;
+            _rangePerLevelFields[key] = field;
+        }
+        return field != null ? (float)field.GetValue(data) : 0f;
+    }
 
     // Burgeon plants that command minions: the info panel shows a "relocate formation" button,
     // and clicking it (after aiming a point) calls RelocateMinionFormation

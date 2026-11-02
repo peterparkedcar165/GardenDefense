@@ -454,9 +454,14 @@ public abstract class Projectile : MonoBehaviour
 
         GameObject obj = Instantiate(hitParticlePrefab, visual.position, Quaternion.identity);
         ParticleSystem ps = obj.GetComponent<ParticleSystem>();
+        if (ps != null) ConfigureHitParticles(ps);
         float lifetime = ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f;
         Destroy(obj, lifetime);
     }
+
+    // lets a subclass resize or retime its hit burst right after it spawns (waterlily fits hers
+    // to her splash radius). runs before the cleanup time above is worked out
+    protected virtual void ConfigureHitParticles(ParticleSystem ps) { }
 
     // Floral Glow: layered on top of whatever hit particle this projectile already has (if any),
     // same one-shot/independent-of-the-projectile pattern as PlayHitParticles above - read

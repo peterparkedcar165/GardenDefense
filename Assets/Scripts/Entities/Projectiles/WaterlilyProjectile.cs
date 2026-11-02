@@ -39,7 +39,7 @@ public class WaterlilyProjectile : Projectile
         WaterlilyData data = source != null ? source.data as WaterlilyData : null;
         _riseHeight = data != null ? data.projectileRiseHeight : 0.8f;
         _riseDuration = Mathf.Max(0.01f, data != null ? data.projectileRiseDuration : 0.3f);
-        _accelDuration = data != null ? data.projectileLaunchAccelDuration : 0.3f;
+        _accelDuration = data != null ? data.projectileLaunchAccelDuration : 0.6f;
         _accelTimer = 0f;
         speedMultiplier = _accelDuration > 0f ? 0f : 1f;
         _riseTimer = 0f;
@@ -162,6 +162,14 @@ public class WaterlilyProjectile : Projectile
         float eased = s * s * (3f - 2f * s);
         float targetHeight = trackedInsect.GetAimPoint().y - trackedInsect.transform.position.y;
         VisualHeightOffset = Mathf.Lerp(_launchHeight, targetHeight, eased);
+    }
+
+    // the hit burst travels out exactly as far as her splash radius, with the same fit Calendula's
+    // fire burst uses for her attack range. keeps the burst's own authored lifetime
+    protected override void ConfigureHitParticles(ParticleSystem ps)
+    {
+        if (source is Waterlily waterlily)
+            ParticleRadiusFit.FitBurstToRadius(ps, waterlily.AoERange, ps.main.startLifetime.constantMax);
     }
 
     // particle-trail detach-before-destroy is now handled generically by the base class

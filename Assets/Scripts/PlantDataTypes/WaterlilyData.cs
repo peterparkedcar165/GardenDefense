@@ -18,7 +18,7 @@ public class WaterlilyData : PlantData
     [Tooltip("seconds the rise takes. it eases to a stop at the top, then the bubble heads down to the target")]
     public float projectileRiseDuration = 0.3f;
     [Tooltip("seconds the bubble takes to speed up from 0 to full projectile speed, counted from the moment it spawns (so it overlaps the rise). 0 = full speed right away")]
-    public float projectileLaunchAccelDuration = 0.3f;
+    public float projectileLaunchAccelDuration = 0.6f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 5f;

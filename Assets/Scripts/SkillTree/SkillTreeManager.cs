@@ -44,6 +44,23 @@ public static class SkillTreeManager
             }
     }
 
+    // total of one stat across every purchased node in this plant's tree, read from data alone so
+    // it works before the plant exists (placement preview)
+    public static float SumStat(PlantData data, StatType statType)
+    {
+        if (data == null || data.skillTree == null || Data == null) return 0f;
+        float total = 0f;
+        foreach (SkillTreeStep step in data.skillTree.steps)
+            foreach (SkillTreeNode node in step.nodes)
+            {
+                int rank = GetRank(data.plantName, node.id);
+                if (rank <= 0) continue;
+                foreach (SkillNodeEffect effect in node.effects)
+                    if (effect.statType == statType) total += effect.valuePerRank * rank;
+            }
+        return total;
+    }
+
     // behavior unlock query for bespoke code, true if a purchased node carries this unlock id
     public static bool HasUnlock(Plant plant, string unlockId)
     {

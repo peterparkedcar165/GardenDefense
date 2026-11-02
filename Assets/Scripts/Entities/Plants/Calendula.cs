@@ -382,40 +382,8 @@ public class Calendula : Aura
             }
         }
 
-        const float lifetime = FireBurstLifetime;
-
-        var main = ps.main;
-        main.startLifetime = lifetime;
-        main.startSpeed = new ParticleSystem.MinMaxCurve(
-            radius * 0.7f / lifetime,
-            radius        / lifetime);
-
-        var lvol = ps.limitVelocityOverLifetime;
-        lvol.enabled = true;
-        lvol.separateAxes = false;
-        lvol.dampen = 0.4f;
-        AnimationCurve limitCurve = new AnimationCurve(
-            new Keyframe(0f,   1f, 0f, 0f),
-            new Keyframe(0.5f, 1f, 0f, 0f),
-            new Keyframe(1f,   0f, 0f, 0f)
-        );
-        lvol.limit = new ParticleSystem.MinMaxCurve(radius / lifetime, limitCurve);
-
-        var col = ps.colorOverLifetime;
-        col.enabled = true;
-        Gradient gradient = new Gradient();
-        gradient.SetKeys(
-            new GradientColorKey[] {
-                new GradientColorKey(Color.white, 0f),
-                new GradientColorKey(Color.white, 1f)
-            },
-            new GradientAlphaKey[] {
-                new GradientAlphaKey(1f, 0f),
-                new GradientAlphaKey(1f, 0.5f),
-                new GradientAlphaKey(0f, 1f)
-            }
-        );
-        col.color = new ParticleSystem.MinMaxGradient(gradient);
+        // particles travel out to exactly radius, same fit Waterlily's bubble hit uses
+        ParticleRadiusFit.FitBurstToRadius(ps, radius, FireBurstLifetime);
     }
 
     public override void ActivateSkill()

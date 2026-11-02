@@ -193,15 +193,9 @@ public class CursorIcon : MonoBehaviour
     {
         if (rangePreviewCircle == null || cachedPlant == null || cachedPlant.data == null) return;
         if (!cachedPlant.ShowRangeCircle) { HideRangePreview(); return; }
-        float range = cachedPlant.data.baseAttackRange;
-        // melee attackers (see Entity.IsMeleeAttacker) never benefit from range increases, so the
-        // placement preview shouldn't show one either - skip fertilizer/highground bonuses entirely
-        if (!cachedPlant.IsMeleeAttacker)
-        {
-            float fertMult = FertilizerManager.instance?.GetPreviewRangeMultiplier(cachedPlant.data.elementalType) ?? 0f;
-            range *= 1f + fertMult;
-            if (tile.isHighground) range *= 1.5f;
-        }
+        // the plant predicts its own placed range: skill tree, both kinds of fertilizer, highground
+        // and the melee clamp, with the same formula its real stats use
+        float range = cachedPlant.PreviewAttackRange(tile.isHighground);
         rangePreviewCircle.gameObject.SetActive(true);
         rangePreviewCircle.position = new Vector3(tile.transform.position.x, tile.transform.position.y, rangePreviewCircle.position.z);
         rangePreviewCircle.localScale = new Vector3(range * 2f, range * 2f, 1f);

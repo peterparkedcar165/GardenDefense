@@ -222,6 +222,18 @@ public static class FertilizerStatRules
             if (requiredPlantNames != null && plant.data != null && requiredPlantNames.Contains(plant.data.plantName)) return true;
             return false;
         }
+
+        // same rules read from plant data, for previews of a plant that isn't placed yet
+        public bool Matches(PlantData data, bool isMeleeAttacker)
+        {
+            if (excludeMelee && isMeleeAttacker) return false;
+            if (appliesToAll) return true;
+            if (data == null) return false;
+            if (requiredElement.HasValue && data.elementalType == requiredElement.Value) return true;
+            if (requiredDamageType.HasValue && data.damageType == requiredDamageType.Value) return true;
+            if (requiredPlantNames != null && requiredPlantNames.Contains(data.plantName)) return true;
+            return false;
+        }
     }
 
     // same as GetAvailableStats, but keyed with each stat's applicability scope so a generated
