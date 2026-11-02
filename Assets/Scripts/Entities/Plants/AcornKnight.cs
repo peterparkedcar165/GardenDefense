@@ -306,6 +306,8 @@ public class AcornKnight : Aura
             case TARGETING.Nearest:   target = FindNearest(Insect.allInsects);   break;
             case TARGETING.Last:      target = FindLast(Insect.allInsects);      break;
             case TARGETING.Strongest: target = FindStrongest(Insect.allInsects); break;
+            case TARGETING.Fastest:   target = FindFastest(Insect.allInsects);   break;
+            case TARGETING.Slowest:   target = FindSlowest(Insect.allInsects);   break;
             default:                  target = null;                            break;
         }
         return target != null ? target.GetComponent<Insect>() : null;

@@ -227,6 +227,8 @@ public class Snowdrop : Shooter
             TARGETING.Nearest   => FindNearest(pool),
             TARGETING.Last      => FindLast(pool),
             TARGETING.Strongest => FindStrongest(pool),
+            TARGETING.Fastest   => FindFastest(pool),
+            TARGETING.Slowest   => FindSlowest(pool),
             _                   => FindFirst(pool)
         };
     }

@@ -128,6 +128,8 @@ public class Stargazer : Aura
             case TARGETING.Nearest:   go = FindNearest(Insect.allInsects);   break;
             case TARGETING.Last:      go = FindLast(Insect.allInsects);      break;
             case TARGETING.Strongest: go = FindStrongest(Insect.allInsects); break;
+            case TARGETING.Fastest:   go = FindFastest(Insect.allInsects);   break;
+            case TARGETING.Slowest:   go = FindSlowest(Insect.allInsects);   break;
             default:                  go = FindFirst(Insect.allInsects);    break;
         }
         return go != null ? go.GetComponent<Insect>() : null;

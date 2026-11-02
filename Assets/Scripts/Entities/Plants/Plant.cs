@@ -30,7 +30,7 @@ public struct PlantBaseStats
     public float floralGlowHeal;
 }
 
-public enum TARGETING { Nearest, First, Last, Strongest }
+public enum TARGETING { Nearest, First, Last, Strongest, Fastest, Slowest }
 
 // a plant's job in the garden, replaces the old families. no mechanics read it yet
 public enum PlantRole { Tank, DPS, Support }
@@ -1787,6 +1787,53 @@ public abstract class Plant : Entity, IAttackable
             }
         }
         return strongest;
+    }
+
+    // fastest or slowest insect in range by its current movement speed (slows count), ties going
+    // to whichever is furthest along the path, same as First
+    protected GameObject FindFastest(System.Collections.Generic.List<Insect> insects) => FindBySpeed(insects, true);
+    protected GameObject FindSlowest(System.Collections.Generic.List<Insect> insects) => FindBySpeed(insects, false);
+
+    private GameObject FindBySpeed(System.Collections.Generic.List<Insect> insects, bool fastest)
+    {
+        GameObject forced = ForcedPriorityTargetOrNull();
+        if (forced != null) return forced;
+
+        var inRange = new System.Collections.Generic.List<Insect>();
+        foreach (Insect insect in insects)
+        {
+            if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
+            float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
+            inRange.Add(insect);
+        }
+        Insect best = PickBySpeed(inRange, fastest);
+        return best != null ? best.gameObject : null;
+    }
+
+    // picks among insects that already passed every range check, so plants with their own
+    // candidate lists (e.g. Nerium Oleander's chain) can use the same rule
+    protected static Insect PickBySpeed(System.Collections.Generic.IEnumerable<Insect> candidates, bool fastest)
+    {
+        const float SpeedTieTolerance = 0.01f;
+        Insect best = null;
+        float bestSpeed = 0f, bestDistToNext = Mathf.Infinity;
+        int bestWaypoint = -1;
+        foreach (Insect insect in candidates)
+        {
+            if (insect == null) continue;
+            float speed = insect.CurrentMoveSpeed;
+            Transform waypoint = insect.GetCurrentWaypoint();
+            float distToNext = waypoint != null ? Vector3.Distance(insect.transform.position, waypoint.position) : Mathf.Infinity;
+            bool better;
+            if (best == null) better = true;
+            else if (Mathf.Abs(speed - bestSpeed) > SpeedTieTolerance) better = fastest ? speed > bestSpeed : speed < bestSpeed;
+            else better = insect.currentWaypointIndex > bestWaypoint
+                || (insect.currentWaypointIndex == bestWaypoint && distToNext < bestDistToNext);
+            if (!better) continue;
+            best = insect; bestSpeed = speed; bestWaypoint = insect.currentWaypointIndex; bestDistToNext = distToNext;
+        }
+        return best;
     }
 
     protected GameObject FindFirst(System.Collections.Generic.List<Insect> insects)

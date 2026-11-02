@@ -171,6 +171,8 @@ public class Waterlily : Shooter
             case TARGETING.Nearest:   return FindNearest(pool);
             case TARGETING.Last:      return FindLast(pool);
             case TARGETING.Strongest: return FindStrongest(pool);
+            case TARGETING.Fastest:   return FindFastest(pool);
+            case TARGETING.Slowest:   return FindSlowest(pool);
             default:                  return null;
         }
     }

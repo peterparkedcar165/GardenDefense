@@ -81,6 +81,8 @@ public abstract class Shooter : Plant
             case TARGETING.Nearest:   return FindNearest(Insect.allInsects);
             case TARGETING.Last:      return FindLast(Insect.allInsects);
             case TARGETING.Strongest: return FindStrongest(Insect.allInsects);
+            case TARGETING.Fastest:   return FindFastest(Insect.allInsects);
+            case TARGETING.Slowest:   return FindSlowest(Insect.allInsects);
             default:                  return null;
         }
     }

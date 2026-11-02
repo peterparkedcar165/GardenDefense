@@ -118,6 +118,8 @@ public class PoisonShroom : Shooter
             case TARGETING.Nearest:   return FindNearest(candidates);
             case TARGETING.Last:      return FindLast(candidates);
             case TARGETING.Strongest: return FindStrongest(candidates);
+            case TARGETING.Fastest:   return FindFastest(candidates);
+            case TARGETING.Slowest:   return FindSlowest(candidates);
             default:                  return FindFirst(candidates);
         }
     }

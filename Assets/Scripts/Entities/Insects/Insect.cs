@@ -1227,6 +1227,8 @@ public abstract class Insect : Entity, IAttackable
     protected void DamagePlayerBase(int amount) => gameManager.Damage(Mathf.RoundToInt(amount * MulchManager.LeakDamageMultiplier));
 
     protected virtual float GetMoveSpeed() => movementSpeed;
+    // how fast it's currently travelling (flight speed for flyers in the air), for Fastest and Slowest targeting
+    public float CurrentMoveSpeed => GetMoveSpeed();
 
     public virtual Vector3 GetVelocity()
     {

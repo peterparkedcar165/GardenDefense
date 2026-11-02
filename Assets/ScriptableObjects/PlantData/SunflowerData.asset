@@ -108,13 +108,13 @@ MonoBehaviour:
   skillSound:
     clips: []
   baseSunGenerated: 10
-  baseSunrayDPS: 50
+  baseSunrayDPS: 60
   baseCooldownReductionPerHit: 1
   path1AttackDamagePerLevel: 3
   path1AttackSpeedPerLevel: 0.02
   path2SunPerLevel: 3
   path2CooldownReductionPerLevel: 0.1
-  path3SunrayDPSPerLevel: 5
+  path3SunrayDPSPerLevel: 10
   path3SkillDurationPerLevel: 0.5
   path3RadiusPerLevel: 0.2
   path3VisualRadiusPerLevel: 0.3

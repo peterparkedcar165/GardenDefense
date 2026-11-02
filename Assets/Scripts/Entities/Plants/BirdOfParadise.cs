@@ -132,6 +132,8 @@ public class BirdOfParadise : Aura
             case TARGETING.First:     return FindFirst(Insect.allInsects);
             case TARGETING.Last:      return FindLast(Insect.allInsects);
             case TARGETING.Strongest: return FindStrongest(Insect.allInsects);
+            case TARGETING.Fastest:   return FindFastest(Insect.allInsects);
+            case TARGETING.Slowest:   return FindSlowest(Insect.allInsects);
             default:                  return null;
         }
     }

@@ -215,6 +215,8 @@ public class NeriumOleander : Shooter
     {
         switch (targeting)
         {
+            case TARGETING.Fastest: return PickBySpeed(candidates, true);
+            case TARGETING.Slowest: return PickBySpeed(candidates, false);
             case TARGETING.Nearest:
             {
                 Insect best = null;

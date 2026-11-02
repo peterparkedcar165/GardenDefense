@@ -80,6 +80,8 @@ public class Glowshroom : Shooter
             case TARGETING.Nearest:   return FindNearest(insects);
             case TARGETING.Last:      return FindLast(insects);
             case TARGETING.Strongest: return FindStrongest(insects);
+            case TARGETING.Fastest:   return FindFastest(insects);
+            case TARGETING.Slowest:   return FindSlowest(insects);
             default:                  return null;
         }
     }
