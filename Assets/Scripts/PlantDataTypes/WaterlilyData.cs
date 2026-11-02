@@ -4,8 +4,8 @@ using UnityEngine;
 public class WaterlilyData : PlantData
 {
     public float baseAoERange;
-    [Tooltip("splash damage as a fraction of the bubble's own attack damage, e.g. 0.5 = half")]
-    public float splashDamageRatio = 0.5f;
+    [Tooltip("splash damage as a fraction of the bubble's own attack damage, e.g. 0.35 = 35%")]
+    public float splashDamageRatio = 0.35f;
     public float baseBubblePrisonImpactDamage;
     [Tooltip("base number of nearest insects around the main target that splash hits (the main target is always hit on top)")]
     public int splashMaxExtraTargets = 2;
@@ -49,7 +49,7 @@ public class WaterlilyData : PlantData
         $"Blows little bubbles towards her target, dealing {DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
-        $"Attacks splash surrounding insects for half damage. Everyone hit is <color=#4FC3F7>Soaked</color>, a stacking slow that also grounds flying insects.";
+        $"Attacks splash surrounding insects for {splashDamageRatio * 100f:F0}% damage. Everyone hit is <color=#4FC3F7>Soaked</color>, a stacking slow that also grounds flying insects.";
 
     public override string GetSkillDescription() =>
         "Blows a large bubble onto a targeted area, trapping insects within and keeping them airborne for a duration. Trapped insects take increased damage from all sources.";

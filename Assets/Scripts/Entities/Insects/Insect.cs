@@ -142,6 +142,9 @@ public abstract class Insect : Entity, IAttackable
     public float movementSpeed, baseMovementSpeed;
     public Vector2 windVelocity;
     public Vector2 windMomentum;
+    // horizontal speed a flyer had the moment it was knocked out of the air (FlyingInsect.SetFlight).
+    // it keeps drifting with it while it falls, stunned or not, and stops once it touches down
+    public Vector3 fallMomentum;
     private Vector2 windBlockMask = Vector2.one;
     public Entity lastSource;
     public Aggressivity aggressivity = Aggressivity.None;
@@ -696,6 +699,17 @@ public abstract class Insect : Entity, IAttackable
         {
             _isDisplaced = false;
             _returningToPath = true;
+        }
+
+        // a flyer knocked out of the air keeps its flying momentum until it lands, even when stunned
+        // or frozen, then the normal rules (and any crowd control) take over. held in a bubble or
+        // already on the ground means there's no fall to carry it through
+        if (fallMomentum.sqrMagnitude > 0.0001f)
+        {
+            if (affectedByGravity && !isOnGround)
+                transform.position += ClampStepAgainstObstacles(transform.position, fallMomentum * Time.deltaTime);
+            else
+                fallMomentum = Vector3.zero;
         }
 
         if (HasEffect<HardCrowdControl>()) return;

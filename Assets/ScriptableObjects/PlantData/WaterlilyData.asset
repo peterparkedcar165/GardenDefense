@@ -19,7 +19,7 @@ MonoBehaviour:
   role: 2
   elementalType: 1
   damageType: 1
-  sunCost: 100
+  sunCost: 115
   placementLimit: 0
   tauntValue: 3
   retainsAggro: 0
@@ -96,19 +96,19 @@ MonoBehaviour:
   attackSound:
     clips:
     - clip: {fileID: 8300000, guid: 2c476d4951eacdd46a5ed49e4ad0ef18, type: 3}
-      volume: 0.097
-      minPitch: 1
-      maxPitch: 1.6
+      volume: 0.2
+      minPitch: 0.5
+      maxPitch: 0.7
   hitSound:
     clips:
     - clip: {fileID: 8300000, guid: 879b35f7c55f0a549853fcc517714014, type: 3}
-      volume: 0.056
+      volume: 0.3
       minPitch: 0.5
       maxPitch: 0.8
   skillSound:
     clips: []
   baseAoERange: 1.5
-  splashDamageRatio: 0.5
+  splashDamageRatio: 0.35
   baseBubblePrisonImpactDamage: 20
   splashMaxExtraTargets: 2
   maxSoakStacks: 4

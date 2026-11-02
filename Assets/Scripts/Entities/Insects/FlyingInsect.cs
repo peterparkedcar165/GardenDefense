@@ -10,6 +10,9 @@ public abstract class FlyingInsect : Insect
     private float hoverSpeed;
     private float hoverAmplitude;
     private float hoverPhase;
+    // its real horizontal velocity while flying, measured each frame, so it can be carried into a fall
+    private Vector3 _flightVelocity;
+    private Vector3 _lastPosition;
 
     protected override void Awake()
     {
@@ -20,6 +23,7 @@ public abstract class FlyingInsect : Insect
         hoverAmplitude = Random.Range(0.075f, 0.125f);
         hoverPhase = Random.Range(0f, Mathf.PI * 2f);
         isFlying = true;
+        _lastPosition = transform.position;
         visual = transform.Find("Visual");
         if (visual != null)
         {
@@ -46,7 +50,13 @@ public abstract class FlyingInsect : Insect
         // bypass), so landing can leave it positioned directly on top of one - push it clear from
         // the obstacle tile's own center so it doesn't end up stuck inside solid geometry
         if (wasFlying && !newState)
+        {
+            // knocked out of the air: keep flying forward while it falls (see Insect.fallMomentum),
+            // capped at its flight speed so a one frame position jump can't fling it
+            Vector3 flat = new Vector3(_flightVelocity.x, _flightVelocity.y, 0f);
+            fallMomentum = Vector3.ClampMagnitude(flat, flightSpeed);
             PushOffObstacleIfLanded();
+        }
     }
 
     private void PushOffObstacleIfLanded()
@@ -91,6 +101,8 @@ public abstract class FlyingInsect : Insect
     protected override void Update()
     {
         base.Update();
+        if (isFlying && Time.deltaTime > 0f) _flightVelocity = (transform.position - _lastPosition) / Time.deltaTime;
+        _lastPosition = transform.position;
         if (!isDying && isFlying && visual != null && !HasEffect<BubblePrisonEffect>())
         {
             hoverPhase += Time.deltaTime * hoverSpeed;

@@ -78,6 +78,7 @@ MonoBehaviour:
   baseProjectileVisualHitboxRadius: 0.1
   projectileEmitLight: 0
   projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
   projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5

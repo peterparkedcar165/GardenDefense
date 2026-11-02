@@ -248,6 +248,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\PoisonEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\Airborne.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Calendula.cs" />
+    <Compile Include="Assets\Scripts\ParticleRadiusFit.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SlowEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\MulchTier.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GloriosaData.cs" />

@@ -23,7 +23,7 @@ public class Waterlily : Shooter
     private const float ExtraTargetOnHitReduction = 0.35f;
     private const float BubbleDurationExtension = 0.2f;
 
-    private float SplashDamageRatio => WLData?.splashDamageRatio ?? 0.5f;
+    private float SplashDamageRatio => WLData?.splashDamageRatio ?? 0.35f;
 
     // soaked duration, split into base and magic power parts for the description brackets
     private float SoakDurationBase => (WLData?.baseSoakDuration ?? 4f) + (WLData?.path2SoakDurationPerLevel ?? 0.5f) * effectivePath2Level;
