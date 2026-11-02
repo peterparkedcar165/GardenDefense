@@ -8,19 +8,21 @@ public class WaterlilyProjectile : Projectile
     private const float bobSpeed = 6f;
     private const float bobAmplitude = 0.12f;
 
-    // two steps. rise: the bubble leaves from the waterlily herself and the visual rises straight up,
-    // easing to a stop at the top, while Base waits on the ground. travel: it launches at the
-    // target and the height eases from the top of the rise down to the target's height, landing
-    // exactly on it however far it had to go
+    // the bubble leaves from the waterlily herself. its travel speed eases from 0 up to full
+    // projectile speed starting the moment it spawns, so it barely drifts toward the target while
+    // the visual rises straight up and eases to a stop at the top. once the rise is done the height
+    // eases from the top down to the target's height, landing exactly on it however far it went
     private float _riseHeight;
     private float _riseDuration;
     private float _riseTimer;
     private bool _launched;
     private float _startHeight;
     private float _launchHeight;
-    // after launch the travel speed eases from 0 up to full projectile speed instead of snapping
     private float _accelDuration;
     private float _accelTimer;
+    // a target this close ends the rise early, so the bubble still has room to come down onto it
+    // instead of passing over it while still high
+    private const float EarlyLaunchDistance = 0.5f;
     private float _traveled;
     private Vector3 _lastBasePos;
 
@@ -38,6 +40,8 @@ public class WaterlilyProjectile : Projectile
         _riseHeight = data != null ? data.projectileRiseHeight : 0.8f;
         _riseDuration = Mathf.Max(0.01f, data != null ? data.projectileRiseDuration : 0.3f);
         _accelDuration = data != null ? data.projectileLaunchAccelDuration : 0.3f;
+        _accelTimer = 0f;
+        speedMultiplier = _accelDuration > 0f ? 0f : 1f;
         _riseTimer = 0f;
         _launched = false;
         _startHeight = VisualHeightOffset;
@@ -108,19 +112,8 @@ public class WaterlilyProjectile : Projectile
 
     protected override void Move()
     {
-        if (!_launched)
-        {
-            // rise: Base stays put, no movement, homing or hit checks until the bubble is up
-            _riseTimer = Mathf.Min(_riseTimer + Time.deltaTime, _riseDuration);
-            float t = _riseTimer / _riseDuration;
-            VisualHeightOffset = _startHeight + _riseHeight * (1f - (1f - t) * (1f - t));
-            PlaceVisualAndShadow();
-            if (_riseTimer >= _riseDuration) Launch();
-            return;
-        }
-
-        // travel: speed eases in over _accelDuration, smooth at both ends (no snap at launch or
-        // when it reaches full speed)
+        // speed eases in over _accelDuration from the moment it spawns, smooth at both ends (no
+        // snap at the start or when it reaches full speed)
         if (_accelTimer < _accelDuration)
         {
             _accelTimer = Mathf.Min(_accelTimer + Time.deltaTime, _accelDuration);
@@ -132,24 +125,29 @@ public class WaterlilyProjectile : Projectile
         base.Move();
     }
 
+    // the rise is over: from here the height heads down to the target, measured from this point
     private void Launch()
     {
         _launched = true;
         _launchHeight = VisualHeightOffset;
-        _accelTimer = 0f;
-        speedMultiplier = _accelDuration > 0f ? 0f : 1f;
         _traveled = 0f;
         _lastBasePos = transform.position;
-        // re aim at where the target is now, it kept moving during the rise
-        if (trackedInsect != null && trackedInsect.IsAlive)
-        {
-            Vector3 toTarget = trackedInsect.transform.position - transform.position;
-            if (toTarget.sqrMagnitude > 0.0001f) direction = toTarget.normalized;
-        }
     }
 
     protected override void OnBaseMoved()
     {
+        if (!_launched)
+        {
+            // rise: the visual goes straight up and eases to a stop at the top while Base drifts
+            _riseTimer = Mathf.Min(_riseTimer + Time.deltaTime, _riseDuration);
+            float t = _riseTimer / _riseDuration;
+            VisualHeightOffset = _startHeight + _riseHeight * (1f - (1f - t) * (1f - t));
+            bool targetClose = trackedInsect != null
+                && Vector3.Distance(transform.position, trackedInsect.transform.position) < EarlyLaunchDistance;
+            if (_riseTimer >= _riseDuration || targetClose) Launch();
+            return;
+        }
+
         // lost target: keep the current height and fly straight on, same as every other projectile
         if (trackedInsect == null) return;
 
