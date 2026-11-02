@@ -8,13 +8,15 @@ public class WaterlilyProjectile : Projectile
     private const float bobSpeed = 6f;
     private const float bobAmplitude = 0.12f;
 
-    // the bubble appears above the waterlily, drifts up a little while Base already heads for the
-    // target, then the normal height convergence glides it down onto the target
-    private float _riseTimer;
-    private float _riseSpeed;
-    // the drift never takes more than this share of the expected flight time, so close targets
-    // still leave plenty of flight for the bubble to come back down and land the hit
-    private const float MaxRiseShareOfFlight = 0.3f;
+    // the bubble leaves from the waterlily herself and arcs to its target. Base travels straight
+    // along the ground at full speed while the visual follows one smooth curve: it shoots up first,
+    // peaks a third of the way there, and lands exactly on the target's height on arrival
+    private float _arcHeight;
+    private float _startHeight;
+    private float _traveled;
+    private Vector3 _lastBasePos;
+    // 27/4 * s * (1 - s)^2 peaks at exactly 1 when s is a third of the way, and is 0 at both ends
+    private const float ArcShapeScale = 6.75f;
 
     public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
     {
@@ -27,18 +29,12 @@ public class WaterlilyProjectile : Projectile
         bobPhase3 = Mathf.PI * 1.33f;
 
         WaterlilyData data = source != null ? source.data as WaterlilyData : null;
-        float spawnHeight   = data != null ? data.projectileSpawnHeight   : 0.6f;
-        float riseHeight    = data != null ? data.projectileRiseHeight    : 0.2f;
-        float riseDuration  = Mathf.Max(0.01f, data != null ? data.projectileRiseDuration : 0.25f);
-        _riseSpeed = riseHeight / riseDuration;
-
-        Vector3 aim = trackedInsect != null ? trackedInsect.transform.position : target;
-        float flightTime = projectileSpeed > 0f ? Vector3.Distance(transform.position, aim) / projectileSpeed : 0f;
-        _riseTimer = Mathf.Min(riseDuration, MaxRiseShareOfFlight * flightTime);
-        holdVisualHeight = _riseTimer > 0f;
-
-        VisualHeightOffset = spawnHeight;
-        PlaceVisualAndShadow();
+        _arcHeight = data != null ? data.projectileArcHeight : 0.8f;
+        _startHeight = VisualHeightOffset;
+        _traveled = 0f;
+        _lastBasePos = transform.position;
+        // the arc owns the visual height for the whole flight, Base keeps full ground speed
+        holdVisualHeight = true;
     }
 
     protected override void Update()
@@ -104,14 +100,24 @@ public class WaterlilyProjectile : Projectile
 
     protected override void Move()
     {
-        if (_riseTimer > 0f)
-        {
-            float step = Mathf.Min(Time.deltaTime, _riseTimer);
-            _riseTimer -= Time.deltaTime;
-            VisualHeightOffset += _riseSpeed * step;
-            holdVisualHeight = _riseTimer > 0f;
-        }
         base.Move();
+    }
+
+    protected override void OnBaseMoved()
+    {
+        // lost target: keep the current height and fly straight on, same as every other projectile
+        if (trackedInsect == null) return;
+
+        _traveled += Vector3.Distance(_lastBasePos, transform.position);
+        _lastBasePos = transform.position;
+
+        // progress along the flight, measured against the target's current spot so it still lands
+        // right on a target that keeps moving
+        float remaining = Vector3.Distance(transform.position, trackedInsect.transform.position);
+        float s = _traveled + remaining > 0.0001f ? _traveled / (_traveled + remaining) : 1f;
+        float targetHeight = trackedInsect.GetAimPoint().y - trackedInsect.transform.position.y;
+        float arc = ArcShapeScale * s * (1f - s) * (1f - s);
+        VisualHeightOffset = Mathf.Lerp(_startHeight, targetHeight, s) + _arcHeight * arc;
     }
 
     // particle-trail detach-before-destroy is now handled generically by the base class

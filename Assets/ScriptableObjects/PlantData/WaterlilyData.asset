@@ -112,9 +112,7 @@ MonoBehaviour:
   baseBubblePrisonImpactDamage: 20
   splashMaxExtraTargets: 2
   maxSoakStacks: 4
-  projectileSpawnHeight: 0.6
-  projectileRiseHeight: 0.2
-  projectileRiseDuration: 0.25
+  projectileArcHeight: 0.8
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.2
   path1SplashTargetsPerLevel: 1

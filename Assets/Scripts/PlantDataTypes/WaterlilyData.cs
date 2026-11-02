@@ -13,12 +13,8 @@ public class WaterlilyData : PlantData
     public int maxSoakStacks = 4;
 
     [Header("Bubble Projectile")]
-    [Tooltip("how far above the projectile's normal flight height the bubble appears when she fires (her sprite top is about 0.6)")]
-    public float projectileSpawnHeight = 0.6f;
-    [Tooltip("how far the bubble drifts up right after it appears, before it heads for the target")]
-    public float projectileRiseHeight = 0.2f;
-    [Tooltip("seconds the upward drift lasts. cut short on close targets so most of the flight still goes to reaching the target")]
-    public float projectileRiseDuration = 0.25f;
+    [Tooltip("the bubble leaves from the waterlily and arcs to its target. this is how high the arc rises above the straight line, peaking a third of the way there (her sprite top is about 0.6 above her base)")]
+    public float projectileArcHeight = 0.8f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 5f;

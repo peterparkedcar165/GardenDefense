@@ -249,6 +249,7 @@ public abstract class Projectile : MonoBehaviour
         }
 
         transform.position += direction * groundSpeed * Time.deltaTime;
+        OnBaseMoved();
 
         // cosmetic-only: Visual rises to mirror however high the tracked target currently is, so
         // the rendered sprite still visually arcs up to meet a flying insect even though Base
@@ -285,6 +286,10 @@ public abstract class Projectile : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    // runs right after Base moves each frame, before Visual is placed and hits are checked, so a
+    // subclass holding the visual height can set it from Base's new position (waterlily's arc)
+    protected virtual void OnBaseMoved() { }
 
     // puts Visual at its rest offset plus the current height, and Shadow on the ground under Base.
     // also called by subclasses that change the height outside Move, so there's no frame at the old spot
