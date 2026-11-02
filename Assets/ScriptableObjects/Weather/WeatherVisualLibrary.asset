@@ -18,22 +18,28 @@ MonoBehaviour:
     tintStrength: 0.3
     lightIntensityMultiplier: 1.1
     particlePrefab: {fileID: 0}
+    nightMaterial: {fileID: 0}
+    ambience: {fileID: 0}
   - weather: 2
     tintColor: {r: 0.25, g: 0.3, b: 0.4, a: 1}
     tintStrength: 0.4
     lightIntensityMultiplier: 0.65
     particlePrefab: {fileID: 2712915376308916410, guid: 3709f080df7fe5e47a609dcfec35776b, type: 3}
+    nightMaterial: {fileID: 0}
     ambience: {fileID: 11400000, guid: d0fcac010926b95498209523b9240970, type: 2}
   - weather: 3
-    tintColor: {r: 0.9, g: 0.95, b: 0.95, a: 1}
-    tintStrength: 0.15
+    tintColor: {r: 1, g: 1, b: 1, a: 1}
+    tintStrength: 0
     lightIntensityMultiplier: 1
     particlePrefab: {fileID: 0}
+    nightMaterial: {fileID: 0}
+    ambience: {fileID: 0}
   - weather: 4
     tintColor: {r: 0.85, g: 0.92, b: 1, a: 1}
-    tintStrength: 0.4
-    lightIntensityMultiplier: 1.05
+    tintStrength: 0
+    lightIntensityMultiplier: 1
     particlePrefab: {fileID: 2712915376308916410, guid: 90bb2d02519818748ae700928472a3bc, type: 3}
+    nightMaterial: {fileID: 0}
     ambience: {fileID: 11400000, guid: a4de42a35d3694545b7cbe9faff06683, type: 2}
   - weather: 5
     tintColor: {r: 0.82, g: 0.68, b: 0.45, a: 1}
@@ -41,8 +47,11 @@ MonoBehaviour:
     lightIntensityMultiplier: 0.75
     particlePrefab: {fileID: 2712915376308916410, guid: 64957656f922a56409cd2aad883f845e, type: 3}
     nightMaterial: {fileID: 2100000, guid: 5692e42ba29859f429173839a1ce31df, type: 2}
+    ambience: {fileID: 0}
   - weather: 6
     tintColor: {r: 0.3, g: 0.55, b: 0.65, a: 1}
     tintStrength: 0.5
     lightIntensityMultiplier: 0.85
     particlePrefab: {fileID: 0}
+    nightMaterial: {fileID: 0}
+    ambience: {fileID: 0}

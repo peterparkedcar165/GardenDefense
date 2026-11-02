@@ -39,7 +39,7 @@ MonoBehaviour:
   baseFireResistance: 0
   baseWaterResistance: 0
   basePoisonResistance: 0
-  baseIceResistance: 0
+  baseIceResistance: -0.25
   baseGrassResistance: 0
   baseWindResistance: 0
   baseDotResistance: 0

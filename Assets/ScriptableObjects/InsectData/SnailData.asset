@@ -24,7 +24,7 @@ MonoBehaviour:
   baseMovementSpeed: 0.4
   baseTargetingRange: 1
   baseArmor: 23
-  baseMagicArmor: 23
+  baseMagicArmor: -10
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
   baseFireResistance: -0.25
   baseWaterResistance: 0.5
   basePoisonResistance: -0.25
-  baseIceResistance: 0
+  baseIceResistance: -0.25
   baseGrassResistance: 0
   baseWindResistance: 0.5
   baseDotResistance: 0
@@ -49,6 +49,7 @@ MonoBehaviour:
   carryPriority: 3
   baseEvasion: 0
   baseAccuracy: 0
+  baseFlightHeight: 1.5
   sunDrop: 14
   sunDropAdder: 0
   sunDropMultiplier: 0
