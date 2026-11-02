@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class PlantSelector : MonoBehaviour
 {
@@ -118,7 +119,14 @@ public class PlantSelector : MonoBehaviour
                    || (MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen);
         if (uiOpen) return;
 
-        if (Mouse.current.rightButton.wasPressedThisFrame || (Keyboard.current.escapeKey.wasPressedThisFrame && !TutorialManager.BlocksEscape))
+        // a right click landing on a UI element (e.g. right-clicking the Speed button to step it
+        // down, see SpeedButtonRightClick) should only do that button's own thing, not also close
+        // whatever plant info panel happens to be open underneath it
+        bool rightClickOnUI = Mouse.current.rightButton.wasPressedThisFrame
+            && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+
+        if ((Mouse.current.rightButton.wasPressedThisFrame && !rightClickOnUI)
+            || (Keyboard.current.escapeKey.wasPressedThisFrame && !TutorialManager.BlocksEscape))
         {
             ClearSelection();
             uprootMode    = false;

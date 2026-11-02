@@ -60,7 +60,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        string text = $"{plant.GetName()}\n\n{plant.GetDescription()}\n\n<b>Element</b>:\n\n{plant.GetElement()}\n{plant.GetElementDescription()}\n\n<b>Family</b>:\n\n{plant.GetFamily()}\n{plant.GetFamilyDescription()}\n\n{plant.GetFamilyPassiveDescription()}";
+        string text = $"{plant.GetName()}\n\n{plant.GetDescription()}\n\n<b>Element</b>:\n\n{plant.GetElement()}\n{plant.GetElementDescription()}";
         PlantUpgradeUI.instance.ShowTooltip(text);
     }
 

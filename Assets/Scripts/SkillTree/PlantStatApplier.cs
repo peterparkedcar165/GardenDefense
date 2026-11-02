@@ -83,7 +83,7 @@ public static class PlantStatApplier
             // rank, and is negated here to match Plant.passiveCooldownAdder's own convention
             case StatType.PassiveCooldownFlat:           plant.passiveCooldownAdder         -= value; break;
             case StatType.AttackRangeFlat:                plant.attackRangeAdder             += value; break;
-            case StatType.MaxSlowStacksFlat:               if (plant is Waterlily wl) wl.maxSlowStacksAdder += Mathf.RoundToInt(value); break;
+            case StatType.MaxSlowStacksFlat:               if (plant is Waterlily wl) wl.maxSoakStacksAdder += Mathf.RoundToInt(value); break;
             case StatType.ToxicSporeDurationFlat:          if (plant is PoisonShroom ps) ps.toxicSporeDurationAdder += value; break;
             case StatType.ProjectileSpeedFlat:             plant.projectileSpeedAdder          += value; break;
             case StatType.AttackDamageTotalMultiplier:     plant.attackDamageTotalMultiplier  += value; break;

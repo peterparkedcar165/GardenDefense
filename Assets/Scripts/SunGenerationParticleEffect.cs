@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// one-shot front/back particle burst spawned wherever a Photosynthesis-family plant generates
+// one-shot front/back particle burst spawned wherever a sun generating plant generates
 // sun from its own passive (Sunflower's book tick, BogIris's sun tick, Kelp's Oxygen threshold -
 // NOT one-off/event sun like Glowshroom's on-kill burst or Aeonium's blessing). burst count
 // scales with the amount of sun generated: floor at 2 sun (2 particles, each of Front and

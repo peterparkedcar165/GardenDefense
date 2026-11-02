@@ -274,10 +274,12 @@ public class Snowdrop : Shooter
         SnowMarkEffect mark = insect.GetEffect<SnowMarkEffect>();
         if (mark == null || mark.source != this) return;
 
-        // detonating with an Attack specifically (as opposed to a Passive/Skill hit) doubles
-        // the % Max Health portion of the bonus - the flat portion is unaffected
+        // detonating with an Attack specifically (as opposed to a Passive/Skill hit) quadruples
+        // the % Max Health portion of the bonus - the flat portion is unaffected. 4x rather than
+        // 2x because snowMarkDamagePercentBase was halved while keeping the Attack-detonation's
+        // own absolute damage unchanged, so the multiplier doubled to compensate
         bool isAttack = System.Array.Exists(data.tags, t => t == DamageTag.Attack);
-        float percentMultiplier = isAttack ? 2f : 1f;
+        float percentMultiplier = isAttack ? 4f : 1f;
         float bonus = SnowMarkFlatDamage + insect.maxHealth * SnowMarkPercent * percentMultiplier;
         insect.Damage(bonus, DamageType.Magic, ElementalType.Ice, this, SnowMarkCanCrit, bonusTags);
         insect.RemoveEffect<SnowMarkEffect>();
@@ -433,7 +435,7 @@ public class Snowdrop : Shooter
     public override string GetPassiveDescription() =>
         $"Bond with a plant, excluding other <color=#00FFFF><b>Snowdrops</b></color> or other plants already bound.\n\n" +
         $"Attacks against unmarked targets deal <color=#00FFFF><b>{SnowMarkFlatDamage:F0}</b></color> + <color=#00FFFF><b>{(SnowMarkPercent - SnowMarkPercentMP) * 100f:F1}%</b></color> [<color=#FFB6C1><b>+{SnowMarkPercentMP * 100f:F1}%</b></color>] of its <color=red><b>Max Health</b></color> as {PlantData.DamageTypeLabel(damageType)}, and apply <color=#00FFFF><b>Snow Mark</b></color> for <color=green><b>{SnowMarkDuration:F0}s</b></color>.\n\n" +
-        $"The bonded plant will target at highest priority the <color=#00FFFF><b>Snow Marked</b></color> insect. Direct damage inflicted by the bonded plant against the <color=#00FFFF><b>Marked</b></color> insect detonates the <color=#00FFFF><b>Snow Mark</b></color>, dealing <color=#00FFFF><b>{SnowMarkFlatDamage:F0}</b></color> + <color=#00FFFF><b>{SnowMarkPercent * 100f:F1}%</b></color> of the target's <color=red><b>Max Health</b></color> as {PlantData.DamageTypeLabel(damageType)}. If the detonation was dealt by an <color=#00FFFF><b>Attack</b></color>, deal <color=#00FFFF><b>{SnowMarkPercent * 200f:F1}%</b></color> <color=red><b>Max Health</b></color> instead.";
+        $"The bonded plant will target at highest priority the <color=#00FFFF><b>Snow Marked</b></color> insect. Direct damage inflicted by the bonded plant against the <color=#00FFFF><b>Marked</b></color> insect detonates the <color=#00FFFF><b>Snow Mark</b></color>, dealing <color=#00FFFF><b>{SnowMarkFlatDamage:F0}</b></color> + <color=#00FFFF><b>{SnowMarkPercent * 100f:F1}%</b></color> of the target's <color=red><b>Max Health</b></color> as {PlantData.DamageTypeLabel(damageType)}. If the detonation was dealt by an <color=#00FFFF><b>Attack</b></color>, deal <color=#00FFFF><b>{SnowMarkPercent * 400f:F1}%</b></color> <color=red><b>Max Health</b></color> instead.";
 
     public override string GetSkillDesription() =>
         $"{GetName()}'s attacks become an <color=#00FFFF><b>Ice Beam</b></color> for <color=green><b>{skillDuration:F0}s</b></color>, within which her Attack Speed is fixed at <color=green><b>{IceBeamAttackSpeed:F1}</b></color>.";
@@ -466,7 +468,7 @@ public class Snowdrop : Shooter
         string desc = details
             ? $"Bond with a plant, excluding other <color=#00FFFF><b>Snowdrops</b></color> or other plants already bound.\n\n" +
               $"Attacks against unmarked targets deal <color=#00FFFF><b>[({SData?.snowMarkFlatDamageBase ?? 12f:F0}) + ({flatpl:F0}/Lvl.)]</b></color> + <color=#00FFFF><b>[({(SData?.snowMarkDamagePercentBase ?? 0.02f) * 100f:F1}%) + ({pctpl * 100f:F1}%/Lvl.) + <color=#FFB6C1>{(SData?.snowMarkDamagePercentMP ?? 0.01f) * 100f:F0}% Magic Power</color>]</b></color> of its <color=red><b>Max Health</b></color> as {PlantData.DamageTypeLabel(damageType)}, and apply <color=#00FFFF><b>Snow Mark</b></color> for <color=green><b>{SnowMarkDuration:F0}s</b></color>.\n\n" +
-              $"The bonded plant will target at highest priority the <color=#00FFFF><b>Snow Marked</b></color> insect. Direct damage inflicted by the bonded plant against the <color=#00FFFF><b>Marked</b></color> insect detonates the <color=#00FFFF><b>Snow Mark</b></color>, dealing the same bonus as <color=red><b>Max Health</b></color> {PlantData.DamageTypeLabel(damageType)}. If the detonation was dealt by an <color=#00FFFF><b>Attack</b></color>, deal double that <color=red><b>Max Health</b></color> percentage instead."
+              $"The bonded plant will target at highest priority the <color=#00FFFF><b>Snow Marked</b></color> insect. Direct damage inflicted by the bonded plant against the <color=#00FFFF><b>Marked</b></color> insect detonates the <color=#00FFFF><b>Snow Mark</b></color>, dealing the same bonus as <color=red><b>Max Health</b></color> {PlantData.DamageTypeLabel(damageType)}. If the detonation was dealt by an <color=#00FFFF><b>Attack</b></color>, deal quadruple that <color=red><b>Max Health</b></color> percentage instead."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase damage by <color=green><b>{flatpl:F0}</b></color> per level. [<color=green><b>+{flatpl * effectivePath2Level:F0}</b></color>]\n\n" +

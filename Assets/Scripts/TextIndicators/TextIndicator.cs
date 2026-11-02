@@ -26,6 +26,7 @@ public abstract class TextIndicator : MonoBehaviour
     protected virtual void Awake()
     {
         tmpText = GetComponent<TMP_Text>();
+        tmpText.raycastTarget = false;
 
         // the spawn jitter decides which side it lands on, and horizontalDrift always pushes
         // further that same way - so this never drifts back the opposite way across center

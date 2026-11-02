@@ -8,7 +8,6 @@ public class Waterlily : Shooter
     public float skillAoERadius;
     public float bubbleDamage;
     public float splashDamage;
-    public float splashOnHitEffectiveness;
     [SerializeField] private GameObject bubbleTrapPrefab;
 
     private WaterlilyData WLData => data as WaterlilyData;
@@ -24,26 +23,52 @@ public class Waterlily : Shooter
     private const float ExtraTargetOnHitReduction = 0.35f;
     private const float BubbleDurationExtension = 0.2f;
 
-    public float SlowDuration => WLData?.baseSlowDuration ?? 6f;
-    // base stack is 1, each passive level raises the cap; maxSlowStacksAdder is the skill tree's
-    // flat bonus on top (see PlantStatApplier.MaxSlowStacksFlat)
-    public int maxSlowStacksAdder;
-    public int MaxSlowStacks => 1 + (WLData?.path2MaxSlowStacksPerLevel ?? 1) * effectivePath2Level + maxSlowStacksAdder;
+    private float SplashDamageRatio => WLData?.splashDamageRatio ?? 0.5f;
 
-    // applies or refreshes the stacking slow, called on both the direct hit and splash damage.
+    // soaked duration, split into base and magic power parts for the description brackets
+    private float SoakDurationBase => (WLData?.baseSoakDuration ?? 4f) + (WLData?.path2SoakDurationPerLevel ?? 0.5f) * effectivePath2Level;
+    private float SoakDurationMP   => (WLData?.soakDurationMP ?? 1f) * magicPower / 100f;
+    public float SoakDuration      => SoakDurationBase + SoakDurationMP;
+
+    // bubble prison duration and the extra damage imprisoned insects take, same base/MP split
+    private float BubbleDurationMP   => (WLData?.bubbleDurationMP ?? 2f) * magicPower / 100f;
+    private float BubbleDuration     => skillDuration + BubbleDurationMP;
+    private float DamageTakenBase    => (WLData?.baseBubbleDamageTaken ?? 0.08f) + (WLData?.path3DamageTakenPerLevel ?? 0.04f) * effectivePath3Level;
+    private float DamageTakenMP      => (WLData?.bubbleDamageTakenMP ?? 0.05f) * magicPower / 100f;
+    private float BubbleDamageTaken  => DamageTakenBase + DamageTakenMP;
+
+    // flat cap with no per level scaling; maxSoakStacksAdder is the skill tree's flat bonus on top
+    // (see PlantStatApplier.MaxSlowStacksFlat)
+    public int maxSoakStacksAdder;
+    public int MaxSoakStacks => (WLData?.maxSoakStacks ?? 4) + maxSoakStacksAdder;
+
+    // how many nearest insects around the main target the splash hits, +1 per attack path level
+    public int SplashTargets => (WLData?.splashMaxExtraTargets ?? 2) + (WLData?.path1SplashTargetsPerLevel ?? 1) * effectivePath1Level;
+
+    private float MaxSoakStunDuration => WLData?.maxSoakStunDuration ?? 0.5f;
+
+    // applies or refreshes the stacking Soaked, called on both the direct hit and splash damage.
     // if this waterlily's own cap can't push the stack any higher (e.g. a lower level waterlily
     // hitting a target already stacked up by a stronger one), the level never drops, only the
-    // duration refreshes. always applies now (used to be a slowProcChance roll)
-    public void ApplyStackingSlow(Insect insect)
+    // duration refreshes
+    public void ApplyStackingSoak(Insect insect)
     {
         if (insect == null || !insect.IsAlive) return;
-        int currentStacks = insect.GetEffect<SlowEffect>()?.level ?? 0;
-        // Path 2 max level: inflicts two stacks per hit instead of one - still clamped to
-        // MaxSlowStacks below, so it can never push a target past its actual stack cap
+        int currentStacks = insect.GetEffect<SoakedEffect>()?.level ?? 0;
+        // Path 2 max level: inflicts two stacks per hit instead of one, still clamped to
+        // MaxSoakStacks below, so it can never push a target past its actual stack cap
         int stacksPerHit = IsPath2Maxed ? 2 : 1;
-        int attemptedStacks = Mathf.Min(currentStacks + stacksPerHit, MaxSlowStacks);
+        int attemptedStacks = Mathf.Min(currentStacks + stacksPerHit, MaxSoakStacks);
         int newStacks = Mathf.Max(currentStacks, attemptedStacks);
-        insect.ApplyEffect(new SlowEffect(insect, SlowDuration, newStacks, this));
+        insect.ApplyEffect(new SoakedEffect(insect, SoakDuration, newStacks, this));
+    }
+
+    // skill max bonus: Bubble Prison popping leaves the insect at this waterlily's full stack cap
+    public void ApplyFullSoak(Insect insect)
+    {
+        if (insect == null || !insect.IsAlive) return;
+        int currentStacks = insect.GetEffect<SoakedEffect>()?.level ?? 0;
+        insect.ApplyEffect(new SoakedEffect(insect, SoakDuration, Mathf.Max(currentStacks, MaxSoakStacks), this));
     }
 
     protected override void Awake()
@@ -83,16 +108,25 @@ public class Waterlily : Shooter
         AoERange = baseAoERange + AoERangeAdder + (baseAoERange * AoERangeMultiplier);
     }
 
-    // skill tree node 10.2: any Water damage this Waterlily deals to an insect currently caught
-    // in one of her own Bubble Prisons extends that bubble's remaining duration
     private void OnAnyEntityHit(EntityEventData hit)
     {
         if (hit.source != this) return;
-        if (hit.elementalType != ElementalType.Water) return;
-        if (!SkillTreeManager.HasUnlock(this, ExtendBubbleDurationUnlock)) return;
         if (hit.target is not Insect insect) return;
-        BubblePrisonEffect bubble = insect.GetEffect<BubblePrisonEffect>();
-        if (bubble != null) bubble.duration += BubbleDurationExtension;
+
+        // attack path max bonus: any damage she deals to an insect already at her max Soaked
+        // stacks stuns it. this event fires inside Damage, before the hit's own soak is applied,
+        // so the hit that first reaches the cap doesn't stun, the next one does
+        if (IsPath1Maxed && hit.damage > 0f && insect.IsAlive
+            && (insect.GetEffect<SoakedEffect>()?.level ?? 0) >= MaxSoakStacks)
+            insect.ApplyEffect(new StunEffect(insect, MaxSoakStunDuration, 1, this));
+
+        // skill tree node 10.2: any Water damage this Waterlily deals to an insect currently caught
+        // in one of her own Bubble Prisons extends that bubble's remaining duration
+        if (hit.elementalType == ElementalType.Water && SkillTreeManager.HasUnlock(this, ExtendBubbleDurationUnlock))
+        {
+            BubblePrisonEffect bubble = insect.GetEffect<BubblePrisonEffect>();
+            if (bubble != null) bubble.duration += BubbleDurationExtension;
+        }
     }
 
     public override void UpdateStats()
@@ -102,12 +136,10 @@ public class Waterlily : Shooter
         base.UpdateStats();
         if (extraTarget)
             onHitEffectiveness *= 1f - ExtraTargetOnHitReduction;
-        float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
-        float bubblepl = WLData?.path3BubbleDamagePerLevel        ?? 12f;
-        splashDamage = WLData.baseSplashDamage + attackDamage * splashpl * effectivePath2Level + skillDamageMultiplier * magicPower;
-        bubbleDamage = (WLData?.baseBubblePrisonImpactDamage ?? 0f) + bubblepl * effectivePath3Level + skillDamageMultiplier * magicPower;
-        // kept as a fraction of onHitEffectiveness, so it mirrors any bonus applied above instead of being a fixed value
-        splashOnHitEffectiveness = (WLData?.splashOnHitEffectiveness ?? 0.33f) * onHitEffectiveness;
+        // splash is a fixed fraction of the bubble's own damage, no per level or magic power scaling
+        splashDamage = attackDamage * SplashDamageRatio;
+        // impact damage no longer scales, magic power goes into the bubble's duration and damage taken
+        bubbleDamage = WLData?.baseBubblePrisonImpactDamage ?? 0f;
     }
 
     protected override void Shoot(Vector3 target)
@@ -158,7 +190,8 @@ public class Waterlily : Shooter
     {
         baseAttackDamage = data.baseAttackDamage + level * (WLData?.path1AttackDamagePerLevel ?? 5f);
         baseAttackRange = data.baseAttackRange + level * (WLData?.path1AttackRangePerLevel ?? 0.5f);
-        baseAttackSpeed = data.baseAttackSpeed + level * (WLData?.path1AttackSpeedPerLevel ?? 0.3f);
+        // attack speed no longer scales per level, the attack path adds splash targets instead (SplashTargets)
+        baseAttackSpeed = data.baseAttackSpeed;
     }
 
     public override void OnPath2Upgrade(int level)
@@ -184,79 +217,78 @@ public class Waterlily : Shooter
         GameObject obj = Instantiate(bubbleTrapPrefab, transform.position, Quaternion.identity);
         BubblePrison bubble = obj.GetComponent<BubblePrison>();
         if (bubble != null)
-            bubble.Initialize(position, skillAoERadius, skillDuration, bubbleDamage, this);
+            bubble.Initialize(position, skillAoERadius, BubbleDuration, bubbleDamage, BubbleDamageTaken, this);
     }
 
     public override string GetName() => "<b><color=#3399FF>Waterlily</color></b>";
 
     public override string GetDescription() =>
-        $"The {GetName()} shoots her targets with little bubbles that hurts surrounding insects. She can also imprison her foes with her larger bubble.";
+        $"The {GetName()} shoots her targets with little bubbles that soak surrounding insects. She can also imprison her foes with her larger bubble, leaving them exposed to her allies.";
 
     public override string GetAttackDescription() =>
         $"Blow little bubbles towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
-    public override string GetSkillDesription()
-    {
-        float bubblepl = WLData?.path3BubbleDamagePerLevel ?? 12f;
-        return $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color={PlantData.ElementalColor(elementalType)}><b>{(WLData?.baseBubblePrisonImpactDamage ?? 0f) + bubblepl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} upon impact, and keeping them airborne for <color=green><b>{skillDuration}</b></color> seconds within a <color=green><b>{skillAoERadius:F1}</b></color> radius.";
-    }
+    public override string GetSkillDesription() =>
+        $"Blow a large bubble onto a targetted area, trapping insects within the bubble while dealing <color={PlantData.ElementalColor(elementalType)}><b>{bubbleDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} upon impact, and keeping them airborne for <color=green><b>{skillDuration:F1}</b></color> [<color=#FFB6C1><b>+{BubbleDurationMP:F1}</b></color>] seconds within a <color=green><b>{skillAoERadius:F1}</b></color> radius.\n\n" +
+        $"Imprisoned insects take <color=green><b>{DamageTakenBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{DamageTakenMP * 100f:F0}%</b></color>] increased damage from all sources.";
 
-    public override string GetPassiveDescription()
-    {
-        float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
-        return $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>{WLData.baseSplashDamage + attackDamage * splashpl * effectivePath2Level:F1}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F1}</b></color>] {PlantData.DamageTypeLabel(damageType)} to surrounding insects within a <color=green><b>{AoERange}</b></color> radius.\n\n" +
-               $"Dealing damage with attacks and splash damage applies a stacking <color=#87CEEB><b>Slow</b></color> of <color=green><b>{SlowDuration:F1}s</b></color>, for <color=green><b>{SlowEffect.baseSlowness * 100f:F0}%</b></color> + <color=green><b>{SlowEffect.slownessPerLevel * 100f:F0}%</b></color> per stack, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks.";
-    }
+    private string SoakLine() =>
+        $"Dealing damage with attacks and splash damage inflicts a stacking <color=#4FC3F7><b>Soaked</b></color> for <color=green><b>{SoakDurationBase:F1}s</b></color> [<color=#FFB6C1><b>+{SoakDurationMP:F1}s</b></color>], slowing by <color=green><b>{SoakedEffect.baseSoakSlowness * 100f:F0}%</b></color> + <color=green><b>{SoakedEffect.soakSlownessPerLevel * 100f:F0}%</b></color> per stack, up to <color=#4FC3F7><b>{MaxSoakStacks}</b></color> stacks. <color=#4FC3F7><b>Soaked</b></color> insects are grounded.";
+
+    private string SplashLine() =>
+        $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>{splashDamage:F1}</b></color> {PlantData.DamageTypeLabel(damageType)} to the <color=green><b>{SplashTargets}</b></color> nearest insects around the target within a <color=green><b>{AoERange:F2}</b></color> radius.";
+
+    public override string GetPassiveDescription() =>
+        $"{SplashLine()}\n\n{SoakLine()}";
 
     public override string GetPath1Description(bool details = false)
     {
-        float dmgpl   = WLData?.path1AttackDamagePerLevel ?? 5f;
-        float rangepl = WLData?.path1AttackRangePerLevel ?? 0.5f;
-        float aspl    = WLData?.path1AttackSpeedPerLevel ?? 0.3f;
+        float dmgpl     = WLData?.path1AttackDamagePerLevel ?? 5f;
+        float rangepl   = WLData?.path1AttackRangePerLevel ?? 0.5f;
+        int   targetspl = WLData?.path1SplashTargetsPerLevel ?? 1;
         string desc = details
-            ? $"Blows little bubbles towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
-            : GetAttackDescription();
+            ? $"Blows little bubbles towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}. Splash hits the <color=green><b>[({WLData?.splashMaxExtraTargets ?? 2}) + ({targetspl}/Lvl.)]</b></color> nearest insects around the target."
+            : $"{GetAttackDescription()} Splash hits the <color=green><b>{SplashTargets}</b></color> nearest insects around the target.";
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"Increase splash targets by <color=green><b>{targetspl}</b></color> per level. [<color=green><b>+{targetspl * effectivePath1Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, $"Splash damage now applies <color=green><b>On-Hit</b></color> effects at <color=green><b>{splashOnHitEffectiveness * 100f:F0}%</b></color> effectiveness. Splash damage is now also considered a <color=green><b>Projectile</b></color> attack.")}\n\n" +
+               $"{Level5Section(path1Level, $"Dealing damage to an insect at max <color=#4FC3F7><b>Soaked</b></color> stacks <color=#FFD700><b>Stuns</b></color> it for <color=green><b>{MaxSoakStunDuration:F1}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath2Description(bool details = false)
     {
-        float splashpl = WLData?.path2SplashDamageScalingPerLevel ?? 0.05f;
-        float aoepl   = WLData?.path2AoERangePerLevel             ?? 0.05f;
-        int stackspl  = WLData?.path2MaxSlowStacksPerLevel        ?? 1;
+        float soakpl = WLData?.path2SoakDurationPerLevel ?? 0.5f;
+        float aoepl  = WLData?.path2AoERangePerLevel     ?? 0.05f;
         string desc = details
-            ? $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>[({WLData.baseSplashDamage:F1}) + ({splashpl * 100f:F0}% <color=green><b>Attack Damage</b></color>/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} to surrounding insects within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius.\n\n" +
-              $"Dealing damage with attacks and splash damage applies a stacking <color=#87CEEB><b>Slow</b></color> of <color=green><b>{SlowDuration:F1}s</b></color>, for <color=green><b>{SlowEffect.baseSlowness * 100f:F0}%</b></color> + <color=green><b>{SlowEffect.slownessPerLevel * 100f:F0}%</b></color> per stack, up to <color=#87CEEB><b>{MaxSlowStacks}</b></color> stacks."
+            ? $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>[{SplashDamageRatio * 100f:F0}% <color=green><b>Attack Damage</b></color>]</b></color> {PlantData.DamageTypeLabel(damageType)} to the <color=green><b>{SplashTargets}</b></color> nearest insects around the target within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius.\n\n" +
+              $"Dealing damage with attacks and splash damage inflicts a stacking <color=#4FC3F7><b>Soaked</b></color> for <color=green><b>[({WLData?.baseSoakDuration ?? 4f:F1}) + ({soakpl:F1}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.soakDurationMP ?? 1f):F1}s per 100 Magic Power</b></color>] seconds, slowing by <color=green><b>{SoakedEffect.baseSoakSlowness * 100f:F0}%</b></color> + <color=green><b>{SoakedEffect.soakSlownessPerLevel * 100f:F0}%</b></color> per stack, up to <color=#4FC3F7><b>{MaxSoakStacks}</b></color> stacks. <color=#4FC3F7><b>Soaked</b></color> insects are grounded."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase splash damage by <color=green><b>{splashpl * 100f:F0}%</b></color> <color=green><b>Attack Damage</b></color> per level. [<color=green><b>+{attackDamage * splashpl * effectivePath2Level:F1}</b></color>]\n\n" +
+               $"Increase <color=#4FC3F7><b>Soaked</b></color> duration by <color=green><b>{soakpl:F1}s</b></color> per level. [<color=green><b>+{soakpl * effectivePath2Level:F1}s</b></color>]\n\n" +
                $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
-               $"Increase max <color=#87CEEB><b>Slow</b></color> stacks by <color=green><b>{stackspl}</b></color> per level. [<color=green><b>+{stackspl * effectivePath2Level}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"Inflicts two stacks of <color=#87CEEB><b>Slow</b></color> instead of one.")}\n\n" +
+               $"{Level5Section(path2Level, $"Inflicts two stacks of <color=#4FC3F7><b>Soaked</b></color> instead of one.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float bubblepl = WLData?.path3BubbleDamagePerLevel  ?? 12f;
+        float takenpl  = WLData?.path3DamageTakenPerLevel   ?? 0.04f;
         float durpl    = WLData?.path3SkillDurationPerLevel ?? 2f;
         float radiuspl = WLData?.path3RadiusPerLevel        ?? 0.2f;
         string desc = details
-            ? $"Blows a large bubble onto a targeted area, trapping insects within the bubble while dealing <color=green><b>[({WLData?.baseBubblePrisonImpactDamage ?? 0f:F0}) + ({bubblepl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} upon impact, and keeping them airborne for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds within a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F2}/Lvl.)]</b></color> radius."
+            ? $"Blows a large bubble onto a targeted area, trapping insects within the bubble while dealing <color=green><b>{bubbleDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} upon impact, and keeping them airborne for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.bubbleDurationMP ?? 2f):F1}s per 100 Magic Power</b></color>] seconds within a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F2}/Lvl.)]</b></color> radius.\n\n" +
+              $"Imprisoned insects take <color=green><b>[({(WLData?.baseBubbleDamageTaken ?? 0.08f) * 100f:F0}%) + ({takenpl * 100f:F0}%/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.bubbleDamageTakenMP ?? 0.05f) * 100f:F0}% per 100 Magic Power</b></color>] increased damage from all sources."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
-               $"Increase impact damage by <color=green><b>{bubblepl:F0}</b></color> per level. [<color=green><b>+{bubblepl * effectivePath3Level:F0}</b></color>]\n\n" +
+               $"Increase damage taken by imprisoned insects by <color=green><b>{takenpl * 100f:F0}%</b></color> per level. [<color=green><b>+{takenpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, "Imprisoned insects slowly rise during the effect.")}\n\n" +
+               $"{Level5Section(path3Level, "Imprisoned insects slowly rise during the effect, taking fall damage when it ends. When the bubble pops, insects inside are left at full <color=#4FC3F7><b>Soaked</b></color> stacks.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

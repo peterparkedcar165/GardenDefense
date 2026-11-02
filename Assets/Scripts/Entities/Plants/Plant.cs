@@ -32,20 +32,8 @@ public struct PlantBaseStats
 
 public enum TARGETING { Nearest, First, Last, Strongest }
 
-// a plant's family defines its archetype/role in the garden.
-// Burgeon (summoning) has been removed - ordinal 6 is intentionally left unused (rather than
-// letting Kindred slide down to it) so existing PlantData assets serialized as family: 7
-// (Kindred, e.g. Calendula/Carrot) don't silently point at the wrong value
-public enum PlantFamily
-{
-    Photosynthesis, // sun generator
-    Verdance,       // healer
-    Symbiosis,      // buffer
-    Ironbark,       // tank/shield
-    Thorn,          // single target dps
-    Wither,         // debuff/nihility
-    Kindred = 7,    // coordinated attacks (e.g. Calendula's skill)
-}
+// a plant's job in the garden, replaces the old families. no mechanics read it yet
+public enum PlantRole { Tank, DPS, Support }
 
 // generic snapshot of a plant's auto-cast state, captured on death and restored on revival.
 // targetTile is used by plants that auto-cast onto another plant (e.g. Calendula), so the
@@ -126,7 +114,7 @@ public abstract class Plant : Entity, IAttackable
 
     // how many "tickets" this plant holds in an insect's weighted-random target roll (see
     // Insect.FindTauntWeightedPlantInRange). baseTauntValue is author-set per plant in its
-    // PlantData asset (defaulting to its family's baseline there) - tauntValueAdder is the only
+    // PlantData asset (default 3 there) - tauntValueAdder is the only
     // way to shift it at runtime from there (no multiplier, by design). floored at 0: a plant
     // at 0 tickets can never be rolled, i.e. unselectable
     public float baseTauntValue;
@@ -375,15 +363,7 @@ public abstract class Plant : Entity, IAttackable
 
     public override void UpdateStats()
     {
-        // Photosynthesis family passive: converts 100% of Sun Yield into Attack Speed. added
-        // before base.UpdateStats() (which is what actually folds attackSpeedMultiplier into
-        // attackSpeed) and subtracted back right after, so it contributes to this frame's
-        // attackSpeed without permanently accumulating on the field itself
-        bool isPhotosynthesis = data != null && data.family == PlantFamily.Photosynthesis;
-        float photosynthesisBonus = isPhotosynthesis ? sunYieldMultiplier : 0f;
-        attackSpeedMultiplier += photosynthesisBonus;
         base.UpdateStats();
-        attackSpeedMultiplier -= photosynthesisBonus;
         tauntValue = Mathf.Max(0f, baseTauntValue + tauntValueAdder);
         comfortMin = baseComfortMin + comfortMinAdder;
         comfortMax = baseComfortMax + comfortMaxAdder;
@@ -1540,74 +1520,10 @@ public abstract class Plant : Entity, IAttackable
             return $"Increase Passive tree level by <color=green>1</color> when exposed to moonlight (dark, but not pitch black, and not raining)";
 
             case ElementalType.Ice:
-            return $"Increase Passive tree level by <color=green>1</color> when in cold weather\n50% Cold Resistance";
+            return $"Increase Passive tree level by <color=green>1</color> when exposed to snow\n50% Cold Resistance";
 
             case ElementalType.Wind:
             return $"Increase Passive tree level by <color=green>1</color> when in high altitude";
-
-            default:
-            return "";
-        }
-    }
-
-    public virtual string GetFamily() => PlantData.FamilyTag(data != null ? data.family : default);
-
-    public virtual string GetFamilyDescription()
-    {
-        switch (data != null ? data.family : default)
-        {
-            case PlantFamily.Photosynthesis:
-            return "Enhances the growth of the garden by providing <color=yellow><b>Sun</b></color>.";
-
-            case PlantFamily.Verdance:
-            return "Aids and provides health benefits to allied plants.";
-
-            case PlantFamily.Symbiosis:
-            return "Provides offensive benefits to allied plants.";
-
-            case PlantFamily.Ironbark:
-            return "Provides defenses to the garden, and resistances to allied plants.";
-
-            case PlantFamily.Thorn:
-            return "Eradicates pests from the garden, strong and powerful.";
-
-            case PlantFamily.Wither:
-            return "Aids the garden by inflicting debuffs on insects.";
-
-            case PlantFamily.Kindred:
-            return "A side-partner plant, who relies on allies to unleash their full potential.";
-
-            default:
-            return "";
-        }
-    }
-
-    // the mechanical effect every plant of this family shares, regardless of its own kit -
-    // shown alongside GetFamilyDescription() in the Family tooltip section
-    public virtual string GetFamilyPassiveDescription()
-    {
-        switch (data != null ? data.family : default)
-        {
-            case PlantFamily.Photosynthesis:
-            return "<b>Passive</b>: Converts 100% of Sun Yield into Attack Speed.";
-
-            case PlantFamily.Verdance:
-            return "<b>Passive</b>: Has a 50% chance to be completely ignored by insects.";
-
-            case PlantFamily.Symbiosis:
-            return "<b>Passive</b>: Attacks have a 50% chance to reduce Skill Cooldown by 1 second on hit.";
-
-            case PlantFamily.Ironbark:
-            return $"<b>Passive</b>: While over {IronbarkAggroEffect.HealthThreshold * 100f:F0}% Health, insects that initiate an Attack will retain aggro.";
-
-            case PlantFamily.Thorn:
-            return "<b>Passive</b>: Damage dealt against insects under 50% Health is increased by 10%.";
-
-            case PlantFamily.Wither:
-            return "<b>Passive</b>: Attacks have a 50% chance to reduce Skill Cooldown by 1 second on hit.";
-
-            case PlantFamily.Kindred:
-            return "<b>Passive</b>: Dealing Coordinated Damage has a 33% chance to reduce Skill Cooldown by 0.75 seconds.";
 
             default:
             return "";

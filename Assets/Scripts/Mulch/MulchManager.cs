@@ -23,6 +23,11 @@ public class MulchManager : MonoBehaviour
     public static float PrimerCooldownMultiplier = 1f;
     public static float BurnDurationMultiplier = 1f;
     public static float RegenerationHealMultiplier = 1f;
+    // read directly by Entity.cs's Freeze+Fire branch - MeltActive swaps the base instant-shatter
+    // reaction for Melt's gradual chip-away-the-duration version
+    public static bool MeltActive = false;
+    public static float MeltFreezeDurationReduction = 0f;
+    public static float MeltDamageMultiplier = 1f;
 
     private PlantRegistry plantRegistry;
     private MulchRegistry mulchRegistry;
@@ -75,6 +80,9 @@ public class MulchManager : MonoBehaviour
         PrimerCooldownMultiplier = 1f;
         BurnDurationMultiplier = 1f;
         RegenerationHealMultiplier = 1f;
+        MeltActive = false;
+        MeltFreezeDurationReduction = 0f;
+        MeltDamageMultiplier = 1f;
     }
 
     // called by Plant.cs whenever a plant is placed, next to FertilizerManager.ApplyTo/

@@ -10,4 +10,6 @@ public class WeatherMulchData : MulchData
     public int intensity = 1;
 
     public override MulchEffect CreateEffect() => new WeatherMulchEffect(this);
+
+    public override string GetDescription() => $"Changes the level's weather to {weather}.";
 }

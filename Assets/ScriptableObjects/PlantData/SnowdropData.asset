@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: 3997787884886350849, guid: 66cc86ab63224114c893b2c8e527b49d, type: 3}
   plantName: Snowdrop
   displayName: Snowdrop
-  family: 7
+  role: 1
   elementalType: 4
   damageType: 1
   sunCost: 125
@@ -24,11 +24,11 @@ MonoBehaviour:
   tauntValue: 3
   category: 0
   skillTree: {fileID: 11400000, guid: 84f8614f737b4d32ac46ef913451db9c, type: 2}
-  fertilizerPossibleStats: 
+  fertilizerPossibleStats: 17000000
   baseMaxHealth: 200
   baseAttackDamage: 16
   baseMagicPower: 0
-  baseAttackSpeed: 0.3
+  baseAttackSpeed: 0.2
   baseAttackRange: 2
   baseAttackChargeTime: 0
   baseArmor: 0
@@ -55,7 +55,6 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
-  baseBonusEffectChance: 0
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -73,13 +72,19 @@ MonoBehaviour:
   baseProjectileSpeed: 7
   baseMaxRange: 33
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 90
-  baseSkillDuration: 10
+  baseSkillCooldown: 120
+  baseSkillDuration: 12
   channelDuration: 0
   baseSkillRadius: 1.5
   baseSkillDamageMultiplier: 0.35
@@ -93,11 +98,11 @@ MonoBehaviour:
   skillSound:
     clips: []
   path1AttackDamagePerLevel: 2
-  path1AttackSpeedPerLevel: 0.04
+  path1AttackSpeedPerLevel: 0.06
   path1AttackRangePerLevel: 0.2
   snowMarkFlatDamageBase: 6
   snowMarkFlatDamagePerLevel: 3
-  snowMarkDamagePercentBase: 0.01
+  snowMarkDamagePercentBase: 0.005
   snowMarkDamagePercentPerLevel: 0.002
   snowMarkDamagePercentMP: 0.01
   snowMarkDuration: 8

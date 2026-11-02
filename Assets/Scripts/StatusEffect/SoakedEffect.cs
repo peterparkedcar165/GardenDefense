@@ -1,42 +1,35 @@
-using UnityEngine;
-
-// water elemental effect proc: reduces movement and attack speed, scaled by the source's elemental affinity
-public class SoakedEffect : StatusEffect, IElementalAffinityEffect
+// waterlily's stacking soak: a movement slow built on SlowEffect (so the Hinder mulch's global
+// slow bonus still applies) with its own stronger per stack values, plus it grounds flying
+// insects for as long as it lasts. grounding goes through GroundedEffect so it shares the one
+// flight authority every other grounding source already uses, and never shortens a longer
+// ground that is already running
+public class SoakedEffect : SlowEffect
 {
-    private float reduction;
-    private float movementReduction;
-
-    public float AffinityPower => source?.elementalAffinity ?? 0f;
+    // 18% at 1 stack, +10% per stack after that
+    public const float baseSoakSlowness = 0.18f;
+    public const float soakSlownessPerLevel = 0.10f;
 
     public SoakedEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        reduction = 0.2f * (1f + source.elementalAffinity);
-        // movement speed specifically gets the global slow bonus on top - attack speed does not,
-        // since that bonus is meant for "slowing effects" (movement) only
-        movementReduction = reduction + MulchManager.GlobalSlowBonus;
-        effectType = Type.negative;
-        elementalType = ElementalType.Water;
+        slowness = baseSoakSlowness + soakSlownessPerLevel * (level - 1) + MulchManager.GlobalSlowBonus;
     }
 
     public override string GetName() => "<color=#4FC3F7>Soaked</color>";
     public override string GetDescription() =>
-        $"Reduce <color=green><b>Movement Speed</b></color> and <color=green><b>Attack Speed</b></color> by <color=green><b>{reduction * 100f:F0}%</b></color>.";
+        $"Reduce <color=green><b>Movement Speed</b></color> by <color=green><b>{slowness * 100:F0}%</b></color>. Grounds flying insects.";
 
     public override void OnApply()
     {
-        StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Soaked", new Color(0.31f, 0.76f, 0.97f));
+        base.OnApply();
 
-        Insect insect = (Insect)target;
-        insect.movementSpeedMultiplier -= movementReduction;
-        insect.attackSpeedMultiplier -= reduction;
-    }
+        if (target is not FlyingInsect flyer) return;
+        GroundedEffect existing = flyer.GetEffect<GroundedEffect>();
+        if (existing != null && existing.duration >= duration) return;
 
-    public override void OnTick(float deltaTime) { }
-
-    public override void OnExpire()
-    {
-        Insect insect = (Insect)target;
-        insect.movementSpeedMultiplier += movementReduction;
-        insect.attackSpeedMultiplier += reduction;
+        GroundedEffect grounded = new GroundedEffect(flyer, duration, 1, source);
+        flyer.ApplyEffect(grounded);
+        // ApplyEffect scales durations by debuff given/received again, keep the ground matched
+        // to this soak's own already scaled duration instead
+        grounded.duration = duration;
     }
 }

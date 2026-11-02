@@ -11,6 +11,10 @@ public class BubblePrisonEffect : Airborne
     private const float bobSpeed = 2f;
     private const float bobAmplitude = 0.08f;
     private readonly bool _rising;
+    // extra damage the imprisoned insect takes from every source while trapped (Entity.damageTakenBonus)
+    private readonly float _damageTakenBonus;
+    // waterlily skill max bonus: on pop, the insect is left at its source's full Soaked stacks
+    private readonly bool _popSoak;
     private const float riseSpeed = 0.5f;
 
     // skill tree nodes 5.1/5.2
@@ -20,22 +24,27 @@ public class BubblePrisonEffect : Airborne
     private readonly bool _hasPopDamage;
     private static readonly DamageTag[] popDamageTags = { DamageTag.SkillDamage };
 
-    public BubblePrisonEffect(Entity target, float duration, int level, Entity source, bool rising = false)
+    public BubblePrisonEffect(Entity target, float duration, int level, Entity source, bool rising = false, float damageTakenBonus = 0f, bool popSoak = false)
         : base(target, duration, level, source)
     {
         effectType = Type.negative;
         elementalType = ElementalType.Water;
         _rising = rising;
+        _damageTakenBonus = damageTakenBonus;
+        _popSoak = popSoak;
         Plant sourcePlant = source as Plant;
         _hasBacktrack = sourcePlant != null && SkillTreeManager.HasUnlock(sourcePlant, Waterlily.BubbleBacktrackUnlock);
         _hasPopDamage = sourcePlant != null && SkillTreeManager.HasUnlock(sourcePlant, Waterlily.BubblePopDamageUnlock);
     }
 
     public override string GetName() => "<color=#4FC3F7>Bubble Prison</color>";
-    public override string GetDescription() => "Hanging in the air, imprisoned within a bubble.";
+    public override string GetDescription() =>
+        $"Hanging in the air, imprisoned within a bubble. Takes <color=red><b>{_damageTakenBonus * 100f:F0}%</b></color> increased damage from all sources.";
 
     public override void OnApply()
     {
+        target.damageTakenBonus += _damageTakenBonus;
+
         Insect insect = target as Insect;
         if (insect == null) return;
         visual = insect.transform.Find("Visual");
@@ -133,11 +142,20 @@ public class BubblePrisonEffect : Airborne
                 target.Damage(popDamage, DamageType.Physical, elementalType, popDamageTags);
         }
 
+        // taken back after the pop so the pop hit itself still gets the bonus
+        target.damageTakenBonus -= _damageTakenBonus;
+
+        if (_popSoak && source is Waterlily popWaterlily && target is Insect soakInsect && soakInsect.IsAlive)
+            popWaterlily.ApplyFullSoak(soakInsect);
+
         if (visual == null) return;
 
         if (target is FlyingInsect)
         {
-            target.ApplyEffect(new GroundedEffect(target, 5f, 1, source));
+            // never shorten a longer ground that is already running (e.g. the pop soak above)
+            GroundedEffect existingGround = target.GetEffect<GroundedEffect>();
+            if (existingGround == null || existingGround.duration < 5f)
+                target.ApplyEffect(new GroundedEffect(target, 5f, 1, source));
         }
         else
         {

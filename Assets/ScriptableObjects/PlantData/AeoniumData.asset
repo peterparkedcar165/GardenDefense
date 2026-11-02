@@ -21,6 +21,8 @@ MonoBehaviour:
   damageType: 1
   sunCost: 95
   tauntValue: 3
+  retainsAggro: 0
+  generatesSun: 1
   baseMaxHealth: 200
   baseAttackDamage: 24
   baseMagicPower: 0

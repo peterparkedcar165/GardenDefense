@@ -87,7 +87,7 @@ public class MulchCard : MonoBehaviour
         // element - see MulchTierColors. MulchData.color is no longer read here
         if (background != null) background.color = MulchTierColors.Get(data.tier);
         if (nameText != null) nameText.text = data.mulchName;
-        if (descriptionText != null) descriptionText.text = data.description;
+        if (descriptionText != null) descriptionText.text = data.GetDescription();
     }
 
     public void OnSelectClicked()

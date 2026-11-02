@@ -10,4 +10,8 @@ public class HealSplashMulchData : MulchData
     public float internalCooldown = 1f;
 
     public override MulchEffect CreateEffect() => new HealSplashMulchEffect(this);
+
+    public override string GetDescription() =>
+        $"Whenever a plant heals <b>another</b> plant, deal damage to nearby insects equal to " +
+        $"<b><color=green>{damagePercent * 100f:F0}%</color></b> of the healing done.";
 }

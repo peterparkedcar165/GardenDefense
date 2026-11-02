@@ -77,8 +77,7 @@ public class AloeVera : Lobber
         skillChargeRateAdder = 0.2f * rainLevel;
 
         // attackDamage is computed inside base.UpdateStats() itself, so the Max Health bonus has
-        // to go in via the adder before that call (same trick Photosynthesis uses for Attack
-        // Speed in Plant.cs) rather than added on afterward like the two heal values below -
+        // to go in via the adder before that call rather than added on afterward like the two heal values below -
         // uses last frame's maxHealth, same one-frame lag that trick always has
         float attackMaxHealthBonus = AttackMaxHealthBonus;
         attackDamageAdder += attackMaxHealthBonus;

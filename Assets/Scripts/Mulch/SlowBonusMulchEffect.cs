@@ -1,6 +1,6 @@
 // adds a flat extra Movement Speed reduction to every effect that slows insects (SlowEffect,
-// MireSlowEffect, OffPathSlownessEffect, SnowMarkEffect's Chilling Grasp slow, SoakedEffect's
-// movement component, FrostbiteEffect) via the global MulchManager.GlobalSlowBonus, which each
+// MireSlowEffect, OffPathSlownessEffect, SnowMarkEffect's Chilling Grasp slow, SoakedEffect
+// through SlowEffect, FrostbiteEffect) via the global MulchManager.GlobalSlowBonus, which each
 // of those bakes into its own applied amount at construction time. only affects slows applied
 // after this mulch is picked - already-active ones keep their original amount until they refresh
 public class SlowBonusMulchEffect : MulchEffect

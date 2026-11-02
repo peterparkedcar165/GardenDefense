@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // single source of truth for which fertilizer stats are available generically (any loadout),
-// which are unlocked by an elemental/family presence in the current loadout, and which are only
+// which are unlocked by an elemental presence in the current loadout, and which are only
 // ever available if a specific plant's own PlantData.fertilizerPossibleStats opts into them.
 // used both by the runtime stat-pool computation (building the 3 choices to roll) and by the
 // PlantData Inspector (to hide already-globally-handled stats from that per-plant list)
@@ -123,16 +123,6 @@ public static class FertilizerStatRules
         return false;
     }
 
-    private static readonly Dictionary<PlantFamily, StatType[]> FamilyStats = new Dictionary<PlantFamily, StatType[]>
-    {
-        { PlantFamily.Verdance,       new[] { StatType.HealingBonus } },
-        { PlantFamily.Photosynthesis, new[] { StatType.SunGenerationCooldownMultiplier } },
-        { PlantFamily.Wither,         new[] { StatType.DebuffGivenDuration } },
-        { PlantFamily.Kindred,        new[] { StatType.CoordinatedDamage } },
-        { PlantFamily.Symbiosis,      new[] { StatType.BuffGivenDuration } },
-        // Ironbark and Thorn intentionally have no family-conditional stats beyond generic
-    };
-
     private static HashSet<StatType> _allGloballyHandled;
 
     // only the truly universal stats get filtered out of PlantData's per-plant
@@ -141,9 +131,9 @@ public static class FertilizerStatRules
     // it's inherently a whole-loadout payoff (2+ distinct elements present), not something a
     // single plant can meaningfully "have" on its own.
     //
-    // elemental/family/damage-type conditional stats are deliberately NOT excluded here: a plant
+    // elemental/damage-type conditional stats are deliberately NOT excluded here: a plant
     // can legitimately want one of those from a category it doesn't itself belong to (e.g.
-    // Calendula, a Kindred plant, picking up Symbiosis's BuffGivenDuration) - that's exactly what
+    // Calendula picking up BuffGivenDuration) - that's exactly what
     // the per-plant list is for, so the picker leaves them selectable
     public static HashSet<StatType> AllGloballyHandled
     {
@@ -158,14 +148,13 @@ public static class FertilizerStatRules
     }
 
     // builds the full set of stats a fertilizer is allowed to roll for the player's current
-    // loadout: generic + whichever elemental/family/multi-affinity rules the loadout satisfies +
+    // loadout: generic + whichever elemental/multi-affinity rules the loadout satisfies +
     // the union of every present plant's own fertilizerPossibleStats
     public static HashSet<StatType> GetAvailableStats(IEnumerable<PlantData> loadout)
     {
         HashSet<StatType> available = new HashSet<StatType>(GenericStats);
         HashSet<ElementalType> elementsSeen = new HashSet<ElementalType>();
         bool hasFallDamagePlant = false;
-        bool hasIronbark = false;
         bool hasRangedPlant = false;
 
         foreach (PlantData plant in loadout)
@@ -176,9 +165,6 @@ public static class FertilizerStatRules
                 available.Add(elementalStat);
             elementsSeen.Add(plant.elementalType);
 
-            if (FamilyStats.TryGetValue(plant.family, out StatType[] familyStats))
-                foreach (StatType stat in familyStats) available.Add(stat);
-
             if (DamageTypeStats.TryGetValue(plant.damageType, out StatType[] damageTypeStats))
                 foreach (StatType stat in damageTypeStats) available.Add(stat);
 
@@ -186,7 +172,6 @@ public static class FertilizerStatRules
                 foreach (StatType stat in plant.fertilizerPossibleStats) available.Add(stat);
 
             if (FallDamagePlantNames.Contains(plant.plantName)) hasFallDamagePlant = true;
-            if (plant.family == PlantFamily.Ironbark) hasIronbark = true;
             if (!MeleePlantNames.Contains(plant.plantName)) hasRangedPlant = true;
         }
 
@@ -197,7 +182,7 @@ public static class FertilizerStatRules
         if (hasRangedPlant) available.Add(StatType.AttackRange);
 
         if (hasFallDamagePlant || HasFlyingInsectInLevel()) available.Add(StatType.FallDamage);
-        if (hasIronbark || HasHighAggressivityInsectInLevel()) available.Add(StatType.Armor);
+        if (HasHighAggressivityInsectInLevel()) available.Add(StatType.Armor);
         if (HasMagicInsectInLevel()) available.Add(StatType.MagicArmor);
 
         return available;
@@ -219,7 +204,6 @@ public static class FertilizerStatRules
     {
         public bool appliesToAll;
         public ElementalType? requiredElement;
-        public PlantFamily? requiredFamily;
         public DamageType? requiredDamageType;
         public HashSet<string> requiredPlantNames; // by PlantData.plantName, for per-plant opt-ins
         // AttackRange's scope: unlocked generically by any non-melee plant being present, but
@@ -234,7 +218,6 @@ public static class FertilizerStatRules
             if (excludeMelee && plant.IsMeleeAttacker) return false;
             if (appliesToAll) return true;
             if (requiredElement.HasValue && plant.elementalType == requiredElement.Value) return true;
-            if (requiredFamily.HasValue && plant.data != null && plant.data.family == requiredFamily.Value) return true;
             if (requiredDamageType.HasValue && plant.damageType == requiredDamageType.Value) return true;
             if (requiredPlantNames != null && plant.data != null && requiredPlantNames.Contains(plant.data.plantName)) return true;
             return false;
@@ -250,7 +233,6 @@ public static class FertilizerStatRules
 
         HashSet<ElementalType> elementsSeen = new HashSet<ElementalType>();
         bool hasFallDamagePlant = false;
-        bool hasIronbark = false;
         bool hasRangedPlant = false;
 
         foreach (PlantData plant in loadout)
@@ -261,10 +243,6 @@ public static class FertilizerStatRules
             if (ElementalDamageStat.TryGetValue(plant.elementalType, out StatType elementalStat))
                 MergeInto(result, elementalStat, new StatScope { requiredElement = plant.elementalType });
 
-            if (FamilyStats.TryGetValue(plant.family, out StatType[] familyStats))
-                foreach (StatType stat in familyStats)
-                    MergeInto(result, stat, new StatScope { requiredFamily = plant.family });
-
             if (DamageTypeStats.TryGetValue(plant.damageType, out StatType[] damageTypeStats))
                 foreach (StatType stat in damageTypeStats)
                     MergeInto(result, stat, new StatScope { requiredDamageType = plant.damageType });
@@ -274,7 +252,6 @@ public static class FertilizerStatRules
                     MergeInto(result, stat, new StatScope { requiredPlantNames = new HashSet<string> { plant.plantName } });
 
             if (FallDamagePlantNames.Contains(plant.plantName)) hasFallDamagePlant = true;
-            if (plant.family == PlantFamily.Ironbark) hasIronbark = true;
             if (!MeleePlantNames.Contains(plant.plantName)) hasRangedPlant = true;
         }
 
@@ -283,7 +260,7 @@ public static class FertilizerStatRules
             foreach (StatType stat in DotStats) MergeInto(result, stat, StatScope.All);
 
         if (hasFallDamagePlant || HasFlyingInsectInLevel()) MergeInto(result, StatType.FallDamage, StatScope.All);
-        if (hasIronbark || HasHighAggressivityInsectInLevel()) MergeInto(result, StatType.Armor, StatScope.All);
+        if (HasHighAggressivityInsectInLevel()) MergeInto(result, StatType.Armor, StatScope.All);
         if (HasMagicInsectInLevel()) MergeInto(result, StatType.MagicArmor, StatScope.All);
         if (hasRangedPlant) MergeInto(result, StatType.AttackRange, new StatScope { appliesToAll = true, excludeMelee = true });
 
@@ -292,7 +269,7 @@ public static class FertilizerStatRules
 
     // combines a newly-found unlock reason into whatever's already recorded for this stat,
     // rather than overwriting it - a stat can be unlocked by more than one reason at once (e.g.
-    // BuffGivenDuration via a Symbiosis plant AND via Calendula's own fertilizerPossibleStats
+    // Armor via a high aggressivity insect AND via a plant's own fertilizerPossibleStats
     // opt-in), and both conditions need to keep matching afterward
     private static void MergeInto(Dictionary<StatType, StatScope> result, StatType stat, StatScope addition)
     {
@@ -316,7 +293,6 @@ public static class FertilizerStatRules
 
         existing.excludeMelee = excludeMelee;
         if (existing.requiredElement == null) existing.requiredElement = addition.requiredElement;
-        if (existing.requiredFamily == null) existing.requiredFamily = addition.requiredFamily;
         if (existing.requiredDamageType == null) existing.requiredDamageType = addition.requiredDamageType;
         if (addition.requiredPlantNames != null)
         {

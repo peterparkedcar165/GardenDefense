@@ -24,6 +24,14 @@ public class DarknessManager : MonoBehaviour
 
     private static readonly List<(Transform t, float radius)> _dynamicSources = new List<(Transform, float)>();
 
+    // the darkness this level would have absent any weather override - whatever the scene author
+    // set isDark/pitchBlack to (or, on a litDuringSetup cave level, whatever the setup-phase fade
+    // just computed). isDark/pitchBlack themselves become read-only derived values once Sunny
+    // weather is active, so every existing reader of isDark/pitchBlack keeps working unchanged
+    private bool _naturalDark;
+    private bool _naturalPitchBlack;
+    private bool _sunnyOverride;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
     {
@@ -31,25 +39,65 @@ public class DarknessManager : MonoBehaviour
         SceneManager.sceneLoaded += (_, __) => _dynamicSources.Clear();
     }
 
-    void Awake() { instance = this; }
+    void Awake()
+    {
+        instance = this;
+        _naturalDark = isDark;
+        _naturalPitchBlack = pitchBlack;
+    }
+
+    void OnEnable()
+    {
+        WeatherManager.OnWeatherAdded += HandleWeatherAdded;
+        WeatherManager.OnWeatherRemoved += HandleWeatherRemoved;
+    }
+
+    void OnDisable()
+    {
+        WeatherManager.OnWeatherAdded -= HandleWeatherAdded;
+        WeatherManager.OnWeatherRemoved -= HandleWeatherRemoved;
+    }
+
+    private void HandleWeatherAdded(WeatherType type, int intensity)
+    {
+        if (type != WeatherType.Sunny) return;
+        _sunnyOverride = true;
+        ApplyOverride();
+    }
+
+    private void HandleWeatherRemoved(WeatherType type)
+    {
+        if (type != WeatherType.Sunny) return;
+        _sunnyOverride = false;
+        ApplyOverride();
+    }
+
+    private void ApplyOverride()
+    {
+        isDark = _sunnyOverride ? false : _naturalDark;
+        pitchBlack = _sunnyOverride ? false : _naturalPitchBlack;
+    }
 
     void Update()
     {
-        if (!litDuringSetup) return;
+        if (litDuringSetup)
+        {
+            bool inSetup = GameManager.instance == null || GameManager.instance.currentWave == 0;
+            float countdown = GameHUD.instance != null ? GameHUD.instance.NextWaveCountdown : float.PositiveInfinity;
 
-        bool inSetup = GameManager.instance == null || GameManager.instance.currentWave == 0;
-        float countdown = GameHUD.instance != null ? GameHUD.instance.NextWaveCountdown : float.PositiveInfinity;
+            // held at setupIntensity through setup, then fades to 0 over fadeDuration, reaching 0 when
+            // darkByCountdown seconds remain before wave 1. stays 0 from then on (pitch black for the wave)
+            float target;
+            if (!inSetup)
+                target = 0f;
+            else
+                target = setupIntensity * Mathf.Clamp01((countdown - darkByCountdown) / Mathf.Max(fadeDuration, 0.0001f));
 
-        // held at setupIntensity through setup, then fades to 0 over fadeDuration, reaching 0 when
-        // darkByCountdown seconds remain before wave 1. stays 0 from then on (pitch black for the wave)
-        float target;
-        if (!inSetup)
-            target = 0f;
-        else
-            target = setupIntensity * Mathf.Clamp01((countdown - darkByCountdown) / Mathf.Max(fadeDuration, 0.0001f));
+            _naturalDark = target <= 0.001f;   // darkness gameplay kicks in once the NightLight is fully out
+            if (nightLight != null) nightLight.intensity = target;
+        }
 
-        isDark = target <= 0.001f;   // darkness gameplay kicks in once the NightLight is fully out
-        if (nightLight != null) nightLight.intensity = target;
+        ApplyOverride();
     }
 
     public static void RegisterLightSource(Transform t, float radius) => _dynamicSources.Add((t, radius));

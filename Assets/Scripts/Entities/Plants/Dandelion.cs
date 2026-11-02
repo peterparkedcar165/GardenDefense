@@ -133,8 +133,8 @@ public class Dandelion : Shooter
         Heal(maxHealth * OvergrowthRegenPercent);
     }
 
-    // shows progress toward the next passive pulse under the health bar, same as Photosynthesis
-    // plants (e.g. Sunflower) and BogIris's own custom up-counting sun timer
+    // shows progress toward the next passive pulse under the health bar, same as Sunflower
+    // and BogIris's own custom up-counting sun timer
     protected override bool GetPassiveBarVisible() => true;
     protected override float GetPassiveBarFill() =>
         PassiveInterval > 0f ? Mathf.Clamp01(passiveTickTimer / PassiveInterval) : 0f;
