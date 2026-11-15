@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85f9ac9e571ca684397fe0884b16b665, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AcornKnightShield
   baseMaxHealth: 0
   baseAttackDamage: 0
@@ -62,23 +62,29 @@ MonoBehaviour:
   baseMagicPenPercent: 0
   baseFireResistance: 0
   baseWaterResistance: 0
-  baseNatureResistance: 0
+  baseGrassResistance: 0
   baseWindResistance: 0
   basePoisonResistance: 0
   baseIceResistance: 0
   basePhysicalDamage: 0
   baseMagicDamage: 0
-  baseBonusEffectChance: 0
+  baseFallDamage: 0
   baseFireDamage: 0
   baseWaterDamage: 0
-  baseNatureDamage: 0
+  baseGrassDamage: 0
   baseWindDamage: 0
   basePoisonDamage: 0
   baseIceDamage: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
+  baseCriticalHealChance: 0
+  baseCriticalDotChance: 0
+  baseCriticalReactionChance: 0
+  baseMinimumDamage: 0.8
+  baseMaximumDamage: 1.2
   baseDotResistance: 0
   baseDotDamage: 0
+  baseFallDamageResistance: 0
   baseelementalAffinity: 0
   basePassiveDamage: 0
   baseSkillDamage: 0
@@ -92,10 +98,16 @@ MonoBehaviour:
   baseBuffGivenDuration: 0
   baseBuffReceivedDuration: 0
   baseDebuffReceivedDuration: 0
+  baseDotDuration: 0
+  baseRegenerationDuration: 0
+  baseShieldDuration: 0
+  baseSunGenerationCooldown: 0
   baseEvasion: 0
   baseAccuracy: 0
   baseBonusCritChanceReceived: 0
+  baseBonusCritDamageReceived: 0
   baseProjectileSpeed: 0
+  baseOnHitEffectiveness: 1
   maxHealth: 0
   health: 0
   attackDamage: 0
@@ -108,6 +120,7 @@ MonoBehaviour:
   healingReceived: 0
   physicalResistance: 0
   magicResistance: 0
+  magicResistanceAdder: 0
   armor: 0
   magicArmor: 0
   armorPenFlat: 0
@@ -116,23 +129,29 @@ MonoBehaviour:
   magicPenPercent: 0
   fireResistance: 0
   waterResistance: 0
-  natureResistance: 0
+  grassResistance: 0
   windResistance: 0
   poisonResistance: 0
   iceResistance: 0
   physicalDamage: 0
   magicDamage: 0
-  bonusEffectChance: 0
+  fallDamage: 0
   fireDamage: 0
   waterDamage: 0
-  natureDamage: 0
+  grassDamage: 0
   windDamage: 0
   poisonDamage: 0
   iceDamage: 0
   criticalChance: 0
   criticalDamage: 0
+  criticalHealChance: 0
+  criticalDotChance: 0
+  criticalReactionChance: 0
+  minimumDamage: 0
+  maximumDamage: 0
   dotResistance: 0
   dotDamage: 0
+  fallDamageResistance: 0
   elementalAffinity: 0
   passiveDamage: 0
   skillDamage: 0
@@ -146,8 +165,12 @@ MonoBehaviour:
   buffGivenDuration: 0
   buffReceivedDuration: 0
   debuffReceivedDuration: 0
+  damageTakenBonus: 0
+  dotDuration: 0
+  regenerationDuration: 0
+  shieldDuration: 0
+  sunGenerationCooldown: 0
   burnDurationBonus: 0
-  sunYieldBonus: 0
   baseMinionDamage: 0
   minionDamage: 0
   shieldBonusDamage: 0
@@ -158,7 +181,9 @@ MonoBehaviour:
   evasion: 0
   accuracy: 0
   bonusCritChanceReceived: 0
+  bonusCritDamageReceived: 0
   projectileSpeed: 0
+  onHitEffectiveness: 0
   maxHealthAdder: 0
   attackDamageAdder: 0
   magicPowerAdder: 0
@@ -174,24 +199,31 @@ MonoBehaviour:
   magicPenPercentAdder: 0
   fireResistanceAdder: 0
   waterResistanceAdder: 0
-  natureResistanceAdder: 0
+  grassResistanceAdder: 0
   windResistanceAdder: 0
   poisonResistanceAdder: 0
   iceResistanceAdder: 0
   physicalDamageAdder: 0
   magicDamageAdder: 0
-  bonusEffectChanceAdder: 0
+  fallDamageAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
-  natureDamageAdder: 0
+  grassDamageAdder: 0
   windDamageAdder: 0
   poisonDamageAdder: 0
   iceDamageAdder: 0
   criticalChanceAdder: 0
   criticalDamageAdder: 0
+  criticalHealChanceAdder: 0
+  criticalDotChanceAdder: 0
+  criticalReactionChanceAdder: 0
+  minimumDamageAdder: 0
+  maximumDamageAdder: 0
   dotResistanceAdder: 0
   dotDamageAdder: 0
+  fallDamageResistanceAdder: 0
   elementalAffinityAdder: 0
+  germinateDetonationSpeedup: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
   coordinatedDamageAdder: 0
@@ -208,10 +240,18 @@ MonoBehaviour:
   buffGivenDurationAdder: 0
   buffReceivedDurationAdder: 0
   debuffReceivedDurationAdder: 0
+  dotDurationAdder: 0
+  regenerationDurationAdder: 0
+  shieldDurationAdder: 0
+  sunGenerationCooldownMultiplier: 0
   evasionAdder: 0
   accuracyAdder: 0
   bonusCritChanceReceivedAdder: 0
+  bonusCritDamageReceivedAdder: 0
   projectileSpeedAdder: 0
+  sunYieldAdder: 0
+  currencyYieldAdder: 0
+  onHitEffectivenessAdder: 0
   maxHealthMultiplier: 0
   attackDamageMultiplier: 0
   magicPowerMultiplier: 0
@@ -219,24 +259,23 @@ MonoBehaviour:
   attackRangeMultiplier: 0
   healingBonusMultiplier: 0
   healingReceivedMultiplier: 0
-  totalArmorMultiplier: 0
-  totalMagicArmorMultiplier: 0
+  armorMultiplier: 0
+  magicArmorMultiplier: 0
   armorPenFlatMultiplier: 0
   magicPenFlatMultiplier: 0
   armorPenPercentMultiplier: 0
   magicPenPercentMultiplier: 0
   fireResistanceMultiplier: 0
   waterResistanceMultiplier: 0
-  natureResistanceMultiplier: 0
+  grassResistanceMultiplier: 0
   windResistanceMultiplier: 0
   poisonResistanceMultiplier: 0
   iceResistanceMultiplier: 0
   physicalDamageMultiplier: 0
   magicDamageMultiplier: 0
-  bonusEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
-  natureDamageMultiplier: 0
+  grassDamageMultiplier: 0
   windDamageMultiplier: 0
   poisonDamageMultiplier: 0
   iceDamageMultiplier: 0
@@ -261,28 +300,63 @@ MonoBehaviour:
   accuracyMultiplier: 0
   bonusCritChanceReceivedMultiplier: 0
   projectileSpeedMultiplier: 0
+  sunYieldMultiplier: 0
+  currencyYieldMultiplier: 0
+  maxHealthTotalMultiplier: 1
+  attackDamageTotalMultiplier: 1
+  magicPowerTotalMultiplier: 1
+  attackSpeedTotalMultiplier: 1
+  attackRangeTotalMultiplier: 1
+  criticalChanceTotalMultiplier: 1
+  criticalDamageTotalMultiplier: 1
+  armorTotalMultiplier: 1
+  magicArmorTotalMultiplier: 1
+  armorPenFlatTotalMultiplier: 1
+  magicPenFlatTotalMultiplier: 1
+  baseInternalCooldown: 10
+  internalCooldownAdder: 0
+  internalCooldownMultiplier: 0
   internalCooldown: 2
-  blazeInternalCooldown: 0
-  wetInternalCooldown: 0
-  sproutInternalCooldown: 0
-  coldInternalCooldown: 0
-  taintedInternalCooldown: 0
+  fireInternalCooldown: 0
+  waterInternalCooldown: 0
+  grassInternalCooldown: 0
+  iceInternalCooldown: 0
+  poisonInternalCooldown: 0
+  windInternalCooldown: 0
   freezeInternalCooldown: 0
   germinateInternalCooldown: 0
+  fireInternalCooldownAdder: 0
+  waterInternalCooldownAdder: 0
+  grassInternalCooldownAdder: 0
+  iceInternalCooldownAdder: 0
+  poisonInternalCooldownAdder: 0
+  windInternalCooldownAdder: 0
+  fireInternalCooldownMultiplier: 0
+  waterInternalCooldownMultiplier: 0
+  grassInternalCooldownMultiplier: 0
+  iceInternalCooldownMultiplier: 0
+  poisonInternalCooldownMultiplier: 0
+  windInternalCooldownMultiplier: 0
+  elementalDebuffDuration: 6
   timeAlive: 0
   totalDamageDealt: 0
   currentWaypointIndex: 0
   isFlying: 0
   verticalVelocity: 0
   fallDamageSource: {fileID: 0}
+  carriedBy: {fileID: 0}
+  movementPaused: 0
+  attackMovementPaused: 0
   data: {fileID: 0}
   movementSpeed: 0
   baseMovementSpeed: 0
   windVelocity: {x: 0, y: 0}
   windMomentum: {x: 0, y: 0}
+  fallMomentum: {x: 0, y: 0, z: 0}
   lastSource: {fileID: 0}
   aggressivity: 0
   targetingRange: 0
+  carryPriority: 0
   team: 0
   movingBackward: 0
   spriteRight: {fileID: 0}
@@ -290,6 +364,11 @@ MonoBehaviour:
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
   sunDrop: 0
+  sunDropAdder: 0
+  sunDropMultiplier: 0
+  currencyDrop: 0
+  currencyDropAdder: 0
+  currencyDropMultiplier: 0
   expDrop: 0
   attackDamageType: 0
   attackElementalType: 6
@@ -297,6 +376,10 @@ MonoBehaviour:
   attackSlowPercent: 0
   attackSlowDuration: 0
   visual: {fileID: 8984753250783695905}
+  baseHitboxRadius: 0.3
+  visualHitboxRadius: 0.3
+  reversesAtSpawn: 0
+  advancingAsFriendly: 0
   rangeCircle: {fileID: 8002834639715293143}
   lifetime: 12
 --- !u!1 &4428489358040829774
@@ -417,7 +500,7 @@ Transform:
   m_GameObject: {fileID: 5145720802284489682}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.05, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -482,6 +565,28 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!95 &3573916743134837742
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5145720802284489682}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cad2bd2cf096b00a1851c69e44130dae, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &9174054146897183988
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,8 +613,8 @@ Transform:
   m_GameObject: {fileID: 9174054146897183988}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.35, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.4, z: 1}
+  m_LocalPosition: {x: -0.009, y: -0.064, z: 0}
+  m_LocalScale: {x: 0.62, y: 0.23, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8075440602679846077}
@@ -573,25 +678,3 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!95 &3573916743134837742
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5145720802284489682}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cad2bd2cf096b00a1851c69e44130dae, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage:
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0

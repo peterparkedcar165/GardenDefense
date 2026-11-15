@@ -584,10 +584,12 @@ public class AcornKnight : Aura
         AcornKnightShield shield = obj.GetComponent<AcornKnightShield>();
         if (shield == null) { _shieldOut = false; return; }
 
-        shield.Initialize(shieldRadius, shieldHealth, skillDuration, this);
-        shield.PlayLanding(hitInsect != null, position.x > transform.position.x);
+        // listen before Initialize: it kills a shield that lands on water straight away, and a
+        // missed OnShieldGone would leave the Knight shieldless (and unable to guard) for good
         _activeShield = shield;
         shield.OnShieldGone += HandleShieldGone;
+        shield.Initialize(shieldRadius, shieldHealth, skillDuration, this);
+        shield.PlayLanding(hitInsect != null, position.x > transform.position.x);
     }
 
     // cooldown itself already started the instant the shield was thrown (see OnTargetConfirmed) -
