@@ -28,9 +28,9 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: 5b35df63d07143619c7e5ab5202c1e5d, type: 2}
   fertilizerPossibleStats: 120000002600000027000000
   baseMaxHealth: 250
-  baseAttackDamage: 26
+  baseAttackDamage: 28
   baseMagicPower: 0
-  baseAttackSpeed: 0.5
+  baseAttackSpeed: 1
   baseAttackRange: 1.75
   baseAttackChargeTime: 0
   baseArmor: 36
@@ -109,6 +109,7 @@ MonoBehaviour:
   baseDefensiveArmor: 20
   path2DefensiveArmorPerLevel: 7
   defensiveAttackSpeedPenalty: 0.3
+  path2DefensiveAttackSpeedPenaltyReductionPerLevel: 0.03
   defensiveAttackRangePenalty: 0.15
   stanceExitDelay: 1
   maxLevelBashStunChance: 0.75

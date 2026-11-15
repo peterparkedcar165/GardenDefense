@@ -17,6 +17,8 @@ public class AcornKnightData : PlantData
     public float baseDefensiveArmor = 20f;
     public float path2DefensiveArmorPerLevel = 6f;
     public float defensiveAttackSpeedPenalty = 0.75f;
+    // each Path2 (passive) level takes this much off the Attack Speed penalty (not the range one)
+    public float path2DefensiveAttackSpeedPenaltyReductionPerLevel = 0.03f;
     public float defensiveAttackRangePenalty = 0.25f;
     // grace period after no insect is targeting the Knight in melee, before the guard drops
     public float stanceExitDelay = 1f;

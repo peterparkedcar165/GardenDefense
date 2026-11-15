@@ -110,7 +110,10 @@ public class AcornKnight : Aura
 
     public float DefensiveArmor =>
         (AcornData?.baseDefensiveArmor ?? 20f) + (AcornData?.path2DefensiveArmorPerLevel ?? 6f) * effectivePath2Level;
-    public float DefensiveAttackSpeedPenalty => AcornData?.defensiveAttackSpeedPenalty ?? 0.75f;
+    // Guard Stance's Attack Speed penalty, lowered by every Path2 level (never below 0)
+    public float DefensiveAttackSpeedPenaltyReductionPerLevel => AcornData?.path2DefensiveAttackSpeedPenaltyReductionPerLevel ?? 0.03f;
+    public float DefensiveAttackSpeedPenalty => Mathf.Max(0f,
+        (AcornData?.defensiveAttackSpeedPenalty ?? 0.75f) - DefensiveAttackSpeedPenaltyReductionPerLevel * effectivePath2Level);
     public float DefensiveAttackRangePenalty => AcornData?.defensiveAttackRangePenalty ?? 0.25f;
 
     // Path1's own Armor bonus (not Path2's Guard Stance bonus, which is already unavailable while
@@ -642,7 +645,7 @@ public class AcornKnight : Aura
 
     public override string GetPassiveDescription() =>
         $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
-        $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}%</b></color> Attack Speed and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}%</b></color> Attack Range.\n\n" +
+        $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\n\n" +
         $"While in <color=orange><b>Guard Stance</b></color>, its attacks become an omnidirectional <color=green><b>Shield Bash</b></color> dealing <color={PlantData.ElementalColor(elementalType)}><b>{armor * BashDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.\n\n" +
         PlantData.RetainAggroLine();
 
@@ -675,13 +678,14 @@ public class AcornKnight : Aura
         float bashDmgPl = AcornData?.path2BashDamagePercentPerLevel ?? 0.10f;
         string desc = details
             ? $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
-              $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}%</b></color> Attack Speed and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}%</b></color> Attack Range.\n\n" +
+              $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\n\n" +
               $"While in <color=orange><b>Guard Stance</b></color>, its attacks become an omnidirectional Shield Bash dealing <color={PlantData.ElementalColor(elementalType)}><b>[({(AcornData?.baseBashDamagePercent ?? 0.5f) * 100f:F0}%) + ({bashDmgPl * 100f:F0}%/Lvl.)] Armor</b></color> {PlantData.DamageTypeLabel(damageType)}.\n\n" +
               PlantData.RetainAggroLine()
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase guard <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=green><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Shield Bash</b></color> Armor scaling by <color=green><b>{bashDmgPl * 100f:F0}%</b></color> per level. [<color=green><b>+{bashDmgPl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Decrease <color=orange><b>Guard Stance</b></color>'s <color=green><b>Attack Speed</b></color> penalty by <color=green><b>{DefensiveAttackSpeedPenaltyReductionPerLevel * 100f:F0}%</b></color> per level. [<color=green><b>-{DefensiveAttackSpeedPenaltyReductionPerLevel * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"<color=green><b>Shield Bash</b></color> inflicts a <color=green><b>{BashStunDuration * MaxLevelBashStunChance:F2}</b></color> second Stun on insects hit.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
