@@ -89,8 +89,18 @@ public class MulchCard : MonoBehaviour
         if (descriptionText != null) descriptionText.text = data.GetDescription();
     }
 
+    // the card's name font, so the target picker built in code matches the cards
+    public TMP_FontAsset Font => nameText != null ? nameText.font : null;
+
     public void OnSelectClicked()
     {
+        // seed swap and seed sell ask which owned mulch to use them on first; nothing is spent
+        // until a row is picked there
+        if (data != null && data.NeedsOwnedMulchTarget)
+        {
+            ui.ShowTargetPicker(data);
+            return;
+        }
         MulchManager.instance.CommitChosen(data);
         TutorialManager.instance?.NotifyEvent(TutorialEvents.SelectRandomMulch);
         ui.CloseAfterSelect();

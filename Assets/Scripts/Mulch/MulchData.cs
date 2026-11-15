@@ -55,6 +55,22 @@ public abstract class MulchData : ScriptableObject
         return false;
     }
 
+    // seed swap and seed sell: picking the card first asks which owned mulch to use it on (see
+    // MulchSelectionUI.ShowTargetPicker), then MulchManager.CommitChosenOnTarget spends it. a
+    // tool's CreateEffect returns null, it never becomes an owned mulch
+    public virtual bool NeedsOwnedMulchTarget => false;
+    // runs after the target was taken away
+    public virtual void UseOnTarget(MulchData target) {}
+    // the picker's prompt, and the note on each row saying what using the tool on it gives
+    public virtual string TargetPrompt => "";
+    public virtual string DescribeTargetUse(MulchData target) => "";
+    // seed swap: its replacement draft opens straight after it's used
+    public virtual bool OpensDraftAfterUse => false;
+
+    // a tier's name in its card color
+    public static string TierLabel(MulchTier tier) =>
+        $"<b><color=#{ColorUtility.ToHtmlStringRGB(MulchTierColors.Get(tier))}>{tier}</color></b>";
+
     // the target plant's name in its element's color, for plant mulch descriptions
     protected string TargetPlantLabel(string fallback)
     {

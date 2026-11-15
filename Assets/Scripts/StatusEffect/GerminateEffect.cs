@@ -10,6 +10,9 @@ public class GerminateEffect : StatusEffect
     private readonly float aoeRadius;
     private readonly int maxAoeTargets;
     private float cachedelementalAffinity;
+    // germination chain mulch: every insect any bloom in this chain already primed. shared with
+    // each germinate those primers set off, so no bloom in one chain primes the same insect twice
+    private HashSet<Insect> chainPrimed;
 
     public GerminateEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
@@ -121,6 +124,24 @@ public class GerminateEffect : StatusEffect
                 insect.Damage(damage, DamageType.Physical, ElementalType.Grass, source, source.ElementalReactionCanCrit, damageTags);
             else
                 insect.Damage(damage, DamageType.Physical, ElementalType.Grass, damageTags);
+        }
+
+        if (GerminationChainMulchEffect.IsActive && source != null && GerminationChainMulchEffect.IsInsideBegoniaAura(origin))
+            PrimeHitInsects(others);
+    }
+
+    // a fresh water primer on every insect this bloom hit that its chain hasn't primed yet. a
+    // primer that sets off a new germinate hands that germinate the same chain
+    private void PrimeHitInsects(List<Insect> hit)
+    {
+        chainPrimed ??= new HashSet<Insect>();
+        foreach (Insect insect in hit)
+        {
+            if (insect == null || !insect.IsAlive || !chainPrimed.Add(insect)) continue;
+            GerminateEffect before = insect.GetEffect<GerminateEffect>();
+            insect.ApplyEffect(new WaterPrimer(insect, insect.elementalDebuffDuration, 1, source));
+            GerminateEffect after = insect.GetEffect<GerminateEffect>();
+            if (after != null && after != before) after.chainPrimed = chainPrimed;
         }
     }
 }

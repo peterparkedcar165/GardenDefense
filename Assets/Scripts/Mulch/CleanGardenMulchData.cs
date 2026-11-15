@@ -10,10 +10,7 @@ public class CleanGardenMulchData : MulchData
 
     public override MulchEffect CreateEffect() => new CleanGardenMulchEffect(this);
 
-    public override string GetDescription()
-    {
-        string tierColor = ColorUtility.ToHtmlStringRGB(MulchTierColors.Get(rewardTier));
-        return $"Every <b><color=green>{cleanWavesNeeded}</color></b> waves in a row with no leaked insect, gain a free " +
-            $"<b><color=#{tierColor}>{rewardTier}</color></b> mulch draft. A leak resets the count.";
-    }
+    public override string GetDescription() =>
+        $"Every <b><color=green>{cleanWavesNeeded}</color></b> waves in a row with no leaked insect, gain a free " +
+        $"{TierLabel(rewardTier)} mulch draft. A leak resets the count.";
 }

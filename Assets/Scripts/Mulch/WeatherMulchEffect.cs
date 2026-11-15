@@ -19,4 +19,8 @@ public class WeatherMulchEffect : MulchEffect
     }
 
     public override void Deactivate() {}
+
+    // the weather change happens once, on pick, and removing the mulch couldn't put the old weather
+    // back, so seed swap and seed sell treat it as already paid out
+    public override bool CanBeRemoved => false;
 }

@@ -40,9 +40,22 @@ public class MulchManager : MonoBehaviour
     private PlantRegistry plantRegistry;
     private MulchRegistry mulchRegistry;
 
-    private readonly Queue<MulchTier> pendingGrants = new Queue<MulchTier>();
+    // one queued draft. a swap draft (seed swap's replacement) offers sameTierChoices of its own
+    // tier plus higherTierChoices from the tier above, and never offers seed swap or seed sell
+    private struct PendingDraft
+    {
+        public MulchTier tier;
+        public bool isSwap;
+        public int sameTierChoices;
+        public int higherTierChoices;
+    }
+
+    private readonly List<PendingDraft> pendingGrants = new List<PendingDraft>();
     private readonly List<MulchData> pickedData = new List<MulchData>();
     private readonly List<MulchEffect> activeEffects = new List<MulchEffect>();
+
+    // mulches seed swap or seed sell took away, kept out of every draft for the rest of the level
+    private readonly HashSet<MulchData> removedData = new HashSet<MulchData>();
 
     // mulches the player has rerolled away - excluded from every reroll for the rest of THIS
     // selection screen (so rerolling one card can't bring back what another card just rerolled
@@ -78,6 +91,7 @@ public class MulchManager : MonoBehaviour
         pendingGrants.Clear();
         pickedData.Clear();
         rerolledAway.Clear();
+        removedData.Clear();
 
         foreach (MulchEffect effect in activeEffects)
             effect?.Deactivate();
@@ -170,7 +184,20 @@ public class MulchManager : MonoBehaviour
     // called when a level's MulchGrant fires (its configured wave just completed)
     public void GrantMulch(MulchTier tier)
     {
-        pendingGrants.Enqueue(tier);
+        pendingGrants.Add(new PendingDraft { tier = tier });
+    }
+
+    // seed swap: the replacement draft goes to the front of the queue, so it's the one that opens
+    // next (MulchSelectionUI opens it straight away)
+    public void GrantSwapDraft(MulchTier tier, int sameTierChoices, int higherTierChoices)
+    {
+        pendingGrants.Insert(0, new PendingDraft
+        {
+            tier = tier,
+            isSwap = true,
+            sameTierChoices = Mathf.Max(0, sameTierChoices),
+            higherTierChoices = Mathf.Max(0, higherTierChoices),
+        });
     }
 
     // builds 3 weighted-random choices for the oldest queued grant, without consuming it - only
@@ -179,9 +206,23 @@ public class MulchManager : MonoBehaviour
     {
         if (pendingGrants.Count == 0) return null;
         rerolledAway.Clear(); // a fresh screen - anything rerolled away on a previous one is fair game again
-        MulchTier tier = pendingGrants.Peek();
-        List<MulchData> eligible = GetEligible(tier);
+        PendingDraft draft = pendingGrants[0];
+        if (draft.isSwap) return GenerateSwapChoices(draft).ToArray();
+        List<MulchData> eligible = GetEligible(draft.tier);
         return WeightedPickDistinct(eligible, DraftChoiceCount).ToArray();
+    }
+
+    // equal or higher rarity only: the higher choices come from the tier above, and any slot a tier
+    // can't fill is topped up from the same tier first, then from the tiers above it
+    private List<MulchData> GenerateSwapChoices(PendingDraft draft)
+    {
+        int total = draft.sameTierChoices + draft.higherTierChoices;
+        List<MulchData> picks = WeightedPickDistinct(GetEligible(draft.tier), draft.sameTierChoices);
+        if (draft.tier < MulchTier.Legendary)
+            picks.AddRange(WeightedPickDistinct(GetEligible(draft.tier + 1, picks), draft.higherTierChoices));
+        for (MulchTier tier = draft.tier; picks.Count < total && tier <= MulchTier.Legendary; tier++)
+            picks.AddRange(WeightedPickDistinct(GetEligible(tier, picks), total - picks.Count));
+        return picks;
     }
 
     // rerolls a single displayed choice in place. the card being rerolled away is treated as a
@@ -205,7 +246,9 @@ public class MulchManager : MonoBehaviour
     public void CommitChosen(MulchData chosen)
     {
         if (pendingGrants.Count == 0 || chosen == null) return;
-        pendingGrants.Dequeue();
+        // seed swap and seed sell are spent through CommitChosenOnTarget instead
+        if (chosen.NeedsOwnedMulchTarget) return;
+        pendingGrants.RemoveAt(0);
 
         // GetEligible already keeps an already-picked mulch out of every future draft/reroll, so
         // this shouldn't normally be reachable - kept as a hard backstop against double-picking
@@ -221,6 +264,67 @@ public class MulchManager : MonoBehaviour
         effect.Activate();
     }
 
+    // seed swap and seed sell: uses up the oldest grant like a normal pick, takes the chosen owned
+    // mulch away, then lets the tool do its part (pay sun, or queue the replacement draft). the
+    // tool is spent on the spot and never joins the owned mulches, so it can show up again in a
+    // later draft
+    public bool CommitChosenOnTarget(MulchData chosen, MulchData target)
+    {
+        if (pendingGrants.Count == 0 || chosen == null || !chosen.NeedsOwnedMulchTarget) return false;
+        if (!CanRemove(target)) return false;
+        pendingGrants.RemoveAt(0);
+        RemoveMulch(target);
+        chosen.UseOnTarget(target);
+        return true;
+    }
+
+    // owned mulches seed swap and seed sell may still take away, oldest pick first
+    public List<MulchData> GetRemovableMulches()
+    {
+        List<MulchData> result = new List<MulchData>();
+        foreach (MulchData data in pickedData)
+            if (CanRemove(data)) result.Add(data);
+        return result;
+    }
+
+    public bool HasRemovableMulch()
+    {
+        foreach (MulchData data in pickedData)
+            if (CanRemove(data)) return true;
+        return false;
+    }
+
+    // false for a mulch that already paid out (see MulchEffect.CanBeRemoved)
+    public bool CanRemove(MulchData data)
+    {
+        if (data == null || !pickedData.Contains(data)) return false;
+        MulchEffect effect = FindEffect(data);
+        return effect == null || effect.CanBeRemoved;
+    }
+
+    // takes an owned mulch away again: its effect is deactivated, which undoes everything it did,
+    // and it stays out of every draft for the rest of the level
+    public bool RemoveMulch(MulchData data)
+    {
+        if (!CanRemove(data)) return false;
+        MulchEffect effect = FindEffect(data);
+        if (effect != null)
+        {
+            effect.Deactivate();
+            activeEffects.Remove(effect);
+        }
+        pickedData.Remove(data);
+        removedData.Add(data);
+        return true;
+    }
+
+    private MulchEffect FindEffect(MulchData data)
+    {
+        foreach (MulchEffect effect in activeEffects)
+            if (effect != null && effect.Data == data) return effect;
+        return null;
+    }
+
     // excludes mulches already picked this level, so the same stacking mulch can't flood every
     // future draft - revisit if you ever want deliberate duplicate-stacking instead. pulls from
     // both the universal registry and this level's exclusive pool
@@ -230,20 +334,24 @@ public class MulchManager : MonoBehaviour
 
         List<PlantData> loadout = GetCurrentLoadout();
         int currentWave = GameManager.instance != null ? GameManager.instance.currentWave : 0;
+        // a swap draft never offers another swap or sell
+        bool excludeTools = pendingGrants.Count > 0 && pendingGrants[0].isSwap;
 
-        AddEligibleFrom(mulchRegistry != null ? mulchRegistry.mulches : null, tier, loadout, currentWave, result, alsoExclude);
-        AddEligibleFrom(levelPool, tier, loadout, currentWave, result, alsoExclude);
+        AddEligibleFrom(mulchRegistry != null ? mulchRegistry.mulches : null, tier, loadout, currentWave, result, alsoExclude, excludeTools);
+        AddEligibleFrom(levelPool, tier, loadout, currentWave, result, alsoExclude, excludeTools);
 
         return result;
     }
 
-    private void AddEligibleFrom(MulchData[] source, MulchTier tier, List<PlantData> loadout, int currentWave, List<MulchData> result, List<MulchData> alsoExclude)
+    private void AddEligibleFrom(MulchData[] source, MulchTier tier, List<PlantData> loadout, int currentWave, List<MulchData> result, List<MulchData> alsoExclude, bool excludeTools)
     {
         if (source == null) return;
         foreach (MulchData data in source)
         {
             if (data == null || data.tier != tier) continue;
             if (pickedData.Contains(data)) continue;
+            if (removedData.Contains(data)) continue;
+            if (excludeTools && data.NeedsOwnedMulchTarget) continue;
             if (rerolledAway.Contains(data)) continue;
             if (alsoExclude != null && alsoExclude.Contains(data)) continue;
             if (result.Contains(data)) continue;
