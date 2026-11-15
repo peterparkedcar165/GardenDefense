@@ -13,6 +13,7 @@ public class GerminateEffect : StatusEffect
     // germination chain mulch: every insect any bloom in this chain already primed. shared with
     // each germinate those primers set off, so no bloom in one chain primes the same insect twice
     private HashSet<Insect> chainPrimed;
+    private bool detonated;
 
     public GerminateEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
@@ -50,7 +51,10 @@ public class GerminateEffect : StatusEffect
     readonly DamageTag[] damageTags = new DamageTag[] { DamageTag.AoE, DamageTag.ElementalDebuff };
     public override void OnExpire()
     {
-        if (target == null) return;
+        // detonates once. a germination chain primer can set off a new germinate on this same
+        // insect while this one is still expiring, and that replacement calls OnExpire again
+        if (target == null || detonated) return;
+        detonated = true;
 
         if (bloomPrefab != null)
         {
