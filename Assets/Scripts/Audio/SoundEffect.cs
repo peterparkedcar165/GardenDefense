@@ -12,10 +12,13 @@ public class SoundClip
 }
 
 // a pool of clip variations for one sfx slot (attack unleash, impact/hit reactions) - a random
-// entry is picked each time instead of the exact same sample playing on every hit.
-// played via SfxPlayer.Play
+// entry is picked each time instead of the exact same sample playing on every hit. with
+// playAllTogether ticked, every entry plays at once instead, layered into one sound (each with its
+// own volume and pitch). played via SfxPlayer.Play
 [System.Serializable]
 public class SoundEffect
 {
     public SoundClip[] clips;
+    [Tooltip("play every clip at the same time, layered, instead of one random clip")]
+    public bool playAllTogether;
 }

@@ -9,7 +9,16 @@ public static class SfxPlayer
     public static void Play(SoundEffect sfx, Vector3 position)
     {
         if (sfx == null || sfx.clips == null || sfx.clips.Length == 0) return;
-        SoundClip entry = sfx.clips[Random.Range(0, sfx.clips.Length)];
+        if (sfx.playAllTogether)
+        {
+            foreach (SoundClip layer in sfx.clips) PlayClip(layer, position);
+            return;
+        }
+        PlayClip(sfx.clips[Random.Range(0, sfx.clips.Length)], position);
+    }
+
+    private static void PlayClip(SoundClip entry, Vector3 position)
+    {
         if (entry == null || entry.clip == null) return;
 
         GameObject tempAudio = new GameObject("Sfx");
@@ -41,7 +50,7 @@ public static class SfxPlayer
     }
 
     // starts a looping sfx (e.g. a skill's ongoing hum) parented to followTarget so it moves with
-    // it. caller owns the returned AudioSource and must pass it to StopLooping when done - there's
+    // it. always one random clip, playAllTogether doesn't apply to loops. caller owns the returned AudioSource and must pass it to StopLooping when done - there's
     // no automatic lifetime here, unlike Play(), since a loop's duration isn't known up front
     public static AudioSource PlayLooping(SoundEffect sfx, Transform followTarget)
     {
