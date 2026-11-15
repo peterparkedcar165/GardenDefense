@@ -1,0 +1,988 @@
+<title>Plant Tooltip Editor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Press+Start+2P&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* layout: plant list on the left, the selected plant's tooltip fields in the middle, a sticky
+   formatting bar above them. tooltip boxes keep the game's dark panel in both themes */
+:root {
+  --bg: #eef1ec; --panel: #f9faf7; --line: #d3d9cf; --ink: #1d2620; --muted: #5d695f;
+  --accent: #2e6b3d; --accent-ink: #ffffff; --edited: #b9861a; --edited-bg: #f6ead0;
+  --new: #2b6c8f; --danger: #a33a2c; --hover: #e4e9e0;
+  --tip-bg: #1b1f24; --tip-line: #3a424b; --tip-ink: #e8ecef; --chip-bg: rgba(255,255,255,.08); --chip-line: rgba(255,255,255,.28);
+  --f-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", Consolas, monospace;
+  --f-pixel: "Press Start 2P", "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121612; --panel: #1a1f1a; --line: #2f382f; --ink: #e3e8e1; --muted: #9aa69a;
+  --accent: #7cc189; --accent-ink: #0f1a12; --edited: #e0b14d; --edited-bg: #3a2f17;
+  --new: #79b8db; --danger: #e07a6c; --hover: #232a23; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121612; --panel: #1a1f1a; --line: #2f382f; --ink: #e3e8e1; --muted: #9aa69a;
+  --accent: #7cc189; --accent-ink: #0f1a12; --edited: #e0b14d; --edited-bg: #3a2f17;
+  --new: #79b8db; --danger: #e07a6c; --hover: #232a23; color-scheme: dark }
+
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+.top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-block: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line); background: var(--panel); }
+.top h1 { font-family: var(--f-display); font-size: 18px; margin: 0; letter-spacing: .01em; }
+.top .spacer { flex: 1; }
+.save-state { color: var(--muted); font-size: 12px; }
+.save-state.bad { color: var(--danger); }
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 6px 11px; }
+.btn:hover { background: var(--hover); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.btn .count { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 4px; border-radius: 9px; background: var(--edited); color: #1a1408; font-size: 12px; font-weight: 700; text-align: center; }
+.toggle { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; }
+
+.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 0; }
+.sidebar { border-right: 1px solid var(--line); overflow-y: auto; padding: 12px 10px 24px; background: var(--panel); }
+.sidebar input[type=search] { width: 100%; box-sizing: border-box; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.group-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 14px 6px 4px; }
+.plant-btn { display: flex; align-items: center; gap: 8px; width: 100%; border: 0; background: none; padding: 6px 8px; border-radius: 6px; text-align: left; }
+.plant-btn:hover { background: var(--hover); }
+.plant-btn[aria-current="true"] { background: var(--accent); color: var(--accent-ink); }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset; }
+.plant-btn .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plant-btn .badge { font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 8px; background: var(--edited); color: #1a1408; }
+.mobile-pick { display: none; }
+
+main { overflow-y: auto; min-width: 0; }
+.toolbar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-block: 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--panel); border-bottom: 1px solid var(--line); }
+.tb { min-width: 30px; height: 30px; border: 1px solid var(--line); background: var(--bg); border-radius: 5px; padding: 0 7px; }
+.tb:hover { background: var(--hover); }
+.tb.b { font-weight: 700; } .tb.i { font-style: italic; } .tb.u { text-decoration: underline; } .tb.s { text-decoration: line-through; }
+.sep { width: 1px; height: 22px; background: var(--line); margin: 0 3px; }
+.swatches { display: flex; flex-wrap: wrap; gap: 4px; }
+.sw { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(0,0,0,.35); padding: 0; }
+.sw.element { background: conic-gradient(#FF8000 0 16%, #4FC3F7 0 33%, #00FF00 0 50%, #B2EBF2 0 66%, #A020F0 0 83%, #00FFFF 0); }
+.tb select { border: 0; background: none; }
+.tb-hint { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+.content { padding-block: 18px 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); max-width: 980px; }
+.banner { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 10px 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+.banner.warn { border-color: var(--danger); color: var(--ink); }
+.plant-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.plant-head h2 { font-family: var(--f-display); font-size: 26px; margin: 0; text-wrap: balance; }
+.meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 12px; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); }
+.file { font-family: var(--f-mono); font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+
+.section { margin-top: 26px; }
+.section > h3 { font-family: var(--f-display); font-size: 17px; margin: 0 0 10px; display: flex; align-items: baseline; gap: 10px; }
+.section > h3 small { font-family: var(--f-body); font-weight: 400; font-size: 12px; color: var(--muted); }
+.field { margin-bottom: 14px; }
+.field-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
+.field-label { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.status { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 8px; }
+.status.edited { background: var(--edited-bg); color: var(--edited); border: 1px solid var(--edited); }
+.status.new { color: var(--new); border: 1px solid var(--new); }
+.status.deleted { color: var(--danger); border: 1px solid var(--danger); }
+.field-actions { margin-left: auto; display: flex; gap: 4px; }
+.link { border: 0; background: none; color: var(--muted); font-size: 12px; padding: 2px 6px; border-radius: 4px; }
+.link:hover { background: var(--hover); color: var(--ink); }
+
+.tip { background: var(--tip-bg); color: var(--tip-ink); border: 1px solid var(--tip-line); border-radius: 6px; padding: 10px 12px;
+  line-height: 1.55; font-size: 15px; white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1.6em; }
+.tip.editable { cursor: text; }
+.tip.editable:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.field.is-edited .tip { box-shadow: inset 3px 0 0 var(--edited); }
+.field.is-deleted .tip { opacity: .45; text-decoration: line-through; }
+body.pixel .tip { font-family: var(--f-pixel); font-size: 11px; line-height: 2; }
+.chip { display: inline-block; padding: 0 4px; margin: 0 1px; border-radius: 4px; background: var(--chip-bg); border: 1px dashed var(--chip-line);
+  white-space: nowrap; user-select: all; cursor: default; }
+.chip.raw { color: #9aa3ad !important; font-family: var(--f-mono); font-size: .85em; }
+.chip.text { white-space: normal; }
+textarea.src { width: 100%; box-sizing: border-box; min-height: 96px; font-family: var(--f-mono); font-size: 12.5px; line-height: 1.5;
+  background: var(--tip-bg); color: var(--tip-ink); border: 1px solid var(--tip-line); border-radius: 6px; padding: 10px 12px; resize: vertical; }
+.add-line { margin-top: 2px; }
+.empty { color: var(--muted); }
+
+.drawer { position: fixed; inset: 0 0 0 auto; width: min(560px, 100%); background: var(--panel); border-left: 1px solid var(--line); z-index: 20;
+  display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,.18); padding-top: env(safe-area-inset-top, 0px); }
+.drawer header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.drawer header h2 { font-family: var(--f-display); font-size: 18px; margin: 0; flex: 1; }
+.drawer .body { overflow-y: auto; padding: 12px 16px 40px; }
+.change { border-bottom: 1px solid var(--line); padding: 12px 0; display: grid; gap: 6px; }
+.change .where { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-weight: 600; }
+.change .where span { font-weight: 400; color: var(--muted); font-size: 12px; }
+.change .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.change .tip { font-size: 13px; padding: 7px 9px; }
+.form { display: grid; gap: 10px; max-width: 420px; }
+.form label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+.form input, .form select { padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.toast { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg);
+  padding: 8px 14px; border-radius: 6px; font-size: 13px; z-index: 30; }
+
+@media (max-width: 760px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { display: none; }
+  .mobile-pick { display: block; width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); margin-bottom: 12px; }
+  .tb-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <div class="top">
+    <h1>Plant Tooltip Editor</h1>
+    <span class="save-state" id="saveState">Loading…</span>
+    <span class="spacer"></span>
+    <label class="toggle" for="pixelToggle"><input type="checkbox" id="pixelToggle"> Pixel font</label>
+    <label class="toggle" for="codeToggle"><input type="checkbox" id="codeToggle"> Show value code</label>
+    <button class="btn" id="newPlantBtn" type="button">New plant</button>
+    <button class="btn primary" id="changesBtn" type="button">Changes<span class="count" id="changeCount" hidden>0</span></button>
+  </div>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Plants">
+      <input type="search" id="search" placeholder="Find a plant" aria-label="Find a plant">
+      <div id="plantList"></div>
+    </nav>
+    <main id="main">
+      <div class="toolbar" id="toolbar" aria-label="Formatting">
+        <button class="tb b" data-cmd="b" title="Bold (Ctrl+B)" type="button">B</button>
+        <button class="tb i" data-cmd="i" title="Italic (Ctrl+I)" type="button">I</button>
+        <button class="tb u" data-cmd="u" title="Underline (Ctrl+U)" type="button">U</button>
+        <button class="tb s" data-cmd="s" title="Strikethrough" type="button">S</button>
+        <span class="sep"></span>
+        <span class="tb" title="Text size"><select id="sizeSel" aria-label="Text size">
+          <option value="">Size</option><option value="70%">Smaller (70%)</option><option value="85%">Small (85%)</option>
+          <option value="none">Normal</option><option value="120%">Large (120%)</option><option value="150%">Larger (150%)</option>
+        </select></span>
+        <span class="sep"></span>
+        <div class="swatches" id="swatches"></div>
+        <input type="color" id="customColor" class="tb" value="#7fd6ff" title="Custom color" aria-label="Custom color" style="padding:2px;width:34px">
+        <button class="tb" data-cmd="nocolor" title="Remove color" type="button">No color</button>
+        <span class="sep"></span>
+        <span class="tb" title="Insert a live value"><select id="tokenSel" aria-label="Insert a live value"><option value="">Insert value…</option></select></span>
+        <button class="tb" data-cmd="clear" title="Clear all formatting from the selection" type="button">Clear</button>
+        <button class="tb" data-cmd="undo" title="Undo (Ctrl+Z)" type="button">Undo</button>
+        <button class="tb" data-cmd="redo" title="Redo (Ctrl+Y)" type="button">Redo</button>
+        <span class="tb-hint" id="tbHint">Select text in a tooltip, then pick a style</span>
+      </div>
+      <div class="content" id="content"><p class="empty">Loading descriptions…</p></div>
+    </main>
+  </div>
+</div>
+<div class="drawer" id="drawer" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script id="core">
+// ---------------------------------------------------------------- template core (pure)
+// a template is the exact content of a C# interpolated string: TMP tags, {holes} kept as written,
+// \n \" escapes, {{ }} for literal braces. items are one per visible unit, each with its style
+const ELEMENT_EXPR = "PlantData.ElementalColor(elementalType)";
+const ELEMENT_COLORS = { Fire: "orange", Water: "#4FC3F7", Grass: "green", Wind: "#B2EBF2", Poison: "purple", Ice: "#00FFFF" };
+const TMP_NAMED = { red: "#FF0000", green: "#00FF00", blue: "#0000FF", yellow: "#FFFF00", orange: "#FF8000", purple: "#A020F0",
+  white: "#FFFFFF", black: "#000000", grey: "#808080", gray: "#808080", cyan: "#00FFFF", lightblue: "#ADD8E6" };
+const ORDER = ["c", "z", "b", "i", "u", "s"];
+const NO_STYLE = Object.freeze({ c: null, z: null, b: false, i: false, u: false, s: false });
+
+function scanStr(s, i) {
+  const interp = s[i - 1] === "$";
+  i++;
+  while (i < s.length) {
+    const c = s[i];
+    if (c === "\\") { i += 2; continue; }
+    if (c === '"') return i + 1;
+    if (interp && c === "{") { if (s[i + 1] === "{") { i += 2; continue; } i = scanHole(s, i); continue; }
+    i++;
+  }
+  return s.length;
+}
+function scanHole(s, i) {
+  let depth = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (c === '"') { i = scanStr(s, i); continue; }
+    if (c === "'") { const j = s.indexOf("'", i + (s[i + 1] === "\\" ? 3 : 2)); i = j < 0 ? s.length : j + 1; continue; }
+    if (c === "(" || c === "{" || c === "[") depth++;
+    else if (c === ")" || c === "}" || c === "]") { depth--; if (depth === 0) return i + 1; }
+    i++;
+  }
+  return s.length;
+}
+function readTag(raw, i) {
+  let j = i + 1, close = false;
+  if (raw[j] === "/") { close = true; j++; }
+  const m = /^[a-zA-Z][\w-]*/.exec(raw.slice(j, j + 40));
+  if (!m) return null;
+  const name = m[0].toLowerCase(); j += m[0].length;
+  let value = null;
+  if (raw[j] === "=") {
+    j++; let v = "";
+    while (j < raw.length && raw[j] !== ">") {
+      if (raw[j] === "{" && raw[j + 1] !== "{") { const e = scanHole(raw, j); v += raw.slice(j, e); j = e; continue; }
+      if (raw[j] === "<" || raw[j] === "\\") return null;
+      v += raw[j]; j++;
+    }
+    value = v;
+  }
+  if (raw[j] !== ">") return null;
+  return { name, value, close, end: j + 1, text: raw.slice(i, j + 1) };
+}
+function parseTemplate(raw) {
+  const items = [];
+  const st = { c: [], z: [], b: 0, i: 0, u: 0, s: 0 };
+  const cur = () => ({ c: st.c.length ? st.c[st.c.length - 1] : null, z: st.z.length ? st.z[st.z.length - 1] : null,
+    b: st.b > 0, i: st.i > 0, u: st.u > 0, s: st.s > 0 });
+  let i = 0;
+  raw = raw || "";
+  while (i < raw.length) {
+    const c = raw[i];
+    if (c === "\\") {
+      const n = raw[i + 1];
+      if (n === "n") items.push({ t: "n", st: cur() });
+      else if (n === "t") items.push({ t: "c", ch: "\t", st: cur() });
+      else if (n !== undefined) items.push({ t: "c", ch: n, st: cur() });
+      i += 2; continue;
+    }
+    if (c === "{") {
+      if (raw[i + 1] === "{") { items.push({ t: "c", ch: "{", st: cur() }); i += 2; continue; }
+      const end = scanHole(raw, i);
+      items.push({ t: "h", expr: raw.slice(i + 1, end - 1), st: cur() });
+      i = end; continue;
+    }
+    if (c === "}" && raw[i + 1] === "}") { items.push({ t: "c", ch: "}", st: cur() }); i += 2; continue; }
+    if (c === "<") {
+      const tag = readTag(raw, i);
+      if (tag) {
+        const key = tag.name === "color" ? "c" : tag.name === "size" ? "z" : ["b", "i", "u", "s"].includes(tag.name) ? tag.name : null;
+        if (key === "c" || key === "z") { if (tag.close) st[key].pop(); else st[key].push(tag.value); }
+        else if (key) st[key] = Math.max(0, st[key] + (tag.close ? -1 : 1));
+        else items.push({ t: "r", raw: tag.text, st: cur() });
+        i = tag.end; continue;
+      }
+    }
+    items.push({ t: "c", ch: c, st: cur() });
+    i++;
+  }
+  return items;
+}
+function active(st, k) { return k === "c" || k === "z" ? st[k] != null : !!st[k]; }
+function sameKey(a, b, k) { return k === "c" || k === "z" ? (a[k] ?? null) === (b[k] ?? null) : !!a[k] === !!b[k]; }
+function openTag(k, v) { return k === "c" ? "<color=" + v + ">" : k === "z" ? "<size=" + v + ">" : "<" + k + ">"; }
+function closeTag(k) { return k === "c" ? "</color>" : k === "z" ? "</size>" : "</" + k + ">"; }
+function escapeChar(ch) {
+  return ch === '"' ? '\\"' : ch === "\\" ? "\\\\" : ch === "{" ? "{{" : ch === "}" ? "}}" : ch === "\t" ? "\\t" : ch === "\n" ? "\\n" : ch;
+}
+function serialize(items) {
+  let out = "", cur = { ...NO_STYLE };
+  for (const it of items) {
+    const want = it.st || NO_STYLE;
+    const d = ORDER.findIndex(k => !sameKey(cur, want, k));
+    if (d >= 0) {
+      for (let k = ORDER.length - 1; k >= d; k--) if (active(cur, ORDER[k])) out += closeTag(ORDER[k]);
+      for (let k = d; k < ORDER.length; k++) if (active(want, ORDER[k])) out += openTag(ORDER[k], want[ORDER[k]]);
+      cur = { ...NO_STYLE, ...want };
+    }
+    if (it.t === "c") out += escapeChar(it.ch);
+    else if (it.t === "n") out += "\\n";
+    else if (it.t === "h") out += "{" + it.expr + "}";
+    else out += it.raw;
+  }
+  for (let k = ORDER.length - 1; k >= 0; k--) if (active(cur, ORDER[k])) out += closeTag(ORDER[k]);
+  return out;
+}
+function sameItems(a, b) {
+  if (a.length !== b.length) return false;
+  for (let k = 0; k < a.length; k++) {
+    const x = a[k], y = b[k];
+    if (x.t !== y.t || x.ch !== y.ch || x.expr !== y.expr || x.raw !== y.raw) return false;
+    if (!ORDER.every(key => sameKey(x.st, y.st, key))) return false;
+  }
+  return true;
+}
+function topLevelColon(s) {
+  let depth = 0;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === '"') { i = scanStr(s, i) - 1; continue; }
+    if (c === "(" || c === "[" || c === "{") depth++;
+    else if (c === ")" || c === "]" || c === "}") depth--;
+    else if (c === "?" && depth === 0) return -1;
+    else if (c === ":" && depth === 0) return i;
+  }
+  return -1;
+}
+function humanize(expr) {
+  let s = expr;
+  const fi = topLevelColon(s);
+  if (fi >= 0) s = s.slice(0, fi);
+  s = s.replace(/\b\w+Data\?\./g, "").replace(/\s*\?\?\s*-?[\d.]+f?/g, "").replace(/\bdata\./g, "base ")
+    .replace(/\beffectivePath(\d)Level\b/g, "P$1 level").replace(/\bpath(\d)Level\b/g, "P$1 level")
+    .replace(/\b(\d+(?:\.\d+)?)f\b/g, "$1").replace(/Mathf\.(RoundToInt|CeilToInt|FloorToInt|Round|Ceil|Floor|Max|Min|Abs)/g, "")
+    .replace(/\s*\*\s*/g, " × ").replace(/\((\w+)\)/g, "$1").replace(/\s+/g, " ").trim();
+  while (/^\(.*\)$/.test(s) && scanHole("{" + s.slice(1, -1) + "}", 0) === s.length) s = s.slice(1, -1).trim();
+  return s;
+}
+</script>
+
+<script>
+// ---------------------------------------------------------------- page
+let DATA = null, db = null;
+const edits = new Map();        // key -> pending edit doc body
+const newPlants = new Map();    // id -> plant doc body
+let currentPlantId = null, activeField = null;
+const fields = new Map();       // key -> field object for the plant on screen
+const $ = id => document.getElementById(id);
+const showCode = () => $("codeToggle").checked;
+
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => t.hidden = true, 2200); }
+function setSaveState(msg, bad) { const s = $("saveState"); s.textContent = msg; s.classList.toggle("bad", !!bad); }
+
+function plantById(id) { return DATA.plants.find(p => p.id === id) || newPlants.get(id); }
+function cssColor(v, plant) {
+  if (!v) return null;
+  v = v.replace(/^"|"$/g, "");
+  if (v.startsWith("{")) {
+    const e = v.slice(1, -1);
+    if (e === ELEMENT_EXPR) return cssColor(ELEMENT_COLORS[plant && plant.element] || "white", plant);
+    return "#cfd6dd";
+  }
+  const named = TMP_NAMED[v.toLowerCase()];
+  if (named) return named;
+  return /^#[0-9a-f]{3,8}$/i.test(v) ? v : null;
+}
+function cssSize(z) {
+  z = String(z).trim();
+  if (/%$/.test(z) || /em$/.test(z)) return z;
+  const n = parseFloat(z);
+  return isNaN(n) ? null : (n / 36) + "em";
+}
+
+// ---------------------------------------------------------------- rendering tooltips
+function nameItems(plant) {
+  const items = parseTemplate(plant.nameTemplate || plant.name);
+  const out = [];
+  for (const it of items) {
+    if (it.t === "h") for (const ch of plant.name) out.push({ t: "c", ch, st: it.st });
+    else out.push(it);
+  }
+  return out;
+}
+const DAMAGE_LABEL = { Magic: '<color=#FFB6C1><b>Magic Damage</b></color>', Physical: '<color=#A0522D><b>Physical Damage</b></color>',
+  True: '<color=white><b>True Damage</b></color>' };
+function chipContent(expr, plant) {
+  if (showCode()) return null;
+  if (expr === "GetName()") return nameItems(plant);
+  if (expr === "PlantData.DamageTypeLabel(damageType)")
+    return parseTemplate(DAMAGE_LABEL[plant.damageType] || "<b>" + plant.damageType + " Damage</b>");
+  if (expr === "PlantData.RetainAggroLine()")
+    return parseTemplate("While over <color=green><b>25%</b></color> Health, insects that initiate an Attack on this plant will retain aggro.");
+  return null;
+}
+function makeChip(it, plant) {
+  const chip = document.createElement("span");
+  chip.className = "chip";
+  chip.contentEditable = "false";
+  chip.dataset.chip = JSON.stringify(it.t === "h" ? { t: "h", expr: it.expr } : { t: "r", raw: it.raw });
+  if (it.t === "r") { chip.classList.add("raw"); chip.textContent = it.raw; chip.title = "TMP tag kept as written"; return chip; }
+  chip.title = "Live value: {" + it.expr + "}";
+  const inner = chipContent(it.expr, plant);
+  if (inner) { chip.classList.add("text"); renderInto(chip, inner, plant, true); }
+  else chip.textContent = showCode() ? "{" + it.expr + "}" : humanize(it.expr);
+  return chip;
+}
+function makeSpan(st, plant, plain) {
+  const s = document.createElement("span");
+  if (!plain) s.dataset.st = JSON.stringify(st);
+  const col = cssColor(st.c, plant); if (col) s.style.color = col;
+  if (st.b) s.style.fontWeight = "700";
+  if (st.i) s.style.fontStyle = "italic";
+  const deco = [st.u && "underline", st.s && "line-through"].filter(Boolean).join(" ");
+  if (deco) s.style.textDecoration = deco;
+  if (st.z) { const z = cssSize(st.z); if (z) s.style.fontSize = z; }
+  return s;
+}
+function renderInto(el, items, plant, plain) {
+  el.textContent = "";
+  let span = null, key = null;
+  for (const it of items) {
+    const k = JSON.stringify(ORDER.map(x => it.st[x] ?? null));
+    if (!span || k !== key) { span = makeSpan(it.st, plant, plain); el.appendChild(span); key = k; }
+    if (it.t === "c") {
+      const last = span.lastChild;
+      if (last && last.nodeType === 3) last.data += it.ch; else span.appendChild(document.createTextNode(it.ch));
+    } else if (it.t === "n") span.appendChild(document.createElement("br"));
+    else span.appendChild(makeChip(it, plant));
+  }
+  if (!plain && (!items.length || items[items.length - 1].t === "n")) {
+    const br = document.createElement("br"); br.dataset.ph = "1"; el.appendChild(br);
+  }
+}
+
+// ---------------------------------------------------------------- reading the editor back
+function lastLeaf(node) { while (node.lastChild) node = node.lastChild; return node; }
+function domToItems(root, opts = {}) {
+  const out = [];
+  const skip = opts.keepTail ? null : lastLeaf(root);
+  (function walk(node, inherited) {
+    for (const child of node.childNodes) {
+      if (child.nodeType === 3) {
+        for (const ch of child.data) {
+          if (ch === "\n") out.push({ t: "n", st: inherited });
+          else if (ch !== "​") out.push({ t: "c", ch: ch === " " ? " " : ch, st: inherited });
+        }
+      } else if (child.nodeType === 1) {
+        if (child.tagName === "BR") { if (child !== skip && !child.dataset.ph) out.push({ t: "n", st: inherited }); continue; }
+        if (child.dataset && child.dataset.chip) { out.push({ ...JSON.parse(child.dataset.chip), st: inherited }); continue; }
+        const st = child.dataset && child.dataset.st ? JSON.parse(child.dataset.st) : inherited;
+        if (/^(DIV|P)$/.test(child.tagName) && out.length && out[out.length - 1].t !== "n") out.push({ t: "n", st });
+        walk(child, st);
+      }
+    }
+  })(root, NO_STYLE);
+  return out;
+}
+function selectionOffsets(el) {
+  const sel = getSelection();
+  if (!sel.rangeCount) return null;
+  const r = sel.getRangeAt(0);
+  if (!el.contains(r.startContainer) || !el.contains(r.endContainer)) return null;
+  const pre = document.createRange();
+  pre.selectNodeContents(el);
+  pre.setEnd(r.startContainer, r.startOffset);
+  const s = domToItems(pre.cloneContents(), { keepTail: true }).length;
+  pre.setEnd(r.endContainer, r.endOffset);
+  const e = domToItems(pre.cloneContents(), { keepTail: true }).length;
+  return [s, e];
+}
+function pointAt(el, n) {
+  let found = null;
+  (function walk(node) {
+    for (const child of node.childNodes) {
+      if (found) return;
+      if (child.nodeType === 3) {
+        if (n <= child.data.length) { found = { node: child, offset: n }; return; }
+        n -= child.data.length;
+      } else if (child.nodeType === 1) {
+        if (child.tagName === "BR" && child.dataset.ph) continue;
+        if (child.tagName === "BR" || (child.dataset && child.dataset.chip)) {
+          if (n === 0) { found = { node: child.parentNode, offset: [...child.parentNode.childNodes].indexOf(child) }; return; }
+          n -= 1;
+          if (n === 0 && child.nextSibling === null) { found = { node: child.parentNode, offset: child.parentNode.childNodes.length }; return; }
+          continue;
+        }
+        walk(child);
+      }
+    }
+  })(el);
+  return found || { node: el, offset: el.childNodes.length };
+}
+function setSelectionOffsets(el, s, e) {
+  const a = pointAt(el, s), b = pointAt(el, e);
+  const r = document.createRange();
+  try { r.setStart(a.node, a.offset); r.setEnd(b.node, b.offset); } catch (err) { r.selectNodeContents(el); r.collapse(false); }
+  const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+}
+
+// ---------------------------------------------------------------- fields
+function fieldKey(plantId, section, part, index) { return [plantId, section, part, index].join("~"); }
+function currentText(f) {
+  const e = edits.get(f.key);
+  return e ? (e.deleted ? f.original : e.text) : f.original;
+}
+function makeField({ plant, section, part, index, label, original, isNew }) {
+  const key = fieldKey(plant.id, section, part, index);
+  const f = { key, plantId: plant.id, section, part, index, label, original: original || "", isNew: !!isNew, history: [], future: [] };
+  f.items = parseTemplate(currentText(f));
+  f.baseline = serialize(parseTemplate(f.original));
+  fields.set(key, f);
+  return f;
+}
+function statusOf(f) {
+  const e = edits.get(f.key);
+  if (!e) return null;
+  if (e.deleted) return "deleted";
+  return f.isNew ? "new" : "edited";
+}
+function fieldEl(f, plant) {
+  const wrap = document.createElement("div");
+  wrap.className = "field"; wrap.id = "f-" + f.key;
+  const head = document.createElement("div"); head.className = "field-head";
+  const lab = document.createElement("span"); lab.className = "field-label"; lab.textContent = f.label;
+  const stat = document.createElement("span"); stat.className = "status";
+  const actions = document.createElement("span"); actions.className = "field-actions";
+  const srcBtn = linkBtn("Source", () => toggleSource(f, plant));
+  const revertBtn = linkBtn(f.isNew ? "Remove" : "Revert", () => revertField(f));
+  actions.append(srcBtn, revertBtn);
+  if (f.part === "upgrade" && !f.isNew) actions.append(linkBtn("Delete line", () => markDeleted(f)));
+  head.append(lab, stat, actions);
+  const tip = document.createElement("div");
+  tip.className = "tip editable"; tip.contentEditable = "true"; tip.spellcheck = true;
+  tip.setAttribute("role", "textbox"); tip.setAttribute("aria-multiline", "true"); tip.setAttribute("aria-label", f.label);
+  f.el = tip; f.wrap = wrap; f.statusEl = stat; f.revertBtn = revertBtn; f.plant = plant;
+  renderInto(tip, f.items, plant);
+  bindEditor(f);
+  wrap.append(head, tip);
+  updateFieldStatus(f);
+  return wrap;
+}
+function linkBtn(text, fn) { const b = document.createElement("button"); b.type = "button"; b.className = "link"; b.textContent = text; b.addEventListener("click", fn); return b; }
+function updateFieldStatus(f) {
+  const s = statusOf(f);
+  f.statusEl.className = "status" + (s ? " " + s : "");
+  f.statusEl.textContent = s === "edited" ? "Edited" : s === "new" ? "New" : s === "deleted" ? "Deleted" : "";
+  f.statusEl.hidden = !s;
+  f.wrap.classList.toggle("is-edited", s === "edited" || s === "new");
+  f.wrap.classList.toggle("is-deleted", s === "deleted");
+  f.revertBtn.hidden = !s && !f.isNew;
+}
+
+// ---------------------------------------------------------------- editing
+function pushHistory(f) {
+  const snap = serialize(f.items);
+  if (f.history[f.history.length - 1] !== snap) { f.history.push(snap); if (f.history.length > 200) f.history.shift(); }
+  f.future = [];
+}
+function commit(f, items, caretS, caretE) {
+  pushHistory(f);
+  f.items = items;
+  renderInto(f.el, items, f.plant);
+  if (caretS != null) { f.el.focus(); setSelectionOffsets(f.el, caretS, caretE ?? caretS); }
+  scheduleSave(f);
+}
+function bindEditor(f) {
+  const el = f.el;
+  el.addEventListener("focus", () => { activeField = f; $("tbHint").textContent = f.plant.name + " · " + f.label; });
+  el.addEventListener("keydown", ev => {
+    const mod = ev.ctrlKey || ev.metaKey;
+    if (ev.key === "Enter") { ev.preventDefault(); insertItems(f, [{ t: "n" }]); return; }
+    if (mod && (ev.key === "z" || ev.key === "Z")) { ev.preventDefault(); ev.shiftKey ? redo(f) : undo(f); return; }
+    if (mod && (ev.key === "y" || ev.key === "Y")) { ev.preventDefault(); redo(f); return; }
+    if (mod && ["b", "i", "u"].includes(ev.key.toLowerCase())) { ev.preventDefault(); toggleFlag(f, ev.key.toLowerCase()); }
+  });
+  el.addEventListener("beforeinput", () => { if (!f.typing) { pushHistory(f); f.typing = true; } });
+  el.addEventListener("input", () => {
+    f.items = domToItems(el);
+    clearTimeout(f.typeTimer); f.typeTimer = setTimeout(() => f.typing = false, 700);
+    scheduleSave(f);
+  });
+  el.addEventListener("paste", ev => {
+    ev.preventDefault();
+    const text = (ev.clipboardData || window.clipboardData).getData("text/plain");
+    const items = [...text.replace(/\r\n?/g, "\n")].map(ch => ch === "\n" ? { t: "n" } : { t: "c", ch });
+    insertItems(f, items);
+  });
+  el.addEventListener("drop", ev => ev.preventDefault());
+}
+function insertItems(f, newItems) {
+  const off = selectionOffsets(f.el) || [f.items.length, f.items.length];
+  const items = domToItems(f.el);
+  const st = (items[off[0] - 1] || items[off[0]] || {}).st || NO_STYLE;
+  const ins = newItems.map(it => ({ ...it, st: it.st || st }));
+  items.splice(off[0], off[1] - off[0], ...ins);
+  commit(f, items, off[0] + ins.length);
+}
+function withSelection(fn) {
+  const f = activeField;
+  if (!f || !document.body.contains(f.el)) { toast("Click into a tooltip first"); return; }
+  const off = selectionOffsets(f.el);
+  if (!off || off[0] === off[1]) { toast("Select some text first"); f.el.focus(); return; }
+  const items = domToItems(f.el);
+  fn(items, off[0], off[1]);
+  commit(f, items, off[0], off[1]);
+}
+function restyle(mutate) { withSelection((items, s, e) => { for (let k = s; k < e; k++) items[k] = { ...items[k], st: mutate({ ...items[k].st }) }; }); }
+function toggleFlag(f, flag) {
+  activeField = f;
+  withSelection((items, s, e) => {
+    const on = !items.slice(s, e).every(it => it.st[flag]);
+    for (let k = s; k < e; k++) items[k] = { ...items[k], st: { ...items[k].st, [flag]: on } };
+  });
+}
+function undo(f) {
+  if (!f.history.length) return toast("Nothing to undo");
+  f.future.push(serialize(f.items));
+  f.items = parseTemplate(f.history.pop());
+  renderInto(f.el, f.items, f.plant); f.el.focus(); setSelectionOffsets(f.el, f.items.length, f.items.length);
+  scheduleSave(f);
+}
+function redo(f) {
+  if (!f.future.length) return toast("Nothing to redo");
+  f.history.push(serialize(f.items));
+  f.items = parseTemplate(f.future.pop());
+  renderInto(f.el, f.items, f.plant); f.el.focus(); setSelectionOffsets(f.el, f.items.length, f.items.length);
+  scheduleSave(f);
+}
+function toggleSource(f, plant) {
+  const existing = f.wrap.querySelector("textarea.src");
+  if (existing) { existing.remove(); f.el.hidden = false; return; }
+  const ta = document.createElement("textarea");
+  ta.className = "src"; ta.id = "src-" + f.key; ta.setAttribute("aria-label", f.label + " source");
+  ta.value = serialize(f.items).replace(/\\n/g, "\n");
+  ta.addEventListener("input", () => {
+    f.items = parseTemplate(ta.value.replace(/\r\n?/g, "\n").replace(/\n/g, "\\n"));
+    renderInto(f.el, f.items, plant);
+    scheduleSave(f);
+  });
+  f.el.hidden = true;
+  f.wrap.append(ta); ta.focus();
+}
+
+// ---------------------------------------------------------------- saving
+let pendingSaves = 0;
+function scheduleSave(f) {
+  f.dirty = true;
+  setSaveState(db ? "Saving…" : "Not saved: storage unavailable", !db);
+  clearTimeout(f.saveTimer);
+  f.saveTimer = setTimeout(() => saveField(f), 700);
+}
+async function saveField(f) {
+  if (!db) return;
+  const text = serialize(f.items);
+  const ref = db.doc("edits/" + f.key);
+  pendingSaves++;
+  try {
+    if (text === f.baseline && !f.isNew) { edits.delete(f.key); await ref.delete(); }
+    else {
+      const body = { plant: f.plantId, section: f.section, part: f.part, index: f.index, label: f.label,
+        text, original: f.original, isNew: f.isNew, status: "pending", updatedAt: Date.now() };
+      edits.set(f.key, body);
+      await ref.set(body);
+    }
+    f.dirty = false;
+    updateFieldStatus(f); refreshCounts();
+    pendingSaves--;
+    if (!pendingSaves) setSaveState("All changes saved");
+  } catch (err) {
+    pendingSaves--;
+    setSaveState(err && err.code === "quota_exceeded" ? "Not saved: storage is full" : "Not saved: " + ((err && err.message) || "try again"), true);
+  }
+}
+async function revertField(f) {
+  pushHistory(f);
+  edits.delete(f.key);
+  if (db) { try { await db.doc("edits/" + f.key).delete(); } catch (e) { setSaveState("Revert not saved", true); } }
+  if (f.isNew) { f.wrap.remove(); fields.delete(f.key); refreshCounts(); return; }
+  f.items = parseTemplate(f.original);
+  renderInto(f.el, f.items, f.plant);
+  updateFieldStatus(f); refreshCounts(); toast("Back to the code's version");
+}
+async function markDeleted(f) {
+  const body = { plant: f.plantId, section: f.section, part: f.part, index: f.index, label: f.label, text: "", original: f.original,
+    isNew: false, deleted: true, status: "pending", updatedAt: Date.now() };
+  edits.set(f.key, body);
+  updateFieldStatus(f); refreshCounts();
+  if (db) { try { await db.doc("edits/" + f.key).set(body); setSaveState("All changes saved"); } catch (e) { setSaveState("Not saved", true); } }
+}
+
+// ---------------------------------------------------------------- plant view
+const SECTION_TITLES = { attack: ["Attack", "Path 1"], passive: ["Passive", "Path 2"], skill: ["Skill", "Path 3"] };
+function plantSections(plant) {
+  if (plant.sections) return plant.sections;
+  return ["attack", "passive", "skill"].map(k => ({ key: k, title: SECTION_TITLES[k][0], overview: "", details: null, upgrades: [], maxBonus: "", maxBonusDetails: null }));
+}
+function extraUpgradeIndices(plant, sec) {
+  const base = sec.upgrades.length;
+  const idx = new Set();
+  for (const [key, e] of edits) if (e.plant === plant.id && e.section === sec.key && e.part === "upgrade" && e.index >= base) idx.add(e.index);
+  return [...idx].sort((a, b) => a - b);
+}
+function showPlant(id, scrollKey, keepScroll) {
+  const plant = plantById(id);
+  if (!plant) return;
+  const scrollBefore = $("main").scrollTop;
+  currentPlantId = id; activeField = null; fields.clear();
+  try { localStorage.setItem("tooltip-editor-plant", id); } catch (e) {}
+  const c = $("content");
+  c.textContent = "";
+  c.append(mobilePicker());
+  if (!db) {
+    const b = document.createElement("div"); b.className = "banner warn";
+    b.textContent = "Edits can't be saved in this view, so they'll be lost when you leave. Open this page in Claude while signed in to keep them.";
+    c.append(b);
+  }
+  const head = document.createElement("div"); head.className = "plant-head";
+  const h2 = document.createElement("h2"); renderInto(h2, nameItems(plant), plant, true);
+  const meta = document.createElement("div"); meta.className = "meta";
+  for (const t of [plant.element, plant.damageType && plant.damageType + " damage", plant.role, plant.deprecated && "Deprecated", plant.isNewPlant && "New plant"].filter(Boolean)) {
+    const s = document.createElement("span"); s.className = "tag"; s.textContent = t; meta.append(s);
+  }
+  head.append(h2, meta); c.append(head);
+  const file = document.createElement("div"); file.className = "file";
+  file.textContent = plant.file ? plant.file : "Not in the code yet. Claude creates the plant's script when you ask it to apply these.";
+  c.append(file);
+
+  const ov = document.createElement("div"); ov.className = "section";
+  const ovh = document.createElement("h3"); ovh.textContent = "Overview"; ov.append(ovh);
+  ov.append(fieldEl(makeField({ plant, section: "plant", part: "overview", index: 0, label: "Plant description", original: plant.overview || "", isNew: !plant.overview }), plant));
+  c.append(ov);
+
+  for (const sec of plantSections(plant)) {
+    const box = document.createElement("div"); box.className = "section";
+    const h3 = document.createElement("h3"); h3.textContent = sec.title;
+    const sm = document.createElement("small"); sm.textContent = (SECTION_TITLES[sec.key] || ["", ""])[1] + " tooltip"; h3.append(sm);
+    box.append(h3);
+    box.append(fieldEl(makeField({ plant, section: sec.key, part: "overview", index: 0, label: sec.title + " · tooltip", original: sec.overview || "", isNew: !sec.overview }), plant));
+    if (sec.details || !plant.sections)
+      box.append(fieldEl(makeField({ plant, section: sec.key, part: "details", index: 0, label: sec.title + " · holding Shift", original: sec.details || "", isNew: !sec.details }), plant));
+    sec.upgrades.forEach((u, k) => box.append(fieldEl(makeField({ plant, section: sec.key, part: "upgrade", index: k, label: "Upgrade line " + (k + 1), original: u }), plant)));
+    for (const k of extraUpgradeIndices(plant, sec))
+      box.append(fieldEl(makeField({ plant, section: sec.key, part: "upgrade", index: k, label: "Upgrade line " + (k + 1), original: "", isNew: true }), plant));
+    const add = document.createElement("button"); add.type = "button"; add.className = "btn add-line"; add.textContent = "Add upgrade line";
+    add.addEventListener("click", () => {
+      const used = [...fields.values()].filter(f => f.section === sec.key && f.part === "upgrade").map(f => f.index);
+      const index = used.length ? Math.max(...used) + 1 : 0;
+      const f = makeField({ plant, section: sec.key, part: "upgrade", index, label: "Upgrade line " + (index + 1), original: "", isNew: true });
+      f.items = parseTemplate("Increase <color=green><b>Stat</b></color> by <color=green><b>0</b></color> per level.");
+      const el = fieldEl(f, plant);
+      add.before(el); f.el.focus(); scheduleSave(f);
+    });
+    if (sec.maxBonus !== null || !plant.sections)
+      box.append(fieldEl(makeField({ plant, section: sec.key, part: "maxBonus", index: 0, label: "Max level bonus", original: sec.maxBonus || "", isNew: !sec.maxBonus }), plant));
+    if (sec.maxBonusDetails)
+      box.append(fieldEl(makeField({ plant, section: sec.key, part: "maxBonusDetails", index: 0, label: "Max level bonus · holding Shift", original: sec.maxBonusDetails }), plant));
+    box.append(add);
+    c.append(box);
+  }
+  buildTokenMenu(plant);
+  renderPlantList();
+  if (scrollKey) { const el = document.getElementById("f-" + scrollKey); if (el) el.scrollIntoView({ block: "center" }); }
+  else $("main").scrollTop = keepScroll ? scrollBefore : 0;
+}
+function mobilePicker() {
+  const sel = document.createElement("select"); sel.className = "mobile-pick"; sel.id = "mobilePick"; sel.setAttribute("aria-label", "Plant");
+  for (const p of allPlants()) { const o = document.createElement("option"); o.value = p.id; o.textContent = p.name; sel.append(o); }
+  sel.value = currentPlantId;
+  sel.addEventListener("change", () => showPlant(sel.value));
+  return sel;
+}
+function allPlants() { return [...DATA.plants, ...newPlants.values()]; }
+function editCount(id) { let n = 0; for (const e of edits.values()) if (e.plant === id) n++; return n; }
+function renderPlantList() {
+  const q = $("search").value.trim().toLowerCase();
+  const list = $("plantList"); list.textContent = "";
+  const groups = [["Plants", p => !p.deprecated && !p.isNewPlant], ["New plants", p => p.isNewPlant], ["Deprecated", p => p.deprecated]];
+  for (const [title, test] of groups) {
+    const ps = allPlants().filter(test).filter(p => !q || p.name.toLowerCase().includes(q)).sort((a, b) => a.name.localeCompare(b.name));
+    if (!ps.length) continue;
+    const g = document.createElement("div"); g.className = "group-label"; g.textContent = title; list.append(g);
+    for (const p of ps) {
+      const b = document.createElement("button"); b.type = "button"; b.className = "plant-btn";
+      if (p.id === currentPlantId) b.setAttribute("aria-current", "true");
+      const dot = document.createElement("span"); dot.className = "dot"; dot.style.background = cssColor(ELEMENT_COLORS[p.element] || "white");
+      const nm = document.createElement("span"); nm.className = "name"; nm.textContent = p.name;
+      b.append(dot, nm);
+      const n = editCount(p.id);
+      if (n) { const bd = document.createElement("span"); bd.className = "badge"; bd.textContent = n; b.append(bd); }
+      b.addEventListener("click", () => showPlant(p.id));
+      list.append(b);
+    }
+  }
+}
+function refreshCounts() {
+  const n = edits.size;
+  $("changeCount").hidden = !n; $("changeCount").textContent = n;
+  renderPlantList();
+  if (!$("drawer").hidden && $("drawer").dataset.view === "changes") openChanges();
+}
+
+// ---------------------------------------------------------------- toolbar
+const COLOR_NAMES = { green: "Green", orange: "Orange", "#00CED1": "Armor", "#FFB6C1": "Magic Power", "#A0522D": "Physical", grey: "Grey",
+  "#FFD700": "Gold", red: "Red", yellow: "Yellow", purple: "Purple", white: "White", "#4FC3F7": "Water", "#00FFFF": "Ice", "#B2EBF2": "Wind" };
+function buildSwatches() {
+  const counts = new Map();
+  const visit = t => { if (!t) return; for (const m of t.matchAll(/<color=([^>{]+)>/g)) counts.set(m[1], (counts.get(m[1]) || 0) + 1); };
+  for (const p of DATA.plants) { visit(p.overview); for (const s of p.sections) { visit(s.overview); visit(s.details); s.upgrades.forEach(visit); visit(s.maxBonus); visit(s.maxBonusDetails); } }
+  const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 14).map(e => e[0]);
+  const box = $("swatches"); box.textContent = "";
+  const el = document.createElement("button"); el.type = "button"; el.className = "sw element"; el.title = "Element color (follows the plant's element)";
+  el.setAttribute("aria-label", "Element color"); el.dataset.color = "{" + ELEMENT_EXPR + "}"; box.append(el);
+  for (const c of top) {
+    const b = document.createElement("button"); b.type = "button"; b.className = "sw"; b.style.background = cssColor(c) || c;
+    const label = (COLOR_NAMES[c] || c) + " (" + c + ")";
+    b.title = label; b.setAttribute("aria-label", label); b.dataset.color = c; box.append(b);
+  }
+}
+function buildTokenMenu(plant) {
+  const sel = $("tokenSel");
+  sel.length = 1;
+  const seen = new Map();
+  const add = (expr, label) => { if (!seen.has(expr)) seen.set(expr, label || humanize(expr)); };
+  add("GetName()", "Plant name"); add("PlantData.DamageTypeLabel(damageType)", "Damage type label");
+  add("attackDamage:F0", "Attack Damage"); add("attackSpeed:F2", "Attack Speed"); add("attackRange:F2", "Attack Range");
+  add("magicPower:F0", "Magic Power"); add("armor:F0", "Armor"); add("skillDuration:F1", "Skill Duration");
+  for (const f of fields.values()) for (const it of f.items) if (it.t === "h") add(it.expr);
+  for (const [expr, label] of seen) { const o = document.createElement("option"); o.value = expr; o.textContent = label; sel.append(o); }
+}
+function bindToolbar() {
+  const tb = $("toolbar");
+  tb.addEventListener("mousedown", ev => { if (ev.target.closest("button")) ev.preventDefault(); });
+  tb.addEventListener("click", ev => {
+    const b = ev.target.closest("button"); if (!b) return;
+    if (b.dataset.color) return restyle(st => ({ ...st, c: b.dataset.color }));
+    const cmd = b.dataset.cmd;
+    if (["b", "i", "u", "s"].includes(cmd)) { if (activeField) toggleFlag(activeField, cmd); else toast("Click into a tooltip first"); }
+    else if (cmd === "nocolor") restyle(st => ({ ...st, c: null }));
+    else if (cmd === "clear") restyle(() => ({ ...NO_STYLE }));
+    else if (cmd === "undo" && activeField) undo(activeField);
+    else if (cmd === "redo" && activeField) redo(activeField);
+  });
+  $("customColor").addEventListener("change", ev => restyle(st => ({ ...st, c: ev.target.value.toUpperCase() })));
+  $("sizeSel").addEventListener("change", ev => {
+    const v = ev.target.value; ev.target.value = "";
+    if (v) restyle(st => ({ ...st, z: v === "none" ? null : v }));
+  });
+  $("tokenSel").addEventListener("change", ev => {
+    const expr = ev.target.value; ev.target.value = "";
+    if (!expr) return;
+    if (!activeField) return toast("Click into a tooltip first");
+    activeField.el.focus();
+    insertItems(activeField, [{ t: "h", expr }]);
+  });
+}
+
+// ---------------------------------------------------------------- changes drawer and new plant
+function openChanges() {
+  const d = $("drawer"); d.hidden = false; d.dataset.view = "changes"; d.textContent = "";
+  const header = document.createElement("header");
+  const h = document.createElement("h2"); h.textContent = "Changes waiting for the code";
+  const copy = document.createElement("button"); copy.type = "button"; copy.className = "btn"; copy.textContent = "Copy all";
+  copy.addEventListener("click", () => copyChanges());
+  const close = document.createElement("button"); close.type = "button"; close.className = "btn"; close.textContent = "Close";
+  close.addEventListener("click", () => { d.hidden = true; });
+  header.append(h, copy, close);
+  const body = document.createElement("div"); body.className = "body";
+  const intro = document.createElement("p"); intro.className = "banner";
+  intro.textContent = "Edits save as you type. When you're ready, tell Claude Code \"apply my tooltip edits\" and it writes these into the plant scripts.";
+  body.append(intro);
+  const list = [...edits.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  if (!list.length) { const p = document.createElement("p"); p.className = "empty"; p.textContent = "No changes yet. Edit any tooltip and it shows up here."; body.append(p); }
+  for (const [key, e] of list) {
+    const plant = plantById(e.plant) || { id: e.plant, name: e.plant, element: "", damageType: "" };
+    const row = document.createElement("div"); row.className = "change";
+    const where = document.createElement("div"); where.className = "where";
+    where.textContent = plant.name;
+    const sp = document.createElement("span"); sp.textContent = (SECTION_TITLES[e.section] || ["Overview"])[0] + " · " + e.label + (e.deleted ? " · delete" : e.isNew ? " · new" : "");
+    where.append(sp);
+    const open = linkBtn("Open", () => { d.hidden = true; showPlant(e.plant, key); });
+    const rev = linkBtn(e.isNew ? "Remove" : "Revert", async () => {
+      edits.delete(key);
+      if (db) { try { await db.doc("edits/" + key).delete(); } catch (err) {} }
+      if (currentPlantId === e.plant) showPlant(e.plant); refreshCounts(); openChanges();
+    });
+    where.append(open, rev);
+    row.append(where);
+    if (e.original) {
+      const l1 = document.createElement("div"); l1.className = "lbl"; l1.textContent = "Now in the game";
+      const t1 = document.createElement("div"); t1.className = "tip"; renderInto(t1, parseTemplate(e.original), plant, true);
+      row.append(l1, t1);
+    }
+    if (!e.deleted) {
+      const l2 = document.createElement("div"); l2.className = "lbl"; l2.textContent = "Your version";
+      const t2 = document.createElement("div"); t2.className = "tip"; renderInto(t2, parseTemplate(e.text), plant, true);
+      row.append(l2, t2);
+    }
+    body.append(row);
+  }
+  d.append(header, body);
+}
+async function copyChanges() {
+  const lines = [];
+  for (const [key, e] of [...edits.entries()].sort((a, b) => a[0].localeCompare(b[0])))
+    lines.push("== " + e.plant + " / " + e.section + " / " + e.label + (e.deleted ? " (delete this line)" : "") + "\n" + (e.deleted ? "" : e.text));
+  const text = lines.join("\n\n");
+  try { await navigator.clipboard.writeText(text); toast("Copied " + edits.size + " changes"); }
+  catch (err) {
+    const ta = document.createElement("textarea"); ta.value = text; ta.className = "src"; ta.id = "copyFallback";
+    $("drawer").querySelector(".body").prepend(ta); ta.select(); toast("Select all and copy");
+  }
+}
+function openNewPlant() {
+  const d = $("drawer"); d.hidden = false; d.dataset.view = "new"; d.textContent = "";
+  const header = document.createElement("header");
+  const h = document.createElement("h2"); h.textContent = "New plant";
+  const close = document.createElement("button"); close.type = "button"; close.className = "btn"; close.textContent = "Close";
+  close.addEventListener("click", () => { d.hidden = true; });
+  header.append(h, close);
+  const body = document.createElement("div"); body.className = "body";
+  const form = document.createElement("form"); form.className = "form";
+  form.innerHTML = '<label for="np-name">Name<input id="np-name" required maxlength="40" placeholder="Foxglove"></label>' +
+    '<label for="np-el">Element<select id="np-el">' + Object.keys(ELEMENT_COLORS).map(e => "<option>" + e + "</option>").join("") + "<option>Neutral</option></select></label>" +
+    '<label for="np-dmg">Damage type<select id="np-dmg"><option>Physical</option><option>Magic</option><option>True</option></select></label>' +
+    '<label for="np-role">Role<select id="np-role"><option>DPS</option><option>Tank</option><option>Support</option></select></label>' +
+    '<button class="btn primary" type="submit">Create</button>';
+  form.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const name = $("np-name").value.trim();
+    const id = name.replace(/[^A-Za-z0-9]/g, "") || "Plant";
+    if (plantById(id)) { toast("A plant with that name already exists"); return; }
+    const body = { id, name, element: $("np-el").value, damageType: $("np-dmg").value, role: $("np-role").value, createdAt: Date.now() };
+    newPlants.set(id, decorateNew(body));
+    if (db) { try { await db.doc("plants/" + id).set(body); } catch (e) { setSaveState("New plant not saved", true); } }
+    d.hidden = true; showPlant(id);
+  });
+  body.append(form); d.append(header, body);
+  $("np-name").focus();
+}
+function decorateNew(p) {
+  return { ...p, isNewPlant: true, nameTemplate: "<b><color=" + (ELEMENT_COLORS[p.element] || "white") + ">{name}</color></b>", overview: "", sections: null };
+}
+
+// edits arriving from another tab or device: update fields that aren't being worked on
+function syncFields() {
+  const busy = [...fields.values()].some(f => f.dirty || f.typing || f.el === document.activeElement);
+  const missing = [...edits.entries()].some(([key, e]) => e.plant === currentPlantId && !fields.has(key));
+  if (missing && !busy) return showPlant(currentPlantId, null, true);
+  for (const f of fields.values()) {
+    if (f.dirty || f.typing || f.el === document.activeElement) continue;
+    const want = parseTemplate(currentText(f));
+    if (!sameItems(want, f.items)) { f.items = want; renderInto(f.el, want, f.plant); }
+    updateFieldStatus(f);
+  }
+}
+
+// ---------------------------------------------------------------- boot
+async function boot() {
+  bindToolbar();
+  $("search").addEventListener("input", renderPlantList);
+  $("changesBtn").addEventListener("click", openChanges);
+  $("newPlantBtn").addEventListener("click", openNewPlant);
+  $("pixelToggle").addEventListener("change", ev => document.body.classList.toggle("pixel", ev.target.checked));
+  $("codeToggle").addEventListener("change", () => currentPlantId && showPlant(currentPlantId, null, true));
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") $("drawer").hidden = true; });
+  try {
+    const res = await fetch("descriptions.json");
+    DATA = await res.json();
+  } catch (e) {
+    $("content").innerHTML = '<p class="banner warn">The plant descriptions could not be loaded. Reload the page to try again.</p>';
+    setSaveState("Not loaded", true); return;
+  }
+  buildSwatches();
+  let start = null;
+  try { start = localStorage.getItem("tooltip-editor-plant"); } catch (e) {}
+  showPlant(start && plantById(start) ? start : (DATA.plants.find(p => p.id === "AcornKnight") || DATA.plants[0]).id);
+  setSaveState("Connecting…");
+  const timeout = setTimeout(() => setSaveState("Can't reach saved edits yet", true), 10000);
+  try { db = await claude.use("db"); } catch (e) { db = null; }
+  if (!db) { clearTimeout(timeout); setSaveState("Not saved: storage unavailable", true); showPlant(currentPlantId, null, true); return; }
+  let loaded = false;
+  db.collection("plants").onSnapshot(snap => {
+    for (const d of snap.docs) newPlants.set(d.id, decorateNew(d.data()));
+    renderPlantList();
+  }, () => {});
+  db.collection("edits").onSnapshot(snap => {
+    if (!snap.metadata.fromCache) clearTimeout(timeout);
+    edits.clear();
+    for (const d of snap.docs) { const e = d.data(); if (e.status === "pending") edits.set(d.id, e); }
+    if (!loaded) { loaded = true; if (currentPlantId) showPlant(currentPlantId, null, true); }
+    else syncFields();
+    refreshCounts();
+    if (!pendingSaves) setSaveState(edits.size ? "All changes saved" : "No changes yet");
+  }, err => { clearTimeout(timeout); setSaveState(err.code === "revoked" ? "Saving was turned off" : "Can't reach saved edits", true); });
+}
+boot();
+</script>
