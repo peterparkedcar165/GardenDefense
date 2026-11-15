@@ -32,6 +32,13 @@ public class AcornKnight : Aura
     private const string BodyShieldOutBool = "ShieldOut";
     private const string BodyGuardingBool = "Guarding";
 
+    // a thrown shield that strikes an insect bounces back off it before landing: this far away
+    // from the insect along the ground, rising this high in a small arc that gravity brings back
+    // down (the arc itself plays on the landed shield, see AcornKnightShield.PlayLanding)
+    [Header("Shield Bounce")]
+    [SerializeField] private float shieldBounceDistance = 0.4f;
+    [SerializeField] private float shieldBounceHeight = 0.35f;
+
     // while the throw animation plays he faces where the shield is going instead of his target
     private float _throwFacingUntil;
     private bool _throwFacingRight;
@@ -176,11 +183,6 @@ public class AcornKnight : Aura
         if (data.target != this) return;
         _noDamageTimer = 0f;
 
-        // temporary guard debug, remove once the guard animation is sorted
-        if (data.source is Insect hitter)
-            Debug.Log($"[AcornGuard] {hitter.name} hit {name} ({data.damageType}): counts as targeting={IsTargetingMe(hitter)}, " +
-                      $"its target is me={hitter.target == (IAttackable)this}, attack type={hitter.attackDamageType}, aggressivity={hitter.aggressivity}, " +
-                      $"guard={IsDefensiveStance}, shieldOut={_shieldOut}, exitTimer={_stanceExitTimer:F2}");
 
         if (IsDefensiveStance && data.damageType == DamageType.Physical && SkillTreeManager.HasUnlock(this, CounterStanceUnlock))
             attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - CounterStanceCooldownReduction);
@@ -207,28 +209,6 @@ public class AcornKnight : Aura
         SetBodyBool(BodyShieldOutBool, _shieldOut);
         SetBodyBool(BodyGuardingBool, IsDefensiveStance);
         UpdateBodyFacing();
-        DebugGuardChange();
-    }
-
-    // temporary guard debug, remove once the guard animation is sorted
-    private bool _debugGuardWas;
-    private void DebugGuardChange()
-    {
-        bool guard = IsDefensiveStance;
-        if (guard == _debugGuardWas) return;
-        _debugGuardWas = guard;
-        string state = "no animator", parameters = "", guardingParam = "n/a";
-        if (bodyAnimator != null && bodyAnimator.isInitialized)
-        {
-            AnimatorStateInfo info = bodyAnimator.GetCurrentAnimatorStateInfo(0);
-            state = "unknown";
-            foreach (string s in new[] { "Idle", "Attack", "IdleNoShield", "AttackNoShield", "GuardRaise", "GuardIdle", "GuardBash", "GuardLower", "ShieldThrow" })
-                if (info.IsName(s)) state = s;
-            foreach (AnimatorControllerParameter p in bodyAnimator.parameters) parameters += p.name + " ";
-            guardingParam = parameters.Contains("Guarding ") ? bodyAnimator.GetBool("Guarding").ToString() : "missing";
-        }
-        Debug.Log($"[AcornGuard] {name} guard {(guard ? "ON" : "OFF")}: animator state={state}, Guarding param={guardingParam}, " +
-                  $"controller={(bodyAnimator != null && bodyAnimator.runtimeAnimatorController != null ? bodyAnimator.runtimeAnimatorController.name : "none")}, params=[{parameters.Trim()}]");
     }
 
     // runs after Plant's own facing flip (base.Update), so the throw can override it
@@ -608,7 +588,9 @@ public class AcornKnight : Aura
 
         if (shieldPrefab == null) { _shieldOut = false; return; }
 
-        GameObject obj = Instantiate(shieldPrefab, position, Quaternion.identity);
+        // a struck insect knocks the shield back, so it comes to rest a little away from it
+        Vector3 restAt = hitInsect != null ? BounceLanding(position, hitInsect) : position;
+        GameObject obj = Instantiate(shieldPrefab, restAt, Quaternion.identity);
         AcornKnightShield shield = obj.GetComponent<AcornKnightShield>();
         if (shield == null) { _shieldOut = false; return; }
 
@@ -617,7 +599,21 @@ public class AcornKnight : Aura
         _activeShield = shield;
         shield.OnShieldGone += HandleShieldGone;
         shield.Initialize(shieldRadius, shieldHealth, skillDuration, this);
-        shield.PlayLanding(hitInsect != null, position.x > transform.position.x);
+        shield.PlayLanding(hitInsect != null, position.x > transform.position.x, position, shieldBounceHeight);
+    }
+
+    // where a shield that struck an insect comes to rest: shieldBounceDistance away from the insect,
+    // on the far side from it (back the way the shield came). it stays where it struck when that
+    // spot would be off the grid or on water, so a bounce never costs the shield
+    private Vector3 BounceLanding(Vector3 struckAt, Insect struck)
+    {
+        Vector2 away = (Vector2)(struckAt - struck.transform.position);
+        if (away.sqrMagnitude < 0.0001f) away = (Vector2)(transform.position - struckAt);
+        if (away.sqrMagnitude < 0.0001f || shieldBounceDistance <= 0f) return struckAt;
+
+        Vector3 landing = struckAt + (Vector3)(away.normalized * shieldBounceDistance);
+        if (!Tile.IsInsideGrid(landing) || AcornKnightShield.IsWaterAt(landing)) return struckAt;
+        return landing;
     }
 
     // cooldown itself already started the instant the shield was thrown (see OnTargetConfirmed) -

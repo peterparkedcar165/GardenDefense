@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 // the thrown shield, sitting on the path after its throw lands. clone of AcornShield adapted for
@@ -49,12 +50,18 @@ public class AcornKnightShield : Minion
     }
 
     // the landing on the Visual's Animator: Impact (the shield flashing where it struck an insect)
-    // then Fall (dropping to the ground and resting on its last frame). with no insect struck it
+    // then Fall (the drawn drop to the ground, resting on its last frame). with no insect struck it
     // goes straight to Fall. the art is drawn for a throw to the left, so a throw to the right
     // mirrors it. purely visual, the shield blocks and taunts from the moment it spawns
     private const string FallState = "Fall";
+    // the Impact clip's length, which the bounce arc below is timed to, so Fall's drawn drop
+    // starts the moment the arc comes back down
+    [SerializeField] private int impactClipFrames = 6;
+    [SerializeField] private float landingClipFrameRate = 12f;
 
-    public void PlayLanding(bool struckInsect, bool thrownRight)
+    // struckAt is where the shield hit the insect. it already sits where it bounced to, so its
+    // Visual starts back at struckAt and flies here in an arc bounceHeight high under gravity
+    public void PlayLanding(bool struckInsect, bool thrownRight, Vector3 struckAt, float bounceHeight)
     {
         Transform v = visual != null ? visual : transform.Find("Visual");
         if (v == null) return;
@@ -62,6 +69,35 @@ public class AcornKnightShield : Minion
         if (sr != null) sr.flipX = thrownRight;
         Animator anim = v.GetComponent<Animator>();
         if (anim != null && !struckInsect) anim.Play(FallState, 0, 0f);
+        if (struckInsect) StartCoroutine(BounceRoutine(v, struckAt, bounceHeight));
+    }
+
+    // straight line across the ground from where it struck to where it rests, while the height
+    // follows a gravity arc that starts and ends at flight height: launched up just fast enough to
+    // peak at bounceHeight and come down again after exactly the Impact clip. the Shadow follows
+    // along the ground only
+    private IEnumerator BounceRoutine(Transform v, Vector3 struckAt, float bounceHeight)
+    {
+        Vector3 visualRest = v.localPosition;
+        Vector3 shadowRest = shadow != null ? shadow.localPosition : Vector3.zero;
+        Vector3 startOffset = struckAt - transform.position;
+        startOffset.z = 0f;
+
+        float duration = Mathf.Max(1, impactClipFrames) / Mathf.Max(0.01f, landingClipFrameRate);
+        float gravity = 8f * Mathf.Max(0f, bounceHeight) / (duration * duration);
+        float launchSpeed = gravity * duration * 0.5f;
+
+        for (float t = 0f; t < duration; t += Time.deltaTime)
+        {
+            Vector3 ground = Vector3.Lerp(startOffset, Vector3.zero, t / duration);
+            float height = launchSpeed * t - 0.5f * gravity * t * t;
+            v.localPosition = visualRest + ground + Vector3.up * height;
+            if (shadow != null) shadow.localPosition = shadowRest + ground;
+            yield return null;
+        }
+
+        v.localPosition = visualRest;
+        if (shadow != null) shadow.localPosition = shadowRest;
     }
 
     // called by AcornKnight immediately after Instantiate, once the throw has landed
@@ -246,9 +282,12 @@ public class AcornKnightShield : Minion
         }
     }
 
-    private bool IsOnWaterTile()
+    private bool IsOnWaterTile() => IsWaterAt(transform.position);
+
+    // also used by AcornKnight, so a bounce never lands the shield on water
+    public static bool IsWaterAt(Vector3 position)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0.1f);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(position, 0.1f);
         foreach (Collider2D c in hits)
         {
             Tile tile = c.GetComponent<Tile>();
