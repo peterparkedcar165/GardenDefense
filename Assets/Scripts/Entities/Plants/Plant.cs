@@ -506,6 +506,18 @@ public abstract class Plant : Entity, IAttackable
     public float expBoost;
     public float activeCooldown;
 
+    [Header("Body Animation")]
+    // the Animator on this plant's Visual (its drawn body). optional: a plant without animations
+    // yet leaves it empty, and every body helper below quietly does nothing
+    [SerializeField] protected Animator bodyAnimator;
+    // Animator.speed is one multiplier shared by every state, so after a clip is sped up or slowed
+    // down it is put back to 1 when that clip would have finished, or Idle keeps the leftover speed
+    private Coroutine _bodySpeedResetRoutine;
+    // parameter names of the controller currently on bodyAnimator, so asking for one it doesn't
+    // have (an empty or half built controller) is skipped instead of warning every frame
+    private RuntimeAnimatorController _bodyParametersFor;
+    private readonly HashSet<string> _bodyParameters = new HashSet<string>();
+
     [Header("Temperature")]
     public float temperature = 10f;
     public float baseComfortMin = 0f,    comfortMinAdder,    comfortMin;
@@ -2001,6 +2013,41 @@ public abstract class Plant : Entity, IAttackable
     // call before the first one's Animation Event ever fires, since each Animator is its own
     // stable, never-reused-concurrently identity, this isolates them correctly
     private readonly Dictionary<Animator, System.Action> _pendingChargeFireCallbacks = new Dictionary<Animator, System.Action>();
+
+    // fires a trigger on the body animator, stretched or squeezed so a clip of clipLength seconds
+    // fits exactly inside targetDuration
+    protected void PlayBodyAnimation(string trigger, float clipLength, float targetDuration)
+    {
+        if (!BodyHasParameter(trigger)) return;
+        if (_bodySpeedResetRoutine != null) StopCoroutine(_bodySpeedResetRoutine);
+        bodyAnimator.speed = targetDuration > 0f && clipLength > 0f ? Mathf.Max(0.01f, clipLength / targetDuration) : 1f;
+        bodyAnimator.SetTrigger(trigger);
+        _bodySpeedResetRoutine = StartCoroutine(ResetBodySpeedAfter(targetDuration));
+    }
+
+    private IEnumerator ResetBodySpeedAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (bodyAnimator != null) bodyAnimator.speed = 1f;
+        _bodySpeedResetRoutine = null;
+    }
+
+    protected void SetBodyBool(string parameter, bool value)
+    {
+        if (BodyHasParameter(parameter)) bodyAnimator.SetBool(parameter, value);
+    }
+
+    private bool BodyHasParameter(string parameter)
+    {
+        if (bodyAnimator == null || bodyAnimator.runtimeAnimatorController == null || !bodyAnimator.isInitialized) return false;
+        if (_bodyParametersFor != bodyAnimator.runtimeAnimatorController)
+        {
+            _bodyParametersFor = bodyAnimator.runtimeAnimatorController;
+            _bodyParameters.Clear();
+            foreach (AnimatorControllerParameter p in bodyAnimator.parameters) _bodyParameters.Add(p.name);
+        }
+        return _bodyParameters.Contains(parameter);
+    }
 
     protected void BeginAnimatedAttackCharge(Animator animator, string triggerName, float clipLength, System.Action onFireFrame)
     {

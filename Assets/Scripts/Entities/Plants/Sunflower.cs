@@ -12,10 +12,9 @@ public class Sunflower : Shooter
     [SerializeField] private GameObject sunrayPrefab;
 
     [Header("Body")]
-    // the Animator on the Visual child (her actual sprite) - separate from circleAnimator,
-    // which only drives the charge-up orb. "Attack"/"Skill" triggers switch her body pose;
-    // both transitions back to Idle via Has Exit Time, so nothing here needs to reset them
-    [SerializeField] private Animator bodyAnimator;
+    // her body Animator lives on Plant now (bodyAnimator, Body Animation section) - separate
+    // from circleAnimator, which only drives the charge-up orb. "Attack"/"Skill" triggers switch
+    // her body pose; both transitions back to Idle via Has Exit Time, so nothing here resets them
     // the Attack clip's own authored Length in seconds, as shown in the Animation window - set
     // this to match whatever that value actually is, same convention as circleClipLength, so the
     // body's pose is stretched or compressed to fit exactly inside AttackChargeTime instead of
@@ -27,30 +26,8 @@ public class Sunflower : Shooter
     private const string BodyAttackTrigger = "Attack";
     private const string BodySkillTrigger = "Skill";
 
-    // Animator.speed is a single global playback multiplier shared by every state on this
-    // Animator, not per-state - so once Attack/Skill scales it to fit their own duration, Idle
-    // would otherwise keep running at that same leftover speed forever after. this timer resets
-    // it back to 1 exactly when the clip would have finished, and gets replaced (not stacked)
-    // whenever a new body animation starts - e.g. Skill interrupting a still-charging Attack
-    private Coroutine _bodySpeedResetRoutine;
-
-    private void PlayBodyAnimation(string trigger, float clipLength, float targetDuration)
-    {
-        if (bodyAnimator == null) return;
-        if (_bodySpeedResetRoutine != null) StopCoroutine(_bodySpeedResetRoutine);
-
-        bodyAnimator.speed = targetDuration > 0f && clipLength > 0f
-            ? Mathf.Max(0.01f, clipLength / targetDuration) : 1f;
-        bodyAnimator.SetTrigger(trigger);
-        _bodySpeedResetRoutine = StartCoroutine(ResetBodySpeedAfter(targetDuration));
-    }
-
-    private IEnumerator ResetBodySpeedAfter(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (bodyAnimator != null) bodyAnimator.speed = 1f;
-        _bodySpeedResetRoutine = null;
-    }
+    // PlayBodyAnimation (on Plant) fits a body clip to a duration and puts Animator.speed back
+    // to 1 afterwards, replaced rather than stacked when Skill interrupts a still charging Attack
 
     [Header("Grimoire (cosmetic)")]
     // the floating book - purely cosmetic, no gameplay effect. its unflipped art faces left, same

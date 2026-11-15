@@ -70,7 +70,6 @@ MonoBehaviour:
   basePhysicalDamage: 0
   baseMagicDamage: 0
   baseFallDamage: 0
-  baseBonusEffectChance: 0
   baseFireDamage: 0
   baseWaterDamage: 0
   baseGrassDamage: 0
@@ -79,6 +78,9 @@ MonoBehaviour:
   baseIceDamage: 0
   baseCriticalChance: 0
   baseCriticalDamage: 0
+  baseCriticalHealChance: 0
+  baseCriticalDotChance: 0
+  baseCriticalReactionChance: 0
   baseMinimumDamage: 0.8
   baseMaximumDamage: 1.2
   baseDotResistance: 0
@@ -119,6 +121,7 @@ MonoBehaviour:
   healingReceived: 1
   physicalResistance: 0
   magicResistance: 0
+  magicResistanceAdder: 0
   armor: 0
   magicArmor: 0
   armorPenFlat: 0
@@ -134,7 +137,6 @@ MonoBehaviour:
   physicalDamage: 0
   magicDamage: 0
   fallDamage: 0
-  bonusEffectChance: 0
   fireDamage: 0
   waterDamage: 0
   grassDamage: 0
@@ -143,6 +145,9 @@ MonoBehaviour:
   iceDamage: 0
   criticalChance: 0
   criticalDamage: 0
+  criticalHealChance: 0
+  criticalDotChance: 0
+  criticalReactionChance: 0
   minimumDamage: 0
   maximumDamage: 0
   dotResistance: 0
@@ -161,6 +166,7 @@ MonoBehaviour:
   buffGivenDuration: 0
   buffReceivedDuration: 0
   debuffReceivedDuration: 0
+  damageTakenBonus: 0
   dotDuration: 0
   regenerationDuration: 0
   shieldDuration: 0
@@ -201,7 +207,6 @@ MonoBehaviour:
   physicalDamageAdder: 0
   magicDamageAdder: 0
   fallDamageAdder: 0
-  bonusEffectChanceAdder: 0
   fireDamageAdder: 0
   waterDamageAdder: 0
   grassDamageAdder: 0
@@ -210,12 +215,16 @@ MonoBehaviour:
   iceDamageAdder: 0
   criticalChanceAdder: 0
   criticalDamageAdder: 0
+  criticalHealChanceAdder: 0
+  criticalDotChanceAdder: 0
+  criticalReactionChanceAdder: 0
   minimumDamageAdder: 0
   maximumDamageAdder: 0
   dotResistanceAdder: 0
   dotDamageAdder: 0
   fallDamageResistanceAdder: 0
   elementalAffinityAdder: 0
+  germinateDetonationSpeedup: 0
   passiveDamageAdder: 0
   skillDamageAdder: 0
   coordinatedDamageAdder: 0
@@ -265,7 +274,6 @@ MonoBehaviour:
   iceResistanceMultiplier: 0
   physicalDamageMultiplier: 0
   magicDamageMultiplier: 0
-  bonusEffectChanceMultiplier: 0
   fireDamageMultiplier: 0
   waterDamageMultiplier: 0
   grassDamageMultiplier: 0
@@ -336,6 +344,11 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 31d7460f463c7bc42a1ef517bd104f7b, type: 2}
   occupiedTile: {fileID: 0}
   selfPrefab: {fileID: 2387982406283412628}
+  hasHighgroundBonus: 0
+  baseTauntValue: 0
+  tauntValueAdder: 0
+  tauntValue: 0
+  forcedPriorityTarget: {fileID: 0}
   circleRadius: {fileID: 4875408615152910057}
   lightInnerRadius: 1.2
   lightFalloffStrength: 0.2
@@ -402,6 +415,7 @@ MonoBehaviour:
   skillDamageMultiplierAdder: 0
   baseSkillHealth: 0
   skillHealth: 0
+  transplantCooldownTimer: 0
   path1Level: 0
   path2Level: 0
   path3Level: 0
@@ -415,6 +429,7 @@ MonoBehaviour:
   mainRenderer: {fileID: 5898074862566098166}
   swordVisual: {fileID: 0}
   shieldVisual: {fileID: 0}
+  bodyAnimator: {fileID: 914770023522418676}
   shieldProjectilePrefab: {fileID: 7388594979766616069, guid: b6f533dece6003441b9e57288542a7ee, type: 3}
   shieldPrefab: {fileID: 3542048050096898586, guid: c2446ee1ca454f14b6963eae3fce164e, type: 3}
 --- !u!58 &3849591162661420664
@@ -463,6 +478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 737382446543302184}
   - component: {fileID: 5898074862566098166}
+  - component: {fileID: 914770023522418676}
   m_Layer: 3
   m_Name: Visual
   m_TagString: Untagged
@@ -544,6 +560,28 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!95 &914770023522418676
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5717149755680190109}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4eb2b104b898f754cbc6fb8ce348c882, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7736349920752556535
 GameObject:
   m_ObjectHideFlags: 0

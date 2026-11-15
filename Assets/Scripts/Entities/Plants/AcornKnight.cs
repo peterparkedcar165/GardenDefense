@@ -9,12 +9,24 @@ public class AcornKnight : Aura
     [SerializeField] private GameObject shieldProjectilePrefab;
     [SerializeField] private GameObject shieldPrefab;
 
+    // his body animation (Body Animation section on Plant). the attack clip's frame layout: its
+    // frame rate, its frame count, and the frames (counted from 0, the big slash arcs) where the
+    // down strike and the up strike land, which is the moment each one deals its damage. the
+    // clips in Sprites/Plants/AcornKnight are built with these same numbers
+    [Header("Attack Animation")]
+    [SerializeField] private float attackClipFrameRate = 12f;
+    [SerializeField] private int attackClipFrames = 12;
+    [SerializeField] private int downStrikeFrame = 2;
+    [SerializeField] private int upStrikeFrame = 6;
+    private const string BodyAttackTrigger = "Attack";
+    private const string BodyShieldOutBool = "ShieldOut";
+
     private AcornKnightData AcornData => data as AcornKnightData;
 
     private const float SwingArcDegrees = 60f;
-    // authored against data.baseAttackSpeed - scales inversely with current attackSpeed, same
-    // convention as Plant.AttackChargeTime, so a faster Knight physically swings faster instead
-    // of the hitbox sweep taking a fixed amount of real time regardless of attack speed
+    // how long the placeholder sword and shield visuals take to rock through a swing. authored
+    // against data.baseAttackSpeed and scaled inversely with current attackSpeed, so a faster
+    // Knight swings them faster
     private const float BaseSwingDuration = 0.18f;
     private float SwingDuration
     {
@@ -25,32 +37,11 @@ public class AcornKnight : Aura
         }
     }
 
-    // "windshield wiper" sword hitbox: a thin rectangle, pivoted at the Knight's own position,
-    // extending out to 1.15x attackRange (a little past the stated range, like a real swing's
-    // reach). sweeps a full top-to-bottom semicircle on whichever side the target is on (same
-    // side-restriction the old static semicircle used), alternating direction every attack like a
-    // real wiper blade - one pass this attack, the reverse pass next attack
-    private const float SwingHitboxWidth = 0.075f;
-    private const float SwingHitboxLengthMultiplier = 1.15f;
-    private float SwingHitboxLength => attackRange * SwingHitboxLengthMultiplier;
-    // neither the sweep nor Bash cap how many insects they can hit - the 10%-per-extra falloff
-    // just bottoms out at each one's own floor instead of ever reaching 0
+    // neither the sword strikes nor Shield Bash cap how many insects they can hit. the falloff
+    // per extra insect just bottoms out at each one's own floor instead of ever reaching 0
     private const float SwingMinDamageMultiplier = 0.25f;
     private const float BashMinDamageMultiplier = 0.25f;
-    private bool _nextSweepTopToBottom = true;
-    private Coroutine _swordSweepRoutine;
-
-    // fine enough that a thin insect can't get skipped between frames even at high game-speed
-    // multipliers, where Time.deltaTime (and so how far the sweep advances per frame) is larger
-    private const float MaxSweepAngleStepDegrees = 1f;
-
-    // visible placeholder for the hitbox itself (a plain colored rectangle) until real sword art
-    // exists - a 1x1 world-unit white sprite pivoted at its left edge, so scaling it by
-    // (SwingHitboxLength, SwingHitboxWidth) stretches it out exactly to the real hitbox's dimensions,
-    // pivoting from the Knight's own position same as the hitbox math does
-    private static Sprite _hitboxSprite;
-    private GameObject _hitboxVisualObj;
-    private SpriteRenderer _hitboxVisualRenderer;
+    private Coroutine _swordSetRoutine;
 
     private Insect _mainTarget;
     private Vector2 _facingDir = Vector2.right;
@@ -155,10 +146,6 @@ public class AcornKnight : Aura
             OnPath3Unlock();
         }
 
-        // stays visible permanently (not just mid-swing) so it's always on screen to tune against
-        EnsureHitboxVisual();
-        _hitboxVisualObj.SetActive(true);
-
         _noDamageTimer = RegenBoostDelay; // starts already at the boosted rate, nothing's hit it yet
         Entity.OnEntityHit += HandleAnyEntityHit;
     }
@@ -196,6 +183,7 @@ public class AcornKnight : Aura
             Attack();
 
         UpdateFacingVisual();
+        SetBodyBool(BodyShieldOutBool, _shieldOut);
     }
 
     private void TickTimers(float dt)
@@ -287,12 +275,6 @@ public class AcornKnight : Aura
             }
             shieldVisual.rotation = Quaternion.Euler(0f, 0f, angle);
         }
-
-        // the sword hitbox is irrelevant while in Guard Stance (attacks become Shield Bash
-        // instead), so hide it there and bring it back the instant the Knight returns to its
-        // normal sword-swinging stance
-        if (_hitboxVisualObj != null)
-            _hitboxVisualObj.SetActive(!IsDefensiveStance);
     }
 
     // same toggle-target helpers every Shooter uses (Plant.FindNearest/FindFirst/FindLast/
@@ -315,203 +297,130 @@ public class AcornKnight : Aura
 
     protected override GameObject GetHighlightTarget() => _mainTarget != null ? _mainTarget.gameObject : null;
 
-    // windup/resolve split (see Plant.BeginAttackWindup): committing to an attack and actually
-    // dealing its damage are now two separate moments. base.Attack() fires immediately - that's
-    // windup start, so the cooldown reset and attack sound both still happen the instant the
-    // swing begins, same as before. which action (bash vs sword) and who the target is are both
-    // locked in right here, matching whatever visual starts playing now, rather than re-read at
-    // resolve time when Update() may have already moved _mainTarget on. only aliveness is
-    // re-checked at resolve, since that's the one thing a windup can invalidate
+    // one attack is a full set: a down strike, then an up strike, each dealing its damage the
+    // moment its strike frame shows in the attack clip. the clip plays at its own speed and is
+    // only sped up when attacks come faster than it lasts. Guard Stance turns the attack into a
+    // single Shield Bash instead, after the usual windup. base.Attack() still fires right away,
+    // so the cooldown reset and attack sound happen the moment the attack starts
     protected override void Attack()
     {
         base.Attack();
         Insect target = _mainTarget;
         if (target == null) return;
 
-        bool bash = IsDefensiveStance;
-        if (bash) _shieldSwingTimer = SwingDuration;
-        else      _swordSwingTimer = SwingDuration;
-
-        BeginAttackWindup(AttackWindupTime, () =>
+        if (IsDefensiveStance)
         {
-            if (target == null || !target.IsAlive) return;
-            if (bash) Bash(target);
-            else      StartSwordSweep(target);
-        });
+            _shieldSwingTimer = SwingDuration;
+            BeginAttackWindup(AttackWindupTime, () =>
+            {
+                if (target != null && target.IsAlive) Bash(target);
+            });
+            return;
+        }
+
+        float clipLength = AttackClipLength;
+        float speed = Mathf.Max(1f, clipLength / Mathf.Max(0.01f, attackCooldown));
+        PlayBodyAnimation(BodyAttackTrigger, clipLength, clipLength / speed);
+
+        if (_swordSetRoutine != null) StopCoroutine(_swordSetRoutine);
+        _swordSetRoutine = StartCoroutine(SwordSetRoutine(target, speed));
     }
 
-    // kicks off the wiper sweep on whichever side (left/right) the target is on, relative to the
-    // Knight's own position - same side-restriction the old static semicircle used. direction
-    // alternates every attack (top-to-bottom, then bottom-to-top, then top-to-bottom again),
-    // like a real wiper blade rather than resetting to the same start every time
-    private void StartSwordSweep(Insect target)
+    private float AttackClipLength => Mathf.Max(1, attackClipFrames) / Mathf.Max(0.01f, attackClipFrameRate);
+
+    // waits for each strike frame at the clip's current playback speed, then strikes. each strike
+    // covers the side its target is on at that moment, or the last side if the target died
+    private IEnumerator SwordSetRoutine(Insect target, float speed)
+    {
+        float frame = 1f / (Mathf.Max(0.01f, attackClipFrameRate) * speed);
+        float facingSign = FacingSignTowards(target);
+
+        yield return new WaitForSeconds(Mathf.Max(0, downStrikeFrame) * frame);
+        if (target != null && target.IsAlive) facingSign = FacingSignTowards(target);
+        SwordStrike(target, facingSign);
+
+        yield return new WaitForSeconds(Mathf.Max(0, upStrikeFrame - downStrikeFrame) * frame);
+        if (target != null && target.IsAlive) facingSign = FacingSignTowards(target);
+        SwordStrike(target, facingSign);
+
+        _swordSetRoutine = null;
+    }
+
+    // 1 when the target is to the Knight's right, minus 1 when to his left
+    private float FacingSignTowards(Insect target)
     {
         Vector2 targetApproach = target.GetApproachPoint(transform.position);
         float facingSign = Mathf.Sign(targetApproach.x - transform.position.x);
-        if (facingSign == 0f) facingSign = 1f;
-
-        bool topToBottom = _nextSweepTopToBottom;
-        _nextSweepTopToBottom = !_nextSweepTopToBottom;
-
-        if (_swordSweepRoutine != null) StopCoroutine(_swordSweepRoutine);
-        _swordSweepRoutine = StartCoroutine(SwordSweepRoutine(facingSign, topToBottom));
+        return facingSign == 0f ? 1f : facingSign;
     }
 
-    // sweeps a thin rectangle hitbox (pivoted at the Knight's own position, length
-    // SwingHitboxLength) through a 180-degree arc over SwingDuration. each insect can only be hit
-    // once per sweep (tracked in hit), with 10%-per-extra falloff bottoming out at
-    // SwingMinDamageMultiplier - no cap on how many insects can be hit in one sweep
-    private IEnumerator SwordSweepRoutine(float facingSign, bool topToBottom)
+    // one sword strike: every insect in reach on that side, the target first, then the rest
+    // closest to it first, with falloff per extra insect bottoming out at
+    // SwingMinDamageMultiplier. the Cleaving Swings node removes the falloff
+    private void SwordStrike(Insect target, float facingSign)
     {
-        HashSet<Insect> hit = new HashSet<Insect>();
-        float elapsed = 0f;
-        float lastT = 0f;
-
-        float AngleAt(float t)
-        {
-            float angleFromTop = topToBottom ? Mathf.Lerp(0f, 180f, t) : Mathf.Lerp(180f, 0f, t);
-            return 90f - facingSign * angleFromTop;
-        }
-
-        void SampleAt(float t)
-        {
-            float worldAngle = AngleAt(Mathf.Clamp01(t));
-            UpdateHitboxVisual(worldAngle);
-            HitInsectsInWiper(worldAngle, hit);
-        }
-
-        SampleAt(0f);
-
-        while (elapsed < SwingDuration)
-        {
-            float duration = Mathf.Max(0.0001f, SwingDuration);
-            float newElapsed = Mathf.Min(duration, elapsed + Time.deltaTime);
-            float newT = newElapsed / duration;
-
-            // at high game-speed multipliers Time.deltaTime (and so how far the sweep advances
-            // in one frame) gets much larger - without this, a single big frame step could rotate
-            // straight past a thin insect without ever sampling an angle that overlapped it.
-            // substepping keeps the angular resolution the same regardless of frame size
-            int steps = Mathf.Max(1, Mathf.CeilToInt(Mathf.Abs(newT - lastT) * 180f / MaxSweepAngleStepDegrees));
-            for (int i = 1; i <= steps; i++)
-                SampleAt(Mathf.Lerp(lastT, newT, (float)i / steps));
-
-            lastT = newT;
-            elapsed = newElapsed;
-            yield return null;
-        }
-
-        _swordSweepRoutine = null;
-    }
-
-    // worldAngleDegrees: 0 = facing +X, 90 = straight up, 180/-180 = straight down's mirror,
-    // -90 = straight down - mirrors Calendula's own SweepAttackDamage falloff pattern (hit.Count
-    // at the moment an insect is reached doubles as the falloff index, no separate counter needed)
-    private void HitInsectsInWiper(float worldAngleDegrees, HashSet<Insect> hit)
-    {
-        float worldAngleRad = worldAngleDegrees * Mathf.Deg2Rad;
-        Vector2 dir = new Vector2(Mathf.Cos(worldAngleRad), Mathf.Sin(worldAngleRad));
-        Vector2 perp = new Vector2(-dir.y, dir.x);
-        float halfWidth = SwingHitboxWidth * 0.5f;
+        _swordSwingTimer = SwingDuration;
+        List<Insect> hits = InsectsInReach(target, facingSign);
         bool noFalloff = SkillTreeManager.HasUnlock(this, CleavingSwingsUnlock);
 
-        // snapshot first: Insect.Kill() removes the insect from allInsects synchronously, so
-        // killing one with this very hit would otherwise mutate the list mid-foreach and throw,
-        // silently killing this coroutine - which looked exactly like the swing "just stopping"
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        for (int i = 0; i < hits.Count; i++)
         {
-            if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
-
-            Vector2 toInsect = (Vector2)insect.transform.position - (Vector2)transform.position;
-            float along = Vector2.Dot(toInsect, dir);
-            if (along < 0f || along > SwingHitboxLength) continue;
-            float across = Vector2.Dot(toInsect, perp);
-            if (Mathf.Abs(across) > halfWidth) continue;
-
-            float multiplier = noFalloff ? 1f : Mathf.Max(SwingMinDamageMultiplier, 1f - ConeFalloffPerTarget * hit.Count);
-            hit.Add(insect);
-            insect.Damage(attackDamage * multiplier, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+            Insect insect = hits[i];
+            if (insect == null || !insect.IsAlive) continue;
+            float falloff = noFalloff ? 1f : Mathf.Max(SwingMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
+            insect.Damage(attackDamage * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
         }
     }
 
-    private static Sprite GetHitboxSprite()
-    {
-        if (_hitboxSprite != null) return _hitboxSprite;
-        Texture2D tex = new Texture2D(1, 1);
-        tex.SetPixel(0, 0, Color.white);
-        tex.Apply();
-        // pivot at the left edge (0, 0.5) rather than center, so the sprite's own position IS
-        // the pivot point the hitbox math rotates around, and scaling along X only ever extends
-        // outward from there instead of growing in both directions
-        _hitboxSprite = Sprite.Create(tex, new Rect(0f, 0f, 1f, 1f), new Vector2(0f, 0.5f), 1f);
-        return _hitboxSprite;
-    }
-
-    private void EnsureHitboxVisual()
-    {
-        if (_hitboxVisualObj != null) return;
-        _hitboxVisualObj = new GameObject("SwordHitboxVisual");
-        _hitboxVisualObj.transform.SetParent(transform, false);
-        _hitboxVisualRenderer = _hitboxVisualObj.AddComponent<SpriteRenderer>();
-        _hitboxVisualRenderer.sprite = GetHitboxSprite();
-        _hitboxVisualRenderer.color = new Color(0.15f, 1f, 0.15f, 0.4f);
-        // same sorting layer the Knight's own body sprite uses - without this it defaults to
-        // "Default", which sits behind every other layer in this project's sorting order
-        // regardless of sortingOrder, so it was rendering fully hidden
-        _hitboxVisualRenderer.sortingLayerName = "Plants";
-        _hitboxVisualRenderer.sortingOrder = 1;
-
-        // starts parked at 12 o'clock (world angle 90) before any attack has ever fired, matching
-        // where the very first sweep (top-to-bottom) begins
-        UpdateHitboxVisual(90f);
-    }
-
-    private void UpdateHitboxVisual(float worldAngleDegrees)
-    {
-        if (_hitboxVisualObj == null) return;
-        _hitboxVisualObj.transform.localPosition = Vector3.zero;
-        _hitboxVisualObj.transform.localRotation = Quaternion.Euler(0f, 0f, worldAngleDegrees);
-        _hitboxVisualObj.transform.localScale = new Vector3(SwingHitboxLength, SwingHitboxWidth, 1f);
-    }
-
-    // omnidirectional: the target plus every insect within the Knight's own attack range, closest
-    // to THAT target (not to the Knight) first - no cap on how many can be hit. since this lands
-    // all at once instead of being discovered over time like the sweep, distance-to-target order
-    // stands in for "order hit": same 10%-per-extra falloff as the swing, down to its own floor,
-    // scaling off Armor instead of Attack Damage and tagged as counter damage. at Path2 max only,
-    // every insect hit also gets stunned for BashStunDuration scaled by MaxLevelBashStunChance
-    // (used to be a MaxLevelBashStunChance roll for the full duration) - this doesn't exist at
-    // all below max level
+    // omnidirectional: every insect in reach all around the Knight, the target first, then the
+    // rest closest to it first. same falloff as the sword, down to its own floor, scaling off
+    // Armor instead of Attack Damage and tagged as counter damage. at Path2 max only, every
+    // insect hit also gets stunned for BashStunDuration scaled by MaxLevelBashStunChance
     private void Bash(Insect target)
     {
-        Vector2 targetApproach = target.GetApproachPoint(transform.position);
-
-        List<Insect> others = new List<Insect>();
-        // snapshot: Insect.Kill() removes itself from allInsects synchronously, which would
-        // otherwise mutate this list mid-foreach if an earlier hit below kills something
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
-        {
-            if (insect == null || !insect.IsAlive || insect == target) continue;
-            Vector2 approach = insect.GetApproachPoint(transform.position);
-            if (Vector2.Distance(transform.position, approach) > attackRange) continue;
-            others.Add(insect);
-        }
-        others.Sort((a, b) => Vector2.Distance(targetApproach, a.GetApproachPoint(transform.position))
-            .CompareTo(Vector2.Distance(targetApproach, b.GetApproachPoint(transform.position))));
-
-        List<Insect> candidates = new List<Insect> { target };
-        candidates.AddRange(others);
+        List<Insect> hits = InsectsInReach(target, 0f);
         bool noFalloff = SkillTreeManager.HasUnlock(this, RelentlessBashUnlock);
 
-        for (int i = 0; i < candidates.Count; i++)
+        for (int i = 0; i < hits.Count; i++)
         {
-            Insect insect = candidates[i];
+            Insect insect = hits[i];
+            if (insect == null || !insect.IsAlive) continue;
             float falloff = noFalloff ? 1f : Mathf.Max(BashMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
             insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter, DamageTag.PassiveDamage });
 
             if (insect.IsAlive && IsPath2Maxed)
                 insect.ApplyEffect(new StunEffect(insect, BashStunDuration * MaxLevelBashStunChance, 1, this));
         }
+    }
+
+    // the insects a strike or bash reaches: every insect within attack range of the Knight. facingSign 0 reaches all around, 1 or minus 1 only that side of the
+    // Knight (straight above or below him counts as either side). ordered target first, then
+    // closest to the target, which is the order the falloff counts in. it is its own list, so a
+    // hit that kills an insect can't change it mid loop
+    private List<Insect> InsectsInReach(Insect target, float facingSign)
+    {
+        Vector2 origin = transform.position;
+        Vector2 center = target != null && target.IsAlive ? target.GetApproachPoint(origin) : origin;
+        List<Insect> hits = new List<Insect>();
+
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive) continue;
+            Vector2 approach = insect.GetApproachPoint(origin);
+            if (Vector2.Distance(origin, approach) > attackRange) continue;
+            if (facingSign != 0f && (approach.x - origin.x) * facingSign < 0f) continue;
+            hits.Add(insect);
+        }
+
+        hits.Sort((a, b) =>
+        {
+            if (a == b) return 0;
+            if (a == target) return -1;
+            if (b == target) return 1;
+            return Vector2.Distance(center, a.GetApproachPoint(origin))
+                .CompareTo(Vector2.Distance(center, b.GetApproachPoint(origin)));
+        });
+        return hits;
     }
 
     public override void UpdateStats()
@@ -652,7 +561,7 @@ public class AcornKnight : Aura
 
     public override string GetAttackDescription() =>
         $"Whenever {GetName()} is not being targeted by a Physical damaging insect, it holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
-        $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword in a semi-circle, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects caught in the swing.";
+        $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword down and then back up, each swing dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects in range on the side its target is on.";
 
     public override string GetPassiveDescription() =>
         $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
@@ -672,7 +581,7 @@ public class AcornKnight : Aura
         int   armorpl = AcornData?.path1ArmorPerLevel     ?? 4;
         string desc = details
             ? $"Whenever {GetName()} is not being targeted by a Physical damaging insect, it holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
-              $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword in a semi-circle through the side its target is on, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects caught in the swing, with <color=green><b>{ConeFalloffPerTarget * 100f:F0}%</b></color> falloff per extra insect hit down to a <color=green><b>{SwingMinDamageMultiplier * 100f:F0}%</b></color> minimum."
+              $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword down and then back up. Each swing deals <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects in range on the side its target is on, with <color=green><b>{ConeFalloffPerTarget * 100f:F0}%</b></color> falloff per extra insect hit down to a <color=green><b>{SwingMinDamageMultiplier * 100f:F0}%</b></color> minimum."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
