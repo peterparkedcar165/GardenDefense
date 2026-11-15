@@ -42,6 +42,7 @@ public class SeasonedOakMulchEffect : MulchEffect
             if (plant == null) continue;
             plant.mulchCarry.Remove(StepsKey);
             plant.mulchCarry.Remove(TimerKey);
+            plant.RemoveEffect<SeasonedOakEffect>();
         }
     }
 
@@ -81,6 +82,8 @@ public class SeasonedOakMulchEffect : MulchEffect
                 plant.armorAdder += wanted - applied;
                 appliedArmor[plant] = wanted;
             }
+
+            ShowStatus(plant, wanted);
         }
 
         // destroyed acorns drop out of the bookkeeping; their progress already lives on in
@@ -90,5 +93,22 @@ public class SeasonedOakMulchEffect : MulchEffect
             if (plant == null) gone.Add(plant);
         foreach (Plant plant in gone)
             appliedArmor.Remove(plant);
+    }
+
+    // the visible status on the acorn (SeasonedOakEffect), put back if anything stripped it, with
+    // his current armor and the time left to his next step
+    private void ShowStatus(Plant plant, float armor)
+    {
+        SeasonedOakEffect status = plant.GetEffect<SeasonedOakEffect>();
+        if (status == null)
+        {
+            status = new SeasonedOakEffect(plant);
+            plant.ApplyEffect(status);
+        }
+        float timer = plant.mulchCarry.TryGetValue(TimerKey, out float savedTimer) ? savedTimer : 0f;
+        status.armor = armor;
+        status.armorPerStep = typedData.armorPerStep;
+        status.maxArmor = typedData.maxArmor;
+        status.secondsToNextStep = Mathf.Max(0f, typedData.stepInterval - timer);
     }
 }

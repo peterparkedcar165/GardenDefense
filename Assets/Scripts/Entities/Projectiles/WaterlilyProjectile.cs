@@ -26,6 +26,17 @@ public class WaterlilyProjectile : Projectile
     private float _traveled;
     private Vector3 _lastBasePos;
 
+    // where the descent ends: the target's ground spot and the height the bubble meets it at,
+    // updated every frame while the target is tracked. when the target dies, gets hit or is
+    // dropped, the bubble keeps coming down onto that last spot instead of freezing its height
+    // in the air and sailing over grounded insects. it ends no higher than _groundAimHeight, so a
+    // bubble that was chasing a flyer still comes down to grounded insects' height
+    private Vector3 _destination;
+    private float _destinationHeight;
+    private float _groundAimHeight;
+    private bool _targetLost;
+    private bool _reachedDestination;
+
     public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
     {
         base.Initialize(target, projectileDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, source);
@@ -45,6 +56,13 @@ public class WaterlilyProjectile : Projectile
         _riseTimer = 0f;
         _launched = false;
         _startHeight = VisualHeightOffset;
+        _groundAimHeight = data != null ? data.projectileGroundAimHeight : 0.4f;
+        // until a tracked target says otherwise, the descent ends on the aimed spot at ground height
+        _destination = target;
+        _destinationHeight = _groundAimHeight;
+        _targetLost = false;
+        _reachedDestination = false;
+        TrackDestination();
         // this projectile sets the visual height itself for the whole flight
         holdVisualHeight = true;
     }
@@ -134,6 +152,8 @@ public class WaterlilyProjectile : Projectile
 
     protected override void OnBaseMoved()
     {
+        TrackDestination();
+
         if (!_launched)
         {
             // rise: the visual goes straight up and eases to a stop at the top while Base drifts
@@ -146,20 +166,50 @@ public class WaterlilyProjectile : Projectile
             return;
         }
 
-        // lost target: keep the current height and fly straight on, same as every other projectile
-        if (trackedInsect == null) return;
+        if (trackedInsect == null && !_targetLost)
+        {
+            // the target just died, was hit or was dropped: the descent carries on to its last
+            // spot. coming down lower than it was aiming (a flyer) restarts the curve from the
+            // current height, so the bubble doesn't jump
+            _targetLost = true;
+            if (_destinationHeight > _groundAimHeight)
+            {
+                _destinationHeight = _groundAimHeight;
+                _launchHeight = VisualHeightOffset;
+                _traveled = 0f;
+            }
+        }
+
+        // down at the lost target's spot: fly straight on at this height, low enough to hit
+        // grounded insects on the way, same straight line every other projectile keeps
+        if (_reachedDestination) return;
 
         _traveled += Vector3.Distance(_lastBasePos, transform.position);
         _lastBasePos = transform.position;
 
+        Vector3 toDestination = _destination - transform.position;
+        float remaining = toDestination.magnitude;
+        if (_targetLost && (remaining < 0.0001f || Vector3.Dot(direction, toDestination) <= 0f))
+        {
+            VisualHeightOffset = _destinationHeight;
+            _reachedDestination = true;
+            return;
+        }
+
         // progress along the travel, measured against the target's current spot so it still lands
         // right on a target that keeps moving. eased at both ends, so it leaves the top of the rise
         // without a jolt
-        float remaining = Vector3.Distance(transform.position, trackedInsect.transform.position);
         float s = _traveled + remaining > 0.0001f ? _traveled / (_traveled + remaining) : 1f;
         float eased = s * s * (3f - 2f * s);
-        float targetHeight = trackedInsect.GetAimPoint().y - trackedInsect.transform.position.y;
-        VisualHeightOffset = Mathf.Lerp(_launchHeight, targetHeight, eased);
+        VisualHeightOffset = Mathf.Lerp(_launchHeight, _destinationHeight, eased);
+    }
+
+    // while the target is tracked, the descent ends on its ground spot at its aim height
+    private void TrackDestination()
+    {
+        if (trackedInsect == null) return;
+        _destination = trackedInsect.transform.position;
+        _destinationHeight = trackedInsect.GetAimPoint().y - trackedInsect.transform.position.y;
     }
 
     // the hit burst travels out exactly as far as her splash radius, with the same fit Calendula's

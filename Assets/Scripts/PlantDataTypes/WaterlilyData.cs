@@ -19,6 +19,8 @@ public class WaterlilyData : PlantData
     public float projectileRiseDuration = 0.3f;
     [Tooltip("seconds the bubble takes to speed up from 0 to full projectile speed, counted from the moment it spawns (so it overlaps the rise). 0 = full speed right away")]
     public float projectileLaunchAccelDuration = 0.6f;
+    [Tooltip("when the bubble's target dies or is lost, it keeps coming down onto the target's last spot and ends no higher than this above the ground, so it still hits grounded insects. most grounded insects aim at about 0.4")]
+    public float projectileGroundAimHeight = 0.4f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 5f;
