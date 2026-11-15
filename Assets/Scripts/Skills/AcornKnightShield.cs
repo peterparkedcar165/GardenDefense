@@ -2,9 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 
 // the thrown shield, sitting on the path after its throw lands. clone of AcornShield adapted for
-// Acorn Knight: no fall-from-sky animation and no impact burst (the throw's projectile already
-// dealt its hit and stun before this spawns), just hp, lifetime, taunt and path blocking, same as
-// the old bomb. kept as its own class rather than editing AcornShield.cs, which is now unused by
+// Acorn Knight: the throw's projectile already dealt its hit and stun before this spawns, so this
+// is hp, lifetime, taunt and path blocking, same as the old bomb, plus the landing animation on
+// its Visual (see PlayLanding). kept as its own class rather than editing AcornShield.cs, which is now unused by
 // the live AcornKnight but left in place rather than deleted outright
 public class AcornKnightShield : Minion
 {
@@ -46,6 +46,22 @@ public class AcornKnightShield : Minion
     {
         float remaining = Mathf.Max(0f, lifetime - _lifetimeElapsed);
         return $"Blocks path while it lasts\nTime remaining: {Mathf.CeilToInt(remaining)}s";
+    }
+
+    // the landing on the Visual's Animator: Impact (the shield flashing where it struck an insect)
+    // then Fall (dropping to the ground and resting on its last frame). with no insect struck it
+    // goes straight to Fall. the art is drawn for a throw to the left, so a throw to the right
+    // mirrors it. purely visual, the shield blocks and taunts from the moment it spawns
+    private const string FallState = "Fall";
+
+    public void PlayLanding(bool struckInsect, bool thrownRight)
+    {
+        Transform v = visual != null ? visual : transform.Find("Visual");
+        if (v == null) return;
+        SpriteRenderer sr = v.GetComponent<SpriteRenderer>();
+        if (sr != null) sr.flipX = thrownRight;
+        Animator anim = v.GetComponent<Animator>();
+        if (anim != null && !struckInsect) anim.Play(FallState, 0, 0f);
     }
 
     // called by AcornKnight immediately after Instantiate, once the throw has landed

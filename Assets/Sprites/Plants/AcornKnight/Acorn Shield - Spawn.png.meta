@@ -103,47 +103,47 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Acorn Shield - Spawn_0
-      rect:
-        serializedVersion: 2
-        x: 76
-        y: 18
-        width: 40
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4d6c77b770840c410800000000000000
-      internalID: 1495274273260422868
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Acorn Shield - Spawn_1
       rect:
         serializedVersion: 2
-        x: 142
-        y: 20
-        width: 36
-        height: 25
+        x: 64
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3b62f0c27af3c6d10800000000000000
-      internalID: 2120139511815939763
+      spriteID: 1f3e293955e57d6fa3fe51190d710366
+      internalID: -4414204744945364440
       vertices: []
-      indices: 
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acorn Shield - Spawn_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 324ce4ca7d7b7bb1c152835e013f9a34
+      internalID: -4218077783085240045
+      vertices: []
+      indices:
       edges: []
       weights: []
     outline: []
@@ -160,8 +160,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Acorn Shield - Spawn_0: 1495274273260422868
-      Acorn Shield - Spawn_1: 2120139511815939763
+      Acorn Shield - Spawn_1: -4414204744945364440
+      Acorn Shield - Spawn_2: -4218077783085240045
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

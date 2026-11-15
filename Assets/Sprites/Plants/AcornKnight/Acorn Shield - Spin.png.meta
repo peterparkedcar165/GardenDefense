@@ -139,286 +139,132 @@ TextureImporter:
       name: Acorn Shield - Spin_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 40
-        width: 37
-        height: 11
+        x: 0
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0c02a00113fcd9860800000000000000
-      internalID: 7538409160917524672
+      spriteID: 642c905c46e523a300cbad12ca9d693a
+      internalID: 842476325205693385
       vertices: []
-      indices: 
+      indices:
       edges: []
       weights: []
     - serializedVersion: 2
       name: Acorn Shield - Spin_1
       rect:
         serializedVersion: 2
-        x: 8
-        y: 18
-        width: 48
-        height: 28
+        x: 64
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3863bb5e445e02910800000000000000
-      internalID: 1810699134277727875
+      spriteID: 8a8bddc1e169ffe2af3a99889bd296e0
+      internalID: 5802019773117276312
       vertices: []
-      indices: 
+      indices:
       edges: []
       weights: []
     - serializedVersion: 2
       name: Acorn Shield - Spin_2
       rect:
         serializedVersion: 2
-        x: 71
-        y: 16
-        width: 20
-        height: 27
+        x: 128
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f03996e6d0cd1db70800000000000000
-      internalID: 8922154287042761487
+      spriteID: 915f389001b9b1ab5b6f5a7f00c551d3
+      internalID: -3373595468377235685
       vertices: []
-      indices: 
+      indices:
       edges: []
       weights: []
     - serializedVersion: 2
       name: Acorn Shield - Spin_3
       rect:
         serializedVersion: 2
-        x: 77
-        y: 19
-        width: 38
-        height: 27
+        x: 192
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0298e219baaf1bb80800000000000000
-      internalID: -8380641816777684704
+      spriteID: 73345e7b50eddf31b5c8bd5138e3f027
+      internalID: 4123224237844608904
       vertices: []
-      indices: 
+      indices:
       edges: []
       weights: []
     - serializedVersion: 2
       name: Acorn Shield - Spin_4
       rect:
         serializedVersion: 2
-        x: 101
-        y: 21
-        width: 20
-        height: 27
+        x: 256
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 68fe3bae9b6b58ab0800000000000000
-      internalID: -5006394501129572474
+      spriteID: 2f191a9dd3daedffda77b5cd36b592b0
+      internalID: 3669419130208391516
       vertices: []
-      indices: 
+      indices:
       edges: []
       weights: []
     - serializedVersion: 2
       name: Acorn Shield - Spin_5
       rect:
         serializedVersion: 2
-        x: 136
-        y: 19
-        width: 43
-        height: 31
+        x: 320
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
+      customData:
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ba93b13bd56855250800000000000000
-      internalID: 5932795821125482923
+      spriteID: 1734e1a656e4490902c0b49e58e35728
+      internalID: -3266941044915343854
       vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Acorn Shield - Spin_6
-      rect:
-        serializedVersion: 2
-        x: 205
-        y: 15
-        width: 38
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ae6716ce39fb771f0800000000000000
-      internalID: -1047157746293442838
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Acorn Shield - Spin_7
-      rect:
-        serializedVersion: 2
-        x: 222
-        y: 42
-        width: 10
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c4bba177bc593c7c0800000000000000
-      internalID: -4052230538594174132
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Acorn Shield - Spin_8
-      rect:
-        serializedVersion: 2
-        x: 269
-        y: 15
-        width: 38
-        height: 34
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ae10a40bf3ad42030800000000000000
-      internalID: 3469137580057559530
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Acorn Shield - Spin_9
-      rect:
-        serializedVersion: 2
-        x: 333
-        y: 19
-        width: 38
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7800c0848530588a0800000000000000
-      internalID: -6303628425734389625
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Acorn Shield - Spin_10
-      rect:
-        serializedVersion: 2
-        x: 19
-        y: 13
-        width: 34
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e946b2e42c5a1ef80800000000000000
-      internalID: -8078994002572254050
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Acorn Shield - Spin_11
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 14
-        width: 24
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2da814b4f9e749aa0800000000000000
-      internalID: -6155155568081138990
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Acorn Shield - Spin_12
-      rect:
-        serializedVersion: 2
-        x: 216
-        y: 16
-        width: 10
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6951d302bebf36ce0800000000000000
-      internalID: -1413008870787443306
-      vertices: []
-      indices: 
+      indices:
       edges: []
       weights: []
     outline: []
@@ -435,19 +281,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Acorn Shield - Spin_0: 7538409160917524672
-      Acorn Shield - Spin_1: 1810699134277727875
-      Acorn Shield - Spin_10: -8078994002572254050
-      Acorn Shield - Spin_11: -6155155568081138990
-      Acorn Shield - Spin_12: -1413008870787443306
-      Acorn Shield - Spin_2: 8922154287042761487
-      Acorn Shield - Spin_3: -8380641816777684704
-      Acorn Shield - Spin_4: -5006394501129572474
-      Acorn Shield - Spin_5: 5932795821125482923
-      Acorn Shield - Spin_6: -1047157746293442838
-      Acorn Shield - Spin_7: -4052230538594174132
-      Acorn Shield - Spin_8: 3469137580057559530
-      Acorn Shield - Spin_9: -6303628425734389625
+      Acorn Shield - Spin_0: 842476325205693385
+      Acorn Shield - Spin_1: 5802019773117276312
+      Acorn Shield - Spin_2: -3373595468377235685
+      Acorn Shield - Spin_3: 4123224237844608904
+      Acorn Shield - Spin_4: 3669419130208391516
+      Acorn Shield - Spin_5: -3266941044915343854
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

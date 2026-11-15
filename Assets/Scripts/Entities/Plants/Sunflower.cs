@@ -261,13 +261,11 @@ public class Sunflower : Shooter
     private Insect _currentTarget;
 
     // true from the moment an attack commits (Shoot() called) until every bolt it's going to
-    // fire actually has (see _pendingAttackShots) - lets a skill cast that comes in mid-attack
-    // queue instead of cutting the attack animation off, matching the Animator (Attack can't be
-    // interrupted by Skill there either)
+    // fire actually has (see _pendingAttackShots), so a second Shoot() can't start on top of it.
+    // a skill cast never waits on it: the skill pose cuts the attack pose off, and the attack's
+    // orbs keep charging and firing underneath
     private bool _attackInProgress;
     private int _pendingAttackShots;
-    private bool _skillQueued;
-    private Vector3 _queuedSkillPosition;
 
     protected override GameObject FindTarget()
     {
@@ -293,13 +291,6 @@ public class Sunflower : Shooter
     // but the circle itself only appears this many seconds later - a small beat so the pose
     // visibly leads the charge-up orb instead of both popping in on the same frame
     private const float BallSpawnDelay = 0.1f;
-
-    // safeguard for WaitForBodyReadyThenInvoke below - name of the body Animator's Skill state,
-    // as it appears in the Animator window
-    private const string BodySkillStateName = "SunflowerSkill";
-    // never block the circle indefinitely if the body Animator is ever stuck/misconfigured -
-    // this is purely a safety cap, not an expected wait
-    private const float BodyReadyMaxExtraWait = 5f;
 
     protected override void Shoot(Vector3 target)
     {
@@ -352,14 +343,14 @@ public class Sunflower : Shooter
                 };
 
                 float startDelay = BallSpawnDelay + capturedIndex * boltDelay;
-                StartCoroutine(WaitForBodyReadyThenInvoke(startDelay, startCircle));
+                StartCoroutine(InvokeAfter(startDelay, startCircle));
             }
         }
         else
         {
             Vector3 lastKnownPosition = lockedTarget != null ? lockedTarget.GetAimPoint() : transform.position;
 
-            StartCoroutine(WaitForBodyReadyThenInvoke(BallSpawnDelay, () =>
+            StartCoroutine(InvokeAfter(BallSpawnDelay, () =>
             {
                 if (attackCircle != null) attackCircle.SetActive(true);
                 BeginAnimatedAttackCharge(circleAnimator, AttackChargeTrigger, circleClipLength, () =>
@@ -380,23 +371,11 @@ public class Sunflower : Shooter
         }
     }
 
-    // waits delay seconds, then also waits for the body Animator to actually have
-    // left the Skill state before running action - the circle otherwise has no idea whether the
-    // body is still mid-Skill-animation (its real playtime can run longer than channelDuration if
-    // bodySkillClipLength doesn't exactly match the clip's authored Length), so without this a
-    // slow Skill animation could let the circle visibly get ahead of the body's own attack pose
-    private IEnumerator WaitForBodyReadyThenInvoke(float delay, System.Action action)
+    // runs action after delay seconds. the orbs no longer wait for the body to leave its Skill
+    // pose: a skill only cuts the attack's animation short, the attack itself carries on
+    private IEnumerator InvokeAfter(float delay, System.Action action)
     {
         yield return new WaitForSeconds(delay);
-
-        float elapsed = 0f;
-        while (bodyAnimator != null && elapsed < BodyReadyMaxExtraWait
-               && bodyAnimator.GetCurrentAnimatorStateInfo(0).IsName(BodySkillStateName))
-        {
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
         action?.Invoke();
     }
 
@@ -424,18 +403,13 @@ public class Sunflower : Shooter
         NotifyAttackShotFired();
     }
 
-    // counts down the shots committed to back in Shoot() - once the last one has actually fired,
-    // the attack is considered fully done, and any skill cast that came in mid-attack (see
-    // OnTargetConfirmed) is free to start its channel now instead of staying queued
+    // counts down the shots committed to back in Shoot(). once the last one has actually fired,
+    // the attack is fully done and the next one may start
     private void NotifyAttackShotFired()
     {
         _pendingAttackShots--;
         if (_pendingAttackShots > 0) return;
-
         _attackInProgress = false;
-        if (!_skillQueued) return;
-        _skillQueued = false;
-        StartSkillChannel(_queuedSkillPosition);
     }
 
     // deterministically shaves cooldownReductionPerHit seconds off the sun timer per attack hit -
@@ -478,23 +452,13 @@ public class Sunflower : Shooter
         SkillTargetingManager.instance.BeginTargeting(skillAoERadius, OnTargetConfirmed);
     }
 
-    // cooldown starts the instant the player casts, even if the channel itself ends up queued
-    // below - so re-casting is gated from this exact moment, not from whenever the attack
-    // actually finishes and the channel gets to start
+    // the channel starts the instant the player casts, even mid attack: the Skill pose cuts the
+    // Attack pose off (Attack to Skill has no exit time), while the attack's orbs keep charging
+    // and fire as normal. the channel still stops new attacks from starting until it ends
     private void OnTargetConfirmed(Vector3 position)
     {
         if (sunrayPrefab == null) return;
         skillCooldownTimer = skillCooldown;
-
-        // matches the Animator (Skill can't interrupt Attack there either) - if an attack is
-        // still mid-flight, hold the channel until NotifyAttackShotFired sees it finish
-        if (_attackInProgress)
-        {
-            _skillQueued = true;
-            _queuedSkillPosition = position;
-            return;
-        }
-
         StartSkillChannel(position);
     }
 
@@ -503,7 +467,7 @@ public class Sunflower : Shooter
         // matches channelDuration (the flat 1s field actually used by ChannelAndSpawn's wait
         // below) rather than data.channelDuration, which BeginChannel reads separately for the
         // attack lockout - kept in sync manually on the data asset, see BeginChannel
-        PlayBodyAnimation(BodySkillTrigger, bodySkillClipLength, channelDuration);
+        PlayBodyAnimation(BodySkillTrigger, bodySkillClipLength, channelDuration, interrupt: true);
         BeginChannel();   // can't attack until the sunray appears (set channelDuration in data)
         StartCoroutine(ChannelAndSpawn(position));
     }

@@ -9,17 +9,33 @@ public class AcornKnight : Aura
     [SerializeField] private GameObject shieldProjectilePrefab;
     [SerializeField] private GameObject shieldPrefab;
 
-    // his body animation (Body Animation section on Plant). the attack clip's frame layout: its
-    // frame rate, its frame count, and the frames (counted from 0, the big slash arcs) where the
-    // down strike and the up strike land, which is the moment each one deals its damage. the
-    // clips in Sprites/Plants/AcornKnight are built with these same numbers
+    // his body animation (Body Animation section on Plant). the frame rate of his action clips,
+    // and each clip's frame count plus the frames (counted from 0) where something happens: the
+    // sword's down and up strikes, the shield bash's smack, and the frame the thrown shield leaves
+    // his hand. each hit lands on its frame. the clips in Sprites/Plants/AcornKnight are built
+    // with these same numbers
     [Header("Attack Animation")]
     [SerializeField] private float attackClipFrameRate = 12f;
     [SerializeField] private int attackClipFrames = 12;
     [SerializeField] private int downStrikeFrame = 2;
     [SerializeField] private int upStrikeFrame = 6;
+    [SerializeField] private int bashClipFrames = 8;
+    [SerializeField] private int bashStrikeFrame = 3;
+    [SerializeField] private int throwClipFrames = 11;
+    [SerializeField] private int shieldReleaseFrame = 5;
+    // the shield bash's ring, a child of the Visual. mirrored with the body by hand, since facing
+    // only flips the body's own SpriteRenderer
+    [SerializeField] private SpriteRenderer shieldFxRenderer;
     private const string BodyAttackTrigger = "Attack";
+    private const string BodyBashTrigger = "Bash";
+    private const string BodySkillTrigger = "Skill";
     private const string BodyShieldOutBool = "ShieldOut";
+    private const string BodyGuardingBool = "Guarding";
+
+    // while the throw animation plays he faces where the shield is going instead of his target
+    private float _throwFacingUntil;
+    private bool _throwFacingRight;
+    private Coroutine _throwRoutine;
 
     private AcornKnightData AcornData => data as AcornKnightData;
 
@@ -75,7 +91,6 @@ public class AcornKnight : Aura
     public const string RelentlessBashUnlock  = "acorn_relentless_bash";
 
     public float ConeFalloffPerTarget   => AcornData?.coneFalloffPerTarget   ?? 0.10f;
-    public float AttackWindupTime       => AcornData?.attackWindupTime       ?? 0.1f;
     public float StanceExitDelay        => AcornData?.stanceExitDelay        ?? 1f;
     public float SkillThrowRange        => AcornData?.skillThrowRange       ?? 7.5f;
     public float ShieldThrowSpeed       => AcornData?.shieldThrowSpeed       ?? 10f;
@@ -184,6 +199,17 @@ public class AcornKnight : Aura
 
         UpdateFacingVisual();
         SetBodyBool(BodyShieldOutBool, _shieldOut);
+        SetBodyBool(BodyGuardingBool, IsDefensiveStance);
+        UpdateBodyFacing();
+    }
+
+    // runs after Plant's own facing flip (base.Update), so the throw can override it
+    private void UpdateBodyFacing()
+    {
+        SpriteRenderer body = GetMainRenderer();
+        if (body == null) return;
+        if (Time.time < _throwFacingUntil) body.flipX = _throwFacingRight;
+        if (shieldFxRenderer != null) shieldFxRenderer.flipX = body.flipX;
     }
 
     private void TickTimers(float dt)
@@ -298,10 +324,10 @@ public class AcornKnight : Aura
     protected override GameObject GetHighlightTarget() => _mainTarget != null ? _mainTarget.gameObject : null;
 
     // one attack is a full set: a down strike, then an up strike, each dealing its damage the
-    // moment its strike frame shows in the attack clip. the clip plays at its own speed and is
-    // only sped up when attacks come faster than it lasts. Guard Stance turns the attack into a
-    // single Shield Bash instead, after the usual windup. base.Attack() still fires right away,
-    // so the cooldown reset and attack sound happen the moment the attack starts
+    // moment its strike frame shows in the attack clip. in Guard Stance the attack is a single
+    // Shield Bash instead, landing on the bash clip's smack frame. a clip plays at its own speed
+    // and is only sped up when attacks come faster than it lasts. base.Attack() still fires right
+    // away, so the cooldown reset and attack sound happen the moment the attack starts
     protected override void Attack()
     {
         base.Attack();
@@ -311,14 +337,18 @@ public class AcornKnight : Aura
         if (IsDefensiveStance)
         {
             _shieldSwingTimer = SwingDuration;
-            BeginAttackWindup(AttackWindupTime, () =>
+            float bashLength = ClipLength(bashClipFrames);
+            float bashSpeed = Mathf.Max(1f, bashLength / Mathf.Max(0.01f, attackCooldown));
+            PlayBodyAnimation(BodyBashTrigger, bashLength, bashLength / bashSpeed);
+            float smackDelay = Mathf.Max(0, bashStrikeFrame) / (Mathf.Max(0.01f, attackClipFrameRate) * bashSpeed);
+            BeginAttackWindup(smackDelay, () =>
             {
                 if (target != null && target.IsAlive) Bash(target);
             });
             return;
         }
 
-        float clipLength = AttackClipLength;
+        float clipLength = ClipLength(attackClipFrames);
         float speed = Mathf.Max(1f, clipLength / Mathf.Max(0.01f, attackCooldown));
         PlayBodyAnimation(BodyAttackTrigger, clipLength, clipLength / speed);
 
@@ -326,7 +356,7 @@ public class AcornKnight : Aura
         _swordSetRoutine = StartCoroutine(SwordSetRoutine(target, speed));
     }
 
-    private float AttackClipLength => Mathf.Max(1, attackClipFrames) / Mathf.Max(0.01f, attackClipFrameRate);
+    private float ClipLength(int frames) => Mathf.Max(1, frames) / Mathf.Max(0.01f, attackClipFrameRate);
 
     // waits for each strike frame at the clip's current playback speed, then strikes. each strike
     // covers the side its target is on at that moment, or the last side if the target died
@@ -513,14 +543,31 @@ public class AcornKnight : Aura
         // the throw's own damage
         float damage = armor * SkillDamageArmorPercent;
 
-        GameObject obj = Instantiate(shieldProjectilePrefab, transform.position, Quaternion.identity);
-        ShieldThrowProjectile proj = obj.GetComponent<ShieldThrowProjectile>();
-        proj?.Initialize(landPos, damage, damageType, elementalType, ShieldThrowSpeed, this, OnShieldLanded);
-
         SetFacing(landPos);
         _shieldOut = true;
         _shieldSwingTimer = SwingDuration;
-        skillCooldownTimer = skillCooldown; // cooldown starts the instant the shield is thrown
+        skillCooldownTimer = skillCooldown; // cooldown starts the instant the shield is cast
+
+        // the throw animation cuts off whatever his body was showing (an attack set keeps striking
+        // underneath it), and the shield leaves his hand on its release frame
+        float throwLength = ClipLength(throwClipFrames);
+        PlayBodyAnimation(BodySkillTrigger, throwLength, throwLength, interrupt: true);
+        _throwFacingUntil = Time.time + throwLength;
+        _throwFacingRight = landPos.x > transform.position.x;
+
+        if (_throwRoutine != null) StopCoroutine(_throwRoutine);
+        _throwRoutine = StartCoroutine(ReleaseShieldRoutine(landPos, damage));
+    }
+
+    private IEnumerator ReleaseShieldRoutine(Vector2 landPos, float damage)
+    {
+        yield return new WaitForSeconds(Mathf.Max(0, shieldReleaseFrame) / Mathf.Max(0.01f, attackClipFrameRate));
+        _throwRoutine = null;
+
+        GameObject obj = Instantiate(shieldProjectilePrefab, transform.position, Quaternion.identity);
+        ShieldThrowProjectile proj = obj.GetComponent<ShieldThrowProjectile>();
+        if (proj != null) proj.Initialize(landPos, damage, damageType, elementalType, ShieldThrowSpeed, this, OnShieldLanded);
+        else _shieldOut = false;
     }
 
     // called by the flying shield once it hits an insect or reaches its clamped landing point.
@@ -538,6 +585,7 @@ public class AcornKnight : Aura
         if (shield == null) { _shieldOut = false; return; }
 
         shield.Initialize(shieldRadius, shieldHealth, skillDuration, this);
+        shield.PlayLanding(hitInsect != null, position.x > transform.position.x);
         _activeShield = shield;
         shield.OnShieldGone += HandleShieldGone;
     }

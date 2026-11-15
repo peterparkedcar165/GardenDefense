@@ -517,6 +517,8 @@ public abstract class Plant : Entity, IAttackable
     // have (an empty or half built controller) is skipped instead of warning every frame
     private RuntimeAnimatorController _bodyParametersFor;
     private readonly HashSet<string> _bodyParameters = new HashSet<string>();
+    // a skill's body animation owns the body until this time, see PlayBodyAnimation
+    private float _bodyInterruptUntil;
 
     [Header("Temperature")]
     public float temperature = 10f;
@@ -2015,14 +2017,39 @@ public abstract class Plant : Entity, IAttackable
     private readonly Dictionary<Animator, System.Action> _pendingChargeFireCallbacks = new Dictionary<Animator, System.Action>();
 
     // fires a trigger on the body animator, stretched or squeezed so a clip of clipLength seconds
-    // fits exactly inside targetDuration
-    protected void PlayBodyAnimation(string trigger, float clipLength, float targetDuration)
+    // fits exactly inside targetDuration. interrupt is for skills: it clears any trigger still
+    // waiting and keeps every other body animation off the body until this one is done (its state
+    // needs an Any State transition, or one from every state, with no exit time). it only cuts
+    // the animation short, never the logic behind it, so an attack in progress still lands
+    protected void PlayBodyAnimation(string trigger, float clipLength, float targetDuration, bool interrupt = false)
     {
         if (!BodyHasParameter(trigger)) return;
+        if (!interrupt && Time.time < _bodyInterruptUntil) return;
+
+        if (interrupt)
+        {
+            foreach (AnimatorControllerParameter p in bodyAnimator.parameters)
+                if (p.type == AnimatorControllerParameterType.Trigger) bodyAnimator.ResetTrigger(p.name);
+            _bodyInterruptUntil = Time.time + Mathf.Max(0f, targetDuration);
+        }
+
         if (_bodySpeedResetRoutine != null) StopCoroutine(_bodySpeedResetRoutine);
         bodyAnimator.speed = targetDuration > 0f && clipLength > 0f ? Mathf.Max(0.01f, clipLength / targetDuration) : 1f;
         bodyAnimator.SetTrigger(trigger);
         _bodySpeedResetRoutine = StartCoroutine(ResetBodySpeedAfter(targetDuration));
+        StartCoroutine(DropUnusedBodyTrigger(trigger));
+    }
+
+    // a trigger the current state has no transition for would sit there and play its animation
+    // late, the next time the body reaches a state that takes it, out of step with the logic. so
+    // once the animator has had a real frame to use it (and finished any transition in progress)
+    // whatever is left of it is dropped
+    private IEnumerator DropUnusedBodyTrigger(string trigger)
+    {
+        do { yield return null; } while (Time.deltaTime <= 0f);
+        while (bodyAnimator != null && bodyAnimator.IsInTransition(0)) yield return null;
+        yield return null;
+        if (bodyAnimator != null) bodyAnimator.ResetTrigger(trigger);
     }
 
     private IEnumerator ResetBodySpeedAfter(float delay)

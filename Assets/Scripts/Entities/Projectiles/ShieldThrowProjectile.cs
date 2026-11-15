@@ -22,6 +22,10 @@ public class ShieldThrowProjectile : Projectile
         maxRange = Vector3.Distance(transform.position, landPosition);
         this.source = source;
         spawnPosition = transform.position;
+
+        // the shield art is drawn flying left, so a throw to the right mirrors it
+        SpriteRenderer sr = visual != null ? visual.GetComponent<SpriteRenderer>() : null;
+        if (sr != null) sr.flipX = direction.x > 0f;
     }
 
     protected override void Move()

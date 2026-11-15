@@ -8,10 +8,6 @@ public class AcornKnightData : PlantData
     // reach - no cap on either - and share this same 10%-per-extra-target falloff, each with its
     // own floor (see AcornKnight.SwingMinDamageMultiplier/BashMinDamageMultiplier)
     public float coneFalloffPerTarget = 0.10f;
-    // seconds from the attack starting to the hit actually landing - stands in for an Animation
-    // Event on the swing clip's hit frame until real art exists. should stay comfortably under
-    // 1/attackSpeed so a windup never overruns into the next attack
-    public float attackWindupTime = 0.1f;
 
     [Header("Defensive Stance And Bash")]
     public float baseDefensiveArmor = 20f;
