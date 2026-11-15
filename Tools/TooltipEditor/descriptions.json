@@ -1813,5 +1813,361 @@
     }
    ]
   }
+ ],
+ "palette": [
+  {
+   "group": "Elements",
+   "value": "orange",
+   "name": "Fire",
+   "uses": 88
+  },
+  {
+   "group": "Elements",
+   "value": "#4FC3F7",
+   "name": "Water",
+   "uses": 46
+  },
+  {
+   "group": "Elements",
+   "value": "green",
+   "name": "Grass",
+   "uses": 1120
+  },
+  {
+   "group": "Elements",
+   "value": "#B2EBF2",
+   "name": "Wind",
+   "uses": 21
+  },
+  {
+   "group": "Elements",
+   "value": "purple",
+   "name": "Poison",
+   "uses": 24
+  },
+  {
+   "group": "Elements",
+   "value": "#00FFFF",
+   "name": "Ice",
+   "uses": 33
+  },
+  {
+   "group": "Damage types",
+   "value": "#A0522D",
+   "name": "Physical",
+   "uses": 6
+  },
+  {
+   "group": "Damage types",
+   "value": "#FFB6C1",
+   "name": "Magic",
+   "uses": 72
+  },
+  {
+   "group": "Damage types",
+   "value": "white",
+   "name": "True",
+   "uses": 0
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#00CED1",
+   "name": "Armor",
+   "uses": 46
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "yellow",
+   "name": "Sun",
+   "uses": 27
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "red",
+   "name": "Max Health",
+   "uses": 24
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#FFD700",
+   "name": "Critical Chance",
+   "uses": 19
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#FF6B1A",
+   "name": "Flammable",
+   "uses": 13
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#E0E0E0",
+   "name": "Wind Erosion",
+   "uses": 10
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#88FF88",
+   "name": "Fungal Glow",
+   "uses": 7
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#9B30D0",
+   "name": "Thorned Guard",
+   "uses": 6
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#FF69B4",
+   "name": "Magic Resistance",
+   "uses": 5
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#FF6B81",
+   "name": "Heals & Shields",
+   "uses": 5
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#2ECC71",
+   "name": "Oleandic Ward",
+   "uses": 5
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "grey",
+   "name": "Release SHIFT for overview",
+   "uses": 4
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#DDDDDD",
+   "name": "Blinded",
+   "uses": 4
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#B266FF",
+   "name": "Psionic Bond",
+   "uses": 4
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#9370DB",
+   "name": "Magic Resist",
+   "uses": 2
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#ED9121",
+   "name": "Carrot",
+   "uses": 2
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#B87333",
+   "name": "Soil Bond",
+   "uses": 2
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#E8D9A8",
+   "name": "Sandstorm",
+   "uses": 2
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#9B59B6",
+   "name": "Oleandic Curse",
+   "uses": 2
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#D0E8FF",
+   "name": "Anemone",
+   "uses": 1
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#FF8C00",
+   "name": "Bird of Paradise",
+   "uses": 1
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#6495ED",
+   "name": "Coordinated Damage",
+   "uses": 1
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#B0E0E6",
+   "name": "Ghost Shroomlet",
+   "uses": 1
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#2E8B57",
+   "name": "Kelp",
+   "uses": 1
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#9400D3",
+   "name": "Damage Over Time",
+   "uses": 1
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#3399FF",
+   "name": "Waterlily",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#888888",
+   "name": "Shielded",
+   "uses": 15
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#8B4513",
+   "name": "Dirt",
+   "uses": 7
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#8B0000",
+   "name": "Mosquito Bite",
+   "uses": 4
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#D9BB48",
+   "name": "Glowing Swarm",
+   "uses": 3
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#6B8E23",
+   "name": "Grass",
+   "uses": 3
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#1B6CA8",
+   "name": "Submerged",
+   "uses": 3
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#FF4500",
+   "name": "Scorch",
+   "uses": 3
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#4488FF",
+   "name": "Water Damage",
+   "uses": 3
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#6E6E6E",
+   "name": "",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#9FD8E0",
+   "name": "Sluggish",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#8B6914",
+   "name": "Devoured",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#C9A0DC",
+   "name": "Fruit Fly Swarm",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#A9A9A9",
+   "name": "Retained",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#AAFF44",
+   "name": "",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#87CEEB",
+   "name": "Slow",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#1E90FF",
+   "name": "Steam",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#DB5B00",
+   "name": "Termite Swarm",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#00BFFF",
+   "name": "Ice",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#88DDFF",
+   "name": "Ice Damage",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#c3c2b7",
+   "name": "",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#40E0D0",
+   "name": "Chill",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#C8A2C8",
+   "name": "Channeling",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#B22222",
+   "name": "Corrosion",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#AAAAAA",
+   "name": "Oblivious",
+   "uses": 1
+  }
  ]
 }

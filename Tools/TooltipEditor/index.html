@@ -65,9 +65,21 @@ main { overflow-y: auto; min-width: 0; }
 .tb.b { font-weight: 700; } .tb.i { font-style: italic; } .tb.u { text-decoration: underline; } .tb.s { text-decoration: line-through; }
 .sep { width: 1px; height: 22px; background: var(--line); margin: 0 3px; }
 .swatches { display: flex; flex-wrap: wrap; gap: 4px; }
-.sw { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(0,0,0,.35); padding: 0; }
+.sw { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(0,0,0,.35); padding: 0; display: inline-block; }
 .sw.element { background: conic-gradient(#FF8000 0 16%, #4FC3F7 0 33%, #00FF00 0 50%, #B2EBF2 0 66%, #A020F0 0 83%, #00FFFF 0); }
 .tb select { border: 0; background: none; }
+.color-panel { position: absolute; top: 100%; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  max-width: 760px; max-height: min(60vh, 520px); overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.22); padding: 12px 14px 14px; z-index: 6; }
+.color-group h4 { margin: 10px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+.color-group:first-child h4 { margin-top: 0; }
+.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 4px; }
+.color-opt { display: flex; align-items: center; gap: 8px; border: 1px solid transparent; background: none; border-radius: 6px; padding: 4px 6px; text-align: left; min-width: 0; }
+.color-opt:hover { background: var(--hover); border-color: var(--line); }
+.color-opt .sw { flex: none; }
+.color-opt .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.color-opt code { font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+.color-panel .custom { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--muted); font-size: 13px; }
 .tb-hint { color: var(--muted); font-size: 12px; margin-left: auto; }
 
 .content { padding-block: 18px 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); max-width: 980px; }
@@ -162,7 +174,7 @@ textarea.src { width: 100%; box-sizing: border-box; min-height: 96px; font-famil
         </select></span>
         <span class="sep"></span>
         <div class="swatches" id="swatches"></div>
-        <input type="color" id="customColor" class="tb" value="#7fd6ff" title="Custom color" aria-label="Custom color" style="padding:2px;width:34px">
+        <button class="tb" id="moreColors" type="button" aria-expanded="false" aria-controls="colorPanel">More colors</button>
         <button class="tb" data-cmd="nocolor" title="Remove color" type="button">No color</button>
         <span class="sep"></span>
         <span class="tb" title="Insert a live value"><select id="tokenSel" aria-label="Insert a live value"><option value="">Insert value…</option></select></span>
@@ -170,6 +182,10 @@ textarea.src { width: 100%; box-sizing: border-box; min-height: 96px; font-famil
         <button class="tb" data-cmd="undo" title="Undo (Ctrl+Z)" type="button">Undo</button>
         <button class="tb" data-cmd="redo" title="Redo (Ctrl+Y)" type="button">Redo</button>
         <span class="tb-hint" id="tbHint">Select text in a tooltip, then pick a style</span>
+        <div class="color-panel" id="colorPanel" hidden>
+          <div id="colorGroups"></div>
+          <label class="custom" for="customColor">Any other color <input type="color" id="customColor" value="#7fd6ff"></label>
+        </div>
       </div>
       <div class="content" id="content"><p class="empty">Loading descriptions…</p></div>
     </main>
@@ -579,7 +595,7 @@ function bindEditor(f) {
   el.addEventListener("drop", ev => ev.preventDefault());
 }
 function insertItems(f, newItems) {
-  const off = selectionOffsets(f.el) || [f.items.length, f.items.length];
+  const off = selectionOffsets(f.el) || f.lastSel || [f.items.length, f.items.length];
   const items = domToItems(f.el);
   const st = (items[off[0] - 1] || items[off[0]] || {}).st || NO_STYLE;
   const ins = newItems.map(it => ({ ...it, st: it.st || st }));
@@ -589,7 +605,7 @@ function insertItems(f, newItems) {
 function withSelection(fn) {
   const f = activeField;
   if (!f || !document.body.contains(f.el)) { toast("Click into a tooltip first"); return; }
-  const off = selectionOffsets(f.el);
+  const off = selectionOffsets(f.el) || f.lastSel;
   if (!off || off[0] === off[1]) { toast("Select some text first"); f.el.focus(); return; }
   const items = domToItems(f.el);
   fn(items, off[0], off[1]);
@@ -791,21 +807,43 @@ function refreshCounts() {
 }
 
 // ---------------------------------------------------------------- toolbar
-const COLOR_NAMES = { green: "Green", orange: "Orange", "#00CED1": "Armor", "#FFB6C1": "Magic Power", "#A0522D": "Physical", grey: "Grey",
-  "#FFD700": "Gold", red: "Red", yellow: "Yellow", purple: "Purple", white: "White", "#4FC3F7": "Water", "#00FFFF": "Ice", "#B2EBF2": "Wind" };
+function swatchButton(value, label, cls) {
+  const b = document.createElement("button"); b.type = "button"; b.className = cls || "sw";
+  b.dataset.color = value; b.title = label; b.setAttribute("aria-label", label);
+  if (cls !== "color-opt") b.style.background = cssColor(value) || value;
+  return b;
+}
 function buildSwatches() {
-  const counts = new Map();
-  const visit = t => { if (!t) return; for (const m of t.matchAll(/<color=([^>{]+)>/g)) counts.set(m[1], (counts.get(m[1]) || 0) + 1); };
-  for (const p of DATA.plants) { visit(p.overview); for (const s of p.sections) { visit(s.overview); visit(s.details); s.upgrades.forEach(visit); visit(s.maxBonus); visit(s.maxBonusDetails); } }
-  const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 14).map(e => e[0]);
-  const box = $("swatches"); box.textContent = "";
-  const el = document.createElement("button"); el.type = "button"; el.className = "sw element"; el.title = "Element color (follows the plant's element)";
-  el.setAttribute("aria-label", "Element color"); el.dataset.color = "{" + ELEMENT_EXPR + "}"; box.append(el);
-  for (const c of top) {
-    const b = document.createElement("button"); b.type = "button"; b.className = "sw"; b.style.background = cssColor(c) || c;
-    const label = (COLOR_NAMES[c] || c) + " (" + c + ")";
-    b.title = label; b.setAttribute("aria-label", label); b.dataset.color = c; box.append(b);
+  const palette = DATA.palette || [];
+  const quick = $("swatches"); quick.textContent = "";
+  const auto = swatchButton("{" + ELEMENT_EXPR + "}", "Element color: follows each plant's element", "sw element");
+  quick.append(auto);
+  for (const c of palette.filter(c => c.group === "Elements" || c.group === "Damage types"))
+    quick.append(swatchButton(c.value, c.name + " (" + c.value + ")"));
+  const box = $("colorGroups"); box.textContent = "";
+  const groups = [];
+  for (const c of palette) { let g = groups.find(x => x.name === c.group); if (!g) groups.push(g = { name: c.group, cols: [] }); g.cols.push(c); }
+  const autoGroup = { name: "Elements", cols: [{ value: "{" + ELEMENT_EXPR + "}", name: "Element color (auto)", auto: true }] };
+  for (const g of groups) {
+    const sec = document.createElement("div"); sec.className = "color-group";
+    const h = document.createElement("h4"); h.textContent = g.name; sec.append(h);
+    const grid = document.createElement("div"); grid.className = "color-grid";
+    const cols = g.name === "Elements" ? [...autoGroup.cols, ...g.cols] : g.cols;
+    for (const c of cols) {
+      const label = (c.name || c.value) + (c.auto ? "" : " (" + c.value + ")");
+      const b = swatchButton(c.value, label, "color-opt");
+      const sw = document.createElement("span"); sw.className = "sw" + (c.auto ? " element" : "");
+      if (!c.auto) sw.style.background = cssColor(c.value) || c.value;
+      const nm = document.createElement("span"); nm.className = "nm"; nm.textContent = c.name || "Unnamed";
+      const code = document.createElement("code"); code.textContent = c.auto ? "auto" : c.value;
+      b.append(sw, nm, code); grid.append(b);
+    }
+    sec.append(grid); box.append(sec);
   }
+}
+function setColorPanel(open) {
+  $("colorPanel").hidden = !open;
+  $("moreColors").setAttribute("aria-expanded", String(open));
 }
 function buildTokenMenu(plant) {
   const sel = $("tokenSel");
@@ -823,7 +861,8 @@ function bindToolbar() {
   tb.addEventListener("mousedown", ev => { if (ev.target.closest("button")) ev.preventDefault(); });
   tb.addEventListener("click", ev => {
     const b = ev.target.closest("button"); if (!b) return;
-    if (b.dataset.color) return restyle(st => ({ ...st, c: b.dataset.color }));
+    if (b.id === "moreColors") return setColorPanel($("colorPanel").hidden);
+    if (b.dataset.color) { setColorPanel(false); return restyle(st => ({ ...st, c: b.dataset.color })); }
     const cmd = b.dataset.cmd;
     if (["b", "i", "u", "s"].includes(cmd)) { if (activeField) toggleFlag(activeField, cmd); else toast("Click into a tooltip first"); }
     else if (cmd === "nocolor") restyle(st => ({ ...st, c: null }));
@@ -831,7 +870,8 @@ function bindToolbar() {
     else if (cmd === "undo" && activeField) undo(activeField);
     else if (cmd === "redo" && activeField) redo(activeField);
   });
-  $("customColor").addEventListener("change", ev => restyle(st => ({ ...st, c: ev.target.value.toUpperCase() })));
+  $("customColor").addEventListener("change", ev => { setColorPanel(false); restyle(st => ({ ...st, c: ev.target.value.toUpperCase() })); });
+  document.addEventListener("mousedown", ev => { if (!$("colorPanel").hidden && !ev.target.closest("#colorPanel, #moreColors")) setColorPanel(false); });
   $("sizeSel").addEventListener("change", ev => {
     const v = ev.target.value; ev.target.value = "";
     if (v) restyle(st => ({ ...st, z: v === "none" ? null : v }));
@@ -948,12 +988,18 @@ function syncFields() {
 // ---------------------------------------------------------------- boot
 async function boot() {
   bindToolbar();
+  document.addEventListener("selectionchange", () => {
+    const f = activeField;
+    if (!f || !f.el || !document.body.contains(f.el)) return;
+    const off = selectionOffsets(f.el);
+    if (off) f.lastSel = off;
+  });
   $("search").addEventListener("input", renderPlantList);
   $("changesBtn").addEventListener("click", openChanges);
   $("newPlantBtn").addEventListener("click", openNewPlant);
   $("pixelToggle").addEventListener("change", ev => document.body.classList.toggle("pixel", ev.target.checked));
   $("codeToggle").addEventListener("change", () => currentPlantId && showPlant(currentPlantId, null, true));
-  document.addEventListener("keydown", ev => { if (ev.key === "Escape") $("drawer").hidden = true; });
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") { $("drawer").hidden = true; setColorPanel(false); } });
   try {
     const res = await fetch("descriptions.json");
     DATA = await res.json();

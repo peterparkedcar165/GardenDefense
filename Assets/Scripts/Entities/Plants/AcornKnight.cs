@@ -36,7 +36,7 @@ public class AcornKnight : Aura
     // from the insect along the ground, rising this high in a small arc that gravity brings back
     // down (the arc itself plays on the landed shield, see AcornKnightShield.PlayLanding)
     [Header("Shield Bounce")]
-    [SerializeField] private float shieldBounceDistance = 0.4f;
+    [SerializeField] private float shieldBounceDistance = 0.3f;
     [SerializeField] private float shieldBounceHeight = 0.35f;
 
     // while the throw animation plays he faces where the shield is going instead of his target

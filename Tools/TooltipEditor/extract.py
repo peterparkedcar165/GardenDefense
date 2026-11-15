@@ -270,7 +270,57 @@ for path in sorted(glob.glob(os.path.join(PLANTS, '*.cs'))):
                    'deprecated': cls in DEPRECATED, 'nameTemplate': getters.get('GetName', cls),
                    'overview': getters.get('GetDescription'), 'blockGetters': sorted(block_getters), 'sections': sections})
 
-json.dump({'plants': plants}, open(os.path.join(HERE, 'descriptions.json'), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
+# ---------------------------------------------------------------- palette: every color the game's text uses
+# fixed groups first (elements and damage types, from PlantData.ElementalColor/DamageTypeLabel),
+# then every other <color=...> in the plant tooltips, then the rest of the scripts. each color is
+# named after the text it most often colors, so "#00CED1" shows as "Armor"
+from collections import Counter, defaultdict
+FIXED = [
+    ('Elements', [('orange', 'Fire'), ('#4FC3F7', 'Water'), ('green', 'Grass'), ('#B2EBF2', 'Wind'), ('purple', 'Poison'), ('#00FFFF', 'Ice')]),
+    ('Damage types', [('#A0522D', 'Physical'), ('#FFB6C1', 'Magic'), ('white', 'True')]),
+]
+def color_uses(text, counts, casing, context):
+    for m in re.finditer(r'<color=([^>{]+)>(.*?)</color>', text, re.S):
+        raw = m.group(1).strip().strip('"')
+        key = raw.lower()
+        counts[key] += 1
+        casing[key][raw] += 1
+        inner = re.sub(r'<[^>]*>|\{[^}]*\}', ' ', m.group(2))
+        inner = re.sub(r'\s+', ' ', inner).strip(' .,:;[]()+-%')
+        if re.search(r'[A-Za-z]{3}', inner) and len(inner) <= 26:
+            context[key][inner] += 1
+    for m in re.finditer(r'<color=([^>{]+)>', text):
+        pass
+
+def templates_of(p):
+    yield p['overview'] or ''; yield p['nameTemplate'] or ''
+    for s in p['sections']:
+        for k in ('overview', 'details', 'maxBonus', 'maxBonusDetails'): yield s[k] or ''
+        yield from s['upgrades']
+
+tip_counts, all_counts = Counter(), Counter()
+casing, context = defaultdict(Counter), defaultdict(Counter)
+for p in plants:
+    for t in templates_of(p): color_uses(t, tip_counts, casing, context)
+for f in glob.glob(os.path.join(PROJ, r"Assets\Scripts\**\*.cs"), recursive=True):
+    color_uses(open(f, encoding='utf-8-sig', errors='replace').read(), all_counts, casing, context)
+
+palette, taken = [], set()
+for group, cols in FIXED:
+    for value, name in cols:
+        palette.append({'group': group, 'value': value, 'name': name, 'uses': tip_counts[value.lower()]})
+        taken.add(value.lower())
+def best_name(key):
+    words = [w for w, _ in context[key].most_common(5)]
+    return words[0] if words else ''
+for group, counts in (('Used in plant tooltips', tip_counts), ('Used elsewhere in the game', all_counts)):
+    for key, n in counts.most_common():
+        if key in taken: continue
+        taken.add(key)
+        palette.append({'group': group, 'value': casing[key].most_common(1)[0][0], 'name': best_name(key), 'uses': n})
+
+json.dump({'plants': plants, 'palette': palette}, open(os.path.join(HERE, 'descriptions.json'), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
+print('palette:', len(palette), 'colors')
 print(len(plants), 'plants;', sum(len(s['upgrades']) for p in plants for s in p['sections']), 'upgrade lines')
 missing = [(p['id'], s['key']) for p in plants for s in p['sections'] if not s['overview']]
 print('sections without overview:', missing)
