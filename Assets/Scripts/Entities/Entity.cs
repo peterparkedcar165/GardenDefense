@@ -207,6 +207,34 @@ public abstract class Entity : MonoBehaviour
     // extra damage this entity takes from every source, e.g. 0.08 = +8%. never recomputed by
     // UpdateStats, effects add it in OnApply and take the same amount back in OnExpire (Bubble Prison)
     public float damageTakenBonus;
+
+    // the increased damage taken from being trapped in water: bubble prison, and soaked at max
+    // stacks while the waterlogged mulch is active. an entity only ever gets the strongest one,
+    // never the sum, so the two can't stack. each source sets its own entry under its own key
+    // and clears it when it ends; damageTakenBonus carries whichever entry is largest
+    private readonly Dictionary<object, float> waterVulnerability = new Dictionary<object, float>();
+    private float appliedWaterVulnerability;
+
+    public void SetWaterVulnerability(object key, float bonus)
+    {
+        if (key == null) return;
+        waterVulnerability[key] = bonus;
+        RefreshWaterVulnerability();
+    }
+
+    public void ClearWaterVulnerability(object key)
+    {
+        if (key != null && waterVulnerability.Remove(key)) RefreshWaterVulnerability();
+    }
+
+    private void RefreshWaterVulnerability()
+    {
+        float strongest = 0f;
+        foreach (float bonus in waterVulnerability.Values)
+            strongest = Mathf.Max(strongest, bonus);
+        damageTakenBonus += strongest - appliedWaterVulnerability;
+        appliedWaterVulnerability = strongest;
+    }
     public float dotDuration, regenerationDuration, shieldDuration, sunGenerationCooldown;
     public float burnDurationBonus;   // multiplies the duration of Burns this entity causes (e.g. Stargazer)
     public float baseMinionDamage;    // the plant's inherent minion damage bonus
@@ -510,6 +538,10 @@ public abstract class Entity : MonoBehaviour
             return;
         }
 
+        // bud mulch: a plant still dormant can't hurt an insect at all, whatever its kit does
+        if (this is Insect && source is Plant dormantPlant && dormantPlant.cannotTargetInsects)
+            return;
+
         if (source.HasEffect<TauntEffect>() && System.Array.Exists(damageTag, t => t == DamageTag.Attack))
             damageDealt *= 0.5f;
 
@@ -757,6 +789,10 @@ public abstract class Entity : MonoBehaviour
 
         finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult * onHitMult
             * Mathf.Max(0f, 1f + damageTakenBonus);
+
+        // dormancy mulch: every plant's damage to insects, from any source of it
+        if (this is Insect && source is Plant)
+            finalDamage *= Mathf.Max(0f, MulchManager.PlantDamageMultiplier);
 
         // damage variance roll, dot ticks stay flat so aggregated numbers remain stable
         // min always wins, when min surpasses max every roll lands on min
@@ -1496,6 +1532,11 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
+        // bud mulch: a plant still dormant can't put a debuff or a primer on an insect either
+        if (this is Insect && effect.source is Plant dormantSource && dormantSource.cannotTargetInsects
+            && (effect.effectType == StatusEffect.Type.negative || effect.effectType == StatusEffect.Type.primer))
+            return;
+
         // hard CC internal cooldown temporarily disabled
         /*
         // per-effect-type hard CC internal cooldown (see HardCrowdControl.InternalCooldownAfterExpiry)

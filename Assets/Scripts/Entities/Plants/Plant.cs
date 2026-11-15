@@ -44,6 +44,7 @@ public class DeadPlantRecord
     public float deathTime;
     public AutoCastState autoCastState;
     public int orbitRadius;
+    public Dictionary<string, float> mulchCarry;
 }
 
 public abstract class Plant : Entity, IAttackable
@@ -162,6 +163,15 @@ public abstract class Plant : Entity, IAttackable
     // stunned plants (e.g. Webbed by a Cave Spider) cannot attack
     public bool IsStunned => HasEffect<HardCrowdControl>();
 
+    // bud mulch: while true this plant can't pick an insect as a target, deal it damage, or put a
+    // debuff on it. it can still be hit, and anything that targets plants or runs on a timer
+    // (heals, sun) keeps working. set and cleared by BudMulchEffect
+    [System.NonSerialized] public bool cannotTargetInsects;
+
+    // mulch state that belongs to this one plant and has to survive its death and revival (seasoned
+    // oak's armor climb). copied into DeadPlantRecord on death and back onto the revived plant
+    public readonly Dictionary<string, float> mulchCarry = new Dictionary<string, float>();
+
     // silenced plants cannot cast their Skill. any HardCrowdControl also silences,
     // without the plant carrying the Silence effect itself
     public bool IsSilenced => HasEffect<SilenceEffect>() || HasEffect<HardCrowdControl>();
@@ -255,6 +265,7 @@ public abstract class Plant : Entity, IAttackable
             deathTime    = Time.time,
             autoCastState = CaptureAutoCastState(),
             orbitRadius  = orbitRadius,
+            mulchCarry   = new Dictionary<string, float>(mulchCarry),
         };
     }
 
@@ -335,6 +346,9 @@ public abstract class Plant : Entity, IAttackable
         plant.skillCooldownTimer = Mathf.Max(0f, record.skillCooldownRemaining - (Time.time - record.deathTime));
         plant.RestoreAutoCastState(record.autoCastState);
         plant.orbitRadius = record.orbitRadius > 0 ? record.orbitRadius : 1;
+        if (record.mulchCarry != null)
+            foreach (KeyValuePair<string, float> entry in record.mulchCarry)
+                plant.mulchCarry[entry.Key] = entry.Value;
         plant.ApplyHighgroundBonus(tile.isHighground);
 
         tile.isOccupied = true;
@@ -1525,6 +1539,36 @@ public abstract class Plant : Entity, IAttackable
         }
     }
 
+    // countdown mulch: one free step on each path, the same step buying it would give. a locked
+    // skill path takes its step as the unlock, an unlocked one gains a level. each path stops at
+    // the level's cap, and no sun is spent or added to totalSunSpent
+    public void GrantFreePathSteps()
+    {
+        if (path1Level < pathLevelCap)
+        {
+            path1Level++;
+            effectivePath1Level = path1Level + path1LevelAdder;
+            OnPath1Upgrade(effectivePath1Level);
+        }
+        if (path2Level < pathLevelCap)
+        {
+            path2Level++;
+            effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
+            OnPath2Upgrade(effectivePath2Level);
+        }
+        if (!path3Unlocked)
+        {
+            path3Unlocked = true;
+            OnPath3Unlock();
+        }
+        else if (path3Level < pathLevelCap)
+        {
+            path3Level++;
+            effectivePath3Level = path3Level + path3LevelAdder;
+            OnPath3Upgrade(effectivePath3Level);
+        }
+    }
+
     // FIELD SELECTION
     private void OnMouseDown()
     {
@@ -1744,11 +1788,16 @@ public abstract class Plant : Entity, IAttackable
     // generates sun scaled by this plant's sunYieldMultiplier, rounded up (sun can't be decimal),
     // and pops the +Sun indicator at indicatorPosition (defaults to this plant's own position,
     // e.g. Aeonium granting sun via a nearby plant's Blessing passes that plant's position instead)
-    protected int GenerateSun(int amount, Vector3? indicatorPosition = null)
+    // fromKill marks sun paid for a kill (glowshroom) rather than this plant's own production, for
+    // mulches that only care about one of the two. MulchManager.SunProductionMultiplier is drought's
+    // pause and boost; nothing is banked or shown while it sits at zero
+    protected int GenerateSun(int amount, Vector3? indicatorPosition = null, bool fromKill = false)
     {
-        int total = Mathf.CeilToInt(amount * (1f + sunYieldMultiplier));
+        int total = Mathf.CeilToInt(amount * (1f + sunYieldMultiplier) * Mathf.Max(0f, MulchManager.SunProductionMultiplier));
+        if (total <= 0) return 0;
         GameManager.instance?.AddSun(total);
         SunIndicator.Spawn((indicatorPosition ?? transform.position) + new Vector3(0.25f, 0.5f, 0f), total);
+        MulchManager.instance?.NotifySunGenerated(this, total, fromKill);
         return total;
     }
 
@@ -1767,6 +1816,7 @@ public abstract class Plant : Entity, IAttackable
 
     protected GameObject FindNearest(System.Collections.Generic.List<Insect> insects)
     {
+        if (cannotTargetInsects) return null;
         GameObject forced = ForcedPriorityTargetOrNull();
         if (forced != null) return forced;
 
@@ -1791,6 +1841,7 @@ public abstract class Plant : Entity, IAttackable
 
     protected GameObject FindStrongest(System.Collections.Generic.List<Insect> insects)
     {
+        if (cannotTargetInsects) return null;
         GameObject forced = ForcedPriorityTargetOrNull();
         if (forced != null) return forced;
 
@@ -1817,6 +1868,7 @@ public abstract class Plant : Entity, IAttackable
 
     private GameObject FindBySpeed(System.Collections.Generic.List<Insect> insects, bool fastest)
     {
+        if (cannotTargetInsects) return null;
         GameObject forced = ForcedPriorityTargetOrNull();
         if (forced != null) return forced;
 
@@ -1859,6 +1911,7 @@ public abstract class Plant : Entity, IAttackable
 
     protected GameObject FindFirst(System.Collections.Generic.List<Insect> insects)
     {
+        if (cannotTargetInsects) return null;
         GameObject forced = ForcedPriorityTargetOrNull();
         if (forced != null) return forced;
 
@@ -1889,6 +1942,7 @@ public abstract class Plant : Entity, IAttackable
 
     protected GameObject FindLast(System.Collections.Generic.List<Insect> insects)
     {
+        if (cannotTargetInsects) return null;
         GameObject forced = ForcedPriorityTargetOrNull();
         if (forced != null) return forced;
 
@@ -1942,6 +1996,7 @@ public abstract class Plant : Entity, IAttackable
 
     public virtual bool IsValidNightTarget(Insect insect, float distance)
     {
+        if (cannotTargetInsects) return false;
         if (insect.isBurrowed && !DetectsBurrowed) return false;
         if (DarknessManager.instance == null || !DarknessManager.instance.isDark) return true;
         // melee plants fight at point-blank range regardless of visibility - darkness's halved

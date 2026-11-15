@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 // base class for a single mulch: a drafted, run-defining mechanic change, as opposed to
 // fertilizers, which only ever add/multiply existing stats. one concrete subclass per mulch,
@@ -41,4 +42,24 @@ public abstract class MulchData : ScriptableObject
     // description field still exists as a fallback/author-time placeholder for anything not yet
     // overridden
     public virtual string GetDescription() => description;
+
+    // eligibility the condition above can't express, checked on top of it: e.g. a plant that
+    // generates sun is in the loadout (drought, solar flare), or enough waves are left (countdown)
+    public virtual bool MeetsExtraRequirements(List<PlantData> loadout, int currentWave) => true;
+
+    protected static bool LoadoutHasSunProducer(List<PlantData> loadout)
+    {
+        if (loadout == null) return false;
+        foreach (PlantData plant in loadout)
+            if (plant != null && plant.generatesSun) return true;
+        return false;
+    }
+
+    // the target plant's name in its element's color, for plant mulch descriptions
+    protected string TargetPlantLabel(string fallback)
+    {
+        string name = targetPlant != null && !string.IsNullOrEmpty(targetPlant.displayName) ? targetPlant.displayName : fallback;
+        ElementalType element = targetPlant != null ? targetPlant.elementalType : ElementalType.Neutral;
+        return $"<b><color={PlantData.ElementalColor(element)}>{name}</color></b>";
+    }
 }

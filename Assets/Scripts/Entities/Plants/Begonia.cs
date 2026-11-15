@@ -33,7 +33,7 @@ public class Begonia : Aura
     // mechanically halved at night, but this keeps her fully exempt (and drops the misleading
     // half-range dark circle indicator) in case anything else ever calls CanReachInsect on her
     public override bool ShowDarkCircle => false;
-    public override bool IsValidNightTarget(Insect insect, float distance) => true;
+    public override bool IsValidNightTarget(Insect insect, float distance) => !cannotTargetInsects;
 
     // skill tree node unlock ids
     public const string InstantSkillUnlock      = "begonia_instant_skill";

@@ -17,6 +17,8 @@ public static class SunGenerationParticleEffect
 
     public static void Spawn(Vector3 position, int amount, float shapeRadius)
     {
+        // no sun, no burst (a tick during the drought mulch banks nothing)
+        if (amount <= 0) return;
         GameObject prefab = Resources.Load<GameObject>("SunGenerationParticles");
         if (prefab == null) return;
 

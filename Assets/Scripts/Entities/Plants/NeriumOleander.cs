@@ -162,6 +162,7 @@ public class NeriumOleander : Shooter
     // Carrot's Soil Bond) asking whether this oleander could target a specific insect right now
     public override bool CanReachInsect(Insect insect)
     {
+        if (cannotTargetInsects) return false;
         if (base.CanReachInsect(insect)) return true;
         return GatherChainInsects().ContainsKey(insect);
     }

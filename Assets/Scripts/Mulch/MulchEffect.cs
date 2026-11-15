@@ -38,6 +38,10 @@ public abstract class MulchEffect
     // Insect.DamagePlayerBase)
     public virtual void OnInsectLeaked(Insect insect) {}
 
+    // a plant banked sun of its own (Plant.GenerateSun). fromKill marks sun paid for a kill, like
+    // glowshroom's, rather than the plant's own production
+    public virtual void OnSunGenerated(Plant plant, int amount, bool fromKill) {}
+
     // placement cost hooks, read by MulchManager.GetPlacementCost: a flat discount off the next
     // plant bought, or the next plant bought costing nothing at all
     public virtual int PlacementDiscount => 0;

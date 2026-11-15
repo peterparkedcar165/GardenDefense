@@ -118,7 +118,7 @@ public class LeafRanger : Shooter
         autoCastEnabled = true;
     }
 
-    public override bool IsValidNightTarget(Insect insect, float distance) => true;
+    public override bool IsValidNightTarget(Insect insect, float distance) => !cannotTargetInsects;
 
     // his vision can never be impaired - blocks any accuracy-reducing debuff outright rather than
     // just resisting it, so Accuracy can never be lowered below base no matter what lands on him.

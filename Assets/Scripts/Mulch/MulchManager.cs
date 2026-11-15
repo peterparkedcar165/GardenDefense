@@ -32,6 +32,10 @@ public class MulchManager : MonoBehaviour
     // (Plant.PathCost), as multipliers
     public static float PlacementCostMultiplier = 1f;
     public static float UpgradeCostMultiplier = 1f;
+    // dormancy: every plant's damage to insects (Entity.Damage). drought: the sun from every
+    // Plant.GenerateSun call, so at zero sun producers make nothing at all
+    public static float PlantDamageMultiplier = 1f;
+    public static float SunProductionMultiplier = 1f;
 
     private PlantRegistry plantRegistry;
     private MulchRegistry mulchRegistry;
@@ -89,6 +93,8 @@ public class MulchManager : MonoBehaviour
         MeltDamageMultiplier = 1f;
         PlacementCostMultiplier = 1f;
         UpgradeCostMultiplier = 1f;
+        PlantDamageMultiplier = 1f;
+        SunProductionMultiplier = 1f;
     }
 
     // called by Plant.cs whenever a plant is placed, next to FertilizerManager.ApplyTo/
@@ -118,6 +124,13 @@ public class MulchManager : MonoBehaviour
     {
         foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
             effect?.OnInsectLeaked(insect);
+    }
+
+    // called by Plant.GenerateSun with the sun actually banked
+    public void NotifySunGenerated(Plant plant, int amount, bool fromKill)
+    {
+        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
+            effect?.OnSunGenerated(plant, amount, fromKill);
     }
 
     // what placing a fresh plant of this species costs right now: the skill tree's reduction,
@@ -235,6 +248,7 @@ public class MulchManager : MonoBehaviour
             if (alsoExclude != null && alsoExclude.Contains(data)) continue;
             if (result.Contains(data)) continue;
             if (data.condition != null && !data.condition.IsEligible(loadout, currentWave)) continue;
+            if (!data.MeetsExtraRequirements(loadout, currentWave)) continue;
             result.Add(data);
         }
     }

@@ -234,12 +234,20 @@ public class Sunflower : Shooter
 
         if (passiveCooldownTimer <= 0)
         {
-            int generatedTotal = GenerateSun(sunGenerated);
-            if (bookTransform != null)
-                SunGenerationParticleEffect.Spawn(bookTransform.position, generatedTotal, 0.25f);
-            PlayBookGenerateAnimation();
+            GenerateSunTick();
             passiveCooldownTimer += passiveCooldown * (1f + sunGenerationCooldown);
         }
+    }
+
+    // one sun tick with its book animation, without touching the passive timer. the timer above
+    // calls it, and so does the sunset mulch at the end of each wave
+    public int GenerateSunTick()
+    {
+        int generatedTotal = GenerateSun(sunGenerated);
+        if (generatedTotal > 0 && bookTransform != null)
+            SunGenerationParticleEffect.Spawn(bookTransform.position, generatedTotal, 0.25f);
+        PlayBookGenerateAnimation();
+        return generatedTotal;
     }
 
     public override void UpdateStats()

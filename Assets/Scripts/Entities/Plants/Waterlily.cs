@@ -35,7 +35,7 @@ public class Waterlily : Shooter
     private float BubbleDuration     => skillDuration + BubbleDurationMP;
     private float DamageTakenBase    => (WLData?.baseBubbleDamageTaken ?? 0.08f) + (WLData?.path3DamageTakenPerLevel ?? 0.04f) * effectivePath3Level;
     private float DamageTakenMP      => (WLData?.bubbleDamageTakenMP ?? 0.05f) * magicPower / 100f;
-    private float BubbleDamageTaken  => DamageTakenBase + DamageTakenMP;
+    public float BubbleDamageTaken   => DamageTakenBase + DamageTakenMP;
 
     // flat cap with no per level scaling; maxSoakStacksAdder is the skill tree's flat bonus on top
     // (see PlantStatApplier.MaxSlowStacksFlat)

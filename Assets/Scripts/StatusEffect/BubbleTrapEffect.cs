@@ -43,7 +43,9 @@ public class BubblePrisonEffect : Airborne
 
     public override void OnApply()
     {
-        target.damageTakenBonus += _damageTakenBonus;
+        // shared with the waterlogged mulch's soaked bonus, the stronger one wins (see
+        // Entity.SetWaterVulnerability)
+        target.SetWaterVulnerability(this, _damageTakenBonus);
 
         Insect insect = target as Insect;
         if (insect == null) return;
@@ -143,7 +145,7 @@ public class BubblePrisonEffect : Airborne
         }
 
         // taken back after the pop so the pop hit itself still gets the bonus
-        target.damageTakenBonus -= _damageTakenBonus;
+        target.ClearWaterVulnerability(this);
 
         if (_popSoak && source is Waterlily popWaterlily && target is Insect soakInsect && soakInsect.IsAlive)
             popWaterlily.ApplyFullSoak(soakInsect);

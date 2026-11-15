@@ -105,7 +105,7 @@ public class Glowshroom : Shooter
     // cause. Sun generation always triggers; the blind flash is a Path2-max-only bonus
     public void OnFungalGlowInsectDied(Vector3 position)
     {
-        GenerateSun(DeathSunGeneration);
+        GenerateSun(DeathSunGeneration, fromKill: true);
 
         if (!IsPath2Maxed) return;
         foreach (Insect insect in new List<Insect>(Insect.allInsects))

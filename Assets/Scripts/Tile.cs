@@ -57,7 +57,8 @@ public class Tile : MonoBehaviour
     // its outer edge (so things don't despawn the instant they clip past the last row of
     // tiles). if no tiles are registered yet (e.g. called before the level finishes loading),
     // defaults to true so nothing gets destroyed prematurely
-    private const float TileSize = 0.5f;
+    // one tile's width in world units, also how mulches turn a radius in tiles into a distance
+    public const float TileSize = 0.5f;
     private const float GraceTiles = 2f;
 
     public static bool IsInsideGrid(Vector3 worldPos)
