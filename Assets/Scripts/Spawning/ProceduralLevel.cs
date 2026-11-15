@@ -95,7 +95,9 @@ public class ProceduralLevel : SpawnManager
             wave++;
             GameManager.instance.currentWave = wave;
             GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
+            MulchManager.instance?.NotifyWaveStarted(wave);
             yield return StartCoroutine(RunWave(wave));
+            MulchManager.instance?.NotifyWaveEnded(wave);
             GrantFertilizersForCompletedWave(wave);
             GrantMulchForCompletedWave(wave);
 

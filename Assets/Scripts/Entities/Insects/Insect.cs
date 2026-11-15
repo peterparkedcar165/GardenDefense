@@ -1184,8 +1184,13 @@ public abstract class Insect : Entity, IAttackable
 
     // exposes gameManager (private, cached in Start) to subclasses that need to damage the
     // player's base outside of ReachObjective itself (e.g. Duskdarter's carried passenger).
-    // every leak routes through here, so MulchManager.LeakDamageMultiplier covers both
-    protected void DamagePlayerBase(int amount) => gameManager.Damage(Mathf.RoundToInt(amount * MulchManager.LeakDamageMultiplier));
+    // every leak routes through here, so MulchManager.LeakDamageMultiplier covers both, and
+    // mulches that care about leaks (clean garden) hear about every one of them
+    protected void DamagePlayerBase(int amount)
+    {
+        MulchManager.instance?.NotifyInsectLeaked(this);
+        gameManager.Damage(Mathf.RoundToInt(amount * Mathf.Max(0f, MulchManager.LeakDamageMultiplier)));
+    }
 
     protected virtual float GetMoveSpeed() => movementSpeed;
     // how fast it's currently travelling (flight speed for flyers in the air), for Fastest and Slowest targeting

@@ -1441,7 +1441,10 @@ public abstract class Plant : Entity, IAttackable
     const float upgradeStepFactor = 2.1f;
     const float skillBaseFactor   = 0.5f;
 
-    int PathCost(int level, float baseFactor) => Mathf.RoundToInt(sunCost * baseFactor * Mathf.Pow(upgradeStepFactor, level));
+    // MulchManager.UpgradeCostMultiplier is market day's discount, so the shown and charged cost
+    // both include it
+    int PathCost(int level, float baseFactor) =>
+        Mathf.RoundToInt(sunCost * baseFactor * Mathf.Pow(upgradeStepFactor, level) * Mathf.Max(0f, MulchManager.UpgradeCostMultiplier));
 
     public int GetPath1Cost() => PathCost(path1Level, upgradeBaseFactor);
     public int GetPath2Cost() => PathCost(path2Level, upgradeBaseFactor);

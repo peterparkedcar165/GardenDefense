@@ -235,7 +235,7 @@ public class Tile : MonoBehaviour
             return;
         }
 
-        int cost = SkillTreeManager.GetEffectiveSunCost(selectedPlant.data);
+        int cost = MulchManager.GetPlacementCost(selectedPlant.data);
         Debug.Log("Cost of selected plant is: " + cost);
 
         if (gm.SpendSun(cost))
@@ -252,6 +252,7 @@ public class Tile : MonoBehaviour
             isOccupied = true;
             GetComponent<Collider2D>().enabled = false;
             selector.ClearSelection();
+            MulchManager.instance?.NotifyPlantBought(plant);
             Debug.Log("Spent " + cost);
 
             if (selectedPlant.data.plantName == "AcornKnight")

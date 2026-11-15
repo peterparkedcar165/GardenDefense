@@ -28,6 +28,10 @@ public class MulchManager : MonoBehaviour
     public static bool MeltActive = false;
     public static float MeltFreezeDurationReduction = 0f;
     public static float MeltDamageMultiplier = 1f;
+    // market day: what placing a plant costs (GetPlacementCost) and what a path upgrade costs
+    // (Plant.PathCost), as multipliers
+    public static float PlacementCostMultiplier = 1f;
+    public static float UpgradeCostMultiplier = 1f;
 
     private PlantRegistry plantRegistry;
     private MulchRegistry mulchRegistry;
@@ -83,6 +87,8 @@ public class MulchManager : MonoBehaviour
         MeltActive = false;
         MeltFreezeDurationReduction = 0f;
         MeltDamageMultiplier = 1f;
+        PlacementCostMultiplier = 1f;
+        UpgradeCostMultiplier = 1f;
     }
 
     // called by Plant.cs whenever a plant is placed, next to FertilizerManager.ApplyTo/
@@ -92,6 +98,60 @@ public class MulchManager : MonoBehaviour
     {
         foreach (MulchEffect effect in activeEffects)
             effect?.OnPlantPlaced(plant);
+    }
+
+    // the hooks below loop over a copy, since an effect reacting to one of them can grant or
+    // remove mulches while the loop is still running
+    public void NotifyWaveStarted(int wave)
+    {
+        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
+            effect?.OnWaveStarted(wave);
+    }
+
+    public void NotifyWaveEnded(int wave)
+    {
+        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
+            effect?.OnWaveEnded(wave);
+    }
+
+    public void NotifyInsectLeaked(Insect insect)
+    {
+        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
+            effect?.OnInsectLeaked(insect);
+    }
+
+    // what placing a fresh plant of this species costs right now: the skill tree's reduction,
+    // then market day's multiplier, then flat discounts (bargain seeds), and nothing at all while
+    // a free placement (bud) is waiting. Tile charges this and PlantSlotButton shows it, so the
+    // shown and charged cost always agree
+    public static int GetPlacementCost(PlantData data)
+    {
+        int cost = SkillTreeManager.GetEffectiveSunCost(data);
+        if (data == null) return cost;
+        cost = Mathf.RoundToInt(cost * Mathf.Max(0f, PlacementCostMultiplier));
+        if (instance == null) return cost;
+
+        int discount = 0;
+        foreach (MulchEffect effect in instance.activeEffects)
+        {
+            if (effect == null) continue;
+            if (effect.GrantsFreePlacement) return 0;
+            discount += effect.PlacementDiscount;
+        }
+        return Mathf.Max(0, cost - discount);
+    }
+
+    // called by Tile right after a bought plant is placed, so one time discounts get used up.
+    // checked before any effect reacts, so the free placement that paid for this plant is
+    // what every effect sees
+    public void NotifyPlantBought(Plant plant)
+    {
+        bool placedForFree = false;
+        foreach (MulchEffect effect in activeEffects)
+            if (effect != null && effect.GrantsFreePlacement) { placedForFree = true; break; }
+
+        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
+            effect?.OnPlantBought(plant, placedForFree);
     }
 
     // called when a level's MulchGrant fires (its configured wave just completed)

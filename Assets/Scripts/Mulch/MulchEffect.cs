@@ -6,6 +6,7 @@
 public abstract class MulchEffect
 {
     protected readonly MulchData data;
+    public MulchData Data => data;
 
     protected MulchEffect(MulchData data)
     {
@@ -26,4 +27,27 @@ public abstract class MulchEffect
     // already on the field when Activate() runs still need their own pass there, same as
     // FertilizerManager.CommitGenerated/ApplyTo
     public virtual void OnPlantPlaced(Plant plant) {}
+
+    // wave hooks, fired by ProceduralLevel through MulchManager. a wave ends the moment its
+    // spawning finishes, the same moment that wave's mulch grants fire, so insects can still be
+    // on the field when OnWaveEnded runs
+    public virtual void OnWaveStarted(int wave) {}
+    public virtual void OnWaveEnded(int wave) {}
+
+    // an insect reached the end of the path and hurt the garden (every leak goes through
+    // Insect.DamagePlayerBase)
+    public virtual void OnInsectLeaked(Insect insect) {}
+
+    // placement cost hooks, read by MulchManager.GetPlacementCost: a flat discount off the next
+    // plant bought, or the next plant bought costing nothing at all
+    public virtual int PlacementDiscount => 0;
+    public virtual bool GrantsFreePlacement => false;
+
+    // a plant was just bought and placed (see Tile). placedForFree is true when a free placement
+    // paid for it, so a discount that wasn't needed doesn't get used up as well
+    public virtual void OnPlantBought(Plant plant, bool placedForFree) {}
+
+    // whether seed swap and seed sell may take this mulch away. false once a one shot mulch has
+    // already paid out, since removing it couldn't undo what it gave
+    public virtual bool CanBeRemoved => true;
 }
