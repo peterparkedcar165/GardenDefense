@@ -98,6 +98,8 @@ public class AcornKnight : Aura
     public const string RelentlessBashUnlock  = "acorn_relentless_bash";
 
     public float ConeFalloffPerTarget   => AcornData?.coneFalloffPerTarget   ?? 0.10f;
+    public float DownStrikeDamagePercent => AcornData?.downStrikeDamagePercent ?? 0.6f;
+    public float UpStrikeDamagePercent   => AcornData?.upStrikeDamagePercent   ?? 0.4f;
     public float StanceExitDelay        => AcornData?.stanceExitDelay        ?? 1f;
     public float SkillThrowRange        => AcornData?.skillThrowRange       ?? 7.5f;
     public float ShieldThrowSpeed       => AcornData?.shieldThrowSpeed       ?? 10f;
@@ -375,11 +377,11 @@ public class AcornKnight : Aura
 
         yield return new WaitForSeconds(Mathf.Max(0, downStrikeFrame) * frame);
         if (target != null && target.IsAlive) facingSign = FacingSignTowards(target);
-        SwordStrike(target, facingSign);
+        SwordStrike(target, facingSign, DownStrikeDamagePercent);
 
         yield return new WaitForSeconds(Mathf.Max(0, upStrikeFrame - downStrikeFrame) * frame);
         if (target != null && target.IsAlive) facingSign = FacingSignTowards(target);
-        SwordStrike(target, facingSign);
+        SwordStrike(target, facingSign, UpStrikeDamagePercent);
 
         _swordSetRoutine = null;
     }
@@ -392,10 +394,11 @@ public class AcornKnight : Aura
         return facingSign == 0f ? 1f : facingSign;
     }
 
-    // one sword strike: every insect in reach on that side, the target first, then the rest
-    // closest to it first, with falloff per extra insect bottoming out at
-    // SwingMinDamageMultiplier. the Cleaving Swings node removes the falloff
-    private void SwordStrike(Insect target, float facingSign)
+    // one sword strike, dealing damageShare of Attack Damage (the down and up strikes split it):
+    // every insect in reach on that side, the target first, then the rest closest to it first,
+    // with falloff per extra insect bottoming out at SwingMinDamageMultiplier. the Cleaving
+    // Swings node removes the falloff
+    private void SwordStrike(Insect target, float facingSign, float damageShare)
     {
         _swordSwingTimer = SwingDuration;
         List<Insect> hits = InsectsInReach(target, facingSign);
@@ -406,7 +409,7 @@ public class AcornKnight : Aura
             Insect insect = hits[i];
             if (insect == null || !insect.IsAlive) continue;
             float falloff = noFalloff ? 1f : Mathf.Max(SwingMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
-            insect.Damage(attackDamage * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+            insect.Damage(attackDamage * damageShare * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
         }
     }
 
@@ -635,7 +638,7 @@ public class AcornKnight : Aura
 
     public override string GetAttackDescription() =>
         $"Whenever {GetName()} is not being targeted by a Physical damaging insect, it holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
-        $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword down and then back up, each swing dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects in range on the side its target is on.";
+        $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword down, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * DownStrikeDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, then back up, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * UpStrikeDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, to all insects in range on the side its target is on.";
 
     public override string GetPassiveDescription() =>
         $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
@@ -655,7 +658,7 @@ public class AcornKnight : Aura
         int   armorpl = AcornData?.path1ArmorPerLevel     ?? 4;
         string desc = details
             ? $"Whenever {GetName()} is not being targeted by a Physical damaging insect, it holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
-              $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword down and then back up. Each swing deals <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects in range on the side its target is on, with <color=green><b>{ConeFalloffPerTarget * 100f:F0}%</b></color> falloff per extra insect hit down to a <color=green><b>{SwingMinDamageMultiplier * 100f:F0}%</b></color> minimum."
+              $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword down, dealing <color={PlantData.ElementalColor(elementalType)}><b>[{DownStrikeDamagePercent * 100f:F0}% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, then back up, dealing <color={PlantData.ElementalColor(elementalType)}><b>[{UpStrikeDamagePercent * 100f:F0}% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, to all insects in range on the side its target is on, with <color=green><b>{ConeFalloffPerTarget * 100f:F0}%</b></color> falloff per extra insect hit down to a <color=green><b>{SwingMinDamageMultiplier * 100f:F0}%</b></color> minimum."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +

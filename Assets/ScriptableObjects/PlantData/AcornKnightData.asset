@@ -104,6 +104,8 @@ MonoBehaviour:
   skillSound:
     clips: []
   coneFalloffPerTarget: 0.2
+  downStrikeDamagePercent: 0.6
+  upStrikeDamagePercent: 0.4
   baseDefensiveArmor: 20
   path2DefensiveArmorPerLevel: 7
   defensiveAttackSpeedPenalty: 0.3

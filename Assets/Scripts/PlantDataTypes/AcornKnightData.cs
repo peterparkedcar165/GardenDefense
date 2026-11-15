@@ -8,6 +8,10 @@ public class AcornKnightData : PlantData
     // reach - no cap on either - and share this same 10%-per-extra-target falloff, each with its
     // own floor (see AcornKnight.SwingMinDamageMultiplier/BashMinDamageMultiplier)
     public float coneFalloffPerTarget = 0.10f;
+    // one attack is two sword strikes that split his Attack Damage between them: the down strike
+    // deals this share of it and the up strike the other, so a full set deals 1x Attack Damage
+    public float downStrikeDamagePercent = 0.6f;
+    public float upStrikeDamagePercent = 0.4f;
 
     [Header("Defensive Stance And Bash")]
     public float baseDefensiveArmor = 20f;
@@ -57,7 +61,7 @@ public class AcornKnightData : PlantData
     public float skillDurationMPMultiplier = 0.10f;
 
     public override string GetAttackDescription() =>
-        $"Swings its sword down and then back up, each swing dealing {DamageTypeLabel(damageType)} to nearby insects.";
+        $"Swings its sword down and then back up, splitting its {DamageTypeLabel(damageType)} between the two swings, to nearby insects.";
 
     public override string GetPassiveDescription() =>
         "Regenerates health over time, faster once it's gone a while without being hit. Being targeted by a physical attacker also puts it into Guard Stance, trading attack speed and range for armor and an omnidirectional shield bash.\n\n" + RetainAggroLine();
