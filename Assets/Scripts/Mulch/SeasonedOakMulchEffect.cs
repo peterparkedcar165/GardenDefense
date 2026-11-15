@@ -106,6 +106,8 @@ public class SeasonedOakMulchEffect : MulchEffect
             plant.ApplyEffect(status);
         }
         float timer = plant.mulchCarry.TryGetValue(TimerKey, out float savedTimer) ? savedTimer : 0f;
+        // permanent: ApplyEffect scales a buff's duration by buff duration stats, pinned back here
+        status.duration = float.MaxValue;
         status.armor = armor;
         status.armorPerStep = typedData.armorPerStep;
         status.maxArmor = typedData.maxArmor;
