@@ -3,7 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NeriumOleanderData", menuName = "Scriptable Objects/PlantData/NeriumOleander")]
 public class NeriumOleanderData : PlantData
 {
-    public int baseBounceCount = 1;
     public float bounceDamageReduction = 0.1f;
     public float baseSproutDuration = 15f;
     public float baseCursePoisonResistReduction = 0.04f;

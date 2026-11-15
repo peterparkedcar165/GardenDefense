@@ -120,10 +120,9 @@ public class AcornKnight : Aura
     // the shield is out) - lost entirely for as long as the shield is out
     public float AttackPathArmorBonus => (AcornData?.path1ArmorPerLevel ?? 4) * effectivePath1Level;
 
-    // Shield Bash's own stun chance - max-level (Path2) only, see Level5Section in
+    // how long Shield Bash stuns every insect it hits. max level (Path2) only, see Level5Section in
     // GetPath2Description. flat, no per-level scaling, since it doesn't exist below max at all
-    public float MaxLevelBashStunChance => AcornData?.maxLevelBashStunChance ?? 0.75f;
-    public float BashStunDuration => AcornData?.bashStunDuration ?? 1f;
+    public float BashStunDuration => AcornData?.bashStunDuration ?? 0.15f;
     // Shield Bash's own damage is this percent of Armor (for the first/closest insect hit this
     // cast) - the separate 10%-per-extra-insect falloff (see Bash()) still applies on top of this
     public float BashDamagePercent =>
@@ -419,7 +418,7 @@ public class AcornKnight : Aura
     // omnidirectional: every insect in reach all around the Knight, the target first, then the
     // rest closest to it first. same falloff as the sword, down to its own floor, scaling off
     // Armor instead of Attack Damage and tagged as counter damage. at Path2 max only, every
-    // insect hit also gets stunned for BashStunDuration scaled by MaxLevelBashStunChance
+    // insect hit also gets stunned for BashStunDuration
     private void Bash(Insect target)
     {
         List<Insect> hits = InsectsInReach(target, 0f);
@@ -433,7 +432,7 @@ public class AcornKnight : Aura
             insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter, DamageTag.PassiveDamage });
 
             if (insect.IsAlive && IsPath2Maxed)
-                insect.ApplyEffect(new StunEffect(insect, BashStunDuration * MaxLevelBashStunChance, 1, this));
+                insect.ApplyEffect(new StunEffect(insect, BashStunDuration, 1, this));
         }
     }
 
@@ -685,7 +684,7 @@ public class AcornKnight : Aura
                $"Increase guard <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=green><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Shield Bash</b></color> Armor scaling by <color=green><b>{bashDmgPl * 100f:F0}%</b></color> per level. [<color=green><b>+{bashDmgPl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Decrease <color=orange><b>Guard Stance</b></color>'s <color=green><b>Attack Speed</b></color> penalty by <color=green><b>{DefensiveAttackSpeedPenaltyReductionPerLevel * 100f:F0}%</b></color> per level. [<color=green><b>-{DefensiveAttackSpeedPenaltyReductionPerLevel * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"<color=green><b>Shield Bash</b></color> inflicts a <color=green><b>{BashStunDuration * MaxLevelBashStunChance:F2}</b></color> second Stun on insects hit.")}\n\n" +
+               $"{Level5Section(path2Level, $"<color=green><b>Shield Bash</b></color> inflicts a <color=green><b>{BashStunDuration:F2}</b></color> second Stun on insects hit.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }

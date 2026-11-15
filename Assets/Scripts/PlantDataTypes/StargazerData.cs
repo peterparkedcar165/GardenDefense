@@ -9,10 +9,8 @@ public class StargazerData : PlantData
     [Header("Passive Flammable")]
     public float flammableBonusPerStack = 0.01f;   // +X% Burn damage per stack
     public int   flammableMaxStacks     = 5;        // fixed stack cap
-    public float flammableDuration      = 4f;
     public int   baseStacksPerHit       = 1;        // stacks applied per hit at base
     public float baseBurnDurationBonus  = 0.5f;     // Burns the Stargazer causes last (1 + this)x longer
-    public float passiveProcChance      = 0.25f;    // chance for a Fire Damage hit to apply Flammable at all
 
     [Header("Skill Sweep (directional fire wave)")]
     public float skillBaseDamage = 200f;

@@ -39,7 +39,7 @@
       "Increase <color=green><b>Shield Bash</b></color> Armor scaling by <color=green><b>{bashDmgPl * 100f:F0}%</b></color> per level. [<color=green><b>+{bashDmgPl * effectivePath2Level * 100f:F0}%</b></color>]",
       "Decrease <color=orange><b>Guard Stance</b></color>'s <color=green><b>Attack Speed</b></color> penalty by <color=green><b>{DefensiveAttackSpeedPenaltyReductionPerLevel * 100f:F0}%</b></color> per level. [<color=green><b>-{DefensiveAttackSpeedPenaltyReductionPerLevel * effectivePath2Level * 100f:F0}%</b></color>]"
      ],
-     "maxBonus": "<color=green><b>Shield Bash</b></color> inflicts a <color=green><b>{BashStunDuration * MaxLevelBashStunChance:F2}</b></color> second Stun on insects hit.",
+     "maxBonus": "<color=green><b>Shield Bash</b></color> inflicts a <color=green><b>{BashStunDuration:F2}</b></color> second Stun on insects hit.",
      "maxBonusDetails": null,
      "extra": [],
      "overviewFrom": "GetPassiveDescription"

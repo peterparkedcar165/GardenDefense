@@ -99,22 +99,34 @@ MonoBehaviour:
       volume: 0.2
       minPitch: 0.5
       maxPitch: 0.7
-    - clip: {fileID: 8300000, guid: 0c9f83785a537204d91104d578228bf5, type: 3}
-      volume: 0.2
-      minPitch: 0.95
-      maxPitch: 1.05
-    playAllTogether: 1
+      alwaysPlay: 1
+    - clip: {fileID: 8300000, guid: 1e3dfb1a521492e42bbf02da17fc3eb7, type: 3}
+      volume: 0.1
+      minPitch: 0.5
+      maxPitch: 1
+      alwaysPlay: 0
+    - clip: {fileID: 8300000, guid: 6c08f2e63351a6948996320cded6f40b, type: 3}
+      volume: 0.1
+      minPitch: 0.5
+      maxPitch: 1
+      alwaysPlay: 0
+    - clip: {fileID: 8300000, guid: 61a4bf4363a8a71489208e6cc37c4c00, type: 3}
+      volume: 0.1
+      minPitch: 0.5
+      maxPitch: 1
+      alwaysPlay: 0
+    - clip: {fileID: 8300000, guid: c79725ebe864f6442a91e13c143c2b9a, type: 3}
+      volume: 0.1
+      minPitch: 0.5
+      maxPitch: 1
+      alwaysPlay: 0
   hitSound:
     clips:
     - clip: {fileID: 8300000, guid: 879b35f7c55f0a549853fcc517714014, type: 3}
       volume: 0.3
       minPitch: 0.5
       maxPitch: 0.8
-    - clip: {fileID: 8300000, guid: 0c9f83785a537204d91104d578228bf5, type: 3}
-      volume: 0.2
-      minPitch: 1.8
-      maxPitch: 2
-    playAllTogether: 1
+      alwaysPlay: 0
   skillSound:
     clips: []
   baseAoERange: 1.5

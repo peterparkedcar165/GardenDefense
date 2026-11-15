@@ -22,10 +22,9 @@ public class AcornKnightData : PlantData
     public float defensiveAttackRangePenalty = 0.25f;
     // grace period after no insect is targeting the Knight in melee, before the guard drops
     public float stanceExitDelay = 1f;
-    // Shield Bash's own chance to stun each insect it hits - Path2 max only (see Level5Section),
-    // flat, no per-level scaling, independent of the skill's shield-throw stun
-    public float maxLevelBashStunChance = 0.75f;
-    public float bashStunDuration = 1f;
+    // how long Shield Bash stuns each insect it hits - Path2 max only (see Level5Section), flat,
+    // no per-level scaling, independent of the skill's shield-throw stun
+    public float bashStunDuration = 0.15f;
     // Shield Bash's damage is this percent of Armor (for the closest insect hit), separate from
     // the 10%-per-extra-insect falloff that still applies on top for every insect beyond that one
     public float baseBashDamagePercent = 0.5f;

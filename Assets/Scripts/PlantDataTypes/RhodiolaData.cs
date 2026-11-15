@@ -38,7 +38,6 @@ public class RhodiolaData : PlantData
     public float path3CooldownReductionPerLevel = 0f;
     public float verdantGuardianShield          = 200f;
     public float verdantGuardianRegen           = 20f;
-    public float verdantGuardianDuration        = 8f;
 
     public override string GetAttackDescription() =>
         "Fires a rejuvenating seed at the most injured nearby plant, healing it and leaving behind a regenerating bloom.";

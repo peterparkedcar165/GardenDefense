@@ -112,8 +112,7 @@ MonoBehaviour:
   path2DefensiveAttackSpeedPenaltyReductionPerLevel: 0.03
   defensiveAttackRangePenalty: 0.15
   stanceExitDelay: 1
-  maxLevelBashStunChance: 0.75
-  bashStunDuration: 1
+  bashStunDuration: 0.15
   baseBashDamagePercent: 0.5
   path2BashDamagePercentPerLevel: 0.1
   counterStanceCooldownReduction: 0.2

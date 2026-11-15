@@ -23,7 +23,6 @@ public class AnemoneData : PlantData
     [Header("Path 3 Scaling")]
     public float baseVortexRadius      = 1.5f;
     public float path3RadiusPerLevel   = 0.2f;
-    public float vortexDuration        = 6f;
     public float vortexDamagePerTick   = 10f;
     public float vortexTickInterval    = 0.5f;
     public float vortexDragSpeed           = 0.8f;

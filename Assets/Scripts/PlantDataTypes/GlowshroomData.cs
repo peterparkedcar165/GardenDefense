@@ -12,7 +12,6 @@ public class GlowshroomData : PlantData
 
     [Header("Passive Fungal Glow")]
     public float fungalGlowDuration = 6f;
-    public float passiveCooldown = 4f;
 
     [Header("Skill Flash")]
     public float lightRadiusMultiplier = 3f;
