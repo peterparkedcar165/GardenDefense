@@ -32,6 +32,30 @@ public class DarknessManager : MonoBehaviour
     private bool _naturalPitchBlack;
     private bool _sunnyOverride;
 
+    // sunny weather on a dark level should look exactly like sunny on a day level, not just play
+    // like one. WeatherManager swaps the scene light for daylight (see IsDarkLevel), and this
+    // switches off every point light (plant glows, projectile and burn lights, glowing insects)
+    // once the daylight is halfway in, since a day level has none of them, then switches them
+    // back on halfway through the fade back to night
+    private bool _isDarkLevel;
+    private float _sunBlend;
+    private bool _lightsHiddenForSun;
+    private readonly List<Light2D> _sunHiddenLights = new List<Light2D>();
+    // a cave's light is driven here, not by WeatherManager. after the sun goes it eases back down
+    // to the cave's own level instead of snapping to black
+    private bool _easingBackFromSun;
+
+    // true on a night or cave level, read by WeatherManager to swap in daylight while it's sunny
+    public bool IsDarkLevel => _isDarkLevel;
+    public bool SunlightActive => _sunnyOverride;
+    // false on a day level (no DarknessManager) and while sunlight has the point lights switched off
+    public static bool LightsVisible => instance != null && !instance._lightsHiddenForSun;
+
+    // WeatherManager leaves this light's intensity alone while it returns true: a cave's setup
+    // fade and darkness are timed here. while it's sunny the weather system takes it back
+    public bool DrivesLightIntensity(Light2D light) =>
+        litDuringSetup && nightLight != null && light == nightLight && !_sunnyOverride;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
     {
@@ -44,6 +68,7 @@ public class DarknessManager : MonoBehaviour
         instance = this;
         _naturalDark = isDark;
         _naturalPitchBlack = pitchBlack;
+        _isDarkLevel = isDark || pitchBlack || litDuringSetup;
     }
 
     void OnEnable()
@@ -69,6 +94,7 @@ public class DarknessManager : MonoBehaviour
     {
         if (type != WeatherType.Sunny) return;
         _sunnyOverride = false;
+        _easingBackFromSun = true;
         ApplyOverride();
     }
 
@@ -80,6 +106,10 @@ public class DarknessManager : MonoBehaviour
 
     void Update()
     {
+        // unscaled, at the weather system's own speed, so the point lights switch while the scene
+        // light is visibly halfway through its own fade, mulch picker pause included
+        float ease = 1f - Mathf.Exp(-(WeatherManager.instance != null ? WeatherManager.instance.LightLerpSpeed : 1.5f) * Time.unscaledDeltaTime);
+
         if (litDuringSetup)
         {
             bool inSetup = GameManager.instance == null || GameManager.instance.currentWave == 0;
@@ -94,10 +124,46 @@ public class DarknessManager : MonoBehaviour
                 target = setupIntensity * Mathf.Clamp01((countdown - darkByCountdown) / Mathf.Max(fadeDuration, 0.0001f));
 
             _naturalDark = target <= 0.001f;   // darkness gameplay kicks in once the NightLight is fully out
-            if (nightLight != null) nightLight.intensity = target;
+
+            // while it's sunny, WeatherManager eases this light up to daylight instead
+            if (nightLight != null && !_sunnyOverride)
+            {
+                if (_easingBackFromSun)
+                {
+                    nightLight.intensity = Mathf.Lerp(nightLight.intensity, target, ease);
+                    if (Mathf.Abs(nightLight.intensity - target) < 0.005f) _easingBackFromSun = false;
+                }
+                else nightLight.intensity = target;
+            }
         }
 
         ApplyOverride();
+        UpdateSunLights(ease);
+    }
+
+    private void UpdateSunLights(float ease)
+    {
+        bool sunnyDay = _sunnyOverride && _isDarkLevel;
+        _sunBlend = Mathf.Lerp(_sunBlend, sunnyDay ? 1f : 0f, ease);
+
+        if (_sunBlend > 0.5f)
+        {
+            _lightsHiddenForSun = true;
+            // swept every frame, so lights made during the sun (new projectiles, burns) go too
+            foreach (Light2D light in FindObjectsByType<Light2D>(FindObjectsInactive.Exclude))
+            {
+                if (light.lightType == Light2D.LightType.Global || !light.enabled) continue;
+                light.enabled = false;
+                _sunHiddenLights.Add(light);
+            }
+        }
+        else if (_lightsHiddenForSun)
+        {
+            _lightsHiddenForSun = false;
+            foreach (Light2D light in _sunHiddenLights)
+                if (light != null) light.enabled = true;
+            _sunHiddenLights.Clear();
+        }
     }
 
     public static void RegisterLightSource(Transform t, float radius) => _dynamicSources.Add((t, radius));

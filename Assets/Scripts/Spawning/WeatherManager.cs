@@ -28,6 +28,11 @@ public class WeatherManager : MonoBehaviour
     [SerializeField] private WeatherVisualLibrary visualLibrary;
     [Tooltip("how quickly the scene light eases toward a weather change - higher is snappier")]
     [SerializeField] private float colorLerpSpeed = 1.5f;
+    [Tooltip("the day level light (DayLight prefab) a night or cave level swaps in underneath the sunny tint while it's sunny, so it looks exactly like sunny on a day level")]
+    [SerializeField] private Color daylightColor = Color.white;
+    [SerializeField] private float daylightIntensity = 1f;
+
+    public float LightLerpSpeed => colorLerpSpeed;
     [Tooltip("seconds for a weather's ambience to fade fully in or out")]
     [SerializeField] private float ambienceFadeDuration = 3f;
 
@@ -116,7 +121,9 @@ public class WeatherManager : MonoBehaviour
         {
             float t = 1f - Mathf.Exp(-colorLerpSpeed * dt);
             sceneLight.color = Color.Lerp(sceneLight.color, _targetLightColor, t);
-            sceneLight.intensity = Mathf.Lerp(sceneLight.intensity, _targetLightIntensity, t);
+            // a cave's darkness owns its light's intensity (DarknessManager), except while sunny
+            if (DarknessManager.instance == null || !DarknessManager.instance.DrivesLightIntensity(sceneLight))
+                sceneLight.intensity = Mathf.Lerp(sceneLight.intensity, _targetLightIntensity, t);
         }
         UpdateAmbienceFades(dt);
     }
@@ -196,7 +203,12 @@ public class WeatherManager : MonoBehaviour
     // crossfade - see WeatherVisualLibrary
     private void RefreshVisuals()
     {
-        Color color = _baseLightColor;
+        // sunny on a night or cave level: daylight goes underneath the sunny tint instead of the
+        // level's own dark light, so it looks exactly like sunny on a day level
+        bool sunnyDay = activeWeather.ContainsKey(WeatherType.Sunny)
+            && DarknessManager.instance != null && DarknessManager.instance.IsDarkLevel;
+        Color color = sunnyDay ? daylightColor : _baseLightColor;
+        float baseIntensity = sunnyDay ? daylightIntensity : _baseLightIntensity;
         float intensityMult = 1f;
 
         if (visualLibrary != null)
@@ -209,7 +221,7 @@ public class WeatherManager : MonoBehaviour
             }
 
         _targetLightColor = color;
-        _targetLightIntensity = _baseLightIntensity * intensityMult;
+        _targetLightIntensity = baseIntensity * intensityMult;
 
         if (visualLibrary?.entries == null) return;
         foreach (WeatherVisualEntry entry in visualLibrary.entries)

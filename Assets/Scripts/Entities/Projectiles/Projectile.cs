@@ -134,7 +134,7 @@ public abstract class Projectile : MonoBehaviour
 
     private void SetupLight()
     {
-        if (DarknessManager.instance == null || source == null) return;
+        if (!DarknessManager.LightsVisible || source == null) return;
 
         float radius = 0f;
         float intensity = DefaultProjectileLightIntensity;

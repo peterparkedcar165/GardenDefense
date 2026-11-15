@@ -157,7 +157,8 @@ public abstract class Plant : Entity, IAttackable
     // to fit, so every existing (larger) light keeps its exact current look
     private float ComputeLightInnerRadius(float outerRadius) =>
         outerRadius <= lightInnerRadius ? outerRadius * 0.4f : lightInnerRadius;
-    protected virtual bool ShowLight => DarknessManager.instance != null;
+    // off on day levels, and on dark levels while sunlight has the point lights switched off
+    protected virtual bool ShowLight => DarknessManager.LightsVisible;
     public virtual bool ShowDarkCircle => true;
 
     // stunned plants (e.g. Webbed by a Cave Spider) cannot attack
