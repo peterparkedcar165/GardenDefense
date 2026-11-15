@@ -640,13 +640,13 @@ public class AcornKnight : Aura
         $"The {GetName()} is a melee tank with a sword and shield, raising its guard under pressure and able to hurl its shield to stun a target and block the path.";
 
     public override string GetAttackDescription() =>
-        $"Whenever {GetName()} is not being targeted by a Physical damaging insect, it holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
+        $"Whenever {GetName()} is not being targeted by a <color=#A0522D><b>Physical</b></color> damaging insect, it holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
         $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword down, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * DownStrikeDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, then back up, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage * UpStrikeDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, to all insects in range on the side its target is on.";
 
     public override string GetPassiveDescription() =>
-        $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
-        $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\n\n" +
-        $"While in <color=orange><b>Guard Stance</b></color>, its attacks become an omnidirectional <color=green><b>Shield Bash</b></color> dealing <color={PlantData.ElementalColor(elementalType)}><b>{armor * BashDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.\n\n" +
+        $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> <color=red><b>Health</b></color> per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
+        $"If {GetName()} is being targeted by a <color=#A0522D><b>Physical</b></color> damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\n\n" +
+        $"While in <color=orange><b>Guard Stance</b></color>, his attacks become an omnidirectional <color=green><b>Shield Bash</b></color> dealing <color={PlantData.ElementalColor(elementalType)}><b>{armor * BashDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.\n\n" +
         PlantData.RetainAggroLine();
 
     public override string GetSkillDesription() =>
@@ -667,7 +667,7 @@ public class AcornKnight : Aura
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl}</b></color> per level. [<color=green><b>+{armorpl * effectivePath1Level}</b></color>]\n\n" +
-               $"{Level5Section(path1Level, details ? "Increase Attack Damage by 33% of <color=#00CED1><b>Armor</b></color>." : $"Increase Attack Damage by <color=#00CED1><b>{armor * 0.33f:F0}</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, details ? "Increase Attack Damage by <color=green><b>33%</b></color> of <color=#00CED1><b>Armor</b></color>." : $"Increase Attack Damage by <color=#00CED1><b>{armor * 0.33f:F0}</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -678,7 +678,7 @@ public class AcornKnight : Aura
         float bashDmgPl = AcornData?.path2BashDamagePercentPerLevel ?? 0.10f;
         string desc = details
             ? $"{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
-              $"If {GetName()} is being targeted by a Physical damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\n\n" +
+              $"If {GetName()} is being targeted by a <color=#A0522D><b>Physical</b></color> damaging insect, it changes into <color=orange><b>Guard Stance</b></color>, during which it gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\n\n" +
               $"While in <color=orange><b>Guard Stance</b></color>, its attacks become an omnidirectional Shield Bash dealing <color={PlantData.ElementalColor(elementalType)}><b>[({(AcornData?.baseBashDamagePercent ?? 0.5f) * 100f:F0}%) + ({bashDmgPl * 100f:F0}%/Lvl.)] Armor</b></color> {PlantData.DamageTypeLabel(damageType)}.\n\n" +
               PlantData.RetainAggroLine()
             : GetPassiveDescription();
