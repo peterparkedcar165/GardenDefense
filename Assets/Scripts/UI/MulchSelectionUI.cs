@@ -103,17 +103,10 @@ public class MulchSelectionUI : MonoBehaviour
         activeCards.Clear();
     }
 
+    // only runs while the panel is open: this script sits on the panel itself. the n key that
+    // opens the test menu is read in GameManager for that reason
     void Update()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        // dev shortcut, same idea as M for sun: N opens the mulch and weather test menu in a level
-        if (!IsOpen && Keyboard.current != null && Keyboard.current.nKey.wasPressedThisFrame
-            && GameManager.instance != null && GameManager.instance.IsGameActive)
-        {
-            ShowDebugMenu();
-            return;
-        }
-#endif
         if (!IsOpen || Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame || TutorialManager.BlocksEscape) return;
         // escape backs out of the owned mulch list first, back to the draft it came from
         if (IsTargetPickerOpen && !_debugMode) HideTargetPicker();

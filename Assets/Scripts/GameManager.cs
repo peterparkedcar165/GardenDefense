@@ -98,6 +98,15 @@ public class GameManager : MonoBehaviour
             SunCount += 99999;
             UpdateSun();
         }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // dev shortcut n opens the mulch and weather test menu while in a level. checked here, not
+        // in MulchSelectionUI, because that script sits on its own panel, which is switched off
+        // (so its Update doesn't run) whenever the panel is closed
+        if (IsGameActive && Keyboard.current.nKey.wasPressedThisFrame
+            && MulchSelectionUI.instance != null && !MulchSelectionUI.instance.IsOpen)
+            MulchSelectionUI.instance.ShowDebugMenu();
+#endif
     }
 
     // true once the player has ever unpaused - the level sits paused at wave 0 waiting for this,
