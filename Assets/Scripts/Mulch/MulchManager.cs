@@ -256,12 +256,62 @@ public class MulchManager : MonoBehaviour
         // the grant above is still consumed either way, same as a normal pick, rather than
         // leaving the queue stuck on an unpickable choice forever
         if (pickedData.Contains(chosen)) return;
-        pickedData.Add(chosen);
+        ActivateMulch(chosen);
+    }
 
+    private void ActivateMulch(MulchData chosen)
+    {
+        pickedData.Add(chosen);
         MulchEffect effect = chosen.CreateEffect();
         if (effect == null) return;
         activeEffects.Add(effect);
         effect.Activate();
+    }
+
+    // dev test menu only (MulchSelectionUI, N key in the editor): every mulch a draft in this level
+    // could ever offer, the universal registry plus this level's own pool, conditions ignored
+    public List<MulchData> DebugAllMulches()
+    {
+        List<MulchData> result = new List<MulchData>();
+        foreach (MulchData[] source in new[] { mulchRegistry != null ? mulchRegistry.mulches : null, levelPool })
+            if (source != null)
+                foreach (MulchData data in source)
+                    if (data != null && !result.Contains(data)) result.Add(data);
+        return result;
+    }
+
+    public bool IsOwned(MulchData data) => data != null && pickedData.Contains(data);
+
+    // dev test menu: activates a mulch right away, skipping the queue and every eligibility check
+    public bool DebugActivate(MulchData data)
+    {
+        if (data == null || data.NeedsOwnedMulchTarget || pickedData.Contains(data)) return false;
+        removedData.Remove(data);
+        ActivateMulch(data);
+        return true;
+    }
+
+    // dev test menu: takes an owned mulch away so it can be tested again, paid out or not
+    public bool DebugRemove(MulchData data)
+    {
+        if (data == null || !pickedData.Contains(data)) return false;
+        MulchEffect effect = FindEffect(data);
+        if (effect != null)
+        {
+            effect.Deactivate();
+            activeEffects.Remove(effect);
+        }
+        pickedData.Remove(data);
+        return true;
+    }
+
+    // dev test menu: seed swap or seed sell used on an owned mulch without spending a queued draft
+    public bool DebugUseTool(MulchData tool, MulchData target)
+    {
+        if (tool == null || !tool.NeedsOwnedMulchTarget || !CanRemove(target)) return false;
+        RemoveMulch(target);
+        tool.UseOnTarget(target);
+        return true;
     }
 
     // seed swap and seed sell: uses up the oldest grant like a normal pick, takes the chosen owned
