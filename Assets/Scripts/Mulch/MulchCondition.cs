@@ -3,7 +3,7 @@ using UnityEngine;
 
 // one "at least one of these" requirement - a bare array can't nest in the Inspector (no
 // array-of-arrays), so each OR group needs this thin wrapper. a single-entry group behaves as a
-// plain AND requirement for that one element/plant - see MulchCondition for how groups
+// plain AND requirement for that one element/plant - see MulchRequirement for how groups
 // combine. excludedPlants (element groups only) lets a specific plant NOT count toward
 // satisfying the group even though its element matches - e.g. a Grass requirement that
 // Rhodiola shouldn't be able to satisfy on her own, since she doesn't deal direct damage
@@ -90,7 +90,7 @@ public class PlantGroup
 // groups ({Fire}, {Grass}); to require "Fire OR Water", use one group with both in it
 // ({Fire, Water})
 [System.Serializable]
-public class MulchCondition
+public class MulchRequirement
 {
     [Tooltip("every group must have at least one match (AND between groups, OR within a group). " +
         "leave empty to not require any")]
@@ -104,25 +104,7 @@ public class MulchCondition
     [Tooltip("0 means no maximum")]
     public int maxWave;
 
-    [Tooltip("escape hatch for a true top-level OR: this condition is met if its own " +
-        "groups/wave/exclusions above all pass, OR if ANY one of these alternatives is fully " +
-        "satisfied on its own (each evaluated completely independently, including its own " +
-        "wave range) - e.g. Critical Rot's 'Grass+Fire/Ice/Poison OR Poison Shroom OR Stargazer' " +
-        "is one primary AND-of-ORs plus one alternative PlantGroup")]
-    public MulchCondition[] orAlternatives;
-
-    public bool IsEligible(List<PlantData> loadout, int currentWave)
-    {
-        if (IsEligibleIgnoringAlternatives(loadout, currentWave)) return true;
-
-        if (orAlternatives != null)
-            foreach (MulchCondition alt in orAlternatives)
-                if (alt != null && alt.IsEligible(loadout, currentWave)) return true;
-
-        return false;
-    }
-
-    private bool IsEligibleIgnoringAlternatives(List<PlantData> loadout, int currentWave)
+    public bool IsMet(List<PlantData> loadout, int currentWave)
     {
         if (minWave > 0 && currentWave < minWave) return false;
         if (maxWave > 0 && currentWave > maxWave) return false;
@@ -166,6 +148,33 @@ public class MulchCondition
         if (excludedPlants == null) return false;
         foreach (PlantData excluded in excludedPlants)
             if (excluded == data) return true;
+        return false;
+    }
+}
+
+// the gate a mulch draft checks: its own requirement, OR any one of the alternatives, each judged
+// completely on its own (wave range included). alternatives are plain requirements with no
+// alternatives of their own: a condition holding a list of conditions is a cycle Unity's
+// serializer can't store (it unrolls it ten levels deep and warns every time it loads), and no
+// mulch nests them anyway
+[System.Serializable]
+public class MulchCondition : MulchRequirement
+{
+    [Tooltip("escape hatch for a true top-level OR: this condition is met if its own " +
+        "groups/wave/exclusions above all pass, OR if ANY one of these alternatives is fully " +
+        "satisfied on its own (each evaluated completely independently, including its own " +
+        "wave range) - e.g. Critical Rot's 'Grass+Fire/Ice/Poison OR Poison Shroom OR Stargazer' " +
+        "is one primary AND-of-ORs plus one alternative PlantGroup")]
+    public MulchRequirement[] orAlternatives;
+
+    public bool IsEligible(List<PlantData> loadout, int currentWave)
+    {
+        if (IsMet(loadout, currentWave)) return true;
+
+        if (orAlternatives != null)
+            foreach (MulchRequirement alt in orAlternatives)
+                if (alt != null && alt.IsMet(loadout, currentWave)) return true;
+
         return false;
     }
 }
