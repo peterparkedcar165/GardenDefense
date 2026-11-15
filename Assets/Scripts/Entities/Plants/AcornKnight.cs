@@ -176,6 +176,12 @@ public class AcornKnight : Aura
         if (data.target != this) return;
         _noDamageTimer = 0f;
 
+        // temporary guard debug, remove once the guard animation is sorted
+        if (data.source is Insect hitter)
+            Debug.Log($"[AcornGuard] {hitter.name} hit {name} ({data.damageType}): counts as targeting={IsTargetingMe(hitter)}, " +
+                      $"its target is me={hitter.target == (IAttackable)this}, attack type={hitter.attackDamageType}, aggressivity={hitter.aggressivity}, " +
+                      $"guard={IsDefensiveStance}, shieldOut={_shieldOut}, exitTimer={_stanceExitTimer:F2}");
+
         if (IsDefensiveStance && data.damageType == DamageType.Physical && SkillTreeManager.HasUnlock(this, CounterStanceUnlock))
             attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - CounterStanceCooldownReduction);
     }
@@ -201,6 +207,28 @@ public class AcornKnight : Aura
         SetBodyBool(BodyShieldOutBool, _shieldOut);
         SetBodyBool(BodyGuardingBool, IsDefensiveStance);
         UpdateBodyFacing();
+        DebugGuardChange();
+    }
+
+    // temporary guard debug, remove once the guard animation is sorted
+    private bool _debugGuardWas;
+    private void DebugGuardChange()
+    {
+        bool guard = IsDefensiveStance;
+        if (guard == _debugGuardWas) return;
+        _debugGuardWas = guard;
+        string state = "no animator", parameters = "", guardingParam = "n/a";
+        if (bodyAnimator != null && bodyAnimator.isInitialized)
+        {
+            AnimatorStateInfo info = bodyAnimator.GetCurrentAnimatorStateInfo(0);
+            state = "unknown";
+            foreach (string s in new[] { "Idle", "Attack", "IdleNoShield", "AttackNoShield", "GuardRaise", "GuardIdle", "GuardBash", "GuardLower", "ShieldThrow" })
+                if (info.IsName(s)) state = s;
+            foreach (AnimatorControllerParameter p in bodyAnimator.parameters) parameters += p.name + " ";
+            guardingParam = parameters.Contains("Guarding ") ? bodyAnimator.GetBool("Guarding").ToString() : "missing";
+        }
+        Debug.Log($"[AcornGuard] {name} guard {(guard ? "ON" : "OFF")}: animator state={state}, Guarding param={guardingParam}, " +
+                  $"controller={(bodyAnimator != null && bodyAnimator.runtimeAnimatorController != null ? bodyAnimator.runtimeAnimatorController.name : "none")}, params=[{parameters.Trim()}]");
     }
 
     // runs after Plant's own facing flip (base.Update), so the throw can override it
