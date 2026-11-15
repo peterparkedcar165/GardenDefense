@@ -8,13 +8,18 @@ public static class SfxPlayer
 {
     public static void Play(SoundEffect sfx, Vector3 position)
     {
-        if (sfx == null || sfx.clips == null || sfx.clips.Length == 0) return;
-        if (sfx.playAllTogether)
+        if (sfx == null || sfx.clips == null) return;
+        // every alwaysPlay clip, plus one random pick among the rest. clips with nothing assigned
+        // are skipped, so an emptied slot never makes the random pick go silent
+        SoundClip pick = null;
+        int pool = 0;
+        foreach (SoundClip entry in sfx.clips)
         {
-            foreach (SoundClip layer in sfx.clips) PlayClip(layer, position);
-            return;
+            if (entry == null || entry.clip == null) continue;
+            if (entry.alwaysPlay) PlayClip(entry, position);
+            else if (Random.Range(0, ++pool) == 0) pick = entry;
         }
-        PlayClip(sfx.clips[Random.Range(0, sfx.clips.Length)], position);
+        if (pick != null) PlayClip(pick, position);
     }
 
     private static void PlayClip(SoundClip entry, Vector3 position)
@@ -50,13 +55,16 @@ public static class SfxPlayer
     }
 
     // starts a looping sfx (e.g. a skill's ongoing hum) parented to followTarget so it moves with
-    // it. always one random clip, playAllTogether doesn't apply to loops. caller owns the returned AudioSource and must pass it to StopLooping when done - there's
+    // it. always one random clip with something assigned, alwaysPlay doesn't apply to loops. caller owns the returned AudioSource and must pass it to StopLooping when done - there's
     // no automatic lifetime here, unlike Play(), since a loop's duration isn't known up front
     public static AudioSource PlayLooping(SoundEffect sfx, Transform followTarget)
     {
-        if (sfx == null || sfx.clips == null || sfx.clips.Length == 0) return null;
-        SoundClip entry = sfx.clips[Random.Range(0, sfx.clips.Length)];
-        if (entry == null || entry.clip == null) return null;
+        if (sfx == null || sfx.clips == null) return null;
+        SoundClip entry = null;
+        int pool = 0;
+        foreach (SoundClip c in sfx.clips)
+            if (c != null && c.clip != null && Random.Range(0, ++pool) == 0) entry = c;
+        if (entry == null) return null;
 
         GameObject obj = new GameObject("SfxLoop");
         if (followTarget != null) obj.transform.SetParent(followTarget, false);

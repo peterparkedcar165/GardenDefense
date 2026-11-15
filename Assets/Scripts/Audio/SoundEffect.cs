@@ -9,16 +9,16 @@ public class SoundClip
     [Range(0f, 1f)] public float volume = 1f;
     [Range(0.5f, 2f)] public float minPitch = 0.95f;
     [Range(0.5f, 2f)] public float maxPitch = 1.05f;
+    [Tooltip("plays every time, layered on top of the one clip picked at random from the unticked ones")]
+    public bool alwaysPlay;
 }
 
-// a pool of clip variations for one sfx slot (attack unleash, impact/hit reactions) - a random
-// entry is picked each time instead of the exact same sample playing on every hit. with
-// playAllTogether ticked, every entry plays at once instead, layered into one sound (each with its
-// own volume and pitch). played via SfxPlayer.Play
+// one sfx slot (attack unleash, impact/hit reactions). every clip ticked alwaysPlay plays each
+// time, and one of the unticked clips is picked at random on top, so the same sample doesn't repeat
+// on every hit. e.g. a bubble blow ticked plus four musical notes unticked: the blow and one random
+// note together. each layer keeps its own volume and pitch. played via SfxPlayer.Play
 [System.Serializable]
 public class SoundEffect
 {
     public SoundClip[] clips;
-    [Tooltip("play every clip at the same time, layered, instead of one random clip")]
-    public bool playAllTogether;
 }
