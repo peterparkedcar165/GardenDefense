@@ -5,8 +5,8 @@ public class MarketDayMulchData : MulchData
 {
     [Tooltip("path upgrades cost this much less, e.g. 0.25 = 25% cheaper")]
     public float upgradeCostReduction = 0.25f;
-    [Tooltip("placing a plant costs this much more, e.g. 0.15 = 15% more")]
-    public float placementCostIncrease = 0.15f;
+    [Tooltip("placing a plant costs this much more, e.g. 0.25 = 25% more")]
+    public float placementCostIncrease = 0.25f;
 
     public override MulchEffect CreateEffect() => new MarketDayMulchEffect(this);
 

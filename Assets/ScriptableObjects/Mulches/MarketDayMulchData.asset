@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MarketDayMulchData
   m_EditorClassIdentifier: Assembly-CSharp::MarketDayMulchData
   mulchName: '<b><color=white>Market Day</color></b>'
-  description: 'Path upgrades cost <b><color=green>25%</color></b> less <b><color=#FFD700>Sun</color></b>. Placing plants costs <b><color=red>15%</color></b> more.'
+  description: 'Path upgrades cost <b><color=green>25%</color></b> less <b><color=#FFD700>Sun</color></b>. Placing plants costs <b><color=red>25%</color></b> more.'
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 6
@@ -27,4 +27,4 @@ MonoBehaviour:
     maxWave: 0
     orAlternatives: []
   upgradeCostReduction: 0.25
-  placementCostIncrease: 0.15
+  placementCostIncrease: 0.25
