@@ -71,8 +71,6 @@ public class WaterlilyProjectile : Projectile
 
     protected override void OnHit(Insect insect) // to change for every plant
     {
-        //if (source != null)
-        //    insect.RegisterAttacker(source);
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile});
 

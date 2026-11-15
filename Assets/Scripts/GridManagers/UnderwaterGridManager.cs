@@ -12,8 +12,6 @@ public class UnderwaterGridManager : MonoBehaviour
     [SerializeField] private Tilemap groundTilemap;
     [SerializeField] private Tilemap pathTilemap;
     [SerializeField] private Tilemap colliderTilemap;
-    [SerializeField] private Tilemap nonColliderGroundTilemap;
-    [SerializeField] private Tilemap nonColliderAirTilemap;
     [SerializeField] private Tilemap highgroundGroundTilemap;
     [SerializeField] private Tilemap lightColliderTilemap;
     [SerializeField] private Tilemap airBubbleTilemap;

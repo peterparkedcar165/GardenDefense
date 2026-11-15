@@ -32,12 +32,6 @@ public class MainMenu : MonoBehaviour
         TryStartTransition("LevelSelector");
     }
 
-    public void OnSettings()
-    {
-        if (TryStartTransition("Settings"))
-            SettingsManager.previousScene = "MainMenu";
-    }
-
     public void OnShop()
     {
         TryStartTransition("Shop");

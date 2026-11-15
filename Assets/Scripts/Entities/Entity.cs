@@ -127,7 +127,6 @@ public abstract class Entity : MonoBehaviour
     public static event System.Action<EntityEventData> OnShieldExpire;
 
     protected static void RaiseEntityDied(EntityEventData data) => OnEntityDied?.Invoke(data);
-    public static void RaiseOnHit(EntityEventData data) => OnHit?.Invoke(data);
 
     // single centralized dispatcher for all on-hit effects, rather than each effect
     // subscribing to OnHit individually. add a new on-hit effect here as its own check
@@ -604,11 +603,6 @@ public abstract class Entity : MonoBehaviour
                 if (this.HasEffect<GerminateEffect>())
                 RemoveEffect<GerminateEffect>();
 
-                // single-element proc replaced by the Primer combo system above
-                /*
-                if (canProcElementalEffect && Random.value < elementalEffectRoll)
-                    ApplyEffect(new BurnEffect(this, 6f, 1, source));
-                */
             break;
 
             case ElementalType.Water:
@@ -628,11 +622,6 @@ public abstract class Entity : MonoBehaviour
                 if (waterBlossoming != null)
                     waterInternalCooldown = Mathf.Max(0f, waterInternalCooldown - waterBlossoming.PrimerCooldownReduction);
 
-                // single-element proc replaced by the Primer combo system above
-                /*
-                if (canProcElementalEffect && Random.value < elementalEffectRoll)
-                    ApplyEffect(new SoakedEffect(this, 8f, 1, source));
-                */
             break;
 
             case ElementalType.Ice:
@@ -644,11 +633,6 @@ public abstract class Entity : MonoBehaviour
                     ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
-                // single-element proc replaced by the Primer combo system above
-                /*
-                if (canProcElementalEffect && Random.value < elementalEffectRoll)
-                    ApplyEffect(new FreezeEffect(this, 2f, 1, source));
-                */
             break;
 
             case ElementalType.Wind:
@@ -667,11 +651,6 @@ public abstract class Entity : MonoBehaviour
                         anemone.ApplyWindErosion(windInsect);
                 }
 
-                // single-element proc replaced by the Primer combo system above
-                /*
-                if (canProcElementalEffect && Random.value < elementalEffectRoll)
-                    ApplyEffect(new WindshearEffect(this, 8f, 1, source));
-                */
             break;
 
             case ElementalType.Grass:
@@ -688,11 +667,6 @@ public abstract class Entity : MonoBehaviour
                 if (grassBlossoming != null)
                     grassInternalCooldown = Mathf.Max(0f, grassInternalCooldown - grassBlossoming.PrimerCooldownReduction);
 
-                // single-element proc replaced by the Primer combo system above
-                /*
-                if (canProcElementalEffect && Random.value < elementalEffectRoll)
-                    ApplyEffect(new SeededEffect(this, 8f, 1, source));
-                */
             break;
 
             case ElementalType.Poison:
@@ -703,11 +677,6 @@ public abstract class Entity : MonoBehaviour
                     ApplyEffect(new PoisonPrimer(this, elementalDebuffDuration, 1, source));
                 }
 
-                // single-element proc replaced by the Primer combo system above
-                /*
-                if (canProcElementalEffect && Random.value < elementalEffectRoll)
-                    ApplyEffect(new PoisonedEffect(this, 6f, 1, source));
-                */
             break;
 
             default:
@@ -1422,30 +1391,6 @@ public abstract class Entity : MonoBehaviour
     }
 
     [ContextMenu("Debug Shield")]
-    public void DebugShield()
-    {
-        Debug.Log($"[Shield] {gameObject.name} | startingShield={startingShield} | TotalShield={TotalShield} | HasShield={HasShield()}");
-        Debug.Log($"[Shield] health={health:F0}/{maxHealth:F0} | activeEffects={activeEffects.Count}");
-        foreach (StatusEffect e in activeEffects)
-            if (e is ShieldEffect s)
-                Debug.Log($"[Shield]   {e.GetType().Name}: amount={s.amount:F0} duration={s.duration:F2} infinite={s.IsInfinite}");
-        Debug.Log($"[Shield] healthBarInstance={(healthBarInstance != null ? healthBarInstance.activeInHierarchy.ToString() : "null")}");
-        Debug.Log($"[Shield] healthBarFill={(healthBarFill != null ? healthBarFill.localScale.ToString() : "null")}");
-        if (shieldFill != null)
-        {
-            SpriteRenderer sr = shieldFill.GetComponent<SpriteRenderer>();
-            Debug.Log($"[Shield] shieldFill scale={shieldFill.localScale} | SR enabled={sr?.enabled} | sortingOrder={sr?.sortingOrder}");
-        }
-        else
-        {
-            Debug.Log("[Shield] shieldFill is NULL");
-        }
-        if (healthBarFill != null)
-        {
-            SpriteRenderer sr = healthBarFill.GetComponent<SpriteRenderer>();
-            Debug.Log($"[Shield] healthFill scale={healthBarFill.localScale} | sortingOrder={sr?.sortingOrder}");
-        }
-    }
 
     public void RefreshHealthBarVisibility()
     {
@@ -1734,20 +1679,6 @@ public abstract class Entity : MonoBehaviour
         for (int i = activeEffects.Count - 1; i >= 0; i--)
         {
             if (activeEffects[i].effectType == StatusEffect.Type.negative)
-            {
-                activeEffects[i].OnExpire();
-                activeEffects.RemoveAt(i);
-            }
-        }
-    }
-
-    // remove all buffs
-    public void RemoveAllBuffs()
-    {
-        // start at end of the list then go leftwards
-        for (int i = activeEffects.Count - 1; i >= 0; i--)
-        {
-            if (activeEffects[i].effectType == StatusEffect.Type.positive)
             {
                 activeEffects[i].OnExpire();
                 activeEffects.RemoveAt(i);

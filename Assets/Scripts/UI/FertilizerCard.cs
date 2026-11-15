@@ -9,7 +9,6 @@ public class FertilizerCard : MonoBehaviour
     [SerializeField] private TMP_Text statsText;
     [SerializeField] private TMP_Text tierText;
     [SerializeField] private Image icon;
-    [SerializeField] private Button selectButton;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private GameObject highlight;
     [SerializeField] private Button rerollButton;

@@ -147,47 +147,6 @@ public static class FertilizerStatRules
         }
     }
 
-    // builds the full set of stats a fertilizer is allowed to roll for the player's current
-    // loadout: generic + whichever elemental/multi-affinity rules the loadout satisfies +
-    // the union of every present plant's own fertilizerPossibleStats
-    public static HashSet<StatType> GetAvailableStats(IEnumerable<PlantData> loadout)
-    {
-        HashSet<StatType> available = new HashSet<StatType>(GenericStats);
-        HashSet<ElementalType> elementsSeen = new HashSet<ElementalType>();
-        bool hasFallDamagePlant = false;
-        bool hasRangedPlant = false;
-
-        foreach (PlantData plant in loadout)
-        {
-            if (plant == null) continue;
-
-            if (ElementalDamageStat.TryGetValue(plant.elementalType, out StatType elementalStat))
-                available.Add(elementalStat);
-            elementsSeen.Add(plant.elementalType);
-
-            if (DamageTypeStats.TryGetValue(plant.damageType, out StatType[] damageTypeStats))
-                foreach (StatType stat in damageTypeStats) available.Add(stat);
-
-            if (plant.fertilizerPossibleStats != null)
-                foreach (StatType stat in plant.fertilizerPossibleStats) available.Add(stat);
-
-            if (FallDamagePlantNames.Contains(plant.plantName)) hasFallDamagePlant = true;
-            if (!MeleePlantNames.Contains(plant.plantName)) hasRangedPlant = true;
-        }
-
-        if (elementsSeen.Count >= 2) available.Add(StatType.elementalAffinity);
-        if (HasDotPair(elementsSeen))
-            foreach (StatType stat in DotStats) available.Add(stat);
-
-        if (hasRangedPlant) available.Add(StatType.AttackRange);
-
-        if (hasFallDamagePlant || HasFlyingInsectInLevel()) available.Add(StatType.FallDamage);
-        if (HasHighAggressivityInsectInLevel()) available.Add(StatType.Armor);
-        if (HasMagicInsectInLevel()) available.Add(StatType.MagicArmor);
-
-        return available;
-    }
-
     private static bool HasDotPair(HashSet<ElementalType> elementsSeen)
     {
         foreach ((ElementalType a, ElementalType b) in DotUnlockPairs)

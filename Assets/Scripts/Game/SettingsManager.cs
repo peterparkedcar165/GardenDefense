@@ -9,7 +9,6 @@ using UnityEngine.InputSystem;
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager instance;
-    public static string previousScene;
 
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private Slider masterSlider, musicSlider, gameSlider, ambientSlider;
@@ -107,11 +106,6 @@ public class SettingsManager : MonoBehaviour
             SceneManager.LoadScene("MainMenu");
     }
 
-    public void GoBack()
-    {
-        SceneTransition transition = FindAnyObjectByType<SceneTransition>();
-        transition.StartCoroutine(transition.FadeToScene(previousScene));
-    }
     private void Start()
     {
         float master = PlayerPrefs.GetFloat("MasterVolume", 1f);

@@ -5,9 +5,6 @@ using System.Collections.Generic;
 
 public class Stargazer : Aura
 {
-    // cone edge indicators (at +/- half the cone angle) -- disabled for now, may re-add later
-    // [SerializeField] private SpriteRenderer facingLineLeft;
-    // [SerializeField] private SpriteRenderer facingLineRight;
     [SerializeField] private GameObject fireWavePrefab;
     [SerializeField] private GameObject skillIndicatorPrefab; // beam aim indicator for the ultimate
     [SerializeField] private ParticleSystem fireConeParticles; // continuous cone of fire while attacking
@@ -92,32 +89,7 @@ public class Stargazer : Aura
         Insect aim = FacingTarget();
         if (aim != null)
             _facingDir = ((Vector2)aim.transform.position - (Vector2)transform.position).normalized;
-
-        // cone edge indicators disabled for now, may re-add later
-        // if (_facingDir.sqrMagnitude < 0.0001f) return;
-        // // the two lines mark the cone's edges, at +/- half the cone angle from the aim direction
-        // float half = ConeAngle * 0.5f;
-        // OrientLine(facingLineLeft,  Rotate(_facingDir,  half));
-        // OrientLine(facingLineRight, Rotate(_facingDir, -half));
     }
-
-    // rectangle line: width 0.15 (X), height (Y) stretched to the cone's reach.
-    // -90 so the sprite's +Y axis points along the given direction
-    // private void OrientLine(SpriteRenderer line, Vector2 dir)
-    // {
-    //     if (line == null) return;
-    //     float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
-    //     line.transform.position = transform.position + (Vector3)(dir * attackRange * 0.5f);
-    //     line.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    //     line.transform.localScale = new Vector3(0.05f, attackRange, 1f);
-    // }
-
-    // private static Vector2 Rotate(Vector2 v, float degrees)
-    // {
-    //     float rad = degrees * Mathf.Deg2Rad;
-    //     float cos = Mathf.Cos(rad), sin = Mathf.Sin(rad);
-    //     return new Vector2(v.x * cos - v.y * sin, v.x * sin + v.y * cos);
-    // }
 
     // the cone tracks the targeting-mode pick among insects within range only
     private Insect FacingTarget()

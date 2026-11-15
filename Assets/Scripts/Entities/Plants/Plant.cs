@@ -3,31 +3,11 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
+// the base stats the Encyclopedia and loadout screens show for a plant (see GetBaseStats)
 public struct PlantBaseStats
 {
-    // Common
-    public float attackDamage, attackSpeed, attackRange, skillCooldown, passiveCooldown, skillDuration;
+    public float attackDamage, attackSpeed, attackRange, skillCooldown, passiveCooldown;
     public int piercing;
-    // stunChance/stunDuration: legacy AcornKnight ranged-kit fields, no longer read by anything.
-    // skillDamageMultiplier: shared, still used by many plants
-    public float stunChance, stunDuration, skillDamageMultiplier;
-    // Sunflower / BogIris
-    public float sunGenerated, sunInterval, openDuration;
-    // BogIris skill
-    public float geyserDamage, knockUpHeight;
-    // Dandelion
-    public int seedCount;
-    public float beamWidth;
-    // LeafRanger
-    public float skillAttackSpeedBonus;
-    // Waterlily
-    public float splashRadius, bubbleDamage;
-    // PoisonShroom
-    public float poisonDuration, poisonDamagePerSecond;
-    // Snowdrop
-    public float slowPercent, blizzardDamage;
-    // Calendula
-    public float floralGlowHeal;
 }
 
 public enum TARGETING { Nearest, First, Last, Strongest, Fastest, Slowest }
@@ -144,7 +124,6 @@ public abstract class Plant : Entity, IAttackable
     private LightFader _lightFader;
     private float _lastLightEmissionRange;
     protected virtual float LightIntensity => 0.5f;
-    private const float lightFadeSpeed = 2f;
     private GameObject _skillBarInstance;
     private Transform _skillBarFill;
     private GameObject _passiveBarInstance;
@@ -1960,21 +1939,11 @@ public abstract class Plant : Entity, IAttackable
     // resolve does. onResolve should re-validate anything it closed over (is the target still
     // alive, still in range) rather than trusting a snapshot taken back when the windup started
     private Coroutine _attackWindupRoutine;
-    protected bool IsAttackWindingUp => _attackWindupRoutine != null;
 
     protected void BeginAttackWindup(float windupSeconds, System.Action onResolve)
     {
         if (_attackWindupRoutine != null) return; // already mid windup, refuse a second one
         _attackWindupRoutine = StartCoroutine(AttackWindupRoutine(windupSeconds, onResolve));
-    }
-
-    // for a plant that needs to abandon a committed attack early (stunned mid windup, killed,
-    // uprooted) rather than let it resolve
-    protected void CancelAttackWindup()
-    {
-        if (_attackWindupRoutine == null) return;
-        StopCoroutine(_attackWindupRoutine);
-        _attackWindupRoutine = null;
     }
 
     private IEnumerator AttackWindupRoutine(float windupSeconds, System.Action onResolve)

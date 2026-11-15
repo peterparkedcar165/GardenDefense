@@ -15,7 +15,6 @@ public class NeriumOleanderProjectile : Projectile
     private const float BounceHitPause = 0.05f;
     private float pauseTimer = 0f;
     private Insect pendingJustHit = null;
-    private OleanderSprout pendingJustHitSprout = null;
     private bool awaitingRetarget = false;
 
     // this petal already handles every insect/sprout hit itself via its own OnTriggerEnter2D
@@ -112,7 +111,6 @@ public class NeriumOleanderProjectile : Projectile
     {
         pauseTimer = BounceHitPause;
         pendingJustHit = justHitInsect;
-        pendingJustHitSprout = justHitSprout;
         awaitingRetarget = true;
     }
 
@@ -130,7 +128,6 @@ public class NeriumOleanderProjectile : Projectile
                     Destroy(gameObject);
                 }
                 pendingJustHit = null;
-                pendingJustHitSprout = null;
             }
             return;
         }

@@ -86,13 +86,4 @@ public class StatusEffect
         return "";
     }
 
-    public string GetEffectTagsString()
-    {
-        return string.Join(", ", tags);
-    }
-
-    public string GetEffectType()
-    {
-        return effectType.ToString();
-    }
 }

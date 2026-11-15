@@ -12,8 +12,6 @@ public class AcornKnightShield : Minion
     private float radius;
     private Transform shadow;
 
-    private const float stunDuration = 2f;
-
     private readonly HashSet<Insect> tauntedInsects = new HashSet<Insect>();
     private float tauntTickTimer = 0f;
 

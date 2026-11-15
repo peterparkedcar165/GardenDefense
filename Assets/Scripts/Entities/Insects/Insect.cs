@@ -331,7 +331,6 @@ public abstract class Insect : Entity, IAttackable
     {
         base.Awake();
         allInsects.Add(this);
-        // Debug.Log("SPAWNED: " + gameObject);
     }
 
     void OnDestroy()
@@ -343,14 +342,11 @@ public abstract class Insect : Entity, IAttackable
     }
 
     private Transform[]   _pendingPath;
-    private Transform[][] _pendingAllPaths;
-    private Transform[][] _allPaths;
 
     /// <summary>Called by SpawnManager immediately after Instantiate, before Start runs.</summary>
-    public void SetPath(Transform[] path, Transform[][] allPaths = null)
+    public void SetPath(Transform[] path)
     {
-        _pendingPath     = path;
-        _pendingAllPaths = allPaths;
+        _pendingPath = path;
     }
 
     // live re-route (unlike SetPath, which only stages a path for the next Start()): used by
@@ -392,7 +388,6 @@ public abstract class Insect : Entity, IAttackable
         base.Start();
         gameManager = FindAnyObjectByType<GameManager>();
         waypoints  = _pendingPath ?? PathManager.instance.waypoints;
-        _allPaths  = _pendingAllPaths;
         expDrop = sunDrop/2;
         aimPoint = transform.Find("AimPoint");
         visual = transform.Find("Visual");
@@ -849,40 +844,6 @@ public abstract class Insect : Entity, IAttackable
         }
 
         _debugOnPath = onPath;
-    }
-
-    private void SnapToNearestWaypoint()
-    {
-        if (waypoints == null || waypoints.Length == 0) return;
-
-        float       nearestDist  = float.MaxValue;
-        int         nearestIndex = currentWaypointIndex;
-        Transform[] nearestPath  = waypoints;
-
-        // Search every known path (own + other spawn entries)
-        Transform[][] searchPaths = (_allPaths != null && _allPaths.Length > 0)
-            ? _allPaths
-            : new Transform[][] { waypoints };
-
-        foreach (Transform[] path in searchPaths)
-        {
-            if (path == null) continue;
-            for (int i = 0; i < path.Length; i++)
-            {
-                if (path[i] == null) continue;
-                float dist = Vector3.Distance(transform.position, path[i].position);
-                if (dist < nearestDist)
-                {
-                    nearestDist  = dist;
-                    nearestIndex = i;
-                    nearestPath  = path;
-                }
-            }
-        }
-
-        // Switch to whichever path had the closest waypoint, targeting the one after it
-        waypoints            = nearestPath;
-        currentWaypointIndex = Mathf.Min(nearestIndex + 1, waypoints.Length - 1);
     }
 
     protected override Vector3 GetIndicatorPosition()
@@ -1529,32 +1490,4 @@ public abstract class Insect : Entity, IAttackable
         base.ApplyEffect(effect);
     }
 
-    public string GetActiveEffectsString()
-    {
-        string negative = "";
-        string positive = "";
-
-        foreach (StatusEffect effect in activeEffects)
-        {
-            string time;
-            if (float.IsInfinity(effect.duration))
-                time = "∞";   // permanent effects show the infinity symbol
-            else
-            {
-                int mins = Mathf.FloorToInt(effect.duration / 60);
-                int secs = Mathf.FloorToInt(effect.duration % 60);
-                time = $"{mins}:{secs:D2}";
-            }
-            string entry = $"{effect.GetName()} ({time})\n";
-
-            if (effect.effectType == StatusEffect.Type.positive)
-                positive += entry;
-            else
-                negative += entry;
-        }
-
-        return $"<b>Active Effects:</b>\n\n" +
-               $"<b>Positive:</b>\n{(positive == "" ? "None" : positive)}\n" +
-               $"<b>Negative:</b>\n{(negative == "" ? "None" : negative)}";
-    }
 }

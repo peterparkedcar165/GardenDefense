@@ -11,8 +11,6 @@ public class NighttimeGridManager : MonoBehaviour
     [SerializeField] private Tilemap groundTilemap;
     [SerializeField] private Tilemap pathTilemap;
     [SerializeField] private Tilemap colliderTilemap;
-    [SerializeField] private Tilemap nonColliderGroundTilemap;
-    [SerializeField] private Tilemap nonColliderAirTilemap;
     [SerializeField] private Tilemap waterTilemap;
     [SerializeField] private Tilemap dirtTilemap;
     [SerializeField] private Tilemap highgroundGroundTilemap;

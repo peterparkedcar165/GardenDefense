@@ -5,21 +5,4 @@ public class GameButtons : MonoBehaviour
     public void TogglePause()  => GameManager.instance?.TogglePause();
     public void ToggleSpeed()  => GameManager.instance?.ToggleSpeed();
 
-    public void ToggleUproot()
-    {
-        if (PlantSelector.instance == null) return;
-        PlantSelector.instance.SetUprootMode(!PlantSelector.instance.uprootMode);
-    }
-
-    public void ToggleFlowerPot()
-    {
-        if (PlantSelector.instance == null) return;
-        PlantSelector.instance.SetFlowerPotMode(!PlantSelector.instance.flowerPotMode);
-    }
-
-    public void ToggleWaterPot()
-    {
-        if (PlantSelector.instance == null) return;
-        PlantSelector.instance.SetWaterPotMode(!PlantSelector.instance.waterPotMode);
-    }
 }

@@ -12,7 +12,6 @@ public class MulchCard : MonoBehaviour
     [SerializeField] private TMP_Text descriptionText;
     [SerializeField] private Image icon;
     [SerializeField] private Image background;
-    [SerializeField] private Button selectButton;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private GameObject highlight;
     [SerializeField] private Button rerollButton;

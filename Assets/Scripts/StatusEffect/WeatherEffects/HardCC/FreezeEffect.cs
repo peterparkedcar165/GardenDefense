@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class FreezeEffect : HardCrowdControl, IElementalAffinityEffect
 {
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
     private float physicalResistBonus;
     private float physicalArmorBonus;
 

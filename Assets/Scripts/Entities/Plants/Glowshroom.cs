@@ -97,7 +97,7 @@ public class Glowshroom : Shooter
         {
             bolt.SetTarget(targetGO);
             bolt.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing,
-                            damageType, elementalType, this, SplashRadius, SplashMult);
+                            damageType, elementalType, this);
         }
     }
 

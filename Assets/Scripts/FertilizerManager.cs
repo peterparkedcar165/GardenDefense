@@ -168,46 +168,7 @@ public class FertilizerManager : MonoBehaviour
         rolledValues = values;
     }
 
-    public FertilizerData ActiveFertilizer => activeFertilizer;
     public bool HasActiveFertilizer => activeFertilizer != null && selectedStats != null;
-
-    // builds the formatted reminder text shown by the in game info tooltip
-    public string GetActiveSummary()
-    {
-        if (!HasActiveFertilizer) return null;
-
-        var sb = new StringBuilder();
-        sb.AppendLine($"<b>{activeFertilizer.fertilizerName}</b>");
-        string target;
-        if (activeFertilizer.appliesToAll)
-        {
-            target = "All Plants";
-        }
-        else
-        {
-            var parts = new System.Collections.Generic.List<string>();
-            if (activeFertilizer.targetElementalTypes != null)
-                foreach (var e in activeFertilizer.targetElementalTypes)
-                    parts.Add(e.ToString());
-            target = parts.Count > 0 ? string.Join(", ", parts) : "None";
-        }
-        sb.AppendLine($"<size=85%>Applies to: <color=#FFD700>{target}</color></size>");
-        sb.AppendLine();
-
-        StatType[] statTypes = new StatType[selectedStats.Length];
-        for (int i = 0; i < selectedStats.Length; i++) statTypes[i] = selectedStats[i].statType;
-
-        foreach (int i in FertilizerFormat.SortedIndicesByName(statTypes))
-        {
-            bool isGood = rolledValues[i] >= 0f;
-            if (FertilizerFormat.IsInvertedStat(selectedStats[i].statType)) isGood = !isGood;
-            string color = isGood ? "green" : "red";
-            string statColor = FertilizerFormat.GetStatColor(selectedStats[i].statType);
-            sb.AppendLine($"<color={statColor}><b>{FertilizerFormat.FormatStatName(selectedStats[i].statType)}</b></color>: <color={color}><b>{FertilizerFormat.FormatValue(selectedStats[i].statType, rolledValues[i])}</b></color>");
-        }
-
-        return sb.ToString().TrimEnd();
-    }
 
     // every fertilizer stat currently in effect - the single pre-level pick plus every mid-level
     // grant already committed - summed per stat type (so two sources of the same stat combine

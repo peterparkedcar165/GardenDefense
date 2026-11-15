@@ -18,7 +18,7 @@ public class Sunray : MonoBehaviour
     private ParticleSystem sunParticles;
     private float baseShapeRadius;
 
-    private SoundEffect loopSound, endSound;
+    private SoundEffect endSound;
     private float endLeadTime;
     private AudioSource activeLoop;
 
@@ -58,7 +58,6 @@ public class Sunray : MonoBehaviour
         this.aoeRadius = aoeRadius;
         this.duration = duration;
         this.source = source;
-        this.loopSound = loopSound;
         this.endSound = endSound;
         this.endLeadTime = endLeadTime;
 

@@ -4,18 +4,12 @@ using UnityEngine.Rendering.Universal;
 public class GlowshroomProjectile : Projectile
 {
     private Glowshroom _mushroom;
-    private float _splashRadius;
-    private float _splashMult;
-    private Insect _target;
 
     public void Initialize(Vector3 target, float damage, float speed, float maxRange, int piercing,
-                           DamageType damageType, ElementalType elementalType, Glowshroom source,
-                           float splashRadius, float splashMult)
+                           DamageType damageType, ElementalType elementalType, Glowshroom source)
     {
         base.Initialize(target, damage, speed, maxRange, piercing, damageType, elementalType, source);
         _mushroom     = source;
-        _splashRadius = splashRadius;
-        _splashMult   = splashMult;
 
         Light2D light = gameObject.AddComponent<Light2D>();
         light.lightType              = Light2D.LightType.Point;
@@ -24,8 +18,6 @@ public class GlowshroomProjectile : Projectile
         light.pointLightOuterRadius  = 0.6f;
         light.pointLightInnerRadius  = 0.1f;
     }
-
-    public void SetTarget(Insect target) => _target = target;
 
     protected override void OnHit(Insect insect)
     {
