@@ -870,12 +870,23 @@ public abstract class Plant : Entity, IAttackable
     // no current target, so it doesn't flicker when insects momentarily clear out of range
     private const float FacingFlipThreshold = 0.01f;
 
+    // idle look around: a plant with nothing to face and nothing going on (not stunned,
+    // channeling, winding up an attack or playing a skill animation) turns the other way every
+    // 4 to 6 seconds, picked at random each time, so it reads as alive. the clock restarts
+    // whenever it has a target again
+    private const float IdleTurnMinInterval = 4f;
+    private const float IdleTurnMaxInterval = 6f;
+    private float _idleTurnTimer = -1f;
+
     private void UpdateFacingFlip()
     {
-        if (!UsesTargeting) return;
-
-        GameObject targetObj = GetHighlightTarget();
-        if (targetObj == null) return;
+        GameObject targetObj = UsesTargeting ? GetHighlightTarget() : null;
+        if (targetObj == null)
+        {
+            UpdateIdleTurn();
+            return;
+        }
+        _idleTurnTimer = -1f;
 
         Insect insect = targetObj.GetComponent<Insect>();
         Vector2 targetPos = insect != null ? insect.GetApproachPoint(transform.position) : (Vector2)targetObj.transform.position;
@@ -884,6 +895,20 @@ public abstract class Plant : Entity, IAttackable
 
         SpriteRenderer sr = GetMainRenderer();
         if (sr != null) sr.flipX = dx > 0f;
+    }
+
+    private void UpdateIdleTurn()
+    {
+        bool busy = IsStunned || IsChanneling || _attackWindupRoutine != null || Time.time < _bodyInterruptUntil;
+        if (busy) return;
+
+        if (_idleTurnTimer < 0f) _idleTurnTimer = Random.Range(IdleTurnMinInterval, IdleTurnMaxInterval);
+        _idleTurnTimer -= Time.deltaTime;
+        if (_idleTurnTimer > 0f) return;
+
+        SpriteRenderer sr = GetMainRenderer();
+        if (sr != null) sr.flipX = !sr.flipX;
+        _idleTurnTimer = Random.Range(IdleTurnMinInterval, IdleTurnMaxInterval);
     }
 
     // lets another plant show/hide THIS plant's own range circle (e.g. Carrot highlighting its

@@ -31,7 +31,7 @@ MonoBehaviour:
   baseAttackDamage: 28
   baseMagicPower: 0
   baseAttackSpeed: 1
-  baseAttackRange: 1.75
+  baseAttackRange: 1.5
   baseAttackChargeTime: 0
   baseArmor: 36
   baseMagicArmor: 0
