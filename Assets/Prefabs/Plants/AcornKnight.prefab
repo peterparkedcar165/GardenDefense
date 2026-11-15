@@ -363,6 +363,7 @@ MonoBehaviour:
   exp: 0
   expBoost: 0
   activeCooldown: 0
+  bodyAnimator: {fileID: 914770023522418676}
   temperature: 10
   baseComfortMin: 0
   comfortMinAdder: 0
@@ -429,9 +430,12 @@ MonoBehaviour:
   mainRenderer: {fileID: 5898074862566098166}
   swordVisual: {fileID: 0}
   shieldVisual: {fileID: 0}
-  bodyAnimator: {fileID: 914770023522418676}
   shieldProjectilePrefab: {fileID: 7388594979766616069, guid: b6f533dece6003441b9e57288542a7ee, type: 3}
   shieldPrefab: {fileID: 3542048050096898586, guid: c2446ee1ca454f14b6963eae3fce164e, type: 3}
+  attackClipFrameRate: 12
+  attackClipFrames: 12
+  downStrikeFrame: 2
+  upStrikeFrame: 6
 --- !u!58 &3849591162661420664
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -550,7 +554,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5622665880769766919, guid: 61ed802b81b693c4fba4309505d4eaaf, type: 3}
+  m_Sprite: {fileID: 3015211819276721340, guid: 361f336491221e742a6a0da0c409a39c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -608,7 +612,7 @@ Transform:
   m_GameObject: {fileID: 7736349920752556535}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.272, z: 0}
+  m_LocalPosition: {x: 0, y: -0.335, z: 0}
   m_LocalScale: {x: 0.79832804, y: 0.26332998, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
