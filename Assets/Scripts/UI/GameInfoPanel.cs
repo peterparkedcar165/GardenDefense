@@ -300,8 +300,10 @@ public class GameInfoPanel : MonoBehaviour
         ScrollRect scroll = scrollGO.AddComponent<ScrollRect>();
         scroll.horizontal = false;
         scroll.vertical = true;
-        Mask mask = scrollGO.AddComponent<Mask>();
-        mask.showMaskGraphic = false;
+        // clips by rectangle. a stencil Mask here hid every line: its graphic is fully transparent,
+        // unity skips drawing fully transparent meshes, so the mask was never written and all the
+        // text got clipped away. the clear image stays only so the mouse wheel scrolls anywhere
+        scrollGO.AddComponent<RectMask2D>();
         Image scrollBg = scrollGO.AddComponent<Image>();
         scrollBg.color = new Color(0f, 0f, 0f, 0f);
 
