@@ -25,6 +25,7 @@ MonoBehaviour:
   retainsAggro: 1
   generatesSun: 0
   category: 0
+  widgetHeightOffset: 0
   skillTree: {fileID: 11400000, guid: 5b35df63d07143619c7e5ab5202c1e5d, type: 2}
   fertilizerPossibleStats: 120000002600000027000000
   baseMaxHealth: 250
@@ -101,6 +102,7 @@ MonoBehaviour:
       volume: 0.5
       minPitch: 1
       maxPitch: 1.5
+      alwaysPlay: 0
   skillSound:
     clips: []
   coneFalloffPerTarget: 0.2
@@ -108,8 +110,8 @@ MonoBehaviour:
   upStrikeDamagePercent: 0.4
   baseDefensiveArmor: 20
   path2DefensiveArmorPerLevel: 7
-  defensiveAttackSpeedPenalty: 0.3
-  path2DefensiveAttackSpeedPenaltyReductionPerLevel: 0.03
+  defensiveAttackSpeedPenalty: 0.5
+  path2DefensiveAttackSpeedPenaltyReductionPerLevel: 0.05
   defensiveAttackRangePenalty: 0.15
   stanceExitDelay: 1
   bashStunDuration: 0.15

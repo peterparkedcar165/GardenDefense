@@ -172,6 +172,9 @@ public class Rhodiola : Shooter
 
         if (!isPrimaryTarget) return;
 
+        // spreading seed mulch: the most injured plant beside the target gets a share of this heal
+        SpreadingSeedMulchEffect.TrySpread(this, entity, amount);
+
         if (SkillTreeManager.HasUnlock(this, OvergrowthUnlock))
         {
             _overgrowthAttackCount++;

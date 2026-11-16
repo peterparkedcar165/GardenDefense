@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f59625fce0d1c7b4fa935c8d8f1fbbc3, type: 3}
-  m_Name: GoldenRootMulchData
-  m_EditorClassIdentifier: Assembly-CSharp::GoldenRootMulchData
-  mulchName: '<b><color=green>Golden Root</color></b>'
-  description: '<b><color=green>Rhodiola</color></b>''s heals also give the healed plant <b><color=green>+5</color></b> <color=#00CED1><b>Armor</b></color> for <b><color=green>4</color></b> seconds.'
+  m_Script: {fileID: 11500000, guid: e7d1c487f6624a0790aeafac61dc3b2c, type: 3}
+  m_Name: SpreadingSeedMulchData
+  m_EditorClassIdentifier: Assembly-CSharp::SpreadingSeedMulchData
+  mulchName: '<b><color=green>Spreading Seed</color></b>'
+  description: '<b><color=green>Rhodiola</color></b>''s healing seed also heals the most injured plant within <b><color=green>1</color></b> tile of its target for <b><color=green>40%</color></b> as much.'
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 2
@@ -25,10 +25,10 @@ MonoBehaviour:
     requiredPlantGroups:
     - anyOf:
       - plant: {fileID: 11400000, guid: 146abf62a7449d54eb1abc221e06d3d2, type: 2}
-        requiredUnlockId: 
+        requiredUnlockId:
         requiredMaxedPath: 0
     minWave: 0
     maxWave: 0
     orAlternatives: []
-  armorBonus: 5
-  duration: 4
+  healShare: 0.4
+  radiusTiles: 1
