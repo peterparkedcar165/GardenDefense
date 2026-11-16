@@ -144,6 +144,9 @@ public class AcornKnight : Aura
     public override bool UsesTargeting => true;
     public override bool IsMeleeAttacker => true;
 
+    // no attack cooldown bar under his health (tommy, 2026-11-15), unlike other aura plants
+    protected override bool GetAttackBarVisible() => false;
+
     // shield lifetime scales with Magic Power - a raw-seconds bonus, so no /100 division (see
     // feedback_magic_power_scaling memory: only decimal-percentage stats divide)
     public float SkillDurationMP => (AcornData?.skillDurationMPMultiplier ?? 0.10f) * magicPower;

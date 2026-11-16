@@ -117,6 +117,10 @@ public abstract class Plant : Entity, IAttackable
     protected virtual float GetPassiveBarFill() => passiveCooldown > 0f ? Mathf.Clamp01(1f - passiveCooldownTimer / passiveCooldown) : 1f;
     protected virtual bool GetAttackBarVisible() => false;
     protected virtual float GetAttackBarFill() => attackCooldown > 0f ? Mathf.Clamp01(attackCooldownTimer / attackCooldown) : 0f;
+    // a plant's own color for its cooldown bars in the widget. null = the style's color for the
+    // bar's position under the health bar
+    protected virtual Color? AttackBarColor => null;
+    protected virtual Color? PassiveBarColor => null;
     [SerializeField] private Transform circleRadius;
     private Transform darkCircleRadius;
     private CircleCollider2D _circleCollider;
@@ -680,9 +684,9 @@ public abstract class Plant : Entity, IAttackable
         if (_widget == null) return;
         bool focused = _isSelected || _hoverHighlighted;
 
-        if (focused && GetAttackBarVisible()) _widget.SetExtraBar("attack", GetAttackBarFill());
+        if (focused && GetAttackBarVisible()) _widget.SetExtraBar("attack", GetAttackBarFill(), AttackBarColor);
         else _widget.RemoveExtraBar("attack");
-        if (focused && GetPassiveBarVisible()) _widget.SetExtraBar("passive", GetPassiveBarFill());
+        if (focused && GetPassiveBarVisible()) _widget.SetExtraBar("passive", GetPassiveBarFill(), PassiveBarColor);
         else _widget.RemoveExtraBar("passive");
 
         float charge = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;

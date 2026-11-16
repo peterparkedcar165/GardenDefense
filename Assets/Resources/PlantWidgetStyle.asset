@@ -39,6 +39,7 @@ MonoBehaviour:
   extraBarColors:
   - {r: 0.247059, g: 0.662745, b: 0.960784, a: 1}
   - {r: 0.690196, g: 0.745098, b: 0.772549, a: 1}
+  sunBarColor: {r: 1, g: 0.843137, b: 0, a: 1}
   circleInsideColor: {r: 0.180392, g: 0.180392, b: 0.180392, a: 1}
   circleOutlineColor: {r: 0.054902, g: 0.054902, b: 0.054902, a: 1}
   chargeColor: {r: 0.356863, g: 0.847059, b: 0.290196, a: 1}

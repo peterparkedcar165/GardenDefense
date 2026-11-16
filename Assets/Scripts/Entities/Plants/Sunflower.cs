@@ -262,6 +262,9 @@ public class Sunflower : Shooter
     // sound is played per projectile (in FireProjectile) instead of the usual once-per-Shoot()
     protected override bool PlaysOwnAttackSound => true;
 
+    // her passive bar is her sun generation cooldown, so it's sun colored (PlantWidgetStyle.sunBarColor)
+    protected override Color? PassiveBarColor => PlantWidget.Style != null ? PlantWidget.Style.sunBarColor : (Color?)null;
+
     // caches whatever FindTarget() actually picked, so the charge sequence below can keep firing
     // at that exact insect later even if it has since walked outside attackRange - re-running
     // FindTarget() at fire time would otherwise silently retarget (or find nothing) the moment the
