@@ -979,6 +979,7 @@ public abstract class Entity : MonoBehaviour
         TickEffects();
         TickHealthBarFill();
         TickDamageChunkFill();
+        TickHealthWidget(_shieldJustExpired);
         _shieldJustExpired = false;
         if (_isHighlighted) SyncHighlightOutline();
 
@@ -1170,6 +1171,10 @@ public abstract class Entity : MonoBehaviour
 
         healthBarInstance.SetActive(false);
     }
+
+    // once a frame, right before the shield popped flag clears: plants feed their PlantWidget here
+    // (they use it instead of the health bar above)
+    protected virtual void TickHealthWidget(bool shieldJustExpired) {}
 
     // plants and friendly units use a green fill, everything else red. overridable for teams
     protected static readonly Color EnemyHealthBarColor = new Color(0.6f, 0.05f, 0.05f);

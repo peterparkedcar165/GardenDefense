@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b0205d39862455da2894f7e7a84bc84, type: 3}
+  m_Name: PlantWidgetStyle
+  m_EditorClassIdentifier: Assembly-CSharp::PlantWidgetStyle
+  barHealth: {fileID: 21300000, guid: fb5e2a7e39f04cafbd3af90525d0baa2, type: 3}
+  barThin: {fileID: 21300000, guid: fc3c322fa22042609bc68310f3d33520, type: 3}
+  fillHealth: {fileID: 21300000, guid: 68b52d2222714716859ec06631b7a6c9, type: 3}
+  fillThin: {fileID: 21300000, guid: d52cf8d36ce046f4884b58c3bf73a635, type: 3}
+  circleInside: {fileID: 21300000, guid: 1c91e9091544494d9e6a46d2523975d0, type: 3}
+  circleCharge: {fileID: 21300000, guid: b507ab471d79486485238bad231b9406, type: 3}
+  circleOutline: {fileID: 21300000, guid: c99b3458591b40e79c86a5fa4a10c494, type: 3}
+  circleGlow: {fileID: 21300000, guid: 8f88316e625c4b0496ccd895f69a7b4e, type: 3}
+  barWidth: 34
+  pixelScale: 1
+  verticalOffset: 0
+  sortingLayer: Plants
+  sortingOrder: 50
+  alwaysVisible: 0
+  showWhileSkillUnlocked: 1
+  colorHealthByAmount: 1
+  healthHigh: {r: 0.298039, g: 0.686275, b: 0.313725, a: 1}
+  healthMid: {r: 1, g: 0.788235, b: 0.235294, a: 1}
+  healthLow: {r: 0.898039, g: 0.282353, b: 0.247059, a: 1}
+  highAbove: 0.5
+  midAbove: 0.2
+  healthFixed: {r: 0.298039, g: 0.686275, b: 0.313725, a: 1}
+  shield: {r: 0.55, g: 0.55, b: 0.55, a: 1}
+  damageChunk: {r: 1, g: 1, b: 1, a: 1}
+  extraBarColors:
+  - {r: 0.247059, g: 0.662745, b: 0.960784, a: 1}
+  - {r: 0.690196, g: 0.745098, b: 0.772549, a: 1}
+  circleInsideColor: {r: 0.180392, g: 0.180392, b: 0.180392, a: 1}
+  circleOutlineColor: {r: 0.054902, g: 0.054902, b: 0.054902, a: 1}
+  chargeColor: {r: 0.356863, g: 0.847059, b: 0.290196, a: 1}
+  readyGlowColor: {r: 0.839216, g: 1, b: 0.690196, a: 1}
+  glowPulsePeriod: 1.4
+  glowMinAlpha: 0.7
+  glowMaxAlpha: 1

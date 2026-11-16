@@ -125,27 +125,10 @@ public abstract class Plant : Entity, IAttackable
     private LightFader _lightFader;
     private float _lastLightEmissionRange;
     protected virtual float LightIntensity => 0.5f;
-    private GameObject _skillBarInstance;
-    private Transform _skillBarFill;
-    private GameObject _passiveBarInstance;
-    private Transform _passiveBarFill;
-    private GameObject _attackBarInstance;
-    private Transform _attackBarFill;
-
-    // eases each bar's fill toward its real fraction every frame instead of snapping, same
-    // formula as the health bar's own lerp - just the one layer, no trailing damage-chunk here.
-    // -1 sentinel so each bar snaps instantly the first time it's ever computed, not ease from 0
-    private float _displayedAttackFill = -1f;
-    private float _displayedPassiveFill = -1f;
-    private float _displayedSkillFill = -1f;
-
-    // only eases upward (recharging) - a drop (e.g. a skill/attack just firing and resetting its
-    // cooldown bar back down) snaps instantly instead of draining smoothly
-    private float EaseBarFillUpOnly(float displayed, float target)
-    {
-        if (displayed < 0f || target <= displayed) return target;
-        return Mathf.Lerp(displayed, target, 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime));
-    }
+    // the bar widget over the plant (health, attack and passive cooldown bars, skill circle),
+    // replacing the old health bar and its stacked cooldown bars. fed every frame in Update and
+    // TickHealthWidget
+    private PlantWidget _widget;
     [SerializeField] private float lightInnerRadius = 1.2f;
     [SerializeField] private float lightFalloffStrength = 0.2f;
 
@@ -577,10 +560,7 @@ public abstract class Plant : Entity, IAttackable
         baseMaxHealth = 200;
         healthBarOffset = new Vector3(0, 0.7f, 0);
         base.Awake();
-        SpawnHealthBar();
-        SpawnAttackBar();
-        SpawnSkillBar();
-        SpawnPassiveBar();
+        _widget = PlantWidget.Create(transform, healthBarOffset.y);
         baseCriticalChance = 0.05f;
         baseCriticalDamage = 1.5f;
         allPlants.Add(this);
@@ -692,94 +672,32 @@ public abstract class Plant : Entity, IAttackable
         OnPlantRemoved?.Invoke(this);
     }
 
-    private void SpawnAttackBar()
+    // the widget over the plant. the attack and passive cooldown bars show only while it's hovered
+    // or selected, like the old ones did; the widget itself shows while hovered, selected, hurt or
+    // shielded, or once the skill is unlocked (PlantWidgetStyle decides the last one)
+    private void UpdateWidget()
     {
-        GameObject prefab = Resources.Load<GameObject>("HealthBar");
-        if (prefab == null) return;
+        if (_widget == null) return;
+        bool focused = _isSelected || _hoverHighlighted;
 
-        _attackBarInstance = Instantiate(prefab, transform);
+        if (focused && GetAttackBarVisible()) _widget.SetExtraBar("attack", GetAttackBarFill());
+        else _widget.RemoveExtraBar("attack");
+        if (focused && GetPassiveBarVisible()) _widget.SetExtraBar("passive", GetPassiveBarFill());
+        else _widget.RemoveExtraBar("passive");
 
-        Vector3 pos = healthBarOffset;
-        pos.x -= 0.35625f;
-        pos.y -= 0.084375f;
-        _attackBarInstance.transform.localPosition = pos;
+        float charge = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;
+        _widget.SetSkill(path3Unlocked, charge, skillCooldownTimer <= 0f);
 
-        Vector3 scale = _attackBarInstance.transform.localScale;
-        scale.x *= 0.75f;
-        scale.y *= 0.35f;
-        _attackBarInstance.transform.localScale = scale;
-
-        _attackBarFill = _attackBarInstance.transform.Find("Fill");
-        if (_attackBarFill != null)
-        {
-            SpriteRenderer sr = _attackBarFill.GetComponent<SpriteRenderer>();
-            if (sr != null) sr.color = Color.cyan;
-        }
-
-        Transform shieldChild = _attackBarInstance.transform.Find("ShieldFill");
-        if (shieldChild != null) Destroy(shieldChild.gameObject);
-
-        _attackBarInstance.SetActive(false);
+        PlantWidgetStyle style = PlantWidget.Style;
+        bool hurt = health < maxHealth || TotalShield > 0f;
+        bool skill = path3Unlocked && style != null && style.showWhileSkillUnlocked;
+        bool always = style != null && style.alwaysVisible;
+        _widget.SetVisible(IsAlive && (focused || hurt || skill || always));
     }
 
-    private void SpawnPassiveBar()
+    protected override void TickHealthWidget(bool shieldJustExpired)
     {
-        GameObject prefab = Resources.Load<GameObject>("HealthBar");
-        if (prefab == null) return;
-
-        _passiveBarInstance = Instantiate(prefab, transform);
-
-        Vector3 pos = healthBarOffset;
-        pos.x -= 0.35625f;
-        pos.y -= 0.128125f;
-        _passiveBarInstance.transform.localPosition = pos;
-
-        Vector3 scale = _passiveBarInstance.transform.localScale;
-        scale.x *= 0.75f;
-        scale.y *= 0.35f;
-        _passiveBarInstance.transform.localScale = scale;
-
-        _passiveBarFill = _passiveBarInstance.transform.Find("Fill");
-        if (_passiveBarFill != null)
-        {
-            SpriteRenderer sr = _passiveBarFill.GetComponent<SpriteRenderer>();
-            if (sr != null) sr.color = new Color(1f, 0.85f, 0f);
-        }
-
-        Transform shieldChild = _passiveBarInstance.transform.Find("ShieldFill");
-        if (shieldChild != null) Destroy(shieldChild.gameObject);
-
-        _passiveBarInstance.SetActive(false);
-    }
-
-    private void SpawnSkillBar()
-    {
-        GameObject prefab = Resources.Load<GameObject>("HealthBar");
-        if (prefab == null) return;
-
-        _skillBarInstance = Instantiate(prefab, transform);
-
-        Vector3 pos = healthBarOffset;
-        pos.x -= 0.35625f;
-        pos.y -= 0.171875f;
-        _skillBarInstance.transform.localPosition = pos;
-
-        Vector3 scale = _skillBarInstance.transform.localScale;
-        scale.x *= 0.75f;
-        scale.y *= 0.35f;
-        _skillBarInstance.transform.localScale = scale;
-
-        _skillBarFill = _skillBarInstance.transform.Find("Fill");
-        if (_skillBarFill != null)
-        {
-            SpriteRenderer sr = _skillBarFill.GetComponent<SpriteRenderer>();
-            if (sr != null) sr.color = new Color(0.8f, 0.8f, 0.8f);
-        }
-
-        Transform shieldChild = _skillBarInstance.transform.Find("ShieldFill");
-        if (shieldChild != null) Destroy(shieldChild.gameObject);
-
-        _skillBarInstance.SetActive(false);
+        if (_widget != null) _widget.SetHealth(health, maxHealth, TotalShield, shieldJustExpired);
     }
 
     [SerializeField] private SpriteRenderer mainRenderer;
@@ -1080,72 +998,7 @@ public abstract class Plant : Entity, IAttackable
         if (transplantCooldownTimer > 0)
             transplantCooldownTimer -= Time.deltaTime;
 
-        {
-            float stackY = healthBarOffset.y - 0.046875f;
-            const float barHalfH = 0.021875f;
-
-            bool attackShow = GetAttackBarVisible() && (_isSelected || _hoverHighlighted);
-            if (_attackBarInstance != null)
-            {
-                _attackBarInstance.SetActive(attackShow);
-                if (attackShow)
-                {
-                    Vector3 p = _attackBarInstance.transform.localPosition;
-                    p.y = stackY - barHalfH;
-                    _attackBarInstance.transform.localPosition = p;
-                    stackY -= barHalfH * 2f;
-                    if (_attackBarFill != null)
-                    {
-                        float target = GetAttackBarFill();
-                        _displayedAttackFill = EaseBarFillUpOnly(_displayedAttackFill, target);
-                        Vector3 s = _attackBarFill.localScale;
-                        s.x = _displayedAttackFill;
-                        _attackBarFill.localScale = s;
-                    }
-                }
-            }
-
-            bool passiveShow = GetPassiveBarVisible() && (_isSelected || _hoverHighlighted);
-            if (_passiveBarInstance != null)
-            {
-                _passiveBarInstance.SetActive(passiveShow);
-                if (passiveShow)
-                {
-                    Vector3 p = _passiveBarInstance.transform.localPosition;
-                    p.y = stackY - barHalfH;
-                    _passiveBarInstance.transform.localPosition = p;
-                    stackY -= barHalfH * 2f;
-                    if (_passiveBarFill != null)
-                    {
-                        float target = GetPassiveBarFill();
-                        _displayedPassiveFill = EaseBarFillUpOnly(_displayedPassiveFill, target);
-                        Vector3 s = _passiveBarFill.localScale;
-                        s.x = _displayedPassiveFill;
-                        _passiveBarFill.localScale = s;
-                    }
-                }
-            }
-
-            bool skillShow = path3Unlocked;
-            if (_skillBarInstance != null)
-            {
-                _skillBarInstance.SetActive(skillShow);
-                if (skillShow)
-                {
-                    Vector3 p = _skillBarInstance.transform.localPosition;
-                    p.y = stackY - barHalfH;
-                    _skillBarInstance.transform.localPosition = p;
-                    if (_skillBarFill != null)
-                    {
-                        float target = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;
-                        _displayedSkillFill = EaseBarFillUpOnly(_displayedSkillFill, target);
-                        Vector3 s = _skillBarFill.localScale;
-                        s.x = _displayedSkillFill;
-                        _skillBarFill.localScale = s;
-                    }
-                }
-            }
-        }
+        UpdateWidget();
 
         if (_hoverHighlighted)
             SetHighlight(Color.white);
