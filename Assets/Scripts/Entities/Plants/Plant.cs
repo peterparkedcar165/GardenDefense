@@ -805,7 +805,10 @@ public abstract class Plant : Entity, IAttackable
     // left/right art is needed. convention: a plant's unflipped art faces LEFT by default, and
     // flipX mirrors it to face right - holds its last facing (no snap to default) when there's
     // no current target, so it doesn't flicker when insects momentarily clear out of range
-    private const float FacingFlipThreshold = 0.01f;
+    // dead zone: the target has to be at least this far to one side before the plant turns, so an
+    // insect almost straight above or below it (a melee plant's attacker) can wobble across its
+    // middle without flipping it left and right every few frames. 0.15 units is about 5 tile pixels
+    private const float FacingFlipThreshold = 0.15f;
 
     // idle look around: a plant with nothing to face and nothing going on (not stunned,
     // channeling, winding up an attack or playing a skill animation) turns the other way every
