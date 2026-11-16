@@ -121,6 +121,8 @@ public abstract class Plant : Entity, IAttackable
     // bar's position under the health bar
     protected virtual Color? AttackBarColor => null;
     protected virtual Color? PassiveBarColor => null;
+    // true puts the passive bar right under the health bar, above the attack bar (rhodiola's sap)
+    protected virtual bool PassiveBarFirst => false;
     [SerializeField] private Transform circleRadius;
     private Transform darkCircleRadius;
     private CircleCollider2D _circleCollider;
@@ -684,10 +686,9 @@ public abstract class Plant : Entity, IAttackable
         if (_widget == null) return;
         bool focused = _isSelected || _hoverHighlighted;
 
-        if (focused && GetAttackBarVisible()) _widget.SetExtraBar("attack", GetAttackBarFill(), AttackBarColor);
-        else _widget.RemoveExtraBar("attack");
-        if (focused && GetPassiveBarVisible()) _widget.SetExtraBar("passive", GetPassiveBarFill(), PassiveBarColor);
-        else _widget.RemoveExtraBar("passive");
+        // bars stack in the order they're first added
+        if (PassiveBarFirst) { UpdatePassiveBar(focused); UpdateAttackBar(focused); }
+        else { UpdateAttackBar(focused); UpdatePassiveBar(focused); }
 
         float charge = skillCooldown > 0f ? Mathf.Clamp01(1f - skillCooldownTimer / skillCooldown) : 1f;
         _widget.SetSkill(path3Unlocked, charge, skillCooldownTimer <= 0f);
@@ -697,6 +698,18 @@ public abstract class Plant : Entity, IAttackable
         bool skill = path3Unlocked && style != null && style.showWhileSkillUnlocked;
         bool always = style != null && style.alwaysVisible;
         _widget.SetVisible(IsAlive && (focused || hurt || skill || always));
+    }
+
+    private void UpdateAttackBar(bool focused)
+    {
+        if (focused && GetAttackBarVisible()) _widget.SetExtraBar("attack", GetAttackBarFill(), AttackBarColor);
+        else _widget.RemoveExtraBar("attack");
+    }
+
+    private void UpdatePassiveBar(bool focused)
+    {
+        if (focused && GetPassiveBarVisible()) _widget.SetExtraBar("passive", GetPassiveBarFill(), PassiveBarColor);
+        else _widget.RemoveExtraBar("passive");
     }
 
     protected override void TickHealthWidget(bool shieldJustExpired)

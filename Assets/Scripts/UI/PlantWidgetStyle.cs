@@ -60,6 +60,8 @@ public class PlantWidgetStyle : ScriptableObject
     public Color[] extraBarColors = { new Color32(0x3F, 0xA9, 0xF5, 0xFF), new Color32(0xB0, 0xBE, 0xC5, 0xFF) };
     [Tooltip("sun generation cooldown bars (the sunflower's), the same gold as Sun in tooltips")]
     public Color sunBarColor = new Color32(0xFF, 0xD7, 0x00, 0xFF);
+    [Tooltip("rhodiola's golden sap bar")]
+    public Color sapBarColor = new Color32(0xFF, 0xD7, 0x00, 0xFF);
 
     [Header("Skill circle")]
     public Color circleInsideColor = new Color32(0x2E, 0x2E, 0x2E, 0xFF);

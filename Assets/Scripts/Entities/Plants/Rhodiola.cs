@@ -12,6 +12,12 @@ public class Rhodiola : Shooter
     // did as an Aura before, so opt back in the same way Gloriosa does
     protected override bool GetAttackBarVisible() => attackCooldown > 0f;
 
+    // her passive bar is her golden sap, gold, directly under her health bar
+    protected override bool GetPassiveBarVisible() => true;
+    protected override float GetPassiveBarFill() => SapCap > 0f ? Mathf.Clamp01(_storedSap / SapCap) : 0f;
+    protected override Color? PassiveBarColor => PlantWidget.Style != null ? PlantWidget.Style.sapBarColor : SapColor;
+    protected override bool PassiveBarFirst => true;
+
     // skill tree node unlock ids
     public const string RevivalAoeUnlock      = "rhodiola_revival_aoe";
     public const string RevivalEmpowerUnlock  = "rhodiola_revival_empower";
@@ -28,7 +34,20 @@ public class Rhodiola : Shooter
     public float HealMP     => (RData?.attackHealMPScaling ?? 0.05f) * magicPower;
     public float HealAmount => attackDamage + HealMP;
 
-    public float GrassConversion => (RData?.baseGrassConversion ?? 0.5f) + (RData?.path2GrassConversionPerLevel ?? 0.1f) * effectivePath2Level;
+    // attack path (moved from the passive, tommy 2026-11-16): heals and shields given grow with
+    // her grass damage, and the share grows per attack level
+    public float GrassConversion => (RData?.baseGrassConversion ?? 0.5f) + (RData?.path1GrassConversionPerLevel ?? 0.1f) * effectivePath1Level;
+
+    // golden sap (passive, tommy 2026-11-16): any of her heals that would go past a target's full
+    // health is stored (OnHealOverflow), up to SapCap. when a plant in her range is below
+    // SapReleaseThreshold of its max health, all of it goes into that plant at once. her root glows
+    // brighter as it fills, and her passive bar under her health shows it in gold
+    public float SapCap              => (RData?.baseSapCap ?? 50f) + (RData?.path2SapCapPerLevel ?? 15f) * effectivePath2Level;
+    public float SapReleaseThreshold => RData?.sapReleaseThreshold ?? 0.25f;
+    private float _storedSap;
+    public float StoredSap => _storedSap;
+    private SpriteRenderer _sapGlow;
+    private static readonly Color SapColor = new Color32(0xFF, 0xD7, 0x00, 0xFF);
 
     // Symbiosis max level bonus: full health favors more Grass Damage (see UpdateStats), otherwise
     // a portion of healing granted through the attack or Rejuvenating Burgeon returns to the Rhodiola
@@ -66,6 +85,72 @@ public class Rhodiola : Shooter
         }
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        if (!IsAlive) return;
+        TryReleaseSap();
+        UpdateSapGlow();
+    }
+
+    // any heal of hers past full health (seed, burgeon, bounce, overgrowth, revival, spreading
+    // seed, the sap release itself) tops up the sap, up to the cap
+    public override void OnHealOverflow(Entity healed, float overflow)
+    {
+        _storedSap = Mathf.Min(SapCap, _storedSap + overflow);
+    }
+
+    // the lowest plant in her range under the threshold (her included) gets every drop at once.
+    // the stored sap already carries her heal bonuses, so they're divided back out here and the
+    // plant gets the stored amount, not more
+    private void TryReleaseSap()
+    {
+        if (_storedSap <= 0f) return;
+        Plant neediest = null;
+        float lowest = SapReleaseThreshold;
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || !plant.IsAlive || plant.maxHealth <= 0f) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
+            float percent = plant.health / plant.maxHealth;
+            if (percent < lowest) { lowest = percent; neediest = plant; }
+        }
+        if (neediest == null) return;
+
+        float sap = _storedSap;
+        _storedSap = 0f;
+        StatusIndicator.Spawn(neediest.transform.position + new Vector3(0.4f, 0f, 0f), "Golden Sap", SapColor);
+        neediest.Heal(sap / Mathf.Max(0.01f, 1f + healingBonus), this);
+    }
+
+    // a soft gold glow over her root (Resources/RhodiolaSapGlow), drawn just above her own sprite
+    // with the same sorting and material, fading in as the sap fills and pulsing gently when full
+    private void UpdateSapGlow()
+    {
+        if (_sapGlow == null)
+        {
+            Sprite glowSprite = Resources.Load<Sprite>("RhodiolaSapGlow");
+            SpriteRenderer body = GetMainRenderer();
+            if (glowSprite == null || body == null) return;
+            GameObject glow = new GameObject("SapGlow");
+            glow.transform.SetParent(transform, false);
+            glow.transform.localPosition = new Vector3(0f, -0.27f, 0f);
+            _sapGlow = glow.AddComponent<SpriteRenderer>();
+            _sapGlow.sprite = glowSprite;
+            _sapGlow.sharedMaterial = body.sharedMaterial;
+            _sapGlow.sortingLayerID = body.sortingLayerID;
+            _sapGlow.sortingOrder = body.sortingOrder + 1;
+        }
+
+        float fill = SapCap > 0f ? Mathf.Clamp01(_storedSap / SapCap) : 0f;
+        float alpha = fill * (RData?.sapGlowMaxAlpha ?? 0.6f);
+        if (fill >= 1f) alpha *= 0.85f + 0.15f * Mathf.Sin(Time.time * 4f);
+        _sapGlow.enabled = alpha > 0.01f;
+        Color c = SapColor;
+        c.a = alpha;
+        _sapGlow.color = c;
+    }
+
     // Symbiosis max level bonus: while not fully healthy, a portion of healing granted through the
     // attack or Rejuvenating Burgeon returns to the Rhodiola itself. called directly at those heal
     // sites (rather than via the global OnHeal event) so the revival heal and skill-sourced regen
@@ -86,7 +171,7 @@ public class Rhodiola : Shooter
         if (IsPath2Maxed && health >= maxHealth)
             grassDamage += MaxLevelGrassDamageBonus;
 
-        // passive, heals and shields given are increased by a portion of grass damage
+        // attack path: heals and shields given are increased by a portion of grass damage
         healingBonus += grassDamage * GrassConversion;
     }
 
@@ -272,11 +357,14 @@ public class Rhodiola : Shooter
 
     public override string GetAttackDescription() =>
         $"Fires a rejuvenating seed at the most injured nearby plant, healing it for <color=green><b>{attackDamage:F0}</b></color> " +
-        $"[<color=#FFB6C1><b>+{HealMP:F0}</b></color>] health and leaving behind a regenerating bloom.";
+        $"[<color=#FFB6C1><b>+{HealMP:F0}</b></color>] health and leaving behind a regenerating bloom.\n\n" +
+        $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.";
+
+    private string GoldenSapLabel => "<color=#FFD700><b>Golden Sap</b></color>";
 
     public override string GetPassiveDescription() =>
-        $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.\n\n" +
-        $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>) while it lasts.";
+        $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>) while it lasts.\n\n" +
+        $"Healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>{SapCap:F0}</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once.";
 
     public override string GetSkillDesription() =>
         $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
@@ -289,12 +377,15 @@ public class Rhodiola : Shooter
     {
         float dmgpl   = RData?.path1AttackDamagePerLevel    ?? 2f;
         float rangepl = RData?.path1AttackRangePerLevel     ?? 0.3f;
+        float convpl  = RData?.path1GrassConversionPerLevel ?? 0.1f;
         string desc = details
-            ? $"Fires a rejuvenating seed at the most injured nearby plant, healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health.\n\n*Unaffected by Piercing"
+            ? $"Fires a rejuvenating seed at the most injured nearby plant, healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health.\n\n" +
+              $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\n\n*Unaffected by Piercing"
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
+               $"Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Each projectile heals an additional <color=green><b>{MissingHealthPercent * 100f:F0}%</b></color> of the target's missing health.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
@@ -302,15 +393,15 @@ public class Rhodiola : Shooter
 
     public override string GetPath2Description(bool details = false)
     {
-        float convpl = RData?.path2GrassConversionPerLevel ?? 0.1f;
+        float sappl  = RData?.path2SapCapPerLevel           ?? 15f;
         float burgpl = RData?.path2BurgeonHealPerLevel      ?? 2f;
         float armorpl = RData?.path2BurgeonArmorPerLevel    ?? 8f;
         string desc = details
-            ? $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\n\n" +
-              $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>, while it lasts."
+            ? $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>, while it lasts.\n\n" +
+              $"Healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>[({RData?.baseSapCap ?? 50f:F0}) + ({sappl:F0}/Lvl.)]</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
-               $"Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{sappl:F0}</b></color> per level. [<color=#FFD700><b>+{sappl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Rejuvenating Burgeon</b></color> healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Rejuvenating Burgeon</b></color> armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"If fully healthy, increase <color=green><b>Grass Damage</b></color> by <color=green><b>{MaxLevelGrassDamageBonus * 100f:F0}%</b></color>. Otherwise, <color=green><b>{MaxLevelHealingReturn * 100f:F0}%</b></color> of healing granted through the attack and <color=green><b>Rejuvenating Burgeon</b></color> is returned to the {GetName()}.")}\n\n" +

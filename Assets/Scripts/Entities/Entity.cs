@@ -862,6 +862,9 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
+    // a heal this entity gave went past its target's max health by overflow (see Heal)
+    public virtual void OnHealOverflow(Entity healed, float overflow) {}
+
 // method for healing
     public virtual void Heal(float healingAmount, Entity source = null, HealTag[] tags = null)
     {
@@ -887,7 +890,13 @@ public abstract class Entity : MonoBehaviour
             healingAmount *= MulchManager.RegenerationHealMultiplier;
 
         float bonus = source != null ? source.healingBonus : 0f;
-        float actual = Mathf.Min(healingAmount * (1f + healingReceived) * (1f + bonus), maxHealth - health);
+        float intended = healingAmount * (1f + healingReceived) * (1f + bonus);
+        float actual = Mathf.Min(intended, maxHealth - health);
+        // the part of the heal past full health, told to whoever gave it (rhodiola's golden sap
+        // stores it). before any heal crit, and before the early out so a heal on a plant already
+        // at full health counts in full
+        float overflow = intended - Mathf.Max(0f, actual);
+        if (source != null && overflow > 0f) source.OnHealOverflow(this, overflow);
         if (actual <= 0f) return;
         bool isCrit = false;
         if (source != null && source.HealCanCrit && Random.value < source.criticalChance + source.criticalHealChance)
