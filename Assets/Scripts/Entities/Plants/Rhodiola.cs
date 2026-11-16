@@ -41,6 +41,7 @@ public class Rhodiola : Shooter
     // brighter as it fills, and her passive bar under her health shows it in gold
     public float SapCap              => (RData?.baseSapCap ?? 50f) + (RData?.path2SapCapPerLevel ?? 15f) * effectivePath2Level;
     public float SapReleaseThreshold => RData?.sapReleaseThreshold ?? 0.25f;
+    public float SapStoreShare       => RData?.sapStoreShare ?? 0.5f;
     private float _storedSap;
     public float StoredSap => _storedSap;
     private SpriteRenderer _sapGlow;
@@ -91,10 +92,11 @@ public class Rhodiola : Shooter
     }
 
     // any heal of hers past full health (seed, burgeon, bounce, overgrowth, revival, spreading
-    // seed, the sap release itself) tops up the sap, up to the cap
+    // seed, the sap release itself) tops up the sap by SapStoreShare of the overflow (half,
+    // tommy 2026-11-16), up to the cap
     public override void OnHealOverflow(Entity healed, float overflow)
     {
-        _storedSap = Mathf.Min(SapCap, _storedSap + overflow);
+        _storedSap = Mathf.Min(SapCap, _storedSap + overflow * SapStoreShare);
     }
 
     // the lowest plant in her range under the threshold (her included) gets every drop at once.
@@ -361,7 +363,7 @@ public class Rhodiola : Shooter
 
     public override string GetPassiveDescription() =>
         $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>) while it lasts.\n\n" +
-        $"Healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>{SapCap:F0}</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once.";
+        $"<color=green><b>{SapStoreShare * 100f:F0}%</b></color> of healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>{SapCap:F0}</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once.";
 
     public override string GetSkillDesription() =>
         $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
@@ -395,7 +397,7 @@ public class Rhodiola : Shooter
         float armorpl = RData?.path2BurgeonArmorPerLevel    ?? 8f;
         string desc = details
             ? $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>, while it lasts.\n\n" +
-              $"Healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>[({RData?.baseSapCap ?? 50f:F0}) + ({sappl:F0}/Lvl.)]</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once."
+              $"<color=green><b>{SapStoreShare * 100f:F0}%</b></color> of healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>[({RData?.baseSapCap ?? 50f:F0}) + ({sappl:F0}/Lvl.)]</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{sappl:F0}</b></color> per level. [<color=#FFD700><b>+{sappl * effectivePath2Level:F0}</b></color>]\n\n" +

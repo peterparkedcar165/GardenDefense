@@ -25,6 +25,8 @@ public class RhodiolaData : PlantData
     [Tooltip("healing past a plant's full health she stores, up to this much at passive level 0")]
     public float baseSapCap = 50f;
     public float path2SapCapPerLevel = 15f;
+    [Tooltip("share of the healing past full health that becomes sap, e.g. 0.5 = 50%")]
+    [Range(0f, 1f)] public float sapStoreShare = 0.5f;
     [Tooltip("a plant in her range below this share of its max health gets all the stored sap at once, e.g. 0.25 = 25%")]
     public float sapReleaseThreshold = 0.25f;
     [Tooltip("how strong the glow at her root gets when the sap is full")]
@@ -55,7 +57,7 @@ public class RhodiolaData : PlantData
         "Fires a rejuvenating seed at the most injured nearby plant, healing it and leaving behind a regenerating bloom. Heals & Shields given are increased by a portion of <color=green><b>Grass Damage</b></color>.";
 
     public override string GetPassiveDescription() =>
-        "Healing applies Rejuvenating Burgeon, a heal over time that also grants Armor while it lasts. Healing past full health is stored as <color=#FFD700><b>Golden Sap</b></color>, released all at once into a plant in range that drops below 25% health.";
+        "Healing applies Rejuvenating Burgeon, a heal over time that also grants Armor while it lasts. Half of the healing past full health is stored as <color=#FFD700><b>Golden Sap</b></color>, released all at once into a plant in range that drops below 25% health.";
 
     public override string GetSkillDescription() =>
         "Target a tile where a plant has fallen to resurrect it and restore a portion of its Health.";
