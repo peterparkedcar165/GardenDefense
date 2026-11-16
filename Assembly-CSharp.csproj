@@ -209,7 +209,6 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\KelpData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\GoldenRootArmorEffect.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\TextIndicator.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\DashHomingProjectile.cs" />
     <Compile Include="Assets\Scripts\Mulch\MarketDayMulchData.cs" />
@@ -250,12 +249,12 @@
     <Compile Include="Assets\Scripts\Mulch\GerminationChainMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Tutorial\TutorialEvents.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\WebbedEffect.cs" />
-    <Compile Include="Assets\Scripts\Mulch\GoldenRootMulchData.cs" />
     <Compile Include="Assets\Scripts\Mulch\GerminationChainMulchData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DaytimeGridManager.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PsionicBondEffect.cs" />
+    <Compile Include="Assets\Scripts\Mulch\SpreadingSeedMulchEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\StargazerData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantEmpowermentEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\WateringCanMulchData.cs" />
@@ -330,6 +329,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\SeasonedOakEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Gloriosa.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
+    <Compile Include="Assets\Scripts\Mulch\SpreadingSeedMulchData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\LeafRanger.cs" />
     <Compile Include="Assets\Scripts\Mulch\WeatherMulchEffect.cs" />
@@ -378,7 +378,6 @@
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\OldCarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
-    <Compile Include="Assets\Scripts\Mulch\GoldenRootMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Tutorial\TutorialContent.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\MonsoonSurgeEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\RejuvenatingBurgeonEffect.cs" />

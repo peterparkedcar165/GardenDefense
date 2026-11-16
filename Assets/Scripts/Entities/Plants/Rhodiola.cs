@@ -8,11 +8,8 @@ public class Rhodiola : Shooter
 
     private Entity _mainTarget;
 
-    // Shooter doesn't show an attack bar by default (most shooters don't need one) - Rhodiola
-    // did as an Aura before, so opt back in the same way Gloriosa does
-    protected override bool GetAttackBarVisible() => attackCooldown > 0f;
-
-    // her passive bar is her golden sap, gold, directly under her health bar
+    // her passive bar is her golden sap, gold, directly under her health bar. no attack cooldown
+    // bar (tommy, 2026-11-16), the shooter default
     protected override bool GetPassiveBarVisible() => true;
     protected override float GetPassiveBarFill() => SapCap > 0f ? Mathf.Clamp01(_storedSap / SapCap) : 0f;
     protected override Color? PassiveBarColor => PlantWidget.Style != null ? PlantWidget.Style.sapBarColor : SapColor;
