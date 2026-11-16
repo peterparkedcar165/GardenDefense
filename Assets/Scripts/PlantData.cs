@@ -43,6 +43,12 @@ public class PlantData : ScriptableObject
     [Header("Dev Only")]
     public PlantCategory category = PlantCategory.Normal;
 
+    // the bar widget sits just above this plant's own sprite on its own (see PlantWidget's
+    // FollowSpriteTop). this nudges it for this plant only, in the widget's pixels
+    [Header("Health Bar")]
+    [Tooltip("widget pixels to move this plant's health bar up (or down, negative) from just above its sprite")]
+    public int widgetHeightOffset = 0;
+
     [Header("Skill Tree")]
     public SkillTreeData skillTree;
 

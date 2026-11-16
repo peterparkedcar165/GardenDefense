@@ -861,6 +861,9 @@ public abstract class Plant : Entity, IAttackable
     {
         base.Start();
         GetMainRenderer();
+        // the widget measures this plant's own sprite to sit just above it, not at one fixed height
+        if (_widget != null)
+            _widget.FollowSpriteTop(GetMainRenderer(), data != null ? data.widgetHeightOffset : 0);
 
         // subscribe to weather changes and apply all currently active weather effects
         WeatherManager.OnWeatherAdded   += HandleWeatherAdded;

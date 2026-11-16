@@ -22,9 +22,12 @@ public class PlantWidgetStyle : ScriptableObject
     [Tooltip("whole number scale of the whole widget, 1 or 2. the base size comes from the sprites' Pixels Per " +
         "Unit: 64 (now) is half the size of 32. never resize it any other way")]
     [Min(1)] public int pixelScale = 1;
-    [Tooltip("art pixels to move the widget up (or down, negative) from the default spot above the plant, " +
-        "where the old health bar sat")]
-    public int verticalOffset = -8;
+    [Tooltip("widget pixels between the top of the plant's own sprite and the bottom of the widget. each plant " +
+        "is measured on its own, so a tall plant gets its bar higher than a short one")]
+    [Min(0)] public int gapAboveSprite = 2;
+    [Tooltip("widget pixels to move every plant's widget up (or down, negative) on top of that. one plant alone: " +
+        "its PlantData's Widget Height Offset")]
+    public int verticalOffset = 0;
     public string sortingLayer = "Plants";
     public int sortingOrder = 50;
 

@@ -57,6 +57,17 @@ public class PlantWidget : MonoBehaviour
     private bool skillUnlocked, skillReady;
     private float chargeTarget, displayedCharge = -1f;
 
+    // height from the owner's own sprite (FollowSpriteTop): the highest point of its visible
+    // pixels, in world units above the owner, taken as the highest seen over its first moments of
+    // idle animation so a bobbing petal can't poke through the bar. negative infinity until then
+    private const float MeasureSeconds = 1.5f;
+    // the 12 px circle hangs this far below its middle, and it's the lowest part of the widget
+    private const int CircleVisibleHalf = 6;
+    private SpriteRenderer heightSource;
+    private int heightOffsetPixels;
+    private float measuredTop = float.NegativeInfinity;
+    private float measureUntil;
+
     private float PixelsPerUnit => Style != null && Style.barHealth != null ? Style.barHealth.pixelsPerUnit : 32f;
     private int Width => Style != null ? Mathf.Max(5, Style.barWidth) : 34;
 
@@ -76,6 +87,32 @@ public class PlantWidget : MonoBehaviour
         widget.baseHeightUnits = baseHeightUnits;
         widget.Build();
         return widget;
+    }
+
+    // sits the widget just above this sprite's visible top instead of at the fixed base height, so
+    // tall and short plants each get their bar right above them. the sprite's tight mesh follows its
+    // opaque pixels, so transparent padding in a sheet doesn't count. extraOffsetPixels is the
+    // plant's own nudge (PlantData.widgetHeightOffset)
+    public void FollowSpriteTop(SpriteRenderer source, int extraOffsetPixels)
+    {
+        heightSource = source;
+        heightOffsetPixels = extraOffsetPixels;
+        measuredTop = float.NegativeInfinity;
+        measureUntil = Time.time + MeasureSeconds;
+        MeasureSpriteTop();
+    }
+
+    private void MeasureSpriteTop()
+    {
+        if (heightSource == null || owner == null || Time.time > measureUntil) return;
+        Sprite sprite = heightSource.sprite;
+        if (sprite == null) return;
+        Transform source = heightSource.transform;
+        float top = float.NegativeInfinity;
+        foreach (Vector2 vertex in sprite.vertices)
+            top = Mathf.Max(top, source.TransformPoint(vertex).y);
+        top -= owner.position.y;
+        if (top > measuredTop) measuredTop = top;
     }
 
     public void SetVisible(bool visible)
@@ -287,6 +324,7 @@ public class PlantWidget : MonoBehaviour
     private void LateUpdate()
     {
         if (owner == null) { Destroy(gameObject); return; }
+        MeasureSpriteTop();
         if (Style == null || canvas == null || !canvas.enabled) return;
         if (layoutDirty || builtWidth != Width) Layout();
 
@@ -298,7 +336,12 @@ public class PlantWidget : MonoBehaviour
         transform.localScale = new Vector3(
             worldScale / (Mathf.Approximately(parentScale.x, 0f) ? 1f : parentScale.x),
             worldScale / (Mathf.Approximately(parentScale.y, 0f) ? 1f : parentScale.y), 1f);
-        float heightPixels = Mathf.Round(baseHeightUnits * ppu) + Style.verticalOffset;
+        // middle of the circle: just above the plant's measured sprite top (its lowest edge a gap
+        // above the sprite), or the old fixed height until a sprite has been measured
+        float heightPixels = float.IsNegativeInfinity(measuredTop)
+            ? Mathf.Round(baseHeightUnits * ppu)
+            : Mathf.Ceil(measuredTop * ppu) + Style.gapAboveSprite + CircleVisibleHalf;
+        heightPixels += Style.verticalOffset + heightOffsetPixels;
         Vector3 pos = owner.position;
         transform.position = new Vector3(Mathf.Round(pos.x * ppu) / ppu, Mathf.Round(pos.y * ppu) / ppu + heightPixels / ppu, pos.z);
 
