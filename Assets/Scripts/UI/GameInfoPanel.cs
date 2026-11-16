@@ -29,6 +29,12 @@ public class GameInfoPanel : MonoBehaviour
 
     private void Awake()
     {
+        // an old copy of this component still sits on SettingsManager.prefab (SettingsPanel >
+        // GameInfoPanel), from when this was a text box inside the settings menu. it loads before
+        // Bootstrap runs, so it used to claim the instance, and its Update only ran while settings
+        // was open, exactly when G is blocked. any copy that isn't a root object is that leftover:
+        // drop just this component (never its object) and let Bootstrap make the real one
+        if (transform.parent != null) { Destroy(this); return; }
         if (instance != null && instance != this) { Destroy(gameObject); return; }
         instance = this;
         DontDestroyOnLoad(gameObject);
