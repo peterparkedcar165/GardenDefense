@@ -13,6 +13,13 @@ public class RootCellarMulchEffect : MulchEffect
     public override void Activate() {}
     public override void Deactivate() {}
 
+    public override string GetStatus()
+    {
+        if (GameManager.instance == null) return null;
+        int interest = Mathf.FloorToInt(GameManager.instance.SunCount * typedData.interestPercent);
+        return $"Next wave end: +{interest} Sun";
+    }
+
     public override void OnWaveEnded(int wave)
     {
         if (GameManager.instance == null) return;

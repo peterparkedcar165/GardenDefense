@@ -21,6 +21,12 @@ public class DormancyMulchEffect : MulchEffect
 
     public override void Deactivate() => SetContribution(0f);
 
+    public override string GetStatus() => awake
+        ? $"Bonus active: +{typedData.damageBonus * 100f:F0}% damage"
+        : $"Penalty: {waves.Left(typedData.dormantWaves)} more {Waves(waves.Left(typedData.dormantWaves))}";
+
+    private static string Waves(int n) => n == 1 ? "wave" : "waves";
+
     public override void OnWaveStarted(int wave) => waves.WaveStarted(wave);
 
     public override void OnWaveEnded(int wave)

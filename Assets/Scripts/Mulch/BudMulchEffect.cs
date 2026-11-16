@@ -25,6 +25,14 @@ public class BudMulchEffect : MulchEffect
     public override bool GrantsFreePlacement => pending;
     public override bool CanBeRemoved => pending;
 
+    public override string GetStatus()
+    {
+        if (pending) return "Your next plant is free";
+        if (bud == null || waves == null) return "Used";
+        int left = waves.Left(typedData.dormantWaves);
+        return $"{bud.GetName()} can't target insects for {left} more {(left == 1 ? "wave" : "waves")}";
+    }
+
     public override void OnPlantBought(Plant plant, bool placedForFree)
     {
         if (!pending || !placedForFree || plant == null) return;

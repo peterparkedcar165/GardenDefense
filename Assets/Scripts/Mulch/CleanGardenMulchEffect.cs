@@ -16,6 +16,8 @@ public class CleanGardenMulchEffect : MulchEffect
     public override void Activate() {}
     public override void Deactivate() {}
 
+    public override string GetStatus() => $"Clean waves in a row: {streak}/{typedData.cleanWavesNeeded}";
+
     public override void OnWaveStarted(int wave)
     {
         waves.WaveStarted(wave);

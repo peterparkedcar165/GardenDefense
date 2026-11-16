@@ -282,6 +282,9 @@ public class MulchManager : MonoBehaviour
 
     public bool IsOwned(MulchData data) => data != null && pickedData.Contains(data);
 
+    // an owned mulch's live status line for the active effects window (G), null if it has none
+    public string GetStatus(MulchData data) => FindEffect(data)?.GetStatus();
+
     // dev test menu: activates a mulch right away, skipping the queue and every eligibility check
     public bool DebugActivate(MulchData data)
     {

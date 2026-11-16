@@ -54,4 +54,8 @@ public abstract class MulchEffect
     // whether seed swap and seed sell may take this mulch away. false once a one shot mulch has
     // already paid out, since removing it couldn't undo what it gave
     public virtual bool CanBeRemoved => true;
+
+    // a short live line for the active effects window (GameInfoPanel, G), like how many waves are
+    // left. null when the description already says everything
+    public virtual string GetStatus() => null;
 }

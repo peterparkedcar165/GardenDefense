@@ -19,6 +19,8 @@ public class BargainSeedsMulchEffect : MulchEffect
 
     public override int PlacementDiscount => Available ? typedData.discount : 0;
 
+    public override string GetStatus() => Available ? "Discount ready this wave" : "Discount used this wave";
+
     public override void OnPlantBought(Plant plant, bool placedForFree)
     {
         if (!placedForFree && Available) usedOnWave = CurrentWave;

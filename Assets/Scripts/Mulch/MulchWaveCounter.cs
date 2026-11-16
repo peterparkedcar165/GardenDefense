@@ -11,6 +11,9 @@ public class MulchWaveCounter
         if (firstCountedWave == int.MaxValue) firstCountedWave = wave;
     }
 
+    // whole waves still to go out of total, for status lines
+    public int Left(int total) => System.Math.Max(0, total - Completed);
+
     // true when this wave counted
     public bool WaveEnded(int wave)
     {

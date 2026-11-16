@@ -20,6 +20,13 @@ public class CountdownMulchEffect : MulchEffect
 
     public override bool CanBeRemoved => !paidOut;
 
+    public override string GetStatus()
+    {
+        if (paidOut) return "Paid out";
+        int left = waves.Left(typedData.wavesUntilPayout);
+        return $"{left} more {(left == 1 ? "wave" : "waves")}";
+    }
+
     public override void OnWaveStarted(int wave) => waves.WaveStarted(wave);
 
     public override void OnWaveEnded(int wave)

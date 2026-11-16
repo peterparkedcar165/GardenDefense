@@ -25,6 +25,13 @@ public class DroughtMulchEffect : MulchEffect
         applied = 0f;
     }
 
+    public override string GetStatus()
+    {
+        if (over) return $"Drought over: {typedData.afterSunMultiplier:0.##}x Sun";
+        int left = waves.Left(typedData.droughtWaves);
+        return $"Drought: {left} more {(left == 1 ? "wave" : "waves")}";
+    }
+
     public override void OnWaveStarted(int wave) => waves.WaveStarted(wave);
 
     public override void OnWaveEnded(int wave)

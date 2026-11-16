@@ -170,6 +170,20 @@ public class FertilizerManager : MonoBehaviour
 
     public bool HasActiveFertilizer => activeFertilizer != null && selectedStats != null;
 
+    // for the active effects window (GameInfoPanel, G): the pre level pick with its rolled values,
+    // and every mid level fertilizer committed so far
+    public FertilizerData ActiveFertilizer => HasActiveFertilizer ? activeFertilizer : null;
+    public IReadOnlyList<GeneratedFertilizer> CommittedGenerated => committedGenerated;
+
+    public List<(StatType statType, float value)> GetPreLevelStats()
+    {
+        var result = new List<(StatType statType, float value)>();
+        if (!HasActiveFertilizer) return result;
+        for (int i = 0; i < selectedStats.Length && i < rolledValues.Length; i++)
+            result.Add((selectedStats[i].statType, rolledValues[i]));
+        return result;
+    }
+
     // every fertilizer stat currently in effect - the single pre-level pick plus every mid-level
     // grant already committed - summed per stat type (so two sources of the same stat combine
     // into one line) and sorted alphabetically by display name. built for the in-game info panel
