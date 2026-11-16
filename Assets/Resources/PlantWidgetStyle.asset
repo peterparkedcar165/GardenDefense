@@ -32,7 +32,7 @@ MonoBehaviour:
   healthMid: {r: 1, g: 0.788235, b: 0.235294, a: 1}
   healthLow: {r: 0.898039, g: 0.282353, b: 0.247059, a: 1}
   highAbove: 0.5
-  midAbove: 0.2
+  midAbove: 0.25
   healthFixed: {r: 0.298039, g: 0.686275, b: 0.313725, a: 1}
   shield: {r: 0.55, g: 0.55, b: 0.55, a: 1}
   damageChunk: {r: 1, g: 1, b: 1, a: 1}

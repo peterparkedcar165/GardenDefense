@@ -44,7 +44,7 @@ public class PlantWidgetStyle : ScriptableObject
     [Tooltip("high above this share of max health, e.g. 0.5 = 50%")]
     [Range(0f, 1f)] public float highAbove = 0.5f;
     [Tooltip("mid above this share of max health, low at or below it")]
-    [Range(0f, 1f)] public float midAbove = 0.2f;
+    [Range(0f, 1f)] public float midAbove = 0.25f;
     public Color healthFixed = new Color32(0x4C, 0xAF, 0x50, 0xFF);
     [Tooltip("shield shown past the health, same as the old bar")]
     public Color shield = new Color(0.55f, 0.55f, 0.55f, 1f);
