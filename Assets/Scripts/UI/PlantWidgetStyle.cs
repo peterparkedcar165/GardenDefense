@@ -19,7 +19,8 @@ public class PlantWidgetStyle : ScriptableObject
     [Header("Size and placement")]
     [Tooltip("width of every bar in art pixels. whole numbers only, at least 5. only the middle stretches")]
     [Min(5)] public int barWidth = 34;
-    [Tooltip("whole number scale of the whole widget, 1 or 2. never resize it any other way")]
+    [Tooltip("whole number scale of the whole widget, 1 or 2. the base size comes from the sprites' Pixels Per " +
+        "Unit: 64 (now) is half the size of 32. never resize it any other way")]
     [Min(1)] public int pixelScale = 1;
     [Tooltip("art pixels to move the widget up (or down, negative) from the default spot above the plant, " +
         "where the old health bar sat")]

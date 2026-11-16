@@ -6,7 +6,7 @@ using System.Collections.Generic;
 // generic extra bars stacked under it (each a value from 0 to 1 and a color, added and removed at
 // runtime), and a circle on the bar's left end that fills clockwise as the skill charges and pulses
 // when it's ready. a world space canvas built in code, one canvas unit = one art pixel, every
-// position and width a whole pixel. the owner feeds it every frame (SetHealth, SetSkill,
+// position and frame a whole pixel; only fill lengths are free, so they glide (see PlaceFill). the owner feeds it every frame (SetHealth, SetSkill,
 // SetExtraBar, SetVisible); the look comes from Resources/PlantWidgetStyle.asset
 public class PlantWidget : MonoBehaviour
 {
@@ -268,18 +268,20 @@ public class PlantWidget : MonoBehaviour
         Place(circleGlow, circleLeft, circleTop, CircleSize, CircleSize);
     }
 
-    // a fill sits 1 px inside its bar, as wide as its share of the inside in whole pixels, and is
-    // hidden under 2 px (too small for both rounded ends)
+    // a fill sits 1 px inside its bar and is exactly as long as its share of the inside, fractions
+    // of a pixel included (tommy's call, 2026-11-15: the readme rounded to whole pixels, which made
+    // the eased fills step a pixel at a time). its left end and height stay on whole pixels, only
+    // its length is free, so the bar glides as it grows and shrinks
     private void PlaceFill(Image fill, Image frame, float fraction)
     {
-        int inner = Width - 2;
-        int fillWidth = Mathf.RoundToInt(inner * Mathf.Clamp01(fraction));
-        bool show = fillWidth >= 2;
+        float fillWidth = (Width - 2) * Mathf.Clamp01(fraction);
+        bool show = fillWidth > 0.01f;
         if (fill.enabled != show) fill.enabled = show;
         if (!show) return;
         RectTransform frameRect = frame.rectTransform;
-        int height = Mathf.RoundToInt(frameRect.sizeDelta.y) - 2;
-        Place(fill, Mathf.RoundToInt(frameRect.anchoredPosition.x) + 1, Mathf.RoundToInt(frameRect.anchoredPosition.y) - 1, fillWidth, height);
+        RectTransform rect = fill.rectTransform;
+        rect.anchoredPosition = new Vector2(Mathf.Round(frameRect.anchoredPosition.x) + 1f, Mathf.Round(frameRect.anchoredPosition.y) - 1f);
+        rect.sizeDelta = new Vector2(fillWidth, Mathf.Round(frameRect.sizeDelta.y) - 2f);
     }
 
     private void LateUpdate()
@@ -303,7 +305,9 @@ public class PlantWidget : MonoBehaviour
         float totalDisplay = maxHealth + shield;
         if (totalDisplay > 0f)
         {
-            healthFill.color = Style.HealthColor(maxHealth > 0f ? health / maxHealth : 0f);
+            // the color follows the bar as it's drawn (the eased health), so it changes as the bar
+            // visibly passes each threshold rather than jumping ahead of it
+            healthFill.color = Style.HealthColor(maxHealth > 0f ? displayedHealth / maxHealth : 0f);
             PlaceFill(healthFill, healthFrame, displayedHealth / totalDisplay);
             bool hasShield = displayedShield > 0.001f || shield > 0f;
             PlaceFill(shieldFill, healthFrame, hasShield ? (displayedHealth + displayedShield) / totalDisplay : 0f);

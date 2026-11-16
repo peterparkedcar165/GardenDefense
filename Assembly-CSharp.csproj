@@ -150,6 +150,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\BubbleTrapEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GhostFungusData.cs" />
     <Compile Include="Assets\Scripts\Mulch\PrimerCooldownMulchEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\PlantWidget.cs" />
     <Compile Include="Assets\Scripts\Game\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Skills\FireWave.cs" />
     <Compile Include="Assets\Scripts\Mulch\PrimerCooldownMulchData.cs" />
@@ -462,6 +463,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreAuraEffect.cs" />
     <Compile Include="Assets\Scripts\UI\QuickStatRow.cs" />
     <Compile Include="Assets\Scripts\Mulch\WaterloggedMulchData.cs" />
+    <Compile Include="Assets\Scripts\UI\PlantWidgetStyle.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />
     <Compile Include="Assets\Scripts\UI\MulchQueueButton.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\OffPathSlownessEffect.cs" />
