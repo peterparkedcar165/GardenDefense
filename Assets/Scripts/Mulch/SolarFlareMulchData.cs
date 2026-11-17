@@ -6,7 +6,7 @@ public class SolarFlareMulchData : MulchData
 {
     [Tooltip("damage dealt to each insect in range, as a share of the sun generated, e.g. 4 = 400%")]
     public float damagePercentOfSun = 4f;
-    [Tooltip("radius around the sun plant, in tiles (a tile is 0.5 units)")]
+    [Tooltip("radius around the sun plant, in tiles (a tile is 1 unit)")]
     public float radiusTiles = 2f;
     public DamageType damageType = DamageType.Magic;
     [Tooltip("on: the flare is in the sun plant's own element. off: it uses fixedElement instead")]

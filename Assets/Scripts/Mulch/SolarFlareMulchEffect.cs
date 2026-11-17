@@ -28,7 +28,7 @@ public class SolarFlareMulchEffect : MulchEffect
         float damage = amount * typedData.damagePercentOfSun;
         if (damage <= 0f) return;
 
-        float radius = typedData.radiusTiles * Tile.TileSize;
+        float radius = typedData.radiusTiles * Tile.CellSize;
         ElementalType element = typedData.useSourceElement ? plant.elementalType : typedData.fixedElement;
         DamageTag[] tags = typedData.appliesPrimer ? FlareTags : FlareTagsNoPrimer;
         Vector3 center = plant.transform.position;

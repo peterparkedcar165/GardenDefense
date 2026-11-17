@@ -25,7 +25,7 @@ public class SpreadingSeedMulchEffect : MulchEffect
     {
         if (active == null || rhodiola == null || target == null || healAmount <= 0f) return;
         // a hair over the radius, so a plant exactly one tile away isn't lost to rounding
-        float radius = active.radiusTiles * Tile.TileSize + 0.01f;
+        float radius = active.radiusTiles * Tile.CellSize + 0.01f;
         Plant best = null;
         float lowest = 1f;
         foreach (Plant plant in Plant.allPlants)

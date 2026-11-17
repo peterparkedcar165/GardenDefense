@@ -6,7 +6,7 @@ public class SpreadingSeedMulchData : MulchData
 {
     [Tooltip("share of the seed's heal the second plant gets, e.g. 0.4 = 40%")]
     public float healShare = 0.4f;
-    [Tooltip("how far from the seed's target the second plant can stand, in tiles (a tile is 0.5 units). " +
+    [Tooltip("how far from the seed's target the second plant can stand, in tiles (a tile is 1 unit). " +
         "1 reaches the tiles right beside it; diagonal tiles are about 1.4 away")]
     public float radiusTiles = 1f;
 
