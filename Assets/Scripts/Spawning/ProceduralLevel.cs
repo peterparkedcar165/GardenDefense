@@ -8,6 +8,11 @@ public class ProceduralLevel : SpawnManager
 {
     public LevelConfig config;
 
+    // test copies of a level (Level6Test, Level7Test): same config as the real level, but a win
+    // saves nothing, so no unlock, currency, plant exp or level ups
+    [Tooltip("test copy of a level: a win saves nothing (no unlock, currency or plant exp)")]
+    public bool testLevel;
+
     // the level actually running, readable statically so systems with no scene reference (like
     // FertilizerStatRules, which needs to know what insects can appear) can query it
     public static LevelConfig CurrentConfig;
@@ -108,6 +113,11 @@ public class ProceduralLevel : SpawnManager
         nextWaveTime = -1f;
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
         yield return new WaitForSeconds(3f);
+        if (testLevel)
+        {
+            Debug.Log("test level " + config.levelNumber + " won, nothing saved");
+            yield break;
+        }
         Plant.BankAllExpForLevelEnd();
         Plant.CommitPendingExpToSave(); // level actually won - exp becomes persistent here
         SaveManager.instance.CompleteLevel(config.levelNumber);

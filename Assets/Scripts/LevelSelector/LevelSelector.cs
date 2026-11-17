@@ -2,12 +2,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using TMPro;
 
 public class LevelSelector : MonoBehaviour
 {
     [SerializeField] private Button level1, level2, level3, level4, level5, level6, level7, level8, level9, level10, level11, level12, level13, level14, level15;
     [SerializeField] private Button level16, level17, level18, level19, level20, level21, level22, level23, level24, level25;
     [SerializeField] private Button level26, level27, level28, level29, level30;
+
+    // test copies of levels 6 and 7 (Level6Test, Level7Test): night levels on the day sized map
+    // with the real level's waves and spawns. a small button beside the real one, always open
+    [Tooltip("adds a Test button beside levels 6 and 7 that loads Level6Test and Level7Test")]
+    [SerializeField] private bool showTestLevels = true;
+    private readonly List<Button> testButtons = new List<Button>();
+
     void Start()
     {
         int highestLevelUnlocked = SaveManager.instance.saveData.highestLevelUnlocked;
@@ -41,6 +50,40 @@ public class LevelSelector : MonoBehaviour
         if (level28 != null) level28.interactable = highestLevelUnlocked >= 27;
         if (level29 != null) level29.interactable = highestLevelUnlocked >= 28;
         if (level30 != null) level30.interactable = highestLevelUnlocked >= 29;
+
+        if (showTestLevels)
+        {
+            AddTestButton(level6, 6);
+            AddTestButton(level7, 7);
+        }
+    }
+
+    // a copy of the real level's button, narrower, placed just left of it
+    private void AddTestButton(Button source, int level)
+    {
+        if (source == null) return;
+        const float width = 100f, gap = 6f;
+        Button test = Instantiate(source, source.transform.parent);
+        test.name = $"Level{level}TestButton";
+        test.onClick = new Button.ButtonClickedEvent(); // drops the copied OnLevelSelected call
+        test.onClick.AddListener(() => OnTestLevelSelected(level));
+        test.interactable = true;
+
+        RectTransform sourceRect = (RectTransform)source.transform;
+        RectTransform rect = (RectTransform)test.transform;
+        float sourceLeft = sourceRect.anchoredPosition.x - sourceRect.sizeDelta.x * sourceRect.pivot.x;
+        rect.sizeDelta = new Vector2(width, sourceRect.sizeDelta.y);
+        rect.anchoredPosition = new Vector2(sourceLeft - gap - width * (1f - rect.pivot.x), sourceRect.anchoredPosition.y);
+
+        TMP_Text label = test.GetComponentInChildren<TMP_Text>();
+        if (label != null)
+        {
+            label.text = label.text + " Test";
+            label.enableAutoSizing = true;
+            label.fontSizeMax = label.fontSize;
+            label.fontSizeMin = 10f;
+        }
+        testButtons.Add(test);
     }
 
     void Update()
@@ -88,14 +131,20 @@ public class LevelSelector : MonoBehaviour
         if (level28 != null) level28.interactable = false;
         if (level29 != null) level29.interactable = false;
         if (level30 != null) level30.interactable = false;
+        foreach (Button test in testButtons) test.interactable = false;
     }
 
-    public void OnLevelSelected(int level)
+    public void OnLevelSelected(int level) => LoadLevel(level, "Level" + level);
+
+    // selectedLevel stays the real level number, so anything keyed on it treats the test like level 6 or 7
+    public void OnTestLevelSelected(int level) => LoadLevel(level, "Level" + level + "Test");
+
+    private void LoadLevel(int level, string sceneName)
     {
         DisableAllButtons();
         SaveManager.instance.selectedLevel = level;
         LoadoutSelectionUI.instance?.ResetUnlockedScroll();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
-        transition.StartCoroutine(transition.FadeToScene("Level" + level));
+        transition.StartCoroutine(transition.FadeToScene(sceneName));
     }
 }
