@@ -25,6 +25,7 @@ MonoBehaviour:
   retainsAggro: 0
   generatesSun: 0
   category: 0
+  widgetHeightOffset: 0
   skillTree: {fileID: 11400000, guid: b55fd20c624741a49c3958b5e412d10f, type: 2}
   fertilizerPossibleStats: 18000000
   baseMaxHealth: 200
@@ -104,7 +105,12 @@ MonoBehaviour:
   path1AttackRangePerLevel: 0.3
   maxMissingHealthPercent: 0.05
   baseGrassConversion: 0.5
-  path2GrassConversionPerLevel: 0.1
+  path1GrassConversionPerLevel: 0.1
+  baseSapCap: 35
+  path2SapCapPerLevel: 5
+  sapStoreShare: 0.35
+  sapReleaseThreshold: 0.25
+  sapGlowMaxAlpha: 0.6
   maxLevelGrassDamageBonus: 0.25
   maxLevelHealingReturn: 0.33
   burgeonHealPerSecond: 12
@@ -119,4 +125,3 @@ MonoBehaviour:
   path3CooldownReductionPerLevel: 20
   verdantGuardianShield: 200
   verdantGuardianRegen: 20
-  verdantGuardianDuration: 20

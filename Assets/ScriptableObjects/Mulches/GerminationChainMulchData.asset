@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GerminationChainMulchData
   mulchName: '<b><color=#4FC3F7>Germination Chain</color></b>'
   description: '<color=green><b>Germinate</b></color> blooms inside <b><color=#4FC3F7>Begonia</color></b>''s aura give every insect they hit a fresh <color=#4FC3F7><b>Water Primer</b></color>. A chain of blooms never primes the same insect twice.'
-  icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
+  icon: {fileID: 21300000, guid: adc730a06fd32d1449e86eb5219c00bf, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 1
   tier: 1
