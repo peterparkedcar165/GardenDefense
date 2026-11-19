@@ -225,7 +225,10 @@ public class Calendula : Aura
             }
         }
 
-        if (autoCastEnabled)
+        // never auto casts while the game is paused (any pause: the pause button, a menu, a
+        // tutorial). unlocking the skill mid pause would otherwise fire it on the spot, before the
+        // player finishes buying the upgrades that make it stronger. it casts once time runs again
+        if (autoCastEnabled && Time.timeScale > 0f)
         {
             // resolved live from the tile (not a pinned instance), so if the target plant dies
             // and gets revived, the auto-cast picks the new instance back up on its own
