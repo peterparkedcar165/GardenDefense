@@ -49,6 +49,16 @@ public class LightFader : MonoBehaviour
     {
         StopAllCoroutines();
         CancelCrossFadeClone();
+        // a light that isn't showing (a plant's light on a day level, or on a dark level while the
+        // sun has the lights off) just takes its new size: the clone is a new, switched on light,
+        // so it would flash the old radius for the length of the fade where no light should be
+        if (!_light.enabled || !_light.gameObject.activeInHierarchy)
+        {
+            _light.pointLightOuterRadius = outerRadius;
+            _light.pointLightInnerRadius = innerRadius;
+            _light.intensity = _targetIntensity;
+            return;
+        }
         StartCoroutine(CrossFadeCoroutine(outerRadius, innerRadius, duration));
     }
 
