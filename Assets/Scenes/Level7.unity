@@ -1446,52 +1446,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1232758270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1098554452
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051820596}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -12.62, y: -7.91}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 22.36, y: 1.02}
-  m_EdgeRadius: 0
 --- !u!4 &1179946550
 Transform:
   m_ObjectHideFlags: 0
@@ -38634,7 +38588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7688021917275621489, guid: c091a3f746ace4049a732e81c423a361, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.496
+      value: 7.996
       objectReference: {fileID: 0}
     - target: {fileID: 7688021917275621489, guid: c091a3f746ace4049a732e81c423a361, type: 3}
       propertyPath: m_LocalPosition.z
@@ -38967,7 +38921,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -2.22, y: -5.48}
+  m_Offset: {x: -12.1, y: -9.05}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -38977,7 +38931,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.56, y: 5.88}
+  m_Size: {x: 25.4, y: 0.9}
   m_EdgeRadius: 0
 --- !u!1 &1744282230
 GameObject:
@@ -39241,7 +39195,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7688021917275621489, guid: c091a3f746ace4049a732e81c423a361, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.496
+      value: 7.996
       objectReference: {fileID: 0}
     - target: {fileID: 7688021917275621489, guid: c091a3f746ace4049a732e81c423a361, type: 3}
       propertyPath: m_LocalPosition.z
@@ -39350,7 +39304,6 @@ GameObject:
   - component: {fileID: 2051820598}
   - component: {fileID: 2051820597}
   - component: {fileID: 1739607958}
-  - component: {fileID: 1098554452}
   m_Layer: 6
   m_Name: Obstacle
   m_TagString: Untagged
@@ -39392,7 +39345,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -2.22, y: 2.93}
+  m_Offset: {x: -0.15, y: -6.002}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -39402,7 +39355,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.56, y: 8.94}
+  m_Size: {x: 1.5, y: 6.996}
   m_EdgeRadius: 0
 --- !u!61 &2051820598
 BoxCollider2D:
@@ -39438,7 +39391,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -1.0698378, y: -6.4526005}
+  m_Offset: {x: -0.15, y: 3.548}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -39448,7 +39401,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.7662396, y: 3.0739017}
+  m_Size: {x: 1.5, y: 10.104}
   m_EdgeRadius: 0
 --- !u!61 &2051820599
 BoxCollider2D:
@@ -39484,7 +39437,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -2.28, y: 7.9}
+  m_Offset: {x: -1.2063, y: 9.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -39494,7 +39447,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.68, y: 1}
+  m_Size: {x: 3.6127, y: 1}
   m_EdgeRadius: 0
 --- !u!61 &2051820600
 BoxCollider2D:
@@ -39530,7 +39483,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -12.615, y: 7.9}
+  m_Offset: {x: -12.5127, y: 9.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -39540,7 +39493,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 16.99, y: 1}
+  m_Size: {x: 17, y: 1}
   m_EdgeRadius: 0
 --- !u!61 &2051820601
 BoxCollider2D:
@@ -39576,7 +39529,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -22.955, y: 7.9}
+  m_Offset: {x: -23.4063, y: 9.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -39586,7 +39539,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.69, y: 1}
+  m_Size: {x: 2.7873, y: 1}
   m_EdgeRadius: 0
 --- !u!61 &2051820602
 BoxCollider2D:
@@ -39622,7 +39575,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -23.45, y: -0.01}
+  m_Offset: {x: -24.45, y: 0.05}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -39632,7 +39585,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7, y: 16.82}
+  m_Size: {x: 0.7, y: 19.1}
   m_EdgeRadius: 0
 --- !u!4 &2051820603
 Transform:
@@ -48748,7 +48701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Intensity
-      value: 4.17
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_ApplyToSortingLayers.Array.size
