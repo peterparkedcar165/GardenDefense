@@ -1196,6 +1196,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 70733413}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1418653394
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4511358385442513055, guid: 5e7bb43fbf2c4ab8a41e05c5731e84fb, type: 3}
+      propertyPath: m_Name
+      value: AmbientFireflies
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5e7bb43fbf2c4ab8a41e05c5731e84fb, type: 3}
 --- !u!1 &1503431438
 GameObject:
   m_ObjectHideFlags: 0
@@ -57757,7 +57774,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_Intensity
-      value: 5.55
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2473620843044869097, guid: c9b183ea3148da34f8f8e7aea6596424, type: 3}
       propertyPath: m_ApplyToSortingLayers.Array.size
@@ -59180,23 +59197,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
---- !u!1001 &1418653394
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4511358385442513055, guid: 5e7bb43fbf2c4ab8a41e05c5731e84fb, type: 3}
-      propertyPath: m_Name
-      value: AmbientFireflies
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5e7bb43fbf2c4ab8a41e05c5731e84fb, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
