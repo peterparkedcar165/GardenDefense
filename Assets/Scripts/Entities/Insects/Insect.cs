@@ -864,6 +864,26 @@ public abstract class Insect : Entity, IAttackable
         return aimPoint != null ? aimPoint.position : transform.position;
     }
 
+    // the point this far ahead of the insect along the way it walks: its own lane offset, round any
+    // corners, stopping at the end of the path. for things dropped right in its way, like Acorn
+    // Knight's thrown shield
+    public Vector3 PointAheadOnPath(float distance)
+    {
+        Vector3 pos = transform.position;
+        if (waypoints == null) return pos;
+        for (int i = currentWaypointIndex; i < waypoints.Length && distance > 0f; i++)
+        {
+            if (waypoints[i] == null) break;
+            Vector3 next = waypoints[i].position + new Vector3(pathOffset.x, pathOffset.y, 0f);
+            next.z = pos.z;
+            float segment = Vector3.Distance(pos, next);
+            if (segment >= distance) return pos + (next - pos).normalized * distance;
+            pos = next;
+            distance -= segment;
+        }
+        return pos;
+    }
+
     public Transform GetCurrentWaypoint()
     {
         if (currentWaypointIndex >= waypoints.Length)

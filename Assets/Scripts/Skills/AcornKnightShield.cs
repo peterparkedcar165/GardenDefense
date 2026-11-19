@@ -57,8 +57,9 @@ public class AcornKnightShield : Minion
     [SerializeField] private int impactClipFrames = 6;
     [SerializeField] private float landingClipFrameRate = 12f;
 
-    // struckAt is where the shield hit the insect. it already sits where it bounced to, so its
-    // Visual starts back at struckAt and flies here in an arc bounceHeight high under gravity
+    // struckAt is where the shield hit the insect. it already sits where it comes to rest (in front
+    // of the insect, see AcornKnight.LandingInFront), so its Visual starts back at struckAt and
+    // hops here in an arc bounceHeight high under gravity
     public void PlayLanding(bool struckInsect, bool thrownRight, Vector3 struckAt, float bounceHeight)
     {
         Transform v = visual != null ? visual : transform.Find("Visual");

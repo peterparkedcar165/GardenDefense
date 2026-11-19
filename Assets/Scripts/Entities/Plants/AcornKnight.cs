@@ -32,11 +32,12 @@ public class AcornKnight : Aura
     private const string BodyShieldOutBool = "ShieldOut";
     private const string BodyGuardingBool = "Guarding";
 
-    // a thrown shield that strikes an insect bounces back off it before landing: this far away
-    // from the insect along the ground, rising this high in a small arc that gravity brings back
-    // down (the arc itself plays on the landed shield, see AcornKnightShield.PlayLanding)
-    [Header("Shield Bounce")]
-    [SerializeField] private float shieldBounceDistance = 0.3f;
+    // a thrown shield that strikes an insect drops right in front of it, no knock back (tommy,
+    // 2026-11-19): it comes to rest this far ahead of the insect along the way it walks, hopping
+    // there from where it struck in a small arc this high that gravity brings back down (the arc
+    // itself plays on the landed shield, see AcornKnightShield.PlayLanding)
+    [Header("Shield Landing")]
+    [SerializeField] private float shieldLandAhead = 0.4f;
     [SerializeField] private float shieldBounceHeight = 0.35f;
 
     // while the throw animation plays he faces where the shield is going instead of his target
@@ -596,8 +597,8 @@ public class AcornKnight : Aura
 
         if (shieldPrefab == null) { _shieldOut = false; return; }
 
-        // a struck insect knocks the shield back, so it comes to rest a little away from it
-        Vector3 restAt = hitInsect != null ? BounceLanding(position, hitInsect) : position;
+        // a struck insect gets the shield dropped right in front of it, in its way
+        Vector3 restAt = hitInsect != null ? LandingInFront(position, hitInsect) : position;
         GameObject obj = Instantiate(shieldPrefab, restAt, Quaternion.identity);
         AcornKnightShield shield = obj.GetComponent<AcornKnightShield>();
         if (shield == null) { _shieldOut = false; return; }
@@ -610,16 +611,15 @@ public class AcornKnight : Aura
         shield.PlayLanding(hitInsect != null, position.x > transform.position.x, position, shieldBounceHeight);
     }
 
-    // where a shield that struck an insect comes to rest: shieldBounceDistance away from the insect,
-    // on the far side from it (back the way the shield came). it stays where it struck when that
-    // spot would be off the grid or on water, so a bounce never costs the shield
-    private Vector3 BounceLanding(Vector3 struckAt, Insect struck)
+    // where a shield that struck an insect comes to rest: shieldLandAhead in front of the insect
+    // along its path (round a corner if it's at one), so the insect walks straight into it once
+    // the stun ends. it stays where it struck when that spot would be off the grid (the path's
+    // exit) or on water, so the landing never costs the shield
+    private Vector3 LandingInFront(Vector3 struckAt, Insect struck)
     {
-        Vector2 away = (Vector2)(struckAt - struck.transform.position);
-        if (away.sqrMagnitude < 0.0001f) away = (Vector2)(transform.position - struckAt);
-        if (away.sqrMagnitude < 0.0001f || shieldBounceDistance <= 0f) return struckAt;
-
-        Vector3 landing = struckAt + (Vector3)(away.normalized * shieldBounceDistance);
+        if (shieldLandAhead <= 0f) return struckAt;
+        Vector3 landing = struck.PointAheadOnPath(shieldLandAhead);
+        landing.z = struckAt.z;
         if (!Tile.IsInsideGrid(landing) || AcornKnightShield.IsWaterAt(landing)) return struckAt;
         return landing;
     }

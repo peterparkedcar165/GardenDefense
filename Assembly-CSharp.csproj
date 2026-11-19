@@ -494,8 +494,8 @@
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Snail.cs" />
     <Compile Include="Assets\Scripts\AttackChargeAnimationRelay.cs" />
-    <Compile Include="Assets\Scripts\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\Environment\ParticleLightResponse.cs" />
+    <Compile Include="Assets\Scripts\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\AloeVeraProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IronbarkCounterShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\CaveSpider.cs" />
