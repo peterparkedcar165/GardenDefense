@@ -19,7 +19,7 @@ public class SeedSwapMulchData : MulchData
 
     // needs something it's allowed to swap
     public override bool MeetsExtraRequirements(List<PlantData> loadout, int currentWave) =>
-        MulchManager.instance != null && MulchManager.instance.HasRemovableMulch();
+        MulchManager.instance != null && MulchManager.instance.HasRemovableMulch(this);
 
     public override void UseOnTarget(MulchData target)
     {

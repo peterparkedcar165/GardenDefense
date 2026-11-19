@@ -158,7 +158,7 @@ public class MulchSelectionUI : MonoBehaviour
         GameObject window = NewOverlayWindow(PickerWidth);
         AddText(window.transform, font, $"{tool.mulchName}\n<size=65%>{tool.TargetPrompt}</size>", 40f, TextAlignmentOptions.Center);
 
-        foreach (MulchData owned in MulchManager.instance.GetRemovableMulches())
+        foreach (MulchData owned in MulchManager.instance.GetRemovableMulches(tool))
         {
             MulchData target = owned;
             Color tierColor = MulchTierColors.Get(target.tier);

@@ -23,10 +23,12 @@ public class SeedSellMulchData : MulchData
 
     public override MulchEffect CreateEffect() => null;
     public override bool NeedsOwnedMulchTarget => true;
+    // mulches that already paid out can still be sold (tommy, 2026-11-19): they keep what they gave
+    public override bool TakesPaidOutMulches => true;
 
     // needs something it's allowed to sell
     public override bool MeetsExtraRequirements(List<PlantData> loadout, int currentWave) =>
-        MulchManager.instance != null && MulchManager.instance.HasRemovableMulch();
+        MulchManager.instance != null && MulchManager.instance.HasRemovableMulch(this);
 
     public override void UseOnTarget(MulchData target)
     {
@@ -41,5 +43,5 @@ public class SeedSellMulchData : MulchData
     public override string GetDescription() =>
         $"One time use: remove a mulch you own and gain <b><color=#FFD700>Sun</color></b> for it. " +
         $"{TierLabel(MulchTier.Common)} <b><color=green>{commonPrice}</color></b>, {TierLabel(MulchTier.Rare)} <b><color=green>{rarePrice}</color></b>, " +
-        $"{TierLabel(MulchTier.Epic)} <b><color=green>{epicPrice}</color></b>. Mulches that already paid out can't be sold.";
+        $"{TierLabel(MulchTier.Epic)} <b><color=green>{epicPrice}</color></b>. Mulches that already paid out can still be sold, and what they gave stays.";
 }

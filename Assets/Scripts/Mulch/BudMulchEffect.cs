@@ -3,8 +3,9 @@ using UnityEngine;
 // the next plant bought costs nothing (MulchManager.GetPlacementCost). that plant then sits with
 // Plant.cannotTargetInsects on until its waves have passed: no insect targets, no damage or
 // debuffs on insects, while heals, buffs and sun keep running. once the free plant is placed the
-// mulch has paid out and can't be sold or swapped. a bud plant that dies and gets revived comes
-// back as a new plant, already awake
+// mulch has paid out: it can't be swapped anymore, but seed sell can still sell it. the free plant
+// stays, and if it's still dormant it wakes (the wave count lives here, so it would never wake
+// otherwise). a bud plant that dies and gets revived comes back as a new plant, already awake
 public class BudMulchEffect : MulchEffect
 {
     private static readonly Color DormantColor = new Color(0.55f, 0.85f, 0.45f);
@@ -24,6 +25,7 @@ public class BudMulchEffect : MulchEffect
 
     public override bool GrantsFreePlacement => pending;
     public override bool CanBeRemoved => pending;
+    public override bool CanBeSold => true;
 
     public override string GetStatus()
     {

@@ -1,5 +1,5 @@
-// pays its sun once, on pick. nothing to undo afterwards, so it can't be sold or swapped either:
-// that would hand back a mulch whose sun was already spent
+// pays its sun once, on pick. it can't be swapped (that would hand back a fresh draft for a mulch
+// whose sun was already spent), but seed sell can still sell it, and the sun stays
 public class SunGrantMulchEffect : MulchEffect
 {
     private readonly SunGrantMulchData typedData;
@@ -18,4 +18,5 @@ public class SunGrantMulchEffect : MulchEffect
     public override void Deactivate() {}
 
     public override bool CanBeRemoved => false;
+    public override bool CanBeSold => true;
 }

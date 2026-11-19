@@ -59,6 +59,9 @@ public abstract class MulchData : ScriptableObject
     // MulchSelectionUI.ShowTargetPicker), then MulchManager.CommitChosenOnTarget spends it. a
     // tool's CreateEffect returns null, it never becomes an owned mulch
     public virtual bool NeedsOwnedMulchTarget => false;
+    // a tool that may also take mulches that already paid out (seed sell, MulchEffect.CanBeSold).
+    // seed swap may not: a fresh draft for a mulch that already gave everything would pay twice
+    public virtual bool TakesPaidOutMulches => false;
     // runs after the target was taken away
     public virtual void UseOnTarget(MulchData target) {}
     // the picker's prompt, and the note on each row saying what using the tool on it gives

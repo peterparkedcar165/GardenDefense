@@ -55,6 +55,12 @@ public abstract class MulchEffect
     // already paid out, since removing it couldn't undo what it gave
     public virtual bool CanBeRemoved => true;
 
+    // whether seed sell may take this mulch away (seed swap reads CanBeRemoved). a mulch that
+    // already paid out can still be sold: what it gave stays, and Deactivate only ends whatever
+    // it's still doing. false where removing it would have to undo something that can't be undone,
+    // like a weather mulch (the old weather can't come back)
+    public virtual bool CanBeSold => CanBeRemoved;
+
     // a short live line for the active effects window (GameInfoPanel, G), like how many waves are
     // left. null when the description already says everything
     public virtual string GetStatus() => null;

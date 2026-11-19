@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // pays out once, at the end of its last wave: every living plant takes one free step on each path
-// (Plant.GrantFreePathSteps). after that there's nothing left to undo, so it can't be sold or
-// swapped anymore
+// (Plant.GrantFreePathSteps). after that it can't be swapped anymore, but seed sell can still sell
+// it, and the free steps stay
 public class CountdownMulchEffect : MulchEffect
 {
     private readonly CountdownMulchData typedData;
@@ -19,6 +19,7 @@ public class CountdownMulchEffect : MulchEffect
     public override void Deactivate() {}
 
     public override bool CanBeRemoved => !paidOut;
+    public override bool CanBeSold => true;
 
     public override string GetStatus()
     {

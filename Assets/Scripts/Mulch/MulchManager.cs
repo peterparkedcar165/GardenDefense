@@ -311,8 +311,8 @@ public class MulchManager : MonoBehaviour
     // dev test menu: seed swap or seed sell used on an owned mulch without spending a queued draft
     public bool DebugUseTool(MulchData tool, MulchData target)
     {
-        if (tool == null || !tool.NeedsOwnedMulchTarget || !CanRemove(target)) return false;
-        RemoveMulch(target);
+        if (tool == null || !tool.NeedsOwnedMulchTarget || !CanRemove(target, tool)) return false;
+        RemoveMulch(target, tool);
         tool.UseOnTarget(target);
         return true;
     }
@@ -324,42 +324,45 @@ public class MulchManager : MonoBehaviour
     public bool CommitChosenOnTarget(MulchData chosen, MulchData target)
     {
         if (pendingGrants.Count == 0 || chosen == null || !chosen.NeedsOwnedMulchTarget) return false;
-        if (!CanRemove(target)) return false;
+        if (!CanRemove(target, chosen)) return false;
         pendingGrants.RemoveAt(0);
-        RemoveMulch(target);
+        RemoveMulch(target, chosen);
         chosen.UseOnTarget(target);
         return true;
     }
 
-    // owned mulches seed swap and seed sell may still take away, oldest pick first
-    public List<MulchData> GetRemovableMulches()
+    // owned mulches the given tool (seed swap or seed sell) may still take away, oldest pick first
+    public List<MulchData> GetRemovableMulches(MulchData tool = null)
     {
         List<MulchData> result = new List<MulchData>();
         foreach (MulchData data in pickedData)
-            if (CanRemove(data)) result.Add(data);
+            if (CanRemove(data, tool)) result.Add(data);
         return result;
     }
 
-    public bool HasRemovableMulch()
+    public bool HasRemovableMulch(MulchData tool = null)
     {
         foreach (MulchData data in pickedData)
-            if (CanRemove(data)) return true;
+            if (CanRemove(data, tool)) return true;
         return false;
     }
 
-    // false for a mulch that already paid out (see MulchEffect.CanBeRemoved)
-    public bool CanRemove(MulchData data)
+    // seed swap (or no tool): false once a mulch paid out (MulchEffect.CanBeRemoved). seed sell
+    // (MulchData.TakesPaidOutMulches): paid out mulches too, only weather stays (MulchEffect.CanBeSold)
+    public bool CanRemove(MulchData data, MulchData tool = null)
     {
         if (data == null || !pickedData.Contains(data)) return false;
         MulchEffect effect = FindEffect(data);
-        return effect == null || effect.CanBeRemoved;
+        if (effect == null) return true;
+        return tool != null && tool.TakesPaidOutMulches ? effect.CanBeSold : effect.CanBeRemoved;
     }
 
-    // takes an owned mulch away again: its effect is deactivated, which undoes everything it did,
-    // and it stays out of every draft for the rest of the level
-    public bool RemoveMulch(MulchData data)
+    // takes an owned mulch away again: its effect is deactivated, which undoes whatever it's still
+    // doing (a paid out mulch keeps what it gave), and it stays out of every draft for the rest of
+    // the level
+    public bool RemoveMulch(MulchData data, MulchData tool = null)
     {
-        if (!CanRemove(data)) return false;
+        if (!CanRemove(data, tool)) return false;
         MulchEffect effect = FindEffect(data);
         if (effect != null)
         {
