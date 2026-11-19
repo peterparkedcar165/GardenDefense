@@ -184,6 +184,7 @@
     <Compile Include="Assets\Scripts\UI\FertilizerCard.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SteamEffect.cs" />
+    <Compile Include="Assets\Scripts\Environment\AmbientFireflies.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BrittleEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\CleanGardenMulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindErosionEffect.cs" />

@@ -4913,7 +4913,7 @@ MonoBehaviour:
     y: -8.504
     width: 23
     height: 17
-  densityPerTile: 0.14
+  densityPerTile: 0.28
   lifeMin: 4
   lifeMax: 7
   fadeIn: 0.7

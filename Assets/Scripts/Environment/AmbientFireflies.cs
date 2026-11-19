@@ -13,8 +13,8 @@ public class AmbientFireflies : MonoBehaviour
     [Header("Area and amount")]
     [Tooltip("where they wander: the standard 23 by 17 map (tile (x, y) centre = (x - 13.51268, y - 8.00399))")]
     [SerializeField] private Rect area = new Rect(-14.013f, -8.504f, 23f, 17f);
-    [Tooltip("fireflies per map tile: 0.14 is about 55 on the 23 by 17 map")]
-    [SerializeField] private float densityPerTile = 0.14f;
+    [Tooltip("fireflies per map tile: 0.28 is about 110 on the 23 by 17 map (doubled from 0.14 on 2026-11-19)")]
+    [SerializeField] private float densityPerTile = 0.28f;
 
     [Header("Life (seconds)")]
     [SerializeField] private float lifeMin = 4f;
