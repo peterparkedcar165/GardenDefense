@@ -166,6 +166,48 @@ public class DarknessManager : MonoBehaviour
         }
     }
 
+    // how lit a point is by the light sources IsIlluminated counts (plants, insects, registered
+    // lights): 1 within a light's bright core, easing to 0 at its edge, like a plant's point light
+    // (full out to 1.2, or 40% of a small radius, then falloff). 1 everywhere when the level isn't
+    // dark. for visuals only (rain brightening under a light); gameplay keeps using IsIlluminated
+    public float LightAmount(Vector3 position)
+    {
+        if (!isDark) return 1f;
+
+        float best = 0f;
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || plant.lightEmissionRange <= 0) continue;
+            best = Mathf.Max(best, LightFalloff(position, plant.transform.position, plant.lightEmissionRange));
+            if (best >= 1f) return 1f;
+        }
+        foreach (Insect insect in Insect.allInsects)
+        {
+            if (insect == null || !insect.IsAlive || insect.lightEmissionRange <= 0) continue;
+            best = Mathf.Max(best, LightFalloff(position, insect.transform.position, insect.lightEmissionRange));
+        }
+        foreach (Insect insect in Insect.friendlyInsects)
+        {
+            if (insect == null || !insect.IsAlive || insect.lightEmissionRange <= 0) continue;
+            best = Mathf.Max(best, LightFalloff(position, insect.transform.position, insect.lightEmissionRange));
+        }
+        foreach (var (t, radius) in _dynamicSources)
+        {
+            if (t == null) continue;
+            best = Mathf.Max(best, LightFalloff(position, t.position, radius));
+        }
+        return Mathf.Min(1f, best);
+    }
+
+    private static float LightFalloff(Vector3 point, Vector3 source, float radius)
+    {
+        float dx = point.x - source.x, dy = point.y - source.y;
+        float sqr = dx * dx + dy * dy;
+        if (sqr >= radius * radius) return 0f;
+        float inner = radius <= 1.2f ? radius * 0.4f : 1.2f;
+        return 1f - Mathf.SmoothStep(0f, 1f, (Mathf.Sqrt(sqr) - inner) / (radius - inner));
+    }
+
     public static void RegisterLightSource(Transform t, float radius) => _dynamicSources.Add((t, radius));
 
     public static void UnregisterLightSource(Transform t) => _dynamicSources.RemoveAll(s => s.t == t);
