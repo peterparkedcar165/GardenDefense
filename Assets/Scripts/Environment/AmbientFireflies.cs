@@ -63,7 +63,9 @@ public class AmbientFireflies : MonoBehaviour
     private ParticleSystem _ps;
     private ParticleSystem.Particle[] _particles;
     private Fly[] _flies;
-    private float _sunFade = 1f;
+    // 0 to 1, eased toward 1 while the weather is clear and toward 0 under any other weather.
+    // starts at 0 so a level whose base weather isn't clear (rain on 8 to 10) never flashes them
+    private float _weatherFade = 0f;
 
     void Awake()
     {
@@ -144,11 +146,13 @@ public class AmbientFireflies : MonoBehaviour
         if (_flies == null || _flies.Length == 0) return;
         float dt = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 
-        // sunny weather turns a night level into day: fade out with the daylight, come back after it,
-        // with the same ease DarknessManager uses
-        float target = DarknessManager.instance != null && DarknessManager.instance.SunlightActive ? 0f : 1f;
+        // only in clear weather (tommy, 2026-11-19): any other weather (rain, snow, wind, sandstorm,
+        // sunny) fades them out and they come back once it's clear again, with the same ease the
+        // scene light uses
+        bool clear = WeatherManager.instance == null || WeatherManager.instance.IsClear;
+        float target = clear ? 1f : 0f;
         float lerpSpeed = WeatherManager.instance != null ? WeatherManager.instance.LightLerpSpeed : 1.5f;
-        _sunFade = Mathf.Lerp(_sunFade, target, 1f - Mathf.Exp(-lerpSpeed * Time.unscaledDeltaTime));
+        _weatherFade = Mathf.Lerp(_weatherFade, target, 1f - Mathf.Exp(-lerpSpeed * Time.unscaledDeltaTime));
 
         int alive = _ps.GetParticles(_particles);
         if (alive < _flies.Length)
@@ -167,7 +171,7 @@ public class AmbientFireflies : MonoBehaviour
             f.pulsePhase += 2f * Mathf.PI * dt / f.pulsePeriod;
             float pulse = pulseMin + (1f - pulseMin) * (0.5f + 0.5f * Mathf.Sin(f.pulsePhase));
             float env = Mathf.Min(1f, f.age / fadeIn) * Mathf.Min(1f, (f.life - f.age) / fadeOut);
-            float b = env * pulse * _sunFade;
+            float b = env * pulse * _weatherFade;
 
             // meander, turning back toward the middle near the area's edges
             f.t += dt;

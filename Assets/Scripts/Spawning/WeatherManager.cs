@@ -389,6 +389,17 @@ public class WeatherManager : MonoBehaviour
     }
 
     public bool HasWeather(WeatherType type) => activeWeather.ContainsKey(type);
+
+    // true while no weather but Clear is active (no weather at all counts as clear)
+    public bool IsClear
+    {
+        get
+        {
+            foreach (var kvp in activeWeather)
+                if (kvp.Key != WeatherType.Clear) return false;
+            return true;
+        }
+    }
     public int GetIntensity(WeatherType type) => activeWeather.TryGetValue(type, out int i) ? i : 0;
 
     // iterate all currently active weather conditions
