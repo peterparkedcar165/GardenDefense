@@ -240,6 +240,8 @@ public class WeatherManager : MonoBehaviour
                             Renderer renderer = instance.GetComponent<Renderer>();
                             if (renderer != null) renderer.material = entry.nightMaterial;
                         }
+                        if (entry.nightDimming > 0f && IsNightScene())
+                            DimParticles(instance, 1f - entry.nightDimming);
                         _particleInstances[entry.weather] = instance;
                     }
                 }
@@ -289,6 +291,23 @@ public class WeatherManager : MonoBehaviour
     // the light prefabs (DayLight/NightLight/DesertLight/UnderwaterDaylight) keep their prefab's
     // own name on the instance, so this needs no per-scene wiring of its own
     private bool IsNightScene() => sceneLight != null && sceneLight.gameObject.name.Contains("Night");
+
+    // multiplies the start colour of every particle system in a weather instance (children included)
+    // by a grey, for WeatherVisualEntry.nightDimming. additive particles like the rain add less light
+    // on top of a dark map. applied right after the instance is made, before it emits; solid colour
+    // and two colour start colours only (what the weather prefabs use)
+    private static void DimParticles(GameObject instance, float brightness)
+    {
+        Color grey = new Color(brightness, brightness, brightness, 1f);
+        foreach (ParticleSystem ps in instance.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            ParticleSystem.MainModule main = ps.main;
+            ParticleSystem.MinMaxGradient start = main.startColor;
+            start.colorMin *= grey;
+            start.colorMax *= grey;
+            main.startColor = start;
+        }
+    }
 
     // defines the natural weather this level reverts to once every active weather effect
     // has expired, and immediately applies it

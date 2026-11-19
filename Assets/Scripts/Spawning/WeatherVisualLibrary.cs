@@ -31,6 +31,8 @@ public class WeatherVisualEntry
     public GameObject particlePrefab;
     [Tooltip("if set, swapped onto the particle instance's renderer when the scene's light is the Night one (e.g. Sandstorm looks different lit by NightLight vs DesertLight) - leave empty if this weather doesn't need a night variant")]
     public Material nightMaterial;
+    [Tooltip("how much darker this weather's particles are when the scene's light is the Night one: 0 leaves them as they are, 0.5 is half as bright, 1 hides them. covers every particle system in the prefab, children included (rain's drops and splashes), so glowing additive weather sits into a dark map. read when the level first shows this weather")]
+    [Range(0f, 1f)] public float nightDimming = 0f;
     [Tooltip("looping ambience that fades in while this weather is active and fades out when it ends - leave empty for no sound")]
     public AmbienceProfile ambience;
 }

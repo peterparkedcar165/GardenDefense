@@ -26,6 +26,7 @@ MonoBehaviour:
     lightIntensityMultiplier: 0.65
     particlePrefab: {fileID: 2712915376308916410, guid: 3709f080df7fe5e47a609dcfec35776b, type: 3}
     nightMaterial: {fileID: 0}
+    nightDimming: 0.5
     ambience: {fileID: 11400000, guid: d0fcac010926b95498209523b9240970, type: 2}
   - weather: 3
     tintColor: {r: 1, g: 1, b: 1, a: 1}
