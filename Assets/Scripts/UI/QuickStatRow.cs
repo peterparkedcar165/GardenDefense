@@ -24,15 +24,17 @@ public class QuickStatRow : MonoBehaviour
 
     private void Update()
     {
-        Entity entity = (Entity)PlantUpgradeUI.instance?.GetSelectedPlant()
-                     ?? PlantUpgradeUI.instance?.GetSelectedInsect();
-
-        if (entity == null)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
-        gameObject.SetActive(true);
+        // never switches its own object off: it sits on the plant panel's StatsPanel (with the
+        // hover trigger), and an object that turns itself off stops running Update, so it could
+        // never come back. it used to do that the moment the selection went away while the panel
+        // was still up (a selected insect dying, a selected plant sold), and the stats were gone
+        // for the rest of the level. the panel hides itself when nothing is selected anyway
+        PlantUpgradeUI ui = PlantUpgradeUI.instance;
+        if (ui == null) return;
+        // unity null checks, not ??, so a destroyed plant falls through to the insect
+        Plant plant = ui.GetSelectedPlant();
+        Entity entity = plant != null ? (Entity)plant : ui.GetSelectedInsect();
+        if (entity == null) return;
 
         if (entity is Insect insect)
         {
