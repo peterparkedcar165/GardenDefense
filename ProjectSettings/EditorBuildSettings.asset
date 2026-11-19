@@ -101,11 +101,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SkillTree.unity
     guid: c48d2fcd3f73ea14e8af0fd22239bacd
-  - enabled: 1
-    path: Assets/Scenes/Level6Test.unity
-    guid: 21e382864a024ddcabd3206c14e52253
-  - enabled: 1
-    path: Assets/Scenes/Level7Test.unity
-    guid: 4a79932abf6749eb8fc569d53bfc069d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

@@ -8,8 +8,8 @@ public class ProceduralLevel : SpawnManager
 {
     public LevelConfig config;
 
-    // test copies of a level (Level6Test, Level7Test): same config as the real level, but a win
-    // saves nothing, so no unlock, currency, plant exp or level ups
+    // for a test copy of a level: same config as the real level, but a win saves nothing, so no
+    // unlock, currency, plant exp or level ups. off in every real level
     [Tooltip("test copy of a level: a win saves nothing (no unlock, currency or plant exp)")]
     public bool testLevel;
 
