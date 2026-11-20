@@ -82,8 +82,8 @@ MonoBehaviour:
   groundSeconds: 25
   flashSeconds: 5
   dropSize: 0.6
-  hopHeight: 0.9
-  hopSeconds: 0.55
+  hopHeight: 0.55
+  hopSeconds: 0.35
   sideOffsetMin: 0.35
   sideOffsetMax: 1.1
   leakHopDistance: 1.6

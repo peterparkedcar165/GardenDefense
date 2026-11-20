@@ -62,11 +62,23 @@ public class MulchRegistry : ScriptableObject
     public float groundSeconds = 25f;
     [Tooltip("seconds before it disappears that it starts flashing")]
     public float flashSeconds = 5f;
+    [Tooltip("seconds for one fade out and back in when it starts flashing, and right before it disappears; it " +
+        "speeds up from the first to the second, slowly at first and faster near the end")]
+    public float flashCycleStart = 1f;
+    public float flashCycleEnd = 0.12f;
+    [Header("floating, once it has landed (visual only: the drop itself stays put)")]
+    [Tooltip("world units the drop's picture floats above where it would rest")]
+    public float floatHeight = 0.12f;
+    [Tooltip("world units it bobs up and down around that height, and seconds for one bob")]
+    public float bobHeight = 0.06f;
+    public float bobSeconds = 2.2f;
+    [Tooltip("seconds it takes to rise to its float after landing")]
+    public float floatRiseSeconds = 0.35f;
     [Tooltip("size of a drop on the map, in world units (a tile is 1)")]
     public float dropSize = 0.6f;
     [Tooltip("how high the drop hops and for how long")]
-    public float hopHeight = 0.9f;
-    public float hopSeconds = 0.55f;
+    public float hopHeight = 0.55f;
+    public float hopSeconds = 0.35f;
     [Tooltip("how far sideways the drop lands from where it popped out, a random amount between these")]
     public float sideOffsetMin = 0.35f;
     public float sideOffsetMax = 1.1f;

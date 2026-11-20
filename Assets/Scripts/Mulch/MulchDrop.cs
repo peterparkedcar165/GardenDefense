@@ -45,6 +45,9 @@ public class MulchDrop : MonoBehaviour
     // gives every part (icon layers, shadow, the glow's strength)
     private float expiryPhase;
     private float expiryAlpha = 1f;
+    // seconds since it landed, on the drop's clock: it rises to its float and bobs (Tommy,
+    // 2026-11-20: like a dropped item in minecraft, without the spin). visual only
+    private float floatAge;
     private bool hovered;
     private bool landed;
     // pressed: the mouse went down on it. dragging: it then moved far enough to be a drag, not a click
@@ -253,7 +256,13 @@ public class MulchDrop : MonoBehaviour
         float hop = registry.hopSeconds > 0f ? Mathf.Clamp01(age / registry.hopSeconds) : 1f;
         Vector3 ground = Vector3.Lerp(start, landing, hop);
         transform.position = ground;
-        PlaceParts(registry.hopHeight * 4f * hop * (1f - hop));
+        float height = registry.hopHeight * 4f * hop * (1f - hop);
+        if (landed)
+        {
+            floatAge += dt;
+            height += FloatOffset();
+        }
+        PlaceParts(height);
         if (!landed && hop >= 1f)
         {
             landed = true;
@@ -285,10 +294,11 @@ public class MulchDrop : MonoBehaviour
         else if (left <= registry.flashSeconds)
         {
             // about to expire: fades smoothly out to nothing and back in (Tommy, 2026-11-20: it used
-            // to blink), faster the closer it gets to vanishing. one fade out and in takes as long as
-            // one off and on of the old blink
-            float period = Mathf.Lerp(0.07f, 0.2f, left / Mathf.Max(0.01f, registry.flashSeconds));
-            expiryPhase += dt * Mathf.PI / period;
+            // to blink), faster the closer it gets to vanishing: one fade out and in takes
+            // flashCycleStart seconds when it starts and shrinks to flashCycleEnd at the very end
+            float share = Mathf.Clamp01(left / Mathf.Max(0.01f, registry.flashSeconds));
+            float cycle = Mathf.Max(0.02f, Mathf.Lerp(registry.flashCycleEnd, registry.flashCycleStart, share));
+            expiryPhase += dt * 2f * Mathf.PI / cycle;
             expiryAlpha = 0.5f + 0.5f * Mathf.Cos(expiryPhase);
         }
         else expiryPhase = 0f;
@@ -329,13 +339,24 @@ public class MulchDrop : MonoBehaviour
 
     private static Color Tint(Color c, float alpha) { c.a = alpha; return c; }
 
+    // how high the landed drop's picture floats: it eases up to floatHeight, bobbing bobHeight up and
+    // down around it once every bobSeconds
+    private float FloatOffset()
+    {
+        float rise = registry.floatRiseSeconds > 0f ? Mathf.Clamp01(floatAge / registry.floatRiseSeconds) : 1f;
+        rise = rise * rise * (3f - 2f * rise);
+        float bob = registry.bobSeconds > 0f ? Mathf.Sin(floatAge * 2f * Mathf.PI / registry.bobSeconds) : 0f;
+        return rise * (registry.floatHeight + registry.bobHeight * bob);
+    }
+
     // the visual rides height above its resting spot; the shadow stays on the ground and shrinks
     // and fades the higher the drop is, like a projectile's
     private void PlaceParts(float height)
     {
         Vector3 visualOffset = new Vector3(0f, restHeight + height, 0f);
         visual.localPosition = visualOffset;
-        if (glitter != null) glitter.transform.localPosition = new Vector3(0f, restHeight, 0f);
+        // the glints are born around the picture wherever it floats; once born they stay put
+        if (glitter != null) glitter.transform.localPosition = visualOffset;
         if (glow != null) glow.transform.localPosition = new Vector3(0f, restHeight * 0.5f, 0f);
         if (hitbox != null) hitbox.offset = visualOffset;
 
