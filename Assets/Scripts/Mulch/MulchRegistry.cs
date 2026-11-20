@@ -105,9 +105,6 @@ public class MulchRegistry : ScriptableObject
     public Vector2 glitterSize = new Vector2(0.09f, 0.14f);
     [Tooltip("how far around the drop the glints appear")]
     public float glitterRadius = 0.32f;
-    [Tooltip("on dark levels a small light under the drop, so it also lights the ground around it (off in daylight and while sunny)")]
-    public float darkGlowRadius = 0.9f;
-    public float darkGlowIntensity = 0.7f;
 
     [Header("pick up")]
     [Tooltip("seconds a clicked drop takes to fly into its inventory slot, real time")]

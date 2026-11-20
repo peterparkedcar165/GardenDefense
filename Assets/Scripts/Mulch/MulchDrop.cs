@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
 // a mulch lying on the map, waiting to be clicked. it pops out where the insect died, hops up and
@@ -16,8 +15,8 @@ using System.Collections.Generic;
 //
 // built like insects and projectiles: this root is the spot on the ground, with a Shadow child that
 // stays on the ground and a Visual child that rises off it during the hop. the visual is unlit, so
-// it shows at full brightness in the dark. once it lands it sparkles with white glints (unlit too),
-// and on dark levels a small light under it lights the ground around it
+// it shows at full brightness in the dark. once it lands it sparkles with white glints (unlit too).
+// it gives off no light (Tommy, 2026-11-20: being unlit already makes it show in the dark)
 public class MulchDrop : MonoBehaviour
 {
     private static readonly List<MulchDrop> all = new List<MulchDrop>();
@@ -35,14 +34,13 @@ public class MulchDrop : MonoBehaviour
     private SpriteRenderer shadow;
     private Vector3 shadowBaseScale;
     private ParticleSystem glitter;
-    private Light2D glow;
     private CircleCollider2D hitbox;
     private Vector3 start, landing;
     private float restHeight;
     private float age;
     private float fullFlash;
     // the fade in and out while it's about to expire: where in the wave it is, and the alpha it
-    // gives every part (icon layers, shadow, the glow's strength)
+    // gives every part (icon layers and shadow)
     private float expiryPhase;
     private float expiryAlpha = 1f;
     // seconds since it landed, on the drop's clock: it rises to its float and bobs (Tommy,
@@ -103,7 +101,6 @@ public class MulchDrop : MonoBehaviour
         BuildShadow();
         BuildVisual();
         BuildGlitter();
-        if (DarknessManager.instance != null) BuildGlow();
 
         hitbox = gameObject.AddComponent<CircleCollider2D>();
         hitbox.radius = reg.dropSize * 0.6f;
@@ -215,31 +212,6 @@ public class MulchDrop : MonoBehaviour
         renderer.sortingOrder = SortingOrder + 1;
     }
 
-    // a small light like a plant's glow, so on dark levels the drop lights the ground around it.
-    // hidden in daylight and while sunny weather hides every point light (DarknessManager.LightsVisible)
-    private void BuildGlow()
-    {
-        GameObject go = new GameObject("Glow");
-        go.transform.SetParent(transform, false);
-        glow = go.AddComponent<Light2D>();
-        glow.lightType = Light2D.LightType.Point;
-        glow.pointLightOuterRadius = registry.darkGlowRadius;
-        glow.pointLightInnerRadius = registry.darkGlowRadius * 0.25f;
-        glow.intensity = registry.darkGlowIntensity;
-        glow.color = new Color(1f, 0.97f, 0.9f);
-        glow.falloffIntensity = 0.6f;
-        glow.targetSortingLayers = AllSortingLayerIDs();
-        glow.enabled = DarknessManager.LightsVisible;
-    }
-
-    private static int[] AllSortingLayerIDs()
-    {
-        SortingLayer[] layers = UnityEngine.SortingLayer.layers;
-        int[] ids = new int[layers.Length];
-        for (int i = 0; i < layers.Length; i++) ids[i] = layers[i].id;
-        return ids;
-    }
-
     private void OnDestroy()
     {
         all.Remove(this);
@@ -275,7 +247,6 @@ public class MulchDrop : MonoBehaviour
             if (Time.timeScale <= 0f && !glitter.isPaused) glitter.Pause();
             else if (Time.timeScale > 0f && glitter.isPaused) glitter.Play();
         }
-        if (glow != null) glow.enabled = DarknessManager.LightsVisible && body.enabled;
 
         float left = registry.groundSeconds - age;
         if (left <= 0f)
@@ -302,7 +273,6 @@ public class MulchDrop : MonoBehaviour
             expiryAlpha = 0.5f + 0.5f * Mathf.Cos(expiryPhase);
         }
         else expiryPhase = 0f;
-        if (glow != null) glow.intensity = registry.darkGlowIntensity * expiryAlpha;
         body.enabled = visible;
         if (label != null) label.enabled = visible;
         if (symbol != null) symbol.enabled = visible;
@@ -357,7 +327,6 @@ public class MulchDrop : MonoBehaviour
         visual.localPosition = visualOffset;
         // the glints are born around the picture wherever it floats; once born they stay put
         if (glitter != null) glitter.transform.localPosition = visualOffset;
-        if (glow != null) glow.transform.localPosition = new Vector3(0f, restHeight * 0.5f, 0f);
         if (hitbox != null) hitbox.offset = visualOffset;
 
         float lift = registry.hopHeight > 0f ? Mathf.Clamp01(height / registry.hopHeight) : 0f;
