@@ -75,14 +75,21 @@ public class StatsPanelTooltip : MonoBehaviour
     // end on the same right edge. the widest line gets MinDots dots and sets the width for the rest
     private string Compose()
     {
-        float dot = Mathf.Max(0.01f, Measure("."));
+        // measured by difference, never one piece on its own: a lone string's preferred width
+        // carries a little extra at its end, which made one dot read wider than a dot in a row and
+        // left lines short of dots (worse the more dots they had). a run of 60 dots minus a run of
+        // 10 is exactly 50 dot steps, and label plus 10 dots minus 10 dots is exactly where the
+        // label ends and its dots start
+        string tenDots = new string('.', 10);
+        float tenDotsW = Measure(tenDots);
+        float dot = Mathf.Max(0.01f, (Measure(new string('.', 60)) - tenDotsW) / 50f);
         int n = _rows.Count;
         float[] labelW = new float[n], valueW = new float[n];
         float content = 0f;
         for (int i = 0; i < n; i++)
         {
             if (_rows[i].label == null) continue;
-            labelW[i] = Measure(_rows[i].label);
+            labelW[i] = Measure(_rows[i].label + tenDots) - tenDotsW;
             valueW[i] = Measure(_rows[i].value);
             content = Mathf.Max(content, labelW[i] + MinDots * dot + valueW[i]);
         }
