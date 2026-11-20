@@ -43,7 +43,7 @@ MonoBehaviour:
   baseGrassResistance: 0.5
   baseWindResistance: 0
   baseDotResistance: 0
-  flatPhysicalDamageReduction: 12
+  flatPhysicalDamageReduction: 14
   threatValue: 1.5
   threatType: 0
   carryPriority: 1
