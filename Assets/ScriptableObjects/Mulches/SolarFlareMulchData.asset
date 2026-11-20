@@ -13,20 +13,14 @@ MonoBehaviour:
   m_Name: SolarFlareMulchData
   m_EditorClassIdentifier: Assembly-CSharp::SolarFlareMulchData
   mulchName: '<b><color=orange>Solar Flare</color></b>'
-  description: 'Whenever a plant generates <b><color=#FFD700>Sun</color></b>, it deals <color=#FFB6C1><b>Magic Damage</b></color> equal to <b><color=green>400%</color></b> of the <b><color=#FFD700>Sun</color></b> generated to every insect within <b><color=green>2</color></b> tiles, in that plant''s own element.'
+  description: 
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
-  color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 0
-  tier: 1
-  rollWeight: 1
-  targetPlant: {fileID: 0}
-  condition:
-    requiredElementGroups: []
-    requiredPlantGroups: []
-    minWave: 0
-    maxWave: 0
-    orAlternatives: []
-  damagePercentOfSun: 4
+  dropWeight: 1
+  damagePercentOfSun:
+    common: 4
+    rare: 8
+    epic: 12
   radiusTiles: 2
   damageType: 1
   useSourceElement: 1

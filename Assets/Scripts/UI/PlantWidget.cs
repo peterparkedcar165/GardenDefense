@@ -57,6 +57,13 @@ public class PlantWidget : MonoBehaviour
     private bool skillUnlocked, skillReady;
     private float chargeTarget, displayedCharge = -1f;
 
+    // one small square per equipped mulch, coloured by its rarity, in a row just above the health
+    // bar (Tommy: plain coloured squares, not mini icons)
+    private const int MarkerSize = 3;
+    private const int MarkerGap = 1;
+    private readonly List<Image> mulchMarkers = new List<Image>();
+    private int markerCount;
+
     // height from the owner's own sprite (FollowSpriteTop): the highest point of its visible
     // pixels, in world units above the owner, taken as the highest seen over its first moments of
     // idle animation so a bobbing petal can't poke through the bar. negative infinity until then
@@ -181,6 +188,22 @@ public class PlantWidget : MonoBehaviour
 
     public bool HasExtraBar(string key) => FindBar(key) != null;
 
+    // the owner's equipped mulches as rarity colours, in slot order. only called when they change
+    public void SetMulchMarkers(List<Color> colors)
+    {
+        int count = colors != null ? colors.Count : 0;
+        while (mulchMarkers.Count < count)
+            mulchMarkers.Add(NewImage("MulchMarker", transform, null, Image.Type.Simple, Color.white));
+        for (int i = 0; i < mulchMarkers.Count; i++)
+        {
+            bool show = i < count;
+            mulchMarkers[i].enabled = show;
+            if (show) mulchMarkers[i].color = colors[i];
+        }
+        if (count != markerCount) layoutDirty = true;
+        markerCount = count;
+    }
+
     private Bar FindBar(string key)
     {
         foreach (Bar bar in extraBars)
@@ -297,6 +320,10 @@ public class PlantWidget : MonoBehaviour
             Place(bar.frame, left, barTop, width, ExtraBarHeight);
             barTop += 1 - ExtraBarHeight;
         }
+
+        // mulch squares: a row from the bar's left end, one pixel above its top border
+        for (int i = 0; i < markerCount && i < mulchMarkers.Count; i++)
+            Place(mulchMarkers[i], left + i * (MarkerSize + MarkerGap), top + 1 + MarkerSize, MarkerSize, MarkerSize);
 
         int circleLeft = left - CircleLeftOfBar;
         Place(circleInside, circleLeft, circleTop, CircleSize, CircleSize);

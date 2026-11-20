@@ -12,7 +12,7 @@ public class SlowEffect : StatusEffect
     {
         effectType = Type.negative;
         elementalType = ElementalType.Water;
-        slowness = baseSlowness + slownessPerLevel * (level - 1) + MulchManager.GlobalSlowBonus;
+        slowness = baseSlowness + slownessPerLevel * (level - 1) + MulchManager.SlowBonusFrom(source);
     }
 
     public override string GetName() => "<color=#87CEEB>Slow</color>";

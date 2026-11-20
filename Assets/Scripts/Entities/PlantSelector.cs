@@ -56,7 +56,7 @@ public class PlantSelector : MonoBehaviour
         waterPotMode  = newMode;
     }
 
-    // Transplant mulch: click the button on the selected plant's info panel, then click a valid
+    // Transplant fertilizer: click the button on the selected plant's info panel, then click a valid
     // destination tile - same shape as flower/water pot modes, but the "placement" step reads
     // transplantingPlant.allowedTiles instead of a prefab (see Tile.OnMouseDown)
     public void SetTransplantMode(Plant plant)
@@ -116,7 +116,7 @@ public class PlantSelector : MonoBehaviour
     {
         bool uiOpen = (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen)
                    || (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen)
-                   || (MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen);
+                   || (MulchDebugMenu.instance != null && MulchDebugMenu.instance.IsOpen);
         if (uiOpen) return;
 
         // a right click landing on a UI element (e.g. right-clicking the Speed button to step it

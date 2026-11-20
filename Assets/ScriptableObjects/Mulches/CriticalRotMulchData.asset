@@ -13,41 +13,11 @@ MonoBehaviour:
   m_Name: CriticalRotMulchData
   m_EditorClassIdentifier: Assembly-CSharp::CriticalRotMulchData
   mulchName: '<b><color=purple>Critical Rot</color></b>'
-  description: 'DoT Damage can critically strike. +10% DoT Crit Chance.'
+  description: 
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
-  color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 3
-  tier: 0
-  rollWeight: 1
-  targetPlant: {fileID: 0}
-  condition:
-    requiredFamilyGroups: []
-    requiredElementGroups:
-    - anyOf:
-      - 2
-      excludedPlants: []
-    - anyOf:
-      - 0
-      - 4
-      - 3
-      excludedPlants: []
-    requiredPlantGroups: []
-    excludedFamilies: []
-    minWave: 0
-    maxWave: 0
-    orAlternatives:
-    - requiredFamilyGroups: []
-      requiredElementGroups: []
-      requiredPlantGroups:
-      - anyOf:
-        - plant: {fileID: 11400000, guid: 09b2bc1040250e142ae01848263b0ab0, type: 2}
-          requiredUnlockId:
-          requiredMaxedPath: 0
-        - plant: {fileID: 11400000, guid: e795825c77c9ced43be2da09a4e18c50, type: 2}
-          requiredUnlockId:
-          requiredMaxedPath: 0
-      excludedFamilies: []
-      minWave: 0
-      maxWave: 0
-      orAlternatives: []
-  dotCritChanceBonus: 0.1
+  dropWeight: 1
+  dotCritChance:
+    common: 0.25
+    rare: 0.5
+    epic: 0.75

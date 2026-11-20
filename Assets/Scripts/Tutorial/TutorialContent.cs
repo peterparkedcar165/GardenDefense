@@ -16,7 +16,7 @@ public static class TutorialContent
 
     public static readonly TutorialPage[] Level1FertilizerSelection =
     {
-        new TutorialPage("After selecting your loadout, you must choose a <b>Fertilizer</b> to help all the selected plants, for the entire level!"),
+        new TutorialPage("After selecting your loadout, you choose one <b>Fertilizer</b>. It changes how the whole level works, from start to finish!"),
         new TutorialPage("Select a <b>Fertilizer</b> you think will help you the most.", TutorialEvents.SelectFertilizer),
     };
 
@@ -40,18 +40,13 @@ public static class TutorialContent
         new TutorialPage("Great! Now that the <b>Attack</b> tree is upgraded, I'm a little bit more powerful!\n\nIf you look below, you'll notice that the <b>Passive Tree</b> has an extra level, that's because you placed me on a <b><color=green>Grass</color></b> Tile!"), // player can click on the panel to close the tutorial.
     };
 
-    public static readonly TutorialPage[] Level1FirstFertilizer =
-    {
-        new TutorialPage("After some waves, you'll collect more <b>Fertilizers</b>. They will appear on the left side of the <b>Shovel</b>, click on it!", TutorialEvents.ClickFertilizerQueueButton), // player is expected to click on the fertilizer button, once done, proceed tutorial
-        new TutorialPage("Once again, you'll be met with three choices of <b>Fertilizers</b>, except these ones will be randomized! You get to select one that you like the most, but if you don't like any of them, you can <b>reroll</b> each one once!", TutorialEvents.SelectRandomFertilizer), // player is expected to click on a fertilizer, once done, proceed tutorial
-        new TutorialPage("The stat bonuses will be applied to all of your plants for the rest of the level!"), // player can click on the panel to close the tutorial.
-    };
-
+    // shown the first time a mulch drops in level 1 (MulchManager.OnDropSpawned), game paused.
+    // click through pages only, so nothing here waits on a world click the popup could block
     public static readonly TutorialPage[] Level1FirstMulch =
     {
-        new TutorialPage("After some waves, you'll collect <b>Mulches</b>. They will appear on the left side of the <b>Shovel</b>, click on it!", TutorialEvents.ClickMulchQueueButton), // player is expected to click on the mulch button, once done, proceed tutorial
-        new TutorialPage("You'll be met with three choices of <b>Mulches</b>, randomized! You get to select one that you like the most, but if you don't like any of them, you can <b>reroll</b> each one once!", TutorialEvents.SelectRandomMulch), // player is expected to click on a mulch, once done, proceed tutorial
-        new TutorialPage("Unlike <b>Fertilizers</b>, Mulches stack! Every one you pick stays active on top of the ones you already have, for the rest of the level."), // player can click on the panel to close the tutorial.
+        new TutorialPage("Insects sometimes drop <b>Mulches</b>! Click one on the ground to put it in your <b>mulch bag</b> at the bottom of the screen. Be quick, it only stays for a little while!"),
+        new TutorialPage("Drag a mulch from your bag onto a plant to give it that mulch for the rest of the level. Hover over a mulch to see what it does. Every wave also drops one mulch where its last insect falls."),
+        new TutorialPage("A plant can hold up to <b>6</b> mulches, and two identical mulches of the same rarity merge into a stronger one. Right click a mulch in your bag to sell it for <b><color=#FFD700>Sun</color></b>."),
     };
 
     public static readonly TutorialPage[] Level1SoldierAntAppears = // player is not expected to do anything, but simply read the tutorial and click to proceed, but the game is paused and non-unpausable while this tutorial holds active

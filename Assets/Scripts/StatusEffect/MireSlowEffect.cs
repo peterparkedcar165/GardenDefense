@@ -6,7 +6,7 @@ public class MireSlowEffect : StatusEffect
     public MireSlowEffect(Entity target, float duration, Entity source) : base(target, duration, 1, source)
     {
         effectType = Type.negative;
-        appliedAmount = SlowAmount + MulchManager.GlobalSlowBonus;
+        appliedAmount = SlowAmount + MulchManager.SlowBonusFrom(source);
     }
 
     public override string GetName() => "<color=#6B8E23>Mire</color>";

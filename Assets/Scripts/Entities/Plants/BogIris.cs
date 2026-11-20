@@ -183,6 +183,14 @@ public class BogIris : Shooter
         }
     }
 
+    // the sunset mulch's extra tick at the end of a wave: one normal sun tick, timer untouched
+    public override bool ExtraSunTick()
+    {
+        int generatedTotal = GenerateSun(BaseSunGenerated + (_isOpen ? OpenBonusSun : 0));
+        SunGenerationParticleEffect.Spawn(GetVisualCenter(), generatedTotal, 0.5f);
+        return true;
+    }
+
     // called on every attack hit (see BogIrisProjectile.OnHit) - deterministically advances the
     // Sun timer by ReduceChance seconds, making the next tick arrive sooner. used to be a
     // ReduceChance% roll to add a full second; this is the RNG-free, expectation-preserving

@@ -145,6 +145,15 @@ public class Kelp : Aura
         }
     }
 
+    // the sunset mulch's extra tick at the end of a wave: one oxygen threshold's worth of sun,
+    // the oxygen bar untouched
+    public override bool ExtraSunTick()
+    {
+        int generatedTotal = GenerateSun(SunPerThreshold);
+        SunGenerationParticleEffect.Spawn(GetVisualCenter(), generatedTotal, 0.5f);
+        return true;
+    }
+
     // shared by the attack passive and the skill's Air Bubble effect (both instant burst and
     // per-second regen): the passive bar (same field Sunflower uses for its sun-cooldown display)
     // tracks cumulative Oxygen granted instead of time, refilling to a full threshold once it

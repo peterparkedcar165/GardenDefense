@@ -60,7 +60,7 @@ public class Tile : MonoBehaviour
     private const float TileSize = 0.5f;
 
     // placement tiles sit this far apart in world units (the level grid's cell size, see
-    // DaytimeGridManager.GridToWorld). how mulches turn a radius in tiles into a distance
+    // DaytimeGridManager.GridToWorld). how mulches and fertilizers turn a radius in tiles into a distance
     public const float CellSize = 1f;
     private const float GraceTiles = 2f;
 
@@ -239,7 +239,7 @@ public class Tile : MonoBehaviour
             return;
         }
 
-        int cost = MulchManager.GetPlacementCost(selectedPlant.data);
+        int cost = FertilizerManager.GetPlacementCost(selectedPlant.data);
         Debug.Log("Cost of selected plant is: " + cost);
 
         if (gm.SpendSun(cost))
@@ -256,7 +256,7 @@ public class Tile : MonoBehaviour
             isOccupied = true;
             GetComponent<Collider2D>().enabled = false;
             selector.ClearSelection();
-            MulchManager.instance?.NotifyPlantBought(plant);
+            FertilizerManager.instance?.NotifyPlantBought(plant);
             Debug.Log("Spent " + cost);
 
             if (selectedPlant.data.plantName == "AcornKnight")

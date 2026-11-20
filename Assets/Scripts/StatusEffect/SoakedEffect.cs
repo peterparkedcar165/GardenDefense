@@ -1,5 +1,5 @@
-// waterlily's stacking soak: a movement slow built on SlowEffect (so the Hinder mulch's global
-// slow bonus still applies) with its own stronger per stack values, plus it grounds flying
+// waterlily's stacking soak: a movement slow built on SlowEffect (so the soaking waterlily's own
+// hinder mulch still adds to it) with its own stronger per stack values, plus it grounds flying
 // insects for as long as it lasts. grounding goes through GroundedEffect so it shares the one
 // flight authority every other grounding source already uses, and never shortens a longer
 // ground that is already running
@@ -11,17 +11,7 @@ public class SoakedEffect : SlowEffect
 
     public SoakedEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
-        slowness = baseSoakSlowness + soakSlownessPerLevel * (level - 1) + MulchManager.GlobalSlowBonus;
-    }
-
-    // waterlogged mulch: at its source waterlily's max stacks, the insect takes that waterlily's
-    // bubble prison bonus, through the same slot bubble prison uses so the two never stack
-    public bool AtMaxStacks => source is Waterlily waterlily && level >= waterlily.MaxSoakStacks;
-
-    public override void OnExpire()
-    {
-        base.OnExpire();
-        WaterloggedMulchEffect.Unmark(this);
+        slowness = baseSoakSlowness + soakSlownessPerLevel * (level - 1) + MulchManager.SlowBonusFrom(source);
     }
 
     public override string GetName() => "<color=#4FC3F7>Soaked</color>";
@@ -31,9 +21,6 @@ public class SoakedEffect : SlowEffect
     public override void OnApply()
     {
         base.OnApply();
-
-        if (WaterloggedMulchEffect.IsActive && AtMaxStacks)
-            WaterloggedMulchEffect.Mark(this, ((Waterlily)source).BubbleDamageTaken);
 
         if (target is not FlyingInsect flyer) return;
         GroundedEffect existing = flyer.GetEffect<GroundedEffect>();

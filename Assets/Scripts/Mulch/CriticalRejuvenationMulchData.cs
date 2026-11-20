@@ -1,15 +1,16 @@
 using UnityEngine;
 
-// lets every plant's heals critically strike, same +50% crit-heal bonus Entity.Heal already
-// rolls for any source with HealCanCrit - this just grants that flag board-wide, plus a flat
-// bonus to the roll itself via criticalHealChance (stacks additively with criticalChance)
+[CreateAssetMenu(fileName = "CriticalRejuvenationMulch", menuName = "Scriptable Objects/Mulch/Critical Rejuvenation")]
 public class CriticalRejuvenationMulchData : MulchData
 {
-    [Tooltip("flat bonus added to criticalHealChance, e.g. 0.15 = +15% heal crit chance")]
-    public float healCritChanceBonus = 0.15f;
+    [Tooltip("heal crit chance added to this plant, e.g. 0.25 = +25%")]
+    public TierValue healCritChance = TierValue.Scaled(0.25f);
 
-    public override MulchEffect CreateEffect() => new CriticalRejuvenationMulchEffect(this);
+    public override MulchEffect CreateEffect(MulchItem item) => new CriticalRejuvenationMulchEffect(this, item);
 
-    public override string GetDescription() =>
-        $"Healing can critically strike. +<b><color=green>{healCritChanceBonus * 100f:F0}%</color></b> Heal Crit Chance.";
+    public override string GetDescription(MulchItem item)
+    {
+        MulchTier r = item.rarity;
+        return $"Healing this plant gives can critically strike. {Green("+" + Pct(healCritChance.Get(r)))} Heal Crit Chance.";
+    }
 }

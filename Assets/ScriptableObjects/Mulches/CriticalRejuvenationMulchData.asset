@@ -13,18 +13,11 @@ MonoBehaviour:
   m_Name: CriticalRejuvenationMulchData
   m_EditorClassIdentifier: Assembly-CSharp::CriticalRejuvenationMulchData
   mulchName: '<b><color=green>Critical Rejuvenation</color></b>'
-  description: Healing can critically strike.
+  description: 
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
-  color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 2
-  tier: 0
-  rollWeight: 1
-  targetPlant: {fileID: 0}
-  condition:
-    requiredFamilyGroups: []
-    requiredElementGroups: []
-    requiredPlantGroups: []
-    excludedFamilies: []
-    minWave: 0
-    maxWave: 0
-  healCritChanceBonus: 0.15
+  dropWeight: 1
+  healCritChance:
+    common: 0.25
+    rare: 0.5
+    epic: 0.75

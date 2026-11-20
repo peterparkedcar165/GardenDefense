@@ -1,10 +1,9 @@
-// mulch rarity. unlike FertilizerTier, this does not control a stat magnitude multiplier -
-// there is no such thing as the same mulch existing at a lower or higher tier with different
-// numbers. the tier is just which draft bucket (see MulchGrant) a mulch belongs to
+// a loot mulch's rarity. the same mulch exists at every rarity, with stronger numbers the rarer it
+// is (TierValue). two identical mulches of the same rarity merge into the next one; Epic is the top
+// and can't merge
 public enum MulchTier
 {
     Common,
     Rare,
-    Epic,
-    Legendary
+    Epic
 }

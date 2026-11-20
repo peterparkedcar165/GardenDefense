@@ -1,28 +1,22 @@
 using UnityEngine;
-using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "DroughtMulchData", menuName = "Scriptable Objects/Mulch/Drought")]
+[CreateAssetMenu(fileName = "DroughtMulch", menuName = "Scriptable Objects/Mulch/Drought")]
 public class DroughtMulchData : MulchData
 {
-    [Tooltip("how many whole waves the drought lasts, counted from the first wave that starts after the pick")]
+    [Tooltip("whole waves the drought lasts, counted from the first wave that starts after it's equipped")]
     public int droughtWaves = 3;
-    [Tooltip("sun production during the drought, as a multiplier. 0 = sun producers make nothing")]
+    [Tooltip("this plant's Sun production during the drought, as a multiplier. 0 = none")]
     public float droughtSunMultiplier = 0f;
-    [Tooltip("sun production after the drought, for the rest of the level, as a multiplier. 2 = double")]
-    public float afterSunMultiplier = 2f;
+    [Tooltip("this plant's Sun production after the drought, for the rest of the level, as a multiplier. 2 = double")]
+    public TierValue afterSunMultiplier = new TierValue(2f, 3f, 4f);
 
-    public override MulchEffect CreateEffect() => new DroughtMulchEffect(this);
+    public override MulchEffect CreateEffect(MulchItem item) => new DroughtMulchEffect(this, item);
 
-    // only worth offering when something in the loadout makes sun
-    public override bool MeetsExtraRequirements(List<PlantData> loadout, int currentWave) => LoadoutHasSunProducer(loadout);
-
-    public override string GetDescription()
+    public override string GetDescription(MulchItem item)
     {
-        const string sun = "<b><color=#FFD700>Sun</color></b>";
-        string during = droughtSunMultiplier <= 0f
-            ? $"make <b><color=red>no</color></b> {sun}"
-            : $"make only <b><color=red>{droughtSunMultiplier * 100f:F0}%</color></b> of their {sun}";
-        return $"{sun} producers {during} for the next <b><color=green>{droughtWaves}</color></b> waves. " +
-            $"After that, they make <b><color=green>{afterSunMultiplier:0.##}x</color></b> {sun} for the rest of the level.";
+        MulchTier r = item.rarity;
+        string during = droughtSunMultiplier <= 0f ? $"makes {Red("no")} {SunLabel}" : $"makes only {Red(Pct(droughtSunMultiplier))} of its {SunLabel}";
+        return $"This plant {during} for the next {Green(droughtWaves.ToString())} waves. " +
+            $"After that, it makes {Green(afterSunMultiplier.Get(r).ToString("0.##") + "x")} {SunLabel} for the rest of the level.";
     }
 }

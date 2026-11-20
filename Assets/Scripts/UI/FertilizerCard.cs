@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using System.Text;
 
+// one fertilizer on the pre level pick screen: its name on top, its tier and what it does below.
+// the description is built from the fertilizer's own numbers (FertilizerData.GetDescription)
 public class FertilizerCard : MonoBehaviour
 {
     [SerializeField] private TMP_Text statsText;
@@ -11,151 +12,45 @@ public class FertilizerCard : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private GameObject highlight;
+    // unused since fertilizers stopped rolling random stats, kept so the card prefab's reference stays valid
     [SerializeField] private Button rerollButton;
 
     private FertilizerData data;
-    private FertilizerStat[] rolledStats;
-    private float[] rolledValues;
     private FertilizerSelectionUI ui;
     private RectTransform rectTransform;
     private Vector2 targetPosition;
 
-    // mid-level ("generated") mode - a procedurally rolled bundle rather than a hand-authored
-    // FertilizerData asset. isGeneratedMode picks which branch RefreshDisplay/OnSelectClicked use
-    private bool isGeneratedMode;
-    private GeneratedFertilizer generatedData;
-
     public void Initialize(FertilizerData fertilizer, FertilizerSelectionUI selectionUI)
     {
-        isGeneratedMode = false;
         data = fertilizer;
         ui = selectionUI;
         rectTransform = GetComponent<RectTransform>();
         canvasGroup.interactable = false;
         canvasGroup.alpha = 1f;
         highlight.SetActive(false);
-        // reroll only ever applies to mid-level procedural choices, never the pre-level pool pick
         if (rerollButton != null) rerollButton.gameObject.SetActive(false);
 
-        Roll();
-        StartCoroutine(AnimateIn());
-    }
-
-    public void InitializeGenerated(GeneratedFertilizer fertilizer, FertilizerSelectionUI selectionUI)
-    {
-        isGeneratedMode = true;
-        generatedData = fertilizer;
-        ui = selectionUI;
-        rectTransform = GetComponent<RectTransform>();
-        canvasGroup.interactable = false;
-        canvasGroup.alpha = 1f;
-        highlight.SetActive(false);
-
-        if (rerollButton != null)
-        {
-            rerollButton.gameObject.SetActive(true);
-            rerollButton.interactable = true;
-        }
-
-        RefreshDisplayGenerated();
-        StartCoroutine(AnimateIn());
-    }
-
-    // rerolls just this card's bundle at the same tier, independent of the other 2 cards and of
-    // the queue itself - nothing is consumed by a reroll, only by an actual selection.
-    // wired via the Reroll button's OnClick() in the Inspector, same as OnSelectClicked.
-    // limited to a single use per card - disabled immediately after firing
-    public void OnRerollClicked()
-    {
-        generatedData = FertilizerManager.instance.RerollSingle(generatedData.tier);
-        RefreshDisplayGenerated();
-        if (rerollButton != null) rerollButton.interactable = false;
-    }
-
-    private void Roll()
-    {
-        (rolledStats, rolledValues) = FertilizerManager.instance.RollFor(data);
         RefreshDisplay();
+        StartCoroutine(AnimateIn());
     }
 
     private void RefreshDisplay()
     {
-        // TODO: uncomment when FertilizerData icons are assigned
-        // if (icon != null) icon.sprite = data.icon;
+        if (icon != null && data.icon != null) icon.sprite = data.icon;
         if (tierText != null) tierText.text = data.fertilizerName;
-
         if (statsText != null)
-        {
-            var sb = new StringBuilder();
-
-            bool hasElements  = data.targetElementalTypes != null && data.targetElementalTypes.Length > 0;
-
-            if (data.appliesToAll)
-            {
-                sb.AppendLine("Applies to all plants");
-            }
-            else
-            {
-                if (hasElements)
-                    sb.AppendLine($"Element: {string.Join(", ", data.targetElementalTypes)}");
-            }
-
-            sb.AppendLine();
-
-            StatType[] statTypes = new StatType[rolledStats.Length];
-            for (int i = 0; i < rolledStats.Length; i++) statTypes[i] = rolledStats[i].statType;
-
-            foreach (int i in FertilizerFormat.SortedIndicesByName(statTypes))
-            {
-                bool isGood = rolledValues[i] >= 0f;
-                if (FertilizerFormat.IsInvertedStat(rolledStats[i].statType)) isGood = !isGood;
-                string color = isGood ? "green" : "red";
-                string statColor = FertilizerFormat.GetStatColor(rolledStats[i].statType);
-                sb.AppendLine($"<color={statColor}><b>{FertilizerFormat.FormatStatName(rolledStats[i].statType)}</b></color>: <color={color}><b>{FertilizerFormat.FormatValue(rolledStats[i].statType, rolledValues[i])}</b></color>");
-            }
-            statsText.text = sb.ToString().TrimEnd();
-        }
-    }
-
-    // tier name + rolled stat list for a mid-level procedural bundle - no element/family
-    // targeting to show, since GeneratedFertilizerStat's scope isn't a single fertilizer-wide tag
-    private void RefreshDisplayGenerated()
-    {
-        if (tierText != null) tierText.text = generatedData.tier.ToString();
-
-        if (statsText != null)
-        {
-            StringBuilder sb = new StringBuilder();
-            GeneratedFertilizerStat[] stats = generatedData.stats;
-            StatType[] statTypes = new StatType[stats.Length];
-            for (int i = 0; i < stats.Length; i++) statTypes[i] = stats[i].statType;
-
-            foreach (int i in FertilizerFormat.SortedIndicesByName(statTypes))
-            {
-                GeneratedFertilizerStat stat = stats[i];
-                bool isGood = stat.value >= 0f;
-                if (FertilizerFormat.IsInvertedStat(stat.statType)) isGood = !isGood;
-                string color = isGood ? "green" : "red";
-                string statColor = FertilizerFormat.GetStatColor(stat.statType);
-                sb.AppendLine($"<color={statColor}><b>{FertilizerFormat.FormatStatName(stat.statType)}</b></color>: <color={color}><b>{FertilizerFormat.FormatValue(stat.statType, stat.value)}</b></color>");
-            }
-            statsText.text = sb.ToString().TrimEnd();
-        }
+            statsText.text = $"{FertilizerData.TierLabel(data.tier)}\n\n{data.GetDescription()}";
     }
 
     public void OnSelectClicked()
     {
-        if (isGeneratedMode)
-        {
-            FertilizerManager.instance.CommitGenerated(generatedData);
-            TutorialManager.instance?.NotifyEvent(TutorialEvents.SelectRandomFertilizer);
-            ui.CloseAfterSelect();
-            return;
-        }
         TutorialManager.instance?.NotifyEvent(TutorialEvents.SelectFertilizer);
-        FertilizerManager.instance.Commit(data, rolledStats, rolledValues);
+        FertilizerManager.instance?.Commit(data);
         ui.CloseAfterSelect();
     }
+
+    // the prefab's hidden reroll button still points here
+    public void OnRerollClicked() {}
 
     public void SetHighlight(bool active)
     {
@@ -184,5 +79,4 @@ public class FertilizerCard : MonoBehaviour
         rectTransform.anchoredPosition = targetPosition;
         canvasGroup.interactable = true;
     }
-
 }

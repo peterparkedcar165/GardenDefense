@@ -1,43 +1,31 @@
-using System.Collections.Generic;
-
-// grants every currently-placed and future-placed plant a reference-counted HealCanCrit token
-// (Entity.AddHealCanCrit/RemoveHealCanCrit), so Entity.Heal's existing crit roll (source.HealCanCrit
-// && Random.value < source.criticalChance, +50% on a crit) now applies to any heal a plant gives -
-// plant-only, like every other mulch, so an insect healing another insect is never affected
+// a reference counted HealCanCrit token on the plant (Entity.Heal already rolls a +50% crit for any
+// healer that has it) plus heal crit chance
 public class CriticalRejuvenationMulchEffect : MulchEffect
 {
     private readonly CriticalRejuvenationMulchData typedData;
-    private readonly List<Plant> affected = new List<Plant>();
+    private float applied;
+    private bool on;
 
-    public CriticalRejuvenationMulchEffect(CriticalRejuvenationMulchData data) : base(data)
+    public CriticalRejuvenationMulchEffect(CriticalRejuvenationMulchData data, MulchItem item) : base(item)
     {
         typedData = data;
     }
 
     public override void Activate()
     {
-        foreach (Plant plant in new List<Plant>(Plant.allPlants))
-            TryApply(plant);
+        if (Owner == null || on) return;
+        on = true;
+        applied = V(typedData.healCritChance);
+        Owner.AddHealCanCrit();
+        Owner.criticalHealChanceAdder += applied;
     }
 
     public override void Deactivate()
     {
-        foreach (Plant plant in affected)
-            if (plant != null && plant.IsAlive)
-            {
-                plant.RemoveHealCanCrit();
-                plant.criticalHealChanceAdder -= typedData.healCritChanceBonus;
-            }
-        affected.Clear();
-    }
-
-    public override void OnPlantPlaced(Plant plant) => TryApply(plant);
-
-    private void TryApply(Plant plant)
-    {
-        if (plant == null || !plant.IsAlive || affected.Contains(plant)) return;
-        plant.AddHealCanCrit();
-        plant.criticalHealChanceAdder += typedData.healCritChanceBonus;
-        affected.Add(plant);
+        if (Owner == null || !on) return;
+        on = false;
+        Owner.RemoveHealCanCrit();
+        Owner.criticalHealChanceAdder -= applied;
+        applied = 0f;
     }
 }

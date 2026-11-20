@@ -1548,35 +1548,8 @@ MonoBehaviour:
       startDelay: 0
   eliteWaveInterval: 0
   eliteInsects: []
-  fertilizerPool:
-  - {fileID: 11400000, guid: e3858c40a5803d34c922f3e3029df1af, type: 2}
-  - {fileID: 11400000, guid: e8f56bf8e138eb64d8aec57ee894e687, type: 2}
-  - {fileID: 11400000, guid: 755f3150c2751ab4aa09e743ba42ace7, type: 2}
-  fertilizerGrants: []
-  mulchPool: []
-  mulchGrants:
-  - afterWave: 1
-    tier: 0
-  - afterWave: 3
-    tier: 1
-  - afterWave: 5
-    tier: 1
-  - afterWave: 7
-    tier: 1
-  - afterWave: 9
-    tier: 2
-  - afterWave: 11
-    tier: 2
-  - afterWave: 13
-    tier: 2
-  - afterWave: 15
-    tier: 2
-  - afterWave: 15
-    tier: 2
-  - afterWave: 19
-    tier: 2
-  - afterWave: 19
-    tier: 2
-  - afterWave: 17
-    tier: 2
+  fertilizers:
+  - {fileID: 11400000, guid: 64316b1c030545a28ed9747c63e660c2, type: 2}
+  - {fileID: 11400000, guid: 0b403a1cb4a44fe2aa253613b92fd1d8, type: 2}
+  - {fileID: 11400000, guid: d0cab36138bf41ad87aeb9b4015da4a3, type: 2}
   ambience: {fileID: 0}

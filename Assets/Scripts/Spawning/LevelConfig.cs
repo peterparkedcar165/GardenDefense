@@ -36,15 +36,10 @@ public class LevelConfig : ScriptableObject
     public LevelEliteEntry[] eliteInsects;
 
     [Header("fertilizers")]
-    public FertilizerData[] fertilizerPool;
-    [Tooltip("mid-level fertilizer grants - after each listed wave completes, the player's fertilizer queue gains one entry of that rarity")]
-    public FertilizerGrant[] fertilizerGrants;
-
-    [Header("mulch")]
-    [Tooltip("mulches exclusive to this level only - universal mulches come from MulchRegistry automatically and don't need to be listed here")]
-    public MulchData[] mulchPool;
-    [Tooltip("mulch grants - after each listed wave completes, the player's mulch queue gains one entry of that tier")]
-    public MulchGrant[] mulchGrants;
+    [Tooltip("the fertilizers this level offers before it starts; the player picks one. one whose " +
+        "loadout condition fails (e.g. melt without fire, water and ice) is left off the screen. " +
+        "mulches aren't listed anywhere: they drop from insects (MulchRegistry)")]
+    public FertilizerData[] fertilizers;
 
     [Header("ambience")]
     [Tooltip("looping background sounds, share one profile asset across a biome")]

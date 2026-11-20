@@ -13,21 +13,11 @@ MonoBehaviour:
   m_Name: SunsetMulchData
   m_EditorClassIdentifier: Assembly-CSharp::SunsetMulchData
   mulchName: '<b><color=orange>Sunset</color></b>'
-  description: 'When a wave ends, every <b><color=orange>Sunflower</color></b> generates <b><color=#FFD700>Sun</color></b> (one extra tick).'
+  description: 
   icon: {fileID: -7978883999570900537, guid: 1e110a04f44af82408fc85aa82f0e30e, type: 3}
-  color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 0
-  tier: 0
-  rollWeight: 1
-  targetPlant: {fileID: 11400000, guid: 092e0c61ed58c854fa604766eb0b0886, type: 2}
-  condition:
-    requiredElementGroups: []
-    requiredPlantGroups:
-    - anyOf:
-      - plant: {fileID: 11400000, guid: 092e0c61ed58c854fa604766eb0b0886, type: 2}
-        requiredUnlockId: 
-        requiredMaxedPath: 0
-    minWave: 0
-    maxWave: 0
-    orAlternatives: []
-  extraTicks: 1
+  dropWeight: 1
+  extraTicks:
+    common: 1
+    rare: 2
+    epic: 3

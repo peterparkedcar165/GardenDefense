@@ -13,24 +13,20 @@ MonoBehaviour:
   m_Name: SeasonedOakMulchData
   m_EditorClassIdentifier: Assembly-CSharp::SeasonedOakMulchData
   mulchName: '<b><color=green>Seasoned Oak</color></b>'
-  description: '<b><color=green>Acorn Knight</color></b>s start at <b><color=red>-30</color></b> <color=#00CED1><b>Armor</b></color> and gain <b><color=green>+1</color></b> <color=#00CED1><b>Armor</b></color> every <b><color=green>4</color></b> seconds, up to <b><color=green>+30</color></b>. Each keeps his progress through death and revival, and gains nothing while dead.'
+  description: 
   icon: {fileID: 3015211819276721340, guid: 361f336491221e742a6a0da0c409a39c, type: 3}
-  color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 2
-  tier: 0
-  rollWeight: 1
-  targetPlant: {fileID: 11400000, guid: 31d7460f463c7bc42a1ef517bd104f7b, type: 2}
-  condition:
-    requiredElementGroups: []
-    requiredPlantGroups:
-    - anyOf:
-      - plant: {fileID: 11400000, guid: 31d7460f463c7bc42a1ef517bd104f7b, type: 2}
-        requiredUnlockId: 
-        requiredMaxedPath: 0
-    minWave: 0
-    maxWave: 0
-    orAlternatives: []
-  startArmor: -30
-  armorPerStep: 1
+  dropWeight: 1
+  startArmor:
+    common: -30
+    rare: -60
+    epic: -90
+  armorPerStep:
+    common: 1
+    rare: 2
+    epic: 3
   stepInterval: 4
-  maxArmor: 30
+  maxArmor:
+    common: 30
+    rare: 60
+    epic: 90

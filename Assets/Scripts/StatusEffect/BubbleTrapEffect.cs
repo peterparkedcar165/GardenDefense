@@ -43,7 +43,7 @@ public class BubblePrisonEffect : Airborne
 
     public override void OnApply()
     {
-        // shared with the waterlogged mulch's soaked bonus, the stronger one wins (see
+        // a shared slot where the stronger water vulnerability wins (see
         // Entity.SetWaterVulnerability)
         target.SetWaterVulnerability(this, _damageTakenBonus);
 

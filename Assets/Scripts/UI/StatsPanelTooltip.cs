@@ -24,6 +24,7 @@ public class StatsPanelTooltip : MonoBehaviour
     private const string Physical = "<color=#A0522D>";
     private const string Crit     = "<color=#FFD700>";
     private const string HealCol  = "<color=#FF6B81>";
+    private const string DropCol  = "<color=#C9A227>";
     private const string End      = "</color>";
 
     // one line of the panel: the label as shown (with its colour) and the value as shown. a null
@@ -160,6 +161,12 @@ public class StatsPanelTooltip : MonoBehaviour
         ElemLine(Grass, "Accuracy:", $"{e.accuracy * 100:F1}%", e.accuracy, e.baseAccuracy);
         Line("<color=grey>Tenacity:</color>", $"{e.tenacity * 100:F0}%", e.tenacity, e.baseTenacity);
         ElemLine(HealCol, "Heals & Shield Bonus:", $"{e.healingBonus * 100:F0}%", e.healingBonus, e.baseHealingBonus);
+        // mulch drop stats, in points with diminishing returns (the bonus they give in brackets)
+        if (e is Plant dropper)
+        {
+            Line($"{DropCol}Item Drop Rate:{End}", DropRateText(dropper.itemDropRate), dropper.itemDropRate, 0f);
+            Line($"{DropCol}Rare Item Drop Rate:{End}", DropRateText(dropper.rareItemDropRate), dropper.rareItemDropRate, 0f);
+        }
         Blank();
         if (e is Insect)
         {
@@ -185,6 +192,9 @@ public class StatsPanelTooltip : MonoBehaviour
     }
 
     private void Blank() => _rows.Add(new Row());
+
+    private static string DropRateText(float points) =>
+        points > 0f ? $"{points:F0} (+{MulchManager.DropRateBonus(points) * 100f:F0}%)" : "0";
 
     private void Line(string label, string plain, float current, float baseVal) =>
         _rows.Add(new Row { label = label, value = Col(current, baseVal, $"<b>{plain}</b>") });

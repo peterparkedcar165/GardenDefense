@@ -1,17 +1,27 @@
-// adds a flat extra Movement Speed reduction to every effect that slows insects (SlowEffect,
-// MireSlowEffect, OffPathSlownessEffect, SnowMarkEffect's Chilling Grasp slow, SoakedEffect
-// through SlowEffect, FrostbiteEffect) via the global MulchManager.GlobalSlowBonus, which each
-// of those bakes into its own applied amount at construction time. only affects slows applied
-// after this mulch is picked - already-active ones keep their original amount until they refresh
+// Hinder: Plant.mulchSlowBonus, which every slowing effect adds when this plant is its source
+// (MulchManager.SlowBonusFrom: SlowEffect, SoakedEffect, MireSlowEffect, SnowMarkEffect's chilling
+// grasp, FrostbiteEffect). baked in when a slow is applied, so slows already running keep their
+// amount until they refresh
 public class SlowBonusMulchEffect : MulchEffect
 {
     private readonly SlowBonusMulchData typedData;
+    private float applied;
 
-    public SlowBonusMulchEffect(SlowBonusMulchData data) : base(data)
+    public SlowBonusMulchEffect(SlowBonusMulchData data, MulchItem item) : base(item)
     {
         typedData = data;
     }
 
-    public override void Activate() => MulchManager.GlobalSlowBonus += typedData.flatBonus;
-    public override void Deactivate() => MulchManager.GlobalSlowBonus -= typedData.flatBonus;
+    public override void Activate()
+    {
+        if (Owner == null) return;
+        applied = V(typedData.flatBonus);
+        Owner.mulchSlowBonus += applied;
+    }
+
+    public override void Deactivate()
+    {
+        if (Owner != null) Owner.mulchSlowBonus -= applied;
+        applied = 0f;
+    }
 }

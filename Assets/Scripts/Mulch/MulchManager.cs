@@ -1,461 +1,434 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// mulch counterpart to FertilizerManager's mid-level queue - session-only by design, same
-// lifecycle (ResetMulch is called per level start). unlike fertilizers, mulch has no numeric
-// roll: a draft is 3 eligible MulchData assets of the queued tier, weighted by rollWeight, and
-// picking one just activates its paired MulchEffect for the rest of the level. mulches stack -
-// each grant adds another active effect on top of whatever was already picked
+// loot mulches for the level: the player's inventory, equipping onto plants, merging, selling, and
+// the drops themselves. session only, reset at every level start (ProceduralLevel.Start).
+//
+// drops: every enemy insect that dies rolls baseDropChance, raised by the killing plant's Item Drop
+// Rate; after pityKills kills in a row without one, the next kill always drops (bad luck
+// protection). on top of that, every wave except the last guarantees one mulch where its last
+// insect died or leaked (its own roll, so a lucky last kill drops two). a drop's rarity uses the
+// killing plant's Rare Item Drop Rate. both rates are points with diminishing returns:
+// bonus = X / (X + 100)
 public class MulchManager : MonoBehaviour
 {
     public static MulchManager instance;
 
-    // how many choices one draft offers - shared with MulchSelectionUI, which pads the display
-    // with "EMPTY" placeholder cards if GenerateChoicesForOldest comes up short of this many
-    public const int DraftChoiceCount = 3;
+    // the inventory or an equip changed: the inventory bar and the plant slots redraw
+    public static event System.Action OnChanged;
 
-    // global modifiers a mulch effect can nudge instead of needing a per-instance hook into
-    // every insect/entity (there's no central "ApplyTo" pass for insects the way plants have
-    // one) - read directly by the base game code they modify, reset to their neutral value by
-    // ResetMulch. additive ones default to 0, multiplicative ones default to 1
-    public static float GlobalSlowBonus = 0f;
-    public static float LeakDamageMultiplier = 1f;
-    public static float PrimerCooldownMultiplier = 1f;
-    public static float BurnDurationMultiplier = 1f;
-    public static float RegenerationHealMultiplier = 1f;
-    // read directly by Entity.cs's Freeze+Fire branch - MeltActive swaps the base instant-shatter
-    // reaction for Melt's gradual chip-away-the-duration version
-    public static bool MeltActive = false;
-    public static float MeltFreezeDurationReduction = 0f;
-    public static float MeltDamageMultiplier = 1f;
-    // market day: what placing a plant costs (GetPlacementCost) and what a path upgrade costs
-    // (Plant.PathCost), as multipliers
-    public static float PlacementCostMultiplier = 1f;
-    public static float UpgradeCostMultiplier = 1f;
-    // dormancy: every plant's damage to insects (Entity.Damage). drought: the sun from every
-    // Plant.GenerateSun call, so at zero sun producers make nothing at all
-    public static float PlantDamageMultiplier = 1f;
-    public static float SunProductionMultiplier = 1f;
+    public MulchRegistry Registry { get; private set; }
 
-    private PlantRegistry plantRegistry;
-    private MulchRegistry mulchRegistry;
+    private MulchItem[] inventory = new MulchItem[8];
+    private int killsSinceDrop;
 
-    // one queued draft. a swap draft (seed swap's replacement) offers sameTierChoices of its own
-    // tier plus higherTierChoices from the tier above, and never offers seed swap or seed sell
-    private struct PendingDraft
-    {
-        public MulchTier tier;
-        public bool isSwap;
-        public int sameTierChoices;
-        public int higherTierChoices;
-    }
+    // the guaranteed end of wave drop. every enemy insect is counted under the wave it spawned in;
+    // once that wave's spawning is over and its count is back to 0, its last insect was the last one
+    private readonly Dictionary<int, int> aliveByWave = new Dictionary<int, int>();
+    private readonly HashSet<int> spawningDone = new HashSet<int>();
+    private readonly HashSet<int> guaranteedHandled = new HashSet<int>();
+    private readonly Dictionary<int, (Vector3 position, Plant killer, bool leaked)> lastExit =
+        new Dictionary<int, (Vector3, Plant, bool)>();
 
-    private readonly List<PendingDraft> pendingGrants = new List<PendingDraft>();
-    private readonly List<MulchData> pickedData = new List<MulchData>();
-    private readonly List<MulchEffect> activeEffects = new List<MulchEffect>();
+    public IReadOnlyList<MulchItem> Inventory => inventory;
+    public int InventorySize => inventory.Length;
+    public int PlantSlots => Registry != null ? Mathf.Max(1, Registry.plantSlots) : 6;
 
-    // mulches seed swap or seed sell took away, kept out of every draft for the rest of the level
-    private readonly HashSet<MulchData> removedData = new HashSet<MulchData>();
-
-    // mulches the player has rerolled away - excluded from every reroll for the rest of THIS
-    // selection screen (so rerolling one card can't bring back what another card just rerolled
-    // away), but cleared the next time a fresh draft is generated (see GenerateChoicesForOldest),
-    // so the same mulch is fair game again on a later screen
-    private readonly HashSet<MulchData> rerolledAway = new HashSet<MulchData>();
-
-    // level-exclusive mulches only - the universal pool lives in mulchRegistry instead, so
-    // adding a new mulch that every level should offer never requires touching LevelConfig
-    private MulchData[] levelPool;
-
-    public int PendingMulchCount => pendingGrants.Count;
-    public IReadOnlyList<MulchData> ActiveMulches => pickedData;
+    // a ground drop's clock: real time, frozen while the game is paused, never sped up
+    public static float DropDeltaTime => Time.timeScale > 0f ? Time.unscaledDeltaTime : 0f;
 
     void Awake()
     {
         if (instance != null) { Destroy(gameObject); return; }
         instance = this;
         DontDestroyOnLoad(gameObject);
-        plantRegistry = Resources.Load<PlantRegistry>("PlantRegistry");
-        if (plantRegistry == null)
-            Debug.LogError("MulchManager: PlantRegistry not found at Resources/PlantRegistry.asset");
-        mulchRegistry = Resources.Load<MulchRegistry>("MulchRegistry");
-        if (mulchRegistry == null)
+        Registry = Resources.Load<MulchRegistry>("MulchRegistry");
+        if (Registry == null)
             Debug.LogError("MulchManager: MulchRegistry not found at Resources/MulchRegistry.asset");
+        inventory = new MulchItem[Registry != null ? Mathf.Max(1, Registry.inventorySize) : 8];
     }
 
-    // called once per level start (ProceduralLevel.Start), same spot as
-    // FertilizerManager.ResetFertilizerQueue
-    public void ResetMulch(MulchData[] levelExclusivePool)
+    // called once per level start (ProceduralLevel.Start): the inventory empties every level
+    public void ResetForLevel()
     {
-        levelPool = levelExclusivePool;
-        pendingGrants.Clear();
-        pickedData.Clear();
-        rerolledAway.Clear();
-        removedData.Clear();
+        inventory = new MulchItem[Registry != null ? Mathf.Max(1, Registry.inventorySize) : 8];
+        killsSinceDrop = 0;
+        aliveByWave.Clear();
+        spawningDone.Clear();
+        guaranteedHandled.Clear();
+        lastExit.Clear();
+        MulchDrop.ClearAll();
+        MulchInventoryUI.Ensure();
+        RaiseChanged();
+    }
 
-        foreach (MulchEffect effect in activeEffects)
+    public static void RaiseChanged() => OnChanged?.Invoke();
+
+    // ── inventory ───────────────────────────────────────────────────────────
+
+    public bool HasRoom
+    {
+        get
+        {
+            foreach (MulchItem item in inventory)
+                if (item == null) return true;
+            return false;
+        }
+    }
+
+    public bool AddToInventory(MulchItem item)
+    {
+        if (item == null) return false;
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i] != null) continue;
+            inventory[i] = item;
+            RaiseChanged();
+            return true;
+        }
+        return false;
+    }
+
+    public MulchItem GetSlot(int slot) => slot >= 0 && slot < inventory.Length ? inventory[slot] : null;
+
+    // dragging one inventory slot onto another: merges two identical copies into the next rarity,
+    // otherwise moves into an empty slot or swaps the two
+    public void MoveOrMerge(int from, int to)
+    {
+        if (from == to || GetSlot(from) == null || to < 0 || to >= inventory.Length) return;
+        MulchItem moving = inventory[from];
+        MulchItem target = inventory[to];
+        if (target != null && moving.CanMergeWith(target))
+        {
+            inventory[to] = moving.Merged();
+            inventory[from] = null;
+            AnnounceMerge(inventory[to], null);
+        }
+        else
+        {
+            inventory[to] = moving;
+            inventory[from] = target;
+        }
+        RaiseChanged();
+    }
+
+    public int SellPrice(MulchItem item) =>
+        item == null || Registry == null ? 0 : Registry.sellPrice.GetInt(item.rarity);
+
+    // right click in the inventory
+    public void Sell(int slot)
+    {
+        MulchItem item = GetSlot(slot);
+        if (item == null) return;
+        inventory[slot] = null;
+        int price = SellPrice(item);
+        if (price > 0) GameManager.instance?.AddSun(price);
+        RaiseChanged();
+    }
+
+    // ── equipping ───────────────────────────────────────────────────────────
+
+    public enum EquipResult { Equipped, Merged, SlotsFull, Invalid }
+
+    // dragging an inventory slot onto a plant (on the map or onto its slots in the plant row)
+    public EquipResult EquipFromSlot(int slot, Plant plant)
+    {
+        MulchItem item = GetSlot(slot);
+        EquipResult result = Equip(item, plant);
+        if (result == EquipResult.Equipped || result == EquipResult.Merged)
+        {
+            inventory[slot] = null;
+            RaiseChanged();
+        }
+        else if (result == EquipResult.SlotsFull && plant != null)
+        {
+            StatusIndicator.Spawn(plant.transform.position + new Vector3(0.4f, 0f, 0f), "Mulch slots full", new Color(1f, 0.45f, 0.4f));
+        }
+        return result;
+    }
+
+    // a plant that already has this mulch at this rarity merges it into the next rarity in place;
+    // anything else takes a free slot. equipped mulches can't be taken off again
+    public EquipResult Equip(MulchItem item, Plant plant)
+    {
+        if (item == null || item.data == null || plant == null || !plant.IsAlive) return EquipResult.Invalid;
+
+        foreach (MulchEffect owned in plant.mulches)
+        {
+            if (owned == null || !item.CanMergeWith(owned.Item)) continue;
+            owned.Upgrade(owned.Item.Merged());
+            AnnounceMerge(owned.Item, plant);
+            RaiseChanged();
+            return EquipResult.Merged;
+        }
+
+        if (plant.mulches.Count >= PlantSlots) return EquipResult.SlotsFull;
+
+        MulchEffect effect = item.data.CreateEffect(item);
+        if (effect == null) return EquipResult.Invalid;
+        effect.AttachTo(plant);
+        plant.mulches.Add(effect);
+        effect.Activate();
+        StatusIndicator.Spawn(plant.transform.position + new Vector3(0.4f, 0f, 0f), "Mulch!", MulchTierColors.Get(item.rarity));
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.EquipMulch);
+        RaiseChanged();
+        return EquipResult.Equipped;
+    }
+
+    private static void AnnounceMerge(MulchItem merged, Plant plant)
+    {
+        Vector3 at = plant != null ? plant.transform.position + new Vector3(0.4f, 0f, 0f) : Vector3.zero;
+        if (plant != null) StatusIndicator.Spawn(at, $"{merged.rarity}!", MulchTierColors.Get(merged.rarity));
+        if (GameManager.instance != null && GameManager.instance.plantSelect != null)
+            GameManager.instance.PlaySound(GameManager.instance.plantSelect);
+    }
+
+    // the plant died: its mulches stop and go into its dead record. only a revive by a max level
+    // Rhodiola skill brings them back (RestoreMulches); any other revive leaves them lost
+    public void OnPlantDied(Plant plant, DeadPlantRecord record)
+    {
+        if (plant == null) return;
+        foreach (MulchEffect effect in plant.mulches)
             effect?.Deactivate();
-        activeEffects.Clear();
-
-        GlobalSlowBonus = 0f;
-        LeakDamageMultiplier = 1f;
-        PrimerCooldownMultiplier = 1f;
-        BurnDurationMultiplier = 1f;
-        RegenerationHealMultiplier = 1f;
-        MeltActive = false;
-        MeltFreezeDurationReduction = 0f;
-        MeltDamageMultiplier = 1f;
-        PlacementCostMultiplier = 1f;
-        UpgradeCostMultiplier = 1f;
-        PlantDamageMultiplier = 1f;
-        SunProductionMultiplier = 1f;
+        if (record != null) record.mulches = new List<MulchEffect>(plant.mulches);
+        plant.mulches.Clear();
+        RaiseChanged();
     }
 
-    // called by Plant.cs whenever a plant is placed, next to FertilizerManager.ApplyTo/
-    // SkillTreeManager.ApplyTo - lets every active mulch effect react to a plant that didn't
-    // exist yet when it was picked (see MulchEffect.OnPlantPlaced)
-    public void NotifyPlantPlaced(Plant plant)
+    // the plant left the field any other way (uprooted, or the level unloading): its mulches stop
+    // for good
+    public static void OnPlantRemoved(Plant plant)
     {
-        foreach (MulchEffect effect in activeEffects)
-            effect?.OnPlantPlaced(plant);
+        if (plant == null || plant.mulches.Count == 0) return;
+        foreach (MulchEffect effect in plant.mulches)
+            effect?.Deactivate();
+        plant.mulches.Clear();
+        RaiseChanged();
     }
 
-    // the hooks below loop over a copy, since an effect reacting to one of them can grant or
-    // remove mulches while the loop is still running
+    // a max level Rhodiola skill revive: the same effects carry on on the new body, with whatever
+    // they had counted so far
+    public static void RestoreMulches(DeadPlantRecord record, Plant revived)
+    {
+        if (record == null || record.mulches == null || revived == null) return;
+        foreach (MulchEffect effect in record.mulches)
+        {
+            if (effect == null) continue;
+            effect.AttachTo(revived);
+            revived.mulches.Add(effect);
+            effect.Activate();
+        }
+        record.mulches = null;
+        RaiseChanged();
+    }
+
+    // ── hooks ───────────────────────────────────────────────────────────────
+
     public void NotifyWaveStarted(int wave)
     {
-        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
-            effect?.OnWaveStarted(wave);
+        foreach (MulchEffect effect in AllEquipped())
+            effect.OnWaveStarted(wave);
     }
 
     public void NotifyWaveEnded(int wave)
     {
-        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
-            effect?.OnWaveEnded(wave);
-    }
-
-    public void NotifyInsectLeaked(Insect insect)
-    {
-        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
-            effect?.OnInsectLeaked(insect);
+        foreach (MulchEffect effect in AllEquipped())
+            effect.OnWaveEnded(wave);
     }
 
     // called by Plant.GenerateSun with the sun actually banked
-    public void NotifySunGenerated(Plant plant, int amount, bool fromKill)
+    public static void NotifySunGenerated(Plant plant, int amount, bool fromKill)
     {
-        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
-            effect?.OnSunGenerated(plant, amount, fromKill);
+        if (plant == null || plant.mulches.Count == 0) return;
+        foreach (MulchEffect effect in new List<MulchEffect>(plant.mulches))
+            effect?.OnSunGenerated(amount, fromKill);
     }
 
-    // what placing a fresh plant of this species costs right now: the skill tree's reduction,
-    // then market day's multiplier, then flat discounts (bargain seeds), and nothing at all while
-    // a free placement (bud) is waiting. Tile charges this and PlantSlotButton shows it, so the
-    // shown and charged cost always agree
-    public static int GetPlacementCost(PlantData data)
+    // a copy, since an effect reacting to a hook can change what's equipped
+    private static List<MulchEffect> AllEquipped()
     {
-        int cost = SkillTreeManager.GetEffectiveSunCost(data);
-        if (data == null) return cost;
-        cost = Mathf.RoundToInt(cost * Mathf.Max(0f, PlacementCostMultiplier));
-        if (instance == null) return cost;
-
-        int discount = 0;
-        foreach (MulchEffect effect in instance.activeEffects)
-        {
-            if (effect == null) continue;
-            if (effect.GrantsFreePlacement) return 0;
-            discount += effect.PlacementDiscount;
-        }
-        return Mathf.Max(0, cost - discount);
-    }
-
-    // called by Tile right after a bought plant is placed, so one time discounts get used up.
-    // checked before any effect reacts, so the free placement that paid for this plant is
-    // what every effect sees
-    public void NotifyPlantBought(Plant plant)
-    {
-        bool placedForFree = false;
-        foreach (MulchEffect effect in activeEffects)
-            if (effect != null && effect.GrantsFreePlacement) { placedForFree = true; break; }
-
-        foreach (MulchEffect effect in new List<MulchEffect>(activeEffects))
-            effect?.OnPlantBought(plant, placedForFree);
-    }
-
-    // called when a level's MulchGrant fires (its configured wave just completed)
-    public void GrantMulch(MulchTier tier)
-    {
-        pendingGrants.Add(new PendingDraft { tier = tier });
-    }
-
-    // seed swap: the replacement draft goes to the front of the queue, so it's the one that opens
-    // next (MulchSelectionUI opens it straight away)
-    public void GrantSwapDraft(MulchTier tier, int sameTierChoices, int higherTierChoices)
-    {
-        pendingGrants.Insert(0, new PendingDraft
-        {
-            tier = tier,
-            isSwap = true,
-            sameTierChoices = Mathf.Max(0, sameTierChoices),
-            higherTierChoices = Mathf.Max(0, higherTierChoices),
-        });
-    }
-
-    // builds 3 weighted-random choices for the oldest queued grant, without consuming it - only
-    // CommitChosen actually dequeues, so backing out of the picker costs nothing
-    public MulchData[] GenerateChoicesForOldest()
-    {
-        if (pendingGrants.Count == 0) return null;
-        rerolledAway.Clear(); // a fresh screen - anything rerolled away on a previous one is fair game again
-        PendingDraft draft = pendingGrants[0];
-        if (draft.isSwap) return GenerateSwapChoices(draft).ToArray();
-        List<MulchData> eligible = GetEligible(draft.tier);
-        return WeightedPickDistinct(eligible, DraftChoiceCount).ToArray();
-    }
-
-    // equal or higher rarity only: the higher choices come from the tier above, and any slot a tier
-    // can't fill is topped up from the same tier first, then from the tiers above it
-    private List<MulchData> GenerateSwapChoices(PendingDraft draft)
-    {
-        int total = draft.sameTierChoices + draft.higherTierChoices;
-        List<MulchData> picks = WeightedPickDistinct(GetEligible(draft.tier), draft.sameTierChoices);
-        if (draft.tier < MulchTier.Legendary)
-            picks.AddRange(WeightedPickDistinct(GetEligible(draft.tier + 1, picks), draft.higherTierChoices));
-        for (MulchTier tier = draft.tier; picks.Count < total && tier <= MulchTier.Legendary; tier++)
-            picks.AddRange(WeightedPickDistinct(GetEligible(tier, picks), total - picks.Count));
-        return picks;
-    }
-
-    // rerolls a single displayed choice in place. the card being rerolled away is treated as a
-    // deliberate pass for the rest of THIS screen - it won't come back on another card's reroll
-    // here, but it's fair game again once a fresh draft is generated (see rerolledAway).
-    // alsoDisplayed is whatever the OTHER cards in this same draft
-    // are currently showing - excluded for just this one roll (not blacklisted level-wide) so the
-    // replacement can never collide with a mulch already sitting on another card. without this,
-    // two cards could end up showing the same mulch at once (GetEligible has no way to know what
-    // the rest of the draft looks like on its own)
-    public MulchData RerollSingle(MulchData current, List<MulchData> alsoDisplayed = null)
-    {
-        if (current != null) rerolledAway.Add(current);
-        List<MulchData> eligible = GetEligible(current.tier, alsoDisplayed);
-        List<MulchData> picked = WeightedPickDistinct(eligible, 1);
-        return picked.Count > 0 ? picked[0] : null;
-    }
-
-    // consumes the oldest queued grant, activates the chosen mulch's effect, and keeps it active
-    // (stacked on top of any previously picked mulches) for the rest of the level
-    public void CommitChosen(MulchData chosen)
-    {
-        if (pendingGrants.Count == 0 || chosen == null) return;
-        // seed swap and seed sell are spent through CommitChosenOnTarget instead
-        if (chosen.NeedsOwnedMulchTarget) return;
-        pendingGrants.RemoveAt(0);
-
-        // GetEligible already keeps an already-picked mulch out of every future draft/reroll, so
-        // this shouldn't normally be reachable - kept as a hard backstop against double-picking
-        // (and therefore double-stacking) the same mulch off a stale/duplicate card reference.
-        // the grant above is still consumed either way, same as a normal pick, rather than
-        // leaving the queue stuck on an unpickable choice forever
-        if (pickedData.Contains(chosen)) return;
-        ActivateMulch(chosen);
-    }
-
-    private void ActivateMulch(MulchData chosen)
-    {
-        pickedData.Add(chosen);
-        MulchEffect effect = chosen.CreateEffect();
-        if (effect == null) return;
-        activeEffects.Add(effect);
-        effect.Activate();
-    }
-
-    // dev test menu only (MulchSelectionUI, N key in the editor): every mulch a draft in this level
-    // could ever offer, the universal registry plus this level's own pool, conditions ignored
-    public List<MulchData> DebugAllMulches()
-    {
-        List<MulchData> result = new List<MulchData>();
-        foreach (MulchData[] source in new[] { mulchRegistry != null ? mulchRegistry.mulches : null, levelPool })
-            if (source != null)
-                foreach (MulchData data in source)
-                    if (data != null && !result.Contains(data)) result.Add(data);
+        List<MulchEffect> result = new List<MulchEffect>();
+        foreach (Plant plant in Plant.allPlants)
+            if (plant != null && plant.IsAlive)
+                foreach (MulchEffect effect in plant.mulches)
+                    if (effect != null) result.Add(effect);
         return result;
     }
 
-    public bool IsOwned(MulchData data) => data != null && pickedData.Contains(data);
+    // per plant values the rest of the game reads, so it never has to know about mulches
+    public static float SlowBonusFrom(Entity source) => source is Plant plant ? plant.mulchSlowBonus : 0f;
+    public static float PrimerCooldownFactor(Entity source) =>
+        source is Plant plant ? Mathf.Max(0f, plant.mulchPrimerCooldownMultiplier) : 1f;
+    public static float RegenerationFactor(Entity source) =>
+        source is Plant plant ? Mathf.Max(0f, 1f + plant.mulchRegenerationBonus) : 1f;
 
-    // an owned mulch's live status line for the active effects window (G), null if it has none
-    public string GetStatus(MulchData data) => FindEffect(data)?.GetStatus();
-
-    // dev test menu: activates a mulch right away, skipping the queue and every eligibility check
-    public bool DebugActivate(MulchData data)
+    // wisdom leaf: the extra share of exp a plant type earns this level, every wisdom leaf on a
+    // living plant of that type added together (read at level end, Plant.CommitPendingExpToSave)
+    public static float WisdomBonusFor(string plantName)
     {
-        if (data == null || data.NeedsOwnedMulchTarget || pickedData.Contains(data)) return false;
-        removedData.Remove(data);
-        ActivateMulch(data);
-        return true;
-    }
-
-    // dev test menu: takes an owned mulch away so it can be tested again, paid out or not
-    public bool DebugRemove(MulchData data)
-    {
-        if (data == null || !pickedData.Contains(data)) return false;
-        MulchEffect effect = FindEffect(data);
-        if (effect != null)
+        float total = 0f;
+        foreach (Plant plant in Plant.allPlants)
         {
-            effect.Deactivate();
-            activeEffects.Remove(effect);
+            if (plant == null || !plant.IsAlive || plant.data == null || plant.data.plantName != plantName) continue;
+            foreach (MulchEffect effect in plant.mulches)
+                if (effect is WisdomLeafMulchEffect wisdom) total += wisdom.Bonus;
         }
-        pickedData.Remove(data);
+        return total;
+    }
+
+    // ── drops ───────────────────────────────────────────────────────────────
+
+    // drop rate points to the bonus they give: X / (X + 100), never past double
+    public static float DropRateBonus(float points) => points > 0f ? points / (points + 100f) : 0f;
+
+    // every enemy insect counts under the wave it spawned in (Insect.Start)
+    public void RegisterInsect(Insect insect)
+    {
+        if (insect == null || insect.team == Team.Friendly || insect.mulchCounted) return;
+        int wave = GameManager.instance != null ? GameManager.instance.currentWave : 0;
+        insect.mulchWave = wave;
+        insect.mulchCounted = true;
+        aliveByWave[wave] = (aliveByWave.TryGetValue(wave, out int n) ? n : 0) + 1;
+    }
+
+    // an enemy insect died (Insect.Kill, or turned by hypnosis): its own drop roll, then the wave count
+    public void NotifyInsectDied(Insect insect, Entity source)
+    {
+        if (insect == null || !insect.mulchCounted) return;
+        Plant killer = source as Plant;
+        RollKillDrop(insect, killer);
+        InsectGone(insect, killer, false, true);
+    }
+
+    // an enemy insect reached the end of the path. it never rolls a drop of its own, but if it was
+    // its wave's last insect the guaranteed mulch pops out of it and hops back onto the map
+    public void NotifyInsectLeaked(Insect insect)
+    {
+        if (insect == null || !insect.mulchCounted) return;
+        InsectGone(insect, null, true, true);
+    }
+
+    // an insect destroyed without dying or leaking: it just stops counting. never spawns anything,
+    // since this can run while a scene is unloading
+    public void NotifyInsectDestroyed(Insect insect)
+    {
+        if (insect == null || !insect.mulchCounted) return;
+        InsectGone(insect, null, false, false);
+    }
+
+    private void InsectGone(Insect insect, Plant killer, bool leaked, bool mayDrop)
+    {
+        insect.mulchCounted = false;
+        int wave = insect.mulchWave;
+        aliveByWave[wave] = Mathf.Max(0, (aliveByWave.TryGetValue(wave, out int n) ? n : 0) - 1);
+        lastExit[wave] = (insect.transform.position, killer, leaked);
+        if (mayDrop) TryGuaranteedDrop(wave);
+    }
+
+    // ProceduralLevel, right after a wave's spawning finishes. the last wave never guarantees one
+    public void NotifyWaveSpawningDone(int wave, bool lastWave)
+    {
+        spawningDone.Add(wave);
+        if (lastWave) { guaranteedHandled.Add(wave); return; }
+        TryGuaranteedDrop(wave);
+    }
+
+    private void TryGuaranteedDrop(int wave)
+    {
+        if (!spawningDone.Contains(wave) || guaranteedHandled.Contains(wave)) return;
+        if (aliveByWave.TryGetValue(wave, out int alive) && alive > 0) return;
+        if (!lastExit.TryGetValue(wave, out var exit)) return;
+        guaranteedHandled.Add(wave);
+
+        int epicEvery = FertilizerManager.EpicMulchEveryWaves;
+        bool epic = epicEvery > 0 && wave > 0 && wave % epicEvery == 0;
+        MulchItem item = RollItem(exit.killer, epic);
+        if (item != null) MulchDrop.Spawn(item, exit.position, exit.leaked);
+    }
+
+    private void RollKillDrop(Insect insect, Plant killer)
+    {
+        if (Registry == null) return;
+        killsSinceDrop++;
+        float chance = Registry.baseDropChance * (1f + DropRateBonus(killer != null ? killer.itemDropRate : 0f));
+        bool pity = Registry.pityKills > 0 && killsSinceDrop >= Registry.pityKills;
+        if (!pity && Random.value >= chance) return;
+        killsSinceDrop = 0;
+        MulchItem item = RollItem(killer, false);
+        if (item != null) MulchDrop.Spawn(item, insect.transform.position, false);
+    }
+
+    // which mulch and at what rarity. countdown is left out with fewer than 10 waves to go
+    public MulchItem RollItem(Plant killer, bool forceEpic)
+    {
+        if (Registry == null || Registry.mulches == null) return null;
+
+        MulchTier rarity = MulchTier.Epic;
+        if (!forceEpic)
+        {
+            float rareBoost = 1f + DropRateBonus(killer != null ? killer.rareItemDropRate : 0f);
+            float common = Mathf.Max(0f, Registry.rarityWeights.common);
+            float rare = Mathf.Max(0f, Registry.rarityWeights.rare) * rareBoost;
+            float epic = Mathf.Max(0f, Registry.rarityWeights.epic) * rareBoost;
+            float roll = Random.Range(0f, common + rare + epic);
+            rarity = roll < common ? MulchTier.Common : roll < common + rare ? MulchTier.Rare : MulchTier.Epic;
+        }
+
+        int wavesLeft = WavesLeft();
+        float total = 0f;
+        foreach (MulchData data in Registry.mulches)
+            if (data != null && data.CanDrop(wavesLeft)) total += Mathf.Max(0f, data.dropWeight);
+        if (total <= 0f) return null;
+
+        float pick = Random.Range(0f, total);
+        MulchData chosen = null;
+        foreach (MulchData data in Registry.mulches)
+        {
+            if (data == null || !data.CanDrop(wavesLeft)) continue;
+            chosen = data;
+            pick -= Mathf.Max(0f, data.dropWeight);
+            if (pick <= 0f) break;
+        }
+        return chosen != null ? new MulchItem(chosen, rarity) : null;
+    }
+
+    public static int WavesLeft()
+    {
+        LevelConfig config = ProceduralLevel.CurrentConfig;
+        int wave = GameManager.instance != null ? GameManager.instance.currentWave : 0;
+        return config != null ? config.maxWaves - wave : int.MaxValue;
+    }
+
+    // clicking a ground drop. false (and the drop stays) when the inventory is full
+    public bool TryCollect(MulchItem item)
+    {
+        if (!AddToInventory(item)) return false;
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.CollectMulch);
         return true;
     }
 
-    // dev test menu: seed swap or seed sell used on an owned mulch without spending a queued draft
-    public bool DebugUseTool(MulchData tool, MulchData target)
+    // the first time a drop appears in level 1, the mulch tutorial explains picking it up, equipping
+    // and selling, with the game paused like the other level 1 tutorials (the drop's own clock is
+    // frozen meanwhile)
+    public static void OnDropSpawned()
     {
-        if (tool == null || !tool.NeedsOwnedMulchTarget || !CanRemove(target, tool)) return false;
-        RemoveMulch(target, tool);
-        tool.UseOnTarget(target);
-        return true;
+        if (ProceduralLevel.CurrentConfig == null || ProceduralLevel.CurrentConfig.levelNumber != 1) return;
+        if (TutorialManager.instance != null && GameManager.instance != null
+            && TutorialManager.instance.TryShow(TutorialIds.Level1FirstMulch, TutorialContent.Level1FirstMulch,
+                TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
+            GameManager.instance.SetPause(true);
     }
 
-    // seed swap and seed sell: uses up the oldest grant like a normal pick, takes the chosen owned
-    // mulch away, then lets the tool do its part (pay sun, or queue the replacement draft). the
-    // tool is spent on the spot and never joins the owned mulches, so it can show up again in a
-    // later draft
-    public bool CommitChosenOnTarget(MulchData chosen, MulchData target)
-    {
-        if (pendingGrants.Count == 0 || chosen == null || !chosen.NeedsOwnedMulchTarget) return false;
-        if (!CanRemove(target, chosen)) return false;
-        pendingGrants.RemoveAt(0);
-        RemoveMulch(target, chosen);
-        chosen.UseOnTarget(target);
-        return true;
-    }
+    // ── dev menu ────────────────────────────────────────────────────────────
 
-    // owned mulches the given tool (seed swap or seed sell) may still take away, oldest pick first
-    public List<MulchData> GetRemovableMulches(MulchData tool = null)
+    public bool DebugGive(MulchData data, MulchTier rarity)
     {
-        List<MulchData> result = new List<MulchData>();
-        foreach (MulchData data in pickedData)
-            if (CanRemove(data, tool)) result.Add(data);
-        return result;
-    }
-
-    public bool HasRemovableMulch(MulchData tool = null)
-    {
-        foreach (MulchData data in pickedData)
-            if (CanRemove(data, tool)) return true;
+        if (data == null) return false;
+        MulchItem item = new MulchItem(data, rarity);
+        if (AddToInventory(item)) return true;
+        Vector3 at = Camera.main != null ? Camera.main.transform.position : Vector3.zero;
+        at.z = 0f;
+        MulchDrop.Spawn(item, at, false);
         return false;
-    }
-
-    // seed swap (or no tool): false once a mulch paid out (MulchEffect.CanBeRemoved). seed sell
-    // (MulchData.TakesPaidOutMulches): paid out mulches too, only weather stays (MulchEffect.CanBeSold)
-    public bool CanRemove(MulchData data, MulchData tool = null)
-    {
-        if (data == null || !pickedData.Contains(data)) return false;
-        MulchEffect effect = FindEffect(data);
-        if (effect == null) return true;
-        return tool != null && tool.TakesPaidOutMulches ? effect.CanBeSold : effect.CanBeRemoved;
-    }
-
-    // takes an owned mulch away again: its effect is deactivated, which undoes whatever it's still
-    // doing (a paid out mulch keeps what it gave), and it stays out of every draft for the rest of
-    // the level
-    public bool RemoveMulch(MulchData data, MulchData tool = null)
-    {
-        if (!CanRemove(data, tool)) return false;
-        MulchEffect effect = FindEffect(data);
-        if (effect != null)
-        {
-            effect.Deactivate();
-            activeEffects.Remove(effect);
-        }
-        pickedData.Remove(data);
-        removedData.Add(data);
-        return true;
-    }
-
-    private MulchEffect FindEffect(MulchData data)
-    {
-        foreach (MulchEffect effect in activeEffects)
-            if (effect != null && effect.Data == data) return effect;
-        return null;
-    }
-
-    // excludes mulches already picked this level, so the same stacking mulch can't flood every
-    // future draft - revisit if you ever want deliberate duplicate-stacking instead. pulls from
-    // both the universal registry and this level's exclusive pool
-    private List<MulchData> GetEligible(MulchTier tier, List<MulchData> alsoExclude = null)
-    {
-        List<MulchData> result = new List<MulchData>();
-
-        List<PlantData> loadout = GetCurrentLoadout();
-        int currentWave = GameManager.instance != null ? GameManager.instance.currentWave : 0;
-        // a swap draft never offers another swap or sell
-        bool excludeTools = pendingGrants.Count > 0 && pendingGrants[0].isSwap;
-
-        AddEligibleFrom(mulchRegistry != null ? mulchRegistry.mulches : null, tier, loadout, currentWave, result, alsoExclude, excludeTools);
-        AddEligibleFrom(levelPool, tier, loadout, currentWave, result, alsoExclude, excludeTools);
-
-        return result;
-    }
-
-    private void AddEligibleFrom(MulchData[] source, MulchTier tier, List<PlantData> loadout, int currentWave, List<MulchData> result, List<MulchData> alsoExclude, bool excludeTools)
-    {
-        if (source == null) return;
-        foreach (MulchData data in source)
-        {
-            if (data == null || data.tier != tier) continue;
-            if (pickedData.Contains(data)) continue;
-            if (removedData.Contains(data)) continue;
-            if (excludeTools && data.NeedsOwnedMulchTarget) continue;
-            if (rerolledAway.Contains(data)) continue;
-            if (alsoExclude != null && alsoExclude.Contains(data)) continue;
-            if (result.Contains(data)) continue;
-            if (data.condition != null && !data.condition.IsEligible(loadout, currentWave)) continue;
-            if (!data.MeetsExtraRequirements(loadout, currentWave)) continue;
-            result.Add(data);
-        }
-    }
-
-    private List<PlantData> GetCurrentLoadout()
-    {
-        List<PlantData> result = new List<PlantData>();
-        if (SaveManager.instance == null || plantRegistry == null || plantRegistry.plants == null) return result;
-        foreach (string plantName in SaveManager.instance.selectedLoadout)
-            foreach (PlantData data in plantRegistry.plants)
-                if (data != null && data.plantName == plantName) { result.Add(data); break; }
-        return result;
-    }
-
-    // weighted sampling without replacement - each pick draws proportionally to rollWeight among
-    // whatever's left, so a removed candidate never skews the remaining odds
-    private static List<MulchData> WeightedPickDistinct(List<MulchData> candidates, int count)
-    {
-        List<MulchData> remaining = new List<MulchData>(candidates);
-        List<MulchData> picked = new List<MulchData>();
-
-        while (picked.Count < count && remaining.Count > 0)
-        {
-            float totalWeight = 0f;
-            foreach (MulchData data in remaining) totalWeight += Mathf.Max(0f, data.rollWeight);
-
-            // a rollWeight of 0 means "never draft this" - if that's all that's left, stop
-            // rather than falling back to a uniform pick among them
-            if (totalWeight <= 0f) break;
-
-            float roll = Random.Range(0f, totalWeight);
-            float cumulative = 0f;
-            int chosenIndex = remaining.Count - 1;
-            for (int i = 0; i < remaining.Count; i++)
-            {
-                cumulative += Mathf.Max(0f, remaining[i].rollWeight);
-                if (roll <= cumulative) { chosenIndex = i; break; }
-            }
-
-            picked.Add(remaining[chosenIndex]);
-            remaining.RemoveAt(chosenIndex);
-        }
-
-        return picked;
     }
 }

@@ -1,47 +1,37 @@
-using System.Collections.Generic;
-
+// Ironclad Riposte (class name kept from when it was an ironbark family mulch): counter damage on
+// its plant, and a small shield whenever that plant's counter damage lands
 public class IronbarkCounterMulchEffect : MulchEffect
 {
     private readonly IronbarkCounterMulchData typedData;
-    private readonly List<Plant> affected = new List<Plant>();
+    private float applied;
+    private bool on;
 
-    public IronbarkCounterMulchEffect(IronbarkCounterMulchData data) : base(data)
+    public IronbarkCounterMulchEffect(IronbarkCounterMulchData data, MulchItem item) : base(item)
     {
         typedData = data;
     }
 
     public override void Activate()
     {
-        foreach (Plant plant in new List<Plant>(Plant.allPlants))
-            TryApply(plant);
+        if (Owner == null || on) return;
+        on = true;
+        applied = V(typedData.counterDamageBonus);
+        PlantStatApplier.Apply(Owner, StatType.CounterDamage, applied);
         Entity.OnEntityHit += HandleHit;
     }
 
     public override void Deactivate()
     {
+        if (!on) return;
+        on = false;
         Entity.OnEntityHit -= HandleHit;
-        foreach (Plant plant in affected)
-            if (plant != null && plant.IsAlive)
-                PlantStatApplier.Apply(plant, StatType.CounterDamage, -typedData.counterDamageBonus);
-        affected.Clear();
-    }
-
-    public override void OnPlantPlaced(Plant plant) => TryApply(plant);
-
-    private void TryApply(Plant plant)
-    {
-        if (plant == null || !plant.IsAlive || plant.data == null) return;
-        if (affected.Contains(plant)) return;
-        PlantStatApplier.Apply(plant, StatType.CounterDamage, typedData.counterDamageBonus);
-        affected.Add(plant);
+        if (Owner != null) PlantStatApplier.Apply(Owner, StatType.CounterDamage, -applied);
+        applied = 0f;
     }
 
     private void HandleHit(EntityEventData hit)
     {
-        if (hit.source is not Plant ironbarkPlant || ironbarkPlant.data == null) return;
-        if (hit.tags == null || !System.Array.Exists(hit.tags, t => t == DamageTag.Counter)) return;
-
-        ironbarkPlant.ApplyEffect(new IronbarkCounterShieldEffect(
-            ironbarkPlant, ironbarkPlant, hit.damage * typedData.shieldPercentOfDamage, typedData.shieldDuration));
+        if (!OwnerAlive || hit.source != Owner || !Entity.HasTag(hit.tags, DamageTag.Counter)) return;
+        Owner.ApplyEffect(new IronbarkCounterShieldEffect(Owner, Owner, hit.damage * V(typedData.shieldPercentOfDamage), typedData.shieldDuration));
     }
 }

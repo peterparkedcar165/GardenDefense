@@ -68,11 +68,8 @@ MonoBehaviour:
     startDelay: 2
     minSpawnCount: 5
     maxSpawnCount: 7
-  fertilizerPool:
-  - {fileID: 11400000, guid: 5b1fcf031c4fede44a676295285e96e2, type: 2}
-  - {fileID: 11400000, guid: dc6c78183d930f040aa36668c09a580c, type: 2}
-  - {fileID: 11400000, guid: abffbf10170e9574f97882becc815939, type: 2}
-  fertilizerGrants: []
-  mulchPool: []
-  mulchGrants: []
+  fertilizers:
+  - {fileID: 11400000, guid: 352e44a18d9147a6a9e51e416f22eece, type: 2}
+  - {fileID: 11400000, guid: 83d865ed59a845c08fd429cd1e08fd73, type: 2}
+  - {fileID: 11400000, guid: ac7935a746c34747a9ada8620a1f1e27, type: 2}
   ambience: {fileID: 0}

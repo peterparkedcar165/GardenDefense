@@ -1281,23 +1281,8 @@ MonoBehaviour:
     trickleSpawns: []
   eliteWaveInterval: 4
   eliteInsects: []
-  fertilizerPool:
-  - {fileID: 11400000, guid: c8613c3921154b64f86afc3c6ea94b78, type: 2}
-  - {fileID: 11400000, guid: 06970b7a93644514e96c630052df2a18, type: 2}
-  - {fileID: 11400000, guid: b41d77e0c376afd4d91b8e967d0306a4, type: 2}
-  fertilizerGrants: []
-  mulchPool: []
-  mulchGrants:
-  - afterWave: 1
-    tier: 0
-  - afterWave: 3
-    tier: 0
-  - afterWave: 5
-    tier: 0
-  - afterWave: 7
-    tier: 0
-  - afterWave: 9
-    tier: 0
-  - afterWave: 11
-    tier: 0
+  fertilizers:
+  - {fileID: 11400000, guid: 64316b1c030545a28ed9747c63e660c2, type: 2}
+  - {fileID: 11400000, guid: ae9f84635e0147e2a88f1eb2314f4fe3, type: 2}
+  - {fileID: 11400000, guid: fd309107a9cf4bd68629ad7c673cff6c, type: 2}
   ambience: {fileID: 11400000, guid: d1804b1344ff0b341aff0c11181dc078, type: 2}

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class BurnEffect : DoTEffect, IElementalAffinityEffect
 {
@@ -24,11 +24,11 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
         // water douses fire: while the level is Underwater, Burn only lasts a quarter as long
         if (WeatherManager.instance != null && WeatherManager.instance.HasWeather(WeatherType.Underwater))
             this.duration *= 0.25f;
-        // board-wide base-duration shrink from a mulch (e.g. Rekindling) - unlike
+        // level wide base-duration shrink from the Rekindling fertilizer - unlike
         // burnDurationBonus above (one specific plant's own passive), this is a global modifier,
         // but still only ever meant to help the player: only applies to Burns a PLANT causes, so
         // an insect burning one of the player's own plants is never affected by it either way
-        if (source is Plant) this.duration *= MulchManager.BurnDurationMultiplier;
+        if (source is Plant) this.duration *= FertilizerManager.BurnDurationMultiplier;
     }
 
     public override string GetName() => "<color=orange>Burn</color>";

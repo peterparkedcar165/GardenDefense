@@ -1,7 +1,7 @@
-// seasoned oak mulch: shows an acorn knight's armor climb in his status effects, as a permanent
+// seasoned oak mulch: shows its plant's armor climb in its status effects, as a permanent
 // buff. display only: SeasonedOakMulchEffect owns the armor itself and updates these numbers
 // every frame, pinning the duration too, so it never runs out while the mulch is active and
-// anything that strips it can't change his armor (the mulch puts it right back)
+// anything that strips it can't change its armor (the mulch puts it right back)
 public class SeasonedOakEffect : StatusEffect
 {
     public float armor;

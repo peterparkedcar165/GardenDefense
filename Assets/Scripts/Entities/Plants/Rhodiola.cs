@@ -256,9 +256,6 @@ public class Rhodiola : Shooter
 
         if (!isPrimaryTarget) return;
 
-        // spreading seed mulch: the most injured plant beside the target gets a share of this heal
-        SpreadingSeedMulchEffect.TrySpread(this, entity, amount);
-
         if (SkillTreeManager.HasUnlock(this, OvergrowthUnlock))
         {
             _overgrowthAttackCount++;
@@ -310,7 +307,9 @@ public class Rhodiola : Shooter
     {
         // nothing to revive at the targeted tile - don't consume the skill (the player can
         // just re-target immediately, no cooldown/sun/cast wasted on an empty click)
-        Plant revived = Plant.RevivePlant(tile);
+        // at her skill's max level a revived plant also comes back with the mulches it had (Tommy,
+        // 2026-11-20), on top of verdant guardian below
+        Plant revived = Plant.RevivePlant(tile, IsPath3Maxed);
         if (revived == null) return;
 
         skillCooldownTimer = skillCooldown;
@@ -343,7 +342,7 @@ public class Rhodiola : Shooter
         {
             if (!Tile.allTiles.TryGetValue(Tile.TileKey(center + offset), out Tile neighbor)) continue;
             if (neighbor.deadPlant == null) continue;
-            Plant revivedNeighbor = Plant.RevivePlant(neighbor);
+            Plant revivedNeighbor = Plant.RevivePlant(neighbor, IsPath3Maxed);
             if (revivedNeighbor != null)
                 revivedNeighbor.Heal(RevivalHeal, this);
         }

@@ -21,7 +21,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (icon != null) icon.sprite = plantData.icon;
         if (background != null && ColorUtility.TryParseHtmlString(PlantData.ElementalColor(plantData.elementalType), out Color elementColor))
             background.color = elementColor;
-        if (sunCostText != null) sunCostText.text = MulchManager.GetPlacementCost(data).ToString();
+        if (sunCostText != null) sunCostText.text = FertilizerManager.GetPlacementCost(data).ToString();
     }
 
     void Update()
@@ -34,7 +34,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
             sunCostText.color = Color.red;
             return;
         }
-        int effectiveCost = MulchManager.GetPlacementCost(data);
+        int effectiveCost = FertilizerManager.GetPlacementCost(data);
         sunCostText.text = effectiveCost.ToString();
         if (GameManager.instance.SunCount >= effectiveCost)
         {
@@ -50,10 +50,10 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnClicked()
     {
-        if (GameManager.instance == null || GameManager.instance.SunCount < MulchManager.GetPlacementCost(data)) return;
+        if (GameManager.instance == null || GameManager.instance.SunCount < FertilizerManager.GetPlacementCost(data)) return;
         if (Plant.AtPlacementLimit(data)) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
-        if (MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen) return;
+        if (MulchDebugMenu.instance != null && MulchDebugMenu.instance.IsOpen) return;
         if (PlantSelector.instance == null) return;
         PlantSelector.instance.SelectPlant(data.plantPrefab.gameObject);
     }

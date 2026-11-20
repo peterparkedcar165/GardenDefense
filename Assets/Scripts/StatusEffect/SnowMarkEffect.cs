@@ -30,7 +30,7 @@ public class SnowMarkEffect : StatusEffect
         if (source is Snowdrop snowdrop && target is Insect insect && SkillTreeManager.HasUnlock(snowdrop, Snowdrop.ChillingGraspUnlock))
         {
             _slowApplied = true;
-            _appliedAmount = ChillingGraspSlowPercent + MulchManager.GlobalSlowBonus;
+            _appliedAmount = ChillingGraspSlowPercent + MulchManager.SlowBonusFrom(source);
             insect.movementSpeedMultiplier -= _appliedAmount;
         }
     }

@@ -13,19 +13,13 @@ MonoBehaviour:
   m_Name: DroughtMulchData
   m_EditorClassIdentifier: Assembly-CSharp::DroughtMulchData
   mulchName: '<b><color=orange>Drought</color></b>'
-  description: '<b><color=#FFD700>Sun</color></b> producers make <b><color=red>no</color></b> <b><color=#FFD700>Sun</color></b> for the next <b><color=green>3</color></b> waves. After that, they make <b><color=green>2x</color></b> <b><color=#FFD700>Sun</color></b> for the rest of the level.'
+  description: 
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
-  color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 0
-  tier: 2
-  rollWeight: 1
-  targetPlant: {fileID: 0}
-  condition:
-    requiredElementGroups: []
-    requiredPlantGroups: []
-    minWave: 0
-    maxWave: 0
-    orAlternatives: []
+  dropWeight: 1
   droughtWaves: 3
   droughtSunMultiplier: 0
-  afterSunMultiplier: 2
+  afterSunMultiplier:
+    common: 2
+    rare: 3
+    epic: 4

@@ -335,6 +335,7 @@ public abstract class Insect : Entity, IAttackable
 
     void OnDestroy()
     {
+        MulchManager.instance?.NotifyInsectDestroyed(this);
         allInsects.Remove(this);
         friendlyInsects.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedInsect() == this)
@@ -387,6 +388,9 @@ public abstract class Insect : Entity, IAttackable
             startingShield *= WaveHealthMultiplier(GameManager.instance.currentWave);
         base.Start();
         gameManager = FindAnyObjectByType<GameManager>();
+        // counted under the wave it spawned in, for the mulch guaranteed when a wave's last insect
+        // dies or leaks. friendlies (minions) are never counted
+        MulchManager.instance?.RegisterInsect(this);
         waypoints  = _pendingPath ?? PathManager.instance.waypoints;
         expDrop = sunDrop/2;
         aimPoint = transform.Find("AimPoint");
@@ -1035,6 +1039,7 @@ public abstract class Insect : Entity, IAttackable
         if (source is Plant p) RegisterAttacker(p);
         DistributeExp();
         RaiseEntityDied(new EntityEventData { target = this, source = source, position = transform.position });
+        MulchManager.instance?.NotifyInsectDied(this, source);
         GameManager.instance?.AddSun(SunReward(source));
         if (SaveManager.instance != null) SaveManager.instance.saveData.currency += CurrencyReward(source);
 
@@ -1204,12 +1209,14 @@ public abstract class Insect : Entity, IAttackable
 
     // exposes gameManager (private, cached in Start) to subclasses that need to damage the
     // player's base outside of ReachObjective itself (e.g. Duskdarter's carried passenger).
-    // every leak routes through here, so MulchManager.LeakDamageMultiplier covers both, and
-    // mulches that care about leaks (clean garden) hear about every one of them
+    // every leak routes through here, so FertilizerManager.LeakDamageMultiplier covers both, and
+    // the mulch manager hears about every leak (a wave's last insect leaking still drops its
+    // guaranteed mulch)
     protected void DamagePlayerBase(int amount)
     {
+        FertilizerManager.instance?.NotifyInsectLeaked(this);
         MulchManager.instance?.NotifyInsectLeaked(this);
-        gameManager.Damage(Mathf.RoundToInt(amount * Mathf.Max(0f, MulchManager.LeakDamageMultiplier)));
+        gameManager.Damage(Mathf.RoundToInt(amount * Mathf.Max(0f, FertilizerManager.LeakDamageMultiplier)));
     }
 
     protected virtual float GetMoveSpeed() => movementSpeed;
@@ -1228,6 +1235,11 @@ public abstract class Insect : Entity, IAttackable
     }
 
     protected bool isDying = false;
+
+    // the wave this insect spawned in, and whether MulchManager still counts it there (for the
+    // mulch guaranteed when a wave's last insect dies or leaks)
+    [System.NonSerialized] public int mulchWave;
+    [System.NonSerialized] public bool mulchCounted;
 
     private int SunReward(Entity source)
     {
@@ -1251,6 +1263,7 @@ public abstract class Insect : Entity, IAttackable
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         RaiseEntityDied(new EntityEventData { target = this, source = source, position = transform.position });
+        MulchManager.instance?.NotifyInsectDied(this, source);
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(SunReward(source));
@@ -1268,6 +1281,7 @@ public abstract class Insect : Entity, IAttackable
         isDying = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         RaiseEntityDied(new EntityEventData { target = this, position = transform.position });
+        MulchManager.instance?.NotifyInsectDied(this, null);
         if (PlantUpgradeUI.instance?.GetSelectedInsect() == this) PlantUpgradeUI.instance.HidePanel();
         DistributeExp();
         gameManager.AddSun(SunReward(null));

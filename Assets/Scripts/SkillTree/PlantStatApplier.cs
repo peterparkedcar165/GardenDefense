@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// shared stat application used by fertilizers and skill trees
+// shared stat application used by skill trees and mulches (wild mulch, long stem and others)
 // pushes a value into the matching adder or multiplier field on a plant
 public static class PlantStatApplier
 {
@@ -91,6 +91,8 @@ public static class PlantStatApplier
             case StatType.SkillChargeRate:                  plant.skillChargeRateAdder          += value; break;
             case StatType.SnowMarkPercentFlat:               if (plant is Snowdrop sd) sd.snowMarkPercentAdder += value; break;
             case StatType.HealAmountFlat:                     if (plant is AloeVera av) av.healAmountAdder += value; break;
+            case StatType.ItemDropRate:                       plant.itemDropRate                 += value; break;
+            case StatType.RareItemDropRate:                   plant.rareItemDropRate             += value; break;
         }
     }
 }

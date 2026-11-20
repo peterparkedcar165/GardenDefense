@@ -1,13 +1,16 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CompostTeaMulchData", menuName = "Scriptable Objects/Mulch/Compost Tea")]
+[CreateAssetMenu(fileName = "CompostTeaMulch", menuName = "Scriptable Objects/Mulch/Compost Tea")]
 public class CompostTeaMulchData : MulchData
 {
-    [Tooltip("share of the killing plant's max health it heals per kill, e.g. 0.02 = 2%")]
-    public float healPercentPerKill = 0.02f;
+    [Tooltip("share of this plant's max health it heals for each kill it helped with, e.g. 0.02 = 2%")]
+    public TierValue healPercentPerKill = TierValue.Scaled(0.02f);
 
-    public override MulchEffect CreateEffect() => new CompostTeaMulchEffect(this);
+    public override MulchEffect CreateEffect(MulchItem item) => new CompostTeaMulchEffect(this, item);
 
-    public override string GetDescription() =>
-        $"Whenever a plant kills an insect, it heals <b><color=green>{healPercentPerKill * 100f:F0}%</color></b> of its <b><color=green>Max Health</color></b>.";
+    public override string GetDescription(MulchItem item)
+    {
+        MulchTier r = item.rarity;
+        return $"Whenever an insect this plant helped kill dies, this plant heals {Green(Pct(healPercentPerKill.Get(r)))} of its <b><color=green>Max Health</color></b>.";
+    }
 }

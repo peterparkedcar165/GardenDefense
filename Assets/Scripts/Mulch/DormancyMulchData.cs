@@ -1,18 +1,21 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DormancyMulchData", menuName = "Scriptable Objects/Mulch/Dormancy")]
+[CreateAssetMenu(fileName = "DormancyMulch", menuName = "Scriptable Objects/Mulch/Dormancy")]
 public class DormancyMulchData : MulchData
 {
-    [Tooltip("how many whole waves the penalty lasts, counted from the first wave that starts after the pick")]
+    [Tooltip("whole waves the penalty lasts, counted from the first wave that starts after it's equipped")]
     public int dormantWaves = 3;
-    [Tooltip("damage every plant loses during those waves, e.g. 0.15 = 15% less")]
-    public float damagePenalty = 0.15f;
-    [Tooltip("damage every plant gains after that, for the rest of the level, e.g. 0.25 = 25% more")]
-    public float damageBonus = 0.25f;
+    [Tooltip("damage this plant loses during those waves, e.g. 0.15 = 15% less")]
+    public TierValue damagePenalty = TierValue.Scaled(0.15f);
+    [Tooltip("damage this plant gains after that, for the rest of the level, e.g. 0.25 = 25% more")]
+    public TierValue damageBonus = TierValue.Scaled(0.25f);
 
-    public override MulchEffect CreateEffect() => new DormancyMulchEffect(this);
+    public override MulchEffect CreateEffect(MulchItem item) => new DormancyMulchEffect(this, item);
 
-    public override string GetDescription() =>
-        $"For the next <b><color=green>{dormantWaves}</color></b> waves, all plants deal <b><color=red>{damagePenalty * 100f:F0}%</color></b> less damage. " +
-        $"After that, they deal <b><color=green>{damageBonus * 100f:F0}%</color></b> more damage for the rest of the level.";
+    public override string GetDescription(MulchItem item)
+    {
+        MulchTier r = item.rarity;
+        return $"For the next {Green(dormantWaves.ToString())} waves this plant deals {Red(Pct(damagePenalty.Get(r)))} less damage. " +
+            $"After that, it deals {Green(Pct(damageBonus.Get(r)))} more damage for the rest of the level.";
+    }
 }

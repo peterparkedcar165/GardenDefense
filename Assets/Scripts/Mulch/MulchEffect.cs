@@ -1,67 +1,66 @@
-// runtime behavior granted by a picked mulch - the Plant/PlantData split, but for mulches.
-// MulchData carries the authored name/tier/condition/tunables; this is where a specific mulch
-// actually does something, almost always by subscribing to an existing global event (Entity.
-// OnEntityHit, Insect.Kill, GameManager.AddSun, etc.) for as long as it stays active.
-// one subclass per mulch, paired with that mulch's own MulchData subclass
+using UnityEngine;
+
+// what an equipped mulch does on its plant, the MulchData/MulchEffect split being the
+// PlantData/Plant one. Activate starts it on Owner and Deactivate must undo all of it. the same
+// effect object can run again later: a merge on the plant swaps in the higher rarity copy
+// (Deactivate, new item, Activate), and a plant revived by a max level Rhodiola skill gets its old
+// effects back on its new body (AttachTo, Activate), so anything an effect counts (waves survived,
+// and so on) carries over both times
 public abstract class MulchEffect
 {
-    protected readonly MulchData data;
-    public MulchData Data => data;
+    public MulchItem Item { get; private set; }
+    public MulchData Data => Item.data;
+    public MulchTier Rarity => Item.rarity;
+    public Plant Owner { get; private set; }
 
-    protected MulchEffect(MulchData data)
+    protected MulchEffect(MulchItem item)
     {
-        this.data = data;
+        Item = item;
     }
 
-    // called once when the player picks this mulch. subscribe to whatever event this mulch
-    // reacts to here
+    public void AttachTo(Plant owner) => Owner = owner;
+
+    // starts the effect on Owner
     public abstract void Activate();
 
-    // called when the level ends/restarts (see MulchManager.ResetMulch). unsubscribe here -
-    // mulches are session-only, so this must always fully undo Activate()
+    // stops it, undoing everything Activate did. called when the plant dies or is removed, when a
+    // merge upgrades it, and when the level ends
     public abstract void Deactivate();
 
-    // called whenever a new plant is placed (see MulchManager.NotifyPlantPlaced, hooked from
-    // Plant.cs next to FertilizerManager.ApplyTo/SkillTreeManager.ApplyTo) - override this for a
-    // mulch that grants a per-plant bonus, so plants placed after the pick get it too. plants
-    // already on the field when Activate() runs still need their own pass there, same as
-    // FertilizerManager.CommitGenerated/ApplyTo
-    public virtual void OnPlantPlaced(Plant plant) {}
+    // a merge on the plant: the same effect continues at the higher rarity
+    public void Upgrade(MulchItem upgraded)
+    {
+        Deactivate();
+        Item = upgraded;
+        Activate();
+    }
 
     // wave hooks, fired by ProceduralLevel through MulchManager. a wave ends the moment its
-    // spawning finishes, the same moment that wave's mulch grants fire, so insects can still be
-    // on the field when OnWaveEnded runs
+    // spawning finishes, so insects can still be on the field when OnWaveEnded runs
     public virtual void OnWaveStarted(int wave) {}
     public virtual void OnWaveEnded(int wave) {}
 
-    // an insect reached the end of the path and hurt the garden (every leak goes through
-    // Insect.DamagePlayerBase)
-    public virtual void OnInsectLeaked(Insect insect) {}
-
-    // a plant banked sun of its own (Plant.GenerateSun). fromKill marks sun paid for a kill, like
+    // Owner banked sun of its own (Plant.GenerateSun). fromKill marks sun paid for a kill, like
     // glowshroom's, rather than the plant's own production
-    public virtual void OnSunGenerated(Plant plant, int amount, bool fromKill) {}
+    public virtual void OnSunGenerated(int amount, bool fromKill) {}
 
-    // placement cost hooks, read by MulchManager.GetPlacementCost: a flat discount off the next
-    // plant bought, or the next plant bought costing nothing at all
-    public virtual int PlacementDiscount => 0;
-    public virtual bool GrantsFreePlacement => false;
-
-    // a plant was just bought and placed (see Tile). placedForFree is true when a free placement
-    // paid for it, so a discount that wasn't needed doesn't get used up as well
-    public virtual void OnPlantBought(Plant plant, bool placedForFree) {}
-
-    // whether seed swap and seed sell may take this mulch away. false once a one shot mulch has
-    // already paid out, since removing it couldn't undo what it gave
-    public virtual bool CanBeRemoved => true;
-
-    // whether seed sell may take this mulch away (seed swap reads CanBeRemoved). a mulch that
-    // already paid out can still be sold: what it gave stays, and Deactivate only ends whatever
-    // it's still doing. false where removing it would have to undo something that can't be undone,
-    // like a weather mulch (the old weather can't come back)
-    public virtual bool CanBeSold => CanBeRemoved;
-
-    // a short live line for the active effects window (GameInfoPanel, G), like how many waves are
-    // left. null when the description already says everything
+    // a short live line for tooltips and the active effects window (G), like waves left. null when
+    // the description already says everything
     public virtual string GetStatus() => null;
+
+    // a number at this copy's rarity
+    protected float V(TierValue value) => value.Get(Rarity);
+    protected int VI(TierValue value) => value.GetInt(Rarity);
+
+    protected bool OwnerAlive => Owner != null && Owner.IsAlive;
+
+    // effects that need a coroutine run it on their plant, so it stops by itself if the plant goes
+    protected Coroutine StartOnOwner(System.Collections.IEnumerator routine) =>
+        Owner != null ? Owner.StartCoroutine(routine) : null;
+
+    protected void StopOnOwner(ref Coroutine routine)
+    {
+        if (routine != null && Owner != null) Owner.StopCoroutine(routine);
+        routine = null;
+    }
 }

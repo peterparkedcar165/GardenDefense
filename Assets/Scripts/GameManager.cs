@@ -30,7 +30,8 @@ public class GameManager : MonoBehaviour
 
     public void AddSun(int amount)
     {
-        int gained = Mathf.RoundToInt(amount * (1 + BonusSunGain));
+        // seed loan: sun still owed is paid out of what comes in first
+        int gained = FertilizerManager.PayDebtFrom(Mathf.RoundToInt(amount * (1 + BonusSunGain)));
         SunCount += gained;
         totalSunGenerated += gained;
         UpdateSun();
@@ -87,7 +88,7 @@ public class GameManager : MonoBehaviour
         {
             if (SettingsManager.instance == null || !SettingsManager.instance.IsOpen)
                 if (FertilizerSelectionUI.instance == null || !FertilizerSelectionUI.instance.IsOpen)
-                    if (MulchSelectionUI.instance == null || !MulchSelectionUI.instance.IsOpen)
+                    if (MulchDebugMenu.instance == null || !MulchDebugMenu.instance.IsOpen)
                         if (LoadoutSelectionUI.instance == null || !LoadoutSelectionUI.instance.IsOpen)
                             TogglePause();
         }
@@ -100,12 +101,12 @@ public class GameManager : MonoBehaviour
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        // dev shortcut n opens the mulch and weather test menu while in a level. checked here, not
-        // in MulchSelectionUI, because that script sits on its own panel, which is switched off
+        // dev shortcut n opens the mulch, fertilizer and weather test menu while in a level. checked
+        // here, not in MulchDebugMenu, because that script sits on its own panel, which is switched off
         // (so its Update doesn't run) whenever the panel is closed
         if (IsGameActive && Keyboard.current.nKey.wasPressedThisFrame
-            && MulchSelectionUI.instance != null && !MulchSelectionUI.instance.IsOpen)
-            MulchSelectionUI.instance.ShowDebugMenu();
+            && MulchDebugMenu.instance != null && !MulchDebugMenu.instance.IsOpen)
+            MulchDebugMenu.instance.Show();
 #endif
     }
 
@@ -115,13 +116,12 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause()
     {
-        // Level1PlantInfo, Level1FirstFertilizer, Level1FirstMulch, Level1SoldierAntAppears and
+        // Level1PlantInfo, Level1FirstMulch, Level1SoldierAntAppears and
         // Level2Primers each pause the game the moment they open (see
         // ProceduralLevel/SoldierAnt/ElementalDebuff) and block Start/Space outright for their
         // entire run, with no exception page - the player gets control back only once the last
         // page closes and currentId clears
         if (TutorialManager.instance != null && (TutorialManager.instance.IsTutorialActive(TutorialIds.Level1PlantInfo)
-            || TutorialManager.instance.IsTutorialActive(TutorialIds.Level1FirstFertilizer)
             || TutorialManager.instance.IsTutorialActive(TutorialIds.Level1FirstMulch)
             || TutorialManager.instance.IsTutorialActive(TutorialIds.Level1SoldierAntAppears)
             || TutorialManager.instance.IsTutorialActive(TutorialIds.Level2Primers)))
@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour
         paused = false;
         LoadoutSelectionUI.instance?.Hide();
         FertilizerSelectionUI.instance?.CloseForSceneExit();
-        MulchSelectionUI.instance?.CloseForSceneExit();
+        MulchDebugMenu.instance?.CloseForSceneExit();
         SceneManager.LoadScene("MainMenu");
     }
 

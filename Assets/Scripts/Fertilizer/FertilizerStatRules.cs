@@ -272,4 +272,86 @@ public static class FertilizerStatRules
         }
         result[stat] = existing;
     }
+
+    // the value range one wild mulch stat rolls in at Common, before WildMulchData's own scale.
+    // these are the old field wide fertilizer ranges, kept as they were
+    public static (float min, float max) BaseRange(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.AttackDamage:    return (0.03f, 0.04f);
+            case StatType.AttackSpeed:     return (0.03f, 0.04f);
+            case StatType.AttackRange:     return (0.03f, 0.04f);
+            case StatType.FireDamage:      return (0.03f, 0.04f);
+            case StatType.IceDamage:       return (0.03f, 0.04f);
+            case StatType.WaterDamage:     return (0.03f, 0.04f);
+            case StatType.GrassDamage:     return (0.03f, 0.04f);
+            case StatType.PoisonDamage:    return (0.03f, 0.04f);
+            case StatType.WindDamage:      return (0.03f, 0.04f);
+            case StatType.MinimumDamage:   return (0.02f, 0.03f);
+            case StatType.MaximumDamage:   return (0.03f, 0.04f);
+            case StatType.CriticalChance:  return (0.02f, 0.03f);
+            case StatType.CriticalDamage:  return (0.0625f, 0.075f);
+            case StatType.elementalAffinity:  return (0.03f, 0.05f);
+            case StatType.PassiveDamage:   return (0.03f, 0.04f);
+            case StatType.SkillDamage:     return (0.03f, 0.04f);
+            case StatType.SkillCooldown:   return (0.03f, 0.04f);
+            case StatType.DoTDamage:       return (0.03f, 0.04f);
+            case StatType.DoTDuration:     return (0.03f, 0.05f);
+            case StatType.MaxHealth:       return (0.03f, 0.05f);
+            case StatType.SunYield:        return (0.03f, 0.05f);
+            case StatType.CurrencyYield:   return (0.03f, 0.05f);
+            case StatType.ShieldDuration:  return (0.03f, 0.05f);
+            case StatType.RegenerationDuration: return (0.03f, 0.05f);
+            case StatType.ImmobilizeDurationAdder:     return (0.25f, 0.5f);
+            case StatType.ImmobilizeDurationMultiplier: return (0.05f, 0.15f);
+            case StatType.PassiveCooldown:              return (0.03f, 0.04f);
+            case StatType.PassiveDurationMultiplier:    return (0.03f, 0.05f);
+            case StatType.SkillDurationAdder:           return (0.5f,  1f);
+            case StatType.SkillDurationMultiplier:      return (0.03f, 0.04f);
+            case StatType.CoordinatedDamage:            return (0.03f, 0.04f);
+            case StatType.HealingBonus:                 return (0.03f, 0.04f);
+            case StatType.IlluminationRangeAdder:       return (0.25f, 0.5f);
+            case StatType.IlluminationRangeMultiplier:  return (0.08f, 0.12f);
+            case StatType.CounterDamage:                return (0.03f, 0.04f);
+            case StatType.PhysicalDamage:               return (0.03f, 0.04f);
+            case StatType.MagicDamage:                  return (0.03f, 0.04f);
+            case StatType.PhysicalResistance:           return (0.02f, 0.03f);
+            case StatType.MagicResistance:              return (0.02f, 0.03f);
+            case StatType.MagicPower:                   return (12f,  16f);
+            case StatType.DebuffGivenDuration:          return (0.03f, 0.05f);
+            case StatType.BuffGivenDuration:            return (0.03f, 0.05f);
+            case StatType.BuffReceivedDuration:         return (0.03f, 0.05f);
+            case StatType.DebuffReceivedDuration:       return (0.03f, 0.05f);
+            case StatType.MinionDamage:                 return (0.03f, 0.04f);
+            case StatType.FallDamage:                   return (0.03f, 0.04f);
+            case StatType.Armor:                        return (6f,  8f);
+            case StatType.MagicArmor:                   return (6f,  8f);
+            case StatType.ArmorPenetration:             return (4f,  7f);
+            case StatType.MagicPenetration:             return (4f,  7f);
+            case StatType.ArmorShred:                   return (0.02f, 0.03f);
+            case StatType.MagicArmorShred:              return (0.02f, 0.03f);
+            case StatType.SunGenerationCooldownMultiplier: return (-0.05f, -0.03f);
+            case StatType.HeatResistance:                return (0.02f, 0.03f);
+            case StatType.ColdResistance:                return (0.02f, 0.03f);
+            case StatType.Respiration:                   return (0.02f, 0.03f);
+            default:                       return (0f,    0f);
+        }
+    }
+
+    // flat whole number stats (not percentages): a rolled 6.83 armor would look wrong
+    public static bool IsIntegerStat(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.MagicPower:
+            case StatType.Armor:
+            case StatType.MagicArmor:
+            case StatType.ArmorPenetration:
+            case StatType.MagicPenetration:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

@@ -13,17 +13,11 @@ MonoBehaviour:
   m_Name: CompostTeaMulchData
   m_EditorClassIdentifier: Assembly-CSharp::CompostTeaMulchData
   mulchName: '<b><color=green>Compost Tea</color></b>'
-  description: 'Whenever a plant kills an insect, it heals <b><color=green>2%</color></b> of its <b><color=green>Max Health</color></b>.'
+  description: 
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
-  color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 2
-  tier: 0
-  rollWeight: 1
-  targetPlant: {fileID: 0}
-  condition:
-    requiredElementGroups: []
-    requiredPlantGroups: []
-    minWave: 0
-    maxWave: 0
-    orAlternatives: []
-  healPercentPerKill: 0.02
+  dropWeight: 1
+  healPercentPerKill:
+    common: 0.02
+    rare: 0.04
+    epic: 0.06

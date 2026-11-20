@@ -1,17 +1,21 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "HealSplashMulchData", menuName = "Scriptable Objects/Mulch/Heal Splash")]
+[CreateAssetMenu(fileName = "HealSplashMulch", menuName = "Scriptable Objects/Mulch/Heal Splash")]
 public class HealSplashMulchData : MulchData
 {
-    [Tooltip("damage dealt to nearby insects, as a percent of the healing done")]
-    public float damagePercent = 0.5f;
+    [Tooltip("damage dealt to nearby insects, as a share of the healing done")]
+    public TierValue damagePercent = TierValue.Scaled(0.5f);
+    [Tooltip("radius around the healed plant, in tiles")]
     public float radius = 1f;
-    [Tooltip("per-healer internal cooldown, so one plant healing repeatedly can't spam this")]
+    [Tooltip("seconds between splashes, so a fast ticking heal can't spam it")]
     public float internalCooldown = 1f;
 
-    public override MulchEffect CreateEffect() => new HealSplashMulchEffect(this);
+    public override MulchEffect CreateEffect(MulchItem item) => new HealSplashMulchEffect(this, item);
 
-    public override string GetDescription() =>
-        $"Whenever a plant heals <b>another</b> plant, deal damage to nearby insects equal to " +
-        $"<b><color=green>{damagePercent * 100f:F0}%</color></b> of the healing done.";
+    public override string GetDescription(MulchItem item)
+    {
+        MulchTier r = item.rarity;
+        return $"Whenever this plant heals <b>another</b> plant, insects near that plant take damage equal to " +
+            $"{Green(Pct(damagePercent.Get(r)))} of the healing done.";
+    }
 }

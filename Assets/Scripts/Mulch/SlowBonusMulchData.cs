@@ -1,13 +1,16 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SlowBonusMulchData", menuName = "Scriptable Objects/Mulch/Slow Bonus")]
+[CreateAssetMenu(fileName = "SlowBonusMulch", menuName = "Scriptable Objects/Mulch/Hinder")]
 public class SlowBonusMulchData : MulchData
 {
-    [Tooltip("flat extra Movement Speed reduction added to every slowing effect, e.g. 0.1 = +10%")]
-    public float flatBonus = 0.1f;
+    [Tooltip("extra Movement Speed reduction on every slow this plant applies, e.g. 0.06 = 6% more")]
+    public TierValue flatBonus = TierValue.Scaled(0.06f);
 
-    public override MulchEffect CreateEffect() => new SlowBonusMulchEffect(this);
+    public override MulchEffect CreateEffect(MulchItem item) => new SlowBonusMulchEffect(this, item);
 
-    public override string GetDescription() =>
-        $"Increase every slowing effect's Movement Speed reduction by a flat <b><color=green>{flatBonus:F2}</color></b>.";
+    public override string GetDescription(MulchItem item)
+    {
+        MulchTier r = item.rarity;
+        return $"Every slow this plant applies takes away {Green(Pct(flatBonus.Get(r)))} more <b><color=green>Movement Speed</color></b>.";
+    }
 }

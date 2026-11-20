@@ -214,7 +214,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (autoCastButton != null)
             autoCastButton.gameObject.SetActive(plant.UsesAutoCast);
         if (transplantButton != null)
-            transplantButton.gameObject.SetActive(TransplantMulchEffect.IsActive);
+            transplantButton.gameObject.SetActive(TransplantFertilizerEffect.IsActive);
 
         panel.SetActive(true);
         ApplyElementalTheme(plant.elementalType);
@@ -495,7 +495,7 @@ public class PlantUpgradeUI : EntityInfoPanel
     private void RefreshTransplantButton()
     {
         if (transplantButton == null) return;
-        bool mulchActive = TransplantMulchEffect.IsActive;
+        bool mulchActive = TransplantFertilizerEffect.IsActive;
         if (transplantButton.gameObject.activeSelf != mulchActive)
             transplantButton.gameObject.SetActive(mulchActive);
         if (!mulchActive) return;
@@ -594,7 +594,7 @@ public class PlantUpgradeUI : EntityInfoPanel
     // via right-click/Escape (see PlantSelector.Update)
     public void OnTransplantButtonClicked()
     {
-        if (selectedPlant == null || !TransplantMulchEffect.IsActive || !selectedPlant.TransplantReady) return;
+        if (selectedPlant == null || !TransplantFertilizerEffect.IsActive || !selectedPlant.TransplantReady) return;
         PlantSelector.instance?.SetTransplantMode(selectedPlant);
     }
 

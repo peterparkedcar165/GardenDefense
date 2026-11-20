@@ -2,59 +2,60 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// whenever a plant heals ANOTHER plant (not itself, and not a pure regeneration-over-time tick -
-// see HealTag.Regeneration/StatusEffect.HealTarget), deals damage to insects near the healed
-// plant equal to a percent of the healing done, using the healer's own damage type/element.
-// gated by a per-healer internal cooldown so a fast-ticking heal can't spam it. the damage itself
-// lands 0.1s after the heal, same delay convention as other on-hit effects (e.g. Bird of
-// Paradise's DelayedExtraProc) - hosted on MulchManager's MonoBehaviour since this effect has no
-// Plant/MonoBehaviour of its own to run a coroutine on
+// whenever its plant heals another plant (not itself, and not a regeneration tick), insects near
+// the healed plant take a share of the healing as damage, in the healer's own damage type and
+// element. the damage lands 0.1 s after the heal, like other on hit effects
 public class HealSplashMulchEffect : MulchEffect
 {
     private const float OnHitDelay = 0.1f;
+    private static readonly DamageTag[] SplashTags = { DamageTag.AoE, DamageTag.PassiveDamage };
 
     private readonly HealSplashMulchData typedData;
-    private readonly Dictionary<Plant, float> lastTriggerTime = new Dictionary<Plant, float>();
+    private float lastTrigger = float.NegativeInfinity;
+    private bool listening;
 
-    public HealSplashMulchEffect(HealSplashMulchData data) : base(data)
+    public HealSplashMulchEffect(HealSplashMulchData data, MulchItem item) : base(item)
     {
         typedData = data;
     }
 
-    public override void Activate() => Entity.OnHeal += HandleHeal;
+    public override void Activate()
+    {
+        if (listening) return;
+        listening = true;
+        Entity.OnHeal += HandleHeal;
+    }
+
     public override void Deactivate()
     {
+        if (!listening) return;
+        listening = false;
         Entity.OnHeal -= HandleHeal;
-        lastTriggerTime.Clear();
     }
 
     private void HandleHeal(EntityEventData heal)
     {
+        if (!OwnerAlive || heal.source != Owner) return;
         if (Entity.HasHealTag(heal.healTags, HealTag.Regeneration)) return;
-        if (heal.source is not Plant healer || heal.target is not Plant healed || healer == healed) return;
+        if (heal.target is not Plant healed || healed == Owner) return;
+        if (Time.time - lastTrigger < typedData.internalCooldown) return;
+        lastTrigger = Time.time;
 
-        if (lastTriggerTime.TryGetValue(healer, out float last) && Time.time - last < typedData.internalCooldown) return;
-        lastTriggerTime[healer] = Time.time;
-
-        float damage = heal.amount * typedData.damagePercent;
-        if (damage <= 0f) return;
-
-        if (MulchManager.instance != null)
-            MulchManager.instance.StartCoroutine(DelayedSplash(healer, healed, damage));
+        float damage = heal.amount * V(typedData.damagePercent);
+        if (damage > 0f) StartOnOwner(DelayedSplash(healed, damage));
     }
 
-    private IEnumerator DelayedSplash(Plant healer, Plant healed, float damage)
+    private IEnumerator DelayedSplash(Plant healed, float damage)
     {
         yield return new WaitForSeconds(OnHitDelay);
-        if (healer == null || !healer.IsAlive) yield break;
-
-        Vector3 center = (healed != null && healed.IsAlive) ? healed.transform.position : healer.transform.position;
+        if (!OwnerAlive) yield break;
+        Vector3 center = healed != null && healed.IsAlive ? healed.transform.position : Owner.transform.position;
+        float radius = typedData.radius * Tile.CellSize;
         foreach (Insect insect in new List<Insect>(Insect.allInsects))
         {
             if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(insect.transform.position, center) > typedData.radius) continue;
-            insect.Damage(damage, healer.damageType, healer.elementalType, healer, false,
-                new DamageTag[] { DamageTag.AoE, DamageTag.PassiveDamage });
+            if (Vector3.Distance(insect.transform.position, center) > radius) continue;
+            insect.Damage(damage, Owner.damageType, Owner.elementalType, Owner, false, SplashTags);
         }
     }
 }

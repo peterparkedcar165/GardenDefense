@@ -13,19 +13,16 @@ MonoBehaviour:
   m_Name: DormancyMulchData
   m_EditorClassIdentifier: Assembly-CSharp::DormancyMulchData
   mulchName: '<b><color=#00FFFF>Dormancy</color></b>'
-  description: 'For the next <b><color=green>3</color></b> waves, all plants deal <b><color=red>15%</color></b> less damage. After that, they deal <b><color=green>25%</color></b> more damage for the rest of the level.'
+  description: 
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
-  color: {r: 1, g: 1, b: 1, a: 1}
   elementalType: 4
-  tier: 2
-  rollWeight: 1
-  targetPlant: {fileID: 0}
-  condition:
-    requiredElementGroups: []
-    requiredPlantGroups: []
-    minWave: 0
-    maxWave: 0
-    orAlternatives: []
+  dropWeight: 1
   dormantWaves: 3
-  damagePenalty: 0.15
-  damageBonus: 0.25
+  damagePenalty:
+    common: 0.15
+    rare: 0.3
+    epic: 0.45
+  damageBonus:
+    common: 0.25
+    rare: 0.5
+    epic: 0.75

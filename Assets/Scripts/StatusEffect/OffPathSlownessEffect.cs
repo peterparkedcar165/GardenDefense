@@ -10,7 +10,7 @@ public class OffPathSlownessEffect : StatusEffect
         effectType = Type.negative;
         visible = false;
         insect = target as Insect;
-        appliedAmount = slowAmount + MulchManager.GlobalSlowBonus;
+        appliedAmount = slowAmount + MulchManager.SlowBonusFrom(source);
     }
 
     public override void OnApply()  { if (insect is not null) insect.movementSpeedMultiplier -= appliedAmount; }

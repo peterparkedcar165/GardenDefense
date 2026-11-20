@@ -55,7 +55,7 @@ public class SettingsManager : MonoBehaviour
              SkillTargetingManager.instance.IsDeadTileTargeting);
         bool loadoutOpen = LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen;
         bool fertilizerOpen = FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen;
-        bool mulchOpen = MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen;
+        bool mulchOpen = MulchDebugMenu.instance != null && MulchDebugMenu.instance.IsOpen;
         bool inEncyclopedia = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Encyclopedia";
         bool inLevelSelector = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "LevelSelector";
         bool inShop = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Shop";
@@ -98,7 +98,7 @@ public class SettingsManager : MonoBehaviour
         settingsPanel.SetActive(false);
         LoadoutSelectionUI.instance?.Hide();
         FertilizerSelectionUI.instance?.CloseForSceneExit();
-        MulchSelectionUI.instance?.CloseForSceneExit();
+        MulchDebugMenu.instance?.CloseForSceneExit();
         SceneTransition transition = FindAnyObjectByType<SceneTransition>();
         if (transition != null)
             transition.StartCoroutine(transition.FadeToScene("MainMenu"));

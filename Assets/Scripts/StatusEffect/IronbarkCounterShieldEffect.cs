@@ -1,4 +1,4 @@
-// granted by IronbarkCounterMulchEffect whenever an Ironbark plant lands a Counter Damage hit -
+// granted by IronbarkCounterMulchEffect (Ironclad Riposte) whenever its plant lands a Counter Damage hit -
 // a plain finite-duration shield, same minimal shape as StartingShieldEffect but not infinite
 public class IronbarkCounterShieldEffect : ShieldEffect
 {

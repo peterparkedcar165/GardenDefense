@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-
-// a normal sun tick (Sunflower.GenerateSunTick), so her yield, drought and solar flare all apply to
-// it the same as to her timed ticks. her passive timer isn't touched
+// a normal tick of its plant's own sun production (Plant.ExtraSunTick: sunflower, bog iris, kelp),
+// plus one tick of every sun sap on it, so yield, drought and solar flare all apply. timers untouched
 public class SunsetMulchEffect : MulchEffect
 {
     private readonly SunsetMulchData typedData;
 
-    public SunsetMulchEffect(SunsetMulchData data) : base(data)
+    public SunsetMulchEffect(SunsetMulchData data, MulchItem item) : base(item)
     {
         typedData = data;
     }
@@ -16,11 +14,13 @@ public class SunsetMulchEffect : MulchEffect
 
     public override void OnWaveEnded(int wave)
     {
-        foreach (Plant plant in new List<Plant>(Plant.allPlants))
+        if (!OwnerAlive) return;
+        int ticks = VI(typedData.extraTicks);
+        for (int i = 0; i < ticks; i++)
         {
-            if (plant is not Sunflower sunflower || sunflower == null || !sunflower.IsAlive) continue;
-            for (int i = 0; i < typedData.extraTicks; i++)
-                sunflower.GenerateSunTick();
+            Owner.ExtraSunTick();
+            foreach (MulchEffect effect in Owner.mulches)
+                if (effect is SunSapMulchEffect sap) sap.Tick();
         }
     }
 }

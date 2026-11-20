@@ -1,0 +1,133 @@
+// every stat a skill tree node, a wild mulch roll or a plant's own data can point at. appended
+// to, never reordered: assets store these by their number
+
+public enum StatType
+{
+    AttackDamage,
+    AttackSpeed,
+    AttackRange,
+    FireDamage,
+    IceDamage,
+    WaterDamage,
+    GrassDamage,
+    PoisonDamage,
+    WindDamage,
+    CriticalChance,
+    CriticalDamage,
+    elementalAffinity,
+    PassiveDamage,
+    SkillDamage,
+    SkillCooldown,
+    DoTDamage,
+    Piercing,
+    ImmobilizeDurationAdder,
+    ImmobilizeDurationMultiplier,
+    PassiveCooldown,
+    PassiveDurationMultiplier,
+    SkillDurationAdder,
+    SkillDurationMultiplier,
+    CoordinatedDamage,
+    HealingBonus,
+    IlluminationRangeAdder,
+    IlluminationRangeMultiplier,
+    CounterDamage,
+    PhysicalDamage,
+    MagicDamage,
+    PhysicalResistance,
+    MagicResistance,
+    MagicPower,
+    DebuffGivenDuration,
+    BuffGivenDuration,
+    BuffReceivedDuration,
+    DebuffReceivedDuration,
+    MinionDamage,
+    FallDamage,
+    Armor,
+    MagicArmor,
+    ArmorPenetration,
+    MagicPenetration,
+    ArmorShred,
+    MagicArmorShred,
+    DoTDuration,
+    RegenerationDuration,
+    ShieldDuration,
+    SunGenerationCooldownMultiplier,
+    MaxHealth,
+    SunYield,
+    CurrencyYield,
+    // unused: Ground element was removed from the game. kept in place (not deleted) so every
+    // member below keeps its serialized ordinal - existing fertilizer assets reference these by
+    // that raw int, not by name
+    GroundDamage,
+    BonusEffectChance,
+    MinimumDamage,
+    MaximumDamage,
+    // unused: the elemental-proc roll this stat fed (elementalEffectRoll in Entity.cs) was
+    // replaced by the deterministic Primer combo system. kept in place (not deleted) so
+    // HeatResistance/ColdResistance/Respiration below keep their serialized ordinals
+    ElementalEffectChance,
+    HeatResistance,
+    ColdResistance,
+    Respiration,
+    // flat (non-percentage) versions of AttackDamage/AttackSpeed, added for skill tree nodes that
+    // grant a plain "Increase Base X by Y" bonus rather than a percentage multiplier - appended
+    // here rather than next to their percentage counterparts to keep every ordinal above stable
+    AttackDamageFlat,
+    AttackSpeedFlat,
+    // virtual per-path level bonuses (skill tree "+1 Effective X Point" nodes) - added to
+    // path1LevelAdder/path2LevelAdder/path3LevelAdder rather than the real purchased level, so
+    // they boost a plant's OnPathXUpgrade output without costing sun or counting as a real level
+    Path1LevelAdder,
+    Path2LevelAdder,
+    Path3LevelAdder,
+    // flat reduction to a plant's placement sun cost, applied at Tile placement time (before the
+    // plant even exists) via SkillTreeManager.GetSunCostReduction - never applied through
+    // PlantStatApplier since there is no live plant instance yet when it matters
+    SunCostReduction,
+    // flat (non-percentage) skill cooldown reduction, for skill tree nodes that grant a plain
+    // "reduce cooldown by N seconds" bonus rather than a percentage multiplier - feeds
+    // Plant.skillCooldownReductionAdder, appended here to keep every ordinal above stable
+    SkillCooldownFlat,
+    // same idea as SkillCooldownFlat but for passive cooldown (e.g. Sunflower's sun generation
+    // timer) - feeds Plant.passiveCooldownAdder
+    PassiveCooldownFlat,
+    // flat (non-percentage) attack range, same idea as AttackDamageFlat/AttackSpeedFlat above -
+    // feeds Plant.attackRangeAdder
+    AttackRangeFlat,
+    // Waterlily-specific: raises her stacking Slow's cap by a flat amount per rank. plant-specific
+    // (cast in PlantStatApplier, same pattern as Piercing/Shooter) since MaxSlowStacks isn't a
+    // generic Entity/Plant field
+    MaxSlowStacksFlat,
+    // PoisonShroom-specific: flat seconds added to Toxic Spore duration per rank, on top of her
+    // own path2ToxicSporeDurationPerLevel scaling - plant-specific since Toxic Spore duration
+    // isn't a generic Entity/Plant field
+    ToxicSporeDurationFlat,
+    // flat projectile speed, same idea as AttackRangeFlat above - feeds Entity.projectileSpeedAdder.
+    // added for Rhodiola's reworked attack tree (Shooter-based healer)
+    ProjectileSpeedFlat,
+    // percentage of TOTAL (fully computed) Attack Damage/Armor, applied last via
+    // Entity.attackDamageTotalMultiplier/armorTotalMultiplier - distinct from the existing
+    // AttackDamage/Armor entries above, which only scale the base stat before adders
+    AttackDamageTotalMultiplier,
+    ArmorTotalMultiplier,
+    // feeds Plant.skillChargeRateAdder - a rate multiplier on how fast skillCooldownTimer counts
+    // down (1 = normal speed, +0.1 = 10% faster), not a flat/percentage reduction to the cooldown
+    // duration itself. League of Legends' Ability Haste is the reference point for this stat
+    SkillChargeRate,
+    // Snowdrop-specific: flat addition to SnowMarkPercent (the % Max Health portion of her Snow
+    // Mark bonus damage), same pattern as MaxSlowStacksFlat/ToxicSporeDurationFlat above - plant-
+    // specific since SnowMarkPercent isn't a generic Entity/Plant field
+    SnowMarkPercentFlat,
+    // Aloe Vera-specific: flat addition to her Passive's own heal amount (healAmount), same
+    // pattern as SnowMarkPercentFlat above - plant-specific since healAmount isn't a generic
+    // Entity/Plant field
+    HealAmountFlat,
+    // loot mulch drop stats on plants (Plant.itemDropRate, Plant.rareItemDropRate), in points with
+    // diminishing returns: the bonus is X / (X + 100), so 30 points give +23% and it never doubles
+    ItemDropRate,
+    RareItemDropRate
+}
+
+// a fertilizer's rarity, shown on its card. a fertilizer has one fixed rarity per asset (fertile
+// start, rich loam and black gold are three assets of one kind)
+public enum FertilizerTier { Common, Rare, Epic }

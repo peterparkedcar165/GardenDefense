@@ -17,10 +17,8 @@ public static class TutorialEvents
     public const string HoverStatsPanel = "hover_statspanel";
     public const string HoverPlantPath = "hover_plant_path";
     public const string UpgradeAcornAttackPath = "upgrade_acorn_attack_path";
-    public const string ClickFertilizerQueueButton = "click_fertilizer_queue_button";
-    public const string SelectRandomFertilizer = "select_random_fertilizer";
-    public const string ClickMulchQueueButton = "click_mulch_queue_button";
-    public const string SelectRandomMulch = "select_random_mulch";
+    public const string CollectMulch = "collect_mulch";
+    public const string EquipMulch = "equip_mulch";
     public const string PlaceSunflowerOnDirt = "place_sunflower_dirt";
     public const string PlaceWaterlilyOnWater = "place_waterlily_water";
 }

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,6 +45,9 @@ public class DeadPlantRecord
     public AutoCastState autoCastState;
     public int orbitRadius;
     public Dictionary<string, float> mulchCarry;
+    // the mulches it had equipped, stopped. only a max level rhodiola skill revive brings them back
+    // (MulchManager.RestoreMulches); any other revive leaves them lost
+    public List<MulchEffect> mulches;
 }
 
 public abstract class Plant : Entity, IAttackable
@@ -153,14 +156,36 @@ public abstract class Plant : Entity, IAttackable
     // stunned plants (e.g. Webbed by a Cave Spider) cannot attack
     public bool IsStunned => HasEffect<HardCrowdControl>();
 
-    // bud mulch: while true this plant can't pick an insect as a target, deal it damage, or put a
-    // debuff on it. it can still be hit, and anything that targets plants or runs on a timer
-    // (heals, sun) keeps working. set and cleared by BudMulchEffect
+    // while true this plant can't pick an insect as a target, deal it damage, or put a debuff on it.
+    // it can still be hit, and anything that targets plants or runs on a timer (heals, sun) keeps
+    // working. nothing sets it right now (the old bud mulch did); kept as a general switch
     [System.NonSerialized] public bool cannotTargetInsects;
 
     // mulch state that belongs to this one plant and has to survive its death and revival (seasoned
     // oak's armor climb). copied into DeadPlantRecord on death and back onto the revived plant
     public readonly Dictionary<string, float> mulchCarry = new Dictionary<string, float>();
+
+    // equipped loot mulches, in slot order, at most MulchRegistry.plantSlots (see MulchManager)
+    [System.NonSerialized] public readonly List<MulchEffect> mulches = new List<MulchEffect>();
+
+    // what this plant's own mulches add, each put in by its MulchEffect and taken back out when it
+    // stops. damage to insects is multiplied by 1 + mulchDamageBonus (dormancy, quick sap), its own
+    // sun production by 1 + mulchSunProductionBonus (drought), slows it applies get mulchSlowBonus
+    // (hinder), primers it applies get their cooldown multiplied by mulchPrimerCooldownMultiplier
+    // (primer cooldown reduction), regeneration it gives heals 1 + mulchRegenerationBonus as much
+    // (rejuvenator), and its splash radius and skill radius grow by mulchAreaBonus (wide canopy)
+    [System.NonSerialized] public float mulchDamageBonus;
+    [System.NonSerialized] public float mulchSunProductionBonus;
+    [System.NonSerialized] public float mulchSlowBonus;
+    [System.NonSerialized] public float mulchPrimerCooldownMultiplier = 1f;
+    [System.NonSerialized] public float mulchRegenerationBonus;
+    [System.NonSerialized] public float mulchAreaBonus;
+
+    // drop stats, in points: a kill by this plant drops a mulch more often (itemDropRate) and rolls
+    // Rare and Epic more often (rareItemDropRate), each by X / (X + 100). from mulches (scavenger,
+    // four leaf clover) or skill tree nodes (StatType.ItemDropRate, RareItemDropRate)
+    [System.NonSerialized] public float itemDropRate;
+    [System.NonSerialized] public float rareItemDropRate;
 
     // silenced plants cannot cast their Skill. any HardCrowdControl also silences,
     // without the plant carrying the Silence effect itself
@@ -304,7 +329,9 @@ public abstract class Plant : Entity, IAttackable
         _ghosts.Clear();
     }
 
-    public static Plant RevivePlant(Tile tile)
+    // restoreMulches: a max level rhodiola skill revive, the plant comes back with the mulches it
+    // had. every other revive leaves them lost
+    public static Plant RevivePlant(Tile tile, bool restoreMulches = false)
     {
         if (tile == null || tile.deadPlant == null || tile.deadPlant.prefab == null) return null;
         DeadPlantRecord record = tile.deadPlant;
@@ -340,6 +367,7 @@ public abstract class Plant : Entity, IAttackable
             foreach (KeyValuePair<string, float> entry in record.mulchCarry)
                 plant.mulchCarry[entry.Key] = entry.Value;
         plant.ApplyHighgroundBonus(tile.isHighground);
+        if (restoreMulches) MulchManager.RestoreMulches(record, plant);
 
         tile.isOccupied = true;
         Collider2D tileCol = tile.GetComponent<Collider2D>();
@@ -428,11 +456,8 @@ public abstract class Plant : Entity, IAttackable
 
         float baseRange = data.baseAttackRange
             + RangePerLevel(data, 1) * p1 + RangePerLevel(data, 2) * p2 + RangePerLevel(data, 3) * p3;
-        FertilizerManager fm = FertilizerManager.instance;
-        float flat = SkillTreeManager.SumStat(data, StatType.AttackRangeFlat)
-            + (fm != null ? fm.GetPreviewStat(data, IsMeleeAttacker, StatType.AttackRangeFlat) : 0f);
+        float flat = SkillTreeManager.SumStat(data, StatType.AttackRangeFlat);
         float percent = SkillTreeManager.SumStat(data, StatType.AttackRange)
-            + (fm != null ? fm.GetPreviewStat(data, IsMeleeAttacker, StatType.AttackRange) : 0f)
             + (onHighground ? HighgroundRangeBonus : 0f);
 
         float range = baseRange + flat + baseRange * percent;
@@ -547,10 +572,10 @@ public abstract class Plant : Entity, IAttackable
     }
 
 
-    // Transplant mulch only - counts down from TransplantMulchEffect.CooldownSeconds after each
-    // use, same shape as skillCooldownTimer but independent of it (and of skillChargeRate -
-    // this is a utility cooldown, not a skill). stays at 0 (always ready) while the mulch isn't
-    // active, since the button itself is hidden in that case anyway
+    // Transplant fertilizer only - counts down from TransplantFertilizerEffect.CooldownSeconds after
+    // each use, same shape as skillCooldownTimer but independent of it (and of skillChargeRate -
+    // this is a utility cooldown, not a skill). stays at 0 (always ready) while the fertilizer
+    // isn't active, since the button itself is hidden in that case anyway
     [Header("Transplant")]
     public float transplantCooldownTimer;
     public bool TransplantReady => transplantCooldownTimer <= 0f;
@@ -633,12 +658,10 @@ public abstract class Plant : Entity, IAttackable
         damageType                    = data.damageType;
         if (elementalType == ElementalType.Fire) heatResistanceAdder += 0.5f; // 50% resistance to heat-driven warming, not full immunity
         if (elementalType == ElementalType.Ice)  coldResistanceAdder += 0.5f; // 50% resistance to cold-driven cooling, not full immunity
-        FertilizerManager.instance?.ApplyTo(this);
         SkillTreeManager.ApplyTo(this);
-        MulchManager.instance?.NotifyPlantPlaced(this);
-        // baseSunCost is fixed above; sunCostReductionAdder only ever comes from the two calls
-        // just above (fertilizer/skill tree StatType.SunCostReduction effects), so this always
-        // reflects both sources once they've run
+        FertilizerManager.instance?.NotifyPlantPlaced(this);
+        // baseSunCost is fixed above; sunCostReductionAdder only ever comes from the skill tree
+        // call just above (StatType.SunCostReduction), so this always reflects it once it's run
         sunCost = Mathf.Max(0, baseSunCost - sunCostReductionAdder);
         RecomputeEffectivePathLevels();
         UpdateStats();
@@ -672,6 +695,7 @@ public abstract class Plant : Entity, IAttackable
         WeatherManager.OnWeatherAdded   -= HandleWeatherAdded;
         WeatherManager.OnWeatherRemoved -= HandleWeatherRemoved;
         ClearTargetHighlight();
+        MulchManager.OnPlantRemoved(this);
         allPlants.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this)
             PlantUpgradeUI.instance.HidePanel();
@@ -697,7 +721,28 @@ public abstract class Plant : Entity, IAttackable
         bool hurt = health < maxHealth || TotalShield > 0f;
         bool skill = path3Unlocked && style != null && style.showWhileSkillUnlocked;
         bool always = style != null && style.alwaysVisible;
-        _widget.SetVisible(IsAlive && (focused || hurt || skill || always));
+        // a plant with mulches always shows its widget, so its rarity squares stay visible like
+        // items in teamfight tactics (proposal: the vault only says they sit above the plant)
+        bool mulched = mulches.Count > 0;
+        _widget.SetVisible(IsAlive && (focused || hurt || skill || always || mulched));
+        UpdateMulchMarkers();
+    }
+
+    // the rarity squares by the health bar, rebuilt only when what's equipped changes
+    private int _mulchMarkerKey = -1;
+    private readonly List<Color> _mulchMarkerColors = new List<Color>();
+
+    private void UpdateMulchMarkers()
+    {
+        int key = mulches.Count;
+        foreach (MulchEffect effect in mulches)
+            key = key * 4 + (effect != null ? (int)effect.Rarity + 1 : 0);
+        if (key == _mulchMarkerKey) return;
+        _mulchMarkerKey = key;
+        _mulchMarkerColors.Clear();
+        foreach (MulchEffect effect in mulches)
+            if (effect != null) _mulchMarkerColors.Add(MulchTierColors.Get(effect.Rarity));
+        _widget.SetMulchMarkers(_mulchMarkerColors);
     }
 
     private void UpdateAttackBar(bool focused)
@@ -1246,7 +1291,7 @@ public abstract class Plant : Entity, IAttackable
         occupiedTile = destination;
         ApplyHighgroundBonus(destination.isHighground);
 
-        transplantCooldownTimer = TransplantMulchEffect.CooldownSeconds;
+        transplantCooldownTimer = TransplantFertilizerEffect.CooldownSeconds;
     }
 
     public void GainExp(int amount)
@@ -1282,6 +1327,18 @@ public abstract class Plant : Entity, IAttackable
         Debug.Log($"[Exp] Level complete - total exp gained per plant this level ({pendingLevelExp.Count} plant type(s)):");
         foreach (var kvp in pendingLevelExp)
             Debug.Log($"[Exp]   {kvp.Key}: {kvp.Value} exp");
+
+        // wisdom leaf: a plant type's whole exp for the level grows by every wisdom leaf equipped on a
+        // living plant of that type, added together. applied once here, at level end, since exp is
+        // a whole number and a small percent per kill would round away
+        foreach (string plantName in new List<string>(pendingLevelExp.Keys))
+        {
+            float wisdom = MulchManager.WisdomBonusFor(plantName);
+            if (wisdom <= 0f) continue;
+            int boosted = Mathf.RoundToInt(pendingLevelExp[plantName] * (1f + wisdom));
+            Debug.Log($"[Exp]   {plantName}: wisdom leaf +{wisdom * 100f:F0}% ({pendingLevelExp[plantName]} to {boosted})");
+            pendingLevelExp[plantName] = boosted;
+        }
 
         if (SaveManager.instance != null)
             foreach (var kvp in pendingLevelExp)
@@ -1332,10 +1389,10 @@ public abstract class Plant : Entity, IAttackable
     const float upgradeStepFactor = 2.1f;
     const float skillBaseFactor   = 0.5f;
 
-    // MulchManager.UpgradeCostMultiplier is market day's discount, so the shown and charged cost
+    // FertilizerManager.UpgradeCostMultiplier is market day's discount, so the shown and charged cost
     // both include it
     int PathCost(int level, float baseFactor) =>
-        Mathf.RoundToInt(sunCost * baseFactor * Mathf.Pow(upgradeStepFactor, level) * Mathf.Max(0f, MulchManager.UpgradeCostMultiplier));
+        Mathf.RoundToInt(sunCost * baseFactor * Mathf.Pow(upgradeStepFactor, level) * Mathf.Max(0f, FertilizerManager.UpgradeCostMultiplier));
 
     public int GetPath1Cost() => PathCost(path1Level, upgradeBaseFactor);
     public int GetPath2Cost() => PathCost(path2Level, upgradeBaseFactor);
@@ -1573,6 +1630,7 @@ public abstract class Plant : Entity, IAttackable
         // exp is NOT banked here - StoreDeadRecord keeps it on the DeadPlantRecord in case this
         // plant is revived, and a revived plant needs its exp intact rather than zeroed out
         StoreDeadRecord();
+        MulchManager.instance?.OnPlantDied(this, occupiedTile != null ? occupiedTile.deadPlant : null);
         FreeTile();
         DetachAndFadeLight();
         base.Kill();
@@ -1581,6 +1639,7 @@ public abstract class Plant : Entity, IAttackable
     public override void Kill(Entity source)
     {
         StoreDeadRecord();
+        MulchManager.instance?.OnPlantDied(this, occupiedTile != null ? occupiedTile.deadPlant : null);
         FreeTile();
         DetachAndFadeLight();
         base.Kill(source);
@@ -1666,17 +1725,22 @@ public abstract class Plant : Entity, IAttackable
     // and pops the +Sun indicator at indicatorPosition (defaults to this plant's own position,
     // e.g. Aeonium granting sun via a nearby plant's Blessing passes that plant's position instead)
     // fromKill marks sun paid for a kill (glowshroom) rather than this plant's own production, for
-    // mulches that only care about one of the two. MulchManager.SunProductionMultiplier is drought's
-    // pause and boost; nothing is banked or shown while it sits at zero
-    protected int GenerateSun(int amount, Vector3? indicatorPosition = null, bool fromKill = false)
+    // mulches that only care about one of the two. mulchSunProductionBonus is this plant's drought
+    // mulch, its pause and its boost; nothing is banked or shown while it sits at zero. public for
+    // the sun sap mulch, which makes any plant a small sun producer
+    public int GenerateSun(int amount, Vector3? indicatorPosition = null, bool fromKill = false)
     {
-        int total = Mathf.CeilToInt(amount * (1f + sunYieldMultiplier) * Mathf.Max(0f, MulchManager.SunProductionMultiplier));
+        int total = Mathf.CeilToInt(amount * (1f + sunYieldMultiplier) * Mathf.Max(0f, 1f + mulchSunProductionBonus));
         if (total <= 0) return 0;
         GameManager.instance?.AddSun(total);
         SunIndicator.Spawn((indicatorPosition ?? transform.position) + new Vector3(0.25f, 0.5f, 0f), total);
-        MulchManager.instance?.NotifySunGenerated(this, total, fromKill);
+        MulchManager.NotifySunGenerated(this, total, fromKill);
         return total;
     }
+
+    // one extra tick of this plant's own sun production, for the sunset mulch. false for a plant
+    // that doesn't make sun on a timer. sun producers override it with their normal tick
+    public virtual bool ExtraSunTick() => false;
 
     // hook for plants that can validly target insects beyond their own circle (e.g. Carrot's
     // Soil Bond, which shares its bonded ally's range - a second circle centered on the ally,

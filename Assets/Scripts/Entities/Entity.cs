@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -99,7 +99,7 @@ public abstract class Entity : MonoBehaviour
     public float baseCriticalChance, baseCriticalDamage;
     // hidden from the stat panel on purpose (see StatsPanelTooltip, which lists stats by hand) -
     // stack additively with criticalChance itself rather than getting their own multiplier
-    // pipeline, since nothing needs one yet (Critical Rejuvenation/Critical Rot mulches)
+    // pipeline, since nothing needs one yet (the Critical Rejuvenation and Critical Rot mulches)
     public float baseCriticalHealChance, baseCriticalDotChance, baseCriticalReactionChance;
     public float baseMinimumDamage = 0.8f, baseMaximumDamage = 1.2f;
     public float baseDotResistance, baseDotDamage, baseFallDamageResistance;
@@ -208,10 +208,10 @@ public abstract class Entity : MonoBehaviour
     // UpdateStats, effects add it in OnApply and take the same amount back in OnExpire (Bubble Prison)
     public float damageTakenBonus;
 
-    // the increased damage taken from being trapped in water: bubble prison, and soaked at max
-    // stacks while the waterlogged mulch is active. an entity only ever gets the strongest one,
-    // never the sum, so the two can't stack. each source sets its own entry under its own key
-    // and clears it when it ends; damageTakenBonus carries whichever entry is largest
+    // the increased damage taken from being trapped in water (bubble prison). if more than one
+    // source ever gives it, an entity only gets the strongest one, never the sum. each source sets
+    // its own entry under its own key and clears it when it ends; damageTakenBonus carries
+    // whichever entry is largest
     private readonly Dictionary<object, float> waterVulnerability = new Dictionary<object, float>();
     private float appliedWaterVulnerability;
 
@@ -424,7 +424,7 @@ public abstract class Entity : MonoBehaviour
         magicPenFlat = (baseMagicPenFlat + magicPenFlatAdder + baseMagicPenFlat * magicPenFlatMultiplier) * magicPenFlatTotalMultiplier;
         armorPenPercent = baseArmorPenPercent  + armorPenPercentAdder  + (baseArmorPenPercent * armorPenPercentMultiplier);
         magicPenPercent = baseMagicPenPercent  + magicPenPercentAdder  + (baseMagicPenPercent * magicPenPercentMultiplier);
-        internalCooldown = Mathf.Max(0f, (baseInternalCooldown + internalCooldownAdder + (baseInternalCooldown * internalCooldownMultiplier)) * MulchManager.PrimerCooldownMultiplier);
+        internalCooldown = Mathf.Max(0f, baseInternalCooldown + internalCooldownAdder + (baseInternalCooldown * internalCooldownMultiplier));
         UpdateHealthBar();
     }
 
@@ -538,7 +538,7 @@ public abstract class Entity : MonoBehaviour
             return;
         }
 
-        // bud mulch: a plant still dormant can't hurt an insect at all, whatever its kit does
+        // a plant that can't target insects can't hurt one either, whatever its kit does
         if (this is Insect && source is Plant dormantPlant && dormantPlant.cannotTargetInsects)
             return;
 
@@ -578,16 +578,16 @@ public abstract class Entity : MonoBehaviour
 
         // Freeze + Fire: a non-DoT Fire hit instantly thaws a frozen target, and the thermal shock
         // deals bonus damage equal to the hit multiplied by 1.5x the attacker's elemental affinity.
-        // Melt mulch replaces this outright: instead of one instant shatter, every qualifying Fire
-        // hit just chips the Freeze's remaining duration down and the hit itself deals bonus damage
+        // the Melt fertilizer replaces this outright: instead of one instant shatter, every qualifying
+        // Fire hit just chips the Freeze's remaining duration down and the hit itself deals bonus damage
         if (this.HasEffect<FreezeEffect>() && elementalType == ElementalType.Fire
             && !System.Array.Exists(damageTag, t => t == DamageTag.DoT)
             && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff))
         {
-            if (MulchManager.MeltActive)
+            if (FertilizerManager.MeltActive)
             {
-                GetEffect<FreezeEffect>().duration -= MulchManager.MeltFreezeDurationReduction;
-                damageDealt *= MulchManager.MeltDamageMultiplier;
+                GetEffect<FreezeEffect>().duration -= FertilizerManager.MeltFreezeDurationReduction;
+                damageDealt *= FertilizerManager.MeltDamageMultiplier;
             }
             else
             {
@@ -628,7 +628,7 @@ public abstract class Entity : MonoBehaviour
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
                 && !System.Array.Exists(damageTag, t => t == DamageTag.NoPrimer) && fireInternalCooldown <= 0)
                 {
-                    fireInternalCooldown = ElementInternalCooldown(fireInternalCooldownAdder, fireInternalCooldownMultiplier);
+                    fireInternalCooldown = ElementInternalCooldown(fireInternalCooldownAdder, fireInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
                     ApplyEffect(new FirePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -643,7 +643,7 @@ public abstract class Entity : MonoBehaviour
                 {
                     if (waterInternalCooldown <= 0)
                     {
-                        waterInternalCooldown = ElementInternalCooldown(waterInternalCooldownAdder, waterInternalCooldownMultiplier);
+                        waterInternalCooldown = ElementInternalCooldown(waterInternalCooldownAdder, waterInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
                         ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
                     }
                 }
@@ -661,7 +661,7 @@ public abstract class Entity : MonoBehaviour
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
                 && !System.Array.Exists(damageTag, t => t == DamageTag.NoPrimer) && iceInternalCooldown <= 0)
                 {
-                    iceInternalCooldown = ElementInternalCooldown(iceInternalCooldownAdder, iceInternalCooldownMultiplier);
+                    iceInternalCooldown = ElementInternalCooldown(iceInternalCooldownAdder, iceInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
                     ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -676,7 +676,7 @@ public abstract class Entity : MonoBehaviour
                          windInsect.HasEffect<WaterPrimer>()   || windInsect.HasEffect<PoisonPrimer>() ||
                          windInsect.HasEffect<GrassPrimer>()))
                     {
-                        windInternalCooldown = ElementInternalCooldown(windInternalCooldownAdder, windInternalCooldownMultiplier);
+                        windInternalCooldown = ElementInternalCooldown(windInternalCooldownAdder, windInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
                         ApplyEffect(new WindPrimer(this, 0.5f, 1, source));
                     }
                     if (source is Anemone anemone)
@@ -689,7 +689,7 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - grassResistance) * (1 + source.grassDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && grassInternalCooldown <= 0)
                 {
-                    grassInternalCooldown = ElementInternalCooldown(grassInternalCooldownAdder, grassInternalCooldownMultiplier);
+                    grassInternalCooldown = ElementInternalCooldown(grassInternalCooldownAdder, grassInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
                     ApplyEffect(new GrassPrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -705,7 +705,7 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance) * (1 + source.poisonDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && poisonInternalCooldown <= 0)
                 {
-                    poisonInternalCooldown = ElementInternalCooldown(poisonInternalCooldownAdder, poisonInternalCooldownMultiplier);
+                    poisonInternalCooldown = ElementInternalCooldown(poisonInternalCooldownAdder, poisonInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
                     ApplyEffect(new PoisonPrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -790,9 +790,10 @@ public abstract class Entity : MonoBehaviour
         finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult * onHitMult
             * Mathf.Max(0f, 1f + damageTakenBonus);
 
-        // dormancy mulch: every plant's damage to insects, from any source of it
-        if (this is Insect && source is Plant)
-            finalDamage *= Mathf.Max(0f, MulchManager.PlantDamageMultiplier);
+        // the damaging plant's own mulches (dormancy, quick sap): its damage to insects, from any
+        // source of it
+        if (this is Insect && source is Plant mulchedPlant)
+            finalDamage *= Mathf.Max(0f, 1f + mulchedPlant.mulchDamageBonus);
 
         // damage variance roll, dot ticks stay flat so aggregated numbers remain stable
         // min always wins, when min surpasses max every roll lands on min
@@ -883,11 +884,10 @@ public abstract class Entity : MonoBehaviour
             return;
         }
 
-        // board-wide heal-amount mulch (e.g. Rejuvenator) - plant-only like every other mulch,
-        // so an insect-targeted Regeneration-tagged heal (Glowworm buffing another insect) is
-        // never affected by it
+        // the healing plant's rejuvenator mulch: regeneration it gives to a plant heals more. an
+        // insect healing another insect (glowworm) is never affected
         if (this is Plant && HasHealTag(tags, HealTag.Regeneration))
-            healingAmount *= MulchManager.RegenerationHealMultiplier;
+            healingAmount *= MulchManager.RegenerationFactor(source);
 
         float bonus = source != null ? source.healingBonus : 0f;
         float intended = healingAmount * (1f + healingReceived) * (1f + bonus);
@@ -916,12 +916,20 @@ public abstract class Entity : MonoBehaviour
         HealParticleEffect.Spawn(this, GetVisualCenter(), actual);
     }
 
-    // shared by Heal() above and any mulch/effect that needs to check a heal's own tags (e.g.
-    // RejuvenatorMulchEffect) - generic enough to reuse for DamageTag[] checks too
+    // shared by Heal() above and any mulch/effect that needs to check a heal's own tags
     public static bool HasHealTag(HealTag[] tags, HealTag tag)
     {
         if (tags == null) return false;
         foreach (HealTag t in tags)
+            if (t == tag) return true;
+        return false;
+    }
+
+    // the same check for a hit's damage tags
+    public static bool HasTag(DamageTag[] tags, DamageTag tag)
+    {
+        if (tags == null) return false;
+        foreach (DamageTag t in tags)
             if (t == tag) return true;
         return false;
     }
@@ -1546,7 +1554,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
-        // bud mulch: a plant still dormant can't put a debuff or a primer on an insect either
+        // a plant that can't target insects can't put a debuff or a primer on one either
         if (this is Insect && effect.source is Plant dormantSource && dormantSource.cannotTargetInsects
             && (effect.effectType == StatusEffect.Type.negative || effect.effectType == StatusEffect.Type.primer))
             return;

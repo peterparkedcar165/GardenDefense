@@ -6,9 +6,9 @@ using System.Text;
 using System.Collections.Generic;
 
 // the active effects window, part of the real game (unlike the mulch test menu on n): press G
-// to toggle. shows the current weather and temperature, every fertilizer in effect with its own
-// stats (plus the combined total), every owned mulch with its tier, description and live status
-// (waves left and so on), and cumulative sun generated and spent this level.
+// to toggle. shows the current weather and temperature, every plant's mulches with their rarity,
+// description and live status (waves left and so on), the level's fertilizer, and cumulative sun
+// generated and spent this level.
 // builds its own UI hierarchy at runtime rather than relying on a scene-dragged prefab, so it
 // needs no Editor wiring - just press play and press G
 public class GameInfoPanel : MonoBehaviour
@@ -67,7 +67,7 @@ public class GameInfoPanel : MonoBehaviour
         if (SettingsManager.instance != null && SettingsManager.instance.IsOpen) return false;
         if (LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen) return false;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return false;
-        if (MulchSelectionUI.instance != null && MulchSelectionUI.instance.IsOpen) return false;
+        if (MulchDebugMenu.instance != null && MulchDebugMenu.instance.IsOpen) return false;
         return true;
     }
 
@@ -118,111 +118,31 @@ public class GameInfoPanel : MonoBehaviour
         sb.AppendLine($"<size=85%><color=#c3c2b7>{WeatherManager.GetTemperatureDescription(WeatherManager.instance.temperature)}</color></size>");
     }
 
-    // each fertilizer on its own (the pre level pick, then every mid level one in pick order) with
-    // its stats, then the combined total once there's more than one
+    // the level's fertilizer (picked before the level), with what it does and its live status
     private void AppendFertilizerSection()
     {
-        sb.AppendLine("<b><size=120%>Fertilizers</size></b>");
+        sb.AppendLine("<b><size=120%>Fertilizer</size></b>");
         FertilizerManager fertilizers = FertilizerManager.instance;
         if (fertilizers == null)
         {
             sb.AppendLine("<color=#888888>No fertilizer manager in this scene.</color>");
             return;
         }
-
-        int count = 0;
-        FertilizerData preLevel = fertilizers.ActiveFertilizer;
-        if (preLevel != null)
+        FertilizerData active = fertilizers.Active;
+        if (active == null)
         {
-            count++;
-            sb.AppendLine($"<b>{preLevel.fertilizerName}</b> {TierLabel(preLevel.tier)} <color=#888888>(picked before the level)</color>");
-            string targets = preLevel.appliesToAll ? "All plants" : ElementList(preLevel.targetElementalTypes);
-            if (!string.IsNullOrEmpty(targets))
-                sb.AppendLine($"<size=85%><color=#c3c2b7>{targets}</color></size>");
-            foreach ((StatType statType, float value) in SortedByName(fertilizers.GetPreLevelStats()))
-                sb.AppendLine($"<indent=4%>{StatLine(statType, value)}</indent>");
-        }
-
-        foreach (GeneratedFertilizer generated in fertilizers.CommittedGenerated)
-        {
-            if (generated == null || generated.stats == null) continue;
-            count++;
-            sb.AppendLine($"<b>{TierLabel(generated.tier)} Fertilizer</b>");
-            var stats = new List<(StatType statType, float value)>();
-            var scopes = new Dictionary<StatType, string>();
-            foreach (GeneratedFertilizerStat stat in generated.stats)
-            {
-                stats.Add((stat.statType, stat.value));
-                scopes[stat.statType] = ScopeLabel(stat.scope);
-            }
-            foreach ((StatType statType, float value) in SortedByName(stats))
-            {
-                string scope = scopes.TryGetValue(statType, out string s) && !string.IsNullOrEmpty(s) ? $" <size=80%><color=#888888>({s})</color></size>" : "";
-                sb.AppendLine($"<indent=4%>{StatLine(statType, value)}{scope}</indent>");
-            }
-        }
-
-        if (count == 0)
-        {
-            sb.AppendLine("<color=#888888>No fertilizers active.</color>");
+            sb.AppendLine("<color=#888888>No fertilizer this level.</color>");
             return;
         }
-        if (count < 2) return;
-
-        sb.AppendLine("<b>Total</b>");
-        foreach ((StatType statType, float value) in fertilizers.GetCombinedActiveStats())
-            sb.AppendLine($"<indent=4%>{StatLine(statType, value)}</indent>");
+        sb.AppendLine($"<b>{active.fertilizerName}</b> <size=85%>{FertilizerData.TierLabel(active.tier)}</size>");
+        sb.AppendLine($"<size=85%><color=#c3c2b7>{active.GetDescription()}</color></size>");
+        string status = fertilizers.ActiveStatus;
+        if (!string.IsNullOrEmpty(status))
+            sb.AppendLine($"<size=85%><color=#FFD27F>{status}</color></size>");
     }
 
-    private static string StatLine(StatType statType, float value)
-    {
-        bool isGood = value >= 0f;
-        if (FertilizerFormat.IsInvertedStat(statType)) isGood = !isGood;
-        string valueColor = isGood ? "green" : "red";
-        string statColor = FertilizerFormat.GetStatColor(statType);
-        return $"<color={statColor}><b>{FertilizerFormat.FormatStatName(statType)}</b></color>: <color={valueColor}><b>{FertilizerFormat.FormatValue(statType, value)}</b></color>";
-    }
-
-    private static List<(StatType statType, float value)> SortedByName(List<(StatType statType, float value)> stats)
-    {
-        StatType[] types = new StatType[stats.Count];
-        for (int i = 0; i < stats.Count; i++) types[i] = stats[i].statType;
-        var result = new List<(StatType statType, float value)>(stats.Count);
-        foreach (int i in FertilizerFormat.SortedIndicesByName(types))
-            result.Add(stats[i]);
-        return result;
-    }
-
-    // fertilizer tiers share the mulch tier names and card colors
-    private static string TierLabel(FertilizerTier tier) => MulchData.TierLabel((MulchTier)(int)tier);
-
-    private static string ElementList(ElementalType[] elements)
-    {
-        if (elements == null || elements.Length == 0) return "";
-        var names = new List<string>();
-        foreach (ElementalType element in elements)
-            names.Add($"<color={PlantData.ElementalColor(element)}>{element}</color>");
-        return $"{string.Join(", ", names)} plants";
-    }
-
-    // who one mid level stat lands on, empty when it's every plant
-    private static string ScopeLabel(FertilizerStatRules.StatScope scope)
-    {
-        if (scope.appliesToAll) return "";
-        var parts = new List<string>();
-        if (scope.requiredElement.HasValue)
-            parts.Add($"<color={PlantData.ElementalColor(scope.requiredElement.Value)}>{scope.requiredElement.Value}</color> plants");
-        if (scope.requiredDamageType.HasValue)
-            parts.Add($"{scope.requiredDamageType.Value} damage plants");
-        if (scope.requiredPlantNames != null && scope.requiredPlantNames.Count > 0)
-            parts.Add(string.Join(", ", scope.requiredPlantNames));
-        if (scope.excludeMelee)
-            parts.Add("ranged plants");
-        return string.Join(", ", parts);
-    }
-
-    // every owned mulch, in pick order: name and tier, its description with the live numbers, and
-    // its status line (waves left and so on) when it has one
+    // every living plant's equipped mulches, with rarity, description and live status, and how
+    // full the inventory is
     private void AppendMulchSection()
     {
         sb.AppendLine("<b><size=120%>Mulches</size></b>");
@@ -232,21 +152,30 @@ public class GameInfoPanel : MonoBehaviour
             return;
         }
 
-        if (MulchManager.instance.ActiveMulches.Count == 0)
-        {
-            sb.AppendLine("<color=#888888>No mulches active.</color>");
-            return;
-        }
+        int held = 0;
+        foreach (MulchItem item in MulchManager.instance.Inventory)
+            if (item != null) held++;
+        sb.AppendLine($"<color=#888888>Inventory: {held}/{MulchManager.instance.InventorySize}</color>");
 
-        foreach (MulchData mulch in MulchManager.instance.ActiveMulches)
+        bool any = false;
+        foreach (Plant plant in Plant.allPlants)
         {
-            sb.AppendLine($"<b>{mulch.mulchName}</b> <size=85%>{MulchData.TierLabel(mulch.tier)}</size>");
-            sb.AppendLine($"<size=85%><color=#c3c2b7>{mulch.GetDescription()}</color></size>");
-            string status = MulchManager.instance.GetStatus(mulch);
-            if (!string.IsNullOrEmpty(status))
-                sb.AppendLine($"<size=85%><color=#FFD27F>{status}</color></size>");
+            if (plant == null || !plant.IsAlive || plant.mulches.Count == 0) continue;
+            any = true;
             sb.AppendLine();
+            sb.AppendLine($"{plant.GetName()} <color=#888888>({plant.mulches.Count}/{MulchManager.instance.PlantSlots})</color>");
+            foreach (MulchEffect effect in plant.mulches)
+            {
+                if (effect == null) continue;
+                sb.AppendLine($"<indent=4%><b>{effect.Item.Name}</b> <size=85%>{MulchData.RarityLabel(effect.Rarity)}</size></indent>");
+                sb.AppendLine($"<indent=4%><size=85%><color=#c3c2b7>{effect.Item.Description}</color></size></indent>");
+                string status = effect.GetStatus();
+                if (!string.IsNullOrEmpty(status))
+                    sb.AppendLine($"<indent=4%><size=85%><color=#FFD27F>{status}</color></size></indent>");
+            }
         }
+        if (!any)
+            sb.AppendLine("<color=#888888>No plant has a mulch yet.</color>");
     }
 
     private void AppendSunSection()

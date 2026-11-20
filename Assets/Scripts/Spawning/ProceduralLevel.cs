@@ -29,13 +29,6 @@ public class ProceduralLevel : SpawnManager
     private bool triedLevel1PlantInfoTutorial;
     private bool level1Wave1SubWave2Started;
 
-    // Level1FirstFertilizer triggers the instant the level's first mid-level fertilizer grant
-    // fires, same moment the queue button lights up for the player to click
-    private bool triedLevel1FirstFertilizerTutorial;
-
-    // same idea as triedLevel1FirstFertilizerTutorial, but for the mulch queue, which replaced
-    // the mid-level fertilizer queue as the thing that actually grants on level 1
-    private bool triedLevel1FirstMulchTutorial;
 
     protected override void Start()
     {
@@ -48,9 +41,9 @@ public class ProceduralLevel : SpawnManager
             WeatherManager.instance.temperature = config.temperature;
         }
 
-        FertilizerSelectionUI.instance?.Configure(config.fertilizerPool);
-        FertilizerManager.instance?.ResetFertilizerQueue();
-        MulchManager.instance?.ResetMulch(config.mulchPool);
+        FertilizerSelectionUI.instance?.Configure(config.fertilizers);
+        FertilizerManager.instance?.ResetForLevel();
+        MulchManager.instance?.ResetForLevel();
         Plant.pathLevelCap = config.maxUpgradeLevel;
         StartAmbience();
         GameManager.instance?.InitiateLevel(config.startSunCount, config.startHealth);
@@ -100,11 +93,13 @@ public class ProceduralLevel : SpawnManager
             wave++;
             GameManager.instance.currentWave = wave;
             GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
+            FertilizerManager.instance?.NotifyWaveStarted(wave);
             MulchManager.instance?.NotifyWaveStarted(wave);
             yield return StartCoroutine(RunWave(wave));
+            FertilizerManager.instance?.NotifyWaveEnded(wave);
             MulchManager.instance?.NotifyWaveEnded(wave);
-            GrantFertilizersForCompletedWave(wave);
-            GrantMulchForCompletedWave(wave);
+            // every wave but the last guarantees a mulch where its last insect dies or leaks
+            MulchManager.instance?.NotifyWaveSpawningDone(wave, wave >= config.maxWaves);
 
             if (wave < config.maxWaves)
                 yield return StartCoroutine(RestPeriod(config.restDuration));
@@ -122,45 +117,6 @@ public class ProceduralLevel : SpawnManager
         Plant.CommitPendingExpToSave(); // level actually won - exp becomes persistent here
         SaveManager.instance.CompleteLevel(config.levelNumber);
         Debug.Log("level " + config.levelNumber + " completed");
-    }
-
-    // "after wave X" means once wave X's spawning phase has fully concluded - this fires right
-    // as the loop transitions into that wave's rest period, before the next wave begins
-    private void GrantFertilizersForCompletedWave(int completedWave)
-    {
-        if (config.fertilizerGrants == null || FertilizerManager.instance == null) return;
-        foreach (FertilizerGrant grant in config.fertilizerGrants)
-        {
-            if (grant == null || grant.afterWave != completedWave) continue;
-            FertilizerManager.instance.GrantFertilizer(grant.rarity);
-
-            if (!triedLevel1FirstFertilizerTutorial && config.levelNumber == 1)
-            {
-                triedLevel1FirstFertilizerTutorial = true;
-                if (TutorialManager.instance != null && TutorialManager.instance.TryShow(TutorialIds.Level1FirstFertilizer, TutorialContent.Level1FirstFertilizer,
-                        TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
-                    GameManager.instance.SetPause(true);
-            }
-        }
-    }
-
-    // same timing as GrantFertilizersForCompletedWave above, just for the mulch queue
-    private void GrantMulchForCompletedWave(int completedWave)
-    {
-        if (config.mulchGrants == null || MulchManager.instance == null) return;
-        foreach (MulchGrant grant in config.mulchGrants)
-        {
-            if (grant == null || grant.afterWave != completedWave) continue;
-            MulchManager.instance.GrantMulch(grant.tier);
-
-            if (!triedLevel1FirstMulchTutorial && config.levelNumber == 1)
-            {
-                triedLevel1FirstMulchTutorial = true;
-                if (TutorialManager.instance != null && TutorialManager.instance.TryShow(TutorialIds.Level1FirstMulch, TutorialContent.Level1FirstMulch,
-                        TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
-                    GameManager.instance.SetPause(true);
-            }
-        }
     }
 
     // ── wave runner ───────────────────────────────────────────────────────────

@@ -28,7 +28,8 @@ public abstract class Lobber : Plant
     public override void UpdateStats()
     {
         base.UpdateStats();
-        aoERadius = baseAoERadius + aoERadiusAdder;
+        // the wide canopy mulch grows the splash (Plant.mulchAreaBonus)
+        aoERadius = (baseAoERadius + aoERadiusAdder) * Mathf.Max(0f, 1f + mulchAreaBonus);
     }
 
     protected override void Update()

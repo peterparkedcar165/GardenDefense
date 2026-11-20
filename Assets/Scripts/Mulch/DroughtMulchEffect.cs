@@ -1,33 +1,24 @@
-// same two phase shape as dormancy, on MulchManager.SunProductionMultiplier instead, which every
-// Plant.GenerateSun call reads (sunflower, bog iris, kelp and glowshroom alike). applied keeps
-// what this mulch adds to it so removing it takes back exactly that
+// dormancy's two phases on its plant's own sun production (Plant.mulchSunProductionBonus, read by
+// Plant.GenerateSun). only does anything on a plant that makes sun (sun sap counts)
 public class DroughtMulchEffect : MulchEffect
 {
     private readonly DroughtMulchData typedData;
-    private readonly MulchWaveCounter waves = new MulchWaveCounter();
+    private readonly WaveCounter waves = new WaveCounter();
     private float applied;
     private bool over;
 
-    public DroughtMulchEffect(DroughtMulchData data) : base(data)
+    public DroughtMulchEffect(DroughtMulchData data, MulchItem item) : base(item)
     {
         typedData = data;
+        over = data.droughtWaves <= 0;
     }
 
-    public override void Activate()
-    {
-        over = typedData.droughtWaves <= 0;
-        SetMultiplier(over ? typedData.afterSunMultiplier : typedData.droughtSunMultiplier);
-    }
-
-    public override void Deactivate()
-    {
-        MulchManager.SunProductionMultiplier -= applied;
-        applied = 0f;
-    }
+    public override void Activate() => SetMultiplier(over ? V(typedData.afterSunMultiplier) : typedData.droughtSunMultiplier);
+    public override void Deactivate() => SetBonus(0f);
 
     public override string GetStatus()
     {
-        if (over) return $"Drought over: {typedData.afterSunMultiplier:0.##}x Sun";
+        if (over) return $"Drought over: {V(typedData.afterSunMultiplier):0.##}x Sun";
         int left = waves.Left(typedData.droughtWaves);
         return $"Drought: {left} more {(left == 1 ? "wave" : "waves")}";
     }
@@ -36,18 +27,17 @@ public class DroughtMulchEffect : MulchEffect
 
     public override void OnWaveEnded(int wave)
     {
-        if (over || !waves.WaveEnded(wave)) return;
-        if (waves.Completed < typedData.droughtWaves) return;
+        if (over || !waves.WaveEnded(wave) || waves.Completed < typedData.droughtWaves) return;
         over = true;
-        SetMultiplier(typedData.afterSunMultiplier);
+        SetMultiplier(V(typedData.afterSunMultiplier));
     }
 
-    // the multiplier is stored as what it adds on top of 1, so it stacks additively with anything
-    // else that ever touches sun production
-    private void SetMultiplier(float multiplier)
+    // stored as what it adds on top of 1, so it adds up with anything else on the same plant
+    private void SetMultiplier(float multiplier) => SetBonus(multiplier - 1f);
+
+    private void SetBonus(float value)
     {
-        float value = multiplier - 1f;
-        MulchManager.SunProductionMultiplier += value - applied;
-        applied = value;
+        if (Owner != null) Owner.mulchSunProductionBonus += value - applied;
+        applied = Owner != null ? value : 0f;
     }
 }
