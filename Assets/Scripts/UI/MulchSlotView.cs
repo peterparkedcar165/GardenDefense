@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 // one square of the mulch bar: an inventory slot, or one of the selected plant's mulch slots.
 // inventory slots drag (onto another slot to merge or swap, onto a plant or its slots to equip)
-// and sell on right click; plant slots only show what's equipped and take drops, since equipped
+// and open a Sell popup on right click; plant slots only show what's equipped and take drops, since equipped
 // mulches can't come off. hovering either shows the mulch's tooltip. built by MulchInventoryUI
 public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
     IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
@@ -92,11 +92,12 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         MulchTooltip.Show(item, null, $"Drag onto a plant to give it this mulch. Right click to sell for {price} Sun.");
     }
 
+    // right click opens the Sell popup on this mulch (or closes it); the popup's button sells
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (isPlantSlot || eventData.button != PointerEventData.InputButton.Right || Item == null) return;
-        MulchManager.instance?.Sell(index);
+        if (isPlantSlot || eventData.button != PointerEventData.InputButton.Right) return;
         MulchTooltip.Hide();
+        ui.ToggleSellPopup(index);
     }
 
     public void OnBeginDrag(PointerEventData eventData)

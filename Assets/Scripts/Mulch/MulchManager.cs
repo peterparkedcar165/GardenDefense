@@ -118,7 +118,7 @@ public class MulchManager : MonoBehaviour
     public int SellPrice(MulchItem item) =>
         item == null || Registry == null ? 0 : Registry.sellPrice.GetInt(item.rarity);
 
-    // right click in the inventory
+    // the Sell popup a right click opens on a bag mulch (MulchSellPopup)
     public void Sell(int slot)
     {
         MulchItem item = GetSlot(slot);

@@ -66,8 +66,8 @@
     <Compile Include="Assets\Scripts\StatusEffect\TansyGlowEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Shooter.cs" />
-    <Compile Include="Assets\Scripts\PlantDataTypes\TansyData.cs" />
     <Compile Include="Assets\Scripts\LoadoutCondition.cs" />
+    <Compile Include="Assets\Scripts\PlantDataTypes\TansyData.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSelectionUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\TransplantFertilizerData.cs" />
@@ -143,6 +143,7 @@
     <Compile Include="Assets\Scripts\InsectDataTypes\ScorpionData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BogIrisData.cs" />
+    <Compile Include="Assets\Scripts\UI\GameControlsStyle.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BubbleTrapEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GhostFungusData.cs" />
     <Compile Include="Assets\Scripts\Mulch\PrimerCooldownMulchEffect.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\WinterMoth.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\KelpData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\HardCrowdControl.cs" />
+    <Compile Include="Assets\Scripts\UI\MulchSellPopup.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\TextIndicator.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\DashHomingProjectile.cs" />
@@ -300,9 +302,9 @@
     <Compile Include="Assets\Scripts\StatusEffect\WindshearedEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IceBeamEffect.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
+    <Compile Include="Assets\Scripts\UI\PlantInfoPanelStyle.cs" />
     <Compile Include="Assets\Scripts\UI\PotButtonVisibility.cs" />
     <Compile Include="Assets\Scripts\GridManagers\CaveGridManager.cs" />
-    <Compile Include="Assets\Scripts\UI\PlantInfoPanelStyle.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BloodsuckerEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\ThreatType.cs" />
     <Compile Include="Assets\Scripts\Mulch\IronbarkCounterMulchData.cs" />
@@ -506,6 +508,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\ObliviousEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\RejuvenatorMulchData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\BirdOfParadise.cs" />
+    <Compile Include="Assets\Scripts\UI\GameControlButton.cs" />
     <Compile Include="Assets\Scripts\Shop\ShopManager.cs" />
     <Compile Include="Assets\Scripts\Mulch\SunsetMulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SludgeEffect.cs" />

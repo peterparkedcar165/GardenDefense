@@ -13,8 +13,8 @@ using System.Collections.Generic;
 // Slot0 to Slot5 children (slot sprite plus an Icon child) are placed in the prefab and taken over
 // here; a plantSlotsRoot without them gets a built row with a "Mulches 2/6" label instead. drag a
 // bag mulch onto another slot to merge or swap, onto a plant on the map or onto the plant's row to
-// equip it; right click sells.
-// tooltips and drag ghosts go on an overlay that's the canvas's last child, above everything
+// equip it; right click opens a Sell popup on the mulch (MulchSellPopup) and that sells it.
+// tooltips, the sell popup and drag ghosts go on an overlay that's the canvas's last child, above everything
 public class MulchInventoryUI : MonoBehaviour
 {
     public static MulchInventoryUI instance;
@@ -45,6 +45,13 @@ public class MulchInventoryUI : MonoBehaviour
     private Image dragGhost;
     private int draggingSlot = -1;
     private bool dropHandled;
+
+    // the Sell popup and the bag slot it's open on (-1: closed), with the mulch it was opened for
+    private MulchSellPopup sellPopup;
+    private int sellSlot = -1;
+    private MulchItem sellItem;
+    // the slot whose popup the current right press closed, so that press's click doesn't open it again
+    private int closedOnPress = -1;
 
     // inventory slots a picked up drop is still flying into: already filled, shown empty until it lands
     private readonly HashSet<int> incoming = new HashSet<int>();
@@ -89,6 +96,7 @@ public class MulchInventoryUI : MonoBehaviour
     private void Update()
     {
         if (!built) return;
+        UpdateSellPopup();
         Plant selected = PlantUpgradeUI.instance != null ? PlantUpgradeUI.instance.GetSelectedPlant() : null;
         if (selected != null && !selected.IsAlive) selected = null;
         if (selected != shownPlant || (selected != null && selected.mulches.Count != shownPlantMulchCount))
@@ -232,6 +240,9 @@ public class MulchInventoryUI : MonoBehaviour
         overlay.offsetMin = Vector2.zero;
         overlay.offsetMax = Vector2.zero;
 
+        // first, so the tooltip and the drag ghost draw over it
+        sellPopup = MulchSellPopup.Create(overlay, font);
+
         GameObject tipGO = new GameObject("Tooltip", typeof(RectTransform));
         tipGO.transform.SetParent(overlay, false);
         tooltipRect = (RectTransform)tipGO.transform;
@@ -284,6 +295,9 @@ public class MulchInventoryUI : MonoBehaviour
         // a new level empties the inventory: anything still flying in is gone
         if (MulchManager.instance != null)
             incoming.RemoveWhere(slot => MulchManager.instance.GetSlot(slot) == null);
+        // the mulch the Sell popup was opened for left its slot (sold, moved, merged, equipped, new level)
+        if (sellSlot >= 0 && (MulchManager.instance == null || MulchManager.instance.GetSlot(sellSlot) != sellItem))
+            CloseSellPopup();
         foreach (MulchSlotView slot in inventorySlots) slot.Refresh(Placeholder);
         if (bagLabel != null && MulchManager.instance != null)
         {
@@ -320,6 +334,7 @@ public class MulchInventoryUI : MonoBehaviour
     {
         MulchItem item = MulchManager.instance != null ? MulchManager.instance.GetSlot(slot) : null;
         if (item == null) return;
+        CloseSellPopup();
         draggingSlot = slot;
         dropHandled = false;
         dragGhost.sprite = item.data.icon != null ? item.data.icon : Placeholder;
@@ -552,6 +567,60 @@ public class MulchInventoryUI : MonoBehaviour
     }
 
     // ── tooltip ─────────────────────────────────────────────────────────────
+
+    // the sell popup: a right click on a bag mulch opens it on that slot, or closes it when it's
+    // already open there
+    public void ToggleSellPopup(int slot)
+    {
+        if (slot == closedOnPress) { closedOnPress = -1; return; }
+        if (slot == sellSlot) { CloseSellPopup(); return; }
+        MulchItem item = MulchManager.instance != null && !IsIncoming(slot) ? MulchManager.instance.GetSlot(slot) : null;
+        if (item == null || sellPopup == null || slot < 0 || slot >= inventorySlots.Count) return;
+        sellSlot = slot;
+        sellItem = item;
+        HideTooltip();
+        overlay.SetAsLastSibling();
+        sellPopup.Open(SlotCenter(slot), SellFromPopup, CloseSellPopup);
+    }
+
+    private void SellFromPopup()
+    {
+        int slot = sellSlot;
+        CloseSellPopup();
+        if (slot >= 0) MulchManager.instance?.Sell(slot);
+    }
+
+    public void CloseSellPopup()
+    {
+        sellSlot = -1;
+        sellItem = null;
+        if (sellPopup != null && sellPopup.IsOpen) sellPopup.Close();
+    }
+
+    // a click anywhere but on the popup closes it, and so does escape. a right press that closes it
+    // over its own slot is remembered, so that click toggles it shut instead of opening it again
+    private void UpdateSellPopup()
+    {
+        Mouse mouse = Mouse.current;
+        if (mouse != null && (mouse.leftButton.wasPressedThisFrame || mouse.rightButton.wasPressedThisFrame))
+        {
+            closedOnPress = -1;
+            if (sellSlot >= 0 && !OverSellPopup(mouse.position.ReadValue()))
+            {
+                if (mouse.rightButton.wasPressedThisFrame) closedOnPress = sellSlot;
+                CloseSellPopup();
+            }
+        }
+        if (sellSlot >= 0 && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+            CloseSellPopup();
+    }
+
+    private bool OverSellPopup(Vector2 screenPosition)
+    {
+        if (sellPopup == null || !sellPopup.IsOpen) return false;
+        Camera cam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+        return RectTransformUtility.RectangleContainsScreenPoint(sellPopup.Rect, screenPosition, cam);
+    }
 
     public void ShowTooltip(MulchItem item, MulchEffect effect, string hint)
     {
