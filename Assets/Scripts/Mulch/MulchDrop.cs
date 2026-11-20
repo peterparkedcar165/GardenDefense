@@ -41,6 +41,10 @@ public class MulchDrop : MonoBehaviour
     private float restHeight;
     private float age;
     private float fullFlash;
+    // the fade in and out while it's about to expire: where in the wave it is, and the alpha it
+    // gives every part (icon layers, shadow, the glow's strength)
+    private float expiryPhase;
+    private float expiryAlpha = 1f;
     private bool hovered;
     private bool landed;
     // pressed: the mouse went down on it. dragging: it then moved far enough to be a drag, not a click
@@ -272,6 +276,7 @@ public class MulchDrop : MonoBehaviour
         }
 
         bool visible = true;
+        expiryAlpha = 1f;
         if (fullFlash > 0f)
         {
             fullFlash -= dt;
@@ -279,10 +284,15 @@ public class MulchDrop : MonoBehaviour
         }
         else if (left <= registry.flashSeconds)
         {
-            // flashes faster the closer it gets to vanishing
+            // about to expire: fades smoothly out to nothing and back in (Tommy, 2026-11-20: it used
+            // to blink), faster the closer it gets to vanishing. one fade out and in takes as long as
+            // one off and on of the old blink
             float period = Mathf.Lerp(0.07f, 0.2f, left / Mathf.Max(0.01f, registry.flashSeconds));
-            visible = Mathf.FloorToInt(left / period) % 2 == 0;
+            expiryPhase += dt * Mathf.PI / period;
+            expiryAlpha = 0.5f + 0.5f * Mathf.Cos(expiryPhase);
         }
+        else expiryPhase = 0f;
+        if (glow != null) glow.intensity = registry.darkGlowIntensity * expiryAlpha;
         body.enabled = visible;
         if (label != null) label.enabled = visible;
         if (symbol != null) symbol.enabled = visible;
@@ -311,7 +321,7 @@ public class MulchDrop : MonoBehaviour
     // icon tinted by rarity. faded while its copy is being dragged
     private void ApplyColors()
     {
-        float alpha = faded ? FadedAlpha : 1f;
+        float alpha = (faded ? FadedAlpha : 1f) * expiryAlpha;
         body.color = Tint(bagIcon ? MulchIcon.BagColor : MulchTierColors.Get(Item.rarity), alpha);
         if (label != null) label.color = Tint(MulchIcon.LabelColor(Item.rarity), alpha);
         if (symbol != null) symbol.color = Tint(MulchIcon.SymbolColor(Item.rarity), alpha);
@@ -333,7 +343,7 @@ public class MulchDrop : MonoBehaviour
         shadow.transform.localPosition = new Vector3(0f, 0.02f, 0.01f);
         shadow.transform.localScale = shadowBaseScale * Mathf.Lerp(1f, 0.65f, lift);
         Color c = registry.shadowColor;
-        c.a *= Mathf.Lerp(1f, 0.55f, lift) * (faded ? FadedAlpha : 1f);
+        c.a *= Mathf.Lerp(1f, 0.55f, lift) * (faded ? FadedAlpha : 1f) * expiryAlpha;
         shadow.color = c;
     }
 
