@@ -5,8 +5,13 @@ using TMPro;
 
 public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    // the bevel portrait (gd_portrait_bevel_grey, 72 by 72): background is the greyscale backdrop in
+    // the frame's 64 by 64 window, tinted with the element colour mixed 60% toward white; icon is the
+    // plant, bottom centred in the window; frame is the greyscale bevel on top, tinted with the element
+    // colour. both colours come from PlantData (ElementColor, ElementBackdropColor)
     [SerializeField] private Image icon;
     [SerializeField] private Image background;
+    [SerializeField] private Image frame;
     [SerializeField] private TMP_Text sunCostText;
 
     private PlantData data;
@@ -19,8 +24,8 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         data = plantData;
         plant = plantData.plantPrefab;
         if (icon != null) icon.sprite = plantData.icon;
-        if (background != null && ColorUtility.TryParseHtmlString(PlantData.ElementalColor(plantData.elementalType), out Color elementColor))
-            background.color = elementColor;
+        if (background != null) background.color = PlantData.ElementBackdropColor(plantData.elementalType);
+        if (frame != null) frame.color = PlantData.ElementColor(plantData.elementalType);
         if (sunCostText != null) sunCostText.text = FertilizerManager.GetPlacementCost(data).ToString();
     }
 

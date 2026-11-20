@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 public class PlantData : ScriptableObject
@@ -189,6 +189,19 @@ public class PlantData : ScriptableObject
         ElementalType.Ice     => "#00FFFF",
         _                     => "white"
     };
+
+    // the element colour above as a Color, for tinting greyscale art (the plant bar's bevel portrait
+    // frame). Neutral is white, which leaves the art untinted
+    public static Color ElementColor(ElementalType t) =>
+        ColorUtility.TryParseHtmlString(ElementalColor(t), out Color color) ? color : Color.white;
+
+    // the element colour mixed 60% toward white, for a portrait's backdrop: light enough that the frame
+    // (the full element colour) still stands out against it
+    public static Color ElementBackdropColor(ElementalType t)
+    {
+        Color c = ElementColor(t);
+        return new Color(c.r + (1f - c.r) * 0.6f, c.g + (1f - c.g) * 0.6f, c.b + (1f - c.b) * 0.6f, 1f);
+    }
 
     public static string DamageTypeLabel(DamageType t) => t switch
     {
