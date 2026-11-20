@@ -358,6 +358,8 @@ public class MulchInventoryUI : MonoBehaviour
         shownPlant != null && index >= 0 && index < shownPlant.mulches.Count ? shownPlant.mulches[index] : null;
 
     public MulchItem PlantSlotItem(int index) => PlantSlotEffect(index)?.Item;
+    // the plant whose slots the panel shows
+    public Plant ShownPlant => shownPlant;
 
     // ── dragging ────────────────────────────────────────────────────────────
 
@@ -578,11 +580,8 @@ public class MulchInventoryUI : MonoBehaviour
         }
         if (image != null) Destroy(image.gameObject);
         incoming.Remove(slot);
-        if (slot < inventorySlots.Count)
-        {
-            inventorySlots[slot].Refresh();
-            inventorySlots[slot].Pop();
-        }
+        // the slot sees the mulch is new and pops it in
+        if (slot < inventorySlots.Count) inventorySlots[slot].Refresh();
     }
 
     // a slot's middle, in the overlay's space

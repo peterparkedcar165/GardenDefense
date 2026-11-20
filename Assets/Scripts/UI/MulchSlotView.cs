@@ -18,6 +18,18 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public bool spriteFrame;
 
     private bool hovered;
+    // what the slot last showed, and whose slot it was (the plant, for a plant slot), so a mulch
+    // that newly lands here pops in, but switching to another plant's slots doesn't
+    private MulchItem shownItem;
+    private Object shownOwner;
+    private Coroutine popRoutine;
+
+    // the pop when a mulch appears in a slot (Tommy, 2026-11-20): from nothing up past full size,
+    // then settling back to it. real time, so it also plays while paused
+    private const float PopSeconds = 0.32f;
+    private const float PopPeak = 1.35f;
+    // the share of the time spent growing to the peak; the rest settles back
+    private const float PopRise = 0.55f;
 
     // an inventory slot a drop is still flying into reads as empty until it lands
     public MulchItem Item =>
@@ -26,10 +38,14 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         : MulchManager.instance != null ? MulchManager.instance.GetSlot(index) : null;
 
     // draws the slot: a rarity coloured frame and the mulch's paper bag icon (MulchIcon), or a dim
-    // empty square
+    // empty square. a mulch new to this slot (picked up, moved, merged, equipped) pops in
     public void Refresh()
     {
         MulchItem item = Item;
+        Object owner = isPlantSlot ? ui.ShownPlant : null;
+        bool appeared = item != null && item != shownItem && owner == shownOwner;
+        shownItem = item;
+        shownOwner = owner;
         bool has = item != null && item.data != null;
         if (has) MulchIcon.Show(icon, item);
         else MulchIcon.Hide(icon);
@@ -44,27 +60,49 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             frame.color = spriteFrame ? Color.white : new Color(0.32f, 0.3f, 0.26f, 0.9f);
         }
         if (hovered) ShowTooltip();
+        if (appeared && has) Pop();
     }
 
-    // a quick bump when a picked up mulch lands in this slot
     public void Pop()
     {
-        if (isActiveAndEnabled) StartCoroutine(PopRoutine());
+        if (!isActiveAndEnabled) return;
+        if (popRoutine != null) StopCoroutine(popRoutine);
+        popRoutine = StartCoroutine(PopRoutine());
     }
 
     private System.Collections.IEnumerator PopRoutine()
     {
-        const float duration = 0.18f;
+        RectTransform rect = icon.rectTransform;
         float elapsed = 0f;
-        while (elapsed < duration)
+        while (elapsed < PopSeconds)
         {
             elapsed += Time.unscaledDeltaTime;
-            float k = Mathf.Clamp01(elapsed / duration);
-            float scale = 1f + 0.25f * Mathf.Sin(k * Mathf.PI);
-            icon.rectTransform.localScale = new Vector3(scale, scale, 1f);
+            float k = Mathf.Clamp01(elapsed / PopSeconds);
+            float scale;
+            if (k < PopRise)
+            {
+                // fast at first, slowing into the peak
+                float u = k / PopRise;
+                scale = PopPeak * (1f - (1f - u) * (1f - u));
+            }
+            else
+            {
+                // eases back down to full size
+                float u = (k - PopRise) / (1f - PopRise);
+                scale = Mathf.Lerp(PopPeak, 1f, u * u * (3f - 2f * u));
+            }
+            rect.localScale = new Vector3(scale, scale, 1f);
             yield return null;
         }
-        icon.rectTransform.localScale = Vector3.one;
+        rect.localScale = Vector3.one;
+        popRoutine = null;
+    }
+
+    // a pop cut short (the panel closed) must not leave the icon small
+    private void OnDisable()
+    {
+        popRoutine = null;
+        if (icon != null) icon.rectTransform.localScale = Vector3.one;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

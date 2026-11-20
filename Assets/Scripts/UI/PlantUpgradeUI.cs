@@ -135,6 +135,8 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private GameObject lockedSkillSquare;
     [SerializeField] private Image lockedSquareVines;
     [SerializeField] private Image lockedSquarePadlock;
+    [Tooltip("the square lights up and unlocks on click like the strip, and either one hovered lights both")]
+    [SerializeField] private PointerHover lockedSquareHover;
 
     [Header("Transplant")]
     [SerializeField] private Button transplantButton;        // visible only while the Transplant fertilizer is active
@@ -614,8 +616,8 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     // round 6: while the skill isn't unlocked, vines over the Skill strip with a padlock, the unlock
     // price at twice the font size and the sun centred as one group (padlock, 5 px, price, 4 px,
-    // sun), and vines with a bigger padlock over the skill square. hovering the strip lightens both.
-    // the price and sun go grey while it can't be afforded. a click on the strip unlocks (wired to
+    // sun), and vines with a bigger padlock over the skill square. hovering either lightens both.
+    // the price and sun go grey while it can't be afforded. a click on either unlocks (wired to
     // OnPath3UpgradeClicked in the prefab)
     private void RefreshLockedSkill(Plant p, int sun)
     {
@@ -627,7 +629,8 @@ public class PlantUpgradeUI : EntityInfoPanel
         PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
         int cost = p.GetPath3Cost();
         bool affordable = sun >= cost;
-        bool hover = lockedSkillHover != null && lockedSkillHover.IsHovered;
+        bool hover = (lockedSkillHover != null && lockedSkillHover.IsHovered)
+            || (lockedSquareHover != null && lockedSquareHover.IsHovered);
         Color vines = hover ? style.lockedVinesHover : style.lockedVines;
         Color glyph = hover ? style.lockedTextHover : style.lockedText;
         if (lockedStripVines != null) lockedStripVines.color = vines;
