@@ -50,7 +50,9 @@ public class PlantUpgradeUI : EntityInfoPanel
     // the layout in art pixels (README), times Px for canvas units
     private const float Px = 2f;
     private const int LevelBarStep = 14;
-    private const int PlantPanelHeight = 206;
+    // round 6: the mulch row's slots grew to 32 at the game's 232 width, so the mulch inset is 4
+    // taller than the design's 38 and the panel 218 (the design's 214)
+    private const int PlantPanelHeight = 218;
     private const int InsectPanelHeight = 96;
     private const int TopInsetHeight = 68;
     private const int LevelBarX = 79;
@@ -82,8 +84,10 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private Image portraitBackdrop;
 
     [Header("Targeting")]
+    [Tooltip("the mode's name in the display between the two arrow buttons, centred on whole art pixels")]
     [SerializeField] private TMP_Text targetingModeText;
-    [SerializeField] private Button targetingToggleButton;
+    [Tooltip("the arrow buttons and the display, shown for plants that use targeting")]
+    [SerializeField] private GameObject targetingControl;
 
     [Header("Minions (Burgeon)")]
     [SerializeField] private Button relocateMinionsButton;   // visible only for plants that command minions
@@ -116,7 +120,21 @@ public class PlantUpgradeUI : EntityInfoPanel
     [Tooltip("radial fill over the icon while it recharges, full while silenced or not unlocked")]
     [SerializeField] private Image skillCooldownOverlay;
     [SerializeField] private TMP_Text skillCooldownText;
+    [Tooltip("the small lock on the skill square while silenced")]
     [SerializeField] private GameObject skillLock;
+
+    [Header("Locked skill (round 6)")]
+    [Tooltip("over the Skill strip while the skill isn't unlocked: dim, vines, padlock, price and sun. a click on it unlocks")]
+    [SerializeField] private GameObject lockedSkillStrip;
+    [SerializeField] private PointerHover lockedSkillHover;
+    [SerializeField] private Image lockedStripVines;
+    [SerializeField] private Image lockedStripPadlock;
+    [SerializeField] private TMP_Text lockedPrice;
+    [SerializeField] private Image lockedSun;
+    [Tooltip("over the skill square while the skill isn't unlocked: dim, vines and a bigger padlock")]
+    [SerializeField] private GameObject lockedSkillSquare;
+    [SerializeField] private Image lockedSquareVines;
+    [SerializeField] private Image lockedSquarePadlock;
 
     [Header("Transplant")]
     [SerializeField] private Button transplantButton;        // visible only while the Transplant fertilizer is active
@@ -141,6 +159,8 @@ public class PlantUpgradeUI : EntityInfoPanel
     private SpriteRenderer cachedInsectRenderer;
     private int shownLevelBars = -1;
     private bool shownAsPlant;
+    // the locked skill price the strip's group was last laid out for
+    private string lockedPriceLaidOut;
 
     // fluid health bar, matching the plant widget: the fill eases toward the real share each frame
     // instead of snapping, and resets on a new selection so it never lerps in from the last one
@@ -214,8 +234,6 @@ public class PlantUpgradeUI : EntityInfoPanel
 
         if (skillGroup != null) skillGroup.SetActive(true);
         if (lowerSection != null) lowerSection.SetActive(true);
-        if (targetingModeText != null)
-            targetingModeText.text = plant.targeting.ToString();
         if (flyingToggleText != null)
             flyingToggleText.text = FlyingLabel(plant);
         if (radiusToggleText != null)
@@ -223,6 +241,8 @@ public class PlantUpgradeUI : EntityInfoPanel
         ArrangeActionButtons(plant);
 
         panel.SetActive(true);
+        // after the panel and the control are shown, so the name is measured active
+        ShowTargetingMode(plant);
         ApplyElement(plant.elementalType);
 
         entityNameText.text = plant.GetName();
@@ -331,8 +351,8 @@ public class PlantUpgradeUI : EntityInfoPanel
     private void ArrangeActionButtons(Plant plant)
     {
         bool targeting = plant.UsesTargeting;
-        if (targetingToggleButton != null)
-            targetingToggleButton.gameObject.SetActive(targeting);
+        if (targetingControl != null)
+            targetingControl.SetActive(targeting);
         if (autoCastButton != null)
         {
             autoCastButton.gameObject.SetActive(plant.UsesAutoCast);
@@ -354,7 +374,8 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     private void HideActionButtons()
     {
-        foreach (Button b in new[] { targetingToggleButton, autoCastButton, relocateMinionsButton, flyingToggleButton, radiusToggleButton, transplantButton })
+        if (targetingControl != null) targetingControl.SetActive(false);
+        foreach (Button b in new[] { autoCastButton, relocateMinionsButton, flyingToggleButton, radiusToggleButton, transplantButton })
             if (b != null) b.gameObject.SetActive(false);
     }
 
@@ -588,6 +609,55 @@ public class PlantUpgradeUI : EntityInfoPanel
         RefreshPath(path1, 0, p.GetPath1Name(), p.path1Level, p.effectivePath1Level, true, p.GetPath1Cost(), allLocked, sun);
         RefreshPath(path2, 1, p.GetPath2Name(), p.path2Level, p.effectivePath2Level, true, p.GetPath2Cost(), otherLocked, sun);
         RefreshPath(path3, 2, p.GetPath3Name(), p.path3Level, p.effectivePath3Level, p.path3Unlocked, p.GetPath3Cost(), otherLocked, sun);
+        RefreshLockedSkill(p, sun);
+    }
+
+    // round 6: while the skill isn't unlocked, vines over the Skill strip with a padlock, the unlock
+    // price at twice the font size and the sun centred as one group (padlock, 5 px, price, 4 px,
+    // sun), and vines with a bigger padlock over the skill square. hovering the strip lightens both.
+    // the price and sun go grey while it can't be afforded. a click on the strip unlocks (wired to
+    // OnPath3UpgradeClicked in the prefab)
+    private void RefreshLockedSkill(Plant p, int sun)
+    {
+        bool locked = !p.path3Unlocked;
+        if (lockedSkillStrip != null && lockedSkillStrip.activeSelf != locked) lockedSkillStrip.SetActive(locked);
+        if (lockedSkillSquare != null && lockedSkillSquare.activeSelf != locked) lockedSkillSquare.SetActive(locked);
+        if (!locked) return;
+
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        int cost = p.GetPath3Cost();
+        bool affordable = sun >= cost;
+        bool hover = lockedSkillHover != null && lockedSkillHover.IsHovered;
+        Color vines = hover ? style.lockedVinesHover : style.lockedVines;
+        Color glyph = hover ? style.lockedTextHover : style.lockedText;
+        if (lockedStripVines != null) lockedStripVines.color = vines;
+        if (lockedSquareVines != null) lockedSquareVines.color = vines;
+        if (lockedStripPadlock != null) lockedStripPadlock.color = glyph;
+        if (lockedSquarePadlock != null) lockedSquarePadlock.color = glyph;
+        if (lockedPrice != null) lockedPrice.color = affordable ? glyph : style.locked.text;
+        if (lockedSun != null) lockedSun.color = affordable ? style.normal.sun : style.locked.sun;
+
+        string price = cost.ToString();
+        if (lockedPrice == null || price == lockedPriceLaidOut) return;
+        lockedPriceLaidOut = price;
+        lockedPrice.text = price;
+        RectTransform strip = lockedSkillStrip.transform as RectTransform;
+        float stripWidth = strip != null ? Mathf.Round(strip.rect.width / Px) : 214f;
+        float priceWidth = Mathf.Ceil(lockedPrice.GetPreferredValues(price).x / Px);
+        float groupX = Mathf.Floor((stripWidth - (33f + priceWidth)) / 2f);
+        RectTransform priceRect = lockedPrice.rectTransform;
+        priceRect.sizeDelta = new Vector2(priceWidth * Px, priceRect.sizeDelta.y);
+        priceRect.anchoredPosition = new Vector2((groupX + 15f) * Px, priceRect.anchoredPosition.y);
+        if (lockedStripPadlock != null)
+        {
+            RectTransform padlock = lockedStripPadlock.rectTransform;
+            padlock.anchoredPosition = new Vector2((groupX - 1f) * Px, padlock.anchoredPosition.y);
+        }
+        if (lockedSun != null)
+        {
+            RectTransform sunRect = lockedSun.rectTransform;
+            sunRect.anchoredPosition = new Vector2((groupX + 15f + priceWidth + 4f) * Px, sunRect.anchoredPosition.y);
+        }
     }
 
     // one path strip: label, five pips and the buy button. the button's look: max at 5/5, locked
@@ -681,7 +751,9 @@ public class PlantUpgradeUI : EntityInfoPanel
         bool cooling = unlocked && p.skillCooldownTimer > 0f;
         skillButton.interactable = p.SkillReady;
 
-        float cover = !unlocked || silenced || p.IsChanneling ? 1f
+        // not unlocked: the vines overlay dims it instead (RefreshLockedSkill)
+        float cover = !unlocked ? 0f
+            : silenced || p.IsChanneling ? 1f
             : cooling && p.skillCooldown > 0f ? Mathf.Clamp01(p.skillCooldownTimer / p.skillCooldown)
             : cooling ? 1f : 0f;
         if (skillCooldownOverlay != null)
@@ -690,8 +762,9 @@ public class PlantUpgradeUI : EntityInfoPanel
             skillCooldownOverlay.fillAmount = cover;
             skillCooldownOverlay.color = PlantInfoPanelStyle.Instance.cooldownOverlay;
         }
-        if (skillLock != null && skillLock.activeSelf != (!unlocked || silenced))
-            skillLock.SetActive(!unlocked || silenced);
+        bool smallLock = unlocked && silenced;
+        if (skillLock != null && skillLock.activeSelf != smallLock)
+            skillLock.SetActive(smallLock);
         if (skillCooldownText != null)
             skillCooldownText.text = cooling && !silenced ? Mathf.CeilToInt(p.skillCooldownTimer).ToString() : "";
     }
@@ -818,25 +891,26 @@ public class PlantUpgradeUI : EntityInfoPanel
         selectedPlant.ToggleAutoCast();
     }
 
-    // the button reads "< First >": a click on its left half steps back through the modes, on its
-    // right half forward
-    public void OnTargetingToggleClicked()
+    // round 6: two arrow buttons around a display with the mode's name. left steps back through the
+    // modes, right forward, both wrapping round
+    public void OnTargetingPrevClicked() => StepTargeting(-1);
+    public void OnTargetingNextClicked() => StepTargeting(1);
+
+    private void StepTargeting(int step)
     {
         if (selectedPlant == null || !selectedPlant.UsesTargeting) return;
         int count = System.Enum.GetValues(typeof(TARGETING)).Length;
-        int step = ClickedLeftHalf(targetingToggleButton) ? count - 1 : 1;
-        selectedPlant.targeting = (TARGETING)(((int)selectedPlant.targeting + step) % count);
-        targetingModeText.text = selectedPlant.targeting.ToString();
+        selectedPlant.targeting = (TARGETING)((((int)selectedPlant.targeting + step) % count + count) % count);
+        ShowTargetingMode(selectedPlant);
     }
 
-    private static bool ClickedLeftHalf(Button button)
+    // the display holds 72 art pixels at the game's width, so every mode fits by its full name,
+    // "Strongest" included (the 205 pixel design shortens it to "Strong")
+    private void ShowTargetingMode(Plant plant)
     {
-        if (button == null || Mouse.current == null) return false;
-        RectTransform rect = (RectTransform)button.transform;
-        Canvas canvas = rect.GetComponentInParent<Canvas>();
-        Camera cam = canvas != null && canvas.rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.rootCanvas.worldCamera : null;
-        return RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, Mouse.current.position.ReadValue(), cam, out Vector2 local)
-            && local.x < rect.rect.center.x;
+        if (targetingModeText == null || plant == null) return;
+        targetingModeText.text = plant.targeting.ToString();
+        PixelLayout.CentreOnPixels(targetingModeText, Px);
     }
 
     // toggle the selected plant between prioritizing flyers and normal targeting

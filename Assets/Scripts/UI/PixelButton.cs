@@ -27,6 +27,11 @@ public class PixelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     [SerializeField] private Image[] suns;
     [Tooltip("canvas units per art pixel")]
     [SerializeField] private float pixel = 2f;
+    [Tooltip("this button's own sprites instead of the style's button and pressed button (the targeting arrows)")]
+    [SerializeField] private Sprite faceSprite;
+    [SerializeField] private Sprite pressedFaceSprite;
+    [Tooltip("texts and glyphs turn white while hovered (the targeting arrows)")]
+    [SerializeField] private bool whiteOnHover;
 
     private Look look = Look.Normal;
     private bool hovered, pressed;
@@ -86,7 +91,8 @@ public class PixelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
         if (face != null)
         {
-            Sprite sprite = down ? style.buttonPressed : style.button;
+            Sprite sprite = down ? (pressedFaceSprite != null ? pressedFaceSprite : style.buttonPressed)
+                : faceSprite != null ? faceSprite : style.button;
             if (sprite != null) face.sprite = sprite;
             face.color = colors.face;
         }
@@ -94,17 +100,18 @@ public class PixelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             content.anchoredPosition = new Vector2(content.anchoredPosition.x, down ? -2f * pixel : 0f);
 
         bool shadow = colors.shadow.a > 0f;
+        Color textColor = whiteOnHover && look == Look.Normal && hovered && !down && Clickable ? Color.white : colors.text;
         if (texts != null)
             foreach (TMP_Text text in texts)
             {
                 if (text == null) continue;
-                text.color = colors.text;
+                text.color = textColor;
                 PixelTextEffect effect = text.GetComponent<PixelTextEffect>();
                 if (effect != null) effect.Color = colors.shadow;
             }
         if (glyphs != null)
             foreach (Image glyph in glyphs)
-                if (glyph != null) glyph.color = colors.text;
+                if (glyph != null) glyph.color = textColor;
         if (glyphShadows != null)
             foreach (Image glyph in glyphShadows)
                 if (glyph != null) { glyph.color = colors.shadow; glyph.enabled = shadow; }

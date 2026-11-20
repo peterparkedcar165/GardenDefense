@@ -92,7 +92,7 @@ public class GameHUD : MonoBehaviour
         if (!nextWaveTimerText || text == shownCountdownText) return;
         shownCountdownText = text;
         nextWaveTimerText.text = text;
-        CentreOnPixels(nextWaveTimerText);
+        PixelLayout.CentreOnPixels(nextWaveTimerText, Px);
     }
 
     // the fill is anchored at the bar's left inner edge: whole art pixels wide out of the bar's inner width
@@ -107,19 +107,5 @@ public class GameHUD : MonoBehaviour
         if (!Mathf.Approximately(rect.sizeDelta.x, width)) rect.sizeDelta = new Vector2(width, rect.sizeDelta.y);
         bool show = width > 0f;
         if (fill.enabled != show) fill.enabled = show;
-    }
-
-    // a text left aligned in a rect as wide as it reads, placed so it sits centred on its parent on
-    // whole art pixels (TMP's own centring lands odd widths on half pixels)
-    private static void CentreOnPixels(TMP_Text text)
-    {
-        RectTransform rect = text.rectTransform;
-        RectTransform parent = rect.parent as RectTransform;
-        if (parent == null) return;
-        text.horizontalAlignment = HorizontalAlignmentOptions.Left;
-        float width = string.IsNullOrEmpty(text.text) ? 0f : Mathf.Ceil(text.GetPreferredValues(text.text).x / Px) * Px;
-        float x = Mathf.Round((parent.rect.width - width) / 2f / Px) * Px;
-        rect.sizeDelta = new Vector2(width, rect.sizeDelta.y);
-        rect.anchoredPosition = new Vector2(x, rect.anchoredPosition.y);
     }
 }

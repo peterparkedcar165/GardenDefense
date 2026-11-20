@@ -6,10 +6,11 @@ using System.Text.RegularExpressions;
 // art pixel off (a shadow: one copy straight below; an outline: eight copies all around). TMP's own
 // underlay and outline are soft, so they never land on whole pixels. the copies are made at runtime
 // as siblings just before the text (so they draw behind it) and follow its text, rect, colour alpha
-// and active state. colour tags in the text are left out of the copies so they keep one colour
+// and active state. colour tags in the text are left out of the copies so they keep one colour.
+// outline below: the outline plus one more pixel under it (the locked skill's price, round 6)
 public class PixelTextEffect : MonoBehaviour
 {
-    public enum Mode { Shadow, Outline }
+    public enum Mode { Shadow, Outline, OutlineBelow }
 
     [SerializeField] private Mode mode = Mode.Shadow;
     [SerializeField] private Color color = Color.black;
@@ -20,6 +21,13 @@ public class PixelTextEffect : MonoBehaviour
     private static readonly Vector2[] ShadowOffsets = { new Vector2(0f, -1f) };
     private static readonly Vector2[] OutlineOffsets =
     {
+        new Vector2(-1f, -1f), new Vector2(0f, -1f), new Vector2(1f, -1f),
+        new Vector2(-1f, 0f), new Vector2(1f, 0f),
+        new Vector2(-1f, 1f), new Vector2(0f, 1f), new Vector2(1f, 1f),
+    };
+    private static readonly Vector2[] OutlineBelowOffsets =
+    {
+        new Vector2(-1f, -2f), new Vector2(0f, -2f), new Vector2(1f, -2f),
         new Vector2(-1f, -1f), new Vector2(0f, -1f), new Vector2(1f, -1f),
         new Vector2(-1f, 0f), new Vector2(1f, 0f),
         new Vector2(-1f, 1f), new Vector2(0f, 1f), new Vector2(1f, 1f),
@@ -45,7 +53,7 @@ public class PixelTextEffect : MonoBehaviour
     {
         source = GetComponent<TMP_Text>();
         if (source == null) return;
-        offsets = mode == Mode.Shadow ? ShadowOffsets : OutlineOffsets;
+        offsets = mode == Mode.Shadow ? ShadowOffsets : mode == Mode.Outline ? OutlineOffsets : OutlineBelowOffsets;
         copies = new TextMeshProUGUI[offsets.Length];
         Transform parent = transform.parent;
         for (int i = 0; i < offsets.Length; i++)

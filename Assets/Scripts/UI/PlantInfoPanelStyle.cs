@@ -96,8 +96,17 @@ public class PlantInfoPanelStyle : ScriptableObject
 
     [Header("Skill")]
     public SkillFrame[] skillFrames;
-    [Tooltip("darkens the skill icon while it recharges, silenced or not unlocked")]
+    [Tooltip("darkens the skill icon while it recharges or is silenced")]
     public Color cooldownOverlay = new Color(0f, 0f, 0f, 0.55f);
+
+    [Header("Locked skill (round 6): vines and a padlock over the Skill strip and the skill square")]
+    public Color lockedVines = Hex("#8FD25C");
+    [Tooltip("while the pointer is over the Skill strip")]
+    public Color lockedVinesHover = Hex("#A5DB7C");
+    [Tooltip("the padlocks and the unlock price. while the unlock can't be afforded the price and the sun take " +
+        "the locked button look's text and sun colours; otherwise the sun is the normal look's")]
+    public Color lockedText = Hex("#FFF1D6");
+    public Color lockedTextHover = Color.white;
 
     [Header("Level bars (the colours the old temperature and oxygen bars had)")]
     public Color oxygen = Hex("#B2EBF2");

@@ -6,11 +6,11 @@ using TMPro;
 using System.Collections.Generic;
 
 // the mulch UI in the right side panel (Tommy's layout, 2026-11-20): the player's mulch bag
-// (MulchRegistry.inventorySize slots) in rows of bagColumns at the left end of the tool buttons'
-// row, as tall as them, where the old mulch button was (two rows of 3, Tommy 2026-11-20), and the
-// selected plant's mulch slots (plantSlots) as a row at the bottom of the plant info panel. this
-// component sits on Canvas.prefab's MulchBag object; that object's rect is the bag's area, its
-// slots built in code at the start and sized to fit. plantSlotsRoot is the plant's row: the info panel's MulchSlots window, whose
+// (MulchRegistry.inventorySize slots) as two rows of 3 left of the pot and shovel boxes, right
+// above the plant info panel, and the selected plant's mulch slots (plantSlots) as a row at the
+// bottom of that panel (both the plant info panel pack's round 6, Tommy 2026-11-20). this
+// component sits on Canvas.prefab's MulchBag object, whose Slot0 to Slot5 are placed in the prefab
+// and taken over here; without them the bag builds rows of bagColumns sized to its rect. plantSlotsRoot is the plant's row: the info panel's MulchSlots window, whose
 // Slot0 to Slot5 children (slot sprite plus an Icon child) are placed in the prefab and taken over
 // here; a plantSlotsRoot without them gets a built row with a "Mulches 2/6" label instead. drag a
 // bag mulch onto another slot to merge or swap, onto a plant on the map or onto the plant's row to
@@ -79,8 +79,8 @@ public class MulchInventoryUI : MonoBehaviour
             go.transform.SetParent(PersistentCanvas.instance.transform, false);
             RectTransform rect = (RectTransform)go.transform;
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(573.24f, 82.36f);
-            rect.sizeDelta = new Vector2(147f, 96.89f);
+            rect.anchoredPosition = new Vector2(598f, 127f);
+            rect.sizeDelta = new Vector2(204f, 134f);
             go.AddComponent<MulchInventoryUI>();
         }
         if (instance == null) return;
@@ -120,19 +120,27 @@ public class MulchInventoryUI : MonoBehaviour
 
         int inventorySize = MulchManager.instance != null ? MulchManager.instance.InventorySize : 6;
         RectTransform bag = (RectTransform)transform;
-        bagSlotSize = BuildGrid(bag, 0f, inventorySize, bagColumns, spacing, inventorySlots, false);
-
-        // "Mulch bag 3/6" just above the slots
-        bagLabel = NewText("BagLabel", bag, 15f, TextAlignmentOptions.BottomLeft);
-        RectTransform bagLabelRect = bagLabel.rectTransform;
-        bagLabelRect.anchorMin = new Vector2(0f, 1f);
-        bagLabelRect.anchorMax = new Vector2(1f, 1f);
-        bagLabelRect.pivot = new Vector2(0f, 0f);
-        bagLabelRect.anchoredPosition = new Vector2(2f, 2f);
-        bagLabelRect.sizeDelta = new Vector2(0f, 18f);
+        // round 6: the bag's slots are placed in the prefab like the plant row's (2 rows of 3, no
+        // label or count). without all of them it builds its own grid with a "Mulch bag 3/6" label
+        if (PlacedSlotCount(bag, inventorySize) == inventorySize)
+        {
+            AdoptPlacedSlots(bag, inventorySize, inventorySlots, false);
+            bagSlotSize = ((RectTransform)inventorySlots[0].transform).rect.width;
+        }
+        else
+        {
+            bagSlotSize = BuildGrid(bag, 0f, inventorySize, bagColumns, spacing, inventorySlots, false);
+            bagLabel = NewText("BagLabel", bag, 15f, TextAlignmentOptions.BottomLeft);
+            RectTransform bagLabelRect = bagLabel.rectTransform;
+            bagLabelRect.anchorMin = new Vector2(0f, 1f);
+            bagLabelRect.anchorMax = new Vector2(1f, 1f);
+            bagLabelRect.pivot = new Vector2(0f, 0f);
+            bagLabelRect.anchoredPosition = new Vector2(2f, 2f);
+            bagLabelRect.sizeDelta = new Vector2(0f, 18f);
+        }
 
         int placedSlotCount = MulchManager.instance != null ? MulchManager.instance.PlantSlots : 6;
-        if (plantSlotsRoot != null && !AdoptPlacedSlots(plantSlotsRoot, placedSlotCount))
+        if (plantSlotsRoot != null && AdoptPlacedSlots(plantSlotsRoot, placedSlotCount, plantSlots, true) == 0)
         {
             int plantSlotCount = placedSlotCount;
             plantLabel = NewText("PlantMulchLabel", plantSlotsRoot, 15f, TextAlignmentOptions.MidlineLeft);
@@ -149,30 +157,45 @@ public class MulchInventoryUI : MonoBehaviour
         RefreshPlantPart(null);
     }
 
-    // the plant info panel's own slots: children named Slot0, Slot1 and so on, each an Image (the
-    // slot sprite, drawn as is while empty) with an Icon child. false when there are none
-    private bool AdoptPlacedSlots(RectTransform root, int count)
+    // slots placed in the prefab (the plant info panel's row, the bag): children named Slot0, Slot1
+    // and so on, each an Image (the slot sprite, drawn as is while empty) with an Icon child.
+    // returns how many it took over, stopping at the first one missing
+    private int AdoptPlacedSlots(RectTransform root, int count, List<MulchSlotView> slots, bool isPlant)
     {
+        int adopted = 0;
         for (int i = 0; i < count; i++)
         {
-            Transform slot = root.Find($"Slot{i}");
-            Image frame = slot != null ? slot.GetComponent<Image>() : null;
-            Transform iconTransform = slot != null ? slot.Find("Icon") : null;
-            Image icon = iconTransform != null ? iconTransform.GetComponent<Image>() : null;
-            if (frame == null || icon == null) break;
+            if (!PlacedSlot(root, i, out Image frame, out Image icon)) break;
             frame.raycastTarget = true;
             icon.raycastTarget = false;
             icon.preserveAspect = true;
-            MulchSlotView view = slot.gameObject.AddComponent<MulchSlotView>();
+            MulchSlotView view = frame.gameObject.AddComponent<MulchSlotView>();
             view.ui = this;
-            view.isPlantSlot = true;
+            view.isPlantSlot = isPlant;
             view.index = i;
             view.frame = frame;
             view.icon = icon;
             view.spriteFrame = true;
-            plantSlots.Add(view);
+            slots.Add(view);
+            adopted++;
         }
-        return plantSlots.Count > 0;
+        return adopted;
+    }
+
+    private static int PlacedSlotCount(RectTransform root, int count)
+    {
+        int found = 0;
+        while (found < count && PlacedSlot(root, found, out _, out _)) found++;
+        return found;
+    }
+
+    private static bool PlacedSlot(RectTransform root, int index, out Image frame, out Image icon)
+    {
+        Transform slot = root.Find($"Slot{index}");
+        frame = slot != null ? slot.GetComponent<Image>() : null;
+        Transform iconTransform = slot != null ? slot.Find("Icon") : null;
+        icon = iconTransform != null ? iconTransform.GetComponent<Image>() : null;
+        return frame != null && icon != null;
     }
 
     // square slots in rows of columns (left to right, then top to bottom) inside parent, from
