@@ -68,7 +68,7 @@ MonoBehaviour:
     common: 50
     rare: 100
     epic: 175
-  inventorySize: 8
+  inventorySize: 6
   plantSlots: 6
   groundSeconds: 25
   flashSeconds: 5

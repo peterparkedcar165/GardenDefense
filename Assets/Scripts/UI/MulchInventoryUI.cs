@@ -75,8 +75,8 @@ public class MulchInventoryUI : MonoBehaviour
             go.transform.SetParent(PersistentCanvas.instance.transform, false);
             RectTransform rect = (RectTransform)go.transform;
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(728f, 169f);
-            rect.sizeDelta = new Vector2(410f, 46f);
+            rect.anchoredPosition = new Vector2(728f, 177.5f);
+            rect.sizeDelta = new Vector2(410f, 63f);
             go.AddComponent<MulchInventoryUI>();
         }
         if (instance == null) return;
@@ -114,11 +114,11 @@ public class MulchInventoryUI : MonoBehaviour
         canvasRect = canvas != null ? (RectTransform)canvas.rootCanvas.transform : null;
         float spacing = registry != null ? registry.slotSpacing : 6f;
 
-        int inventorySize = MulchManager.instance != null ? MulchManager.instance.InventorySize : 8;
+        int inventorySize = MulchManager.instance != null ? MulchManager.instance.InventorySize : 6;
         RectTransform bag = (RectTransform)transform;
         bagSlotSize = BuildRow(bag, 0f, inventorySize, spacing, inventorySlots, false);
 
-        // "Mulch bag 3/8" just above the row
+        // "Mulch bag 3/6" just above the row
         bagLabel = NewText("BagLabel", bag, 15f, TextAlignmentOptions.BottomLeft);
         RectTransform bagLabelRect = bagLabel.rectTransform;
         bagLabelRect.anchorMin = new Vector2(0f, 1f);

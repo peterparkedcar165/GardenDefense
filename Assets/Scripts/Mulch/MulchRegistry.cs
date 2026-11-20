@@ -26,11 +26,11 @@ public class MulchRegistry : ScriptableObject
     [Tooltip("relative odds of each rarity on a drop, before the killing plant's Rare Item Drop Rate, " +
         "which multiplies Rare and Epic (proposal)")]
     public TierValue rarityWeights = new TierValue(70f, 25f, 5f);
-    [Tooltip("Sun for right clicking a mulch in the inventory to sell it")]
+    [Tooltip("Sun for selling a mulch from the inventory (right click it, then Sell)")]
     public TierValue sellPrice = new TierValue(50f, 100f, 175f);
 
     [Header("limits")]
-    public int inventorySize = 8;
+    public int inventorySize = 6;
     public int plantSlots = 6;
 
     [Header("ground drops")]

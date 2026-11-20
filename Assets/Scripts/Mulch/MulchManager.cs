@@ -45,13 +45,13 @@ public class MulchManager : MonoBehaviour
         Registry = Resources.Load<MulchRegistry>("MulchRegistry");
         if (Registry == null)
             Debug.LogError("MulchManager: MulchRegistry not found at Resources/MulchRegistry.asset");
-        inventory = new MulchItem[Registry != null ? Mathf.Max(1, Registry.inventorySize) : 8];
+        inventory = new MulchItem[Registry != null ? Mathf.Max(1, Registry.inventorySize) : 6];
     }
 
     // called once per level start (ProceduralLevel.Start): the inventory empties every level
     public void ResetForLevel()
     {
-        inventory = new MulchItem[Registry != null ? Mathf.Max(1, Registry.inventorySize) : 8];
+        inventory = new MulchItem[Registry != null ? Mathf.Max(1, Registry.inventorySize) : 6];
         killsSinceDrop = 0;
         aliveByWave.Clear();
         spawningDone.Clear();
