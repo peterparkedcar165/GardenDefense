@@ -395,7 +395,9 @@ public class MulchInventoryUI : MonoBehaviour
     public void ShowTooltip(MulchItem item, MulchEffect effect, string hint)
     {
         if (item == null || tooltipRect == null) return;
-        string text = $"<b>{item.Name}</b>  <size=80%>{MulchData.RarityLabel(item.rarity)}</size>\n<size=90%>{item.Description}</size>";
+        // title, a blank line, the lead in line, a blank line, then the description (Tommy, 2026-11-20)
+        string text = $"<b>{item.Name}</b>  <size=80%>{MulchData.RarityLabel(item.rarity)}</size>\n\n" +
+            $"<size=90%>Whenever this mulch is equipped on a plant:</size>\n\n<size=90%>{item.Description}</size>";
         string status = effect != null ? effect.GetStatus() : null;
         if (!string.IsNullOrEmpty(status)) text += $"\n<size=85%><color=#FFD27F>{status}</color></size>";
         if (!string.IsNullOrEmpty(hint)) text += $"\n<size=75%><color=#AAAAAA>{hint}</color></size>";

@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Shooter.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\TansyData.cs" />
+    <Compile Include="Assets\Scripts\LoadoutCondition.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSelectionUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\DisplacedEffect.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\TransplantFertilizerData.cs" />
@@ -375,7 +376,6 @@
     <Compile Include="Assets\Scripts\Skills\SoothingRain.cs" />
     <Compile Include="Assets\Scripts\Game\SaveData.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\OldCarrotProjectile.cs" />
-    <Compile Include="Assets\Scripts\Fertilizer\FertilizerCondition.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\MorningGloryProjectile.cs" />
     <Compile Include="Assets\Scripts\Tutorial\TutorialContent.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\MonsoonSurgeEffect.cs" />
