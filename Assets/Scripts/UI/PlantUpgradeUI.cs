@@ -591,8 +591,10 @@ public class PlantUpgradeUI : EntityInfoPanel
     }
 
     // one path strip: label, five pips and the buy button. the button's look: max at 5/5, locked
-    // while the path isn't unlocked, can't be afforded, is capped early by the level or held by the
-    // tutorial, else normal. a locked path still unlocks on click when the player has the sun
+    // while it can't be afforded, is capped early by the level or held by the tutorial, else normal.
+    // a path that isn't unlocked yet (the skill path) looks the same way as the others (Tommy,
+    // 2026-11-20): normal when its unlock can be afforded, locked when not. its lock glyph stays in
+    // place of the plus, and it unlocks on click when the player has the sun
     private void RefreshPath(PathRow row, int pathIndex, string label, int level, int effectiveLevel,
         bool unlocked, int cost, bool blocked, int sun)
     {
@@ -608,7 +610,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (row.button != null) row.button.interactable = !trueMax && !capped && !blocked;
         if (row.look != null)
             row.look.SetLook(trueMax ? PixelButton.Look.Max
-                : !unlocked || capped || blocked || !affordable ? PixelButton.Look.Locked
+                : capped || blocked || !affordable ? PixelButton.Look.Locked
                 : PixelButton.Look.Normal);
         if (row.plus != null) row.plus.SetActive(unlocked && !trueMax && !capped);
         if (row.lockGlyph != null) row.lockGlyph.SetActive(!trueMax && (!unlocked || capped));
