@@ -214,6 +214,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\PollenHasteEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalHypnosisEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\IcePrimer.cs" />
+    <Compile Include="Assets\Scripts\UI\PixelTextEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\WeatherVisualLibrary.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DarklingBeetle.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\FertilizerStatRules.cs" />
@@ -301,6 +302,7 @@
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
     <Compile Include="Assets\Scripts\UI\PotButtonVisibility.cs" />
     <Compile Include="Assets\Scripts\GridManagers\CaveGridManager.cs" />
+    <Compile Include="Assets\Scripts\UI\PlantInfoPanelStyle.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BloodsuckerEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\ThreatType.cs" />
     <Compile Include="Assets\Scripts\Mulch\IronbarkCounterMulchData.cs" />
@@ -451,6 +453,7 @@
     <Compile Include="Assets\Scripts\Mulch\MulchItem.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CoolingTouchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FloralGlowEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\PixelButton.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\BombardierBeetleData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\SnailData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantGuardianEffect.cs" />

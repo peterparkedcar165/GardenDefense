@@ -55,7 +55,6 @@ public class PlantUpgradeUI : EntityInfoPanel
     private const int TopInsetHeight = 68;
     private const int LevelBarX = 79;
     private const int FirstLevelBarY = 39;
-    private const int BarInnerWidth = 115;
     private const int SideButtonGap = 3;
 
     [Header("Layout")]
@@ -406,10 +405,19 @@ public class PlantUpgradeUI : EntityInfoPanel
             shiftedRoot.anchoredPosition = new Vector2(shiftedRoot.anchoredPosition.x, -d * Px);
     }
 
-    // fill width in whole art pixels: 115 at 100%, rounded down
+    // the art pixels a bar's fill spans at 100%: the bar frame's width less its 1 pixel border on
+    // each side (142 since the panel matches the right column's width)
+    private static float InnerWidth(RectTransform inside)
+    {
+        RectTransform bar = inside != null ? inside.parent as RectTransform : null;
+        return bar != null ? Mathf.Max(1f, Mathf.Round(bar.rect.width / Px) - 2f) : 1f;
+    }
+
+    // fill width in whole art pixels, rounded down
     private static void SetFill(Image fill, Image shine, float fraction)
     {
-        float width = Mathf.Floor(BarInnerWidth * Mathf.Clamp01(fraction)) * Px;
+        if (fill == null) return;
+        float width = Mathf.Floor(InnerWidth(fill.rectTransform) * Mathf.Clamp01(fraction)) * Px;
         foreach (Image image in new[] { fill, shine })
         {
             if (image == null) continue;
@@ -562,7 +570,8 @@ public class PlantUpgradeUI : EntityInfoPanel
         PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
         Image image = mark.GetComponent<Image>();
         if (image != null) image.color = style.comfortMark;
-        float x = 1f + Mathf.Clamp(Mathf.Round(BarInnerWidth * fraction), 0f, BarInnerWidth - 1);
+        float inner = InnerWidth(mark);
+        float x = 1f + Mathf.Clamp(Mathf.Round(inner * fraction), 0f, inner - 1f);
         mark.anchoredPosition = new Vector2(x * Px, mark.anchoredPosition.y);
     }
 
