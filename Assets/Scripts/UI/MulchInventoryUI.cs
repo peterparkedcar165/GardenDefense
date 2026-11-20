@@ -320,8 +320,6 @@ public class MulchInventoryUI : MonoBehaviour
 
     // ── refreshing ──────────────────────────────────────────────────────────
 
-    private Sprite Placeholder => registry != null ? registry.placeholderIcon : null;
-
     public void RefreshAll()
     {
         if (!built) return;
@@ -331,7 +329,7 @@ public class MulchInventoryUI : MonoBehaviour
         // the mulch the Sell popup was opened for left its slot (sold, moved, merged, equipped, new level)
         if (sellSlot >= 0 && (MulchManager.instance == null || MulchManager.instance.GetSlot(sellSlot) != sellItem))
             CloseSellPopup();
-        foreach (MulchSlotView slot in inventorySlots) slot.Refresh(Placeholder);
+        foreach (MulchSlotView slot in inventorySlots) slot.Refresh();
         if (bagLabel != null && MulchManager.instance != null)
         {
             int held = 0;
@@ -353,7 +351,7 @@ public class MulchInventoryUI : MonoBehaviour
         int slots = MulchManager.instance != null ? MulchManager.instance.PlantSlots : plantSlots.Count;
         if (plantLabel != null)
             plantLabel.text = $"Mulches <color=#BBBBBB>{plant.mulches.Count}/{slots}</color>";
-        foreach (MulchSlotView slot in plantSlots) slot.Refresh(Placeholder);
+        foreach (MulchSlotView slot in plantSlots) slot.Refresh();
     }
 
     public MulchEffect PlantSlotEffect(int index) =>
@@ -370,8 +368,7 @@ public class MulchInventoryUI : MonoBehaviour
         CloseSellPopup();
         draggingSlot = slot;
         dropHandled = false;
-        dragGhost.sprite = item.data.icon != null ? item.data.icon : Placeholder;
-        dragGhost.color = new Color(MulchTierColors.Get(item.rarity).r, MulchTierColors.Get(item.rarity).g, MulchTierColors.Get(item.rarity).b, 0.85f);
+        MulchIcon.Show(dragGhost, item, 0.85f);
         dragGhost.rectTransform.sizeDelta = new Vector2(bagSlotSize, bagSlotSize);
         dragGhost.gameObject.SetActive(true);
         overlay.SetAsLastSibling();
@@ -447,8 +444,7 @@ public class MulchInventoryUI : MonoBehaviour
         if (ghostReturn != null) { StopCoroutine(ghostReturn); ghostReturn = null; }
         groundDragging = true;
         HideTooltip();
-        dragGhost.sprite = item.data.icon != null ? item.data.icon : Placeholder;
-        dragGhost.color = MulchTierColors.Get(item.rarity);
+        MulchIcon.Show(dragGhost, item);
         float size = WorldSizeOnOverlay(worldPosition, worldSize);
         dragGhost.rectTransform.sizeDelta = new Vector2(size, size);
         dragGhost.gameObject.SetActive(true);
@@ -543,17 +539,16 @@ public class MulchInventoryUI : MonoBehaviour
     {
         if (item == null || slot < 0 || slot >= inventorySlots.Count || overlay == null) return;
         Camera cam = Camera.main;
-        if (cam == null) { inventorySlots[slot].Refresh(Placeholder); return; }
+        if (cam == null) { inventorySlots[slot].Refresh(); return; }
 
         incoming.Add(slot);
-        inventorySlots[slot].Refresh(Placeholder);
+        inventorySlots[slot].Refresh();
 
         GameObject go = new GameObject("FlyingMulch", typeof(RectTransform));
         go.transform.SetParent(overlay, false);
         Image image = go.AddComponent<Image>();
-        image.sprite = item.data.icon != null ? item.data.icon : Placeholder;
-        image.color = MulchTierColors.Get(item.rarity);
         image.preserveAspect = true;
+        MulchIcon.Show(image, item);
         image.raycastTarget = false;
         overlay.SetAsLastSibling();
 
@@ -585,7 +580,7 @@ public class MulchInventoryUI : MonoBehaviour
         incoming.Remove(slot);
         if (slot < inventorySlots.Count)
         {
-            inventorySlots[slot].Refresh(Placeholder);
+            inventorySlots[slot].Refresh();
             inventorySlots[slot].Pop();
         }
     }

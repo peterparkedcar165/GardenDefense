@@ -25,16 +25,16 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         : ui.IsIncoming(index) ? null
         : MulchManager.instance != null ? MulchManager.instance.GetSlot(index) : null;
 
-    // draws the slot: a rarity coloured frame and tinted icon, or a dim empty square
-    public void Refresh(Sprite placeholder)
+    // draws the slot: a rarity coloured frame and the mulch's paper bag icon (MulchIcon), or a dim
+    // empty square
+    public void Refresh()
     {
         MulchItem item = Item;
         bool has = item != null && item.data != null;
-        icon.enabled = has;
+        if (has) MulchIcon.Show(icon, item);
+        else MulchIcon.Hide(icon);
         if (has)
         {
-            icon.sprite = item.data.icon != null ? item.data.icon : placeholder;
-            icon.color = MulchTierColors.Get(item.rarity);
             frame.color = spriteFrame
                 ? Color.Lerp(Color.white, MulchTierColors.Get(item.rarity), 0.5f)
                 : Color.Lerp(MulchTierColors.Get(item.rarity), Color.black, 0.25f);

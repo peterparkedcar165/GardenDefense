@@ -57,6 +57,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0b403a1cb4a44fe2aa253613b92fd1d8, type: 2}
   - {fileID: 11400000, guid: ac7935a746c34747a9ada8620a1f1e27, type: 2}
   placeholderIcon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
+  iconBag: {fileID: 21300000, guid: 19db19e0e0314a2db05b506d7955e5df, type: 3}
+  iconLabel: {fileID: 21300000, guid: 10c5d50064d34688901e5e656f7d8ac0, type: 3}
+  iconBagColor: {r: 0.7686275, g: 0.454902, b: 0.07843138, a: 1}
   font: {fileID: 11400000, guid: 0d1f0e22ae7b80343814964aec364541, type: 2}
   baseDropChance: 0.04
   pityKills: 30

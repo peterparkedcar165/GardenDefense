@@ -12,8 +12,14 @@ public class MulchRegistry : ScriptableObject
     public MulchData[] mulches;
     [Tooltip("every fertilizer, for the dev menu (n). which ones a level offers is LevelConfig.fertilizers")]
     public FertilizerData[] fertilizers;
-    [Tooltip("icon for a mulch with none of its own")]
+    [Tooltip("old icon for a mulch with none of its own, only while there's no paper bag below")]
     public Sprite placeholderIcon;
+    [Tooltip("the paper bag mulch icon (Downloads\\gd_mulch_icons): every mulch's icon is this bag, the label over " +
+        "it in the rarity colour, and the mulch's own symbol (MulchData.symbol) over that in a pale rarity colour")]
+    public Sprite iconBag;
+    public Sprite iconLabel;
+    [Tooltip("the bag's tint, the same for every mulch")]
+    public Color iconBagColor = new Color32(0xC4, 0x74, 0x14, 0xFF);
     [Tooltip("font of the mulch inventory, tooltips and the dev menu")]
     public TMP_FontAsset font;
 

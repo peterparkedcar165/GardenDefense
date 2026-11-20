@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
@@ -25,7 +26,12 @@ public class MulchDrop : MonoBehaviour
 
     private MulchRegistry registry;
     private Transform visual;
+    // the paper bag icon's layers (MulchIcon): bag, label and symbol, one sorting group so drops
+    // that overlap never interleave. label and symbol are null without the bag in the registry
     private SpriteRenderer body;
+    private SpriteRenderer label;
+    private SpriteRenderer symbol;
+    private bool bagIcon;
     private SpriteRenderer shadow;
     private Vector3 shadowBaseScale;
     private ParticleSystem glitter;
@@ -122,13 +128,18 @@ public class MulchDrop : MonoBehaviour
         GameObject go = new GameObject("Visual");
         go.transform.SetParent(transform, false);
         visual = go.transform;
-        body = go.AddComponent<SpriteRenderer>();
-        Sprite sprite = Item.data.icon != null ? Item.data.icon : registry.placeholderIcon;
-        body.sprite = sprite;
-        if (registry.spriteMaterial != null) body.sharedMaterial = registry.spriteMaterial;
-        body.color = MulchTierColors.Get(Item.rarity);
-        body.sortingLayerName = DropLayer;
-        body.sortingOrder = SortingOrder;
+        SortingGroup group = go.AddComponent<SortingGroup>();
+        group.sortingLayerName = DropLayer;
+        group.sortingOrder = SortingOrder;
+        bagIcon = registry.iconBag != null;
+        Sprite sprite = bagIcon ? registry.iconBag : MulchIcon.OldIcon(Item);
+        body = AddLayer(go, sprite, 0);
+        if (bagIcon)
+        {
+            label = AddLayer(NewChild("Label"), registry.iconLabel, 1);
+            if (Item.data.symbol != null) symbol = AddLayer(NewChild("Symbol"), Item.data.symbol, 2);
+        }
+        ApplyColors();
         float spriteSize = sprite != null ? Mathf.Max(sprite.bounds.size.x, sprite.bounds.size.y) : 1f;
         float scale = spriteSize > 0f ? registry.dropSize / spriteSize : 1f;
         visual.localScale = new Vector3(scale, scale, 1f);
@@ -272,11 +283,40 @@ public class MulchDrop : MonoBehaviour
             visible = Mathf.FloorToInt(left / period) % 2 == 0;
         }
         body.enabled = visible;
+        if (label != null) label.enabled = visible;
+        if (symbol != null) symbol.enabled = visible;
         shadow.enabled = visible;
-        Color tint = MulchTierColors.Get(Item.rarity);
-        tint.a = faded ? FadedAlpha : 1f;
-        body.color = tint;
+        ApplyColors();
     }
+
+    private SpriteRenderer AddLayer(GameObject go, Sprite sprite, int order)
+    {
+        SpriteRenderer layer = go.AddComponent<SpriteRenderer>();
+        layer.sprite = sprite;
+        if (registry.spriteMaterial != null) layer.sharedMaterial = registry.spriteMaterial;
+        layer.sortingLayerName = DropLayer;
+        layer.sortingOrder = order;
+        return layer;
+    }
+
+    private GameObject NewChild(string name)
+    {
+        GameObject go = new GameObject(name);
+        go.transform.SetParent(visual, false);
+        return go;
+    }
+
+    // bag brown, label in the rarity colour, symbol pale (MulchIcon); without the bag the old
+    // icon tinted by rarity. faded while its copy is being dragged
+    private void ApplyColors()
+    {
+        float alpha = faded ? FadedAlpha : 1f;
+        body.color = Tint(bagIcon ? MulchIcon.BagColor : MulchTierColors.Get(Item.rarity), alpha);
+        if (label != null) label.color = Tint(MulchIcon.LabelColor(Item.rarity), alpha);
+        if (symbol != null) symbol.color = Tint(MulchIcon.SymbolColor(Item.rarity), alpha);
+    }
+
+    private static Color Tint(Color c, float alpha) { c.a = alpha; return c; }
 
     // the visual rides height above its resting spot; the shadow stays on the ground and shrinks
     // and fades the higher the drop is, like a projectile's

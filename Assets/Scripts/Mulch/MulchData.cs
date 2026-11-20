@@ -13,7 +13,10 @@ public abstract class MulchData : ScriptableObject
         "coloured to its elementalType (PlantData.ElementalColor), even when that's just Neutral")]
     public string mulchName;
     [TextArea] public string description;
-    [Tooltip("drawn in grayscale, the game tints it by rarity. empty uses the registry's placeholder")]
+    [Tooltip("the 9 by 9 symbol on the paper bag icon's label (a 32 by 32 sprite from Sprites/UI/MulchIcons, drawn " +
+        "near white, tinted a pale rarity colour). empty: the bag and label only, until its symbol is drawn")]
+    public Sprite symbol;
+    [Tooltip("the old single sprite icon, tinted by rarity. only shown while the registry has no paper bag (iconBag)")]
     public Sprite icon;
     [Tooltip("drives the colour of mulchName")]
     public ElementalType elementalType;
