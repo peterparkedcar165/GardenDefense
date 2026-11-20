@@ -63,6 +63,13 @@ public class PlantWidgetStyle : ScriptableObject
     [Tooltip("rhodiola's golden sap bar")]
     public Color sapBarColor = new Color32(0xFF, 0xD7, 0x00, 0xFF);
 
+    [Header("Mulch squares")]
+    [Tooltip("widget pixels of each equipped mulch's square, in the row above the health bar. it starts where the " +
+        "bar shows, right of the circle")]
+    [Min(1)] public int mulchMarkerSize = 4;
+    [Tooltip("widget pixels between two squares")]
+    [Min(0)] public int mulchMarkerGap = 1;
+
     [Header("Skill circle")]
     public Color circleInsideColor = new Color32(0x2E, 0x2E, 0x2E, 0xFF);
     public Color circleOutlineColor = new Color32(0x0E, 0x0E, 0x0E, 0xFF);

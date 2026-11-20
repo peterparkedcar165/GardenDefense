@@ -58,9 +58,7 @@ public class PlantWidget : MonoBehaviour
     private float chargeTarget, displayedCharge = -1f;
 
     // one small square per equipped mulch, coloured by its rarity, in a row just above the health
-    // bar (Tommy: plain coloured squares, not mini icons)
-    private const int MarkerSize = 3;
-    private const int MarkerGap = 1;
+    // bar (Tommy: plain coloured squares, not mini icons). size and gap: Style.mulchMarkerSize, mulchMarkerGap
     private readonly List<Image> mulchMarkers = new List<Image>();
     private int markerCount;
 
@@ -321,11 +319,18 @@ public class PlantWidget : MonoBehaviour
             barTop += 1 - ExtraBarHeight;
         }
 
-        // mulch squares: a row from the bar's left end, one pixel above its top border
-        for (int i = 0; i < markerCount && i < mulchMarkers.Count; i++)
-            Place(mulchMarkers[i], left + i * (MarkerSize + MarkerGap), top + 1 + MarkerSize, MarkerSize, MarkerSize);
-
         int circleLeft = left - CircleLeftOfBar;
+
+        // mulch squares: a row one pixel above the bar's top border, starting where the bar shows.
+        // the circle's outline covers the bar's first 3 pixels (it ends 6 past the circle's middle),
+        // so the row starts on the first pixel right of it (Tommy, 2026-11-20: it used to start
+        // under the circle)
+        int markerSize = Mathf.Max(1, Style.mulchMarkerSize);
+        int markerStep = markerSize + Mathf.Max(0, Style.mulchMarkerGap);
+        int markerLeft = circleLeft + CircleSize / 2 + CircleVisibleHalf;
+        for (int i = 0; i < markerCount && i < mulchMarkers.Count; i++)
+            Place(mulchMarkers[i], markerLeft + i * markerStep, top + 1 + markerSize, markerSize, markerSize);
+
         Place(circleInside, circleLeft, circleTop, CircleSize, CircleSize);
         Place(circleCharge, circleLeft, circleTop, CircleSize, CircleSize);
         Place(circleOutline, circleLeft, circleTop, CircleSize, CircleSize);
