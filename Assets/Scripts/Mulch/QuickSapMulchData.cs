@@ -5,7 +5,7 @@ public class QuickSapMulchData : MulchData
 {
     [Tooltip("attack speed this plant gains, e.g. 0.25 = 25% faster")]
     public TierValue attackSpeedBonus = TierValue.Scaled(0.25f);
-    [Tooltip("damage this plant loses, e.g. 0.25 = 25% less")]
+    [Tooltip("Attack Damage this plant loses, e.g. 0.25 = 25% less (of its total Attack Damage)")]
     public TierValue damagePenalty = TierValue.Scaled(0.25f);
 
     public override MulchEffect CreateEffect(MulchItem item) => new QuickSapMulchEffect(this, item);
@@ -13,6 +13,7 @@ public class QuickSapMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"This plant attacks {Green(Pct(attackSpeedBonus.Get(r)))} faster but deals {Red(Pct(damagePenalty.Get(r)))} less damage.";
+        return $"Increase <color=green><b>Attack Speed</b></color> by {Green(Pct(attackSpeedBonus.Get(r)))}, " +
+            $"but reduce <color=green><b>Attack Damage</b></color> by {Red(Pct(damagePenalty.Get(r)))}.";
     }
 }
