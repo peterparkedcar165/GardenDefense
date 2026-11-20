@@ -967,7 +967,7 @@ public abstract class Entity : MonoBehaviour
     {
         UpdateStats();
         health = maxHealth;
-        if (this is Insect) SpawnHealthBar();
+        // insects make their bar widget in Insect.Start (the old bar there only if the widget style is missing)
 
         _flashRenderer = GetComponentInChildren<SpriteRenderer>();
         if (_flashRenderer != null)
@@ -1189,8 +1189,8 @@ public abstract class Entity : MonoBehaviour
         healthBarInstance.SetActive(false);
     }
 
-    // once a frame, right before the shield popped flag clears: plants feed their PlantWidget here
-    // (they use it instead of the health bar above)
+    // once a frame, right before the shield popped flag clears: plants and insects feed their
+    // PlantWidget here (they use it instead of the health bar above)
     protected virtual void TickHealthWidget(bool shieldJustExpired) {}
 
     // plants and friendly units use a green fill, everything else red. overridable for teams

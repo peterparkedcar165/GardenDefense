@@ -8,6 +8,8 @@ public class InsectData : ScriptableObject
     public Color nameColor = Color.white;
     public Sprite sprite;
     public GameObject insectPrefab;
+    [Tooltip("widget pixels to move this insect's health bar up (or down, negative) from just above its sprite")]
+    public int widgetHeightOffset = 0;
 
     [Header("Core Stats")]
     public float baseMaxHealth;

@@ -63,6 +63,15 @@ public class PlantWidgetStyle : ScriptableObject
     [Tooltip("rhodiola's golden sap bar")]
     public Color sapBarColor = new Color32(0xFF, 0xD7, 0x00, 0xFF);
 
+    [Header("Insects")]
+    [Tooltip("width of an insect's health bar in art pixels. insects get the same bar as plants, without the skill circle")]
+    [Min(5)] public int insectBarWidth = 42;
+    [Tooltip("an enemy insect's health fill, the old enemy bar's dark red. friendly insects (minions, hypnotized) " +
+        "use the plant colours above")]
+    public Color enemyHealth = new Color(0.6f, 0.05f, 0.05f, 1f);
+    [Tooltip("the chunk an enemy just lost, shown for a moment before it drains, the old enemy bar's orange")]
+    public Color enemyDamageChunk = new Color(1f, 0.55f, 0f, 1f);
+
     [Header("Mulch squares")]
     [Tooltip("widget pixels of each equipped mulch's square, in the row above the health bar. it starts where the " +
         "bar shows, right of the circle")]

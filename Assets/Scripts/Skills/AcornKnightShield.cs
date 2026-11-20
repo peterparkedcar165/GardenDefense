@@ -159,7 +159,8 @@ public class AcornKnightShield : Minion
             healthBarInstance.transform.localPosition = new Vector3(-0.475f, 0.4f, 0f);
         }
 
-        SpawnLifetimeBar();
+        // with the bar widget the lifetime is a thin bar under its health (see Update)
+        if (HealthWidget == null) SpawnLifetimeBar();
 
         _visualSR = GetComponentInChildren<SpriteRenderer>();
         if (_visualSR != null)
@@ -190,6 +191,12 @@ public class AcornKnightShield : Minion
             }
         }
     }
+
+    // the bar sits over the shield's root at its old height: its Visual bounces and its Fall clip
+    // draws the drop inside the sprite, so the sprite's top would put the bar too high
+    protected override Transform HealthWidgetAnchor => transform;
+    protected override bool HealthWidgetFollowsSprite => false;
+    protected override float HealthWidgetHeight => 0.4f;
 
     private void SpawnLifetimeBar()
     {
@@ -267,7 +274,15 @@ public class AcornKnightShield : Minion
                     if (r != null) { r.sprite = _visualSR.sprite; r.enabled = show; }
         }
 
-        if (_lifetimeBarInstance != null)
+        if (HealthWidget != null)
+        {
+            bool selected = PlantUpgradeUI.instance?.GetSelectedInsect() == this;
+            if ((_isHovered || selected) && lifetime > 0f)
+                HealthWidget.SetExtraBar("lifetime", Mathf.Clamp01(1f - _lifetimeElapsed / lifetime), Color.grey);
+            else
+                HealthWidget.RemoveExtraBar("lifetime");
+        }
+        else if (_lifetimeBarInstance != null)
         {
             bool selected = PlantUpgradeUI.instance?.GetSelectedInsect() == this;
             _lifetimeBarInstance.SetActive(_isHovered || selected);

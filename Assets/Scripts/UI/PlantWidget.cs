@@ -7,7 +7,8 @@ using System.Collections.Generic;
 // runtime), and a circle on the bar's left end that fills clockwise as the skill charges and pulses
 // when it's ready. a world space canvas built in code, one canvas unit = one art pixel, every
 // position and frame a whole pixel; only fill lengths are free, so they glide (see PlaceFill). the owner feeds it every frame (SetHealth, SetSkill,
-// SetExtraBar, SetVisible); the look comes from Resources/PlantWidgetStyle.asset
+// SetExtraBar, SetVisible); the look comes from Resources/PlantWidgetStyle.asset. insects get the
+// same widget without the circle (Tommy, 2026-11-20), at the style's insect width, enemies in red
 public class PlantWidget : MonoBehaviour
 {
     private const int HealthBarHeight = 6;
@@ -57,6 +58,14 @@ public class PlantWidget : MonoBehaviour
     private bool skillUnlocked, skillReady;
     private float chargeTarget, displayedCharge = -1f;
 
+    // false for insects: no skill circle, and the bar takes the style's insect width
+    private bool showCircle = true;
+    // an enemy's health fill and damage chunk take the style's enemy colours
+    private bool enemy;
+    // how far the widget's lowest pixel hangs below the circle's middle, so it sits that far above
+    // the sprite: the circle's when it has one (as before), else the bottom of the bar stack
+    private int lowestBelowMiddle = CircleVisibleHalf;
+
     // one small square per equipped mulch, coloured by its rarity, in a row just above the health
     // bar (Tommy: plain coloured squares, not mini icons). size and gap: Style.mulchMarkerSize, mulchMarkerGap
     private readonly List<Image> mulchMarkers = new List<Image>();
@@ -74,11 +83,12 @@ public class PlantWidget : MonoBehaviour
     private float measureUntil;
 
     private float PixelsPerUnit => Style != null && Style.barHealth != null ? Style.barHealth.pixelsPerUnit : 32f;
-    private int Width => Style != null ? Mathf.Max(5, Style.barWidth) : 34;
+    private int Width => Style != null ? Mathf.Max(5, showCircle ? Style.barWidth : Style.insectBarWidth) : 34;
 
     // baseHeightUnits: how far above the owner's position the middle of the circle sits before the
-    // style's verticalOffset, normally the owner's old health bar height
-    public static PlantWidget Create(Transform owner, float baseHeightUnits)
+    // style's verticalOffset, normally the owner's old health bar height. showCircle false: the
+    // insect look, bars only
+    public static PlantWidget Create(Transform owner, float baseHeightUnits, bool showCircle = true)
     {
         if (Style == null)
         {
@@ -90,9 +100,12 @@ public class PlantWidget : MonoBehaviour
         PlantWidget widget = go.AddComponent<PlantWidget>();
         widget.owner = owner;
         widget.baseHeightUnits = baseHeightUnits;
+        widget.showCircle = showCircle;
         widget.Build();
         return widget;
     }
+
+    public void SetEnemy(bool value) => enemy = value;
 
     // sits the widget just above this sprite's visible top instead of at the fixed base height, so
     // tall and short plants each get their bar right above them. the sprite's tight mesh follows its
@@ -241,15 +254,18 @@ public class PlantWidget : MonoBehaviour
         shieldFill = NewImage("Shield", fillsRoot, Style.fillHealth, Image.Type.Sliced, Style.shield);
         healthFill = NewImage("Health", fillsRoot, Style.fillHealth, Image.Type.Sliced, Style.healthHigh);
 
-        circleInside = NewImage("CircleInside", transform, Style.circleInside, Image.Type.Simple, Style.circleInsideColor);
-        circleCharge = NewImage("CircleCharge", transform, Style.circleCharge, Image.Type.Filled, Style.chargeColor);
-        circleCharge.fillMethod = Image.FillMethod.Radial360;
-        circleCharge.fillOrigin = (int)Image.Origin360.Top;
-        circleCharge.fillClockwise = true;
-        circleCharge.fillAmount = 0f;
-        circleOutline = NewImage("CircleOutline", transform, Style.circleOutline, Image.Type.Simple, Style.circleOutlineColor);
-        circleGlow = NewImage("CircleGlow", transform, Style.circleGlow, Image.Type.Simple, Style.readyGlowColor);
-        circleGlow.enabled = false;
+        if (showCircle)
+        {
+            circleInside = NewImage("CircleInside", transform, Style.circleInside, Image.Type.Simple, Style.circleInsideColor);
+            circleCharge = NewImage("CircleCharge", transform, Style.circleCharge, Image.Type.Filled, Style.chargeColor);
+            circleCharge.fillMethod = Image.FillMethod.Radial360;
+            circleCharge.fillOrigin = (int)Image.Origin360.Top;
+            circleCharge.fillClockwise = true;
+            circleCharge.fillAmount = 0f;
+            circleOutline = NewImage("CircleOutline", transform, Style.circleOutline, Image.Type.Simple, Style.circleOutlineColor);
+            circleGlow = NewImage("CircleGlow", transform, Style.circleGlow, Image.Type.Simple, Style.readyGlowColor);
+            circleGlow.enabled = false;
+        }
 
         canvas.enabled = false;
     }
@@ -303,7 +319,8 @@ public class PlantWidget : MonoBehaviour
         int count = 1 + extraBars.Count;
         int stackHeight = HealthBarHeight + extraBars.Count * ExtraBarHeight - (count - 1);
         int circleTop = CircleSize / 2;
-        int top = circleTop - Mathf.FloorToInt((CircleSize - stackHeight) / 2f);
+        // without the circle the health bar stays put and any extra bars hang below it
+        int top = showCircle ? circleTop - Mathf.FloorToInt((CircleSize - stackHeight) / 2f) : HealthBarHeight / 2;
 
         Place(healthFrame, left, top, width, HealthBarHeight);
         int barTop = top + 1 - HealthBarHeight;
@@ -318,6 +335,8 @@ public class PlantWidget : MonoBehaviour
             Place(bar.frame, left, barTop, width, ExtraBarHeight);
             barTop += 1 - ExtraBarHeight;
         }
+        int stackBottom = top - stackHeight;
+        lowestBelowMiddle = showCircle ? CircleVisibleHalf : -stackBottom;
 
         int circleLeft = left - CircleLeftOfBar;
 
@@ -331,6 +350,7 @@ public class PlantWidget : MonoBehaviour
         for (int i = 0; i < markerCount && i < mulchMarkers.Count; i++)
             Place(mulchMarkers[i], markerLeft + i * markerStep, top + 1 + markerSize, markerSize, markerSize);
 
+        if (!showCircle) return;
         Place(circleInside, circleLeft, circleTop, CircleSize, CircleSize);
         Place(circleCharge, circleLeft, circleTop, CircleSize, CircleSize);
         Place(circleOutline, circleLeft, circleTop, CircleSize, CircleSize);
@@ -372,7 +392,7 @@ public class PlantWidget : MonoBehaviour
         // above the sprite), or the old fixed height until a sprite has been measured
         float heightPixels = float.IsNegativeInfinity(measuredTop)
             ? Mathf.Round(baseHeightUnits * ppu)
-            : Mathf.Ceil(measuredTop * ppu) + Style.gapAboveSprite + CircleVisibleHalf;
+            : Mathf.Ceil(measuredTop * ppu) + Style.gapAboveSprite + lowestBelowMiddle;
         heightPixels += Style.verticalOffset + heightOffsetPixels;
         Vector3 pos = owner.position;
         transform.position = new Vector3(Mathf.Round(pos.x * ppu) / ppu, Mathf.Round(pos.y * ppu) / ppu + heightPixels / ppu, pos.z);
@@ -382,11 +402,12 @@ public class PlantWidget : MonoBehaviour
         {
             // the color follows the bar as it's drawn (the eased health), so it changes as the bar
             // visibly passes each threshold rather than jumping ahead of it
-            healthFill.color = Style.HealthColor(maxHealth > 0f ? displayedHealth / maxHealth : 0f);
+            healthFill.color = enemy ? Style.enemyHealth : Style.HealthColor(maxHealth > 0f ? displayedHealth / maxHealth : 0f);
             PlaceFill(healthFill, healthFrame, displayedHealth / totalDisplay);
             bool hasShield = displayedShield > 0.001f || shield > 0f;
             PlaceFill(shieldFill, healthFrame, hasShield ? (displayedHealth + displayedShield) / totalDisplay : 0f);
             bool chunk = chunkProtection > health + shield + 0.001f;
+            chunkFill.color = enemy ? Style.enemyDamageChunk : Style.damageChunk;
             PlaceFill(chunkFill, healthFrame, chunk ? chunkProtection / totalDisplay : 0f);
         }
 
@@ -397,6 +418,7 @@ public class PlantWidget : MonoBehaviour
             PlaceFill(bar.fill, bar.frame, bar.displayed);
         }
 
+        if (!showCircle) return;
         circleCharge.fillAmount = skillUnlocked ? Mathf.Clamp01(displayedCharge) : 0f;
         if (circleGlow.enabled != skillReady) circleGlow.enabled = skillReady;
         if (skillReady)

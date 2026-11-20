@@ -402,6 +402,7 @@ public abstract class Insect : Entity, IAttackable
         pathOffset = new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
 
 
+        CreateHealthWidget();
         if (visual != null && healthBarInstance != null)
         {
             healthBarInstance.transform.SetParent(visual);
@@ -569,10 +570,50 @@ public abstract class Insect : Entity, IAttackable
         }
     }
 
+    protected override void OnHover()
+    {
+        base.OnHover();
+        _widgetHovered = true;
+    }
+
     protected override void OnHoverExit()
     {
+        _widgetHovered = false;
         if (health >= maxHealth && !HasShield() && healthBarInstance != null)
             healthBarInstance.SetActive(false);
+    }
+
+    // the plants' bar widget without the skill circle (Tommy, 2026-11-20), red for enemies and
+    // green like a plant's for friendlies. it follows the Visual, just above its sprite. without
+    // Resources/PlantWidgetStyle.asset the old bar is spawned instead
+    private PlantWidget _widget;
+    private bool _widgetHovered;
+    protected PlantWidget HealthWidget => _widget;
+    // the transform the bar sits over and follows
+    protected virtual Transform HealthWidgetAnchor => visual != null ? visual : transform;
+    // false: the bar stays at HealthWidgetHeight instead of just above the sprite
+    protected virtual bool HealthWidgetFollowsSprite => true;
+    // world units from the anchor to the bar's middle, until (or instead of) the sprite measuring
+    protected virtual float HealthWidgetHeight => 0.6f;
+
+    private void CreateHealthWidget()
+    {
+        if (_widget != null || healthBarInstance != null) return;
+        _widget = PlantWidget.Create(HealthWidgetAnchor, HealthWidgetHeight, false);
+        if (_widget == null) { SpawnHealthBar(); return; }
+        if (HealthWidgetFollowsSprite && _spriteRenderer != null)
+            _widget.FollowSpriteTop(_spriteRenderer, data != null ? data.widgetHeightOffset : 0);
+    }
+
+    // shows while hurt or shielded, hovered or selected, like the old bar
+    protected override void TickHealthWidget(bool shieldJustExpired)
+    {
+        if (_widget == null) return;
+        _widget.SetHealth(health, maxHealth, TotalShield, shieldJustExpired);
+        _widget.SetEnemy(team != Team.Friendly);
+        bool selected = PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedInsect() == this;
+        bool hurt = health < maxHealth || TotalShield > 0f;
+        _widget.SetVisible(IsAlive && (hurt || _widgetHovered || selected));
     }
 
     protected virtual Vector3 AimPointOffset => Vector3.zero;
