@@ -6,10 +6,11 @@ using TMPro;
 using System.Collections.Generic;
 
 // the mulch UI in the right side panel (Tommy's layout, 2026-11-20): the player's mulch bag
-// (MulchRegistry.inventorySize slots) in one row under the plant buttons, and the selected plant's
-// mulch slots (plantSlots) as a row at the bottom of the plant info panel. this component sits on
-// Canvas.prefab's MulchBag object; that object's rect is the bag's row, built in code at the start
-// and sized to fit. plantSlotsRoot is the plant's row: the info panel's MulchSlots window, whose
+// (MulchRegistry.inventorySize slots) in rows of bagColumns at the left end of the tool buttons'
+// row, as tall as them, where the old mulch button was (two rows of 3, Tommy 2026-11-20), and the
+// selected plant's mulch slots (plantSlots) as a row at the bottom of the plant info panel. this
+// component sits on Canvas.prefab's MulchBag object; that object's rect is the bag's area, its
+// slots built in code at the start and sized to fit. plantSlotsRoot is the plant's row: the info panel's MulchSlots window, whose
 // Slot0 to Slot5 children (slot sprite plus an Icon child) are placed in the prefab and taken over
 // here; a plantSlotsRoot without them gets a built row with a "Mulches 2/6" label instead. drag a
 // bag mulch onto another slot to merge or swap, onto a plant on the map or onto the plant's row to
@@ -23,6 +24,9 @@ public class MulchInventoryUI : MonoBehaviour
     [SerializeField] private RectTransform plantSlotsRoot;
     [Tooltip("width of the plant row's label (\"Mulches 2/6\")")]
     [SerializeField] private float plantLabelWidth = 112f;
+    [Tooltip("slots per row in the mulch bag; the rows fill the bag's rect top to bottom (Tommy, 2026-11-20: " +
+        "two rows of 3, as tall as the tool buttons)")]
+    [SerializeField] private int bagColumns = 3;
 
     private MulchRegistry registry;
     private TMP_FontAsset font;
@@ -75,8 +79,8 @@ public class MulchInventoryUI : MonoBehaviour
             go.transform.SetParent(PersistentCanvas.instance.transform, false);
             RectTransform rect = (RectTransform)go.transform;
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(728f, 177.5f);
-            rect.sizeDelta = new Vector2(410f, 63f);
+            rect.anchoredPosition = new Vector2(573.24f, 82.36f);
+            rect.sizeDelta = new Vector2(147f, 96.89f);
             go.AddComponent<MulchInventoryUI>();
         }
         if (instance == null) return;
@@ -116,9 +120,9 @@ public class MulchInventoryUI : MonoBehaviour
 
         int inventorySize = MulchManager.instance != null ? MulchManager.instance.InventorySize : 6;
         RectTransform bag = (RectTransform)transform;
-        bagSlotSize = BuildRow(bag, 0f, inventorySize, spacing, inventorySlots, false);
+        bagSlotSize = BuildGrid(bag, 0f, inventorySize, bagColumns, spacing, inventorySlots, false);
 
-        // "Mulch bag 3/6" just above the row
+        // "Mulch bag 3/6" just above the slots
         bagLabel = NewText("BagLabel", bag, 15f, TextAlignmentOptions.BottomLeft);
         RectTransform bagLabelRect = bagLabel.rectTransform;
         bagLabelRect.anchorMin = new Vector2(0f, 1f);
@@ -138,7 +142,7 @@ public class MulchInventoryUI : MonoBehaviour
             labelRect.pivot = new Vector2(0f, 0.5f);
             labelRect.anchoredPosition = Vector2.zero;
             labelRect.sizeDelta = new Vector2(plantLabelWidth, 0f);
-            BuildRow(plantSlotsRoot, plantLabelWidth, plantSlotCount, spacing, plantSlots, true);
+            BuildGrid(plantSlotsRoot, plantLabelWidth, plantSlotCount, plantSlotCount, spacing, plantSlots, true);
         }
 
         BuildOverlay();
@@ -171,16 +175,22 @@ public class MulchInventoryUI : MonoBehaviour
         return plantSlots.Count > 0;
     }
 
-    // a row of square slots inside parent, from leftInset to its right edge, as big as fits the
-    // parent's height and width. returns the slot size
-    private float BuildRow(RectTransform parent, float leftInset, int count, float spacing, List<MulchSlotView> slots, bool isPlant)
+    // square slots in rows of columns (left to right, then top to bottom) inside parent, from
+    // leftInset to its right edge, as big as fit the parent's height and width, the block centred
+    // in that area. returns the slot size
+    private float BuildGrid(RectTransform parent, float leftInset, int count, int columns, float spacing, List<MulchSlotView> slots, bool isPlant)
     {
         Rect area = parent.rect;
+        columns = Mathf.Clamp(columns, 1, Mathf.Max(1, count));
+        int rows = Mathf.Max(1, Mathf.CeilToInt(count / (float)columns));
         float width = Mathf.Max(1f, area.width - leftInset);
-        float size = Mathf.Floor(Mathf.Min(area.height, (width - (count - 1) * spacing) / Mathf.Max(1, count)));
-        float rowWidth = count * size + (count - 1) * spacing;
-        // centred in what's left of the row
-        float x0 = leftInset + (width - rowWidth) / 2f;
+        float size = Mathf.Floor(Mathf.Min((area.height - (rows - 1) * spacing) / rows,
+            (width - (columns - 1) * spacing) / columns));
+        float gridWidth = columns * size + (columns - 1) * spacing;
+        float gridHeight = rows * size + (rows - 1) * spacing;
+        float x0 = leftInset + (width - gridWidth) / 2f;
+        // the top row's top edge, from the parent's middle
+        float y0 = gridHeight / 2f;
 
         for (int i = 0; i < count; i++)
         {
@@ -188,8 +198,8 @@ public class MulchInventoryUI : MonoBehaviour
             slotGO.transform.SetParent(parent, false);
             RectTransform slotRect = (RectTransform)slotGO.transform;
             slotRect.anchorMin = slotRect.anchorMax = new Vector2(0f, 0.5f);
-            slotRect.pivot = new Vector2(0f, 0.5f);
-            slotRect.anchoredPosition = new Vector2(x0 + i * (size + spacing), 0f);
+            slotRect.pivot = new Vector2(0f, 1f);
+            slotRect.anchoredPosition = new Vector2(x0 + (i % columns) * (size + spacing), y0 - (i / columns) * (size + spacing));
             slotRect.sizeDelta = new Vector2(size, size);
 
             Image frame = slotGO.AddComponent<Image>();
