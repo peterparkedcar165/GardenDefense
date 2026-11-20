@@ -422,12 +422,12 @@
     <Compile Include="Assets\Scripts\StatusEffect\SnowBondHasteEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
+    <Compile Include="Assets\Scripts\UI\PointerHover.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreedyGrowthFertilizerEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\LongStemMulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HealTag.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreedyGrowthFertilizerData.cs" />
-    <Compile Include="Assets\Scripts\UI\PointerHover.cs" />
     <Compile Include="Assets\Scripts\Mulch\HealSplashMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearPoisonEffect.cs" />
