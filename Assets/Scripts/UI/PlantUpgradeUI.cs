@@ -4,9 +4,83 @@ using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using TMPro;
 
+// the info panel for the selected plant or insect, built from Tommy's plant info panel pack
+// (Downloads\gd_plant_info_panel\README.md). every piece is greyscale art tinted here: the panel,
+// text shadows, portrait and skill frame by the element, the pips by their path, the buttons by
+// their state (PixelButton). the prefab holds the layout in art pixels times 2 (1 art pixel = 2
+// canvas units, every child anchored to its parent's top left). the panel grows 14 art pixels per
+// level bar shown (oxygen, temperature) and moves everything under them down. an insect only gets
+// the top part: name, portrait, health and stats. colours and timings: PlantInfoPanelStyle
 public class PlantUpgradeUI : EntityInfoPanel
 {
+    [System.Serializable]
+    public class InfoBar
+    {
+        public RectTransform root;
+        public Image fill;
+        public Image shine;
+        [Tooltip("health only: the chunk just lost, behind the fill")]
+        public Image chunk;
+        public TMP_Text text;
+    }
+
+    [System.Serializable]
+    public class PathRow
+    {
+        public TMP_Text nameText;
+        [Tooltip("the 5 pips: empty, filled or max")]
+        public Image[] pips;
+        [Tooltip("drawn over each pip: the pulsing rim of the next one the player can buy")]
+        public Image[] pipNext;
+        [Tooltip("drawn over each pip: the max sprite, shown a moment when it's bought")]
+        public Image[] pipFlash;
+        public Button button;
+        public PixelButton look;
+        public GameObject plus;
+        public GameObject lockGlyph;
+        public TMP_Text priceText;
+        public GameObject sun;
+
+        [System.NonSerialized] public int shownLevel = -1;
+        [System.NonSerialized] public float[] flashUntil;
+    }
+
     public static PlantUpgradeUI instance;
+
+    // the layout in art pixels (README), times Px for canvas units
+    private const float Px = 2f;
+    private const int LevelBarStep = 14;
+    private const int PlantPanelHeight = 206;
+    private const int InsectPanelHeight = 96;
+    private const int TopInsetHeight = 68;
+    private const int LevelBarX = 79;
+    private const int FirstLevelBarY = 39;
+    private const int BarInnerWidth = 115;
+    private const int SideButtonGap = 3;
+
+    [Header("Layout")]
+    [SerializeField] private RectTransform panelRect;
+    [SerializeField] private RectTransform topInset;
+    [Tooltip("everything under the level bars, moved down 14 art pixels per bar")]
+    [SerializeField] private RectTransform shiftedRoot;
+    [SerializeField] private GameObject skillGroup;
+    [Tooltip("paths and mulches, plants only")]
+    [SerializeField] private GameObject lowerSection;
+    [Tooltip("the target button's place. a plant without targeting gets its auto cast button here instead")]
+    [SerializeField] private RectTransform actionSlot;
+    [Tooltip("buttons the design has no place for (auto cast next to targeting, orbit radius, transplant, " +
+        "relocate, flying first), stacked outside the panel's left edge")]
+    [SerializeField] private RectTransform sideButtons;
+
+    [Header("Element colours")]
+    [SerializeField] private Image panelBackground;
+    [Tooltip("the insets and strips, tinted with the panel colour like the panel itself")]
+    [SerializeField] private Image[] panelTinted;
+    [Tooltip("texts in the panel colour's text shadow")]
+    [SerializeField] private PixelTextEffect[] textShadows;
+    [SerializeField] private TMP_Text[] panelTexts;
+    [SerializeField] private Image portraitFrame;
+    [SerializeField] private Image portraitBackdrop;
 
     [Header("Targeting")]
     [SerializeField] private TMP_Text targetingModeText;
@@ -17,75 +91,36 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private float relocateIndicatorRadius = 0.5f;
 
     [Header("Flying Priority (Cattail)")]
-    [SerializeField] private Button flyingToggleButton;      // visible only for plants with a flying-first toggle
+    [SerializeField] private Button flyingToggleButton;      // visible only for plants with a flying first toggle
     [SerializeField] private TMP_Text flyingToggleText;
 
-    [Header("Orbit Radius (Calendula)")]
-    [SerializeField] private Button radiusToggleButton;      // visible only for plants with a fixed-radius toggle
+    [Header("Orbit Radius (Tansy)")]
+    [SerializeField] private Button radiusToggleButton;      // visible on every plant while Tansy is in the loadout
     [SerializeField] private TMP_Text radiusToggleText;
 
-    [Header("Health Bar")]
-    [SerializeField] private GameObject healthBarRoot;
-    [SerializeField] private Image healthBarFill;
-    [SerializeField] private TMP_Text healthText;
-
-    // fluid health bar, matching Entity's world-space bar: fillAmount eases toward the real
-    // percentage each frame instead of snapping. resets instantly on a new selection so switching
-    // targets never lerps in from the previously-selected entity's leftover value
-    private Entity _healthBarEntity;
-    private float _displayedHealthPct = -1f;
-    private const float HealthBarLerpSpeed = 12f;
-
-    // trailing damage chunk overlay, matching Entity's world-space chunk bar - built at runtime
-    // as a clone of healthBarFill inserted directly behind it, since the panel prefab has no
-    // dedicated chunk Image wired up in the Inspector
-    private Image _damageChunkFill;
-    private float _chunkPct = -1f;
-    private float _lastPctForChunk = -1f;
-    private float _chunkDelayTimer;
-    private const float DamageChunkDelay = 0.25f;
-    private static readonly Color AllyChunkColor  = Color.white;
-    private static readonly Color EnemyChunkColor = new Color(1f, 0.55f, 0f);
-
-    [Header("Temperature Bar")]
-    [SerializeField] private GameObject tempBarRoot;
-    [SerializeField] private Image tempBarBackground;
-    [SerializeField] private TMP_Text tempText;
-    [SerializeField] private TMP_Text tempStateText;
-    [SerializeField] private RectTransform tempCurrentIndicator;
+    [Header("Bars")]
+    [SerializeField] private InfoBar healthBar;
+    [SerializeField] private InfoBar oxygenBar;
+    [SerializeField] private InfoBar temperatureBar;
     [SerializeField] private RectTransform tempComfortMinIndicator;
     [SerializeField] private RectTransform tempComfortMaxIndicator;
-    [SerializeField] private RectTransform tempMinIndicator;
-    [SerializeField] private RectTransform tempMaxIndicator;
 
-    [Header("Upgrades Section")]
-    [SerializeField] private GameObject upgradesSection;
-
-    [Header("Path 1")]
-    [SerializeField] private TMP_Text path1NameText;
-    [SerializeField] private TMP_Text path1CostText;
-    [SerializeField] private Transform path1PipsContainer;
-    [SerializeField] private Button path1UpgradeButton;
-
-    [Header("Path 2")]
-    [SerializeField] private TMP_Text path2NameText;
-    [SerializeField] private TMP_Text path2CostText;
-    [SerializeField] private Transform path2PipsContainer;
-    [SerializeField] private Button path2UpgradeButton;
-
-    [Header("Path 3")]
-    [SerializeField] private TMP_Text path3NameText;
-    [SerializeField] private TMP_Text path3CostText;
-    [SerializeField] private Transform path3PipsContainer;
-    [SerializeField] private Button path3Button;
-    [SerializeField] private GameObject path3LockOverlay;
+    [Header("Paths (Attack, Passive, Skill)")]
+    [SerializeField] private PathRow path1;
+    [SerializeField] private PathRow path2;
+    [SerializeField] private PathRow path3;
 
     [Header("Skill")]
     [SerializeField] private Button skillButton;
+    [SerializeField] private Image skillFrame;
+    [SerializeField] private Image skillIcon;
+    [Tooltip("radial fill over the icon while it recharges, full while silenced or not unlocked")]
+    [SerializeField] private Image skillCooldownOverlay;
     [SerializeField] private TMP_Text skillCooldownText;
+    [SerializeField] private GameObject skillLock;
 
     [Header("Transplant")]
-    [SerializeField] private Button transplantButton;         // visible only while the Transplant mulch is active
+    [SerializeField] private Button transplantButton;        // visible only while the Transplant fertilizer is active
     [SerializeField] private TMP_Text transplantCooldownText;
 
     [Header("Auto Cast")]
@@ -102,42 +137,25 @@ public class PlantUpgradeUI : EntityInfoPanel
     [SerializeField] private GameObject tooltipPanel;
     [SerializeField] private TMP_Text tooltipText;
 
-    [Header("Colors")]
-    [SerializeField] private Color pipFilled = Color.yellow;
-    [SerializeField] private Color pipEmpty = Color.black;
-
-    [System.Serializable]
-    private struct ElementalPanelTheme
-    {
-        public ElementalType elementalType;
-        public Sprite backgroundSprite;
-    }
-
-    [Header("Elemental Theme")]
-    [SerializeField] private Image panelBackground;
-    [SerializeField] private ElementalPanelTheme[] elementalThemes;
-
-    private void ApplyElementalTheme(ElementalType type)
-    {
-        if (panelBackground == null)
-        {
-            Debug.LogWarning("PlantUpgradeUI: Panel Background is not assigned, cannot apply elemental theme.");
-            return;
-        }
-        foreach (var theme in elementalThemes)
-        {
-            if (theme.elementalType == type)
-            {
-                panelBackground.sprite = theme.backgroundSprite;
-                return;
-            }
-        }
-        Debug.LogWarning($"PlantUpgradeUI: no elemental theme set for {type}.");
-    }
-
     private Plant selectedPlant;
     private Insect selectedInsect;
     private SpriteRenderer cachedInsectRenderer;
+    private int shownLevelBars = -1;
+    private bool shownAsPlant;
+
+    // fluid health bar, matching the plant widget: the fill eases toward the real share each frame
+    // instead of snapping, and resets on a new selection so it never lerps in from the last one
+    private Entity _healthBarEntity;
+    private float _displayedHealthPct = -1f;
+    private const float HealthBarLerpSpeed = 12f;
+
+    // trailing damage chunk behind the fill: freezes at the share before a hit, waits, then drains
+    private float _chunkPct = -1f;
+    private float _lastPctForChunk = -1f;
+    private float _chunkDelayTimer;
+    private const float DamageChunkDelay = 0.25f;
+    private static readonly Color AllyChunkColor  = Color.white;
+    private static readonly Color EnemyChunkColor = new Color(1f, 0.55f, 0f);
 
     protected override void Awake()
     {
@@ -195,37 +213,36 @@ public class PlantUpgradeUI : EntityInfoPanel
         selectedPlant = plant;
         selectedPlant.Select();
 
-        if (upgradesSection != null) upgradesSection.SetActive(true);
-        if (healthBarRoot != null)   healthBarRoot.SetActive(true);
-        if (targetingToggleButton != null)
-            targetingToggleButton.gameObject.SetActive(plant.UsesTargeting);
+        if (skillGroup != null) skillGroup.SetActive(true);
+        if (lowerSection != null) lowerSection.SetActive(true);
         if (targetingModeText != null)
             targetingModeText.text = plant.targeting.ToString();
-        if (relocateMinionsButton != null)
-            relocateMinionsButton.gameObject.SetActive(plant.CommandsMinions);
-        if (flyingToggleButton != null)
-            flyingToggleButton.gameObject.SetActive(plant.UsesFlyingToggle);
         if (flyingToggleText != null)
-            flyingToggleText.text = plant.prioritizeFlying ? "Flying First" : "Default";
-        if (radiusToggleButton != null)
-            radiusToggleButton.gameObject.SetActive(plant.UsesRadiusToggle);
+            flyingToggleText.text = FlyingLabel(plant);
         if (radiusToggleText != null)
-            radiusToggleText.text = plant.orbitRadius.ToString();
-        if (autoCastButton != null)
-            autoCastButton.gameObject.SetActive(plant.UsesAutoCast);
-        if (transplantButton != null)
-            transplantButton.gameObject.SetActive(TransplantFertilizerEffect.IsActive);
+            radiusToggleText.text = RadiusLabel(plant);
+        ArrangeActionButtons(plant);
 
         panel.SetActive(true);
-        ApplyElementalTheme(plant.elementalType);
+        ApplyElement(plant.elementalType);
 
         entityNameText.text = plant.GetName();
-        if (entityIcon != null && plant.data != null)
-            entityIcon.sprite = plant.data.icon;
+        SetPortrait(plant.data != null ? plant.data.icon : null);
+
+        PlantInfoPanelStyle.SkillFrame frame = PlantInfoPanelStyle.Instance.FrameFor(plant.elementalType);
+        if (skillIcon != null)
+        {
+            Sprite icon = plant.data != null && plant.data.skillIcon != null ? plant.data.skillIcon : frame.fallbackIcon;
+            skillIcon.sprite = icon;
+            skillIcon.enabled = icon != null;
+        }
+
+        foreach (PathRow row in Paths) if (row != null) row.shownLevel = -1;
 
         statusEffectPanel?.Show(plant);
         RefreshStats();
         RefreshPaths();
+        RefreshSkillButton();
     }
 
     public void ShowPanel(Insect insect)
@@ -237,28 +254,16 @@ public class PlantUpgradeUI : EntityInfoPanel
         insect.ShowHealthBar();
         cachedInsectRenderer = insect.GetComponentInChildren<SpriteRenderer>();
 
-        if (upgradesSection != null) upgradesSection.SetActive(false);
-        if (tempBarRoot != null)     tempBarRoot.SetActive(false);
-        if (targetingToggleButton != null)
-            targetingToggleButton.gameObject.SetActive(false);
-        if (relocateMinionsButton != null)
-            relocateMinionsButton.gameObject.SetActive(false);
-        if (flyingToggleButton != null)
-            flyingToggleButton.gameObject.SetActive(false);
-        if (radiusToggleButton != null)
-            radiusToggleButton.gameObject.SetActive(false);
-        if (autoCastButton != null)
-            autoCastButton.gameObject.SetActive(false);
+        if (skillGroup != null) skillGroup.SetActive(false);
+        if (lowerSection != null) lowerSection.SetActive(false);
+        HideActionButtons();
 
         panel.SetActive(true);
-        ApplyElementalTheme(ElementalType.Neutral);
+        ApplyElement(ElementalType.Neutral);
 
-        string desc = insect.GetDescription();
-        entityNameText.text = string.IsNullOrEmpty(desc)
-            ? insect.GetName()
-            : $"{insect.GetName()}\n<size=70%><color=grey>{desc}</color></size>";
-        if (entityIcon != null && cachedInsectRenderer != null)
-            entityIcon.sprite = cachedInsectRenderer.sprite;
+        // the name line holds one line only: the description is in the portrait's tooltip
+        entityNameText.text = insect.GetName();
+        SetPortrait(cachedInsectRenderer != null ? cachedInsectRenderer.sprite : null);
 
         statusEffectPanel?.Show(insect);
         RefreshStats();
@@ -280,7 +285,94 @@ public class PlantUpgradeUI : EntityInfoPanel
     public Plant  GetSelectedPlant()  => selectedPlant;
     public Insect GetSelectedInsect() => selectedInsect;
 
-    // --- Stats ---
+    private PathRow[] Paths => new[] { path1, path2, path3 };
+
+    // --- Element colours ---
+
+    private void ApplyElement(ElementalType element)
+    {
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        Color panelColor = PlantData.ElementPanelColor(element);
+        Color shadow = PlantData.ElementTextShadowColor(element);
+        if (panelBackground != null) panelBackground.color = panelColor;
+        if (panelTinted != null)
+            foreach (Image image in panelTinted)
+                if (image != null) image.color = panelColor;
+        if (textShadows != null)
+            foreach (PixelTextEffect effect in textShadows)
+                if (effect != null) effect.Color = shadow;
+        if (panelTexts != null)
+            foreach (TMP_Text text in panelTexts)
+                if (text != null) text.color = style.text;
+        if (portraitFrame != null) portraitFrame.color = PlantData.ElementColor(element);
+        if (portraitBackdrop != null) portraitBackdrop.color = PlantData.ElementBackdropColor(element);
+        PlantInfoPanelStyle.SkillFrame frame = style.FrameFor(element);
+        if (skillFrame != null && frame.frame != null) skillFrame.sprite = frame.frame;
+    }
+
+    // the plant (or insect) as big as fits the portrait window, bottom centred
+    private void SetPortrait(Sprite sprite)
+    {
+        if (entityIcon == null) return;
+        entityIcon.sprite = sprite;
+        entityIcon.enabled = sprite != null;
+        if (sprite == null) return;
+        RectTransform window = entityIcon.rectTransform.parent as RectTransform;
+        Vector2 area = window != null ? window.rect.size : new Vector2(112f, 112f);
+        Vector2 size = sprite.rect.size;
+        float scale = Mathf.Min(area.x / Mathf.Max(1f, size.x), area.y / Mathf.Max(1f, size.y));
+        RectTransform rect = entityIcon.rectTransform;
+        rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0f);
+        rect.anchoredPosition = Vector2.zero;
+        rect.sizeDelta = new Vector2(Mathf.Round(size.x * scale), Mathf.Round(size.y * scale));
+    }
+
+    // --- Action buttons ---
+
+    private void ArrangeActionButtons(Plant plant)
+    {
+        bool targeting = plant.UsesTargeting;
+        if (targetingToggleButton != null)
+            targetingToggleButton.gameObject.SetActive(targeting);
+        if (autoCastButton != null)
+        {
+            autoCastButton.gameObject.SetActive(plant.UsesAutoCast);
+            Transform home = targeting || actionSlot == null ? sideButtons : actionSlot;
+            if (home != null && autoCastButton.transform.parent != home)
+                autoCastButton.transform.SetParent(home, false);
+            ((RectTransform)autoCastButton.transform).anchoredPosition = Vector2.zero;
+        }
+        if (relocateMinionsButton != null)
+            relocateMinionsButton.gameObject.SetActive(plant.CommandsMinions);
+        if (flyingToggleButton != null)
+            flyingToggleButton.gameObject.SetActive(plant.UsesFlyingToggle);
+        if (radiusToggleButton != null)
+            radiusToggleButton.gameObject.SetActive(plant.UsesRadiusToggle);
+        if (transplantButton != null)
+            transplantButton.gameObject.SetActive(TransplantFertilizerEffect.IsActive);
+        StackSideButtons();
+    }
+
+    private void HideActionButtons()
+    {
+        foreach (Button b in new[] { targetingToggleButton, autoCastButton, relocateMinionsButton, flyingToggleButton, radiusToggleButton, transplantButton })
+            if (b != null) b.gameObject.SetActive(false);
+    }
+
+    // the side buttons one under another, top aligned with the top inset, 3 art pixels apart
+    private void StackSideButtons()
+    {
+        if (sideButtons == null) return;
+        float y = 0f;
+        foreach (Transform child in sideButtons)
+        {
+            if (!child.gameObject.activeSelf || !(child is RectTransform rect)) continue;
+            rect.anchoredPosition = new Vector2(0f, y);
+            y -= rect.sizeDelta.y + SideButtonGap * Px;
+        }
+    }
+
+    // --- Stats and bars ---
 
     protected override void RefreshStats()
     {
@@ -289,15 +381,41 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (selectedPlant != null)
         {
             RefreshHealthBar();
-            RefreshTemperatureBar(selectedPlant);
+            ApplyLayout(RefreshLevelBars(selectedPlant), true);
         }
         else if (selectedInsect != null)
         {
-            string desc = selectedInsect.GetDescription();
-            entityNameText.text = string.IsNullOrEmpty(desc)
-                ? selectedInsect.GetName()
-                : $"{selectedInsect.GetName()}\n<size=70%><color=grey>{desc}</color></size>";
+            entityNameText.text = selectedInsect.GetName();
             RefreshHealthBar();
+            ApplyLayout(RefreshLevelBars(null), false);
+        }
+    }
+
+    // panel height, top inset height and how far down everything under the level bars sits
+    private void ApplyLayout(int levelBars, bool isPlant)
+    {
+        if (levelBars == shownLevelBars && isPlant == shownAsPlant) return;
+        shownLevelBars = levelBars;
+        shownAsPlant = isPlant;
+        int d = LevelBarStep * levelBars;
+        if (panelRect != null)
+            panelRect.sizeDelta = new Vector2(panelRect.sizeDelta.x, ((isPlant ? PlantPanelHeight : InsectPanelHeight) + d) * Px);
+        if (topInset != null)
+            topInset.sizeDelta = new Vector2(topInset.sizeDelta.x, (TopInsetHeight + d) * Px);
+        if (shiftedRoot != null)
+            shiftedRoot.anchoredPosition = new Vector2(shiftedRoot.anchoredPosition.x, -d * Px);
+    }
+
+    // fill width in whole art pixels: 115 at 100%, rounded down
+    private static void SetFill(Image fill, Image shine, float fraction)
+    {
+        float width = Mathf.Floor(BarInnerWidth * Mathf.Clamp01(fraction)) * Px;
+        foreach (Image image in new[] { fill, shine })
+        {
+            if (image == null) continue;
+            RectTransform rect = image.rectTransform;
+            rect.sizeDelta = new Vector2(width, rect.sizeDelta.y);
+            image.enabled = width > 0f;
         }
     }
 
@@ -336,44 +454,31 @@ public class PlantUpgradeUI : EntityInfoPanel
             _displayedHealthPct = Mathf.Lerp(_displayedHealthPct, pct, 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime));
         }
 
-        if (healthBarFill != null)
+        if (healthBar == null) return;
+        SetFill(healthBar.fill, healthBar.shine, _displayedHealthPct);
+        if (healthBar.fill != null)
         {
-            healthBarFill.fillAmount = _displayedHealthPct;
-            healthBarFill.color = _displayedHealthPct <= 0.25f ? Color.red
-                                : _displayedHealthPct <= 0.50f ? Color.yellow
-                                : Color.green;
+            // the same green, yellow and red as the bar over the plant (PlantWidget)
+            PlantWidgetStyle widget = PlantWidget.Style;
+            healthBar.fill.color = widget != null ? widget.HealthColor(_displayedHealthPct)
+                : _displayedHealthPct <= 0.25f ? Color.red : _displayedHealthPct <= 0.5f ? Color.yellow : Color.green;
         }
 
         RefreshDamageChunk(entity, pct);
 
-        if (healthText != null)
+        if (healthBar.text != null)
         {
-            string shieldSuffix = shield > 0f ? $" <b><color=#888888>(+{shield:F0})</color></b>" : "";
-            healthText.text = $"{health:F0}/{maxHealth:F0}{shieldSuffix}";
+            string shieldSuffix = shield > 0f ? $" <color=#888888>(+{shield:F0})</color>" : "";
+            healthBar.text.text = $"{health:F0}/{maxHealth:F0}{shieldSuffix}";
         }
     }
 
-    // clones healthBarFill the first time it's needed and inserts the clone directly behind it in
-    // the hierarchy (earlier sibling = drawn first = behind), so it inherits the same sprite,
-    // fill method and anchoring without needing a dedicated Image wired up in the Inspector
-    private void EnsureDamageChunkFill()
-    {
-        if (_damageChunkFill != null || healthBarFill == null) return;
-        GameObject obj = Instantiate(healthBarFill.gameObject, healthBarFill.transform.parent);
-        obj.name = "DamageChunkFill";
-        obj.transform.SetSiblingIndex(healthBarFill.transform.GetSiblingIndex());
-        _damageChunkFill = obj.GetComponent<Image>();
-        _damageChunkFill.raycastTarget = false;
-        _damageChunkFill.enabled = false;
-    }
-
-    // same hold-then-drain behavior as Entity.TickDamageChunkFill: freezes at the pre-hit
-    // percentage, waits DamageChunkDelay with no further drop, then eases down to the real
-    // percentage at the same speed as the main bar
+    // hold then drain, like the plant widget's chunk: freezes at the share before a hit, waits
+    // DamageChunkDelay with no further drop, then eases down at the same speed as the fill
     private void RefreshDamageChunk(Entity entity, float pct)
     {
-        EnsureDamageChunkFill();
-        if (_damageChunkFill == null) return;
+        Image chunk = healthBar != null ? healthBar.chunk : null;
+        if (chunk == null) return;
 
         if (pct < _lastPctForChunk)
         {
@@ -392,124 +497,215 @@ public class PlantUpgradeUI : EntityInfoPanel
             _chunkPct = Mathf.Lerp(_chunkPct, pct, 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime));
 
         bool visible = _chunkPct > pct + 0.001f;
-        _damageChunkFill.enabled = visible;
-        if (!visible) return;
-
-        _damageChunkFill.fillAmount = _chunkPct;
+        if (!visible) { chunk.enabled = false; return; }
+        SetFill(chunk, null, _chunkPct);
         bool ally = entity is Plant || (entity is Insect insect && insect.team == Team.Friendly);
-        _damageChunkFill.color = ally ? AllyChunkColor : EnemyChunkColor;
+        chunk.color = ally ? AllyChunkColor : EnemyChunkColor;
+    }
+
+    // the level's extra bars, top to bottom: oxygen while submerged (underwater levels), else
+    // temperature on hot and cold levels (the same rule as the old single bar). returns how many show
+    private int RefreshLevelBars(Plant plant)
+    {
+        bool oxygen = plant != null && plant.HasEffect<SubmergedEffect>();
+        bool temperature = plant != null && !oxygen && WeatherManager.instance != null &&
+            (WeatherManager.instance.temperature == TemperatureType.Hot ||
+             WeatherManager.instance.temperature == TemperatureType.Cold);
+
+        int count = 0;
+        if (ShowBar(oxygenBar, oxygen, count)) { RefreshOxygenBar(plant); count++; }
+        if (ShowBar(temperatureBar, temperature, count)) { RefreshTemperatureBar(plant); count++; }
+        return count;
+    }
+
+    private static bool ShowBar(InfoBar bar, bool show, int slot)
+    {
+        if (bar == null || bar.root == null) return false;
+        if (bar.root.gameObject.activeSelf != show) bar.root.gameObject.SetActive(show);
+        if (show) bar.root.anchoredPosition = new Vector2(LevelBarX * Px, -(FirstLevelBarY + LevelBarStep * slot) * Px);
+        return show;
+    }
+
+    private void RefreshOxygenBar(Plant plant)
+    {
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        SetFill(oxygenBar.fill, oxygenBar.shine, plant.air / 100f);
+        if (oxygenBar.fill != null) oxygenBar.fill.color = plant.air <= 0f ? style.oxygenEmpty : style.oxygen;
+        if (oxygenBar.text != null) oxygenBar.text.text = $"{plant.air:F0}/100";
+    }
+
+    private void RefreshTemperatureBar(Plant plant)
+    {
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        float min = plant.temperatureMin, max = plant.temperatureMax;
+        SetFill(temperatureBar.fill, temperatureBar.shine, Fraction(plant.temperature, min, max));
+
+        string state;
+        Color color;
+        if (plant.temperature < plant.comfortMin)      { state = "Cold";    color = style.temperatureCold; }
+        else if (plant.temperature > plant.comfortMax) { state = "Hot";     color = style.temperatureHot; }
+        else                                           { state = "Comfort"; color = style.temperatureComfort; }
+        if (temperatureBar.fill != null) temperatureBar.fill.color = color;
+        if (temperatureBar.text != null) temperatureBar.text.text = $"{plant.temperature:F1}° {state}";
+
+        PlaceComfortMark(tempComfortMinIndicator, Fraction(plant.comfortMin, min, max));
+        PlaceComfortMark(tempComfortMaxIndicator, Fraction(plant.comfortMax, min, max));
+    }
+
+    private static float Fraction(float value, float min, float max) =>
+        max > min ? Mathf.Clamp01((value - min) / (max - min)) : 0f;
+
+    // a 1 pixel mark inside the bar's frame, on the art pixel for that share of the bar
+    private static void PlaceComfortMark(RectTransform mark, float fraction)
+    {
+        if (mark == null) return;
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        Image image = mark.GetComponent<Image>();
+        if (image != null) image.color = style.comfortMark;
+        float x = 1f + Mathf.Clamp(Mathf.Round(BarInnerWidth * fraction), 0f, BarInnerWidth - 1);
+        mark.anchoredPosition = new Vector2(x * Px, mark.anchoredPosition.y);
     }
 
     // --- Paths ---
 
     private void RefreshPaths()
     {
+        if (selectedPlant == null) return;
         bool allLocked = AllPathsLockedForLevel1Intro;
         bool otherLocked = OtherPathsTutorialBlocked;
+        int sun = GameManager.instance != null ? GameManager.instance.SunCount : 0;
+        Plant p = selectedPlant;
 
-        // Path 1
-        path1NameText.text = selectedPlant.GetPath1Name();
-        RefreshPips(path1PipsContainer, selectedPlant.path1Level, selectedPlant.effectivePath1Level);
-        bool path1Maxed = selectedPlant.path1Level >= Plant.pathLevelCap;
-        path1UpgradeButton.interactable = !path1Maxed && !allLocked;
-        path1CostText.text = path1Maxed ? CapLabel(selectedPlant.path1Level) : $"{selectedPlant.GetPath1Cost()} Sun";
-
-        // Path 2
-        path2NameText.text = selectedPlant.GetPath2Name();
-        RefreshPips(path2PipsContainer, selectedPlant.path2Level, selectedPlant.effectivePath2Level);
-        bool path2Maxed = selectedPlant.path2Level >= Plant.pathLevelCap;
-        path2UpgradeButton.interactable = !path2Maxed && !otherLocked;
-        path2CostText.text = path2Maxed ? CapLabel(selectedPlant.path2Level) : $"{selectedPlant.GetPath2Cost()} Sun";
-
-        // Path 3
-        path3NameText.text = selectedPlant.GetPath3Name();
-        bool unlocked = selectedPlant.path3Unlocked;
-        path3LockOverlay.SetActive(!unlocked);
-
-        if (!unlocked)
-        {
-            path3CostText.text = $"{selectedPlant.GetPath3Cost()} Sun to unlock.";
-            path3Button.interactable = !otherLocked;
-            RefreshPips(path3PipsContainer, selectedPlant.path3Level, selectedPlant.effectivePath3Level);
-        }
-        else
-        {
-            RefreshPips(path3PipsContainer, selectedPlant.path3Level, selectedPlant.effectivePath3Level);
-            bool path3Maxed = selectedPlant.path3Level >= Plant.pathLevelCap;
-            path3Button.interactable = !path3Maxed && !otherLocked;
-            path3CostText.text = path3Maxed ? CapLabel(selectedPlant.path3Level) : $"{selectedPlant.GetPath3Cost()} Sun";
-        }
+        RefreshPath(path1, 0, p.GetPath1Name(), p.path1Level, p.effectivePath1Level, true, p.GetPath1Cost(), allLocked, sun);
+        RefreshPath(path2, 1, p.GetPath2Name(), p.path2Level, p.effectivePath2Level, true, p.GetPath2Cost(), otherLocked, sun);
+        RefreshPath(path3, 2, p.GetPath3Name(), p.path3Level, p.effectivePath3Level, p.path3Unlocked, p.GetPath3Cost(), otherLocked, sun);
     }
 
-    // maxed at the true cap shows max, capped early by the level shows locked
-    private static string CapLabel(int pathLevel) =>
-        pathLevel >= Plant.absoluteLevelCap ? "MAX" : "LOCKED";
-
-    // a row of pre-placed pip icon children, all always visible.
-    // purchased pips show full color, pips only reached through a temporary
-    // effective level bonus (not yet truly maxed) show the same color at 75% alpha,
-    // everything else is tinted pitch black
-    private void RefreshPips(Transform pipsContainer, int level, int effectiveLevel)
+    // one path strip: label, five pips and the buy button. the button's look: max at 5/5, locked
+    // while the path isn't unlocked, can't be afforded, is capped early by the level or held by the
+    // tutorial, else normal. a locked path still unlocks on click when the player has the sun
+    private void RefreshPath(PathRow row, int pathIndex, string label, int level, int effectiveLevel,
+        bool unlocked, int cost, bool blocked, int sun)
     {
-        if (pipsContainer == null) return;
-        bool showBonus = level < Plant.absoluteLevelCap && effectiveLevel > level;
+        if (row == null) return;
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        if (row.nameText != null) row.nameText.text = label;
 
-        for (int i = 0; i < pipsContainer.childCount; i++)
+        bool trueMax = level >= Plant.absoluteLevelCap;
+        bool capped = !trueMax && unlocked && level >= Plant.pathLevelCap;
+        bool affordable = sun >= cost;
+        bool canBuyNext = unlocked && !trueMax && !capped && !blocked && affordable;
+
+        if (row.button != null) row.button.interactable = !trueMax && !capped && !blocked;
+        if (row.look != null)
+            row.look.SetLook(trueMax ? PixelButton.Look.Max
+                : !unlocked || capped || blocked || !affordable ? PixelButton.Look.Locked
+                : PixelButton.Look.Normal);
+        if (row.plus != null) row.plus.SetActive(unlocked && !trueMax && !capped);
+        if (row.lockGlyph != null) row.lockGlyph.SetActive(!trueMax && (!unlocked || capped));
+        if (row.sun != null) row.sun.SetActive(!trueMax && !capped);
+        if (row.priceText != null)
         {
-            Transform pip = pipsContainer.GetChild(i);
-            pip.gameObject.SetActive(true);
-            Image pipImage = pip.GetComponent<Image>();
-            if (pipImage == null) continue;
+            row.priceText.gameObject.SetActive(!capped);
+            row.priceText.text = trueMax ? "Max" : cost.ToString();
+        }
 
-            if (i < level)
+        if (row.pips == null) return;
+        int count = row.pips.Length;
+        if (row.flashUntil == null || row.flashUntil.Length != count) row.flashUntil = new float[count];
+        if (row.shownLevel >= 0 && level > row.shownLevel)
+            for (int i = row.shownLevel; i < level && i < count; i++)
+                row.flashUntil[i] = Time.unscaledTime + style.buyFlashSeconds;
+        row.shownLevel = level;
+
+        Color pathColor = style.PathColor(pathIndex);
+        bool bonus = !trueMax && effectiveLevel > level;
+        float nextAlpha = Wave(style.nextPulseSeconds, style.nextPulseMin, style.nextPulseMax);
+        float breath = Wave(style.maxBreathSeconds, style.maxBreathMin, 1f);
+
+        for (int i = 0; i < count; i++)
+        {
+            Image pip = row.pips[i];
+            if (pip == null) continue;
+            Sprite sprite;
+            float alpha = 1f;
+            if (trueMax) sprite = style.breatheMax ? style.pipFilled : style.pipMax;
+            else if (i < level) sprite = style.pipFilled;
+            else if (bonus && i < effectiveLevel) { sprite = style.pipFilled; alpha = style.bonusPipAlpha; }
+            else { sprite = style.pipEmpty; if (!unlocked) alpha = style.lockedPathAlpha; }
+            if (sprite != null) pip.sprite = sprite;
+            pip.color = WithAlpha(pathColor, alpha);
+
+            Image next = row.pipNext != null && i < row.pipNext.Length ? row.pipNext[i] : null;
+            if (next != null)
             {
-                pipImage.color = pipFilled;
+                next.enabled = canBuyNext && i == level;
+                next.color = WithAlpha(pathColor, nextAlpha);
             }
-            else if (showBonus && i < effectiveLevel)
+
+            Image flash = row.pipFlash != null && i < row.pipFlash.Length ? row.pipFlash[i] : null;
+            if (flash != null)
             {
-                Color bonus = pipFilled;
-                bonus.a = 0.35f;
-                pipImage.color = bonus;
-            }
-            else
-            {
-                pipImage.color = pipEmpty;
+                float flashAlpha = Time.unscaledTime < row.flashUntil[i] ? 1f
+                    : trueMax && style.breatheMax ? breath : 0f;
+                flash.enabled = flashAlpha > 0f;
+                flash.color = WithAlpha(pathColor, flashAlpha);
             }
         }
     }
+
+    private static float Wave(float seconds, float min, float max) =>
+        Mathf.Lerp(min, max, 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 2f * Mathf.PI / Mathf.Max(0.01f, seconds)));
+
+    private static Color WithAlpha(Color c, float a) { c.a = a; return c; }
+
+    // --- Skill ---
 
     private void RefreshSkillButton()
     {
         if (skillButton == null) return;
-        bool ready = selectedPlant.SkillReady;
-        skillButton.interactable = ready;
-        if (skillCooldownText != null)
+        Plant p = selectedPlant;
+        bool unlocked = p.path3Unlocked;
+        bool silenced = p.IsSilenced;
+        bool cooling = unlocked && p.skillCooldownTimer > 0f;
+        skillButton.interactable = p.SkillReady;
+
+        float cover = !unlocked || silenced || p.IsChanneling ? 1f
+            : cooling && p.skillCooldown > 0f ? Mathf.Clamp01(p.skillCooldownTimer / p.skillCooldown)
+            : cooling ? 1f : 0f;
+        if (skillCooldownOverlay != null)
         {
-            if (selectedPlant.IsSilenced)
-                skillCooldownText.text = "SILENCED";
-            else
-                skillCooldownText.text = ready ? "Skill (Q)" : $"{Mathf.CeilToInt(selectedPlant.skillCooldownTimer)}s";
+            skillCooldownOverlay.enabled = cover > 0f;
+            skillCooldownOverlay.fillAmount = cover;
+            skillCooldownOverlay.color = PlantInfoPanelStyle.Instance.cooldownOverlay;
         }
+        if (skillLock != null && skillLock.activeSelf != (!unlocked || silenced))
+            skillLock.SetActive(!unlocked || silenced);
+        if (skillCooldownText != null)
+            skillCooldownText.text = cooling && !silenced ? Mathf.CeilToInt(p.skillCooldownTimer).ToString() : "";
     }
 
     private void RefreshTransplantButton()
     {
         if (transplantButton == null) return;
-        bool mulchActive = TransplantFertilizerEffect.IsActive;
-        if (transplantButton.gameObject.activeSelf != mulchActive)
-            transplantButton.gameObject.SetActive(mulchActive);
-        if (!mulchActive) return;
+        bool fertilizerActive = TransplantFertilizerEffect.IsActive;
+        if (transplantButton.gameObject.activeSelf != fertilizerActive)
+        {
+            transplantButton.gameObject.SetActive(fertilizerActive);
+            StackSideButtons();
+        }
+        if (!fertilizerActive) return;
 
-        // visible confirmation that the click actually registered - without this, picking a
-        // destination tile right after clicking Move looked like the button did nothing at all
+        // visible confirmation that the click registered: without it, picking a destination tile
+        // right after clicking Move looked like the button did nothing at all
         bool targeting = PlantSelector.instance != null && PlantSelector.instance.transplantMode
             && PlantSelector.instance.transplantingPlant == selectedPlant;
         bool ready = selectedPlant.TransplantReady;
         transplantButton.interactable = ready && !targeting;
         if (transplantCooldownText != null)
-            transplantCooldownText.text = targeting ? "Pick a tile..."
+            transplantCooldownText.text = targeting ? "Pick a tile"
                 : ready ? "Move"
-                : $"{Mathf.CeilToInt(selectedPlant.transplantCooldownTimer)}s";
+                : $"Move {Mathf.CeilToInt(selectedPlant.transplantCooldownTimer)}s";
     }
 
     private void RefreshAutoCastButton()
@@ -517,23 +713,30 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (autoCastButton == null || !selectedPlant.UsesAutoCast) return;
         bool targeting = SkillTargetingManager.instance.IsPlantTargeting;
         if (autoCastButtonText != null)
-            autoCastButtonText.text = targeting ? "Pick a target..." : $"{selectedPlant.AutoCastLabel}: {(selectedPlant.IsAutoCasting ? "ON" : "OFF")}";
+            autoCastButtonText.text = targeting ? "Pick one" : $"{ShortAutoCastLabel(selectedPlant)}: {(selectedPlant.IsAutoCasting ? "On" : "Off")}";
     }
+
+    // "Auto Cast" doesn't fit the 73 pixel button with its state, so it reads "Auto"
+    private static string ShortAutoCastLabel(Plant plant) =>
+        plant.AutoCastLabel == "Auto Cast" ? "Auto" : plant.AutoCastLabel;
+
+    private static string FlyingLabel(Plant plant) => plant.prioritizeFlying ? "Flyers" : "Default";
+    private static string RadiusLabel(Plant plant) => $"Orbit {plant.orbitRadius}";
 
     // holding shift while clicking an upgrade button repeats it until it stops succeeding
     // (level cap reached or sun runs out), instead of just the one level a plain click grants
     private static bool IsShiftHeld() =>
         Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed);
 
-    // Button callbacks , wired in Inspector
-    // true before Level1PlantInfo has taught the upgrade system at all - blocks every path,
-    // on any plant, until its Attack-upgrade page is reached (see TutorialManager)
+    // button callbacks, wired in the prefab
+    // true before Level1PlantInfo has taught the upgrade system at all: blocks every path, on any
+    // plant, until its Attack upgrade page is reached (see TutorialManager)
     private static bool AllPathsLockedForLevel1Intro =>
         TutorialManager.instance != null && TutorialManager.instance.Level1UpgradesLocked();
 
-    // true while Level1PlantInfo's upgrade page is up - it's specifically about the Attack
-    // (path 1) upgrade, so path 2/3 are blocked for the duration (see TutorialContent). also
-    // true for the stricter pre-gate lock above, since that blocks everything including path 1
+    // true while Level1PlantInfo's upgrade page is up: it's about the Attack (path 1) upgrade, so
+    // path 2 and 3 are blocked for the duration (see TutorialContent). also true for the stricter
+    // lock above, since that blocks everything including path 1
     private static bool OtherPathsTutorialBlocked =>
         AllPathsLockedForLevel1Intro ||
         (TutorialManager.instance != null && TutorialManager.instance.IsWaitingForEvent(TutorialEvents.UpgradeAcornAttackPath));
@@ -589,9 +792,9 @@ public class PlantUpgradeUI : EntityInfoPanel
         selectedPlant.TriggerSkill();
     }
 
-    // enters transplant mode on the selected plant - the next tile click (if valid for this
-    // plant, see Tile.OnMouseDown) relocates it there for free. cancels like every other mode,
-    // via right-click/Escape (see PlantSelector.Update)
+    // enters transplant mode on the selected plant: the next tile click (if valid for this plant,
+    // see Tile.OnMouseDown) relocates it there for free. cancels like every other mode, via right
+    // click or Escape (see PlantSelector.Update)
     public void OnTransplantButtonClicked()
     {
         if (selectedPlant == null || !TransplantFertilizerEffect.IsActive || !selectedPlant.TransplantReady) return;
@@ -604,12 +807,25 @@ public class PlantUpgradeUI : EntityInfoPanel
         selectedPlant.ToggleAutoCast();
     }
 
+    // the button reads "< First >": a click on its left half steps back through the modes, on its
+    // right half forward
     public void OnTargetingToggleClicked()
     {
         if (selectedPlant == null || !selectedPlant.UsesTargeting) return;
         int count = System.Enum.GetValues(typeof(TARGETING)).Length;
-        selectedPlant.targeting = (TARGETING)(((int)selectedPlant.targeting + 1) % count);
+        int step = ClickedLeftHalf(targetingToggleButton) ? count - 1 : 1;
+        selectedPlant.targeting = (TARGETING)(((int)selectedPlant.targeting + step) % count);
         targetingModeText.text = selectedPlant.targeting.ToString();
+    }
+
+    private static bool ClickedLeftHalf(Button button)
+    {
+        if (button == null || Mouse.current == null) return false;
+        RectTransform rect = (RectTransform)button.transform;
+        Canvas canvas = rect.GetComponentInParent<Canvas>();
+        Camera cam = canvas != null && canvas.rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.rootCanvas.worldCamera : null;
+        return RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, Mouse.current.position.ReadValue(), cam, out Vector2 local)
+            && local.x < rect.rect.center.x;
     }
 
     // toggle the selected plant between prioritizing flyers and normal targeting
@@ -618,7 +834,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (selectedPlant == null || !selectedPlant.UsesFlyingToggle) return;
         selectedPlant.prioritizeFlying = !selectedPlant.prioritizeFlying;
         if (flyingToggleText != null)
-            flyingToggleText.text = selectedPlant.prioritizeFlying ? "Flying First" : "Default";
+            flyingToggleText.text = FlyingLabel(selectedPlant);
     }
 
     // cycle the selected plant's fixed orbit radius, wrapping back to 1 past its current max
@@ -628,7 +844,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         int max = Mathf.Max(1, selectedPlant.MaxOrbitRadius);
         selectedPlant.orbitRadius = selectedPlant.orbitRadius >= max ? 1 : selectedPlant.orbitRadius + 1;
         if (radiusToggleText != null)
-            radiusToggleText.text = selectedPlant.orbitRadius.ToString();
+            radiusToggleText.text = RadiusLabel(selectedPlant);
     }
 
     // aim a point, then relocate the selected plant's minion formation there
@@ -641,109 +857,6 @@ public class PlantUpgradeUI : EntityInfoPanel
             point => plant.RelocateMinionFormation(point), plant.transform.position, plant.attackRange);
     }
 
-    // --- Temperature Bar ---
-
-    private void RefreshTemperatureBar(Plant plant)
-    {
-        // Underwater levels replace the whole bar with Air instead of Temperature
-        if (plant.HasEffect<SubmergedEffect>())
-        {
-            RefreshAirBar(plant);
-            return;
-        }
-
-        bool isTempLevel = WeatherManager.instance != null &&
-            (WeatherManager.instance.temperature == TemperatureType.Hot ||
-             WeatherManager.instance.temperature == TemperatureType.Cold);
-
-        if (tempBarRoot != null)
-            tempBarRoot.SetActive(isTempLevel);
-
-        if (!isTempLevel) return;
-
-        Color tempColor = GetTempColor(plant);
-
-        if (tempBarBackground != null)
-            tempBarBackground.color = tempColor;
-
-        if (tempText != null)
-        {
-            tempText.text  = $"{plant.temperature:F1}°";
-            tempText.color = tempColor;
-        }
-
-        if (tempStateText != null)
-        {
-            if (plant.temperature < plant.comfortMin)
-                tempStateText.text = "Cold";
-            else if (plant.temperature > plant.comfortMax)
-                tempStateText.text = "Hot";
-            else
-                tempStateText.text = "Comfort";
-        }
-
-        if (tempComfortMinIndicator != null) tempComfortMinIndicator.gameObject.SetActive(true);
-        if (tempComfortMaxIndicator != null) tempComfortMaxIndicator.gameObject.SetActive(true);
-
-        float min = plant.temperatureMin, max = plant.temperatureMax;
-        SetTempIndicator(tempCurrentIndicator,    plant.temperature, min, max);
-        SetTempIndicator(tempComfortMinIndicator, plant.comfortMin,  min, max);
-        SetTempIndicator(tempComfortMaxIndicator, plant.comfortMax,  min, max);
-        SetTempIndicator(tempMinIndicator,        min,               min, max);
-        SetTempIndicator(tempMaxIndicator,        max,               min, max);
-    }
-
-    // --- Air Bar (Underwater levels' replacement for the Temperature bar) ---
-
-    private static readonly Color AirColor = new Color(0.698f, 0.922f, 0.949f); // #B2EBF2
-
-    private void RefreshAirBar(Plant plant)
-    {
-        if (tempBarRoot != null)
-            tempBarRoot.SetActive(true);
-
-        Color airColor = plant.air <= 0f ? Color.red : AirColor;
-
-        if (tempBarBackground != null)
-            tempBarBackground.color = airColor;
-
-        if (tempText != null)
-        {
-            tempText.text  = $"{plant.air:F0}";
-            tempText.color = airColor;
-        }
-
-        if (tempStateText != null)
-            tempStateText.text = "Oxygen";
-
-        // Air has no comfort range, unlike Temperature — hide those indicators entirely
-        if (tempComfortMinIndicator != null) tempComfortMinIndicator.gameObject.SetActive(false);
-        if (tempComfortMaxIndicator != null) tempComfortMaxIndicator.gameObject.SetActive(false);
-
-        // left side of the bar is 0, right side is 100
-        const float min = 0f, max = 100f;
-        SetTempIndicator(tempCurrentIndicator, plant.air, min, max);
-        SetTempIndicator(tempMinIndicator,     min,       min, max);
-        SetTempIndicator(tempMaxIndicator,     max,       min, max);
-    }
-
-    private static void SetTempIndicator(RectTransform indicator, float value, float min, float max)
-    {
-        if (indicator == null) return;
-        float t = max > min ? Mathf.Clamp01((value - min) / (max - min)) : 0f;
-        indicator.anchorMin = new Vector2(t, indicator.anchorMin.y);
-        indicator.anchorMax = new Vector2(t, indicator.anchorMax.y);
-        indicator.anchoredPosition = Vector2.zero;
-    }
-
-    private static Color GetTempColor(Plant plant)
-    {
-        float temp = plant.temperature;
-        if (temp < plant.comfortMin)  return Color.cyan;
-        if (temp > plant.comfortMax)  return new Color(1f, 0.5f, 0f);
-        return Color.green;
-    }
-
     // --- Tooltips ---
 
     public void ShowTooltip(string text)
@@ -752,21 +865,21 @@ public class PlantUpgradeUI : EntityInfoPanel
         tooltipPanel.SetActive(true);
         tooltipText.text = text;
         Canvas.ForceUpdateCanvases();
-        RectTransform panelRect = tooltipPanel.GetComponent<RectTransform>();
+        RectTransform tipRect = tooltipPanel.GetComponent<RectTransform>();
 
         float maxHeight = Screen.height * 0.975f;
         float height = Mathf.Min(tooltipText.preferredHeight + 40f, maxHeight);
-        panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+        tipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
 
         Canvas.ForceUpdateCanvases();
         Vector3[] corners = new Vector3[4];
-        panelRect.GetWorldCorners(corners);
+        tipRect.GetWorldCorners(corners);
         float topY    = corners[1].y;
         float bottomY = corners[0].y;
         if (topY > Screen.height)
-            panelRect.anchoredPosition += Vector2.down * (topY - Screen.height);
+            tipRect.anchoredPosition += Vector2.down * (topY - Screen.height);
         else if (bottomY < 0f)
-            panelRect.anchoredPosition += Vector2.up * -bottomY;
+            tipRect.anchoredPosition += Vector2.up * -bottomY;
     }
 
     public void HideTooltip()

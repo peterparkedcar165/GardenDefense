@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c964114054e147dba625be19017820e9, type: 3}
+  m_Name: PlantInfoPanelStyle
+  m_EditorClassIdentifier: Assembly-CSharp::PlantInfoPanelStyle
+  pipEmpty: {fileID: 21300000, guid: c69f880c3b064e3088a87db46040741d, type: 3}
+  pipNext: {fileID: 21300000, guid: dc8097c4277845c1b772822ec0dd90cb, type: 3}
+  pipFilled: {fileID: 21300000, guid: 57728014d8504d7eb570a1ff352461dd, type: 3}
+  pipMax: {fileID: 21300000, guid: 54a7ea1b41c447799ca34c02016801e5, type: 3}
+  button: {fileID: 21300000, guid: 55c43e58079a45cc8f11e59232f624e6, type: 3}
+  buttonPressed: {fileID: 21300000, guid: 63f6d1db929f49359c72b98a26432fbd, type: 3}
+  skillFrames:
+  - element: 0
+    frame: {fileID: 21300000, guid: 5479033541a24dcfa49128f9b080ec76, type: 3}
+    fallbackIcon: {fileID: 21300000, guid: 6ce95a409bfba6f4997cfb36c7187687, type: 3}
+  - element: 1
+    frame: {fileID: 21300000, guid: 884f6d07b7d740db821472797ba68b92, type: 3}
+    fallbackIcon: {fileID: 21300000, guid: bdd461e80d2e87549a53764323ba3cf1, type: 3}
+  - element: 2
+    frame: {fileID: 21300000, guid: 118fbf031544430da2f6caf6d989e8f3, type: 3}
+    fallbackIcon: {fileID: 21300000, guid: e392073d0da84ee4ea0167742b35cc5e, type: 3}
+  - element: 3
+    frame: {fileID: 21300000, guid: 131353d79cf24bdf8fc03b04a41de887, type: 3}
+    fallbackIcon: {fileID: 21300000, guid: 2d63d3169d396444a847b8c98b173f60, type: 3}
+  - element: 4
+    frame: {fileID: 21300000, guid: cc2ab5297ae444f8a74a7420ef09a43b, type: 3}
+    fallbackIcon: {fileID: 21300000, guid: 954d4312a1b446f4182593f63f3e63f2, type: 3}
+  - element: 5
+    frame: {fileID: 21300000, guid: be84e9d6894148dc8a8e4651fc7bff47, type: 3}
+    fallbackIcon: {fileID: 21300000, guid: aada4dc6ea980f84f95b8814446fa98d, type: 3}

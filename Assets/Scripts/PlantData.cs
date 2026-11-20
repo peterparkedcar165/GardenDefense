@@ -6,6 +6,8 @@ public class PlantData : ScriptableObject
     [Header("Display")]
     public Plant plantPrefab;
     public Sprite icon;
+    [Tooltip("the skill's icon in the plant info panel's skill frame (32 by 32). empty: the element's icon")]
+    public Sprite skillIcon;
 
     // keeps icon following whatever sprite is currently on the prefab's "Visual" child (the
     // convention every plant prefab uses for its actual rendered sprite), so updating a plant's
@@ -201,6 +203,27 @@ public class PlantData : ScriptableObject
     {
         Color c = ElementColor(t);
         return new Color(c.r + (1f - c.r) * 0.6f, c.g + (1f - c.g) * 0.6f, c.b + (1f - c.b) * 0.6f, 1f);
+    }
+
+    // the plant info panel's colour (Downloads\gd_plant_info_panel): its panel, insets and strips.
+    // fire is tommy's orange, the other five came with the pack as proposals, neutral (insects) is a
+    // proposal too
+    public static Color ElementPanelColor(ElementalType t) => t switch
+    {
+        ElementalType.Fire    => new Color32(0xB8, 0x6E, 0x00, 0xFF),
+        ElementalType.Water   => new Color32(0x2A, 0x6D, 0xB0, 0xFF),
+        ElementalType.Ice     => new Color32(0x1F, 0x9F, 0xBF, 0xFF),
+        ElementalType.Wind    => new Color32(0x4F, 0x94, 0x84, 0xFF),
+        ElementalType.Grass   => new Color32(0x3A, 0x8A, 0x2E, 0xFF),
+        ElementalType.Poison  => new Color32(0x7A, 0x35, 0x92, 0xFF),
+        _                     => new Color32(0x6B, 0x6B, 0x6B, 0xFF),
+    };
+
+    // the 1 pixel shadow under the panel's text: the panel colour times 0.38, rounded down
+    public static Color ElementTextShadowColor(ElementalType t)
+    {
+        Color32 c = ElementPanelColor(t);
+        return new Color32((byte)(c.r * 38 / 100), (byte)(c.g * 38 / 100), (byte)(c.b * 38 / 100), 0xFF);
     }
 
     public static string DamageTypeLabel(DamageType t) => t switch

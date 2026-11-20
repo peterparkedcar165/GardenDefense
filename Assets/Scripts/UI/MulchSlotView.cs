@@ -14,6 +14,8 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public int index;
     public Image frame;
     public Image icon;
+    [Tooltip("the frame is the info panel's slot sprite: drawn as is while empty, tinted toward the rarity when filled")]
+    public bool spriteFrame;
 
     private bool hovered;
 
@@ -33,11 +35,13 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             icon.sprite = item.data.icon != null ? item.data.icon : placeholder;
             icon.color = MulchTierColors.Get(item.rarity);
-            frame.color = Color.Lerp(MulchTierColors.Get(item.rarity), Color.black, 0.25f);
+            frame.color = spriteFrame
+                ? Color.Lerp(Color.white, MulchTierColors.Get(item.rarity), 0.5f)
+                : Color.Lerp(MulchTierColors.Get(item.rarity), Color.black, 0.25f);
         }
         else
         {
-            frame.color = new Color(0.32f, 0.3f, 0.26f, 0.9f);
+            frame.color = spriteFrame ? Color.white : new Color(0.32f, 0.3f, 0.26f, 0.9f);
         }
         if (hovered) ShowTooltip();
     }

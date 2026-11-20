@@ -8,11 +8,12 @@ using System.Collections.Generic;
 // the mulch UI in the right side panel (Tommy's layout, 2026-11-20): the player's mulch bag
 // (MulchRegistry.inventorySize slots) in one row under the plant buttons, and the selected plant's
 // mulch slots (plantSlots) as a row at the bottom of the plant info panel. this component sits on
-// Canvas.prefab's MulchBag object; that object's rect is the bag's row and plantSlotsRoot (the
-// PlantMulches object under EntityInfoPanel/UpgradesSection, so it hides with the upgrades for an
-// insect) is the plant's row: move or resize either in the prefab and the slots follow, sized to
-// fit. the slots themselves are built in code at the start. drag a bag mulch onto another slot to
-// merge or swap, onto a plant on the map or onto the plant's row to equip it; right click sells.
+// Canvas.prefab's MulchBag object; that object's rect is the bag's row, built in code at the start
+// and sized to fit. plantSlotsRoot is the plant's row: the info panel's MulchSlots window, whose
+// Slot0 to Slot5 children (slot sprite plus an Icon child) are placed in the prefab and taken over
+// here; a plantSlotsRoot without them gets a built row with a "Mulches 2/6" label instead. drag a
+// bag mulch onto another slot to merge or swap, onto a plant on the map or onto the plant's row to
+// equip it; right click sells.
 // tooltips and drag ghosts go on an overlay that's the canvas's last child, above everything
 public class MulchInventoryUI : MonoBehaviour
 {
@@ -118,9 +119,10 @@ public class MulchInventoryUI : MonoBehaviour
         bagLabelRect.anchoredPosition = new Vector2(2f, 2f);
         bagLabelRect.sizeDelta = new Vector2(0f, 18f);
 
-        if (plantSlotsRoot != null)
+        int placedSlotCount = MulchManager.instance != null ? MulchManager.instance.PlantSlots : 6;
+        if (plantSlotsRoot != null && !AdoptPlacedSlots(plantSlotsRoot, placedSlotCount))
         {
-            int plantSlotCount = MulchManager.instance != null ? MulchManager.instance.PlantSlots : 6;
+            int plantSlotCount = placedSlotCount;
             plantLabel = NewText("PlantMulchLabel", plantSlotsRoot, 15f, TextAlignmentOptions.MidlineLeft);
             RectTransform labelRect = plantLabel.rectTransform;
             labelRect.anchorMin = new Vector2(0f, 0f);
@@ -133,6 +135,32 @@ public class MulchInventoryUI : MonoBehaviour
 
         BuildOverlay();
         RefreshPlantPart(null);
+    }
+
+    // the plant info panel's own slots: children named Slot0, Slot1 and so on, each an Image (the
+    // slot sprite, drawn as is while empty) with an Icon child. false when there are none
+    private bool AdoptPlacedSlots(RectTransform root, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Transform slot = root.Find($"Slot{i}");
+            Image frame = slot != null ? slot.GetComponent<Image>() : null;
+            Transform iconTransform = slot != null ? slot.Find("Icon") : null;
+            Image icon = iconTransform != null ? iconTransform.GetComponent<Image>() : null;
+            if (frame == null || icon == null) break;
+            frame.raycastTarget = true;
+            icon.raycastTarget = false;
+            icon.preserveAspect = true;
+            MulchSlotView view = slot.gameObject.AddComponent<MulchSlotView>();
+            view.ui = this;
+            view.isPlantSlot = true;
+            view.index = i;
+            view.frame = frame;
+            view.icon = icon;
+            view.spriteFrame = true;
+            plantSlots.Add(view);
+        }
+        return plantSlots.Count > 0;
     }
 
     // a row of square slots inside parent, from leftInset to its right edge, as big as fits the
@@ -276,7 +304,8 @@ public class MulchInventoryUI : MonoBehaviour
         plantSlotsRoot.gameObject.SetActive(plant != null);
         if (plant == null) return;
         int slots = MulchManager.instance != null ? MulchManager.instance.PlantSlots : plantSlots.Count;
-        plantLabel.text = $"Mulches <color=#BBBBBB>{plant.mulches.Count}/{slots}</color>";
+        if (plantLabel != null)
+            plantLabel.text = $"Mulches <color=#BBBBBB>{plant.mulches.Count}/{slots}</color>";
         foreach (MulchSlotView slot in plantSlots) slot.Refresh(Placeholder);
     }
 
