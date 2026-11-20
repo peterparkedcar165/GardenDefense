@@ -79,8 +79,8 @@ public class MulchInventoryUI : MonoBehaviour
             go.transform.SetParent(PersistentCanvas.instance.transform, false);
             RectTransform rect = (RectTransform)go.transform;
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(598f, 127f);
-            rect.sizeDelta = new Vector2(204f, 134f);
+            rect.anchoredPosition = new Vector2(596f, 126f);
+            rect.sizeDelta = new Vector2(200f, 132f);
             go.AddComponent<MulchInventoryUI>();
         }
         if (instance == null) return;
