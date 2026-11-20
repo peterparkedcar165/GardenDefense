@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 // tommy's paper bag mulch icon (Downloads\gd_mulch_icons): three greyscale 32 by 32 layers in one
 // rect, each tinted: the bag brown (MulchRegistry.iconBagColor), the label the rarity colour (the
-// game's own, MulchTierColors, as the readme asks), and the mulch's symbol (MulchData.symbol, only
-// some have one yet) a pale version of the rarity colour. Show draws it on a ui Image: the image is
+// game's own, MulchTierColors, as the readme asks), and the symbol of the mulch's kind
+// (MulchData.symbol, its sprite from MulchRegistry.SymbolSprite) a pale version of the rarity colour. Show draws it on a ui Image: the image is
 // the bag and two child images it makes the first time are the label and the symbol. MulchDrop
 // draws the same layers with sprite renderers. without a bag in the registry the old single icon
 // shows instead (MulchData.icon or the placeholder, tinted by rarity)
@@ -56,7 +56,7 @@ public static class MulchIcon
         image.sprite = Registry.iconBag;
         image.color = WithAlpha(BagColor, alpha);
         SetLayer(image, LabelName, Registry.iconLabel, WithAlpha(LabelColor(item.rarity), alpha));
-        SetLayer(image, SymbolName, item.data.symbol, WithAlpha(SymbolColor(item.rarity), alpha));
+        SetLayer(image, SymbolName, Registry.SymbolSprite(item.data.symbol), WithAlpha(SymbolColor(item.rarity), alpha));
     }
 
     public static void Hide(Image image)

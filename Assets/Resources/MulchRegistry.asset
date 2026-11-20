@@ -60,6 +60,12 @@ MonoBehaviour:
   iconBag: {fileID: 21300000, guid: 19db19e0e0314a2db05b506d7955e5df, type: 3}
   iconLabel: {fileID: 21300000, guid: 10c5d50064d34688901e5e656f7d8ac0, type: 3}
   iconBagColor: {r: 0.7686275, g: 0.454902, b: 0.07843138, a: 1}
+  symbolHeal: {fileID: 21300000, guid: 43f8695b88764349a9cce5abe1fd1022, type: 3}
+  symbolDefense: {fileID: 21300000, guid: 749e239f36bc46639973f329c8e0e51c, type: 3}
+  symbolAttack: {fileID: 21300000, guid: 68ef23914abd4e00bc166871755394cd, type: 3}
+  symbolAffliction: {fileID: 21300000, guid: 58d282b4c4144a9398f6ff5de1554b60, type: 3}
+  symbolSun: {fileID: 21300000, guid: 2251c91aefa441878bc285a38586cd4d, type: 3}
+  symbolTime: {fileID: 21300000, guid: a0199210eb2d4e43a3c55681e149107f, type: 3}
   font: {fileID: 11400000, guid: 0d1f0e22ae7b80343814964aec364541, type: 2}
   baseDropChance: 0.04
   pityKills: 30

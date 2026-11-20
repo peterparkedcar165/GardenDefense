@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SeasonedOakMulchData
   mulchName: '<b><color=green>Seasoned Oak</color></b>'
   description: 
+  symbol: 2
   icon: {fileID: 3015211819276721340, guid: 361f336491221e742a6a0da0c409a39c, type: 3}
   elementalType: 2
   dropWeight: 1

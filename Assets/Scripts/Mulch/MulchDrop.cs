@@ -137,7 +137,8 @@ public class MulchDrop : MonoBehaviour
         if (bagIcon)
         {
             label = AddLayer(NewChild("Label"), registry.iconLabel, 1);
-            if (Item.data.symbol != null) symbol = AddLayer(NewChild("Symbol"), Item.data.symbol, 2);
+            Sprite symbolSprite = registry.SymbolSprite(Item.data.symbol);
+            if (symbolSprite != null) symbol = AddLayer(NewChild("Symbol"), symbolSprite, 2);
         }
         ApplyColors();
         float spriteSize = sprite != null ? Mathf.Max(sprite.bounds.size.x, sprite.bounds.size.y) : 1f;

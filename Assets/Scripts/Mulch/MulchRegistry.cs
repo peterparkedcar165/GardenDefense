@@ -20,6 +20,24 @@ public class MulchRegistry : ScriptableObject
     public Sprite iconLabel;
     [Tooltip("the bag's tint, the same for every mulch")]
     public Color iconBagColor = new Color32(0xC4, 0x74, 0x14, 0xFF);
+    [Tooltip("the symbol on the label for each kind of mulch (MulchData.symbol): 32 by 32, the 9 by 9 symbol drawn near white")]
+    public Sprite symbolHeal;
+    public Sprite symbolDefense;
+    public Sprite symbolAttack;
+    public Sprite symbolAffliction;
+    public Sprite symbolSun;
+    public Sprite symbolTime;
+
+    public Sprite SymbolSprite(MulchSymbol symbol) => symbol switch
+    {
+        MulchSymbol.Heal => symbolHeal,
+        MulchSymbol.Defense => symbolDefense,
+        MulchSymbol.Attack => symbolAttack,
+        MulchSymbol.Affliction => symbolAffliction,
+        MulchSymbol.Sun => symbolSun,
+        MulchSymbol.Time => symbolTime,
+        _ => null,
+    };
     [Tooltip("font of the mulch inventory, tooltips and the dev menu")]
     public TMP_FontAsset font;
 

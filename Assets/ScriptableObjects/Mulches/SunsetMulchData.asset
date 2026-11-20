@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SunsetMulchData
   mulchName: '<b><color=orange>Sunset</color></b>'
   description: 
+  symbol: 5
   icon: {fileID: -7978883999570900537, guid: 1e110a04f44af82408fc85aa82f0e30e, type: 3}
   elementalType: 0
   dropWeight: 1

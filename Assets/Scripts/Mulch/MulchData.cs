@@ -7,15 +7,29 @@ using System.Collections.Generic;
 // TierValue fields; a picked up copy is a MulchItem, and an equipped one runs a MulchEffect on its
 // plant. one concrete subclass per mulch, paired with its MulchEffect. fertilizers are the other
 // system: picked before the level, they change the whole level (see FertilizerData)
+
+// the kind of effect a mulch has, shown as the symbol on its paper bag icon's label (Tommy,
+// 2026-11-20: symbols are categories, not one per mulch). the sprite for each is on MulchRegistry
+public enum MulchSymbol
+{
+    None,
+    Heal,        // the plus: healing and regeneration
+    Defense,     // the shield: armor, shields and hitting back
+    Attack,      // the lightning: attack speed, range and area
+    Affliction,  // the spiral: slows, primers, debuffs and damage over time
+    Sun,         // the sun: making sun
+    Time,        // the hourglass: payoffs that come later in the level
+}
+
 public abstract class MulchData : ScriptableObject
 {
     [Tooltip("rich text, e.g. '<b><color=green>Thorns</color></b>': every mulch name is bold and " +
         "coloured to its elementalType (PlantData.ElementalColor), even when that's just Neutral")]
     public string mulchName;
     [TextArea] public string description;
-    [Tooltip("the 9 by 9 symbol on the paper bag icon's label (a 32 by 32 sprite from Sprites/UI/MulchIcons, drawn " +
-        "near white, tinted a pale rarity colour). empty: the bag and label only, until its symbol is drawn")]
-    public Sprite symbol;
+    [Tooltip("which kind of mulch it is, drawn as the symbol on its icon's label (the sprites are on MulchRegistry). " +
+        "None: the bag and label only")]
+    public MulchSymbol symbol;
     [Tooltip("the old single sprite icon, tinted by rarity. only shown while the registry has no paper bag (iconBag)")]
     public Sprite icon;
     [Tooltip("drives the colour of mulchName")]

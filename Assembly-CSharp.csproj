@@ -130,6 +130,7 @@
     <Compile Include="Assets\Scripts\Audio\LevelMusic.cs" />
     <Compile Include="Assets\Scripts\UI\SpeedButtonRightClick.cs" />
     <Compile Include="Assets\Scripts\Mulch\DroughtMulchEffect.cs" />
+    <Compile Include="Assets\Scripts\Mulch\MulchIcon.cs" />
     <Compile Include="Assets\Scripts\Mulch\CriticalRejuvenationMulchData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\PoisonShroomData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\DuskdarterData.cs" />
@@ -426,6 +427,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\HealTag.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearIceEffect.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreedyGrowthFertilizerData.cs" />
+    <Compile Include="Assets\Scripts\UI\PointerHover.cs" />
     <Compile Include="Assets\Scripts\Mulch\HealSplashMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Team.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearPoisonEffect.cs" />
@@ -476,6 +478,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Cinderwisp.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Aeonium.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreAuraEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\PixelLayout.cs" />
     <Compile Include="Assets\Scripts\Mulch\WideCanopyMulchEffect.cs" />
     <Compile Include="Assets\Scripts\UI\QuickStatRow.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreenhouseFertilizerData.cs" />
