@@ -17,6 +17,22 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   elementalType: 6
   dropWeight: 1
+  condition:
+    requiredElementGroups: []
+    requiredPlantGroups:
+    - anyOf:
+      - plant: {fileID: 11400000, guid: 31d7460f463c7bc42a1ef517bd104f7b, type: 2}
+        requiredUnlockId: 
+        requiredMaxedPath: 0
+      - plant: {fileID: 11400000, guid: 93c952ec7eca7e447b235cf9708b4ac8, type: 2}
+        requiredUnlockId: 
+        requiredMaxedPath: 0
+      - plant: {fileID: 11400000, guid: d0b39d02d557c704687e1b4d2744077d, type: 2}
+        requiredUnlockId: 
+        requiredMaxedPath: 0
+    minWave: 0
+    maxWave: 0
+    orAlternatives: []
   counterDamageBonus:
     common: 0.25
     rare: 0.5

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 // base class for a loot mulch: it drops from insects during a level, the player picks it up into
 // the mulch inventory and drags it onto one plant, which then has its effect until the level ends
@@ -20,6 +21,10 @@ public abstract class MulchData : ScriptableObject
     [Tooltip("relative odds of this mulch when a drop rolls which mulch it is. 0 never drops")]
     public float dropWeight = 1f;
 
+    [Tooltip("which loadouts this mulch is any use to: it never drops unless the plants brought into " +
+        "the level pass (e.g. hinder needs a plant that slows). leave empty for every loadout")]
+    public LoadoutCondition condition;
+
     // builds what this mulch does on a plant. called once per equip
     public abstract MulchEffect CreateEffect(MulchItem item);
 
@@ -29,6 +34,30 @@ public abstract class MulchData : ScriptableObject
 
     // whether a drop may roll this mulch, given how many waves the level still has (countdown needs 10)
     public virtual bool CanDrop(int wavesLeft) => true;
+
+    // whether a plant in this loadout could use it at all, on top of the condition above, for what
+    // the condition can't say (a sun producer, a ranged plant)
+    public virtual bool IsUseful(List<PlantData> loadout) => true;
+
+    // the full drop check: waves left, the condition and IsUseful
+    public bool CanDropFor(int wavesLeft, List<PlantData> loadout) =>
+        CanDrop(wavesLeft) && (condition == null || condition.IsEligible(loadout, 0)) && IsUseful(loadout);
+
+    // a sun producer in the loadout, or a plant already given sun sap (which makes any plant one)
+    protected static bool HasSunMaker(List<PlantData> loadout)
+    {
+        if (loadout != null)
+            foreach (PlantData plant in loadout)
+                if (plant != null && plant.generatesSun) return true;
+        foreach (Plant plant in Plant.allPlants)
+            if (plant != null && plant.IsAlive)
+                foreach (MulchEffect effect in plant.mulches)
+                    if (effect is SunSapMulchEffect) return true;
+        if (MulchManager.instance != null)
+            foreach (MulchItem item in MulchManager.instance.Inventory)
+                if (item != null && item.data is SunSapMulchData) return true;
+        return false;
+    }
 
     // runs once when a new copy is made (dropped, merged, given by the dev menu). wild mulch rolls
     // its stats here

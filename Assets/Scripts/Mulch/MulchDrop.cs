@@ -1,12 +1,19 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
 // a mulch lying on the map, waiting to be clicked. it pops out where the insect died, hops up and
 // lands a random distance to the side, always inside the map and never under the mulch inventory
 // bar or any other on screen UI (a drop from a leaked insect hops back toward the map instead). it
 // stays MulchRegistry.groundSeconds of real time (frozen while paused, never sped up), flashing
-// near the end. clicking it with a full inventory leaves it where it is, flashing "Inventory full"
+// near the end. clicking it flies it into its inventory slot (MulchInventoryUI.FlyToSlot); with a
+// full inventory it stays where it is, flashing "Inventory full".
+//
+// built like insects and projectiles: this root is the spot on the ground, with a Shadow child that
+// stays on the ground and a Visual child that rises off it during the hop. the visual is unlit, so
+// it shows at full brightness in the dark. once it lands it sparkles with white glints (unlit too),
+// and on dark levels a small light under it lights the ground around it
 public class MulchDrop : MonoBehaviour
 {
     private static readonly List<MulchDrop> all = new List<MulchDrop>();
@@ -14,15 +21,24 @@ public class MulchDrop : MonoBehaviour
     public MulchItem Item { get; private set; }
 
     private MulchRegistry registry;
+    private Transform visual;
     private SpriteRenderer body;
     private SpriteRenderer shadow;
+    private Vector3 shadowBaseScale;
+    private ParticleSystem glitter;
+    private Light2D glow;
+    private CircleCollider2D hitbox;
     private Vector3 start, landing;
+    private float restHeight;
     private float age;
     private float fullFlash;
     private bool hovered;
+    private bool landed;
 
-    private const string SortingLayer = "Weather";
+    private const string DropLayer = "Weather";
     private const int SortingOrder = 60;
+    // the shadow sits with the insects' shadows, under every plant and insect body
+    private const string ShadowLayer = "Insects";
     // in front of tiles, plants and insects, so a click lands on the drop first
     private const float DropZ = -1f;
 
@@ -56,34 +72,141 @@ public class MulchDrop : MonoBehaviour
         start = from;
         landing = to;
         transform.position = from;
+        // the drop stands on the ground: its middle sits this far above the root
+        restHeight = reg.dropSize * 0.5f;
 
-        Sprite sprite = item.data.icon != null ? item.data.icon : reg.placeholderIcon;
-        Color tint = MulchTierColors.Get(item.rarity);
+        BuildShadow();
+        BuildVisual();
+        BuildGlitter();
+        if (DarknessManager.instance != null) BuildGlow();
 
-        GameObject shadowGO = new GameObject("Shadow");
-        shadowGO.transform.SetParent(transform, false);
-        shadowGO.transform.localPosition = new Vector3(0.06f, -0.06f, 0.01f);
-        shadow = shadowGO.AddComponent<SpriteRenderer>();
-        shadow.sprite = sprite;
-        shadow.color = new Color(0f, 0f, 0f, 0.55f);
-        shadow.sortingLayerName = SortingLayer;
-        shadow.sortingOrder = SortingOrder - 1;
-
-        body = gameObject.AddComponent<SpriteRenderer>();
-        body.sprite = sprite;
-        body.color = tint;
-        body.sortingLayerName = SortingLayer;
-        body.sortingOrder = SortingOrder;
-
-        float spriteSize = sprite != null ? Mathf.Max(sprite.bounds.size.x, sprite.bounds.size.y) : 1f;
-        float scale = spriteSize > 0f ? reg.dropSize / spriteSize : 1f;
-        transform.localScale = new Vector3(scale, scale, 1f);
-
-        CircleCollider2D hitbox = gameObject.AddComponent<CircleCollider2D>();
-        hitbox.radius = spriteSize * 0.6f;
+        hitbox = gameObject.AddComponent<CircleCollider2D>();
+        hitbox.radius = reg.dropSize * 0.6f;
         hitbox.isTrigger = true;
 
         all.Add(this);
+        PlaceParts(0f);
+    }
+
+    private void BuildShadow()
+    {
+        GameObject go = new GameObject("Shadow");
+        go.transform.SetParent(transform, false);
+        shadow = go.AddComponent<SpriteRenderer>();
+        shadow.sprite = registry.shadowSprite;
+        if (registry.shadowMaterial != null) shadow.sharedMaterial = registry.shadowMaterial;
+        shadow.color = registry.shadowColor;
+        shadow.sortingLayerName = ShadowLayer;
+        shadow.sortingOrder = -1;
+        Vector2 spriteSize = registry.shadowSprite != null ? (Vector2)registry.shadowSprite.bounds.size : Vector2.one;
+        shadowBaseScale = new Vector3(
+            registry.shadowSize.x / Mathf.Max(0.01f, spriteSize.x),
+            registry.shadowSize.y / Mathf.Max(0.01f, spriteSize.y), 1f);
+        go.transform.localScale = shadowBaseScale;
+    }
+
+    private void BuildVisual()
+    {
+        GameObject go = new GameObject("Visual");
+        go.transform.SetParent(transform, false);
+        visual = go.transform;
+        body = go.AddComponent<SpriteRenderer>();
+        Sprite sprite = Item.data.icon != null ? Item.data.icon : registry.placeholderIcon;
+        body.sprite = sprite;
+        if (registry.spriteMaterial != null) body.sharedMaterial = registry.spriteMaterial;
+        body.color = MulchTierColors.Get(Item.rarity);
+        body.sortingLayerName = DropLayer;
+        body.sortingOrder = SortingOrder;
+        float spriteSize = sprite != null ? Mathf.Max(sprite.bounds.size.x, sprite.bounds.size.y) : 1f;
+        float scale = spriteSize > 0f ? registry.dropSize / spriteSize : 1f;
+        visual.localScale = new Vector3(scale, scale, 1f);
+    }
+
+    // white glints around the drop, unlit so they shine in the dark. made in code like the ambient
+    // fireflies, all numbers from the registry. not emitting until it lands
+    private void BuildGlitter()
+    {
+        if (registry.glitterMaterial == null) return;
+        GameObject go = new GameObject("Glitter");
+        go.transform.SetParent(transform, false);
+        glitter = go.AddComponent<ParticleSystem>();
+        glitter.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        ParticleSystem.MainModule main = glitter.main;
+        main.loop = true;
+        main.playOnAwake = false;
+        main.duration = 1f;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(registry.glitterLifetime.x, registry.glitterLifetime.y);
+        main.startSpeed = 0f;
+        main.startSize = new ParticleSystem.MinMaxCurve(registry.glitterSize.x, registry.glitterSize.y);
+        main.startColor = registry.glitterColor;
+        main.startRotation = 0f;
+        main.gravityModifier = 0f;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.maxParticles = 40;
+        // the drop's own clock: real time, so a game speed up doesn't speed the sparkle (paused in Update)
+        main.useUnscaledTime = true;
+
+        ParticleSystem.EmissionModule emission = glitter.emission;
+        emission.rateOverTime = registry.glitterRate;
+
+        ParticleSystem.ShapeModule shape = glitter.shape;
+        shape.enabled = true;
+        shape.shapeType = ParticleSystemShapeType.Circle;
+        shape.radius = registry.glitterRadius;
+        shape.radiusThickness = 1f;
+
+        ParticleSystem.VelocityOverLifetimeModule velocity = glitter.velocityOverLifetime;
+        velocity.enabled = true;
+        velocity.space = ParticleSystemSimulationSpace.World;
+        velocity.x = new ParticleSystem.MinMaxCurve(-0.04f, 0.04f);
+        velocity.y = new ParticleSystem.MinMaxCurve(0.08f, 0.22f);
+        velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
+
+        // each glint pops in, holds a moment and shrinks away: a twinkle
+        ParticleSystem.SizeOverLifetimeModule size = glitter.sizeOverLifetime;
+        size.enabled = true;
+        size.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(
+            new Keyframe(0f, 0f), new Keyframe(0.25f, 1f), new Keyframe(0.6f, 0.8f), new Keyframe(1f, 0f)));
+
+        ParticleSystem.ColorOverLifetimeModule color = glitter.colorOverLifetime;
+        color.enabled = true;
+        Gradient fade = new Gradient();
+        fade.SetKeys(
+            new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+            new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.2f), new GradientAlphaKey(1f, 0.6f), new GradientAlphaKey(0f, 1f) });
+        color.color = fade;
+
+        ParticleSystemRenderer renderer = go.GetComponent<ParticleSystemRenderer>();
+        renderer.sharedMaterial = registry.glitterMaterial;
+        renderer.renderMode = ParticleSystemRenderMode.Billboard;
+        renderer.sortingLayerName = DropLayer;
+        renderer.sortingOrder = SortingOrder + 1;
+    }
+
+    // a small light like a plant's glow, so on dark levels the drop lights the ground around it.
+    // hidden in daylight and while sunny weather hides every point light (DarknessManager.LightsVisible)
+    private void BuildGlow()
+    {
+        GameObject go = new GameObject("Glow");
+        go.transform.SetParent(transform, false);
+        glow = go.AddComponent<Light2D>();
+        glow.lightType = Light2D.LightType.Point;
+        glow.pointLightOuterRadius = registry.darkGlowRadius;
+        glow.pointLightInnerRadius = registry.darkGlowRadius * 0.25f;
+        glow.intensity = registry.darkGlowIntensity;
+        glow.color = new Color(1f, 0.97f, 0.9f);
+        glow.falloffIntensity = 0.6f;
+        glow.targetSortingLayers = AllSortingLayerIDs();
+        glow.enabled = DarknessManager.LightsVisible;
+    }
+
+    private static int[] AllSortingLayerIDs()
+    {
+        SortingLayer[] layers = UnityEngine.SortingLayer.layers;
+        int[] ids = new int[layers.Length];
+        for (int i = 0; i < layers.Length; i++) ids[i] = layers[i].id;
+        return ids;
     }
 
     private void OnDestroy()
@@ -98,9 +221,22 @@ public class MulchDrop : MonoBehaviour
         age += dt;
 
         float hop = registry.hopSeconds > 0f ? Mathf.Clamp01(age / registry.hopSeconds) : 1f;
-        Vector3 position = Vector3.Lerp(start, landing, hop);
-        position.y += registry.hopHeight * 4f * hop * (1f - hop);
-        transform.position = position;
+        Vector3 ground = Vector3.Lerp(start, landing, hop);
+        transform.position = ground;
+        PlaceParts(registry.hopHeight * 4f * hop * (1f - hop));
+        if (!landed && hop >= 1f)
+        {
+            landed = true;
+            if (glitter != null) glitter.Play();
+        }
+
+        // the glints keep the drop's clock: frozen while paused
+        if (glitter != null && landed)
+        {
+            if (Time.timeScale <= 0f && !glitter.isPaused) glitter.Pause();
+            else if (Time.timeScale > 0f && glitter.isPaused) glitter.Play();
+        }
+        if (glow != null) glow.enabled = DarknessManager.LightsVisible && body.enabled;
 
         float left = registry.groundSeconds - age;
         if (left <= 0f)
@@ -125,21 +261,41 @@ public class MulchDrop : MonoBehaviour
         shadow.enabled = visible;
     }
 
+    // the visual rides height above its resting spot; the shadow stays on the ground and shrinks
+    // and fades the higher the drop is, like a projectile's
+    private void PlaceParts(float height)
+    {
+        Vector3 visualOffset = new Vector3(0f, restHeight + height, 0f);
+        visual.localPosition = visualOffset;
+        if (glitter != null) glitter.transform.localPosition = new Vector3(0f, restHeight, 0f);
+        if (glow != null) glow.transform.localPosition = new Vector3(0f, restHeight * 0.5f, 0f);
+        if (hitbox != null) hitbox.offset = visualOffset;
+
+        float lift = registry.hopHeight > 0f ? Mathf.Clamp01(height / registry.hopHeight) : 0f;
+        shadow.transform.localPosition = new Vector3(0f, 0.02f, 0.01f);
+        shadow.transform.localScale = shadowBaseScale * Mathf.Lerp(1f, 0.65f, lift);
+        Color c = registry.shadowColor;
+        c.a *= Mathf.Lerp(1f, 0.55f, lift);
+        shadow.color = c;
+    }
+
     private void OnMouseDown()
     {
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
         if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsTargeting) return;
         if (MulchManager.instance == null) return;
 
-        if (MulchManager.instance.TryCollect(Item))
+        int slot = MulchManager.instance.TryCollect(Item);
+        if (slot >= 0)
         {
             if (GameManager.instance != null && GameManager.instance.plantSelect != null)
                 GameManager.instance.PlaySound(GameManager.instance.plantSelect);
+            MulchInventoryUI.instance?.FlyToSlot(Item, slot, visual.position, registry.dropSize);
             Destroy(gameObject);
             return;
         }
         fullFlash = 0.64f;
-        StatusIndicator.Spawn(transform.position + new Vector3(0f, 0.35f, 0f), "Inventory full", new Color(1f, 0.45f, 0.4f));
+        StatusIndicator.Spawn(visual.position + new Vector3(0f, 0.35f, 0f), "Inventory full", new Color(1f, 0.45f, 0.4f));
     }
 
     private void OnMouseEnter()
@@ -231,11 +387,13 @@ public class MulchDrop : MonoBehaviour
         return p;
     }
 
-    // on screen, and no UI over the drop's middle or any of its corners
-    private static bool IsClear(Vector3 p, MulchRegistry reg)
+    // on screen, and no UI over the drop (its resting spot sits half its size above the ground
+    // point): its middle and corners are all checked
+    private static bool IsClear(Vector3 ground, MulchRegistry reg)
     {
         Camera cam = Camera.main;
         if (cam == null) return true;
+        Vector3 p = ground + new Vector3(0f, reg.dropSize * 0.5f, 0f);
         Vector3 viewport = cam.WorldToViewportPoint(p);
         if (viewport.x < 0.02f || viewport.x > 0.98f || viewport.y < 0.02f || viewport.y > 0.98f) return false;
 

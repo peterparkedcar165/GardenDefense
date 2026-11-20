@@ -72,7 +72,10 @@ public static class FertilizerStatRules
     // nothing for them. kept as a name set here too, same as FallDamagePlantNames above, since
     // FertilizerStatRules only ever sees PlantData, never the live Plant/Entity instance that
     // actually carries the IsMeleeAttacker override
-    private static readonly HashSet<string> MeleePlantNames = new HashSet<string> { "AcornKnight", "BirdOfParadise" };
+    private static readonly HashSet<string> MeleePlantNames = new HashSet<string> { "AcornKnight", "BirdOfParadise", "Cactus" };
+
+    // a plant whose range bonuses do nothing (Entity.IsMeleeAttacker on its class)
+    public static bool IsMeleePlant(PlantData plant) => plant != null && MeleePlantNames.Contains(plant.plantName);
 
     // reads only the hand-authored wave slots (not the procedural roster/elite arrays) - what's
     // actually placed in a wave's sub-wave spawns is what the player will really fight, so that's

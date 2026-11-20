@@ -49,6 +49,34 @@ public class MulchRegistry : ScriptableObject
     [Tooltip("a drop from a leaked insect hops this far back toward the map")]
     public float leakHopDistance = 1.6f;
 
+    [Header("drop look")]
+    [Tooltip("the drop's own sprite: unlit (Sprite-Unlit-Default), so it shows at full brightness in the dark")]
+    public Material spriteMaterial;
+    [Tooltip("ground shadow, the same one insects use (Resources/Circle, lit, black at 41%)")]
+    public Sprite shadowSprite;
+    public Material shadowMaterial;
+    public Color shadowColor = new Color(0f, 0f, 0f, 0.41f);
+    [Tooltip("shadow size in world units, an ellipse under the drop")]
+    public Vector2 shadowSize = new Vector2(0.5f, 0.2f);
+    [Tooltip("glitter while it rests on the ground: unlit, so it shines in the dark too (MulchGlitter, a white glint)")]
+    public Material glitterMaterial;
+    public Color glitterColor = Color.white;
+    [Tooltip("glints per second")]
+    public float glitterRate = 7f;
+    [Tooltip("seconds each glint lives, a random amount between x and y")]
+    public Vector2 glitterLifetime = new Vector2(0.5f, 0.9f);
+    [Tooltip("glint size in world units, a random amount between x and y (0.11 is the texture's own 7 pixels)")]
+    public Vector2 glitterSize = new Vector2(0.09f, 0.14f);
+    [Tooltip("how far around the drop the glints appear")]
+    public float glitterRadius = 0.32f;
+    [Tooltip("on dark levels a small light under the drop, so it also lights the ground around it (off in daylight and while sunny)")]
+    public float darkGlowRadius = 0.9f;
+    public float darkGlowIntensity = 0.7f;
+
+    [Header("pick up")]
+    [Tooltip("seconds a clicked drop takes to fly into its inventory slot, real time")]
+    public float flySeconds = 0.55f;
+
     [Header("inventory bar (on screen, reference 1920 by 1080)")]
     [Tooltip("where the bar sits on the screen: 0.38, 0 is the bottom middle of the map (the right 24% is the plant panel)")]
     public Vector2 barAnchor = new Vector2(0.38f, 0f);

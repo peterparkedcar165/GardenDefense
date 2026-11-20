@@ -76,17 +76,20 @@ public class MulchManager : MonoBehaviour
         }
     }
 
-    public bool AddToInventory(MulchItem item)
+    public bool AddToInventory(MulchItem item) => AddToInventorySlot(item) >= 0;
+
+    // the first empty slot it went into, -1 when the inventory is full
+    public int AddToInventorySlot(MulchItem item)
     {
-        if (item == null) return false;
+        if (item == null) return -1;
         for (int i = 0; i < inventory.Length; i++)
         {
             if (inventory[i] != null) continue;
             inventory[i] = item;
             RaiseChanged();
-            return true;
+            return i;
         }
-        return false;
+        return -1;
     }
 
     public MulchItem GetSlot(int slot) => slot >= 0 && slot < inventory.Length ? inventory[slot] : null;
@@ -358,7 +361,9 @@ public class MulchManager : MonoBehaviour
         if (item != null) MulchDrop.Spawn(item, insect.transform.position, false);
     }
 
-    // which mulch and at what rarity. countdown is left out with fewer than 10 waves to go
+    // which mulch and at what rarity. only mulches the loadout can use (MulchData.CanDropFor:
+    // their condition, like hinder needing a plant that slows), and countdown is left out with fewer
+    // than 10 waves to go
     public MulchItem RollItem(Plant killer, bool forceEpic)
     {
         if (Registry == null || Registry.mulches == null) return null;
@@ -375,16 +380,21 @@ public class MulchManager : MonoBehaviour
         }
 
         int wavesLeft = WavesLeft();
+        List<PlantData> loadout = FertilizerManager.GetCurrentLoadout();
+        List<MulchData> pool = new List<MulchData>();
         float total = 0f;
         foreach (MulchData data in Registry.mulches)
-            if (data != null && data.CanDrop(wavesLeft)) total += Mathf.Max(0f, data.dropWeight);
+        {
+            if (data == null || !data.CanDropFor(wavesLeft, loadout)) continue;
+            pool.Add(data);
+            total += Mathf.Max(0f, data.dropWeight);
+        }
         if (total <= 0f) return null;
 
         float pick = Random.Range(0f, total);
         MulchData chosen = null;
-        foreach (MulchData data in Registry.mulches)
+        foreach (MulchData data in pool)
         {
-            if (data == null || !data.CanDrop(wavesLeft)) continue;
             chosen = data;
             pick -= Mathf.Max(0f, data.dropWeight);
             if (pick <= 0f) break;
@@ -399,12 +409,13 @@ public class MulchManager : MonoBehaviour
         return config != null ? config.maxWaves - wave : int.MaxValue;
     }
 
-    // clicking a ground drop. false (and the drop stays) when the inventory is full
-    public bool TryCollect(MulchItem item)
+    // clicking a ground drop: the slot it goes into (it's there at once, the bar just shows it once
+    // the drop has flown in), or -1 (and the drop stays) when the inventory is full
+    public int TryCollect(MulchItem item)
     {
-        if (!AddToInventory(item)) return false;
-        TutorialManager.instance?.NotifyEvent(TutorialEvents.CollectMulch);
-        return true;
+        int slot = AddToInventorySlot(item);
+        if (slot >= 0) TutorialManager.instance?.NotifyEvent(TutorialEvents.CollectMulch);
+        return slot;
     }
 
     // the first time a drop appears in level 1, the mulch tutorial explains picking it up, equipping

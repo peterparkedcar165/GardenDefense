@@ -78,6 +78,20 @@ MonoBehaviour:
   sideOffsetMin: 0.35
   sideOffsetMax: 1.1
   leakHopDistance: 1.6
+  spriteMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  shadowSprite: {fileID: -2413806693520163455, guid: d852e9b01c514a1498e3348a6b17926f, type: 3}
+  shadowMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  shadowColor: {r: 0, g: 0, b: 0, a: 0.41}
+  shadowSize: {x: 0.5, y: 0.2}
+  glitterMaterial: {fileID: 2100000, guid: c75202a00edb4796bd139aaf904912ba, type: 2}
+  glitterColor: {r: 1, g: 1, b: 1, a: 1}
+  glitterRate: 7
+  glitterLifetime: {x: 0.5, y: 0.9}
+  glitterSize: {x: 0.09, y: 0.14}
+  glitterRadius: 0.32
+  darkGlowRadius: 0.9
+  darkGlowIntensity: 0.7
+  flySeconds: 0.55
   barAnchor: {x: 0.38, y: 0}
   barOffset: {x: 0, y: 6}
   slotSize: 54

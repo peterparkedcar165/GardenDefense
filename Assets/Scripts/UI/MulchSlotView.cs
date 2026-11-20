@@ -17,8 +17,10 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private bool hovered;
 
+    // an inventory slot a drop is still flying into reads as empty until it lands
     public MulchItem Item =>
         isPlantSlot ? ui.PlantSlotItem(index)
+        : ui.IsIncoming(index) ? null
         : MulchManager.instance != null ? MulchManager.instance.GetSlot(index) : null;
 
     // draws the slot: a rarity coloured frame and tinted icon, or a dim empty square
@@ -38,6 +40,27 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             frame.color = new Color(0.32f, 0.3f, 0.26f, 0.9f);
         }
         if (hovered) ShowTooltip();
+    }
+
+    // a quick bump when a picked up mulch lands in this slot
+    public void Pop()
+    {
+        if (isActiveAndEnabled) StartCoroutine(PopRoutine());
+    }
+
+    private System.Collections.IEnumerator PopRoutine()
+    {
+        const float duration = 0.18f;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float k = Mathf.Clamp01(elapsed / duration);
+            float scale = 1f + 0.25f * Mathf.Sin(k * Mathf.PI);
+            icon.rectTransform.localScale = new Vector3(scale, scale, 1f);
+            yield return null;
+        }
+        icon.rectTransform.localScale = Vector3.one;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

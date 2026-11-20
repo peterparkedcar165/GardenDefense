@@ -39,6 +39,10 @@ public class MulchInventoryUI : MonoBehaviour
     private int draggingSlot = -1;
     private bool dropHandled;
 
+    // inventory slots a picked up drop is still flying into: already filled, shown empty until it lands
+    private readonly HashSet<int> incoming = new HashSet<int>();
+    public bool IsIncoming(int slot) => incoming.Contains(slot);
+
     // called at every level start (MulchManager.ResetForLevel): built once, kept with the canvas
     public static void Ensure()
     {
@@ -224,6 +228,9 @@ public class MulchInventoryUI : MonoBehaviour
 
     public void RefreshAll()
     {
+        // a new level empties the inventory: anything still flying in is gone
+        if (MulchManager.instance != null)
+            incoming.RemoveWhere(slot => MulchManager.instance.GetSlot(slot) == null);
         foreach (MulchSlotView slot in inventorySlots) slot.Refresh(Placeholder);
         RefreshPlantPart(shownPlant);
     }
@@ -285,6 +292,8 @@ public class MulchInventoryUI : MonoBehaviour
     {
         if (draggingSlot < 0 || target == null || MulchManager.instance == null) return;
         dropHandled = true;
+        // a slot a picked up drop is still flying into only looks empty: leave it alone
+        if (!target.isPlantSlot && IsIncoming(target.index)) return;
         if (target.isPlantSlot)
         {
             if (shownPlant != null) MulchManager.instance.EquipFromSlot(draggingSlot, shownPlant);
@@ -313,6 +322,72 @@ public class MulchInventoryUI : MonoBehaviour
             if (plant != null && plant.IsAlive) return plant;
         }
         return null;
+    }
+
+    // ── picking up ──────────────────────────────────────────────────────────
+
+    // a clicked ground drop flies from where it lay into its inventory slot, the way collected sun
+    // flies to the counter in plants vs. zombies: it speeds off and eases into the slot, shrinking
+    // or growing to the slot's icon size, then the slot pops. real time, so it also lands while paused
+    public void FlyToSlot(MulchItem item, int slot, Vector3 worldPosition, float worldSize)
+    {
+        if (item == null || slot < 0 || slot >= inventorySlots.Count || overlay == null) return;
+        Camera cam = Camera.main;
+        if (cam == null) { inventorySlots[slot].Refresh(Placeholder); return; }
+
+        incoming.Add(slot);
+        inventorySlots[slot].Refresh(Placeholder);
+
+        GameObject go = new GameObject("FlyingMulch", typeof(RectTransform));
+        go.transform.SetParent(overlay, false);
+        Image image = go.AddComponent<Image>();
+        image.sprite = item.data.icon != null ? item.data.icon : Placeholder;
+        image.color = MulchTierColors.Get(item.rarity);
+        image.preserveAspect = true;
+        image.raycastTarget = false;
+        overlay.SetAsLastSibling();
+
+        Vector2 from = ScreenToOverlay(cam.WorldToScreenPoint(worldPosition));
+        Vector2 edge = ScreenToOverlay(cam.WorldToScreenPoint(worldPosition + new Vector3(worldSize, 0f, 0f)));
+        float fromSize = Mathf.Max(8f, Mathf.Abs(edge.x - from.x));
+        StartCoroutine(Fly(image, slot, from, fromSize));
+    }
+
+    private System.Collections.IEnumerator Fly(Image image, int slot, Vector2 from, float fromSize)
+    {
+        float duration = registry != null ? Mathf.Max(0.05f, registry.flySeconds) : 0.55f;
+        float size = registry != null ? registry.slotSize : 54f;
+        float toSize = Mathf.Max(8f, size - 14f);
+        RectTransform rect = image.rectTransform;
+        float elapsed = 0f;
+        while (elapsed < duration && image != null)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float k = Mathf.Clamp01(elapsed / duration);
+            // ease out: quick start, gentle arrival
+            float e = 1f - Mathf.Pow(1f - k, 3f);
+            Vector2 to = SlotCenter(slot);
+            rect.anchoredPosition = Vector2.LerpUnclamped(from, to, e);
+            float s = Mathf.Lerp(fromSize, toSize, e);
+            rect.sizeDelta = new Vector2(s, s);
+            yield return null;
+        }
+        if (image != null) Destroy(image.gameObject);
+        incoming.Remove(slot);
+        if (slot < inventorySlots.Count)
+        {
+            inventorySlots[slot].Refresh(Placeholder);
+            inventorySlots[slot].Pop();
+        }
+    }
+
+    // a slot's middle, in the overlay's space
+    private Vector2 SlotCenter(int slot)
+    {
+        RectTransform slotRect = (RectTransform)inventorySlots[slot].transform;
+        Vector3 world = slotRect.TransformPoint(slotRect.rect.center);
+        Camera cam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+        return ScreenToOverlay(RectTransformUtility.WorldToScreenPoint(cam, world));
     }
 
     // ── tooltip ─────────────────────────────────────────────────────────────

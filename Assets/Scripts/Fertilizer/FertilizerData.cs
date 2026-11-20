@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 // base class for a fertilizer: picked once before the level, from that level's own list
@@ -19,7 +19,7 @@ public abstract class FertilizerData : ScriptableObject
 
     [Tooltip("loadout requirement: a fertilizer whose condition fails is left off the pick screen " +
         "(e.g. melt needs fire, water and ice plants)")]
-    public FertilizerCondition condition;
+    public LoadoutCondition condition;
 
     // builds the runtime behaviour this fertilizer grants. called once, when it's picked
     public abstract FertilizerEffect CreateEffect();

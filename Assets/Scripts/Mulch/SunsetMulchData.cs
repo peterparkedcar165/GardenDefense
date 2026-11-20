@@ -1,10 +1,14 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "SunsetMulch", menuName = "Scriptable Objects/Mulch/Sunset")]
 public class SunsetMulchData : MulchData
 {
     [Tooltip("extra sun ticks this plant makes when a wave ends")]
     public TierValue extraTicks = new TierValue(1f, 2f, 3f);
+
+    // only drops when something makes sun: a sun producer in the loadout, or sun sap
+    public override bool IsUseful(List<PlantData> loadout) => HasSunMaker(loadout);
 
     public override MulchEffect CreateEffect(MulchItem item) => new SunsetMulchEffect(this, item);
 

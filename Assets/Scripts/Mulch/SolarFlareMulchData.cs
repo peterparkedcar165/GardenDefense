@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "SolarFlareMulch", menuName = "Scriptable Objects/Mulch/Solar Flare")]
 public class SolarFlareMulchData : MulchData
@@ -15,6 +16,9 @@ public class SolarFlareMulchData : MulchData
     public bool appliesPrimer = true;
     [Tooltip("on: sun paid for kills (glowshroom) also sets off a flare. off: only the plant's own production does")]
     public bool triggeredByKillSun = false;
+
+    // only drops when something makes sun: a sun producer in the loadout, or sun sap
+    public override bool IsUseful(List<PlantData> loadout) => HasSunMaker(loadout);
 
     public override MulchEffect CreateEffect(MulchItem item) => new SolarFlareMulchEffect(this, item);
 

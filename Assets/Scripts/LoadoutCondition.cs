@@ -3,7 +3,7 @@ using UnityEngine;
 
 // one "at least one of these" requirement - a bare array can't nest in the Inspector (no
 // array-of-arrays), so each OR group needs this thin wrapper. a single-entry group behaves as a
-// plain AND requirement for that one element/plant - see FertilizerRequirement for how groups
+// plain AND requirement for that one element/plant - see LoadoutRequirement for how groups
 // combine. excludedPlants (element groups only) lets a specific plant NOT count toward
 // satisfying the group even though its element matches - e.g. a Grass requirement that
 // Rhodiola shouldn't be able to satisfy on her own, since she doesn't deal direct damage
@@ -78,17 +78,17 @@ public class PlantGroup
     public QualifiedPlant[] anyOf;
 }
 
-// eligibility gate for whether a fertilizer shows on the pick screen at all, checked against
-// the player's loadout (wave 0, since the pick happens before the level), plus (for
-// requiredPlantGroups' QualifiedPlant entries) persistent skill tree saves - so "this plant is in
-// the loadout" and "this plant has actually unlocked the specific mechanic the fertilizer cares
-// about" can be required separately. this is AND-of-ORs: every group listed must have
+// which loadouts a fertilizer or a mulch is any use to: a fertilizer whose condition fails is left
+// off the pick screen, a mulch whose condition fails never drops. checked against the player's
+// loadout, plus (for requiredPlantGroups' QualifiedPlant entries) persistent skill tree saves - so
+// "this plant is in the loadout" and "this plant has actually unlocked the specific mechanic it
+// cares about" can be required separately. this is AND-of-ORs: every group listed must have
 // at least one match (AND between groups), and within one group only a single
 // match is needed (OR within that group). e.g. to require "Fire AND Grass", use two single-entry
 // groups ({Fire}, {Grass}); to require "Fire OR Water", use one group with both in it
 // ({Fire, Water})
 [System.Serializable]
-public class FertilizerRequirement
+public class LoadoutRequirement
 {
     [Tooltip("every group must have at least one match (AND between groups, OR within a group). " +
         "leave empty to not require any")]
@@ -150,27 +150,26 @@ public class FertilizerRequirement
     }
 }
 
-// the gate the fertilizer pick screen checks: its own requirement, OR any one of the alternatives,
-// each judged completely on its own (wave range included). alternatives are plain requirements
-// with no alternatives of their own: a condition holding a list of conditions is a cycle Unity's
-// serializer can't store (it unrolls it ten levels deep and warns every time it loads), and no
-// fertilizer nests them anyway
+// the full gate: its own requirement, OR any one of the alternatives, each judged completely on
+// its own (wave range included). alternatives are plain requirements with no alternatives of their
+// own: a condition holding a list of conditions is a cycle Unity's serializer can't store (it
+// unrolls it ten levels deep and warns every time it loads), and nothing nests them anyway
 [System.Serializable]
-public class FertilizerCondition : FertilizerRequirement
+public class LoadoutCondition : LoadoutRequirement
 {
     [Tooltip("escape hatch for a true top-level OR: this condition is met if its own " +
         "groups/wave/exclusions above all pass, OR if ANY one of these alternatives is fully " +
         "satisfied on its own (each evaluated completely independently, including its own " +
         "wave range) - e.g. 'Fire+Grass OR a plant that unlocked burning' is one primary " +
         "AND-of-ORs plus one alternative PlantGroup")]
-    public FertilizerRequirement[] orAlternatives;
+    public LoadoutRequirement[] orAlternatives;
 
     public bool IsEligible(List<PlantData> loadout, int currentWave)
     {
         if (IsMet(loadout, currentWave)) return true;
 
         if (orAlternatives != null)
-            foreach (FertilizerRequirement alt in orAlternatives)
+            foreach (LoadoutRequirement alt in orAlternatives)
                 if (alt != null && alt.IsMet(loadout, currentWave)) return true;
 
         return false;

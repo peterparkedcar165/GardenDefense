@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "DroughtMulch", menuName = "Scriptable Objects/Mulch/Drought")]
 public class DroughtMulchData : MulchData
@@ -9,6 +10,9 @@ public class DroughtMulchData : MulchData
     public float droughtSunMultiplier = 0f;
     [Tooltip("this plant's Sun production after the drought, for the rest of the level, as a multiplier. 2 = double")]
     public TierValue afterSunMultiplier = new TierValue(2f, 3f, 4f);
+
+    // only drops when something makes sun: a sun producer in the loadout, or sun sap
+    public override bool IsUseful(List<PlantData> loadout) => HasSunMaker(loadout);
 
     public override MulchEffect CreateEffect(MulchItem item) => new DroughtMulchEffect(this, item);
 
