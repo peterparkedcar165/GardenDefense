@@ -263,6 +263,8 @@ public class MulchInventoryUI : MonoBehaviour
         dropHandled = false;
         dragGhost.sprite = item.data.icon != null ? item.data.icon : Placeholder;
         dragGhost.color = new Color(MulchTierColors.Get(item.rarity).r, MulchTierColors.Get(item.rarity).g, MulchTierColors.Get(item.rarity).b, 0.85f);
+        float size = registry != null ? registry.slotSize : 54f;
+        dragGhost.rectTransform.sizeDelta = new Vector2(size, size);
         dragGhost.gameObject.SetActive(true);
         overlay.SetAsLastSibling();
         MoveDrag(screenPosition);
@@ -305,7 +307,7 @@ public class MulchInventoryUI : MonoBehaviour
     }
 
     // the plant on the tile under the pointer, or any plant whose collider is there
-    private static Plant PlantAt(Vector2 screenPosition)
+    public static Plant PlantAt(Vector2 screenPosition)
     {
         Camera cam = Camera.main;
         if (cam == null) return null;
@@ -322,6 +324,106 @@ public class MulchInventoryUI : MonoBehaviour
             if (plant != null && plant.IsAlive) return plant;
         }
         return null;
+    }
+
+    // ── dragging a ground drop ──────────────────────────────────────────────
+
+    // a ground drop being dragged shows this opaque copy under the pointer, at the drop's own size
+    // on screen, while the drop itself stays where it lies, faded (MulchDrop)
+    private bool groundDragging;
+    private Coroutine ghostReturn;
+
+    public void BeginGroundDrag(MulchItem item, Vector2 screenPosition, Vector3 worldPosition, float worldSize)
+    {
+        if (item == null || overlay == null) return;
+        if (ghostReturn != null) { StopCoroutine(ghostReturn); ghostReturn = null; }
+        groundDragging = true;
+        HideTooltip();
+        dragGhost.sprite = item.data.icon != null ? item.data.icon : Placeholder;
+        dragGhost.color = MulchTierColors.Get(item.rarity);
+        float size = WorldSizeOnOverlay(worldPosition, worldSize);
+        dragGhost.rectTransform.sizeDelta = new Vector2(size, size);
+        dragGhost.gameObject.SetActive(true);
+        overlay.SetAsLastSibling();
+        MoveGroundDrag(screenPosition);
+    }
+
+    public void MoveGroundDrag(Vector2 screenPosition)
+    {
+        if (!groundDragging) return;
+        dragGhost.rectTransform.anchoredPosition = ScreenToOverlay(screenPosition);
+    }
+
+    // what a ground drop was let go over: the inventory bar, a plant (on the map, or the selected
+    // plant's slots), or nothing
+    public enum GroundDropTarget { Nothing, Inventory, Plant }
+
+    public GroundDropTarget TargetUnder(Vector2 screenPosition, out Plant plant)
+    {
+        plant = null;
+        if (EventSystem.current != null)
+        {
+            PointerEventData pointer = new PointerEventData(EventSystem.current) { position = screenPosition };
+            List<RaycastResult> hits = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, hits);
+            foreach (RaycastResult hit in hits)
+            {
+                if (!(hit.module is GraphicRaycaster)) continue;
+                MulchSlotView slot = hit.gameObject.GetComponentInParent<MulchSlotView>();
+                if (slot == null) return GroundDropTarget.Nothing;
+                if (!slot.isPlantSlot) return GroundDropTarget.Inventory;
+                plant = shownPlant;
+                return plant != null ? GroundDropTarget.Plant : GroundDropTarget.Nothing;
+            }
+        }
+        plant = PlantAt(screenPosition);
+        return plant != null ? GroundDropTarget.Plant : GroundDropTarget.Nothing;
+    }
+
+    // the drop went somewhere: the copy just goes
+    public void EndGroundDrag()
+    {
+        groundDragging = false;
+        if (ghostReturn != null) { StopCoroutine(ghostReturn); ghostReturn = null; }
+        dragGhost.gameObject.SetActive(false);
+    }
+
+    // let go over nothing: the copy glides back onto the drop, then the drop shows again (done)
+    public void ReturnGroundDrag(Vector3 worldPosition, System.Action done)
+    {
+        groundDragging = false;
+        Camera cam = Camera.main;
+        if (cam == null || !dragGhost.gameObject.activeSelf) { dragGhost.gameObject.SetActive(false); done?.Invoke(); return; }
+        if (ghostReturn != null) StopCoroutine(ghostReturn);
+        ghostReturn = StartCoroutine(ReturnGhost(ScreenToOverlay(cam.WorldToScreenPoint(worldPosition)), done));
+    }
+
+    private System.Collections.IEnumerator ReturnGhost(Vector2 to, System.Action done)
+    {
+        const float duration = 0.18f;
+        RectTransform rect = dragGhost.rectTransform;
+        Vector2 from = rect.anchoredPosition;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float k = Mathf.Clamp01(elapsed / duration);
+            rect.anchoredPosition = Vector2.Lerp(from, to, 1f - Mathf.Pow(1f - k, 3f));
+            yield return null;
+        }
+        dragGhost.gameObject.SetActive(false);
+        ghostReturn = null;
+        done?.Invoke();
+    }
+
+    // a world size (at a world spot) in the overlay's units
+    private float WorldSizeOnOverlay(Vector3 worldPosition, float worldSize)
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return registry != null ? registry.slotSize : 54f;
+        Vector2 a = ScreenToOverlay(cam.WorldToScreenPoint(worldPosition));
+        Vector2 b = ScreenToOverlay(cam.WorldToScreenPoint(worldPosition + new Vector3(worldSize, 0f, 0f)));
+        return Mathf.Max(8f, Mathf.Abs(b.x - a.x));
     }
 
     // ── picking up ──────────────────────────────────────────────────────────
@@ -395,12 +497,13 @@ public class MulchInventoryUI : MonoBehaviour
     public void ShowTooltip(MulchItem item, MulchEffect effect, string hint)
     {
         if (item == null || tooltipRect == null) return;
-        // title, a blank line, the lead in line, a blank line, then the description (Tommy, 2026-11-20)
+        // title, a blank line, the lead in line, a blank line, the description and its live status,
+        // then a blank line before the hint (Tommy, 2026-11-20)
         string text = $"<b>{item.Name}</b>  <size=80%>{MulchData.RarityLabel(item.rarity)}</size>\n\n" +
-            $"<size=90%>Whenever this mulch is equipped on a plant:</size>\n\n<size=90%>{item.Description}</size>";
+            $"<size=90%>When equipped on a plant:</size>\n\n<size=90%>{item.Description}</size>";
         string status = effect != null ? effect.GetStatus() : null;
         if (!string.IsNullOrEmpty(status)) text += $"\n<size=85%><color=#FFD27F>{status}</color></size>";
-        if (!string.IsNullOrEmpty(hint)) text += $"\n<size=75%><color=#AAAAAA>{hint}</color></size>";
+        if (!string.IsNullOrEmpty(hint)) text += $"\n\n<size=75%><color=#AAAAAA>{hint}</color></size>";
         tooltipText.text = text;
         tooltipRect.gameObject.SetActive(true);
         overlay.SetAsLastSibling();

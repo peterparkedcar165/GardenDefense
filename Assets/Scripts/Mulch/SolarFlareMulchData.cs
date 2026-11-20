@@ -26,7 +26,7 @@ public class SolarFlareMulchData : MulchData
     {
         MulchTier r = item.rarity;
         string element = useSourceElement ? "in its own element" : $"as <b><color={PlantData.ElementalColor(fixedElement)}>{fixedElement}</color></b>";
-        return $"Whenever this plant makes {SunLabel}, it deals {PlantData.DamageTypeLabel(damageType)} equal to " +
-            $"{Green(Pct(damagePercentOfSun.Get(r)))} of the {SunLabel} made to every insect within {Green(radiusTiles.ToString("0.#"))} tiles, {element}.";
+        return $"Whenever this plant produces {SunLabel}, it deals {PlantData.DamageTypeLabel(damageType)} equal to " +
+            $"{Green(Pct(damagePercentOfSun.Get(r)))} of the {SunLabel} produced to every insect within {Green(radiusTiles.ToString("0.#"))} tiles, {element}.";
     }
 }

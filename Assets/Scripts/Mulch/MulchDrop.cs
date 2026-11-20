@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
@@ -8,7 +9,9 @@ using System.Collections.Generic;
 // bar or any other on screen UI (a drop from a leaked insect hops back toward the map instead). it
 // stays MulchRegistry.groundSeconds of real time (frozen while paused, never sped up), flashing
 // near the end. clicking it flies it into its inventory slot (MulchInventoryUI.FlyToSlot); with a
-// full inventory it stays where it is, flashing "Inventory full".
+// full inventory it stays where it is, flashing "Inventory full". it can also be dragged straight
+// onto a plant (or onto the inventory bar): the drop fades and stays where it lies while an opaque
+// copy follows the pointer, and let go over nothing the copy glides back onto it (Tommy, 2026-11-20).
 //
 // built like insects and projectiles: this root is the spot on the ground, with a Shadow child that
 // stays on the ground and a Visual child that rises off it during the hop. the visual is unlit, so
@@ -34,6 +37,15 @@ public class MulchDrop : MonoBehaviour
     private float fullFlash;
     private bool hovered;
     private bool landed;
+    // pressed: the mouse went down on it. dragging: it then moved far enough to be a drag, not a click
+    private bool pressed;
+    private bool dragging;
+    private bool faded;
+    private Vector2 pressPosition;
+    // any drop being dragged: other drops don't pop their tooltips while it passes over them
+    private static MulchDrop draggedDrop;
+    // how faded the drop is while its copy is being dragged
+    private const float FadedAlpha = 0.35f;
 
     private const string DropLayer = "Weather";
     private const int SortingOrder = 60;
@@ -213,6 +225,8 @@ public class MulchDrop : MonoBehaviour
     {
         all.Remove(this);
         if (hovered) MulchTooltip.Hide();
+        if (dragging) MulchInventoryUI.instance?.EndGroundDrag();
+        if (draggedDrop == this) draggedDrop = null;
     }
 
     private void Update()
@@ -259,6 +273,9 @@ public class MulchDrop : MonoBehaviour
         }
         body.enabled = visible;
         shadow.enabled = visible;
+        Color tint = MulchTierColors.Get(Item.rarity);
+        tint.a = faded ? FadedAlpha : 1f;
+        body.color = tint;
     }
 
     // the visual rides height above its resting spot; the shadow stays on the ground and shrinks
@@ -275,34 +292,108 @@ public class MulchDrop : MonoBehaviour
         shadow.transform.localPosition = new Vector3(0f, 0.02f, 0.01f);
         shadow.transform.localScale = shadowBaseScale * Mathf.Lerp(1f, 0.65f, lift);
         Color c = registry.shadowColor;
-        c.a *= Mathf.Lerp(1f, 0.55f, lift);
+        c.a *= Mathf.Lerp(1f, 0.55f, lift) * (faded ? FadedAlpha : 1f);
         shadow.color = c;
     }
 
+    // a press decides on release: moved past the drag threshold, it was a drag; otherwise a click
     private void OnMouseDown()
     {
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
         if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsTargeting) return;
-        if (MulchManager.instance == null) return;
+        if (MulchManager.instance == null || Mouse.current == null) return;
+        pressed = true;
+        dragging = false;
+        pressPosition = Mouse.current.position.ReadValue();
+    }
 
+    private void OnMouseDrag()
+    {
+        if (!pressed || Mouse.current == null) return;
+        Vector2 pointer = Mouse.current.position.ReadValue();
+        if (!dragging)
+        {
+            float threshold = EventSystem.current != null ? EventSystem.current.pixelDragThreshold : 10f;
+            if ((pointer - pressPosition).sqrMagnitude < threshold * threshold) return;
+            dragging = true;
+            draggedDrop = this;
+            faded = true;
+            hovered = false;
+            MulchTooltip.Hide();
+            MulchInventoryUI.instance?.BeginGroundDrag(Item, pointer, visual.position, registry.dropSize);
+        }
+        MulchInventoryUI.instance?.MoveGroundDrag(pointer);
+    }
+
+    private void OnMouseUp()
+    {
+        if (!pressed) return;
+        pressed = false;
+        if (!dragging)
+        {
+            Collect(visual.position);
+            return;
+        }
+        dragging = false;
+        if (draggedDrop == this) draggedDrop = null;
+        MulchInventoryUI ui = MulchInventoryUI.instance;
+        Vector2 pointer = Mouse.current != null ? Mouse.current.position.ReadValue() : pressPosition;
+        Plant plant = null;
+        MulchInventoryUI.GroundDropTarget target = MulchInventoryUI.GroundDropTarget.Nothing;
+        if (ui != null) target = ui.TargetUnder(pointer, out plant);
+
+        if (target == MulchInventoryUI.GroundDropTarget.Plant && MulchManager.instance != null)
+        {
+            MulchManager.EquipResult result = MulchManager.instance.Equip(Item, plant);
+            if (result == MulchManager.EquipResult.Equipped || result == MulchManager.EquipResult.Merged)
+            {
+                ui.EndGroundDrag();
+                Destroy(gameObject);
+                return;
+            }
+            if (result == MulchManager.EquipResult.SlotsFull)
+                StatusIndicator.Spawn(plant.transform.position + new Vector3(0.4f, 0f, 0f), "Mulch slots full", new Color(1f, 0.45f, 0.4f));
+        }
+        else if (target == MulchInventoryUI.GroundDropTarget.Inventory && Camera.main != null)
+        {
+            Vector3 at = Camera.main.ScreenToWorldPoint(new Vector3(pointer.x, pointer.y, -Camera.main.transform.position.z));
+            at.z = visual.position.z;
+            if (Collect(at))
+            {
+                ui.EndGroundDrag();
+                return;
+            }
+        }
+
+        // nothing took it: the dragged copy glides back and the drop shows again where it lies
+        if (ui != null) ui.ReturnGroundDrag(visual.position, () => { if (this != null) faded = false; });
+        else faded = false;
+    }
+
+    // into the first free inventory slot, flying there from `from`. false (and the drop stays,
+    // flashing "Inventory full") when the inventory is full
+    private bool Collect(Vector3 from)
+    {
+        if (MulchManager.instance == null) return false;
         int slot = MulchManager.instance.TryCollect(Item);
         if (slot >= 0)
         {
             if (GameManager.instance != null && GameManager.instance.plantSelect != null)
                 GameManager.instance.PlaySound(GameManager.instance.plantSelect);
-            MulchInventoryUI.instance?.FlyToSlot(Item, slot, visual.position, registry.dropSize);
+            MulchInventoryUI.instance?.FlyToSlot(Item, slot, from, registry.dropSize);
             Destroy(gameObject);
-            return;
+            return true;
         }
         fullFlash = 0.64f;
         StatusIndicator.Spawn(visual.position + new Vector3(0f, 0.35f, 0f), "Inventory full", new Color(1f, 0.45f, 0.4f));
+        return false;
     }
 
     private void OnMouseEnter()
     {
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        if (draggedDrop != null || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())) return;
         hovered = true;
-        MulchTooltip.Show(Item, null, "Click to pick it up.");
+        MulchTooltip.Show(Item, null, "Click to pick it up, or drag it onto a plant.");
     }
 
     private void OnMouseExit()
