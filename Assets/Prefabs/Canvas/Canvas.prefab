@@ -327,6 +327,7 @@ RectTransform:
   - {fileID: 7711652024515199688}
   - {fileID: 2951771000417769744}
   - {fileID: 62300481973609445}
+  - {fileID: 8906917684800921302}
   - {fileID: 7624283668924466546}
   - {fileID: 1850211924427959734}
   - {fileID: 732829023786255893}
@@ -5145,8 +5146,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 691.6, y: -398.6}
-  m_SizeDelta: {x: 105.08, y: 98.53}
+  m_AnchoredPosition: {x: 691.6, y: -421}
+  m_SizeDelta: {x: 105.08, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3335110149905635975
 CanvasRenderer:
@@ -6212,7 +6213,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 22.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4184216877982445467
@@ -7236,8 +7237,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 570, y: -398.6}
-  m_SizeDelta: {x: 105.08, y: 98.53}
+  m_AnchoredPosition: {x: 570, y: -421}
+  m_SizeDelta: {x: 105.08, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6798075692704198664
 CanvasRenderer:
@@ -7371,8 +7372,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 728.701, y: -143.78}
-  m_SizeDelta: {x: -1481.9651, y: -727.73}
+  m_AnchoredPosition: {x: 728.701, y: -166.28}
+  m_SizeDelta: {x: -1481.9651, y: -682.73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8217447594952994139
 CanvasRenderer:
@@ -8421,11 +8422,12 @@ RectTransform:
   - {fileID: 6305609365240065759}
   - {fileID: 8095451673717346403}
   - {fileID: 7385931328057765669}
+  - {fileID: 8852406486200050399}
   m_Father: {fileID: 4873381137991711799}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 22.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5390778069888747610
@@ -12851,7 +12853,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 22.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &669361691402913565
@@ -13458,3 +13460,88 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3038846103250895329, guid: 4234d3187ff8c5b468a2fff00ea1fac5, type: 3}
   m_PrefabInstance: {fileID: 4691539656211543405}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6858701459039381106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8906917684800921302}
+  - component: {fileID: 266450701160054060}
+  m_Layer: 5
+  m_Name: MulchBag
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8906917684800921302
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6858701459039381106}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2380463719241947518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 728, y: 169}
+  m_SizeDelta: {x: 410, y: 46}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &266450701160054060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6858701459039381106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0601fc4052194010a68e4cd04f83c944, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MulchInventoryUI
+  plantSlotsRoot: {fileID: 8852406486200050399}
+  plantLabelWidth: 112
+--- !u!1 &1973936579186106053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8852406486200050399}
+  m_Layer: 5
+  m_Name: PlantMulches
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8852406486200050399
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973936579186106053}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1129011234668902874}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -192.22}
+  m_SizeDelta: {x: 410, y: 40}
+  m_Pivot: {x: 0.5, y: 0.5}

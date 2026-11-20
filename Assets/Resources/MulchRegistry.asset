@@ -92,7 +92,4 @@ MonoBehaviour:
   darkGlowRadius: 0.9
   darkGlowIntensity: 0.7
   flySeconds: 0.55
-  barAnchor: {x: 0.38, y: 0}
-  barOffset: {x: 0, y: 6}
-  slotSize: 54
   slotSpacing: 6

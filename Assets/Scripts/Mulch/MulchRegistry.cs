@@ -77,11 +77,8 @@ public class MulchRegistry : ScriptableObject
     [Tooltip("seconds a clicked drop takes to fly into its inventory slot, real time")]
     public float flySeconds = 0.55f;
 
-    [Header("inventory bar (on screen, reference 1920 by 1080)")]
-    [Tooltip("where the bar sits on the screen: 0.38, 0 is the bottom middle of the map (the right 24% is the plant panel)")]
-    public Vector2 barAnchor = new Vector2(0.38f, 0f);
-    [Tooltip("nudge from that anchor, in reference pixels")]
-    public Vector2 barOffset = new Vector2(0f, 6f);
-    public float slotSize = 54f;
+    [Header("mulch slots in the right panel")]
+    [Tooltip("gap between slots. where the rows sit and how big the slots are comes from Canvas.prefab's " +
+        "MulchBag and PlantMulches objects (MulchInventoryUI)")]
     public float slotSpacing = 6f;
 }
