@@ -5,10 +5,11 @@ using TMPro;
 
 public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    // the bevel portrait (gd_portrait_bevel_grey, 72 by 72): background is the greyscale backdrop in
-    // the frame's 64 by 64 window, tinted with the element colour mixed 60% toward white; icon is the
-    // plant, bottom centred in the window; frame is the greyscale bevel on top, tinted with the element
-    // colour. both colours come from PlantData (ElementColor, ElementBackdropColor)
+    // the bevel portrait (gd_portrait_bevel_grey, drawn 72 by 72, shown at the button's 100 by 100,
+    // Tommy): background is the greyscale backdrop filling the frame's window (64 of its 72), tinted
+    // with the element colour mixed 60% toward white; icon is the plant, 10% smaller than the frame;
+    // frame is the greyscale bevel on top, tinted with the element colour. both colours come from
+    // PlantData (ElementColor, ElementBackdropColor)
     [SerializeField] private Image icon;
     [SerializeField] private Image background;
     [SerializeField] private Image frame;
