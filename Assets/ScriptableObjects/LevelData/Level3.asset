@@ -127,7 +127,7 @@ MonoBehaviour:
     - subWaveDuration: 18.95
       spawns:
       - insectData: {fileID: 11400000, guid: f28eb13ce556983449f50b1e69f47850, type: 2}
-        count: 8
+        count: 6
         timeBetweenSpawns: 1.5
         startDelay: 0
       delayBeforeNext: 8.45
