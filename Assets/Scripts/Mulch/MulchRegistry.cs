@@ -42,16 +42,16 @@ public class MulchRegistry : ScriptableObject
     public TMP_FontAsset font;
 
     [Header("drops")]
-    [Tooltip("chance an insect drops a mulch when it dies, before the killing plant's Item Drop Rate (proposal)")]
-    [Range(0f, 1f)] public float baseDropChance = 0.04f;
+    [Tooltip("chance an insect drops a mulch when it dies, before the killing plant's Item Drop Rate (Tommy: 2%)")]
+    [Range(0f, 1f)] public float baseDropChance = 0.02f;
     [Tooltip("bad luck protection: after this many kills in a row without a drop, the next kill " +
-        "always drops one (proposal). 0 turns it off")]
-    public int pityKills = 30;
+        "always drops one (Tommy: 50). 0 turns it off")]
+    public int pityKills = 50;
     [Tooltip("relative odds of each rarity on a drop, before the killing plant's Rare Item Drop Rate, " +
         "which multiplies Rare and Epic (proposal)")]
     public TierValue rarityWeights = new TierValue(70f, 25f, 5f);
     [Tooltip("Sun for selling a mulch from the inventory (right click it, then Sell)")]
-    public TierValue sellPrice = new TierValue(50f, 100f, 175f);
+    public TierValue sellPrice = new TierValue(15f, 30f, 45f);
 
     [Header("limits")]
     public int inventorySize = 6;

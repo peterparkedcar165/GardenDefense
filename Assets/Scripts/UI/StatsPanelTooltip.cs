@@ -193,8 +193,8 @@ public class StatsPanelTooltip : MonoBehaviour
 
     private void Blank() => _rows.Add(new Row());
 
-    private static string DropRateText(float points) =>
-        points > 0f ? $"{points:F0} (+{MulchManager.DropRateBonus(points) * 100f:F0}%)" : "0";
+    private static string DropRateText(float percent) =>
+        percent > 0f ? $"+{percent:F0}%" : "0%";
 
     private void Line(string label, string plain, float current, float baseVal) =>
         _rows.Add(new Row { label = label, value = Col(current, baseVal, $"<b>{plain}</b>") });

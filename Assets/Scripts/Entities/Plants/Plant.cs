@@ -178,8 +178,8 @@ public abstract class Plant : Entity, IAttackable
     [System.NonSerialized] public float mulchPrimerCooldownReduction;
     [System.NonSerialized] public float mulchRegenerationBonus;
 
-    // drop stats, in points: a kill by this plant drops a mulch more often (itemDropRate) and rolls
-    // Rare and Epic more often (rareItemDropRate), each by X / (X + 100). from mulches (scavenger,
+    // drop stats, in plain percents: a kill by this plant drops a mulch more often (itemDropRate) and
+    // rolls Rare and Epic more often (rareItemDropRate), 30 being +30%. from mulches (scavenger,
     // four leaf clover) or skill tree nodes (StatType.ItemDropRate, RareItemDropRate)
     [System.NonSerialized] public float itemDropRate;
     [System.NonSerialized] public float rareItemDropRate;

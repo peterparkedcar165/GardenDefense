@@ -63,16 +63,16 @@ MonoBehaviour:
   symbolSun: {fileID: 21300000, guid: 2251c91aefa441878bc285a38586cd4d, type: 3}
   symbolTime: {fileID: 21300000, guid: a0199210eb2d4e43a3c55681e149107f, type: 3}
   font: {fileID: 11400000, guid: 0d1f0e22ae7b80343814964aec364541, type: 2}
-  baseDropChance: 0.04
-  pityKills: 30
+  baseDropChance: 0.02
+  pityKills: 50
   rarityWeights:
     common: 70
     rare: 25
     epic: 5
   sellPrice:
-    common: 50
-    rare: 100
-    epic: 175
+    common: 15
+    rare: 30
+    epic: 45
   inventorySize: 6
   plantSlots: 6
   groundSeconds: 25

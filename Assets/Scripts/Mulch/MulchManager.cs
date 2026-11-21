@@ -8,8 +8,8 @@ using System.Collections.Generic;
 // Rate; after pityKills kills in a row without one, the next kill always drops (bad luck
 // protection). on top of that, every wave except the last guarantees one mulch where its last
 // insect died or leaked (its own roll, so a lucky last kill drops two). a drop's rarity uses the
-// killing plant's Rare Item Drop Rate. both rates are points with diminishing returns:
-// bonus = X / (X + 100)
+// killing plant's Rare Item Drop Rate. both rates are plain percents: 30 is +30% (Tommy,
+// 2026-11-21; they had diminishing returns, X / (X + 100))
 public class MulchManager : MonoBehaviour
 {
     public static MulchManager instance;
@@ -284,8 +284,8 @@ public class MulchManager : MonoBehaviour
 
     // ── drops ───────────────────────────────────────────────────────────────
 
-    // drop rate points to the bonus they give: X / (X + 100), never past double
-    public static float DropRateBonus(float points) => points > 0f ? points / (points + 100f) : 0f;
+    // a drop rate stat to the bonus it gives: a plain percent, 30 is +30% (Tommy, 2026-11-21)
+    public static float DropRateBonus(float percent) => percent > 0f ? percent / 100f : 0f;
 
     // every enemy insect counts under the wave it spawned in (Insect.Start)
     public void RegisterInsect(Insect insect)
