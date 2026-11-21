@@ -54,12 +54,13 @@ MonoBehaviour:
   threatType: 0
   baseEvasion: 0
   baseAccuracy: 0
-  sunDrop: 18
+  sunDrop: 16
   sunDropAdder: 0
   sunDropMultiplier: 0
-  currencyDrop: 0
+  currencyDrop: 9
   currencyDropAdder: 0
   currencyDropMultiplier: 0
+  expDrop: 9
   aggressivity: 0
   baseLightEmissionRange: 0
   baseHealingBonus: 0

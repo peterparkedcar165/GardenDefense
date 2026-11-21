@@ -392,7 +392,7 @@ public abstract class Insect : Entity, IAttackable
         // dies or leaks. friendlies (minions) are never counted
         MulchManager.instance?.RegisterInsect(this);
         waypoints  = _pendingPath ?? PathManager.instance.waypoints;
-        expDrop = sunDrop/2;
+        expDrop = data != null && data.expDrop > 0 ? data.expDrop : sunDrop / 2;
         aimPoint = transform.Find("AimPoint");
         visual = transform.Find("Visual");
         _shadow = transform.Find("Shadow");

@@ -49,12 +49,13 @@ MonoBehaviour:
   carryPriority: 0
   baseEvasion: 0
   baseAccuracy: 0
-  sunDrop: 23
+  sunDrop: 21
   sunDropAdder: 0
   sunDropMultiplier: 0
-  currencyDrop: 0
+  currencyDrop: 11
   currencyDropAdder: 0
   currencyDropMultiplier: 0
+  expDrop: 11
   aggressivity: 1
   baseLightEmissionRange: 0
   baseHealingBonus: 0

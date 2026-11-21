@@ -51,12 +51,13 @@ MonoBehaviour:
   baseEvasion: 0
   baseAccuracy: 0
   baseFlightHeight: 1.58
-  sunDrop: 7
+  sunDrop: 3
   sunDropAdder: 0
   sunDropMultiplier: 0
-  currencyDrop: 0
+  currencyDrop: 3
   currencyDropAdder: 0
   currencyDropMultiplier: 0
+  expDrop: 3
   aggressivity: 0
   baseLightEmissionRange: 0
   baseHealingBonus: 0

@@ -70,6 +70,9 @@ public class InsectData : ScriptableObject
     public int currencyDrop;
     public float currencyDropAdder;
     public float currencyDropMultiplier;
+    [Tooltip("EXP for killing it, shared by the plants that hit it. 0 = half its sunDrop (how it always was " +
+        "before 2026-11-21, when the sun yields were cut and every insect's EXP was written in to keep it)")]
+    public int expDrop;
     public Aggressivity aggressivity;
     public float baseLightEmissionRange;
     public float baseHealingBonus;
