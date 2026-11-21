@@ -4,9 +4,9 @@ using UnityEngine;
 public class SeedLoanFertilizerData : FertilizerData
 {
     [Tooltip("Sun given the moment this fertilizer is picked")]
-    public int loanAmount = 250;
+    public int loanAmount = 100;
     [Tooltip("Sun taken back when the loan comes due")]
-    public int repayAmount = 450;
+    public int repayAmount = 200;
     [Tooltip("the loan comes due at the end of this many waves")]
     public int waves = 3;
 

@@ -6,7 +6,7 @@ using UnityEngine;
 public class SunGrantFertilizerData : FertilizerData
 {
     [Tooltip("Sun given the moment this fertilizer is picked")]
-    public int sunAmount = 80;
+    public int sunAmount = 50;
 
     public override FertilizerEffect CreateEffect() => new SunGrantFertilizerEffect(this);
 

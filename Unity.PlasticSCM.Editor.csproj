@@ -333,8 +333,8 @@
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\PendingChanges\PendingChangesMultiColumnHeader.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\Labels\LabelListViewItem.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\Diff\ChangeCategoryTreeViewItem.cs" />
-    <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\_Deprecated\CollabMigration\MigrateCollabProject.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\AssetOverlays\Cache\AssetStatusCache.cs" />
+    <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\_Deprecated\CollabMigration\MigrateCollabProject.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\CloudDrive\CreateWorkspace\CreateWorkspaceView.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\Views\History\HistoryListView.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Editor\UI\DialogWithCheckBox.cs" />
