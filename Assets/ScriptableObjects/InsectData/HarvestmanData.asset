@@ -52,7 +52,7 @@ MonoBehaviour:
   carryPriority: 2
   baseEvasion: 0
   baseAccuracy: 0
-  sunDrop: 21
+  sunDrop: 22
   sunDropAdder: 0
   sunDropMultiplier: 0
   currencyDrop: 11

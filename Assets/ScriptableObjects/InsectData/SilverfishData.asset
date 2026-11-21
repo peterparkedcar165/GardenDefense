@@ -50,7 +50,7 @@ MonoBehaviour:
   threatType: 0
   baseEvasion: 0.18
   baseAccuracy: 0
-  sunDrop: 10
+  sunDrop: 11
   sunDropAdder: 0
   sunDropMultiplier: 0
   currencyDrop: 6
