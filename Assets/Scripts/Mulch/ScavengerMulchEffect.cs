@@ -11,13 +11,13 @@ public class ScavengerMulchEffect : MulchEffect
     public override void Activate()
     {
         if (Owner == null) return;
-        applied = V(typedData.itemDropRate);
-        Owner.itemDropRate += applied;
+        applied = V(typedData.mulchDropRate);
+        Owner.mulchDropRate += applied;
     }
 
     public override void Deactivate()
     {
-        if (Owner != null) Owner.itemDropRate -= applied;
+        if (Owner != null) Owner.mulchDropRate -= applied;
         applied = 0f;
     }
 }

@@ -122,8 +122,9 @@ public enum StatType
     // pattern as SnowMarkPercentFlat above - plant-specific since healAmount isn't a generic
     // Entity/Plant field
     HealAmountFlat,
-    // loot mulch drop stats on plants (Plant.itemDropRate, Plant.rareItemDropRate), in plain
-    // percents: 30 is +30% (Tommy, 2026-11-21)
-    ItemDropRate,
+    // loot mulch drop stats on plants (Plant.mulchDropRate, Plant.rareItemDropRate), in percents:
+    // MulchDropRate adds to the base drop chance (1 = +1%), RareItemDropRate weighs Rare and Epic
+    // more (25 = +25%). MulchDropRate was ItemDropRate, same slot (Tommy, 2026-11-21)
+    MulchDropRate,
     RareItemDropRate
 }

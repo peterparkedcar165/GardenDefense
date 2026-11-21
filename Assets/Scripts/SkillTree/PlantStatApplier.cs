@@ -91,7 +91,7 @@ public static class PlantStatApplier
             case StatType.SkillChargeRate:                  plant.skillChargeRateAdder          += value; break;
             case StatType.SnowMarkPercentFlat:               if (plant is Snowdrop sd) sd.snowMarkPercentAdder += value; break;
             case StatType.HealAmountFlat:                     if (plant is AloeVera av) av.healAmountAdder += value; break;
-            case StatType.ItemDropRate:                       plant.itemDropRate                 += value; break;
+            case StatType.MulchDropRate:                      plant.mulchDropRate                += value; break;
             case StatType.RareItemDropRate:                   plant.rareItemDropRate             += value; break;
         }
     }

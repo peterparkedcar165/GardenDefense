@@ -178,10 +178,11 @@ public abstract class Plant : Entity, IAttackable
     [System.NonSerialized] public float mulchPrimerCooldownReduction;
     [System.NonSerialized] public float mulchRegenerationBonus;
 
-    // drop stats, in plain percents: a kill by this plant drops a mulch more often (itemDropRate) and
-    // rolls Rare and Epic more often (rareItemDropRate), 30 being +30%. from mulches (scavenger,
-    // four leaf clover) or skill tree nodes (StatType.ItemDropRate, RareItemDropRate)
-    [System.NonSerialized] public float itemDropRate;
+    // drop stats, in percents. mulchDropRate is added to the base drop chance of a kill by this plant
+    // (1 = one more percent, so 2% becomes 3%; Tommy, 2026-11-21: was Item Drop Rate, a multiplier).
+    // rareItemDropRate makes its drops Rare and Epic more often (25 = those weigh 25% more). from
+    // mulches (scavenger, four leaf clover) or skill tree nodes (StatType.MulchDropRate, RareItemDropRate)
+    [System.NonSerialized] public float mulchDropRate;
     [System.NonSerialized] public float rareItemDropRate;
 
     // silenced plants cannot cast their Skill. any HardCrowdControl also silences,

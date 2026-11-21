@@ -42,7 +42,7 @@ public class MulchRegistry : ScriptableObject
     public TMP_FontAsset font;
 
     [Header("drops")]
-    [Tooltip("chance an insect drops a mulch when it dies, before the killing plant's Item Drop Rate (Tommy: 2%)")]
+    [Tooltip("chance an insect drops a mulch when it dies (Tommy: 2%); the killing plant's Mulch Drop Rate is added to it")]
     [Range(0f, 1f)] public float baseDropChance = 0.02f;
     [Tooltip("bad luck protection: after this many kills in a row without a drop, the next kill " +
         "always drops one (Tommy: 50). 0 turns it off")]

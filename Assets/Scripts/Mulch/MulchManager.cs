@@ -4,12 +4,12 @@ using System.Collections.Generic;
 // loot mulches for the level: the player's inventory, equipping onto plants, merging, selling, and
 // the drops themselves. session only, reset at every level start (ProceduralLevel.Start).
 //
-// drops: every enemy insect that dies rolls baseDropChance, raised by the killing plant's Item Drop
-// Rate; after pityKills kills in a row without one, the next kill always drops (bad luck
-// protection). on top of that, every wave except the last guarantees one mulch where its last
-// insect died or leaked (its own roll, so a lucky last kill drops two). a drop's rarity uses the
-// killing plant's Rare Item Drop Rate. both rates are plain percents: 30 is +30% (Tommy,
-// 2026-11-21; they had diminishing returns, X / (X + 100))
+// drops: every enemy insect that dies rolls baseDropChance plus the killing plant's Mulch Drop Rate
+// (added, Tommy 2026-11-21: 2% base and +1% make 3%); after pityKills kills in a row without one,
+// the next kill always drops (bad luck protection). on top of that, every wave except the last
+// guarantees one mulch where its last insect died or leaked (its own roll, so a lucky last kill
+// drops two). a drop's rarity uses the killing plant's Rare Item Drop Rate, a plain percent that
+// multiplies the Rare and Epic weights (25 = ×1.25)
 public class MulchManager : MonoBehaviour
 {
     public static MulchManager instance;
@@ -284,8 +284,12 @@ public class MulchManager : MonoBehaviour
 
     // ── drops ───────────────────────────────────────────────────────────────
 
-    // a drop rate stat to the bonus it gives: a plain percent, 30 is +30% (Tommy, 2026-11-21)
+    // Rare Item Drop Rate to the bonus it gives on the Rare and Epic weights: a plain percent, 25 is +25%
     public static float DropRateBonus(float percent) => percent > 0f ? percent / 100f : 0f;
+
+    // a kill's drop chance: the base plus the killer's Mulch Drop Rate, in percentage points
+    public float KillDropChance(Plant killer) =>
+        Registry == null ? 0f : Mathf.Clamp01(Registry.baseDropChance + (killer != null ? Mathf.Max(0f, killer.mulchDropRate) / 100f : 0f));
 
     // every enemy insect counts under the wave it spawned in (Insect.Start)
     public void RegisterInsect(Insect insect)
@@ -356,7 +360,7 @@ public class MulchManager : MonoBehaviour
     {
         if (Registry == null) return;
         killsSinceDrop++;
-        float chance = Registry.baseDropChance * (1f + DropRateBonus(killer != null ? killer.itemDropRate : 0f));
+        float chance = KillDropChance(killer);
         bool pity = Registry.pityKills > 0 && killsSinceDrop >= Registry.pityKills;
         if (!pity && Random.value >= chance) return;
         killsSinceDrop = 0;

@@ -161,10 +161,11 @@ public class StatsPanelTooltip : MonoBehaviour
         ElemLine(Grass, "Accuracy:", $"{e.accuracy * 100:F1}%", e.accuracy, e.baseAccuracy);
         Line("<color=grey>Tenacity:</color>", $"{e.tenacity * 100:F0}%", e.tenacity, e.baseTenacity);
         ElemLine(HealCol, "Heals & Shield Bonus:", $"{e.healingBonus * 100:F0}%", e.healingBonus, e.baseHealingBonus);
-        // mulch drop stats, in points with diminishing returns (the bonus they give in brackets)
+        // mulch drop stats, in percents: Mulch Drop Rate adds to the base drop chance, Rare Item Drop
+        // Rate weighs Rare and Epic more
         if (e is Plant dropper)
         {
-            Line($"{DropCol}Item Drop Rate:{End}", DropRateText(dropper.itemDropRate), dropper.itemDropRate, 0f);
+            Line($"{DropCol}Mulch Drop Rate:{End}", DropRateText(dropper.mulchDropRate), dropper.mulchDropRate, 0f);
             Line($"{DropCol}Rare Item Drop Rate:{End}", DropRateText(dropper.rareItemDropRate), dropper.rareItemDropRate, 0f);
         }
         Blank();
@@ -194,7 +195,7 @@ public class StatsPanelTooltip : MonoBehaviour
     private void Blank() => _rows.Add(new Row());
 
     private static string DropRateText(float percent) =>
-        percent > 0f ? $"+{percent:F0}%" : "0%";
+        percent > 0f ? $"+{percent:0.#}%" : "0%";
 
     private void Line(string label, string plain, float current, float baseVal) =>
         _rows.Add(new Row { label = label, value = Col(current, baseVal, $"<b>{plain}</b>") });

@@ -18,7 +18,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   elementalType: 6
   dropWeight: 1
-  itemDropRate:
-    common: 30
-    rare: 60
-    epic: 90
+  mulchDropRate:
+    common: 1
+    rare: 2
+    epic: 3
