@@ -10,7 +10,7 @@ public class GameHUD : MonoBehaviour
     [SerializeField] public TMP_Text pauseButtonText, speedButtonText;
 
     [Header("Game controls (Downloads\\gd_game_controls)")]
-    [Tooltip("start, pause and resume: its colours and icon. without it only pauseButtonText changes")]
+    [Tooltip("start, pause and resume: its colours, icon and word. without it only pauseButtonText changes")]
     [SerializeField] private GameControlButton pauseButton;
     [Tooltip("its colours, icon and label. without it only speedButtonText changes")]
     [SerializeField] private GameControlButton speedButton;
@@ -34,12 +34,12 @@ public class GameHUD : MonoBehaviour
 
     public void SetSun(int count)            { if (sunText)           sunText.text           = $"{count}"; }
     public void SetHealth(int hp)            { if (healthText)        healthText.text        = $"{hp}"; }
-    // "Wave 3/8", the timer's first line, centred on it by its drawn pixels
+    // "Wave 3/8" at the timer bar's left end, its drawn pixels GameControlsStyle.timerTextInset in
     public void SetWaveCount(int w, int max)
     {
         if (!waveCountText) return;
         waveCountText.text = $"Wave {w}/{max}";
-        PixelLayout.CentreByInk(waveCountText, Px);
+        PixelLayout.PlaceInkLeft(waveCountText, Px, GameControlsStyle.Instance.timerTextInset);
     }
     // seconds until the next wave (set every frame by the level); +inf before the level starts ticking
     public float NextWaveCountdown { get; private set; } = float.PositiveInfinity;
@@ -65,9 +65,8 @@ public class GameHUD : MonoBehaviour
         if (pauseButton != null)
         {
             GameControlsStyle style = GameControlsStyle.Instance;
-            // the squares show only the icon: play to start or resume, pause while running
             pauseButton.Set(!hasStarted ? style.start : paused ? style.resume : style.pause,
-                paused ? style.playIcon : style.pauseIcon, paused ? style.playIconAt : style.pauseIconAt, "");
+                paused ? style.playIcon : style.pauseIcon, paused ? style.playIconTop : style.pauseIconTop, label);
         }
         else if (pauseButtonText) pauseButtonText.text = label;
     }
@@ -84,7 +83,7 @@ public class GameHUD : MonoBehaviour
         if (speedButton != null)
         {
             GameControlsStyle style = GameControlsStyle.Instance;
-            speedButton.Set(style.speed, style.speedIcon, style.speedIconAt, label, style.speedLabelTop);
+            speedButton.Set(style.speed, style.speedIcon, style.speedIconTop, label);
         }
         else if (speedButtonText) speedButtonText.text = label;
     }
@@ -105,7 +104,8 @@ public class GameHUD : MonoBehaviour
         if (!nextWaveTimerText || text == shownCountdownText) return;
         shownCountdownText = text;
         nextWaveTimerText.text = text;
-        PixelLayout.CentreByInk(nextWaveTimerText, Px);
+        // at the bar's right end, its drawn pixels the same inset in
+        PixelLayout.PlaceInkRight(nextWaveTimerText, Px, GameControlsStyle.Instance.timerTextInset);
     }
 
     // the fill is anchored at the bar's left inner edge: whole art pixels wide out of the bar's inner width

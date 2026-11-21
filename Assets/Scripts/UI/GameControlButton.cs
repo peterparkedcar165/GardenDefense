@@ -3,13 +3,14 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-// the look of one game control button (Downloads\gd_game_controls, Buttons Left): the 34 by 34
-// start, pause and resume square, or the speed square. the greyscale square and its white shine
-// swap sprites for idle, hover and pressed, the face takes that state's colour, and the icon sits
-// at its own spot (GameControlsStyle) with a copy 1 pixel lower in the shadow colour. the speed
-// button also has a label (1x, 2x) under its icon, centred by its drawn pixels. everything inside
-// drops 2 pixels while pressed. the Button next to it still does the clicking (its own transition
-// is off). GameHUD sets the colours, icon and label with Set; until then the prefab's own look stays
+// the look of one game control button (Downloads\gd_game_controls, Bigger Planks): the long start,
+// pause and resume button, or the speed button. the greyscale button and its white shine swap
+// sprites for idle, hover and pressed, the face takes that state's colour, and the icon, a gap and
+// the word (Start, 1x) sit centred on the button as one group by their drawn pixels, the icon with
+// a copy 1 pixel lower in the shadow colour. heights and the gap are on GameControlsStyle.
+// everything inside drops 2 pixels while pressed. the Button next to it still does the clicking
+// (its own transition is off). GameHUD sets the colours, icon and word with Set; until then the
+// prefab's own look stays
 public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private Image face;
@@ -21,7 +22,7 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
     [SerializeField] private Image icon;
     [Tooltip("the copy 1 pixel under the icon, in the shadow colour")]
     [SerializeField] private Image iconShadow;
-    [Tooltip("the speed button's 1x, 2x; hidden when the button has no label")]
+    [Tooltip("the word beside the icon; hidden when the button has none")]
     [SerializeField] private TMP_Text label;
     [Tooltip("canvas units per art pixel")]
     [SerializeField] private float pixel = 2f;
@@ -31,8 +32,7 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
     // held down by a key (space for the start / pause / resume button): looks pressed like a click
     private bool keyHeld;
     private Button button;
-    private Vector2Int iconAt;
-    private int labelTop;
+    private int iconTop;
     private bool hasPlacement;
     private string layoutKey;
 
@@ -49,14 +49,13 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
         Apply();
     }
 
-    // glyph: the icon, placed with its top left at iconAt (art pixels in the button). text: the
-    // label under it, its cap top at labelTop; empty hides it
-    public void Set(GameControlsStyle.ButtonColors value, Sprite glyph, Vector2Int iconAt, string text, int labelTop = 0)
+    // glyph: the icon, its top iconTop art pixels under the button's top. text: the word beside it;
+    // empty hides it
+    public void Set(GameControlsStyle.ButtonColors value, Sprite glyph, int iconTop, string text)
     {
         colors = value;
         hasColors = true;
-        this.iconAt = iconAt;
-        this.labelTop = labelTop;
+        this.iconTop = iconTop;
         hasPlacement = true;
         if (glyph != null)
         {
@@ -129,23 +128,31 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
         Relayout();
     }
 
-    // the icon at its spot, sized to its sprite; the label's drawn pixels centred on the button.
-    // only redone when the icon or the label changes
+    // the icon, the gap and the word's drawn pixels centred on the button as one group, left edge
+    // rounded down, the icon sized to its sprite. only redone when the icon or the word changes
     private void Relayout()
     {
         if (!hasPlacement || iconBox == null) return;
+        GameControlsStyle style = GameControlsStyle.Instance;
         Sprite glyph = icon != null ? icon.sprite : null;
         bool showLabel = label != null && label.gameObject.activeSelf;
-        string key = (glyph != null ? glyph.name : "") + "|" + (showLabel ? label.text : "") + "|" + iconAt + "|" + labelTop;
+        string key = (glyph != null ? glyph.name : "") + "|" + (showLabel ? label.text : "") + "|" + iconTop + "|"
+            + style.iconGap + "|" + style.labelTop;
         if (key == layoutKey) return;
         layoutKey = key;
 
+        float iconWidth = glyph != null ? glyph.rect.width : 0f;
+        float inkLeft = 0f, inkWidth = 0f;
+        bool hasInk = showLabel && PixelLayout.Ink(label, pixel, out inkLeft, out inkWidth);
+        float gap = iconWidth > 0f && hasInk ? style.iconGap : 0f;
+        float buttonWidth = Mathf.Round(((RectTransform)transform).rect.width / pixel);
+        float left = Mathf.Floor((buttonWidth - (iconWidth + gap + inkWidth)) / 2f);
+
         iconBox.sizeDelta = glyph != null ? glyph.rect.size * pixel : Vector2.zero;
-        iconBox.anchoredPosition = new Vector2(iconAt.x * pixel, -iconAt.y * pixel);
-        if (!showLabel) return;
+        iconBox.anchoredPosition = new Vector2(left * pixel, -iconTop * pixel);
+        if (!hasInk) return;
         // the font's capitals start 3 pixels under the top of its rect at its native size
         RectTransform labelRect = label.rectTransform;
-        labelRect.anchoredPosition = new Vector2(labelRect.anchoredPosition.x, -(labelTop - 3) * pixel);
-        PixelLayout.CentreByInk(label, pixel);
+        labelRect.anchoredPosition = new Vector2((left + iconWidth + gap - inkLeft) * pixel, -(style.labelTop - 3) * pixel);
     }
 }

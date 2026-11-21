@@ -45,7 +45,9 @@ MonoBehaviour:
     shadow: {r: 0.09411765, g: 0.227451, b: 0.4, a: 1}
     faceHover: {r: 0.4862745, g: 0.7843137, b: 0.9568627, a: 1}
     facePressed: {r: 0.2039216, g: 0.4705882, b: 0.7215686, a: 1}
-  playIconAt: {x: 14, y: 8}
-  pauseIconAt: {x: 13, y: 8}
-  speedIconAt: {x: 12, y: 6}
-  speedLabelTop: 18
+  iconGap: 6
+  playIconTop: 8
+  pauseIconTop: 8
+  speedIconTop: 11
+  labelTop: 12
+  timerTextInset: 6

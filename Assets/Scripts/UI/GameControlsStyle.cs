@@ -4,8 +4,9 @@ using UnityEngine;
 // GameControlButton): the start, pause and resume button and the speed button. lives at
 // Resources/GameControlsStyle.asset so tuning it in the inspector changes them in every level.
 // spec: Downloads\gd_game_controls\README.md. the wave text, the countdown bar and its text keep
-// their colours on their own objects in the Canvas prefab. layout: Buttons Left (2026-11-21): two 34 by 34
-// square buttons with icons, the speed one over its 1x, and the wave timer filling the rest of the row
+// their colours on their own objects in the Canvas prefab. layout: Bigger Planks (2026-11-21): two long
+// buttons side by side, icon beside word, over a timer bar as wide as both, with the wave number at
+// its left end and the countdown at its right end
 [CreateAssetMenu(fileName = "GameControlsStyle", menuName = "Scriptable Objects/Game Controls Style")]
 public class GameControlsStyle : ScriptableObject
 {
@@ -58,12 +59,19 @@ public class GameControlsStyle : ScriptableObject
     public Sprite pauseIcon;
     public Sprite speedIcon;
 
-    [Header("Inside the 34 by 34 buttons (art pixels from the button's top left; 2 lower while pressed)")]
-    public Vector2Int playIconAt = new Vector2Int(14, 8);
-    public Vector2Int pauseIconAt = new Vector2Int(13, 8);
-    public Vector2Int speedIconAt = new Vector2Int(12, 6);
-    [Tooltip("cap top of the speed label (1x, 2x), which is centred on the button by its drawn pixels")]
-    public int speedLabelTop = 18;
+    [Header("Inside the buttons (art pixels from the button's top; everything 2 lower while pressed)")]
+    [Tooltip("the icon, this gap, then the word: one group centred on the button by their drawn pixels")]
+    public int iconGap = 6;
+    public int playIconTop = 8;
+    public int pauseIconTop = 8;
+    public int speedIconTop = 11;
+    [Tooltip("cap top of the word (Start, Pause, Resume, 1x)")]
+    public int labelTop = 12;
+
+    [Header("Timer")]
+    [Tooltip("art pixels from each end of the timer bar to the drawn pixels of \"Wave 3/8\" (left) and " +
+        "\"Next wave 24s\" (right)")]
+    public int timerTextInset = 6;
 
     [Header("Button colours")]
     [Tooltip("before the first wave")]
