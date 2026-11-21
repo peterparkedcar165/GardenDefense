@@ -365,8 +365,7 @@ public class MulchManager : MonoBehaviour
     }
 
     // which mulch and at what rarity. only mulches the loadout can use (MulchData.CanDropFor:
-    // their condition, like hinder needing a plant that slows), and countdown is left out with fewer
-    // than 10 waves to go
+    // their condition, like hinder needing a plant that slows)
     public MulchItem RollItem(Plant killer, bool forceEpic)
     {
         if (Registry == null || Registry.mulches == null) return null;

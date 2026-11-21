@@ -8,7 +8,7 @@ public class SeasonedOakMulchData : MulchData
     [Tooltip("armor gained each step")]
     public TierValue armorPerStep = TierValue.Scaled(1f);
     [Tooltip("seconds alive between steps")]
-    public float stepInterval = 8f;
+    public float stepInterval = 4f;
     [Tooltip("the climb stops when the total bonus (the start plus everything gained) reaches this")]
     public TierValue maxArmor = new TierValue(30f, 45f, 60f);
 

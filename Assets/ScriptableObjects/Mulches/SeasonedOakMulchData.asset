@@ -26,7 +26,7 @@ MonoBehaviour:
     common: 1
     rare: 2
     epic: 3
-  stepInterval: 8
+  stepInterval: 4
   maxArmor:
     common: 30
     rare: 45

@@ -19,9 +19,9 @@ MonoBehaviour:
   elementalType: 0
   dropWeight: 1
   damagePercentOfSun:
-    common: 4
-    rare: 8
-    epic: 12
+    common: 2
+    rare: 4
+    epic: 6
   damageType: 1
   useSourceElement: 1
   fixedElement: 6

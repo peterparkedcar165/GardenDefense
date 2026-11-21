@@ -4,8 +4,8 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "SolarFlareMulch", menuName = "Scriptable Objects/Mulch/Solar Flare")]
 public class SolarFlareMulchData : MulchData
 {
-    [Tooltip("damage dealt to each insect within the plant's attack range, as a share of the sun made, e.g. 4 = 400%")]
-    public TierValue damagePercentOfSun = TierValue.Scaled(4f);
+    [Tooltip("damage dealt to each insect within the plant's attack range, as a share of the sun made, e.g. 2 = 200%")]
+    public TierValue damagePercentOfSun = TierValue.Scaled(2f);
     public DamageType damageType = DamageType.Magic;
     [Tooltip("on: the flare is in the plant's own element. off: it uses fixedElement instead")]
     public bool useSourceElement = true;
