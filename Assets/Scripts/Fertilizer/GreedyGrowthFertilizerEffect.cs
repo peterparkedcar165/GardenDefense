@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 
-// insects give more sun on kill (the killing plant's own sunYieldMultiplier, which Insect.SunReward
-// reads), but every leak hurts more (FertilizerManager.LeakDamageMultiplier)
+// every plant's sunYieldMultiplier goes up, which Insect.SunReward reads for the sun a kill pays and
+// Plant.GenerateSun for the sun a plant makes (both, Tommy 2026-11-21), but every leak hurts more
+// (FertilizerManager.LeakDamageMultiplier)
 public class GreedyGrowthFertilizerEffect : FertilizerEffect
 {
     private readonly GreedyGrowthFertilizerData typedData;
