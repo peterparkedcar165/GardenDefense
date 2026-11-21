@@ -649,31 +649,62 @@ public class MulchInventoryUI : MonoBehaviour
         return RectTransformUtility.RectangleContainsScreenPoint(sellPopup.Rect, screenPosition, cam);
     }
 
+    // what the open tooltip shows, kept so it can be rebuilt every frame: timers and other live
+    // numbers (drought's seconds left, sun sap's next batch, ironclad riposte's shield) tick while
+    // it's up, like status effect tooltips (Tommy, 2026-11-21)
+    private MulchItem tooltipItem;
+    private MulchEffect tooltipEffect;
+    private string tooltipHint;
+
     public void ShowTooltip(MulchItem item, MulchEffect effect, string hint)
     {
         if (item == null || tooltipRect == null) return;
-        // title, a blank line, the lead in line, a blank line, the description and its live status,
-        // then a blank line before the hint (Tommy, 2026-11-20)
-        string text = $"<b>{item.Name}</b>  <size=80%>{MulchData.RarityLabel(item.rarity)}</size>\n\n" +
-            $"<size=90%>When equipped on a plant:</size>\n\n<size=90%>{(item.data != null ? item.data.GetDescription(item, effect) : "")}</size>";
-        string status = effect != null ? effect.GetStatus() : null;
-        if (!string.IsNullOrEmpty(status)) text += $"\n<size=85%><color=#FFD27F>{status}</color></size>";
-        if (!string.IsNullOrEmpty(hint)) text += $"\n\n<size=75%><color=#AAAAAA>{hint}</color></size>";
-        tooltipText.text = text;
+        tooltipItem = item;
+        tooltipEffect = effect;
+        tooltipHint = hint;
+        tooltipText.text = TooltipText(item, effect, hint);
         tooltipRect.gameObject.SetActive(true);
         overlay.SetAsLastSibling();
         LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
         PlaceTooltip();
     }
 
+    // title, a blank line, the lead in line, a blank line, the description and its live status,
+    // then a blank line before the hint (Tommy, 2026-11-20)
+    private static string TooltipText(MulchItem item, MulchEffect effect, string hint)
+    {
+        string text = $"<b>{item.Name}</b>  <size=80%>{MulchData.RarityLabel(item.rarity)}</size>\n\n" +
+            $"<size=90%>When equipped on a plant:</size>\n\n<size=90%>{(item.data != null ? item.data.GetDescription(item, effect) : "")}</size>";
+        string status = effect != null ? effect.GetStatus() : null;
+        if (!string.IsNullOrEmpty(status)) text += $"\n<size=85%><color=#FFD27F>{status}</color></size>";
+        if (!string.IsNullOrEmpty(hint)) text += $"\n\n<size=75%><color=#AAAAAA>{hint}</color></size>";
+        return text;
+    }
+
     public void HideTooltip()
     {
         if (tooltipRect != null) tooltipRect.gameObject.SetActive(false);
+        tooltipItem = null;
+        tooltipEffect = null;
+        tooltipHint = null;
     }
 
     private void LateUpdate()
     {
-        if (tooltipRect != null && tooltipRect.gameObject.activeSelf) PlaceTooltip();
+        if (tooltipRect == null || !tooltipRect.gameObject.activeSelf) return;
+        if (tooltipItem != null)
+        {
+            // only re lay out when the text really changed (a timer's whole second ticking over). an
+            // equipped mulch follows its effect, which a merge moves to the higher rarity copy
+            MulchItem shown = tooltipEffect != null && tooltipEffect.Item != null ? tooltipEffect.Item : tooltipItem;
+            string text = TooltipText(shown, tooltipEffect, tooltipHint);
+            if (text != tooltipText.text)
+            {
+                tooltipText.text = text;
+                LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
+            }
+        }
+        PlaceTooltip();
     }
 
     // next to the pointer, on whichever side keeps it on screen (above the pointer near the bottom)
