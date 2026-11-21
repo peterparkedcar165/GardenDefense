@@ -863,7 +863,12 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (selectedPlant == null || OtherPathsTutorialBlocked) return;
         bool shift = IsShiftHeld();
         if (!selectedPlant.path3Unlocked)
-            selectedPlant.UnlockPath3();
+        {
+            // level 1 keeps skills locked until its skill tutorial asks for the unlock (Tommy)
+            if (TutorialManager.instance != null && TutorialManager.instance.Level1SkillLocked()) return;
+            if (selectedPlant.UnlockPath3() && selectedPlant.data.plantName == "AcornKnight")
+                TutorialManager.instance?.NotifyEvent(TutorialEvents.UnlockAcornSkill);
+        }
         else if (!shift)
             selectedPlant.UpgradePath3();
 

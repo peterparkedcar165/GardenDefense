@@ -28,6 +28,9 @@ public class ProceduralLevel : SpawnManager
     // from level start since sun accrues passively and may not already be over 18 by then
     private bool triedLevel1PlantInfoTutorial;
     private bool level1Wave1SubWave2Started;
+    private bool triedLevel1SkillTutorial;
+    // game time wave 3 of level 1 began, for its skill tutorial (4 seconds in). negative until then
+    private float level1Wave3StartTime = -1f;
 
 
     protected override void Start()
@@ -92,6 +95,7 @@ public class ProceduralLevel : SpawnManager
         {
             wave++;
             GameManager.instance.currentWave = wave;
+            if (config.levelNumber == 1 && wave == 3) level1Wave3StartTime = Time.time;
             GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
             FertilizerManager.instance?.NotifyWaveStarted(wave);
             MulchManager.instance?.NotifyWaveStarted(wave);
@@ -434,6 +438,35 @@ public class ProceduralLevel : SpawnManager
             if (TutorialManager.instance != null && TutorialManager.instance.TryShow(TutorialIds.Level1PlantInfo, TutorialContent.Level1PlantInfo,
                     TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
                 GameManager.instance.SetPause(true);
+        }
+
+        if (!triedLevel1SkillTutorial && level1Wave3StartTime >= 0f && Time.time - level1Wave3StartTime >= 4f)
+            TryLevel1SkillTutorial();
+    }
+
+    // Level1UseSkillForTheFirstTime (Tommy): from 4 seconds into wave 3, as soon as an Acorn Knight
+    // whose skill is still locked is on the field and the sun covers its unlock. that Knight is
+    // selected, so his panel with the skill's vines is open for the first page
+    private void TryLevel1SkillTutorial()
+    {
+        TutorialManager tutorials = TutorialManager.instance;
+        if (tutorials == null || GameManager.instance == null) return;
+        if (tutorials.HasSeen(TutorialIds.Level1UseSkillForTheFirstTime)) { triedLevel1SkillTutorial = true; return; }
+        if (tutorials.IsAnyTutorialActive) return;
+        AcornKnight knight = null;
+        foreach (Plant plant in Plant.allPlants)
+            if (plant is AcornKnight k && k.IsAlive && !k.path3Unlocked && GameManager.instance.SunCount >= k.GetPath3Cost())
+            {
+                knight = k;
+                break;
+            }
+        if (knight == null) return;
+        triedLevel1SkillTutorial = true;
+        if (tutorials.TryShow(TutorialIds.Level1UseSkillForTheFirstTime, TutorialContent.Level1UseSkillForTheFirstTime,
+                TutorialSpeaker.AcornKnight, () => GameManager.instance.SetPause(false)))
+        {
+            GameManager.instance.SetPause(true);
+            PlantUpgradeUI.instance?.ShowPanel(knight);
         }
     }
 }

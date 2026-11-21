@@ -70,6 +70,8 @@ public class TutorialManager : MonoBehaviour
             Debug.Log($"[Tutorial] TryShow('{id}') aborted - popup reference is NULL (not wired in the Inspector?)");
             return false;
         }
+        // already up: a second trigger (two primers landing close together) mustn't restart it
+        if (popup.IsShowing && currentId == id) return false;
         if (SaveManager.instance.saveData.seenTutorials.Contains(id))
         {
             Debug.Log($"[Tutorial] TryShow('{id}') skipped - already in seenTutorials (press the debug hotkey to clear it)");
@@ -149,6 +151,36 @@ public class TutorialManager : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    // true while level 1 should keep every plant's skill locked: until Level1UseSkillForTheFirstTime
+    // reaches its unlock page (Tommy: the player shouldn't unlock a skill before it). never locks
+    // once that tutorial has been seen, or outside level 1
+    public bool Level1SkillLocked()
+    {
+        if (SaveManager.instance != null && SaveManager.instance.saveData.seenTutorials.Contains(TutorialIds.Level1UseSkillForTheFirstTime))
+            return false;
+        if (ProceduralLevel.CurrentConfig == null || ProceduralLevel.CurrentConfig.levelNumber != 1)
+            return false;
+        return !IsWaitingForEvent(TutorialEvents.UnlockAcornSkill);
+    }
+
+    public bool HasSeen(string id) => SaveManager.instance != null && SaveManager.instance.saveData.seenTutorials.Contains(id);
+
+    // announces an event after some game time, then pauses the game: for a page that needs the game
+    // running until something finishes (the Acorn Knight's shield landing), runs here so it survives
+    // whatever started it
+    public void NotifyEventAfter(string eventId, float seconds, bool pauseAfter)
+    {
+        StartCoroutine(NotifyLater(eventId, seconds, pauseAfter));
+    }
+
+    private System.Collections.IEnumerator NotifyLater(string eventId, float seconds, bool pauseAfter)
+    {
+        if (seconds > 0f) yield return new WaitForSeconds(seconds);
+        if (!IsWaitingForEvent(eventId)) yield break;
+        NotifyEvent(eventId);
+        if (pauseAfter && IsAnyTutorialActive) GameManager.instance?.SetPause(true);
     }
 
     private void MarkSeen(string id)

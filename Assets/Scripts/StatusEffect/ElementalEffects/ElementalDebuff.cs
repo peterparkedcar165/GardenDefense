@@ -27,6 +27,22 @@ public abstract class ElementalDebuff : StatusEffect
 
         if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2 && target != null)
             target.StartCoroutine(DelayedPrimerTutorial());
+
+        // Waterlily's first Water primer: her own primer tutorial (Tommy, Level3WaterPrimer)
+        if (this is WaterPrimer && source is Plant plant && plant.data != null && plant.data.plantName == "Waterlily"
+            && target != null && TutorialManager.instance != null && !TutorialManager.instance.HasSeen(TutorialIds.Level3WaterPrimer))
+            target.StartCoroutine(DelayedWaterPrimerTutorial());
+    }
+
+    // 1 second after the primer lands, like the level 2 one, and only when no other tutorial is up
+    // (a later primer tries again)
+    private System.Collections.IEnumerator DelayedWaterPrimerTutorial()
+    {
+        yield return new UnityEngine.WaitForSeconds(1f);
+        if (TutorialManager.instance == null || TutorialManager.instance.IsAnyTutorialActive) yield break;
+        if (TutorialManager.instance.TryShow(TutorialIds.Level3WaterPrimer, TutorialContent.Level3WaterPrimer,
+                TutorialSpeaker.Waterlily, () => GameManager.instance.SetPause(false)))
+            GameManager.instance.SetPause(true);
     }
 
     // fires 1 second after the primer actually lands rather than instantly, so the player sees

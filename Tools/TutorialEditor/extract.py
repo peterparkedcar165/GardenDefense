@@ -61,6 +61,8 @@ TRIGGERS = {
     'Level2StartLevel': (2, 'Level 2, right after a fertilizer is picked, if Sunflower is in the loadout.', False, 'FertilizerSelectionUI.CloseAfterSelect'),
     'Level2Primers': (2, 'Level 2, 1 second after the first elemental primer lands on an insect.', True, 'ElementalDebuff.OnApply'),
     'Level3StartLevel': (3, 'Level 3, right after a fertilizer is picked, if Waterlily is in the loadout.', False, 'FertilizerSelectionUI.CloseAfterSelect'),
+    'Level1UseSkillForTheFirstTime': (1, "Level 1, from 4 seconds into wave 3, once an Acorn Knight's skill is still locked and you have the Sun to unlock it. Until then level 1 keeps skills locked.", True, 'ProceduralLevel.Update'),
+    'Level3WaterPrimer': (3, 'The first time a Waterlily puts a Water primer on an insect, 1 second after it lands.', True, 'ElementalDebuff.OnApply'),
 }
 
 # the speaker each TryShow call passes, read from the call sites themselves

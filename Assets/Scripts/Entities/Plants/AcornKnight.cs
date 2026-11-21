@@ -549,6 +549,11 @@ public class AcornKnight : Aura
     {
         if (shieldProjectilePrefab == null) return;
 
+        // the skill tutorial's cast page keeps the game paused for aiming; the throw and the flight
+        // need it running, until the shield lands (OnShieldLanded pauses it again)
+        if (TutorialManager.instance != null && TutorialManager.instance.IsWaitingForEvent(TutorialEvents.AcornShieldLanded))
+            GameManager.instance?.SetPause(false);
+
         Vector2 toTarget = (Vector2)position - (Vector2)transform.position;
         Vector2 landPos = toTarget.magnitude > SkillThrowRange
             ? (Vector2)transform.position + toTarget.normalized * SkillThrowRange
@@ -592,6 +597,11 @@ public class AcornKnight : Aura
     // through the ordinary StunEffect like any other hard CC in the game
     private void OnShieldLanded(Vector3 position, Insect hitInsect)
     {
+        // the skill tutorial moves on once the shield is down: a moment later, so its landing shows,
+        // then the game pauses for the next page
+        if (TutorialManager.instance != null && TutorialManager.instance.IsWaitingForEvent(TutorialEvents.AcornShieldLanded))
+            TutorialManager.instance.NotifyEventAfter(TutorialEvents.AcornShieldLanded, 0.4f, true);
+
         if (hitInsect != null && hitInsect.IsAlive)
             hitInsect.ApplyEffect(new StunEffect(hitInsect, ShieldStunDuration, 1, this));
 

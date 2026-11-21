@@ -19,6 +19,12 @@ public static class TutorialEvents
     public const string UpgradeAcornAttackPath = "upgrade_acorn_attack_path";
     public const string CollectMulch = "collect_mulch";
     public const string EquipMulch = "equip_mulch";
+    // any mulch taken: clicked or dragged into the bag, or dragged onto a plant (MulchManager)
+    public const string TakeMulch = "take_mulch";
+    // the Acorn Knight's skill unlocked (PlantUpgradeUI.OnPath3UpgradeClicked)
+    public const string UnlockAcornSkill = "unlock_acorn_skill";
+    // the Acorn Knight's thrown shield came down (AcornKnight.OnShieldLanded)
+    public const string AcornShieldLanded = "acorn_shield_landed";
     public const string PlaceSunflowerOnDirt = "place_sunflower_dirt";
     public const string PlaceWaterlilyOnWater = "place_waterlily_water";
 }

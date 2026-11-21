@@ -161,6 +161,7 @@ public class MulchManager : MonoBehaviour
             if (owned == null || !item.CanMergeWith(owned.Item)) continue;
             owned.Upgrade(owned.Item.Merged(item));
             AnnounceMerge(owned.Item, plant);
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.TakeMulch);
             RaiseChanged();
             return EquipResult.Merged;
         }
@@ -174,6 +175,7 @@ public class MulchManager : MonoBehaviour
         effect.Activate();
         StatusIndicator.Spawn(plant.transform.position + new Vector3(0.4f, 0f, 0f), "Mulch!", MulchTierColors.Get(item.rarity));
         TutorialManager.instance?.NotifyEvent(TutorialEvents.EquipMulch);
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.TakeMulch);
         RaiseChanged();
         return EquipResult.Equipped;
     }
@@ -420,7 +422,11 @@ public class MulchManager : MonoBehaviour
     public int TryCollect(MulchItem item)
     {
         int slot = AddToInventorySlot(item);
-        if (slot >= 0) TutorialManager.instance?.NotifyEvent(TutorialEvents.CollectMulch);
+        if (slot >= 0)
+        {
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.CollectMulch);
+            TutorialManager.instance?.NotifyEvent(TutorialEvents.TakeMulch);
+        }
         return slot;
     }
 
