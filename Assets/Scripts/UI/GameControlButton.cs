@@ -28,6 +28,8 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     private GameControlsStyle.ButtonColors colors;
     private bool hasColors, hovered, pressed;
+    // held down by a key (space for the start / pause / resume button): looks pressed like a click
+    private bool keyHeld;
     private Button button;
     private Vector2Int iconAt;
     private int labelTop;
@@ -71,6 +73,13 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
         Relayout();
     }
 
+    public void SetKeyHeld(bool held)
+    {
+        if (keyHeld == held) return;
+        keyHeld = held;
+        Apply();
+    }
+
     public void OnPointerEnter(PointerEventData eventData) { hovered = true; Apply(); }
     public void OnPointerExit(PointerEventData eventData) { hovered = false; pressed = false; Apply(); }
 
@@ -93,7 +102,7 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private void Apply()
     {
         GameControlsStyle style = GameControlsStyle.Instance;
-        bool down = pressed && Clickable;
+        bool down = (pressed || keyHeld) && Clickable;
         bool over = hovered && Clickable;
         Sprite faceSprite = down ? style.buttonPressed : over ? style.buttonHover : style.buttonIdle;
         Sprite shineSprite = down ? style.buttonPressedShine : over ? style.buttonHoverShine : style.buttonIdleShine;

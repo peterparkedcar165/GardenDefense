@@ -72,6 +72,12 @@ public class GameHUD : MonoBehaviour
         else if (pauseButtonText) pauseButtonText.text = label;
     }
 
+    // space held down shows the start / pause / resume button pressed (GameManager presses it on release)
+    public void HoldPauseButton(bool held)
+    {
+        if (pauseButton != null) pauseButton.SetKeyHeld(held);
+    }
+
     public void SetSpeedButton(float speed)
     {
         string label = speed + "x";

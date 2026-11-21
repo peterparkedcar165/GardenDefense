@@ -82,15 +82,38 @@ public class GameManager : MonoBehaviour
         audioSource.PlayOneShot(clip);
     }
 
+    // space works the start / pause / resume button like a click (Tommy, 2026-11-21): while it's
+    // down the button shows pressed, and letting go presses it. a press that started while a menu
+    // was open is ignored, and one released after a menu opened only lets the button back up
+    private bool spaceHeld;
+
+    // the canvas outlives this manager, so a level left with space still down mustn't leave the
+    // button stuck pressed
+    private void OnDisable()
+    {
+        if (!spaceHeld) return;
+        spaceHeld = false;
+        GameHUD.instance?.HoldPauseButton(false);
+    }
+
+    private bool SpaceAllowed =>
+        (SettingsManager.instance == null || !SettingsManager.instance.IsOpen)
+        && (FertilizerSelectionUI.instance == null || !FertilizerSelectionUI.instance.IsOpen)
+        && (MulchDebugMenu.instance == null || !MulchDebugMenu.instance.IsOpen)
+        && (LoadoutSelectionUI.instance == null || !LoadoutSelectionUI.instance.IsOpen);
+
     private void Update()
     {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && SpaceAllowed)
         {
-            if (SettingsManager.instance == null || !SettingsManager.instance.IsOpen)
-                if (FertilizerSelectionUI.instance == null || !FertilizerSelectionUI.instance.IsOpen)
-                    if (MulchDebugMenu.instance == null || !MulchDebugMenu.instance.IsOpen)
-                        if (LoadoutSelectionUI.instance == null || !LoadoutSelectionUI.instance.IsOpen)
-                            TogglePause();
+            spaceHeld = true;
+            GameHUD.instance?.HoldPauseButton(true);
+        }
+        if (spaceHeld && Keyboard.current.spaceKey.wasReleasedThisFrame)
+        {
+            spaceHeld = false;
+            GameHUD.instance?.HoldPauseButton(false);
+            if (SpaceAllowed) TogglePause();
         }
 
         // cheatcode m grants 99999 sun while in a level
