@@ -83,6 +83,8 @@ public class PlantInfoPanelStyle : ScriptableObject
     [Header("Buttons")]
     public Sprite button;
     public Sprite buttonPressed;
+    [Tooltip("the 7 by 7 sun after a price drawn in code (the mulch Sell popup), tinted with the look's sun colour")]
+    public Sprite sunGlyph;
     [Tooltip("can buy")]
     public ButtonLook normal = new ButtonLook("#FFB973", "#FFF1D6", "#4A2814", "#FFC939");
     [Tooltip("pointer over")]

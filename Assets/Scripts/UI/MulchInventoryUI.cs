@@ -607,7 +607,7 @@ public class MulchInventoryUI : MonoBehaviour
         sellItem = item;
         HideTooltip();
         overlay.SetAsLastSibling();
-        sellPopup.Open(SlotCenter(slot), SellFromPopup, CloseSellPopup);
+        sellPopup.Open(SlotCenter(slot), MulchManager.instance.SellPrice(item), SellFromPopup, CloseSellPopup);
     }
 
     private void SellFromPopup()

@@ -5,9 +5,11 @@ using TMPro;
 
 // the "Sell" popup a right click opens on a bag mulch (Tommy, 2026-11-20): one button over the
 // slot, in the plant info panel's button look (PlantInfoPanelStyle: tinted button sprite, lighter
-// on hover, the pressed sprite with the label 2 pixels lower). a left click on it sells the mulch, a
-// right click closes it. MulchInventoryUI builds it on its overlay and also closes it on a click
-// anywhere else, escape, a drag, or when the slot's mulch changes
+// on hover, the pressed sprite with the label 2 pixels lower). it reads "Sell 50" and the sun glyph
+// (Tommy, 2026-11-21: show the price), laid out like an upgrade button's price: the sun 2 pixels
+// after the number, 4 under the button's top, in the look's sun colour. a left click on it sells the
+// mulch, a right click closes it. MulchInventoryUI builds it on its overlay and also closes it on a
+// click anywhere else, escape, a drag, or when the slot's mulch changes
 public class MulchSellPopup : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
     IPointerUpHandler, IPointerClickHandler
 {
@@ -17,10 +19,15 @@ public class MulchSellPopup : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     private const float PadX = 6f;
     // art pixels: the button sprite's height
     private const float Height = 18f;
+    // art pixels: the sun glyph's size, its gap after the price and its drop from the button's top
+    private const float SunSize = 7f;
+    private const float SunGap = 2f;
+    private const float SunTop = 4f;
 
     private Image face;
     private RectTransform content;
     private TextMeshProUGUI label;
+    private Image sun;
     private PixelTextEffect shadow;
     private bool hovered, pressed;
     private System.Action onSell, onClose;
@@ -65,27 +72,53 @@ public class MulchSellPopup : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         label.alignment = TextAlignmentOptions.TopLeft;
         label.textWrappingMode = TextWrappingModes.NoWrap;
         label.raycastTarget = false;
-        label.text = "Sell";
-        float width = Mathf.Ceil(label.GetPreferredValues(label.text).x / Px) * Px;
         RectTransform labelRect = label.rectTransform;
         labelRect.anchorMin = labelRect.anchorMax = new Vector2(0f, 1f);
         labelRect.pivot = new Vector2(0f, 1f);
-        labelRect.sizeDelta = new Vector2(width, 12f * Px);
         // capitals 4 art pixels under the button's top, like the info panel's buttons
         labelRect.anchoredPosition = new Vector2(PadX * Px, -1f * Px);
         shadow = labelGO.AddComponent<PixelTextEffect>();
 
-        rect.sizeDelta = new Vector2(width + 2f * PadX * Px, Height * Px);
+        GameObject sunGO = new GameObject("Sun", typeof(RectTransform));
+        sunGO.transform.SetParent(content, false);
+        sun = sunGO.AddComponent<Image>();
+        sun.raycastTarget = false;
+        sun.sprite = PlantInfoPanelStyle.Instance.sunGlyph;
+        RectTransform sunRect = sun.rectTransform;
+        sunRect.anchorMin = sunRect.anchorMax = new Vector2(0f, 1f);
+        sunRect.pivot = new Vector2(0f, 1f);
+        sunRect.sizeDelta = new Vector2(SunSize * Px, SunSize * Px);
+
+        Layout(0);
         Apply();
     }
 
-    // opens centred on a point of the parent (the slot's middle), on whole art pixels
-    public void Open(Vector2 center, System.Action sell, System.Action close)
+    // "Sell <price>" and the sun after it; the button is as wide as both plus its padding
+    private void Layout(int price)
+    {
+        label.text = $"Sell {price}";
+        float width = Mathf.Ceil(label.GetPreferredValues(label.text).x / Px) * Px;
+        label.rectTransform.sizeDelta = new Vector2(width, 12f * Px);
+        float right = PadX * Px + width;
+        bool showSun = sun.sprite != null;
+        sun.gameObject.SetActive(showSun);
+        if (showSun)
+        {
+            sun.rectTransform.anchoredPosition = new Vector2(right + SunGap * Px, -SunTop * Px);
+            right += (SunGap + SunSize) * Px;
+        }
+        Rect.sizeDelta = new Vector2(right + PadX * Px, Height * Px);
+    }
+
+    // opens centred on a point of the parent (the slot's middle), on whole art pixels, showing the
+    // mulch's sell price
+    public void Open(Vector2 center, int price, System.Action sell, System.Action close)
     {
         onSell = sell;
         onClose = close;
         hovered = false;
         pressed = false;
+        Layout(price);
         Vector2 size = Rect.sizeDelta;
         Rect.anchoredPosition = new Vector2(Mathf.Round((center.x - size.x / 2f) / Px) * Px, Mathf.Round(center.y / Px) * Px);
         gameObject.SetActive(true);
@@ -131,6 +164,7 @@ public class MulchSellPopup : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         face.color = look.face;
         label.color = look.text;
         shadow.Color = look.shadow;
+        sun.color = look.sun;
         content.anchoredPosition = new Vector2(0f, pressed ? -2f * Px : 0f);
     }
 }
