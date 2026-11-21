@@ -3,12 +3,13 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-// the look of one game control button (Downloads\gd_game_controls): start, pause and resume, or the
-// speed button. the greyscale button and its white shine swap sprites for idle, hover and pressed,
-// the face takes the button's colour, and the icon, a 4 pixel gap and the label sit centred as one
-// group, 2 pixels lower while pressed. the Button next to it still does the clicking (its own
-// transition is off). GameHUD sets the colours, icon and label with Set; until then the prefab's
-// own colours stay
+// the look of one game control button (Downloads\gd_game_controls, Buttons Left): the 34 by 34
+// start, pause and resume square, or the speed square. the greyscale square and its white shine
+// swap sprites for idle, hover and pressed, the face takes that state's colour, and the icon sits
+// at its own spot (GameControlsStyle) with a copy 1 pixel lower in the shadow colour. the speed
+// button also has a label (1x, 2x) under its icon, centred by its drawn pixels. everything inside
+// drops 2 pixels while pressed. the Button next to it still does the clicking (its own transition
+// is off). GameHUD sets the colours, icon and label with Set; until then the prefab's own look stays
 public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private Image face;
@@ -20,15 +21,17 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
     [SerializeField] private Image icon;
     [Tooltip("the copy 1 pixel under the icon, in the shadow colour")]
     [SerializeField] private Image iconShadow;
+    [Tooltip("the speed button's 1x, 2x; hidden when the button has no label")]
     [SerializeField] private TMP_Text label;
-    [Tooltip("art pixels between the icon and the label")]
-    [SerializeField] private int iconGap = 4;
     [Tooltip("canvas units per art pixel")]
     [SerializeField] private float pixel = 2f;
 
     private GameControlsStyle.ButtonColors colors;
     private bool hasColors, hovered, pressed;
     private Button button;
+    private Vector2Int iconAt;
+    private int labelTop;
+    private bool hasPlacement;
     private string layoutKey;
 
     private void Awake()
@@ -44,16 +47,26 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
         Apply();
     }
 
-    public void Set(GameControlsStyle.ButtonColors value, Sprite glyph, string text)
+    // glyph: the icon, placed with its top left at iconAt (art pixels in the button). text: the
+    // label under it, its cap top at labelTop; empty hides it
+    public void Set(GameControlsStyle.ButtonColors value, Sprite glyph, Vector2Int iconAt, string text, int labelTop = 0)
     {
         colors = value;
         hasColors = true;
+        this.iconAt = iconAt;
+        this.labelTop = labelTop;
+        hasPlacement = true;
         if (glyph != null)
         {
             if (icon != null) icon.sprite = glyph;
             if (iconShadow != null) iconShadow.sprite = glyph;
         }
-        if (label != null) label.text = text;
+        if (label != null)
+        {
+            bool show = !string.IsNullOrEmpty(text);
+            if (label.gameObject.activeSelf != show) label.gameObject.SetActive(show);
+            if (show) label.text = text;
+        }
         Apply();
         Relayout();
     }
@@ -90,7 +103,7 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
             content.anchoredPosition = new Vector2(content.anchoredPosition.x, down ? -2f * pixel : 0f);
 
         if (!hasColors) return;
-        if (face != null) face.color = colors.face;
+        if (face != null) face.color = down ? colors.facePressed : over ? colors.faceHover : colors.face;
         if (icon != null) icon.color = colors.text;
         if (iconShadow != null) iconShadow.color = colors.shadow;
         if (label != null)
@@ -107,28 +120,23 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
         Relayout();
     }
 
-    // the icon, the gap and the label centred as one group, every x on a whole art pixel. the icon
-    // box takes the icon sprite's size and the label the width of what it says. only redone when the
-    // icon or the label changes
+    // the icon at its spot, sized to its sprite; the label's drawn pixels centred on the button.
+    // only redone when the icon or the label changes
     private void Relayout()
     {
-        if (iconBox == null || label == null) return;
+        if (!hasPlacement || iconBox == null) return;
         Sprite glyph = icon != null ? icon.sprite : null;
-        string key = (glyph != null ? glyph.name : "") + "|" + label.text;
+        bool showLabel = label != null && label.gameObject.activeSelf;
+        string key = (glyph != null ? glyph.name : "") + "|" + (showLabel ? label.text : "") + "|" + iconAt + "|" + labelTop;
         if (key == layoutKey) return;
         layoutKey = key;
 
-        Vector2 iconSize = glyph != null ? glyph.rect.size * pixel : Vector2.zero;
-        iconBox.sizeDelta = iconSize;
+        iconBox.sizeDelta = glyph != null ? glyph.rect.size * pixel : Vector2.zero;
+        iconBox.anchoredPosition = new Vector2(iconAt.x * pixel, -iconAt.y * pixel);
+        if (!showLabel) return;
+        // the font's capitals start 3 pixels under the top of its rect at its native size
         RectTransform labelRect = label.rectTransform;
-        float labelWidth = string.IsNullOrEmpty(label.text) ? 0f
-            : Mathf.Ceil(label.GetPreferredValues(label.text).x / pixel) * pixel;
-        labelRect.sizeDelta = new Vector2(labelWidth, labelRect.sizeDelta.y);
-
-        float gap = iconSize.x > 0f && labelWidth > 0f ? iconGap * pixel : 0f;
-        float total = iconSize.x + gap + labelWidth;
-        float x = Mathf.Round((((RectTransform)transform).rect.width - total) / 2f / pixel) * pixel;
-        iconBox.anchoredPosition = new Vector2(x, iconBox.anchoredPosition.y);
-        labelRect.anchoredPosition = new Vector2(x + iconSize.x + gap, labelRect.anchoredPosition.y);
+        labelRect.anchoredPosition = new Vector2(labelRect.anchoredPosition.x, -(labelTop - 3) * pixel);
+        PixelLayout.CentreByInk(label, pixel);
     }
 }
