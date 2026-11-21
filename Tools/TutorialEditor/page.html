@@ -1,0 +1,739 @@
+<title>Tutorial Popup Editor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Pixelify+Sans:wght@500;600&display=swap">
+<style>
+/* layout: a garden-shed workbench. tutorials down the left like seed packets, the game screen
+   preview up top, the script of pages under it, one card per page */
+@font-face { font-family: "GD Game"; src: url(data:font/ttf;base64,__FONT_B64__) format("truetype"); font-display: block; }
+:root {
+  --bg: #EEF2EA;
+  --panel: #FFFFFF;
+  --panel-2: #F6F8F3;
+  --ink: #1F2A21;
+  --muted: #5F6D61;
+  --line: #D5DDD2;
+  --accent: #2F6B3A;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DCEBDD;
+  --wait: #B9770E;
+  --wait-soft: #FBEFD9;
+  --new: #2F6FA8;
+  --new-soft: #DDEAF6;
+  --warn: #B23A2E;
+  --warn-soft: #F8E1DE;
+  --stage-edge: #2B3A2D;
+  --f-display: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --f-game: "GD Game", "Pixelify Sans", system-ui, sans-serif;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121813; --panel: #1A221C; --panel-2: #202A22; --ink: #E4ECE2; --muted: #9BAA9D; --line: #2F3B31;
+  --accent: #7DC283; --accent-ink: #0F1A11; --accent-soft: #24382A; --wait: #E8B04B; --wait-soft: #3A2E17;
+  --new: #7FB3E6; --new-soft: #1D2C3B; --warn: #F08A7E; --warn-soft: #3B1F1C; --stage-edge: #0C110D; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121813; --panel: #1A221C; --panel-2: #202A22; --ink: #E4ECE2; --muted: #9BAA9D; --line: #2F3B31;
+  --accent: #7DC283; --accent-ink: #0F1A11; --accent-soft: #24382A; --wait: #E8B04B; --wait-soft: #3A2E17;
+  --new: #7FB3E6; --new-soft: #1D2C3B; --warn: #F08A7E; --warn-soft: #3B1F1C; --stage-edge: #0C110D; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.45; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 20px; max-width: 1400px; margin: 0 auto;
+  padding-block: 18px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+header.top h1 { font-family: var(--f-display); font-weight: 600; font-size: 26px; letter-spacing: 0.01em; margin: 0; line-height: 1.1; }
+header.top .sub { color: var(--muted); font-size: 13px; }
+header.top .spacer { flex: 1; }
+.save { font-size: 12.5px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+.save::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.save.bad { color: var(--warn); } .save.bad::before { background: var(--warn); }
+.save.busy::before { background: var(--wait); }
+
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 7px 12px; font-weight: 500; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 4px 9px; font-size: 12.5px; }
+.btn.danger:hover { border-color: var(--warn); color: var(--warn); }
+.btn[disabled] { opacity: 0.45; cursor: default; }
+
+/* sidebar */
+aside { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.side-block { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 10px; }
+.side-block h2 { font-family: var(--f-display); font-weight: 500; font-size: 15px; margin: 4px 6px 8px; letter-spacing: 0.02em; }
+.level-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 10px 6px 4px; }
+.tut { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 8px; align-items: center; width: 100%; text-align: left;
+  border: 1px solid transparent; background: transparent; border-radius: 8px; padding: 6px; }
+.tut:hover { background: var(--panel-2); }
+.tut[aria-current="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.tut img { width: 30px; height: 30px; image-rendering: pixelated; border-radius: 6px; background: var(--panel-2); }
+.tut .t-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tut .t-meta { color: var(--muted); font-size: 12px; }
+.badge { font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 6px; border-radius: 999px; white-space: nowrap; }
+.badge.edited { background: var(--wait-soft); color: var(--wait); }
+.badge.new { background: var(--new-soft); color: var(--new); }
+.badge.removed { background: var(--warn-soft); color: var(--warn); }
+.ideas { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 4px 4px; }
+.idea { border: 1px dashed var(--line); background: transparent; border-radius: 999px; padding: 3px 10px; font-size: 12.5px; color: var(--muted); }
+.idea:hover { border-color: var(--accent); color: var(--ink); }
+.side-select { display: none; }
+
+/* main */
+main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
+.head { padding: 14px 16px; display: grid; gap: 12px; }
+.head-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.head h2 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 22px; line-height: 1.15; text-wrap: balance; }
+.mono { font-family: var(--f-mono); font-size: 12.5px; color: var(--muted); }
+.fields { display: grid; grid-template-columns: 220px 110px minmax(0, 1fr); gap: 10px 14px; align-items: start; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field > span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.field input[type="text"], .field select, .field textarea { width: 100%; border: 1px solid var(--line); background: var(--panel-2); border-radius: 8px; padding: 7px 9px; }
+.field textarea { resize: vertical; min-height: 38px; }
+.check { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+.speaker-btn { display: flex; align-items: center; gap: 9px; width: 100%; border: 1px solid var(--line); background: var(--panel-2); border-radius: 8px; padding: 5px 8px; text-align: left; }
+.speaker-btn img { width: 26px; height: 26px; image-rendering: pixelated; }
+.speaker-btn .el { margin-left: auto; width: 12px; height: 12px; border-radius: 3px; border: 1px solid #0003; }
+.wiring { font-size: 12px; color: var(--wait); }
+.speaker-pop { position: absolute; z-index: 20; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 10px;
+  box-shadow: 0 10px 30px #0003; width: min(440px, calc(100vw - 32px)); display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+.speaker-pop button { display: grid; justify-items: center; gap: 2px; border: 1px solid transparent; background: var(--panel-2); border-radius: 8px; padding: 6px 4px; font-size: 12px; }
+.speaker-pop button:hover, .speaker-pop button[aria-pressed="true"] { border-color: var(--accent); }
+.speaker-pop img { width: 44px; height: 44px; image-rendering: pixelated; }
+.speaker-pop small { color: var(--muted); font-size: 10.5px; }
+.speaker-pop .in-game { color: var(--accent); }
+
+/* stage */
+.stage-card { padding: 12px; display: grid; gap: 10px; }
+.stage-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.stage-bar .pager { display: inline-flex; align-items: center; gap: 6px; }
+.stage-bar .count { font-variant-numeric: tabular-nums; min-width: 92px; text-align: center; font-weight: 500; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: var(--panel); padding: 5px 10px; font-size: 12.5px; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.stage-wrap { position: relative; overflow: hidden; border-radius: 8px; border: 2px solid var(--stage-edge); background: #2c4a2a; }
+.stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; overflow: hidden;
+  background: repeating-conic-gradient(#5f9a3f 0 25%, #67a446 0 50%) 0 0 / 128px 128px; }
+.stage .path { position: absolute; left: 0; right: 480px; top: 560px; height: 128px; background:
+  repeating-linear-gradient(90deg, #9a6b3f 0 64px, #a1734a 64px 128px); box-shadow: inset 0 6px 0 #7d5530, inset 0 -6px 0 #7d5530; }
+.stage .path.v { left: 1240px; right: auto; width: 128px; top: 0; height: 690px; }
+.stage .panel { position: absolute; right: 0; top: 0; width: 480px; height: 1080px; background: #4b3424; box-shadow: inset 8px 0 0 #3a271a; }
+.stage .panel::after { content: ""; position: absolute; inset: 24px; border: 6px solid #6b4a32; border-radius: 6px; }
+/* sits between the portrait and the name plate, so the close up shows it too */
+.waiting-ribbon { position: absolute; left: 168px; top: 772px; max-width: 370px; font: 600 20px/1.25 var(--f-body); color: #fff; background: #000b; padding: 8px 14px; border-radius: 10px; }
+.waiting-ribbon small { display: block; font-weight: 400; font-size: 16px; opacity: 0.9; }
+
+/* the popup itself, in canvas units (1920 by 1080), numbers from Canvas.prefab's TutorialPopup */
+.pp { position: absolute; }
+.pp .fill { position: absolute; background: #fff; }
+.pp .frame { position: absolute; inset: 0; border-style: solid; border-width: 25px; border-image-slice: 4 fill; border-image-width: 25px; border-image-repeat: stretch; image-rendering: pixelated; pointer-events: none; }
+.pp-box { left: 11.5px; width: 656.5px; bottom: 0; height: 151.66px; cursor: pointer; }
+.pp-box .fill { left: 16.97px; right: 19.17px; top: 16.97px; bottom: 19.17px; }
+.pp-text { position: absolute; left: 31.27px; right: 25.74px; top: 27.41px; bottom: 31.05px; font: 16px/1.2 var(--f-game); color: #000; overflow: visible; overflow-wrap: break-word; white-space: normal; }
+.pp-text .lines { display: block; white-space: pre-wrap; }
+.pp-hint { position: absolute; right: 25.74px; bottom: 24.7px; width: 12.64px; height: 14.06px; font: 700 22px/14px var(--f-game); color: #000; text-align: center; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .pp-hint { animation: none; } }
+.pp-portrait { left: 11.5px; width: 140px; bottom: 151.66px; height: 140px; }
+.pp-portrait .fill { left: 13.72px; right: 15.37px; top: 18.11px; bottom: 15.37px; }
+.pp-portrait img { position: absolute; inset: 25px; width: 90px; height: 90px; object-fit: contain; image-rendering: pixelated; }
+.pp-name { left: 551.79px; width: 116.21px; bottom: 151.66px; height: 75.72px; }
+.pp-name .fill { left: 17.19px; right: 15.69px; top: 11.16px; bottom: 11.76px; }
+.pp-name .label { position: absolute; left: 32px; width: 52.21px; top: 25.86px; height: 24.01px; display: flex; align-items: center; justify-content: center;
+  white-space: nowrap; font-family: var(--f-game); font-weight: 700; color: #1a1a1a; }
+.overflow-line { position: absolute; left: 0; right: 0; border-top: 3px dashed #e0302099; pointer-events: none; }
+
+.note-line { font-size: 12.5px; color: var(--muted); }
+.warn-chip { display: inline-flex; gap: 6px; align-items: center; background: var(--warn-soft); color: var(--warn); border-radius: 999px; padding: 3px 10px; font-size: 12.5px; font-weight: 500; }
+.ok-chip { display: inline-flex; gap: 6px; align-items: center; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 10px; font-size: 12.5px; font-weight: 500; }
+
+/* pages */
+.pages-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.pages-head h3 { margin: 0; font-family: var(--f-display); font-weight: 500; font-size: 18px; }
+.pages { display: grid; gap: 12px; }
+.page { padding: 12px 14px; display: grid; gap: 10px; border-left: 4px solid var(--line); }
+.page.mode-wait { border-left-color: var(--wait); }
+.page.mode-click { border-left-color: var(--accent); }
+.page[aria-current="true"] { box-shadow: 0 0 0 2px var(--accent); }
+.page-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.page-num { font-family: var(--f-display); font-weight: 600; font-size: 16px; min-width: 64px; }
+.page-top .grow { flex: 1; }
+.event-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.event-row select, .event-row input { border: 1px solid var(--line); background: var(--panel-2); border-radius: 8px; padding: 5px 8px; min-width: 0; max-width: 100%; }
+.event-row .sites { font-size: 12px; color: var(--muted); }
+.tools { display: flex; flex-wrap: wrap; gap: 5px; }
+.tool { border: 1px solid var(--line); background: var(--panel-2); border-radius: 6px; padding: 3px 8px; font-size: 12.5px; display: inline-flex; align-items: center; gap: 5px; }
+.tool:hover { border-color: var(--accent); }
+.tool i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; border: 1px solid #0003; }
+.tool.b { font-weight: 700; }
+.tool input[type="color"] { width: 20px; height: 18px; padding: 0; border: 0; background: none; }
+textarea.raw { width: 100%; min-height: 92px; resize: vertical; border: 1px solid var(--line); background: var(--panel-2); border-radius: 8px; padding: 9px 10px; font: 13px/1.55 var(--f-mono); }
+.note { display: grid; gap: 4px; }
+.note > span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.note input { width: 100%; border: 1px dashed var(--line); background: transparent; border-radius: 8px; padding: 6px 9px; font-size: 13px; color: var(--muted); }
+.page-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.add-page { justify-self: start; }
+.empty { padding: 30px; text-align: center; color: var(--muted); }
+
+dialog.copy { border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); color: var(--ink); width: min(760px, calc(100vw - 32px)); padding: 16px; }
+dialog.copy textarea { width: 100%; height: 50vh; font: 12.5px/1.5 var(--f-mono); border: 1px solid var(--line); border-radius: 8px; background: var(--panel-2); padding: 10px; }
+dialog.copy .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; flex-wrap: wrap; }
+dialog::backdrop { background: #0006; }
+
+@media (max-width: 960px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  aside .side-list { display: none; }
+  .side-select { display: block; width: 100%; border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 8px; }
+  .fields { grid-template-columns: minmax(0, 1fr) 110px; }
+  .fields .trigger { grid-column: 1 / -1; }
+}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>Tutorial Popup Editor</h1>
+      <div class="sub">Garden Defense · the tutorial popups as they appear in game, page by page</div>
+    </div>
+    <span class="spacer"></span>
+    <span class="save" id="save" role="status">Loading…</span>
+    <button class="btn" id="copyBtn" type="button">Copy changes for Claude Code</button>
+  </header>
+
+  <aside>
+    <select class="side-select" id="sideSelect" aria-label="Tutorial"></select>
+    <div class="side-block side-list">
+      <h2>Tutorials</h2>
+      <div id="tutList"></div>
+      <div style="padding:8px 4px 2px"><button class="btn primary" id="newBtn" type="button" style="width:100%">+ New tutorial</button></div>
+    </div>
+    <div class="side-block">
+      <h2>Ideas from the code</h2>
+      <div class="note-line" style="margin:0 6px 8px">To-do notes at the bottom of TutorialContent.cs. Click one to start a tutorial from it.</div>
+      <div class="ideas" id="ideas"></div>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="card empty">Loading the tutorials…</div>
+  </main>
+</div>
+
+<dialog class="copy" id="copyDlg">
+  <h3 style="margin:0 0 8px;font-family:var(--f-display);font-weight:500">Changes for Claude Code</h3>
+  <p class="note-line" style="margin:0 0 8px">Paste this to Claude Code, or just say "apply my tutorial edits": it can read them from this page directly.</p>
+  <textarea id="copyText" readonly></textarea>
+  <div class="row"><span class="note-line" id="copyState" style="margin-right:auto"></span><button class="btn" type="button" id="copyClose">Close</button><button class="btn primary" type="button" id="copyDo">Copy</button></div>
+</dialog>
+
+<script>
+"use strict";
+const FRAME_SRC = "data:image/png;base64,__FRAME_B64__";
+// rich text colour names TextMeshPro knows, and the values it draws them in
+const TMP_NAMES = { red: "#FF0000", lightblue: "#ADD8E6", blue: "#0000FF", grey: "#808080", black: "#000000", green: "#00FF00", white: "#FFFFFF", orange: "#FF8000", purple: "#A020F0", yellow: "#FFEB04" };
+// keywords the game's tutorials and tooltips already colour (bold, in this colour)
+const KEYWORDS = [
+  ["Grass", "green"], ["Fire", "orange"], ["Water", "#4FC3F7"], ["Ice", "#00FFFF"], ["Poison", "purple"], ["Wind", "#B2EBF2"],
+  ["Dirt", "#8B4513"], ["Sun", "#FFD700"], ["Physical", "#A0522D"], ["Magic", "#FFB6C1"], ["Slow", "#87CEEB"], ["Steam", "#1E90FF"],
+];
+// the rich text colour a plant's name gets in tutorials, by element (as the existing pages write them)
+const NAME_COLOR = { Grass: "green", Fire: "orange", Water: "#3399FF", Ice: "#00FFFF", Poison: "purple", Wind: "#B2EBF2", Neutral: "white" };
+const CROP = { x: 0, y: 760, w: 700, h: 320 };
+
+let DATA = null, db = null;
+const edits = new Map();          // doc id -> saved body (pending changes)
+const saveTimers = new Map(), saveChains = new Map(), dirty = new Set();
+let currentKey = null, work = null, pageIdx = 0, view = "close";
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+
+// ---------- data helpers ----------
+const baseTut = key => DATA.tutorials.find(t => t.key === key);
+const plant = cls => DATA.plants.find(p => p.cls === cls) || { cls, name: cls, element: "Neutral", color: "#FFFFFF", speaker: false };
+const eventInfo = name => DATA.events.find(e => e.name === name);
+function humanKey(key) {
+  return key.replace(/^Level\d+/, "").replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, c => c.toUpperCase()).replace(/ ([A-Z])([a-z])/g, (m, a, b) => " " + a.toLowerCase() + b) || key;
+}
+function humanEvent(name) {
+  const small = new Set(["On", "From", "To", "Of", "The", "And", "In"]);
+  return name.replace(/([a-z])([A-Z])/g, "$1 $2").split(" ").map((w, i) => i && small.has(w) ? w.toLowerCase() : w).join(" ");
+}
+function pascal(s) { return s.replace(/[^A-Za-z0-9 ]/g, " ").split(/\s+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join(""); }
+function tutOf(key) {
+  if (edits.has(key)) return edits.get(key);
+  const b = baseTut(key);
+  return b ? { key, isNew: false, deleted: false, title: humanKey(b.key), arrayName: b.key, id: b.id, level: b.level, speaker: b.speaker, trigger: b.trigger, pauses: b.pauses, pages: clone(b.pages) } : null;
+}
+function samePages(a, b) {
+  if (a.length !== b.length) return false;
+  return a.every((p, i) => p.text === b[i].text && (p.wait || "") === (b[i].wait || "") && (p.waitNew || "") === (b[i].waitNew || "") && (p.note || "") === (b[i].note || ""));
+}
+function matchesBase(t) {
+  const b = baseTut(t.key);
+  if (!b || t.isNew) return false;
+  return !t.deleted && t.speaker === b.speaker && t.trigger === b.trigger && !!t.pauses === !!b.pauses && Number(t.level) === Number(b.level) && samePages(t.pages, b.pages);
+}
+function stateOf(key) {
+  const t = edits.get(key);
+  if (!t) return "";
+  return t.deleted ? "removed" : t.isNew ? "new" : "edited";
+}
+function allKeys() {
+  const keys = DATA.tutorials.map(t => t.key);
+  for (const [k, t] of edits) if (t.isNew && !keys.includes(k)) keys.push(k);
+  return keys;
+}
+
+// ---------- rich text ----------
+function colorValue(v) {
+  v = v.trim().replace(/^"|"$/g, "");
+  if (TMP_NAMES[v.toLowerCase()]) return TMP_NAMES[v.toLowerCase()];
+  if (/^#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(v)) return v;
+  return null;
+}
+// TextMeshPro rich text to HTML: b, i, u, s, color, size, line breaks. anything else stays as text
+function renderTMP(raw) {
+  const re = /<(\/?)(b|i|u|s|color|size)(?:=([^>]*))?>/gi;
+  let out = "", last = 0, m;
+  const stack = [];
+  while ((m = re.exec(raw))) {
+    out += esc(raw.slice(last, m.index)); last = re.lastIndex;
+    const close = m[1] === "/", tag = m[2].toLowerCase();
+    if (close) {
+      const at = stack.lastIndexOf(tag);
+      if (at < 0) continue;
+      while (stack.length > at) { stack.pop(); out += "</span>"; }
+      continue;
+    }
+    let style = "";
+    if (tag === "b") style = "font-weight:700";
+    else if (tag === "i") style = "font-style:italic";
+    else if (tag === "u") style = "text-decoration:underline";
+    else if (tag === "s") style = "text-decoration:line-through";
+    else if (tag === "color") { const c = colorValue(m[3] || ""); if (!c) { out += esc(m[0]); continue; } style = "color:" + c; }
+    else if (tag === "size") { const v = (m[3] || "").trim(); style = /%$/.test(v) ? "font-size:" + parseFloat(v) / 100 + "em" : "font-size:" + parseFloat(v) + "px"; }
+    stack.push(tag); out += '<span style="' + style + '">';
+  }
+  out += esc(raw.slice(last));
+  while (stack.length) { stack.pop(); out += "</span>"; }
+  return out;
+}
+
+// ---------- frame tint (the game multiplies the 9 slice sprite by the speaker's element colour) ----------
+const frameImg = new Image(); frameImg.src = FRAME_SRC;
+const tintCache = new Map();
+function tinted(color) {
+  if (tintCache.has(color)) return tintCache.get(color);
+  if (!frameImg.complete) return FRAME_SRC;
+  const c = document.createElement("canvas"); c.width = 16; c.height = 16;
+  const g = c.getContext("2d");
+  g.drawImage(frameImg, 0, 0);
+  g.globalCompositeOperation = "multiply"; g.fillStyle = color; g.fillRect(0, 0, 16, 16);
+  g.globalCompositeOperation = "destination-in"; g.drawImage(frameImg, 0, 0);
+  const url = c.toDataURL(); tintCache.set(color, url); return url;
+}
+frameImg.onload = () => { tintCache.clear(); if (work) renderStage(); };
+
+// ---------- saving ----------
+function setSave(text, kind) { const el = $("save"); el.textContent = text; el.className = "save" + (kind ? " " + kind : ""); }
+function touch() {
+  dirty.add(currentKey);
+  setSave("Saving…", "busy");
+  const key = currentKey, body = clone(work);
+  clearTimeout(saveTimers.get(key));
+  saveTimers.set(key, setTimeout(() => persist(key, body), 650));
+  refreshList();
+}
+function persist(key, body) {
+  saveTimers.delete(key);
+  const prev = saveChains.get(key) || Promise.resolve();
+  const next = prev.then(async () => {
+    if (!db) { setSave("Not saved: storage unavailable", "bad"); return; }
+    const ref = db.doc("tutorials/" + key);
+    try {
+      if (matchesBase(body)) { await ref.delete(); edits.delete(key); }
+      else { body.status = "pending"; await ref.set(body); edits.set(key, body); }
+      dirty.delete(key);
+      if (!saveTimers.size) setSave("All changes saved");
+    } catch (e) {
+      setSave(e && e.code === "quota_exceeded" ? "Not saved: storage is full" : "Not saved, try again", "bad");
+    }
+    refreshList();
+  });
+  saveChains.set(key, next.catch(() => {}));
+}
+
+// ---------- sidebar ----------
+function portraitSrc(cls) { return "icons/" + cls + ".png"; }
+function refreshList() {
+  const keys = allKeys();
+  const groups = new Map();
+  for (const k of keys) { const t = tutOf(k); const L = Number(t.level) || 0; if (!groups.has(L)) groups.set(L, []); groups.get(L).push(t); }
+  const levels = [...groups.keys()].sort((a, b) => (a || 99) - (b || 99));
+  let html = "";
+  for (const L of levels) {
+    html += '<div class="level-label">' + (L ? "Level " + L : "Level not set") + "</div>";
+    for (const t of groups.get(L)) {
+      const st = stateOf(t.key);
+      html += '<button type="button" class="tut" data-key="' + esc(t.key) + '" aria-current="' + (t.key === currentKey) + '">' +
+        '<img alt="" src="' + portraitSrc(t.speaker) + '">' +
+        '<span style="min-width:0"><span class="t-name">' + esc(t.title || humanKey(t.key)) + '</span><br><span class="t-meta">' + t.pages.length + (t.pages.length === 1 ? " page" : " pages") + "</span></span>" +
+        (st ? '<span class="badge ' + st + '">' + st + "</span>" : "<span></span>") + "</button>";
+    }
+  }
+  $("tutList").innerHTML = html;
+  $("sideSelect").innerHTML = keys.map(k => { const t = tutOf(k); return '<option value="' + esc(k) + '"' + (k === currentKey ? " selected" : "") + ">" + (t.level ? "Level " + t.level + " · " : "") + esc(t.title || humanKey(k)) + (stateOf(k) ? " (" + stateOf(k) + ")" : "") + "</option>"; }).join("");
+}
+$("tutList").addEventListener("click", e => { const b = e.target.closest(".tut"); if (b) select(b.dataset.key); });
+$("sideSelect").addEventListener("change", e => select(e.target.value));
+
+// ---------- main view ----------
+function select(key, page) {
+  currentKey = key; work = clone(tutOf(key)); pageIdx = Math.min(page || 0, Math.max(0, work.pages.length - 1));
+  try { localStorage.setItem("tutorial-editor-current", key); } catch (e) {}
+  renderMain(); refreshList();
+}
+function renderMain() {
+  const t = work, b = baseTut(t.key), sp = plant(t.speaker);
+  const st = stateOf(t.key);
+  $("main").innerHTML = `
+  <section class="card head" aria-label="Tutorial">
+    <div class="head-row">
+      <h2>${esc(t.title || humanKey(t.key))}</h2>
+      ${st ? '<span class="badge ' + st + '">' + st + "</span>" : ""}
+      <span class="mono">${esc(t.arrayName || t.key)} · id "${esc(t.id || "")}"</span>
+      <span style="flex:1"></span>
+      ${t.isNew ? '<button class="btn small danger" type="button" id="delTut">Delete this tutorial</button>'
+        : (t.deleted ? '<button class="btn small" type="button" id="restoreTut">Keep it in the game</button>' : '<button class="btn small danger" type="button" id="removeTut">Remove from the game</button>')}
+      ${!t.isNew && st ? '<button class="btn small" type="button" id="revertTut">Revert to the game\'s version</button>' : ""}
+    </div>
+    ${t.deleted ? '<div class="warn-chip">Marked for removal: Claude Code will take it out of the game.</div>' : ""}
+    ${t.isNew ? `<label class="field"><span>Name</span><input type="text" id="fTitle" value="${esc(t.title)}" placeholder="e.g. Weather"></label>` : ""}
+    <div class="fields">
+      <div class="field"><span>Speaker</span>
+        <button type="button" class="speaker-btn" id="speakerBtn" aria-haspopup="true"><img alt="" src="${portraitSrc(sp.cls)}"><span>${esc(sp.name)}</span><i class="el" style="background:${sp.color}"></i></button>
+        ${DATA.speakers.includes(sp.cls) ? "" : '<span class="wiring">New speaker: Claude Code will wire it into the game</span>'}
+      </div>
+      <label class="field"><span>Level</span><select id="fLevel">${Array.from({ length: 27 }, (_, i) => '<option value="' + (i + 1) + '"' + (Number(t.level) === i + 1 ? " selected" : "") + ">" + (i + 1) + "</option>").join("")}<option value="0"${Number(t.level) ? "" : " selected"}>any</option></select></label>
+      <label class="field trigger"><span>Shows when</span><textarea id="fTrigger" rows="2" placeholder="e.g. Level 4, the first time it starts raining">${esc(t.trigger || "")}</textarea></label>
+    </div>
+    <div class="head-row">
+      <label class="check"><input type="checkbox" id="fPauses"${t.pauses ? " checked" : ""}> Pauses the game while it's up</label>
+      ${b && b.site ? '<span class="note-line">Shown from ' + esc(b.site) + "</span>" : ""}
+    </div>
+    ${b && b.comment ? '<div class="note-line">Code note: ' + esc(b.comment) + "</div>" : ""}
+  </section>
+
+  <section class="card stage-card" aria-label="Preview">
+    <div class="stage-bar">
+      <span class="pager"><button class="btn small" type="button" id="prevPg" aria-label="Previous page">◀</button><span class="count" id="pgCount"></span><button class="btn small" type="button" id="nextPg" aria-label="Next page">▶</button></span>
+      <span class="seg" role="group" aria-label="Preview size"><button type="button" data-view="close" aria-pressed="${view === "close"}">Close up</button><button type="button" data-view="full" aria-pressed="${view === "full"}">Whole screen</button></span>
+      <span id="fitState"></span>
+      <span class="note-line" style="margin-left:auto">Click the popup to go to the next page, like in the game.</span>
+    </div>
+    <div class="stage-wrap" id="stageWrap"><div class="stage" id="stage"></div></div>
+  </section>
+
+  <section style="display:grid;gap:12px">
+    <div class="pages-head"><h3>Pages</h3><span class="note-line">A page either continues on a click (▼ shows) or waits for the player to do something (no ▼, clicks go through to the game).</span></div>
+    <div class="pages" id="pages"></div>
+    <button class="btn add-page" type="button" id="addEnd">+ Add a page</button>
+  </section>`;
+  bindHead();
+  renderPages();
+  renderStage();
+}
+
+function bindHead() {
+  const on = (id, ev, fn) => { const el = $(id); if (el) el.addEventListener(ev, fn); };
+  on("fTitle", "input", e => { work.title = e.target.value; const L = Number(work.level) || 0; work.arrayName = "Level" + L + pascal(e.target.value || "New"); work.id = "level" + L + "_" + (e.target.value || "new").toLowerCase().replace(/[^a-z0-9]/g, ""); touch(); document.querySelector(".head h2").textContent = work.title || "New tutorial"; document.querySelector(".head .mono").textContent = work.arrayName + ' · id "' + work.id + '"'; });
+  on("fLevel", "change", e => { work.level = Number(e.target.value); if (work.isNew) { work.arrayName = "Level" + work.level + pascal(work.title || "New"); work.id = "level" + work.level + "_" + (work.title || "new").toLowerCase().replace(/[^a-z0-9]/g, ""); } touch(); });
+  on("fTrigger", "input", e => { work.trigger = e.target.value; touch(); });
+  on("fPauses", "change", e => { work.pauses = e.target.checked; touch(); });
+  on("speakerBtn", "click", openSpeakerPicker);
+  on("removeTut", "click", () => { work.deleted = true; touch(); renderMain(); });
+  on("restoreTut", "click", () => { work.deleted = false; touch(); renderMain(); });
+  on("revertTut", "click", () => { const b = baseTut(work.key); work = clone(tutOf(work.key)); Object.assign(work, { deleted: false, speaker: b.speaker, trigger: b.trigger, pauses: b.pauses, level: b.level, pages: clone(b.pages) }); pageIdx = 0; touch(); renderMain(); });
+  on("delTut", "click", deleteNew);
+  on("prevPg", "click", () => goPage(pageIdx - 1));
+  on("nextPg", "click", () => goPage(pageIdx + 1));
+  on("addEnd", "click", () => addPage(work.pages.length));
+  document.querySelectorAll(".seg [data-view]").forEach(b => b.addEventListener("click", () => { view = b.dataset.view; document.querySelectorAll(".seg [data-view]").forEach(x => x.setAttribute("aria-pressed", x === b)); renderStage(); }));
+}
+let deleteArmed = false;
+function deleteNew() {
+  const btn = $("delTut");
+  if (!deleteArmed) { deleteArmed = true; btn.textContent = "Click again to delete"; setTimeout(() => { deleteArmed = false; if ($("delTut")) $("delTut").textContent = "Delete this tutorial"; }, 3000); return; }
+  deleteArmed = false;
+  const key = work.key; clearTimeout(saveTimers.get(key)); saveTimers.delete(key);
+  edits.delete(key);
+  if (db) db.doc("tutorials/" + key).delete().then(() => setSave("All changes saved")).catch(() => setSave("Not deleted, try again", "bad"));
+  select(DATA.tutorials[0].key);
+}
+
+function openSpeakerPicker(e) {
+  const old = document.querySelector(".speaker-pop"); if (old) { old.remove(); return; }
+  const btn = $("speakerBtn"), r = btn.getBoundingClientRect();
+  const pop = document.createElement("div"); pop.className = "speaker-pop"; pop.setAttribute("role", "dialog"); pop.setAttribute("aria-label", "Choose a speaker");
+  const list = [...DATA.plants].sort((a, b) => (b.speaker - a.speaker) || (a.unlock - b.unlock));
+  pop.innerHTML = list.map(p => `<button type="button" data-cls="${p.cls}" aria-pressed="${p.cls === work.speaker}"><img alt="" src="${portraitSrc(p.cls)}"><span>${esc(p.name)}</span><small class="${p.speaker ? "in-game" : ""}">${p.speaker ? "speaker in game" : "level " + p.unlock}</small></button>`).join("");
+  document.body.appendChild(pop);
+  pop.style.left = Math.max(16, Math.min(r.left + window.scrollX, window.scrollX + document.documentElement.clientWidth - pop.offsetWidth - 16)) + "px";
+  pop.style.top = (r.bottom + window.scrollY + 6) + "px";
+  pop.addEventListener("click", ev => { const b = ev.target.closest("button[data-cls]"); if (!b) return; work.speaker = b.dataset.cls; pop.remove(); touch(); renderMain(); });
+  setTimeout(() => document.addEventListener("click", function off(ev) { if (!pop.contains(ev.target) && ev.target !== btn) { pop.remove(); document.removeEventListener("click", off); } }), 0);
+}
+
+// ---------- stage ----------
+function fitScale() {
+  const wrap = $("stageWrap"); if (!wrap) return 1;
+  const box = view === "close" ? CROP : { x: 0, y: 0, w: 1920, h: 1080 };
+  const s = wrap.clientWidth / box.w;
+  wrap.style.height = Math.round(box.h * s) + "px";
+  const st = $("stage"); st.style.transform = `scale(${s}) translate(${-box.x}px, ${-box.y}px)`;
+  return s;
+}
+function nameFontSize(name) {
+  const probe = document.createElement("span");
+  probe.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;font:700 20px var(--f-game)";
+  probe.textContent = name; document.body.appendChild(probe);
+  const w = probe.getBoundingClientRect().width; probe.remove();
+  return Math.max(10, Math.min(20, w > 52.21 ? 20 * 52.21 / w : 20));
+}
+function renderStage() {
+  const stage = $("stage"); if (!stage || !work) return;
+  const sp = plant(work.speaker), tint = tinted(sp.color);
+  const page = work.pages[pageIdx];
+  const waits = page && !!(page.wait || page.waitNew);
+  const ev = page && page.wait ? humanEvent(page.wait) : page && page.waitNew ? page.waitNew : "";
+  const frame = '<div class="frame" style="border-image-source:url(' + tint + ')"></div>';
+  stage.innerHTML = `<div class="path"></div><div class="path v"></div><div class="panel"></div>
+    ${waits ? '<div class="waiting-ribbon">Waiting for the player<small>' + esc(ev) + "</small></div>" : ""}
+    <div class="pp pp-portrait"><div class="fill"></div><img alt="" src="${portraitSrc(sp.cls)}">${frame}</div>
+    <div class="pp pp-name"><div class="fill"></div><div class="label" style="font-size:${nameFontSize(sp.name)}px">${esc(sp.name)}</div>${frame}</div>
+    <div class="pp pp-box" id="ppBox"><div class="fill"></div><div class="pp-text" id="ppText"><span class="lines">${page ? renderTMP(page.text) : ""}</span></div>${!waits && page ? '<div class="pp-hint">▼</div>' : ""}${frame}</div>`;
+  $("ppBox").addEventListener("click", () => goPage(pageIdx + 1 < work.pages.length ? pageIdx + 1 : 0));
+  fitScale();
+  $("pgCount").textContent = work.pages.length ? "Page " + (pageIdx + 1) + " of " + work.pages.length : "No pages";
+  $("prevPg").disabled = pageIdx <= 0; $("nextPg").disabled = pageIdx >= work.pages.length - 1;
+  // does the text fit the box? the game lets it spill past the bottom (overflow mode), so say so
+  const txt = $("ppText");
+  const lines = txt.querySelector(".lines");
+  // layout sizes, so the preview's scale doesn't matter
+  const over = lines.offsetHeight - txt.clientHeight;
+  const lineH = 19.2;
+  $("fitState").innerHTML = !page ? "" : over > 1
+    ? '<span class="warn-chip">Runs past the box by ' + Math.ceil(over / lineH) + (Math.ceil(over / lineH) === 1 ? " line" : " lines") + "</span>"
+    : '<span class="ok-chip">Fits the box</span>';
+  if (over > 1) { const l = document.createElement("div"); l.className = "overflow-line"; l.style.top = txt.clientHeight + "px"; txt.appendChild(l); }
+  document.querySelectorAll(".page").forEach((el, i) => el.setAttribute("aria-current", i === pageIdx));
+}
+function goPage(i) { if (!work.pages.length) return; pageIdx = Math.max(0, Math.min(work.pages.length - 1, i)); renderStage(); }
+window.addEventListener("resize", () => { if (work) fitScale(); });
+// the game font is inline, but the name plate size and the overflow check need it loaded
+if (document.fonts) document.fonts.ready.then(() => { if (work) renderStage(); });
+
+// ---------- pages ----------
+function eventOptions(sel) {
+  return DATA.events.map(e => '<option value="' + e.name + '"' + (e.name === sel ? " selected" : "") + ">" + esc(humanEvent(e.name)) + "</option>").join("") +
+    '<option value="__new"' + (sel === "__new" ? " selected" : "") + ">A new action…</option>";
+}
+function renderPages() {
+  const b = baseTut(work.key);
+  $("pages").innerHTML = work.pages.map((p, i) => {
+    const waits = !!(p.wait || p.waitNew);
+    const sel = p.waitNew ? "__new" : p.wait;
+    const info = p.wait ? eventInfo(p.wait) : null;
+    const bp = b && b.pages[i];
+    const changed = !work.isNew && (!bp || bp.text !== p.text || (bp.wait || "") !== (p.wait || "") || (p.waitNew || ""));
+    return `<article class="card page ${waits ? "mode-wait" : "mode-click"}" data-i="${i}" aria-current="${i === pageIdx}">
+      <div class="page-top">
+        <span class="page-num">Page ${i + 1}</span>
+        <span class="seg" role="group" aria-label="How the page continues">
+          <button type="button" data-mode="click" aria-pressed="${!waits}">Click to continue</button>
+          <button type="button" data-mode="wait" aria-pressed="${waits}">Waits for an action</button>
+        </span>
+        ${changed ? '<span class="badge ' + (bp ? "edited" : "new") + '">' + (bp ? "changed" : "new page") + "</span>" : ""}
+        <span class="grow"></span>
+        <span class="page-actions">
+          <button class="btn small" type="button" data-act="up" ${i === 0 ? "disabled" : ""} aria-label="Move up">↑</button>
+          <button class="btn small" type="button" data-act="down" ${i === work.pages.length - 1 ? "disabled" : ""} aria-label="Move down">↓</button>
+          <button class="btn small" type="button" data-act="dup">Duplicate</button>
+          <button class="btn small danger" type="button" data-act="del">Delete</button>
+        </span>
+      </div>
+      ${waits ? `<div class="event-row"><span class="note-line">Goes on when the player:</span>
+        <select data-f="event" aria-label="Action">${eventOptions(sel)}</select>
+        ${sel === "__new" ? `<input type="text" data-f="waitNew" value="${esc(p.waitNew || "")}" placeholder="describe it, e.g. places Sunflower in sunlight" style="flex:1;min-width:200px">` : ""}
+        ${info && info.sites.length ? '<span class="sites">announced in ' + esc(info.sites.join(", ")) + "</span>" : sel === "__new" ? '<span class="sites">Claude Code will add this action to the game</span>' : ""}</div>` : ""}
+      <div class="tools" role="toolbar" aria-label="Formatting">
+        <button class="tool b" type="button" data-wrap="b">B</button>
+        ${KEYWORDS.map(([n, c]) => '<button class="tool" type="button" data-kw="' + c + '" title="Bold, ' + c + '"><i style="background:' + (colorValue(c) || c) + '"></i>' + n + "</button>").join("")}
+        <button class="tool" type="button" data-name="1" title="The speaker's name, bold, in its element colour">Speaker name</button>
+        <button class="tool" type="button" data-para="1" title="Starts a new paragraph (a blank line)">New paragraph</button>
+        <label class="tool" title="Any colour">Colour <input type="color" data-custom="1" value="#ff8000" aria-label="Custom colour"></label>
+      </div>
+      <textarea class="raw" data-f="text" spellcheck="true" aria-label="Page ${i + 1} text">${esc(p.text)}</textarea>
+      <label class="note"><span>Notes for the code (what the player does)</span><input type="text" data-f="note" value="${esc(p.note || "")}" placeholder="optional"></label>
+      <button class="btn small add-page" type="button" data-act="add">+ Add a page after this</button>
+    </article>`;
+  }).join("") || '<div class="card empty">No pages yet. Add the first one.</div>';
+}
+function pageEl(t) { const a = t.closest(".page"); return a ? Number(a.dataset.i) : -1; }
+$("main").addEventListener("focusin", e => { const i = pageEl(e.target); if (i >= 0 && i !== pageIdx) { pageIdx = i; renderStage(); } });
+$("main").addEventListener("input", e => {
+  const i = pageEl(e.target); if (i < 0) return;
+  const f = e.target.dataset.f, p = work.pages[i];
+  if (f === "text") { p.text = e.target.value; pageIdx = i; renderStage(); }
+  else if (f === "note") p.note = e.target.value;
+  else if (f === "waitNew") p.waitNew = e.target.value;
+  else return;
+  touch();
+});
+$("main").addEventListener("change", e => {
+  const i = pageEl(e.target); if (i < 0) return;
+  if (e.target.dataset.f === "event") {
+    const p = work.pages[i];
+    if (e.target.value === "__new") { p.wait = ""; p.waitNew = p.waitNew || "the new action"; } else { p.wait = e.target.value; delete p.waitNew; }
+    touch(); renderPages(); renderStage();
+  }
+});
+$("main").addEventListener("click", e => {
+  const t = e.target, i = pageEl(t); if (i < 0) return;
+  const p = work.pages[i];
+  const mode = t.closest("[data-mode]");
+  if (mode) {
+    if (mode.dataset.mode === "click") { p.wait = ""; delete p.waitNew; }
+    else if (!p.wait && !p.waitNew) p.wait = DATA.events[0].name;
+    pageIdx = i; touch(); renderPages(); renderStage(); return;
+  }
+  const act = t.closest("[data-act]");
+  if (act) {
+    const a = act.dataset.act;
+    if (a === "up" && i > 0) { [work.pages[i - 1], work.pages[i]] = [work.pages[i], work.pages[i - 1]]; pageIdx = i - 1; }
+    else if (a === "down" && i < work.pages.length - 1) { [work.pages[i + 1], work.pages[i]] = [work.pages[i], work.pages[i + 1]]; pageIdx = i + 1; }
+    else if (a === "dup") { work.pages.splice(i + 1, 0, clone(p)); pageIdx = i + 1; }
+    else if (a === "del") {
+      if (act.dataset.armed !== "1") { act.dataset.armed = "1"; act.textContent = "Click again"; setTimeout(() => { if (act.isConnected) { act.dataset.armed = ""; act.textContent = "Delete"; } }, 3000); return; }
+      work.pages.splice(i, 1); pageIdx = Math.max(0, Math.min(pageIdx, work.pages.length - 1));
+    }
+    else if (a === "add") { addPage(i + 1); return; }
+    touch(); renderPages(); renderStage(); return;
+  }
+  const ta = t.closest(".page").querySelector("textarea.raw");
+  if (t.closest("[data-wrap]")) wrapSel(ta, "<b>", "</b>");
+  else if (t.closest("[data-kw]")) { const c = t.closest("[data-kw]").dataset.kw; wrapSel(ta, "<b><color=" + c + ">", "</color></b>"); }
+  else if (t.closest("[data-name]")) { const sp = plant(work.speaker); insertAt(ta, "<b><color=" + (NAME_COLOR[sp.element] || "white") + ">" + sp.name + "</color></b>"); }
+  else if (t.closest("[data-para]")) insertAt(ta, "\n\n");
+});
+$("main").addEventListener("change", e => {
+  if (!e.target.dataset.custom) return;
+  const ta = e.target.closest(".page").querySelector("textarea.raw");
+  wrapSel(ta, "<b><color=" + e.target.value.toUpperCase() + ">", "</color></b>");
+});
+function wrapSel(ta, open, close) {
+  const s = ta.selectionStart, en = ta.selectionEnd, v = ta.value;
+  const mid = v.slice(s, en) || "text";
+  ta.value = v.slice(0, s) + open + mid + close + v.slice(en);
+  ta.focus(); ta.setSelectionRange(s + open.length, s + open.length + mid.length);
+  ta.dispatchEvent(new Event("input", { bubbles: true }));
+}
+function insertAt(ta, text) {
+  const s = ta.selectionStart, en = ta.selectionEnd, v = ta.value;
+  ta.value = v.slice(0, s) + text + v.slice(en);
+  ta.focus(); ta.setSelectionRange(s + text.length, s + text.length);
+  ta.dispatchEvent(new Event("input", { bubbles: true }));
+}
+function addPage(at) {
+  work.pages.splice(at, 0, { text: "", wait: "", note: "" });
+  pageIdx = at; touch(); renderPages(); renderStage();
+  const ta = document.querySelector('.page[data-i="' + at + '"] textarea.raw'); if (ta) { ta.focus(); ta.scrollIntoView({ block: "center", behavior: "smooth" }); }
+}
+
+// ---------- new tutorials ----------
+function newTutorial(title) {
+  const key = "new-" + Math.random().toString(36).slice(2, 10);
+  const level = 1;
+  const t = { key, isNew: true, deleted: false, title: title || "New tutorial", arrayName: "Level" + level + pascal(title || "New"), id: "level" + level + "_" + (title || "new").toLowerCase().replace(/[^a-z0-9]/g, ""),
+    level, speaker: "AcornKnight", trigger: "", pauses: true, pages: [{ text: "", wait: "", note: "" }], status: "pending" };
+  edits.set(key, t);
+  currentKey = key; work = clone(t); pageIdx = 0;
+  touch(); renderMain(); refreshList();
+  const f = $("fTitle"); if (f) { f.focus(); f.select(); }
+}
+$("newBtn").addEventListener("click", () => newTutorial(""));
+$("ideas").addEventListener("click", e => { const b = e.target.closest(".idea"); if (b) newTutorial(b.dataset.idea.replace(/^need tutorial for /, "")); });
+
+// ---------- copy for claude code ----------
+function cs(s) { return '"' + s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n") + '"'; }
+function changesText() {
+  const pend = [...edits.values()];
+  if (!pend.length) return "No changes yet.";
+  let out = "# Garden Defense — tutorial edits from Tommy's editor\nApply these to Assets/Scripts/Tutorial/TutorialContent.cs (and TutorialIds, TutorialEvents, TutorialSpeaker and the TryShow call sites where needed).\n";
+  for (const t of pend) {
+    const b = baseTut(t.key);
+    out += "\n## " + (t.deleted ? "REMOVE " : t.isNew ? "NEW " : "") + (t.arrayName || t.key) + ' (id "' + t.id + '")\n';
+    if (t.deleted) { out += "- Tommy removed this tutorial: delete the array, its id and its TryShow call.\n"; continue; }
+    if (t.isNew || !b || t.speaker !== b.speaker) out += "- speaker: " + t.speaker + (DATA.speakers.includes(t.speaker) ? "" : " (new speaker: add it to TutorialSpeaker and TutorialManager)") + "\n";
+    if (t.isNew || !b || Number(t.level) !== Number(b.level)) out += "- level: " + (t.level || "any") + "\n";
+    if (t.isNew || !b || t.trigger !== b.trigger) out += "- shows when: " + (t.trigger || "(not set)") + "\n";
+    if (t.isNew || !b || !!t.pauses !== !!b.pauses) out += "- pauses the game: " + (t.pauses ? "yes" : "no") + "\n";
+    if (t.isNew || !b || !samePages(t.pages, b.pages)) {
+      out += "- pages:\n";
+      t.pages.forEach((p, i) => {
+        const w = p.waitNew ? ", NEW EVENT: player " + p.waitNew : p.wait ? ", TutorialEvents." + p.wait : "";
+        out += "  " + (i + 1) + ". new TutorialPage(" + cs(p.text) + w + ")" + (p.note ? " // " + p.note : "") + "\n";
+      });
+    }
+  }
+  return out;
+}
+$("copyBtn").addEventListener("click", () => { $("copyText").value = changesText(); $("copyState").textContent = ""; $("copyDlg").showModal(); });
+$("copyClose").addEventListener("click", () => $("copyDlg").close());
+$("copyDo").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText($("copyText").value); $("copyState").textContent = "Copied"; }
+  catch (e) { const ta = $("copyText"); ta.focus(); ta.select(); $("copyState").textContent = "Press Ctrl+C to copy the selected text"; }
+});
+
+// ---------- boot ----------
+async function boot() {
+  try { DATA = await (await fetch("tutorials.json")).json(); }
+  catch (e) { $("main").innerHTML = '<div class="card empty">The tutorials could not be loaded. Reload the page to try again.</div>'; setSave("Not loaded", "bad"); return; }
+  $("ideas").innerHTML = DATA.ideas.map(i => '<button type="button" class="idea" data-idea="' + esc(i) + '">' + esc(i) + "</button>").join("");
+  let start = null; try { start = localStorage.getItem("tutorial-editor-current"); } catch (e) {}
+  select(start && baseTut(start) ? start : DATA.tutorials[0].key);
+  setSave("Connecting…", "busy");
+  const timeout = setTimeout(() => setSave("Can't reach saved edits yet", "bad"), 10000);
+  try { db = await claude.use("db"); } catch (e) { db = null; }
+  if (!db) { clearTimeout(timeout); setSave("Not saved: storage unavailable", "bad"); return; }
+  let first = true;
+  db.collection("tutorials").onSnapshot(snap => {
+    if (!snap.metadata.fromCache) clearTimeout(timeout);
+    const seen = new Set();
+    for (const d of snap.docs) {
+      seen.add(d.id);
+      if (dirty.has(d.id)) continue;           // my own edit is on its way, keep what's on screen
+      const body = d.data();
+      if (body && body.status === "pending") edits.set(d.id, clone(Object.assign({ key: d.id }, body)));
+    }
+    for (const k of [...edits.keys()]) if (!seen.has(k) && !dirty.has(k)) edits.delete(k);
+    if (currentKey && !dirty.has(currentKey)) {
+      const fresh = tutOf(currentKey);
+      if (fresh && JSON.stringify(fresh) !== JSON.stringify(work)) {
+        if (first || !document.activeElement || !$("main").contains(document.activeElement)) { work = clone(fresh); pageIdx = Math.min(pageIdx, Math.max(0, work.pages.length - 1)); renderMain(); }
+      }
+    }
+    if (first && start && !baseTut(start) && edits.has(start)) select(start);
+    first = false;
+    refreshList();
+    if (!saveTimers.size) setSave(edits.size ? "All changes saved" : "No changes yet");
+  }, err => { clearTimeout(timeout); setSave(err.code === "revoked" ? "Saving was turned off" : "Can't reach saved edits", "bad"); });
+}
+boot();
+</script>

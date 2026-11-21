@@ -1,0 +1,633 @@
+{
+ "source": "Assets/Scripts/Tutorial/TutorialContent.cs",
+ "tutorials": [
+  {
+   "key": "Level1PlantSelection",
+   "id": "level1_plantselection",
+   "level": 1,
+   "speaker": "AcornKnight",
+   "trigger": "Level 1 starts, on the loadout screen.",
+   "pauses": false,
+   "site": "ProceduralLevel.Start",
+   "comment": "",
+   "pages": [
+    {
+     "text": "Hi! Nice to meet you, I'm the <b><color=green>Acorn Knight</color></b>. I'm here to help you learn how to play the game!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "First, let's learn how to select a plant.",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "Hover over me in the <b>Available Plants</b> section. You should get a preview of what I'm able to do!\n\nThen, click on me to select me. Once that's done, I'll move up to the <b>Current Loadout</b> section.",
+     "wait": "SelectAcornKnightSlot",
+     "note": ""
+    },
+    {
+     "text": "Great! Now that I'm selected, click on the <b>Next</b> button.",
+     "wait": "ClickConfirmButton",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "key": "Level1FertilizerSelection",
+   "id": "level1_fertilizerselection",
+   "level": 1,
+   "speaker": "AcornKnight",
+   "trigger": "Level 1, when the fertilizer screen opens (the game is already paused there).",
+   "pauses": false,
+   "site": "FertilizerSelectionUI.Show",
+   "comment": "",
+   "pages": [
+    {
+     "text": "After selecting your loadout, you choose one <b>Fertilizer</b>. It changes how the whole level works, from start to finish!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "Select a <b>Fertilizer</b> you think will help you the most.",
+     "wait": "SelectFertilizer",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "key": "Level1StartLevel",
+   "id": "level1_startlevel",
+   "level": 1,
+   "speaker": "AcornKnight",
+   "trigger": "Level 1, right after a fertilizer is picked, in the setup phase before the first wave.",
+   "pauses": false,
+   "site": "FertilizerSelectionUI.CloseAfterSelect",
+   "comment": "",
+   "pages": [
+    {
+     "text": "Now that the level has started, you can see the selected plants in the top right corner of the screen.",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "Click on me (or Press <b>1</b>) , that'll select me.\n\nThen, place me on any <b><color=#8B4513>Dirt</color></b> tile on the map!",
+     "wait": "PlaceAcornKnightOnDirt",
+     "note": "here, the player is expected to select the acorn knight , and place it on any dirt tile in the map, once that's done, jump to next tutorial text"
+    },
+    {
+     "text": "<b>Hold on, my mistake!</b> You shouldn't place me on a <b><color=#8B4513>Dirt</color></b> tile!\n\nClick on the <b>Shovel</b> on the right side of the screen, and then select the <b><color=green>Acorn Knight</color></b> you just placed on the <b><color=#8B4513>Dirt</color></b> tile!",
+     "wait": "UprootAcornKnightFromDirt",
+     "note": "here, the player is expected to select the shovel, and then remove the acorn from the field, once thats done, move to next"
+    },
+    {
+     "text": "When you <b>Shovel</b> a plant, you get a 50% refund of all the <b>Sun</b> spent on it. However, since we're still in the <b>Setup Phase</b>, you get 100%.\n\nNow select me once again (or Press <b>1</b>), and place me on a <b><color=green>Grass</color></b> tile!",
+     "wait": "PlaceAcornKnightOnGrass",
+     "note": "player is expected to select the acorn knight again, and then place it on a grass tile"
+    },
+    {
+     "text": "Great! Since I'm a <b><color=green>Grass</color></b> element plant, I can be placed on <b><color=green>Grass</color></b> Tiles, and get a bonus point in my <b>Passive Tree</b> which makes me slightly stronger!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "Wonderful, now we're ready to start the level! Click on the <b>START</b> button at the bottom right of your screen (or press <b>Space</b>) to begin!",
+     "wait": "ClickStartLevelButton",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "key": "Level1PlantInfo",
+   "id": "level1_plantinfo",
+   "level": 1,
+   "speaker": "AcornKnight",
+   "trigger": "Level 1, once wave 1's second group has started and you have more than 18 Sun.",
+   "pauses": true,
+   "site": "ProceduralLevel (wave timer)",
+   "comment": "",
+   "pages": [
+    {
+     "text": "For more information on what I can do, click on the placed <b><color=green>Acorn Knight</color></b>.",
+     "wait": "ClickPlacedAcornKnight",
+     "note": "the player is expected to click on the acorn knight placed then next tutorial proceeds"
+    },
+    {
+     "text": "You can hover over my picture to see my <b>General Information</b>",
+     "wait": "HoverPlantInfoIcon",
+     "note": "the player is expected to hover over the acorn knight's icon in the plant info panel then next tutorial proceeds"
+    },
+    {
+     "text": "On the right side of that, you can see my <b>Basic Combat Stats</b> and if you hover over it, you'll see more!",
+     "wait": "HoverStatsPanel",
+     "note": "the player is expected to hover over the statspanel then next tutorial proceeds"
+    },
+    {
+     "text": "Below that, you'll see the <b>Attack</b>, <b>Passive</b> and <b>Skill</b> paths! Hover over any of them to see that intricacies of what I have to offer!",
+     "wait": "HoverPlantPath",
+     "note": "the player is expected to hover over either the attack, or passive, or skill tree, once at least one is done, proceed tutorial"
+    },
+    {
+     "text": "I notice that you have enough <b>Sun</b> to upgrade something! Let's upgrade the <b>Attack</b> tree by clicking on the <b>+</b> button next to the <b>Attack</b> tree!",
+     "wait": "UpgradeAcornAttackPath",
+     "note": "the player is expected to upgrade the attack path, once done, proceed tutorial, during this time, CANNOT upgrade anything else."
+    },
+    {
+     "text": "Great! Now that the <b>Attack</b> tree is upgraded, I'm a little bit more powerful!\n\nIf you look below, you'll notice that the <b>Passive Tree</b> has an extra level, that's because you placed me on a <b><color=green>Grass</color></b> Tile!",
+     "wait": "",
+     "note": "player can click on the panel to close the tutorial."
+    }
+   ]
+  },
+  {
+   "key": "Level1FirstMulch",
+   "id": "level1_firstmulch",
+   "level": 1,
+   "speaker": "AcornKnight",
+   "trigger": "Level 1, the first time a mulch drops.",
+   "pauses": true,
+   "site": "MulchManager.OnDropSpawned",
+   "comment": "shown the first time a mulch drops in level 1 (MulchManager.OnDropSpawned), game paused. click through pages only, so nothing here waits on a world click the popup could block",
+   "pages": [
+    {
+     "text": "Insects sometimes drop <b>Mulches</b>! Click one on the ground to put it in your <b>mulch bag</b> at the bottom of the screen. Be quick, it only stays for a little while!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "Drag a mulch from your bag onto a plant to give it that mulch for the rest of the level. Hover over a mulch to see what it does. Every wave also drops one mulch where its last insect falls.",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "A plant can hold up to <b>6</b> mulches, and two identical mulches of the same rarity merge into a stronger one. Right click a mulch in your bag to sell it for <b><color=#FFD700>Sun</color></b>.",
+     "wait": "",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "key": "Level1SoldierAntAppears",
+   "id": "level1_soldierantappears",
+   "level": 1,
+   "speaker": "AcornKnight",
+   "trigger": "4 seconds after the first Soldier Ant ever spawns.",
+   "pauses": true,
+   "site": "SoldierAnt (spawn coroutine)",
+   "comment": "player is not expected to do anything, but simply read the tutorial and click to proceed, but the game is paused and non-unpausable while this tutorial holds active",
+   "pages": [
+    {
+     "text": "<b>Soldier Ants</b> are tougher ants that take reduced damage from <color=#A0522D><b>Physical</b></color> attacks, but also <b><color=green>Grass</color></b> damage!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "They're also aggressive, but only a little bit...\n\nThey'll attack the closest plant to them, then continue onto their path!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "However, once they start attacking me, they can't look away until I'm badly hurt. I can keep them distracted while others tear them down!",
+     "wait": "",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "key": "Level2StartLevel",
+   "id": "level2_startlevel",
+   "level": 2,
+   "speaker": "Sunflower",
+   "trigger": "Level 2, right after a fertilizer is picked, if Sunflower is in the loadout.",
+   "pauses": false,
+   "site": "FertilizerSelectionUI.CloseAfterSelect",
+   "comment": "triggers the moment the player enters level 2's setup phase (the initial pre-level fertilizer selection), same hook point as Level1StartLevel - see FertilizerSelectionUI",
+   "pages": [
+    {
+     "text": "Hi there! I'm <b><color=orange>Sunflower</color></b>, nice to meet you!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "Click on me, that'll select me.\n\nThen, place me on any <b><color=#8B4513>Dirt</color></b> tile on the map!",
+     "wait": "PlaceSunflowerOnDirt",
+     "note": "player is expected to select the sunflower and place her on any dirt tile, once done, proceed tutorial"
+    },
+    {
+     "text": "Unlike the <b><color=green>Acorn Knight</color></b>, I can't be placed on <b><color=green>Grass</color></b> tiles.\n\nI do however benefit from the <b><color=orange>Sun</color></b>. In other words, I get an extra <b>Passive</b> point if I'm exposed to <b><color=orange>sunlight</color></b>!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "My magic fire bolts deal <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> <b>Damage</b>, obviously, so these \"tough\" <b>Soldier Ants</b> are not so tough when I'm around!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "What's cool about me?\nI generate <b><color=orange>Sun</color></b> over time, so you'll be able to place more plants as long as I'm working!\nNot only that, my attacks have a chance to speed up my <b><color=orange>sun</color></b> generation!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "My skill summons a <color=orange><b>Sunray</b></color>, a beam that deals continuous <color=orange><b>Fire</b></color> damage to everything caught within it!",
+     "wait": "",
+     "note": "player can click on the panel to close the tutorial."
+    }
+   ]
+  },
+  {
+   "key": "Level2Primers",
+   "id": "level2_primers",
+   "level": 2,
+   "speaker": "AcornKnight",
+   "trigger": "Level 2, 1 second after the first elemental primer lands on an insect.",
+   "pauses": true,
+   "site": "ElementalDebuff.OnApply",
+   "comment": "triggers the moment any plant inflicts an elemental primer on an insect for the first time (see ElementalDebuff.OnApply) - purely informational, no action required",
+   "pages": [
+    {
+     "text": "Notice the elemental icon above that insect? That means it's being primed with an elemental debuff!\n\nIf another elemental attack lands on it while primed, it triggers an <b>Elemental Reaction</b>!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "For example, if <b><color=green>Grass</color></b> comes in contact with <color=orange><b>Fire</b></color>, it inflicts a <color=orange><b>Burn</b></color> on the target, dealing <color=#FFB6C1><b>Magic</b></color> <color=orange><b>Fire</b></color> damage over time!",
+     "wait": "",
+     "note": "player can click on the panel to close the tutorial."
+    }
+   ]
+  },
+  {
+   "key": "Level3StartLevel",
+   "id": "level3_startlevel",
+   "level": 3,
+   "speaker": "Waterlily",
+   "trigger": "Level 3, right after a fertilizer is picked, if Waterlily is in the loadout.",
+   "pauses": false,
+   "site": "FertilizerSelectionUI.CloseAfterSelect",
+   "comment": "triggers the moment the player enters level 3's setup phase (the initial pre-level fertilizer selection), same hook point as Level1StartLevel/Level2StartLevel - see FertilizerSelectionUI",
+   "pages": [
+    {
+     "text": "Hi! I'm <b><color=#3399FF>Waterlily</color></b>, soooo nice to meet you!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "Click on me, that'll select me.\n\nThen, place me on any <b><color=#4FC3F7>Water</color></b> tile on the map!",
+     "wait": "PlaceWaterlilyOnWater",
+     "note": "player is expected to select the waterlily and place her on any water tile, once done, proceed tutorial"
+    },
+    {
+     "text": "Unlike the others, I can only be placed on <b><color=#4FC3F7>Water</color></b> tiles.\n\nMy bubbles deal <color=#4FC3F7><b>Water</b></color> damage, and splash onto nearby insects too, with a chance to <color=#87CEEB><b>Slow</b></color> them down!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "My <color=#4FC3F7><b>Water</b></color> damage also reacts with other elements!\n\nMixed with <color=orange><b>Fire</b></color>, it creates <color=#1E90FF><b>Steam</b></color>. Mixed with <color=green><b>Grass</b></color>, it triggers <color=green><b>Germinate</b></color>, a delayed explosion that hits everything nearby!",
+     "wait": "",
+     "note": ""
+    },
+    {
+     "text": "My skill traps insects inside a giant bubble, keeping them airborne while dealing <color=#4FC3F7><b>Water</b></color> damage on impact!",
+     "wait": "",
+     "note": "player can click on the panel to close the tutorial."
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "name": "HoverAcornKnightSlot",
+   "id": "hover_acornknight_slot",
+   "sites": [
+    "LoadoutSelectionUI"
+   ]
+  },
+  {
+   "name": "SelectAcornKnightSlot",
+   "id": "select_acornknight_slot",
+   "sites": [
+    "LoadoutSelectionUI"
+   ]
+  },
+  {
+   "name": "ClickConfirmButton",
+   "id": "click_confirm_button",
+   "sites": [
+    "LoadoutSelectionUI"
+   ]
+  },
+  {
+   "name": "SelectFertilizer",
+   "id": "select_fertilizer",
+   "sites": [
+    "FertilizerCard"
+   ]
+  },
+  {
+   "name": "PlaceAcornKnightOnDirt",
+   "id": "place_acornknight_dirt",
+   "sites": [
+    "Tile"
+   ]
+  },
+  {
+   "name": "UprootAcornKnightFromDirt",
+   "id": "uproot_acornknight_dirt",
+   "sites": [
+    "Plant"
+   ]
+  },
+  {
+   "name": "PlaceAcornKnightOnGrass",
+   "id": "place_acornknight_grass",
+   "sites": [
+    "Tile"
+   ]
+  },
+  {
+   "name": "ClickStartLevelButton",
+   "id": "click_start_level_button",
+   "sites": [
+    "GameManager"
+   ]
+  },
+  {
+   "name": "ClickPlacedAcornKnight",
+   "id": "click_placed_acornknight",
+   "sites": [
+    "Plant"
+   ]
+  },
+  {
+   "name": "HoverPlantInfoIcon",
+   "id": "hover_plantinfo_icon",
+   "sites": [
+    "PlantIconTooltip"
+   ]
+  },
+  {
+   "name": "HoverStatsPanel",
+   "id": "hover_statspanel",
+   "sites": [
+    "StatsAreaHoverTrigger"
+   ]
+  },
+  {
+   "name": "HoverPlantPath",
+   "id": "hover_plant_path",
+   "sites": [
+    "PathHoverTrigger"
+   ]
+  },
+  {
+   "name": "UpgradeAcornAttackPath",
+   "id": "upgrade_acorn_attack_path",
+   "sites": [
+    "PlantUpgradeUI"
+   ]
+  },
+  {
+   "name": "CollectMulch",
+   "id": "collect_mulch",
+   "sites": [
+    "MulchManager"
+   ]
+  },
+  {
+   "name": "EquipMulch",
+   "id": "equip_mulch",
+   "sites": [
+    "MulchManager"
+   ]
+  },
+  {
+   "name": "PlaceSunflowerOnDirt",
+   "id": "place_sunflower_dirt",
+   "sites": [
+    "Tile"
+   ]
+  },
+  {
+   "name": "PlaceWaterlilyOnWater",
+   "id": "place_waterlily_water",
+   "sites": [
+    "Tile"
+   ]
+  }
+ ],
+ "speakers": [
+  "AcornKnight",
+  "Sunflower",
+  "Waterlily"
+ ],
+ "plants": [
+  {
+   "cls": "AcornKnight",
+   "name": "Acorn Knight",
+   "element": "Grass",
+   "color": "#008000",
+   "unlock": 1,
+   "speaker": true
+  },
+  {
+   "cls": "Sunflower",
+   "name": "Sunflower",
+   "element": "Fire",
+   "color": "#FFA500",
+   "unlock": 2,
+   "speaker": true
+  },
+  {
+   "cls": "Waterlily",
+   "name": "Waterlily",
+   "element": "Water",
+   "color": "#4FC3F7",
+   "unlock": 3,
+   "speaker": true
+  },
+  {
+   "cls": "Rhodiola",
+   "name": "Rhodiola",
+   "element": "Grass",
+   "color": "#008000",
+   "unlock": 4,
+   "speaker": false
+  },
+  {
+   "cls": "Begonia",
+   "name": "Begonia",
+   "element": "Water",
+   "color": "#4FC3F7",
+   "unlock": 5,
+   "speaker": false
+  },
+  {
+   "cls": "Calendula",
+   "name": "Calendula",
+   "element": "Fire",
+   "color": "#FFA500",
+   "unlock": 6,
+   "speaker": false
+  },
+  {
+   "cls": "BogIris",
+   "name": "Bog Iris",
+   "element": "Water",
+   "color": "#4FC3F7",
+   "unlock": 7,
+   "speaker": false
+  },
+  {
+   "cls": "Dandelion",
+   "name": "Dandelion",
+   "element": "Wind",
+   "color": "#B2EBF2",
+   "unlock": 8,
+   "speaker": false
+  },
+  {
+   "cls": "Snowdrop",
+   "name": "Snowdrop",
+   "element": "Ice",
+   "color": "#00FFFF",
+   "unlock": 9,
+   "speaker": false
+  },
+  {
+   "cls": "LeafRanger",
+   "name": "Leaf Ranger",
+   "element": "Grass",
+   "color": "#008000",
+   "unlock": 10,
+   "speaker": false
+  },
+  {
+   "cls": "AloeVera",
+   "name": "Aloe Vera",
+   "element": "Water",
+   "color": "#4FC3F7",
+   "unlock": 11,
+   "speaker": false
+  },
+  {
+   "cls": "Cactus",
+   "name": "Cactus",
+   "element": "Poison",
+   "color": "#800080",
+   "unlock": 12,
+   "speaker": false
+  },
+  {
+   "cls": "Holly",
+   "name": "Holly",
+   "element": "Ice",
+   "color": "#00FFFF",
+   "unlock": 13,
+   "speaker": false
+  },
+  {
+   "cls": "Zinnia",
+   "name": "Zinnia",
+   "element": "Fire",
+   "color": "#FFA500",
+   "unlock": 14,
+   "speaker": false
+  },
+  {
+   "cls": "PoisonShroom",
+   "name": "Poison Shroom",
+   "element": "Poison",
+   "color": "#800080",
+   "unlock": 15,
+   "speaker": false
+  },
+  {
+   "cls": "BirdOfParadise",
+   "name": "Bird of Paradise",
+   "element": "Wind",
+   "color": "#B2EBF2",
+   "unlock": 16,
+   "speaker": false
+  },
+  {
+   "cls": "Glowshroom",
+   "name": "Glowshroom",
+   "element": "Grass",
+   "color": "#008000",
+   "unlock": 17,
+   "speaker": false
+  },
+  {
+   "cls": "NeriumOleander",
+   "name": "Oleander",
+   "element": "Poison",
+   "color": "#800080",
+   "unlock": 18,
+   "speaker": false
+  },
+  {
+   "cls": "Stargazer",
+   "name": "Stargazer",
+   "element": "Fire",
+   "color": "#FFA500",
+   "unlock": 19,
+   "speaker": false
+  },
+  {
+   "cls": "Carrot",
+   "name": "Carrot",
+   "element": "Grass",
+   "color": "#008000",
+   "unlock": 20,
+   "speaker": false
+  },
+  {
+   "cls": "Gloriosa",
+   "name": "Gloriosa",
+   "element": "Fire",
+   "color": "#FFA500",
+   "unlock": 21,
+   "speaker": false
+  },
+  {
+   "cls": "Hellebore",
+   "name": "Hellebore",
+   "element": "Poison",
+   "color": "#800080",
+   "unlock": 22,
+   "speaker": false
+  },
+  {
+   "cls": "Anemone",
+   "name": "Anemone",
+   "element": "Wind",
+   "color": "#B2EBF2",
+   "unlock": 23,
+   "speaker": false
+  },
+  {
+   "cls": "Kelp",
+   "name": "Kelp",
+   "element": "Wind",
+   "color": "#B2EBF2",
+   "unlock": 24,
+   "speaker": false
+  }
+ ],
+ "ideas": [
+  "need tutorial for when soldier ant appears",
+  "fertilizer",
+  "skill",
+  "level 2, sunflower",
+  "weather",
+  "fire element",
+  "magic damage",
+  "sun producing",
+  "elemental primers, elemental reactions",
+  "level 3, waterlily",
+  "water bonus on water tiles",
+  "wither",
+  "germinate"
+ ]
+}

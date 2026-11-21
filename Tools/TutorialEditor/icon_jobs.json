@@ -1,0 +1,194 @@
+[
+ {
+  "cls": "AcornKnight",
+  "src": "Assets/Sprites/Plants/AcornKnight/Acorn - Idle.png",
+  "x": 64,
+  "y": 64,
+  "w": 64,
+  "h": 64
+ },
+ {
+  "cls": "Sunflower",
+  "src": "Assets/Sprites/Plants/sunflower/sunflower_Idle.png",
+  "x": 0,
+  "y": 0,
+  "w": 64,
+  "h": 64
+ },
+ {
+  "cls": "Waterlily",
+  "src": "Assets/Sprites/Plants/waterlily.png",
+  "x": 0,
+  "y": 0,
+  "w": 1258,
+  "h": 1258
+ },
+ {
+  "cls": "Rhodiola",
+  "src": "Assets/Sprites/Plants/rhodiolarosea.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Begonia",
+  "src": "Assets/Sprites/Plants/begonia.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Calendula",
+  "src": "Assets/Sprites/Plants/calendula.png",
+  "x": 0,
+  "y": 0,
+  "w": 640,
+  "h": 640
+ },
+ {
+  "cls": "BogIris",
+  "src": "Assets/Sprites/Plants/bogiris.png",
+  "x": 0,
+  "y": 0,
+  "w": 780,
+  "h": 780
+ },
+ {
+  "cls": "Dandelion",
+  "src": "Assets/Sprites/Plants/dandelion.png",
+  "x": 0,
+  "y": 0,
+  "w": 800,
+  "h": 800
+ },
+ {
+  "cls": "Snowdrop",
+  "src": "Assets/Sprites/Plants/snowdrop.png",
+  "x": 192,
+  "y": 168,
+  "w": 650,
+  "h": 650
+ },
+ {
+  "cls": "LeafRanger",
+  "src": "Assets/Sprites/Plants/leafarcher.png",
+  "x": 0,
+  "y": 0,
+  "w": 730,
+  "h": 730
+ },
+ {
+  "cls": "AloeVera",
+  "src": "Assets/Sprites/Plants/aloevera.png",
+  "x": 0,
+  "y": 0,
+  "w": 960,
+  "h": 960
+ },
+ {
+  "cls": "Cactus",
+  "src": "Assets/Sprites/Plants/cactus.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Holly",
+  "src": "Assets/Sprites/Plants/holly.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Zinnia",
+  "src": "Assets/Sprites/Plants/zinnia.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "PoisonShroom",
+  "src": "Assets/Sprites/Plants/poisonshroom.png",
+  "x": 255,
+  "y": 255,
+  "w": 529,
+  "h": 506
+ },
+ {
+  "cls": "BirdOfParadise",
+  "src": "Assets/Sprites/Plants/birdofparadise.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Glowshroom",
+  "src": "Assets/Sprites/Plants/glowingMushroom.png",
+  "x": 0,
+  "y": 0,
+  "w": 512,
+  "h": 512
+ },
+ {
+  "cls": "NeriumOleander",
+  "src": "Assets/Sprites/Plants/oleander.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Stargazer",
+  "src": "Assets/Sprites/Plants/stargazer.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Carrot",
+  "src": "Assets/Sprites/Plants/carrot.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Gloriosa",
+  "src": "Assets/Sprites/Plants/gloriosa.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Hellebore",
+  "src": "Assets/Sprites/Plants/hellebore.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Anemone",
+  "src": "Assets/Sprites/Plants/anemone.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ },
+ {
+  "cls": "Kelp",
+  "src": "Assets/Sprites/Plants/kelp.png",
+  "x": 0,
+  "y": 0,
+  "w": 1024,
+  "h": 1024
+ }
+]
