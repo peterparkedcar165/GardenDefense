@@ -197,7 +197,7 @@
      "note": ""
     },
     {
-     "text": "Here's where I shine! So, you know how every plant has a passive?\n\nYeah, well mine allows me to raise my shield, entering a <b><color=green>Defensive Stance</color></b> whenever I sense that an insect sees me as their target!",
+     "text": "Here's where I shine! So, you know how every plant has a passive?\n\nYeah, well mine allows me to raise my shield, entering a <color=orange><b>Guard Stance</b></color> whenever I sense that an insect sees me as their target!",
      "wait": "",
      "note": ""
     },
@@ -340,7 +340,7 @@
      "note": "shown once the thrown shield has landed on the ground"
     },
     {
-     "text": "I just won't be able to hold a <b><color=green>Defensive Stance</color></b> while my shield is on the floor, so I will be vulnerable. Just remember that...\n\n\nPlease.",
+     "text": "I just won't be able to hold a <color=orange><b>Guard Stance</b></color> while my shield is on the floor, so I will be vulnerable. Just remember that...\n\n\nPlease.",
      "wait": "",
      "note": ""
     }

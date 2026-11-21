@@ -56,7 +56,7 @@ public static class TutorialContent
     {
         new TutorialPage("So this is a <b>Soldier Ant</b>. It's a tougher variant of an ant that's like suuuuuper duuuuper bulky and takes reduced damage from <color=#A0522D><b>Physical</b></color> AND <b><color=green>Grass</color></b> attacks!\n\nI'm not really the best plant to fight this ant."),
         new TutorialPage("They're also mildly <b><color=#A0522D>aggressive</color></b>, meaning that they walk off the path to attack us!"),
-        new TutorialPage("Here's where I shine! So, you know how every plant has a passive?\n\nYeah, well mine allows me to raise my shield, entering a <b><color=green>Defensive Stance</color></b> whenever I sense that an insect sees me as their target!"),
+        new TutorialPage("Here's where I shine! So, you know how every plant has a passive?\n\nYeah, well mine allows me to raise my shield, entering a <color=orange><b>Guard Stance</b></color> whenever I sense that an insect sees me as their target!"),
         new TutorialPage("While I'm holding up my shield, I have increased <b><color=#00CED1>Armor</color></b>, and my attacks change to a <b>Shield Bash</b>, which doesn't benefit from my <b><color=green>Attack Damage</color></b>, but rather my <b><color=#00CED1>Armor</color></b>!"),
         new TutorialPage("So, when the <b>Soldier Ant</b> attacks a plant, he hits once, then continues on its way.\nAnother cool thing about my <b>passive</b> is that insects that target me won't leave after hitting me. I'm able to hold their attention while other plants tear them down!"),
     };
@@ -103,7 +103,7 @@ public static class TutorialContent
         new TutorialPage("Things are about to get rough.\n\nAll plants also have a <b>Skill</b>, but they need to be unlocked, so you just gotta click on the vines to unlock my skill.", TutorialEvents.UnlockAcornSkill), // here, the player is expected to click on the skill unlock vines to unlock the skill. note that before this tutorial, the player should NOT be able to unlock the skill.
         new TutorialPage("You can cast my skill by clicking on me, then clicking on the <b>Skill Icon</b> or just by <b>Pressing \"Q\"</b> as a shortcut, then you'll have to aim and click with your mouse to cast it!", TutorialEvents.AcornShieldLanded), // here, the player is expected to cast the acorn skill. the game runs from the cast until the shield lands (AcornKnight), then pauses again for page 3
         new TutorialPage("My skill allows me to throw my shield in a straight line, dropping on the ground when it reaches the destination or it hits an insect. It deals damage, and <b>stuns</b> for a little bit, but it stays on the ground, blocking the path, so insects have no choice but to munch on my shield."), // shown once the thrown shield has landed on the ground
-        new TutorialPage("I just won't be able to hold a <b><color=green>Defensive Stance</color></b> while my shield is on the floor, so I will be vulnerable. Just remember that...\n\n\nPlease."),
+        new TutorialPage("I just won't be able to hold a <color=orange><b>Guard Stance</b></color> while my shield is on the floor, so I will be vulnerable. Just remember that...\n\n\nPlease."),
     };
 
     // the first time a Waterlily puts a Water primer on an insect, 1 second after it lands (see

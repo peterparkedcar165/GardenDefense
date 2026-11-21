@@ -13,7 +13,7 @@ public class AcornKnightData : PlantData
     public float downStrikeDamagePercent = 0.6f;
     public float upStrikeDamagePercent = 0.4f;
 
-    [Header("Defensive Stance And Bash")]
+    [Header("Guard Stance And Bash")]
     public float baseDefensiveArmor = 20f;
     public float path2DefensiveArmorPerLevel = 6f;
     public float defensiveAttackSpeedPenalty = 0.75f;
