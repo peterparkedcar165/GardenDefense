@@ -16,7 +16,8 @@ MonoBehaviour:
   nameColor: {r: 0.54509807, g: 0, b: 0, a: 1}
   sprite: {fileID: 21300000, guid: 1c27e4fa9d6ba654e8c711258d0af381, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: eed3a1feae60b494e8cd4d71eddbd86d, type: 3}
-  baseMaxHealth: 700
+  widgetHeightOffset: 0
+  baseMaxHealth: 900
   baseAttackDamage: 30
   baseMagicPower: 0
   baseAttackSpeed: 1
@@ -49,6 +50,7 @@ MonoBehaviour:
   carryPriority: 0
   baseEvasion: 0
   baseAccuracy: 0
+  baseFlightHeight: 1.5
   sunDrop: 22
   sunDropAdder: 0
   sunDropMultiplier: 0

@@ -12,8 +12,8 @@ public class WildMulchData : MulchData
 {
     [Tooltip("how many different stats it rolls")]
     public TierValue statCount = new TierValue(1f, 2f, 4f);
-    [Tooltip("each stat's value: the old fertilizer range for that stat, times this, times the rarity multiplier below (proposal)")]
-    public float valueScale = 3f;
+    [Tooltip("each stat's value: the old fertilizer range for that stat, times this, times the rarity multiplier below (Tommy, 2026-11-21: halved from 3)")]
+    public float valueScale = 1.5f;
     public TierValue rarityMultiplier = new TierValue(1f, 2f, 4f);
 
     public override MulchEffect CreateEffect(MulchItem item) => new WildMulchEffect(this, item);

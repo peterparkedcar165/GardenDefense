@@ -22,7 +22,7 @@ MonoBehaviour:
     common: 1
     rare: 2
     epic: 4
-  valueScale: 3
+  valueScale: 1.5
   rarityMultiplier:
     common: 1
     rare: 2
