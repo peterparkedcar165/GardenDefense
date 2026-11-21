@@ -1549,7 +1549,7 @@ MonoBehaviour:
   eliteWaveInterval: 0
   eliteInsects: []
   fertilizers:
-  - {fileID: 11400000, guid: 79c0db51ca6d4920890174ffb40882ff, type: 2}
+  - {fileID: 11400000, guid: 777fd61cdf034642a3eee9bb0001921f, type: 2}
   - {fileID: 11400000, guid: f52e930ac9d6b4a46812feb61a267758, type: 2}
   - {fileID: 11400000, guid: e6799d422a414ef6ab0f8d8226658b3a, type: 2}
   ambience: {fileID: 0}

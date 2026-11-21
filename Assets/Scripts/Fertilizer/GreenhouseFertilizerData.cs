@@ -6,5 +6,5 @@ public class GreenhouseFertilizerData : FertilizerData
     public override FertilizerEffect CreateEffect() => new GreenhouseFertilizerEffect(this);
 
     public override string GetDescription() =>
-        "The level has <b>no weather</b>, clearing any weather it would normally have.";
+        "Clear the weather.";
 }

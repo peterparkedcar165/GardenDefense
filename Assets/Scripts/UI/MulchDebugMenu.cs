@@ -99,7 +99,8 @@ public class MulchDebugMenu : MonoBehaviour
                 if (fertilizer == null) continue;
                 FertilizerData data = fertilizer;
                 bool isActive = data == active;
-                Color tier = MulchTierColors.Get(data.tier);
+                // fertilizers have no rarity, so one soil brown for all of them
+                Color tier = new Color(0.6f, 0.42f, 0.22f);
                 string label = isActive ? $"{data.fertilizerName} <size=70%><color=#AAAAAA>(active)</color></size>" : data.fertilizerName;
                 AddButton(fertilizerGrid, font, label, TextAlignmentOptions.Center,
                     isActive ? new Color(0.25f, 0.25f, 0.25f) : Color.Lerp(tier, Color.black, 0.7f),

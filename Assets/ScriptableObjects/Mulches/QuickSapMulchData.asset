@@ -23,6 +23,6 @@ MonoBehaviour:
     rare: 0.5
     epic: 0.75
   damagePenalty:
-    common: 0.25
-    rare: 0.5
-    epic: 0.75
+    common: 0.35
+    rare: 0.25
+    epic: 0.15

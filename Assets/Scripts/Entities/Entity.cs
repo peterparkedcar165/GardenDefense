@@ -628,7 +628,7 @@ public abstract class Entity : MonoBehaviour
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
                 && !System.Array.Exists(damageTag, t => t == DamageTag.NoPrimer) && fireInternalCooldown <= 0)
                 {
-                    fireInternalCooldown = ElementInternalCooldown(fireInternalCooldownAdder, fireInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
+                    fireInternalCooldown = MulchManager.PrimerCooldown(ElementInternalCooldown(fireInternalCooldownAdder, fireInternalCooldownMultiplier), source);
                     ApplyEffect(new FirePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -643,7 +643,7 @@ public abstract class Entity : MonoBehaviour
                 {
                     if (waterInternalCooldown <= 0)
                     {
-                        waterInternalCooldown = ElementInternalCooldown(waterInternalCooldownAdder, waterInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
+                        waterInternalCooldown = MulchManager.PrimerCooldown(ElementInternalCooldown(waterInternalCooldownAdder, waterInternalCooldownMultiplier), source);
                         ApplyEffect(new WaterPrimer(this, elementalDebuffDuration, 1, source));
                     }
                 }
@@ -661,7 +661,7 @@ public abstract class Entity : MonoBehaviour
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff)
                 && !System.Array.Exists(damageTag, t => t == DamageTag.NoPrimer) && iceInternalCooldown <= 0)
                 {
-                    iceInternalCooldown = ElementInternalCooldown(iceInternalCooldownAdder, iceInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
+                    iceInternalCooldown = MulchManager.PrimerCooldown(ElementInternalCooldown(iceInternalCooldownAdder, iceInternalCooldownMultiplier), source);
                     ApplyEffect(new IcePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -676,7 +676,7 @@ public abstract class Entity : MonoBehaviour
                          windInsect.HasEffect<WaterPrimer>()   || windInsect.HasEffect<PoisonPrimer>() ||
                          windInsect.HasEffect<GrassPrimer>()))
                     {
-                        windInternalCooldown = ElementInternalCooldown(windInternalCooldownAdder, windInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
+                        windInternalCooldown = MulchManager.PrimerCooldown(ElementInternalCooldown(windInternalCooldownAdder, windInternalCooldownMultiplier), source);
                         ApplyEffect(new WindPrimer(this, 0.5f, 1, source));
                     }
                     if (source is Anemone anemone)
@@ -689,7 +689,7 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - grassResistance) * (1 + source.grassDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && grassInternalCooldown <= 0)
                 {
-                    grassInternalCooldown = ElementInternalCooldown(grassInternalCooldownAdder, grassInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
+                    grassInternalCooldown = MulchManager.PrimerCooldown(ElementInternalCooldown(grassInternalCooldownAdder, grassInternalCooldownMultiplier), source);
                     ApplyEffect(new GrassPrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -705,7 +705,7 @@ public abstract class Entity : MonoBehaviour
             elementalMultiplier = Mathf.Max(0f, 1 - poisonResistance) * (1 + source.poisonDamage);
             if (this is Insect && !System.Array.Exists(damageTag, t => t == DamageTag.ElementalDebuff) && poisonInternalCooldown <= 0)
                 {
-                    poisonInternalCooldown = ElementInternalCooldown(poisonInternalCooldownAdder, poisonInternalCooldownMultiplier) * MulchManager.PrimerCooldownFactor(source);
+                    poisonInternalCooldown = MulchManager.PrimerCooldown(ElementInternalCooldown(poisonInternalCooldownAdder, poisonInternalCooldownMultiplier), source);
                     ApplyEffect(new PoisonPrimer(this, elementalDebuffDuration, 1, source));
                 }
 
@@ -790,11 +790,6 @@ public abstract class Entity : MonoBehaviour
         finalDamage = modifiedDamage * elementalMultiplier * dotMultiplier * passiveDamageMult * skillDamageMult * coordinatedDamageMult * counterDamageMult * onHitMult
             * Mathf.Max(0f, 1f + damageTakenBonus);
 
-        // the damaging plant's own mulches (dormancy, quick sap): its damage to insects, from any
-        // source of it
-        if (this is Insect && source is Plant mulchedPlant)
-            finalDamage *= Mathf.Max(0f, 1f + mulchedPlant.mulchDamageBonus);
-
         // damage variance roll, dot ticks stay flat so aggregated numbers remain stable
         // min always wins, when min surpasses max every roll lands on min
         if (!System.Array.Exists(damageTag, t => t == DamageTag.DoT))
@@ -837,7 +832,11 @@ public abstract class Entity : MonoBehaviour
             SfxPlayer.Play(soundInsect.data.hitSound, transform.position);
         source.totalDamageDealt += finalDamage; // FOR DEBUG
         if (this is Insect damagedInsect) damagedInsect.lastSource = source;
-        if (source.lifesteal > 0f) source.Heal(finalDamage * source.lifesteal);
+        // lifesteal only drinks from attacks, never from damage over time, skills or splash procs
+        // without the attack tag (Tommy, 2026-11-21)
+        if (source.lifesteal > 0f && System.Array.Exists(damageTag, t => t == DamageTag.Attack)
+            && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
+            source.Heal(finalDamage * source.lifesteal);
 
         // damage indicator
 
@@ -884,10 +883,10 @@ public abstract class Entity : MonoBehaviour
             return;
         }
 
-        // the healing plant's rejuvenator mulch: regeneration it gives to a plant heals more. an
-        // insect healing another insect (glowworm) is never affected
+        // the healed plant's rejuvenator mulch: regeneration it receives heals it more, whoever gives
+        // it (Tommy, 2026-11-21: it used to be the giver's). insects are never affected
         if (this is Plant && HasHealTag(tags, HealTag.Regeneration))
-            healingAmount *= MulchManager.RegenerationFactor(source);
+            healingAmount *= MulchManager.RegenerationReceivedFactor(this);
 
         float bonus = source != null ? source.healingBonus : 0f;
         float intended = healingAmount * (1f + healingReceived) * (1f + bonus);

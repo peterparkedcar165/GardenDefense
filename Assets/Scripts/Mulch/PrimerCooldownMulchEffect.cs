@@ -1,11 +1,9 @@
-using UnityEngine;
-
-// Plant.mulchPrimerCooldownMultiplier: Entity.Damage multiplies an insect's element cooldown by it
-// whenever this plant is the one landing the primer (MulchManager.PrimerCooldownFactor)
+// Plant.mulchPrimerCooldownReduction: Entity.Damage takes it off an insect's element cooldown
+// whenever this plant is the one landing the primer (MulchManager.PrimerCooldown)
 public class PrimerCooldownMulchEffect : MulchEffect
 {
     private readonly PrimerCooldownMulchData typedData;
-    private float factor = 1f;
+    private float applied;
 
     public PrimerCooldownMulchEffect(PrimerCooldownMulchData data, MulchItem item) : base(item)
     {
@@ -15,13 +13,13 @@ public class PrimerCooldownMulchEffect : MulchEffect
     public override void Activate()
     {
         if (Owner == null) return;
-        factor = 1f - Mathf.Clamp(V(typedData.cooldownReductionPercent), 0f, 0.9f);
-        Owner.mulchPrimerCooldownMultiplier *= factor;
+        applied = V(typedData.cooldownReduction);
+        Owner.mulchPrimerCooldownReduction += applied;
     }
 
     public override void Deactivate()
     {
-        if (Owner != null && factor > 0f) Owner.mulchPrimerCooldownMultiplier /= factor;
-        factor = 1f;
+        if (Owner != null) Owner.mulchPrimerCooldownReduction -= applied;
+        applied = 0f;
     }
 }

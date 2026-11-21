@@ -15,7 +15,6 @@ public class HealSplashMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"Whenever this plant heals <b>another</b> plant, insects near that plant take damage equal to " +
-            $"{Green(Pct(damagePercent.Get(r)))} of the healing done.";
+        return $"Healing {Green("another plant")} damages nearby insects for {Green(Pct(damagePercent.Get(r)))} of the healing amount.";
     }
 }

@@ -127,7 +127,3 @@ public enum StatType
     ItemDropRate,
     RareItemDropRate
 }
-
-// a fertilizer's rarity, shown on its card. a fertilizer has one fixed rarity per asset (fertile
-// start, rich loam and black gold are three assets of one kind)
-public enum FertilizerTier { Common, Rare, Epic }

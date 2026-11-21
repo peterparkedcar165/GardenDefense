@@ -19,6 +19,6 @@ MonoBehaviour:
   elementalType: 1
   dropWeight: 1
   lifesteal:
-    common: 0.08
-    rare: 0.16
-    epic: 0.24
+    common: 0.06
+    rare: 0.1
+    epic: 0.18

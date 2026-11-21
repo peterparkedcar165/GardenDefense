@@ -19,6 +19,6 @@ MonoBehaviour:
   elementalType: 2
   dropWeight: 1
   range:
-    common: 0.5
-    rare: 1
-    epic: 1.5
+    common: 0.25
+    rare: 0.5
+    epic: 0.75

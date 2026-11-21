@@ -11,5 +11,5 @@ public class WeatherFertilizerData : FertilizerData
     public override FertilizerEffect CreateEffect() => new WeatherFertilizerEffect(this);
 
     public override string GetDescription() =>
-        $"The level's weather is <b>{WeatherManager.GetWeatherName(weather)}</b> instead of its usual weather.";
+        $"Change the weather to {weather}.";
 }

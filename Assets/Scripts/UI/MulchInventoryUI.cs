@@ -655,7 +655,7 @@ public class MulchInventoryUI : MonoBehaviour
         // title, a blank line, the lead in line, a blank line, the description and its live status,
         // then a blank line before the hint (Tommy, 2026-11-20)
         string text = $"<b>{item.Name}</b>  <size=80%>{MulchData.RarityLabel(item.rarity)}</size>\n\n" +
-            $"<size=90%>When equipped on a plant:</size>\n\n<size=90%>{item.Description}</size>";
+            $"<size=90%>When equipped on a plant:</size>\n\n<size=90%>{(item.data != null ? item.data.GetDescription(item, effect) : "")}</size>";
         string status = effect != null ? effect.GetStatus() : null;
         if (!string.IsNullOrEmpty(status)) text += $"\n<size=85%><color=#FFD27F>{status}</color></size>";
         if (!string.IsNullOrEmpty(hint)) text += $"\n\n<size=75%><color=#AAAAAA>{hint}</color></size>";

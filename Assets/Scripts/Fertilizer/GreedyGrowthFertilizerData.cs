@@ -11,6 +11,6 @@ public class GreedyGrowthFertilizerData : FertilizerData
     public override FertilizerEffect CreateEffect() => new GreedyGrowthFertilizerEffect(this);
 
     public override string GetDescription() =>
-        $"Increase <b><color=#FFD700>Sun Yield</color></b> from insect kills by <b><color=green>{sunYieldBonus * 100f:F0}%</color></b>. " +
-        $"Increase <b><color=red>Leak Damage</color></b> by <b><color=red>{leakDamageBonus * 100f:F0}%</color></b>.";
+        $"Increase {SunLabel} yield by {Green(Pct(sunYieldBonus))}, " +
+        $"but increase the damage you take from insects escaping by {Red(Pct(leakDamageBonus))}.";
 }

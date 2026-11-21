@@ -63,7 +63,7 @@ MonoBehaviour:
     minSpawnCount: 7
     maxSpawnCount: 12
   fertilizers:
+  - {fileID: 11400000, guid: 777fd61cdf034642a3eee9bb0001921f, type: 2}
   - {fileID: 11400000, guid: f52e930ac9d6b4a46812feb61a267758, type: 2}
   - {fileID: 11400000, guid: d821f48f4ef44bb8b4bfb509223b91a2, type: 2}
-  - {fileID: 11400000, guid: 0b403a1cb4a44fe2aa253613b92fd1d8, type: 2}
   ambience: {fileID: 0}

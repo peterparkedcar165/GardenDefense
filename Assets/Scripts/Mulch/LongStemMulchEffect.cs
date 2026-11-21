@@ -1,3 +1,4 @@
+// percent attack range on its plant (StatType.AttackRange adds to attackRangeMultiplier, a share of the base range)
 public class LongStemMulchEffect : MulchEffect
 {
     private readonly LongStemMulchData typedData;
@@ -12,12 +13,12 @@ public class LongStemMulchEffect : MulchEffect
     {
         if (Owner == null) return;
         applied = V(typedData.range);
-        PlantStatApplier.Apply(Owner, StatType.AttackRangeFlat, applied);
+        PlantStatApplier.Apply(Owner, StatType.AttackRange, applied);
     }
 
     public override void Deactivate()
     {
-        if (Owner != null) PlantStatApplier.Apply(Owner, StatType.AttackRangeFlat, -applied);
+        if (Owner != null) PlantStatApplier.Apply(Owner, StatType.AttackRange, -applied);
         applied = 0f;
     }
 }

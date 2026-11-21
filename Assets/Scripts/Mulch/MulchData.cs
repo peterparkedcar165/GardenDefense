@@ -49,7 +49,12 @@ public abstract class MulchData : ScriptableObject
     // so a tuned number never drifts away from what the tooltip says
     public virtual string GetDescription(MulchItem item) => description;
 
-    // whether a drop may roll this mulch, given how many waves the level still has (countdown needs 10)
+    // the same text for a copy equipped on a plant, for mulches whose numbers depend on that plant
+    // (ironclad riposte's shield). effect is null for a copy in the bag or on the ground
+    public virtual string GetDescription(MulchItem item, MulchEffect effect) => GetDescription(item);
+
+    // whether a drop may roll this mulch, given how many waves the level still has (none needs it now,
+    // kept for mulches that pay out after a set number of waves)
     public virtual bool CanDrop(int wavesLeft) => true;
 
     // whether a plant in this loadout could use it at all, on top of the condition above, for what
@@ -85,11 +90,35 @@ public abstract class MulchData : ScriptableObject
     public virtual bool CanMerge(MulchItem a, MulchItem b) =>
         a != null && b != null && a.data == this && b.data == this && a.rarity == b.rarity && a.rarity < MulchTier.Epic;
 
-    // number helpers for descriptions, at an item's rarity
+    // the copy two mergeable copies become: a fresh one at the next rarity. wild mulch keeps both
+    // copies' stats instead
+    public virtual MulchItem Merge(MulchItem a, MulchItem b) => new MulchItem(this, NextRarity(a.rarity));
+
+    protected static MulchTier NextRarity(MulchTier rarity) => rarity < MulchTier.Epic ? rarity + 1 : rarity;
+
+    // number helpers for descriptions, at an item's rarity. numbers are green and bold, red for a
+    // downside (Tommy's tooltip rules, 2026-11-21)
     protected static string Green(string text) => $"<b><color=green>{text}</color></b>";
     protected static string Red(string text) => $"<b><color=red>{text}</color></b>";
     protected static string Pct(float value) => $"{value * 100f:0.#}%";
-    protected const string SunLabel = "<b><color=#FFD700>Sun</color></b>";
+    // a keyword in its colour, bold
+    protected static string Kw(string text, string color) => $"<color={color}><b>{text}</b></color>";
+    protected const string SunLabel = "<color=yellow><b>Sun</b></color>";
+
+    // the tooltip keyword colours (Tommy, 2026-11-21)
+    protected const string HealthColor = "red";
+    protected const string ArmorColor = "#00CED1";
+    protected const string ShieldColor = "grey";
+    protected const string CritColor = "#FFD700";
+    protected const string CounterColor = "#CD7F32";
+    protected const string LifestealColor = "#FF6B81";
+    protected const string PhysicalColor = "#A0522D";
+    protected const string IceColor = "#00FFFF";
+    protected const string PoisonColor = "purple";
+    // no colour existed for these yet (proposal)
+    protected const string MeleeColor = "#E9967A";
+    protected const string OnHitColor = "#F0E68C";
+    protected const string TrueColor = "#D3D3D3";
 
     // a rarity's name in its colour
     public static string RarityLabel(MulchTier rarity) =>

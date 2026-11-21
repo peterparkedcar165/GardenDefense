@@ -103,7 +103,7 @@ public class MulchManager : MonoBehaviour
         MulchItem target = inventory[to];
         if (target != null && moving.CanMergeWith(target))
         {
-            inventory[to] = moving.Merged();
+            inventory[to] = moving.Merged(target);
             inventory[from] = null;
             AnnounceMerge(inventory[to], null);
         }
@@ -159,7 +159,7 @@ public class MulchManager : MonoBehaviour
         foreach (MulchEffect owned in plant.mulches)
         {
             if (owned == null || !item.CanMergeWith(owned.Item)) continue;
-            owned.Upgrade(owned.Item.Merged());
+            owned.Upgrade(owned.Item.Merged(item));
             AnnounceMerge(owned.Item, plant);
             RaiseChanged();
             return EquipResult.Merged;
@@ -260,10 +260,13 @@ public class MulchManager : MonoBehaviour
 
     // per plant values the rest of the game reads, so it never has to know about mulches
     public static float SlowBonusFrom(Entity source) => source is Plant plant ? plant.mulchSlowBonus : 0f;
-    public static float PrimerCooldownFactor(Entity source) =>
-        source is Plant plant ? Mathf.Max(0f, plant.mulchPrimerCooldownMultiplier) : 1f;
-    public static float RegenerationFactor(Entity source) =>
-        source is Plant plant ? Mathf.Max(0f, 1f + plant.mulchRegenerationBonus) : 1f;
+    // reaction adept: a primer this plant lands starts the insect's element cooldown that many
+    // seconds shorter, never below zero
+    public static float PrimerCooldown(float cooldown, Entity source) =>
+        source is Plant plant ? Mathf.Max(0f, cooldown - plant.mulchPrimerCooldownReduction) : cooldown;
+    // rejuvenator: regeneration a plant receives heals it this much
+    public static float RegenerationReceivedFactor(Entity target) =>
+        target is Plant plant ? Mathf.Max(0f, 1f + plant.mulchRegenerationBonus) : 1f;
 
     // wisdom leaf: the extra share of exp a plant type earns this level, every wisdom leaf on a
     // living plant of that type added together (read at level end, Plant.CommitPendingExpToSave)

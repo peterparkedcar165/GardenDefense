@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-// one fertilizer on the pre level pick screen: its name on top, its tier and what it does below.
+// one fertilizer on the pre level pick screen: its name on top and what it does below.
 // the description is built from the fertilizer's own numbers (FertilizerData.GetDescription)
 public class FertilizerCard : MonoBehaviour
 {
@@ -39,7 +39,7 @@ public class FertilizerCard : MonoBehaviour
         if (icon != null && data.icon != null) icon.sprite = data.icon;
         if (tierText != null) tierText.text = data.fertilizerName;
         if (statsText != null)
-            statsText.text = $"{FertilizerData.TierLabel(data.tier)}\n\n{data.GetDescription()}";
+            statsText.text = data.GetDescription();
     }
 
     public void OnSelectClicked()

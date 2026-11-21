@@ -4,30 +4,31 @@ using UnityEngine;
 public class SeasonedOakMulchData : MulchData
 {
     [Tooltip("armor this plant starts at, on top of its own")]
-    public TierValue startArmor = TierValue.Scaled(-30f);
+    public TierValue startArmor = new TierValue(-30f, -30f, -30f);
     [Tooltip("armor gained each step")]
     public TierValue armorPerStep = TierValue.Scaled(1f);
     [Tooltip("seconds alive between steps")]
-    public float stepInterval = 4f;
-    [Tooltip("the climb stops here")]
-    public TierValue maxArmor = TierValue.Scaled(30f);
+    public float stepInterval = 8f;
+    [Tooltip("the climb stops when the total bonus (the start plus everything gained) reaches this")]
+    public TierValue maxArmor = new TierValue(30f, 45f, 60f);
 
     public override MulchEffect CreateEffect(MulchItem item) => new SeasonedOakMulchEffect(this, item);
 
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        const string armor = "<color=#00CED1><b>Armor</b></color>";
-        return $"This plant starts at {Red(startArmor.Get(r).ToString("+0.#;-0.#;0"))} {armor} and gains " +
-            $"{Green("+" + armorPerStep.Get(r).ToString("0.#"))} {armor} every {Green(stepInterval.ToString("0.#"))} seconds, " +
-            $"up to {Green(maxArmor.Get(r).ToString("+0.#;-0.#;0"))}. It keeps its progress through a merge, and through a revival that brings this mulch back.";
+        string armor = Kw("Armor", ArmorColor);
+        float start = startArmor.Get(r);
+        string opening = start < 0f ? $"Reduce {armor} by {Red((-start).ToString("0.#"))}, but gain"
+            : start > 0f ? $"Increase {armor} by {Green(start.ToString("0.#"))}, and gain"
+            : "Gain";
+        return $"{opening} {Green(armorPerStep.Get(r).ToString("0.#"))} {armor} every {Green(stepInterval.ToString("0.#"))} seconds, " +
+            $"until the total bonus reaches {Green(maxArmor.Get(r).ToString("0.#"))}.";
     }
 
-    public int MaxSteps(MulchTier r)
-    {
-        float step = armorPerStep.Get(r);
-        return step > 0f ? Mathf.CeilToInt((maxArmor.Get(r) - startArmor.Get(r)) / step) : 0;
-    }
+    // armor it can gain at a rarity before the total bonus hits the cap
+    public float MaxGain(MulchTier r) => Mathf.Max(0f, maxArmor.Get(r) - startArmor.Get(r));
 
-    public float ArmorAtStep(MulchTier r, int steps) => Mathf.Min(maxArmor.Get(r), startArmor.Get(r) + steps * armorPerStep.Get(r));
+    // the total bonus with this much armor gained so far
+    public float ArmorWithGain(MulchTier r, float gained) => Mathf.Min(maxArmor.Get(r), startArmor.Get(r) + gained);
 }

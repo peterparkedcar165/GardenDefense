@@ -20,14 +20,14 @@ MonoBehaviour:
   dropWeight: 1
   startArmor:
     common: -30
-    rare: -60
-    epic: -90
+    rare: -30
+    epic: -30
   armorPerStep:
     common: 1
     rare: 2
     epic: 3
-  stepInterval: 4
+  stepInterval: 8
   maxArmor:
     common: 30
-    rare: 60
-    epic: 90
+    rare: 45
+    epic: 60

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// hears its own plant's Plant.GenerateSun (the sun actually banked), then hits every insect in range
+// hears its own plant's Plant.GenerateSun (the sun actually banked), then hits every insect within its attack range
 // through the normal Entity.Damage path with the plant as its source. only does anything on a plant
 // that makes sun (sun sap counts)
 public class SolarFlareMulchEffect : MulchEffect
@@ -26,7 +26,8 @@ public class SolarFlareMulchEffect : MulchEffect
         float damage = amount * V(typedData.damagePercentOfSun);
         if (damage <= 0f) return;
 
-        float radius = typedData.radiusTiles * Tile.CellSize;
+        // the plant's own attack range (Tommy, 2026-11-21), so range stats and long stem widen it
+        float radius = Owner.attackRange;
         ElementalType element = typedData.useSourceElement ? Owner.elementalType : typedData.fixedElement;
         DamageTag[] tags = typedData.appliesPrimer ? FlareTags : FlareTagsNoPrimer;
         Vector3 center = Owner.transform.position;

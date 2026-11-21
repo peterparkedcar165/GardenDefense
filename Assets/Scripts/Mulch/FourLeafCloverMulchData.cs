@@ -11,8 +11,6 @@ public class FourLeafCloverMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        float points = rareItemDropRate.Get(r);
-        return $"{Green("+" + points.ToString("0"))} Rare Item Drop Rate: mulches from insects this plant kills are " +
-            $"{Green(Pct(MulchManager.DropRateBonus(points)))} more likely to be {RarityLabel(MulchTier.Rare)} or {RarityLabel(MulchTier.Epic)}.";
+        return $"Increase Rare Item Drop Rate by {Green(rareItemDropRate.Get(r).ToString("0"))}.";
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 // base class for a fertilizer: picked once before the level, from that level's own list
 // (LevelConfig.fertilizers), it changes how the whole level works until the level ends. one
 // concrete subclass per fertilizer, paired with its FertilizerEffect, the same split as PlantData
-// and Plant. mulches are the other system: loot that drops during the level and goes on a single
+// and Plant. fertilizers have no rarity (Tommy, 2026-11-21). mulches are the other system: loot that drops during the level and goes on a single
 // plant (see MulchData)
 public abstract class FertilizerData : ScriptableObject
 {
@@ -15,7 +15,6 @@ public abstract class FertilizerData : ScriptableObject
     public Sprite icon;
     [Tooltip("drives the colour of fertilizerName")]
     public ElementalType elementalType;
-    public FertilizerTier tier;
 
     [Tooltip("loadout requirement: a fertilizer whose condition fails is left off the pick screen " +
         "(e.g. melt needs fire, water and ice plants)")]
@@ -34,7 +33,10 @@ public abstract class FertilizerData : ScriptableObject
     public bool IsOffered(List<PlantData> loadout) =>
         (condition == null || condition.IsEligible(loadout, 0)) && MeetsExtraRequirements(loadout);
 
-    // a tier's name in its card colour
-    public static string TierLabel(FertilizerTier tier) =>
-        $"<b><color=#{ColorUtility.ToHtmlStringRGB(MulchTierColors.Get(tier))}>{tier}</color></b>";
+    // card text pieces, the same colours as the mulch tooltips: numbers green and bold, red for a
+    // downside, and Sun yellow
+    protected static string Green(string text) => $"<color=green><b>{text}</b></color>";
+    protected static string Red(string text) => $"<color=red><b>{text}</b></color>";
+    protected static string Pct(float value) => $"{value * 100f:0.#}%";
+    protected const string SunLabel = "<color=yellow><b>Sun</b></color>";
 }

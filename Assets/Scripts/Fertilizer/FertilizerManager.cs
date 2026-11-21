@@ -9,7 +9,7 @@ public class FertilizerManager : MonoBehaviour
 {
     public static FertilizerManager instance;
 
-    // greedy growth raises it, garden fence lowers it: what a leaked insect's damage is multiplied by
+    // greedy growth raises it: what a leaked insect's damage is multiplied by
     public static float LeakDamageMultiplier = 1f;
     // rekindling: every burn a plant applies lasts this much of its normal duration (BurnEffect)
     public static float BurnDurationMultiplier = 1f;
@@ -22,7 +22,7 @@ public class FertilizerManager : MonoBehaviour
     // (Plant.PathCost), as multipliers
     public static float PlacementCostMultiplier = 1f;
     public static float UpgradeCostMultiplier = 1f;
-    // seed loan: sun still owed after the loan came due. every sun gained pays this off first
+    // solar loan: sun still owed after the loan came due. every sun gained pays this off first
     // (GameManager.AddSun)
     public static int SunDebt = 0;
     // clean garden: every this many waves, the guaranteed end of wave mulch is Epic (0 = off).
@@ -75,14 +75,20 @@ public class FertilizerManager : MonoBehaviour
                 if (plant != null && plant.IsAlive) activeEffect.OnPlantPlaced(plant);
     }
 
-    // the fertilizers of a level's list the current loadout can use, in list order
+    // a level offers at most this many, fertile start first (Tommy, 2026-11-21)
+    public const int MaxOffered = 3;
+
+    // the fertilizers of a level's list the current loadout can use, in list order, at most MaxOffered
     public static List<FertilizerData> GetOffered(FertilizerData[] list)
     {
         List<PlantData> loadout = GetCurrentLoadout();
         List<FertilizerData> result = new List<FertilizerData>();
         if (list == null) return result;
         foreach (FertilizerData data in list)
+        {
+            if (result.Count >= MaxOffered) break;
             if (data != null && !result.Contains(data) && data.IsOffered(loadout)) result.Add(data);
+        }
         return result;
     }
 
@@ -115,7 +121,7 @@ public class FertilizerManager : MonoBehaviour
         return Mathf.Max(0, cost - discount);
     }
 
-    // seed loan: pays the debt off out of sun just gained, returns what's left to bank
+    // solar loan: pays the debt off out of sun just gained, returns what's left to bank
     public static int PayDebtFrom(int gained)
     {
         if (SunDebt <= 0 || gained <= 0) return gained;

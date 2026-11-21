@@ -169,17 +169,14 @@ public abstract class Plant : Entity, IAttackable
     [System.NonSerialized] public readonly List<MulchEffect> mulches = new List<MulchEffect>();
 
     // what this plant's own mulches add, each put in by its MulchEffect and taken back out when it
-    // stops. damage to insects is multiplied by 1 + mulchDamageBonus (dormancy, quick sap), its own
-    // sun production by 1 + mulchSunProductionBonus (drought), slows it applies get mulchSlowBonus
-    // (hinder), primers it applies get their cooldown multiplied by mulchPrimerCooldownMultiplier
-    // (primer cooldown reduction), regeneration it gives heals 1 + mulchRegenerationBonus as much
-    // (rejuvenator), and its splash radius and skill radius grow by mulchAreaBonus (wide canopy)
-    [System.NonSerialized] public float mulchDamageBonus;
+    // stops. its own sun production is multiplied by 1 + mulchSunProductionBonus (drought), slows
+    // it applies get mulchSlowBonus (hinder), primers it applies start their cooldown
+    // mulchPrimerCooldownReduction seconds shorter (reaction adept), and regeneration it receives
+    // heals it 1 + mulchRegenerationBonus as much (rejuvenator)
     [System.NonSerialized] public float mulchSunProductionBonus;
     [System.NonSerialized] public float mulchSlowBonus;
-    [System.NonSerialized] public float mulchPrimerCooldownMultiplier = 1f;
+    [System.NonSerialized] public float mulchPrimerCooldownReduction;
     [System.NonSerialized] public float mulchRegenerationBonus;
-    [System.NonSerialized] public float mulchAreaBonus;
 
     // drop stats, in points: a kill by this plant drops a mulch more often (itemDropRate) and rolls
     // Rare and Epic more often (rareItemDropRate), each by X / (X + 100). from mulches (scavenger,
@@ -1473,33 +1470,26 @@ public abstract class Plant : Entity, IAttackable
         }
     }
 
-    // countdown mulch: one free step on each path, the same step buying it would give. a locked
-    // skill path takes its step as the unlock, an unlocked one gains a level. each path stops at
-    // the level's cap, and no sun is spent or added to totalSunSpent
-    public void GrantFreePathSteps()
+    // the growth mulches: levels added to one path's effective level (1 attack, 2 passive, 3 skill),
+    // not its point level, so the cost of the next point and the uproot refund don't change. the
+    // path's hook runs again at the new effective level, the same way LoadData's skill tree adders
+    // are baked in. a locked skill path gets the levels too, and they show once it's unlocked
+    public void AddPathLevelBonus(int path, int delta)
     {
-        if (path1Level < pathLevelCap)
+        if (delta == 0) return;
+        switch (path)
         {
-            path1Level++;
-            effectivePath1Level = path1Level + path1LevelAdder;
-            OnPath1Upgrade(effectivePath1Level);
+            case 1: path1LevelAdder += delta; break;
+            case 2: path2LevelAdder += delta; break;
+            case 3: path3LevelAdder += delta; break;
+            default: return;
         }
-        if (path2Level < pathLevelCap)
+        RecomputeEffectivePathLevels();
+        switch (path)
         {
-            path2Level++;
-            effectivePath2Level = path2Level + path2LevelAdder + GetWeatherPath2Bonus();
-            OnPath2Upgrade(effectivePath2Level);
-        }
-        if (!path3Unlocked)
-        {
-            path3Unlocked = true;
-            OnPath3Unlock();
-        }
-        else if (path3Level < pathLevelCap)
-        {
-            path3Level++;
-            effectivePath3Level = path3Level + path3LevelAdder;
-            OnPath3Upgrade(effectivePath3Level);
+            case 1: OnPath1Upgrade(effectivePath1Level); break;
+            case 2: OnPath2Upgrade(effectivePath2Level); break;
+            case 3: OnPath3Upgrade(effectivePath3Level); break;
         }
     }
 
@@ -1737,10 +1727,6 @@ public abstract class Plant : Entity, IAttackable
         MulchManager.NotifySunGenerated(this, total, fromKill);
         return total;
     }
-
-    // one extra tick of this plant's own sun production, for the sunset mulch. false for a plant
-    // that doesn't make sun on a timer. sun producers override it with their normal tick
-    public virtual bool ExtraSunTick() => false;
 
     // hook for plants that can validly target insects beyond their own circle (e.g. Carrot's
     // Soil Bond, which shares its bonded ally's range - a second circle centered on the ally,

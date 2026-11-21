@@ -239,15 +239,8 @@ public class Sunflower : Shooter
         }
     }
 
-    // the sunset mulch's extra tick at the end of a wave is a normal tick
-    public override bool ExtraSunTick()
-    {
-        GenerateSunTick();
-        return true;
-    }
-
     // one sun tick with its book animation, without touching the passive timer. the timer above
-    // calls it, and so does the sunset mulch at the end of each wave (ExtraSunTick)
+    // calls it
     public int GenerateSunTick()
     {
         int generatedTotal = GenerateSun(sunGenerated);

@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     public void AddSun(int amount)
     {
-        // seed loan: sun still owed is paid out of what comes in first
+        // solar loan: sun still owed is paid out of what comes in first
         int gained = FertilizerManager.PayDebtFrom(Mathf.RoundToInt(amount * (1 + BonusSunGain)));
         SunCount += gained;
         totalSunGenerated += gained;

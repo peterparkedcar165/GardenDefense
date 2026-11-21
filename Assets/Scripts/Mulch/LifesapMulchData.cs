@@ -11,6 +11,6 @@ public class LifesapMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"This plant heals for {Green(Pct(lifesteal.Get(r)))} of the damage it deals.";
+        return $"Increase {Kw("Lifesteal", LifestealColor)} by {Green(Pct(lifesteal.Get(r)))}.";
     }
 }

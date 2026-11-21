@@ -11,8 +11,6 @@ public class ScavengerMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        float points = itemDropRate.Get(r);
-        return $"{Green("+" + points.ToString("0"))} Item Drop Rate: insects this plant kills drop mulches " +
-            $"{Green(Pct(MulchManager.DropRateBonus(points)))} more often.";
+        return $"Increase Item Drop Rate by {Green(itemDropRate.Get(r).ToString("0"))}.";
     }
 }

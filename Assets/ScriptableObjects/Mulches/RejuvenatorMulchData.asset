@@ -31,12 +31,6 @@ MonoBehaviour:
       - plant: {fileID: 11400000, guid: a87b905f63edb5f44940e6bc0460922c, type: 2}
         requiredUnlockId: calendula_radiant_aura
         requiredMaxedPath: 0
-      - plant: {fileID: 11400000, guid: eff13cac8b82a324dad737978b29cf7c, type: 2}
-        requiredUnlockId: 
-        requiredMaxedPath: 0
-      - plant: {fileID: 11400000, guid: 54cad904a44c6344888faaed9dda3b63, type: 2}
-        requiredUnlockId: 
-        requiredMaxedPath: 0
       - plant: {fileID: 11400000, guid: 146abf62a7449d54eb1abc221e06d3d2, type: 2}
         requiredUnlockId: 
         requiredMaxedPath: 0
@@ -49,4 +43,4 @@ MonoBehaviour:
   effectivenessBonus:
     common: 0.35
     rare: 0.7
-    epic: 1.05
+    epic: 1

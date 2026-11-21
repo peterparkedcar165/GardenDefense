@@ -9,5 +9,5 @@ public class RootCellarFertilizerData : FertilizerData
     public override FertilizerEffect CreateEffect() => new RootCellarFertilizerEffect(this);
 
     public override string GetDescription() =>
-        $"At the end of each wave, gain <b><color=green>{interestPercent * 100f:F0}%</color></b> of your banked <b><color=#FFD700>Sun</color></b> as interest. No cap.";
+        $"At the end of each wave, gain {Green(Pct(interestPercent))} of your current {SunLabel} amount.";
 }

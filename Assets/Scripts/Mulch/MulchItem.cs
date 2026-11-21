@@ -16,13 +16,21 @@ public class MulchItem
         data?.OnItemCreated(this);
     }
 
+    // a copy that comes with its stats already set (a wild mulch merge), so nothing is rolled
+    public MulchItem(MulchData data, MulchTier rarity, List<WildStat> presetStats)
+    {
+        this.data = data;
+        this.rarity = rarity;
+        if (presetStats != null) stats.AddRange(presetStats);
+    }
+
     public string Name => data != null ? data.mulchName : "?";
     public string Description => data != null ? data.GetDescription(this) : "";
 
     public bool CanMergeWith(MulchItem other) => data != null && other != null && data.CanMerge(this, other);
 
-    // the copy two mergeable copies become
-    public MulchItem Merged() => new MulchItem(data, rarity < MulchTier.Epic ? rarity + 1 : rarity);
+    // the copy this and another mergeable copy become (MulchData.Merge)
+    public MulchItem Merged(MulchItem other) => data.Merge(this, other);
 }
 
 // one stat a wild mulch rolled

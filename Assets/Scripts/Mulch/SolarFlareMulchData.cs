@@ -4,10 +4,8 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "SolarFlareMulch", menuName = "Scriptable Objects/Mulch/Solar Flare")]
 public class SolarFlareMulchData : MulchData
 {
-    [Tooltip("damage dealt to each insect in range, as a share of the sun made, e.g. 4 = 400%")]
+    [Tooltip("damage dealt to each insect within the plant's attack range, as a share of the sun made, e.g. 4 = 400%")]
     public TierValue damagePercentOfSun = TierValue.Scaled(4f);
-    [Tooltip("radius around the plant, in tiles (a tile is 1 unit)")]
-    public float radiusTiles = 2f;
     public DamageType damageType = DamageType.Magic;
     [Tooltip("on: the flare is in the plant's own element. off: it uses fixedElement instead")]
     public bool useSourceElement = true;
@@ -22,11 +20,7 @@ public class SolarFlareMulchData : MulchData
 
     public override MulchEffect CreateEffect(MulchItem item) => new SolarFlareMulchEffect(this, item);
 
-    public override string GetDescription(MulchItem item)
-    {
-        MulchTier r = item.rarity;
-        string element = useSourceElement ? "in its own element" : $"as <b><color={PlantData.ElementalColor(fixedElement)}>{fixedElement}</color></b>";
-        return $"Whenever this plant produces {SunLabel}, it deals {PlantData.DamageTypeLabel(damageType)} equal to " +
-            $"{Green(Pct(damagePercentOfSun.Get(r)))} of the {SunLabel} produced to every insect within {Green(radiusTiles.ToString("0.#"))} tiles, {element}.";
-    }
+    public override string GetDescription(MulchItem item) =>
+        $"Whenever the plant produces {SunLabel}, insects within its {Kw("Attack Range", "green")} take damage equal to " +
+        $"{Green(Pct(damagePercentOfSun.Get(item.rarity)))} of the {SunLabel} generated.";
 }

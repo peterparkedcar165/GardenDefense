@@ -134,7 +134,7 @@ public class GameInfoPanel : MonoBehaviour
             sb.AppendLine("<color=#888888>No fertilizer this level.</color>");
             return;
         }
-        sb.AppendLine($"<b>{active.fertilizerName}</b> <size=85%>{FertilizerData.TierLabel(active.tier)}</size>");
+        sb.AppendLine($"<b>{active.fertilizerName}</b>");
         sb.AppendLine($"<size=85%><color=#c3c2b7>{active.GetDescription()}</color></size>");
         string status = fertilizers.ActiveStatus;
         if (!string.IsNullOrEmpty(status))
@@ -168,7 +168,7 @@ public class GameInfoPanel : MonoBehaviour
             {
                 if (effect == null) continue;
                 sb.AppendLine($"<indent=4%><b>{effect.Item.Name}</b> <size=85%>{MulchData.RarityLabel(effect.Rarity)}</size></indent>");
-                sb.AppendLine($"<indent=4%><size=85%><color=#c3c2b7>{effect.Item.Description}</color></size></indent>");
+                sb.AppendLine($"<indent=4%><size=85%><color=#c3c2b7>{effect.Data.GetDescription(effect.Item, effect)}</color></size></indent>");
                 string status = effect.GetStatus();
                 if (!string.IsNullOrEmpty(status))
                     sb.AppendLine($"<indent=4%><size=85%><color=#FFD27F>{status}</color></size></indent>");

@@ -11,6 +11,7 @@ public class CriticalRejuvenationMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"Healing this plant gives can critically strike. {Green("+" + Pct(healCritChance.Get(r)))} Heal Crit Chance.";
+        return $"Healing provided by the plant may {Kw("critically strike", CritColor)}.\n\n" +
+            $"Increase {Kw("Healing Critical Chance", CritColor)} by {Green(Pct(healCritChance.Get(r)))}.";
     }
 }

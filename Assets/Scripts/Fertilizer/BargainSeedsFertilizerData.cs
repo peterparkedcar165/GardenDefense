@@ -9,5 +9,5 @@ public class BargainSeedsFertilizerData : FertilizerData
     public override FertilizerEffect CreateEffect() => new BargainSeedsFertilizerEffect(this);
 
     public override string GetDescription() =>
-        $"The first plant you place each wave costs <b><color=green>{discount}</color></b> less <b><color=#FFD700>Sun</color></b>.";
+        $"The first plant placed each wave costs {Green(discount.ToString())} less {SunLabel}.";
 }

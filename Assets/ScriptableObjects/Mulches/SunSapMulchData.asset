@@ -22,4 +22,7 @@ MonoBehaviour:
     common: 5
     rare: 10
     epic: 15
-  interval: 30
+  interval:
+    common: 30
+    rare: 25
+    epic: 20

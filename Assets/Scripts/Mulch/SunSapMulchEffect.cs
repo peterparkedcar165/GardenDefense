@@ -22,20 +22,21 @@ public class SunSapMulchEffect : MulchEffect
 
     public override void Deactivate() => StopOnOwner(ref routine);
 
-    public override string GetStatus() => $"Next {SunAmount} Sun in {Mathf.Max(0f, typedData.interval - timer):0}s";
+    public override string GetStatus() => $"Next {SunAmount} Sun in {Mathf.Max(0f, Interval - timer):0}s";
 
     private int SunAmount => VI(typedData.sunAmount);
+    private float Interval => V(typedData.interval);
 
     private IEnumerator Run()
     {
         while (true)
         {
-            if (OwnerAlive && typedData.interval > 0f)
+            if (OwnerAlive && Interval > 0f)
             {
                 timer += Time.deltaTime;
-                if (timer >= typedData.interval)
+                if (timer >= Interval)
                 {
-                    timer -= typedData.interval;
+                    timer -= Interval;
                     Tick();
                 }
             }
@@ -43,8 +44,8 @@ public class SunSapMulchEffect : MulchEffect
         }
     }
 
-    // one batch of sun, also used by the sunset mulch at the end of a wave
-    public void Tick()
+    // one batch of sun
+    private void Tick()
     {
         if (!OwnerAlive) return;
         int made = Owner.GenerateSun(SunAmount);

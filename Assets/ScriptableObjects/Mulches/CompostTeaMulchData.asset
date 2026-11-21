@@ -19,6 +19,6 @@ MonoBehaviour:
   elementalType: 2
   dropWeight: 1
   healPercentPerKill:
-    common: 0.02
-    rare: 0.04
-    epic: 0.06
+    common: 0.04
+    rare: 0.08
+    epic: 0.16

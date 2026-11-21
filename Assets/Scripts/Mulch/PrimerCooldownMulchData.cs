@@ -1,17 +1,19 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PrimerCooldownMulch", menuName = "Scriptable Objects/Mulch/Primer Cooldown Reduction")]
+// Reaction Adept (class and asset names kept from when it was Primer Cooldown Reduction): primers
+// this plant lands start the insect's element cooldown some seconds shorter (Tommy, 2026-11-21: a
+// flat cut in seconds, it was a percentage)
+[CreateAssetMenu(fileName = "PrimerCooldownMulch", menuName = "Scriptable Objects/Mulch/Reaction Adept")]
 public class PrimerCooldownMulchData : MulchData
 {
-    [Tooltip("how much shorter the cooldown is after this plant puts a primer on an insect, e.g. 0.3 = 30%. capped at 90%")]
-    public TierValue cooldownReductionPercent = TierValue.Scaled(0.3f);
+    [Tooltip("seconds taken off the element cooldown an insect gets when this plant puts a primer on it. never below zero")]
+    public TierValue cooldownReduction = new TierValue(2f, 4f, 6f);
 
     public override MulchEffect CreateEffect(MulchItem item) => new PrimerCooldownMulchEffect(this, item);
 
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"After this plant puts an <b><color=green>Elemental Primer</color></b> on an insect, that insect's Primer cooldown is " +
-            $"{Green(Pct(Mathf.Min(0.9f, cooldownReductionPercent.Get(r))))} shorter.";
+        return $"Reduce the cooldown of your elemental primer on insects by {Green(cooldownReduction.Get(r).ToString("0.#"))} seconds.";
     }
 }

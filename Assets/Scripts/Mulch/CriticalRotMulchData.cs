@@ -11,6 +11,7 @@ public class CriticalRotMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"This plant's damage over time can critically strike. {Green("+" + Pct(dotCritChance.Get(r)))} damage over time crit chance.";
+        return $"{Kw("Damage Over Time", PoisonColor)} dealt by the plant may {Kw("critically strike", CritColor)}.\n\n" +
+            $"Increase {Kw("DoT Critical Chance", PoisonColor)} by {Green(Pct(dotCritChance.Get(r)))}.";
     }
 }

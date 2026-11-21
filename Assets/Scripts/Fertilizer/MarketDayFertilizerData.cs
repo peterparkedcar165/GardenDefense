@@ -11,6 +11,5 @@ public class MarketDayFertilizerData : FertilizerData
     public override FertilizerEffect CreateEffect() => new MarketDayFertilizerEffect(this);
 
     public override string GetDescription() =>
-        $"Path upgrades cost <b><color=green>{upgradeCostReduction * 100f:F0}%</color></b> less <b><color=#FFD700>Sun</color></b>. " +
-        $"Placing plants costs <b><color=red>{placementCostIncrease * 100f:F0}%</color></b> more.";
+        $"Increase plant cost by {Red(Pct(placementCostIncrease))}, but reduce upgrade cost by {Green(Pct(upgradeCostReduction))}.";
 }

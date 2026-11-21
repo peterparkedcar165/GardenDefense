@@ -22,7 +22,6 @@ MonoBehaviour:
     common: 4
     rare: 8
     epic: 12
-  radiusTiles: 2
   damageType: 1
   useSourceElement: 1
   fixedElement: 6

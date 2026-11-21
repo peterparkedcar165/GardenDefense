@@ -11,7 +11,6 @@ public class WisdomLeafMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"At the end of the level, this plant's type earns {Green(Pct(expBonus.Get(r)))} more EXP for the whole level. " +
-            $"Wisdom Leafs on plants of the same type add up. The plant must still be alive at the end.";
+        return $"When the level ends, increase this plant's total {Kw("EXP", "green")} gained by {Green(Pct(expBonus.Get(r)))}.";
     }
 }

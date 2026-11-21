@@ -11,6 +11,6 @@ public class SlowBonusMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"Every slow this plant applies takes away {Green(Pct(flatBonus.Get(r)))} more <b><color=green>Movement Speed</color></b>.";
+        return $"{Kw("Slowing", IceColor)} effects are increased by a flat {Kw(flatBonus.Get(r).ToString("0.##"), IceColor)}.";
     }
 }

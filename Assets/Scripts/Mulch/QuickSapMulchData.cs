@@ -13,7 +13,7 @@ public class QuickSapMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"Increase <color=green><b>Attack Speed</b></color> by {Green(Pct(attackSpeedBonus.Get(r)))}, " +
-            $"but reduce <color=green><b>Attack Damage</b></color> by {Red(Pct(damagePenalty.Get(r)))}.";
+        return $"Increase {Kw("Attack Speed", "green")} by {Green(Pct(attackSpeedBonus.Get(r)))}, " +
+            $"and reduce {Kw("Attack Damage", "green")} by {Red(Pct(damagePenalty.Get(r)))}.";
     }
 }

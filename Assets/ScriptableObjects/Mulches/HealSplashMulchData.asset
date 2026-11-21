@@ -44,8 +44,8 @@ MonoBehaviour:
     maxWave: 0
     orAlternatives: []
   damagePercent:
-    common: 0.5
-    rare: 1
-    epic: 1.5
+    common: 0.75
+    rare: 1.5
+    epic: 3
   radius: 1
   internalCooldown: 1

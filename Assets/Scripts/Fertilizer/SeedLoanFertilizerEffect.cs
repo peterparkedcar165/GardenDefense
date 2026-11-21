@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// pays the loan on pick, then takes the repayment at the end of its last wave. whatever the bank
+// solar loan (class name kept from seed loan): pays the loan on pick, then takes the repayment at the end of its last wave. whatever the bank
 // can't cover becomes FertilizerManager.SunDebt, which GameManager.AddSun pays off first
 // (proposal: the vault only says the sun is taken back)
 public class SeedLoanFertilizerEffect : FertilizerEffect
@@ -33,7 +33,7 @@ public class SeedLoanFertilizerEffect : FertilizerEffect
         gm.SunCount -= paid;
         gm.UpdateSun();
         FertilizerManager.SunDebt += typedData.repayAmount - paid;
-        StatusIndicator.Spawn(Vector3.zero, $"Seed Loan: -{typedData.repayAmount} Sun", new Color(1f, 0.45f, 0.3f));
+        StatusIndicator.Spawn(Vector3.zero, $"Solar Loan: -{typedData.repayAmount} Sun", new Color(1f, 0.45f, 0.3f));
     }
 
     public override string GetStatus()

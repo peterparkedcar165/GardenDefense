@@ -12,9 +12,6 @@ public class EchoSeedMulchData : MulchData
     {
         MulchTier r = item.rarity;
         int n = Mathf.Max(1, everyAttacks.GetInt(r));
-        return $"Every {Green(Ordinal(n))} attack of this plant applies its on hit effects <b>twice</b>: every debuff that attack puts on an insect " +
-            $"lands a second time (an extra stack, or a refresh). Primers don't double.";
+        return $"Every {Green(n.ToString())} {Kw("Attacks", "green")}, {Kw("On-Hit Effects", OnHitColor)} apply twice.";
     }
-
-    private static string Ordinal(int n) => n switch { 1 => "", 2 => "2nd", 3 => "3rd", _ => n + "th" };
 }
