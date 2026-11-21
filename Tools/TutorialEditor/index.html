@@ -66,7 +66,13 @@ header.top .spacer { flex: 1; }
 aside { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .side-block { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 10px; }
 .side-block h2 { font-family: var(--f-display); font-weight: 500; font-size: 15px; margin: 4px 6px 8px; letter-spacing: 0.02em; }
-.level-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 10px 6px 4px; }
+.level-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 10px 6px 4px; display: flex; align-items: center; gap: 6px; }
+.level-add { margin-left: auto; border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 6px; font-size: 11px; line-height: 1; padding: 3px 7px; cursor: pointer; text-transform: none; letter-spacing: 0; }
+.level-add:hover { color: var(--accent); border-color: var(--accent); }
+.new-row { display: flex; gap: 8px; align-items: center; padding: 8px 4px 2px; }
+.new-row .btn { flex: 1; white-space: nowrap; }
+.new-row label { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.new-row select { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 8px; padding: 6px 4px; }
 .tut { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 8px; align-items: center; width: 100%; text-align: left;
   border: 1px solid transparent; background: transparent; border-radius: 8px; padding: 6px; }
 .tut:hover { background: var(--panel-2); }
@@ -210,7 +216,7 @@ dialog::backdrop { background: #0006; }
     <div class="side-block side-list">
       <h2>Tutorials</h2>
       <div id="tutList"></div>
-      <div style="padding:8px 4px 2px"><button class="btn primary" id="newBtn" type="button" style="width:100%">+ New tutorial</button></div>
+      <div class="new-row"><button class="btn primary" id="newBtn" type="button">+ New tutorial</button><label>in Level <select id="newLevel" aria-label="Level for the new tutorial"></select></label></div>
     </div>
     <div class="side-block">
       <h2>Ideas from the code</h2>
@@ -374,11 +380,12 @@ function portraitSrc(cls) { return "icons/" + cls + ".png"; }
 function refreshList() {
   const keys = allKeys();
   const groups = new Map();
-  for (const k of keys) { const t = tutOf(k); const L = Number(t.level) || 0; if (!groups.has(L)) groups.set(L, []); groups.get(L).push(t); }
+  const live = k => (k === currentKey && work ? work : tutOf(k));
+  for (const k of keys) { const t = live(k); const L = Number(t.level) || 0; if (!groups.has(L)) groups.set(L, []); groups.get(L).push(t); }
   const levels = [...groups.keys()].sort((a, b) => (a || 99) - (b || 99));
   let html = "";
   for (const L of levels) {
-    html += '<div class="level-label">' + (L ? "Level " + L : "Level not set") + "</div>";
+    html += '<div class="level-label"><span>' + (L ? "Level " + L : "Level not set") + '</span><button type="button" class="level-add" data-level="' + L + '" title="New tutorial in ' + (L ? "Level " + L : "no level") + '" aria-label="New tutorial in ' + (L ? "Level " + L : "no level") + '">+ New</button></div>';
     for (const t of groups.get(L)) {
       const st = stateOf(t.key);
       html += '<button type="button" class="tut" data-key="' + esc(t.key) + '" aria-current="' + (t.key === currentKey) + '">' +
@@ -388,15 +395,19 @@ function refreshList() {
     }
   }
   $("tutList").innerHTML = html;
-  $("sideSelect").innerHTML = keys.map(k => { const t = tutOf(k); return '<option value="' + esc(k) + '"' + (k === currentKey ? " selected" : "") + ">" + (t.level ? "Level " + t.level + " · " : "") + esc(t.title || humanKey(k)) + (stateOf(k) ? " (" + stateOf(k) + ")" : "") + "</option>"; }).join("");
+  $("sideSelect").innerHTML = keys.map(k => { const t = live(k); return '<option value="' + esc(k) + '"' + (k === currentKey ? " selected" : "") + ">" + (t.level ? "Level " + t.level + " · " : "") + esc(t.title || humanKey(k)) + (stateOf(k) ? " (" + stateOf(k) + ")" : "") + "</option>"; }).join("");
 }
-$("tutList").addEventListener("click", e => { const b = e.target.closest(".tut"); if (b) select(b.dataset.key); });
+$("tutList").addEventListener("click", e => {
+  const a = e.target.closest(".level-add"); if (a) { newTutorial("", Number(a.dataset.level)); return; }
+  const b = e.target.closest(".tut"); if (b) select(b.dataset.key);
+});
 $("sideSelect").addEventListener("change", e => select(e.target.value));
 
 // ---------- main view ----------
 function select(key, page) {
   currentKey = key; work = clone(tutOf(key)); pageIdx = Math.min(page || 0, Math.max(0, work.pages.length - 1));
   try { localStorage.setItem("tutorial-editor-current", key); } catch (e) {}
+  if ($("newLevel") && work) $("newLevel").value = String(Number(work.level) || 0);
   renderMain(); refreshList();
 }
 function renderMain() {
@@ -453,7 +464,7 @@ function renderMain() {
 function bindHead() {
   const on = (id, ev, fn) => { const el = $(id); if (el) el.addEventListener(ev, fn); };
   on("fTitle", "input", e => { work.title = e.target.value; const L = Number(work.level) || 0; work.arrayName = "Level" + L + pascal(e.target.value || "New"); work.id = "level" + L + "_" + (e.target.value || "new").toLowerCase().replace(/[^a-z0-9]/g, ""); touch(); document.querySelector(".head h2").textContent = work.title || "New tutorial"; document.querySelector(".head .mono").textContent = work.arrayName + ' · id "' + work.id + '"'; });
-  on("fLevel", "change", e => { work.level = Number(e.target.value); if (work.isNew) { work.arrayName = "Level" + work.level + pascal(work.title || "New"); work.id = "level" + work.level + "_" + (work.title || "new").toLowerCase().replace(/[^a-z0-9]/g, ""); } touch(); });
+  on("fLevel", "change", e => { work.level = Number(e.target.value); if (work.isNew) { work.arrayName = "Level" + work.level + pascal(work.title || "New"); work.id = "level" + work.level + "_" + (work.title || "new").toLowerCase().replace(/[^a-z0-9]/g, ""); document.querySelector(".head .mono").textContent = work.arrayName + ' · id "' + work.id + '"'; } if ($("newLevel")) $("newLevel").value = String(work.level || 0); touch(); });
   on("fTrigger", "input", e => { work.trigger = e.target.value; touch(); });
   on("fPauses", "change", e => { work.pauses = e.target.checked; touch(); });
   on("speakerBtn", "click", openSpeakerPicker);
@@ -657,13 +668,15 @@ function addPage(at) {
 }
 
 // ---------- new tutorials ----------
-function newTutorial(title) {
+function newTutorial(title, lvl) {
   const key = "new-" + Math.random().toString(36).slice(2, 10);
-  const level = 1;
+  const picked = $("newLevel") ? Number($("newLevel").value) : 1;
+  const level = Number.isFinite(lvl) ? lvl : (Number.isFinite(picked) ? picked : 1);
   const t = { key, isNew: true, deleted: false, title: title || "New tutorial", arrayName: "Level" + level + pascal(title || "New"), id: "level" + level + "_" + (title || "new").toLowerCase().replace(/[^a-z0-9]/g, ""),
     level, speaker: "AcornKnight", trigger: "", pauses: true, pages: [{ text: "", wait: "", note: "" }], status: "pending" };
   edits.set(key, t);
   currentKey = key; work = clone(t); pageIdx = 0;
+  if ($("newLevel")) $("newLevel").value = String(level);
   touch(); renderMain(); refreshList();
   const f = $("fTitle"); if (f) { f.focus(); f.select(); }
 }
@@ -705,6 +718,7 @@ $("copyDo").addEventListener("click", async () => {
 async function boot() {
   try { DATA = await (await fetch("tutorials.json")).json(); }
   catch (e) { $("main").innerHTML = '<div class="card empty">The tutorials could not be loaded. Reload the page to try again.</div>'; setSave("Not loaded", "bad"); return; }
+  $("newLevel").innerHTML = Array.from({ length: 27 }, (_, i) => '<option value="' + (i + 1) + '">' + (i + 1) + "</option>").join("") + '<option value="0">any</option>';
   $("ideas").innerHTML = DATA.ideas.map(i => '<button type="button" class="idea" data-idea="' + esc(i) + '">' + esc(i) + "</button>").join("");
   let start = null; try { start = localStorage.getItem("tutorial-editor-current"); } catch (e) {}
   select(start && baseTut(start) ? start : DATA.tutorials[0].key);
@@ -737,3 +751,4 @@ async function boot() {
 }
 boot();
 </script>
+
