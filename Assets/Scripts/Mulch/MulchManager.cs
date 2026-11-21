@@ -131,7 +131,35 @@ public class MulchManager : MonoBehaviour
 
     // ── equipping ───────────────────────────────────────────────────────────
 
-    public enum EquipResult { Equipped, Merged, SlotsFull, Invalid }
+    public enum EquipResult { Equipped, Merged, SlotsFull, AtEpic, Invalid }
+
+    // a plant holds at most one Epic's worth of any one mulch (Tommy, 2026-11-21), counted in Commons:
+    // Common 1, Rare 2, Epic 4. so once it has the Epic it takes no more copies of that mulch, and a
+    // copy that would push it past an Epic is refused. Wild Mulch is exempt (every copy rolls its own
+    // stats)
+    public const int MaxWorthPerMulch = 4;
+    public static int Worth(MulchTier rarity) => rarity == MulchTier.Epic ? 4 : rarity == MulchTier.Rare ? 2 : 1;
+    public static bool CappedAtOneEpic(MulchData data) => data != null && !(data is WildMulchData);
+
+    public static int WorthOn(Plant plant, MulchData data)
+    {
+        int worth = 0;
+        if (plant == null) return 0;
+        foreach (MulchEffect effect in plant.mulches)
+            if (effect != null && effect.Data == data) worth += Worth(effect.Rarity);
+        return worth;
+    }
+
+    public static bool WouldPassEpic(Plant plant, MulchItem item) =>
+        item != null && CappedAtOneEpic(item.data) && WorthOn(plant, item.data) + Worth(item.rarity) > MaxWorthPerMulch;
+
+    // the label a refused equip pops over the plant
+    public static void ShowRefusal(EquipResult result, Plant plant)
+    {
+        if (plant == null) return;
+        string text = result == EquipResult.SlotsFull ? "Mulch slots full" : result == EquipResult.AtEpic ? "One Epic max" : null;
+        if (text != null) StatusIndicator.Spawn(plant.transform.position + new Vector3(0.4f, 0f, 0f), text, new Color(1f, 0.45f, 0.4f));
+    }
 
     // dragging an inventory slot onto a plant (on the map or onto its slots in the plant row)
     public EquipResult EquipFromSlot(int slot, Plant plant)
@@ -143,9 +171,9 @@ public class MulchManager : MonoBehaviour
             inventory[slot] = null;
             RaiseChanged();
         }
-        else if (result == EquipResult.SlotsFull && plant != null)
+        else
         {
-            StatusIndicator.Spawn(plant.transform.position + new Vector3(0.4f, 0f, 0f), "Mulch slots full", new Color(1f, 0.45f, 0.4f));
+            ShowRefusal(result, plant);
         }
         return result;
     }
@@ -155,11 +183,13 @@ public class MulchManager : MonoBehaviour
     public EquipResult Equip(MulchItem item, Plant plant)
     {
         if (item == null || item.data == null || plant == null || !plant.IsAlive) return EquipResult.Invalid;
+        if (WouldPassEpic(plant, item)) return EquipResult.AtEpic;
 
         foreach (MulchEffect owned in plant.mulches)
         {
             if (owned == null || !item.CanMergeWith(owned.Item)) continue;
             owned.Upgrade(owned.Item.Merged(item));
+            MergeOnPlant(owned, plant);
             AnnounceMerge(owned.Item, plant);
             TutorialManager.instance?.NotifyEvent(TutorialEvents.TakeMulch);
             RaiseChanged();
@@ -178,6 +208,27 @@ public class MulchManager : MonoBehaviour
         TutorialManager.instance?.NotifyEvent(TutorialEvents.TakeMulch);
         RaiseChanged();
         return EquipResult.Equipped;
+    }
+
+    // a merge can leave the plant with another identical copy at the new rarity (a Common merging
+    // into a Rare next to the Rare it already had): that one merges in too, and so on (Tommy,
+    // 2026-11-21). the merged effect keeps running, the other one stops and leaves its slot
+    private static void MergeOnPlant(MulchEffect merged, Plant plant)
+    {
+        bool again = true;
+        while (again)
+        {
+            again = false;
+            foreach (MulchEffect other in plant.mulches)
+            {
+                if (other == null || other == merged || !merged.Item.CanMergeWith(other.Item)) continue;
+                other.Deactivate();
+                plant.mulches.Remove(other);
+                merged.Upgrade(merged.Item.Merged(other.Item));
+                again = true;
+                break;
+            }
+        }
     }
 
     private static void AnnounceMerge(MulchItem merged, Plant plant)

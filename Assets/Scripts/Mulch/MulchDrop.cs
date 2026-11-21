@@ -392,8 +392,7 @@ public class MulchDrop : MonoBehaviour
                 Destroy(gameObject);
                 return;
             }
-            if (result == MulchManager.EquipResult.SlotsFull)
-                StatusIndicator.Spawn(plant.transform.position + new Vector3(0.4f, 0f, 0f), "Mulch slots full", new Color(1f, 0.45f, 0.4f));
+            MulchManager.ShowRefusal(result, plant);
         }
         else if (target == MulchInventoryUI.GroundDropTarget.Inventory && Camera.main != null)
         {
