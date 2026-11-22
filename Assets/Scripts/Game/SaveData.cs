@@ -46,6 +46,9 @@ public class SaveData
     public static string SlotUnlockHint(int slot) =>
         $"<b>Locked plant slot</b>\nBeat Level {LevelToBeatForSlot(slot)} to unlock it.";
 
+    // the plant bar's hover on an open slot no plant was picked for this level
+    public const string EmptySlotHint = "<b>Empty plant slot</b>\nNo plant was picked for it this level.";
+
     // skill tree meta progression - skill points are earned per plant (see PlantExpRecord),
     // not from a global pool, so using a plant more is what lets its own tree get built out
     public List<SkillNodePurchase> skillPurchases = new List<SkillNodePurchase>();
