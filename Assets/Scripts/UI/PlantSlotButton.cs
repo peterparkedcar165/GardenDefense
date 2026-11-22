@@ -17,6 +17,8 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private PlantData data;
     private Plant plant;
+    // an empty square's hover text: how a locked slot unlocks (null for an open one)
+    private string emptyHint;
 
     public PlantData Data => data;
 
@@ -28,6 +30,25 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (background != null) background.color = PlantData.ElementBackdropColor(plantData.elementalType);
         if (frame != null) frame.color = PlantData.ElementColor(plantData.elementalType);
         if (sunCostText != null) sunCostText.text = FertilizerManager.GetPlacementCost(data).ToString();
+    }
+
+    // an empty square on the bar (Tommy, 2026-11-22): a slot the loadout left open shows the frame
+    // and backdrop untinted; a slot not unlocked yet is darkened, with a padlock, and its hover says
+    // which level unlocks it
+    public void SetupEmpty(bool locked, string lockedHint)
+    {
+        data = null;
+        plant = null;
+        emptyHint = locked ? lockedHint : null;
+        if (icon != null) icon.enabled = false;
+        if (sunCostText != null) sunCostText.gameObject.SetActive(false);
+        Color tint = locked ? PlantSlotLook.LockedTint : Color.white;
+        if (background != null) background.color = tint;
+        if (frame != null) frame.color = tint;
+        // the button off, so an empty square doesn't light up like a plant does under the pointer
+        Button button = GetComponent<Button>();
+        if (button != null) button.enabled = false;
+        if (locked) PlantSlotLook.AddPadlock(transform);
     }
 
     void Update()
@@ -56,6 +77,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnClicked()
     {
+        if (data == null) return;
         if (GameManager.instance == null || GameManager.instance.SunCount < FertilizerManager.GetPlacementCost(data)) return;
         if (Plant.AtPlacementLimit(data)) return;
         if (FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen) return;
@@ -66,12 +88,19 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (PlantUpgradeUI.instance == null) return;
+        if (plant == null)
+        {
+            if (emptyHint != null) PlantUpgradeUI.instance.ShowTooltip(emptyHint);
+            return;
+        }
         string text = $"{plant.GetName()}\n\n{plant.GetDescription()}\n\n<b>Element</b>:\n\n{plant.GetElement()}\n{plant.GetElementDescription()}";
         PlantUpgradeUI.instance.ShowTooltip(text);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        PlantUpgradeUI.instance.HideTooltip();
+        if (plant == null && emptyHint == null) return;
+        PlantUpgradeUI.instance?.HideTooltip();
     }
 }

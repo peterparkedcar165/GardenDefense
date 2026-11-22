@@ -110,6 +110,17 @@ public class PlantBar : MonoBehaviour
             slot.Setup(data);
             slots.Add(slot);
         }
+
+        // the rest of the bar's squares (Tommy, 2026-11-22): open slots the loadout left empty, then
+        // the slots not unlocked yet, darkened with a padlock. they aren't in slots, so the number
+        // keys and F keys only ever reach plants
+        int open = SaveManager.instance.saveData.MaxLoadoutSize;
+        for (int i = slots.Count; i < SaveData.MaxLoadoutSlots; i++)
+        {
+            PlantSlotButton empty = Instantiate(slotPrefab, container);
+            bool locked = i >= open;
+            empty.SetupEmpty(locked, locked ? SaveData.SlotUnlockHint(i) : null);
+        }
     }
 
     private PlantData GetPlantData(string plantName)

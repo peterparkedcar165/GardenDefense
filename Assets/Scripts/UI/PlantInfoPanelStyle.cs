@@ -110,6 +110,16 @@ public class PlantInfoPanelStyle : ScriptableObject
     public Color lockedText = Hex("#FFF1D6");
     public Color lockedTextHover = Color.white;
 
+    [Header("Plant slots: the squares of the loadout screen and the plant bar (Tommy, 2026-11-22)")]
+    [Tooltip("the bevel frame the plant bar's buttons use (portrait_bevel_grey)")]
+    public Sprite slotFrame;
+    [Tooltip("the backdrop in the frame's window (portrait_backdrop_grey)")]
+    public Sprite slotBackdrop;
+    [Tooltip("over a slot that isn't unlocked yet, tinted with lockedText")]
+    public Sprite slotPadlock;
+    [Tooltip("frame and backdrop of a slot that isn't unlocked yet")]
+    public Color lockedSlotTint = new Color(0.35f, 0.35f, 0.35f, 1f);
+
     [Header("Level bars (the colours the old temperature and oxygen bars had)")]
     public Color oxygen = Hex("#B2EBF2");
     public Color oxygenEmpty = Color.red;

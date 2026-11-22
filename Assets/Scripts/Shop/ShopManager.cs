@@ -122,8 +122,8 @@ public class ShopManager : MonoBehaviour
     private void RefreshPlantSlotItem()
     {
         int slots = Data.MaxLoadoutSize;
-        if (plantSlotStatusText != null) plantSlotStatusText.text = $"Plant Slots: {slots} / 8";
-        if (plantSlotCostText   != null) plantSlotCostText.text   = slots >= 8 ? "MAX" : "Unlocks via levels";
+        if (plantSlotStatusText != null) plantSlotStatusText.text = $"Plant Slots: {slots} / {SaveData.MaxLoadoutSlots}";
+        if (plantSlotCostText   != null) plantSlotCostText.text   = slots >= SaveData.MaxLoadoutSlots ? "MAX" : "Unlocks via levels";
         if (plantSlotBuyButton  != null) plantSlotBuyButton.interactable = false;
     }
 

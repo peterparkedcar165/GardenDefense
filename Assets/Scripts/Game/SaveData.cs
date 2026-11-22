@@ -35,6 +35,17 @@ public class SaveData
     // capped there for now
     public int MaxLoadoutSize => 4 + Mathf.Clamp(highestLevelUnlocked / 5, 0, 4);
 
+    // every plant slot there is, unlocked or not: the loadout screen and the plant bar draw this many
+    // squares (Tommy, 2026-11-22)
+    public const int MaxLoadoutSlots = 8;
+
+    // the level to beat to open a slot (slot counted from 0): beating level 5 unlocks level 6, which
+    // opens slot 5, and so on every 5 levels. 0 for the 4 slots every save starts with
+    public static int LevelToBeatForSlot(int slot) => slot < 4 ? 0 : (slot - 3) * 5;
+
+    public static string SlotUnlockHint(int slot) =>
+        $"<b>Locked plant slot</b>\nBeat Level {LevelToBeatForSlot(slot)} to unlock it.";
+
     // skill tree meta progression - skill points are earned per plant (see PlantExpRecord),
     // not from a global pool, so using a plant more is what lets its own tree get built out
     public List<SkillNodePurchase> skillPurchases = new List<SkillNodePurchase>();

@@ -39,7 +39,13 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     private List<string> selectedLoadout = new List<string>();
     private List<LoadoutSlot> unlockedSlots = new List<LoadoutSlot>();
-    private List<LoadoutSlot> selectedSlots = new List<LoadoutSlot>();
+    // the Current Loadout grid: every plant slot there is (SaveData.MaxLoadoutSlots), picked plants
+    // first, then the open slots, then the locked ones (Tommy, 2026-11-22)
+    private readonly List<LoadoutSlotSquare> selectedSquares = new List<LoadoutSlotSquare>();
+    // the small box over a locked square saying which level unlocks it, built on first use
+    private RectTransform slotHint;
+    private TMP_Text slotHintText;
+    private const float SlotHintGap = 6f;
     private readonly List<InsectPreviewSlot> insectSlots = new List<InsectPreviewSlot>();
 
     public bool IsOpen => panel.activeSelf;
@@ -72,6 +78,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         panel.SetActive(false);
         selectedLoadout.Clear();
         HideTooltip();
+        HideSlotHint();
     }
 
     // Re-opens the loadout with the previously confirmed selection still in the slots.
@@ -180,16 +187,31 @@ public class LoadoutSelectionUI : MonoBehaviour
             unlockedSlots.Add(slot);
         }
 
-        foreach (var s in selectedSlots) Destroy(s.gameObject);
-        selectedSlots.Clear();
+        // hidden first, so the grid lays out only the new squares this frame
+        foreach (var s in selectedSquares)
+            if (s != null) { s.gameObject.SetActive(false); Destroy(s.gameObject); }
+        selectedSquares.Clear();
+        HideSlotHint();
 
+        for (int i = 0; i < SaveData.MaxLoadoutSlots; i++)
+            selectedSquares.Add(LoadoutSlotSquare.Create(selectedContainer, ShowSlotHint, HideSlotHint));
+
+        int filled = 0;
         foreach (string plantName in selectedLoadout)
         {
             PlantData data = GetPlantData(plantName);
-            if (data == null) continue;
-            LoadoutSlot slot = Instantiate(slotPrefab, selectedContainer);
+            if (data == null || filled >= selectedSquares.Count) continue;
+            LoadoutSlotSquare square = selectedSquares[filled++];
+            LoadoutSlot slot = Instantiate(slotPrefab, square.transform);
             slot.Initialize(data, OnSelectedSlotClicked, ShowTooltip, HideTooltip);
-            selectedSlots.Add(slot);
+            square.ShowPlant(slot, data);
+        }
+
+        int open = SaveManager.instance.saveData.MaxLoadoutSize;
+        for (int i = filled; i < selectedSquares.Count; i++)
+        {
+            if (i < open) selectedSquares[i].ShowOpen();
+            else selectedSquares[i].ShowLocked(SaveData.SlotUnlockHint(i));
         }
 
         confirmButton.interactable = selectedLoadout.Count > 0;
@@ -217,6 +239,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         SaveManager.instance.selectedLoadout = new List<string>(selectedLoadout);
         panel.SetActive(false);
         HideTooltip();
+        HideSlotHint();
         GameManager.instance?.OnLoadoutConfirmed();
     }
 
@@ -297,6 +320,64 @@ public class LoadoutSelectionUI : MonoBehaviour
     private void HideTooltip()
     {
         if (tooltipPanel != null) tooltipPanel.SetActive(false);
+    }
+
+    // the unlock hint just above a hovered locked square
+    private void ShowSlotHint(LoadoutSlotSquare square, string hint)
+    {
+        if (slotHint == null) BuildSlotHint();
+        if (slotHint == null || square == null) return;
+        slotHintText.text = hint;
+        slotHint.gameObject.SetActive(true);
+        slotHint.SetAsLastSibling();
+        RectTransform rect = square.Rect;
+        float top = rect.rect.yMax + SlotHintGap;
+        slotHint.position = rect.TransformPoint(new Vector3(rect.rect.center.x, top, 0f));
+        LayoutRebuilder.ForceRebuildLayoutImmediate(slotHint);
+    }
+
+    private void HideSlotHint()
+    {
+        if (slotHint != null) slotHint.gameObject.SetActive(false);
+    }
+
+    // a dark box sized to its text, in the font the screen's own labels use. neither part takes the
+    // pointer, so the square under it keeps its hover
+    private void BuildSlotHint()
+    {
+        if (panel == null) return;
+        GameObject box = new GameObject("SlotUnlockHint", typeof(RectTransform), typeof(Image),
+            typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+        box.layer = panel.layer;
+        slotHint = (RectTransform)box.transform;
+        slotHint.SetParent(panel.transform, false);
+        slotHint.anchorMin = slotHint.anchorMax = new Vector2(0.5f, 0.5f);
+        slotHint.pivot = new Vector2(0.5f, 0f);
+        Image background = box.GetComponent<Image>();
+        background.color = new Color(0.08f, 0.06f, 0.05f, 0.92f);
+        background.raycastTarget = false;
+        VerticalLayoutGroup layout = box.GetComponent<VerticalLayoutGroup>();
+        layout.padding = new RectOffset(12, 12, 8, 8);
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = false;
+        ContentSizeFitter fitter = box.GetComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        GameObject label = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+        label.layer = panel.layer;
+        label.transform.SetParent(slotHint, false);
+        slotHintText = label.GetComponent<TextMeshProUGUI>();
+        TMP_Text fontSource = panel.GetComponentInChildren<TMP_Text>(true);
+        if (fontSource != null && fontSource.font != null) slotHintText.font = fontSource.font;
+        slotHintText.fontSize = 22f;
+        slotHintText.color = Color.white;
+        slotHintText.alignment = TextAlignmentOptions.Center;
+        slotHintText.textWrappingMode = TextWrappingModes.NoWrap;
+        slotHintText.raycastTarget = false;
+        box.SetActive(false);
     }
 
     private PlantData GetPlantData(string plantName)

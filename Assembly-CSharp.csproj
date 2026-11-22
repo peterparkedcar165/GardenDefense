@@ -249,6 +249,7 @@
     <Compile Include="Assets\Scripts\Audio\SfxPlayer.cs" />
     <Compile Include="Assets\Scripts\Tutorial\TutorialEvents.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\WebbedEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\PlantSlotLook.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FractureEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DaytimeGridManager.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MainMenu.cs" />
@@ -409,6 +410,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\Duskdarter.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PsionicOldCarrotProjectile.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\FertilizerData.cs" />
+    <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlotSquare.cs" />
     <Compile Include="Assets\Scripts\Mulch\WisdomLeafMulchData.cs" />
     <Compile Include="Assets\Scripts\UI\MulchInventoryUI.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Waterlily.cs" />
