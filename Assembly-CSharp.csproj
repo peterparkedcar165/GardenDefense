@@ -331,7 +331,6 @@
     <Compile Include="Assets\Scripts\StatusEffect\SilenceEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\NeriumOleanderData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Hellebore.cs" />
-    <Compile Include="Assets\Scripts\StatusEffect\SeasonedOakEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Gloriosa.cs" />
     <Compile Include="Assets\Scripts\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Plant.cs" />

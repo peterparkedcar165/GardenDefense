@@ -127,7 +127,7 @@ public class AcornKnight : Aura
     // Shield Bash's own damage is this percent of Armor (for the first/closest insect hit this
     // cast) - the separate 10%-per-extra-insect falloff (see Bash()) still applies on top of this
     public float BashDamagePercent =>
-        (AcornData?.baseBashDamagePercent ?? 0.5f) + (AcornData?.path2BashDamagePercentPerLevel ?? 0.10f) * effectivePath2Level;
+        (AcornData?.baseBashDamagePercent ?? 0.5f) + (AcornData?.path2BashDamagePercentPerLevel ?? 0.05f) * effectivePath2Level;
 
     // percent of max health, ticking once per second, no level scaling at all - picks up to the
     // boosted rate once nothing has damaged the Knight for RegenBoostDelay seconds
@@ -686,7 +686,7 @@ public class AcornKnight : Aura
     public override string GetPath2Description(bool details = false)
     {
         float armorpl = AcornData?.path2DefensiveArmorPerLevel ?? 6f;
-        float bashDmgPl = AcornData?.path2BashDamagePercentPerLevel ?? 0.10f;
+        float bashDmgPl = AcornData?.path2BashDamagePercentPerLevel ?? 0.05f;
         string desc = details
             ? $"{GetName()} heals himself for <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the healing increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\n\n" +
               $"If {GetName()} is being targeted by a <color=#A0522D><b>Physical</b></color> damaging insect, he changes into <color=orange><b>Guard Stance</b></color>, during which he gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\n\n" +

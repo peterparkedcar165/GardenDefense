@@ -26,9 +26,10 @@ public class AcornKnightData : PlantData
     // no per-level scaling, independent of the skill's shield-throw stun
     public float bashStunDuration = 0.15f;
     // Shield Bash's damage is this percent of Armor (for the closest insect hit), separate from
-    // the 10%-per-extra-insect falloff that still applies on top for every insect beyond that one
+    // the per extra insect falloff (coneFalloffPerTarget) that still applies on top for every insect
+    // beyond that one. 50% plus 5% per Path 2 level (Tommy, 2026-11-22; was 10% a level)
     public float baseBashDamagePercent = 0.5f;
-    public float path2BashDamagePercentPerLevel = 0.10f;
+    public float path2BashDamagePercentPerLevel = 0.05f;
     // skill tree node 5a (Vengeful Guard): Attack Cooldown refunded per Physical hit taken while
     // in Guard Stance
     public float counterStanceCooldownReduction = 0.2f;

@@ -116,7 +116,7 @@ MonoBehaviour:
   stanceExitDelay: 1
   bashStunDuration: 0.15
   baseBashDamagePercent: 0.5
-  path2BashDamagePercentPerLevel: 0.1
+  path2BashDamagePercentPerLevel: 0.05
   counterStanceCooldownReduction: 0.2
   defensiveEvasionBonus: 0.15
   baseRegenPercentPerSecond: 0.005
