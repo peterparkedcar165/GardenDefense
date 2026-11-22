@@ -160,9 +160,14 @@ public class Rhodiola : Shooter
         Heal(amount * MaxLevelHealingReturn);
     }
 
+    // her skill level takes a lot off the cooldown (and growth mulches and the skill tree add more
+    // levels), so it never goes under this (Tommy, 2026-11-22)
+    public const float MinSkillCooldown = 10f;
+
     public override void UpdateStats()
     {
         base.UpdateStats();
+        skillCooldown = Mathf.Max(MinSkillCooldown, skillCooldown);
 
         // Symbiosis max level bonus: fully healthy favors more Grass Damage instead of the return above.
         // additive, like every other elemental damage bonus in the codebase - Rhodiola's base Grass
@@ -290,7 +295,7 @@ public class Rhodiola : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillCooldown = data.baseSkillCooldown - level * (RData?.path3CooldownReductionPerLevel ?? 0f);
+        baseSkillCooldown = Mathf.Max(MinSkillCooldown, data.baseSkillCooldown - level * (RData?.path3CooldownReductionPerLevel ?? 0f));
     }
 
     public override void ActivateSkill()
@@ -415,7 +420,7 @@ public class Rhodiola : Shooter
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Revival Heal</b></color> by <color=green><b>{RevivalHealPerLevel:F0}</b></color> per level. [<color=green><b>+{RevivalHealPerLevel * effectivePath3Level:F0}</b></color>]\n\n" +
-               $"Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]\n\n" +
+               $"Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level, never below <color=green><b>{MinSkillCooldown:F0}s</b></color>. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, $"Upon reviving a plant, grant it <color=green><b>Verdant Guardian</b></color>, shielding it for <color=grey><b>{RData?.verdantGuardianShield ?? 200f:F0}</b></color> health and regenerating <color=green><b>{RData?.verdantGuardianRegen ?? 20f:F0}</b></color> health per second while the shield lasts, for <color=green><b>{skillDuration:F0}s</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
