@@ -250,7 +250,8 @@ public class Begonia : Aura
         if (_rangeGlitter == null && !BuildRangeGlitter()) return;
         if (Mathf.Abs(attackRange - _rangeGlitterRadius) > 0.001f) FitRangeGlitter();
 
-        bool show = IsAlive && !IsSelected;
+        // keeps going while she's selected too (Tommy, 2026-11-22)
+        bool show = IsAlive;
         if (show && !_rangeGlitter.isEmitting) _rangeGlitter.Play();
         else if (!show && _rangeGlitter.isEmitting) _rangeGlitter.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
