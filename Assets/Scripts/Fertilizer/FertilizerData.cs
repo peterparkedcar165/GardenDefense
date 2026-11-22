@@ -30,8 +30,12 @@ public abstract class FertilizerData : ScriptableObject
     // eligibility the condition above can't express
     public virtual bool MeetsExtraRequirements(List<PlantData> loadout) => true;
 
+    [Tooltip("off for now: never offered before a level, even when a level lists it or a short list " +
+        "is being filled (greenhouse, Tommy, 2026-11-22). the dev menu still has it")]
+    public bool disabled;
+
     public bool IsOffered(List<PlantData> loadout) =>
-        (condition == null || condition.IsEligible(loadout, 0)) && MeetsExtraRequirements(loadout);
+        !disabled && (condition == null || condition.IsEligible(loadout, 0)) && MeetsExtraRequirements(loadout);
 
     // card text pieces, the same colours as the mulch tooltips: numbers green and bold, red for a
     // downside, and Sun yellow

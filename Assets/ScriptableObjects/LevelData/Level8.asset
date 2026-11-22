@@ -1547,6 +1547,6 @@ MonoBehaviour:
   eliteInsects: []
   fertilizers:
   - {fileID: 11400000, guid: 777fd61cdf034642a3eee9bb0001921f, type: 2}
-  - {fileID: 11400000, guid: ac7935a746c34747a9ada8620a1f1e27, type: 2}
+  - {fileID: 11400000, guid: d0cab36138bf41ad87aeb9b4015da4a3, type: 2}
   - {fileID: 11400000, guid: d821f48f4ef44bb8b4bfb509223b91a2, type: 2}
   ambience: {fileID: 11400000, guid: a53efb8b7d84dfe438423cd008ebef91, type: 2}
