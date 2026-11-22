@@ -22,5 +22,5 @@ MonoBehaviour:
     minWave: 0
     maxWave: 0
     orAlternatives: []
-  upgradeCostReduction: 0.25
-  placementCostIncrease: 0.25
+  upgradeCostReduction: 0.15
+  placementCostIncrease: 0.15

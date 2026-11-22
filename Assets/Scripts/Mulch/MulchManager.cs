@@ -295,8 +295,8 @@ public class MulchManager : MonoBehaviour
             GameManager.instance.PlaySound(GameManager.instance.plantSelect);
     }
 
-    // the plant died: its mulches stop and go into its dead record. only a revive by a max level
-    // Rhodiola skill brings them back (RestoreMulches); any other revive leaves them lost
+    // the plant died: its mulches stop and go into its dead record. a revive by Rhodiola's skill
+    // brings them back (RestoreMulches); any other revive leaves them lost
     public void OnPlantDied(Plant plant, DeadPlantRecord record)
     {
         if (plant == null) return;
@@ -318,7 +318,7 @@ public class MulchManager : MonoBehaviour
         RaiseChanged();
     }
 
-    // a max level Rhodiola skill revive: the same effects carry on on the new body, with whatever
+    // a Rhodiola skill revive: the same effects carry on on the new body, with whatever
     // they had counted so far
     public static void RestoreMulches(DeadPlantRecord record, Plant revived)
     {

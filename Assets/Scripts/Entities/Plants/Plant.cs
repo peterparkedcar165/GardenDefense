@@ -45,7 +45,7 @@ public class DeadPlantRecord
     public AutoCastState autoCastState;
     public int orbitRadius;
     public Dictionary<string, float> mulchCarry;
-    // the mulches it had equipped, stopped. only a max level rhodiola skill revive brings them back
+    // the mulches it had equipped, stopped. a rhodiola skill revive brings them back
     // (MulchManager.RestoreMulches); any other revive leaves them lost
     public List<MulchEffect> mulches;
 }
@@ -327,8 +327,8 @@ public abstract class Plant : Entity, IAttackable
         _ghosts.Clear();
     }
 
-    // restoreMulches: a max level rhodiola skill revive, the plant comes back with the mulches it
-    // had. every other revive leaves them lost
+    // restoreMulches: a rhodiola skill revive, the plant comes back with the mulches it had. every
+    // other revive leaves them lost
     public static Plant RevivePlant(Tile tile, bool restoreMulches = false)
     {
         if (tile == null || tile.deadPlant == null || tile.deadPlant.prefab == null) return null;

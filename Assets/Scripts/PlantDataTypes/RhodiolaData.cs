@@ -60,5 +60,5 @@ public class RhodiolaData : PlantData
         "Healing applies Rejuvenating Burgeon, a heal over time that also grants Armor while it lasts. Half of the healing past full health is stored as <color=#FFD700><b>Golden Sap</b></color>, released all at once into a plant in range that drops below 25% health.";
 
     public override string GetSkillDescription() =>
-        "Target a tile where a plant has fallen to resurrect it and restore a portion of its Health.";
+        "Target a tile where a plant has fallen to resurrect it, with the mulches it had, and restore a portion of its Health.";
 }

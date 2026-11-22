@@ -307,9 +307,9 @@ public class Rhodiola : Shooter
     {
         // nothing to revive at the targeted tile - don't consume the skill (the player can
         // just re-target immediately, no cooldown/sun/cast wasted on an empty click)
-        // at her skill's max level a revived plant also comes back with the mulches it had (Tommy,
-        // 2026-11-20), on top of verdant guardian below
-        Plant revived = Plant.RevivePlant(tile, IsPath3Maxed);
+        // a revived plant comes back with the mulches it had (Tommy, 2026-11-22; it took her skill's
+        // max level until then)
+        Plant revived = Plant.RevivePlant(tile, true);
         if (revived == null) return;
 
         skillCooldownTimer = skillCooldown;
@@ -342,7 +342,7 @@ public class Rhodiola : Shooter
         {
             if (!Tile.allTiles.TryGetValue(Tile.TileKey(center + offset), out Tile neighbor)) continue;
             if (neighbor.deadPlant == null) continue;
-            Plant revivedNeighbor = Plant.RevivePlant(neighbor, IsPath3Maxed);
+            Plant revivedNeighbor = Plant.RevivePlant(neighbor, true);
             if (revivedNeighbor != null)
                 revivedNeighbor.Heal(RevivalHeal, this);
         }
@@ -365,7 +365,7 @@ public class Rhodiola : Shooter
         $"<color=green><b>{SapStoreShare * 100f:F0}%</b></color> of healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>{SapCap:F0}</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once.";
 
     public override string GetSkillDesription() =>
-        $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
+        $"Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
 
     public override string GetPath1Name() => "Verdance";
     public override string GetPath2Name() => "Symbiosis";
@@ -411,7 +411,7 @@ public class Rhodiola : Shooter
     {
         float cdrpl = RData?.path3CooldownReductionPerLevel ?? 0.1f;
         string desc = details
-            ? $"Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</color>]</b></color> Health."
+            ? $"Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</color>]</b></color> Health."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Revival Heal</b></color> by <color=green><b>{RevivalHealPerLevel:F0}</b></color> per level. [<color=green><b>+{RevivalHealPerLevel * effectivePath3Level:F0}</b></color>]\n\n" +
