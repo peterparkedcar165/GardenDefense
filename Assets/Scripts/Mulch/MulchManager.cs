@@ -133,25 +133,37 @@ public class MulchManager : MonoBehaviour
 
     public enum EquipResult { Equipped, Merged, SlotsFull, AtEpic, Invalid }
 
-    // a plant holds at most one Epic's worth of any one mulch (Tommy, 2026-11-21), counted in Commons:
-    // Common 1, Rare 2, Epic 4. so once it has the Epic it takes no more copies of that mulch, and a
-    // copy that would push it past an Epic is refused. Wild Mulch is exempt (every copy rolls its own
-    // stats)
-    public const int MaxWorthPerMulch = 4;
-    public static int Worth(MulchTier rarity) => rarity == MulchTier.Epic ? 4 : rarity == MulchTier.Rare ? 2 : 1;
+    // a plant holds at most one Epic of any one mulch (Tommy, 2026-11-21). merging up to the Epic is
+    // fine, and once the plant has it, every other copy of that mulch on it is sold for its sell price
+    // (a Rare and a Common, then another Rare: the Rares become the Epic and the Common is sold). that
+    // is the only way a mulch on a plant is ever sold. a plant that already has the Epic takes no
+    // more copies. Wild Mulch is exempt (every copy rolls its own stats)
     public static bool CappedAtOneEpic(MulchData data) => data != null && !(data is WildMulchData);
 
-    public static int WorthOn(Plant plant, MulchData data)
+    public static bool HasEpicOf(Plant plant, MulchData data)
     {
-        int worth = 0;
-        if (plant == null) return 0;
+        if (plant == null) return false;
         foreach (MulchEffect effect in plant.mulches)
-            if (effect != null && effect.Data == data) worth += Worth(effect.Rarity);
-        return worth;
+            if (effect != null && effect.Data == data && effect.Rarity == MulchTier.Epic) return true;
+        return false;
     }
 
-    public static bool WouldPassEpic(Plant plant, MulchItem item) =>
-        item != null && CappedAtOneEpic(item.data) && WorthOn(plant, item.data) + Worth(item.rarity) > MaxWorthPerMulch;
+    // sells every copy of this mulch on the plant except keep (null sells them all): each stops, leaves
+    // its slot and pays its sell price, shown over the plant
+    private void SellCopiesOn(Plant plant, MulchData data, MulchEffect keep)
+    {
+        for (int i = plant.mulches.Count - 1; i >= 0; i--)
+        {
+            MulchEffect other = plant.mulches[i];
+            if (other == null || other == keep || other.Data != data) continue;
+            other.Deactivate();
+            plant.mulches.RemoveAt(i);
+            int price = SellPrice(other.Item);
+            if (price > 0) GameManager.instance?.AddSun(price);
+            StatusIndicator.Spawn(plant.transform.position + new Vector3(0.4f, 0.35f, 0f),
+                $"{other.Item.rarity} sold +{price} Sun", new Color(1f, 0.85f, 0.25f));
+        }
+    }
 
     // the label a refused equip pops over the plant
     public static void ShowRefusal(EquipResult result, Plant plant)
@@ -178,28 +190,39 @@ public class MulchManager : MonoBehaviour
         return result;
     }
 
-    // a plant that already has this mulch at this rarity merges it into the next rarity in place;
-    // anything else takes a free slot. equipped mulches can't be taken off again
+    // a plant that already has this mulch at this rarity merges it into the next rarity in place
+    // (and on, MergeOnPlant); anything else takes a free slot. equipped mulches can't be taken off
+    // again: once a merge or a new copy gives the plant the Epic, its other copies of that mulch are
+    // sold (SellCopiesOn), the only way a mulch on a plant is sold
     public EquipResult Equip(MulchItem item, Plant plant)
     {
         if (item == null || item.data == null || plant == null || !plant.IsAlive) return EquipResult.Invalid;
-        if (WouldPassEpic(plant, item)) return EquipResult.AtEpic;
+        bool capped = CappedAtOneEpic(item.data);
+        if (capped && HasEpicOf(plant, item.data)) return EquipResult.AtEpic;
 
         foreach (MulchEffect owned in plant.mulches)
         {
             if (owned == null || !item.CanMergeWith(owned.Item)) continue;
             owned.Upgrade(owned.Item.Merged(item));
             MergeOnPlant(owned, plant);
+            if (capped && owned.Rarity == MulchTier.Epic) SellCopiesOn(plant, item.data, owned);
             AnnounceMerge(owned.Item, plant);
             TutorialManager.instance?.NotifyEvent(TutorialEvents.TakeMulch);
             RaiseChanged();
             return EquipResult.Merged;
         }
 
-        if (plant.mulches.Count >= PlantSlots) return EquipResult.SlotsFull;
+        // an Epic copy replaces the plant's lower copies of it (sold), which also frees their slots
+        bool replaces = capped && item.rarity == MulchTier.Epic;
+        bool hasLower = false;
+        if (replaces)
+            foreach (MulchEffect owned in plant.mulches)
+                if (owned != null && owned.Data == item.data) { hasLower = true; break; }
+        if (plant.mulches.Count >= PlantSlots && !hasLower) return EquipResult.SlotsFull;
 
         MulchEffect effect = item.data.CreateEffect(item);
         if (effect == null) return EquipResult.Invalid;
+        if (hasLower) SellCopiesOn(plant, item.data, null);
         effect.AttachTo(plant);
         plant.mulches.Add(effect);
         effect.Activate();
