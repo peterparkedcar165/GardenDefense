@@ -368,11 +368,29 @@ public class MulchManager : MonoBehaviour
     }
 
     // per plant values the rest of the game reads, so it never has to know about mulches
-    public static float SlowBonusFrom(Entity source) => source is Plant plant ? plant.mulchSlowBonus : 0f;
+    public static float SlowBonusFrom(Entity source)
+    {
+        if (source is not Plant plant) return 0f;
+        // every slow it makes stronger, counted for hinder's tooltip
+        if (plant.mulchSlowBonus > 0f)
+            foreach (MulchEffect effect in plant.mulches)
+                if (effect is SlowBonusMulchEffect hinder) hinder.CountSlow();
+        return plant.mulchSlowBonus;
+    }
     // reaction adept: a primer this plant lands starts the insect's element cooldown that many
     // seconds shorter, never below zero
-    public static float PrimerCooldown(float cooldown, Entity source) =>
-        source is Plant plant ? Mathf.Max(0f, cooldown - plant.mulchPrimerCooldownReduction) : cooldown;
+    public static float PrimerCooldown(float cooldown, Entity source)
+    {
+        if (source is not Plant plant) return cooldown;
+        float reduced = Mathf.Max(0f, cooldown - plant.mulchPrimerCooldownReduction);
+        // the seconds it cut, shared between its reaction adept copies for their tooltips
+        float cut = cooldown - reduced;
+        if (cut > 0f && plant.mulchPrimerCooldownReduction > 0f)
+            foreach (MulchEffect effect in plant.mulches)
+                if (effect is PrimerCooldownMulchEffect adept)
+                    adept.CountPrimer(cut * adept.Applied / plant.mulchPrimerCooldownReduction);
+        return reduced;
+    }
     // rejuvenator: regeneration a plant receives heals it this much
     public static float RegenerationReceivedFactor(Entity target) =>
         target is Plant plant ? Mathf.Max(0f, 1f + plant.mulchRegenerationBonus) : 1f;
@@ -462,6 +480,7 @@ public class MulchManager : MonoBehaviour
 
         MulchItem item = RollItem(exit.killer, false);
         if (item != null) MulchDrop.Spawn(item, exit.position, exit.leaked);
+        NotifyKillDrop(exit.killer, item, false);
 
         // clean garden: every Nth wave also drops an Epic mulch, on top of the usual one (Tommy,
         // 2026-11-22; it used to make the usual one Epic instead)
@@ -483,6 +502,15 @@ public class MulchManager : MonoBehaviour
         killsSinceDrop = 0;
         MulchItem item = RollItem(killer, false);
         if (item != null) MulchDrop.Spawn(item, insect.transform.position, false);
+        NotifyKillDrop(killer, item, !pity);
+    }
+
+    // four-leaf clover and scavenger count the drops their plant's kills bring
+    private static void NotifyKillDrop(Plant killer, MulchItem item, bool fromChance)
+    {
+        if (killer == null || item == null || killer.mulches.Count == 0) return;
+        foreach (MulchEffect effect in new List<MulchEffect>(killer.mulches))
+            effect?.OnKillDrop(item, fromChance);
     }
 
     // which mulch and at what rarity. only mulches the loadout can use (MulchData.CanDropFor:

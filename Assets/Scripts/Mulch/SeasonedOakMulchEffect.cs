@@ -3,8 +3,8 @@ using UnityEngine;
 
 // its plant climbs on its own clock, kept in Plant.mulchCarry so a death and a revival that brings
 // the mulch back carries it over (DeadPlantRecord copies it). only a living plant's clock runs. the
-// armor itself is an armorAdder delta, checked every frame; the visible status (SeasonedOakEffect) is
-// display only and put back if anything strips it
+// armor itself is an armorAdder delta, checked every frame. the climb shows in the mulch's tooltip
+// (GetStatus; Tommy, 2026-11-22: it was a status effect on the plant before)
 public class SeasonedOakMulchEffect : MulchEffect
 {
     private const string GainedKey = "seasonedOak.gained";
@@ -28,12 +28,22 @@ public class SeasonedOakMulchEffect : MulchEffect
     public override void Deactivate()
     {
         StopOnOwner(ref routine);
-        if (Owner != null)
-        {
-            Owner.armorAdder -= appliedArmor;
-            Owner.RemoveEffect<SeasonedOakEffect>();
-        }
+        if (Owner != null) Owner.armorAdder -= appliedArmor;
         appliedArmor = 0f;
+    }
+
+    // the armor bonus now, and the next step while it's still climbing
+    public override string GetStatus()
+    {
+        if (Owner == null) return null;
+        float gained = Owner.mulchCarry.TryGetValue(GainedKey, out float savedGain) ? savedGain : 0f;
+        float armor = typedData.ArmorWithGain(Rarity, gained);
+        float max = typedData.maxArmor.Get(Rarity);
+        string now = armor < 0f ? $"{armor:0.#}" : $"+{armor:0.#}";
+        if (armor >= max) return $"Armor bonus: {now}, fully seasoned";
+        float timer = Owner.mulchCarry.TryGetValue(TimerKey, out float savedTimer) ? savedTimer : 0f;
+        float next = Mathf.Max(0f, typedData.stepInterval - timer);
+        return $"Armor bonus: {now}\n+{typedData.armorPerStep.Get(Rarity):0.#} in {next:0}s, up to +{max:0.#}";
     }
 
     private IEnumerator Run()
@@ -71,23 +81,6 @@ public class SeasonedOakMulchEffect : MulchEffect
             Owner.armorAdder += wanted - appliedArmor;
             appliedArmor = wanted;
         }
-        ShowStatus(wanted);
     }
 
-    private void ShowStatus(float armor)
-    {
-        SeasonedOakEffect status = Owner.GetEffect<SeasonedOakEffect>();
-        if (status == null)
-        {
-            status = new SeasonedOakEffect(Owner);
-            Owner.ApplyEffect(status);
-        }
-        float timer = Owner.mulchCarry.TryGetValue(TimerKey, out float savedTimer) ? savedTimer : 0f;
-        // permanent: ApplyEffect scales a buff's duration by buff duration stats, pinned back here
-        status.duration = float.MaxValue;
-        status.armor = armor;
-        status.armorPerStep = typedData.armorPerStep.Get(Rarity);
-        status.maxArmor = typedData.maxArmor.Get(Rarity);
-        status.secondsToNextStep = Mathf.Max(0f, typedData.stepInterval - timer);
-    }
 }

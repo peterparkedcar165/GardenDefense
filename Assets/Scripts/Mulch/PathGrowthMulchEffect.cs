@@ -22,4 +22,13 @@ public class PathGrowthMulchEffect : MulchEffect
         if (Owner != null && applied != 0) Owner.AddPathLevelBonus((int)typedData.path, -applied);
         applied = 0;
     }
+
+    public override string GetStatus()
+    {
+        if (Owner == null || applied == 0) return null;
+        int effective = typedData.path == PathGrowthMulchData.GrowthPath.Attack ? Owner.effectivePath1Level
+            : typedData.path == PathGrowthMulchData.GrowthPath.Passive ? Owner.effectivePath2Level
+            : Owner.effectivePath3Level;
+        return $"{typedData.path} path level: {effective} ({effective - applied} without it)";
+    }
 }

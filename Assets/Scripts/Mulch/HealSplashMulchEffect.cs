@@ -13,6 +13,8 @@ public class HealSplashMulchEffect : MulchEffect
     private readonly HealSplashMulchData typedData;
     private float lastTrigger = float.NegativeInfinity;
     private bool listening;
+    // what its splashes took off insects this level
+    private float dealt;
 
     public HealSplashMulchEffect(HealSplashMulchData data, MulchItem item) : base(item)
     {
@@ -32,6 +34,8 @@ public class HealSplashMulchEffect : MulchEffect
         listening = false;
         Entity.OnHeal -= HandleHeal;
     }
+
+    public override string GetStatus() => $"Splash damage dealt: {dealt:0}";
 
     private void HandleHeal(EntityEventData heal)
     {
@@ -55,7 +59,7 @@ public class HealSplashMulchEffect : MulchEffect
         {
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(insect.transform.position, center) > radius) continue;
-            insect.Damage(damage, Owner.damageType, Owner.elementalType, Owner, false, SplashTags);
+            dealt += DealDamage(insect, damage, Owner.damageType, Owner.elementalType, Owner, SplashTags);
         }
     }
 }

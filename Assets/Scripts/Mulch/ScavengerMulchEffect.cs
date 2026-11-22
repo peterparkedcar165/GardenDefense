@@ -2,6 +2,8 @@ public class ScavengerMulchEffect : MulchEffect
 {
     private readonly ScavengerMulchData typedData;
     private float applied;
+    // mulches its plant's kills dropped this level (their own drop rolls, not the wave's guaranteed one)
+    private int drops;
 
     public ScavengerMulchEffect(ScavengerMulchData data, MulchItem item) : base(item)
     {
@@ -20,4 +22,11 @@ public class ScavengerMulchEffect : MulchEffect
         if (Owner != null) Owner.mulchDropRate -= applied;
         applied = 0f;
     }
+
+    public override void OnKillDrop(MulchItem item, bool fromChance)
+    {
+        if (fromChance) drops++;
+    }
+
+    public override string GetStatus() => $"Mulches its kills dropped: {drops}";
 }

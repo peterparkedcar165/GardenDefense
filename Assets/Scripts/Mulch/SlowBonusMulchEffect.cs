@@ -6,6 +6,8 @@ public class SlowBonusMulchEffect : MulchEffect
 {
     private readonly SlowBonusMulchData typedData;
     private float applied;
+    // slows its plant made this level while it was on (MulchManager.SlowBonusFrom counts them)
+    private int slows;
 
     public SlowBonusMulchEffect(SlowBonusMulchData data, MulchItem item) : base(item)
     {
@@ -24,4 +26,8 @@ public class SlowBonusMulchEffect : MulchEffect
         if (Owner != null) Owner.mulchSlowBonus -= applied;
         applied = 0f;
     }
+
+    public void CountSlow() => slows++;
+
+    public override string GetStatus() => $"Slows made stronger: {slows}";
 }

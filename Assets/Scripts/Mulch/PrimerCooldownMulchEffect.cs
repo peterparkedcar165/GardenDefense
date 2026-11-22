@@ -4,6 +4,11 @@ public class PrimerCooldownMulchEffect : MulchEffect
 {
     private readonly PrimerCooldownMulchData typedData;
     private float applied;
+    // primers it shortened this level and the seconds it cut (MulchManager.PrimerCooldown counts them)
+    private int primers;
+    private float cut;
+
+    public float Applied => applied;
 
     public PrimerCooldownMulchEffect(PrimerCooldownMulchData data, MulchItem item) : base(item)
     {
@@ -22,4 +27,12 @@ public class PrimerCooldownMulchEffect : MulchEffect
         if (Owner != null) Owner.mulchPrimerCooldownReduction -= applied;
         applied = 0f;
     }
+
+    public void CountPrimer(float seconds)
+    {
+        primers++;
+        cut += seconds;
+    }
+
+    public override string GetStatus() => $"Primer cooldowns cut: {primers} ({cut:0.#}s in all)";
 }

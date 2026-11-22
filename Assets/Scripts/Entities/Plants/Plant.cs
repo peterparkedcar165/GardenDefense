@@ -1313,6 +1313,16 @@ public abstract class Plant : Entity, IAttackable
     // retry) - called once per level load, see ProceduralLevel.Start
     public static void ResetPendingExpForNewLevel() => pendingLevelExp.Clear();
 
+    // the exp a plant type has earned this level so far, banked or still on its plants (wisdom
+    // leaf's tooltip). wisdom leaf itself is only added at level end
+    public static int LevelExpSoFar(string plantName)
+    {
+        pendingLevelExp.TryGetValue(plantName, out int total);
+        foreach (Plant plant in allPlants)
+            if (plant != null && plant.data != null && plant.data.plantName == plantName) total += plant.exp;
+        return total;
+    }
+
     // banks this plant's session exp into pendingLevelExp, staged until the level is actually won
     private void BankExp()
     {

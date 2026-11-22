@@ -6,6 +6,8 @@ public class ThornsMulchEffect : MulchEffect
 
     private readonly ThornsMulchData typedData;
     private bool listening;
+    // what its thorns took off insects this level
+    private float dealt;
 
     public ThornsMulchEffect(ThornsMulchData data, MulchItem item) : base(item)
     {
@@ -26,6 +28,8 @@ public class ThornsMulchEffect : MulchEffect
         Entity.OnEntityHit -= HandleHit;
     }
 
+    public override string GetStatus() => $"Thorns damage dealt: {dealt:0}";
+
     private void HandleHit(EntityEventData hit)
     {
         if (!OwnerAlive || hit.target != Owner || hit.source is not Insect attacker || !attacker.IsAlive) return;
@@ -34,6 +38,6 @@ public class ThornsMulchEffect : MulchEffect
         // prick the attacker
         if (!Entity.HasTag(hit.tags, DamageTag.Attack) || !Entity.HasTag(hit.tags, DamageTag.Melee)
             || Entity.HasTag(hit.tags, DamageTag.DoT) || hit.damageType != DamageType.Physical) return;
-        attacker.Damage(V(typedData.damage), DamageType.True, ElementalType.Neutral, Owner, false, ThornTags);
+        dealt += DealDamage(attacker, V(typedData.damage), DamageType.True, ElementalType.Neutral, Owner, ThornTags);
     }
 }

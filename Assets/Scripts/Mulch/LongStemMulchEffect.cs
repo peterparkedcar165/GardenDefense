@@ -21,4 +21,12 @@ public class LongStemMulchEffect : MulchEffect
         if (Owner != null) PlantStatApplier.Apply(Owner, StatType.AttackRange, -applied);
         applied = 0f;
     }
+
+    // its plant's range now, and without it (Entity.UpdateStats with its part taken out)
+    public override string GetStatus()
+    {
+        if (Owner == null) return null;
+        float without = Owner.attackRange - Owner.baseAttackRange * applied * Owner.attackRangeTotalMultiplier;
+        return $"Attack Range: {Owner.attackRange:0.0#} ({without:0.0#} without it)";
+    }
 }

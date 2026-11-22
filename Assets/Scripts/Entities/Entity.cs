@@ -71,6 +71,8 @@ public struct EntityEventData
     // Entity.Heal()'s own tags parameter, see StatusEffect.HealTarget for how an effect gets
     // HealTag.Regeneration attached automatically
     public HealTag[] healTags;
+    // the hit or heal was a critical one (Damage and Heal set it; mulch tooltips count crits)
+    public bool isCrit;
 }
 
 public abstract class Entity : MonoBehaviour
@@ -844,7 +846,7 @@ public abstract class Entity : MonoBehaviour
         // without the attack tag (Tommy, 2026-11-21)
         if (source.lifesteal > 0f && System.Array.Exists(damageTag, t => t == DamageTag.Attack)
             && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
-            source.Heal(finalDamage * source.lifesteal);
+            source.Heal(finalDamage * source.lifesteal, null, LifestealHealTags);
 
         // damage indicator
 
@@ -859,7 +861,7 @@ public abstract class Entity : MonoBehaviour
         // amount carries the raw PRE-mitigation damage (damageDealt as it stood right before
         // armor/resistance reduced it to finalDamage) - see the non-sourced overload above for
         // the full rationale
-        var evtData = new EntityEventData { target = this, source = source, position = transform.position, damage = finalDamage, amount = damageDealt, damageType = damageType, elementalType = elementalType, tags = damageTag };
+        var evtData = new EntityEventData { target = this, source = source, position = transform.position, damage = finalDamage, amount = damageDealt, damageType = damageType, elementalType = elementalType, tags = damageTag, isCrit = isCrit };
         if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
             OnHit?.Invoke(evtData);
         OnEntityHit?.Invoke(evtData);
@@ -917,11 +919,14 @@ public abstract class Entity : MonoBehaviour
         // healed plant for the healer - see Plant.RegisterHeal/RecentHealers
         if (this is Plant healedPlant && source is Plant healSource)
             healedPlant.RegisterHeal(healSource);
-        OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual, healTags = tags });
+        OnHeal?.Invoke(new EntityEventData { target = this, source = source, position = transform.position, damage = actual, amount = actual, healTags = tags, isCrit = isCrit });
         UpdateHealthBar();
         HealIndicator.Spawn(GetIndicatorPosition(), actual, isCrit);
         HealParticleEffect.Spawn(this, GetVisualCenter(), actual);
     }
+
+    // a lifesteal heal is tagged so lifesap's tooltip can count it
+    private static readonly HealTag[] LifestealHealTags = { HealTag.Lifesteal };
 
     // shared by Heal() above and any mulch/effect that needs to check a heal's own tags
     public static bool HasHealTag(HealTag[] tags, HealTag tag)

@@ -4,4 +4,6 @@
 public enum HealTag
 {
     Regeneration,
+    // the heal an attack's lifesteal gives its attacker (Entity.Damage)
+    Lifesteal,
 }

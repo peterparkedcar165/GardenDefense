@@ -12,6 +12,8 @@ public class DroughtMulchEffect : MulchEffect
     private float elapsed;
     private float applied;
     private bool over;
+    // the sun its after bonus added once the drought was over
+    private float extra;
 
     public DroughtMulchEffect(DroughtMulchData data, MulchItem item) : base(item)
     {
@@ -34,8 +36,17 @@ public class DroughtMulchEffect : MulchEffect
 
     public override string GetStatus()
     {
-        if (over) return $"Drought over: {V(typedData.afterSunMultiplier) * 100f:0}% Sun";
+        if (over) return $"Drought over: {V(typedData.afterSunMultiplier) * 100f:0}% Sun\nExtra Sun made: {extra:0}";
         return $"Drought: {Mathf.Max(0f, typedData.haltDuration - elapsed):0}s left";
+    }
+
+    // GenerateSun banks amount times 1 + every production bonus on the plant; this copy's part is
+    // applied over that
+    public override void OnSunGenerated(int amount, bool fromKill)
+    {
+        if (!over || Owner == null || amount <= 0 || applied <= 0f) return;
+        float factor = 1f + Owner.mulchSunProductionBonus;
+        if (factor > 0f) extra += amount * applied / factor;
     }
 
     private IEnumerator Run()

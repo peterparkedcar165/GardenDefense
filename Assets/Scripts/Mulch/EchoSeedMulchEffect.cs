@@ -18,6 +18,8 @@ public class EchoSeedMulchEffect : MulchEffect
     private readonly EchoSeedMulchData typedData;
     private bool listening;
     private int attacks;
+    // attacks it echoed this level
+    private int echoes;
     private int lastAttackFrame = -1;
     private int echoFrame = -1;
     private bool echoing;
@@ -51,7 +53,8 @@ public class EchoSeedMulchEffect : MulchEffect
     {
         int every = Mathf.Max(1, VI(typedData.everyAttacks));
         int left = every - attacks % every;
-        return left == every ? "Next attack: normal" : $"Echo in {left} {(left == 1 ? "attack" : "attacks")}";
+        string next = left == every ? "Next attack: normal" : $"Echo in {left} {(left == 1 ? "attack" : "attacks")}";
+        return $"{next}\nEchoed attacks: {echoes}";
     }
 
     private void HandleHit(EntityEventData hit)
@@ -65,6 +68,7 @@ public class EchoSeedMulchEffect : MulchEffect
             int every = Mathf.Max(1, VI(typedData.everyAttacks));
             if (attacks % every == 0)
             {
+                echoes++;
                 echoFrame = frame;
                 echoTargets.Clear();
             }

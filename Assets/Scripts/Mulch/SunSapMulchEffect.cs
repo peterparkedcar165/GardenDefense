@@ -8,6 +8,8 @@ public class SunSapMulchEffect : MulchEffect
     private readonly SunSapMulchData typedData;
     private Coroutine routine;
     private float timer;
+    // sun it made this level
+    private int made;
 
     public SunSapMulchEffect(SunSapMulchData data, MulchItem item) : base(item)
     {
@@ -22,7 +24,7 @@ public class SunSapMulchEffect : MulchEffect
 
     public override void Deactivate() => StopOnOwner(ref routine);
 
-    public override string GetStatus() => $"Next {SunAmount} Sun in {Mathf.Max(0f, Interval - timer):0}s";
+    public override string GetStatus() => $"Sun made: {made}\nNext {SunAmount} Sun in {Mathf.Max(0f, Interval - timer):0}s";
 
     private int SunAmount => VI(typedData.sunAmount);
     private float Interval => V(typedData.interval);
@@ -48,7 +50,8 @@ public class SunSapMulchEffect : MulchEffect
     private void Tick()
     {
         if (!OwnerAlive) return;
-        int made = Owner.GenerateSun(SunAmount);
-        if (made > 0) SunGenerationParticleEffect.Spawn(Owner.transform.position, made, 0.5f);
+        int batch = Owner.GenerateSun(SunAmount);
+        made += batch;
+        if (batch > 0) SunGenerationParticleEffect.Spawn(Owner.transform.position, batch, 0.5f);
     }
 }

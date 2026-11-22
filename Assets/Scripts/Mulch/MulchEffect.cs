@@ -44,9 +44,25 @@ public abstract class MulchEffect
     // glowshroom's, rather than the plant's own production
     public virtual void OnSunGenerated(int amount, bool fromKill) {}
 
+    // a mulch dropped from an insect Owner killed: fromChance for a kill's own drop roll (not bad
+    // luck protection), false for the wave's guaranteed one
+    public virtual void OnKillDrop(MulchItem item, bool fromChance) {}
+
     // a short live line for tooltips and the active effects window (G), like waves left. null when
-    // the description already says everything
+    // the description already says everything. since 2026-11-22 (Tommy) every mulch that does
+    // something with numbers also shows its impact here, running totals for the level like the
+    // damage its splash dealt, one per line
     public virtual string GetStatus() => null;
+
+    // damage through the normal path, returning what it took off the target's health, for the
+    // running totals
+    protected static float DealDamage(Entity target, float amount, DamageType type, ElementalType element, Entity source, DamageTag[] tags)
+    {
+        if (target == null) return 0f;
+        float before = target.health;
+        target.Damage(amount, type, element, source, false, tags);
+        return Mathf.Max(0f, before - Mathf.Max(0f, target.health));
+    }
 
     // a number at this copy's rarity
     protected float V(TierValue value) => value.Get(Rarity);

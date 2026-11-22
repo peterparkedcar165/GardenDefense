@@ -10,6 +10,8 @@ public class SolarFlareMulchEffect : MulchEffect
     private static readonly DamageTag[] FlareTagsNoPrimer = { DamageTag.AoE, DamageTag.PassiveDamage, DamageTag.NoPrimer, DamageTag.ElementalDebuff };
 
     private readonly SolarFlareMulchData typedData;
+    // what its flares took off insects this level
+    private float dealt;
 
     public SolarFlareMulchEffect(SolarFlareMulchData data, MulchItem item) : base(item)
     {
@@ -17,6 +19,8 @@ public class SolarFlareMulchEffect : MulchEffect
     }
 
     public override void Activate() {}
+
+    public override string GetStatus() => $"Flare damage dealt: {dealt:0}";
     public override void Deactivate() {}
 
     public override void OnSunGenerated(int amount, bool fromKill)
@@ -35,7 +39,7 @@ public class SolarFlareMulchEffect : MulchEffect
         {
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(center, insect.transform.position) > radius) continue;
-            insect.Damage(damage, typedData.damageType, element, Owner, false, tags);
+            dealt += DealDamage(insect, damage, typedData.damageType, element, Owner, tags);
         }
     }
 }
