@@ -22,4 +22,4 @@ MonoBehaviour:
     minWave: 0
     maxWave: 0
     orAlternatives: []
-  sunAmount: 50
+  sunAmount: 60
