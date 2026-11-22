@@ -135,9 +135,15 @@ public class StatsPanelTooltip : MonoBehaviour
 
     private void BuildCore(Entity e)
     {
-        // attack damage, armor, and (plant: attack speed/range | insect: movement speed/magic
-        // armor) show in the icon row above (QuickStatRow) - not duplicated here
+        // the icon row above (QuickStatRow) shows a few of these too; this list has them all (Tommy,
+        // 2026-11-22), with the same number formats as the icon row
         ElemLine(HealCol, "Max Health:", $"{e.maxHealth:F0}", e.maxHealth, e.baseMaxHealth);
+        Line("Attack Damage:", $"{e.attackDamage:F0}", e.attackDamage, e.baseAttackDamage);
+        Line("Attack Speed:", $"{e.attackSpeed:F2}", e.attackSpeed, e.baseAttackSpeed);
+        Line("Attack Range:", $"{e.attackRange:F1}", e.attackRange, e.baseAttackRange);
+        if (e is Insect mover)
+            Line("Movement Speed:", $"{mover.movementSpeed:F2}", mover.movementSpeed, mover.baseMovementSpeed);
+        Blank();
         ElemLine(Crit, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
         ElemLine(Crit, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
         Blank();
@@ -146,9 +152,8 @@ public class StatsPanelTooltip : MonoBehaviour
         Blank();
         ElemLine(Magic, "Magic Power:", $"{e.magicPower:F0}", e.magicPower, e.baseMagicPower);
         Blank();
-        // Armor shows in the icon row for both plants and insects; Magic Armor only for insects
-        if (e is Plant)
-            Line("<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
+        ElemLine(Physical, "Armor:", $"{e.armor}", e.armor, e.baseArmor);
+        Line("<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
         Blank();
         ElemLine(Physical, "Armor Penetration:", $"{e.armorPenFlat:F0}",           e.armorPenFlat,    e.baseArmorPenFlat);
         ElemLine(Physical, "Armor Shred:",       $"{e.armorPenPercent * 100:F0}%", e.armorPenPercent, e.baseArmorPenPercent);
