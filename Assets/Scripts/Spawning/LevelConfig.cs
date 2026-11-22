@@ -14,19 +14,6 @@ public class LevelConfig : ScriptableObject
     [Tooltip("highest upgrade level plants can reach in this level")]
     public int maxUpgradeLevel = 5;
 
-    [Header("difficulty")]
-    [Tooltip("every insect's health and starting shield in this level is multiplied by this, on top of the usual " +
-        "growth per wave. 1 = as designed, 0.85 = 15% less (minions aren't touched)")]
-    public float insectHealthMultiplier = 1f;
-    [Tooltip("waves up to and including this one use the early multiplier below instead (0 = none)")]
-    public int earlyWaves = 0;
-    [Tooltip("insect health multiplier for the early waves, used instead of the one above")]
-    public float earlyInsectHealthMultiplier = 1f;
-
-    // what an insect spawned in this wave gets its health and shield multiplied by
-    public float InsectHealthMultiplier(int wave) =>
-        Mathf.Max(0f, wave > 0 && wave <= earlyWaves ? earlyInsectHealthMultiplier : insectHealthMultiplier);
-
     [Header("wave duration")]
     [Tooltip("duration in seconds of the very first wave")]
     public float minWaveDuration = 20f;
