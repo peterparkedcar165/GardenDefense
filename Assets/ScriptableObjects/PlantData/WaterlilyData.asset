@@ -120,7 +120,7 @@ MonoBehaviour:
   projectileRiseDuration: 0.3
   projectileLaunchAccelDuration: 0.6
   projectileGroundAimHeight: 0.4
-  path1AttackDamagePerLevel: 2
+  path1AttackDamagePerLevel: 3
   path1AttackRangePerLevel: 0.2
   path1SplashTargetsPerLevel: 1
   maxSoakStunDuration: 0.5

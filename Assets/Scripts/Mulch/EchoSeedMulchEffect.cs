@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -6,7 +7,9 @@ using UnityEngine;
 // an attack is counted from the plant's Attack tagged hits (Entity.OnHit), several hits in the same
 // frame (a splash, a multi target attack) being one attack. debuffs the hit put on before or after
 // its damage in that frame both count. primers aren't doubled, so reactions don't cascade
-// (proposal: Tommy's rule is "applies its on hit effects twice")
+// (proposal: Tommy's rule is "applies its on hit effects twice"). the plant's other on hit effects
+// (waterlily's splash, Plant.RepeatOnHitEffects) happen again repeatDelay seconds later
+// (Tommy, 2026-11-22: splash twice, with a little delay)
 public class EchoSeedMulchEffect : MulchEffect
 {
     private static readonly MethodInfo CloneMethod =
@@ -72,6 +75,21 @@ public class EchoSeedMulchEffect : MulchEffect
         if (recordFrame == frame)
             foreach (StatusEffect effect in new List<StatusEffect>(recorded))
                 if (effect != null && effect.target == hit.target) Echo(effect);
+
+        // the rest of its on hit effects (waterlily's splash) again, a moment later
+        Insect insect = (Insect)hit.target;
+        StartOnOwner(RepeatLater(insect, hit.position, insect.GetAimPoint()));
+    }
+
+    private IEnumerator RepeatLater(Insect target, Vector3 groundPoint, Vector3 aimPoint)
+    {
+        float delay = Mathf.Max(0f, typedData.repeatDelay);
+        if (delay > 0f) yield return new WaitForSeconds(delay);
+        if (!listening || !OwnerAlive) yield break;
+        // the debuffs the repeat puts on are its own second application, not echoed again
+        echoing = true;
+        try { Owner.RepeatOnHitEffects(target, groundPoint, aimPoint); }
+        finally { echoing = false; }
     }
 
     private void HandleEffect(StatusEffect effect)

@@ -1205,6 +1205,11 @@ public abstract class Plant : Entity, IAttackable
 
     public virtual void ActivateSkill() {}
 
+    // an echo seed repeating one of this plant's attacks: the on hit effects that aren't debuffs
+    // (waterlily's splash) happen again. the mulch repeats the debuffs itself. target can be dead or
+    // gone by now, groundPoint and aimPoint are where it was when the attack hit
+    public virtual void RepeatOnHitEffects(Insect target, Vector3 groundPoint, Vector3 aimPoint) {}
+
     // every caller (UI button/hotkey, auto-cast plants) should call this instead of ActivateSkill()
     // directly, so the skill sound plays uniformly regardless of which plant/path triggers it -
     // ActivateSkill() itself stays the per-plant override point for the actual skill behaviour

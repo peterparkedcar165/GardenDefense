@@ -5,6 +5,8 @@ public class EchoSeedMulchData : MulchData
 {
     [Tooltip("every this many attacks, the attack's on hit effects land twice")]
     public TierValue everyAttacks = new TierValue(4f, 3f, 2f);
+    [Tooltip("seconds after the attack that its on hit effects that aren't debuffs (waterlily's splash) happen again. debuffs land again at once")]
+    public float repeatDelay = 0.2f;
 
     public override MulchEffect CreateEffect(MulchItem item) => new EchoSeedMulchEffect(this, item);
 

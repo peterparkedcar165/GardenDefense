@@ -137,7 +137,15 @@ public abstract class Entity : MonoBehaviour
 
     private static void HandleOnHitEffects(EntityEventData data)
     {
-        if (data.source == null || data.target is not Insect insect || !insect.IsAlive) return;
+        if (data.source == null || data.target is not Insect insect) return;
+
+        // Waterlily: her bubble splashes the insects around the one it hit. checked before the
+        // alive check below, so a bubble that kills its target still splashes. a miss never gets
+        // here, so a missed bubble doesn't splash
+        if (data.source is Waterlily waterlily && HasTag(data.tags, DamageTag.Projectile))
+            waterlily.Splash(insect, data.position);
+
+        if (!insect.IsAlive) return;
 
         // fast-attacking sources (Snowdrop, Stargazer) deal reduced on-hit effect damage per hit,
         // so their overall on-hit output doesn't scale with attack speed the way base damage does

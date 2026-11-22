@@ -87,43 +87,15 @@ public class WaterlilyProjectile : Projectile
     }
 
 
+    // the splash is an on hit effect of this hit now (Waterlily.Splash, called from
+    // Entity.HandleOnHitEffects while the damage below lands), so an echo seed can repeat it
     protected override void OnHit(Insect insect) // to change for every plant
     {
 
         insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile});
 
-        Waterlily waterlily = source as Waterlily;
-
-        if (waterlily != null)
-        {
+        if (source is Waterlily waterlily)
             waterlily.ApplyStackingSoak(insect);
-
-            DamageTag[] splashTags = { DamageTag.AoE, DamageTag.PassiveDamage };
-
-            List<Insect> splashTargets = new List<Insect>();
-            foreach (Insect splashedInsect in Insect.allInsects)
-            {
-                if (splashedInsect == null || !splashedInsect.IsAlive || splashedInsect == insect) continue;
-                if (Vector3.Distance(transform.position, splashedInsect.transform.position) <= waterlily.AoERange)
-                    splashTargets.Add(splashedInsect);
-            }
-
-            // splash only hits the nearest N insects (2 base, +1 per attack path level), the
-            // main target above is unaffected by this cap, it always takes full damage
-            int maxSplashTargets = waterlily.SplashTargets;
-            if (splashTargets.Count > maxSplashTargets)
-            {
-                splashTargets.Sort((a, b) =>
-                    Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
-                splashTargets.RemoveRange(maxSplashTargets, splashTargets.Count - maxSplashTargets);
-            }
-
-            foreach (Insect splashedInsect in splashTargets)
-            {
-                splashedInsect.Damage(waterlily.splashDamage, damageType, elementalType, source, true, splashTags);
-                waterlily.ApplyStackingSoak(splashedInsect);
-            }
-        }
     }
 
     protected override void Move()

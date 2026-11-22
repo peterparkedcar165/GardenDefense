@@ -14,6 +14,8 @@ public abstract class Projectile : MonoBehaviour
     // one-shot burst at the point of impact, shared by every projectile - optional, left null for
     // the ones that don't have one yet
     [SerializeField] protected GameObject hitParticlePrefab;
+    // read off the prefab by a plant that plays the same burst again without a projectile (waterlily's repeated splash)
+    public GameObject HitParticlePrefab => hitParticlePrefab;
 
     [Header("Combat")]
     public float projectileDamage, projectileSpeed, maxRange;

@@ -71,6 +71,64 @@ public class Waterlily : Shooter
         insect.ApplyEffect(new SoakedEffect(insect, SoakDuration, Mathf.Max(currentStacks, MaxSoakStacks), this));
     }
 
+    // her bubble's splash, an on hit effect of her attack (Entity.HandleOnHitEffects calls it as the
+    // bubble's damage lands): splash damage and a Soaked stack on the nearest insects around center,
+    // never the insect the bubble hit itself
+    public void Splash(Insect mainTarget, Vector3 center)
+    {
+        DamageTag[] splashTags = { DamageTag.AoE, DamageTag.PassiveDamage };
+
+        List<Insect> splashTargets = new List<Insect>();
+        foreach (Insect splashedInsect in Insect.allInsects)
+        {
+            if (splashedInsect == null || !splashedInsect.IsAlive || splashedInsect == mainTarget) continue;
+            if (Vector3.Distance(center, splashedInsect.transform.position) <= AoERange)
+                splashTargets.Add(splashedInsect);
+        }
+
+        // splash only hits the nearest N insects (2 base, +1 per attack path level), the
+        // main target is unaffected by this cap, it always takes full damage
+        if (splashTargets.Count > SplashTargets)
+        {
+            splashTargets.Sort((a, b) =>
+                Vector3.Distance(center, a.transform.position).CompareTo(Vector3.Distance(center, b.transform.position)));
+            splashTargets.RemoveRange(SplashTargets, splashTargets.Count - SplashTargets);
+        }
+
+        foreach (Insect splashedInsect in splashTargets)
+        {
+            splashedInsect.Damage(splashDamage, damageType, elementalType, this, true, splashTags);
+            ApplyStackingSoak(splashedInsect);
+        }
+    }
+
+    // an echo seed repeating her attack: the hit insect is soaked again and the bubble splashes
+    // again, around where the insect is now (or where it was hit, if it died), with the hit burst
+    // played again so the second splash shows
+    public override void RepeatOnHitEffects(Insect target, Vector3 groundPoint, Vector3 aimPoint)
+    {
+        bool targetHere = target != null && target.IsAlive;
+        Vector3 center = targetHere ? target.transform.position : groundPoint;
+        PlaySplashBurst(targetHere ? target.GetAimPoint() : aimPoint);
+        if (targetHere) ApplyStackingSoak(target);
+        Splash(target, center);
+    }
+
+    // the bubble's own hit burst (off her projectile prefab), fitted to her splash radius like the
+    // bubble fits it (WaterlilyProjectile.ConfigureHitParticles)
+    private void PlaySplashBurst(Vector3 position)
+    {
+        if (projectilePrefab == null) return;
+        Projectile bubble = projectilePrefab.GetComponent<Projectile>();
+        if (bubble == null || bubble.HitParticlePrefab == null) return;
+
+        GameObject obj = Instantiate(bubble.HitParticlePrefab, position, Quaternion.identity);
+        ParticleSystem ps = obj.GetComponent<ParticleSystem>();
+        if (ps != null) ParticleRadiusFit.FitBurstToRadius(ps, AoERange, ps.main.startLifetime.constantMax);
+        float lifetime = ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f;
+        Destroy(obj, lifetime);
+    }
+
     protected override void Awake()
     {
         base.Awake();
