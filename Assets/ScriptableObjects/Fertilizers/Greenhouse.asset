@@ -16,7 +16,7 @@ MonoBehaviour:
   description: 
   icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
   elementalType: 2
-  disabled: 1
+  disabled: 0
   condition:
     requiredElementGroups: []
     requiredPlantGroups: []

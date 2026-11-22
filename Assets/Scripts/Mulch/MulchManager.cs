@@ -58,11 +58,15 @@ public class MulchManager : MonoBehaviour
         guaranteedHandled.Clear();
         lastExit.Clear();
         MulchDrop.ClearAll();
+        DroughtMulchEffect.ResetClock();
         MulchInventoryUI.Ensure();
         RaiseChanged();
     }
 
     public static void RaiseChanged() => OnChanged?.Invoke();
+
+    // the level's one drought timer runs here, whichever plants carry a drought
+    void Update() => DroughtMulchEffect.TickClock(Time.deltaTime);
 
     // ── inventory ───────────────────────────────────────────────────────────
 
