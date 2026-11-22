@@ -22,10 +22,10 @@ MonoBehaviour:
   baseMagicPower: 0
   baseAttackSpeed: 0.5
   baseAttackRange: 0.3
-  baseMovementSpeed: 0.4
+  baseMovementSpeed: 0.3
   baseTargetingRange: 1
   baseArmor: 23
-  baseMagicArmor: -10
+  baseMagicArmor: -15
   attackDamageType: 0
   attackElementalType: 6
   baseLifesteal: 0
