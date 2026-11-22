@@ -178,6 +178,7 @@
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeLineConnector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\FreezeEffect.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerCard.cs" />
+    <Compile Include="Assets\Scripts\UI\WaveCallBar.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreenhouseFertilizerEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\PlantSelector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SteamEffect.cs" />

@@ -3,78 +3,65 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-// the wave timer bar under the game controls, made a button (Tommy, 2026-11-21): clicking it calls the
-// next wave early (ProceduralLevel.CallNextWave), the way Kingdom Rush does, and the wave already running
-// keeps playing. the call opens at half time or once the field is clear; while it's open the bar's fill
-// pulses, and it lights up under the pointer. hovering shows what calling pays, or when it opens.
+// the wave timer bar under the game controls, made a button like the start and speed buttons
+// (Tommy, 2026-11-21): clicking it calls the next wave early (ProceduralLevel.CallNextWave), the way
+// Kingdom Rush does, and the wave already running keeps playing.
+// - "Skip" sits in the middle of the bar, between the wave number and the countdown: white while a
+//   skip is open (half time, or a clear field), grey while it isn't, hidden when there's no next wave
+// - while a skip is open the fill turns the start button's green, lighter under the pointer and
+//   darker while pressed; otherwise it keeps its blue and ignores the pointer, like a disabled button
+// - pressing drops the whole bar 2 art pixels and does nothing yet; letting go over it calls the wave
 // GameHUD attaches it at runtime to the bar holding the countdown fill
 public class WaveCallBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
-    private Image[] fills;
-    private Color[] fillColors;
-    private RectTransform tip;
-    private TextMeshProUGUI tipText;
-    private bool hovered, pressed;
-    // after a call, the tooltip says what it paid for a moment (real time)
-    private string paidText;
-    private float paidUntil;
+    // canvas units per art pixel
+    private const float Px = 2f;
+    private static readonly Color LabelOff = new Color(0.62f, 0.62f, 0.62f, 1f);
 
-    public static WaveCallBar Attach(RectTransform bar, Image fill, Image shine, TMP_Text styleFrom)
+    private RectTransform rect;
+    private Vector2 restPosition;
+    private Image fill;
+    private Color fillIdle;
+    private TMP_Text label;
+    private bool labelPlaced;
+    private bool hovered, pressed;
+
+    public static WaveCallBar Attach(RectTransform bar, Image fill, TMP_Text labelTemplate)
     {
         if (bar == null) return null;
         WaveCallBar call = bar.GetComponent<WaveCallBar>();
         if (call == null) call = bar.gameObject.AddComponent<WaveCallBar>();
-        call.Build(fill, shine, styleFrom);
+        call.Build(fill, labelTemplate);
         return call;
     }
 
-    private void Build(Image fill, Image shine, TMP_Text styleFrom)
+    private void Build(Image barFill, TMP_Text labelTemplate)
     {
-        // the bar's frame catches the pointer; the texts and fill inside it pass it on
+        rect = (RectTransform)transform;
+        restPosition = rect.anchoredPosition;
+        // the bar's frame catches the pointer; the fill and texts inside it don't
         Image frame = GetComponent<Image>();
         if (frame != null) frame.raycastTarget = true;
-        fills = new[] { fill, shine };
-        fillColors = new Color[fills.Length];
-        for (int i = 0; i < fills.Length; i++)
-            if (fills[i] != null) fillColors[i] = fills[i].color;
+        fill = barFill;
+        if (fill != null) fillIdle = fill.color;
 
-        if (tip != null) return;
-        GameObject tipGO = new GameObject("WaveCallTip", typeof(RectTransform));
-        tipGO.transform.SetParent(transform, false);
-        tip = (RectTransform)tipGO.transform;
-        tip.anchorMin = tip.anchorMax = new Vector2(0.5f, 1f);
-        tip.pivot = new Vector2(0.5f, 0f);
-        tip.anchoredPosition = new Vector2(0f, 8f);
-        Image back = tipGO.AddComponent<Image>();
-        back.color = new Color(0.08f, 0.09f, 0.08f, 0.92f);
-        back.raycastTarget = false;
-        HorizontalLayoutGroup pad = tipGO.AddComponent<HorizontalLayoutGroup>();
-        pad.padding = new RectOffset(12, 12, 8, 8);
-        pad.childControlWidth = pad.childControlHeight = true;
-        pad.childForceExpandWidth = pad.childForceExpandHeight = false;
-        ContentSizeFitter fit = tipGO.AddComponent<ContentSizeFitter>();
-        fit.horizontalFit = fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-        GameObject textGO = new GameObject("Text", typeof(RectTransform));
-        textGO.transform.SetParent(tip, false);
-        tipText = textGO.AddComponent<TextMeshProUGUI>();
-        if (styleFrom != null)
+        // "Skip": a copy of the wave number text, so it has the same font, size and outline
+        if (label == null && labelTemplate != null)
         {
-            tipText.font = styleFrom.font;
-            tipText.fontSize = styleFrom.fontSize;
+            GameObject copy = Instantiate(labelTemplate.gameObject, transform, false);
+            copy.name = "SkipLabel";
+            label = copy.GetComponent<TMP_Text>();
+            label.raycastTarget = false;
+            label.text = "Skip";
+            copy.SetActive(false);
         }
-        tipText.color = Color.white;
-        tipText.alignment = TextAlignmentOptions.Center;
-        tipText.textWrappingMode = TextWrappingModes.NoWrap;
-        tipText.raycastTarget = false;
-        tipGO.SetActive(false);
     }
 
     private void OnDisable()
     {
         hovered = pressed = false;
-        if (tip != null) tip.gameObject.SetActive(false);
-        Tint(0f);
+        if (rect != null) rect.anchoredPosition = restPosition;
+        if (fill != null) fill.color = fillIdle;
     }
 
     public void OnPointerEnter(PointerEventData eventData) => hovered = true;
@@ -90,56 +77,43 @@ public class WaveCallBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (eventData.button == PointerEventData.InputButton.Left) pressed = false;
     }
 
+    // Unity sends the click on release, only when the pointer is still over the bar it pressed
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button != PointerEventData.InputButton.Left) return;
         ProceduralLevel level = ProceduralLevel.Instance;
-        if (level == null) return;
-        int sun = level.CallSunReward;
-        float cut = level.CallCooldownCut;
-        int calling = level.NextWaveNumber;
-        if (!level.CallNextWave()) return;
-        if (GameManager.instance != null && GameManager.instance.plantSelect != null)
-            GameManager.instance.PlaySound(GameManager.instance.plantSelect);
-        paidText = $"<b>Wave {calling} called</b>\n<color=#FFD700>+{sun} Sun</color>, skills {Mathf.FloorToInt(cut)}s faster";
-        paidUntil = Time.unscaledTime + 1.6f;
+        if (level == null || !level.CallNextWave()) return;
+        if (GameManager.instance != null && GameManager.instance.buttonClick != null)
+            GameManager.instance.PlaySound(GameManager.instance.buttonClick);
     }
 
     private void Update()
     {
         ProceduralLevel level = ProceduralLevel.Instance;
-        bool open = level != null && level.CanCallNextWave;
-        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 4f);
-        Tint(!open ? 0f : pressed ? 0.5f : hovered ? 0.35f : 0.1f + 0.15f * pulse);
+        bool hasNext = level != null && level.HasNextWave;
+        bool ready = hasNext && level.CanCallNextWave;
+        bool down = pressed && ready;
+        bool over = hovered && ready;
 
-        string text = TipText(level, open);
-        bool show = text != null;
-        if (tip != null && tip.gameObject.activeSelf != show) tip.gameObject.SetActive(show);
-        if (show && tipText.text != text) tipText.text = text;
-    }
-
-    private string TipText(ProceduralLevel level, bool open)
-    {
-        if (paidText != null && Time.unscaledTime < paidUntil) return paidText;
-        paidText = null;
-        if (!hovered || level == null || !level.HasNextWave) return null;
-        if (open)
-            return $"<b>Call wave {level.NextWaveNumber} now</b>\n<color=#FFD700>+{level.CallSunReward} Sun</color>, " +
-                $"skills {Mathf.FloorToInt(level.CallCooldownCut)}s faster";
-        return $"<b>Call wave {level.NextWaveNumber} early</b>\nOpens in {Mathf.CeilToInt(level.SecondsToHalfTime)}s, " +
-            "or once the field is clear";
-    }
-
-    // lightens the fill toward white by this much (0 is its own colour)
-    private void Tint(float amount)
-    {
-        if (fills == null) return;
-        for (int i = 0; i < fills.Length; i++)
+        if (fill != null)
         {
-            if (fills[i] == null) continue;
-            Color c = Color.Lerp(fillColors[i], Color.white, amount);
-            c.a = fillColors[i].a;
-            if (fills[i].color != c) fills[i].color = c;
+            GameControlsStyle.ButtonColors green = GameControlsStyle.Instance.start;
+            Color c = !ready ? fillIdle : down ? green.facePressed : over ? green.faceHover : green.face;
+            if (fill.color != c) fill.color = c;
+        }
+        Vector2 at = restPosition + (down ? new Vector2(0f, -2f * Px) : Vector2.zero);
+        if (rect.anchoredPosition != at) rect.anchoredPosition = at;
+
+        if (label == null) return;
+        if (label.gameObject.activeSelf != hasNext) label.gameObject.SetActive(hasNext);
+        if (!hasNext) return;
+        Color text = ready ? Color.white : LabelOff;
+        if (label.color != text) label.color = text;
+        // centred by its drawn pixels, once the font has drawn it
+        if (!labelPlaced && PixelLayout.Ink(label, Px, out _, out _))
+        {
+            PixelLayout.CentreByInk(label, Px);
+            labelPlaced = true;
         }
     }
 }
