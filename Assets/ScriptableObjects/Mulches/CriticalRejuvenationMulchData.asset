@@ -43,6 +43,9 @@ MonoBehaviour:
       - plant: {fileID: 11400000, guid: 58cc267f928a46a7af490e85136d3b18, type: 2}
         requiredUnlockId: tansy_radiant_aura
         requiredMaxedPath: 0
+      - plant: {fileID: 11400000, guid: 4b98c4a2c9a2fe94e8c59cb56e95bc0c, type: 2}
+        requiredUnlockId: 
+        requiredMaxedPath: 0
     minWave: 0
     maxWave: 0
     orAlternatives: []

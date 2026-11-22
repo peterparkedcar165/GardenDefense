@@ -36,6 +36,7 @@ public class BogIris : Shooter
     // Bogged Barrier: while closed, regen that would overheal becomes a shield instead, capped at
     // this percent of Max Health (see UpdatePassive)
     private const float BoggedBarrierShieldCapPercent = 0.10f;
+    private static readonly HealTag[] RegenTags = { HealTag.Regeneration };
     // Tidal Surge: a Geyser crit knocks insects this much higher (see Geyser.cs), and any assist
     // credit (see Insect.attackerSet) cuts the Skill cooldown by this many seconds
     public const float TidalSurgeCritKnockUpBonus = 0.35f;
@@ -143,9 +144,15 @@ public class BogIris : Shooter
                 // Path2 max removes the out-of-combat requirement: the doubled rate is always active
                 bool doubled = IsPath2Maxed || !IsInCombat;
                 float regenPerTick = RegenPercentPerSecond * (doubled ? 2f : 1f);
-                float healAmount = maxHealth * regenPerTick * (1f + healingReceived) * (1f + healingBonus);
+                // given and received, like the acorn knight's (Tommy, 2026-11-22): she is the healer
+                // and it's tagged regeneration, so Entity.Heal applies her Healing Bonus and Healing
+                // Received once each, rejuvenator boosts it and critical rejuvenation can crit it.
+                // healAmount is what Heal will try to give, before any crit, for the overheal below
+                float baseHeal = maxHealth * regenPerTick;
+                float healAmount = baseHeal * MulchManager.RegenerationReceivedFactor(this)
+                    * (1f + healingReceived) * (1f + healingBonus);
                 float missing = maxHealth - health;
-                Heal(healAmount);
+                Heal(baseHeal, this, RegenTags);
 
                 // Bogged Barrier: whatever portion of this tick's heal would have overhealed
                 // instead tops up a Shield, capped at BoggedBarrierShieldCapPercent of Max Health
