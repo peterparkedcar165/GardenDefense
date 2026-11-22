@@ -22,7 +22,8 @@ public class HealIndicator : TextIndicator
         shrink = false;
         lifetime = 2f;
         tmpText.color     = isCrit ? new Color(0.4f, 1f, 0.4f) : new Color(0.2f, 1f, 0.2f);
-        tmpText.fontStyle = FontStyles.Bold;
+        // a crit heal is italic too, like a crit damage number
+        tmpText.fontStyle = isCrit ? FontStyles.Bold | FontStyles.Italic : FontStyles.Bold;
 
         // same size scaling as DamageIndicator: clamped to a 2.5-3.5 range (cap reached at 250
         // healed), same crit bump
