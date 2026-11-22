@@ -96,12 +96,12 @@ public class WaveCallBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         ProceduralLevel level = ProceduralLevel.Instance;
         if (level == null) return;
         int sun = level.CallSunReward;
-        float skipped = level.SecondsSkipped;
+        float cut = level.CallCooldownCut;
         int calling = level.NextWaveNumber;
         if (!level.CallNextWave()) return;
         if (GameManager.instance != null && GameManager.instance.plantSelect != null)
             GameManager.instance.PlaySound(GameManager.instance.plantSelect);
-        paidText = $"<b>Wave {calling} called</b>\n<color=#FFD700>+{sun} Sun</color>, skills {Mathf.CeilToInt(skipped)}s faster";
+        paidText = $"<b>Wave {calling} called</b>\n<color=#FFD700>+{sun} Sun</color>, skills {Mathf.FloorToInt(cut)}s faster";
         paidUntil = Time.unscaledTime + 1.6f;
     }
 
@@ -125,7 +125,7 @@ public class WaveCallBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (!hovered || level == null || !level.HasNextWave) return null;
         if (open)
             return $"<b>Call wave {level.NextWaveNumber} now</b>\n<color=#FFD700>+{level.CallSunReward} Sun</color>, " +
-                $"skills {Mathf.CeilToInt(level.SecondsSkipped)}s faster";
+                $"skills {Mathf.FloorToInt(level.CallCooldownCut)}s faster";
         return $"<b>Call wave {level.NextWaveNumber} early</b>\nOpens in {Mathf.CeilToInt(level.SecondsToHalfTime)}s, " +
             "or once the field is clear";
     }

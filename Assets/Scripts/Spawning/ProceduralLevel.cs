@@ -33,12 +33,15 @@ public class ProceduralLevel : SpawnManager
 
     // calling the next wave early (Tommy, 2026-11-21): the timer bar starts it now, like Kingdom Rush.
     // the wave already running keeps playing. it pays 1 Sun per SecondsPerSun seconds skipped and
-    // takes the skipped time off every plant's skill cooldown. it opens at half time (the bar half
-    // empty), or earlier once the field is clear after the newest wave began spawning
+    // takes 1 second off every plant's skill cooldown per SecondsPerCooldownSecond skipped (Tommy: 1 per
+    // 2). it opens at half time (the bar half empty), or earlier once the field is clear after the
+    // newest wave began spawning
     public const float SecondsPerSun = 2f;
+    public const float SecondsPerCooldownSecond = 2f;
     public bool HasNextWave => wave >= 1 && wave < config.maxWaves && nextWaveTime > 0f && !float.IsPositiveInfinity(nextWaveTime);
     public float SecondsSkipped => HasNextWave ? Mathf.Max(0f, nextWaveTime - Time.time) : 0f;
     public int CallSunReward => Mathf.FloorToInt(SecondsSkipped / SecondsPerSun);
+    public float CallCooldownCut => SecondsSkipped / SecondsPerCooldownSecond;
     public int NextWaveNumber => wave + 1;
     public bool PastHalfTime => HasNextWave && Time.time - countdownStartTime >= (nextWaveTime - countdownStartTime) * 0.5f;
     public bool FieldClear => newestWaveSpawned > 0 && Insect.allInsects.Count == 0;
@@ -49,11 +52,11 @@ public class ProceduralLevel : SpawnManager
     public bool CallNextWave()
     {
         if (!CanCallNextWave) return false;
-        float skipped = SecondsSkipped;
+        float cut = CallCooldownCut;
         int sun = CallSunReward;
         if (sun > 0) GameManager.instance.AddSun(sun);
         foreach (Plant plant in new List<Plant>(Plant.allPlants))
-            if (plant != null && plant.IsAlive) plant.ReduceSkillCooldown(skipped);
+            if (plant != null && plant.IsAlive) plant.ReduceSkillCooldown(cut);
         callNextWaveRequested = true;
         return true;
     }
