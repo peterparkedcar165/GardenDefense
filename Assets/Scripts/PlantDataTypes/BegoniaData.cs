@@ -33,6 +33,21 @@ public class BegoniaData : PlantData
     public float path3SkillDurationPerLevel = 1f;
     public float path3PrimerCooldownReductionPerLevel = 0.1f;
 
+    [Header("Range Glitter")]
+    [Tooltip("glints that rise and fade all over her attack range while she isn't selected, marking it. empty uses the ground mulches' glint (MulchGlitter)")]
+    public Material rangeGlitterMaterial;
+    [Tooltip("each glint gets a colour between these two")]
+    public Color rangeGlitterColorA = new Color(0.31f, 0.76f, 0.97f);
+    public Color rangeGlitterColorB = new Color(0.70f, 0.90f, 0.99f);
+    [Tooltip("glints per second for each square unit of her range, so a bigger range isn't thinner")]
+    public float rangeGlitterDensity = 0.8f;
+    [Tooltip("seconds a glint lasts, min and max")]
+    public Vector2 rangeGlitterLifetime = new Vector2(1f, 1.6f);
+    [Tooltip("world size of a glint, min and max")]
+    public Vector2 rangeGlitterSize = new Vector2(0.07f, 0.12f);
+    [Tooltip("how fast a glint rises, units per second, min and max")]
+    public Vector2 rangeGlitterRiseSpeed = new Vector2(0.25f, 0.5f);
+
     public override string GetAttackDescription() =>
         "Grows wet flowers around her, applying <color=#4FC3F7><b>Water</b></color> primer to insects in contact with them, reducing its internal cooldown and their <color=green><b>Grass Resistance</b></color>.";
 

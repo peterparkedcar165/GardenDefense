@@ -115,6 +115,7 @@ public class Begonia : Aura
     {
         base.Update();
         UpdateHighlights();
+        UpdateRangeGlitter();
 
         if (float.IsNaN(_grantedAffinity)
             || Mathf.Abs(BlessingAffinity - _grantedAffinity) > BlessingRefreshThreshold
@@ -235,6 +236,106 @@ public class Begonia : Aura
         _highlightedPlants.Clear();
         foreach (Plant p in desired)
             _highlightedPlants.Add(p);
+    }
+
+    // water coloured glints rising and fading all over her attack range while she isn't selected,
+    // marking it (Tommy, 2026-11-22). selected, her range circle shows instead and the glints left
+    // fade out. made in code like the ground mulches' glitter, numbers on BegoniaData
+    private ParticleSystem _rangeGlitter;
+    private bool _rangeGlitterTried;
+    private float _rangeGlitterRadius = -1f;
+
+    private void UpdateRangeGlitter()
+    {
+        if (_rangeGlitter == null && !BuildRangeGlitter()) return;
+        if (Mathf.Abs(attackRange - _rangeGlitterRadius) > 0.001f) FitRangeGlitter();
+
+        bool show = IsAlive && !IsSelected;
+        if (show && !_rangeGlitter.isEmitting) _rangeGlitter.Play();
+        else if (!show && _rangeGlitter.isEmitting) _rangeGlitter.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    private bool BuildRangeGlitter()
+    {
+        if (_rangeGlitterTried) return false;
+        _rangeGlitterTried = true;
+        BegoniaData d = BData;
+        if (d == null) return false;
+
+        Material material = d.rangeGlitterMaterial;
+        if (material == null)
+        {
+            MulchRegistry registry = MulchIcon.Registry;
+            if (registry != null) material = registry.glitterMaterial;
+        }
+        if (material == null) return false;
+
+        GameObject go = new GameObject("RangeGlitter");
+        go.transform.SetParent(transform, false);
+        _rangeGlitter = go.AddComponent<ParticleSystem>();
+        _rangeGlitter.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        ParticleSystem.MainModule main = _rangeGlitter.main;
+        main.loop = true;
+        main.playOnAwake = false;
+        main.duration = 1f;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(d.rangeGlitterLifetime.x, Mathf.Max(d.rangeGlitterLifetime.x, d.rangeGlitterLifetime.y));
+        main.startSpeed = 0f;
+        main.startSize = new ParticleSystem.MinMaxCurve(d.rangeGlitterSize.x, Mathf.Max(d.rangeGlitterSize.x, d.rangeGlitterSize.y));
+        main.startColor = new ParticleSystem.MinMaxGradient(d.rangeGlitterColorA, d.rangeGlitterColorB);
+        main.startRotation = 0f;
+        main.gravityModifier = 0f;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        // her own scale never shrinks the disc, it stays exactly her range
+        main.scalingMode = ParticleSystemScalingMode.Local;
+
+        // spread over the whole disc of her range, around the same point her range is measured from
+        ParticleSystem.ShapeModule shape = _rangeGlitter.shape;
+        shape.enabled = true;
+        shape.shapeType = ParticleSystemShapeType.Circle;
+        shape.radiusThickness = 1f;
+        shape.arc = 360f;
+
+        ParticleSystem.VelocityOverLifetimeModule velocity = _rangeGlitter.velocityOverLifetime;
+        velocity.enabled = true;
+        velocity.space = ParticleSystemSimulationSpace.World;
+        velocity.x = new ParticleSystem.MinMaxCurve(-0.03f, 0.03f);
+        velocity.y = new ParticleSystem.MinMaxCurve(d.rangeGlitterRiseSpeed.x, Mathf.Max(d.rangeGlitterRiseSpeed.x, d.rangeGlitterRiseSpeed.y));
+        velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
+
+        // each glint appears quickly, rises, then fades to nothing
+        ParticleSystem.ColorOverLifetimeModule color = _rangeGlitter.colorOverLifetime;
+        color.enabled = true;
+        Gradient fade = new Gradient();
+        fade.SetKeys(
+            new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+            new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.15f), new GradientAlphaKey(1f, 0.45f), new GradientAlphaKey(0f, 1f) });
+        color.color = fade;
+
+        // drawn where her range circle is (Plants layer, just under the plants)
+        ParticleSystemRenderer renderer = go.GetComponent<ParticleSystemRenderer>();
+        renderer.sharedMaterial = material;
+        renderer.renderMode = ParticleSystemRenderMode.Billboard;
+        renderer.sortingLayerName = "Plants";
+        renderer.sortingOrder = -1;
+        return true;
+    }
+
+    // the disc follows her range, and the rate follows its area so a bigger range isn't sparser
+    private void FitRangeGlitter()
+    {
+        BegoniaData d = BData;
+        _rangeGlitterRadius = attackRange;
+        float radius = Mathf.Max(0.01f, attackRange);
+        float rate = Mathf.Max(0f, d != null ? d.rangeGlitterDensity : 0.8f) * Mathf.PI * radius * radius;
+        float longest = d != null ? Mathf.Max(d.rangeGlitterLifetime.x, d.rangeGlitterLifetime.y) : 1.6f;
+
+        ParticleSystem.ShapeModule shape = _rangeGlitter.shape;
+        shape.radius = radius;
+        ParticleSystem.EmissionModule emission = _rangeGlitter.emission;
+        emission.rateOverTime = rate;
+        ParticleSystem.MainModule main = _rangeGlitter.main;
+        main.maxParticles = Mathf.Clamp(Mathf.CeilToInt(rate * longest * 1.5f) + 4, 8, 500);
     }
 
     protected override void OnDestroy()
