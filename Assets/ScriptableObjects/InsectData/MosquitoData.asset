@@ -66,5 +66,5 @@ MonoBehaviour:
   biteDPS: 12
   biteDuration: 4
   biteHealingReductionPercent: 0.5
-  bloodsuckerHealPerSecond: 12
-  bloodsuckerHealPercent: 0.02
+  bloodsuckerHealPerSecond: 16
+  bloodsuckerHealPercent: 0.01
