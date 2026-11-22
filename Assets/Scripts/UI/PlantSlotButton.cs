@@ -19,6 +19,11 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
     private Plant plant;
     // an empty square's hover text: how a locked slot unlocks (null for an open one)
     private string emptyHint;
+    // the square's own colours, and whether it's darkened for now because the plant can't be afforded
+    private Color iconColor = Color.white;
+    private Color backgroundColor = Color.white;
+    private Color frameColor = Color.white;
+    private bool darkened;
 
     public PlantData Data => data;
 
@@ -30,6 +35,22 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (background != null) background.color = PlantData.ElementBackdropColor(plantData.elementalType);
         if (frame != null) frame.color = PlantData.ElementColor(plantData.elementalType);
         if (sunCostText != null) sunCostText.text = FertilizerManager.GetPlacementCost(data).ToString();
+        if (icon != null) iconColor = icon.color;
+        if (background != null) backgroundColor = background.color;
+        if (frame != null) frameColor = frame.color;
+        darkened = false;
+    }
+
+    // too little Sun for the plant: the whole square darkens, the price stays red (Tommy, 2026-11-22).
+    // affordable, it's drawn as normal
+    private void SetDarkened(bool on)
+    {
+        if (darkened == on) return;
+        darkened = on;
+        Color tint = on ? PlantSlotLook.UnaffordableTint : Color.white;
+        if (icon != null) icon.color = iconColor * tint;
+        if (background != null) background.color = backgroundColor * tint;
+        if (frame != null) frame.color = frameColor * tint;
     }
 
     // an empty square on the bar (Tommy, 2026-11-22): a slot the loadout left open shows the frame
@@ -59,6 +80,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
             sunCostText.text = "MAX";
             sunCostText.fontStyle = FontStyles.Bold;
             sunCostText.color = Color.red;
+            SetDarkened(false);
             return;
         }
         int effectiveCost = FertilizerManager.GetPlacementCost(data);
@@ -67,11 +89,13 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         {
             sunCostText.fontStyle = FontStyles.Bold;
             sunCostText.color = Color.green;
+            SetDarkened(false);
         }
         else
         {
             sunCostText.fontStyle = FontStyles.Normal;
             sunCostText.color = Color.red;
+            SetDarkened(true);
         }
     }
 

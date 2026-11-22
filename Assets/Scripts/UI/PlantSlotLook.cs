@@ -13,6 +13,9 @@ public static class PlantSlotLook
     public static Color LockedTint =>
         PlantInfoPanelStyle.Instance != null ? PlantInfoPanelStyle.Instance.lockedSlotTint : new Color(0.35f, 0.35f, 0.35f, 1f);
 
+    public static Color UnaffordableTint =>
+        PlantInfoPanelStyle.Instance != null ? PlantInfoPanelStyle.Instance.unaffordableSlotTint : new Color(0.45f, 0.45f, 0.45f, 1f);
+
     // a padlock in the middle of the slot, drawn over everything else in it
     public static Image AddPadlock(Transform slot)
     {

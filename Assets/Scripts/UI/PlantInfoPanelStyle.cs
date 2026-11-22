@@ -119,6 +119,8 @@ public class PlantInfoPanelStyle : ScriptableObject
     public Sprite slotPadlock;
     [Tooltip("frame and backdrop of a slot that isn't unlocked yet")]
     public Color lockedSlotTint = new Color(0.35f, 0.35f, 0.35f, 1f);
+    [Tooltip("the whole plant bar square (backdrop, plant and frame) while its plant costs more Sun than the player has")]
+    public Color unaffordableSlotTint = new Color(0.45f, 0.45f, 0.45f, 1f);
 
     [Header("Level bars (the colours the old temperature and oxygen bars had)")]
     public Color oxygen = Hex("#B2EBF2");
