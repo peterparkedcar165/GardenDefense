@@ -50,6 +50,10 @@ public abstract class SpawnManager : MonoBehaviour
         if (insect != null)
         {
             insect.spawnWave = wave;
+            // counted for its wave's guaranteed mulch the moment it exists, not a frame later in its
+            // Start: a wave can now report its spawning done right after its last spawn, and that
+            // last insect must already be counted then (Insect.Start's call does nothing after this)
+            MulchManager.instance?.RegisterInsect(insect);
             insect.SetPath(fullPath);
             OnInsectSpawned(insect);
         }

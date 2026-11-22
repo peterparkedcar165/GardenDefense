@@ -31,6 +31,11 @@ public class MulchDrop : MonoBehaviour
     private SpriteRenderer label;
     private SpriteRenderer symbol;
     private bool bagIcon;
+    // the outline in the rarity's colour (Tommy, 2026-11-22): like a selected plant's (Entity's
+    // highlight), silhouettes of the bag in a ring behind it, thinner, and always on. null: none
+    private SpriteRenderer[] outline;
+    private static Material silhouetteMaterial;
+    private const int OutlineCopies = 8;
     private SpriteRenderer shadow;
     private Vector3 shadowBaseScale;
     private ParticleSystem glitter;
@@ -144,10 +149,38 @@ public class MulchDrop : MonoBehaviour
             Sprite symbolSprite = registry.SymbolSprite(Item.data.symbol);
             if (symbolSprite != null) symbol = AddLayer(NewChild("Symbol"), symbolSprite, 2);
         }
-        ApplyColors();
         float spriteSize = sprite != null ? Mathf.Max(sprite.bounds.size.x, sprite.bounds.size.y) : 1f;
         float scale = spriteSize > 0f ? registry.dropSize / spriteSize : 1f;
         visual.localScale = new Vector3(scale, scale, 1f);
+        BuildOutline(sprite, scale);
+        ApplyColors();
+    }
+
+    // eight silhouettes of the bag, each moved outlineWidth world units in another direction, under
+    // the bag in its sorting group. the visual is scaled, so the offsets are divided by its scale
+    private void BuildOutline(Sprite sprite, float scale)
+    {
+        if (sprite == null || registry.outlineWidth <= 0f) return;
+        if (silhouetteMaterial == null)
+        {
+            Shader shader = Shader.Find("Custom/SpriteSilhouette");
+            if (shader == null) return;
+            silhouetteMaterial = new Material(shader);
+        }
+        float offset = registry.outlineWidth / Mathf.Max(0.0001f, scale);
+        outline = new SpriteRenderer[OutlineCopies];
+        for (int i = 0; i < OutlineCopies; i++)
+        {
+            float angle = i * (360f / OutlineCopies) * Mathf.Deg2Rad;
+            GameObject go = NewChild("Outline");
+            go.transform.localPosition = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * offset;
+            SpriteRenderer copy = go.AddComponent<SpriteRenderer>();
+            copy.sprite = sprite;
+            copy.sharedMaterial = silhouetteMaterial;
+            copy.sortingLayerName = DropLayer;
+            copy.sortingOrder = -1;
+            outline[i] = copy;
+        }
     }
 
     // white glints around the drop, unlit so they shine in the dark. made in code like the ambient
@@ -276,6 +309,8 @@ public class MulchDrop : MonoBehaviour
         body.enabled = visible;
         if (label != null) label.enabled = visible;
         if (symbol != null) symbol.enabled = visible;
+        if (outline != null)
+            foreach (SpriteRenderer copy in outline) copy.enabled = visible;
         shadow.enabled = visible;
         ApplyColors();
     }
@@ -305,6 +340,11 @@ public class MulchDrop : MonoBehaviour
         body.color = Tint(bagIcon ? MulchIcon.BagColor : MulchTierColors.Get(Item.rarity), alpha);
         if (label != null) label.color = Tint(MulchIcon.LabelColor(Item.rarity), alpha);
         if (symbol != null) symbol.color = Tint(MulchIcon.SymbolColor(Item.rarity), alpha);
+        if (outline != null)
+        {
+            Color rim = Tint(MulchTierColors.Get(Item.rarity), alpha);
+            foreach (SpriteRenderer copy in outline) copy.color = rim;
+        }
     }
 
     private static Color Tint(Color c, float alpha) { c.a = alpha; return c; }

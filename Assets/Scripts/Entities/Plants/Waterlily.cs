@@ -132,8 +132,12 @@ public class Waterlily : Shooter
     public override void UpdateStats()
     {
         bool extraTarget = SkillTreeManager.HasUnlock(this, ExtraTargetUnlock);
-        attackDamageTotalMultiplier = extraTarget ? ExtraTargetDamageMultiplier : 1f;
+        // her own factor goes on only while the stats are worked out, then comes back off: setting
+        // the multiplier outright wiped what others put on it (Quick Sap's damage cut)
+        float extraTargetFactor = extraTarget ? ExtraTargetDamageMultiplier : 1f;
+        attackDamageTotalMultiplier *= extraTargetFactor;
         base.UpdateStats();
+        attackDamageTotalMultiplier /= extraTargetFactor;
         if (extraTarget)
             onHitEffectiveness *= 1f - ExtraTargetOnHitReduction;
         // splash is a fixed fraction of the bubble's own damage, no per level or magic power scaling

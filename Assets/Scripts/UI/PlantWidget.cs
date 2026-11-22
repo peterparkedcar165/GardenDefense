@@ -340,13 +340,17 @@ public class PlantWidget : MonoBehaviour
 
         int circleLeft = left - CircleLeftOfBar;
 
-        // mulch squares: a row one pixel above the bar's top border, starting where the bar shows.
-        // the circle's outline covers the bar's first 3 pixels (it ends 6 past the circle's middle),
-        // so the row starts on the first pixel right of it (Tommy, 2026-11-20: it used to start
-        // under the circle)
-        int markerSize = Mathf.Max(1, Style.mulchMarkerSize);
-        int markerStep = markerSize + Mathf.Max(0, Style.mulchMarkerGap);
-        int markerLeft = circleLeft + CircleSize / 2 + CircleVisibleHalf;
+        // mulch squares: a row one pixel above the bar's top border, never under the circle (Tommy,
+        // 2026-11-20). a full plant's squares span the bar (Tommy, 2026-11-22: bigger, as wide as the
+        // health bar), so their size comes from the bar's width: the row starts on the bar's second
+        // pixel, the first one clear of the circle's outline on the row above the bar (the outline
+        // only covers the bar's first 3 pixels lower down), and ends with the bar. a 42 wide bar
+        // gives six 6 pixel squares 1 apart; fewer mulches keep that size, from the left
+        int slots = MulchManager.instance != null ? MulchManager.instance.PlantSlots : 6;
+        int markerGap = Mathf.Max(0, Style.mulchMarkerGap);
+        int markerLeft = left + 1;
+        int markerSize = Mathf.Max(1, (left + width - markerLeft - markerGap * (slots - 1)) / slots);
+        int markerStep = markerSize + markerGap;
         for (int i = 0; i < markerCount && i < mulchMarkers.Count; i++)
             Place(mulchMarkers[i], markerLeft + i * markerStep, top + 1 + markerSize, markerSize, markerSize);
 

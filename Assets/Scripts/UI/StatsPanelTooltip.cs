@@ -37,10 +37,22 @@ public class StatsPanelTooltip : MonoBehaviour
     private readonly StringBuilder _key = new StringBuilder();
     private string lastKey;
 
-    // the panel keeps its right edge (next to the plant panel) while its width follows the text
+    // the panel keeps its right edge (next to the plant panel) while its width follows the text,
+    // and its middle where the prefab put it unless that would put part of it off screen
     private RectTransform _panelRect;
-    private float _rightEdge;
+    private float _rightEdge, _baseY;
     private bool _edgeKnown;
+    private readonly Vector3[] _corners = new Vector3[4];
+    // share of the screen's height the panel may use, and the edge kept free above and below it
+    private const float MaxScreenShare = 0.975f;
+
+    private void Awake()
+    {
+        // every line is laid out by hand (Compose), so the text never wraps. with wrapping on, its
+        // height was measured at the width it had before the panel resized, lines wider than that
+        // counted as wrapped, and the panel came out taller than the stats (Tommy, 2026-11-22)
+        if (statsText != null) statsText.textWrappingMode = TextWrappingModes.NoWrap;
+    }
 
     private string Col(float current, float baseValue, string formatted)
     {
@@ -113,24 +125,49 @@ public class StatsPanelTooltip : MonoBehaviour
     private float Measure(string richText) => statsText.GetPreferredValues(richText).x;
 
     // same pattern as StatusEffectPanel: the panel hugs the text (plus the layout padding) but never
-    // exceeds the screen. width now hugs too, keeping the right edge where the prefab put it
+    // exceeds the screen. width now hugs too, keeping the right edge where the prefab put it. the
+    // limit is in canvas units (the canvas is always 1080 tall), not screen pixels, and a panel that
+    // would reach past the top or bottom of the screen moves in until it fits (Tommy, 2026-11-22:
+    // with every stat listed its top went off screen)
     private void FitPanel()
     {
         if (_panelRect == null) _panelRect = GetComponent<RectTransform>();
         if (!_edgeKnown)
         {
             _rightEdge = _panelRect.anchoredPosition.x + _panelRect.rect.width * (1f - _panelRect.pivot.x);
+            _baseY = _panelRect.anchoredPosition.y;
             _edgeKnown = true;
         }
 
+        RectTransform screen = statsText.canvas != null ? statsText.canvas.rootCanvas.transform as RectTransform : null;
+        float screenHeight = screen != null ? screen.rect.height : Screen.height;
+
         Canvas.ForceUpdateCanvases();
         float width = Mathf.Ceil(statsText.preferredWidth) + Padding;
-        float height = Mathf.Min(statsText.preferredHeight + Padding, Screen.height * 0.975f);
+        float height = Mathf.Min(Mathf.Ceil(statsText.preferredHeight) + Padding, screenHeight * MaxScreenShare);
         _panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
         _panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
-        Vector2 pos = _panelRect.anchoredPosition;
-        pos.x = _rightEdge - width * (1f - _panelRect.pivot.x);
-        _panelRect.anchoredPosition = pos;
+        _panelRect.anchoredPosition = new Vector2(_rightEdge - width * (1f - _panelRect.pivot.x), _baseY);
+        if (screen != null) KeepOnScreen(screen);
+    }
+
+    // moves the panel straight down (or up) by however far it reaches past the screen's top (or
+    // bottom), leaving the same small edge MaxScreenShare leaves
+    private void KeepOnScreen(RectTransform screen)
+    {
+        _panelRect.GetWorldCorners(_corners);
+        float bottom = screen.InverseTransformPoint(_corners[0]).y;
+        float top = screen.InverseTransformPoint(_corners[1]).y;
+        float edge = screen.rect.height * (1f - MaxScreenShare) * 0.5f;
+        float shift = 0f;
+        if (top > screen.rect.yMax - edge) shift = screen.rect.yMax - edge - top;
+        else if (bottom < screen.rect.yMin + edge) shift = screen.rect.yMin + edge - bottom;
+        if (Mathf.Approximately(shift, 0f)) return;
+        // from the screen's units to the units the panel's position is in
+        float scale = _panelRect.parent != null
+            ? screen.lossyScale.y / Mathf.Max(0.0001f, _panelRect.parent.lossyScale.y)
+            : 1f;
+        _panelRect.anchoredPosition += new Vector2(0f, shift * scale);
     }
 
     private void BuildCore(Entity e)

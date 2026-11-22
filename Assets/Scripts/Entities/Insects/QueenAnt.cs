@@ -121,6 +121,8 @@ public class QueenAnt : Ant
             // so it follows the correct route regardless of which spawn lane the queen came from
             ant.SetPath(waypoints);
             ant.currentWaypointIndex = currentWaypointIndex;
+            // the queen's wave (health scaling, the wave's guaranteed mulch), even after a later wave was called
+            ant.spawnWave = spawnWave;
 
             // if the queen herself is hypnotized, her children are born with the same hypnosis.
             // pre-set the team so it is born friendly (no kill rewards), then copy the effect

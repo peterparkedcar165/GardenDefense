@@ -367,7 +367,8 @@ public class MulchManager : MonoBehaviour
     public float KillDropChance(Plant killer) =>
         Registry == null ? 0f : Mathf.Clamp01(Registry.baseDropChance + (killer != null ? Mathf.Max(0f, killer.mulchDropRate) / 100f : 0f));
 
-    // every enemy insect counts under the wave it spawned in (Insect.Start)
+    // every enemy insect counts under the wave it spawned in (SpawnManager.Spawn the moment it's made,
+    // otherwise Insect.Start: companions and a queen's babies)
     public void RegisterInsect(Insect insect)
     {
         if (insect == null || insect.team == Team.Friendly || insect.mulchCounted) return;

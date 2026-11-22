@@ -73,10 +73,8 @@ public class PlantWidgetStyle : ScriptableObject
     public Color enemyDamageChunk = new Color(1f, 0.55f, 0f, 1f);
 
     [Header("Mulch squares")]
-    [Tooltip("widget pixels of each equipped mulch's square, in the row above the health bar. it starts where the " +
-        "bar shows, right of the circle")]
-    [Min(1)] public int mulchMarkerSize = 4;
-    [Tooltip("widget pixels between two squares")]
+    [Tooltip("widget pixels between two squares in the row above the health bar. their size isn't set here: a full " +
+        "plant's squares span the bar, so it comes from barWidth (42 wide, gap 1: six 6 pixel squares)")]
     [Min(0)] public int mulchMarkerGap = 1;
 
     [Header("Skill circle")]

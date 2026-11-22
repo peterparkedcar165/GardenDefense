@@ -52,6 +52,8 @@ public class FruitFly : FlyingInsect
             {
                 // mark as companion before its Start() runs so it won't spawn more companions
                 companion.isCompanion = true;
+                // its parent's wave (health scaling, the wave's guaranteed mulch), even after a later wave was called
+                companion.spawnWave = spawnWave;
                 companion.SetPath(waypoints);
                 companion.currentWaypointIndex = currentWaypointIndex;
             }

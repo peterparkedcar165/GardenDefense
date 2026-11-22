@@ -252,8 +252,13 @@ public class Sunflower : Shooter
 
     public override void UpdateStats()
     {
-        attackDamageTotalMultiplier = IsPath1Maxed ? 0.5f : 1f;
+        // her triple shot halves Attack Damage only while the stats are worked out, then is taken
+        // back off, like Stargazer: setting the multiplier outright wiped what others put on it
+        // (Quick Sap's damage cut never showed on her)
+        float tripleShot = IsPath1Maxed ? 0.5f : 1f;
+        attackDamageTotalMultiplier *= tripleShot;
         base.UpdateStats();
+        attackDamageTotalMultiplier /= tripleShot;
         float dpspl = SFData?.path3SunrayDPSPerLevel ?? 15f;
         sunrayDamagePerSecond = (SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level + skillDamageMultiplier * magicPower;
     }

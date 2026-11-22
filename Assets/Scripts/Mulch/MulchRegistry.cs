@@ -88,6 +88,9 @@ public class MulchRegistry : ScriptableObject
     [Header("drop look")]
     [Tooltip("the drop's own sprite: unlit (Sprite-Unlit-Default), so it shows at full brightness in the dark")]
     public Material spriteMaterial;
+    [Tooltip("world units wide, the outline in the rarity's colour always drawn around a drop (Tommy, 2026-11-22: " +
+        "like a selected plant's, 0.05, a little thinner). 0: no outline")]
+    public float outlineWidth = 0.035f;
     [Tooltip("ground shadow, the same one insects use (Resources/Circle, lit, black at 41%)")]
     public Sprite shadowSprite;
     public Material shadowMaterial;

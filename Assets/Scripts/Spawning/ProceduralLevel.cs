@@ -201,6 +201,9 @@ public class ProceduralLevel : SpawnManager
 
         float waveDuration;
         var streams = new List<Coroutine>();
+        // held at 1 until every spawn stream of this wave is counted, so one that finishes at once
+        // can't report the wave done early (ReleaseSpawnStream below)
+        spawnStreamsLeft[waveNumber] = 1;
         // tracks the latest point (relative to wave start) any insect actually spawns, for the
         // final wave's "time until last insect" HUD countdown
         float lastSpawnOffset = 0f;
@@ -223,6 +226,9 @@ public class ProceduralLevel : SpawnManager
                 for (int i = 0; i < scripted.subWaves.Length; i++)
                 {
                     SubWaveDefinition sub = scripted.subWaves[i];
+                    if (sub.spawns != null)
+                        foreach (WaveSpawnEntry entry in sub.spawns)
+                            if (Spawns(entry)) spawnStreamsLeft[waveNumber]++;
                     streams.Add(StartCoroutine(RunSubWave(sub, cumulativeStart, waveNumber, i + 1)));
                     lastSpawnOffset = Mathf.Max(lastSpawnOffset, cumulativeStart + SubWaveSpawnFinish(sub));
                     cumulativeStart += sub.subWaveDuration;
@@ -232,6 +238,7 @@ public class ProceduralLevel : SpawnManager
             {
                 foreach (TrickleEntry trickle in scripted.trickleSpawns)
                 {
+                    if (Spawns(trickle)) spawnStreamsLeft[waveNumber]++;
                     streams.Add(StartCoroutine(RunTrickle(trickle, waveDuration, waveNumber)));
                     lastSpawnOffset = Mathf.Max(lastSpawnOffset, LastRepeatingSpawnOffset(trickle.startDelay, trickle.interval, waveDuration));
                 }
@@ -256,6 +263,7 @@ public class ProceduralLevel : SpawnManager
             LevelEliteEntry chosenElite = PickWeightedElite(waveNumber);
             if (chosenElite != null)
             {
+                spawnStreamsLeft[waveNumber]++;
                 streams.Add(StartCoroutine(
                     SpawnEliteGroup(chosenElite, waveDuration, t, waveNumber)));
 
@@ -281,6 +289,7 @@ public class ProceduralLevel : SpawnManager
             nextWaveTime = -1f;
             finalWaveSpawnTime = Time.time + lastSpawnOffset;
         }
+        ReleaseSpawnStream(waveNumber);
         yield return new WaitForSeconds(waveDuration);
 
         // stop any streams still running (they self-terminate via elapsed check but
@@ -386,7 +395,7 @@ public class ProceduralLevel : SpawnManager
 
     IEnumerator RunWaveSpawnEntry(WaveSpawnEntry entry, int waveNumber)
     {
-        if (entry.insectData == null || entry.insectData.insectPrefab == null || entry.count <= 0)
+        if (!Spawns(entry))
             yield break;
 
         if (entry.startDelay > 0f)
@@ -398,13 +407,36 @@ public class ProceduralLevel : SpawnManager
             if (i < entry.count - 1)
                 yield return new WaitForSeconds(entry.timeBetweenSpawns);
         }
+        ReleaseSpawnStream(waveNumber);
+    }
+
+    // ── a wave's spawning done ────────────────────────────────────────────────
+
+    // spawn streams (spawn entries, trickles, the elite group) of each wave still to finish. at 0
+    // the wave has spawned its last insect, so its guaranteed mulch can drop the moment its last
+    // insect dies, instead of after the pause that closes the wave (Tommy, 2026-11-22: the mulch
+    // sometimes came late). RunWaveToEnd still reports it at the wave's end in case a stream was cut
+    private readonly Dictionary<int, int> spawnStreamsLeft = new Dictionary<int, int>();
+
+    private static bool Spawns(WaveSpawnEntry entry) =>
+        entry != null && entry.insectData != null && entry.insectData.insectPrefab != null && entry.count > 0;
+
+    private static bool Spawns(TrickleEntry trickle) =>
+        trickle != null && trickle.insectData != null && trickle.insectData.insectPrefab != null;
+
+    private void ReleaseSpawnStream(int waveNumber)
+    {
+        if (!spawnStreamsLeft.TryGetValue(waveNumber, out int left) || left <= 0) return;
+        spawnStreamsLeft[waveNumber] = --left;
+        if (left == 0)
+            MulchManager.instance?.NotifyWaveSpawningDone(waveNumber, waveNumber >= config.maxWaves);
     }
 
     // background spawner: loops for the wave's whole (computed) duration, independent of
     // whatever the scripted sub-waves are doing
     IEnumerator RunTrickle(TrickleEntry trickle, float waveDuration, int waveNumber)
     {
-        if (trickle.insectData == null || trickle.insectData.insectPrefab == null)
+        if (!Spawns(trickle))
             yield break;
 
         if (trickle.startDelay > 0f)
@@ -417,6 +449,7 @@ public class ProceduralLevel : SpawnManager
             yield return new WaitForSeconds(trickle.interval);
             elapsed += trickle.interval;
         }
+        ReleaseSpawnStream(waveNumber);
     }
 
     // ── spawn helpers ─────────────────────────────────────────────────────────
@@ -448,6 +481,7 @@ public class ProceduralLevel : SpawnManager
                     yield return new WaitForSeconds(gap);
             }
         }
+        ReleaseSpawnStream(waveNumber);
     }
 
     // ── SpawnManager overrides ─────────────────────────────────────────────────
