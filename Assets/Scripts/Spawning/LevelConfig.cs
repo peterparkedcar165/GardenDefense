@@ -37,7 +37,8 @@ public class LevelConfig : ScriptableObject
 
     [Header("fertilizers")]
     [Tooltip("the fertilizers this level offers before it starts; the player picks one. one whose " +
-        "loadout condition fails (e.g. melt without fire, water and ice) is left off the screen. " +
+        "loadout condition fails (e.g. melt without fire, water and ice) is left off the screen. the " +
+        "screen always shows 3: a short list is filled from MulchRegistry.fertilizers, never with a weather pick. " +
         "mulches aren't listed anywhere: they drop from insects (MulchRegistry)")]
     public FertilizerData[] fertilizers;
 

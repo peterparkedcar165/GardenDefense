@@ -71,4 +71,5 @@ MonoBehaviour:
   fertilizers:
   - {fileID: 11400000, guid: 777fd61cdf034642a3eee9bb0001921f, type: 2}
   - {fileID: 11400000, guid: 79c0db51ca6d4920890174ffb40882ff, type: 2}
+  - {fileID: 11400000, guid: d821f48f4ef44bb8b4bfb509223b91a2, type: 2}
   ambience: {fileID: 11400000, guid: a4de42a35d3694545b7cbe9faff06683, type: 2}

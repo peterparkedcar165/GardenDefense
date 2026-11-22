@@ -75,22 +75,49 @@ public class FertilizerManager : MonoBehaviour
                 if (plant != null && plant.IsAlive) activeEffect.OnPlantPlaced(plant);
     }
 
-    // a level offers at most this many, fertile start first (Tommy, 2026-11-21)
+    // a level offers exactly this many, fertile start first (Tommy, 2026-11-21: at most 3;
+    // 2026-11-22: always 3)
     public const int MaxOffered = 3;
 
-    // the fertilizers of a level's list the current loadout can use, in list order, at most MaxOffered
+    // the fertilizers of a level's list the current loadout can use, in list order, at most MaxOffered.
+    // when the list comes up short (too short, or melt or rekindling hidden by the loadout) the rest
+    // is filled from every fertilizer (MulchRegistry.fertilizers), so the screen always shows 3
     public static List<FertilizerData> GetOffered(FertilizerData[] list)
     {
         List<PlantData> loadout = GetCurrentLoadout();
         List<FertilizerData> result = new List<FertilizerData>();
-        if (list == null) return result;
-        foreach (FertilizerData data in list)
+        if (list != null)
         {
-            if (result.Count >= MaxOffered) break;
-            if (data != null && !result.Contains(data) && data.IsOffered(loadout)) result.Add(data);
+            foreach (FertilizerData data in list)
+            {
+                if (result.Count >= MaxOffered) break;
+                if (data != null && !result.Contains(data) && data.IsOffered(loadout)) result.Add(data);
+            }
         }
+        if (result.Count < MaxOffered) FillFromRegistry(result, list, loadout);
         return result;
     }
+
+    // the fill walks the registry from a spot set by the level number, so a level always fills the
+    // same way for the same loadout. it skips what the level already lists and every weather pick
+    // (sunny, rainy, snowy day, greenhouse): a fill shouldn't undo a level's weather or darkness
+    private static void FillFromRegistry(List<FertilizerData> result, FertilizerData[] list, List<PlantData> loadout)
+    {
+        MulchRegistry registry = Resources.Load<MulchRegistry>("MulchRegistry");
+        if (registry == null || registry.fertilizers == null || registry.fertilizers.Length == 0) return;
+        FertilizerData[] all = registry.fertilizers;
+        int level = ProceduralLevel.CurrentConfig != null ? Mathf.Max(0, ProceduralLevel.CurrentConfig.levelNumber) : 0;
+        for (int i = 0; i < all.Length && result.Count < MaxOffered; i++)
+        {
+            FertilizerData data = all[(level + i) % all.Length];
+            if (data == null || result.Contains(data) || ChangesWeather(data)) continue;
+            if (list != null && System.Array.IndexOf(list, data) >= 0) continue;
+            if (data.IsOffered(loadout)) result.Add(data);
+        }
+    }
+
+    private static bool ChangesWeather(FertilizerData data) =>
+        data is WeatherFertilizerData || data is GreenhouseFertilizerData;
 
     public static List<PlantData> GetCurrentLoadout()
     {
