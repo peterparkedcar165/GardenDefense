@@ -4,7 +4,7 @@ using UnityEngine;
 public class WisdomLeafMulchData : MulchData
 {
     [Tooltip("extra share of exp this plant's type earns for the level")]
-    public TierValue expBonus = new TierValue(0.1f, 0.2f, 0.3f);
+    public TierValue expBonus = new TierValue(0.1f, 0.2f, 0.4f);
 
     public override MulchEffect CreateEffect(MulchItem item) => new WisdomLeafMulchEffect(this, item);
 

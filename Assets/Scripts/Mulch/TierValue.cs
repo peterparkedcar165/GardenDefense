@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // one number of a mulch at each rarity, set per mulch in the Inspector. the defaults follow
-// Tommy's starting rule (Common x1, Rare x2, Epic x3); every one is meant to be hand tuned later
+// Tommy's rule (Common x1, Rare x2, Epic x4, 2026-11-22; it was x3); every one is meant to be hand tuned later
 [System.Serializable]
 public struct TierValue
 {
@@ -16,8 +16,8 @@ public struct TierValue
         this.epic = epic;
     }
 
-    // the starting rule: Rare is twice Common, Epic three times
-    public static TierValue Scaled(float common) => new TierValue(common, common * 2f, common * 3f);
+    // the rule: Rare is twice Common, Epic four times
+    public static TierValue Scaled(float common) => new TierValue(common, common * 2f, common * 4f);
 
     public float Get(MulchTier rarity) => rarity switch
     {

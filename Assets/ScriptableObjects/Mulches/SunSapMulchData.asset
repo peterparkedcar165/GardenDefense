@@ -21,7 +21,7 @@ MonoBehaviour:
   sunAmount:
     common: 5
     rare: 10
-    epic: 15
+    epic: 20
   interval:
     common: 30
     rare: 25

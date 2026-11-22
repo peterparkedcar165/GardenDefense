@@ -7,7 +7,7 @@ using UnityEngine;
 public class PrimerCooldownMulchData : MulchData
 {
     [Tooltip("seconds taken off the element cooldown an insect gets when this plant puts a primer on it. never below zero")]
-    public TierValue cooldownReduction = new TierValue(2f, 4f, 6f);
+    public TierValue cooldownReduction = new TierValue(2f, 4f, 8f);
 
     public override MulchEffect CreateEffect(MulchItem item) => new PrimerCooldownMulchEffect(this, item);
 

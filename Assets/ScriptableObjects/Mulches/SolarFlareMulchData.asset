@@ -21,7 +21,7 @@ MonoBehaviour:
   damagePercentOfSun:
     common: 2
     rare: 4
-    epic: 6
+    epic: 8
   damageType: 1
   useSourceElement: 1
   fixedElement: 6

@@ -46,4 +46,4 @@ MonoBehaviour:
   dotCritChance:
     common: 0.25
     rare: 0.5
-    epic: 0.75
+    epic: 1

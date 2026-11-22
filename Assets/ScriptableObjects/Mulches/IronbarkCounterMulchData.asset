@@ -37,9 +37,9 @@ MonoBehaviour:
   counterDamageBonus:
     common: 0.25
     rare: 0.5
-    epic: 0.75
+    epic: 1
   shieldPercentOfDamage:
     common: 0.05
     rare: 0.1
-    epic: 0.15
+    epic: 0.2
   shieldDuration: 4

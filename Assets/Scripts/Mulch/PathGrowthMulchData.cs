@@ -10,7 +10,7 @@ public class PathGrowthMulchData : MulchData
     [Tooltip("the path whose effective level goes up")]
     public GrowthPath path = GrowthPath.Attack;
     [Tooltip("levels added to that path's effective level")]
-    public TierValue levels = new TierValue(1f, 2f, 3f);
+    public TierValue levels = new TierValue(1f, 2f, 4f);
 
     public override MulchEffect CreateEffect(MulchItem item) => new PathGrowthMulchEffect(this, item);
 

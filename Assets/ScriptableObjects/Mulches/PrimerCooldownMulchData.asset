@@ -21,4 +21,4 @@ MonoBehaviour:
   cooldownReduction:
     common: 2
     rare: 4
-    epic: 6
+    epic: 8

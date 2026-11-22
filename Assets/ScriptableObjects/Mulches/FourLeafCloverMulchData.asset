@@ -21,4 +21,4 @@ MonoBehaviour:
   rareItemDropRate:
     common: 25
     rare: 50
-    epic: 75
+    epic: 100

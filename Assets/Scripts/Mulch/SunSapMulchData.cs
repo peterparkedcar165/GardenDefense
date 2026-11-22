@@ -4,7 +4,7 @@ using UnityEngine;
 public class SunSapMulchData : MulchData
 {
     [Tooltip("Sun made each time")]
-    public TierValue sunAmount = new TierValue(5f, 10f, 15f);
+    public TierValue sunAmount = new TierValue(5f, 10f, 20f);
     [Tooltip("seconds between each time (game time)")]
     public TierValue interval = new TierValue(30f, 25f, 20f);
 

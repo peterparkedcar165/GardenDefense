@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class LongStemMulchData : MulchData
 {
     [Tooltip("attack range added to this plant, as a share of its base range, e.g. 0.25 = +25% (melee plants can't reach past their own range)")]
-    public TierValue range = new TierValue(0.25f, 0.5f, 0.75f);
+    public TierValue range = new TierValue(0.25f, 0.5f, 1f);
 
     // melee plants can't reach past their own range, so it needs a ranged plant in the loadout
     public override bool IsUseful(List<PlantData> loadout)

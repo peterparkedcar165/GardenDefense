@@ -47,4 +47,4 @@ MonoBehaviour:
   flatBonus:
     common: 0.04
     rare: 0.08
-    epic: 0.12
+    epic: 0.16

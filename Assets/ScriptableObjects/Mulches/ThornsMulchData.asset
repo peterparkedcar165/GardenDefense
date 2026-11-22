@@ -21,4 +21,4 @@ MonoBehaviour:
   damage:
     common: 8
     rare: 16
-    epic: 24
+    epic: 32
