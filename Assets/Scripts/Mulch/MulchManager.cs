@@ -115,8 +115,41 @@ public class MulchManager : MonoBehaviour
         RaiseChanged();
     }
 
+    // a ground drop dragged onto a bag mulch it merges with: the two become the next rarity in that
+    // slot, so it works with a full bag too (Tommy, 2026-11-22). clicking a drop never merges
+    public bool MergeIntoSlot(MulchItem item, int slot)
+    {
+        MulchItem target = GetSlot(slot);
+        if (item == null || target == null || !item.CanMergeWith(target)) return false;
+        inventory[slot] = item.Merged(target);
+        AnnounceMerge(inventory[slot], null);
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.CollectMulch);
+        TutorialManager.instance?.NotifyEvent(TutorialEvents.TakeMulch);
+        RaiseChanged();
+        return true;
+    }
+
+    // whether dropping this mulch on the plant would merge it with a copy the plant has (Equip's
+    // merge), for the highlight on those plants while a bag mulch is hovered
+    public static bool MergesOnto(MulchItem item, Plant plant)
+    {
+        if (item == null || item.data == null || plant == null || !plant.IsAlive) return false;
+        if (CappedAtOneEpic(item.data) && HasEpicOf(plant, item.data)) return false;
+        foreach (MulchEffect owned in plant.mulches)
+            if (owned != null && item.CanMergeWith(owned.Item)) return true;
+        return false;
+    }
+
     public int SellPrice(MulchItem item) =>
         item == null || Registry == null ? 0 : Registry.sellPrice.GetInt(item.rarity);
+
+    // a ground drop's Sell popup (right click on it): pays its sell price; the drop removes itself
+    public int SellGroundItem(MulchItem item)
+    {
+        int price = SellPrice(item);
+        if (price > 0) GameManager.instance?.AddSun(price);
+        return price;
+    }
 
     // the Sell popup a right click opens on a bag mulch (MulchSellPopup)
     public void Sell(int slot)

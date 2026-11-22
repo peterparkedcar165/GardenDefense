@@ -12,6 +12,8 @@ using System.Collections.Generic;
 // full inventory it stays where it is, flashing "Inventory full". it can also be dragged straight
 // onto a plant (or onto the inventory bar): the drop fades and stays where it lies while an opaque
 // copy follows the pointer, and let go over nothing the copy glides back onto it (Tommy, 2026-11-20).
+// let go over a bag mulch it merges with, the two merge in that slot, even with a full bag; a click
+// never merges. a right click opens a Sell popup on it, like a bag mulch's (Tommy, 2026-11-22).
 //
 // built like insects and projectiles: this root is the spot on the ground, with a Shadow child that
 // stays on the ground and a Visual child that rises off it during the hop. the visual is unlit, so
@@ -383,6 +385,9 @@ public class MulchDrop : MonoBehaviour
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
         if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsTargeting) return;
         if (MulchManager.instance == null || Mouse.current == null) return;
+        // a Sell popup is open (on a drop or a bag slot): this click only closes it, like a click
+        // outside it in the bag (MulchInventoryUI closes it this frame, after mouse events)
+        if (MulchInventoryUI.instance != null && MulchInventoryUI.instance.SellPopupOpen) return;
         pressed = true;
         dragging = false;
         pressPosition = Mouse.current.position.ReadValue();
@@ -436,6 +441,15 @@ public class MulchDrop : MonoBehaviour
         }
         else if (target == MulchInventoryUI.GroundDropTarget.Inventory && Camera.main != null)
         {
+            // let go over a bag mulch it merges with: they merge there, even with a full bag (Tommy,
+            // 2026-11-22). a slot a drop is still flying into only looks empty, so it's left alone
+            int slot = ui.InventorySlotAt(pointer);
+            if (slot >= 0 && !ui.IsIncoming(slot) && MulchManager.instance != null && MulchManager.instance.MergeIntoSlot(Item, slot))
+            {
+                ui.EndGroundDrag();
+                Destroy(gameObject);
+                return;
+            }
             Vector3 at = Camera.main.ScreenToWorldPoint(new Vector3(pointer.x, pointer.y, -Camera.main.transform.position.z));
             at.z = visual.position.z;
             if (Collect(at))
@@ -473,7 +487,34 @@ public class MulchDrop : MonoBehaviour
     {
         if (draggedDrop != null || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())) return;
         hovered = true;
-        MulchTooltip.Show(Item, null, "Click to pick it up, or drag it onto a plant.");
+        int price = MulchManager.instance != null ? MulchManager.instance.SellPrice(Item) : 0;
+        MulchTooltip.Show(Item, null, $"Click to pick it up, or drag it onto a plant or onto a matching mulch in your bag. Right click to sell for {price} Sun.");
+    }
+
+    // a right click on it opens its Sell popup (or closes it), like a bag mulch's (Tommy, 2026-11-22).
+    // on release, like the bag's click
+    private void OnMouseOver()
+    {
+        Mouse mouse = Mouse.current;
+        if (mouse == null || !mouse.rightButton.wasReleasedThisFrame) return;
+        if (pressed || dragging || draggedDrop != null) return;
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        if (SkillTargetingManager.instance != null && SkillTargetingManager.instance.IsTargeting) return;
+        if (MulchInventoryUI.instance == null) return;
+        if (hovered) { hovered = false; MulchTooltip.Hide(); }
+        MulchInventoryUI.instance.ToggleGroundSellPopup(this);
+    }
+
+    // where its picture is now, for the Sell popup to open over it
+    public Vector3 VisualPosition => visual != null ? visual.position : transform.position;
+
+    // its Sell popup's button: pays its sell price and it's gone
+    public void Sell()
+    {
+        if (MulchManager.instance == null) return;
+        int price = MulchManager.instance.SellGroundItem(Item);
+        StatusIndicator.Spawn(VisualPosition + new Vector3(0f, 0.35f, 0f), $"+{price} Sun", new Color(1f, 0.85f, 0.25f));
+        Destroy(gameObject);
     }
 
     private void OnMouseExit()

@@ -101,19 +101,24 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     // a pop cut short (the panel closed) must not leave the icon small
     private void OnDisable()
     {
+        if (hovered && !isPlantSlot && ui != null) ui.SetHoveredSlot(index, false);
+        hovered = false;
         popRoutine = null;
         if (icon != null) icon.rectTransform.localScale = Vector3.one;
     }
 
+    // a hovered bag slot also lights up the plants its mulch would merge with (MulchInventoryUI)
     public void OnPointerEnter(PointerEventData eventData)
     {
         hovered = true;
+        if (!isPlantSlot) ui.SetHoveredSlot(index, true);
         ShowTooltip();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         hovered = false;
+        if (!isPlantSlot) ui.SetHoveredSlot(index, false);
         MulchTooltip.Hide();
     }
 

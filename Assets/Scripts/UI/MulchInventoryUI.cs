@@ -56,6 +56,18 @@ public class MulchInventoryUI : MonoBehaviour
     private MulchItem sellItem;
     // the slot whose popup the current right press closed, so that press's click doesn't open it again
     private int closedOnPress = -1;
+    // the same popup opened on a ground drop by a right click on it (Tommy, 2026-11-22), and the drop
+    // whose popup the current right press closed
+    private MulchDrop sellDrop;
+    private bool sellOnDrop;
+    private MulchDrop closedDropOnPress;
+    public bool SellPopupOpen => sellPopup != null && sellPopup.IsOpen;
+
+    // plants a hovered (or dragged) bag mulch would merge with show a highlight in its rarity's
+    // colour (Tommy, 2026-11-22)
+    private int hoveredSlot = -1;
+    private readonly HashSet<Plant> mergeHighlighted = new HashSet<Plant>();
+    private readonly HashSet<Plant> mergeWanted = new HashSet<Plant>();
 
     // inventory slots a picked up drop is still flying into: already filled, shown empty until it lands
     private readonly HashSet<int> incoming = new HashSet<int>();
@@ -101,6 +113,7 @@ public class MulchInventoryUI : MonoBehaviour
     {
         if (!built) return;
         UpdateSellPopup();
+        UpdateMergeHighlights();
         Plant selected = PlantUpgradeUI.instance != null ? PlantUpgradeUI.instance.GetSelectedPlant() : null;
         if (selected != null && !selected.IsAlive) selected = null;
         if (selected != shownPlant || (selected != null && selected.mulches.Count != shownPlantMulchCount))
@@ -467,23 +480,70 @@ public class MulchInventoryUI : MonoBehaviour
     public GroundDropTarget TargetUnder(Vector2 screenPosition, out Plant plant)
     {
         plant = null;
-        if (EventSystem.current != null)
+        if (UIUnder(screenPosition, out MulchSlotView slot))
         {
-            PointerEventData pointer = new PointerEventData(EventSystem.current) { position = screenPosition };
-            List<RaycastResult> hits = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointer, hits);
-            foreach (RaycastResult hit in hits)
-            {
-                if (!(hit.module is GraphicRaycaster)) continue;
-                MulchSlotView slot = hit.gameObject.GetComponentInParent<MulchSlotView>();
-                if (slot == null) return GroundDropTarget.Nothing;
-                if (!slot.isPlantSlot) return GroundDropTarget.Inventory;
-                plant = shownPlant;
-                return plant != null ? GroundDropTarget.Plant : GroundDropTarget.Nothing;
-            }
+            if (slot == null) return GroundDropTarget.Nothing;
+            if (!slot.isPlantSlot) return GroundDropTarget.Inventory;
+            plant = shownPlant;
+            return plant != null ? GroundDropTarget.Plant : GroundDropTarget.Nothing;
         }
         plant = PlantAt(screenPosition);
         return plant != null ? GroundDropTarget.Plant : GroundDropTarget.Nothing;
+    }
+
+    // the bag slot under the pointer, -1 for none (another UI, a plant slot or the map)
+    public int InventorySlotAt(Vector2 screenPosition) =>
+        UIUnder(screenPosition, out MulchSlotView slot) && slot != null && !slot.isPlantSlot ? slot.index : -1;
+
+    // true when the topmost UI under the pointer is on this canvas, with the mulch slot it belongs to
+    // (null for other UI)
+    private static bool UIUnder(Vector2 screenPosition, out MulchSlotView slot)
+    {
+        slot = null;
+        if (EventSystem.current == null) return false;
+        PointerEventData pointer = new PointerEventData(EventSystem.current) { position = screenPosition };
+        List<RaycastResult> hits = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, hits);
+        foreach (RaycastResult hit in hits)
+        {
+            if (!(hit.module is GraphicRaycaster)) continue;
+            slot = hit.gameObject.GetComponentInParent<MulchSlotView>();
+            return true;
+        }
+        return false;
+    }
+
+    // ── merge highlights ────────────────────────────────────────────────────
+
+    // a bag slot's pointer enter and exit (MulchSlotView)
+    public void SetHoveredSlot(int slot, bool hovering)
+    {
+        if (hovering) hoveredSlot = slot;
+        else if (hoveredSlot == slot) hoveredSlot = -1;
+    }
+
+    // every frame, since other highlights (a plant's own hover ending) clear it
+    private void UpdateMergeHighlights()
+    {
+        int slot = draggingSlot >= 0 ? draggingSlot : hoveredSlot;
+        MulchItem item = slot >= 0 && MulchManager.instance != null && !IsIncoming(slot) ? MulchManager.instance.GetSlot(slot) : null;
+
+        mergeWanted.Clear();
+        if (item != null)
+            foreach (Plant plant in Plant.allPlants)
+                if (MulchManager.MergesOnto(item, plant)) mergeWanted.Add(plant);
+
+        foreach (Plant plant in mergeHighlighted)
+            if (plant != null && !mergeWanted.Contains(plant)) plant.ClearHighlight();
+        mergeHighlighted.Clear();
+        if (item == null) return;
+
+        Color color = MulchTierColors.Get(item.rarity);
+        foreach (Plant plant in mergeWanted)
+        {
+            plant.SetHighlight(color);
+            mergeHighlighted.Add(plant);
+        }
     }
 
     // the drop went somewhere: the copy just goes
@@ -603,6 +663,7 @@ public class MulchInventoryUI : MonoBehaviour
         if (slot == sellSlot) { CloseSellPopup(); return; }
         MulchItem item = MulchManager.instance != null && !IsIncoming(slot) ? MulchManager.instance.GetSlot(slot) : null;
         if (item == null || sellPopup == null || slot < 0 || slot >= inventorySlots.Count) return;
+        CloseSellPopup();
         sellSlot = slot;
         sellItem = item;
         HideTooltip();
@@ -617,28 +678,63 @@ public class MulchInventoryUI : MonoBehaviour
         if (slot >= 0) MulchManager.instance?.Sell(slot);
     }
 
+    // a right click on a ground drop opens the same popup over it, or closes it when it's already
+    // open there; its button sells the drop where it lies
+    public void ToggleGroundSellPopup(MulchDrop drop)
+    {
+        if (drop == null) return;
+        if (drop == closedDropOnPress) { closedDropOnPress = null; return; }
+        if (sellOnDrop && drop == sellDrop) { CloseSellPopup(); return; }
+        Camera cam = Camera.main;
+        if (sellPopup == null || MulchManager.instance == null || cam == null || drop.Item == null) return;
+        CloseSellPopup();
+        sellDrop = drop;
+        sellOnDrop = true;
+        HideTooltip();
+        overlay.SetAsLastSibling();
+        sellPopup.Open(ScreenToOverlay(cam.WorldToScreenPoint(drop.VisualPosition)), MulchManager.instance.SellPrice(drop.Item),
+            SellDropFromPopup, CloseSellPopup);
+    }
+
+    private void SellDropFromPopup()
+    {
+        MulchDrop drop = sellDrop;
+        CloseSellPopup();
+        if (drop != null) drop.Sell();
+    }
+
     public void CloseSellPopup()
     {
         sellSlot = -1;
         sellItem = null;
+        sellDrop = null;
+        sellOnDrop = false;
         if (sellPopup != null && sellPopup.IsOpen) sellPopup.Close();
     }
 
     // a click anywhere but on the popup closes it, and so does escape. a right press that closes it
-    // over its own slot is remembered, so that click toggles it shut instead of opening it again
+    // over its own slot (or drop) is remembered, so that click toggles it shut instead of opening it
+    // again. a drop that vanished (expired) takes its popup with it
     private void UpdateSellPopup()
     {
+        if (sellOnDrop && sellDrop == null) CloseSellPopup();
+        bool open = sellSlot >= 0 || sellOnDrop;
         Mouse mouse = Mouse.current;
         if (mouse != null && (mouse.leftButton.wasPressedThisFrame || mouse.rightButton.wasPressedThisFrame))
         {
             closedOnPress = -1;
-            if (sellSlot >= 0 && !OverSellPopup(mouse.position.ReadValue()))
+            closedDropOnPress = null;
+            if (open && !OverSellPopup(mouse.position.ReadValue()))
             {
-                if (mouse.rightButton.wasPressedThisFrame) closedOnPress = sellSlot;
+                if (mouse.rightButton.wasPressedThisFrame)
+                {
+                    closedOnPress = sellSlot;
+                    closedDropOnPress = sellDrop;
+                }
                 CloseSellPopup();
             }
         }
-        if (sellSlot >= 0 && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        if ((sellSlot >= 0 || sellOnDrop) && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
             CloseSellPopup();
     }
 
