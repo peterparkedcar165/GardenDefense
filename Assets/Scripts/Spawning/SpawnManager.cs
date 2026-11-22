@@ -15,17 +15,19 @@ public abstract class SpawnManager : MonoBehaviour
 
     public virtual GameObject[] GetInsectPrefabs() => System.Array.Empty<GameObject>();
 
-    protected void Spawn(GameObject insectPrefab)
+    // wave: the wave this insect belongs to (Insect.spawnWave), so two waves running at once (an early
+    // call) keep their own health scaling and mulch counts. 0 leaves it to GameManager.currentWave
+    protected void Spawn(GameObject insectPrefab, int wave = 0)
     {
         if (spawnEntries == null || spawnEntries.Length == 0)
         {
             Debug.LogWarning("SpawnManager: no spawnEntries configured on " + gameObject.name);
             return;
         }
-        SpawnFromEntry(insectPrefab, spawnEntries[Random.Range(0, spawnEntries.Length)]);
+        SpawnFromEntry(insectPrefab, spawnEntries[Random.Range(0, spawnEntries.Length)], wave);
     }
 
-    private void SpawnFromEntry(GameObject insectPrefab, SpawnEntry entry)
+    private void SpawnFromEntry(GameObject insectPrefab, SpawnEntry entry, int wave)
     {
         if (entry.spawnPoint == null)
         {
@@ -46,8 +48,14 @@ public abstract class SpawnManager : MonoBehaviour
 
         Insect insect = go.GetComponent<Insect>();
         if (insect != null)
+        {
+            insect.spawnWave = wave;
             insect.SetPath(fullPath);
+            OnInsectSpawned(insect);
+        }
     }
+
+    protected virtual void OnInsectSpawned(Insect insect) { }
 
     protected virtual void Update() { }
 }

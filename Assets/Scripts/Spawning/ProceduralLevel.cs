@@ -20,6 +20,43 @@ public class ProceduralLevel : SpawnManager
     private int wave = 0;
     // absolute (scaled) time at which the next wave begins; negative = no next wave
     private float nextWaveTime = -1f;
+    // when the running countdown to the next wave began (its half way point unlocks the early call)
+    private float countdownStartTime = -1f;
+    // insects the newest wave has spawned so far: a clear field only unlocks the early call once
+    // that wave has started coming
+    private int newestWaveSpawned;
+    private bool callNextWaveRequested;
+    // waves still spawning: they run side by side once one is called early
+    private int wavesRunning;
+
+    public static ProceduralLevel Instance { get; private set; }
+
+    // calling the next wave early (Tommy, 2026-11-21): the timer bar starts it now, like Kingdom Rush.
+    // the wave already running keeps playing. it pays 1 Sun per SecondsPerSun seconds skipped and
+    // takes the skipped time off every plant's skill cooldown. it opens at half time (the bar half
+    // empty), or earlier once the field is clear after the newest wave began spawning
+    public const float SecondsPerSun = 2f;
+    public bool HasNextWave => wave >= 1 && wave < config.maxWaves && nextWaveTime > 0f && !float.IsPositiveInfinity(nextWaveTime);
+    public float SecondsSkipped => HasNextWave ? Mathf.Max(0f, nextWaveTime - Time.time) : 0f;
+    public int CallSunReward => Mathf.FloorToInt(SecondsSkipped / SecondsPerSun);
+    public int NextWaveNumber => wave + 1;
+    public bool PastHalfTime => HasNextWave && Time.time - countdownStartTime >= (nextWaveTime - countdownStartTime) * 0.5f;
+    public bool FieldClear => newestWaveSpawned > 0 && Insect.allInsects.Count == 0;
+    public float SecondsToHalfTime => HasNextWave ? Mathf.Max(0f, countdownStartTime + (nextWaveTime - countdownStartTime) * 0.5f - Time.time) : 0f;
+    public bool CanCallNextWave => GameManager.instance != null && GameManager.instance.HasStarted && !callNextWaveRequested
+        && HasNextWave && SecondsSkipped > 0f && (PastHalfTime || FieldClear);
+
+    public bool CallNextWave()
+    {
+        if (!CanCallNextWave) return false;
+        float skipped = SecondsSkipped;
+        int sun = CallSunReward;
+        if (sun > 0) GameManager.instance.AddSun(sun);
+        foreach (Plant plant in new List<Plant>(Plant.allPlants))
+            if (plant != null && plant.IsAlive) plant.ReduceSkillCooldown(skipped);
+        callNextWaveRequested = true;
+        return true;
+    }
     // absolute (scaled) time the current (final) wave's last insect spawns; negative = not the final wave
     private float finalWaveSpawnTime = -1f;
 
@@ -36,6 +73,7 @@ public class ProceduralLevel : SpawnManager
     protected override void Start()
     {
         CurrentConfig = config;
+        Instance = this;
         Plant.ResetPendingExpForNewLevel(); // discard any exp left over from a game-over'd attempt
 
         if (WeatherManager.instance)
@@ -62,6 +100,7 @@ public class ProceduralLevel : SpawnManager
     private void OnDestroy()
     {
         if (CurrentConfig == config) CurrentConfig = null;
+        if (Instance == this) Instance = null;
     }
 
     // spawns one looping audio source per ambience clip, destroyed with the scene
@@ -99,17 +138,19 @@ public class ProceduralLevel : SpawnManager
             GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
             FertilizerManager.instance?.NotifyWaveStarted(wave);
             MulchManager.instance?.NotifyWaveStarted(wave);
-            yield return StartCoroutine(RunWave(wave));
-            FertilizerManager.instance?.NotifyWaveEnded(wave);
-            MulchManager.instance?.NotifyWaveEnded(wave);
-            // every wave but the last guarantees a mulch where its last insect dies or leaks
-            MulchManager.instance?.NotifyWaveSpawningDone(wave, wave >= config.maxWaves);
+            newestWaveSpawned = 0;
+            callNextWaveRequested = false;
+            // the wave runs on its own (RunWaveToEnd), so a wave called early plays alongside it.
+            // starting it sets nextWaveTime: its length plus the rest after it
+            StartCoroutine(RunWaveToEnd(wave));
 
+            // the countdown to the next wave, cut short when the player calls it early
             if (wave < config.maxWaves)
-                yield return StartCoroutine(RestPeriod(config.restDuration));
+                yield return new WaitUntil(() => callNextWaveRequested || Time.time >= nextWaveTime);
         }
 
         nextWaveTime = -1f;
+        yield return new WaitUntil(() => wavesRunning == 0);
         yield return new WaitUntil(() => Insect.allInsects.Count == 0);
         yield return new WaitForSeconds(3f);
         if (testLevel)
@@ -124,6 +165,23 @@ public class ProceduralLevel : SpawnManager
     }
 
     // ── wave runner ───────────────────────────────────────────────────────────
+
+    // one wave from its first spawn to its end, and what follows its end. several can run at once
+    IEnumerator RunWaveToEnd(int waveNumber)
+    {
+        wavesRunning++;
+        yield return StartCoroutine(RunWave(waveNumber));
+        FertilizerManager.instance?.NotifyWaveEnded(waveNumber);
+        MulchManager.instance?.NotifyWaveEnded(waveNumber);
+        // every wave but the last guarantees a mulch where its last insect dies or leaks
+        MulchManager.instance?.NotifyWaveSpawningDone(waveNumber, waveNumber >= config.maxWaves);
+        wavesRunning--;
+    }
+
+    protected override void OnInsectSpawned(Insect insect)
+    {
+        if (insect != null && insect.spawnWave == wave) newestWaveSpawned++;
+    }
 
     IEnumerator RunWave(int waveNumber)
     {
@@ -171,7 +229,7 @@ public class ProceduralLevel : SpawnManager
             {
                 foreach (TrickleEntry trickle in scripted.trickleSpawns)
                 {
-                    streams.Add(StartCoroutine(RunTrickle(trickle, waveDuration)));
+                    streams.Add(StartCoroutine(RunTrickle(trickle, waveDuration, waveNumber)));
                     lastSpawnOffset = Mathf.Max(lastSpawnOffset, LastRepeatingSpawnOffset(trickle.startDelay, trickle.interval, waveDuration));
                 }
             }
@@ -196,7 +254,7 @@ public class ProceduralLevel : SpawnManager
             if (chosenElite != null)
             {
                 streams.Add(StartCoroutine(
-                    SpawnEliteGroup(chosenElite, waveDuration, t)));
+                    SpawnEliteGroup(chosenElite, waveDuration, t, waveNumber)));
 
                 int eliteCount = Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(chosenElite.minSpawnCount, chosenElite.maxSpawnCount, t)));
                 float eliteLastSpawn = eliteCount <= 1
@@ -212,6 +270,7 @@ public class ProceduralLevel : SpawnManager
         if (waveNumber < config.maxWaves)
         {
             nextWaveTime = Time.time + waveDuration + config.restDuration;
+            countdownStartTime = Time.time;
             finalWaveSpawnTime = -1f;
         }
         else
@@ -319,10 +378,10 @@ public class ProceduralLevel : SpawnManager
 
         if (sub.spawns == null) yield break;
         foreach (WaveSpawnEntry entry in sub.spawns)
-            StartCoroutine(RunWaveSpawnEntry(entry));
+            StartCoroutine(RunWaveSpawnEntry(entry, waveNumber));
     }
 
-    IEnumerator RunWaveSpawnEntry(WaveSpawnEntry entry)
+    IEnumerator RunWaveSpawnEntry(WaveSpawnEntry entry, int waveNumber)
     {
         if (entry.insectData == null || entry.insectData.insectPrefab == null || entry.count <= 0)
             yield break;
@@ -332,7 +391,7 @@ public class ProceduralLevel : SpawnManager
 
         for (int i = 0; i < entry.count; i++)
         {
-            Spawn(entry.insectData.insectPrefab);
+            Spawn(entry.insectData.insectPrefab, waveNumber);
             if (i < entry.count - 1)
                 yield return new WaitForSeconds(entry.timeBetweenSpawns);
         }
@@ -340,7 +399,7 @@ public class ProceduralLevel : SpawnManager
 
     // background spawner: loops for the wave's whole (computed) duration, independent of
     // whatever the scripted sub-waves are doing
-    IEnumerator RunTrickle(TrickleEntry trickle, float waveDuration)
+    IEnumerator RunTrickle(TrickleEntry trickle, float waveDuration, int waveNumber)
     {
         if (trickle.insectData == null || trickle.insectData.insectPrefab == null)
             yield break;
@@ -351,7 +410,7 @@ public class ProceduralLevel : SpawnManager
         float elapsed = trickle.startDelay;
         while (elapsed < waveDuration)
         {
-            Spawn(trickle.insectData.insectPrefab);
+            Spawn(trickle.insectData.insectPrefab, waveNumber);
             yield return new WaitForSeconds(trickle.interval);
             elapsed += trickle.interval;
         }
@@ -362,7 +421,7 @@ public class ProceduralLevel : SpawnManager
     // spawns the elite group for an elite wave
     // count scales between minSpawnCount and maxSpawnCount based on wave progress (t = 0 to 1)
     // if count > 1, spreads the spawns evenly across the remaining wave time
-    IEnumerator SpawnEliteGroup(LevelEliteEntry entry, float waveDuration, float t)
+    IEnumerator SpawnEliteGroup(LevelEliteEntry entry, float waveDuration, float t, int waveNumber)
     {
         int count = Mathf.RoundToInt(Mathf.Lerp(entry.minSpawnCount, entry.maxSpawnCount, t));
         count = Mathf.Max(1, count);
@@ -372,7 +431,7 @@ public class ProceduralLevel : SpawnManager
 
         if (count <= 1)
         {
-            Spawn(entry.data.insectPrefab);
+            Spawn(entry.data.insectPrefab, waveNumber);
         }
         else
         {
@@ -381,16 +440,11 @@ public class ProceduralLevel : SpawnManager
             float gap = remaining / count;
             for (int i = 0; i < count; i++)
             {
-                Spawn(entry.data.insectPrefab);
+                Spawn(entry.data.insectPrefab, waveNumber);
                 if (i < count - 1)
                     yield return new WaitForSeconds(gap);
             }
         }
-    }
-
-    IEnumerator RestPeriod(float duration)
-    {
-        yield return new WaitForSeconds(duration);
     }
 
     // ── SpawnManager overrides ─────────────────────────────────────────────────

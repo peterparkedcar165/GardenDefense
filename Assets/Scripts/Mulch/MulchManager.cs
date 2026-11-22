@@ -371,7 +371,7 @@ public class MulchManager : MonoBehaviour
     public void RegisterInsect(Insect insect)
     {
         if (insect == null || insect.team == Team.Friendly || insect.mulchCounted) return;
-        int wave = GameManager.instance != null ? GameManager.instance.currentWave : 0;
+        int wave = insect.Wave;
         insect.mulchWave = wave;
         insect.mulchCounted = true;
         aliveByWave[wave] = (aliveByWave.TryGetValue(wave, out int n) ? n : 0) + 1;

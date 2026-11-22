@@ -167,6 +167,10 @@ public abstract class Insect : Entity, IAttackable
 
     // combat side. Friendly = minion / hypnotized: seeks enemy insects, holds or walks back.
     public Team team = Team.Enemy;
+    // the wave that spawned it (ProceduralLevel through SpawnManager.Spawn), for its health scaling and
+    // its mulch count while two waves run at once. 0: spawned some other way, so the current wave
+    [System.NonSerialized] public int spawnWave;
+    public int Wave => spawnWave > 0 ? spawnWave : (GameManager.instance != null ? GameManager.instance.currentWave : 0);
     public bool movingBackward = false;                 // friendlies that retreat to find a fight
     protected virtual bool ChasesTarget => true;        // false = hold position, let the target come
     protected virtual bool ScalesWithWave => true;      // false = health is not scaled by wave number
@@ -385,7 +389,7 @@ public abstract class Insect : Entity, IAttackable
         // starting shield (e.g. Snail) gets a shield that grows with the wave the same way
         // baseMaxHealth already does below
         if (ScalesWithWave)
-            startingShield *= WaveHealthMultiplier(GameManager.instance.currentWave);
+            startingShield *= WaveHealthMultiplier(Wave);
         base.Start();
         gameManager = FindAnyObjectByType<GameManager>();
         // counted under the wave it spawned in, for the mulch guaranteed when a wave's last insect
@@ -411,7 +415,7 @@ public abstract class Insect : Entity, IAttackable
 
         if (ScalesWithWave)
         {
-            int waveNumber = GameManager.instance.currentWave;
+            int waveNumber = Wave;
             baseMaxHealth   *= WaveHealthMultiplier(waveNumber);
             armorAdder      += (waveNumber - 1) * Random.Range(1, 2);
             magicArmorAdder += (waveNumber - 1) * Random.Range(1, 2);

@@ -30,6 +30,9 @@ public class GameHUD : MonoBehaviour
     {
         if (instance != null) return;
         instance = this;
+        // the timer bar is also the button that calls the next wave early (WaveCallBar)
+        if (nextWaveFill != null && nextWaveFill.rectTransform.parent is RectTransform bar)
+            WaveCallBar.Attach(bar, nextWaveFill, nextWaveFillShine, nextWaveTimerText);
     }
 
     public void SetSun(int count)            { if (sunText)           sunText.text           = $"{count}"; }
