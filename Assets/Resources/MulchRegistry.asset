@@ -72,7 +72,7 @@ MonoBehaviour:
   sellPrice:
     common: 15
     rare: 30
-    epic: 45
+    epic: 60
   inventorySize: 6
   plantSlots: 6
   groundSeconds: 25
