@@ -389,7 +389,7 @@ public abstract class Insect : Entity, IAttackable
         // starting shield (e.g. Snail) gets a shield that grows with the wave the same way
         // baseMaxHealth already does below
         if (ScalesWithWave)
-            startingShield *= WaveHealthMultiplier(Wave);
+            startingShield *= WaveHealthMultiplier(Wave) * LevelHealthMultiplier(Wave);
         base.Start();
         gameManager = FindAnyObjectByType<GameManager>();
         // counted under the wave it spawned in, for the mulch guaranteed when a wave's last insect
@@ -416,7 +416,7 @@ public abstract class Insect : Entity, IAttackable
         if (ScalesWithWave)
         {
             int waveNumber = Wave;
-            baseMaxHealth   *= WaveHealthMultiplier(waveNumber);
+            baseMaxHealth   *= WaveHealthMultiplier(waveNumber) * LevelHealthMultiplier(waveNumber);
             armorAdder      += (waveNumber - 1) * Random.Range(1, 2);
             magicArmorAdder += (waveNumber - 1) * Random.Range(1, 2);
         }
@@ -429,6 +429,11 @@ public abstract class Insect : Entity, IAttackable
     // percentage point per wave (wave 2 = +8%, wave 3 = +9%, wave 4 = +10%, ...), multiplied
     // on top of the already-scaled total from the previous wave rather than the original base -
     // fixed/deterministic, no randomness, and uncapped
+    // the level's own difficulty knob (LevelConfig.insectHealthMultiplier, and the early waves' one):
+    // Tommy, 2026-11-22, levels 7 to 10 made easier this way
+    private static float LevelHealthMultiplier(int waveNumber) =>
+        ProceduralLevel.CurrentConfig != null ? ProceduralLevel.CurrentConfig.InsectHealthMultiplier(waveNumber) : 1f;
+
     private static float WaveHealthMultiplier(int waveNumber)
     {
         float multiplier = 1f;

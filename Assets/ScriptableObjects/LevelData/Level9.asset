@@ -21,6 +21,9 @@ MonoBehaviour:
   startSunCount: 750
   startHealth: 200
   maxUpgradeLevel: 5
+  insectHealthMultiplier: 0.85
+  earlyWaves: 5
+  earlyInsectHealthMultiplier: 0.7
   minWaveDuration: 25
   maxWaveDuration: 100
   waveDurationCurve:
