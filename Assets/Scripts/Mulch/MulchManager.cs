@@ -427,10 +427,17 @@ public class MulchManager : MonoBehaviour
         if (!lastExit.TryGetValue(wave, out var exit)) return;
         guaranteedHandled.Add(wave);
 
-        int epicEvery = FertilizerManager.EpicMulchEveryWaves;
-        bool epic = epicEvery > 0 && wave > 0 && wave % epicEvery == 0;
-        MulchItem item = RollItem(exit.killer, epic);
+        MulchItem item = RollItem(exit.killer, false);
         if (item != null) MulchDrop.Spawn(item, exit.position, exit.leaked);
+
+        // clean garden: every Nth wave also drops an Epic mulch, on top of the usual one (Tommy,
+        // 2026-11-22; it used to make the usual one Epic instead)
+        int epicEvery = FertilizerManager.EpicMulchEveryWaves;
+        if (epicEvery > 0 && wave > 0 && wave % epicEvery == 0)
+        {
+            MulchItem epic = RollItem(exit.killer, true);
+            if (epic != null) MulchDrop.Spawn(epic, exit.position, exit.leaked);
+        }
     }
 
     private void RollKillDrop(Insect insect, Plant killer)

@@ -25,8 +25,8 @@ public class FertilizerManager : MonoBehaviour
     // solar loan: sun still owed after the loan came due. every sun gained pays this off first
     // (GameManager.AddSun)
     public static int SunDebt = 0;
-    // clean garden: every this many waves, the guaranteed end of wave mulch is Epic (0 = off).
-    // read by MulchManager
+    // clean garden: every this many waves, an Epic mulch drops at the end of the wave on top of the
+    // guaranteed one (0 = off). read by MulchManager
     public static int EpicMulchEveryWaves = 0;
 
     private FertilizerData active;
