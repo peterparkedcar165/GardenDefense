@@ -21,6 +21,8 @@ public class BegoniaData : PlantData
     [Tooltip("Grass Resistance reduction on insects standing in her flowers")]
     public float baseGrassResistanceShred = 0.12f;
     public float path1GrassResistanceShredPerLevel = 0.04f;
+    [Tooltip("seconds added to the Water primer her flowers apply, per attack path level (Tommy, 2026-11-23)")]
+    public float path1WaterPrimerDurationPerLevel = 1f;
 
     [Header("Path 2 Scaling")]
     public float path2ElementalAffinityPerLevel = 0.08f;

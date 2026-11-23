@@ -23,6 +23,8 @@ public class Begonia : Aura
     private float WaterCooldownReduction => (BData?.baseWaterCooldownReduction ?? 2f) + (BData?.path1CooldownReductionPerLevel ?? 0.6f) * effectivePath1Level;
     // base kit: insects in her flowers lose grass resistance, growing with her attack path
     private float GrassResistanceShredAmount => (BData?.baseGrassResistanceShred ?? 0.12f) + (BData?.path1GrassResistanceShredPerLevel ?? 0.04f) * effectivePath1Level;
+    // her Water primer lasts the insect's usual primer duration plus this, growing with her attack path
+    private float WaterPrimerDurationBonus => (BData?.path1WaterPrimerDurationPerLevel ?? 1f) * effectivePath1Level;
 
     // attack path max bonus: a reaction her own primer sets off is credited to whoever applied
     // the first primer (see WaterPrimer), so it runs on that plant's stats instead of hers
@@ -155,7 +157,7 @@ public class Begonia : Aura
             if (insect.waterInternalCooldown <= 0f)
             {
                 insect.waterInternalCooldown = insect.ElementInternalCooldown(insect.waterInternalCooldownAdder, insect.waterInternalCooldownMultiplier);
-                insect.ApplyEffect(new WaterPrimer(insect, insect.elementalDebuffDuration, 1, this));
+                insect.ApplyEffect(new WaterPrimer(insect, insect.elementalDebuffDuration + WaterPrimerDurationBonus, 1, this));
             }
         }
     }
@@ -369,6 +371,7 @@ public class Begonia : Aura
         float rangepl = BData?.path1AttackRangePerLevel ?? 0.2f;
         float cdrpl   = BData?.path1CooldownReductionPerLevel ?? 0.6f;
         float shredpl = BData?.path1GrassResistanceShredPerLevel ?? 0.04f;
+        float durpl   = BData?.path1WaterPrimerDurationPerLevel ?? 1f;
         string desc = details
             ? $"Grows wet flowers around her, applying <color=#4FC3F7><b>Water</b></color> primer to insects in contact with them and reducing its internal cooldown by <color=green><b>[({(BData?.baseWaterCooldownReduction ?? 2f):F1}s) + ({cdrpl:F1}s/Lvl.)]</b></color>. Insects in contact with her flowers have <color=green><b>[({(BData?.baseGrassResistanceShred ?? 0.12f) * 100f:F0}%) + ({shredpl * 100f:F0}%/Lvl.)]</b></color> reduced <color=green><b>Grass Resistance</b></color>."
             : GetAttackDescription();
@@ -376,6 +379,7 @@ public class Begonia : Aura
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#4FC3F7><b>Water</b></color> internal cooldown reduction by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath1Level:F1}s</b></color>]\n\n" +
                $"Increase <color=green><b>Grass Resistance</b></color> reduction by <color=green><b>{shredpl * 100f:F0}%</b></color> per level. [<color=green><b>+{shredpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase <color=#4FC3F7><b>Water</b></color> Primer duration by <color=green><b>{durpl:0.#}s</b></color> per level. [<color=green><b>+{durpl * effectivePath1Level:0.#}s</b></color>]\n\n" +
                $"{Level5Section(path1Level, "When her <color=#4FC3F7><b>Water</b></color> primer sets off a reaction, the reaction is credited to whoever applied the first primer, using that plant's stats instead of hers.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
