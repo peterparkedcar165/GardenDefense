@@ -141,6 +141,9 @@ public class DarknessManager : MonoBehaviour
         UpdateSunLights(ease);
     }
 
+    private const float SunSweepInterval = 0.1f;
+    private float _sunSweepTimer;
+
     private void UpdateSunLights(float ease)
     {
         bool sunnyDay = _sunnyOverride && _isDarkLevel;
@@ -148,18 +151,26 @@ public class DarknessManager : MonoBehaviour
 
         if (_sunBlend > 0.5f)
         {
-            _lightsHiddenForSun = true;
-            // swept every frame, so lights made during the sun (new projectiles, burns) go too
-            foreach (Light2D light in FindObjectsByType<Light2D>(FindObjectsInactive.Exclude))
+            // swept at once when the sun takes over, then every SunSweepInterval, so lights made during
+            // the sun (new projectiles, burns) go too. it was every frame, and the sweep searches every
+            // object in the scene and makes a new array each time
+            _sunSweepTimer -= Time.unscaledDeltaTime;
+            if (!_lightsHiddenForSun || _sunSweepTimer <= 0f)
             {
-                if (light.lightType == Light2D.LightType.Global || !light.enabled) continue;
-                light.enabled = false;
-                _sunHiddenLights.Add(light);
+                _sunSweepTimer = SunSweepInterval;
+                foreach (Light2D light in FindObjectsByType<Light2D>(FindObjectsInactive.Exclude))
+                {
+                    if (light.lightType == Light2D.LightType.Global || !light.enabled) continue;
+                    light.enabled = false;
+                    _sunHiddenLights.Add(light);
+                }
             }
+            _lightsHiddenForSun = true;
         }
         else if (_lightsHiddenForSun)
         {
             _lightsHiddenForSun = false;
+            _sunSweepTimer = 0f;
             foreach (Light2D light in _sunHiddenLights)
                 if (light != null) light.enabled = true;
             _sunHiddenLights.Clear();
@@ -174,30 +185,53 @@ public class DarknessManager : MonoBehaviour
     {
         if (!isDark) return 1f;
 
+        GatherLights();
         float best = 0f;
-        foreach (Plant plant in Plant.allPlants)
+        for (int i = 0; i < _lights.Count; i++)
         {
-            if (plant == null || plant.lightEmissionRange <= 0) continue;
-            best = Mathf.Max(best, LightFalloff(position, plant.transform.position, plant.lightEmissionRange));
+            LitSource light = _lights[i];
+            best = Mathf.Max(best, LightFalloff(position, light.position, light.radius));
             if (best >= 1f) return 1f;
         }
-        foreach (Insect insect in Insect.allInsects)
-        {
-            if (insect == null || !insect.IsAlive || insect.lightEmissionRange <= 0) continue;
-            best = Mathf.Max(best, LightFalloff(position, insect.transform.position, insect.lightEmissionRange));
-        }
-        foreach (Insect insect in Insect.friendlyInsects)
-        {
-            if (insect == null || !insect.IsAlive || insect.lightEmissionRange <= 0) continue;
-            best = Mathf.Max(best, LightFalloff(position, insect.transform.position, insect.lightEmissionRange));
-        }
-        foreach (var (t, radius) in _dynamicSources)
-        {
-            if (t == null) continue;
-            best = Mathf.Max(best, LightFalloff(position, t.position, radius));
-        }
-        return Mathf.Min(1f, best);
+        return best;
     }
+
+    // every light source IsIlluminated and LightAmount count (plants, insects, friendlies and the
+    // registered lights), gathered once per frame. both are asked about very many points a frame
+    // (every candidate insect of every plant's target search on a dark level, every rain and snow
+    // particle), and each call read every plant's, insect's and light's position again. a light that
+    // appears or moves later in the frame counts from the next frame
+    private struct LitSource
+    {
+        public Vector3 position;
+        public float radius;
+        public float sqrRadius;
+    }
+
+    private readonly List<LitSource> _lights = new List<LitSource>();
+    private int _lightsFrame = -1;
+
+    private void GatherLights()
+    {
+        if (_lightsFrame == Time.frameCount) return;
+        _lightsFrame = Time.frameCount;
+        _lights.Clear();
+        foreach (Plant plant in Plant.allPlants)
+            if (plant != null && plant.lightEmissionRange > 0) AddLight(plant.transform.position, plant.lightEmissionRange);
+        foreach (Insect insect in Insect.allInsects)
+            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange);
+        foreach (Insect insect in Insect.friendlyInsects)
+            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange);
+        for (int i = _dynamicSources.Count - 1; i >= 0; i--)
+        {
+            var (t, radius) = _dynamicSources[i];
+            if (t == null) { _dynamicSources.RemoveAt(i); continue; }
+            AddLight(t.position, radius);
+        }
+    }
+
+    private void AddLight(Vector3 position, float radius) =>
+        _lights.Add(new LitSource { position = position, radius = radius, sqrRadius = radius * radius });
 
     private static float LightFalloff(Vector3 point, Vector3 source, float radius)
     {
@@ -216,35 +250,12 @@ public class DarknessManager : MonoBehaviour
     {
         if (!isDark) return true;
 
-        foreach (Plant plant in Plant.allPlants)
+        GatherLights();
+        for (int i = 0; i < _lights.Count; i++)
         {
-            if (plant.lightEmissionRange <= 0) continue;
-            if (Vector3.Distance(position, plant.transform.position) <= plant.lightEmissionRange)
-                return true;
+            LitSource light = _lights[i];
+            if ((position - light.position).sqrMagnitude <= light.sqrRadius) return true;
         }
-
-        foreach (Insect insect in Insect.allInsects)
-        {
-            if (insect == null || !insect.IsAlive || insect.lightEmissionRange <= 0) continue;
-            if (Vector3.Distance(position, insect.transform.position) <= insect.lightEmissionRange)
-                return true;
-        }
-
-        foreach (Insect insect in Insect.friendlyInsects)
-        {
-            if (insect == null || !insect.IsAlive || insect.lightEmissionRange <= 0) continue;
-            if (Vector3.Distance(position, insect.transform.position) <= insect.lightEmissionRange)
-                return true;
-        }
-
-        for (int i = _dynamicSources.Count - 1; i >= 0; i--)
-        {
-            var (t, radius) = _dynamicSources[i];
-            if (t == null) { _dynamicSources.RemoveAt(i); continue; }
-            if (Vector3.Distance(position, t.position) <= radius)
-                return true;
-        }
-
         return false;
     }
 }

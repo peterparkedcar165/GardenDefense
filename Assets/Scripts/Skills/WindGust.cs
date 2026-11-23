@@ -24,6 +24,10 @@ public class WindGust : MonoBehaviour
     private readonly HashSet<Insect> hitInsects = new HashSet<Insect>();
     private readonly HashSet<Plant> hitPlants = new HashSet<Plant>();
 
+    // reused copies of the insect and plant lists, refilled each time so changes to the live lists mid loop are safe
+    private readonly List<Insect> insectSnapshot = new List<Insect>();
+    private readonly List<Plant> plantSnapshot = new List<Plant>();
+
     [SerializeField] private SpriteRenderer visualRenderer;
 
     private static readonly DamageTag[] damageTags = { DamageTag.AoE, DamageTag.SkillDamage };
@@ -59,23 +63,29 @@ public class WindGust : MonoBehaviour
         distanceTraveled += step;
 
         Vector2 windVelocity = direction * speed;
+        Vector2 center = transform.position;
+        float hitboxRadiusSqr = hitboxRadius * hitboxRadius;
 
-        List<Insect> insectSnapshot = new List<Insect>(Insect.allInsects);
-        foreach (Insect insect in insectSnapshot)
+        insectSnapshot.Clear();
+        insectSnapshot.AddRange(Insect.allInsects);
+        for (int i = 0; i < insectSnapshot.Count; i++)
         {
+            Insect insect = insectSnapshot[i];
             if (insect == null || !insect.IsAlive || hitInsects.Contains(insect)) continue;
-            if (Vector2.Distance(transform.position, insect.transform.position) > hitboxRadius) continue;
+            if (((Vector2)insect.transform.position - center).sqrMagnitude > hitboxRadiusSqr) continue;
 
             hitInsects.Add(insect);
             insect.Damage(damage, source.damageType, source.elementalType, source, true, damageTags);
             insect.ApplyEffect(new WindDisplacedEffect(insect, trapDuration, source, windVelocity));
         }
 
-        List<Plant> plantSnapshot = new List<Plant>(Plant.allPlants);
-        foreach (Plant plant in plantSnapshot)
+        plantSnapshot.Clear();
+        plantSnapshot.AddRange(Plant.allPlants);
+        for (int i = 0; i < plantSnapshot.Count; i++)
         {
+            Plant plant = plantSnapshot[i];
             if (plant == null || !plant.IsAlive || plant == source || hitPlants.Contains(plant)) continue;
-            if (Vector2.Distance(transform.position, plant.transform.position) > hitboxRadius) continue;
+            if (((Vector2)plant.transform.position - center).sqrMagnitude > hitboxRadiusSqr) continue;
 
             hitPlants.Add(plant);
             plant.ApplyEffect(new PollenHasteEffect(plant, hasteDuration, source, hasteBonus));
@@ -89,11 +99,13 @@ public class WindGust : MonoBehaviour
             // hitbox at the moment it expires - including insects it already hit earlier
             if (seedBomb)
             {
-                List<Insect> finalSnapshot = new List<Insect>(Insect.allInsects);
-                foreach (Insect insect in finalSnapshot)
+                insectSnapshot.Clear();
+                insectSnapshot.AddRange(Insect.allInsects);
+                for (int i = 0; i < insectSnapshot.Count; i++)
                 {
+                    Insect insect = insectSnapshot[i];
                     if (insect == null || !insect.IsAlive) continue;
-                    if (Vector2.Distance(transform.position, insect.transform.position) > hitboxRadius) continue;
+                    if (((Vector2)insect.transform.position - center).sqrMagnitude > hitboxRadiusSqr) continue;
                     insect.Damage(damage, source.damageType, source.elementalType, source, true, damageTags);
                 }
             }

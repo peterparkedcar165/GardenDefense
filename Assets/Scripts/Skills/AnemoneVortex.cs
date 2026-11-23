@@ -18,6 +18,9 @@ public class AnemoneVortex : MonoBehaviour
 
     private float tickTimer = 0f;
 
+    // reused copy of the insect list, refilled each frame so damage killing an insect mid loop is safe
+    private readonly List<Insect> insectSnapshot = new List<Insect>();
+
     private const float AirborneTargetHeight = 0.5f;
     private const float LiftSpeed = 3f;
     private const float LiftEffectDuration = 1f;
@@ -65,17 +68,24 @@ public class AnemoneVortex : MonoBehaviour
         bool doTick = tickTimer >= tickInterval;
         if (doTick) tickTimer -= tickInterval;
 
-        List<Insect> snapshot = new List<Insect>(Insect.allInsects);
-        foreach (Insect insect in snapshot)
-        {
-            if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) > radius) continue;
+        Vector3 center = transform.position;
+        float radiusSqr = radius * radius;
+        float minPullRadiusSqr = minPullRadius * minPullRadius;
 
-            if (Vector3.Distance(transform.position, insect.transform.position) > minPullRadius)
+        insectSnapshot.Clear();
+        insectSnapshot.AddRange(Insect.allInsects);
+        for (int i = 0; i < insectSnapshot.Count; i++)
+        {
+            Insect insect = insectSnapshot[i];
+            if (insect == null || !insect.IsAlive) continue;
+            Vector3 insectPos = insect.transform.position;
+            float distSqr = (insectPos - center).sqrMagnitude;
+            if (distSqr > radiusSqr) continue;
+
+            if (distSqr > minPullRadiusSqr)
             {
-                Vector3 dragStep = Vector3.MoveTowards(
-                    insect.transform.position, transform.position, dragSpeed * Time.deltaTime) - insect.transform.position;
-                insect.transform.position += Insect.ClampStepAgainstObstacles(insect.transform.position, dragStep);
+                Vector3 dragStep = Vector3.MoveTowards(insectPos, center, dragSpeed * Time.deltaTime) - insectPos;
+                insect.transform.position = insectPos + Insect.ClampStepAgainstObstacles(insectPos, dragStep);
             }
 
             if (isAirborne && !insect.isFlying)
@@ -106,11 +116,14 @@ public class AnemoneVortex : MonoBehaviour
         {
             SpawnDetonationBurst();
 
-            List<Insect> snapshot = new List<Insect>(Insect.allInsects);
-            foreach (Insect insect in snapshot)
+            insectSnapshot.Clear();
+            insectSnapshot.AddRange(Insect.allInsects);
+            float detonationRadiusSqr = detonationRadius * detonationRadius;
+            for (int i = 0; i < insectSnapshot.Count; i++)
             {
+                Insect insect = insectSnapshot[i];
                 if (insect == null || !insect.IsAlive) continue;
-                if (Vector3.Distance(transform.position, insect.transform.position) > detonationRadius) continue;
+                if ((insect.transform.position - transform.position).sqrMagnitude > detonationRadiusSqr) continue;
 
                 insect.Damage(detonationDamage, source.damageType, source.elementalType, source, true, detonationTags);
 

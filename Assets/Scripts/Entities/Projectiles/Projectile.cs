@@ -64,6 +64,8 @@ public abstract class Projectile : MonoBehaviour
     // LeafRangerProjectile's bounce-redirect) can still search "every live insect I haven't hit
     // yet" using the exact same detection/record-keeping everyone else goes through
     protected readonly HashSet<Insect> _alreadyHit = new HashSet<Insect>();
+    // reused copy of the insect list for HandleInsectHits, refilled each frame instead of a new array
+    private readonly List<Insect> _insectSnapshot = new List<Insect>();
 
     // light emission: either the firing plant currently has Floral Glow active (every
     // projectile glows while that buff is up, same as Calendula's own FloralGlowProjectile
@@ -335,16 +337,19 @@ public abstract class Projectile : MonoBehaviour
         // snapshot first: RegisterHit() below can kill the insect synchronously (OnHit -> Damage),
         // which removes it from the live allInsects list via its own OnDestroy - mutating the
         // exact list this loop is enumerating and throwing InvalidOperationException otherwise
-        foreach (Insect insect in Insect.allInsects.ToArray())
+        _insectSnapshot.Clear();
+        _insectSnapshot.AddRange(Insect.allInsects);
+        for (int i = 0; i < _insectSnapshot.Count; i++)
         {
+            Insect insect = _insectSnapshot[i];
             if (insect == null || !insect.IsAlive || insect.team == Team.Friendly) continue;
             if (_alreadyHit.Contains(insect)) continue;
 
-            float baseDist = Vector3.Distance(basePos, insect.transform.position);
-            if (baseDist > baseHitboxRadius + insect.BaseHitboxRadius) continue;
+            float baseReach = baseHitboxRadius + insect.BaseHitboxRadius;
+            if ((basePos - insect.transform.position).sqrMagnitude > baseReach * baseReach) continue;
 
-            float visualDist = Vector3.Distance(visualPos, insect.GetAimPoint());
-            if (visualDist > visualHitboxRadius + insect.VisualHitboxRadius) continue;
+            float visualReach = visualHitboxRadius + insect.VisualHitboxRadius;
+            if ((visualPos - insect.GetAimPoint()).sqrMagnitude > visualReach * visualReach) continue;
 
             RegisterHit(insect);
             if (hitCount > piercing) return; // about to be destroyed below, stop scanning

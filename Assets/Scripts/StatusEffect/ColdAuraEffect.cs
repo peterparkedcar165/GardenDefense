@@ -25,10 +25,13 @@ public class ColdAuraEffect : StatusEffect
 
     public override void OnTick(float deltaTime)
     {
+        // the cold is added per deltaTime, so this still runs every frame; the aura position is read once
+        Vector3 center = target.transform.position;
+        float radiusSqr = radius * radius;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
-            if (Vector3.Distance(target.transform.position, plant.transform.position) > radius) continue;
+            if ((plant.transform.position - center).sqrMagnitude > radiusSqr) continue;
             plant.temperature = Mathf.Max(plant.temperature - coldPerSecond * deltaTime, plant.temperatureMin);
         }
     }

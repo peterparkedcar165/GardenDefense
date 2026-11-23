@@ -1585,6 +1585,7 @@ public abstract class Entity : MonoBehaviour
     // STATUS EFFECTS
 
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
+    private readonly List<StatusEffect> _tickSnapshot = new List<StatusEffect>();
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
@@ -1755,10 +1756,13 @@ public abstract class Entity : MonoBehaviour
     private void TickEffects()
     {
         // snapshot so effects that add/remove other effects during OnTick/OnExpire
-        // can't corrupt the iteration (indices shifting out of range)
-        StatusEffect[] snapshot = activeEffects.ToArray();
-        foreach (StatusEffect effect in snapshot)
+        // can't corrupt the iteration (indices shifting out of range). one reused list per entity:
+        // a new array every frame for every plant and insect kept the garbage collector busy
+        _tickSnapshot.Clear();
+        _tickSnapshot.AddRange(activeEffects);
+        for (int s = 0; s < _tickSnapshot.Count; s++)
         {
+            StatusEffect effect = _tickSnapshot[s];
             if (!activeEffects.Contains(effect)) continue; // already removed this frame
 
             bool durationFrozen = debuffsFrozen && effect.effectType == StatusEffect.Type.negative;

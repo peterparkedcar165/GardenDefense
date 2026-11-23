@@ -280,9 +280,17 @@ public abstract class Insect : Entity, IAttackable
         if (cachedStillValid)
             return _cachedWeightedTarget;
 
+        // nothing in range was found already this frame: don't search every plant again for each of
+        // the many reads of `target` in the same frame (a found plant is kept by the cache above)
+        if (_cachedWeightedTarget == null && _noWeightedTargetFrame == Time.frameCount)
+            return null;
+
         _cachedWeightedTarget = FindTauntWeightedPlantInRange();
+        if (_cachedWeightedTarget == null) _noWeightedTargetFrame = Time.frameCount;
         return _cachedWeightedTarget;
     }
+
+    private int _noWeightedTargetFrame = -1;
 
     private float attackTimer;
 
@@ -863,14 +871,29 @@ public abstract class Insect : Entity, IAttackable
         }
     }
 
+    // tiles are static, so standing still can't change the answer: only moved insects check again.
+    // the check is a point test against tile colliders only (tiles are on the Default layer), into
+    // a reused buffer: it was an all layer overlap that made a new array for every insect every frame
+    private static readonly Collider2D[] _pathTileHits = new Collider2D[16];
+    private static ContactFilter2D _pathTileFilter;
+    private static bool _pathTileFilterReady;
+    private Vector3 _lastPathCheckPosition = new Vector3(float.NaN, float.NaN, float.NaN);
+
     private void DebugPathTile()
     {
-        bool onPath = false;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0f);
-        foreach (Collider2D c in hits)
+        if (transform.position == _lastPathCheckPosition) return;
+        _lastPathCheckPosition = transform.position;
+        if (!_pathTileFilterReady)
         {
-            Tile tile = c.GetComponent<Tile>();
-            if (tile != null && tile.tileType == TileType.Path) { onPath = true; break; }
+            _pathTileFilter = new ContactFilter2D { useTriggers = Physics2D.queriesHitTriggers };
+            _pathTileFilter.SetLayerMask(1 << 0);
+            _pathTileFilterReady = true;
+        }
+        bool onPath = false;
+        int count = Physics2D.OverlapPoint(transform.position, _pathTileFilter, _pathTileHits);
+        for (int i = 0; i < count; i++)
+        {
+            if (_pathTileHits[i].TryGetComponent(out Tile tile) && tile.tileType == TileType.Path) { onPath = true; break; }
         }
 
         if (onPath && !_debugOnPath)
@@ -1038,6 +1061,10 @@ public abstract class Insect : Entity, IAttackable
         if (candidate is not Plant plant || !plant.IsAlive || plant.data == null) return;
         if (!plant.data.retainsAggro) return;
         if (plant.health <= plant.maxHealth * IronbarkAggroEffect.HealthThreshold) return;
+        // already retained by this plant: `target` is read many times a frame, and every read put a
+        // new, identical effect on in place of the old one (firing the applied event each time)
+        IronbarkAggroEffect retained = GetEffect<IronbarkAggroEffect>();
+        if (retained != null && ReferenceEquals(retained.taunter, plant)) return;
         ApplyEffect(new IronbarkAggroEffect(this, plant, plant));
     }
 

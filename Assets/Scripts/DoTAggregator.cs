@@ -8,6 +8,8 @@ public class DoTAggregator : MonoBehaviour
     private static readonly Dictionary<(Entity, ElementalType), DoTAggregator> active = new();
     // ordered list per entity so stacking positions can be recalculated when one expires
     private static readonly Dictionary<Entity, List<DoTAggregator>> entityStacks = new();
+    // loaded once on first use instead of a resources lookup for every new aggregator
+    private static GameObject prefab;
 
     private Entity target;
     private ElementalType myElement;
@@ -41,8 +43,9 @@ public class DoTAggregator : MonoBehaviour
             }
 
             float spawnOffset = baseOffset + stack.Count * stackSpacing;
+            if (prefab == null) prefab = Resources.Load<GameObject>("DoTAggregator");
             GameObject go = Object.Instantiate(
-                Resources.Load<GameObject>("DoTAggregator"),
+                prefab,
                 entity.transform.position + Vector3.up * spawnOffset,
                 Quaternion.identity);
             agg = go.GetComponent<DoTAggregator>();
@@ -78,12 +81,10 @@ public class DoTAggregator : MonoBehaviour
         Refresh();
     }
 
+    // only Accumulate changes the total, so the number and its size are set here and not every
+    // frame. the colour is set once in Init and only its alpha changes after that, in Update
     private void Refresh()
     {
-        float preservedAlpha = tmpText.color.a;
-        Color col = GetElementColor(myElement);
-        col.a = preservedAlpha;
-        tmpText.color = col;
         tmpText.text = $"<b>{totalDamage:F0}</b>";
         tmpText.fontSize = Mathf.Min(baseSize + totalDamage * sizeScale, maxSize);
     }
@@ -125,12 +126,7 @@ public class DoTAggregator : MonoBehaviour
         transform.localScale = Vector3.one * Mathf.Lerp(0.5f, 1f, alpha);
 
         if (alpha <= 0f)
-        {
             Destroy(gameObject);
-            return;
-        }
-
-        Refresh();
     }
 
     private float GetTargetOffset()

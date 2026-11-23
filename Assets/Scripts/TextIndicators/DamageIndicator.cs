@@ -6,13 +6,19 @@ public class DamageIndicator : TextIndicator
     protected override float MinVerticalSpeed => 1f;
     protected override float MaxVerticalSpeed => 1.25f;
 
+    // loaded once on first use instead of a resources lookup on every hit
+    private static GameObject prefab;
+
     public static void Spawn(Vector3 position, float damage, ElementalType elementalType, bool isCrit)
     {
         if (!SettingsManager.ShowDamageIndicators) return;
+        // Initialize destroys these before they are ever drawn, so skip making them at all
+        if (damage <= 0.5f) return;
 
-        GameObject go = Object.Instantiate(
-            Resources.Load<GameObject>("DamageIndicator"), position, Quaternion.identity);
-        go.GetComponent<DamageIndicator>()?.Initialize(damage, elementalType, isCrit);
+        if (prefab == null) prefab = Resources.Load<GameObject>("DamageIndicator");
+        GameObject go = Object.Instantiate(prefab, position, Quaternion.identity);
+        DamageIndicator indicator = go.GetComponent<DamageIndicator>();
+        if (indicator != null) indicator.Initialize(damage, elementalType, isCrit);
     }
 
     public void Initialize(float damage, ElementalType elementalType, bool isCrit)

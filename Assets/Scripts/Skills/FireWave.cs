@@ -12,6 +12,8 @@ public class FireWave : MonoBehaviour
     private Plant source;
     private Vector2 startPos;
     private readonly HashSet<Insect> _hit = new HashSet<Insect>();
+    // reused copy of the insect list, refilled each frame so damage killing an insect mid loop is safe
+    private readonly List<Insect> _insectSnapshot = new List<Insect>();
     private bool _returnsAfterEnd;
     private bool _isReturning;
 
@@ -80,11 +82,17 @@ public class FireWave : MonoBehaviour
             if (_light != null) _light.enabled = DarknessManager.instance != null && DarknessManager.instance.isDark;
         }
 
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        Vector2 center = transform.position;
+        float radiusSqr = radius * radius;
+
+        _insectSnapshot.Clear();
+        _insectSnapshot.AddRange(Insect.allInsects);
+        for (int i = 0; i < _insectSnapshot.Count; i++)
         {
+            Insect insect = _insectSnapshot[i];
             if (insect == null || !insect.IsAlive || _hit.Contains(insect)) continue;
 
-            if (Vector2.Distance(insect.transform.position, transform.position) <= radius)
+            if (((Vector2)insect.transform.position - center).sqrMagnitude <= radiusSqr)
             {
                 // amplified damage against already-burning targets
                 float dmg = insect.HasEffect<BurnEffect>() ? damage * burnMultiplier : damage;

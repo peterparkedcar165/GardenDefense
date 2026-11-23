@@ -57,8 +57,15 @@ public class Snowdrop : Shooter
     protected override bool IsWithinAttackRange(Insect insect, float distance)
     {
         if (distance <= attackRange) return true;
-        return IsPath2Maxed && boundPartner != null && boundPartner.IsAlive && boundPartner.CanReachInsect(insect);
+        // the bond lends range one step only: a Carrot bonded back to this Snowdrop asks this
+        // Snowdrop about the same insect, which asked the Carrot, forever (a stack overflow)
+        if (_resolvingBond || !IsPath2Maxed || boundPartner == null || !boundPartner.IsAlive) return false;
+        _resolvingBond = true;
+        try { return boundPartner.CanReachInsect(insect); }
+        finally { _resolvingBond = false; }
     }
+
+    private bool _resolvingBond;
 
     // tracked ourselves rather than read back off iceBeam.gameObject.activeSelf, so a stale or
     // unexpected read of Unity's own active-state can never silently skip the SetActive call
@@ -344,10 +351,13 @@ public class Snowdrop : Shooter
         if (boundPartnerGone || current != boundPartner)
         {
             if (!boundPartnerGone) Unbind();
+            // a partner that died or was removed reads as null, so Unbind never ran for it: take
+            // the hit handler off here too, or every new partner added one more
+            SetPartnerHitSubscription(false);
             boundPartner = current;
             if (boundPartner != null)
             {
-                Entity.OnEntityHit += HandleBoundPartnerHit;
+                SetPartnerHitSubscription(true);
                 boundPartner.ApplyEffect(new SnowBondHasteEffect(boundPartner, this, this));
             }
         }
@@ -369,10 +379,20 @@ public class Snowdrop : Shooter
         return null;
     }
 
+    private bool _partnerHitSubscribed;
+
+    private void SetPartnerHitSubscription(bool on)
+    {
+        if (on == _partnerHitSubscribed) return;
+        _partnerHitSubscribed = on;
+        if (on) Entity.OnEntityHit += HandleBoundPartnerHit;
+        else Entity.OnEntityHit -= HandleBoundPartnerHit;
+    }
+
     private void Unbind()
     {
+        SetPartnerHitSubscription(false);
         if (boundPartner == null) return;
-        Entity.OnEntityHit -= HandleBoundPartnerHit;
         if (boundPartner.forcedPriorityTarget != null) boundPartner.forcedPriorityTarget = null;
         boundPartner.RemoveEffect<SnowBondHasteEffect>(this);
         boundPartner = null;
@@ -401,8 +421,11 @@ public class Snowdrop : Shooter
         base.OnDestroy();
         Entity.OnEntityKilled -= OnAnyEntityKilled;
         Unbind();
-        _bondHighlighted?.ClearHighlight();
-        _bondHighlighted?.ShowExternalRangeCircle(false);
+        if (_bondHighlighted != null)
+        {
+            _bondHighlighted.ClearHighlight();
+            _bondHighlighted.ShowExternalRangeCircle(false);
+        }
     }
 
     public override AutoCastState CaptureAutoCastState() =>

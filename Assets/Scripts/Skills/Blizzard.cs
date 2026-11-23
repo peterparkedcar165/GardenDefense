@@ -35,6 +35,10 @@ public class Blizzard : MonoBehaviour
 
     [SerializeField] private SpriteRenderer visualRenderer;
 
+    // reused copies of the insect and plant lists, refilled each time so changes to the live lists mid loop are safe
+    private readonly List<Insect> insectSnapshot = new List<Insect>();
+    private readonly List<Plant> plantSnapshot = new List<Plant>();
+
     private static readonly DamageTag[] blizzardDamageTags = { DamageTag.AoE, DamageTag.DoT, DamageTag.SkillDamage };
 
     public void Initialize(Vector2 origin, Vector2 direction, float width, float duration, float maxRange,
@@ -84,21 +88,28 @@ public class Blizzard : MonoBehaviour
         tickTimer += Time.deltaTime;
         bool dealTick = tickTimer >= tickInterval;
 
-        List<Insect> insectSnapshot = new List<Insect>(Insect.allInsects);
-        foreach (Insect insect in insectSnapshot)
+        // insects are only damaged on a tick, so the scan is skipped on every other frame
+        if (dealTick)
         {
-            if (insect == null || !insect.IsAlive) continue;
-            if (!IsInBeam(insect.transform.position)) continue;
-            if (dealTick)
+            insectSnapshot.Clear();
+            insectSnapshot.AddRange(Insect.allInsects);
+            for (int i = 0; i < insectSnapshot.Count; i++)
+            {
+                Insect insect = insectSnapshot[i];
+                if (insect == null || !insect.IsAlive) continue;
+                if (!IsInBeam(insect.transform.position)) continue;
                 insect.Damage(damagePerSecond * tickInterval, source.damageType, source.elementalType, source, false, blizzardDamageTags);
+            }
         }
 
         if (dealTick)
             tickTimer -= tickInterval;
 
-        List<Plant> plantSnapshot = new List<Plant>(Plant.allPlants);
-        foreach (Plant plant in plantSnapshot)
+        plantSnapshot.Clear();
+        plantSnapshot.AddRange(Plant.allPlants);
+        for (int i = 0; i < plantSnapshot.Count; i++)
         {
+            Plant plant = plantSnapshot[i];
             if (plant == null || !plant.IsAlive) continue;
             if (!IsInBeam(plant.transform.position)) continue;
             Holly.ApplySnowWard(plant, source, auraLingerDuration, auraRampPerSecond, auraShieldMax, auraCoolingPerSecond, auraTickInterval, auraMagicResistanceBonus);
@@ -136,6 +147,7 @@ public class Blizzard : MonoBehaviour
         float dot = Vector2.Dot(toPoint, direction);
         if (dot < beamStart || dot > beamEnd) return false;
         Vector2 perp = toPoint - direction * dot;
-        return perp.magnitude <= width * 0.5f;
+        float halfWidth = width * 0.5f;
+        return perp.sqrMagnitude <= halfWidth * halfWidth;
     }
 }

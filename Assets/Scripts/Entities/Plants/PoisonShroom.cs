@@ -19,6 +19,10 @@ public class PoisonShroom : Shooter
     // so UpdateStats (which runs every frame) adds/removes it exactly once on each state change
     private bool _dotCanCritFromPath2;
 
+    // reused by FindTarget on every call (cleared first) so targeting makes no garbage; only
+    // read during that call, never handed out or kept
+    private readonly List<Insect> _freshScratch = new List<Insect>();
+
     // skill tree node unlock ids
     public const string LingeringToxinsUnlock   = "poison_field_lingering";
     public const string DelayedBloomUnlock      = "poison_field_delayed_bloom";
@@ -77,7 +81,8 @@ public class PoisonShroom : Shooter
     // right as it would otherwise fall off
     protected override GameObject FindTarget()
     {
-        List<Insect> fresh = new List<Insect>();
+        List<Insect> fresh = _freshScratch;
+        fresh.Clear();
         Insect leastTimeInsect = null;
         float leastTime = float.MaxValue;
 

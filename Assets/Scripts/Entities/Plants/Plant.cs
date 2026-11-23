@@ -875,9 +875,33 @@ public abstract class Plant : Entity, IAttackable
     private const float IdleTurnMaxInterval = 6f;
     private float _idleTurnTimer = -1f;
 
+    // the target it faces is picked again every FacingRetargetInterval, or at once when that target
+    // dies or goes: the pick runs the plant's whole target search (every insect, with its range,
+    // night and flight checks), which ran every frame on every plant just to turn the sprite. the
+    // sprite still follows the picked target every frame, and attacks do their own fresh search
+    private const float FacingRetargetInterval = 0.15f;
+    private GameObject _facingTarget;
+    private Insect _facingInsect;
+    private float _facingRetargetTimer;
+
+    private GameObject FacingTarget()
+    {
+        if (!UsesTargeting) return null;
+        _facingRetargetTimer -= Time.deltaTime;
+        bool lost = !ReferenceEquals(_facingTarget, null)
+            && (_facingTarget == null || !_facingTarget.activeInHierarchy || (_facingInsect != null && !_facingInsect.IsAlive));
+        if (lost || _facingRetargetTimer <= 0f)
+        {
+            _facingRetargetTimer = FacingRetargetInterval;
+            _facingTarget = GetHighlightTarget();
+            _facingInsect = _facingTarget != null ? _facingTarget.GetComponent<Insect>() : null;
+        }
+        return _facingTarget;
+    }
+
     private void UpdateFacingFlip()
     {
-        GameObject targetObj = UsesTargeting ? GetHighlightTarget() : null;
+        GameObject targetObj = FacingTarget();
         if (targetObj == null)
         {
             UpdateIdleTurn();
@@ -885,7 +909,7 @@ public abstract class Plant : Entity, IAttackable
         }
         _idleTurnTimer = -1f;
 
-        Insect insect = targetObj.GetComponent<Insect>();
+        Insect insect = _facingInsect;
         Vector2 targetPos = insect != null ? insect.GetApproachPoint(transform.position) : (Vector2)targetObj.transform.position;
         float dx = targetPos.x - transform.position.x;
         if (Mathf.Abs(dx) < FacingFlipThreshold) return;

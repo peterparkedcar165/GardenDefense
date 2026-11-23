@@ -96,8 +96,11 @@ public class Carrot : Shooter
     {
         base.OnDestroy();
         Unbind();
-        _bondHighlighted?.ClearHighlight();
-        _bondHighlighted?.ShowExternalRangeCircle(false);
+        if (_bondHighlighted != null)
+        {
+            _bondHighlighted.ClearHighlight();
+            _bondHighlighted.ShowExternalRangeCircle(false);
+        }
     }
 
     // click Bond to pick a Shooter plant to link with, click again to break the bond.
@@ -135,19 +138,32 @@ public class Carrot : Shooter
         if (!boundShooterGone && current == boundShooter) return;
 
         if (!boundShooterGone) Unbind();
+        // a bonded plant that died or was removed reads as null, so Unbind never ran for it: take
+        // the hit handler off here too, or every new bond added one more
+        SetShooterHitSubscription(false);
 
         boundShooter = current;
         if (boundShooter != null)
         {
-            Entity.OnHit += HandleBoundShooterHit;
+            SetShooterHitSubscription(true);
             boundShooter.ApplyEffect(new SoilBondEffect(boundShooter, this, this));
         }
     }
 
+    private bool _shooterHitSubscribed;
+
+    private void SetShooterHitSubscription(bool on)
+    {
+        if (on == _shooterHitSubscribed) return;
+        _shooterHitSubscribed = on;
+        if (on) Entity.OnHit += HandleBoundShooterHit;
+        else Entity.OnHit -= HandleBoundShooterHit;
+    }
+
     private void Unbind()
     {
+        SetShooterHitSubscription(false);
         if (boundShooter == null) return;
-        Entity.OnHit -= HandleBoundShooterHit;
         // removes only this Carrot's own instance - SoilBondEffect is source-stackable, so
         // other Carrots bonded to the same plant keep theirs untouched
         boundShooter.RemoveEffect<SoilBondEffect>(this);
@@ -193,8 +209,15 @@ public class Carrot : Shooter
     protected override bool IsWithinAttackRange(Insect insect, float distance)
     {
         if (distance <= attackRange) return true;
-        return boundShooter != null && boundShooter.IsAlive && boundShooter.CanReachInsect(insect);
+        // the bond lends range one step only: a Snowdrop bonded back to this Carrot asks this
+        // Carrot about the same insect, which asked the Snowdrop, forever (a stack overflow)
+        if (_resolvingBond || boundShooter == null || !boundShooter.IsAlive) return false;
+        _resolvingBond = true;
+        try { return boundShooter.CanReachInsect(insect); }
+        finally { _resolvingBond = false; }
     }
+
+    private bool _resolvingBond;
 
     // pushes an insect over a short time so the knockback reads as motion instead of a teleport.
     // runs on the plant because projectiles/instant hits destroy themselves on impact

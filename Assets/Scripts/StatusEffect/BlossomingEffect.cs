@@ -39,30 +39,49 @@ public class BlossomingEffect : StatusEffect
         sourceStackable = true;
     }
 
+    // its full duration once it landed (after the duration stats), for the rebloom's half
+    private float _fullDuration;
+    // set when it runs out on its own with the rebloom conditions met (OnNaturalExpire)
+    private bool _rebloomOnExpire;
+    private bool _expired;
+
     public override void OnApply()
     {
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Blossoming", new Color(0.31f, 0.76f, 0.97f));
         target.attackSpeedMultiplier += attackSpeedBonus;
         target.elementalAffinityAdder += elementalAffinityBonus;
         target.grassDamageAdder += grassDamageBonus;
+        _fullDuration = duration;
 
         GrantsGerminateRadiusBonus = source is Begonia beg && beg.path3Level >= Plant.absoluteLevelCap;
     }
 
+    // Rebloom: if the bearer is still within range when this lapses, it blooms again once more at
+    // half duration, instead of just falling off. only when it runs out on its own: a new cast that
+    // replaces it doesn't rebloom
+    public override void OnNaturalExpire()
+    {
+        _rebloomOnExpire = !_isRebloom && source is Begonia beg && beg != null && beg.IsAlive
+            && SkillTreeManager.HasUnlock(beg, Begonia.RebloomUnlock)
+            && Vector3.Distance(target.transform.position, beg.transform.position) <= beg.attackRange;
+    }
+
     public override void OnExpire()
     {
+        // once only: its bonuses are taken back a single time however it ends
+        if (_expired) return;
+        _expired = true;
         target.attackSpeedMultiplier -= attackSpeedBonus;
         target.elementalAffinityAdder -= elementalAffinityBonus;
         target.grassDamageAdder -= grassDamageBonus;
 
-        // Rebloom: if the bearer is still within range when this lapses, it blooms again once
-        // more at half duration, instead of just falling off
-        if (!_isRebloom && source is Begonia beg && beg.IsAlive && SkillTreeManager.HasUnlock(beg, Begonia.RebloomUnlock)
-            && Vector3.Distance(target.transform.position, beg.transform.position) <= beg.attackRange)
-        {
-            target.ApplyEffect(new BlossomingEffect(target, duration * 0.5f, level, source, attackSpeedBonus, PrimerCooldownReduction,
-                elementalAffinityBonus, grassDamageBonus, isRebloom: true));
-        }
+        if (!_rebloomOnExpire) return;
+        // off the plant first: the rebloom is the same kind from the same Begonia, so while this one
+        // was still on it, applying the rebloom replaced and expired this one again, which reapplied
+        // the rebloom, forever (a stack overflow)
+        target.activeEffects.Remove(this);
+        target.ApplyEffect(new BlossomingEffect(target, _fullDuration * 0.5f, level, source, attackSpeedBonus, PrimerCooldownReduction,
+            elementalAffinityBonus, grassDamageBonus, isRebloom: true) { durationIsFinal = true });
     }
 
     public override void OnTick(float deltaTime) { }

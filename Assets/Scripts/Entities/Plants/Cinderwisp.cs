@@ -45,6 +45,11 @@ public class Cinderwisp : MonoBehaviour
     private bool    _isChasingDarkness;
     private Insect  _chasedInsect;
 
+    // after a darkness search finds nothing, the next search waits this long (seconds), so a
+    // covered garden on a dark level isn't rescanned insect by insect every frame
+    private float   _nextDarknessSearchTime;
+    private const float DarknessSearchRetryDelay = 0.25f;
+
     private Light2D _light;
     private bool _cleanedUp;
     private bool _isDying;
@@ -211,8 +216,15 @@ public class Cinderwisp : MonoBehaviour
         if (_chasedInsect == null || !_chasedInsect.IsAlive)
         {
             ReleaseInsectClaim();
-            _chasedInsect = FindDarknessTarget();
-            if (_chasedInsect != null) ClaimInsect(_chasedInsect);
+            _chasedInsect = null;
+            // while the wait after a search that found nothing runs, count it as nothing found
+            // again without searching; a search that finds a target sets no wait
+            if (Time.time >= _nextDarknessSearchTime)
+            {
+                _chasedInsect = FindDarknessTarget();
+                if (_chasedInsect != null) ClaimInsect(_chasedInsect);
+                else _nextDarknessSearchTime = Time.time + DarknessSearchRetryDelay;
+            }
         }
 
         if (_chasedInsect == null)

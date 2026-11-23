@@ -12,6 +12,8 @@ public class PoisonField : MonoBehaviour
     private float tickTimer = 0f;
 
     private readonly List<Insect> affectedInsects = new List<Insect>();
+    // reused copy of the insect list, refilled each frame instead of allocating a new one
+    private readonly List<Insect> insectSnapshot = new List<Insect>();
 
     // Delayed Bloom: the field starts at `startRadius` and ramps up to `endRadius` over the first
     // 60% of `totalDuration`, then holds - both captured once in Initialize since `radius` itself
@@ -67,11 +69,16 @@ public class PoisonField : MonoBehaviour
         PoisonShroom shroom = source as PoisonShroom;
         bool lingeringToxins = shroom != null && SkillTreeManager.HasUnlock(shroom, PoisonShroom.LingeringToxinsUnlock);
 
-        List<Insect> snapshot = new List<Insect>(Insect.allInsects);
-        foreach (Insect insect in snapshot)
+        Vector3 center = transform.position;
+        float radiusSqr = radius * radius;
+
+        insectSnapshot.Clear();
+        insectSnapshot.AddRange(Insect.allInsects);
+        for (int i = 0; i < insectSnapshot.Count; i++)
         {
+            Insect insect = insectSnapshot[i];
             if (insect == null || !insect.IsAlive) continue;
-            bool inside = Vector3.Distance(transform.position, insect.transform.position) <= radius;
+            bool inside = (insect.transform.position - center).sqrMagnitude <= radiusSqr;
             bool tracked = affectedInsects.Contains(insect);
 
             if (inside && !tracked)

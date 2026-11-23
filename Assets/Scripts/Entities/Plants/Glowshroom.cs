@@ -29,6 +29,10 @@ public class Glowshroom : Shooter
     private float DeathBlindDuration => GMData?.deathBlindDuration ?? 4f;
     private float DeathBlindRadius   => GMData?.deathBlindRadius   ?? 2f;
 
+    // reused by FindTarget on every call (cleared first) so targeting makes no garbage; only
+    // read during that call, never handed out or kept
+    private readonly List<Insect> _withoutGlow = new List<Insect>();
+
     protected override void Awake()
     {
         base.Awake();
@@ -61,14 +65,14 @@ public class Glowshroom : Shooter
     // only falls back to a glowing target when every valid insect already has it
     protected override GameObject FindTarget()
     {
-        List<Insect> withoutGlow = new List<Insect>();
+        _withoutGlow.Clear();
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive || insect.HasEffect<FungalGlowEffect>()) continue;
-            withoutGlow.Add(insect);
+            _withoutGlow.Add(insect);
         }
 
-        GameObject target = FindByTargeting(withoutGlow);
+        GameObject target = FindByTargeting(_withoutGlow);
         return target != null ? target : FindByTargeting(Insect.allInsects);
     }
 

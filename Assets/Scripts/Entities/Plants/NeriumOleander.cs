@@ -30,6 +30,19 @@ public class NeriumOleander : Shooter
     private const float WardAuraTickInterval = 0.5f;
     private float _wardAuraTickTimer;
 
+    // reused by FindTarget on every call (cleared first) so targeting makes no garbage
+    private readonly List<Insect> _candidates = new List<Insect>();
+    private readonly HashSet<Insect> _directlySeen = new HashSet<Insect>();
+
+    // sprout chain search result (see GatherChainInsects): each reachable insect and the first
+    // sprout that leads to it, plus the order they were found in; built at most once per frame
+    private readonly Dictionary<Insect, OleanderSprout> _chainVia = new Dictionary<Insect, OleanderSprout>();
+    private readonly List<Insect> _chainOrder = new List<Insect>();
+    private readonly HashSet<OleanderSprout> _chainVisited = new HashSet<OleanderSprout>();
+    private readonly Queue<OleanderSprout> _chainFrontier = new Queue<OleanderSprout>();
+    private int _chainFrame = -1;
+    private int _chainSproutCount = -1;
+
     // skill tree unlock ids
     public const string VenomChainUnlock   = "oleander_venom_chain";
     public const string ThornedPetalsUnlock = "oleander_thorned_petals";
@@ -136,8 +149,9 @@ public class NeriumOleander : Shooter
     // travel to it first
     protected override GameObject FindTarget()
     {
-        List<Insect> candidates = new List<Insect>();
-        Dictionary<Insect, OleanderSprout> viaSprout = GatherChainInsects();
+        _candidates.Clear();
+        _directlySeen.Clear();
+        GatherChainInsects();
 
         foreach (Insect insect in Insect.allInsects)
         {
@@ -145,16 +159,23 @@ public class NeriumOleander : Shooter
             float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see Plant.FindNearest
             if (dist <= attackRange && IsValidNightTarget(insect, dist))
             {
-                candidates.Add(insect);
-                viaSprout.Remove(insect); // directly visible: no need to route through a sprout
+                _candidates.Add(insect);
+                _directlySeen.Add(insect); // directly visible: no need to route through a sprout
             }
         }
-        foreach (Insect insect in viaSprout.Keys)
-            candidates.Add(insect);
+        // chained insects in the order the chain search found them, leaving out any seen directly
+        // and any that died since the search ran earlier this frame
+        foreach (Insect insect in _chainOrder)
+        {
+            if (insect == null || !insect.IsAlive || _directlySeen.Contains(insect)) continue;
+            _candidates.Add(insect);
+        }
 
-        Insect winner = PickBestCandidate(candidates);
+        Insect winner = PickBestCandidate(_candidates);
         if (winner == null) return null;
-        return viaSprout.TryGetValue(winner, out OleanderSprout sprout) ? sprout.gameObject : winner.gameObject;
+        if (!_directlySeen.Contains(winner) && _chainVia.TryGetValue(winner, out OleanderSprout sprout))
+            return sprout.gameObject;
+        return winner.gameObject;
     }
 
     // extends the base single-circle check with the same sprout-chain reach FindTarget() itself
@@ -164,15 +185,23 @@ public class NeriumOleander : Shooter
     {
         if (cannotTargetInsects) return false;
         if (base.CanReachInsect(insect)) return true;
-        return GatherChainInsects().ContainsKey(insect);
+        GatherChainInsects();
+        // the chain search only takes living insects, so one that died since it ran is left out
+        return insect.IsAlive && _chainVia.ContainsKey(insect);
     }
 
     // BFS out from every sprout within attackRange (this oleander's own bounce search radius,
     // the same radius its petal uses once airborne), collecting every insect reachable through
-    // that chain and which first-hop sprout leads to it
-    private Dictionary<Insect, OleanderSprout> GatherChainInsects()
+    // that chain and which first-hop sprout leads to it.
+    // the result is kept for the rest of the frame (searched again sooner only if a sprout
+    // appears or goes), so FindTarget and every CanReachInsect query that frame share one search
+    private void GatherChainInsects()
     {
-        Dictionary<Insect, OleanderSprout> result = new Dictionary<Insect, OleanderSprout>();
+        int sproutCount = OleanderSprout.allSprouts.Count;
+        if (_chainFrame == Time.frameCount && _chainSproutCount == sproutCount) return;
+
+        _chainVia.Clear();
+        _chainOrder.Clear();
         float range = BounceSearchRadius;
 
         foreach (OleanderSprout first in OleanderSprout.allSprouts)
@@ -180,33 +209,39 @@ public class NeriumOleander : Shooter
             if (first == null) continue;
             if (Vector3.Distance(transform.position, first.transform.position) > attackRange) continue;
 
-            HashSet<OleanderSprout> visited = new HashSet<OleanderSprout> { first };
-            Queue<OleanderSprout> frontier = new Queue<OleanderSprout>();
-            frontier.Enqueue(first);
+            _chainVisited.Clear();
+            _chainVisited.Add(first);
+            _chainFrontier.Clear();
+            _chainFrontier.Enqueue(first);
 
-            while (frontier.Count > 0)
+            while (_chainFrontier.Count > 0)
             {
-                OleanderSprout current = frontier.Dequeue();
+                OleanderSprout current = _chainFrontier.Dequeue();
 
                 foreach (Insect i in Insect.allInsects)
                 {
-                    if (i == null || !i.IsAlive || result.ContainsKey(i)) continue;
+                    if (i == null || !i.IsAlive || _chainVia.ContainsKey(i)) continue;
                     if (i.SeenDistance(Vector3.Distance(current.transform.position, i.transform.position)) <= range && IsVisibleToChain(i))
-                        result[i] = first;
+                    {
+                        _chainVia[i] = first;
+                        _chainOrder.Add(i);
+                    }
                 }
 
                 foreach (OleanderSprout other in OleanderSprout.allSprouts)
                 {
-                    if (other == null || visited.Contains(other)) continue;
+                    if (other == null || _chainVisited.Contains(other)) continue;
                     if (Vector3.Distance(current.transform.position, other.transform.position) <= range)
                     {
-                        visited.Add(other);
-                        frontier.Enqueue(other);
+                        _chainVisited.Add(other);
+                        _chainFrontier.Enqueue(other);
                     }
                 }
             }
         }
-        return result;
+
+        _chainFrame       = Time.frameCount;
+        _chainSproutCount = sproutCount;
     }
 
     // mirrors Plant's FindFirst/FindNearest/FindLast/FindStrongest scoring, but over a pool
