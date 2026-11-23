@@ -4,7 +4,8 @@ using UnityEngine;
 // where a plant, insect or other light shines (DarknessManager.LightAmount). WeatherManager dims
 // the whole effect on night levels (WeatherVisualEntry.nightDimming), which suits the dark ground,
 // but a light brightens the ground under it and the dimmed rain gets lost there.
-// sits on the effect's root and covers every particle system under it (rain: drops and splashes).
+// sits on the effect's root and covers every particle system under it (rain: drops and splashes;
+// snow since 2026-11-22, Tommy: it was plain white on dark levels).
 // does nothing on day levels. unlike a lit shader, the effect keeps its own unlit additive look
 public class ParticleLightResponse : MonoBehaviour
 {
