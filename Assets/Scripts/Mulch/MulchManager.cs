@@ -134,7 +134,7 @@ public class MulchManager : MonoBehaviour
     }
 
     // whether dropping this mulch on the plant would merge it with a copy the plant has (Equip's
-    // merge), for the highlight on those plants while a bag mulch is hovered
+    // merge), for the highlight on those plants while a bag mulch or a ground drop is hovered or dragged
     public static bool MergesOnto(MulchItem item, Plant plant)
     {
         if (item == null || item.data == null || plant == null || !plant.IsAlive) return false;

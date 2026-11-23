@@ -14,6 +14,7 @@ using System.Collections.Generic;
 // copy follows the pointer, and let go over nothing the copy glides back onto it (Tommy, 2026-11-20).
 // let go over a bag mulch it merges with, the two merge in that slot, even with a full bag; a click
 // never merges. a right click opens a Sell popup on it, like a bag mulch's (Tommy, 2026-11-22).
+// hovered or dragged, the plants it would merge with light up like a bag mulch's (2026-11-23).
 //
 // built like insects and projectiles: this root is the spot on the ground, with a Shadow child that
 // stays on the ground and a Visual child that rises off it during the hop. the visual is unlit, so
@@ -62,6 +63,13 @@ public class MulchDrop : MonoBehaviour
     private Vector2 pressPosition;
     // any drop being dragged: other drops don't pop their tooltips while it passes over them
     private static MulchDrop draggedDrop;
+    // the drop under the pointer (kept while its Sell popup is open, like a bag slot's hover)
+    private static MulchDrop hoveredDrop;
+
+    // while a drop is dragged or hovered, the plants its mulch would merge with show the same
+    // highlight as for a bag mulch (MulchInventoryUI.UpdateMergeHighlights; Tommy, 2026-11-23)
+    public static MulchItem DraggedItem => draggedDrop != null ? draggedDrop.Item : null;
+    public static MulchItem HoveredItem => hoveredDrop != null ? hoveredDrop.Item : null;
     // how faded the drop is while its copy is being dragged
     private const float FadedAlpha = 0.35f;
 
@@ -253,6 +261,7 @@ public class MulchDrop : MonoBehaviour
         if (hovered) MulchTooltip.Hide();
         if (dragging) MulchInventoryUI.instance?.EndGroundDrag();
         if (draggedDrop == this) draggedDrop = null;
+        if (hoveredDrop == this) hoveredDrop = null;
     }
 
     private void Update()
@@ -405,6 +414,7 @@ public class MulchDrop : MonoBehaviour
             draggedDrop = this;
             faded = true;
             hovered = false;
+            if (hoveredDrop == this) hoveredDrop = null;
             MulchTooltip.Hide();
             MulchInventoryUI.instance?.BeginGroundDrag(Item, pointer, visual.position, registry.dropSize);
         }
@@ -487,6 +497,7 @@ public class MulchDrop : MonoBehaviour
     {
         if (draggedDrop != null || (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())) return;
         hovered = true;
+        hoveredDrop = this;
         int price = MulchManager.instance != null ? MulchManager.instance.SellPrice(Item) : 0;
         MulchTooltip.Show(Item, null, $"Click to pick it up, or drag it onto a plant or onto a matching mulch in your bag. Right click to sell for {price} Sun.");
     }
@@ -519,6 +530,7 @@ public class MulchDrop : MonoBehaviour
 
     private void OnMouseExit()
     {
+        if (hoveredDrop == this) hoveredDrop = null;
         if (!hovered) return;
         hovered = false;
         MulchTooltip.Hide();

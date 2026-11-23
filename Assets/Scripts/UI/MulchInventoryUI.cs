@@ -64,7 +64,7 @@ public class MulchInventoryUI : MonoBehaviour
     public bool SellPopupOpen => sellPopup != null && sellPopup.IsOpen;
 
     // plants a hovered (or dragged) bag mulch would merge with show a highlight in its rarity's
-    // colour (Tommy, 2026-11-22)
+    // colour (Tommy, 2026-11-22), and the same for a ground drop (2026-11-23)
     private int hoveredSlot = -1;
     private readonly HashSet<Plant> mergeHighlighted = new HashSet<Plant>();
     private readonly HashSet<Plant> mergeWanted = new HashSet<Plant>();
@@ -522,11 +522,11 @@ public class MulchInventoryUI : MonoBehaviour
         else if (hoveredSlot == slot) hoveredSlot = -1;
     }
 
-    // every frame, since other highlights (a plant's own hover ending) clear it
+    // every frame, since other highlights (a plant's own hover ending) clear it. a ground drop being
+    // hovered or dragged highlights the same way (Tommy, 2026-11-23); whatever is dragged comes first
     private void UpdateMergeHighlights()
     {
-        int slot = draggingSlot >= 0 ? draggingSlot : hoveredSlot;
-        MulchItem item = slot >= 0 && MulchManager.instance != null && !IsIncoming(slot) ? MulchManager.instance.GetSlot(slot) : null;
+        MulchItem item = BagItem(draggingSlot) ?? MulchDrop.DraggedItem ?? BagItem(hoveredSlot) ?? MulchDrop.HoveredItem;
 
         mergeWanted.Clear();
         if (item != null)
@@ -545,6 +545,10 @@ public class MulchInventoryUI : MonoBehaviour
             mergeHighlighted.Add(plant);
         }
     }
+
+    // the mulch in a bag slot, null for none, -1 or a slot a drop is still flying into
+    private MulchItem BagItem(int slot) =>
+        slot >= 0 && MulchManager.instance != null && !IsIncoming(slot) ? MulchManager.instance.GetSlot(slot) : null;
 
     // the drop went somewhere: the copy just goes
     public void EndGroundDrag()
