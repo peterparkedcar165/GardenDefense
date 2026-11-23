@@ -102,7 +102,7 @@ public class BombardierBeetle : Insect, IShooterInsect
             if (plant == null || !plant.IsAlive) continue;
             if (!CanReachPlant(plant)) continue;
 
-            float rangeDist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
+            float rangeDist = plant.SeenDistance(Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position)));
             if (rangeDist > attackRange) continue;
 
             float pathDist = DistanceToNearestPathTile(plant.transform.position);

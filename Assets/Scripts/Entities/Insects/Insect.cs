@@ -275,7 +275,7 @@ public abstract class Insect : Entity, IAttackable
         // aborts Move() every frame from then on - the insect just stops in place for good
         bool cachedStillValid = _cachedWeightedTarget is Plant cachedPlant && cachedPlant != null && cachedPlant.IsAlive
             && CanReachPlant(cachedPlant)
-            && Vector3.Distance(transform.position, cachedPlant.GetApproachPoint(transform.position)) <= targetingRange;
+            && cachedPlant.SeenDistance(Vector3.Distance(transform.position, cachedPlant.GetApproachPoint(transform.position))) <= targetingRange;
 
         if (cachedStillValid)
             return _cachedWeightedTarget;
@@ -1009,7 +1009,8 @@ public abstract class Insect : Entity, IAttackable
             if (plant == null || !plant.IsAlive) continue;
             if (!CanReachPlant(plant)) continue;
             if (plant == _stuckIgnoredPlant && _stuckIgnoreTimer > 0f) continue;
-            float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
+            // how far it looks (Visibility), not how far it is
+            float dist = plant.SeenDistance(Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position)));
             if (dist > targetingRange) continue;
 
             float tickets = plant.tauntValue * GetTauntAffinity(plant);
@@ -1106,7 +1107,7 @@ public abstract class Insect : Entity, IAttackable
     // nearest enemy insect within engage range (used by friendlies). enemies live in allInsects
     protected IAttackable FindNearestEnemyInRange()
     {
-        return StickyEnemy(e => Vector3.Distance(transform.position, e.transform.position) <= EngageRange);
+        return StickyEnemy(e => e.SeenDistance(Vector3.Distance(transform.position, e.transform.position)) <= EngageRange);
     }
 
     // keeps the friendly locked onto one enemy until it dies or leaves the valid set, then picks the
@@ -1510,6 +1511,7 @@ public abstract class Insect : Entity, IAttackable
         startingShield         = data.startingShield;
         baseEvasion            = data.baseEvasion;
         baseAccuracy           = data.baseAccuracy;
+        baseVisibility         = data.baseVisibility;
     }
 
     public virtual string GetName()

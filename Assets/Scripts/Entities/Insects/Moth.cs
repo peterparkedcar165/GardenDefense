@@ -73,7 +73,7 @@ public class Moth : FlyingInsect
             if (plant == null || !plant.IsAlive) continue;
             if (plant.lightEmissionRange <= 0f) continue;
             float dist = Vector3.Distance(transform.position, plant.Position);
-            if (dist <= targetingRange && dist < nearestDist)
+            if (plant.SeenDistance(dist) <= targetingRange && dist < nearestDist)
             {
                 nearestDist = dist;
                 nearest = plant;

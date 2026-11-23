@@ -93,6 +93,7 @@ public static class PlantStatApplier
             case StatType.HealAmountFlat:                     if (plant is AloeVera av) av.healAmountAdder += value; break;
             case StatType.MulchDropRate:                      plant.mulchDropRate                += value; break;
             case StatType.RareItemDropRate:                   plant.rareItemDropRate             += value; break;
+            case StatType.Visibility:                         plant.visibilityAdder              += value; break;
         }
     }
 }

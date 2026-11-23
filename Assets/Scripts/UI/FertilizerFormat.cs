@@ -20,6 +20,8 @@ public static class FertilizerFormat
         {
             case StatType.DebuffReceivedDuration:
             case StatType.SunGenerationCooldownMultiplier:
+            // a plant is better off seen less (Visibility)
+            case StatType.Visibility:
                 return true;
             default: return false;
         }

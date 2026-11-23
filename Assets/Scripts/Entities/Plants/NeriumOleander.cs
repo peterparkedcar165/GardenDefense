@@ -142,7 +142,7 @@ public class NeriumOleander : Shooter
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            float dist = Vector3.Distance(transform.position, insect.transform.position); // see Plant.FindNearest
+            float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see Plant.FindNearest
             if (dist <= attackRange && IsValidNightTarget(insect, dist))
             {
                 candidates.Add(insect);
@@ -191,7 +191,7 @@ public class NeriumOleander : Shooter
                 foreach (Insect i in Insect.allInsects)
                 {
                     if (i == null || !i.IsAlive || result.ContainsKey(i)) continue;
-                    if (Vector3.Distance(current.transform.position, i.transform.position) <= range && IsVisibleToChain(i))
+                    if (i.SeenDistance(Vector3.Distance(current.transform.position, i.transform.position)) <= range && IsVisibleToChain(i))
                         result[i] = first;
                 }
 

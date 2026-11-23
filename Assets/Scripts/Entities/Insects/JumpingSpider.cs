@@ -135,7 +135,7 @@ public class JumpingSpider : Insect
             if (plant == null || !plant.IsAlive) continue;
             if (plant.occupiedTile != null && plant.occupiedTile.tileType == TileType.Water) continue;
             float dist = Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position));
-            if (dist <= LeapRange && dist < nearestDist)
+            if (plant.SeenDistance(dist) <= LeapRange && dist < nearestDist)
             {
                 nearestDist = dist;
                 nearest = plant;

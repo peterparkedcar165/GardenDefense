@@ -126,5 +126,8 @@ public enum StatType
     // MulchDropRate adds to the base drop chance (1 = +1%), RareItemDropRate weighs Rare and Epic
     // more (25 = +25%). MulchDropRate was ItemDropRate, same slot (Tommy, 2026-11-21)
     MulchDropRate,
-    RareItemDropRate
+    RareItemDropRate,
+    // Entity.visibilityAdder: the share of an insect's range a plant can be seen in (Tommy,
+    // 2026-11-23), e.g. -0.25 = seen 25% less far. appended to keep every ordinal above stable
+    Visibility
 }

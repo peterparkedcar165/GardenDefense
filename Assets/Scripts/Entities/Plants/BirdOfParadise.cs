@@ -115,7 +115,7 @@ public class BirdOfParadise : Aura
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || exclude.Contains(insect) || !insect.IsAlive) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) > attackRange) continue;
+            if (insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)) > attackRange) continue;
             candidates.Add(insect);
         }
         candidates.Sort((a, b) =>

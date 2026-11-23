@@ -102,6 +102,8 @@ public class PlantData : ScriptableObject
     public int baseMagicPenFlat;
     public float baseMagicPenPercent;
     public float baseLifesteal;
+    [Tooltip("the share of an insect's targeting range this plant can be seen in, 1 = 100%. 0.5: an insect with a 6 targeting range only sees it within 3")]
+    public float baseVisibility = 1f;
     // disabled: every chance-based proc that used to read this was converted to a deterministic
     // equivalent, so this has no reader left - kept out, not deleted, so already-serialized
     // fertilizer rolls and the BonusEffectChance ordinal in StatType stay valid

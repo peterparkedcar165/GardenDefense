@@ -115,6 +115,10 @@ public abstract class Entity : MonoBehaviour
     public float baseDebuffGivenDuration, baseBuffGivenDuration, baseBuffReceivedDuration, baseDebuffReceivedDuration;
     public float baseDotDuration, baseRegenerationDuration, baseShieldDuration, baseSunGenerationCooldown;
     public float baseEvasion, baseAccuracy;
+    // Visibility (Tommy, 2026-11-23): the share of another's sight range this can be seen in, 1 = 100%.
+    // a plant at 50% is only seen by an insect with a 6 targeting range within 3, and the same for an
+    // insect seen by a plant. 0 = never seen. see SeenDistance
+    public float baseVisibility = 1f;
     public float baseBonusCritChanceReceived, baseBonusCritDamageReceived, baseProjectileSpeed;
     public float baseOnHitEffectiveness = 1f;
 
@@ -269,6 +273,7 @@ public abstract class Entity : MonoBehaviour
     public void AddElementalReactionCanCrit()    => _elementalReactionCanCritSources++;
     public void RemoveElementalReactionCanCrit() => _elementalReactionCanCritSources = Mathf.Max(0, _elementalReactionCanCritSources - 1);
     public float evasion, accuracy;
+    public float visibility = 1f;
     public float bonusCritChanceReceived, bonusCritDamageReceived, projectileSpeed;
     public float onHitEffectiveness;
 
@@ -300,6 +305,7 @@ public abstract class Entity : MonoBehaviour
     public float debuffGivenDurationAdder, buffGivenDurationAdder, buffReceivedDurationAdder, debuffReceivedDurationAdder;
     public float dotDurationAdder, regenerationDurationAdder, shieldDurationAdder, sunGenerationCooldownMultiplier;
     public float evasionAdder, accuracyAdder;
+    public float visibilityAdder;
     public float bonusCritChanceReceivedAdder, bonusCritDamageReceivedAdder, projectileSpeedAdder;
     public float sunYieldAdder, currencyYieldAdder;
     public float onHitEffectivenessAdder;
@@ -324,6 +330,7 @@ public abstract class Entity : MonoBehaviour
     public float counterDamageMultiplier;
     public float debuffGivenDurationMultiplier, buffGivenDurationMultiplier, buffReceivedDurationMultiplier, debuffReceivedDurationMultiplier;
     public float evasionMultiplier, accuracyMultiplier;
+    public float visibilityMultiplier;
     public float bonusCritChanceReceivedMultiplier, projectileSpeedMultiplier;
     public float sunYieldMultiplier, currencyYieldMultiplier;
     public float maxHealthTotalMultiplier = 1f, attackDamageTotalMultiplier = 1f, magicPowerTotalMultiplier = 1f;
@@ -358,6 +365,14 @@ public abstract class Entity : MonoBehaviour
     // at baseAttackRange in UpdateStats() below, since reaching farther than your own base melee
     // range from a fertilizer/skill node/aura doesn't make sense the way it does for a shooter
     public virtual bool IsMeleeAttacker => false;
+
+    // how far away this entity looks to whoever is choosing a target: the real distance divided by
+    // its visibility, so it is only seen within that share of the chooser's range (exactly the real
+    // distance at 100%). every target choice compares this to its range: a plant picking an insect or
+    // an ally to heal, an insect picking a plant or an enemy. area effects that hit everything in a
+    // radius, and the reach of an attack on a target already chosen, use the real distance
+    public float SeenDistance(float realDistance) =>
+        visibility > 0f ? realDistance / visibility : float.PositiveInfinity;
 
     public virtual void UpdateStats()
     {
@@ -426,6 +441,7 @@ public abstract class Entity : MonoBehaviour
         sunGenerationCooldown = Mathf.Max(-0.8f, sunGenerationCooldownMultiplier);
         evasion  = baseEvasion  + evasionAdder  + (baseEvasion  * evasionMultiplier);
         accuracy = baseAccuracy + accuracyAdder + (baseAccuracy * accuracyMultiplier);
+        visibility = Mathf.Max(0f, baseVisibility + visibilityAdder + (baseVisibility * visibilityMultiplier));
         armor      = (int)(((baseArmor      + armorAdder)      + (baseArmor      * armorMultiplier))      * armorTotalMultiplier);
         magicArmor = (int)(((baseMagicArmor + magicArmorAdder) + (baseMagicArmor * magicArmorMultiplier)) * magicArmorTotalMultiplier);
         physicalResistance = armor      / (ArmorCoefficient + armor);

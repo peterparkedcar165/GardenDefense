@@ -626,6 +626,7 @@ public abstract class Plant : Entity, IAttackable
         baseMagicPenFlat       = data.baseMagicPenFlat;
         baseMagicPenPercent    = data.baseMagicPenPercent;
         baseLifesteal          = data.baseLifesteal;
+        baseVisibility         = data.baseVisibility;
         baseOnHitEffectiveness = data.baseOnHitEffectiveness;
         baseFireDamage         = data.baseFireDamage;
         baseWaterDamage        = data.baseWaterDamage;
@@ -1772,10 +1773,12 @@ public abstract class Plant : Entity, IAttackable
             // sprite upward (never its actual root position), and that visual offset shares the
             // same world axis this 2D range check reads, so using the aim point here would let a
             // plant "see" an insect that only looks airborne, never actually moved
-            float dist = Vector3.Distance(transform.position, insect.transform.position);
-            if (IsWithinAttackRange(insect, dist) && dist < nearestDist && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect))
+            // the range checks use how far it looks (Visibility), nearest is still the real distance
+            float real = Vector3.Distance(transform.position, insect.transform.position);
+            float dist = insect.SeenDistance(real);
+            if (IsWithinAttackRange(insect, dist) && real < nearestDist && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect))
             {
-                nearestDist = dist;
+                nearestDist = real;
                 nearest = insect.gameObject;
             }
         }
@@ -1793,7 +1796,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
-            float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
+            float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
             if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
             if (insect.maxHealth > highestMaxHealth)
             {
@@ -1819,7 +1822,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
-            float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
+            float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
             if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
             inRange.Add(insect);
         }
@@ -1864,7 +1867,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
-            float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
+            float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
             if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
@@ -1895,7 +1898,7 @@ public abstract class Plant : Entity, IAttackable
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
-            float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
+            float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
             if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
@@ -1923,7 +1926,7 @@ public abstract class Plant : Entity, IAttackable
     // which bypasses the normal range circle entirely) is still seen correctly through the bond
     public virtual bool CanReachInsect(Insect insect)
     {
-        float dist = Vector3.Distance(transform.position, insect.transform.position); // see FindNearest
+        float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
         return IsWithinAttackRange(insect, dist) && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect);
     }
 

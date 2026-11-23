@@ -34,7 +34,7 @@ public class Harvestman : Insect
             if (insect == null || !insect.IsAlive) continue;
             if (!CanReach(this, insect)) continue;
             float dist = Vector3.Distance(transform.position, insect.transform.position);
-            if (dist <= targetingRange && dist < nearestDist)
+            if (insect.SeenDistance(dist) <= targetingRange && dist < nearestDist)
             {
                 nearestDist = dist;
                 nearest = insect;

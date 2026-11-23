@@ -141,7 +141,7 @@ public class AloeVera : Lobber
         {
             if (plant == this || plant == null || !plant.IsAlive) continue;
             if (plant.health >= plant.maxHealth) continue;
-            if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+            if (plant.SeenDistance(Vector3.Distance(transform.position, plant.transform.position)) > attackRange) continue;
             if (plant.health < lowestPlantHealth) { lowestPlantHealth = plant.health; bestPlant = plant; }
         }
         if (bestPlant != null) return bestPlant.gameObject;
@@ -153,7 +153,7 @@ public class AloeVera : Lobber
         {
             if (ally == null || !ally.IsAlive) continue;
             if (ally.health >= ally.maxHealth) continue;
-            if (Vector3.Distance(transform.position, ally.transform.position) > attackRange) continue;
+            if (ally.SeenDistance(Vector3.Distance(transform.position, ally.transform.position)) > attackRange) continue;
             if (ally.health < lowestAllyHealth) { lowestAllyHealth = ally.health; bestAlly = ally; }
         }
         if (bestAlly != null) return bestAlly.gameObject;
@@ -170,7 +170,7 @@ public class AloeVera : Lobber
             foreach (Plant plant in Plant.allPlants)
             {
                 if (plant == this || plant == null || !plant.IsAlive) continue;
-                if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+                if (plant.SeenDistance(Vector3.Distance(transform.position, plant.transform.position)) > attackRange) continue;
                 if (plant.temperature > highestTemp) { highestTemp = plant.temperature; hottest = plant; }
             }
             if (hottest != null) return hottest.gameObject;

@@ -58,6 +58,10 @@ public class InsectData : ScriptableObject
     public float baseEvasion;
     public float baseAccuracy;
 
+    [Header("Visibility")]
+    [Tooltip("the share of a plant's range this insect can be seen in, 1 = 100%. 0.5: a plant with a 6 range only sees it within 3")]
+    public float baseVisibility = 1f;
+
     [Header("Flight")]
     [Tooltip("flying insects only - center of this species' flight-height range, so different " +
         "species visibly hover at different altitudes instead of all flying at the same height")]

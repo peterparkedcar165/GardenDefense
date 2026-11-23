@@ -201,6 +201,7 @@ public class StatsPanelTooltip : MonoBehaviour
         Blank();
         Line("Evasion:", $"{e.evasion * 100:F1}%", e.evasion, e.baseEvasion);
         ElemLine(Grass, "Accuracy:", $"{e.accuracy * 100:F1}%", e.accuracy, e.baseAccuracy);
+        Line("Visibility:", $"{e.visibility * 100:F0}%", e.visibility, e.baseVisibility);
         Line("<color=grey>Tenacity:</color>", $"{e.tenacity * 100:F0}%", e.tenacity, e.baseTenacity);
         ElemLine(HealCol, "Heals & Shield Bonus:", $"{e.healingBonus * 100:F0}%", e.healingBonus, e.baseHealingBonus);
         // mulch drop stats, in percents: Mulch Drop Rate adds to the base drop chance, Rare Item Drop
