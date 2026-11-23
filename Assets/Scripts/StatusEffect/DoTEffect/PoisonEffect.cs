@@ -36,6 +36,8 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
 
     public override void OnApply()
     {
+        // uses up a Sludge on the insect like every other damage over time (it never did before)
+        base.OnApply();
         if (!spread) cachedElementalAffinity = source?.elementalAffinity ?? 0f;
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Poisoned", new Color(0.6f, 0.1f, 0.8f));
         GameObject fx = Object.Instantiate(Resources.Load<GameObject>("PoisonBubbles"), target.transform.position, Quaternion.identity);
@@ -51,7 +53,7 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
         else
             target.Damage(damage, DamageType.Magic, ElementalType.Poison, tickTags);
-        MulchManager.ReactionEvent(this, source, target.transform.position);
+        if (IsWholeTick(share)) MulchManager.ReactionEvent(this, source, target.transform.position);
     }
 
     public override void OnExpire()
@@ -74,9 +76,15 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
     {
         if (t == null || !t.IsAlive || from == null || passed <= 0f) return false;
         PoisonedEffect existing = t.GetEffect<PoisonedEffect>();
-        float newTick = PerTickOn(t, from.cachedElementalAffinity, from.ticks.baseInterval);
-        if (existing != null && existing.DamagePerTickOn(t) >= newTick)
+        if (existing != null)
         {
+            // the one already there keeps running; when the passed one is stronger it takes over that
+            // poison's numbers and source, so nothing is removed and nothing can be refused on the way
+            if (PerTickOn(t, from.cachedElementalAffinity, from.ticks.baseInterval) > existing.DamagePerTickOn(t))
+            {
+                existing.cachedElementalAffinity = from.cachedElementalAffinity;
+                existing.source = from.source;
+            }
             existing.duration += passed;
             existing.alchemyPayouts = 0;
             return true;
@@ -88,12 +96,6 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
             durationIsFinal = true,
         };
         poison.duration = passed;
-        if (existing != null)
-        {
-            poison.duration += existing.duration;
-            poison.ticks.CarryFrom(existing.ticks);
-            t.RemoveEffect<PoisonedEffect>();
-        }
         t.ApplyEffect(poison);
         return true;
     }

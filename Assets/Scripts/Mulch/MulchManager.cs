@@ -70,15 +70,6 @@ public class MulchManager : MonoBehaviour
 
     // ── inventory ───────────────────────────────────────────────────────────
 
-    public bool HasRoom
-    {
-        get
-        {
-            foreach (MulchItem item in inventory)
-                if (item == null) return true;
-            return false;
-        }
-    }
 
     public bool AddToInventory(MulchItem item) => AddToInventorySlot(item) >= 0;
 
@@ -433,12 +424,14 @@ public class MulchManager : MonoBehaviour
     public static void ReactionEvent(StatusEffect reaction, Entity payer, Vector3 at)
     {
         if (reaction == null) return;
-        int count = reaction.alchemyPayouts;
-        if (PayReaction(payer, at, ref count)) reaction.alchemyPayouts = count;
+        PayReaction(payer, at, ref reaction.alchemyPayouts);
     }
 
     // the same for a burst with no effect of its own to count on (Germinate's bloom, Windshear's
-    // blast): count is that burst's own. true when it paid
+    // blast): count is that burst's own. true when it paid. the count goes up before any Sun is made,
+    // and the Sun itself is queued: making Sun can hit insects again (Solar Flare), and a hit can pay
+    // again (Brittle, Fracture), so paying straight away would nest call inside call until the stack
+    // ran out. queued payouts are made one after another instead (FlushAlchemySun)
     public static bool PayReaction(Entity payer, Vector3 at, ref int count)
     {
         if (count >= BotanicalAlchemyMulchData.MaxEventsPerReaction) return false;
@@ -448,10 +441,34 @@ public class MulchManager : MonoBehaviour
             if (effect is BotanicalAlchemyMulchEffect alchemy) sun += alchemy.SunPerEvent;
         if (sun <= 0) return false;
         count++;
-        int made = plant.GenerateSun(sun, at);
-        foreach (MulchEffect effect in plant.mulches)
-            if (effect is BotanicalAlchemyMulchEffect alchemy) alchemy.CountEvent((float)made * alchemy.SunPerEvent / sun);
+        alchemySunQueue.Add((plant, sun, at));
+        if (!alchemyPaying) FlushAlchemySun();
         return true;
+    }
+
+    private static readonly List<(Plant plant, int sun, Vector3 at)> alchemySunQueue = new List<(Plant, int, Vector3)>();
+    private static bool alchemyPaying;
+
+    private static void FlushAlchemySun()
+    {
+        alchemyPaying = true;
+        try
+        {
+            // payouts queued while this runs are added to the end and made in the same loop
+            for (int i = 0; i < alchemySunQueue.Count; i++)
+            {
+                (Plant plant, int sun, Vector3 at) = alchemySunQueue[i];
+                if (plant == null || !plant.IsAlive) continue;
+                int made = plant.GenerateSun(sun, at);
+                foreach (MulchEffect effect in plant.mulches)
+                    if (effect is BotanicalAlchemyMulchEffect alchemy) alchemy.CountEvent((float)made * alchemy.SunPerEvent / sun);
+            }
+        }
+        finally
+        {
+            alchemySunQueue.Clear();
+            alchemyPaying = false;
+        }
     }
 
     // rejuvenator: regeneration a plant receives heals it this much

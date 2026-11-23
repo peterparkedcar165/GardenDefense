@@ -4,8 +4,8 @@ public class TansyGlowEffect : StatusEffect
 {
     private readonly Tansy tansy;
     private float cachedLightRange;
-    private float healTickTimer;
-    private const float HealInterval = 0.5f;
+    // the shared over time timing (OverTimeTicker): a heal tick every half second
+    private readonly OverTimeTicker healTicks = new OverTimeTicker(0.5f);
     // flat + percent max health healed per second - scaled by HealInterval at each tick so
     // ticking more often (smoother health bar movement) doesn't change the actual heal rate
     private const float HealFlat = 6f;
@@ -52,10 +52,15 @@ public class TansyGlowEffect : StatusEffect
         Plant plant = target as Plant;
         if (plant == null || !plant.IsAlive) return;
 
-        healTickTimer += deltaTime;
-        if (healTickTimer < HealInterval) return;
-        healTickTimer -= HealInterval;
-        plant.Heal((HealFlat + plant.maxHealth * HealPercent) * HealInterval, tansy);
+        int due = healTicks.Advance(deltaTime);
+        for (int i = 0; i < due; i++) plant.Heal((HealFlat + plant.maxHealth * HealPercent) * healTicks.baseInterval, tansy);
+    }
+
+    public override void OnNaturalExpire()
+    {
+        if (tansy == null || !tansy.NurturingGlowActive || !(target is Plant plant) || !plant.IsAlive) return;
+        float share = healTicks.LeftoverShare(duration);
+        if (share > 0.0001f) plant.Heal((HealFlat + plant.maxHealth * HealPercent) * healTicks.baseInterval * share, tansy);
     }
 
     public override void OnExpire()

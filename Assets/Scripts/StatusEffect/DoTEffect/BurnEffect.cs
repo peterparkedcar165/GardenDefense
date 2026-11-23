@@ -151,7 +151,7 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
         // Inflammable's share of what this Burn dealt: the ticks it added
         if (ticks.tickSpeedBonus > 0f)
             MulchManager.NotifyFasterBurn(source, Mathf.Max(0f, before - Mathf.Max(0f, target.health)) * ticks.tickSpeedBonus / (1f + ticks.tickSpeedBonus));
-        MulchManager.ReactionEvent(this, source, target.transform.position);
+        if (IsWholeTick(share)) MulchManager.ReactionEvent(this, source, target.transform.position);
     }
 
     public override void OnExpire()

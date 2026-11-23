@@ -25,7 +25,6 @@ public class MulchItem
     }
 
     public string Name => data != null ? data.mulchName : "?";
-    public string Description => data != null ? data.GetDescription(this) : "";
 
     public bool CanMergeWith(MulchItem other) => data != null && other != null && data.CanMerge(this, other);
 

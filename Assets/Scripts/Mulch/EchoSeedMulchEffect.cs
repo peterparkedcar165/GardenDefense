@@ -117,6 +117,8 @@ public class EchoSeedMulchEffect : MulchEffect
         if (effect.target == null || effect.target.health <= 0f || CloneMethod == null) return;
         StatusEffect copy = CloneMethod.Invoke(effect, null) as StatusEffect;
         if (copy == null) return;
+        // the copy's duration was already scaled by the duration stats when the original landed
+        copy.durationIsFinal = true;
         echoing = true;
         try { effect.target.ApplyEffect(copy); }
         finally { echoing = false; }

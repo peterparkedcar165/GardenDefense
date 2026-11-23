@@ -1572,6 +1572,9 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void ApplyEffect(StatusEffect effect)
     {
+        // a landing effect starts its Botanical Alchemy count at 0 (an Echo Seed copy carries the old one's)
+        effect.alchemyPayouts = 0;
+
         // a plant that can't target insects can't put a debuff or a primer on one either
         if (this is Insect && effect.source is Plant dormantSource && dormantSource.cannotTargetInsects
             && (effect.effectType == StatusEffect.Type.negative || effect.effectType == StatusEffect.Type.primer))

@@ -49,7 +49,7 @@ public class FrostbiteEffect : DoTEffect
             target.Damage(tick, DamageType.Physical, ElementalType.Ice, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
         else
             target.Damage(tick, DamageType.Physical, ElementalType.Ice, tickTags);
-        MulchManager.ReactionEvent(this, source, target.transform.position);
+        if (IsWholeTick(share)) MulchManager.ReactionEvent(this, source, target.transform.position);
     }
 
     public override void OnExpire()

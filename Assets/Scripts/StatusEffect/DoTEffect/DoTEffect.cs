@@ -8,6 +8,9 @@ public abstract class DoTEffect : StatusEffect
 {
     protected readonly OverTimeTicker ticks;
     protected float damagePerSecond;
+    // set when something shortens it to nothing on purpose (Aloe Vera cutting a Scorch): that is a
+    // cleanse, so no leftover tick is paid when it then runs out
+    protected bool cleansed;
 
     public DoTEffect(Entity target, float duration, int level, Entity source, float baseInterval = 1f) : base(target, duration, level, source)
     {
@@ -44,11 +47,16 @@ public abstract class DoTEffect : StatusEffect
 
     public override void OnNaturalExpire()
     {
+        if (cleansed) return;
         float share = ticks.LeftoverShare(duration);
         if (share > 0.0001f && TargetStanding) DealTick(share);
     }
 
     protected bool TargetStanding => target != null && target.health > 0f;
+
+    // a whole tick, not the leftover share at a natural expiry: only whole ticks pay Botanical
+    // Alchemy (proposal, 2026-11-23: a 6 s Burn pays 1 + 6 Sun at Common, whatever its tick speed)
+    protected static bool IsWholeTick(float share) => share >= 0.999f;
 
     // one tick's damage. share is 1 for a whole tick, less for the bit left at a natural expiry
     protected abstract void DealTick(float share);

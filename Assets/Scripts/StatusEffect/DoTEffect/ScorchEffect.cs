@@ -38,7 +38,12 @@ public class ScorchEffect : DoTEffect
 
     // shaves a fixed fraction of the original (fully-resolved) duration off however much of
     // this Scorch is left, e.g. Aloe Vera's heal reducing it by 33%/10% of its starting length
-    public void ReduceByFraction(float fraction) => duration = Mathf.Max(0f, duration - originalDuration * fraction);
+    public void ReduceByFraction(float fraction)
+    {
+        duration = Mathf.Max(0f, duration - originalDuration * fraction);
+        // cut to nothing: a cleanse, so no leftover tick when it runs out
+        if (duration <= 0f) cleansed = true;
+    }
 
     public override string GetName() => "<color=#FF4500>Scorch</color>";
     public override string GetDescription() =>

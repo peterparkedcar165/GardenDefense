@@ -79,11 +79,6 @@ public class StatusEffect
         target.Heal(amount, source, isRegen ? new HealTag[] { HealTag.Regeneration } : null);
     }
 
-    public virtual void Tick(float deltaTime)
-    {
-        duration -= deltaTime;
-        OnTick(deltaTime);
-    }
 
     public virtual string GetDescription()
     {
