@@ -110,7 +110,7 @@ public class Rhodiola : Shooter
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive || plant.maxHealth <= 0f) continue;
-            if (plant.SeenDistance(Vector2.Distance(transform.position, plant.transform.position)) > attackRange) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             float percent = plant.health / plant.maxHealth;
             if (percent < lowest) { lowest = percent; neediest = plant; }
         }
@@ -199,7 +199,7 @@ public class Rhodiola : Shooter
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || plant == this || !plant.IsAlive) continue;
-            if (plant.SeenDistance(Vector2.Distance(transform.position, plant.transform.position)) > attackRange) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             float percent = plant.health / plant.maxHealth;
             if (percent >= CriticalHealthPercent) continue;
             if (percent < criticalPercent) { criticalPercent = percent; critical = plant; }
@@ -208,7 +208,7 @@ public class Rhodiola : Shooter
 
         if (_mainTarget is Plant currentTarget && currentTarget != null && currentTarget.IsAlive
             && currentTarget.health < currentTarget.maxHealth
-            && currentTarget.SeenDistance(Vector2.Distance(transform.position, currentTarget.transform.position)) <= attackRange)
+            && Vector2.Distance(transform.position, currentTarget.transform.position) <= attackRange)
             return currentTarget;
 
         Plant lowest = null;
@@ -217,7 +217,7 @@ public class Rhodiola : Shooter
         {
             if (plant == null || plant == this || !plant.IsAlive) continue;
             if (plant.health >= plant.maxHealth) continue;
-            if (plant.SeenDistance(Vector2.Distance(transform.position, plant.transform.position)) > attackRange) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             float percent = plant.health / plant.maxHealth;
             if (percent < lowestPercent) { lowestPercent = percent; lowest = plant; }
         }
@@ -229,7 +229,7 @@ public class Rhodiola : Shooter
         {
             if (ally == null || !ally.IsAlive) continue;
             if (ally.health >= ally.maxHealth) continue;
-            if (ally.SeenDistance(Vector2.Distance(transform.position, ally.transform.position)) > attackRange) continue;
+            if (Vector2.Distance(transform.position, ally.transform.position) > attackRange) continue;
             float percent = ally.health / ally.maxHealth;
             if (percent < lowestAllyPercent) { lowestAllyPercent = percent; lowestAlly = ally; }
         }

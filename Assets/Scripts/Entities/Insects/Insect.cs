@@ -1134,7 +1134,7 @@ public abstract class Insect : Entity, IAttackable
     // nearest enemy insect within engage range (used by friendlies). enemies live in allInsects
     protected IAttackable FindNearestEnemyInRange()
     {
-        return StickyEnemy(e => e.SeenDistance(Vector3.Distance(transform.position, e.transform.position)) <= EngageRange);
+        return StickyEnemy(e => Vector3.Distance(transform.position, e.transform.position) <= EngageRange);
     }
 
     // keeps the friendly locked onto one enemy until it dies or leaves the valid set, then picks the

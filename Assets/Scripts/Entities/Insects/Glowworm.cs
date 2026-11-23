@@ -93,7 +93,7 @@ public class Glowworm : Insect
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            if (insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)) > range) continue;
+            if (Vector3.Distance(transform.position, insect.transform.position) > range) continue;
             float frac = insect.health / insect.maxHealth;
             if (frac < bestFrac) { bestFrac = frac; best = insect; }
         }

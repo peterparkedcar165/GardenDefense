@@ -93,7 +93,7 @@ public class Gloriosa : Shooter
         {
             if (plant == this || plant == null || !plant.IsAlive) continue;
             if (plant.health >= plant.maxHealth) continue;
-            if (plant.SeenDistance(Vector3.Distance(transform.position, plant.transform.position)) > attackRange) continue;
+            if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
             float frac = plant.health / plant.maxHealth;
             if (frac < bestFrac) { bestFrac = frac; bestPlant = plant; }
         }
@@ -106,7 +106,7 @@ public class Gloriosa : Shooter
         {
             if (ally == null || !ally.IsAlive) continue;
             if (ally.health >= ally.maxHealth) continue;
-            if (ally.SeenDistance(Vector3.Distance(transform.position, ally.transform.position)) > attackRange) continue;
+            if (Vector3.Distance(transform.position, ally.transform.position) > attackRange) continue;
             float frac = ally.health / ally.maxHealth;
             if (frac < bestAllyFrac) { bestAllyFrac = frac; bestAlly = ally; }
         }
@@ -136,7 +136,7 @@ public class Gloriosa : Shooter
             {
                 if (plant == this || plant == null || !plant.IsAlive) continue;
                 if (plant.temperature >= 10f) continue;
-                if (plant.SeenDistance(Vector3.Distance(transform.position, plant.transform.position)) > attackRange) continue;
+                if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
                 if (plant.temperature < lowestTemp) { lowestTemp = plant.temperature; coldest = plant; }
             }
             if (coldest != null) return coldest;
