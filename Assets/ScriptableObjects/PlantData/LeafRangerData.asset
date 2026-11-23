@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LeafRangerData
   plantPrefab: {fileID: 1851713260975089766, guid: 3584e059b79c1d14db47663813476f48, type: 3}
   icon: {fileID: 21300000, guid: e32f7955f2156924a9dca8632cbe022d, type: 3}
+  skillIcon: {fileID: 0}
   plantName: LeafRanger
   displayName: Leaf Ranger
   role: 1
@@ -22,11 +23,14 @@ MonoBehaviour:
   sunCost: 250
   placementLimit: 0
   tauntValue: 3
+  retainsAggro: 0
+  generatesSun: 0
   category: 1
+  widgetHeightOffset: 0
   skillTree: {fileID: 11400000, guid: 1dcfd0f9c7e046b580ee7e432e13517c, type: 2}
   fertilizerPossibleStats: 
   baseMaxHealth: 200
-  baseAttackDamage: 122
+  baseAttackDamage: 138
   baseMagicPower: 0
   baseAttackSpeed: 0.15
   baseAttackRange: 99
@@ -55,7 +59,6 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
-  baseBonusEffectChance: 0
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -77,6 +80,7 @@ MonoBehaviour:
   baseProjectileVisualHitboxRadius: 0.1
   projectileEmitLight: 0
   projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
   projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -98,8 +102,8 @@ MonoBehaviour:
   skillSound:
     clips: []
   baseSkillAttackSpeedBonus: 2
-  path1AttackDamagePerLevel: 13
-  path1AttackSpeedPerLevel: 0.02
+  path1AttackDamagePerLevel: 18
+  path1AttackSpeedPerLevel: 0.03
   baseCritChanceBonus: 0.1
   path2CritChancePerLevel: 0.03
   baseBounceRadius: 1.5

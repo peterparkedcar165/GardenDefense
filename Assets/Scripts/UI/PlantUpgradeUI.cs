@@ -194,8 +194,14 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (tooltipPanel != null && tooltipPanel.activeSelf && selectedInsect != null && tooltipText != null)
         {
             string desc = selectedInsect.GetDescription();
-            if (!string.IsNullOrEmpty(desc))
-                tooltipText.text = $"{selectedInsect.GetName()}\n\n{desc}";
+            string live = string.IsNullOrEmpty(desc) ? null : $"{selectedInsect.GetName()}\n\n{desc}";
+            // laid out again only when the live text changed, so it fits like any other tooltip
+            if (live != null && live != tooltipText.text)
+            {
+                ReadTooltipBase();
+                tooltipText.text = live;
+                LayoutTooltip();
+            }
         }
 
         if (selectedInsect != null && Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
@@ -952,27 +958,86 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     // --- Tooltips ---
 
+    // the panel's own spot and its text's font size as built: every layout starts from them, so a
+    // long tooltip never leaves the next one moved or shrunk
+    private bool tooltipBaseRead;
+    private Vector2 tooltipBasePosition;
+    private float tooltipBaseFontSize;
+    private Vector2Int tooltipLaidOutScreen;
+    // the text sits 20 above and 20 below inside the panel (its rect's height is the panel's minus 40)
+    private const float TooltipPadding = 40f;
+    private const float TooltipMinFontSize = 6f;
+    private static readonly Vector3[] tooltipCorners = new Vector3[4];
+
+    // path tooltips call this every frame while hovered: it lays the panel out again only when the
+    // text or the screen size changed
     public void ShowTooltip(string text)
     {
-        if (tooltipPanel == null) return;
+        if (tooltipPanel == null || tooltipText == null) return;
+        ReadTooltipBase();
+        bool wasShown = tooltipPanel.activeSelf;
         tooltipPanel.SetActive(true);
+        Vector2Int screen = new Vector2Int(Screen.width, Screen.height);
+        if (wasShown && text == tooltipText.text && screen == tooltipLaidOutScreen) return;
         tooltipText.text = text;
-        Canvas.ForceUpdateCanvases();
-        RectTransform tipRect = tooltipPanel.GetComponent<RectTransform>();
+        LayoutTooltip();
+    }
 
-        float maxHeight = Screen.height * 0.975f;
-        float height = Mathf.Min(tooltipText.preferredHeight + 40f, maxHeight);
-        tipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+    private void ReadTooltipBase()
+    {
+        if (tooltipBaseRead) return;
+        tooltipBaseRead = true;
+        tooltipBasePosition = ((RectTransform)tooltipPanel.transform).anchoredPosition;
+        tooltipBaseFontSize = tooltipText.fontSize;
+    }
 
+    // as tall as its text, at most the screen's height (Tommy, 2026-11-23). text too long for that
+    // gets the biggest font size that fits instead of spilling over, and the panel is kept on screen.
+    // everything is measured in the root canvas's own units: the canvas renders through the camera,
+    // so world corners are not screen pixels (comparing them to Screen.height made the panel jump
+    // up and down every frame once it was taller than the screen)
+    private void LayoutTooltip()
+    {
+        // a panel just switched on has its text's measurements made here first
         Canvas.ForceUpdateCanvases();
-        Vector3[] corners = new Vector3[4];
-        tipRect.GetWorldCorners(corners);
-        float topY    = corners[1].y;
-        float bottomY = corners[0].y;
-        if (topY > Screen.height)
-            tipRect.anchoredPosition += Vector2.down * (topY - Screen.height);
-        else if (bottomY < 0f)
-            tipRect.anchoredPosition += Vector2.up * -bottomY;
+        RectTransform tipRect = (RectTransform)tooltipPanel.transform;
+        Canvas canvas = tooltipPanel.GetComponentInParent<Canvas>();
+        RectTransform root = canvas != null ? (RectTransform)canvas.rootCanvas.transform : null;
+        float maxHeight = root != null ? root.rect.height : Screen.height;
+        float maxTextHeight = maxHeight - TooltipPadding;
+
+        tooltipText.fontSize = tooltipBaseFontSize;
+        float textHeight = tooltipText.preferredHeight;
+        if (textHeight > maxTextHeight)
+        {
+            // halving the range between the smallest size and the normal one
+            float fits = TooltipMinFontSize, tooBig = tooltipBaseFontSize;
+            for (int i = 0; i < 8; i++)
+            {
+                float size = (fits + tooBig) * 0.5f;
+                tooltipText.fontSize = size;
+                if (tooltipText.preferredHeight <= maxTextHeight) fits = size;
+                else tooBig = size;
+            }
+            tooltipText.fontSize = fits;
+            textHeight = tooltipText.preferredHeight;
+        }
+        tipRect.anchoredPosition = tooltipBasePosition;
+        tipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Min(textHeight + TooltipPadding, maxHeight));
+        tooltipLaidOutScreen = new Vector2Int(Screen.width, Screen.height);
+        if (root == null) return;
+
+        // its top and bottom in the root canvas's units; at most screen high, so one move puts it all on
+        tipRect.GetWorldCorners(tooltipCorners);
+        float bottom = root.InverseTransformPoint(tooltipCorners[0]).y;
+        float top = root.InverseTransformPoint(tooltipCorners[1]).y;
+        float shift = 0f;
+        if (top > root.rect.yMax) shift = root.rect.yMax - top;
+        else if (bottom < root.rect.yMin) shift = root.rect.yMin - bottom;
+        if (shift == 0f) return;
+        Transform parent = tipRect.parent != null ? tipRect.parent : root;
+        Vector3 move = parent.InverseTransformVector(root.TransformVector(new Vector3(0f, shift, 0f)));
+        tipRect.anchoredPosition += new Vector2(0f, move.y);
     }
 
     public void HideTooltip()
