@@ -115,6 +115,15 @@ public abstract class MulchData : ScriptableObject
     protected const string PhysicalColor = "#A0522D";
     protected const string IceColor = "#00FFFF";
     protected const string PoisonColor = "purple";
+    // the element colours (PlantData.ElementalColor) and the reaction names' own colours from their
+    // effects, for the reaction mulches (2026-11-23)
+    protected const string FireColor = "orange";
+    protected const string GrassColor = "green";
+    protected const string WindColor = "#B2EBF2";
+    protected const string CorrosionColor = "#B22222";
+    protected const string SteamColor = "#1E90FF";
+    // no colour existed for "Elemental Reaction" (proposal)
+    protected const string ReactionColor = "white";
     // no colour existed for these yet (proposal)
     protected const string MeleeColor = "#E9967A";
     protected const string OnHitColor = "#F0E68C";

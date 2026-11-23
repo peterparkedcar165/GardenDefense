@@ -28,6 +28,17 @@ public class StatusEffect
     public EffectTag[] tags = new EffectTag[0];
     public bool sourceStackable = false;
 
+    // a duration handed over exactly as it is (Plague Bearer's spread): Entity.ApplyEffect leaves it
+    // alone instead of scaling it by the source's and target's duration stats again
+    public bool durationIsFinal;
+
+    // an elemental reaction's effect (Burn, Poisoned, Frostbite, Corrosion, Freeze, Steam, Sludge,
+    // Brittle, Fracture, Germinate): applying it pays Botanical Alchemy (Entity.ApplyEffect)
+    public virtual bool IsReaction => false;
+    // the Botanical Alchemy payouts this reaction has made on its target, at most
+    // BotanicalAlchemyMulchData.MaxEventsPerReaction; back to 0 whenever the reaction is refreshed
+    public int alchemyPayouts;
+
 
     public StatusEffect(Entity target, float duration, int level, Entity source)
     {
@@ -40,6 +51,9 @@ public class StatusEffect
     public virtual void OnApply() {}
     public virtual void OnTick(float deltaTime) {}
     public virtual void OnExpire() {}
+    // it ran out on its own (Entity.TickEffects), right before OnExpire. never called when it is
+    // cleansed, used up, replaced or removed early, or when its target dies
+    public virtual void OnNaturalExpire() {}
     public virtual void OnTargetDied() {}
     public virtual void OnReapply(StatusEffect previous) {}
     public virtual void OnDamageReceived(ElementalType elementalType, Entity damageSource, DamageTag[] damageTags = null) {}

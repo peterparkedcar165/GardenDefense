@@ -3,7 +3,8 @@ using UnityEngine;
 public class VerdantGuardianEffect : ShieldEffect
 {
     private readonly float _regenPerSecond;
-    private float _tickTimer;
+    // the shared over time timing (OverTimeTicker): a tick every second
+    private readonly OverTimeTicker _ticks = new OverTimeTicker(1f);
 
     public VerdantGuardianEffect(Entity target, float duration, Entity source, float shieldAmount, float regenPerSecond)
         : base(target, duration, 1, source, shieldAmount)
@@ -16,10 +17,15 @@ public class VerdantGuardianEffect : ShieldEffect
     public override void OnTick(float deltaTime)
     {
         if (amount <= 0f) return;
-        _tickTimer += deltaTime;
-        if (_tickTimer < 1f) return;
-        _tickTimer -= 1f;
-        HealTarget(_regenPerSecond);
+        int due = _ticks.Advance(deltaTime);
+        for (int i = 0; i < due; i++) HealTarget(_regenPerSecond * _ticks.baseInterval);
+    }
+
+    public override void OnNaturalExpire()
+    {
+        if (amount <= 0f) return;
+        float share = _ticks.LeftoverShare(duration);
+        if (share > 0.0001f) HealTarget(_regenPerSecond * _ticks.baseInterval * share);
     }
 
     protected override string GetShieldDetails() =>

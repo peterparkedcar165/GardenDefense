@@ -8,8 +8,8 @@ public class MosquitoBiteEffect : StatusEffect
 {
     private readonly float damagePerSecond;
     private readonly float healingReductionPercent;
-    private const float tickInterval = 1f;
-    private float tickTimer = 0f;
+    // the shared over time timing (OverTimeTicker): a tick every second
+    private readonly OverTimeTicker ticks = new OverTimeTicker(1f);
 
     public MosquitoBiteEffect(Entity target, float duration, int level, Entity source, float damagePerSecond, float healingReductionPercent)
         : base(target, duration, level, source)
@@ -29,12 +29,19 @@ public class MosquitoBiteEffect : StatusEffect
 
     public override void OnTick(float deltaTime)
     {
-        tickTimer += deltaTime;
-        if (tickTimer < tickInterval) return;
-        tickTimer -= tickInterval;
-        target.Damage(damagePerSecond * tickInterval, DamageType.True, ElementalType.Grass, source, source.DotCanCrit,
-            new DamageTag[] { DamageTag.DoT });
+        int due = ticks.Advance(deltaTime);
+        for (int i = 0; i < due && target.health > 0f; i++) DealTick(1f);
     }
+
+    public override void OnNaturalExpire()
+    {
+        float share = ticks.LeftoverShare(duration);
+        if (share > 0.0001f && target.health > 0f) DealTick(share);
+    }
+
+    private void DealTick(float share) =>
+        target.Damage(damagePerSecond * ticks.baseInterval * share, DamageType.True, ElementalType.Grass, source, source.DotCanCrit,
+            new DamageTag[] { DamageTag.DoT });
 
     public override void OnExpire()
     {

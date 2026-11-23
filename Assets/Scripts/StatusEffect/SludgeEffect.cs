@@ -4,6 +4,8 @@ public class SludgeEffect : StatusEffect
 {
     public float bonusDuration;
 
+    public override bool IsReaction => true;
+
     public SludgeEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         bonusDuration = 4f * (1f + source.elementalAffinity);
@@ -31,6 +33,8 @@ public class SludgeEffect : StatusEffect
         if (hasDoT)
         {
             target.RemoveEffect<SludgeEffect>();
+            // Botanical Alchemy: used up on the spot, which pays the plant that applied it
+            MulchManager.ReactionEvent(this, source, target.transform.position);
         }
     }
 

@@ -395,6 +395,65 @@ public class MulchManager : MonoBehaviour
                     adept.CountPrimer(cut * adept.Applied / plant.mulchPrimerCooldownReduction);
         return reduced;
     }
+    // inflammable: how much faster the Burns this plant causes tick (0.5 = 50%), read as each Burn lands
+    public static float BurnTickSpeedFrom(Entity source)
+    {
+        float bonus = 0f;
+        if (source is Plant plant && plant != null)
+            foreach (MulchEffect effect in plant.mulches)
+                if (effect is InflammableMulchEffect inflammable) bonus += inflammable.TickSpeed;
+        return bonus;
+    }
+
+    // inflammable: the part of a Burn tick its faster ticks added, shared between its copies for their tooltips
+    public static void NotifyFasterBurn(Entity source, float extraDamage)
+    {
+        if (extraDamage <= 0f || !(source is Plant plant) || plant == null) return;
+        float total = BurnTickSpeedFrom(plant);
+        if (total <= 0f) return;
+        foreach (MulchEffect effect in plant.mulches)
+            if (effect is InflammableMulchEffect inflammable) inflammable.CountExtra(extraDamage * inflammable.TickSpeed / total);
+    }
+
+    // plague bearer: the copy on a living plant that spreads its Poisoned, the highest rarity one when
+    // it has several (proposal), null for none
+    public static PlagueBearerMulchEffect PlagueBearerOf(Entity source)
+    {
+        if (!(source is Plant plant) || plant == null || !plant.IsAlive) return null;
+        PlagueBearerMulchEffect best = null;
+        foreach (MulchEffect effect in plant.mulches)
+            if (effect is PlagueBearerMulchEffect plague && (best == null || plague.Rarity > best.Rarity)) best = plague;
+        return best;
+    }
+
+    // botanical alchemy (Tommy, 2026-11-23): one event of an elemental reaction pays the plant that
+    // applied it, at most BotanicalAlchemyMulchData.MaxEventsPerReaction times per reaction on one
+    // insect, counted on the reaction's own effect (StatusEffect.alchemyPayouts, back to 0 when the
+    // reaction is refreshed). payer is the plant the code credits as the reaction's source
+    public static void ReactionEvent(StatusEffect reaction, Entity payer, Vector3 at)
+    {
+        if (reaction == null) return;
+        int count = reaction.alchemyPayouts;
+        if (PayReaction(payer, at, ref count)) reaction.alchemyPayouts = count;
+    }
+
+    // the same for a burst with no effect of its own to count on (Germinate's bloom, Windshear's
+    // blast): count is that burst's own. true when it paid
+    public static bool PayReaction(Entity payer, Vector3 at, ref int count)
+    {
+        if (count >= BotanicalAlchemyMulchData.MaxEventsPerReaction) return false;
+        if (!(payer is Plant plant) || plant == null || !plant.IsAlive) return false;
+        int sun = 0;
+        foreach (MulchEffect effect in plant.mulches)
+            if (effect is BotanicalAlchemyMulchEffect alchemy) sun += alchemy.SunPerEvent;
+        if (sun <= 0) return false;
+        count++;
+        int made = plant.GenerateSun(sun, at);
+        foreach (MulchEffect effect in plant.mulches)
+            if (effect is BotanicalAlchemyMulchEffect alchemy) alchemy.CountEvent((float)made * alchemy.SunPerEvent / sun);
+        return true;
+    }
+
     // rejuvenator: regeneration a plant receives heals it this much
     public static float RegenerationReceivedFactor(Entity target) =>
         target is Plant plant ? Mathf.Max(0f, 1f + plant.mulchRegenerationBonus) : 1f;

@@ -12,6 +12,8 @@ public class GerminateEffect : StatusEffect
     private float cachedelementalAffinity;
     private bool detonated;
 
+    public override bool IsReaction => true;
+
     public GerminateEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
@@ -119,8 +121,12 @@ public class GerminateEffect : StatusEffect
 
         if (mainTarget != null && mainTarget.IsAlive) others.Add(mainTarget);
 
+        // Botanical Alchemy: every insect the bloom damages pays the plant that applied it, at most
+        // the cap for this one bloom
+        int bloomPayouts = 0;
         foreach (Insect insect in others)
         {
+            MulchManager.PayReaction(source, insect.transform.position, ref bloomPayouts);
             if (source != null)
                 insect.Damage(damage, DamageType.Physical, ElementalType.Grass, source, source.ElementalReactionCanCrit, damageTags);
             else

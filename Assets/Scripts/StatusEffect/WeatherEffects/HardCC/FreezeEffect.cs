@@ -6,6 +6,7 @@ public class FreezeEffect : HardCrowdControl, IElementalAffinityEffect
     private float physicalArmorBonus;
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
+    public override bool IsReaction => true;
 
     // once Freeze lands on a target, Freeze specifically can't land again for duration + 3s
     public override float InternalCooldownAfterExpiry => 3f;

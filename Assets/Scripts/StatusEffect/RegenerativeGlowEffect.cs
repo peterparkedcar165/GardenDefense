@@ -31,15 +31,9 @@ public class RegenerativeGlowEffect : RegenerationEffect
         SpawnLight();
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        tickTimer += deltaTime;
-        if (tickTimer >= tickInterval)
-        {
-            tickTimer -= tickInterval;
-            HealTarget(healingPerSecond + target.maxHealth * _regenPercent);
-        }
-    }
+    // the flat part is fixed when it lands, the max health part is read as each tick lands
+    protected override void HealTick(float share) =>
+        HealTarget((healingPerSecond + target.maxHealth * _regenPercent) * share);
 
     public override void OnExpire()
     {

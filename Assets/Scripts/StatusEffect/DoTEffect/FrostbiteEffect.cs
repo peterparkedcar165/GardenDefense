@@ -10,13 +10,14 @@ public class FrostbiteEffect : DoTEffect
     private float cachedelementalAffinity;
     private float cachedMaxHealth;
 
-    public FrostbiteEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
+    public override bool IsReaction => true;
+
+    public FrostbiteEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source, 1f)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         movementSlow = baseMovementSlow * (1f + cachedelementalAffinity) + MulchManager.SlowBonusFrom(source);
         effectType = Type.negative;
         elementalType = ElementalType.Ice;
-        tickInterval = 1f;
     }
 
     public override string GetName() => "<color=#00FFFF>Frostbite</color>";
@@ -24,7 +25,7 @@ public class FrostbiteEffect : DoTEffect
     {
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
         float ep = cachedelementalAffinity;
-        float total = (healthPerSecond * hp + flatPerSecond) * (1f + 0.33f * ep);
+        float total = (healthPerSecond * hp + flatPerSecond) * (1f + 0.33f * ep) * (1f + ticks.tickSpeedBonus);
         return $"Deal <color=#00BFFF><b>{total:F0}</b></color> <color=#00BFFF>Ice</color> Physical damage per second. " +
                $"Reduces Movement Speed by <color=green>{movementSlow * 100f:F0}%</color>.";
     }
@@ -41,17 +42,14 @@ public class FrostbiteEffect : DoTEffect
             insect.movementSpeedMultiplier -= movementSlow;
     }
 
-    public override void OnTick(float deltaTime)
+    protected override void DealTick(float share)
     {
-        tickTimer += deltaTime;
-        if (tickTimer >= tickInterval)
-        {
-            if (source != null)
-                target.Damage(damagePerSecond * tickInterval, DamageType.Physical, ElementalType.Ice, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
-            else
-                target.Damage(damagePerSecond * tickInterval, DamageType.Physical, ElementalType.Ice, tickTags);
-            tickTimer -= tickInterval;
-        }
+        float tick = damagePerSecond * ticks.baseInterval * share;
+        if (source != null)
+            target.Damage(tick, DamageType.Physical, ElementalType.Ice, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
+        else
+            target.Damage(tick, DamageType.Physical, ElementalType.Ice, tickTags);
+        MulchManager.ReactionEvent(this, source, target.transform.position);
     }
 
     public override void OnExpire()

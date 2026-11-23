@@ -3,8 +3,8 @@ using UnityEngine;
 public class VenomEffect : StatusEffect
 {
     private readonly float damagePerSecond;
-    private const float tickInterval = 0.5f;
-    private float tickTimer = 0f;
+    // the shared over time timing (OverTimeTicker): a tick every half second
+    private readonly OverTimeTicker ticks = new OverTimeTicker(0.5f);
 
     public VenomEffect(Entity target, float duration, int level, Entity source, float damagePerSecond)
         : base(target, duration, level, source)
@@ -25,12 +25,19 @@ public class VenomEffect : StatusEffect
     {
         Plant plant = target as Plant;
         if (plant == null || !plant.IsAlive) return;
-        tickTimer += deltaTime;
-        if (tickTimer < tickInterval) return;
-        tickTimer -= tickInterval;
-        plant.Damage(damagePerSecond * tickInterval, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit,
-            new DamageTag[] { DamageTag.DoT });
+        int due = ticks.Advance(deltaTime);
+        for (int i = 0; i < due && plant.IsAlive; i++) DealTick(plant, 1f);
     }
+
+    public override void OnNaturalExpire()
+    {
+        float share = ticks.LeftoverShare(duration);
+        if (share > 0.0001f && target is Plant plant && plant.IsAlive) DealTick(plant, share);
+    }
+
+    private void DealTick(Plant plant, float share) =>
+        plant.Damage(damagePerSecond * ticks.baseInterval * share, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit,
+            new DamageTag[] { DamageTag.DoT });
 
     public override string GetName() => "<color=purple>Venom</color>";
     public override string GetDescription() => $"Inflicts <color=green><b>{damagePerSecond:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.";

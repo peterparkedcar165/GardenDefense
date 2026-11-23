@@ -581,9 +581,12 @@ public abstract class Entity : MonoBehaviour
         {
             // tripled if the target is currently shielded - checked before this hit drains any
             // shield below, so it reflects whether it was protected at the moment it got hit
-            float brittleDamage = GetEffect<BrittleEffect>().bonusDamage;
+            BrittleEffect brittle = GetEffect<BrittleEffect>();
+            float brittleDamage = brittle.bonusDamage;
             if (this.HasShield()) brittleDamage *= 3f;
             Damage(brittleDamage, damageType, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+            // Botanical Alchemy: every bonus hit pays the plant that applied the Brittle
+            MulchManager.ReactionEvent(brittle, brittle.source, transform.position);
         }
 
         // Freeze + Fire: a non-DoT Fire hit instantly thaws a frozen target, and the thermal shock
@@ -825,6 +828,9 @@ public abstract class Entity : MonoBehaviour
                 finalDamage *= source.criticalDamage * (1f + bonusCritDamageReceived);
                 isCrit = true;
                 OnCriticalHit?.Invoke(source, this);
+                // Botanical Alchemy: every crit a Fractured insect takes pays the plant that applied the Fracture
+                FractureEffect fracture = GetEffect<FractureEffect>();
+                if (fracture != null) MulchManager.ReactionEvent(fracture, fracture.source, transform.position);
             }
         }
 
@@ -1589,7 +1595,9 @@ public abstract class Entity : MonoBehaviour
         }
 
         // scale duration by source's given-duration stat and this entity's received-duration stat
-        if (effect.effectType == StatusEffect.Type.positive)
+        // (not a duration handed over as it is, see StatusEffect.durationIsFinal)
+        if (effect.durationIsFinal) { }
+        else if (effect.effectType == StatusEffect.Type.positive)
         {
             if (effect.source != null) effect.duration *= Mathf.Max(0f, 1f + effect.source.buffGivenDuration);
             effect.duration *= Mathf.Max(0f, 1f + buffReceivedDuration);
@@ -1641,6 +1649,10 @@ public abstract class Entity : MonoBehaviour
                     else
                     {
                         activeEffects[i].duration = effect.duration;
+                        // a refresh: its Botanical Alchemy count starts again, and the plant that
+                        // set the reaction off is paid for applying it
+                        activeEffects[i].alchemyPayouts = 0;
+                        if (effect.IsReaction) MulchManager.ReactionEvent(activeEffects[i], effect.source, transform.position);
                         return;
                     }
                 }
@@ -1664,6 +1676,8 @@ public abstract class Entity : MonoBehaviour
 
         activeEffects.Add(effect);
         effect.OnApply();
+        // Botanical Alchemy: an elemental reaction landing pays the plant that set it off
+        if (effect.IsReaction) MulchManager.ReactionEvent(effect, effect.source, transform.position);
         if (effect is ShieldEffect) UpdateHealthBar();
         OnEffectApplied?.Invoke(effect);
         if (effect is ShieldEffect acquiredShield)
@@ -1736,6 +1750,7 @@ public abstract class Entity : MonoBehaviour
 
             if (effect.IsExpired() && activeEffects.Contains(effect))
             {
+                effect.OnNaturalExpire();
                 effect.OnExpire();
                 activeEffects.Remove(effect);
                 if (effect is ShieldEffect expiredShield)

@@ -6,6 +6,8 @@ public class BrittleEffect : StatusEffect
     private float cachedelementalAffinity;
     private float shieldToughnessReduction;
 
+    public override bool IsReaction => true;
+
     public BrittleEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;

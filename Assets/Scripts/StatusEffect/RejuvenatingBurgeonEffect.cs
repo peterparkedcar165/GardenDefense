@@ -24,17 +24,14 @@ public class RejuvenatingBurgeonEffect : RegenerationEffect
         target.armorAdder -= armorBonus;
     }
 
-    public override void OnTick(float deltaTime)
+    protected override void HealTick(float share)
     {
-        tickTimer += deltaTime;
-        if (tickTimer < tickInterval) return;
-        tickTimer -= tickInterval;
-        HealTarget(healingPerSecond);
-        if (source is Rhodiola rhodiola) rhodiola.ReturnMaxLevelHealing(healingPerSecond);
+        HealTarget(healingPerSecond * share);
+        if (source is Rhodiola rhodiola) rhodiola.ReturnMaxLevelHealing(healingPerSecond * share);
     }
 
     public override string GetName()        => "<color=green><b>Rejuvenating Burgeon</b></color>";
     public override string GetDescription() =>
-        $"Recovering <color=green><b>{Mathf.RoundToInt(healingPerSecond)}</b></color> health every <color=green><b>{tickInterval}s</b></color>." +
+        $"Recovering <color=green><b>{Mathf.RoundToInt(healingPerSecond)}</b></color> health every <color=green><b>{TickInterval:0.##}s</b></color>." +
         (armorBonus > 0f ? $" Grants <color=#00CED1><b>+{armorBonus:F0} Armor</b></color>." : "");
 }

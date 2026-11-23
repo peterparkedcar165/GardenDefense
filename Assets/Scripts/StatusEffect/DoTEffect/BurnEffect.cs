@@ -13,12 +13,15 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
 
     public float AffinityPower => source?.elementalAffinity ?? 0f;
 
-    public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
+    public override bool IsReaction => true;
+
+    public BurnEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source, 1f)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
         effectType = Type.negative;
         elementalType = ElementalType.Fire;
-        tickInterval = 1f;
+        // Inflammable on the plant it comes from: it ticks faster, so it deals more in all
+        ticks.tickSpeedBonus = MulchManager.BurnTickSpeedFrom(source);
         // the source can extend the Burns it causes (Stargazer passive)
         if (source != null) this.duration *= 1f + source.burnDurationBonus;
         // water douses fire: while the level is Underwater, Burn only lasts a quarter as long
@@ -37,7 +40,8 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
         float hp = cachedMaxHealth > 0 ? cachedMaxHealth : (target?.maxHealth ?? 0f);
         float ep = cachedelementalAffinity;
         float flammable = target?.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
-        float total = (healthPerSecond * hp + flatPerSecond) * (1f + 0.33f * ep) * flammable;
+        // a faster tick speed (Inflammable) deals more per second
+        float total = (healthPerSecond * hp + flatPerSecond) * (1f + 0.33f * ep) * flammable * (1f + ticks.tickSpeedBonus);
         return $"Deal <color=orange><b>{total:F0}</b></color> <color=orange>Fire</color> <color=#FFB6C1>Magic</color> damage per second.";
     }
 
@@ -134,20 +138,20 @@ public class BurnEffect : DoTEffect, IElementalAffinityEffect
         return newFader;
     }
 
-    public override void OnTick(float deltaTime)
+    protected override void DealTick(float share)
     {
-        tickTimer += deltaTime;
-        if (tickTimer >= tickInterval)
-        {
-            // Flammable (from the Stargazer) amplifies Burn damage per stack
-            float flammable = target.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
-            float tick = damagePerSecond * tickInterval * flammable;
-            if (source != null)
-                target.Damage(tick, DamageType.Magic, ElementalType.Fire, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
-            else
-                target.Damage(tick, DamageType.Magic, ElementalType.Fire, tickTags);
-            tickTimer -= tickInterval;
-        }
+        // Flammable (from the Stargazer) amplifies Burn damage per stack, read as each tick lands
+        float flammable = target.GetEffect<FlammableEffect>()?.BurnMultiplier ?? 1f;
+        float tick = damagePerSecond * ticks.baseInterval * flammable * share;
+        float before = target.health;
+        if (source != null)
+            target.Damage(tick, DamageType.Magic, ElementalType.Fire, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
+        else
+            target.Damage(tick, DamageType.Magic, ElementalType.Fire, tickTags);
+        // Inflammable's share of what this Burn dealt: the ticks it added
+        if (ticks.tickSpeedBonus > 0f)
+            MulchManager.NotifyFasterBurn(source, Mathf.Max(0f, before - Mathf.Max(0f, target.health)) * ticks.tickSpeedBonus / (1f + ticks.tickSpeedBonus));
+        MulchManager.ReactionEvent(this, source, target.transform.position);
     }
 
     public override void OnExpire()

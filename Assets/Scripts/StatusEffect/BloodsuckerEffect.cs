@@ -19,15 +19,9 @@ public class BloodsuckerEffect : RegenerationEffect
         StatusIndicator.Spawn(target.transform.position + new Vector3(-0.4f, 0f, 0f), "Bloodsucker", new Color(0.55f, 0.05f, 0.05f));
     }
 
-    public override void OnTick(float deltaTime)
-    {
-        tickTimer += deltaTime;
-        if (tickTimer >= tickInterval)
-        {
-            tickTimer -= tickInterval;
-            target.Heal(healingPerSecond + target.maxHealth * healPercent, source);
-        }
-    }
+    // the flat part is fixed when it lands, the max health part is read as each tick lands
+    protected override void HealTick(float share) =>
+        target.Heal((healingPerSecond + target.maxHealth * healPercent) * share, source);
 
     public override string GetName() => "<color=#8B0000>Bloodsucker</color>";
     public override string GetDescription() =>

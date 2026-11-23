@@ -22,13 +22,12 @@ public class ScorchEffect : DoTEffect
     public readonly float originalDuration;
 
     public ScorchEffect(Entity target, float duration, int level, Entity source, float? damagePerTick = null, float? healthPercentPerSecond = null)
-        : base(target, duration, level, source)
+        : base(target, duration, level, source, 1f)
     {
         if (damagePerTick.HasValue) this.damagePerTick = damagePerTick.Value;
         if (healthPercentPerSecond.HasValue) this.healthPercentPerSecond = healthPercentPerSecond.Value;
         effectType = Type.negative;
         elementalType = ElementalType.Fire;
-        tickInterval = 1f;
         // the source can extend the Scorches it causes, same hook Burn uses
         if (source != null) this.duration *= 1f + source.burnDurationBonus;
         // water douses fire: while the level is Underwater, Scorch only lasts a quarter as long
@@ -139,25 +138,20 @@ public class ScorchEffect : DoTEffect
         return newFader;
     }
 
-    public override void OnTick(float deltaTime)
+    // the flat part is fixed when it lands, the max health part is read as each tick lands
+    protected override void DealTick(float share)
     {
-        tickTimer += deltaTime;
-        if (tickTimer >= tickInterval)
-        {
-            float tick = (damagePerSecond + target.maxHealth * healthPercentPerSecond) * tickInterval;
-            if (source != null)
-                target.Damage(tick, DamageType.Magic, ElementalType.Fire, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
-            else
-                target.Damage(tick, DamageType.Magic, ElementalType.Fire, tickTags);
+        float tick = (damagePerSecond + target.maxHealth * healthPercentPerSecond) * ticks.baseInterval * share;
+        if (source != null)
+            target.Damage(tick, DamageType.Magic, ElementalType.Fire, source, source.DotCanCrit || source.ElementalReactionCanCrit, tickTags);
+        else
+            target.Damage(tick, DamageType.Magic, ElementalType.Fire, tickTags);
 
-            // hidden: while the level's ambient temperature is Hot or Cold, Scorch also nudges
-            // the plant's own temperature up by 1 per tick - not mentioned in any tooltip
-            if (target is Plant plant && WeatherManager.instance != null &&
-                (WeatherManager.instance.temperature == TemperatureType.Hot || WeatherManager.instance.temperature == TemperatureType.Cold))
-                plant.temperature = Mathf.Min(plant.temperature + 1f, plant.temperatureMax);
-
-            tickTimer -= tickInterval;
-        }
+        // hidden: while the level's ambient temperature is Hot or Cold, Scorch also nudges
+        // the plant's own temperature up by 1 per tick - not mentioned in any tooltip
+        if (target is Plant plant && WeatherManager.instance != null &&
+            (WeatherManager.instance.temperature == TemperatureType.Hot || WeatherManager.instance.temperature == TemperatureType.Cold))
+            plant.temperature = Mathf.Min(plant.temperature + share, plant.temperatureMax);
     }
 
     public override void OnExpire()

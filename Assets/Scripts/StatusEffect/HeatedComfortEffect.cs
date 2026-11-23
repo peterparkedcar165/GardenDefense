@@ -9,7 +9,8 @@ public class HeatedComfortEffect : StatusEffect
 
     private readonly float _healPerTick;
     private readonly float _tempPerTick;
-    private float _tickTimer;
+    // the shared over time timing (OverTimeTicker)
+    private readonly OverTimeTicker _ticks = new OverTimeTicker(TickInterval);
 
     public HeatedComfortEffect(Entity target, float totalHeal, float totalTemp, Entity source)
         : base(target, Duration, 1, source)
@@ -28,13 +29,22 @@ public class HeatedComfortEffect : StatusEffect
 
     public override void OnTick(float deltaTime)
     {
-        _tickTimer += deltaTime;
-        if (_tickTimer < TickInterval) return;
-        _tickTimer -= TickInterval;
-        HealTarget(_healPerTick);
+        int due = _ticks.Advance(deltaTime);
+        for (int i = 0; i < due; i++) ComfortTick(1f);
+    }
+
+    public override void OnNaturalExpire()
+    {
+        float share = _ticks.LeftoverShare(duration);
+        if (share > 0.0001f) ComfortTick(share);
+    }
+
+    private void ComfortTick(float share)
+    {
+        HealTarget(_healPerTick * share);
         Plant plant = target as Plant;
         if (plant != null && WeatherManager.instance?.temperature == TemperatureType.Cold)
-            plant.temperature = Mathf.Min(plant.temperature + _tempPerTick, plant.comfortMax);
+            plant.temperature = Mathf.Min(plant.temperature + _tempPerTick * share, plant.comfortMax);
     }
 
     public override string GetName() => "<color=orange><b>Heated Comfort</b></color>";

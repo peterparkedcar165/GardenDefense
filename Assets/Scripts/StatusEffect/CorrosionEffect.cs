@@ -19,6 +19,8 @@ public class CorrosionEffect : StatusEffect
     private double totalArmorReduction;
     private float cachedelementalAffinity;
 
+    public override bool IsReaction => true;
+
     public CorrosionEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         cachedelementalAffinity = source?.elementalAffinity ?? 0f;
@@ -60,6 +62,8 @@ public class CorrosionEffect : StatusEffect
         double increment = RatePerSecond;
         totalArmorReduction += increment;
         target.armorAdder -= (float)increment;
+        // Botanical Alchemy: every armor drop pays the plant that applied it
+        MulchManager.ReactionEvent(this, source, target.transform.position);
     }
 
     public override void OnExpire()

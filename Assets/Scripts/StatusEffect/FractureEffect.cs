@@ -4,6 +4,8 @@ public class FractureEffect : StatusEffect
 {
     private float critDamageReceivedBonus;
 
+    public override bool IsReaction => true;
+
     public FractureEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         critDamageReceivedBonus = 0.25f * (1f + source.elementalAffinity);

@@ -18,8 +18,8 @@ public class OleandicWardEffect : StatusEffect
     private readonly float baseDuration;
     private readonly float weakHealAmount;
     private readonly float regenPerLockPerSecond;
-    private float regenTickTimer;
-    private const float RegenTickInterval = 1f;
+    // the shared over time timing (OverTimeTicker): a regen tick every second
+    private readonly OverTimeTicker regenTicks = new OverTimeTicker(1f);
 
     // Path2 max level bonus: +Magic Resistance per debuff locked, synced the same way Toxin
     // synced its Magic Armor reduction per buff captured
@@ -110,10 +110,15 @@ public class OleandicWardEffect : StatusEffect
     public override void OnTick(float deltaTime)
     {
         if (immuneTypes.Count == 0) return;
-        regenTickTimer += deltaTime;
-        if (regenTickTimer < RegenTickInterval) return;
-        regenTickTimer -= RegenTickInterval;
-        HealTarget(regenPerLockPerSecond * immuneTypes.Count * RegenTickInterval);
+        int due = regenTicks.Advance(deltaTime);
+        for (int i = 0; i < due; i++) HealTarget(regenPerLockPerSecond * immuneTypes.Count * regenTicks.baseInterval);
+    }
+
+    public override void OnNaturalExpire()
+    {
+        if (immuneTypes.Count == 0) return;
+        float share = regenTicks.LeftoverShare(duration);
+        if (share > 0.0001f) HealTarget(regenPerLockPerSecond * immuneTypes.Count * regenTicks.baseInterval * share);
     }
 
     public override void OnExpire()

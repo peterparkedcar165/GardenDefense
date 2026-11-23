@@ -37,6 +37,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9062ba99babd44ea909e1a59f3422770, type: 2}
   - {fileID: 11400000, guid: 1ee3fa712f0f4dd89d272fd6e6c77736, type: 2}
   - {fileID: 11400000, guid: 61194ea48cd24d8cb55edd5e7aca24e7, type: 2}
+  - {fileID: 11400000, guid: 4f30f5eb5a154da6af7e0b52d90a263e, type: 2}
+  - {fileID: 11400000, guid: 29535308526348ebabf1ab9e03de08ba, type: 2}
+  - {fileID: 11400000, guid: e0838185af5c421bafc5df2e24aa95e2, type: 2}
   fertilizers:
   - {fileID: 11400000, guid: 777fd61cdf034642a3eee9bb0001921f, type: 2}
   - {fileID: 11400000, guid: 64316b1c030545a28ed9747c63e660c2, type: 2}

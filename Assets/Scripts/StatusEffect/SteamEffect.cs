@@ -5,6 +5,8 @@ public class SteamEffect : StatusEffect
     public float resistShred;
     public float healingReduction;
 
+    public override bool IsReaction => true;
+
     public SteamEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)
     {
         resistShred = 0.18f * (1f + source.elementalAffinity);

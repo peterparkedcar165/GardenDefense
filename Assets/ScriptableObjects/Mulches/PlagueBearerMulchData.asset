@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bde014e5be301764b88751630569a125, type: 3}
+  m_Name: PlagueBearerMulchData
+  m_EditorClassIdentifier: Assembly-CSharp::PlagueBearerMulchData
+  mulchName: '<b><color=purple>Plague Bearer</color></b>'
+  description: 
+  symbol: 4
+  icon: {fileID: 21300000, guid: fb0921d11daf4ca49aa335b0bdca1203, type: 3}
+  elementalType: 3
+  dropWeight: 1
+  condition:
+    requiredElementGroups:
+    - anyOf:
+      - 2
+      excludedPlants: []
+    - anyOf:
+      - 3
+      excludedPlants: []
+    requiredPlantGroups: []
+    minWave: 0
+    maxWave: 0
+    orAlternatives: []
+  durationShare:
+    common: 0.25
+    rare: 0.5
+    epic: 1
+  targets:
+    common: 1
+    rare: 2
+    epic: 3
+  radius:
+    common: 2
+    rare: 3
+    epic: 4
