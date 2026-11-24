@@ -83,6 +83,7 @@ public class LoadoutSelectionUI : MonoBehaviour
     public void Hide()
     {
         StopIntro();
+        CompleteFlights();
         SetMapShown(false);
         panel.SetActive(false);
         selectedLoadout.Clear();
@@ -450,6 +451,7 @@ public class LoadoutSelectionUI : MonoBehaviour
     private void SetMapShown(bool shown, bool instant)
     {
         if (mapFade != null) { StopCoroutine(mapFade); mapFade = null; }
+        CompleteFlights();
         if (shown != mapShown)
         {
             mapShown = shown;
@@ -534,6 +536,8 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     public void RefreshUI()
     {
+        // a glide still under way lands first: its slots are about to be rebuilt
+        CompleteFlights();
         BuildAvailablePlants();
 
         // hidden first, so the grid lays out only the new squares this frame
@@ -789,8 +793,13 @@ public class LoadoutSelectionUI : MonoBehaviour
     private void OnUnlockedSlotClicked(string plantName)
     {
         if (selectedLoadout.Contains(plantName) || selectedLoadout.Count >= SaveManager.instance.saveData.MaxLoadoutSize) return;
+        CompleteFlights();
+        Rect? from = SlotRect(AvailableSlotOf(plantName));
         selectedLoadout.Add(plantName);
         RefreshUI();
+        // it glides from its card to its new loadout slot (its card stays greyed, as before)
+        LoadoutSlot to = LoadoutSlotOf(plantName);
+        if (from.HasValue && to != null) Fly(plantName, from.Value, to, null);
 
         if (plantName == "AcornKnight")
             TutorialManager.instance?.NotifyEvent(TutorialEvents.SelectAcornKnightSlot);
@@ -798,14 +807,157 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     private void OnSelectedSlotClicked(string plantName)
     {
+        CompleteFlights();
+        Dictionary<string, Rect> before = LoadoutRects();
         selectedLoadout.Remove(plantName);
         RefreshUI();
+        // it glides back to its card, which stays greyed until it lands; the plants after it slide one slot left
+        LoadoutSlot card = AvailableSlotOf(plantName);
+        if (card != null && before.TryGetValue(plantName, out Rect from))
+        {
+            CanvasGroup cardGroup = card.transform.parent != null && card.transform.parent.parent != null
+                ? card.transform.parent.parent.GetComponent<CanvasGroup>() : null;
+            Fly(plantName, from, card, cardGroup);
+        }
+        foreach (KeyValuePair<string, Rect> moved in LoadoutRects())
+            if (before.TryGetValue(moved.Key, out Rect old) && Vector2.Distance(old.center, moved.Value.center) > 1f)
+                Fly(moved.Key, old, LoadoutSlotOf(moved.Key), null);
+    }
+
+    // ---------- plants gliding between the two sections (Tommy, 2026-11-24, like Plants vs. Zombies) ----------
+    // a click doesn't snap a plant from one section to the other: a copy of its portrait glides there
+    // (FlyTime, quick then settling, unscaled since the level is paused), the real one shows once it lands.
+    // a plant going back to its card keeps the card greyed until then. a new click lands every glide first
+    private const float FlyTime = 0.28f;
+    private class Flight
+    {
+        public RectTransform flyer;
+        public Rect from, to;
+        public LoadoutSlot target;
+        public CanvasGroup greyedCard;
+        public float t;
+    }
+    private readonly List<Flight> flights = new List<Flight>();
+    private Coroutine flying;
+
+    private void Fly(string plantName, Rect from, LoadoutSlot target, CanvasGroup greyedCard)
+    {
+        PlantData data = GetPlantData(plantName);
+        if (data == null || target == null) return;
+        Rect? to = SlotRect(target);
+        if (!to.HasValue) return;
+
+        GameObject go = new GameObject("Flying " + plantName, typeof(RectTransform), typeof(Image));
+        go.layer = panel.layer;
+        RectTransform flyer = (RectTransform)go.transform;
+        flyer.SetParent(panel.transform, false);
+        flyer.SetAsLastSibling();
+        flyer.anchorMin = flyer.anchorMax = flyer.pivot = new Vector2(0.5f, 0.5f);
+        Image image = go.GetComponent<Image>();
+        image.sprite = data.icon;
+        image.preserveAspect = true;
+        image.raycastTarget = false;
+
+        // the real one waits out of sight (a card going back only stays greyed)
+        if (greyedCard == null) SlotGroup(target).alpha = 0f;
+        else greyedCard.alpha = 0.35f;
+        Flight flight = new Flight { flyer = flyer, from = from, to = to.Value, target = target, greyedCard = greyedCard };
+        PlaceFlyer(flight, 0f);
+        flights.Add(flight);
+        if (flying == null) flying = StartCoroutine(Flights());
+    }
+
+    private System.Collections.IEnumerator Flights()
+    {
+        while (flights.Count > 0)
+        {
+            for (int i = flights.Count - 1; i >= 0; i--)
+            {
+                Flight f = flights[i];
+                f.t += Time.unscaledDeltaTime / FlyTime;
+                if (f.t >= 1f) { Land(f); flights.RemoveAt(i); }
+                else PlaceFlyer(f, 1f - Mathf.Pow(1f - f.t, 3f));
+            }
+            yield return null;
+        }
+        flying = null;
+    }
+
+    private void PlaceFlyer(Flight f, float k)
+    {
+        if (f.flyer == null) return;
+        f.flyer.anchoredPosition = Vector2.Lerp(f.from.center, f.to.center, k);
+        f.flyer.sizeDelta = Vector2.Lerp(f.from.size, f.to.size, k);
+    }
+
+    private void Land(Flight f)
+    {
+        if (f.target != null)
+        {
+            if (f.greyedCard == null) SlotGroup(f.target).alpha = 1f;
+            else if (f.greyedCard != null) f.greyedCard.alpha = 1f;
+        }
+        if (f.flyer != null) Destroy(f.flyer.gameObject);
+    }
+
+    // every glide lands at once (a new click, the screen closing or changing)
+    private void CompleteFlights()
+    {
+        foreach (Flight f in flights) Land(f);
+        flights.Clear();
+        if (flying != null) { StopCoroutine(flying); flying = null; }
+    }
+
+    private static CanvasGroup SlotGroup(LoadoutSlot slot)
+    {
+        CanvasGroup group = slot.GetComponent<CanvasGroup>();
+        return group != null ? group : slot.gameObject.AddComponent<CanvasGroup>();
+    }
+
+    private LoadoutSlot AvailableSlotOf(string plantName)
+    {
+        foreach (LoadoutSlot slot in unlockedSlots)
+            if (slot != null && slot.PlantName == plantName) return slot;
+        return null;
+    }
+
+    private LoadoutSlot LoadoutSlotOf(string plantName)
+    {
+        foreach (LoadoutSlot slot in selectedContainer.GetComponentsInChildren<LoadoutSlot>())
+            if (slot.PlantName == plantName) return slot;
+        return null;
+    }
+
+    // where each loadout plant sits now, in the loadout panel's own space
+    private Dictionary<string, Rect> LoadoutRects()
+    {
+        var rects = new Dictionary<string, Rect>();
+        foreach (LoadoutSlot slot in selectedContainer.GetComponentsInChildren<LoadoutSlot>())
+        {
+            Rect? r = SlotRect(slot);
+            if (r.HasValue) rects[slot.PlantName] = r.Value;
+        }
+        return rects;
+    }
+
+    // a slot's rect in the loadout panel's own space, after the layout has placed it
+    private Rect? SlotRect(LoadoutSlot slot)
+    {
+        if (slot == null) return null;
+        Canvas.ForceUpdateCanvases();
+        RectTransform space = (RectTransform)panel.transform;
+        Vector3[] corners = new Vector3[4];
+        ((RectTransform)slot.transform).GetWorldCorners(corners);
+        Vector2 min = space.InverseTransformPoint(corners[0]);
+        Vector2 max = space.InverseTransformPoint(corners[2]);
+        return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
     }
 
     public void Confirm()
     {
         TutorialManager.instance?.NotifyEvent(TutorialEvents.ClickConfirmButton);
         StopIntro();
+        CompleteFlights();
         SetMapShown(false);
         SaveManager.instance.selectedLoadout = new List<string>(selectedLoadout);
         panel.SetActive(false);
