@@ -48,6 +48,14 @@ public class LoadoutSelectionUI : MonoBehaviour
     // the insect panel on the left (Tommy, 2026-11-24), built the first time the screen opens
     private InsectShowcase showcase;
 
+    // Show Map (Tommy, 2026-11-24): hides everything on the screen but its own button, the dark
+    // backdrop included, so the whole map shows; pressed again, the screen comes back as it was
+    private PlankButton mapButton;
+    private bool mapShown;
+    private Image backdrop;
+    private readonly List<GameObject> hiddenForMap = new List<GameObject>();
+    private bool plantPanelsBuilt;
+
     public bool IsOpen => panel.activeSelf;
 
     void Awake()
@@ -75,6 +83,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     public void Hide()
     {
+        SetMapShown(false);
         panel.SetActive(false);
         selectedLoadout.Clear();
         HideTooltip();
@@ -95,6 +104,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
 
         panel.SetActive(true);
+        SetMapShown(false);
+        BuildScreenDressing();
         PopulateInsectPanel();
         RefreshUI();
     }
@@ -114,8 +125,170 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
 
         panel.SetActive(true);
+        SetMapShown(false);
+        BuildScreenDressing();
         PopulateInsectPanel();
         RefreshUI();
+    }
+
+    // once, the first time the screen opens: the green panels behind Current Loadout and Available
+    // Plants, and the Show Map button
+    private void BuildScreenDressing()
+    {
+        if (!plantPanelsBuilt)
+        {
+            plantPanelsBuilt = true;
+            BuildPlantPanels();
+        }
+        if (mapButton == null)
+        {
+            backdrop = panel.GetComponent<Image>();
+            RectTransform panelRect = (RectTransform)panel.transform;
+            mapButton = PlankButton.Create(panelRect, "Show Map", GameControlsStyle.Instance.speed,
+                InsectShowcaseStyle.Instance.font, () => SetMapShown(!mapShown));
+            // just right of Confirm, level with it
+            RectTransform r = mapButton.Rect;
+            r.anchorMin = r.anchorMax = new Vector2(0.5f, 0.5f);
+            r.pivot = new Vector2(0f, 0.5f);
+            Vector3[] corners = new Vector3[4];
+            ((RectTransform)confirmButton.transform).GetWorldCorners(corners);
+            Vector2 rightMiddle = panelRect.InverseTransformPoint((corners[2] + corners[3]) * 0.5f);
+            r.anchoredPosition = new Vector2(Mathf.Round(rightMiddle.x + 24f), Mathf.Round(rightMiddle.y));
+        }
+    }
+
+    // the insect panel's kit, in a bright green, behind each plant section's title and grid (Tommy):
+    // panel_base and its shine around both, the grids' dark boxes swapped for the inset box
+    private void BuildPlantPanels()
+    {
+        InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
+        RectTransform panelRect = (RectTransform)panel.transform;
+        Transform loadoutSection = SectionOf(selectedContainer);
+        Transform plantsSection = SectionOf(unlockedContainer);
+        if (loadoutSection == null || plantsSection == null) return;
+
+        Rect upper = BoundsIn(panelRect, loadoutSection);
+        Rect lower = BoundsIn(panelRect, plantsSection);
+        if (upper.yMin < lower.yMin) { Rect t = upper; upper = lower; lower = t; Transform tt = loadoutSection; loadoutSection = plantsSection; plantsSection = tt; }
+        const float Px = 2f;
+        float pad = s.plantPanelPad * Px;
+        // the two panels never touch: when the sections are close the pads between them shrink
+        float gap = upper.yMin - lower.yMax;
+        float between = Mathf.Min(pad, Mathf.Max(0f, Mathf.Floor((gap - 4f * Px) / (2f * Px))) * Px);
+        float width = Mathf.Max(upper.width, lower.width) + 2f * pad;
+        AddPlantPanel(panelRect, loadoutSection, upper, width, pad, between);
+        AddPlantPanel(panelRect, plantsSection, lower, width, between, pad);
+
+        foreach (Transform section in new[] { loadoutSection, plantsSection })
+            foreach (Transform child in section)
+            {
+                // the dark box behind each grid becomes the kit's inset box
+                Image box = child.GetComponent<Image>();
+                if (box != null && (child == selectedContainer || child.GetComponent<ScrollRect>() != null))
+                {
+                    box.sprite = s.insetBox;
+                    box.type = Image.Type.Sliced;
+                    box.pixelsPerUnitMultiplier = 1f;
+                    box.color = s.plantPanel;
+                }
+                // the title gets the panel's 1 pixel shadow
+                TMP_Text title = child.GetComponent<TMP_Text>();
+                if (title != null && title.GetComponent<PixelTextEffect>() == null)
+                    title.gameObject.AddComponent<PixelTextEffect>().Color = s.plantTitleShadow;
+            }
+    }
+
+    private void AddPlantPanel(RectTransform panelRect, Transform section, Rect bounds, float width, float padTop, float padBottom)
+    {
+        InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
+        const float Px = 2f;
+        float pad = s.plantPanelPad * Px;
+        GameObject go = new GameObject("PlantsPanel", typeof(RectTransform), typeof(Image));
+        go.layer = panel.layer;
+        RectTransform r = (RectTransform)go.transform;
+        r.SetParent(panelRect, false);
+        r.SetSiblingIndex(section.GetSiblingIndex());   // drawn behind its section
+        r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+        float height = bounds.height + padTop + padBottom;
+        float centerY = bounds.yMin - padBottom + height * 0.5f;
+        r.sizeDelta = new Vector2(Mathf.Round(width / Px) * Px, Mathf.Round(height / Px) * Px);
+        r.anchoredPosition = new Vector2(Mathf.Round(bounds.center.x), Mathf.Round(centerY));
+        Image body = go.GetComponent<Image>();
+        body.sprite = s.panelBase;
+        body.type = Image.Type.Sliced;
+        body.pixelsPerUnitMultiplier = 1f;
+        body.color = s.plantPanel;
+        body.raycastTarget = false;
+
+        GameObject shineGO = new GameObject("Shine", typeof(RectTransform), typeof(Image));
+        shineGO.layer = go.layer;
+        RectTransform shine = (RectTransform)shineGO.transform;
+        shine.SetParent(r, false);
+        shine.anchorMin = Vector2.zero;
+        shine.anchorMax = Vector2.one;
+        shine.offsetMin = shine.offsetMax = Vector2.zero;
+        Image shineImage = shineGO.GetComponent<Image>();
+        shineImage.sprite = s.panelShine;
+        shineImage.type = Image.Type.Sliced;
+        shineImage.pixelsPerUnitMultiplier = 1f;
+        shineImage.raycastTarget = false;
+    }
+
+    // the child of the loadout panel that holds t (a plant section)
+    private Transform SectionOf(Transform t)
+    {
+        while (t != null && t.parent != panel.transform) t = t.parent;
+        return t;
+    }
+
+    // what a section's active children cover, in the loadout panel's own space
+    private static Rect BoundsIn(RectTransform space, Transform section)
+    {
+        Vector2 min = new Vector2(float.MaxValue, float.MaxValue), max = new Vector2(float.MinValue, float.MinValue);
+        Vector3[] corners = new Vector3[4];
+        foreach (Transform child in section)
+        {
+            if (!child.gameObject.activeSelf || !(child is RectTransform rt)) continue;
+            rt.GetWorldCorners(corners);
+            foreach (Vector3 corner in corners)
+            {
+                Vector2 p = space.InverseTransformPoint(corner);
+                min = Vector2.Min(min, p);
+                max = Vector2.Max(max, p);
+            }
+        }
+        return min.x > max.x ? new Rect(0f, 0f, 0f, 0f) : Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+    }
+
+    // Show Map: everything on the loadout panel but its button hides, and the dark backdrop goes, so
+    // the whole map shows. off again, exactly what was showing comes back
+    private void SetMapShown(bool shown)
+    {
+        if (mapShown == shown) return;
+        mapShown = shown;
+        if (shown)
+        {
+            HideTooltip();
+            HideSlotHint();
+            showcase?.HideTips();
+            hiddenForMap.Clear();
+            foreach (Transform child in panel.transform)
+            {
+                if (mapButton != null && child == mapButton.transform) continue;
+                if (!child.gameObject.activeSelf) continue;
+                hiddenForMap.Add(child.gameObject);
+                child.gameObject.SetActive(false);
+            }
+            if (backdrop != null) backdrop.enabled = false;
+        }
+        else
+        {
+            foreach (GameObject go in hiddenForMap)
+                if (go != null) go.SetActive(true);
+            hiddenForMap.Clear();
+            if (backdrop != null) backdrop.enabled = true;
+        }
+        if (mapButton != null) mapButton.SetLabel(shown ? "Hide Map" : "Show Map");
     }
 
     // the insect panel (InsectShowcase): the level's conditions and a card per insect its waves spawn.
@@ -217,6 +390,7 @@ public class LoadoutSelectionUI : MonoBehaviour
     public void Confirm()
     {
         TutorialManager.instance?.NotifyEvent(TutorialEvents.ClickConfirmButton);
+        SetMapShown(false);
         SaveManager.instance.selectedLoadout = new List<string>(selectedLoadout);
         panel.SetActive(false);
         HideTooltip();

@@ -68,6 +68,14 @@ public class InsectShowcaseStyle : ScriptableObject
     [Tooltip("a resistance above 0: the insect takes less damage from that element")]
     public Color resists = Hex("#FF7A66");
 
+    [Header("Plant sections (Current Loadout, Available Plants): the same panel, brighter")]
+    [Tooltip("their panels, and the inset boxes behind the two plant grids (proposal: a bright leaf green)")]
+    public Color plantPanel = Hex("#5DB33A");
+    [Tooltip("the 1 pixel shadow under the two section titles (the panel colour x 0.38)")]
+    public Color plantTitleShadow = Hex("#234416");
+    [Tooltip("art pixels of panel around each section's title and grid (less between the two when they're close)")]
+    public int plantPanelPad = 10;
+
     [Header("Tag colours")]
     public Color passive = Hex("#C9BFA2");
     public Color mildlyAggressive = Hex("#FFB973");

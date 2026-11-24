@@ -304,6 +304,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\BogIris.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\GlowshroomProjectile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearedEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\PlankButton.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IceBeamEffect.cs" />
     <Compile Include="Assets\Scripts\UI\CursorIcon.cs" />
     <Compile Include="Assets\Scripts\UI\PlantInfoPanelStyle.cs" />
