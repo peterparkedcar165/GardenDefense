@@ -3,6 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RekindlingFertilizer", menuName = "Scriptable Objects/Fertilizer/Rekindling")]
 public class RekindlingFertilizerData : FertilizerData
 {
+    // its paper bag icon's symbol, the mulches' categories (proposal, Tommy, 2026-11-24: burn and grass against burning insects)
+    protected override MulchSymbol DefaultSymbol => MulchSymbol.Affliction;
+
     [Tooltip("how much shorter every Burn's base duration becomes, e.g. 0.25 = 25% shorter")]
     public float durationReductionPercent = 0.25f;
     [Tooltip("seconds added to an already Burning target's remaining duration per qualifying hit")]

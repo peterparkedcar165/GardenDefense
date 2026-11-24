@@ -7,6 +7,9 @@ using UnityEngine;
 // (FertilizerManager.MeltActive, MeltFreezeDurationReduction, MeltDamageMultiplier)
 public class MeltFertilizerData : FertilizerData
 {
+    // its paper bag icon's symbol, the mulches' categories (proposal, Tommy, 2026-11-24: fire against frozen insects)
+    protected override MulchSymbol DefaultSymbol => MulchSymbol.Affliction;
+
     [Tooltip("seconds shaved off the target's remaining Freeze duration per qualifying Fire hit")]
     public float freezeDurationReduction = 0.2f;
     [Tooltip("damage multiplier on each qualifying Fire hit, e.g. 1.75 = 175% damage")]

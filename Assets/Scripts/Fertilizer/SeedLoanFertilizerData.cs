@@ -3,6 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SeedLoanFertilizer", menuName = "Scriptable Objects/Fertilizer/Solar Loan")]
 public class SeedLoanFertilizerData : FertilizerData
 {
+    // its paper bag icon's symbol, the mulches' categories (proposal, Tommy, 2026-11-24: sun now, paid back later)
+    protected override MulchSymbol DefaultSymbol => MulchSymbol.Sun;
+
     [Tooltip("Sun given the moment this fertilizer is picked")]
     public int loanAmount = 150;
     [Tooltip("Sun taken back when the loan comes due")]

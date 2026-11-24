@@ -59,6 +59,32 @@ public static class MulchIcon
         SetLayer(image, SymbolName, Registry.SymbolSprite(item.data.symbol), WithAlpha(SymbolColor(item.rarity), alpha));
     }
 
+    // a fertilizer's icon (Tommy, 2026-11-24): the same paper bag, the symbol of its kind
+    // (FertilizerData.symbol, the mulches' categories) pale on the label as on a mulch. fertilizers have
+    // no rarity, so the label is a colour no rarity uses, gold (proposal)
+    public static readonly Color FertilizerLabelColor = new Color32(0xE0, 0xA8, 0x2E, 0xFF);
+
+    public static void ShowFertilizer(Image image, FertilizerData fertilizer)
+    {
+        if (image == null) return;
+        if (fertilizer == null) { Hide(image); return; }
+        image.enabled = true;
+        if (!HasBag)
+        {
+            image.sprite = fertilizer.icon != null ? fertilizer.icon : Registry != null ? Registry.placeholderIcon : null;
+            image.color = Color.white;
+            SetLayer(image, LabelName, null, Color.clear);
+            SetLayer(image, SymbolName, null, Color.clear);
+            return;
+        }
+        Color label = FertilizerLabelColor;
+        Color symbol = new Color(1f - (1f - label.r) * SymbolPaleness, 1f - (1f - label.g) * SymbolPaleness, 1f - (1f - label.b) * SymbolPaleness, 1f);
+        image.sprite = Registry.iconBag;
+        image.color = BagColor;
+        SetLayer(image, LabelName, Registry.iconLabel, label);
+        SetLayer(image, SymbolName, Registry.SymbolSprite(fertilizer.symbol), symbol);
+    }
+
     public static void Hide(Image image)
     {
         if (image == null) return;

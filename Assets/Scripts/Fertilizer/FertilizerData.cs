@@ -12,9 +12,20 @@ public abstract class FertilizerData : ScriptableObject
         "bold and coloured to its elementalType (PlantData.ElementalColor), even when that's just Neutral")]
     public string fertilizerName;
     [TextArea] public string description;
+    [Tooltip("the old single sprite icon, only shown while the mulch registry has no paper bag (MulchIcon)")]
     public Sprite icon;
+    [Tooltip("which kind of fertilizer it is, the symbol on its paper bag icon, with the mulches' categories (Tommy, " +
+        "2026-11-24): Heal, Defense (armor, shields, hitting back), Attack (attack speed, range, area, damage), Affliction " +
+        "(slows, primers, debuffs, damage over time), Sun (making sun), Time (payoffs later in the level). None: no symbol. " +
+        "each kind of fertilizer starts with its own (DefaultSymbol)")]
+    public MulchSymbol symbol;
     [Tooltip("drives the colour of fertilizerName")]
     public ElementalType elementalType;
+
+    // the symbol a fertilizer asset has until it's set in the inspector (a field the asset doesn't
+    // have yet keeps the value given here)
+    protected FertilizerData() { symbol = DefaultSymbol; }
+    protected virtual MulchSymbol DefaultSymbol => MulchSymbol.None;
 
     [Tooltip("loadout requirement: a fertilizer whose condition fails is left off the pick screen " +
         "(e.g. melt needs fire, water and ice plants)")]
