@@ -447,6 +447,50 @@ public class LoadoutSelectionUI : MonoBehaviour
                 stats += $"     PIERCE: <color=green><b>{s.piercing}</b></color>";
             tooltipStats.text = stats;
         }
+        FitTooltip();
+    }
+
+    // the plant tooltip is as tall as its texts, at most the screen's height less a small margin. when
+    // they're too long for that, every text in it gets the same smaller share of its own font size, the
+    // biggest that fits (Tommy, 2026-11-24, as the level's tooltip does: PlantUpgradeUI.LayoutTooltip)
+    private TMP_Text[] tooltipTexts;
+    private float[] tooltipBaseSizes;
+    private const float TooltipScreenMargin = 16f;
+    private const float TooltipMinScale = 0.35f;
+
+    private void FitTooltip()
+    {
+        if (tooltipPanel == null) return;
+        RectTransform tip = (RectTransform)tooltipPanel.transform;
+        if (tooltipTexts == null)
+        {
+            tooltipTexts = tooltipPanel.GetComponentsInChildren<TMP_Text>(true);
+            tooltipBaseSizes = new float[tooltipTexts.Length];
+            for (int i = 0; i < tooltipTexts.Length; i++) tooltipBaseSizes[i] = tooltipTexts[i].fontSize;
+        }
+        Canvas canvas = tooltipPanel.GetComponentInParent<Canvas>();
+        RectTransform root = canvas != null ? (RectTransform)canvas.rootCanvas.transform : null;
+        float maxHeight = (root != null ? root.rect.height : Screen.height) - 2f * TooltipScreenMargin;
+
+        if (TooltipHeightAt(tip, 1f) <= maxHeight) return;
+        // halving the range between the smallest share and the full size
+        float fits = TooltipMinScale, tooBig = 1f;
+        for (int i = 0; i < 8; i++)
+        {
+            float scale = (fits + tooBig) * 0.5f;
+            if (TooltipHeightAt(tip, scale) <= maxHeight) fits = scale;
+            else tooBig = scale;
+        }
+        TooltipHeightAt(tip, fits);
+    }
+
+    // sets every tooltip text to scale times its own size, lays the panel out and returns its height
+    private float TooltipHeightAt(RectTransform tip, float scale)
+    {
+        for (int i = 0; i < tooltipTexts.Length; i++)
+            if (tooltipTexts[i] != null) tooltipTexts[i].fontSize = tooltipBaseSizes[i] * scale;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(tip);
+        return tip.rect.height;
     }
 
     private static string ColoredElemental(ElementalType type)
