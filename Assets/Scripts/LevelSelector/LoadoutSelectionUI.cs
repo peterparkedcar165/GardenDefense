@@ -408,6 +408,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
         if (tooltipPanel == null) return;
         tooltipPanel.SetActive(true);
+        SkinTooltip(data);
         Plant prefab = data.plantPrefab;
         // the texts the plant shows in the level, with the numbers of a just placed plant: every path
         // at level 0 (Tommy, 2026-11-24; the short PlantData versions are gone)
@@ -448,6 +449,40 @@ public class LoadoutSelectionUI : MonoBehaviour
             tooltipStats.text = stats;
         }
         FitTooltip();
+    }
+
+    // the plant tooltip wears the same kit panel as the insect tooltip (panel_base and its shine, Tommy,
+    // 2026-11-24), tinted with the plant's element colour like the level's plant info panel
+    private Image tooltipBody;
+
+    private void SkinTooltip(PlantData data)
+    {
+        InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
+        if (tooltipBody == null)
+        {
+            tooltipBody = tooltipPanel.GetComponent<Image>();
+            if (tooltipBody == null) return;
+            tooltipBody.sprite = s.panelBase;
+            tooltipBody.type = Image.Type.Sliced;
+            tooltipBody.pixelsPerUnitMultiplier = 1f;
+
+            // the shine over the whole panel, kept out of its layout group
+            GameObject shine = new GameObject("Shine", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+            shine.layer = tooltipPanel.layer;
+            RectTransform r = (RectTransform)shine.transform;
+            r.SetParent(tooltipPanel.transform, false);
+            r.SetAsFirstSibling();
+            r.anchorMin = Vector2.zero;
+            r.anchorMax = Vector2.one;
+            r.offsetMin = r.offsetMax = Vector2.zero;
+            shine.GetComponent<LayoutElement>().ignoreLayout = true;
+            Image shineImage = shine.GetComponent<Image>();
+            shineImage.sprite = s.panelShine;
+            shineImage.type = Image.Type.Sliced;
+            shineImage.pixelsPerUnitMultiplier = 1f;
+            shineImage.raycastTarget = false;
+        }
+        tooltipBody.color = PlantData.ElementPanelColor(data.elementalType);
     }
 
     // the plant tooltip is as tall as its texts, at most the screen's height less a small margin. when
