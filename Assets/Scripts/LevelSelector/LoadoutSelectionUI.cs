@@ -568,18 +568,18 @@ public class LoadoutSelectionUI : MonoBehaviour
     }
 
     // ---------- Available Plants (Tommy, 2026-11-24) ----------
-    // the plants in sections of five levels (Levels 1-5, Levels 6-10, ...). the registry's slot N is the
-    // plant beating level N unlocks (slot 0 the one every save starts with), so a section holds the plants
-    // that become available within its five levels. each plant is a card: its square (the plant bar's
-    // bevel frame on its backdrop, tinted by element), its name and its sun cost under it. a plant not
-    // unlocked yet keeps its place as a dark silhouette named ??? that costs ?. shown: the section of the
-    // level being played and every section holding an unlocked plant
+    // the plants in sections of five levels, one row each, no labels: levels 1 to 5 at the bottom, later
+    // ones above. the registry's slot N is the plant beating level N unlocks (slot 0 the one every save
+    // starts with), so a section holds the plants that become available within its five levels. each
+    // plant is a card: its square (the plant bar's bevel frame on its backdrop, tinted by element), its
+    // name and its sun cost under it. a plant not unlocked yet keeps its place as a solid black
+    // silhouette named ??? that costs ?. shown: the section of the level being played and every section
+    // holding an unlocked plant
     private const int LevelsPerSection = 5;
     private const float CardSquare = 100f;
     private const float CardNameHeight = 20f;
     private const float CardCostHeight = 18f;
     private const float CardHeight = CardSquare + 3f + CardNameHeight + 1f + CardCostHeight;
-    private static readonly Color SilhouetteColor = new Color(0.06f, 0.06f, 0.07f, 1f);
     private bool availablePrepared;
 
     // the container's grid becomes a column of sections, each with its own grid
@@ -596,7 +596,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
         VerticalLayoutGroup column = unlockedContainer.gameObject.AddComponent<VerticalLayoutGroup>();
         column.padding = padding;
-        column.spacing = 8f;
+        // a little more room between two sections' rows than between a section's own rows
+        column.spacing = 14f;
         column.childAlignment = TextAnchor.UpperCenter;
         column.childControlWidth = true;
         column.childControlHeight = true;
@@ -623,36 +624,22 @@ public class LoadoutSelectionUI : MonoBehaviour
             if (plants[i] != null && unlocked.Contains(plants[i].plantName))
                 lastSection = Mathf.Max(lastSection, i / LevelsPerSection);
 
-        for (int section = 0; section <= lastSection; section++)
+        // the first plants at the bottom left, as the old grid had them (Tommy): the earliest section is
+        // the bottom row, later sections stack above it, each left to right. no level labels (Tommy)
+        for (int section = lastSection; section >= 0; section--)
         {
             int first = section * LevelsPerSection;
-            if (first >= plants.Length) break;
-            AddSectionHeader($"Levels {first + 1}-{first + LevelsPerSection}");
-            RectTransform grid = AddSectionGrid();
+            if (first >= plants.Length) continue;
+            RectTransform grid = AddSectionGrid(section);
             for (int i = first; i < first + LevelsPerSection && i < plants.Length; i++)
                 if (plants[i] != null) AddPlantCard(grid, plants[i], unlocked.Contains(plants[i].plantName));
         }
     }
 
-    // a section's title, in a box of its own so the text's shadow copies stay out of the column's layout
-    private void AddSectionHeader(string title)
+    private RectTransform AddSectionGrid(int section)
     {
-        InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
-        GameObject box = new GameObject("Section " + title, typeof(RectTransform), typeof(LayoutElement));
-        box.layer = panel.layer;
-        box.transform.SetParent(unlockedContainer, false);
-        box.GetComponent<LayoutElement>().preferredHeight = 24f;
-        TextMeshProUGUI text = NewText(box.transform, title, 20f, TextAlignmentOptions.Left);
-        RectTransform r = text.rectTransform;
-        r.anchorMin = Vector2.zero;
-        r.anchorMax = Vector2.one;
-        r.offsetMin = r.offsetMax = Vector2.zero;
-        text.gameObject.AddComponent<PixelTextEffect>().Color = s.plantTitleShadow;
-    }
-
-    private RectTransform AddSectionGrid()
-    {
-        GameObject go = new GameObject("Plants", typeof(RectTransform), typeof(GridLayoutGroup));
+        GameObject go = new GameObject("Levels " + (section * LevelsPerSection + 1) + " to " + (section * LevelsPerSection + LevelsPerSection),
+            typeof(RectTransform), typeof(GridLayoutGroup));
         go.layer = panel.layer;
         go.transform.SetParent(unlockedContainer, false);
         GridLayoutGroup grid = go.GetComponent<GridLayoutGroup>();
@@ -660,8 +647,28 @@ public class LoadoutSelectionUI : MonoBehaviour
         grid.spacing = new Vector2(7f, 10f);
         grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         grid.constraintCount = LevelsPerSection;
-        grid.childAlignment = TextAnchor.UpperCenter;
+        grid.startCorner = GridLayoutGroup.Corner.LowerLeft;
+        grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+        grid.childAlignment = TextAnchor.UpperLeft;
         return (RectTransform)go.transform;
+    }
+
+    // a plant not unlocked yet: its sprite as a solid black silhouette, half transparent pixels too
+    // (UI/Silhouette through Resources/UISilhouette.mat). without the material it's only tinted black
+    private static Material silhouetteMaterial;
+    private static bool silhouetteLooked;
+
+    private static Material SilhouetteMaterial
+    {
+        get
+        {
+            if (!silhouetteLooked)
+            {
+                silhouetteLooked = true;
+                silhouetteMaterial = Resources.Load<Material>("UISilhouette");
+            }
+            return silhouetteMaterial;
+        }
     }
 
     // one plant's card: its square with the plant (or its silhouette), its name, its sun cost
@@ -706,7 +713,8 @@ public class LoadoutSelectionUI : MonoBehaviour
             Image image = silhouette.GetComponent<Image>();
             image.sprite = data.icon;
             image.preserveAspect = true;
-            image.color = SilhouetteColor;
+            image.material = SilhouetteMaterial;
+            image.color = Color.black;
             image.raycastTarget = false;
         }
 
