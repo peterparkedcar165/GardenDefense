@@ -519,6 +519,8 @@ public abstract class Plant : Entity, IAttackable
     // the Animator on this plant's Visual (its drawn body). optional: a plant without animations
     // yet leaves it empty, and every body helper below quietly does nothing
     [SerializeField] protected Animator bodyAnimator;
+    // read off the prefab by AnimatedPortrait, which plays this controller's idle on a UI portrait
+    public Animator BodyAnimator => bodyAnimator;
     // Animator.speed is one multiplier shared by every state, so after a clip is sped up or slowed
     // down it is put back to 1 when that clip would have finished, or Idle keeps the leftover speed
     private Coroutine _bodySpeedResetRoutine;

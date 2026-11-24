@@ -127,25 +127,63 @@ public class SkillTreeUI : MonoBehaviour
     // using ContentSizeFitter/VerticalLayoutGroup - the in-level tooltip this is meant to match
     // doesn't use them either, and they fight anything that also tries to position the panel
     // (like following the cursor) or sits inside another layout-controlled container
-    public void ShowTooltip(string text, ElementalType element = ElementalType.Neutral)
+    public void ShowTooltip(string text, ElementalType element = ElementalType.Neutral) => ShowTooltip(null, text, element);
+
+    // the title (bold, Tommy 2026-11-24) on its own line with the kit's seam under it, then the text;
+    // every piece hangs from the panel's top edge, so the pivot PositionTooltipAtCursor picks each
+    // frame doesn't move them
+    public void ShowTooltip(string title, string text, ElementalType element)
     {
         if (tooltipPanel == null) return;
         tooltipPanel.SetActive(true);
-        // the kit panel in the hovered plant's element colour, its text shadow to match
+        // the kit panel in the hovered plant's element colour, its text shadows to match
+        Color shadow = PlantData.ElementTextShadowColor(element);
         if (tooltipImage != null) tooltipImage.color = PlantData.ElementPanelColor(element);
-        if (tooltipShadow != null) tooltipShadow.Color = PlantData.ElementTextShadowColor(element);
+        if (tooltipShadow != null) tooltipShadow.Color = shadow;
+        if (tooltipTitleShadow != null) tooltipTitleShadow.Color = shadow;
         if (tooltipText == null) return;
-        tooltipText.text = text;
 
         Canvas.ForceUpdateCanvases();
         RectTransform panelRect = TooltipRect;
+        float width = panelRect.rect.width - 2f * TipSide;
+        float y = TipPad;
+
+        bool hasTitle = tooltipTitle != null && !string.IsNullOrEmpty(title);
+        if (tooltipTitle != null) tooltipTitle.gameObject.SetActive(hasTitle);
+        if (tooltipSeam != null) tooltipSeam.gameObject.SetActive(hasTitle);
+        if (hasTitle)
+        {
+            tooltipTitle.text = title;
+            float titleHeight = Mathf.Ceil(tooltipTitle.GetPreferredValues(title, width, 0f).y);
+            HangFromTop(tooltipTitle.rectTransform, y, titleHeight, TipSide);
+            y += titleHeight + 6f;
+            if (tooltipSeam != null) HangFromTop(tooltipSeam, y, 4f, 8f);
+            y += 4f + 10f;
+        }
+
+        tooltipText.text = text;
+        float bodyHeight = Mathf.Ceil(tooltipText.GetPreferredValues(text, width, 0f).y);
+        HangFromTop(tooltipText.rectTransform, y, bodyHeight, TipSide);
+        y += bodyHeight + TipPad;
 
         float maxHeight = Screen.height * 0.975f;
-        float height = Mathf.Min(tooltipText.preferredHeight + 40f, maxHeight);
-        panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+        panelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Min(y, maxHeight));
 
         Canvas.ForceUpdateCanvases();
         PositionTooltipAtCursor();
+    }
+
+    // canvas units: the tooltip's space above the title and below the text, and at its sides
+    private const float TipPad = 16f;
+    private const float TipSide = 20f;
+
+    private static void HangFromTop(RectTransform r, float top, float height, float side)
+    {
+        r.anchorMin = new Vector2(0f, 1f);
+        r.anchorMax = new Vector2(1f, 1f);
+        r.pivot = new Vector2(0.5f, 1f);
+        r.offsetMin = new Vector2(side, -(top + height));
+        r.offsetMax = new Vector2(-side, -top);
     }
 
     // sets world position directly (not anchoredPosition) so this doesn't care what the
@@ -214,6 +252,9 @@ public class SkillTreeUI : MonoBehaviour
     private const float Px = 2f;
     private Image tooltipImage;
     private PixelTextEffect tooltipShadow;
+    private TMP_Text tooltipTitle;
+    private PixelTextEffect tooltipTitleShadow;
+    private RectTransform tooltipSeam;
 
     private void SkinScreen()
     {
@@ -257,7 +298,27 @@ public class SkillTreeUI : MonoBehaviour
                 if (kit.font != null) tooltipText.font = kit.font;
                 tooltipText.color = kit.text;
                 tooltipText.raycastTarget = false;
+                tooltipText.verticalAlignment = VerticalAlignmentOptions.Top;
                 tooltipShadow = tooltipText.gameObject.AddComponent<PixelTextEffect>();
+
+                // the title line and the seam under it
+                GameObject titleObject = new GameObject("TooltipTitle", typeof(RectTransform));
+                titleObject.layer = tooltipPanel.layer;
+                titleObject.transform.SetParent(tooltipPanel.transform, false);
+                TextMeshProUGUI title = titleObject.AddComponent<TextMeshProUGUI>();
+                title.font = tooltipText.font;
+                title.fontSize = tooltipText.fontSize;
+                title.fontStyle = FontStyles.Bold;
+                title.color = kit.text;
+                title.horizontalAlignment = tooltipText.horizontalAlignment;
+                title.verticalAlignment = VerticalAlignmentOptions.Top;
+                title.textWrappingMode = TextWrappingModes.Normal;
+                title.richText = true;
+                title.raycastTarget = false;
+                title.margin = Vector4.zero;
+                tooltipTitle = title;
+                tooltipTitleShadow = titleObject.AddComponent<PixelTextEffect>();
+                tooltipSeam = NewImage("Seam", tooltipPanel.transform, kit.seam, Color.white, false);
             }
         }
 

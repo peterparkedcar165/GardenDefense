@@ -75,7 +75,7 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         else return;
 
         Refresh();
-        if (hovering) ui?.ShowTooltip(BuildTooltip(), plant.elementalType);
+        if (hovering) ShowTooltip();
     }
 
     // a multi-rank node can already have some ranks confirmed while further ranks sit staged
@@ -267,32 +267,33 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         return r;
     }
 
-    // name, description, and a cost line - matches the same things the in-level skill/passive
-    // tooltip shows, nothing more
-    private string BuildTooltip()
+    // the name as the tooltip's title (bold, a seam under it), then the description and a cost line -
+    // the same things the in-level skill/passive tooltip shows, nothing more
+    private void ShowTooltip()
     {
         bool locked = IsLocked(out _, out _);
+        string title = locked
+            ? $"<b><color=#9C9C9C>{StripRichText(node.nodeName)}</color></b>"
+            : $"<b><color=#FFD84A>{node.nodeName}</color></b>";
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine(locked
-            ? $"<b><color=#9C9C9C>{StripRichText(node.nodeName)}</color></b>"
-            : $"<b><color=#FFD84A>{node.nodeName}</color></b>");
         if (!string.IsNullOrEmpty(node.description))
+        {
             sb.AppendLine(locked ? $"<color=#B4B4B4>{StripRichText(node.description)}</color>" : node.description);
-        sb.AppendLine();
-
+            sb.AppendLine();
+        }
         bool canAfford = SkillTreeSession.DisplaySkillPoints(plantName) >= node.costPerRank;
         string cost = canAfford ? $"<color=#5ED45E><b>{node.costPerRank}</b></color>" : $"<color=#FF7A66>{node.costPerRank}</color>";
         sb.AppendLine($"[COST]: {cost} point{(node.costPerRank == 1 ? "" : "s")}.");
 
-        return sb.ToString().TrimEnd();
+        ui?.ShowTooltip(title, sb.ToString().TrimEnd(), plant.elementalType);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         hovering = true;
         ApplyHover();
-        ui?.ShowTooltip(BuildTooltip(), plant.elementalType);
+        ShowTooltip();
     }
 
     public void OnPointerExit(PointerEventData eventData)
