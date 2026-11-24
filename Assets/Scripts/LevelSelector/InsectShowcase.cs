@@ -64,11 +64,12 @@ public class InsectShowcase : MonoBehaviour
         style = InsectShowcaseStyle.Instance;
         host = hostRect;
         rect = (RectTransform)transform;
-        rect.anchorMin = new Vector2(0f, 0f);
-        rect.anchorMax = new Vector2(0f, 1f);
+        // hangs from the top left corner; Show makes it as tall as its insects need, up to the screen's
+        // full height (then the cards scroll)
+        rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
         rect.pivot = new Vector2(0f, 1f);
         rect.anchoredPosition = new Vector2(style.margin * Px, -style.margin * Px);
-        rect.sizeDelta = new Vector2(style.panelWidth * Px, -2f * style.margin * Px);
+        rect.sizeDelta = new Vector2(style.panelWidth * Px, Mathf.Max(0f, host.rect.height - 2f * style.margin * Px));
 
         Image body = gameObject.AddComponent<Image>();
         SetSprite(body, style.panelBase, style.panel, true);
@@ -144,8 +145,16 @@ public class InsectShowcase : MonoBehaviour
                 cardY += BuildCard(new Entry { data = insect.data, insect = insect }, cardY, width) + CardGap;
             }
 
-        content.sizeDelta = new Vector2(0f, Mathf.Max(0f, cardY - CardGap) * Px);
+        float cardsHeight = Mathf.Max(0f, cardY - CardGap);
+        content.sizeDelta = new Vector2(0f, cardsHeight * Px);
         content.anchoredPosition = Vector2.zero;
+
+        // the panel fits its insects (Tommy, 2026-11-24): the header, every card and the bottom padding,
+        // until that's taller than the screen; then it stops at the screen's full height and the cards
+        // scroll
+        float room = host.rect.height - 2f * style.margin * Px;
+        float wanted = (y + cardsHeight + Pad) * Px;
+        rect.sizeDelta = new Vector2(style.panelWidth * Px, room > 0f ? Mathf.Min(wanted, room) : wanted);
     }
 
     // "Insects", the seam under it and the level's conditions; returns the art pixel height it takes

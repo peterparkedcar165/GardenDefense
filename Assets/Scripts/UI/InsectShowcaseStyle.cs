@@ -120,7 +120,8 @@ public class InsectShowcaseStyle : ScriptableObject
     [Header("Sizes (art pixels; 1 art pixel = 2 canvas units)")]
     public int panelWidth = 240;
     [Tooltip("space between the insect panel and the screen's left, top and bottom edges, and between the plant " +
-        "tooltip and the right, top and bottom ones. 0: both hug their side for the screen's whole height (Tommy)")]
+        "tooltip and the right, top and bottom ones. 0: both hug their side (Tommy). the plant tooltip is the screen's " +
+        "whole height; the insect panel is as tall as its insects need, up to the whole height, then scrolls")]
     public int margin = 0;
     public int portraitSize = 36;
     public int tooltipWidth = 250;
