@@ -297,13 +297,16 @@ public class BogIris : Shooter
     public override string GetDescription() =>
         $"The {GetName()} is self-sufficient, providing herself with regeneration as well as generating sun for the garden.";
 
+    public override string GetAttackDescription() =>
+        $"Fires a water bolt at a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage + HealthScalingDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+
     public override string GetPath1Description(bool details = false)
     {
         float hppl = BogData?.path1HealthScalingPerLevel ?? 0.02f;
         float aspl = BogData?.path1AttackSpeedPerLevel    ?? 0.05f;
         string desc = details
             ? $"Fires a water bolt at a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> [<color=green><b>+{HealthDamageScalingPercent * 100f:F0}% Max Health</b></color>] {PlantData.DamageTypeLabel(damageType)}."
-            : $"Fires a water bolt at a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage + HealthScalingDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+            : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Max Health</b></color> damage scaling by <color=green><b>{hppl * 100f:F0}%</b></color> per level. [<color=green><b>+{hppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
@@ -311,6 +314,13 @@ public class BogIris : Shooter
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
+
+    public override string GetPassiveDescription() =>
+        $"Every <color=green><b>{SunInterval:F1}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
+              $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>{RegenPercentPerSecond * 100f:F0}%</b></color> Max Health per second (doubled to <color=red><b>{RegenPercentPerSecond * 200f:F0}%</b></color> when out of combat).\n\n" +
+              $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>{OpenBonusSun}</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
+              $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>{ReduceChance:F2}</b></color> seconds on hit.\n\n" +
+              PlantData.RetainAggroLine();
 
     public override string GetPath2Description(bool details = false)
     {
@@ -324,11 +334,7 @@ public class BogIris : Shooter
               $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>[({BogData?.baseOpenBonusSun ?? 2}) + ({sunpl}/Lvl.)]</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
               $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>[({(BogData?.baseReduceChance ?? 0.35f):F2}) + ({reducepl:F2}/Lvl.)]</b></color> seconds on hit.\n\n" +
               PlantData.RetainAggroLine()
-            : $"Every <color=green><b>{SunInterval:F1}</b></color> seconds, generates <color=green><b>{BaseSunGenerated}</b></color> <color=yellow>Sun</color>.\n\n" +
-              $"When damaged, she <b><color=#4FC3F7>closes</color></b>, regenerating <color=red><b>{RegenPercentPerSecond * 100f:F0}%</b></color> Max Health per second (doubled to <color=red><b>{RegenPercentPerSecond * 200f:F0}%</b></color> when out of combat).\n\n" +
-              $"When healthy, she <b><color=#4FC3F7>opens</color></b>, generating <color=green><b>{OpenBonusSun}</b></color> additional <color=yellow>Sun</color> per production.\n\n" +
-              $"Attacks reduce the <color=yellow>Sun</color> generation timer by <color=green><b>{ReduceChance:F2}</b></color> seconds on hit.\n\n" +
-              PlantData.RetainAggroLine();
+            : GetPassiveDescription();
         string stateLine = $"<b><color=#4FC3F7>{(_isOpen ? "OPEN" : "CLOSED")}</color></b>";
         return $"Passive:\n\n{stateLine}\n\n{desc}\n\n" +
                $"Increase regeneration by <color=red><b>{regenpl * 100f:F0}%</b></color> per level. [<color=red><b>+{regenpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
@@ -340,6 +346,12 @@ public class BogIris : Shooter
                ShiftHint(details);
     }
 
+    public override string GetSkillDesription()
+    {
+        float dmgpl    = BogData?.path3GeyserDamagePerLevel  ?? 15f;
+        return $"Target a location. After a brief delay, a geyser erupts, dealing <color={PlantData.ElementalColor(elementalType)}><b>{(BogData?.baseGeyserDamage ?? 0f) + dmgpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.";
+    }
+
     public override string GetPath3Description(bool details = false)
     {
         float dmgpl    = BogData?.path3GeyserDamagePerLevel  ?? 15f;
@@ -347,7 +359,7 @@ public class BogIris : Shooter
         float radiuspl = BogData?.path3GeyserRadiusPerLevel   ?? 0.15f;
         string desc = details
             ? $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>[({BogData?.baseGeyserDamage:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} and knocking all insects airborne by <color=green><b>[({BogData?.baseKnockUpHeight:F0}) + ({knockpl:F0}/Lvl.)]</b></color> units within radius <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color>."
-            : $"Target a location. After a brief delay, a geyser erupts, dealing <color={PlantData.ElementalColor(elementalType)}><b>{(BogData?.baseGeyserDamage ?? 0f) + dmgpl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} and knocking all insects airborne by <color=green><b>{KnockUpHeight:F0}</b></color> units.";
+            : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase the flat component of geyser damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +

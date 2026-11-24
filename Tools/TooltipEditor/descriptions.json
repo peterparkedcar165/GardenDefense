@@ -32,8 +32,8 @@
      "key": "passive",
      "title": "Passive",
      "method": "GetPath2Description",
-     "overview": "{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> <color=red><b>Health</b></color> per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\\n\\nIf {GetName()} is being targeted by a <color=#A0522D><b>Physical</b></color> damaging insect, he changes into <color=orange><b>Guard Stance</b></color>, during which he gains <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\\n\\nWhile in <color=orange><b>Guard Stance</b></color>, his attacks become an omnidirectional <color=green><b>Shield Bash</b></color> dealing <color={PlantData.ElementalColor(elementalType)}><b>{armor * BashDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.\\n\\n{PlantData.RetainAggroLine()}",
-     "details": "{GetName()} regenerates <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the regeneration increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\\n\\nIf {GetName()} is being targeted by a <color=#A0522D><b>Physical</b></color> damaging insect, he changes into <color=orange><b>Guard Stance</b></color>, during which he gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\\n\\nWhile in <color=orange><b>Guard Stance</b></color>, his attacks become an omnidirectional Shield Bash dealing <color={PlantData.ElementalColor(elementalType)}><b>[({(AcornData?.baseBashDamagePercent ?? 0.5f) * 100f:F0}%) + ({bashDmgPl * 100f:F0}%/Lvl.)] Armor</b></color> {PlantData.DamageTypeLabel(damageType)}.\\n\\n{PlantData.RetainAggroLine()}",
+     "overview": "{GetName()} heals himself for <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> <color=red><b>Health</b></color> per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the healing increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\\n\\nIf {GetName()} is being targeted by a <color=#A0522D><b>Physical</b></color> damaging insect, he changes into <color=orange><b>Guard Stance</b></color>, during which he gains <color=#00CED1><b>+{DefensiveArmor:F0} Armor</b></color>, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\\n\\nWhile in <color=orange><b>Guard Stance</b></color>, his attacks become an omnidirectional <color=green><b>Shield Bash</b></color> dealing <color={PlantData.ElementalColor(elementalType)}><b>{armor * BashDamagePercent:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.\\n\\n{PlantData.RetainAggroLine()}",
+     "details": "{GetName()} heals himself for <color=green><b>{BaseRegenPercent * 100f:F0}%</b></color> Health per second. After not being damaged for <color=green><b>{RegenBoostDelay:F0}s</b></color>, the healing increases to <color=green><b>{BoostedRegenPercent * 100f:F0}%</b></color> per second.\\n\\nIf {GetName()} is being targeted by a <color=#A0522D><b>Physical</b></color> damaging insect, he changes into <color=orange><b>Guard Stance</b></color>, during which he gains <color=#00CED1><b>[({AcornData?.baseDefensiveArmor ?? 20f:F0}) + ({armorpl:F0}/Lvl.)]</b></color> Armor, while losing <color=green><b>{DefensiveAttackSpeedPenalty * 100f:F0}% Attack Speed</b></color> and <color=green><b>{DefensiveAttackRangePenalty * 100f:F0}% Attack Range</b></color>.\\n\\nWhile in <color=orange><b>Guard Stance</b></color>, his attacks become an omnidirectional Shield Bash dealing <color={PlantData.ElementalColor(elementalType)}><b>[({(AcornData?.baseBashDamagePercent ?? 0.5f) * 100f:F0}%) + ({bashDmgPl * 100f:F0}%/Lvl.)] Armor</b></color> {PlantData.DamageTypeLabel(damageType)}.\\n\\n{PlantData.RetainAggroLine()}",
      "upgrades": [
       "Increase guard <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=green><b>+{armorpl * effectivePath2Level:F0}</b></color>]",
       "Increase <color=green><b>Shield Bash</b></color> Armor scaling by <color=green><b>{bashDmgPl * 100f:F0}%</b></color> per level. [<color=green><b>+{bashDmgPl * effectivePath2Level * 100f:F0}%</b></color>]",
@@ -265,7 +265,8 @@
      "upgrades": [
       "Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]",
       "Increase <color=#4FC3F7><b>Water</b></color> internal cooldown reduction by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath1Level:F1}s</b></color>]",
-      "Increase <color=green><b>Grass Resistance</b></color> reduction by <color=green><b>{shredpl * 100f:F0}%</b></color> per level. [<color=green><b>+{shredpl * effectivePath1Level * 100f:F0}%</b></color>]"
+      "Increase <color=green><b>Grass Resistance</b></color> reduction by <color=green><b>{shredpl * 100f:F0}%</b></color> per level. [<color=green><b>+{shredpl * effectivePath1Level * 100f:F0}%</b></color>]",
+      "Increase <color=#4FC3F7><b>Water</b></color> Primer duration by <color=green><b>{durpl:0.#}s</b></color> per level. [<color=green><b>+{durpl * effectivePath1Level:0.#}s</b></color>]"
      ],
      "maxBonus": "When her <color=#4FC3F7><b>Water</b></color> primer sets off a reaction, the reaction is credited to whoever applied the first primer, using that plant's stats instead of hers.",
      "maxBonusDetails": null,
@@ -376,7 +377,9 @@
    "deprecated": false,
    "nameTemplate": "<b><color=#4FC3F7>Bog Iris</color></b>",
    "overview": "The {GetName()} is self-sufficient, providing herself with regeneration as well as generating sun for the garden.",
-   "blockGetters": [],
+   "blockGetters": [
+    "GetSkillDesription"
+   ],
    "sections": [
     {
      "key": "attack",
@@ -390,7 +393,8 @@
      ],
      "maxBonus": "Increase the Sun timer advance per attack hit by <color=green><b>50%</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetAttackDescription"
     },
     {
      "key": "passive",
@@ -406,7 +410,8 @@
      ],
      "maxBonus": "Remove the out-of-combat condition from the regeneration (always doubled). Increase Armor by <color=green><b>{ClosedArmorBonus:F0}</b></color> when in <b><color=#4FC3F7>closed</color></b> state.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetPassiveDescription"
     },
     {
      "key": "skill",
@@ -421,7 +426,8 @@
      ],
      "maxBonus": "Successful <color=#4FC3F7><b>Geyser</b></color> hits inflict <color=#4FC3F7><b>Waterweight</b></color> for <color=green><b>{BogData?.waterweightDuration ?? 8f:F0}</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> by <color=red><b>{BogData?.waterweightArmorShred ?? 20f:F0}</b></color> and <color=#A0522D><b>Fall Damage Resistance</b></color> by <color=red><b>{(BogData?.waterweightFallDamageResistanceShred ?? 0.15f) * 100f:F0}%</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetSkillDesription"
     }
    ]
   },
@@ -688,7 +694,8 @@
      ],
      "maxBonus": "Increase the per-attack timer reduction by an additional <color=green><b>1</b></color> second, scaled by proc rate.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetAttackDescription"
     },
     {
      "key": "passive",
@@ -703,7 +710,8 @@
      ],
      "maxBonus": "Allied plants within her attack radius have <color=green><b>Skill Damage</b></color> increased by <color=green><b>{SkillDamageAuraBonus * 100f:F0}%</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetPassiveDescription"
     },
     {
      "key": "skill",
@@ -720,7 +728,8 @@
      ],
      "maxBonus": "The wind keeps insects trapped for <color=green><b>{Path3MaxTrapExtraDuration:F0}</b></color> extra seconds. Allied plants hit are refunded <color=green><b>{Path3MaxCooldownRefundPercent * 100f:F0}%</b></color> of their total Skill Cooldown.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetSkillDesription"
     }
    ]
   },
@@ -1108,7 +1117,10 @@
    "deprecated": false,
    "nameTemplate": "<b><color=green>Leaf Ranger</color></b>",
    "overview": "The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can bounce to another target instead of being destroyed.",
-   "blockGetters": [],
+   "blockGetters": [
+    "GetPassiveDescription",
+    "GetSkillDesription"
+   ],
    "sections": [
     {
      "key": "attack",
@@ -1122,7 +1134,8 @@
      ],
      "maxBonus": "Increase <color=green><b>Armor Penetration</b></color> by <color=green><b>30</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetAttackDescription"
     },
     {
      "key": "passive",
@@ -1137,7 +1150,8 @@
      ],
      "maxBonus": "Upon shooting, grant a level of <color=green><b>Verdant Fervor</b></color>, increasing <b>Total Attack Speed</b> by <color=green><b>3%</b></color> per level for <color=green><b>{passiveDuration:F0}s</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetPassiveDescription"
     },
     {
      "key": "skill",
@@ -1151,7 +1165,8 @@
      ],
      "maxBonus": "While the skill is active, shots instead fire a volley of <color=green><b>5</b></color> arrows in a <color=green><b>30°</b></color> cone.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetSkillDesription"
     }
    ]
   },
@@ -1240,7 +1255,8 @@
      ],
      "maxBonus": "Attacks extend <color=purple><b>Poison</b></color>-Element negative status effects on targets by <color=green><b>{OleanderData?.path1MaxPoisonExtendPerHit ?? 1f:F0}</b></color> second per hit. Petals may bounce back to older targets.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetAttackDescription"
     },
     {
      "key": "passive",
@@ -1253,7 +1269,8 @@
      ],
      "maxBonus": "For each debuff locked, also grant <color=#FF69B4><b>{(OleanderData?.path2MaxMagicResistancePerLock ?? 0.05f) * 100f:F0}% Magic Resistance</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetPassiveDescription"
     },
     {
      "key": "skill",
@@ -1267,7 +1284,8 @@
      ],
      "maxBonus": "When attacks hit the sprout, increase bounce count by <color=green><b>{bouncepl}</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetSkillDesription"
     }
    ]
   },
@@ -1357,7 +1375,8 @@
      ],
      "maxBonus": "Attacks splash onto the <color=green><b>{(PSData?.path1MaxSplashTargets ?? 2)}</b></color> nearest insects within a <color=green><b>1</b></color> radius, applying <color=purple><b>Toxic Spores</b></color>. Affects up to <color=green><b>3</b></color> insects total, including the main target.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetAttackDescription"
     },
     {
      "key": "passive",
@@ -1371,7 +1390,8 @@
      ],
      "maxBonus": "The {GetName()} is able to deal <color=green><b>Critical Damage</b></color> with <color=#9400D3><b>Damage Over Time</b></color> effects. Increase <color=green><b>Critical Chance</b></color> by <color=green><b>15%</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetPassiveDescription"
     },
     {
      "key": "skill",
@@ -1385,7 +1405,8 @@
      ],
      "maxBonus": "Each tick of damage from the field inflicts <color=purple><b>Toxic Spore</b></color>.",
      "maxBonusDetails": null,
-     "extra": []
+     "extra": [],
+     "overviewFrom": "GetSkillDesription"
     }
    ]
   },
@@ -1405,11 +1426,12 @@
      "key": "attack",
      "title": "Attack",
      "method": "GetPath1Description",
-     "overview": "Fires a rejuvenating seed at the most injured nearby plant, healing it for <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{HealMP:F0}</b></color>] health and leaving behind a regenerating bloom.",
-     "details": "Fires a rejuvenating seed at the most injured nearby plant, healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health.\\n\\n*Unaffected by Piercing",
+     "overview": "Fires a rejuvenating seed at the most injured nearby plant, healing it for <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{HealMP:F0}</b></color>] health and leaving behind a regenerating bloom.\\n\\nIncrease <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.",
+     "details": "Fires a rejuvenating seed at the most injured nearby plant, healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health.\\n\\nIncrease <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\\n\\n*Unaffected by Piercing",
      "upgrades": [
       "Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]",
-      "Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]"
+      "Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]",
+      "Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath1Level * 100f:F0}%</b></color>]"
      ],
      "maxBonus": "Each projectile heals an additional <color=green><b>{MissingHealthPercent * 100f:F0}%</b></color> of the target's missing health.",
      "maxBonusDetails": null,
@@ -1420,10 +1442,10 @@
      "key": "passive",
      "title": "Passive",
      "method": "GetPath2Description",
-     "overview": "Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.\\n\\nHealing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>) while it lasts.",
-     "details": "Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\\n\\nHealing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>, while it lasts.",
+     "overview": "Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>) while it lasts.\\n\\n<color=green><b>{SapStoreShare * 100f:F0}%</b></color> of healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>{SapCap:F0}</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once.",
+     "details": "Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>, while it lasts.\\n\\n<color=green><b>{SapStoreShare * 100f:F0}%</b></color> of healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>[({RData?.baseSapCap ?? 50f:F0}) + ({sappl:F0}/Lvl.)]</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once.",
      "upgrades": [
-      "Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]",
+      "Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{sappl:F0}</b></color> per level. [<color=#FFD700><b>+{sappl * effectivePath2Level:F0}</b></color>]",
       "Increase <color=green><b>Rejuvenating Burgeon</b></color> healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]",
       "Increase <color=green><b>Rejuvenating Burgeon</b></color> armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]"
      ],
@@ -1436,11 +1458,11 @@
      "key": "skill",
      "title": "Skill",
      "method": "GetPath3Description",
-     "overview": "Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.",
-     "details": "Target a tile where a plant has fallen to resurrect it. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</color>]</b></color> Health.",
+     "overview": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.",
+     "details": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</color>]</b></color> Health.",
      "upgrades": [
       "Increase <color=green><b>Revival Heal</b></color> by <color=green><b>{RevivalHealPerLevel:F0}</b></color> per level. [<color=green><b>+{RevivalHealPerLevel * effectivePath3Level:F0}</b></color>]",
-      "Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]"
+      "Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level, never below <color=green><b>{MinSkillCooldown:F0}s</b></color>. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]"
      ],
      "maxBonus": "Upon reviving a plant, grant it <color=green><b>Verdant Guardian</b></color>, shielding it for <color=grey><b>{RData?.verdantGuardianShield ?? 200f:F0}</b></color> health and regenerating <color=green><b>{RData?.verdantGuardianRegen ?? 20f:F0}</b></color> health per second while the shield lasts, for <color=green><b>{skillDuration:F0}s</b></color>.",
      "maxBonusDetails": null,
@@ -1825,13 +1847,13 @@
    "group": "Elements",
    "value": "#4FC3F7",
    "name": "Water",
-   "uses": 46
+   "uses": 47
   },
   {
    "group": "Elements",
    "value": "green",
    "name": "Grass",
-   "uses": 1124
+   "uses": 1131
   },
   {
    "group": "Elements",
@@ -1891,7 +1913,7 @@
    "group": "Used in plant tooltips",
    "value": "#FFD700",
    "name": "Critical Chance",
-   "uses": 19
+   "uses": 23
   },
   {
    "group": "Used in plant tooltips",
@@ -2029,18 +2051,24 @@
    "group": "Used elsewhere in the game",
    "value": "#888888",
    "name": "Shielded",
-   "uses": 15
+   "uses": 17
   },
   {
    "group": "Used elsewhere in the game",
    "value": "#8B4513",
-   "name": "Dirt",
+   "name": "Dirt Tile",
    "uses": 7
   },
   {
    "group": "Used elsewhere in the game",
    "value": "#8B0000",
    "name": "Mosquito Bite",
+   "uses": 4
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#c3c2b7",
+   "name": "",
    "uses": 4
   },
   {
@@ -2063,6 +2091,12 @@
   },
   {
    "group": "Used elsewhere in the game",
+   "value": "#AAAAAA",
+   "name": "Oblivious",
+   "uses": 3
+  },
+  {
+   "group": "Used elsewhere in the game",
    "value": "#FF4500",
    "name": "Scorch",
    "uses": 3
@@ -2071,6 +2105,12 @@
    "group": "Used elsewhere in the game",
    "value": "#4488FF",
    "name": "Water Damage",
+   "uses": 3
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#FFD27F",
+   "name": "\").Append(status).Append(\"",
    "uses": 3
   },
   {
@@ -2117,12 +2157,6 @@
   },
   {
    "group": "Used elsewhere in the game",
-   "value": "#1E90FF",
-   "name": "Steam",
-   "uses": 2
-  },
-  {
-   "group": "Used elsewhere in the game",
    "value": "#DB5B00",
    "name": "Termite Swarm",
    "uses": 2
@@ -2141,9 +2175,21 @@
   },
   {
    "group": "Used elsewhere in the game",
-   "value": "#c3c2b7",
+   "value": "#BBBBBB",
    "name": "",
    "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#99FF1A",
+   "name": "Regenerative Glow",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "[^",
+   "name": "",
+   "uses": 1
   },
   {
    "group": "Used elsewhere in the game",
@@ -2165,8 +2211,8 @@
   },
   {
    "group": "Used elsewhere in the game",
-   "value": "#AAAAAA",
-   "name": "Oblivious",
+   "value": "#1E90FF",
+   "name": "Steam",
    "uses": 1
   }
  ]

@@ -60,9 +60,17 @@ public static class PlantPreview
     private static Texts Read(Plant plant) => new Texts
     {
         name = plant.GetName(),
-        description = plant.GetDescription(),
-        attack = plant.GetAttackDescription(),
-        passive = plant.GetPassiveDescription(),
-        skill = plant.GetSkillDesription(),
+        description = WithoutScaling(plant.GetDescription()),
+        attack = WithoutScaling(plant.GetAttackDescription()),
+        passive = WithoutScaling(plant.GetPassiveDescription()),
+        skill = WithoutScaling(plant.GetSkillDesription()),
     };
+
+    // a bracketed, coloured bonus after a number: magic power [+12], a share of attack damage [33%],
+    // armor scaling [+12]. the level texts show them; off the field they're left out (Tommy, 2026-11-24).
+    // a plain bracketed word, like [Punctured], stays
+    private static readonly System.Text.RegularExpressions.Regex Scaling = new System.Text.RegularExpressions.Regex(
+        @" ?\[<color=[^>]+><b>[^\[\]<]*</b></color>\]", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    public static string WithoutScaling(string text) => string.IsNullOrEmpty(text) ? text : Scaling.Replace(text, "");
 }

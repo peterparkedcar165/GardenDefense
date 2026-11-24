@@ -212,19 +212,30 @@ public class LeafRanger : Shooter
     public override string GetPath2Name() => "Passive";
     public override string GetPath3Name() => "Skill";
 
+    public override string GetAttackDescription() =>
+        $"Shoots slow but precise and fierce arrows at his target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+
     public override string GetPath1Description(bool details = false)
     {
         float adpl = LRData?.path1AttackDamagePerLevel ?? 5f;
         float aspl = LRData?.path1AttackSpeedPerLevel  ?? 0.05f;
         string desc = details
             ? $"Shoots slow but precise and fierce arrows at his target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
-            : $"Shoots slow but precise and fierce arrows at his target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+            : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Increase <color=green><b>Armor Penetration</b></color> by <color=green><b>30</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
+    }
+
+    public override string GetPassiveDescription()
+    {
+        float baseCrit = LRData?.baseCritChanceBonus    ?? 0.1f;
+        float critpl   = LRData?.path2CritChancePerLevel ?? 0.05f;
+        float totalCrit = baseCrit + critpl * effectivePath2Level;
+        return $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.\n\n<color=green>Piercing</color> instead bounces from target to target, up to a maximum of <color=green><b>{piercing}</b></color> additional targets, within a <color=green><b>{BounceRadius:F1}</b></color> radius.";
     }
 
     public override string GetPath2Description(bool details = false)
@@ -236,7 +247,7 @@ public class LeafRanger : Shooter
         float bouncepl = LRData?.path2BounceRadiusPerLevel ?? 0.5f;
         string desc = details
             ? $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>[(0) + (1/Lvl.)]</b></color> <color=green>Piercing</color>.\n\n<color=green>Piercing</color> instead bounces from target to target, up to a maximum of <color=green><b>[(0) + (1/Lvl.)]</b></color> additional targets, within a <color=green><b>[({baseBounceRadius:F1}) + ({bouncepl:F1}/Lvl.)]</b></color> radius."
-            : $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>{totalCrit * 100f:F0}%</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>{piercing}</b></color> <color=green>Piercing</color>.\n\n<color=green>Piercing</color> instead bounces from target to target, up to a maximum of <color=green><b>{piercing}</b></color> additional targets, within a <color=green><b>{BounceRadius:F1}</b></color> radius.";
+            : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=green>Piercing</color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
@@ -246,6 +257,13 @@ public class LeafRanger : Shooter
                ShiftHint(details);
     }
 
+    public override string GetSkillDesription()
+    {
+        float aspl  = LRData?.path3AttackSpeedBonusPerLevel ?? 0.25f;
+        float baseAS = LRData?.baseSkillAttackSpeedBonus    ?? 3f;
+        return $"Enter a state of <color=green><b>Rapid Focus</b></color>, increasing <color=green>Attack Speed</color> by <color=green><b>{(baseAS + aspl * effectivePath3Level) * 100f + skillDamageMultiplier * magicPower * 100f:F0}%</b></color>, for <color=green><b>{skillDuration}</b></color> seconds.";
+    }
+
     public override string GetPath3Description(bool details = false)
     {
         float aspl  = LRData?.path3AttackSpeedBonusPerLevel ?? 0.25f;
@@ -253,7 +271,7 @@ public class LeafRanger : Shooter
         float baseAS = LRData?.baseSkillAttackSpeedBonus    ?? 3f;
         string desc = details
             ? $"Enter a state of <color=green><b>Rapid Focus</b></color>, increasing <color=green>Attack Speed</color> by <color=green><b>[({baseAS * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color>, for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
-            : $"Enter a state of <color=green><b>Rapid Focus</b></color>, increasing <color=green>Attack Speed</color> by <color=green><b>{(baseAS + aspl * effectivePath3Level) * 100f + skillDamageMultiplier * magicPower * 100f:F0}%</b></color>, for <color=green><b>{skillDuration}</b></color> seconds.";
+            : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
