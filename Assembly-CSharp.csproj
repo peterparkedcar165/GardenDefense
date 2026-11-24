@@ -142,6 +142,7 @@
     <Compile Include="Assets\Scripts\Mulch\CompostTeaMulchData.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\SunGrantFertilizerEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ArtificialSunEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\InsectShowcaseStyle.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\ScorpionData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BogIrisData.cs" />
@@ -314,6 +315,7 @@
     <Compile Include="Assets\Scripts\Mulch\IronbarkCounterMulchData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HeatedComfortEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IronbarkAggroEffect.cs" />
+    <Compile Include="Assets\Scripts\LevelSelector\InsectShowcase.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\MeltFertilizerData.cs" />
     <Compile Include="Assets\Scripts\Spawning\LevelInsectEntry.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonBlob.cs" />
@@ -547,6 +549,7 @@
     <Compile Include="Assets\Scripts\Mulch\MulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ScoutsEncouragementEffect.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantEntry.cs" />
+    <Compile Include="Assets\Scripts\UI\UIHoverRelay.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\DesertLocust.cs" />
     <Compile Include="Assets\Scripts\Skills\OldCarrotFurrow.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VenomEffect.cs" />

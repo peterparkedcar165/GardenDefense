@@ -359,6 +359,9 @@ public class InsectShowcase : MonoBehaviour
     {
         if (shownCard == entry && cardTip.gameObject.activeSelf) return;
         shownCard = entry;
+        // shown before it's filled: a text only measures its wrapped height on an active object, and
+        // a hidden tooltip measured every text as one line, so the boxes under it overlapped (Tommy)
+        cardTip.gameObject.SetActive(true);
         Clear(cardTip);
         Stretch(NewImage("Shine", cardTip, style.panelShine, Color.white, true).rectTransform);
 
@@ -413,35 +416,42 @@ public class InsectShowcase : MonoBehaviour
         }
         y += 2f * cellH + 3f + 4f;
 
-        // resistances, Tommy's order, each named "<element> Resistance"
-        float resW = Mathf.Floor((inner - 3f) / 2f);
-        float resH = 3f + lh + 1f + lh + 3f;
-        ResCell(0, ElementalType.Fire, data.baseFireResistance);
-        ResCell(1, ElementalType.Water, data.baseWaterResistance);
-        ResCell(2, ElementalType.Grass, data.baseGrassResistance);
-        ResCell(3, ElementalType.Poison, data.basePoisonResistance);
-        ResCell(4, ElementalType.Ice, data.baseIceResistance);
-        ResCell(5, ElementalType.Wind, data.baseWindResistance);
-        void ResCell(int i, ElementalType element, float value)
+        // resistances (Tommy): one box headed "Resistances", then each element's icon, a colon and its
+        // percentage, three to a row in his order: fire, water, grass, then poison, ice, wind
+        Image resBox = NewImage("Resistances", cardTip, style.insetBox, style.panel, true);
+        float ry = 3f;
+        ry += AddText(resBox.rectTransform, "Resistances", 5f, ry, inner - 10f, style.label, style.textSize, false) + 2f;
+        float colW = Mathf.Floor((inner - 10f) / 3f);
+        float rowH = Mathf.Max(ElementIcon, lh);
+        string colon = ColorUtility.ToHtmlStringRGB(style.text);
+        ResEntry(0, ElementalType.Fire, data.baseFireResistance);
+        ResEntry(1, ElementalType.Water, data.baseWaterResistance);
+        ResEntry(2, ElementalType.Grass, data.baseGrassResistance);
+        ResEntry(3, ElementalType.Poison, data.basePoisonResistance);
+        ResEntry(4, ElementalType.Ice, data.baseIceResistance);
+        ResEntry(5, ElementalType.Wind, data.baseWindResistance);
+        void ResEntry(int i, ElementalType element, float value)
         {
-            Image cell = NewImage("Resistance", cardTip, style.stripSunken, style.panel, true);
-            TopLeft(cell.rectTransform, Pad + (i % 2) * (resW + 3f), y + (i / 2) * (resH + 3f), resW, resH);
+            float cx = 5f + (i % 3) * colW;
+            float cy = ry + (i / 3) * (rowH + 2f);
+            float tx = cx;
             Sprite icon = style.ElementIcon(element);
-            float tx = 3f;
             if (icon != null)
             {
-                Image image = NewImage("Icon", cell.rectTransform, icon, Color.white, false);
+                Image image = NewImage("Icon " + element, resBox.rectTransform, icon, Color.white, false);
                 image.preserveAspect = true;
-                TopLeft(image.rectTransform, 3f, 3f, ElementIcon, ElementIcon);
-                tx = 3f + ElementIcon + 3f;
+                TopLeft(image.rectTransform, cx, cy + Mathf.Floor((rowH - ElementIcon) / 2f), ElementIcon, ElementIcon);
+                tx = cx + ElementIcon + 2f;
             }
-            AddText(cell.rectTransform, $"{element} Resistance", tx, 3f, resW - tx - 2f, style.ElementText(element), style.textSize, false);
             int percent = Mathf.RoundToInt(value * 100f);
-            string shown = percent == 0 ? "0" : (percent > 0 ? "+" : "-") + Mathf.Abs(percent) + "%";
+            string shown = (percent > 0 ? "+" : percent < 0 ? "-" : "") + Mathf.Abs(percent) + "%";
             Color color = percent < 0 ? style.weak : percent > 0 ? style.resists : style.mutedText;
-            AddText(cell.rectTransform, shown, tx, 3f + lh + 1f, resW - tx - 2f, color, style.textSize, false);
+            string label = icon != null ? $"<color=#{colon}>:</color> {shown}" : $"<color=#{colon}>{element}:</color> {shown}";
+            AddText(resBox.rectTransform, label, tx, cy + Mathf.Floor((rowH - lh) / 2f), cx + colW - tx - 2f, color, style.textSize, false);
         }
-        y += 3f * resH + 2f * 3f + 4f;
+        ry += 2f * rowH + 2f + 4f;
+        TopLeft(resBox.rectTransform, Pad, y, inner, ry);
+        y += ry + 4f;
 
         y += AddText(cardTip, insect.GetTraitsAndAggressivityText(), 8f, y, w - 16f, style.text, style.textSize, true) + 6f;
 
@@ -464,6 +474,8 @@ public class InsectShowcase : MonoBehaviour
     {
         if (shownChip == chip && chipTip.gameObject.activeSelf) return;
         shownChip = chip;
+        // shown before it's filled, so its wrapped text measures right (see ShowCardTip)
+        chipTip.gameObject.SetActive(true);
         Clear(chipTip);
         Stretch(NewImage("Shine", chipTip, style.panelShine, Color.white, true).rectTransform);
 
