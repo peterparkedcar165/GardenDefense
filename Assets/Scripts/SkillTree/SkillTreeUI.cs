@@ -105,6 +105,7 @@ public class SkillTreeUI : MonoBehaviour
         }
         foreach (SkillTreePlantPanel panel in panels)
             if (panel != null) panel.Refresh();
+        RefreshUndo();
     }
 
     // hooked to the Confirm button - commits every staged pick this visit into the real save
@@ -285,7 +286,9 @@ public class SkillTreeUI : MonoBehaviour
         if (confirm == null || reset == null) return;
         Rect a = Bounds(confirm, PlankHeight);
         Rect b = Bounds(reset, PlankHeight);
-        float left = Mathf.Min(a.xMin, b.xMin) - 12f;
+        // Undo goes left of Confirm, as far from it as Reset is on the other side
+        Rect u = new Rect(a.x - (b.x - a.x), a.y, a.width, a.height);
+        float left = Mathf.Min(u.xMin, a.xMin, b.xMin) - 12f;
         float right = Mathf.Max(a.xMax, b.xMax) + 12f;
         float bottom = Mathf.Min(a.yMin, b.yMin) - 10f;
 
@@ -304,6 +307,31 @@ public class SkillTreeUI : MonoBehaviour
 
         Plank(confirm, GameControlsStyle.Instance.start);
         Plank(reset, s.resetPlank);
+
+        // Undo has no button in the scene: a plank of its own in the game controls' blue, faded while
+        // there's nothing to undo
+        PlankButton undo = PlankButton.Create((RectTransform)parent, "Undo", GameControlsStyle.Instance.speed, kit.font, OnUndo);
+        RectTransform ur = undo.Rect;
+        ur.anchorMin = ur.anchorMax = confirm.anchorMin;
+        ur.pivot = new Vector2(0.5f, 0.5f);
+        ur.anchoredPosition = u.center;
+        ur.sizeDelta = new Vector2(Mathf.Max(ur.sizeDelta.x, u.width), ur.sizeDelta.y);
+        undoGroup = undo.gameObject.AddComponent<CanvasGroup>();
+        RefreshUndo();
+    }
+
+    private CanvasGroup undoGroup;
+
+    // hooked to the Undo plank - un-stages the newest pick not yet confirmed
+    public void OnUndo() => SkillTreeSession.UndoLast();
+
+    private void RefreshUndo()
+    {
+        if (undoGroup == null) return;
+        bool any = SkillTreeSession.HasPending;
+        undoGroup.alpha = any ? 1f : 0.45f;
+        undoGroup.interactable = any;
+        undoGroup.blocksRaycasts = any;
     }
 
     // canvas units: the planks are 34 art px tall

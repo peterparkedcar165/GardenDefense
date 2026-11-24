@@ -130,6 +130,14 @@ public class SkillTreePlantPanel : MonoBehaviour
                 stepButtons.Add(button);
             }
         }
+
+        // settled now, so the card and the links can measure where the nodes really are. it takes two
+        // passes: the row spaces its columns by their current width before each column shrinks to its
+        // node, so after one pass they're still spaced as unity's default 100 wide columns, which put the
+        // first node about 115 units left of where it ends up (the card stopped mid portrait)
+        RectTransform container = (RectTransform)nodesContainer;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(container);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(container);
     }
 
     public void Refresh()
@@ -320,7 +328,6 @@ public class SkillTreePlantPanel : MonoBehaviour
         links.Clear();
         if (columns.Count == 0) return;
         RectTransform container = (RectTransform)nodesContainer;
-        LayoutRebuilder.ForceRebuildLayoutImmediate(container);
 
         RectTransform outlines = NewLayer("LinkOutlines", container);
         RectTransform cores = NewLayer("LinkCores", container);
@@ -406,7 +413,6 @@ public class SkillTreePlantPanel : MonoBehaviour
     private float FirstNodeLeft(RectTransform root)
     {
         if (columns.Count == 0 || columns[0].Count == 0) return float.NaN;
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)nodesContainer);
         Vector3 centre = root.InverseTransformPoint(columns[0][0].Wrapper.position);
         return centre.x - SkillNodeButton.HalfWidth;
     }

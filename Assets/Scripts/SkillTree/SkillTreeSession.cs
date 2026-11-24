@@ -105,6 +105,16 @@ public static class SkillTreeSession
         return false;
     }
 
+    // the Undo button (Tommy, 2026-11-24): drops the newest staged pick, one per press. nothing picked
+    // after it can depend on it, so the rest stay valid; confirmed picks can't be undone
+    public static bool UndoLast()
+    {
+        if (pending.Count == 0) return false;
+        pending.RemoveAt(pending.Count - 1);
+        SkillTreeUI.instance?.RefreshAll();
+        return true;
+    }
+
     public static bool HasPending => pending.Count > 0;
 
     // drops every staged pick, nothing was spent on them yet so nothing needs a refund (the
