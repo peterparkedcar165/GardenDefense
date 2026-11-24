@@ -83,15 +83,18 @@ public class FertilizerCard : MonoBehaviour
         seam.sizeDelta = new Vector2(name.sizeDelta.x + 24f, 4f);
         seam.anchoredPosition = new Vector2(name.anchoredPosition.x, Mathf.Round(name.anchoredPosition.y - name.sizeDelta.y * 0.5f - 4f));
 
-        // the description in a dark inset box, drawn behind it
+        // the description in a dark inset box, drawn behind it: exactly as wide as the seam and under it
+        // (Tommy), the text 12 in from each side and 6 from the top and bottom
         RectTransform stats = statsText.rectTransform;
+        float width = seam.sizeDelta.x;
+        stats.sizeDelta = new Vector2(width - 24f, stats.sizeDelta.y);
+        stats.anchoredPosition = new Vector2(seam.anchoredPosition.x, stats.anchoredPosition.y);
         RectTransform inset = AddKitImage(body, "Inset", s.insetBox, color, true);
         inset.anchorMin = stats.anchorMin;
         inset.anchorMax = stats.anchorMax;
         inset.pivot = stats.pivot;
         inset.anchoredPosition = stats.anchoredPosition;
-        // 12 wider on each side, 6 taller above and below (there's little room between the name and the text)
-        inset.sizeDelta = stats.sizeDelta + new Vector2(24f, 12f);
+        inset.sizeDelta = new Vector2(width, stats.sizeDelta.y + 12f);
         inset.SetSiblingIndex(stats.GetSiblingIndex());
     }
 
