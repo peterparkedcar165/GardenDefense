@@ -30,3 +30,8 @@ MonoBehaviour:
   poison: {fileID: 21300000, guid: 2d63d3169d396444a847b8c98b173f60, type: 3}
   ice: {fileID: 21300000, guid: 954d4312a1b446f4182593f63f3e63f2, type: 3}
   wind: {fileID: 21300000, guid: aada4dc6ea980f84f95b8814446fa98d, type: 3}
+  barFrame: {fileID: 21300000, guid: d4ecbdc2b8344894b697a2f7175d7be4, type: 3}
+  barFill: {fileID: 21300000, guid: 6468deeedf76472681149e3f5ad997d0, type: 3}
+  barFillShine: {fileID: 21300000, guid: c42bdc7cba674181a5074c5af281b88a, type: 3}
+  toggleBox: {fileID: 21300000, guid: 897917bc6ed0457789931f881b55ffef, type: 3}
+  toggleTick: {fileID: 21300000, guid: 57728014d8504d7eb570a1ff352461dd, type: 3}

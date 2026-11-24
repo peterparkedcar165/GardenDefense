@@ -34,6 +34,14 @@ public class SettingsManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         Canvas rootCanvas = settingsPanel.GetComponentInParent<Canvas>(true);
         if (rootCanvas != null) rootCanvas.sortingOrder = 100;
+        // Tommy's pixel kit on the menu's bars, toggles and buttons (SettingsSkin), while it's all still
+        // active so the planks can measure their words
+        foreach (Slider slider in new[] { masterSlider, musicSlider, gameSlider, ambientSlider })
+            SettingsSkin.Slider(slider);
+        foreach (Toggle toggle in new[] { damageIndicatorsToggle, healingIndicatorsToggle, statusEffectIndicatorsToggle })
+            SettingsSkin.Toggle(toggle);
+        SettingsSkin.Plank(restartButton, GameControlsStyle.Instance.speed);
+        SettingsSkin.Plank(mainMenuButton, GameControlsStyle.Instance.speed);
         settingsPanel.SetActive(false);
         if (restartButton != null) restartButton.SetActive(false);
         if (mainMenuButton != null) mainMenuButton.SetActive(false);

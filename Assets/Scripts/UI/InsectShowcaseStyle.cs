@@ -32,6 +32,22 @@ public class InsectShowcaseStyle : ScriptableObject
     [Tooltip("8 by 8, sliced 2: the chips (conditions, tags) and the stat cells, tinted with the panel colour")]
     public Sprite stripSunken;
 
+    [Header("Kit pieces the escape menu uses (SettingsSkin)")]
+    [Tooltip("8 by 11, sliced 2: a volume bar's frame, as the plant info panel's health bar")]
+    public Sprite barFrame;
+    [Tooltip("4 by 9: a volume bar's fill, stretched")]
+    public Sprite barFill;
+    [Tooltip("drawn over barFill, untinted")]
+    public Sprite barFillShine;
+    [Tooltip("28 by 28, sliced 2: an indicator toggle's box")]
+    public Sprite toggleBox;
+    [Tooltip("15 by 15: an indicator toggle's tick (the bloom pip)")]
+    public Sprite toggleTick;
+    [Tooltip("the volume bars' fill")]
+    public Color volumeFill = Hex("#5ED45E");
+    [Tooltip("a ticked toggle's pip")]
+    public Color toggleTickColor = Hex("#5ED45E");
+
     [Header("Stat icons (Sprites/UI/icons, 16 by 16)")]
     public Sprite health;
     public Sprite movementSpeed;
