@@ -431,19 +431,28 @@ public abstract class Insect : Entity, IAttackable
         {
             int waveNumber = Wave;
             baseMaxHealth   *= WaveHealthMultiplier(waveNumber);
-            armorAdder      += (waveNumber - 1) * Random.Range(1, 2);
-            magicArmorAdder += (waveNumber - 1) * Random.Range(1, 2);
+            // the armor bonus stops growing at the wave the health plateau starts (wave 15 with a 3x cap)
+            int armorWave = Mathf.Min(waveNumber, PlateauWave());
+            armorAdder      += (armorWave - 1) * Random.Range(1, 2);
+            magicArmorAdder += (armorWave - 1) * Random.Range(1, 2);
         }
         UpdateStats();
         health = maxHealth;
         RefreshHealthBarVisibility();
     }
 
-    // wave 1 gets no bonus; each wave after that compounds a bonus that itself grows by 1
-    // percentage point per wave (wave 2 = +8%, wave 3 = +9%, wave 4 = +10%, ...), multiplied
-    // on top of the already-scaled total from the previous wave rather than the original base -
-    // fixed/deterministic, no randomness, and uncapped
-    private static float WaveHealthMultiplier(int waveNumber)
+    // the running level's cap on the health scaling (LevelConfig.maxHealthMultiplier). 0 or less, or
+    // no running level (a test scene), means no cap
+    private static float HealthMultiplierCap()
+    {
+        LevelConfig config = ProceduralLevel.CurrentConfig;
+        return config != null && config.maxHealthMultiplier > 0f ? config.maxHealthMultiplier : float.PositiveInfinity;
+    }
+
+    // wave 1 gets no bonus. each wave after that compounds a bonus that grows by 0.8 percentage
+    // points per wave (wave 2 = +4%, wave 3 = +4.8%, wave 4 = +5.6%, ...), multiplied on top of the
+    // previous wave's total. fixed, no randomness. it stops at the level's cap (3x reached at wave 15)
+    private static float UncappedWaveHealthMultiplier(int waveNumber)
     {
         float multiplier = 1f;
         for (int w = 2; w <= waveNumber; w++)
@@ -452,6 +461,24 @@ public abstract class Insect : Entity, IAttackable
             multiplier *= 1f + stepBonus;
         }
         return multiplier;
+    }
+
+    private static float WaveHealthMultiplier(int waveNumber) =>
+        Mathf.Min(UncappedWaveHealthMultiplier(waveNumber), HealthMultiplierCap());
+
+    // the first wave whose health multiplier reaches the cap (wave 15 with a cap of 3), or
+    // int.MaxValue when there is no cap
+    private static int PlateauWave()
+    {
+        float cap = HealthMultiplierCap();
+        if (float.IsPositiveInfinity(cap)) return int.MaxValue;
+        float multiplier = 1f;
+        for (int w = 2; w < 1000; w++)
+        {
+            multiplier *= 1f + 0.04f + 0.008f * (w - 2);
+            if (multiplier >= cap) return w;
+        }
+        return int.MaxValue;
     }
 
     protected override void Update()

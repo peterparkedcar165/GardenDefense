@@ -48,6 +48,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 10
+  maxHealthMultiplier: 3
   eliteWaveInterval: 4
   eliteInsects:
   - data: {fileID: 11400000, guid: 8738e9d508ddabb4db908fd57d379c56, type: 2}

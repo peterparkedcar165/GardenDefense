@@ -25,6 +25,11 @@ public class LevelConfig : ScriptableObject
     [Header("rest period")]
     public float restDuration = 12f;
 
+    [Header("insect scaling")]
+    [Tooltip("the per-wave health scaling stops at this multiplier; 0 or less = no cap. the +1 armor and " +
+        "magic armor per wave stops at the same wave")]
+    public float maxHealthMultiplier = 3f;
+
     [Header("hand-authored waves")]
     [Tooltip("exact spawn scripting for specific wave numbers. a wave number with no entry here (or an entry with no sub-waves/trickle spawns) simply spawns nothing")]
     public WaveDefinition[] waves;

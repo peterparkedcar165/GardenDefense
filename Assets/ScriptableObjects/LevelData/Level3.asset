@@ -48,6 +48,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 8
+  maxHealthMultiplier: 3
   waves:
   - waveNumber: 1
     subWaves:

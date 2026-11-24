@@ -48,6 +48,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   restDuration: 15
+  maxHealthMultiplier: 3
   waves: []
   eliteWaveInterval: 5
   eliteInsects:
