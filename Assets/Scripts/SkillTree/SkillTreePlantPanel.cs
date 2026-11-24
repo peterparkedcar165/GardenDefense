@@ -202,6 +202,8 @@ public class SkillTreePlantPanel : MonoBehaviour
     private const float ExpBarHeight = 22f;
     private const float LinkCore = 4f;
     private const float LinkOutline = 8f;
+    // the shortest vine between the card and the first node (16 art px)
+    private const float MinStem = 32f;
 
     private struct Link
     {
@@ -238,24 +240,40 @@ public class SkillTreePlantPanel : MonoBehaviour
             plantSprite.enabled = false;
         }
 
-        // the card: from the points box on the left to the widest line under the portrait, from just
-        // above the portrait to just under the level line, stopping short of the first node
-        float nameWidth = nameText != null ? nameText.GetPreferredValues(nameText.text).x : 0f;
-        float half = Mathf.Max(portrait.width * 0.5f, nameWidth * 0.5f, ExpBarWidth * 0.5f) + CardPad;
-        float right = portrait.center.x + half;
-        float firstNodeLeft = FirstNodeLeft(root);
-        if (!float.IsNaN(firstNodeLeft)) right = Mathf.Min(right, firstNodeLeft - 14f);
-        float left = portrait.center.x - half;
+        // the card's contents (points, portrait, name, exp and level) move up together so the card's
+        // middle sits on the nodes' middle line (Tommy, 2026-11-24): the card runs from just above the
+        // portrait to just under the level line
+        float top = portrait.yMax + 8f;
+        float bottom = levelText != null ? CapTop(levelText) - 7f * Px - 10f : portrait.yMin - 8f;
+        RectTransform nodesRect = (RectTransform)nodesContainer;
+        float nodesY = root.InverseTransformPoint(nodesRect.TransformPoint(nodesRect.rect.center)).y;
+        float shift = Mathf.Round((nodesY - (top + bottom) * 0.5f) / Px) * Px;
+        portrait.y += shift;
+        top += shift;
+        bottom += shift;
+        foreach (TMP_Text t in new[] { nameText, expText, levelText, pointsText })
+            if (t != null) t.rectTransform.anchoredPosition += new Vector2(0f, shift);
+
+        // as wide on both sides of the portrait (Tommy): wide enough for the points box on its left, the
+        // name and the exp bar under it
         Rect chip = default;
         bool hasChip = pointsText != null;
+        float nameWidth = nameText != null ? nameText.GetPreferredValues(nameText.text).x : 0f;
+        float half = Mathf.Max(portrait.width * 0.5f, nameWidth * 0.5f, ExpBarWidth * 0.5f) + CardPad;
         if (hasChip)
         {
             Vector2 at = pointsText.rectTransform.anchoredPosition;
             chip = new Rect(at.x - 38f, at.y - 38f, 76f, 76f);
-            left = Mathf.Min(left, chip.xMin - CardPad);
+            half = Mathf.Max(half, portrait.center.x - chip.xMin + CardPad);
         }
-        float top = portrait.yMax + 8f;
-        float bottom = levelText != null ? CapTop(levelText) - 7f * Px - 10f : portrait.yMin - 8f;
+        half = Mathf.Ceil(half / Px) * Px;
+        float left = portrait.center.x - half;
+        float right = portrait.center.x + half;
+
+        // the chain moves right when its first node would sit closer than a short vine to the card
+        float firstNodeLeft = FirstNodeLeft(root);
+        if (!float.IsNaN(firstNodeLeft) && firstNodeLeft < right + MinStem)
+            nodesRect.anchoredPosition += new Vector2(Mathf.Ceil((right + MinStem - firstNodeLeft) / Px) * Px, 0f);
         RectTransform card = NewImage("Card", root, kit.panelBase, panel, true);
         Place(card, new Rect(left, bottom, right - left, top - bottom));
         card.SetSiblingIndex(0);
