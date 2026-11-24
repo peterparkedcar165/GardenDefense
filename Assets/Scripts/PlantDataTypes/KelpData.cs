@@ -27,13 +27,4 @@ public class KelpData : PlantData
     public float baseBubbleRegenPerSecond         = 2f;
     public float path3BubbleRegenPerLevel         = 0.5f;
     public float path3DurationPerLevel            = 2f;
-
-    public override string GetAttackDescription() =>
-        $"Whips the target insect, dealing {DamageTypeLabel(damageType)}.";
-
-    public override string GetPassiveDescription() =>
-        "Kelp's own Oxygen never depletes. Releases air bubbles when it hits a target, granting nearby plants Oxygen and producing Sun.";
-
-    public override string GetSkillDescription() =>
-        "Fires a bubble in a chosen direction. Plants it touches are enveloped in an Air Bubble, restoring Oxygen instantly and over time.";
 }

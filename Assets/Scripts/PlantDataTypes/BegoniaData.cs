@@ -49,13 +49,4 @@ public class BegoniaData : PlantData
     public Vector2 rangeGlitterSize = new Vector2(0.07f, 0.12f);
     [Tooltip("how fast a glint rises, units per second, min and max")]
     public Vector2 rangeGlitterRiseSpeed = new Vector2(0.25f, 0.5f);
-
-    public override string GetAttackDescription() =>
-        "Grows wet flowers around her, applying <color=#4FC3F7><b>Water</b></color> primer to insects in contact with them, reducing its internal cooldown and their <color=green><b>Grass Resistance</b></color>.";
-
-    public override string GetPassiveDescription() =>
-        "Grants herself base <color=green><b>Elemental Affinity</b></color> and <color=green><b>Grass Damage</b></color>. Other plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, sharing her own <color=green><b>Elemental Affinity</b></color> and <color=green><b>Grass Damage</b></color> and making their <color=green><b>Germinate</b></color> triggers detonate earlier. Scales with <color=#FFB6C1><b>Magic Power</b></color>.";
-
-    public override string GetSkillDescription() =>
-        "Plants within her attack range are granted <color=green><b>Blossoming</b></color>, increasing <color=green><b>Attack Speed</b></color>. While active, dealing <color=#4FC3F7><b>Water</b></color> or <color=green><b>Grass</b></color> damage reduces that insect's own primer cooldown for that element. Scales with <color=#FFB6C1><b>Magic Power</b></color>.";
 }

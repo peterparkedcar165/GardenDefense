@@ -19,13 +19,4 @@ public class TansyData : PlantData
     public float path3SkillDurationPerLevel = 2f;
     public float floralGlowBaseDamage = 20f;
     public float floralGlowDamagePerLevel = 5f;
-
-    public override string GetAttackDescription() =>
-        $"An orbiting petal projectile deals {DamageTypeLabel(damageType)} to any insect it passes through.";
-
-    public override string GetPassiveDescription() =>
-        "Illuminates the surrounding area with a radius equal to her Attack Range.";
-
-    public override string GetSkillDescription() =>
-        $"Target a plant anywhere on the field to grant it <color=orange>Floral Glow</color>, summoning an orbiting petal projectile around it that deals {DamageTypeLabel(damageType)}, sourced from <b><color=orange>Tansy</color></b>, to anything it passes through. Emits light equal to <b><color=orange>Tansy</color></b>'s range.";
 }

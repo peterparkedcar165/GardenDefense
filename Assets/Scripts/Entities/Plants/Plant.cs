@@ -661,7 +661,7 @@ public abstract class Plant : Entity, IAttackable
         if (elementalType == ElementalType.Fire) heatResistanceAdder += 0.5f; // 50% resistance to heat-driven warming, not full immunity
         if (elementalType == ElementalType.Ice)  coldResistanceAdder += 0.5f; // 50% resistance to cold-driven cooling, not full immunity
         SkillTreeManager.ApplyTo(this);
-        FertilizerManager.instance?.NotifyPlantPlaced(this);
+        if (!BuildingPreview) FertilizerManager.instance?.NotifyPlantPlaced(this);
         // baseSunCost is fixed above; sunCostReductionAdder only ever comes from the skill tree
         // call just above (StatType.SunCostReduction), so this always reflects it once it's run
         sunCost = Mathf.Max(0, baseSunCost - sunCostReductionAdder);
@@ -669,8 +669,12 @@ public abstract class Plant : Entity, IAttackable
         UpdateStats();
         health = maxHealth;
         UpdateHealthBar();
-        OnPlantPlaced?.Invoke(this);
+        if (!BuildingPreview) OnPlantPlaced?.Invoke(this);
     }
+
+    // true while PlantPreview sets up a copy of a plant only to read its texts: the copy is never
+    // placed, so nothing is told it was placed or removed (events, fertilizer, mulches, aims)
+    public static bool BuildingPreview;
 
     // fires once a plant's stats are actually valid (end of LoadData, not Awake — subclasses
     // call LoadData from their own Awake, after their data-driven fields are set up). lets
@@ -696,6 +700,13 @@ public abstract class Plant : Entity, IAttackable
     {
         WeatherManager.OnWeatherAdded   -= HandleWeatherAdded;
         WeatherManager.OnWeatherRemoved -= HandleWeatherRemoved;
+        // a tooltip's copy (PlantPreview) was never placed: it only leaves the plant list
+        if (BuildingPreview)
+        {
+            allPlants.Remove(this);
+            ReleaseHitFlashMaterial();
+            return;
+        }
         ClearTargetHighlight();
         MulchManager.OnPlantRemoved(this);
         allPlants.Remove(this);

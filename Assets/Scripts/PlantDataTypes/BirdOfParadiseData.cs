@@ -28,13 +28,4 @@ public class BirdOfParadiseData : PlantData
     public float baseSkillAttackSpeedBonus = 0.08f;
     public float path3AttackSpeedBonusPerLevel = 0.04f;
     public float path3SkillDurationPerLevel = 2f;
-
-    public override string GetAttackDescription() =>
-        $"Attacks a single target dealing {DamageTypeLabel(damageType)}, gaining a stack of Talon Focus.";
-
-    public override string GetPassiveDescription() =>
-        "Each stack of Talon Focus increases damage dealt on hit.";
-
-    public override string GetSkillDescription() =>
-        "Grants self Three Talon Strike, increasing Total Attack Speed and allowing attacks to hit additional nearest enemies.";
 }

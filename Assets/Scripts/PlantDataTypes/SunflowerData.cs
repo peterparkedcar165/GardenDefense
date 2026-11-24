@@ -36,13 +36,4 @@ public class SunflowerData : PlantData
     public SoundEffect sunrayEndSound;
     [Tooltip("how long before the sunray expires the loop sound stops and the end sound plays")]
     public float sunrayEndLeadTime = 0.2f;
-
-    public override string GetAttackDescription() =>
-        $"Briefly charges up a solar-powered energy orb then shoots it towards her target, dealing {DamageTypeLabel(damageType)}.";
-
-    public override string GetPassiveDescription() =>
-        "Passively generates <color=yellow>Sun</color> for the garden periodically. Attacks reduce the generation cooldown.";
-
-    public override string GetSkillDescription() =>
-        $"Gathers a large burst of energy from the sun, calling down a scorching beam from above that deals {DamageTypeLabel(damageType)} per second to insects within the designated area. Scales with <color=#FFB6C1>Magic Power</color>.";
 }

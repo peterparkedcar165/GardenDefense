@@ -39,13 +39,4 @@ public class StargazerData : PlantData
     public float path3WaveWidthPerLevel         = 0.5f;   // lane width gained per skill level
     public float path3BurnMultiplierPerLevel    = 0.1f;   // burn-damage multiplier gained per skill level
     public float path3FlammableStacksPerLevel   = 0.5f;   // extra wave Flammable stacks per skill level
-
-    public override string GetAttackDescription() =>
-        $"Sprays fire in a cone, dealing damage to all insects within it.";
-
-    public override string GetPassiveDescription() =>
-        $"Dealing Fire Damage has a chance to inflict <color=#FF6B1A>Flammable</color>, increasing the <color=orange>Burn</color> damage it takes.";
-
-    public override string GetSkillDescription() =>
-        $"Aim a direction. After a brief delay, a wall of fire sweeps across the entire map, dealing massive damage and inflicting Burn on everything in its path.";
 }

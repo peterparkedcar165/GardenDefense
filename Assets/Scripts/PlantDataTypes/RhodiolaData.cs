@@ -52,13 +52,4 @@ public class RhodiolaData : PlantData
     public float path3CooldownReductionPerLevel = 0f;
     public float verdantGuardianShield          = 200f;
     public float verdantGuardianRegen           = 20f;
-
-    public override string GetAttackDescription() =>
-        "Fires a rejuvenating seed at the most injured nearby plant, healing it and leaving behind a regenerating bloom. Heals & Shields given are increased by a portion of <color=green><b>Grass Damage</b></color>.";
-
-    public override string GetPassiveDescription() =>
-        "Healing applies Rejuvenating Burgeon, a heal over time that also grants Armor while it lasts. Half of the healing past full health is stored as <color=#FFD700><b>Golden Sap</b></color>, released all at once into a plant in range that drops below 25% health.";
-
-    public override string GetSkillDescription() =>
-        "Target a tile where a plant has fallen to resurrect it, with the mulches it had, and restore a portion of its Health.";
 }

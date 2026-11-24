@@ -23,13 +23,4 @@ public class PoisonShroomData : PlantData
     [Header("Path 3 Scaling")]
     public float path3SkillDurationPerLevel = 1f;
     public float path3RadiusPerLevel = 0.2f;
-
-    public override string GetAttackDescription() =>
-        $"Fires Toxic Spores at the target, dealing {DamageTypeLabel(damageType)} over time.";
-
-    public override string GetPassiveDescription() =>
-        "Toxic Spores also deal bonus damage equal to a percentage of the target's current health while active, and last longer per level. When fully grown, gains the ability to deal Critical Damage with Damage Over Time effects, along with bonus Critical Chance.";
-
-    public override string GetSkillDescription() =>
-        $"Hurls a toxic blob towards a targeted area, creating a poison field that lasts for a duration. Insects standing in the field take {DamageTypeLabel(damageType)} per second, and any debuffs on them are frozen in time.";
 }

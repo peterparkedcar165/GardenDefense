@@ -61,13 +61,4 @@ public class AcornKnightData : PlantData
     public float path3AttackSpeedBonusPerLevel = 0.05f;
     // seconds of shield lifetime granted per 1 point of Magic Power
     public float skillDurationMPMultiplier = 0.10f;
-
-    public override string GetAttackDescription() =>
-        $"Swings his sword down and then back up, splitting his {DamageTypeLabel(damageType)} between the two swings, to nearby insects.";
-
-    public override string GetPassiveDescription() =>
-        "Regenerates health over time, faster once he's gone a while without being hit. Being targeted by a physical attacker also puts him into Guard Stance, trading attack speed and range for armor and an omnidirectional shield bash.\n\n" + RetainAggroLine();
-
-    public override string GetSkillDescription() =>
-        "Arms a shield throw. The next attack hurls the shield at the target, stunning it, then the shield falls to the ground, blocking the path and taunting insects.";
 }

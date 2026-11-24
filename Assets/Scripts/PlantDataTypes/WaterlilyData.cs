@@ -46,13 +46,4 @@ public class WaterlilyData : PlantData
     public float bubbleDurationMP = 2f;
     public float path3SkillDurationPerLevel = 2f;
     public float path3RadiusPerLevel = 0.2f;
-
-    public override string GetAttackDescription() =>
-        $"Blows little bubbles towards her target, dealing {DamageTypeLabel(damageType)}.";
-
-    public override string GetPassiveDescription() =>
-        $"Attacks splash surrounding insects for {splashDamageRatio * 100f:F0}% damage. Everyone hit is <color=#4FC3F7>Soaked</color>, a stacking slow that also grounds flying insects.";
-
-    public override string GetSkillDescription() =>
-        "Blows a large bubble onto a targeted area, trapping insects within and keeping them airborne for a duration. Trapped insects take increased damage from all sources.";
 }

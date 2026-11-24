@@ -89,12 +89,14 @@ public class PlantsPanelUI : MonoBehaviour
         if (detailDamageType)              detailDamageType.text              = ColoredDamage(data.damageType);
         if (detailElementalType)           detailElementalType.text           = $"Elemental Type: {ColoredElemental(data.elementalType)}";
         if (detailElementalTypeDescription) detailElementalTypeDescription.text = prefab != null ? prefab.GetElementDescription() : "";
+        // the in-game texts with a just placed plant's numbers, every path at level 0 (Tommy, 2026-11-24)
+        PlantPreview.Texts texts = PlantPreview.For(data);
         if (detailAttackTitle)             detailAttackTitle.text             = "Attack";
-        if (detailAttackDescription)       detailAttackDescription.text       = data.GetAttackDescription();
+        if (detailAttackDescription)       detailAttackDescription.text       = texts.attack;
         if (detailPassiveTitle)            detailPassiveTitle.text            = "Passive";
-        if (detailPassiveDescription)      detailPassiveDescription.text      = data.GetPassiveDescription();
+        if (detailPassiveDescription)      detailPassiveDescription.text      = texts.passive;
         if (detailSkillTitle)              detailSkillTitle.text              = "Skill";
-        if (detailSkillDescription)        detailSkillDescription.text        = data.GetSkillDescription();
+        if (detailSkillDescription)        detailSkillDescription.text        = texts.skill;
         if (detailStatsTitle)              detailStatsTitle.text              = "Stats";
         if (detailStatsDescription)
         {

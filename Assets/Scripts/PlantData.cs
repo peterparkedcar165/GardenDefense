@@ -168,10 +168,6 @@ public class PlantData : ScriptableObject
     [Tooltip("played when this plant's skill is activated (every plant should have one)")]
     public SoundEffect skillSound;
 
-    public virtual string GetAttackDescription() => "";
-    public virtual string GetPassiveDescription() => "";
-    public virtual string GetSkillDescription() => "";
-
     public static string ElementalTag(ElementalType t) => t switch
     {
         ElementalType.Fire    => "<color=orange>Fire</color>",

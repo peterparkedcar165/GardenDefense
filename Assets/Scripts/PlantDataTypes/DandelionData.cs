@@ -31,13 +31,4 @@ public class DandelionData : PlantData
     // drives the generic Plant.baseSkillDuration/skillDuration stat (see OnPath3Upgrade) -
     // Pollen Haste's duration reads straight off skillDuration rather than its own field
     public float path3SkillDurationPerLevel = 2f;
-
-    public override string GetAttackDescription() =>
-        $"Fires a pollen seed at a target, dealing {DamageTypeLabel(damageType)}.";
-
-    public override string GetPassiveDescription() =>
-        "Periodically reduces the Skill Cooldown of allied plants within her attack radius, and her attacks have a chance to speed this up.";
-
-    public override string GetSkillDescription() =>
-        $"Fires a slow, large pollen seed towards the targeted direction. On impact, deals {DamageTypeLabel(damageType)} to insects and sweeps them along with the wind, while granting allied plants touched by it <color=#B2EBF2><b>Pollen Haste</b></color>.";
 }

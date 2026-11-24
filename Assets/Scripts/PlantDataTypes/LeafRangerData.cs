@@ -19,13 +19,4 @@ public class LeafRangerData : PlantData
     [Header("Path 3 Scaling")]
     public float path3AttackSpeedBonusPerLevel = 0.25f;
     public float path3SkillDurationPerLevel = 0.5f;
-
-    public override string GetAttackDescription() =>
-        $"Shoots slow but precise and fierce arrows at his target, dealing {DamageTypeLabel(damageType)}.";
-
-    public override string GetPassiveDescription() =>
-        "The <color=green><b>Leaf Ranger</b></color> sees in the dark, gains bonus Critical Chance, and his arrows can bounce to another target instead of being destroyed.";
-
-    public override string GetSkillDescription() =>
-        "Enters a state of rapid focus, greatly increasing Attack Speed for a duration.";
 }

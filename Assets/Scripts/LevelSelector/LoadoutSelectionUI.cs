@@ -135,6 +135,8 @@ public class LoadoutSelectionUI : MonoBehaviour
     // Plants, and the Show Map button
     private void BuildScreenDressing()
     {
+        // every opening: the plant tooltips' numbers are read again (the skill tree can have changed)
+        PlantPreview.ClearCache();
         if (!plantPanelsBuilt)
         {
             plantPanelsBuilt = true;
@@ -407,24 +409,27 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (tooltipPanel == null) return;
         tooltipPanel.SetActive(true);
         Plant prefab = data.plantPrefab;
+        // the texts the plant shows in the level, with the numbers of a just placed plant: every path
+        // at level 0 (Tommy, 2026-11-24; the short PlantData versions are gone)
+        PlantPreview.Texts texts = PlantPreview.For(data);
         if (tooltipName != null)
-            tooltipName.text = prefab != null ? prefab.GetName() : data.displayName;
+            tooltipName.text = !string.IsNullOrEmpty(texts.name) ? texts.name : data.displayName;
         if (tooltipIcon != null)
             tooltipIcon.sprite = data.icon;
         if (tooltipDescription != null)
-            tooltipDescription.text = prefab != null ? prefab.GetDescription() : "";
+            tooltipDescription.text = texts.description ?? "";
         if (tooltipAttackTitle != null)
             tooltipAttackTitle.text = "Attack";
         if (tooltipAttackDescription != null)
-            tooltipAttackDescription.text = data.GetAttackDescription();
+            tooltipAttackDescription.text = texts.attack ?? "";
         if (tooltipPassiveTitle != null)
             tooltipPassiveTitle.text = "Passive";
         if (tooltipPassiveDescription != null)
-            tooltipPassiveDescription.text = data.GetPassiveDescription();
+            tooltipPassiveDescription.text = texts.passive ?? "";
         if (tooltipSkillTitle != null)
             tooltipSkillTitle.text = "Skill";
         if (tooltipSkillDescription != null)
-            tooltipSkillDescription.text = data.GetSkillDescription();
+            tooltipSkillDescription.text = texts.skill ?? "";
         if (tooltipElementalType != null)
             tooltipElementalType.text = ColoredElemental(data.elementalType);
         if (tooltipElementalBonus != null)

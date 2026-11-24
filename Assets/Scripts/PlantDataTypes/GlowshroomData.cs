@@ -33,13 +33,4 @@ public class GlowshroomData : PlantData
     [Header("Path 3 Scaling")]
     public float path3BlindDurationPerLevel = 0.5f;
     public float path3SkillDurationPerLevel = 1f;
-
-    public override string GetAttackDescription() =>
-        $"Fires a fungal bolt dealing <color={ElementalColor(elementalType)}><b>{baseAttackDamage:F0}</b></color> {DamageTypeLabel(damageType)}, splashing to nearby insects.";
-
-    public override string GetPassiveDescription() =>
-        $"Attacks inflict <color=#88FF88>Fungal Glow</color> on the target. <color=#4FC3F7><b>Water</b></color> damage refreshes the glow's duration.";
-
-    public override string GetSkillDescription() =>
-        $"Releases a blinding flash, tripling the illumination radius and <color=#DDDDDD>Blinding</color> all insects caught in the expanded area.";
 }

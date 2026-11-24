@@ -28,13 +28,4 @@ public class MorningGloryData : PlantData
     public float baseLevitateCritBonus      = 0.25f;
     public float path3CritBonusPerLevel     = 0.05f;
     public float critBonusMPMultiplier      = 0.24f;   // +24% Levitating crit chance per 100 Magic Power
-
-    public override string GetAttackDescription() =>
-        $"Sends a wind blade at the first target, dealing damage that scales with Projectile Speed.";
-
-    public override string GetPassiveDescription() =>
-        $"Plants within range (including herself) gain increased Attack Speed and Projectile Speed.";
-
-    public override string GetSkillDescription() =>
-        $"Summons an updraft field that suspends insects helplessly in the air and makes them take extra critical hits.";
 }

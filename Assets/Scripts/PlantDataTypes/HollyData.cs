@@ -37,12 +37,4 @@ public class HollyData : PlantData
     public float path1AttackDamagePerLevel = 3f;
     public int path1MagicArmorPerLevel = 4;
     public float path1AttackRangePerLevel = 0.2f;
-
-    public override string GetAttackDescription() =>
-        $"Conjures a spiraling cold wind around herself, dealing {DamageTypeLabel(damageType)} to all insects within range.";
-    public override string GetPassiveDescription() =>
-        "Plants caught in the spiraling wind are afflicted with <color=#00FFFF><b>Snow Ward</b></color>, which grants a rampant <color=#00CED1><b>Shield</b></color>, cools them from hot weather, and grants immunity to <color=#E8D9A8><b>Sandstorm</b></color>. " +
-        "Only the <b><color=#00FFFF>Holly</color></b> with the largest <color=#00CED1><b>Shield</b></color> cap affects a given plant - other Hollies cannot interfere or stack their shielding.";
-    public override string GetSkillDescription() =>
-        $"Conjures a blizzard blowing toward a targeted location, dealing {DamageTypeLabel(damageType)} per second to insects within it, and afflicting plants within it with the same <color=#00FFFF><b>Snow Ward</b></color> as her passive, at a higher power.";
 }

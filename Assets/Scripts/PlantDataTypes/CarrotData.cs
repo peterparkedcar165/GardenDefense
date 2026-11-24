@@ -42,13 +42,4 @@ public class CarrotData : PlantData
     public float visualFadeOut = 0.5f;
     [Tooltip("random x and y offset applied to each carrot visual on spawn")]
     public float visualPositionJitter = 0.05f;
-
-    public override string GetAttackDescription() =>
-        "Erupts a chunk of earth beneath a target insect, striking it and any insects caught nearby.";
-
-    public override string GetPassiveDescription() =>
-        "Forms a Soil Bond with a chosen Shooter plant, sharing its targeting range and quickening Carrot's own attacks whenever it fires.";
-
-    public override string GetSkillDescription() =>
-        "Summons a line of earth pillars that erupt outwards, launching and pushing insects along the wave.";
 }

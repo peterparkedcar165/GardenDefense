@@ -39,13 +39,4 @@ public class OldCarrotData : PlantData
     public float visualFadeOut = 0.5f;
     [Tooltip("random x and y offset applied to each oldCarrot visual on spawn")]
     public float visualPositionJitter = 0.05f;
-
-    public override string GetAttackDescription() =>
-        "Lifts earth from the ground and hurls it at a single target.";
-
-    public override string GetPassiveDescription() =>
-        "Forms a Psionic Bond with a chosen Shooter plant: every time that plant fires, OldCarrot also fires a Psionic OldCarrot at the same target.";
-
-    public override string GetSkillDescription() =>
-        "Summons a line of earth pillars that erupt outwards, launching and pushing insects along the wave.";
 }

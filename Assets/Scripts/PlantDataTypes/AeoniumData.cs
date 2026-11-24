@@ -20,13 +20,4 @@ public class AeoniumData : PlantData
     [Header("Path 2 Scaling")]
     public int   path2SunPerLevel               = 1;
     public float path2SunTimerReductionPerLevel = 0.1f;
-
-    public override string GetAttackDescription() =>
-        $"Launches an energy ball dealing {DamageTypeLabel(damageType)} to the first insect hit.";
-
-    public override string GetPassiveDescription() =>
-        "Generates <color=yellow>Sun</color> periodically. Each projectile attack hit by a plant within her radius reduces the generation timer.";
-
-    public override string GetSkillDescription() =>
-        $"Grants all plants within her radius <color=green>Blessing of the Sun</color>, increasing their Sun yield for the duration.";
 }

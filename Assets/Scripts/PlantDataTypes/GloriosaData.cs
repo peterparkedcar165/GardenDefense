@@ -45,13 +45,4 @@ public class GloriosaData : PlantData
     public float path3LatchHealPerSecondPerLevel   = 2f;
     public float path3LatchFireDamageBonusPerLevel = 0.05f;
     public float path3LatchDurationPerLevel        = 0.5f;
-
-    public override string GetAttackDescription() =>
-        $"Sends embers of soothing fire towards its target, dealing {DamageTypeLabel(damageType)}.";
-
-    public override string GetPassiveDescription() =>
-        "Targets injured plants before insects. Embers heal the plant and increase its temperature toward comfort. Plants nearby also receive a weaker version of the effect.";
-
-    public override string GetSkillDescription() =>
-        "Summons Cinderwisps that fly across the map seeking the most injured plant. Wisps heal and warm plants near them. When a wisp reaches its target it latches, applying <color=orange>Boon of The Wisp</color>: healing the plant and increasing its <color=orange>Fire</color> damage. The effect lingers after the wisp detaches.";
 }

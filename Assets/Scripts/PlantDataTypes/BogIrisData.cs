@@ -29,14 +29,4 @@ public class BogIrisData : PlantData
     public float path3GeyserDamagePerLevel = 15f;
     public float path3KnockUpPerLevel = 1f;
     public float path3GeyserRadiusPerLevel = 0.15f;
-
-    public override string GetAttackDescription() =>
-        $"Fires a water bolt at a single target dealing {DamageTypeLabel(damageType)}.";
-
-    public override string GetPassiveDescription() =>
-        "Periodically generates <color=yellow>Sun</color>. When damaged, she <b><color=#4FC3F7>closes</color></b> and regenerates Max Health per second, doubled while out of combat. " +
-        "When healthy, she <b><color=#4FC3F7>opens</color></b> and generates bonus <color=yellow>Sun</color> per production. Attacks have a chance to speed up the next Sun tick.\n\n" + RetainAggroLine();
-
-    public override string GetSkillDescription() =>
-        $"Target a location. After a brief delay, a geyser erupts, dealing {DamageTypeLabel(damageType)} and knocking all insects airborne.";
 }

@@ -26,13 +26,4 @@ public class CactusData : PlantData
     // Armor scaling: flat bonus added to the skill's reflected damage, same % pattern his Attack
     // already uses off his own Armor (see ArmorScalingPercent)
     public float counterArmorScalingPercent = 0.5f;
-
-    public override string GetAttackDescription() =>
-        $"Slams all insects in range, dealing {DamageTypeLabel(damageType)} plus a % of its Armor. Applies <color=#A0522D>Punctured</color>.";
-
-    public override string GetPassiveDescription() =>
-        "<color=#A0522D>Punctured</color> reduces Attack Damage instead of dealing bonus damage. Being shielded taunts nearby insects.\n\n" + RetainAggroLine();
-
-    public override string GetSkillDescription() =>
-        "Enters a countering stance and shields itself for a duration, gaining Physical Resistance and reflecting melee damage back at attackers.";
 }

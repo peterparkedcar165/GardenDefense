@@ -30,13 +30,4 @@ public class ZinniaData : PlantData
     public int   path3SunIntensityPerLevel  = 1;
     public float baseSunHeatingPerSecond    = 1f;
     public float path3HeatingPerLevel       = 0.2f;
-
-    public override string GetAttackDescription() =>
-        $"Releases fiery sparks dealing {DamageTypeLabel(damageType)} to nearby insects. Nearby plants take no damage and are instead marked with <color=orange><b>Ablaze</b></color>.";
-
-    public override string GetPassiveDescription() =>
-        "Plants within her radius gain <color=orange><b>Zinnia's Warmth</b></color>, increasing <color=orange><b>Fire Damage</b></color> and <color=#FFB6C1><b>Magic Power</b></color>.";
-
-    public override string GetSkillDescription() =>
-        "Emits an artificial sun, granting Sunlight Exposure and warmth to plants within its radius for a duration.";
 }

@@ -29,13 +29,4 @@ public class AnemoneData : PlantData
     public float path3DragSpeedPerLevel    = 0.1f;
     public float vortexDetonationDamage = 150f;
     public float vortexKnockbackForce  = 8f;
-
-    public override string GetAttackDescription() =>
-        $"Launches a wind ball at the target, dealing {DamageTypeLabel(damageType)}, and half that to surrounding insects.";
-
-    public override string GetPassiveDescription() =>
-        $"Dealing damage applies <color=#E0E0E0><b>Wind Erosion</b></color>, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> per stack. If the target is already afflicted, adds an additional stack instead.";
-
-    public override string GetSkillDescription() =>
-        "Summons a vortex of wind at a targeted location, dragging insects toward its center and dealing damage over time.";
 }
