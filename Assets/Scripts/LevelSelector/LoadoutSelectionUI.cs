@@ -53,7 +53,6 @@ public class LoadoutSelectionUI : MonoBehaviour
     private PlankButton mapButton;
     private bool mapShown;
     private Image backdrop;
-    private readonly List<GameObject> hiddenForMap = new List<GameObject>();
     private bool plantPanelsBuilt;
 
     public bool IsOpen => panel.activeSelf;
@@ -139,7 +138,7 @@ public class LoadoutSelectionUI : MonoBehaviour
     // the game's own panel. once the fade is done and IntroDelay has passed, the insect panel, the plant
     // panels and the buttons rise from below the screen into their places, a little one after another,
     // and the dark backdrop fades in with them. the level is paused, so it all runs on unscaled time
-    private const float IntroDelay = 1.25f;
+    private const float IntroDelay = 0.5f;
     private const float IntroRise = 0.45f;
     private const float IntroStagger = 0.08f;
     private Coroutine intro;
@@ -259,9 +258,10 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (mapButton == null)
         {
             backdrop = panel.GetComponent<Image>();
+            if (backdrop != null && backdropAlpha < 0f) backdropAlpha = backdrop.color.a;
             RectTransform panelRect = (RectTransform)panel.transform;
             mapButton = PlankButton.Create(panelRect, "Show Map", GameControlsStyle.Instance.speed,
-                InsectShowcaseStyle.Instance.font, () => SetMapShown(!mapShown));
+                InsectShowcaseStyle.Instance.font, () => SetMapShown(!mapShown, false));
             // just right of Confirm, level with it
             RectTransform r = mapButton.Rect;
             r.anchorMin = r.anchorMax = new Vector2(0.5f, 0.5f);
@@ -437,33 +437,70 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     // Show Map: everything on the loadout panel but its button hides, and the dark backdrop goes, so
     // the whole map shows. off again, exactly what was showing comes back
-    private void SetMapShown(bool shown)
+    // the button fades the screen out and back (Tommy, 2026-11-24: a lerp, not a snap); opening,
+    // closing and confirming put it back at once
+    private void SetMapShown(bool shown) => SetMapShown(shown, true);
+
+    private const float MapFadeTime = 0.25f;
+    private Coroutine mapFade;
+    // 1: the whole screen shows, 0: only the map (and the button)
+    private float mapShare = 1f;
+    private readonly List<CanvasGroup> mapFaded = new List<CanvasGroup>();
+
+    private void SetMapShown(bool shown, bool instant)
     {
-        if (mapShown == shown) return;
-        mapShown = shown;
-        if (shown)
+        if (mapFade != null) { StopCoroutine(mapFade); mapFade = null; }
+        if (shown != mapShown)
         {
-            HideTooltip();
-            HideSlotHint();
-            showcase?.HideTips();
-            hiddenForMap.Clear();
-            foreach (Transform child in panel.transform)
+            mapShown = shown;
+            if (shown)
             {
-                if (mapButton != null && child == mapButton.transform) continue;
-                if (!child.gameObject.activeSelf) continue;
-                hiddenForMap.Add(child.gameObject);
-                child.gameObject.SetActive(false);
+                HideTooltip();
+                HideSlotHint();
+                showcase?.HideTips();
+                // every shown part but the button fades, each through its own canvas group
+                mapFaded.Clear();
+                foreach (Transform child in panel.transform)
+                {
+                    if (mapButton != null && child == mapButton.transform) continue;
+                    if (!child.gameObject.activeSelf) continue;
+                    CanvasGroup group = child.GetComponent<CanvasGroup>();
+                    if (group == null) group = child.gameObject.AddComponent<CanvasGroup>();
+                    mapFaded.Add(group);
+                }
             }
-            if (backdrop != null) backdrop.enabled = false;
+            if (mapButton != null) mapButton.SetLabel(shown ? "Hide Map" : "Show Map");
         }
-        else
+        float target = shown ? 0f : 1f;
+        if (instant || !isActiveAndEnabled) ApplyMapShare(target);
+        else mapFade = StartCoroutine(FadeMap(target));
+    }
+
+    private System.Collections.IEnumerator FadeMap(float target)
+    {
+        float from = mapShare;
+        for (float t = 0f; t < MapFadeTime; t += Time.unscaledDeltaTime)
         {
-            foreach (GameObject go in hiddenForMap)
-                if (go != null) go.SetActive(true);
-            hiddenForMap.Clear();
-            if (backdrop != null) backdrop.enabled = true;
+            float k = t / MapFadeTime;
+            ApplyMapShare(Mathf.Lerp(from, target, k * k * (3f - 2f * k)));
+            yield return null;
         }
-        if (mapButton != null) mapButton.SetLabel(shown ? "Hide Map" : "Show Map");
+        ApplyMapShare(target);
+        mapFade = null;
+    }
+
+    // every faded part and the dark backdrop at this share of their look; hidden parts can't be clicked
+    private void ApplyMapShare(float share)
+    {
+        mapShare = share;
+        foreach (CanvasGroup group in mapFaded)
+        {
+            if (group == null) continue;
+            group.alpha = share;
+            group.blocksRaycasts = !mapShown;
+        }
+        SetBackdropAlpha(share);
+        if (!mapShown && share >= 1f) mapFaded.Clear();
     }
 
     // the insect panel (InsectShowcase): the level's conditions and a card per insect its waves spawn.
@@ -497,23 +534,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     public void RefreshUI()
     {
-        foreach (var s in unlockedSlots){
-            Destroy(s.gameObject);
-        }
-        unlockedSlots.Clear();
-
-        List<string> unlocked = SaveManager.instance.saveData.unlockedPlants;
-        foreach (PlantData data in plantRegistry.plants)
-        {
-            if (data == null) continue;
-            if (!unlocked.Contains(data.plantName)) continue;
-
-            LoadoutSlot slot = Instantiate(slotPrefab, unlockedContainer);
-            slot.Initialize(data, OnUnlockedSlotClicked, ShowTooltip, HideTooltip);
-            slot.SetDimmed(selectedLoadout.Contains(data.plantName));
-            AddRecommendedBadge(slot, data);
-            unlockedSlots.Add(slot);
-        }
+        BuildAvailablePlants();
 
         // hidden first, so the grid lays out only the new squares this frame
         foreach (var s in selectedSquares)
@@ -544,6 +565,217 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
 
         confirmButton.interactable = selectedLoadout.Count > 0;
+    }
+
+    // ---------- Available Plants (Tommy, 2026-11-24) ----------
+    // the plants in sections of five levels (Levels 1-5, Levels 6-10, ...). the registry's slot N is the
+    // plant beating level N unlocks (slot 0 the one every save starts with), so a section holds the plants
+    // that become available within its five levels. each plant is a card: its square (the plant bar's
+    // bevel frame on its backdrop, tinted by element), its name and its sun cost under it. a plant not
+    // unlocked yet keeps its place as a dark silhouette named ??? that costs ?. shown: the section of the
+    // level being played and every section holding an unlocked plant
+    private const int LevelsPerSection = 5;
+    private const float CardSquare = 100f;
+    private const float CardNameHeight = 20f;
+    private const float CardCostHeight = 18f;
+    private const float CardHeight = CardSquare + 3f + CardNameHeight + 1f + CardCostHeight;
+    private static readonly Color SilhouetteColor = new Color(0.06f, 0.06f, 0.07f, 1f);
+    private bool availablePrepared;
+
+    // the container's grid becomes a column of sections, each with its own grid
+    private void PrepareAvailableContainer()
+    {
+        if (availablePrepared) return;
+        availablePrepared = true;
+        RectOffset padding = new RectOffset(20, 20, 20, 30);
+        GridLayoutGroup oldGrid = unlockedContainer.GetComponent<GridLayoutGroup>();
+        if (oldGrid != null)
+        {
+            padding = new RectOffset(oldGrid.padding.left, oldGrid.padding.right, oldGrid.padding.top, oldGrid.padding.bottom);
+            DestroyImmediate(oldGrid);   // one layout group per object
+        }
+        VerticalLayoutGroup column = unlockedContainer.gameObject.AddComponent<VerticalLayoutGroup>();
+        column.padding = padding;
+        column.spacing = 8f;
+        column.childAlignment = TextAnchor.UpperCenter;
+        column.childControlWidth = true;
+        column.childControlHeight = true;
+        column.childForceExpandWidth = true;
+        column.childForceExpandHeight = false;
+    }
+
+    private void BuildAvailablePlants()
+    {
+        PrepareAvailableContainer();
+        for (int i = unlockedContainer.childCount - 1; i >= 0; i--)
+        {
+            GameObject old = unlockedContainer.GetChild(i).gameObject;
+            old.SetActive(false);
+            Destroy(old);
+        }
+        unlockedSlots.Clear();
+
+        List<string> unlocked = SaveManager.instance.saveData.unlockedPlants;
+        PlantData[] plants = plantRegistry.plants;
+        LevelConfig config = ProceduralLevel.CurrentConfig;
+        int lastSection = config != null ? Mathf.Max(0, (config.levelNumber - 1) / LevelsPerSection) : 0;
+        for (int i = 0; i < plants.Length; i++)
+            if (plants[i] != null && unlocked.Contains(plants[i].plantName))
+                lastSection = Mathf.Max(lastSection, i / LevelsPerSection);
+
+        for (int section = 0; section <= lastSection; section++)
+        {
+            int first = section * LevelsPerSection;
+            if (first >= plants.Length) break;
+            AddSectionHeader($"Levels {first + 1}-{first + LevelsPerSection}");
+            RectTransform grid = AddSectionGrid();
+            for (int i = first; i < first + LevelsPerSection && i < plants.Length; i++)
+                if (plants[i] != null) AddPlantCard(grid, plants[i], unlocked.Contains(plants[i].plantName));
+        }
+    }
+
+    // a section's title, in a box of its own so the text's shadow copies stay out of the column's layout
+    private void AddSectionHeader(string title)
+    {
+        InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
+        GameObject box = new GameObject("Section " + title, typeof(RectTransform), typeof(LayoutElement));
+        box.layer = panel.layer;
+        box.transform.SetParent(unlockedContainer, false);
+        box.GetComponent<LayoutElement>().preferredHeight = 24f;
+        TextMeshProUGUI text = NewText(box.transform, title, 20f, TextAlignmentOptions.Left);
+        RectTransform r = text.rectTransform;
+        r.anchorMin = Vector2.zero;
+        r.anchorMax = Vector2.one;
+        r.offsetMin = r.offsetMax = Vector2.zero;
+        text.gameObject.AddComponent<PixelTextEffect>().Color = s.plantTitleShadow;
+    }
+
+    private RectTransform AddSectionGrid()
+    {
+        GameObject go = new GameObject("Plants", typeof(RectTransform), typeof(GridLayoutGroup));
+        go.layer = panel.layer;
+        go.transform.SetParent(unlockedContainer, false);
+        GridLayoutGroup grid = go.GetComponent<GridLayoutGroup>();
+        grid.cellSize = new Vector2(CardSquare, CardHeight);
+        grid.spacing = new Vector2(7f, 10f);
+        grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        grid.constraintCount = LevelsPerSection;
+        grid.childAlignment = TextAnchor.UpperCenter;
+        return (RectTransform)go.transform;
+    }
+
+    // one plant's card: its square with the plant (or its silhouette), its name, its sun cost
+    private void AddPlantCard(RectTransform grid, PlantData data, bool unlocked)
+    {
+        GameObject card = new GameObject(data.displayName + " Card", typeof(RectTransform), typeof(CanvasGroup));
+        card.layer = panel.layer;
+        card.transform.SetParent(grid, false);
+        RectTransform cardRect = (RectTransform)card.transform;
+
+        LoadoutSlotSquare square = LoadoutSlotSquare.Create(cardRect, null, null);
+        RectTransform sq = square.Rect;
+        sq.anchorMin = sq.anchorMax = new Vector2(0.5f, 1f);
+        sq.pivot = new Vector2(0.5f, 1f);
+        sq.anchoredPosition = Vector2.zero;
+        sq.sizeDelta = new Vector2(CardSquare, CardSquare);
+
+        if (unlocked)
+        {
+            LoadoutSlot slot = Instantiate(slotPrefab, square.transform);
+            slot.Initialize(data, OnUnlockedSlotClicked, ShowTooltip, HideTooltip);
+            square.ShowPlant(slot, data);
+            // the name sits under the square now
+            foreach (TMP_Text own in slot.GetComponentsInChildren<TMP_Text>(true)) own.gameObject.SetActive(false);
+            AddRecommendedBadge(slot, data);
+            unlockedSlots.Add(slot);
+            // a plant already in the loadout is greyed out here
+            if (selectedLoadout.Contains(data.plantName)) card.GetComponent<CanvasGroup>().alpha = 0.35f;
+        }
+        else
+        {
+            square.ShowOpen();
+            // its sprite, all dark, between the backdrop and the frame
+            GameObject silhouette = new GameObject("Silhouette", typeof(RectTransform), typeof(Image));
+            silhouette.layer = card.layer;
+            RectTransform r = (RectTransform)silhouette.transform;
+            r.SetParent(square.transform, false);
+            r.SetSiblingIndex(Mathf.Max(0, square.transform.childCount - 2));
+            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+            r.anchoredPosition = Vector2.zero;
+            r.sizeDelta = new Vector2(CardSquare * 0.9f, CardSquare * 0.9f);
+            Image image = silhouette.GetComponent<Image>();
+            image.sprite = data.icon;
+            image.preserveAspect = true;
+            image.color = SilhouetteColor;
+            image.raycastTarget = false;
+        }
+
+        // the name, then the sun cost (the one placing it charges, the skill tree's reduction included)
+        TextMeshProUGUI name = NewText(cardRect, unlocked ? data.displayName : "???", 16f, TextAlignmentOptions.Top);
+        // a long name gets a smaller size so it fits the card (set by hand: its shadow copies the size)
+        float nameWidth = name.GetPreferredValues(name.text).x;
+        float roomWidth = CardSquare + 4f;
+        if (nameWidth > roomWidth) name.fontSize = Mathf.Max(10f, Mathf.Floor(16f * roomWidth / nameWidth));
+        PlaceUnder(name.rectTransform, CardSquare + 3f, CardSquare + 6f, CardNameHeight);
+        name.gameObject.AddComponent<PixelTextEffect>().Color = InsectShowcaseStyle.Instance.plantTitleShadow;
+        AddCost(cardRect, unlocked ? SkillTreeManager.GetEffectiveSunCost(data).ToString() : "?", CardSquare + 3f + CardNameHeight + 1f);
+    }
+
+    // the cost under a card's name: the sun glyph, then the number, centred together
+    private void AddCost(RectTransform card, string cost, float top)
+    {
+        PlantInfoPanelStyle look = PlantInfoPanelStyle.Instance;
+        TextMeshProUGUI text = NewText(card, cost, 16f, TextAlignmentOptions.TopLeft);
+        float textWidth = Mathf.Ceil(text.GetPreferredValues(cost).x);
+        const float SunSize = 14f, Gap = 4f;
+        float total = SunSize + Gap + textWidth;
+
+        GameObject sunGO = new GameObject("Sun", typeof(RectTransform), typeof(Image));
+        sunGO.layer = card.gameObject.layer;
+        RectTransform sun = (RectTransform)sunGO.transform;
+        sun.SetParent(card, false);
+        sun.anchorMin = sun.anchorMax = new Vector2(0.5f, 1f);
+        sun.pivot = new Vector2(0f, 1f);
+        sun.anchoredPosition = new Vector2(Mathf.Round(-total / 2f), -(top + 2f));
+        sun.sizeDelta = new Vector2(SunSize, SunSize);
+        Image sunImage = sunGO.GetComponent<Image>();
+        sunImage.sprite = look.sunGlyph;
+        sunImage.color = look.normal.sun;
+        sunImage.raycastTarget = false;
+
+        RectTransform r = text.rectTransform;
+        r.anchorMin = r.anchorMax = new Vector2(0.5f, 1f);
+        r.pivot = new Vector2(0f, 1f);
+        r.anchoredPosition = new Vector2(Mathf.Round(-total / 2f + SunSize + Gap), -top);
+        r.sizeDelta = new Vector2(textWidth + 2f, CardCostHeight);
+        text.gameObject.AddComponent<PixelTextEffect>().Color = InsectShowcaseStyle.Instance.plantTitleShadow;
+    }
+
+    private TextMeshProUGUI NewText(Transform parent, string value, float size, TextAlignmentOptions align)
+    {
+        InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
+        GameObject go = new GameObject("Text", typeof(RectTransform));
+        go.layer = panel.layer;
+        go.transform.SetParent(parent, false);
+        TextMeshProUGUI text = go.AddComponent<TextMeshProUGUI>();
+        if (s.font != null) text.font = s.font;
+        text.fontSize = size;
+        text.color = s.text;
+        text.alignment = align;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
+        text.raycastTarget = false;
+        text.margin = Vector4.zero;
+        text.text = value;
+        return text;
+    }
+
+    // a rect centred under the top of its card, top units down, width wide and height tall
+    private static void PlaceUnder(RectTransform r, float top, float width, float height)
+    {
+        r.anchorMin = r.anchorMax = new Vector2(0.5f, 1f);
+        r.pivot = new Vector2(0.5f, 1f);
+        r.anchoredPosition = new Vector2(0f, -top);
+        r.sizeDelta = new Vector2(width, height);
     }
 
     private void OnUnlockedSlotClicked(string plantName)
