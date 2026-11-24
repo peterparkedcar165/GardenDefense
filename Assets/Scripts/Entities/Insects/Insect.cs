@@ -302,6 +302,7 @@ public abstract class Insect : Entity, IAttackable
     // bonus
     public float movementSpeedAdder, movementSpeedMultiplier;
     
+    // damage multiplier against path blockers. nothing reads it yet: there are no path blockers in the game
     public virtual float eatMultiplier => 1f;
 
     public override void UpdateStats()

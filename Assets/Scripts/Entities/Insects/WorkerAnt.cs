@@ -9,8 +9,7 @@ public class WorkerAnt : Ant
         LoadData();
     }
 
-    public override float eatMultiplier => 1.5f;
-
+    // no ability of its own (Tommy, 2026-11-24): the 1.5x damage to path blockers moved to the Soldier Ant
     public override string GetDescription() =>
-        $"Average insect that deals <b>{eatMultiplier:F1}x</b> damage to path blockers." + AggressivityLine();
+        "Average insect." + AggressivityLine();
 }

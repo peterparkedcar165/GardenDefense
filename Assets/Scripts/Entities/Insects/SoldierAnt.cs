@@ -30,9 +30,14 @@ public class SoldierAnt : Ant
         }
     }
 
+    // moved here from the Worker Ant (Tommy, 2026-11-24). nothing reads eatMultiplier yet: the game
+    // has no path blockers, so this only shows in the description for now
+    public override float eatMultiplier => 1.5f;
+
     public override string GetDescription() =>
         "Bulkier insect with increased Physical and Nature resistances. The Soldier Ant takes " +
-        $"<b>{(data != null ? data.flatPhysicalDamageReduction : 0f):F0}</b> reduced damage from Physical Attacks." + AggressivityLine();
+        $"<b>{(data != null ? data.flatPhysicalDamageReduction : 0f):F0}</b> reduced damage from Physical Attacks, " +
+        $"and deals <b>{eatMultiplier:F1}x</b> damage to path blockers." + AggressivityLine();
 
     public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null) // sourced
     {
