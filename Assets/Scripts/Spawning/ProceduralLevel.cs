@@ -94,8 +94,14 @@ public class ProceduralLevel : SpawnManager
         GameHUD.instance?.SetWaveCount(wave, config.maxWaves);
 
         Debug.Log($"[Tutorial] ProceduralLevel.Start - levelNumber={config.levelNumber}, TutorialManager.instance={(TutorialManager.instance != null ? "OK" : "NULL")}");
+        // the plant selection tutorial waits for the loadout screen's panels to rise into place
         if (config.levelNumber == 1)
-            TutorialManager.instance?.TryShow(TutorialIds.Level1PlantSelection, TutorialContent.Level1PlantSelection, TutorialSpeaker.AcornKnight);
+        {
+            System.Action showTutorial = () => TutorialManager.instance?.TryShow(TutorialIds.Level1PlantSelection,
+                TutorialContent.Level1PlantSelection, TutorialSpeaker.AcornKnight);
+            if (LoadoutSelectionUI.instance != null) LoadoutSelectionUI.instance.AfterIntro(showTutorial);
+            else showTutorial();
+        }
 
         StartCoroutine(RunWaves());
     }

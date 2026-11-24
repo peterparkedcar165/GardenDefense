@@ -83,6 +83,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     public void Hide()
     {
+        StopIntro();
         SetMapShown(false);
         panel.SetActive(false);
         selectedLoadout.Clear();
@@ -104,6 +105,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
 
         panel.SetActive(true);
+        StopIntro();
         SetMapShown(false);
         BuildScreenDressing();
         PopulateInsectPanel();
@@ -129,6 +131,118 @@ public class LoadoutSelectionUI : MonoBehaviour
         BuildScreenDressing();
         PopulateInsectPanel();
         RefreshUI();
+        PlayIntro();
+    }
+
+    // ---------- the level's opening (Tommy, 2026-11-24) ----------
+    // the level fades in from the loading screen with nothing of this screen on it, only the map and
+    // the game's own panel. once the fade is done and IntroDelay has passed, the insect panel, the plant
+    // panels and the buttons rise from below the screen into their places, a little one after another,
+    // and the dark backdrop fades in with them. the level is paused, so it all runs on unscaled time
+    private const float IntroDelay = 1.25f;
+    private const float IntroRise = 0.45f;
+    private const float IntroStagger = 0.08f;
+    private Coroutine intro;
+    private readonly List<(RectTransform rect, Vector2 home, float delay)> introMovers = new List<(RectTransform, Vector2, float)>();
+    private float backdropAlpha = -1f;
+    private CanvasGroup panelGroup;
+    private readonly List<System.Action> afterIntro = new List<System.Action>();
+
+    public bool IntroPlaying => intro != null;
+
+    // runs the action once the panels are in place (at once when no intro is playing): the level 1
+    // tutorial waits for them
+    public void AfterIntro(System.Action action)
+    {
+        if (action == null) return;
+        if (intro == null) action();
+        else afterIntro.Add(action);
+    }
+
+    private void PlayIntro()
+    {
+        StopIntro();
+        if (panelGroup == null) panelGroup = panel.GetComponent<CanvasGroup>();
+        if (panelGroup == null) panelGroup = panel.AddComponent<CanvasGroup>();
+        if (backdrop == null) backdrop = panel.GetComponent<Image>();
+        if (backdrop != null && backdropAlpha < 0f) backdropAlpha = backdrop.color.a;
+
+        // what rises: every shown part of the screen (the tooltips stay hidden), the insect panel
+        // first, then the plant panels, then the buttons. all rise the same distance, enough to put
+        // the highest one fully below the screen, so parts that belong together stay together
+        RectTransform panelRect = (RectTransform)panel.transform;
+        Canvas.ForceUpdateCanvases();
+        Transform loadoutSection = SectionOf(selectedContainer), plantsSection = SectionOf(unlockedContainer);
+        introMovers.Clear();
+        float distance = 0f;
+        Vector3[] corners = new Vector3[4];
+        foreach (Transform child in panel.transform)
+        {
+            if (!child.gameObject.activeSelf || !(child is RectTransform rt)) continue;
+            float delay = showcase != null && child == showcase.transform ? 0f
+                : child == loadoutSection || child == plantsSection || child.name == "PlantsPanel" ? IntroStagger
+                : 2f * IntroStagger;
+            introMovers.Add((rt, rt.anchoredPosition, delay));
+            rt.GetWorldCorners(corners);
+            float top = panelRect.InverseTransformPoint(corners[1]).y;
+            distance = Mathf.Max(distance, top - panelRect.rect.yMin + 40f);
+        }
+        foreach (var m in introMovers) m.rect.anchoredPosition = m.home - new Vector2(0f, distance);
+        SetBackdropAlpha(0f);
+        // the backdrop still takes the pointer, so nothing under the screen can be clicked meanwhile
+        panelGroup.interactable = false;
+        intro = StartCoroutine(Intro(distance));
+    }
+
+    private System.Collections.IEnumerator Intro(float distance)
+    {
+        while (SceneTransition.IsTransitioning) yield return null;
+        yield return new WaitForSecondsRealtime(IntroDelay);
+        float maxDelay = 0f;
+        foreach (var m in introMovers) maxDelay = Mathf.Max(maxDelay, m.delay);
+        for (float t = 0f; t < IntroRise + maxDelay; t += Time.unscaledDeltaTime)
+        {
+            foreach (var m in introMovers)
+            {
+                if (m.rect == null) continue;
+                float k = Mathf.Clamp01((t - m.delay) / IntroRise);
+                float eased = 1f - Mathf.Pow(1f - k, 3f);   // quick at first, settling into place
+                m.rect.anchoredPosition = m.home - new Vector2(0f, distance * (1f - eased));
+            }
+            SetBackdropAlpha(Mathf.Clamp01(t / IntroRise));
+            yield return null;
+        }
+        FinishIntro();
+    }
+
+    // everything in its place at once (the intro ended, or the screen closed or changed meanwhile)
+    private void StopIntro()
+    {
+        if (intro == null) return;
+        StopCoroutine(intro);
+        FinishIntro();
+    }
+
+    private void FinishIntro()
+    {
+        foreach (var m in introMovers)
+            if (m.rect != null) m.rect.anchoredPosition = m.home;
+        introMovers.Clear();
+        SetBackdropAlpha(1f);
+        if (panelGroup != null) panelGroup.interactable = true;
+        intro = null;
+        var waiting = new List<System.Action>(afterIntro);
+        afterIntro.Clear();
+        foreach (System.Action action in waiting) action();
+    }
+
+    // share of the backdrop's own darkness
+    private void SetBackdropAlpha(float share)
+    {
+        if (backdrop == null || backdropAlpha < 0f) return;
+        Color c = backdrop.color;
+        c.a = backdropAlpha * share;
+        backdrop.color = c;
     }
 
     // once, the first time the screen opens: the green panels behind Current Loadout and Available
@@ -169,13 +283,30 @@ public class LoadoutSelectionUI : MonoBehaviour
         Transform plantsSection = SectionOf(unlockedContainer);
         if (loadoutSection == null || plantsSection == null) return;
 
+        // each title's drawn text clear of its grid's box: they overlapped the dark boxes (Tommy, 2026-11-24)
+        LiftTitle(loadoutSection, selectedContainer as RectTransform);
+        LiftTitle(plantsSection, BoxIn(plantsSection));
+
         Rect upper = BoundsIn(panelRect, loadoutSection);
         Rect lower = BoundsIn(panelRect, plantsSection);
         if (upper.yMin < lower.yMin) { Rect t = upper; upper = lower; lower = t; Transform tt = loadoutSection; loadoutSection = plantsSection; plantsSection = tt; }
         const float Px = 2f;
         float pad = s.plantPanelPad * Px;
-        // the two panels never touch: when the sections are close the pads between them shrink
+        // room for both panels' pads between the sections: the upper section moves up, as far as the screen allows
+        float need = 2f * pad + 4f * Px;
         float gap = upper.yMin - lower.yMax;
+        if (gap < need)
+        {
+            float room = panelRect.rect.yMax - 8f * Px - (upper.yMax + pad);
+            float up = Mathf.Round(Mathf.Min(need - gap, Mathf.Max(0f, room)));
+            if (up > 0f)
+            {
+                ((RectTransform)loadoutSection).anchoredPosition += new Vector2(0f, up);
+                upper = BoundsIn(panelRect, loadoutSection);
+                gap = upper.yMin - lower.yMax;
+            }
+        }
+        // the two panels never touch: when the sections are still close the pads between them shrink
         float between = Mathf.Min(pad, Mathf.Max(0f, Mathf.Floor((gap - 4f * Px) / (2f * Px))) * Px);
         float width = Mathf.Max(upper.width, lower.width) + 2f * pad;
         AddPlantPanel(panelRect, loadoutSection, upper, width, pad, between);
@@ -243,20 +374,62 @@ public class LoadoutSelectionUI : MonoBehaviour
         return t;
     }
 
-    // what a section's active children cover, in the loadout panel's own space
+    // a plant section's grid box: its scroll view, or the grid itself
+    private RectTransform BoxIn(Transform section)
+    {
+        foreach (Transform child in section)
+            if (child == selectedContainer || child.GetComponent<ScrollRect>() != null) return (RectTransform)child;
+        return null;
+    }
+
+    // art pixels between a section title's drawn letters and the top of its grid's box
+    private const float TitleGap = 4f;
+
+    // moves a section's title up until its drawn text ends TitleGap pixels above the box
+    private static void LiftTitle(Transform section, RectTransform box)
+    {
+        if (box == null) return;
+        TMP_Text title = null;
+        foreach (Transform child in section)
+            if ((title = child.GetComponent<TMP_Text>()) != null) break;
+        if (title == null) return;
+        title.ForceMeshUpdate();
+        Bounds drawn = title.textBounds;
+        if (drawn.size.y <= 0f) return;
+        float textBottom = section.InverseTransformPoint(title.rectTransform.TransformPoint(new Vector3(drawn.center.x, drawn.min.y, 0f))).y;
+        Vector3[] corners = new Vector3[4];
+        box.GetWorldCorners(corners);
+        float boxTop = section.InverseTransformPoint(corners[1]).y;
+        float lift = boxTop + TitleGap * 2f - textBottom;
+        if (lift > 0f) title.rectTransform.anchoredPosition += new Vector2(0f, Mathf.Ceil(lift));
+    }
+
+    // what a section's active children cover (a text's drawn letters too), in the loadout panel's own space
     private static Rect BoundsIn(RectTransform space, Transform section)
     {
         Vector2 min = new Vector2(float.MaxValue, float.MaxValue), max = new Vector2(float.MinValue, float.MinValue);
         Vector3[] corners = new Vector3[4];
+        void Add(Vector3 world)
+        {
+            Vector2 p = space.InverseTransformPoint(world);
+            min = Vector2.Min(min, p);
+            max = Vector2.Max(max, p);
+        }
         foreach (Transform child in section)
         {
             if (!child.gameObject.activeSelf || !(child is RectTransform rt)) continue;
             rt.GetWorldCorners(corners);
-            foreach (Vector3 corner in corners)
+            foreach (Vector3 corner in corners) Add(corner);
+            TMP_Text text = child.GetComponent<TMP_Text>();
+            if (text != null)
             {
-                Vector2 p = space.InverseTransformPoint(corner);
-                min = Vector2.Min(min, p);
-                max = Vector2.Max(max, p);
+                text.ForceMeshUpdate();
+                Bounds drawn = text.textBounds;
+                if (drawn.size.y > 0f)
+                {
+                    Add(rt.TransformPoint(drawn.min));
+                    Add(rt.TransformPoint(drawn.max));
+                }
             }
         }
         return min.x > max.x ? new Rect(0f, 0f, 0f, 0f) : Rect.MinMaxRect(min.x, min.y, max.x, max.y);
@@ -392,6 +565,7 @@ public class LoadoutSelectionUI : MonoBehaviour
     public void Confirm()
     {
         TutorialManager.instance?.NotifyEvent(TutorialEvents.ClickConfirmButton);
+        StopIntro();
         SetMapShown(false);
         SaveManager.instance.selectedLoadout = new List<string>(selectedLoadout);
         panel.SetActive(false);
@@ -481,16 +655,91 @@ public class LoadoutSelectionUI : MonoBehaviour
             shineImage.type = Image.Type.Sliced;
             shineImage.pixelsPerUnitMultiplier = 1f;
             shineImage.raycastTarget = false;
+
+            LayoutLikeInsectTooltip(s);
         }
-        tooltipBody.color = PlantData.ElementPanelColor(data.elementalType);
+        Color panelColor = PlantData.ElementPanelColor(data.elementalType);
+        tooltipBody.color = panelColor;
+        foreach (Image box in tooltipBoxes)
+            if (box != null) box.color = panelColor;
     }
 
-    // the plant tooltip is as tall as its texts, at most the screen's height less a small margin. when
-    // they're too long for that, every text in it gets the same smaller share of its own font size, the
-    // biggest that fits (Tommy, 2026-11-24, as the level's tooltip does: PlantUpgradeUI.LayoutTooltip)
+    // the dark boxes of the tooltip's sections, tinted with the plant's element colour on every hover
+    private readonly List<Image> tooltipBoxes = new List<Image>();
+
+    // the plant tooltip laid out like the insect tooltip (Tommy, 2026-11-24): the whole screen's height
+    // on the right; the name, a seam, the plant's description; then Attack, Passive, Skill and the
+    // element with its bonus, each in its own dark box with its title in the kit's label colour
+    private void LayoutLikeInsectTooltip(InsectShowcaseStyle s)
+    {
+        RectTransform tip = (RectTransform)tooltipPanel.transform;
+        float width = tip.rect.width;
+        float margin = s.margin * 2f;
+        tip.anchorMin = new Vector2(1f, 0f);
+        tip.anchorMax = new Vector2(1f, 1f);
+        tip.pivot = new Vector2(1f, 0.5f);
+        tip.anchoredPosition = new Vector2(-margin, 0f);
+        tip.sizeDelta = new Vector2(width, -2f * margin);
+        ContentSizeFitter fitter = tooltipPanel.GetComponent<ContentSizeFitter>();
+        if (fitter != null) fitter.enabled = false;
+        VerticalLayoutGroup column = tooltipPanel.GetComponent<VerticalLayoutGroup>();
+        if (column != null)
+        {
+            column.childAlignment = TextAnchor.UpperCenter;
+            column.childForceExpandHeight = false;
+            column.childControlHeight = true;
+            column.spacing = 12f;
+        }
+
+        // the seam under the name, like the insect tooltip's
+        Transform header = ChildOf(tooltipPanel.transform, tooltipName != null ? tooltipName.transform : null);
+        Transform nameRow = header != null ? ChildOf(header, tooltipName.transform) : null;
+        if (header != null && nameRow != null)
+        {
+            GameObject seam = new GameObject("Seam", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+            seam.layer = tooltipPanel.layer;
+            seam.transform.SetParent(header, false);
+            seam.transform.SetSiblingIndex(nameRow.GetSiblingIndex() + 1);
+            Image seamImage = seam.GetComponent<Image>();
+            seamImage.sprite = s.seam;
+            seamImage.raycastTarget = false;
+            LayoutElement seamSize = seam.GetComponent<LayoutElement>();
+            seamSize.minHeight = seamSize.preferredHeight = 4f;
+            seamSize.flexibleWidth = 1f;
+        }
+
+        // Attack, Passive, Skill, then the element: each section a dark inset box
+        TMP_Text[] titles = { tooltipAttackTitle, tooltipPassiveTitle, tooltipSkillTitle, tooltipElementalType };
+        foreach (TMP_Text title in titles)
+        {
+            Transform section = title != null ? ChildOf(tooltipPanel.transform, title.transform) : null;
+            if (section == null || section == header) continue;
+            Image box = section.GetComponent<Image>();
+            if (box == null) box = section.gameObject.AddComponent<Image>();
+            box.sprite = s.insetBox;
+            box.type = Image.Type.Sliced;
+            box.pixelsPerUnitMultiplier = 1f;
+            box.raycastTarget = false;
+            tooltipBoxes.Add(box);
+            VerticalLayoutGroup inner = section.GetComponent<VerticalLayoutGroup>();
+            if (inner != null) inner.padding = new RectOffset(14, 14, 10, 12);
+            if (title != tooltipElementalType) title.color = s.label;
+            section.SetAsLastSibling();
+        }
+    }
+
+    // the child of parent that holds t
+    private static Transform ChildOf(Transform parent, Transform t)
+    {
+        while (t != null && t.parent != parent) t = t.parent;
+        return t;
+    }
+
+    // the plant tooltip is the screen's height; its sections sit at the top. when they're too long for
+    // it, every text in it gets the same smaller share of its own font size, the biggest that fits
+    // (Tommy, 2026-11-24, as the level's tooltip does: PlantUpgradeUI.LayoutTooltip)
     private TMP_Text[] tooltipTexts;
     private float[] tooltipBaseSizes;
-    private const float TooltipScreenMargin = 16f;
     private const float TooltipMinScale = 0.35f;
 
     private void FitTooltip()
@@ -503,9 +752,8 @@ public class LoadoutSelectionUI : MonoBehaviour
             tooltipBaseSizes = new float[tooltipTexts.Length];
             for (int i = 0; i < tooltipTexts.Length; i++) tooltipBaseSizes[i] = tooltipTexts[i].fontSize;
         }
-        Canvas canvas = tooltipPanel.GetComponentInParent<Canvas>();
-        RectTransform root = canvas != null ? (RectTransform)canvas.rootCanvas.transform : null;
-        float maxHeight = (root != null ? root.rect.height : Screen.height) - 2f * TooltipScreenMargin;
+        Canvas.ForceUpdateCanvases();
+        float maxHeight = tip.rect.height;
 
         if (TooltipHeightAt(tip, 1f) <= maxHeight) return;
         // halving the range between the smallest share and the full size
@@ -519,13 +767,14 @@ public class LoadoutSelectionUI : MonoBehaviour
         TooltipHeightAt(tip, fits);
     }
 
-    // sets every tooltip text to scale times its own size, lays the panel out and returns its height
+    // sets every tooltip text to scale times its own size, lays the panel out and returns the height its
+    // sections need
     private float TooltipHeightAt(RectTransform tip, float scale)
     {
         for (int i = 0; i < tooltipTexts.Length; i++)
             if (tooltipTexts[i] != null) tooltipTexts[i].fontSize = tooltipBaseSizes[i] * scale;
         LayoutRebuilder.ForceRebuildLayoutImmediate(tip);
-        return tip.rect.height;
+        return LayoutUtility.GetPreferredHeight(tip);
     }
 
     private static string ColoredElemental(ElementalType type)
