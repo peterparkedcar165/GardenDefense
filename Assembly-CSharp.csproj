@@ -314,6 +314,7 @@
     <Compile Include="Assets\Scripts\GridManagers\CaveGridManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BloodsuckerEffect.cs" />
     <Compile Include="Assets\Scripts\Spawning\ThreatType.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillTreeStyle.cs" />
     <Compile Include="Assets\Scripts\Mulch\IronbarkCounterMulchData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HeatedComfortEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IronbarkAggroEffect.cs" />
@@ -460,6 +461,7 @@
     <Compile Include="Assets\Scripts\Fertilizer\FertilizerEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\MulchDrop.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\OldCarrot.cs" />
+    <Compile Include="Assets\Scripts\UI\SettingsSkin.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\Mulch\MulchItem.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CoolingTouchEffect.cs" />

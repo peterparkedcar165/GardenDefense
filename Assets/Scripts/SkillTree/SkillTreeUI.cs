@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 // top-level controller for the Skill Tree screen. every plant's own SkillTreePlantPanel shows
@@ -30,6 +31,7 @@ public class SkillTreeUI : MonoBehaviour
     void Awake()
     {
         instance = this;
+        SkinScreen();
         SpawnPanels();
     }
 
@@ -97,7 +99,9 @@ public class SkillTreeUI : MonoBehaviour
             int totalDisplay = 0;
             foreach (PlantExpRecord record in SaveManager.instance.saveData.plantExp)
                 totalDisplay += SkillTreeSession.DisplaySkillPoints(record.plantName);
-            pointsText.text = $"Total Unspent Skill Points: <b><color=green>{totalDisplay}</color></b>";
+            SkillTreeStyle s = SkillTreeStyle.Instance;
+            Color number = totalDisplay > 0 ? s.points : s.mutedText;
+            pointsText.text = $"Unspent Points: <color=#{ColorUtility.ToHtmlStringRGB(number)}>{totalDisplay}</color>";
         }
         foreach (SkillTreePlantPanel panel in panels)
             if (panel != null) panel.Refresh();
@@ -122,10 +126,13 @@ public class SkillTreeUI : MonoBehaviour
     // using ContentSizeFitter/VerticalLayoutGroup - the in-level tooltip this is meant to match
     // doesn't use them either, and they fight anything that also tries to position the panel
     // (like following the cursor) or sits inside another layout-controlled container
-    public void ShowTooltip(string text)
+    public void ShowTooltip(string text, ElementalType element = ElementalType.Neutral)
     {
         if (tooltipPanel == null) return;
         tooltipPanel.SetActive(true);
+        // the kit panel in the hovered plant's element colour, its text shadow to match
+        if (tooltipImage != null) tooltipImage.color = PlantData.ElementPanelColor(element);
+        if (tooltipShadow != null) tooltipShadow.Color = PlantData.ElementTextShadowColor(element);
         if (tooltipText == null) return;
         tooltipText.text = text;
 
@@ -195,6 +202,174 @@ public class SkillTreeUI : MonoBehaviour
         else if (leftX < 0f)       correction.x = -leftX;
 
         panelRect.position += correction;
+    }
+
+    // ---- the look (Tommy's pixel kit, 2026-11-24) ----
+    // the scene's own objects keep their places; this dresses them: a kit board behind everything,
+    // the scroll view's haze gone, kit scroll bars, the tooltip a kit panel, and Unspent Points,
+    // Confirm and Reset in a kit box with Confirm and Reset as the game controls' planks (green and
+    // red) that click the scene's own buttons. colours in SkillTreeStyle
+
+    private const float Px = 2f;
+    private Image tooltipImage;
+    private PixelTextEffect tooltipShadow;
+
+    private void SkinScreen()
+    {
+        InsectShowcaseStyle kit = InsectShowcaseStyle.Instance;
+        SkillTreeStyle s = SkillTreeStyle.Instance;
+        Canvas canvas = panelsContainer != null ? panelsContainer.GetComponentInParent<Canvas>(true) : null;
+        if (canvas != null) canvas = canvas.rootCanvas;
+
+        // the board, behind everything on the screen
+        if (canvas != null)
+        {
+            RectTransform board = NewImage("Board", canvas.transform, kit.panelBase, s.board, true);
+            Stretch(board);
+            board.SetAsFirstSibling();
+            Stretch(NewImage("Shine", board, kit.panelShine, Color.white, true));
+        }
+
+        ScrollRect scroll = panelsContainer != null ? panelsContainer.GetComponentInParent<ScrollRect>(true) : null;
+        if (scroll != null)
+        {
+            // still takes the drags, just isn't seen
+            Image haze = scroll.GetComponent<Image>();
+            if (haze != null) haze.color = Color.clear;
+            SkinScrollbar(scroll.horizontalScrollbar);
+            SkinScrollbar(scroll.verticalScrollbar);
+        }
+
+        if (tooltipPanel != null)
+        {
+            tooltipImage = tooltipPanel.GetComponent<Image>();
+            if (tooltipImage != null)
+            {
+                SetKit(tooltipImage, kit.panelBase, PlantData.ElementPanelColor(ElementalType.Neutral), true);
+                tooltipImage.raycastTarget = false;
+                RectTransform shine = NewImage("Shine", tooltipPanel.transform, kit.panelShine, Color.white, true);
+                Stretch(shine);
+                shine.SetAsFirstSibling();
+            }
+            if (tooltipText != null)
+            {
+                if (kit.font != null) tooltipText.font = kit.font;
+                tooltipText.color = kit.text;
+                tooltipText.raycastTarget = false;
+                tooltipShadow = tooltipText.gameObject.AddComponent<PixelTextEffect>();
+            }
+        }
+
+        SkinDock();
+    }
+
+    // Unspent Points over Confirm and Reset, all three in one kit box. the planks keep the old buttons'
+    // centres and widths; the points line is centred over the two
+    private void SkinDock()
+    {
+        if (pointsText == null) return;
+        InsectShowcaseStyle kit = InsectShowcaseStyle.Instance;
+        SkillTreeStyle s = SkillTreeStyle.Instance;
+        Transform parent = pointsText.transform.parent;
+        RectTransform confirm = parent.Find("ConfirmButton") as RectTransform;
+        RectTransform reset = parent.Find("ResetButton") as RectTransform;
+
+        if (kit.font != null) pointsText.font = kit.font;
+        pointsText.fontSize = 20f;
+        pointsText.color = kit.text;
+        pointsText.textWrappingMode = TextWrappingModes.NoWrap;
+        pointsText.overflowMode = TextOverflowModes.Overflow;
+        pointsText.raycastTarget = false;
+        pointsText.gameObject.AddComponent<PixelTextEffect>().Color = new Color32(0x30, 0x1E, 0x12, 0xFF);
+
+        if (confirm == null || reset == null) return;
+        Rect a = Bounds(confirm, PlankHeight);
+        Rect b = Bounds(reset, PlankHeight);
+        float left = Mathf.Min(a.xMin, b.xMin) - 12f;
+        float right = Mathf.Max(a.xMax, b.xMax) + 12f;
+        float bottom = Mathf.Min(a.yMin, b.yMin) - 10f;
+
+        RectTransform label = pointsText.rectTransform;
+        label.anchoredPosition = new Vector2((left + right) * 0.5f, label.anchoredPosition.y);
+        float rectTop = label.anchoredPosition.y + label.sizeDelta.y * (1f - label.pivot.y);
+        float top = rectTop - 3f * Px + 14f;
+
+        RectTransform dock = NewImage("Dock", parent, kit.panelBase, s.dock, true);
+        dock.anchorMin = dock.anchorMax = confirm.anchorMin;
+        dock.pivot = new Vector2(0.5f, 0.5f);
+        dock.anchoredPosition = new Vector2((left + right) * 0.5f, (top + bottom) * 0.5f);
+        dock.sizeDelta = new Vector2(right - left, top - bottom);
+        dock.SetSiblingIndex(Mathf.Min(confirm.GetSiblingIndex(), reset.GetSiblingIndex(), label.GetSiblingIndex()));
+        Stretch(NewImage("Shine", dock, kit.panelShine, Color.white, true));
+
+        Plank(confirm, GameControlsStyle.Instance.start);
+        Plank(reset, s.resetPlank);
+    }
+
+    // canvas units: the planks are 34 art px tall
+    private const float PlankHeight = 68f;
+
+    // a button's footprint once it is a plank: its own centre and width, the plank's height
+    private static Rect Bounds(RectTransform r, float height) =>
+        new Rect(r.anchoredPosition.x - r.sizeDelta.x * 0.5f, r.anchoredPosition.y - height * 0.5f, r.sizeDelta.x, height);
+
+    // the button's old look hides and a plank with the same word sits in its place, as wide as it was,
+    // clicking the same button (so Confirm and Reset keep their wiring)
+    private static void Plank(RectTransform buttonRect, GameControlsStyle.ButtonColors colors)
+    {
+        Button button = buttonRect.GetComponent<Button>();
+        if (button == null || buttonRect.GetComponentInChildren<PlankButton>(true) != null) return;
+        Image face = buttonRect.GetComponent<Image>();
+        TMP_Text word = buttonRect.GetComponentInChildren<TMP_Text>(true);
+        string text = word != null && !string.IsNullOrEmpty(word.text) ? word.text : buttonRect.name;
+        if (face != null) face.enabled = false;
+        if (word != null) word.gameObject.SetActive(false);
+        PlankButton plank = PlankButton.Create(buttonRect, text, colors, InsectShowcaseStyle.Instance.font, () => button.onClick.Invoke());
+        RectTransform r = plank.Rect;
+        r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+        r.anchoredPosition = Vector2.zero;
+        r.sizeDelta = new Vector2(Mathf.Max(r.sizeDelta.x, Mathf.Round(buttonRect.sizeDelta.x / Px) * Px), r.sizeDelta.y);
+    }
+
+    private static void SkinScrollbar(Scrollbar bar)
+    {
+        if (bar == null) return;
+        InsectShowcaseStyle kit = InsectShowcaseStyle.Instance;
+        SkillTreeStyle s = SkillTreeStyle.Instance;
+        bar.transition = Selectable.Transition.None;
+        SetKit(bar.GetComponent<Image>(), kit.stripSunken, s.scrollTrack, true);
+        if (bar.handleRect != null) SetKit(bar.handleRect.GetComponent<Image>(), s.white, s.scrollHandle, false);
+    }
+
+    private static RectTransform NewImage(string name, Transform parent, Sprite sprite, Color color, bool sliced)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform), typeof(Image));
+        go.layer = parent.gameObject.layer;
+        RectTransform r = (RectTransform)go.transform;
+        r.SetParent(parent, false);
+        Image image = go.GetComponent<Image>();
+        SetKit(image, sprite, color, sliced);
+        image.raycastTarget = false;
+        return r;
+    }
+
+    private static void SetKit(Image image, Sprite sprite, Color color, bool sliced)
+    {
+        if (image == null) return;
+        if (sprite != null)
+        {
+            image.sprite = sprite;
+            image.type = sliced ? Image.Type.Sliced : Image.Type.Simple;
+            image.pixelsPerUnitMultiplier = 1f;
+        }
+        image.color = color;
+    }
+
+    private static void Stretch(RectTransform r)
+    {
+        r.anchorMin = Vector2.zero;
+        r.anchorMax = Vector2.one;
+        r.offsetMin = r.offsetMax = Vector2.zero;
     }
 
     public void HideTooltip()
