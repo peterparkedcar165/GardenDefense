@@ -259,7 +259,8 @@ public class MulchDrop : MonoBehaviour
     {
         all.Remove(this);
         if (hovered) MulchTooltip.Hide();
-        if (dragging) MulchInventoryUI.instance?.EndGroundDrag();
+        // an explicit unity null check: on a scene unload the ui can already be destroyed
+        if (dragging && MulchInventoryUI.instance != null) MulchInventoryUI.instance.EndGroundDrag();
         if (draggedDrop == this) draggedDrop = null;
         if (hoveredDrop == this) hoveredDrop = null;
     }
@@ -270,8 +271,8 @@ public class MulchDrop : MonoBehaviour
         age += dt;
 
         float hop = registry.hopSeconds > 0f ? Mathf.Clamp01(age / registry.hopSeconds) : 1f;
-        Vector3 ground = Vector3.Lerp(start, landing, hop);
-        transform.position = ground;
+        // once landed it rests on landing for good, so only a hopping drop moves its root
+        if (!landed) transform.position = Vector3.Lerp(start, landing, hop);
         float height = registry.hopHeight * 4f * hop * (1f - hop);
         if (landed)
         {
@@ -317,14 +318,32 @@ public class MulchDrop : MonoBehaviour
             expiryAlpha = 0.5f + 0.5f * Mathf.Cos(expiryPhase);
         }
         else expiryPhase = 0f;
-        body.enabled = visible;
-        if (label != null) label.enabled = visible;
-        if (symbol != null) symbol.enabled = visible;
-        if (outline != null)
-            foreach (SpriteRenderer copy in outline) copy.enabled = visible;
-        shadow.enabled = visible;
-        ApplyColors();
+
+        // the renderers are only touched when what they show changes: for most of the drop's
+        // life neither its visibility nor its alpha does (nothing else writes these)
+        if (visible != shownVisible || !shownOnce)
+        {
+            body.enabled = visible;
+            if (label != null) label.enabled = visible;
+            if (symbol != null) symbol.enabled = visible;
+            if (outline != null)
+                foreach (SpriteRenderer copy in outline) copy.enabled = visible;
+            shadow.enabled = visible;
+            shownVisible = visible;
+        }
+        float alpha = (faded ? FadedAlpha : 1f) * expiryAlpha;
+        if (alpha != shownAlpha || !shownOnce)
+        {
+            ApplyColors();
+            shownAlpha = alpha;
+        }
+        shownOnce = true;
     }
+
+    // what Update last gave the renderers
+    private bool shownOnce;
+    private bool shownVisible;
+    private float shownAlpha;
 
     private SpriteRenderer AddLayer(GameObject go, Sprite sprite, int order)
     {
@@ -567,21 +586,37 @@ public class MulchDrop : MonoBehaviour
             if (IsClear(candidate, reg)) return candidate;
         }
 
-        // nothing nearby was clear: the closest clear tile
+        // nothing nearby was clear: the closest clear tile. the tiles are tried nearest first (equal
+        // distances in the order the map lists them, as before) and the first clear one wins, so
+        // the far tiles' ui checks are skipped instead of every tile being tested
         Vector3 best = ClampInside(origin, map);
-        float bestDistance = float.MaxValue;
-        foreach (Tile tile in Tile.allTiles.Values)
+        List<(Vector3 point, float distance, int order)> tiles = UnityEngine.Pool.ListPool<(Vector3, float, int)>.Get();
+        try
         {
-            if (tile == null) continue;
-            Vector3 p = tile.transform.position;
-            p.z = 0f;
-            float distance = (p - origin).sqrMagnitude;
-            if (distance >= bestDistance || !IsClear(p, reg)) continue;
-            bestDistance = distance;
-            best = p;
+            int order = 0;
+            foreach (Tile tile in Tile.allTiles.Values)
+            {
+                if (tile == null) continue;
+                Vector3 p = tile.transform.position;
+                p.z = 0f;
+                tiles.Add((p, (p - origin).sqrMagnitude, order++));
+            }
+            tiles.Sort(NearestTileFirst);
+            for (int i = 0; i < tiles.Count; i++)
+                if (IsClear(tiles[i].point, reg)) return tiles[i].point;
+        }
+        finally
+        {
+            UnityEngine.Pool.ListPool<(Vector3, float, int)>.Release(tiles);
         }
         return best;
     }
+
+    private static readonly System.Comparison<(Vector3 point, float distance, int order)> NearestTileFirst = (a, b) =>
+    {
+        int byDistance = a.distance.CompareTo(b.distance);
+        return byDistance != 0 ? byDistance : a.order.CompareTo(b.order);
+    };
 
     // the placement tiles' area, plus half a tile around it
     private static Bounds MapBounds()
@@ -622,24 +657,36 @@ public class MulchDrop : MonoBehaviour
         if (viewport.x < 0.02f || viewport.x > 0.98f || viewport.y < 0.02f || viewport.y > 0.98f) return false;
 
         float half = reg.dropSize * 0.6f;
-        Vector3[] points =
-        {
-            p, p + new Vector3(half, half, 0f), p + new Vector3(-half, half, 0f),
-            p + new Vector3(half, -half, 0f), p + new Vector3(-half, -half, 0f),
-        };
-        foreach (Vector3 point in points)
-            if (UnderUI(cam.WorldToScreenPoint(point))) return false;
+        // one shared buffer (main thread only, never nested) instead of a new array per check
+        Vector3[] points = clearCheckPoints;
+        points[0] = p;
+        points[1] = p + new Vector3(half, half, 0f);
+        points[2] = p + new Vector3(-half, half, 0f);
+        points[3] = p + new Vector3(half, -half, 0f);
+        points[4] = p + new Vector3(-half, -half, 0f);
+        for (int i = 0; i < points.Length; i++)
+            if (UnderUI(cam.WorldToScreenPoint(points[i]))) return false;
         return true;
     }
 
+    private static readonly Vector3[] clearCheckPoints = new Vector3[5];
     private static readonly List<RaycastResult> uiHits = new List<RaycastResult>();
+    // one pointer reused for every ui check, made again when the event system changes
+    private static PointerEventData uiPointer;
+    private static EventSystem uiPointerOwner;
 
     private static bool UnderUI(Vector2 screenPoint)
     {
-        if (EventSystem.current == null) return false;
-        PointerEventData pointer = new PointerEventData(EventSystem.current) { position = screenPoint };
+        EventSystem events = EventSystem.current;
+        if (events == null) return false;
+        if (uiPointer == null || uiPointerOwner != events)
+        {
+            uiPointer = new PointerEventData(events);
+            uiPointerOwner = events;
+        }
+        uiPointer.position = screenPoint;
         uiHits.Clear();
-        EventSystem.current.RaycastAll(pointer, uiHits);
+        events.RaycastAll(uiPointer, uiHits);
         // UI graphics only, never world colliders a physics raycaster might add
         foreach (RaycastResult hit in uiHits)
             if (hit.module is UnityEngine.UI.GraphicRaycaster) return true;

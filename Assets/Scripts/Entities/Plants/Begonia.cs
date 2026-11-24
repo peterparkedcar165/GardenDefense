@@ -4,6 +4,8 @@ using System.Collections.Generic;
 public class Begonia : Aura
 {
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
+    // reused every frame by UpdateHighlights instead of a new set each time
+    private readonly HashSet<Plant> _desiredHighlights = new HashSet<Plant>();
 
     // no target to remember anymore - just whether to auto-recast on herself every time ready
     private bool autoCastEnabled = false;
@@ -213,9 +215,13 @@ public class Begonia : Aura
 
     private void UpdateHighlights()
     {
-        bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
+        bool isSelected = IsSelected;
 
-        var desired = new HashSet<Plant>();
+        // nothing to show and nothing shown, so there is nothing to add or clear
+        if (!isSelected && _highlightedPlants.Count == 0) return;
+
+        HashSet<Plant> desired = _desiredHighlights;
+        desired.Clear();
         Color highlightColor = Color.green;
 
         if (isSelected)

@@ -82,6 +82,10 @@ public class Stargazer : Aura
             attackCooldownTimer += Time.deltaTime;
         else if (canAttack)   // only fires when there's a visible target in range (respects darkness)
             Attack();
+
+        // delayed cone hits land here, after the rest of the frame's update, where the coroutine
+        // that used to carry each one would have resumed
+        ResolvePendingHits();
     }
 
     private void UpdateFacing()
@@ -91,9 +95,24 @@ public class Stargazer : Aura
             _facingDir = ((Vector2)aim.transform.position - (Vector2)transform.position).normalized;
     }
 
+    // the pick is a full scan of every insect, and the facing, the attack check and the target
+    // highlight all ask for it, so it runs once a frame and is reused. picked again within the
+    // frame only if the cached insect stopped being alive
+    private int _facingFrame = -1;
+    private bool _facingFound;
+    private Insect _facingInsect;
+    private GameObject _facingGo;
+
     // the cone tracks the targeting-mode pick among insects within range only
     private Insect FacingTarget()
     {
+        if (_facingFrame == Time.frameCount)
+        {
+            if (!_facingFound) return null;
+            if (_facingInsect != null && _facingInsect.IsAlive) return _facingInsect;
+        }
+        _facingFrame = Time.frameCount;
+
         GameObject go;
         switch (targeting)
         {
@@ -104,14 +123,46 @@ public class Stargazer : Aura
             case TARGETING.Slowest:   go = FindSlowest(Insect.allInsects);   break;
             default:                  go = FindFirst(Insect.allInsects);    break;
         }
-        return go != null ? go.GetComponent<Insect>() : null;
+        // the component is only looked up again when the pick changes
+        if (!ReferenceEquals(go, _facingGo))
+        {
+            _facingGo = go;
+            _facingInsect = go != null ? go.GetComponent<Insect>() : null;
+        }
+        _facingFound = go != null;
+        return _facingInsect;
     }
 
-    protected override GameObject GetHighlightTarget() => FacingTarget()?.gameObject;
+    protected override GameObject GetHighlightTarget()
+    {
+        Insect aim = FacingTarget();
+        return aim != null ? aim.gameObject : null;
+    }
+
+    // reused per attack instead of a new copy of every insect each time
+    private readonly List<Insect> _attackInsects = new List<Insect>();
+    private static readonly DamageTag[] ConeTags = { DamageTag.AoE, DamageTag.Attack };
+
+    // a cone hit waiting for its delay, kept in a list instead of one coroutine and one wait
+    // object per insect hit
+    private struct PendingConeHit
+    {
+        public Insect insect;
+        public float landsAt;
+        public float damage;
+        public DamageType damageType;
+        public ElementalType elementalType;
+    }
+    private readonly List<PendingConeHit> _pendingHits = new List<PendingConeHit>();
 
     protected override void Attack()
     {
         base.Attack();   // resets the attack timer
+
+        // turns to the target at once for the attack (the facing pick only refreshes every
+        // 0.15 s), the cone itself still aims along _facingDir
+        Insect aim = FacingTarget();
+        if (aim != null) FaceAttackTarget(aim.gameObject);
 
         // _facingDir is kept current by UpdateFacing (tracks the target even out of range)
         float halfAngle = ConeAngle * 0.5f;
@@ -123,24 +174,55 @@ public class Stargazer : Aura
         float snapshotDamage = attackDamage;
         DamageType snapshotDamageType = damageType;
         ElementalType snapshotElementalType = elementalType;
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        List<Insect> insects = _attackInsects;
+        insects.Clear();
+        insects.AddRange(Insect.allInsects);
+        for (int i = 0; i < insects.Count; i++)
         {
+            Insect insect = insects[i];
             if (insect == null || !insect.IsAlive) continue;
             Vector2 to = (Vector2)insect.transform.position - (Vector2)transform.position;
             if (to.magnitude > attackRange) continue;
             if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
 
             float delay = attackRange > 0f ? Mathf.Clamp01(to.magnitude / attackRange) * attackHitDelayTime : 0f;
-            StartCoroutine(DelayedAttackHit(insect, snapshotDamage, snapshotDamageType, snapshotElementalType, delay));
+            if (delay > 0f)
+            {
+                _pendingHits.Add(new PendingConeHit
+                {
+                    insect = insect,
+                    landsAt = Time.time + delay,
+                    damage = snapshotDamage,
+                    damageType = snapshotDamageType,
+                    elementalType = snapshotElementalType
+                });
+            }
+            else
+            {
+                // no delay lands at once, as the coroutine did before its first wait
+                insect.Damage(snapshotDamage, snapshotDamageType, snapshotElementalType, this, true, ConeTags);
+            }
         }
+        insects.Clear();
     }
 
-    private IEnumerator DelayedAttackHit(Insect insect, float damage, DamageType dmgType, ElementalType elemType, float delay)
+    private void ResolvePendingHits()
     {
-        if (delay > 0f) yield return new WaitForSeconds(delay);
-        if (insect == null || !insect.IsAlive) yield break;
-        insect.Damage(damage, dmgType, elemType, this, true,
-            new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+        if (_pendingHits.Count == 0) return;
+        float now = Time.time;
+        int count = _pendingHits.Count;
+        int write = 0;
+        for (int read = 0; read < count; read++)
+        {
+            PendingConeHit hit = _pendingHits[read];
+            if (now < hit.landsAt) { _pendingHits[write++] = hit; continue; }
+            if (hit.insect == null || !hit.insect.IsAlive) continue;
+            hit.insect.Damage(hit.damage, hit.damageType, hit.elementalType, this, true, ConeTags);
+        }
+        // keeps anything added while these hits were landing
+        for (int read = count; read < _pendingHits.Count; read++)
+            _pendingHits[write++] = _pendingHits[read];
+        _pendingHits.RemoveRange(write, _pendingHits.Count - write);
     }
 
     private ConeParticleEmitter _fireCone;

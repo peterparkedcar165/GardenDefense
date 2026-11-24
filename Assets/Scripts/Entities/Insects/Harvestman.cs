@@ -19,13 +19,29 @@ public class Harvestman : Insect
         get
         {
             // prioritize minions over the base target (which is null for Low aggressivity)
-            IAttackable minion = FindNearestMinionInRange();
+            Insect minion = CurrentMinion();
             if (minion != null) return minion;
             return base.target;
         }
     }
 
-    private IAttackable FindNearestMinionInRange()
+    // the minion it goes for, worked out once a frame: target is read several times a frame and
+    // every read scanned every friendly. worked out again within the frame if that one dies
+    private Insect _minion;
+    private int _minionFrame = -1;
+
+    private Insect CurrentMinion()
+    {
+        bool gone = !ReferenceEquals(_minion, null) && (_minion == null || !_minion.IsAlive);
+        if (_minionFrame != Time.frameCount || gone)
+        {
+            _minion = FindNearestMinionInRange();
+            _minionFrame = Time.frameCount;
+        }
+        return _minion;
+    }
+
+    private Insect FindNearestMinionInRange()
     {
         Insect nearest = null;
         float nearestDist = Mathf.Infinity;

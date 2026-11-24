@@ -27,6 +27,15 @@ public class SoothingRain : MonoBehaviour
     private AloeVera source;
     private float tickTimer = 0f;
 
+    // skill tree unlocks, read once in Initialize instead of every frame
+    private bool monsoon;
+    private bool cleansingRain;
+
+    // reused copies for the heal tick, refilled each tick instead of allocating new lists
+    private readonly List<Plant> plantSnapshot = new List<Plant>();
+    private readonly List<Insect> allySnapshot = new List<Insect>();
+    private static readonly HealTag[] RegenerationTags = { HealTag.Regeneration };
+
     public void Initialize(float radius, float duration, float healPerTick, float tickInterval, float tempReduction, AloeVera source)
     {
         this.radius        = radius;
@@ -37,6 +46,8 @@ public class SoothingRain : MonoBehaviour
         this.tickInterval  = tickInterval;
         this.tempReduction = tempReduction;
         this.source        = source;
+        monsoon       = source != null && SkillTreeManager.HasUnlock(source, AloeVera.MonsoonUnlock);
+        cleansingRain = source != null && SkillTreeManager.HasUnlock(source, AloeVera.CleansingRainUnlock);
         float s = radius * 2f;
         transform.localScale = new Vector3(s, s, 1f);
     }
@@ -48,7 +59,6 @@ public class SoothingRain : MonoBehaviour
         duration -= Time.deltaTime;
         if (duration <= 0f) { Destroy(gameObject); return; }
 
-        bool monsoon = SkillTreeManager.HasUnlock(source, AloeVera.MonsoonUnlock);
         if (monsoon)
         {
             float elapsed = totalDuration - duration;
@@ -61,14 +71,20 @@ public class SoothingRain : MonoBehaviour
 
         // Cleansing Rain (skill tree): applied every frame, independent of the heal-tick cadence
         // below, so the extra depletion is smooth for as long as a plant stays inside the rain
-        if (SkillTreeManager.HasUnlock(source, AloeVera.CleansingRainUnlock))
+        // only reads plants and lowers durations, nothing is added or removed, so the live lists
+        // are walked directly
+        if (cleansingRain)
         {
-            foreach (Plant plant in new List<Plant>(Plant.allPlants))
+            List<Plant> plants = Plant.allPlants;
+            for (int p = 0; p < plants.Count; p++)
             {
+                Plant plant = plants[p];
                 if (plant == null || !plant.IsAlive) continue;
                 if (Vector3.Distance(transform.position, plant.transform.position) > radius) continue;
-                foreach (StatusEffect effect in new List<StatusEffect>(plant.activeEffects))
+                List<StatusEffect> effects = plant.activeEffects;
+                for (int e = 0; e < effects.Count; e++)
                 {
+                    StatusEffect effect = effects[e];
                     if (effect.effectType != StatusEffect.Type.negative) continue;
                     float extraRate = effect.elementalType == ElementalType.Fire ? CleansingRainFireExtraRate : CleansingRainExtraRate;
                     effect.duration -= extraRate * Time.deltaTime;
@@ -82,13 +98,15 @@ public class SoothingRain : MonoBehaviour
 
         bool path3Maxed = source != null && source.IsPath3Maxed;
         int rainLevel = (source != null ? source.effectivePath3Level : 0) + 1;
-        foreach (Plant plant in new List<Plant>(Plant.allPlants))
+        plantSnapshot.Clear();
+        plantSnapshot.AddRange(Plant.allPlants);
+        foreach (Plant plant in plantSnapshot)
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > radius) continue;
             float scaledHeal = healPerTick * (1f + plant.healingReceived) * (1f + plant.healingBonus);
             float overflow = path3Maxed ? Mathf.Max(0f, scaledHeal - plant.MissingHealth) : 0f;
-            plant.Heal(healPerTick, source, new HealTag[] { HealTag.Regeneration });
+            plant.Heal(healPerTick, source, RegenerationTags);
             plant.temperature = Mathf.Max(plant.temperature - tempReduction, 10f);
             plant.GetEffect<ScorchEffect>()?.ReduceByFraction(ScorchReductionPerTick);
 
@@ -124,7 +142,9 @@ public class SoothingRain : MonoBehaviour
         }
 
         // friendly minions are also healed by the rain
-        foreach (Insect ally in new List<Insect>(Insect.friendlyInsects))
+        allySnapshot.Clear();
+        allySnapshot.AddRange(Insect.friendlyInsects);
+        foreach (Insect ally in allySnapshot)
         {
             if (ally == null || !ally.IsAlive) continue;
             if (Vector3.Distance(transform.position, ally.transform.position) <= radius)

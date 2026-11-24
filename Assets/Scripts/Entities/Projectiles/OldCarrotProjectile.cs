@@ -5,6 +5,9 @@ using UnityEngine;
 // Mark that increases this OldCarrot's own subsequent damage on that target (see PsionicMarkEffect)
 public class OldCarrotProjectile : DashHomingProjectile
 {
+    // made once and shared by every hit: nothing writes into it
+    private static readonly DamageTag[] HitTags = { DamageTag.Attack, DamageTag.SingleTarget, DamageTag.Projectile };
+
     protected override void OnHit(Insect insect)
     {
         OldCarrot oldCarrot = source as OldCarrot;
@@ -15,6 +18,6 @@ public class OldCarrotProjectile : DashHomingProjectile
             damage *= oldCarrot.ApplyPsionicMark(insect);
 
         insect.Damage(damage, damageType, elementalType, source, true,
-            new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget, DamageTag.Projectile });
+            HitTags);
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 // every Nth attack of its plant: each debuff that attack puts on an insect is applied a second time.
@@ -12,10 +11,10 @@ using UnityEngine;
 // (Tommy, 2026-11-22: splash twice, with a little delay)
 public class EchoSeedMulchEffect : MulchEffect
 {
-    private static readonly MethodInfo CloneMethod =
-        typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
-
     private readonly EchoSeedMulchData typedData;
+    // the repeat's wait, made again only when the delay changes
+    private WaitForSeconds repeatWait;
+    private float repeatWaitDelay = -1f;
     private bool listening;
     private int attacks;
     // attacks it echoed this level
@@ -75,10 +74,18 @@ public class EchoSeedMulchEffect : MulchEffect
         }
         if (echoFrame != frame || !echoTargets.Add(hit.target)) return;
 
-        // debuffs this hit already put on before its damage
+        // debuffs this hit already put on before its damage. no copy of the list: echoing is set
+        // while a copy lands, so HandleEffect adds nothing to it, and only the debuffs that were
+        // there when the loop began are echoed
         if (recordFrame == frame)
-            foreach (StatusEffect effect in new List<StatusEffect>(recorded))
+        {
+            int count = recorded.Count;
+            for (int i = 0; i < count && i < recorded.Count; i++)
+            {
+                StatusEffect effect = recorded[i];
                 if (effect != null && effect.target == hit.target) Echo(effect);
+            }
+        }
 
         // the rest of its on hit effects (waterlily's splash) again, a moment later
         Insect insect = (Insect)hit.target;
@@ -88,12 +95,21 @@ public class EchoSeedMulchEffect : MulchEffect
     private IEnumerator RepeatLater(Insect target, Vector3 groundPoint, Vector3 aimPoint)
     {
         float delay = Mathf.Max(0f, typedData.repeatDelay);
-        if (delay > 0f) yield return new WaitForSeconds(delay);
+        if (delay > 0f)
+        {
+            if (repeatWait == null || delay != repeatWaitDelay)
+            {
+                repeatWait = new WaitForSeconds(delay);
+                repeatWaitDelay = delay;
+            }
+            yield return repeatWait;
+        }
         if (!listening || !OwnerAlive) yield break;
         // the debuffs the repeat puts on are its own second application, not echoed again
+        bool wasEchoing = echoing;
         echoing = true;
         try { Owner.RepeatOnHitEffects(target, groundPoint, aimPoint); }
-        finally { echoing = false; }
+        finally { echoing = wasEchoing; }
     }
 
     private void HandleEffect(StatusEffect effect)
@@ -112,15 +128,19 @@ public class EchoSeedMulchEffect : MulchEffect
     }
 
     // a copy of the debuff applied again, so it stacks or refreshes like a second hit would
+    // (the copy replacing the original runs the original's OnExpire, then the copy's OnApply,
+    // exactly as a second hit's debuff would)
     private void Echo(StatusEffect effect)
     {
-        if (effect.target == null || effect.target.health <= 0f || CloneMethod == null) return;
-        StatusEffect copy = CloneMethod.Invoke(effect, null) as StatusEffect;
-        if (copy == null) return;
+        if (effect.target == null || effect.target.health <= 0f) return;
+        // a direct copy (no reflection), with its own tick timer (StatusEffect.CopyForEcho)
+        StatusEffect copy = effect.CopyForEcho();
         // the copy's duration was already scaled by the duration stats when the original landed
         copy.durationIsFinal = true;
+        // kept as it was, so a copy landing inside another copy's landing doesn't switch it off early
+        bool wasEchoing = echoing;
         echoing = true;
         try { effect.target.ApplyEffect(copy); }
-        finally { echoing = false; }
+        finally { echoing = wasEchoing; }
     }
 }

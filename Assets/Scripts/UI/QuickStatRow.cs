@@ -36,25 +36,49 @@ public class QuickStatRow : MonoBehaviour
         Entity entity = plant != null ? (Entity)plant : ui.GetSelectedInsect();
         if (entity == null) return;
 
+        // the four numbers still update live, but each is only turned into text again when it
+        // changes (or the row switches between a plant and an insect)
+        bool isInsect = entity is Insect;
+        if (isInsect != shownInsect)
+        {
+            shownInsect = isInsect;
+            for (int i = 0; i < shown.Length; i++) shown[i] = float.NaN;
+        }
+
         if (entity is Insect insect)
         {
-            SetSlot(stat1Icon, stat1Text, attackDamageIcon, entity.attackDamage.ToString("F0"));
-            SetSlot(stat2Icon, stat2Text, movementSpeedIcon, insect.movementSpeed.ToString("F2"));
-            SetSlot(stat3Icon, stat3Text, armorIcon, entity.armor.ToString());
-            SetSlot(stat4Icon, stat4Text, magicArmorIcon, entity.magicArmor.ToString());
+            SetSlot(0, stat1Icon, stat1Text, attackDamageIcon, entity.attackDamage, "F0");
+            SetSlot(1, stat2Icon, stat2Text, movementSpeedIcon, insect.movementSpeed, "F2");
+            SetSlot(2, stat3Icon, stat3Text, armorIcon, entity.armor);
+            SetSlot(3, stat4Icon, stat4Text, magicArmorIcon, entity.magicArmor);
         }
         else
         {
-            SetSlot(stat1Icon, stat1Text, attackDamageIcon, entity.attackDamage.ToString("F0"));
-            SetSlot(stat2Icon, stat2Text, attackSpeedIcon, entity.attackSpeed.ToString("F2"));
-            SetSlot(stat3Icon, stat3Text, attackRangeIcon, entity.attackRange.ToString("F1"));
-            SetSlot(stat4Icon, stat4Text, armorIcon, entity.armor.ToString());
+            SetSlot(0, stat1Icon, stat1Text, attackDamageIcon, entity.attackDamage, "F0");
+            SetSlot(1, stat2Icon, stat2Text, attackSpeedIcon, entity.attackSpeed, "F2");
+            SetSlot(2, stat3Icon, stat3Text, attackRangeIcon, entity.attackRange, "F1");
+            SetSlot(3, stat4Icon, stat4Text, armorIcon, entity.armor);
         }
     }
 
-    private static void SetSlot(Image icon, TMP_Text text, Sprite sprite, string value)
+    // the value each slot's text was last made from (NaN: not made yet)
+    private readonly float[] shown = { float.NaN, float.NaN, float.NaN, float.NaN };
+    private bool shownInsect;
+
+    private void SetSlot(int slot, Image icon, TMP_Text text, Sprite sprite, float value, string format)
     {
         if (icon != null) icon.sprite = sprite;
-        if (text != null) text.text = value;
+        if (text == null || value == shown[slot]) return;
+        shown[slot] = value;
+        text.text = value.ToString(format);
+    }
+
+    // whole number stats, written the way int.ToString writes them
+    private void SetSlot(int slot, Image icon, TMP_Text text, Sprite sprite, int value)
+    {
+        if (icon != null) icon.sprite = sprite;
+        if (text == null || value == shown[slot]) return;
+        shown[slot] = value;
+        text.text = value.ToString();
     }
 }

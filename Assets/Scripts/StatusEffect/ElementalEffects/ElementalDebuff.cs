@@ -12,6 +12,12 @@ public abstract class ElementalDebuff : StatusEffect
 {
     private static PrimerIconSet _iconSet;
     private static bool _iconSetLoaded;
+    // the icon object's name per element and the Insects sorting layer, worked out once instead
+    // of on every primer
+    private static readonly System.Collections.Generic.Dictionary<ElementalType, string> _iconNames =
+        new System.Collections.Generic.Dictionary<ElementalType, string>();
+    private static int _insectsLayerId;
+    private static bool _insectsLayerIdSet;
 
     private GameObject _icon;
 
@@ -25,7 +31,9 @@ public abstract class ElementalDebuff : StatusEffect
         SpawnIcon();
         OnPrimerApply();
 
-        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2 && target != null)
+        // once the level 2 tutorial has been seen, TryShow would only turn it down a second later
+        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 2 && target != null
+            && !(TutorialManager.instance != null && TutorialManager.instance.HasSeen(TutorialIds.Level2Primers)))
             target.StartCoroutine(DelayedPrimerTutorial());
 
         // Waterlily's first Water primer: her own primer tutorial (Tommy, Level3WaterPrimer)
@@ -82,14 +90,24 @@ public abstract class ElementalDebuff : StatusEffect
         if (sprite == null) return;
 
         Transform parent = insect.visual != null ? insect.visual : insect.transform;
-        _icon = new GameObject("PrimerIcon_" + elementalType);
+        if (!_iconNames.TryGetValue(elementalType, out string iconName))
+        {
+            iconName = "PrimerIcon_" + elementalType;
+            _iconNames[elementalType] = iconName;
+        }
+        _icon = new GameObject(iconName);
         _icon.transform.SetParent(parent, false);
         _icon.transform.localPosition = new Vector3(0f, _iconSet.iconHeight, 0f);
         _icon.transform.localScale = Vector3.one * _iconSet.iconScale;
 
         SpriteRenderer sr = _icon.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
-        sr.sortingLayerID = SortingLayer.NameToID("Insects");
+        if (!_insectsLayerIdSet)
+        {
+            _insectsLayerId = SortingLayer.NameToID("Insects");
+            _insectsLayerIdSet = true;
+        }
+        sr.sortingLayerID = _insectsLayerId;
         sr.sortingOrder = 10;
     }
 }

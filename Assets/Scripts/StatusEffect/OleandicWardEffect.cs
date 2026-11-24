@@ -10,6 +10,9 @@ using System.Collections.Generic;
 // strength scales with how many debuff types are currently locked out
 public class OleandicWardEffect : StatusEffect
 {
+    // one shared tag array for every instance
+    private static readonly EffectTag[] RegenTags = { EffectTag.Regenerative };
+
     // set of debuff types that have been captured and are now locked out
     public HashSet<System.Type> immuneTypes = new HashSet<System.Type>();
     // display names of each locked effect, in lock order
@@ -32,7 +35,7 @@ public class OleandicWardEffect : StatusEffect
     {
         effectType = Type.positive;
         elementalType = ElementalType.Poison;
-        tags = new EffectTag[] { EffectTag.Regenerative };
+        tags = RegenTags;
         baseDuration = duration;
         this.weakHealAmount = weakHealAmount;
         this.regenPerLockPerSecond = regenPerLockPerSecond;

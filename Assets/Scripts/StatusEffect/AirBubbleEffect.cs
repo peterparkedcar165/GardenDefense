@@ -29,7 +29,9 @@ public class AirBubbleEffect : StatusEffect, IRespirationEffect
     // so the skill also feeds her cumulative-Oxygen Sun tracker
     public void OnOxygenGranted(float amount)
     {
-        if (source is Kelp kelp) kelp.AccumulateOxygen(amount);
+        // the bubble goes on after kelp dies or is uprooted; only a living kelp is credited
+        // ("is" skips unity's destroyed check, so test it with != null as well)
+        if (source is Kelp kelp && kelp != null && kelp.IsAlive) kelp.AccumulateOxygen(amount);
     }
 
     public override void OnApply()

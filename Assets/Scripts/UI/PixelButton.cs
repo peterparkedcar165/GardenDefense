@@ -36,7 +36,6 @@ public class PixelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private Look look = Look.Normal;
     private bool hovered, pressed;
     private Button button;
-    private string layoutKey;
 
     public Look CurrentLook => look;
 
@@ -126,29 +125,63 @@ public class PixelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         Relayout();
     }
 
+    // each part's text (null for a glyph), looked up once, and what each part showed at the last
+    // layout, compared every frame without building a string
+    private TMP_Text[] partTexts;
+    private bool[] laidOutActive;
+    private string[] laidOutText;
+    private float[] partWidths;
+    private bool laidOut;
+
+    private void CachePartTexts()
+    {
+        if (partTexts != null && partTexts.Length == parts.Length) return;
+        partTexts = new TMP_Text[parts.Length];
+        laidOutActive = new bool[parts.Length];
+        laidOutText = new string[parts.Length];
+        partWidths = new float[parts.Length];
+        for (int i = 0; i < parts.Length; i++)
+            partTexts[i] = parts[i] != null ? parts[i].GetComponent<TMP_Text>() : null;
+        laidOut = false;
+    }
+
+    // true when a part was shown or hidden, or a shown text changed, since the last layout
+    private bool PartsChanged()
+    {
+        bool changed = !laidOut;
+        for (int i = 0; i < parts.Length; i++)
+        {
+            RectTransform part = parts[i];
+            bool active = part != null && part.gameObject.activeSelf;
+            string text = active && partTexts[i] != null ? partTexts[i].text : null;
+            if (active != laidOutActive[i] || text != laidOutText[i])
+            {
+                laidOutActive[i] = active;
+                laidOutText[i] = text;
+                changed = true;
+            }
+        }
+        laidOut = true;
+        return changed;
+    }
+
     // centres the shown parts side by side, every x on a whole art pixel. texts take the width of
     // what they say. only redone when what's shown changes
     public void Relayout()
     {
         if (parts == null || parts.Length == 0 || content == null) return;
-        string key = "";
-        foreach (RectTransform part in parts)
-        {
-            if (part == null || !part.gameObject.activeSelf) { key += "|"; continue; }
-            TMP_Text text = part.GetComponent<TMP_Text>();
-            key += text != null ? text.text + "|" : "#|";
-        }
-        if (key == layoutKey) return;
-        layoutKey = key;
+        CachePartTexts();
+        if (!PartsChanged()) return;
 
         float total = 0f;
         bool first = true;
-        float[] widths = new float[parts.Length];
+        float[] widths = partWidths;
         for (int i = 0; i < parts.Length; i++)
         {
+            widths[i] = 0f;
             RectTransform part = parts[i];
             if (part == null || !part.gameObject.activeSelf) continue;
-            TMP_Text text = part.GetComponent<TMP_Text>();
+            TMP_Text text = partTexts[i];
             float width = part.sizeDelta.x;
             if (text != null)
             {

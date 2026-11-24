@@ -3,6 +3,8 @@ public class AblazeEffect : StatusEffect
     private readonly float flatBonusDamage;
     private readonly float maxHealthPercent;
     private static readonly DamageTag[] bonusDamageTags = { DamageTag.Coordinated, DamageTag.OnHit };
+    // made once and shared by every trigger
+    private static readonly UnityEngine.WaitForSeconds BonusDelay = new UnityEngine.WaitForSeconds(0.1f);
 
     public AblazeEffect(Entity target, float duration, int level, Entity source, float flatBonusDamage, float maxHealthPercent)
         : base(target, duration, level, source)
@@ -41,7 +43,7 @@ public class AblazeEffect : StatusEffect
 
     private System.Collections.IEnumerator DelayedBonusDamage(Insect insect, float effectiveness)
     {
-        yield return new UnityEngine.WaitForSeconds(0.1f);
+        yield return BonusDelay;
         if (insect == null || !insect.IsAlive) yield break;
         float totalBonus = flatBonusDamage + maxHealthPercent * insect.maxHealth;
         insect.Damage(totalBonus, DamageType.Magic, ElementalType.Fire, target, false, bonusDamageTags, false, effectiveness);

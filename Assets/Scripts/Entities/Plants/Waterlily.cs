@@ -219,14 +219,39 @@ public class Waterlily : Shooter
         }
     }
 
+    // the insect FindSecondTarget leaves out, only set for the length of that call
+    private Insect _excludedTarget;
+
+    protected override bool IsWithinAttackRange(Insect insect, float distance)
+    {
+        if (_excludedTarget != null && ReferenceEquals(insect, _excludedTarget)) return false;
+        return base.IsWithinAttackRange(insect, distance);
+    }
+
+    // the primary's insect is turned away by IsWithinAttackRange for the length of this call,
+    // instead of copying every insect into a new list on each shot
     private GameObject FindSecondTarget(GameObject exclude)
     {
-        List<Insect> pool = new List<Insect>(Insect.allInsects);
-        if (exclude != null)
+        Insect excludeInsect = exclude != null ? exclude.GetComponent<Insect>() : null;
+
+        // the old copied list never changed the forced pick (a snow bond partner's mark), so when
+        // the left out insect is that forced target the copied list is still used, to pick
+        // exactly as before
+        if (excludeInsect != null && ReferenceEquals(excludeInsect, forcedPriorityTarget))
         {
-            Insect excludeInsect = exclude.GetComponent<Insect>();
-            if (excludeInsect != null) pool.Remove(excludeInsect);
+            List<Insect> copy = new List<Insect>(Insect.allInsects);
+            copy.Remove(excludeInsect);
+            return FindSecondByTargeting(copy);
         }
+
+        Insect previous = _excludedTarget;
+        _excludedTarget = excludeInsect;
+        try { return FindSecondByTargeting(Insect.allInsects); }
+        finally { _excludedTarget = previous; }
+    }
+
+    private GameObject FindSecondByTargeting(List<Insect> pool)
+    {
         switch (targeting)
         {
             case TARGETING.First:     return FindFirst(pool);

@@ -81,6 +81,8 @@ public class PlantWidget : MonoBehaviour
     private int heightOffsetPixels;
     private float measuredTop = float.NegativeInfinity;
     private float measureUntil;
+    // each sprite's mesh vertices, read once for every widget (a sprite's mesh doesn't change)
+    private static readonly Dictionary<Sprite, Vector2[]> spriteVertices = new Dictionary<Sprite, Vector2[]>();
 
     private float PixelsPerUnit => Style != null && Style.barHealth != null ? Style.barHealth.pixelsPerUnit : 32f;
     private int Width => Style != null ? Mathf.Max(5, showCircle ? Style.barWidth : Style.insectBarWidth) : 34;
@@ -127,7 +129,13 @@ public class PlantWidget : MonoBehaviour
         if (sprite == null) return;
         Transform source = heightSource.transform;
         float top = float.NegativeInfinity;
-        foreach (Vector2 vertex in sprite.vertices)
+        // Sprite.vertices makes a new array on every read, so each sprite's is read once and kept
+        if (!spriteVertices.TryGetValue(sprite, out Vector2[] vertices))
+        {
+            vertices = sprite.vertices;
+            spriteVertices[sprite] = vertices;
+        }
+        foreach (Vector2 vertex in vertices)
             top = Mathf.Max(top, source.TransformPoint(vertex).y);
         top -= owner.position.y;
         if (top > measuredTop) measuredTop = top;
@@ -236,10 +244,10 @@ public class PlantWidget : MonoBehaviour
         canvas.sortingLayerName = Style.sortingLayer;
         canvas.sortingOrder = Style.sortingOrder;
         // reference pixels per unit = the sprites' own, so a sprite pixel (and a 9 slice border)
-        // is exactly one canvas unit
-        CanvasScaler scaler = gameObject.AddComponent<CanvasScaler>();
-        scaler.referencePixelsPerUnit = PixelsPerUnit;
-        scaler.dynamicPixelsPerUnit = 1f;
+        // is exactly one canvas unit. set on the canvas itself, which is all a world space
+        // CanvasScaler did here (with a scale factor of 1), without one more Update per widget
+        canvas.referencePixelsPerUnit = PixelsPerUnit;
+        canvas.scaleFactor = 1f;
 
         RectTransform rect = (RectTransform)transform;
         rect.sizeDelta = Vector2.zero;
@@ -373,8 +381,11 @@ public class PlantWidget : MonoBehaviour
         if (!show) return;
         RectTransform frameRect = frame.rectTransform;
         RectTransform rect = fill.rectTransform;
-        rect.anchoredPosition = new Vector2(Mathf.Round(frameRect.anchoredPosition.x) + 1f, Mathf.Round(frameRect.anchoredPosition.y) - 1f);
-        rect.sizeDelta = new Vector2(fillWidth, Mathf.Round(frameRect.sizeDelta.y) - 2f);
+        // written only when different, so a settled bar doesn't touch its rect every frame
+        Vector2 position = new Vector2(Mathf.Round(frameRect.anchoredPosition.x) + 1f, Mathf.Round(frameRect.anchoredPosition.y) - 1f);
+        Vector2 size = new Vector2(fillWidth, Mathf.Round(frameRect.sizeDelta.y) - 2f);
+        if (rect.anchoredPosition != position) rect.anchoredPosition = position;
+        if (rect.sizeDelta != size) rect.sizeDelta = size;
     }
 
     private void LateUpdate()
@@ -389,9 +400,12 @@ public class PlantWidget : MonoBehaviour
         float ppu = PixelsPerUnit;
         float worldScale = Mathf.Max(1, Style.pixelScale) / ppu;
         Vector3 parentScale = owner.lossyScale;
-        transform.localScale = new Vector3(
+        Vector3 scale = new Vector3(
             worldScale / (Mathf.Approximately(parentScale.x, 0f) ? 1f : parentScale.x),
             worldScale / (Mathf.Approximately(parentScale.y, 0f) ? 1f : parentScale.y), 1f);
+        // scale and position are only written when they differ, so a still plant's widget isn't
+        // marked as moved every frame
+        if (transform.localScale != scale) transform.localScale = scale;
         // middle of the circle: just above the plant's measured sprite top (its lowest edge a gap
         // above the sprite), or the old fixed height until a sprite has been measured
         float heightPixels = float.IsNegativeInfinity(measuredTop)
@@ -399,7 +413,8 @@ public class PlantWidget : MonoBehaviour
             : Mathf.Ceil(measuredTop * ppu) + Style.gapAboveSprite + lowestBelowMiddle;
         heightPixels += Style.verticalOffset + heightOffsetPixels;
         Vector3 pos = owner.position;
-        transform.position = new Vector3(Mathf.Round(pos.x * ppu) / ppu, Mathf.Round(pos.y * ppu) / ppu + heightPixels / ppu, pos.z);
+        Vector3 snapped = new Vector3(Mathf.Round(pos.x * ppu) / ppu, Mathf.Round(pos.y * ppu) / ppu + heightPixels / ppu, pos.z);
+        if (transform.position != snapped) transform.position = snapped;
 
         float totalDisplay = maxHealth + shield;
         if (totalDisplay > 0f)

@@ -10,11 +10,15 @@ public class SunIndicator : TextIndicator
     protected override float MinVerticalSpeed => 1f;
     protected override float MaxVerticalSpeed => 1.25f;
 
+    // loaded once on first use instead of a resources lookup on every sun gain
+    private static GameObject prefab;
+
     public static void Spawn(Vector3 position, int amount)
     {
-        GameObject go = Object.Instantiate(
-            Resources.Load<GameObject>("SunIndicator"), position, Quaternion.identity);
-        go.GetComponent<SunIndicator>()?.Initialize(amount);
+        if (prefab == null) prefab = Resources.Load<GameObject>("SunIndicator");
+        GameObject go = Object.Instantiate(prefab, position, Quaternion.identity);
+        SunIndicator indicator = go.GetComponent<SunIndicator>();
+        if (indicator != null) indicator.Initialize(amount);
     }
 
     // bonus sun gain (e.g. from Aeonium bloom, Sun Mark) now looks identical to regular sun gain

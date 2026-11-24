@@ -6,6 +6,8 @@ public class HeatedComfortEffect : StatusEffect
 {
     private const float Duration     = 4f;
     private const float TickInterval = 0.5f;
+    // one shared tag array for every instance
+    private static readonly EffectTag[] RegenTags = { EffectTag.Regenerative };
 
     private readonly float _healPerTick;
     private readonly float _tempPerTick;
@@ -21,7 +23,7 @@ public class HeatedComfortEffect : StatusEffect
         effectType      = Type.positive;
         elementalType   = ElementalType.Fire;
         sourceStackable = true;
-        tags = new EffectTag[] { EffectTag.Regenerative };
+        tags = RegenTags;
     }
 
     public override void OnApply()  { }

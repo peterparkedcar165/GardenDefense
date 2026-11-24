@@ -12,6 +12,9 @@ public class GerminateEffect : StatusEffect
     private float cachedelementalAffinity;
     private bool detonated;
 
+    // removed without blooming (a Fire hit burns it away, Entity.Damage)
+    public void CancelBloom() => detonated = true;
+
     public override bool IsReaction => true;
 
     public GerminateEffect(Entity target, float duration, int level, Entity source) : base(target, duration, level, source)

@@ -101,6 +101,10 @@ public class Carrot : Shooter
             _bondHighlighted.ClearHighlight();
             _bondHighlighted.ShowExternalRangeCircle(false);
         }
+        // a carrot that dies while the furrow is being aimed would otherwise leave its aim
+        // rectangles on screen for good, nothing else ever removes them
+        if (_skillIndicatorInstance != null) Destroy(_skillIndicatorInstance);
+        if (_bondSkillIndicatorInstance != null) Destroy(_bondSkillIndicatorInstance);
     }
 
     // click Bond to pick a Shooter plant to link with, click again to break the bond.

@@ -34,7 +34,8 @@ public abstract class PlantAuraBuffEffect : StatusEffect
             return;
         }
         Vector3 center = centerOverride != null ? centerOverride.position : sourcePlant.transform.position;
-        if (Vector3.Distance(target.transform.position, center) > range)
+        // squared distances: the same test without a square root every frame
+        if ((target.transform.position - center).sqrMagnitude > range * range)
         {
             duration = 0f;
             return;

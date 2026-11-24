@@ -158,6 +158,17 @@ public class SkillTargetingManager : MonoBehaviour
         if (isDeadTileTargeting) CancelDeadTileTargeting();
     }
 
+    // a plant that's gone (Plant.OnDestroy) cancels any aim it started: a point aim or a dead tile aim
+    // whose callback belongs to it, or a plant aim it is the source of
+    public void CancelFor(Plant plant)
+    {
+        if (plant == null) return;
+        if (isTargeting && onConfirm != null && ReferenceEquals(onConfirm.Target, plant)) Cancel();
+        if (isPlantTargeting && (ReferenceEquals(PlantTargetingSource, plant)
+            || (onPlantConfirm != null && ReferenceEquals(onPlantConfirm.Target, plant)))) CancelPlantTargeting();
+        if (isDeadTileTargeting && onDeadTileConfirm != null && ReferenceEquals(onDeadTileConfirm.Target, plant)) CancelDeadTileTargeting();
+    }
+
     public void BeginTargeting(float radius, Action<Vector3> onConfirm, Vector3? clampCenter = null, float clampRadius = 0f, bool asLine = false, float lineWidth = DefaultLineIndicatorWidth, Sprite lineSprite = null, float? fixedLineLength = null)
     {
         PlantSelector.instance?.ClearAll();

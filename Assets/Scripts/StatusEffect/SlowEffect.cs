@@ -22,8 +22,6 @@ public class SlowEffect : StatusEffect
     {
         Insect insect = (Insect)target;
         insect.movementSpeedMultiplier -= slowness;
-
-        Debug.Log("Slow applied at level " + level);
     }
 
     public override void OnTick(float deltaTime)
@@ -33,7 +31,6 @@ public class SlowEffect : StatusEffect
 
     public override void OnExpire()
     {
-        Debug.Log("Slow expired");
         Insect insect = (Insect)target;
         insect.movementSpeedMultiplier += slowness;
     }

@@ -22,10 +22,32 @@ public class SkillTreeUI : MonoBehaviour
 
     private readonly List<SkillTreePlantPanel> panels = new List<SkillTreePlantPanel>();
 
+    // reused every frame the tooltip follows the cursor instead of a new array each time
+    private static readonly Vector3[] tooltipCorners = new Vector3[4];
+    private RectTransform tooltipRect;
+    private Canvas tooltipCanvas;
+
     void Awake()
     {
         instance = this;
         SpawnPanels();
+    }
+
+    // picks staged but never confirmed are dropped when the screen is left, as OnBack warns,
+    // instead of staying staged for the next visit
+    void OnDestroy()
+    {
+        SkillTreeSession.ClearPending();
+        if (instance == this) instance = null;
+    }
+
+    private RectTransform TooltipRect
+    {
+        get
+        {
+            if (tooltipRect == null && tooltipPanel != null) tooltipRect = tooltipPanel.GetComponent<RectTransform>();
+            return tooltipRect;
+        }
     }
 
     // one panel per plant that has an authored tree - each panel then decides for itself
@@ -108,7 +130,7 @@ public class SkillTreeUI : MonoBehaviour
         tooltipText.text = text;
 
         Canvas.ForceUpdateCanvases();
-        RectTransform panelRect = tooltipPanel.GetComponent<RectTransform>();
+        RectTransform panelRect = TooltipRect;
 
         float maxHeight = Screen.height * 0.975f;
         float height = Mathf.Min(tooltipText.preferredHeight + 40f, maxHeight);
@@ -136,7 +158,7 @@ public class SkillTreeUI : MonoBehaviour
     private void PositionTooltipAtCursor()
     {
         if (tooltipPanel == null || Mouse.current == null) return;
-        RectTransform panelRect = tooltipPanel.GetComponent<RectTransform>();
+        RectTransform panelRect = TooltipRect;
         RectTransform parentRect = panelRect.parent as RectTransform;
         if (parentRect == null) return;
 
@@ -146,7 +168,8 @@ public class SkillTreeUI : MonoBehaviour
         bool top   = mouseScreenPos.y >= Screen.height * 0.5f;
         panelRect.pivot = new Vector2(right ? 1f : 0f, top ? 1f : 0f);
 
-        Canvas canvas = panelRect.GetComponentInParent<Canvas>();
+        if (tooltipCanvas == null) tooltipCanvas = panelRect.GetComponentInParent<Canvas>();
+        Canvas canvas = tooltipCanvas;
         Camera cam = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
 
         if (RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect, mouseScreenPos, cam, out Vector3 worldPoint))
@@ -157,7 +180,7 @@ public class SkillTreeUI : MonoBehaviour
 
     private void ClampToScreen(RectTransform panelRect)
     {
-        Vector3[] corners = new Vector3[4];
+        Vector3[] corners = tooltipCorners;
         panelRect.GetWorldCorners(corners);
         float leftX   = corners[0].x;
         float bottomY = corners[0].y;

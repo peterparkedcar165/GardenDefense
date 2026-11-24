@@ -53,18 +53,55 @@ public class SaveData
     // not from a global pool, so using a plant more is what lets its own tree get built out
     public List<SkillNodePurchase> skillPurchases = new List<SkillNodePurchase>();
 
+    // runtime lookup over skillPurchases (plant name, then node id, to the first matching entry),
+    // so a rank lookup is not a walk with string compares every time. not saved. built again
+    // whenever the list's count no longer matches, which catches entries added or removed
+    // straight on the list (SaveManager's tree reset removes them that way)
+    [System.NonSerialized] private Dictionary<string, Dictionary<string, SkillNodePurchase>> purchaseLookup;
+    [System.NonSerialized] private List<SkillNodePurchase> purchaseLookupList;
+    [System.NonSerialized] private int purchaseLookupCount = -1;
+
+    private Dictionary<string, Dictionary<string, SkillNodePurchase>> PurchaseLookup
+    {
+        get
+        {
+            if (purchaseLookup == null || purchaseLookupList != skillPurchases || purchaseLookupCount != skillPurchases.Count)
+            {
+                if (purchaseLookup == null) purchaseLookup = new Dictionary<string, Dictionary<string, SkillNodePurchase>>();
+                else purchaseLookup.Clear();
+                foreach (SkillNodePurchase p in skillPurchases)
+                {
+                    if (p == null || p.plantName == null || p.nodeId == null) continue;
+                    if (!purchaseLookup.TryGetValue(p.plantName, out var nodes))
+                        purchaseLookup[p.plantName] = nodes = new Dictionary<string, SkillNodePurchase>();
+                    // the first matching entry wins, same as the old walk
+                    if (!nodes.ContainsKey(p.nodeId)) nodes[p.nodeId] = p;
+                }
+                purchaseLookupList = skillPurchases;
+                purchaseLookupCount = skillPurchases.Count;
+            }
+            return purchaseLookup;
+        }
+    }
+
+    private SkillNodePurchase FindPurchase(string plantName, string nodeId)
+    {
+        if (skillPurchases == null || plantName == null || nodeId == null) return null;
+        return PurchaseLookup.TryGetValue(plantName, out var nodes) && nodes.TryGetValue(nodeId, out SkillNodePurchase p) ? p : null;
+    }
+
     public int GetSkillRank(string plantName, string nodeId)
     {
-        foreach (SkillNodePurchase p in skillPurchases)
-            if (p.plantName == plantName && p.nodeId == nodeId) return p.rank;
-        return 0;
+        SkillNodePurchase p = FindPurchase(plantName, nodeId);
+        return p != null ? p.rank : 0;
     }
 
     public void SetSkillRank(string plantName, string nodeId, int rank)
     {
-        foreach (SkillNodePurchase p in skillPurchases)
-            if (p.plantName == plantName && p.nodeId == nodeId) { p.rank = rank; return; }
+        SkillNodePurchase existing = FindPurchase(plantName, nodeId);
+        if (existing != null) { existing.rank = rank; return; }
         skillPurchases.Add(new SkillNodePurchase { plantName = plantName, nodeId = nodeId, rank = rank });
+        // the count check above builds the lookup again with this entry on the next call
     }
 
     // persistent per-species exp/level/skill points, banked from a plant's own (session-scoped)

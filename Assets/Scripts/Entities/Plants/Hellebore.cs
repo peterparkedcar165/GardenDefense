@@ -20,6 +20,8 @@ public class Hellebore : Shooter
     }
     private static readonly Color PurpleHighlight = new Color(0.6f, 0.2f, 0.8f);
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
+    // reused every frame by UpdateHighlights instead of a new set each time
+    private readonly HashSet<Plant> _desiredHighlights = new HashSet<Plant>();
 
     private bool autoCastEnabled = false;
     private Tile autoCastTargetTile = null;
@@ -174,8 +176,13 @@ public class Hellebore : Shooter
 
     private void UpdateHighlights()
     {
-        bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
-        var desired = new HashSet<Plant>();
+        bool isSelected = IsSelected;
+
+        // nothing to show and nothing shown, so there is nothing to add or clear
+        if (!isSelected && _highlightedPlants.Count == 0) return;
+
+        HashSet<Plant> desired = _desiredHighlights;
+        desired.Clear();
         if (isSelected)
         {
             foreach (Plant plant in Plant.allPlants)
@@ -234,7 +241,8 @@ public class Hellebore : Shooter
         Plant.OnPlantPlaced -= HandlePlantPlaced;
         foreach (Plant p in _highlightedPlants)
             if (p != null) p.ClearHighlight();
-        _autoCastHighlighted?.ClearHighlight();
+        // unity null check, the plant may already be destroyed at scene teardown
+        if (_autoCastHighlighted != null) _autoCastHighlighted.ClearHighlight();
     }
 
     public override string GetName() => "<b><color=#9B30D0>Hellebore</color></b>";

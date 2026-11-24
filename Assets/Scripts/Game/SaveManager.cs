@@ -35,7 +35,7 @@ public class SaveManager : MonoBehaviour
         {
             Directory.CreateDirectory(Path.GetDirectoryName(savePath));
             string json = JsonUtility.ToJson(saveData);
-            File.WriteAllText(savePath, json);
+            WriteSaveFile(json);
             Debug.Log("Saved to: " + savePath);
         }
         catch (System.Exception e)
@@ -44,14 +44,61 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    // writes the whole save to a temp file first and only then swaps it in, keeping the old save
+    // as save.json.bak, so a crash or power cut mid write never leaves a cut off save.json. if
+    // the swap itself fails on this machine, it writes save.json directly like before
+    private void WriteSaveFile(string json)
+    {
+        string tempPath = savePath + ".tmp";
+        File.WriteAllText(tempPath, json);
+        try
+        {
+            if (File.Exists(savePath)) File.Replace(tempPath, savePath, savePath + ".bak");
+            else File.Move(tempPath, savePath);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("Save swap failed, writing directly: " + e.Message);
+            File.WriteAllText(savePath, json);
+            try { File.Delete(tempPath); } catch (System.Exception) { }
+        }
+    }
+
+    // null when the file is missing, empty or not a readable save
+    private static SaveData ReadSaveFile(string path)
+    {
+        try
+        {
+            if (!File.Exists(path)) return null;
+            string json = File.ReadAllText(path);
+            if (string.IsNullOrWhiteSpace(json)) return null;
+            return JsonUtility.FromJson<SaveData>(json);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Could not read save file " + path + ": " + e.Message);
+            return null;
+        }
+    }
+
     public void Load()
     {
         Debug.Log("Started");
         if (File.Exists(savePath))
         {
-            string json = File.ReadAllText(savePath);
-            saveData = JsonUtility.FromJson<SaveData>(json);
-            Debug.Log("Loaded save data");
+            SaveData loaded = ReadSaveFile(savePath);
+            if (loaded == null)
+            {
+                // keep the broken file aside before anything saves over it, then try the backup
+                Debug.LogError("Save file is broken, kept as save.json.corrupt, trying the backup");
+                try { File.Copy(savePath, savePath + ".corrupt", true); } catch (System.Exception) { }
+                loaded = ReadSaveFile(savePath + ".bak");
+            }
+            if (loaded != null)
+            {
+                saveData = loaded;
+                Debug.Log("Loaded save data");
+            }
         }
 
         MigrateExpCurve();

@@ -5,11 +5,17 @@ using FontStyles = TMPro.FontStyles;
 public class FlowerPotButton : MonoBehaviour
 {
     [SerializeField] private TMP_Text sunCostText;
+    // the cost the text shows, so it is only turned into text again when it changes
+    private int shownCost = int.MinValue;
 
     void Update()
     {
         if (sunCostText == null || GameManager.instance == null) return;
-        sunCostText.text = FlowerPot.SunCost.ToString();
+        if (FlowerPot.SunCost != shownCost)
+        {
+            shownCost = FlowerPot.SunCost;
+            sunCostText.text = shownCost.ToString();
+        }
         if (GameManager.instance.SunCount >= FlowerPot.SunCost)
         {
             sunCostText.fontStyle = FontStyles.Bold;

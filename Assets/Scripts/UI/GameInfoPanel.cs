@@ -91,7 +91,23 @@ public class GameInfoPanel : MonoBehaviour
         sb.AppendLine();
         AppendSunSection();
 
-        bodyText.text = sb.ToString();
+        // the panel stays live, it is built again every frame, but the text is only handed to
+        // the text box (a new string, a new mesh and a new layout) when it changed
+        if (shownText != null && Matches(sb, shownText)) return;
+        shownText = sb.ToString();
+        bodyText.text = shownText;
+    }
+
+    // the text the body last got
+    private string shownText;
+
+    // compares the builder with the shown string without making a new string
+    private static bool Matches(StringBuilder builder, string text)
+    {
+        if (builder.Length != text.Length) return false;
+        for (int i = 0; i < text.Length; i++)
+            if (builder[i] != text[i]) return false;
+        return true;
     }
 
     private void AppendWeatherSection()
@@ -107,15 +123,15 @@ public class GameInfoPanel : MonoBehaviour
         foreach (WeatherEntry entry in WeatherManager.instance.GetActiveWeather())
         {
             any = true;
-            sb.AppendLine($"{WeatherManager.GetWeatherName(entry.type)} <color=#888888>(intensity {entry.intensity})</color>");
-            sb.AppendLine($"<size=85%><color=#c3c2b7>{WeatherManager.GetWeatherDescription(entry.type, entry.intensity)}</color></size>");
+            sb.Append(WeatherManager.GetWeatherName(entry.type)).Append(" <color=#888888>(intensity ").Append(entry.intensity).AppendLine(")</color>");
+            sb.Append("<size=85%><color=#c3c2b7>").Append(WeatherManager.GetWeatherDescription(entry.type, entry.intensity)).AppendLine("</color></size>");
         }
         if (!any)
             sb.AppendLine("<color=#888888>Clear skies.</color>");
 
         sb.AppendLine();
-        sb.AppendLine($"{WeatherManager.GetTemperatureName(WeatherManager.instance.temperature)} <color=#888888>(temperature)</color>");
-        sb.AppendLine($"<size=85%><color=#c3c2b7>{WeatherManager.GetTemperatureDescription(WeatherManager.instance.temperature)}</color></size>");
+        sb.Append(WeatherManager.GetTemperatureName(WeatherManager.instance.temperature)).AppendLine(" <color=#888888>(temperature)</color>");
+        sb.Append("<size=85%><color=#c3c2b7>").Append(WeatherManager.GetTemperatureDescription(WeatherManager.instance.temperature)).AppendLine("</color></size>");
     }
 
     // the level's fertilizer (picked before the level), with what it does and its live status
@@ -134,11 +150,11 @@ public class GameInfoPanel : MonoBehaviour
             sb.AppendLine("<color=#888888>No fertilizer this level.</color>");
             return;
         }
-        sb.AppendLine($"<b>{active.fertilizerName}</b>");
-        sb.AppendLine($"<size=85%><color=#c3c2b7>{active.GetDescription()}</color></size>");
+        sb.Append("<b>").Append(active.fertilizerName).AppendLine("</b>");
+        sb.Append("<size=85%><color=#c3c2b7>").Append(active.GetDescription()).AppendLine("</color></size>");
         string status = fertilizers.ActiveStatus;
         if (!string.IsNullOrEmpty(status))
-            sb.AppendLine($"<size=85%><color=#FFD27F>{status}</color></size>");
+            sb.Append("<size=85%><color=#FFD27F>").Append(status).AppendLine("</color></size>");
     }
 
     // every living plant's equipped mulches, with rarity, description and live status, and how
@@ -155,7 +171,7 @@ public class GameInfoPanel : MonoBehaviour
         int held = 0;
         foreach (MulchItem item in MulchManager.instance.Inventory)
             if (item != null) held++;
-        sb.AppendLine($"<color=#888888>Inventory: {held}/{MulchManager.instance.InventorySize}</color>");
+        sb.Append("<color=#888888>Inventory: ").Append(held).Append('/').Append(MulchManager.instance.InventorySize).AppendLine("</color>");
 
         bool any = false;
         foreach (Plant plant in Plant.allPlants)
@@ -163,15 +179,15 @@ public class GameInfoPanel : MonoBehaviour
             if (plant == null || !plant.IsAlive || plant.mulches.Count == 0) continue;
             any = true;
             sb.AppendLine();
-            sb.AppendLine($"{plant.GetName()} <color=#888888>({plant.mulches.Count}/{MulchManager.instance.PlantSlots})</color>");
+            sb.Append(plant.GetName()).Append(" <color=#888888>(").Append(plant.mulches.Count).Append('/').Append(MulchManager.instance.PlantSlots).AppendLine(")</color>");
             foreach (MulchEffect effect in plant.mulches)
             {
                 if (effect == null) continue;
-                sb.AppendLine($"<indent=4%><b>{effect.Item.Name}</b> <size=85%>{MulchData.RarityLabel(effect.Rarity)}</size></indent>");
-                sb.AppendLine($"<indent=4%><size=85%><color=#c3c2b7>{effect.Data.GetDescription(effect.Item, effect)}</color></size></indent>");
+                sb.Append("<indent=4%><b>").Append(effect.Item.Name).Append("</b> <size=85%>").Append(MulchData.RarityLabel(effect.Rarity)).AppendLine("</size></indent>");
+                sb.Append("<indent=4%><size=85%><color=#c3c2b7>").Append(effect.Data.GetDescription(effect.Item, effect)).AppendLine("</color></size></indent>");
                 string status = effect.GetStatus();
                 if (!string.IsNullOrEmpty(status))
-                    sb.AppendLine($"<indent=4%><size=85%><color=#FFD27F>{status}</color></size></indent>");
+                    sb.Append("<indent=4%><size=85%><color=#FFD27F>").Append(status).AppendLine("</color></size></indent>");
             }
         }
         if (!any)
@@ -187,9 +203,9 @@ public class GameInfoPanel : MonoBehaviour
             return;
         }
 
-        sb.AppendLine($"Current: <color=#FFD700><b>{GameManager.instance.SunCount}</b></color>");
-        sb.AppendLine($"Generated this level: <color=green><b>{GameManager.instance.totalSunGenerated}</b></color>");
-        sb.AppendLine($"Spent this level: <color=red><b>{GameManager.instance.totalSunSpent}</b></color>");
+        sb.Append("Current: <color=#FFD700><b>").Append(GameManager.instance.SunCount).AppendLine("</b></color>");
+        sb.Append("Generated this level: <color=green><b>").Append(GameManager.instance.totalSunGenerated).AppendLine("</b></color>");
+        sb.Append("Spent this level: <color=red><b>").Append(GameManager.instance.totalSunSpent).AppendLine("</b></color>");
     }
 
     // ── UI construction ─────────────────────────────────────────────────────

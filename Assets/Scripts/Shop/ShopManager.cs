@@ -43,8 +43,16 @@ public class ShopManager : MonoBehaviour
     {
         if (UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame && !TutorialManager.BlocksEscape)
             OnBack();
-        RefreshAll();
+        // still live (a purchase, or a SaveManager debug key changing currency, pots or levels),
+        // but the texts are only rebuilt on a frame where one of those numbers changed
+        SaveData data = Data;
+        if (data.currency != shownCurrency || data.flowerPotLevel != shownFlowerPotLevel
+            || data.waterPotLevel != shownWaterPotLevel || data.highestLevelUnlocked != shownHighestLevel)
+            RefreshAll();
     }
+
+    // the save values the shop texts were last built from
+    private int shownCurrency = int.MinValue, shownFlowerPotLevel, shownWaterPotLevel, shownHighestLevel;
 
     private void Start()
     {
@@ -99,6 +107,11 @@ public class ShopManager : MonoBehaviour
 
     private void RefreshAll()
     {
+        shownCurrency = Data.currency;
+        shownFlowerPotLevel = Data.flowerPotLevel;
+        shownWaterPotLevel = Data.waterPotLevel;
+        shownHighestLevel = Data.highestLevelUnlocked;
+
         if (currencyText != null)
             currencyText.text = $"${Data.currency}";
 

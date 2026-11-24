@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class WaterlilyProjectile : Projectile
 {
+    // made once and shared by every hit: nothing writes into it
+    private static readonly DamageTag[] HitTags = { DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile };
+
     private Transform bubble1, bubble2, bubble3;
     private float bobPhase1, bobPhase2, bobPhase3;
     private const float bobSpeed = 6f;
@@ -92,7 +95,7 @@ public class WaterlilyProjectile : Projectile
     protected override void OnHit(Insect insect) // to change for every plant
     {
 
-        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile});
+        insect.Damage(projectileDamage, damageType, elementalType, source, true, HitTags);
 
         if (source is Waterlily waterlily)
             waterlily.ApplyStackingSoak(insect);

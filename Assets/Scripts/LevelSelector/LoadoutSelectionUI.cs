@@ -166,10 +166,6 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     public void RefreshUI()
     {
-        Debug.Log("RefreshUI called. Unlocked plants: " + SaveManager.instance.saveData.unlockedPlants.Count);
-        foreach (string p in SaveManager.instance.saveData.unlockedPlants)
-            Debug.Log("Plant: " + p);
-
         foreach (var s in unlockedSlots){
             Destroy(s.gameObject);
         }
@@ -385,7 +381,6 @@ public class LoadoutSelectionUI : MonoBehaviour
         foreach (var data in plantRegistry.plants)
         {
             if (data == null) continue;
-            Debug.Log($"Comparing '{plantName}' to '{data.plantName}'");
             if (data.plantName == plantName) return data;
         }
 

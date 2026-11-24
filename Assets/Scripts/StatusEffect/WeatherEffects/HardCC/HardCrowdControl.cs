@@ -27,11 +27,9 @@ public abstract class HardCrowdControl : StatusEffect
         if (InternalCooldownAfterExpiry > 0f && target != null)
             target.SetHardCCInternalCooldown(GetType(), duration + InternalCooldownAfterExpiry);
         */
-        Debug.Log("Hard cc applied");
     }
 
     public override void OnExpire()
     {
-        Debug.Log("Hard cc expired");
     }
 }

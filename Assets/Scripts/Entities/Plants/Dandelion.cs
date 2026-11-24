@@ -93,6 +93,9 @@ public class Dandelion : Shooter
         base.OnDestroy();
         Plant.OnPlantPlaced -= HandlePlantPlaced;
         if (_windGustInstance != null) Destroy(_windGustInstance);
+        // a dandelion that dies while the gust is being aimed would otherwise leave its aim
+        // indicator on screen for good, nothing else ever removes it
+        if (windGustIndicatorInstance != null) Destroy(windGustIndicatorInstance);
     }
 
     private void HandlePlantPlaced(Plant plant)

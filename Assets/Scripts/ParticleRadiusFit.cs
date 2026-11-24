@@ -7,6 +7,32 @@ using UnityEngine;
 // their own radius
 public static class ParticleRadiusFit
 {
+    // built once and shared, the particle system copies both when they are assigned, so nothing
+    // here is changed afterwards
+    private static readonly AnimationCurve LimitCurve = new AnimationCurve(
+        new Keyframe(0f,   1f, 0f, 0f),
+        new Keyframe(0.5f, 1f, 0f, 0f),
+        new Keyframe(1f,   0f, 0f, 0f)
+    );
+    private static readonly Gradient FadeGradient = BuildFadeGradient();
+
+    private static Gradient BuildFadeGradient()
+    {
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] {
+                new GradientColorKey(Color.white, 0f),
+                new GradientColorKey(Color.white, 1f)
+            },
+            new GradientAlphaKey[] {
+                new GradientAlphaKey(1f, 0f),
+                new GradientAlphaKey(1f, 0.5f),
+                new GradientAlphaKey(0f, 1f)
+            }
+        );
+        return gradient;
+    }
+
     public static void FitBurstToRadius(ParticleSystem ps, float radius, float lifetime)
     {
         if (ps == null || lifetime <= 0f) return;
@@ -21,27 +47,10 @@ public static class ParticleRadiusFit
         lvol.enabled = true;
         lvol.separateAxes = false;
         lvol.dampen = 0.4f;
-        AnimationCurve limitCurve = new AnimationCurve(
-            new Keyframe(0f,   1f, 0f, 0f),
-            new Keyframe(0.5f, 1f, 0f, 0f),
-            new Keyframe(1f,   0f, 0f, 0f)
-        );
-        lvol.limit = new ParticleSystem.MinMaxCurve(radius / lifetime, limitCurve);
+        lvol.limit = new ParticleSystem.MinMaxCurve(radius / lifetime, LimitCurve);
 
         var col = ps.colorOverLifetime;
         col.enabled = true;
-        Gradient gradient = new Gradient();
-        gradient.SetKeys(
-            new GradientColorKey[] {
-                new GradientColorKey(Color.white, 0f),
-                new GradientColorKey(Color.white, 1f)
-            },
-            new GradientAlphaKey[] {
-                new GradientAlphaKey(1f, 0f),
-                new GradientAlphaKey(1f, 0.5f),
-                new GradientAlphaKey(0f, 1f)
-            }
-        );
-        col.color = new ParticleSystem.MinMaxGradient(gradient);
+        col.color = new ParticleSystem.MinMaxGradient(FadeGradient);
     }
 }

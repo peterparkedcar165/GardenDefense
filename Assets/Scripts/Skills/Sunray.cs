@@ -37,6 +37,8 @@ public class Sunray : MonoBehaviour
     private bool _homing;
     private bool _refreshOnKill;
     private Insect _trackedInsect;
+    // insects hit this tick, cleared and refilled every tick instead of a new list
+    private readonly List<Insect> _inRange = new List<Insect>();
 
     private void Awake()
     {
@@ -129,9 +131,14 @@ public class Sunray : MonoBehaviour
 
             if (elapsed >= nextTick)
             {
-                List<Insect> inRange = new List<Insect>();
-                foreach (Insect insect in new List<Insect>(Insect.allInsects))
+                // this pass only reads, so the live insect list is walked directly. the damage
+                // below goes over inRange, its own reused list
+                List<Insect> inRange = _inRange;
+                inRange.Clear();
+                List<Insect> allInsects = Insect.allInsects;
+                for (int i = 0; i < allInsects.Count; i++)
                 {
+                    Insect insect = allInsects[i];
                     if (insect == null || !insect.IsAlive) continue;
                     if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
                         inRange.Add(insect);

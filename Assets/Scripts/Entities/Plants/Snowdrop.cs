@@ -56,6 +56,8 @@ public class Snowdrop : Shooter
     // this Snowdrop - mirrors Carrot's Soil Bond range-sharing pattern exactly
     protected override bool IsWithinAttackRange(Insect insect, float distance)
     {
+        // the insect FindTarget(excluding) leaves out, only set for the length of that call
+        if (_excludedTarget != null && ReferenceEquals(insect, _excludedTarget)) return false;
         if (distance <= attackRange) return true;
         // the bond lends range one step only: a Carrot bonded back to this Snowdrop asks this
         // Snowdrop about the same insect, which asked the Carrot, forever (a stack overflow)
@@ -71,6 +73,13 @@ public class Snowdrop : Shooter
     // unexpected read of Unity's own active-state can never silently skip the SetActive call
     private bool _beamWasActive;
     private bool _beam2WasActive;
+
+    // each beam's current target and its insect component, so the component isn't looked up
+    // again every frame while the target stays the same
+    private GameObject _beamTargetGo;
+    private Insect _beamTargetInsect;
+    private GameObject _beam2TargetGo;
+    private Insect _beam2TargetInsect;
 
     protected override void Awake()
     {
@@ -125,7 +134,13 @@ public class Snowdrop : Shooter
 
             if (beamShouldBeActive)
             {
-                Insect targetInsect = currentTarget.GetComponent<Insect>();
+                // the component is only looked up again when the beam's target changes
+                if (!ReferenceEquals(currentTarget, _beamTargetGo))
+                {
+                    _beamTargetGo = currentTarget;
+                    _beamTargetInsect = currentTarget.GetComponent<Insect>();
+                }
+                Insect targetInsect = _beamTargetInsect;
                 Vector3 aimPoint = targetInsect != null ? targetInsect.GetAimPoint() : currentTarget.transform.position;
                 // just turned on this frame - snap to the target instantly rather than smoothly
                 // sweeping in from whatever direction it was left facing last time
@@ -153,7 +168,12 @@ public class Snowdrop : Shooter
 
             if (beam2ShouldBeActive)
             {
-                Insect targetInsect2 = secondaryTarget.GetComponent<Insect>();
+                if (!ReferenceEquals(secondaryTarget, _beam2TargetGo))
+                {
+                    _beam2TargetGo = secondaryTarget;
+                    _beam2TargetInsect = secondaryTarget.GetComponent<Insect>();
+                }
+                Insect targetInsect2 = _beam2TargetInsect;
                 Vector3 aimPoint2 = targetInsect2 != null ? targetInsect2.GetAimPoint() : secondaryTarget.transform.position;
                 if (!_beam2WasActive) iceBeam2.SnapToTarget(aimPoint2);
                 float beam2MaxRange = IsPath2Maxed ? Mathf.Infinity : attackRange;
@@ -218,27 +238,45 @@ public class Snowdrop : Shooter
         proj.Initialize(target, attackDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, this);
     }
 
-    // same selection rule as the plant's normal targeting, just run over a pool that leaves out
-    // one specific insect (the shot already aimed at it this attack)
+    // same selection rule as the plant's normal targeting, just leaving out one specific insect
+    // (the shot already aimed at it this attack). the insect is turned away by
+    // IsWithinAttackRange for the length of this call, instead of copying every other insect
+    // into a new list each time (this runs every frame while the second beam is up)
+    private Insect _excludedTarget;
+
     private GameObject FindTarget(GameObject excluding)
     {
-        List<Insect> pool = new List<Insect>();
-        foreach (Insect insect in Insect.allInsects)
+        Insect excluded = excluding != null ? excluding.GetComponent<Insect>() : null;
+
+        // the old copied list never changed the forced pick, so when the left out insect is her
+        // forced target (only if a snowdrop got placed on another snowdrop's bonded tile) the
+        // copied list is still used, to pick exactly as before
+        if (excluded != null && ReferenceEquals(excluded, forcedPriorityTarget))
         {
-            if (insect == null || insect.gameObject == excluding) continue;
-            pool.Add(insect);
+            List<Insect> copy = new List<Insect>();
+            foreach (Insect insect in Insect.allInsects)
+            {
+                if (insect == null || insect.gameObject == excluding) continue;
+                copy.Add(insect);
+            }
+            return FindByTargeting(copy);
         }
 
-        return targeting switch
-        {
-            TARGETING.Nearest   => FindNearest(pool),
-            TARGETING.Last      => FindLast(pool),
-            TARGETING.Strongest => FindStrongest(pool),
-            TARGETING.Fastest   => FindFastest(pool),
-            TARGETING.Slowest   => FindSlowest(pool),
-            _                   => FindFirst(pool)
-        };
+        Insect previous = _excludedTarget;
+        _excludedTarget = excluded;
+        try { return FindByTargeting(Insect.allInsects); }
+        finally { _excludedTarget = previous; }
     }
+
+    private GameObject FindByTargeting(List<Insect> pool) => targeting switch
+    {
+        TARGETING.Nearest   => FindNearest(pool),
+        TARGETING.Last      => FindLast(pool),
+        TARGETING.Strongest => FindStrongest(pool),
+        TARGETING.Fastest   => FindFastest(pool),
+        TARGETING.Slowest   => FindSlowest(pool),
+        _                   => FindFirst(pool)
+    };
 
     // called by SnowdropProjectile/IceBeamProjectile right after their own direct-damage hit lands.
     // a target not already carrying this Snowdrop's own Snow Mark takes the bonus % Max Health

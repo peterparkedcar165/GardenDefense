@@ -11,6 +11,10 @@ public class Geyser : MonoBehaviour
     private const float MireSlowDuration = 0.5f;
     private const float LingeringMireDuration = 6f;
 
+    private static readonly DamageTag[] GeyserTags = { DamageTag.AoE, DamageTag.SkillDamage, DamageTag.CanHitBurrowed };
+    // reused copy of the insect list for the mire tick, refilled each tick instead of a new list
+    private readonly List<Insect> mireSnapshot = new List<Insect>();
+
     public void Initialize(Vector3 position, float radius, float knockDuration, float damage, float knockUpForce, Plant source)
     {
         this.source = source;
@@ -31,8 +35,7 @@ public class Geyser : MonoBehaviour
             bool crit = false;
             void OnCrit(Entity attacker, Entity target) { if (attacker == source && target == insect) crit = true; }
             if (tidalSurge) Entity.OnCriticalHit += OnCrit;
-            insect.Damage(damage, source.damageType, source.elementalType, source, true,
-                new DamageTag[] { DamageTag.AoE, DamageTag.SkillDamage, DamageTag.CanHitBurrowed });
+            insect.Damage(damage, source.damageType, source.elementalType, source, true, GeyserTags);
             if (tidalSurge) Entity.OnCriticalHit -= OnCrit;
 
             float force = (tidalSurge && crit) ? knockUpForce * (1f + BogIris.TidalSurgeCritKnockUpBonus) : knockUpForce;
@@ -55,7 +58,9 @@ public class Geyser : MonoBehaviour
         if (mireTickTimer < MireTickInterval) return;
         mireTickTimer -= MireTickInterval;
 
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        mireSnapshot.Clear();
+        mireSnapshot.AddRange(Insect.allInsects);
+        foreach (Insect insect in mireSnapshot)
         {
             if (insect == null || !insect.IsAlive || insect is FlyingInsect) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) > radius) continue;

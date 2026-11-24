@@ -27,10 +27,15 @@ public class SandstormExposedEffect : StatusEffect
         effectType = Type.negative;
         basePenalty = PenaltyPerLevel * level;
         damagePerSecond = BaseDamagePerSecond + DamagePerSecondPerLevel * level;
+        desertAdapted = target is AloeVera || target is Cactus;
     }
 
+    // a plant's kind never changes, so that part is worked out once; snow ward is still read
+    // every frame, since it comes and goes
+    private readonly bool desertAdapted;
+
     private bool IsImmune() =>
-        target is AloeVera || target is Cactus || target.HasEffect<SnowWardEffect>();
+        desertAdapted || target.HasEffect<SnowWardEffect>();
 
     public override void OnApply()
     {

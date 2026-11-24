@@ -65,20 +65,27 @@ public class MusicManager : MonoBehaviour
         aIsActive = !aIsActive;
     }
 
+    // fades both sources: a stop that lands in the middle of a crossfade (which never got to swap
+    // the active source) also fades the track that was coming in, instead of leaving it playing at
+    // part volume. outside a crossfade the other source is already stopped, so nothing changes
     private IEnumerator FadeOut(float duration)
     {
-        AudioSource active = aIsActive ? sourceA : sourceB;
-        float startVolume = active.volume;
+        float startA = sourceA.volume;
+        float startB = sourceB.volume;
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
             elapsed += Time.unscaledDeltaTime;
-            active.volume = Mathf.Lerp(startVolume, 0f, Mathf.Clamp01(elapsed / duration));
+            float t = Mathf.Clamp01(elapsed / duration);
+            sourceA.volume = Mathf.Lerp(startA, 0f, t);
+            sourceB.volume = Mathf.Lerp(startB, 0f, t);
             yield return null;
         }
 
-        active.Stop();
-        active.clip = null;
+        sourceA.Stop();
+        sourceA.clip = null;
+        sourceB.Stop();
+        sourceB.clip = null;
     }
 }

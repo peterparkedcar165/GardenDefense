@@ -29,6 +29,11 @@ public class AcornKnightShield : Minion
     private Collider2D _clickCollider;
     private SpriteRenderer _visualSR;
     private SpriteRenderer[] _outlineRenderers;
+    // looked up once for every shield, and this shield's own outline material, destroyed with it
+    private static Shader _silhouetteShader;
+    private Material _outlineMaterial;
+    // reused copy of the insect list for the grass tick, refilled each tick instead of a new list
+    private readonly List<Insect> _grassDotSnapshot = new List<Insect>();
     private bool _isHovered;
 
     private GameObject _lifetimeBarInstance;
@@ -165,8 +170,9 @@ public class AcornKnightShield : Minion
         _visualSR = GetComponentInChildren<SpriteRenderer>();
         if (_visualSR != null)
         {
-            Shader silhouette = Shader.Find("Custom/SpriteSilhouette");
-            Material mat = silhouette != null ? new Material(silhouette) : null;
+            if (_silhouetteShader == null) _silhouetteShader = Shader.Find("Custom/SpriteSilhouette");
+            Material mat = _silhouetteShader != null ? new Material(_silhouetteShader) : null;
+            _outlineMaterial = mat;
             float localOffset = radius > 0f ? 0.05f / radius : 0.05f;
             const int count = 8;
             _outlineRenderers = new SpriteRenderer[count];
@@ -250,6 +256,7 @@ public class AcornKnightShield : Minion
     private void OnDestroy()
     {
         OnHeal -= HandleHeal;
+        if (_outlineMaterial != null) Destroy(_outlineMaterial);
     }
 
     public override void Attack() { }
@@ -317,7 +324,9 @@ public class AcornKnightShield : Minion
         _grassDotTimer = GrassDotTickInterval;
 
         float tickDamage = armor * GrassDotArmorPercent;
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        _grassDotSnapshot.Clear();
+        _grassDotSnapshot.AddRange(Insect.allInsects);
+        foreach (Insect insect in _grassDotSnapshot)
         {
             if (insect == null || !insect.IsAlive) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= radius)

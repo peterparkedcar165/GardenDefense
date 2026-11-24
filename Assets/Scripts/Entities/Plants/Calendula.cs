@@ -108,17 +108,30 @@ public class Calendula : Aura
     // Borrowed Light: every plant currently carrying a Floral Glow cast by this Calendula acts as
     // a second illumination source, sharing its passive's max level bonus and Guiding Light/
     // Radiant Aura fork with anything standing in range of the target instead of Calendula herself
+    // filled once a frame into one reused list (up to three ticks ask for it in the same frame),
+    // and only read inside this Calendula's own Update
+    private readonly List<Plant> _floralGlowTargets = new List<Plant>();
+    private int _floralGlowTargetsFrame = -1;
+
     private List<Plant> GetFloralGlowTargets()
     {
-        List<Plant> targets = new List<Plant>();
+        if (_floralGlowTargetsFrame == Time.frameCount) return _floralGlowTargets;
+        _floralGlowTargetsFrame = Time.frameCount;
+        _floralGlowTargets.Clear();
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
             FloralGlowEffect fg = plant.GetEffect<FloralGlowEffect>();
-            if (fg != null && fg.source == this) targets.Add(plant);
+            if (fg != null && fg.source == this) _floralGlowTargets.Add(plant);
         }
-        return targets;
+        return _floralGlowTargets;
     }
+
+    // reused lists and tags for the ticks and the attack sweep below, instead of new ones each time
+    private readonly List<Insect> _guidingLightInsects = new List<Insect>();
+    private readonly List<Insect> _sweepInsects = new List<Insect>();
+    private readonly HashSet<Plant> _radiantHealed = new HashSet<Plant>();
+    private static readonly HealTag[] RegenTags = { HealTag.Regeneration };
 
     protected override bool ShowLight => DarknessManager.instance != null && (DarknessManager.instance.isDark || DarknessManager.instance.pitchBlack);
     public override bool ShowDarkCircle => false;
@@ -151,7 +164,10 @@ public class Calendula : Aura
             if (_guidingLightTimer >= GuidingLightInterval)
             {
                 _guidingLightTimer = 0f;
-                List<Insect> insects = new List<Insect>(Insect.allInsects);
+                // still a snapshot (an apply hook could change the live list), just into a reused list
+                List<Insect> insects = _guidingLightInsects;
+                insects.Clear();
+                insects.AddRange(Insect.allInsects);
                 List<Plant> glowTargets = borrowedLight ? GetFloralGlowTargets() : null;
 
                 foreach (Insect insect in insects)
@@ -183,13 +199,14 @@ public class Calendula : Aura
             if (_radiantAuraTimer >= RadiantAuraInterval)
             {
                 _radiantAuraTimer = 0f;
-                HashSet<Plant> healed = new HashSet<Plant>();
+                HashSet<Plant> healed = _radiantHealed;
+                healed.Clear();
                 foreach (Plant plant in Plant.allPlants)
                 {
                     if (plant == null || !plant.IsAlive || plant == this) continue;
                     if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
                     healed.Add(plant);
-                    plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, new HealTag[] { HealTag.Regeneration });
+                    plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, RegenTags);
                 }
 
                 if (borrowedLight)
@@ -200,7 +217,7 @@ public class Calendula : Aura
                         if (plant == null || !plant.IsAlive || plant == this || healed.Contains(plant)) continue;
                         if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
                         healed.Add(plant);
-                        plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, new HealTag[] { HealTag.Regeneration });
+                        plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, RegenTags);
                     }
                 }
             }
@@ -265,7 +282,8 @@ public class Calendula : Aura
     {
         base.OnDestroy();
         Plant.OnPlantPlaced -= HandlePlantPlaced;
-        _autoCastHighlighted?.ClearHighlight();
+        // unity null check, the plant may already be destroyed at scene teardown
+        if (_autoCastHighlighted != null) _autoCastHighlighted.ClearHighlight();
     }
 
     // click Auto Cast to pick a target, click again to turn it off
@@ -337,26 +355,42 @@ public class Calendula : Aura
             insect.Damage(damage * multiplier, dmgType, elemType, this, true, playSound ? SweepTags : SweepTagsSilent);
         }
 
+        // still a snapshot each frame (a hit can kill and remove an insect mid loop), copied into
+        // one reused list. overlapping sweeps share it safely: each fills and finishes its loop
+        // before it yields
+        List<Insect> insects = _sweepInsects;
         while (elapsed < FireBurstLifetime)
         {
             float currentRadius = (elapsed / FireBurstLifetime) * attackRange;
-            foreach (Insect insect in new List<Insect>(Insect.allInsects))
+            float radiusSqr = currentRadius * currentRadius;
+            Vector3 center = transform.position;
+            insects.Clear();
+            insects.AddRange(Insect.allInsects);
+            for (int i = 0; i < insects.Count; i++)
             {
+                Insect insect = insects[i];
                 if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
-                if (Vector3.Distance(transform.position, insect.transform.position) > currentRadius) continue;
+                if ((insect.transform.position - center).sqrMagnitude > radiusSqr) continue;
                 DamageInsect(insect);
             }
+            insects.Clear();
             yield return null;
             elapsed += Time.deltaTime;
         }
 
         // catch anyone the wavefront should have reached by now but a frame gap missed
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        float rangeSqr = attackRange * attackRange;
+        Vector3 origin = transform.position;
+        insects.Clear();
+        insects.AddRange(Insect.allInsects);
+        for (int i = 0; i < insects.Count; i++)
         {
+            Insect insect = insects[i];
             if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) > attackRange) continue;
+            if ((insect.transform.position - origin).sqrMagnitude > rangeSqr) continue;
             DamageInsect(insect);
         }
+        insects.Clear();
     }
 
     // same fire burst visual used by the attack

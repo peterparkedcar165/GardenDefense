@@ -15,11 +15,17 @@ public static class SunGenerationParticleEffect
     private const int MaxBurst = 4;
     private const float Lifetime = 2f;
 
+    // loaded once on first use instead of a resources lookup on every sun tick
+    private static GameObject prefab;
+    // reused for every burst instead of a new array per sun tick
+    private static readonly System.Collections.Generic.List<ParticleSystem> systems =
+        new System.Collections.Generic.List<ParticleSystem>();
+
     public static void Spawn(Vector3 position, int amount, float shapeRadius)
     {
         // no sun, no burst (a tick during the drought mulch banks nothing)
         if (amount <= 0) return;
-        GameObject prefab = Resources.Load<GameObject>("SunGenerationParticles");
+        if (prefab == null) prefab = Resources.Load<GameObject>("SunGenerationParticles");
         if (prefab == null) return;
 
         GameObject go = Object.Instantiate(prefab, position, Quaternion.identity);
@@ -27,7 +33,8 @@ public static class SunGenerationParticleEffect
         float t = Mathf.InverseLerp(MinSun, MaxSun, Mathf.Max(amount, MinSun));
         int burstCount = Mathf.RoundToInt(Mathf.Lerp(MinBurst, MaxBurst, t));
 
-        foreach (ParticleSystem ps in go.GetComponentsInChildren<ParticleSystem>())
+        go.GetComponentsInChildren(systems);
+        foreach (ParticleSystem ps in systems)
         {
             ParticleSystem.EmissionModule emission = ps.emission;
             ParticleSystem.Burst burst = emission.GetBurst(0);

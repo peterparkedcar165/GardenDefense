@@ -43,7 +43,13 @@ public class PlantUpgradeUI : EntityInfoPanel
 
         [System.NonSerialized] public int shownLevel = -1;
         [System.NonSerialized] public float[] flashUntil;
+        // the price the price text shows (ShownMaxPrice while it says Max), so the number is only
+        // turned into text when it changes
+        [System.NonSerialized] public int shownPrice = ShownNoPrice;
     }
+
+    private const int ShownNoPrice = int.MinValue;
+    private const int ShownMaxPrice = int.MinValue + 1;
 
     public static PlantUpgradeUI instance;
 
@@ -162,7 +168,20 @@ public class PlantUpgradeUI : EntityInfoPanel
     private int shownLevelBars = -1;
     private bool shownAsPlant;
     // the locked skill price the strip's group was last laid out for
-    private string lockedPriceLaidOut;
+    private int lockedPriceLaidOut = ShownNoPrice;
+
+    // the values the live texts below were last written from, so a text is only made again when
+    // what it shows changed. NaN or the ShownNo values mean not written yet
+    private float shownHealth = float.NaN, shownMaxHealth = float.NaN, shownShield = float.NaN;
+    private float shownAir = float.NaN;
+    private float shownTemperature = float.NaN;
+    private string shownTemperatureState;
+    private int shownSkillSeconds = ShownNoPrice;
+    private int shownTransplant = ShownNoPrice;
+    private int shownAutoCast = ShownNoPrice;
+    private string shownAutoCastLabel;
+    // the comfort marks' images, looked up once
+    private Image comfortMinImage, comfortMaxImage;
 
     // fluid health bar, matching the plant widget: the fill eases toward the real share each frame
     // instead of snapping, and resets on a new selection so it never lerps in from the last one
@@ -447,13 +466,17 @@ public class PlantUpgradeUI : EntityInfoPanel
     {
         if (fill == null) return;
         float width = Mathf.Floor(InnerWidth(fill.rectTransform) * Mathf.Clamp01(fraction)) * Px;
-        foreach (Image image in new[] { fill, shine })
-        {
-            if (image == null) continue;
-            RectTransform rect = image.rectTransform;
-            rect.sizeDelta = new Vector2(width, rect.sizeDelta.y);
-            image.enabled = width > 0f;
-        }
+        // each image on its own, no array made per call
+        ApplyFillWidth(fill, width);
+        ApplyFillWidth(shine, width);
+    }
+
+    private static void ApplyFillWidth(Image image, float width)
+    {
+        if (image == null) return;
+        RectTransform rect = image.rectTransform;
+        rect.sizeDelta = new Vector2(width, rect.sizeDelta.y);
+        image.enabled = width > 0f;
     }
 
     private void RefreshHealthBar()
@@ -503,8 +526,12 @@ public class PlantUpgradeUI : EntityInfoPanel
 
         RefreshDamageChunk(entity, pct);
 
-        if (healthBar.text != null)
+        // the same numbers give the same text, so it is only made again when one changed
+        if (healthBar.text != null && (health != shownHealth || maxHealth != shownMaxHealth || shield != shownShield))
         {
+            shownHealth = health;
+            shownMaxHealth = maxHealth;
+            shownShield = shield;
             string shieldSuffix = shield > 0f ? $" <color=#888888>(+{shield:F0})</color>" : "";
             healthBar.text.text = $"{health:F0}/{maxHealth:F0}{shieldSuffix}";
         }
@@ -568,7 +595,11 @@ public class PlantUpgradeUI : EntityInfoPanel
         PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
         SetFill(oxygenBar.fill, oxygenBar.shine, plant.air / 100f);
         if (oxygenBar.fill != null) oxygenBar.fill.color = plant.air <= 0f ? style.oxygenEmpty : style.oxygen;
-        if (oxygenBar.text != null) oxygenBar.text.text = $"{plant.air:F0}/100";
+        if (oxygenBar.text != null && plant.air != shownAir)
+        {
+            shownAir = plant.air;
+            oxygenBar.text.text = $"{plant.air:F0}/100";
+        }
     }
 
     private void RefreshTemperatureBar(Plant plant)
@@ -583,21 +614,27 @@ public class PlantUpgradeUI : EntityInfoPanel
         else if (plant.temperature > plant.comfortMax) { state = "Hot";     color = style.temperatureHot; }
         else                                           { state = "Comfort"; color = style.temperatureComfort; }
         if (temperatureBar.fill != null) temperatureBar.fill.color = color;
-        if (temperatureBar.text != null) temperatureBar.text.text = $"{plant.temperature:F1}° {state}";
+        if (temperatureBar.text != null && (plant.temperature != shownTemperature || state != shownTemperatureState))
+        {
+            shownTemperature = plant.temperature;
+            shownTemperatureState = state;
+            temperatureBar.text.text = $"{plant.temperature:F1}° {state}";
+        }
 
-        PlaceComfortMark(tempComfortMinIndicator, Fraction(plant.comfortMin, min, max));
-        PlaceComfortMark(tempComfortMaxIndicator, Fraction(plant.comfortMax, min, max));
+        if (comfortMinImage == null && tempComfortMinIndicator != null) comfortMinImage = tempComfortMinIndicator.GetComponent<Image>();
+        if (comfortMaxImage == null && tempComfortMaxIndicator != null) comfortMaxImage = tempComfortMaxIndicator.GetComponent<Image>();
+        PlaceComfortMark(tempComfortMinIndicator, comfortMinImage, Fraction(plant.comfortMin, min, max));
+        PlaceComfortMark(tempComfortMaxIndicator, comfortMaxImage, Fraction(plant.comfortMax, min, max));
     }
 
     private static float Fraction(float value, float min, float max) =>
         max > min ? Mathf.Clamp01((value - min) / (max - min)) : 0f;
 
     // a 1 pixel mark inside the bar's frame, on the art pixel for that share of the bar
-    private static void PlaceComfortMark(RectTransform mark, float fraction)
+    private static void PlaceComfortMark(RectTransform mark, Image image, float fraction)
     {
         if (mark == null) return;
         PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
-        Image image = mark.GetComponent<Image>();
         if (image != null) image.color = style.comfortMark;
         float inner = InnerWidth(mark);
         float x = 1f + Mathf.Clamp(Mathf.Round(inner * fraction), 0f, inner - 1f);
@@ -646,9 +683,10 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (lockedPrice != null) lockedPrice.color = affordable ? glyph : style.locked.text;
         if (lockedSun != null) lockedSun.color = affordable ? style.normal.sun : style.locked.sun;
 
+        // compared as a number, so the text is only made when the price changed
+        if (lockedPrice == null || cost == lockedPriceLaidOut) return;
+        lockedPriceLaidOut = cost;
         string price = cost.ToString();
-        if (lockedPrice == null || price == lockedPriceLaidOut) return;
-        lockedPriceLaidOut = price;
         lockedPrice.text = price;
         RectTransform strip = lockedSkillStrip.transform as RectTransform;
         float stripWidth = strip != null ? Mathf.Round(strip.rect.width / Px) : 214f;
@@ -697,7 +735,12 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (row.priceText != null)
         {
             row.priceText.gameObject.SetActive(!capped);
-            row.priceText.text = trueMax ? "Max" : cost.ToString();
+            int price = trueMax ? ShownMaxPrice : cost;
+            if (price != row.shownPrice)
+            {
+                row.shownPrice = price;
+                row.priceText.text = trueMax ? "Max" : cost.ToString();
+            }
         }
 
         if (row.pips == null) return;
@@ -774,8 +817,13 @@ public class PlantUpgradeUI : EntityInfoPanel
         bool smallLock = unlocked && silenced;
         if (skillLock != null && skillLock.activeSelf != smallLock)
             skillLock.SetActive(smallLock);
-        if (skillCooldownText != null)
-            skillCooldownText.text = cooling && !silenced ? Mathf.CeilToInt(p.skillCooldownTimer).ToString() : "";
+        // whole seconds, so the text only changes once a second (-1: shows nothing)
+        int seconds = cooling && !silenced ? Mathf.CeilToInt(p.skillCooldownTimer) : -1;
+        if (skillCooldownText != null && seconds != shownSkillSeconds)
+        {
+            shownSkillSeconds = seconds;
+            skillCooldownText.text = seconds != -1 ? seconds.ToString() : "";
+        }
     }
 
     private void RefreshTransplantButton()
@@ -795,18 +843,32 @@ public class PlantUpgradeUI : EntityInfoPanel
             && PlantSelector.instance.transplantingPlant == selectedPlant;
         bool ready = selectedPlant.TransplantReady;
         transplantButton.interactable = ready && !targeting;
-        if (transplantCooldownText != null)
+        // ShownNoPrice for "Pick a tile", ShownMaxPrice for "Move", else the whole seconds left
+        int state = targeting ? ShownNoPrice : ready ? ShownMaxPrice : Mathf.CeilToInt(selectedPlant.transplantCooldownTimer);
+        if (transplantCooldownText != null && (state != shownTransplant || !transplantShown))
+        {
+            transplantShown = true;
+            shownTransplant = state;
             transplantCooldownText.text = targeting ? "Pick a tile"
                 : ready ? "Move"
-                : $"Move {Mathf.CeilToInt(selectedPlant.transplantCooldownTimer)}s";
+                : $"Move {state}s";
+        }
     }
+
+    private bool transplantShown;
 
     private void RefreshAutoCastButton()
     {
         if (autoCastButton == null || !selectedPlant.UsesAutoCast) return;
         bool targeting = SkillTargetingManager.instance.IsPlantTargeting;
-        if (autoCastButtonText != null)
-            autoCastButtonText.text = targeting ? "Pick one" : $"{ShortAutoCastLabel(selectedPlant)}: {(selectedPlant.IsAutoCasting ? "On" : "Off")}";
+        if (autoCastButtonText == null) return;
+        // 2 picking, 1 on, 0 off; built again only when that or the plant's label changes
+        int state = targeting ? 2 : selectedPlant.IsAutoCasting ? 1 : 0;
+        string label = selectedPlant.AutoCastLabel;
+        if (state == shownAutoCast && label == shownAutoCastLabel) return;
+        shownAutoCast = state;
+        shownAutoCastLabel = label;
+        autoCastButtonText.text = targeting ? "Pick one" : $"{ShortAutoCastLabel(selectedPlant)}: {(selectedPlant.IsAutoCasting ? "On" : "Off")}";
     }
 
     // "Auto Cast" doesn't fit the 73 pixel button with its state, so it reads "Auto"

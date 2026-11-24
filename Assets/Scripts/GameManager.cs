@@ -70,9 +70,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // set at 0 health. the game then stays stopped: unpausing, the speed buttons or closing the
+    // settings panel no longer start time again (restart or leave the level instead)
+    private bool gameOver;
+
     private void GameOver()
     {
         Debug.Log("Game Over");
+        gameOver = true;
         Time.timeScale = 0; // pauses game
         // show game over screen later
     }
@@ -165,7 +170,7 @@ public class GameManager : MonoBehaviour
     {
         paused = value;
         if (!paused) HasStarted = true;
-        Time.timeScale = paused ? 0f : gameSpeed;
+        Time.timeScale = paused || gameOver ? 0f : gameSpeed;
         GameHUD.instance?.SetPauseButton(paused, HasStarted);
     }
 
@@ -173,7 +178,7 @@ public class GameManager : MonoBehaviour
     {
         speedIndex = (speedIndex + 1) % speeds.Length;
         gameSpeed = speeds[speedIndex];
-        if (!paused) Time.timeScale = gameSpeed;
+        if (!paused && !gameOver) Time.timeScale = gameSpeed;
         GameHUD.instance?.SetSpeedButton(gameSpeed);
     }
 
@@ -181,7 +186,7 @@ public class GameManager : MonoBehaviour
     {
         speedIndex = (speedIndex - 1 + speeds.Length) % speeds.Length;
         gameSpeed = speeds[speedIndex];
-        if (!paused) Time.timeScale = gameSpeed;
+        if (!paused && !gameOver) Time.timeScale = gameSpeed;
         GameHUD.instance?.SetSpeedButton(gameSpeed);
     }
 
@@ -191,6 +196,7 @@ public class GameManager : MonoBehaviour
     {
         IsGameActive = true;
         HasStarted = false;
+        gameOver = false;
         SunCount = sunCount;
         totalSunGenerated = 0;
         totalSunSpent = 0;

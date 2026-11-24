@@ -50,9 +50,16 @@ public class EmberProjectile : MonoBehaviour
         _damageType        = damageType;
         _elementalType     = elementalType;
 
-        if (transform.childCount > 0)
-            transform.GetChild(0).GetComponent<SpriteRenderer>()?.gameObject.SetActive(true);
+        // TryGetComponent: in the editor a missing component comes back as a fake null that ?.
+        // doesn't stop, and .gameObject on it throws
+        if (transform.childCount > 0 && transform.GetChild(0).TryGetComponent(out SpriteRenderer childSprite))
+            childSprite.gameObject.SetActive(true);
     }
+
+    // the target is gone: an interface null check skips unity's destroyed check, so an uprooted
+    // plant (destroyed with its health left as it was) still looked alive and the ember threw an
+    // error every frame instead of retargeting
+    private bool TargetGone => (_target as UnityEngine.Object) == null || !_target.IsAlive;
 
     public void SetBouncesRemaining(int count) => _bouncesRemaining = count;
     public void MarkAsBounce()                 => _isBounce = true;
@@ -80,11 +87,11 @@ public class EmberProjectile : MonoBehaviour
             return;
         }
 
-        if (_target == null || !_target.IsAlive)
+        if (TargetGone)
         {
             // bounce embers only ever seek friendly units
             _target = _isBounce ? FindBounceTarget(_hitHistory) : (_source != null ? _source.FindCurrentTarget() : null);
-            if (_target == null) { Destroy(gameObject); return; }
+            if ((_target as UnityEngine.Object) == null) { Destroy(gameObject); return; }
         }
 
         Insect targetInsect = _target as Insect;
@@ -97,7 +104,7 @@ public class EmberProjectile : MonoBehaviour
 
     private void Detonate()
     {
-        if (_target == null || !_target.IsAlive) return;
+        if (TargetGone) return;
 
         bool targetWasFriendly = false;
 

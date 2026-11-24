@@ -41,12 +41,17 @@ public class JumpingSpider : Insect
 
     protected override bool FallDamageImmune => _fallDamageImmune;
 
+    // the leap target is still there to go for: an interface != null check skips unity's destroyed
+    // check, so an uprooted plant (destroyed with its health left as it was) still looked alive
+    // and froze the spider throwing an error every frame. a destroyed target counts as gone
+    private bool LeapTargetValid => (_leapTarget as UnityEngine.Object) != null && _leapTarget.IsAlive;
+
     // only exposes a target during the attacking phase so the base attack loop fires
     public override IAttackable target
     {
         get
         {
-            if (_leapState == LeapState.Attacking && _leapTarget != null && _leapTarget.IsAlive)
+            if (_leapState == LeapState.Attacking && LeapTargetValid)
                 return _leapTarget;
             return null;
         }
@@ -97,7 +102,7 @@ public class JumpingSpider : Insect
                 break;
 
             case LeapState.Aiming:
-                if (_leapTarget == null || !_leapTarget.IsAlive)
+                if (!LeapTargetValid)
                 { _leapState = LeapState.Walking; break; }
                 _aimTimer -= Time.deltaTime;
                 if (_aimTimer <= 0f) BeginLeap();
@@ -109,7 +114,7 @@ public class JumpingSpider : Insect
                 break;
 
             case LeapState.Attacking:
-                if (_leapTarget == null || !_leapTarget.IsAlive)
+                if (!LeapTargetValid)
                 {
                     _leapTarget = null;
                     bool wasHighground = _isPerchedOnHighground;
@@ -256,7 +261,7 @@ public class JumpingSpider : Insect
         // clear immunity on any landing
         _fallDamageImmune = false;
 
-        if (!_isReturnLeap && _leapTarget != null && _leapTarget.IsAlive)
+        if (!_isReturnLeap && LeapTargetValid)
         {
             float dist = Vector3.Distance(transform.position, _leapTarget.GetApproachPoint(transform.position));
             if (dist <= attackRange * 1.5f)

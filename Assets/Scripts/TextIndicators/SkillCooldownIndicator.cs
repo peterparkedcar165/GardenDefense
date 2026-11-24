@@ -10,9 +10,9 @@ public static class SkillCooldownIndicator
 
     public static void Spawn(Vector3 position, float amount)
     {
-        GameObject go = Object.Instantiate(
-            Resources.Load<GameObject>("HealIndicator"), position, Quaternion.identity);
-        go.GetComponent<HealIndicator>()?.Initialize(amount);
+        GameObject go = Object.Instantiate(HealIndicator.Prefab, position, Quaternion.identity);
+        HealIndicator indicator = go.GetComponent<HealIndicator>();
+        if (indicator != null) indicator.Initialize(amount);
         TMP_Text tmp = go.GetComponent<TMP_Text>();
         if (tmp == null) return;
         tmp.color = WindColor;

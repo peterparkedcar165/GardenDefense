@@ -7,7 +7,10 @@ public class NeriumOleanderProjectile : Projectile
     private int bouncesHit = 0;
     private float bounceDamageReduction = 0.1f;
     private float bounceSearchRadius = 6f;
-    private List<Insect> alreadyHit = new List<Insect>();
+    // a set: every bounce retarget asks it about every insect (only Add and Contains are used)
+    private readonly HashSet<Insect> alreadyHit = new HashSet<Insect>();
+    // made once and shared by every hit: nothing writes into it
+    private static readonly DamageTag[] HitTags = { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget };
     private HashSet<OleanderSprout> hitSprouts = new HashSet<OleanderSprout>();
     private bool hasGainedSproutBounceBonus = false;
 
@@ -36,7 +39,7 @@ public class NeriumOleanderProjectile : Projectile
         bouncesHit++;
 
         insect.Damage(effectiveDamage, damageType, elementalType, source, true,
-            new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
+            HitTags);
 
         if (source is NeriumOleander oleander && oleander.IsPath1Maxed)
         {

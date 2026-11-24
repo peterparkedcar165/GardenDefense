@@ -45,6 +45,7 @@ public abstract class Lobber : Plant
             GameObject target = FindLobberTarget();
             if (target != null)
             {
+                FaceAttackTarget(target);
                 attackCooldownTimer = 0f;
                 Fire(target, GetLandingPosition(target));
                 if (data != null) SfxPlayer.Play(data.attackSound, transform.position);

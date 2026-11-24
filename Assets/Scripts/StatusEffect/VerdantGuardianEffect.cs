@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class VerdantGuardianEffect : ShieldEffect
 {
+    // one shared tag array for every instance
+    private static readonly EffectTag[] RegenTags = { EffectTag.Regenerative };
+
     private readonly float _regenPerSecond;
     // the shared over time timing (OverTimeTicker): a tick every second
     private readonly OverTimeTicker _ticks = new OverTimeTicker(1f);
@@ -11,7 +14,7 @@ public class VerdantGuardianEffect : ShieldEffect
     {
         _regenPerSecond = regenPerSecond;
         elementalType = ElementalType.Grass;
-        tags = new EffectTag[] { EffectTag.Regenerative };
+        tags = RegenTags;
     }
 
     public override void OnTick(float deltaTime)

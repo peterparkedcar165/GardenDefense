@@ -160,17 +160,29 @@ public class Tansy : Aura
     // Borrowed Light: every plant currently carrying a Floral Glow cast by this Tansy acts as
     // a second illumination source, sharing its passive's max level bonus and Guiding Light/
     // Radiant Aura fork with anything standing in range of the target instead of Tansy herself
+    // filled once a frame into one reused list (up to three ticks ask for it in the same frame),
+    // and only read inside this Tansy's own Update
+    private readonly List<Plant> _floralGlowTargets = new List<Plant>();
+    private int _floralGlowTargetsFrame = -1;
+
     private List<Plant> GetFloralGlowTargets()
     {
-        List<Plant> targets = new List<Plant>();
+        if (_floralGlowTargetsFrame == Time.frameCount) return _floralGlowTargets;
+        _floralGlowTargetsFrame = Time.frameCount;
+        _floralGlowTargets.Clear();
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
             TansyGlowEffect fg = plant.GetEffect<TansyGlowEffect>();
-            if (fg != null && fg.source == this) targets.Add(plant);
+            if (fg != null && fg.source == this) _floralGlowTargets.Add(plant);
         }
-        return targets;
+        return _floralGlowTargets;
     }
+
+    // reused lists and tags for the light ticks below, instead of new ones each tick
+    private readonly List<Insect> _guidingLightInsects = new List<Insect>();
+    private readonly HashSet<Plant> _radiantHealed = new HashSet<Plant>();
+    private static readonly HealTag[] RegenTags = { HealTag.Regeneration };
 
     protected override bool ShowLight => DarknessManager.instance != null && (DarknessManager.instance.isDark || DarknessManager.instance.pitchBlack);
     public override bool ShowDarkCircle => false;
@@ -213,7 +225,10 @@ public class Tansy : Aura
             if (_guidingLightTimer >= GuidingLightInterval)
             {
                 _guidingLightTimer = 0f;
-                List<Insect> insects = new List<Insect>(Insect.allInsects);
+                // still a snapshot (an apply hook could change the live list), just into a reused list
+                List<Insect> insects = _guidingLightInsects;
+                insects.Clear();
+                insects.AddRange(Insect.allInsects);
                 List<Plant> glowTargets = borrowedLight ? GetFloralGlowTargets() : null;
 
                 foreach (Insect insect in insects)
@@ -245,13 +260,14 @@ public class Tansy : Aura
             if (_radiantAuraTimer >= RadiantAuraInterval)
             {
                 _radiantAuraTimer = 0f;
-                HashSet<Plant> healed = new HashSet<Plant>();
+                HashSet<Plant> healed = _radiantHealed;
+                healed.Clear();
                 foreach (Plant plant in Plant.allPlants)
                 {
                     if (plant == null || !plant.IsAlive || plant == this) continue;
                     if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
                     healed.Add(plant);
-                    plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, new HealTag[] { HealTag.Regeneration });
+                    plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, RegenTags);
                 }
 
                 if (borrowedLight)
@@ -262,7 +278,7 @@ public class Tansy : Aura
                         if (plant == null || !plant.IsAlive || plant == this || healed.Contains(plant)) continue;
                         if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
                         healed.Add(plant);
-                        plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, new HealTag[] { HealTag.Regeneration });
+                        plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, RegenTags);
                     }
                 }
             }
@@ -330,7 +346,9 @@ public class Tansy : Aura
     {
         base.OnDestroy();
         Plant.OnPlantPlaced -= HandlePlantPlaced;
-        _autoCastHighlighted?.ClearHighlight();
+        // unity null check: on a plant already destroyed at teardown the call would throw and
+        // skip the projectile cleanup below
+        if (_autoCastHighlighted != null) _autoCastHighlighted.ClearHighlight();
 
         foreach (TansyProjectile proj in _orbitProjectiles)
             if (proj != null) Destroy(proj.gameObject);

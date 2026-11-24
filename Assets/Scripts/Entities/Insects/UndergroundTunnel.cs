@@ -117,8 +117,12 @@ public class UndergroundTunnel : MonoBehaviour
 
     private void ScanForEntrants()
     {
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        // straight over the live list, no copy every scan: nothing in here adds or removes insects
+        // (RerouteTo and SetBurrowed leave Insect.allInsects alone)
+        List<Insect> insects = Insect.allInsects;
+        for (int i = 0; i < insects.Count; i++)
         {
+            Insect insect = insects[i];
             if (insect == null || !insect.IsAlive) continue;
             if (insect.isFlying || insect.isBurrowed || insect.carriedBy != null) continue;
             if (insect is Earthworm) continue;

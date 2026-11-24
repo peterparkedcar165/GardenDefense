@@ -3,6 +3,9 @@ using UnityEngine.Rendering.Universal;
 
 public class GlowshroomProjectile : Projectile
 {
+    // made once and shared by every hit: nothing writes into it
+    private static readonly DamageTag[] HitTags = { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget };
+
     private Glowshroom _mushroom;
 
     public void Initialize(Vector3 target, float damage, float speed, float maxRange, int piercing,
@@ -22,7 +25,7 @@ public class GlowshroomProjectile : Projectile
     protected override void OnHit(Insect insect)
     {
         insect.Damage(projectileDamage, damageType, elementalType, source, false,
-            new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
+            HitTags);
         _mushroom?.OnBoltHit(transform.position, insect);
     }
 }

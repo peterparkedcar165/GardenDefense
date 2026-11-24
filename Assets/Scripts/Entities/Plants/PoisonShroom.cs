@@ -106,6 +106,10 @@ public class PoisonShroom : Shooter
 
         if (fresh.Count > 0) return PickByTargeting(fresh);
         if (leastTimeInsect != null) return leastTimeInsect.gameObject;
+        // nothing passed the range and night checks above, and the normal search uses those same
+        // checks (plus more), so all it could still return is her forced target. without one it
+        // would only scan every insect again to find nothing (the usual idle state)
+        if (forcedPriorityTarget == null) return null;
         return base.FindTarget();
     }
 

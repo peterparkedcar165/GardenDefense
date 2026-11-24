@@ -773,12 +773,31 @@ public class MulchInventoryUI : MonoBehaviour
     // then a blank line before the hint (Tommy, 2026-11-20)
     private static string TooltipText(MulchItem item, MulchEffect effect, string hint)
     {
-        string text = $"<b>{item.Name}</b>  <size=80%>{MulchData.RarityLabel(item.rarity)}</size>\n\n" +
-            $"<size=90%>When equipped on a plant:</size>\n\n<size=90%>{(item.data != null ? item.data.GetDescription(item, effect) : "")}</size>";
+        AppendTooltipText(tooltipBuilder.Clear(), item, effect, hint);
+        return tooltipBuilder.ToString();
+    }
+
+    // one builder for the tooltip text, so the live refresh in LateUpdate only makes a string
+    // when the text changed
+    private static readonly System.Text.StringBuilder tooltipBuilder = new System.Text.StringBuilder(256);
+
+    private static void AppendTooltipText(System.Text.StringBuilder sb, MulchItem item, MulchEffect effect, string hint)
+    {
+        sb.Append("<b>").Append(item.Name).Append("</b>  <size=80%>").Append(MulchData.RarityLabel(item.rarity)).Append("</size>\n\n")
+          .Append("<size=90%>When equipped on a plant:</size>\n\n<size=90%>")
+          .Append(item.data != null ? item.data.GetDescription(item, effect) : "").Append("</size>");
         string status = effect != null ? effect.GetStatus() : null;
-        if (!string.IsNullOrEmpty(status)) text += $"\n<size=85%><color=#FFD27F>{status}</color></size>";
-        if (!string.IsNullOrEmpty(hint)) text += $"\n\n<size=75%><color=#AAAAAA>{hint}</color></size>";
-        return text;
+        if (!string.IsNullOrEmpty(status)) sb.Append("\n<size=85%><color=#FFD27F>").Append(status).Append("</color></size>");
+        if (!string.IsNullOrEmpty(hint)) sb.Append("\n\n<size=75%><color=#AAAAAA>").Append(hint).Append("</color></size>");
+    }
+
+    // compares the builder with a string without making a new string
+    private static bool BuilderMatches(System.Text.StringBuilder builder, string text)
+    {
+        if (text == null || builder.Length != text.Length) return false;
+        for (int i = 0; i < text.Length; i++)
+            if (builder[i] != text[i]) return false;
+        return true;
     }
 
     public void HideTooltip()
@@ -797,10 +816,10 @@ public class MulchInventoryUI : MonoBehaviour
             // only re lay out when the text really changed (a timer's whole second ticking over). an
             // equipped mulch follows its effect, which a merge moves to the higher rarity copy
             MulchItem shown = tooltipEffect != null && tooltipEffect.Item != null ? tooltipEffect.Item : tooltipItem;
-            string text = TooltipText(shown, tooltipEffect, tooltipHint);
-            if (text != tooltipText.text)
+            AppendTooltipText(tooltipBuilder.Clear(), shown, tooltipEffect, tooltipHint);
+            if (!BuilderMatches(tooltipBuilder, tooltipText.text))
             {
-                tooltipText.text = text;
+                tooltipText.text = tooltipBuilder.ToString();
                 LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
             }
         }

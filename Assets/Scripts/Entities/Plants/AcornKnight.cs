@@ -196,6 +196,13 @@ public class AcornKnight : Aura
             attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - CounterStanceCooldownReduction);
     }
 
+    // one array each, not a new one for every insect a strike or bash hits
+    private static readonly DamageTag[] SwordHitTags = { DamageTag.Melee, DamageTag.Attack };
+    private static readonly DamageTag[] BashHitTags = { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter, DamageTag.PassiveDamage };
+
+    private const float MainTargetInterval = 0.15f;
+    private float _mainTargetTimer;
+
     protected override void Update()
     {
         base.Update(); // Aura sets attackCooldown = 1 / attackSpeed
@@ -203,7 +210,18 @@ public class AcornKnight : Aura
         TickTimers(Time.deltaTime);
         TickRegen(Time.deltaTime);
 
-        _mainTarget = FindTarget();
+        // his target search runs every frame while his attack is ready, so a swing is never late, and
+        // otherwise every MainTargetInterval, or at once when his target dies or leaves his reach;
+        // the sword and shield still follow the target every frame
+        bool attackReady = attackCooldownTimer >= attackCooldown;
+        _mainTargetTimer -= Time.deltaTime;
+        bool targetLost = !ReferenceEquals(_mainTarget, null)
+            && (_mainTarget == null || !_mainTarget.IsAlive || !CanReachInsect(_mainTarget));
+        if (attackReady || targetLost || _mainTargetTimer <= 0f)
+        {
+            _mainTarget = FindTarget();
+            _mainTargetTimer = MainTargetInterval;
+        }
         if (_mainTarget != null)
             SetFacing(_mainTarget.GetApproachPoint(transform.position));
 
@@ -211,7 +229,10 @@ public class AcornKnight : Aura
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
         else if (!stunned && _mainTarget != null)
+        {
+            FaceAttackTarget(_mainTarget.gameObject);
             Attack();
+        }
 
         UpdateFacingVisual();
         SetBodyBool(BodyShieldOutBool, _shieldOut);
@@ -415,7 +436,7 @@ public class AcornKnight : Aura
             Insect insect = hits[i];
             if (insect == null || !insect.IsAlive) continue;
             float falloff = noFalloff ? 1f : Mathf.Max(SwingMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
-            insect.Damage(attackDamage * damageShare * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+            insect.Damage(attackDamage * damageShare * falloff, damageType, elementalType, this, false, SwordHitTags);
         }
     }
 
@@ -433,7 +454,7 @@ public class AcornKnight : Aura
             Insect insect = hits[i];
             if (insect == null || !insect.IsAlive) continue;
             float falloff = noFalloff ? 1f : Mathf.Max(BashMinDamageMultiplier, 1f - ConeFalloffPerTarget * i);
-            insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.Counter, DamageTag.PassiveDamage });
+            insect.Damage(armor * BashDamagePercent * falloff, damageType, elementalType, this, false, BashHitTags);
 
             if (insect.IsAlive && IsPath2Maxed)
                 insect.ApplyEffect(new StunEffect(insect, BashStunDuration, 1, this));

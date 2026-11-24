@@ -46,7 +46,7 @@ public class HelleboreProtectionEffect : ShieldEffect
     public override void OnDamageReceived(ElementalType elementalType, Entity damageSource, DamageTag[] damageTags = null)
     {
         if (damageSource == null) return;
-        if (damageTags == null || !System.Array.Exists(damageTags, t => t == DamageTag.Attack)) return;
+        if (!Entity.HasTag(damageTags, DamageTag.Attack)) return;
         if (damageSource is Insect ins && ins.team == Team.Friendly) return;
 
         // OnDamageReceived fires independently on every stacked HelleboreProtectionEffect for

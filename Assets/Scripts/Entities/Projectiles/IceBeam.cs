@@ -47,10 +47,13 @@ public class IceBeam : MonoBehaviour
         Vector3 direction = transform.right;
         float range = Mathf.Max(0f, maxRange);
 
-        // every hostile insect within beamWidth of the beam's CURRENT facing line, ordered by
-        // how far along it sits - may not be the same insects the beam was aimed at a moment
-        // ago if it's still mid-turn, which is correct: it only hits what it's actually touching
-        List<(Insect insect, float dist)> inPath = new List<(Insect, float)>();
+        // every hostile insect within beamWidth of the beam's CURRENT facing line - may not be
+        // the same insects the beam was aimed at a moment ago if it's still mid-turn, which is
+        // correct: it only hits what it's actually touching. no piercing, so only the nearest one
+        // along the line matters: it is tracked as the scan goes (this runs every frame, and a new
+        // list plus a sort every frame only ever used its first entry)
+        Insect first = null;
+        float firstAlong = float.MaxValue;
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive || insect.team == Team.Friendly) continue;
@@ -63,30 +66,22 @@ public class IceBeam : MonoBehaviour
             if (along < 0f || along > range) continue;
             float perp = (toInsect - direction * along).magnitude;
             if (perp > beamWidth * 0.5f) continue;
-            inPath.Add((insect, along));
+            if (along < firstAlong)
+            {
+                firstAlong = along;
+                first = insect;
+            }
         }
-        inPath.Sort((a, b) => a.dist.CompareTo(b.dist));
 
         // no piercing - the beam only ever hits the first thing in its path
-        const int maxHits = 1;
-        int hitCount = Mathf.Min(inPath.Count, maxHits);
-
         _currentHits.Clear();
-        for (int i = 0; i < hitCount; i++)
-            _currentHits.Add(inPath[i].insect);
+        if (first != null) _currentHits.Add(first);
 
-        // stops short only if there were MORE insects on the line than the beam could pierce.
-        // otherwise it reaches exactly as far as the farthest thing it's actually hitting - not
-        // blindly out to maxRange, since maxRange can now be unlimited (Path2 max removes the
-        // cap entirely) and a literal infinite-length sprite would break the visual
-        bool stoppedShort = inPath.Count > maxHits;
-        float beamLength;
-        if (stoppedShort)
-            beamLength = inPath[maxHits - 1].dist;
-        else if (inPath.Count > 0)
-            beamLength = inPath[inPath.Count - 1].dist;
-        else
-            beamLength = Mathf.Min(range, toTarget.magnitude);
+        // it stops on the first insect in its path. with nothing on the line it reaches to the
+        // target, never past range - not blindly out to maxRange, since maxRange can now be
+        // unlimited (Path2 max removes the cap entirely) and a literal infinite-length sprite
+        // would break the visual
+        float beamLength = first != null ? firstAlong : Mathf.Min(range, toTarget.magnitude);
 
         if (beamSprite != null)
         {

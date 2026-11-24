@@ -141,11 +141,9 @@ public class TutorialPopupUI : MonoBehaviour, IPointerClickHandler
     public void NotifyEvent(string eventId)
     {
         if (pages == null || pageIndex >= pages.Length) return;
+        // no log for an ignored event: every hover and click lands here while a popup is up
         if (pages[pageIndex].waitForEventId != eventId)
-        {
-            Debug.Log($"[Tutorial] Popup.NotifyEvent('{eventId}') ignored - current page waits for '{pages[pageIndex].waitForEventId}'");
             return;
-        }
         Debug.Log($"[Tutorial] Popup.NotifyEvent('{eventId}') matched current page - advancing");
         Advance();
     }

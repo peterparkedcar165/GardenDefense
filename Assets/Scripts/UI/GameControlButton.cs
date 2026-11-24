@@ -34,7 +34,11 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private Button button;
     private int iconTop;
     private bool hasPlacement;
-    private string layoutKey;
+    // what the last layout was done for
+    private bool laidOut;
+    private Sprite laidOutGlyph;
+    private string laidOutText;
+    private int laidOutIconTop, laidOutIconGap, laidOutLabelTop;
 
     private void Awake()
     {
@@ -136,10 +140,17 @@ public class GameControlButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
         GameControlsStyle style = GameControlsStyle.Instance;
         Sprite glyph = icon != null ? icon.sprite : null;
         bool showLabel = label != null && label.gameObject.activeSelf;
-        string key = (glyph != null ? glyph.name : "") + "|" + (showLabel ? label.text : "") + "|" + iconTop + "|"
-            + style.iconGap + "|" + style.labelTop;
-        if (key == layoutKey) return;
-        layoutKey = key;
+        // compared field by field instead of building a key string every frame
+        string shownText = showLabel ? label.text : null;
+        if (laidOut && glyph == laidOutGlyph && shownText == laidOutText && iconTop == laidOutIconTop
+            && style.iconGap == laidOutIconGap && style.labelTop == laidOutLabelTop)
+            return;
+        laidOut = true;
+        laidOutGlyph = glyph;
+        laidOutText = shownText;
+        laidOutIconTop = iconTop;
+        laidOutIconGap = style.iconGap;
+        laidOutLabelTop = style.labelTop;
 
         float iconWidth = glyph != null ? glyph.rect.width : 0f;
         float inkLeft = 0f, inkWidth = 0f;

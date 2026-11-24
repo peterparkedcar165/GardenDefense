@@ -51,15 +51,30 @@ public class HealSplashMulchEffect : MulchEffect
 
     private IEnumerator DelayedSplash(Plant healed, float damage)
     {
-        yield return new WaitForSeconds(OnHitDelay);
+        yield return SplashDelay;
         if (!OwnerAlive) yield break;
         Vector3 center = healed != null && healed.IsAlive ? healed.transform.position : Owner.transform.position;
         float radius = typedData.radius * Tile.CellSize;
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        float radiusSqr = radius * radius;
+        // a snapshot, since the damage can kill insects; pooled instead of a new list per splash
+        List<Insect> insects = UnityEngine.Pool.ListPool<Insect>.Get();
+        insects.AddRange(Insect.allInsects);
+        try
         {
-            if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(insect.transform.position, center) > radius) continue;
-            dealt += DealDamage(insect, damage, Owner.damageType, Owner.elementalType, Owner, SplashTags);
+            for (int i = 0; i < insects.Count; i++)
+            {
+                Insect insect = insects[i];
+                if (insect == null || !insect.IsAlive) continue;
+                if ((insect.transform.position - center).sqrMagnitude > radiusSqr) continue;
+                dealt += DealDamage(insect, damage, Owner.damageType, Owner.elementalType, Owner, SplashTags);
+            }
+        }
+        finally
+        {
+            UnityEngine.Pool.ListPool<Insect>.Release(insects);
         }
     }
+
+    // made once and shared by every splash
+    private static readonly WaitForSeconds SplashDelay = new WaitForSeconds(OnHitDelay);
 }

@@ -78,23 +78,30 @@ public class WeatherManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        // found here, not in Start: ProceduralLevel.Start can set the base weather before this
+        // Start runs, and the weather particles check for a night light once, when they are made
+        FindSceneLight();
+    }
+
+    // the hand-assigned Inspector reference is kept as an optional override, but every
+    // level's biome light (DayLight/NightLight/DesertLight/UnderwaterDaylight) is the
+    // scene's one Light2D of type Global, so find it automatically rather than requiring
+    // it to be dragged in per scene
+    private void FindSceneLight()
+    {
+        if (sceneLight != null) return;
+        foreach (Light2D light in FindObjectsByType<Light2D>(FindObjectsInactive.Exclude))
+        {
+            if (light.lightType != Light2D.LightType.Global) continue;
+            sceneLight = light;
+            break;
+        }
     }
 
     void Start()
     {
-        // the hand-assigned Inspector reference is kept as an optional override, but every
-        // level's biome light (DayLight/NightLight/DesertLight/UnderwaterDaylight) is the
-        // scene's one Light2D of type Global, so find it automatically rather than requiring
-        // it to be dragged in per scene
-        if (sceneLight == null)
-        {
-            foreach (Light2D light in FindObjectsByType<Light2D>(FindObjectsInactive.Exclude))
-            {
-                if (light.lightType != Light2D.LightType.Global) continue;
-                sceneLight = light;
-                break;
-            }
-        }
+        // only finds anything if the light was not there yet in Awake
+        FindSceneLight();
 
         if (sceneLight != null)
         {

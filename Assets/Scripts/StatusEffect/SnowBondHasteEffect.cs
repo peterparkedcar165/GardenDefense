@@ -8,6 +8,8 @@ public class SnowBondHasteEffect : StatusEffect
 {
     private readonly Snowdrop snowdrop;
     private bool hasteActive;
+    // the exact haste added while active, taken back as it was (the snowdrop is often gone by then)
+    private float appliedHaste;
 
     public SnowBondHasteEffect(Entity target, Entity source, Snowdrop snowdrop)
         : base(target, float.MaxValue, 1, source)
@@ -32,13 +34,24 @@ public class SnowBondHasteEffect : StatusEffect
         if (shouldBeActive != hasteActive)
         {
             hasteActive = shouldBeActive;
-            target.attackSpeedMultiplier += hasteActive ? snowdrop.PartnerHasteBonus : -snowdrop.PartnerHasteBonus;
+            if (hasteActive)
+            {
+                appliedHaste = snowdrop.PartnerHasteBonus;
+                target.attackSpeedMultiplier += appliedHaste;
+            }
+            else
+            {
+                target.attackSpeedMultiplier -= appliedHaste;
+                appliedHaste = 0f;
+            }
         }
     }
 
     public override void OnExpire()
     {
-        if (hasteActive) target.attackSpeedMultiplier -= snowdrop.PartnerHasteBonus;
+        if (hasteActive) target.attackSpeedMultiplier -= appliedHaste;
+        hasteActive = false;
+        appliedHaste = 0f;
     }
 
     public override string GetName() => "<color=#00FFFF><b>Snow Bond</b></color>";

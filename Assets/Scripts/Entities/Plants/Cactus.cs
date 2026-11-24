@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Cactus : Aura
 {
@@ -78,8 +79,7 @@ public class Cactus : Aura
         bool isMelee = data.tags != null && System.Array.Exists(data.tags, t => t == DamageTag.Melee);
         if (!isMelee) return;
         float reflectedDamage = data.source.baseAttackDamage * CounterReflectPercent + armor * CounterArmorScalingPercent;
-        data.source.Damage(reflectedDamage, DamageType.Physical, elementalType, this, false,
-            new DamageTag[] { DamageTag.SkillDamage, DamageTag.Counter });
+        data.source.Damage(reflectedDamage, DamageType.Physical, elementalType, this, false, ReflectTags);
 
         // Retaliatory Spikes (skill tree): the reflected hit also leaves a Punctured stack
         if (SkillTreeManager.HasUnlock(this, RetaliatorySpikesUnlock))
@@ -106,12 +106,19 @@ public class Cactus : Aura
     {
         base.Update();
 
-        if (autoCastEnabled && SkillReady && HasInsectsInRange())
-            TriggerSkill();
+        // one range scan a frame, shared by the auto cast and the attack, and only run when one of
+        // them needs it
+        bool scanned = false, anyInRange = false;
+        if (autoCastEnabled && SkillReady)
+        {
+            anyInRange = HasInsectsInRange();
+            scanned = true;
+            if (anyInRange) TriggerSkill();
+        }
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else if (!IsStunned && !IsChanneling && HasInsectsInRange())
+        else if (!IsStunned && !IsChanneling && (scanned ? anyInRange : HasInsectsInRange()))
             Attack();
 
         if (HasEffect<ShieldEffect>())
@@ -151,18 +158,27 @@ public class Cactus : Aura
         base.Attack();
         float armorBonus = armor * ArmorScalingPercent;
         foreach (Insect insect in GetInsectsInRange())
-            insect.Damage(attackDamage + armorBonus, damageType, elementalType, this, false,
-                new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Melee, DamageTag.Counter });
+            insect.Damage(attackDamage + armorBonus, damageType, elementalType, this, false, SlamTags);
     }
 
+    // shared by every hit instead of a new tag array each time, nothing writes into them
+    private static readonly DamageTag[] SlamTags = { DamageTag.AoE, DamageTag.Attack, DamageTag.Melee, DamageTag.Counter };
+    private static readonly DamageTag[] ReflectTags = { DamageTag.SkillDamage, DamageTag.Counter };
+
     // Passive: whenever Cactus is protected by ANY shield (his own skill included), nearby
-    // insects are taunted onto him
+    // insects are taunted onto him. walks the live insect list by index from the end with a null
+    // check, so an apply hook that kills or spawns an insect can't break the loop
     private void ApplyTauntInRange()
     {
-        foreach (Insect insect in Insect.allInsects)
+        List<Insect> insects = Insect.allInsects;
+        Vector3 center = transform.position;
+        float rangeSqr = attackRange * attackRange;
+        for (int i = insects.Count - 1; i >= 0; i--)
         {
-            if (!insect.IsAlive) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) <= attackRange)
+            if (i >= insects.Count) continue;
+            Insect insect = insects[i];
+            if (insect == null || !insect.IsAlive) continue;
+            if ((insect.transform.position - center).sqrMagnitude <= rangeSqr)
                 insect.ApplyEffect(new TauntEffect(insect, TauntEffectDuration, 1, this, this) { tauntStrength = 2 });
         }
     }

@@ -72,11 +72,10 @@ public class TutorialManager : MonoBehaviour
         }
         // already up: a second trigger (two primers landing close together) mustn't restart it
         if (popup.IsShowing && currentId == id) return false;
+        // no log here: this is hit on every trigger of a tutorial already seen (every primer in
+        // level 2, for one)
         if (SaveManager.instance.saveData.seenTutorials.Contains(id))
-        {
-            Debug.Log($"[Tutorial] TryShow('{id}') skipped - already in seenTutorials (press the debug hotkey to clear it)");
             return false;
-        }
 
         PlantData data = ResolveSpeaker(speaker);
         if (data == null)
@@ -99,7 +98,7 @@ public class TutorialManager : MonoBehaviour
     // on a page waiting for this exact id - harmless to call any time, tutorial active or not
     public void NotifyEvent(string eventId)
     {
-        Debug.Log($"[Tutorial] NotifyEvent('{eventId}')");
+        // no log here: this runs on every placement, click, hover and mulch pickup
         if (popup == null) return;
         popup.NotifyEvent(eventId);
     }

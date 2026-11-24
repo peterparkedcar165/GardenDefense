@@ -65,6 +65,7 @@ public class BirdOfParadise : Aura
         GameObject primary = FindTarget();
         Insect primaryInsect = primary != null ? primary.GetComponent<Insect>() : null;
         if (primaryInsect == null || !primaryInsect.IsAlive) return;
+        FaceAttackTarget(primary);
 
         primaryInsect.Damage(attackDamage, damageType, elementalType, this, true, attackTags);
 

@@ -11,6 +11,8 @@ public class Gloriosa : Shooter
     private IAttackable _currentTarget;
     private readonly List<Cinderwisp> _activeWisps = new List<Cinderwisp>();
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
+    // reused every frame by UpdateHighlights instead of a new set each time
+    private readonly HashSet<Plant> _desiredHighlights = new HashSet<Plant>();
     private static readonly Color HighlightColor = new Color(1f, 0.5f, 0f);
 
     private float HealAmountBase       => (GData?.healAmount        ?? 25f) + (GData?.path2HealPerLevel        ?? 5f)  * effectivePath2Level;
@@ -226,8 +228,13 @@ public class Gloriosa : Shooter
 
     private void UpdateHighlights()
     {
-        bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
-        var desired = new HashSet<Plant>();
+        bool isSelected = IsSelected;
+
+        // nothing to show and nothing shown, so there is nothing to add or clear
+        if (!isSelected && _highlightedPlants.Count == 0) return;
+
+        HashSet<Plant> desired = _desiredHighlights;
+        desired.Clear();
 
         if (isSelected)
         {

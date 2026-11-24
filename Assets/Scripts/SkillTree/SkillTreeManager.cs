@@ -71,10 +71,45 @@ public static class SkillTreeManager
     public static bool HasUnlock(string plantName, SkillTreeData tree, string unlockId)
     {
         if (tree == null) return false;
+        ValidateUnlockCache();
+        var key = (plantName, unlockId);
+        if (UnlockCache.TryGetValue(key, out bool known)) return known;
+        bool found = false;
         foreach (SkillTreeStep step in tree.steps)
+        {
             foreach (SkillTreeNode node in step.nodes)
-                if (node.unlockId == unlockId && GetRank(plantName, node.id) > 0) return true;
-        return false;
+                if (node.unlockId == unlockId && GetRank(plantName, node.id) > 0) { found = true; break; }
+            if (found) break;
+        }
+        UnlockCache[key] = found;
+        return found;
+    }
+
+    // HasUnlock's answers, kept until the purchases change: it's asked many times every frame (every
+    // plant with Tansy's glow, Begonia, Acorn Knight and more), and each answer scanned the plant's
+    // whole tree and the purchase list with string compares. checked once a frame against the save,
+    // the number of purchases and their ranks added up, so a purchase, a reset or a new save clears
+    // it from the next frame on
+    private static readonly System.Collections.Generic.Dictionary<(string, string), bool> UnlockCache =
+        new System.Collections.Generic.Dictionary<(string, string), bool>();
+    private static SaveData _cachedFor;
+    private static int _cachedPurchaseCount = -1, _cachedRankSum = -1, _cacheCheckedFrame = -1;
+
+    private static void ValidateUnlockCache()
+    {
+        int frame = UnityEngine.Time.frameCount;
+        if (frame == _cacheCheckedFrame) return;
+        _cacheCheckedFrame = frame;
+        SaveData data = Data;
+        int count = data != null ? data.skillPurchases.Count : -1;
+        int rankSum = 0;
+        if (data != null)
+            foreach (SkillNodePurchase p in data.skillPurchases) rankSum += p.rank;
+        if (data == _cachedFor && count == _cachedPurchaseCount && rankSum == _cachedRankSum) return;
+        _cachedFor = data;
+        _cachedPurchaseCount = count;
+        _cachedRankSum = rankSum;
+        UnlockCache.Clear();
     }
 
     // sums confirmed StatType.SunCostReduction effects for this plant - queried at Tile

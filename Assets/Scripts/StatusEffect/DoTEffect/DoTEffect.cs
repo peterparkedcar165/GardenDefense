@@ -6,7 +6,8 @@ using UnityEngine;
 // left over when the effect runs out on its own
 public abstract class DoTEffect : StatusEffect
 {
-    protected readonly OverTimeTicker ticks;
+    // only ever replaced by an echo seed copy's own clone (OnCopiedForEcho)
+    protected OverTimeTicker ticks;
     protected float damagePerSecond;
     // set when something shortens it to nothing on purpose (Aloe Vera cutting a Scorch): that is a
     // cleanse, so no leftover tick is paid when it then runs out
@@ -26,6 +27,9 @@ public abstract class DoTEffect : StatusEffect
     {
         if (previous is DoTEffect prev) ticks.CarryFrom(prev.ticks);
     }
+
+    // an echo seed copy ticks on its own timer, not the original's
+    protected override void OnCopiedForEcho() => ticks = ticks.Clone();
 
     public override void OnApply()
     {

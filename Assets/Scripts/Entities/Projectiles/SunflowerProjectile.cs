@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class SunflowerProjectile : Projectile
 {
+    // made once and shared by every hit: nothing writes into it
+    private static readonly DamageTag[] HitTags = { DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile };
+
     public override void Initialize(Vector3 target, float projectileDamage, float projectileSpeed, float maxRange, int piercing, DamageType damageType, ElementalType elementalType, Shooter source)
     {
         base.Initialize(target, projectileDamage, projectileSpeed, maxRange, piercing, damageType, elementalType, source);
@@ -16,7 +19,7 @@ public class SunflowerProjectile : Projectile
     protected override void OnHit(Insect insect) // to change for every plant
     {
 
-        insect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] {DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile});
+        insect.Damage(projectileDamage, damageType, elementalType, source, true, HitTags);
         
         Sunflower sunflower = source as Sunflower;
 

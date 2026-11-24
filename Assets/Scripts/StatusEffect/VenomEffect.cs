@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class VenomEffect : StatusEffect
 {
+    // shared by every instance and every tick: nothing writes into them
+    private static readonly EffectTag[] DotEffectTags = { EffectTag.DoT };
+    private static readonly DamageTag[] TickTags = { DamageTag.DoT };
+
     private readonly float damagePerSecond;
     // the shared over time timing (OverTimeTicker): a tick every half second
     private readonly OverTimeTicker ticks = new OverTimeTicker(0.5f);
@@ -13,7 +17,7 @@ public class VenomEffect : StatusEffect
         effectType = Type.negative;
         elementalType = ElementalType.Poison;
         sourceStackable = true;
-        tags = new EffectTag[] { EffectTag.DoT };
+        tags = DotEffectTags;
     }
 
     public override void OnApply()
@@ -37,7 +41,7 @@ public class VenomEffect : StatusEffect
 
     private void DealTick(Plant plant, float share) =>
         plant.Damage(damagePerSecond * ticks.baseInterval * share, DamageType.Magic, ElementalType.Poison, source, source.DotCanCrit,
-            new DamageTag[] { DamageTag.DoT });
+            TickTags);
 
     public override string GetName() => "<color=purple>Venom</color>";
     public override string GetDescription() => $"Inflicts <color=green><b>{damagePerSecond:F0}</b></color> <color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per second.";

@@ -20,6 +20,8 @@ public class AloeVera : Lobber
 
     private bool _isSkillTargeting = false;
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
+    // reused every frame by UpdateHighlights instead of a new set each time
+    private readonly HashSet<Plant> _desiredHighlights = new HashSet<Plant>();
 
     private bool autoCastEnabled = false;
     private Vector3 autoCastPosition;
@@ -248,9 +250,13 @@ public class AloeVera : Lobber
     {
         if (!SkillTargetingManager.instance.IsTargeting) _isSkillTargeting = false;
 
-        bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
+        bool isSelected = IsSelected;
 
-        var desired = new HashSet<Plant>();
+        // nothing to show and nothing shown, so there is nothing to add or clear
+        if (!_isSkillTargeting && !isSelected && _highlightedPlants.Count == 0) return;
+
+        HashSet<Plant> desired = _desiredHighlights;
+        desired.Clear();
         Color highlightColor = Color.cyan;
 
         if (_isSkillTargeting)

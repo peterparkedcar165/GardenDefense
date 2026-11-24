@@ -19,7 +19,13 @@ public class Tile : MonoBehaviour
         new Vector2Int(Mathf.RoundToInt(pos.x * 2), Mathf.RoundToInt(pos.y * 2));
 
     private void Awake()  => allTiles[TileKey(transform.position)] = this;
-    private void OnDestroy() => allTiles.Remove(TileKey(transform.position));
+    // only takes out its own entry: a tile of the next scene may already sit under the same key
+    private void OnDestroy()
+    {
+        Vector2Int key = TileKey(transform.position);
+        if (allTiles.TryGetValue(key, out Tile registered) && ReferenceEquals(registered, this))
+            allTiles.Remove(key);
+    }
 
     // world-space bounding box of every currently-registered tile, cached lazily and rebuilt
     // once per scene (tiles are level-authored and static once loaded, so the set of keys in

@@ -529,8 +529,9 @@ public abstract class Entity : MonoBehaviour
         if (this is Insect soundInsect && soundInsect.data != null && !System.Array.Exists(damageTag, t => t == DamageTag.DoT))
             SfxPlayer.Play(soundInsect.data.hitSound, transform.position);
         UpdateHealthBar();
-        foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
-            e.OnDamageReceived(elementalType, null, damageTag);
+        StatusEffect[] hitSnapshot = RentEffectSnapshot(out int hitCount);
+        try { for (int i = 0; i < hitCount; i++) hitSnapshot[i].OnDamageReceived(elementalType, null, damageTag); }
+        finally { ReturnEffectSnapshot(hitSnapshot, hitCount); }
 
         // amount carries the raw PRE-mitigation damage (the method's own input, before
         // armor/resistance reduce it to finalDamage) - unused by heal-side listeners (which
@@ -540,8 +541,9 @@ public abstract class Entity : MonoBehaviour
         if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
             OnHit?.Invoke(evtData);
         OnEntityHit?.Invoke(evtData);
-        if (health <= 0)
+        if (health <= 0 && !_deathStarted)
         {
+            _deathStarted = true;
             OnEntityKilled?.Invoke(evtData);
             Kill();
         }
@@ -600,7 +602,7 @@ public abstract class Entity : MonoBehaviour
             BrittleEffect brittle = GetEffect<BrittleEffect>();
             float brittleDamage = brittle.bonusDamage;
             if (this.HasShield()) brittleDamage *= 3f;
-            Damage(brittleDamage, damageType, ElementalType.Grass, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+            Damage(brittleDamage, damageType, ElementalType.Grass, source, false, ReactionHitTags);
             // Botanical Alchemy: every bonus hit pays the plant that applied the Brittle
             MulchManager.ReactionEvent(brittle, brittle.source, transform.position);
         }
@@ -621,7 +623,7 @@ public abstract class Entity : MonoBehaviour
             else
             {
                 RemoveEffect<FreezeEffect>();
-                Damage(damageDealt * 1.5f * source.elementalAffinity, damageType, ElementalType.Fire, source, false, new DamageTag[] { DamageTag.ElementalDebuff });
+                Damage(damageDealt * 1.5f * source.elementalAffinity, damageType, ElementalType.Fire, source, false, ReactionHitTags);
             }
         }
 
@@ -661,8 +663,14 @@ public abstract class Entity : MonoBehaviour
                     ApplyEffect(new FirePrimer(this, elementalDebuffDuration, 1, source));
                 }
 
-                if (this.HasEffect<GerminateEffect>())
-                RemoveEffect<GerminateEffect>();
+                // a Fire hit burns a Germinate away without setting its bloom off (Tommy, 2026-11-23:
+                // removing it used to detonate it early)
+                GerminateEffect germinate = GetEffect<GerminateEffect>();
+                if (germinate != null)
+                {
+                    germinate.CancelBloom();
+                    RemoveEffect<GerminateEffect>();
+                }
 
             break;
 
@@ -877,8 +885,9 @@ public abstract class Entity : MonoBehaviour
             DoTAggregator.AddDamage(this, finalDamage, elementalType);
 
         UpdateHealthBar();
-        foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
-            e.OnDamageReceived(elementalType, source, damageTag);
+        StatusEffect[] hitSnapshot = RentEffectSnapshot(out int hitCount);
+        try { for (int i = 0; i < hitCount; i++) hitSnapshot[i].OnDamageReceived(elementalType, source, damageTag); }
+        finally { ReturnEffectSnapshot(hitSnapshot, hitCount); }
 
         // amount carries the raw PRE-mitigation damage (damageDealt as it stood right before
         // armor/resistance reduced it to finalDamage) - see the non-sourced overload above for
@@ -887,8 +896,9 @@ public abstract class Entity : MonoBehaviour
         if (System.Array.Exists(damageTag, t => t == DamageTag.Attack))
             OnHit?.Invoke(evtData);
         OnEntityHit?.Invoke(evtData);
-        if (health <= 0)
+        if (health <= 0 && !_deathStarted)
         {
+            _deathStarted = true;
             OnEntityKilled?.Invoke(evtData);
             Kill(source);
         }
@@ -969,8 +979,15 @@ public abstract class Entity : MonoBehaviour
     }
 
 // method for death
+    // set the first time this entity's death runs: it is only destroyed at the end of the frame, and a
+    // hit landing on it in between (another attack, a DoT tick, Brittle's bonus hit inside the killing
+    // hit) ran the death again, firing the kill event twice and, for a plant, storing its dead record
+    // and handing its mulches over twice
+    private bool _deathStarted;
+
     public virtual void Kill()
     {
+        _deathStarted = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         OnEntityDied?.Invoke(new EntityEventData { target = this, position = transform.position });
         Destroy(gameObject);
@@ -978,6 +995,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Kill(Entity source)
     {
+        _deathStarted = true;
         foreach (StatusEffect e in activeEffects) e.OnTargetDied();
         OnEntityDied?.Invoke(new EntityEventData { target = this, source = source, position = transform.position });
         Destroy(gameObject);
@@ -1005,15 +1023,34 @@ public abstract class Entity : MonoBehaviour
 
         _flashRenderer = GetComponentInChildren<SpriteRenderer>();
         if (_flashRenderer != null)
-        {
             _originalMaterial = _flashRenderer.sharedMaterial;
-            Shader hitFlashShader = Shader.Find("Custom/SpriteHitFlash");
-            if (hitFlashShader != null)
-            {
-                _flashMaterial = new Material(hitFlashShader);
-                _flashMaterial.SetColor("_FlashColor", Color.red);
-            }
+    }
+
+    // the hit flash material is made on the first hit, not for every plant and insect that spawns,
+    // and destroyed with its entity (ReleaseHitFlashMaterial from Plant's and Insect's OnDestroy):
+    // every entity used to make one and none was ever destroyed, so they piled up over a level
+    private static Shader _hitFlashShader;
+    private static bool _hitFlashShaderLooked;
+
+    private bool EnsureHitFlashMaterial()
+    {
+        if (_flashMaterial != null) return true;
+        if (!_hitFlashShaderLooked)
+        {
+            _hitFlashShader = Shader.Find("Custom/SpriteHitFlash");
+            _hitFlashShaderLooked = true;
         }
+        if (_hitFlashShader == null) return false;
+        _flashMaterial = new Material(_hitFlashShader);
+        _flashMaterial.SetColor("_FlashColor", Color.red);
+        return true;
+    }
+
+    protected void ReleaseHitFlashMaterial()
+    {
+        if (_flashMaterial == null) return;
+        Destroy(_flashMaterial);
+        _flashMaterial = null;
     }
 
     protected virtual void Start()
@@ -1111,7 +1148,14 @@ public abstract class Entity : MonoBehaviour
     // tracking its own timer
     public bool IsInCombat => HasEffect<InCombatEffect>();
 
-    public void RefreshCombatState() => ApplyEffect(new InCombatEffect(this));
+    // an entity already in combat just has its marker's time reset: every hit used to put a new
+    // marker on in place of the old one (two per hit), firing the effect applied event each time
+    public void RefreshCombatState()
+    {
+        InCombatEffect marker = GetEffect<InCombatEffect>();
+        if (marker != null) { marker.duration = InCombatEffect.Duration; return; }
+        ApplyEffect(new InCombatEffect(this));
+    }
 
     // HEALTH BAR
 
@@ -1342,7 +1386,7 @@ public abstract class Entity : MonoBehaviour
     {
         if (_flashRenderer == null)
             _flashRenderer = GetComponentInChildren<SpriteRenderer>();
-        if (_flashRenderer == null || _flashMaterial == null) return;
+        if (_flashRenderer == null || !EnsureHitFlashMaterial()) return;
         if (_flashCoroutine != null) StopCoroutine(_flashCoroutine);
         _flashCoroutine = StartCoroutine(HitFlash());
     }
@@ -1585,6 +1629,25 @@ public abstract class Entity : MonoBehaviour
     // STATUS EFFECTS
 
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
+
+    private static readonly DamageTag[] ReactionHitTags = { DamageTag.ElementalDebuff };
+
+    // a copy of activeEffects to walk while the effects called may add or remove others, borrowed
+    // from a shared pool: every hit and every new debuff made a new list. Damage can run again inside
+    // the walk (Brittle's bonus hit), so each walk borrows its own copy
+    private StatusEffect[] RentEffectSnapshot(out int count)
+    {
+        count = activeEffects.Count;
+        StatusEffect[] copy = System.Buffers.ArrayPool<StatusEffect>.Shared.Rent(Mathf.Max(1, count));
+        activeEffects.CopyTo(copy);
+        return copy;
+    }
+
+    private static void ReturnEffectSnapshot(StatusEffect[] copy, int count)
+    {
+        System.Array.Clear(copy, 0, count);
+        System.Buffers.ArrayPool<StatusEffect>.Shared.Return(copy);
+    }
     private readonly List<StatusEffect> _tickSnapshot = new List<StatusEffect>();
 
     public virtual void ApplyEffect(StatusEffect effect)
@@ -1610,8 +1673,15 @@ public abstract class Entity : MonoBehaviour
         // Hellebore Protection intercept: negative effects aimed at a shielded entity can be reflected
         if (effect.effectType == StatusEffect.Type.negative)
         {
-            foreach (StatusEffect e in new System.Collections.Generic.List<StatusEffect>(activeEffects))
-                if (e.TryBlockNegativeEffect(effect)) return;
+            bool blocked = false;
+            StatusEffect[] guards = RentEffectSnapshot(out int guardCount);
+            try
+            {
+                for (int i = 0; i < guardCount && !blocked; i++)
+                    blocked = guards[i].TryBlockNegativeEffect(effect);
+            }
+            finally { ReturnEffectSnapshot(guards, guardCount); }
+            if (blocked) return;
         }
 
         // scale duration by source's given-duration stat and this entity's received-duration stat

@@ -491,15 +491,48 @@ public abstract class Projectile : MonoBehaviour
             return;
         }
 
-        GameObject tempAudio = new GameObject("TempAudio");
-        tempAudio.transform.position = transform.position;
-        AudioSource source = tempAudio.AddComponent<AudioSource>();
+        AudioSource source = GetFreeHitVoice();
+        source.transform.position = transform.position;
         source.clip = sound;
         source.pitch = Random.Range(minPitch, maxPitch);
         source.spatialBlend = 0f;
         source.volume = hitVolume;
         source.Play();
-        Destroy(tempAudio,sound.length/source.pitch);
+    }
+
+    // reused hit sound sources instead of a new object made and destroyed per hit. the same
+    // settings as before (no mixer group, 2D). a source is only picked again once it is done
+    // playing and was not started this frame, so a sound is never cut off; when all are busy a
+    // new one is made, so there is no cap. they live in the active scene like before, so a scene
+    // change still ends them with it
+    private static readonly System.Collections.Generic.List<AudioSource> hitVoices =
+        new System.Collections.Generic.List<AudioSource>();
+    private static readonly System.Collections.Generic.List<int> hitVoiceStartFrames =
+        new System.Collections.Generic.List<int>();
+
+    private static AudioSource GetFreeHitVoice()
+    {
+        int frame = Time.frameCount;
+        for (int i = hitVoices.Count - 1; i >= 0; i--)
+        {
+            AudioSource voice = hitVoices[i];
+            if (voice == null)
+            {
+                // its scene was unloaded
+                hitVoices.RemoveAt(i);
+                hitVoiceStartFrames.RemoveAt(i);
+                continue;
+            }
+            if (hitVoiceStartFrames[i] == frame || voice.isPlaying) continue;
+            hitVoiceStartFrames[i] = frame;
+            return voice;
+        }
+
+        AudioSource made = new GameObject("TempAudio").AddComponent<AudioSource>();
+        made.playOnAwake = false;
+        hitVoices.Add(made);
+        hitVoiceStartFrames.Add(frame);
+        return made;
     }
 
 }

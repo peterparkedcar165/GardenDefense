@@ -6,6 +6,9 @@ using UnityEngine;
 // the effect runs out on its own
 public class RegenerationEffect : StatusEffect
 {
+    // one shared tag array for every instance (Queen's Aura and Glowworm make these very often)
+    private static readonly EffectTag[] RegenTags = { EffectTag.Regenerative };
+
     protected readonly OverTimeTicker ticks;
     // what one tick heals (the name is from when every regen ticked once a second)
     protected float healingPerSecond;
@@ -17,7 +20,7 @@ public class RegenerationEffect : StatusEffect
     {
         effectType = Type.positive;
         sourceStackable = true;
-        tags = new EffectTag[] { EffectTag.Regenerative };
+        tags = RegenTags;
         this.healingPerSecond = healingPerSecond;
         ticks = new OverTimeTicker(tickInterval);
         if (source != null && source.regenerationDuration != 0f)

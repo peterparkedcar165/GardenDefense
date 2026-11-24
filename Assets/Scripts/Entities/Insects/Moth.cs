@@ -20,8 +20,25 @@ public class Moth : FlyingInsect
             if (team == Team.Friendly) return FindNearestEnemyInRange();
             IAttackable taunted = GetEffect<TauntEffect>()?.taunter;
             if ((taunted as Object) != null) return taunted;
-            return FindNearestLightPlantInRange();
+            return CurrentLightTarget();
         }
+    }
+
+    // the light plant it goes for, worked out once a frame: target is read several times a frame
+    // and every read scanned every plant. worked out again within the frame if that plant dies
+    // or is removed
+    private Plant _lightTarget;
+    private int _lightTargetFrame = -1;
+
+    private Plant CurrentLightTarget()
+    {
+        bool gone = !ReferenceEquals(_lightTarget, null) && (_lightTarget == null || !_lightTarget.IsAlive);
+        if (_lightTargetFrame != Time.frameCount || gone)
+        {
+            _lightTarget = FindNearestLightPlantInRange();
+            _lightTargetFrame = Time.frameCount;
+        }
+        return _lightTarget;
     }
 
     protected override void Update()
@@ -47,18 +64,22 @@ public class Moth : FlyingInsect
         }
     }
 
+    // its own position read once, and squared distances (the same test without square roots)
     private bool IsNearLight()
     {
+        Vector3 here = transform.position;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive || plant.lightEmissionRange <= 0f) continue;
-            if (Vector3.Distance(transform.position, plant.transform.position) <= plant.lightEmissionRange)
+            float range = plant.lightEmissionRange;
+            if ((plant.transform.position - here).sqrMagnitude <= range * range)
                 return true;
         }
         foreach (Insect insect in allInsects)
         {
             if (insect == null || insect == this || !insect.IsAlive || insect.lightEmissionRange <= 0f) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) <= insect.lightEmissionRange)
+            float range = insect.lightEmissionRange;
+            if ((insect.transform.position - here).sqrMagnitude <= range * range)
                 return true;
         }
         return false;

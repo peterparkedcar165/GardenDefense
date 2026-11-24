@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class LeafRangerProjectile : Projectile
 {
+    // made once and shared by every hit: nothing writes into it
+    private static readonly DamageTag[] HitTags = { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget };
+
     // True Flight (skill tree): +3% damage per unit of distance already traveled when it hits
     private const float TrueFlightBonusPerUnit = 0.03f;
 
@@ -81,7 +84,7 @@ public class LeafRangerProjectile : Projectile
             float distanceTraveled = Vector3.Distance(spawnPosition, transform.position);
             damage *= 1f + TrueFlightBonusPerUnit * distanceTraveled;
         }
-        insect.Damage(damage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.Projectile, DamageTag.Attack, DamageTag.SingleTarget });
+        insect.Damage(damage, damageType, elementalType, source, true, HitTags);
         PlaySound(hit);
     }
 

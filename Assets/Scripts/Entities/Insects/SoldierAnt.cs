@@ -8,7 +8,9 @@ public class SoldierAnt : Ant
         base.Awake();
         LoadData();
 
-        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 1)
+        // once seen, TryShow would only turn it down (and log) four seconds later on every spawn
+        if (ProceduralLevel.CurrentConfig != null && ProceduralLevel.CurrentConfig.levelNumber == 1
+            && !(TutorialManager.instance != null && TutorialManager.instance.HasSeen(TutorialIds.Level1SoldierAntAppears)))
             StartCoroutine(TriggerSoldierAntTutorialAfterDelay());
     }
 
@@ -38,7 +40,7 @@ public class SoldierAnt : Ant
         // passive of the soldier ant, reduces physical damage taken by a flat amount
         if (damageType == DamageType.Physical)
         {
-            reducedDamage = Mathf.Max(0, damageDealt - data.flatPhysicalDamageReduction);
+            reducedDamage = Mathf.Max(0, damageDealt - FlatPhysicalReduction);
         }
         else // if its magic or true, ignores the reduction
         {
@@ -54,7 +56,7 @@ public class SoldierAnt : Ant
         // passive of the soldier ant, reduces physical damage taken by a flat amount
         if (damageType == DamageType.Physical)
         {
-            reducedDamage = Mathf.Max(0, damageDealt - data.flatPhysicalDamageReduction);
+            reducedDamage = Mathf.Max(0, damageDealt - FlatPhysicalReduction);
         }
         else // if its magic or true, ignores the reduction
         {
@@ -63,4 +65,7 @@ public class SoldierAnt : Ant
 
         base.Damage(reducedDamage, damageType, elementalType, damageTag); // calls up to parent for damage reduction
     }
+
+    // no data (LoadData allows that) means no reduction, instead of an error on every hit
+    private float FlatPhysicalReduction => data != null ? data.flatPhysicalDamageReduction : 0f;
 }

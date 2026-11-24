@@ -68,30 +68,48 @@ public class WindPrimer : ElementalDebuff
         // detonate around where the reaction happened, so a dying target does not cancel the AoE
         Vector3 center = target.transform.position;
         float halfDamage = 52f * (1f + 0.6f * source.elementalAffinity);
-        DamageTag[] tags = new DamageTag[] { DamageTag.ElementalDebuff };
+        DamageTag[] tags = WindshearTags;
 
         // Botanical Alchemy: setting Windshear off pays the Wind plant, and so does every damage it
         // deals, both hits on every insect (Tommy, 2026-11-23), at most the cap for this one blast
         int applied = 0, blastPayouts = 0;
         MulchManager.PayReaction(source, center, ref applied);
 
-        yield return new WaitForSeconds(0.1f);
+        yield return FirstBurstWait;
         DealWindshearAoe(center, halfDamage, ElementalType.Wind, source, tags, ref blastPayouts);
-        yield return new WaitForSeconds(0.05f);
+        yield return SecondBurstWait;
         DealWindshearAoe(center, halfDamage, primerElement, source, tags, ref blastPayouts);
 
         OnWindshearTriggered?.Invoke(center, source);
     }
 
+    // made once and shared by every windshear: nothing writes into them
+    private static readonly DamageTag[] WindshearTags = { DamageTag.ElementalDebuff };
+    private static readonly WaitForSeconds FirstBurstWait = new WaitForSeconds(0.1f);
+    private static readonly WaitForSeconds SecondBurstWait = new WaitForSeconds(0.05f);
+
     // deals one burst of the reaction damage to every insect within WindshearRadius of the center
     private static void DealWindshearAoe(Vector3 center, float damage, ElementalType element, Entity source, DamageTag[] tags, ref int payouts)
     {
-        foreach (Insect insect in new System.Collections.Generic.List<Insect>(Insect.allInsects))
+        // a snapshot, since the damage can kill insects or set off another windshear. pooled, so
+        // a burst inside this one's damage gets a list of its own
+        System.Collections.Generic.List<Insect> insects = UnityEngine.Pool.ListPool<Insect>.Get();
+        insects.AddRange(Insect.allInsects);
+        try
         {
-            if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(center, insect.transform.position) > WindshearRadius) continue;
-            MulchManager.PayReaction(source, insect.transform.position, ref payouts);
-            insect.Damage(damage, DamageType.Magic, element, source, source?.ElementalReactionCanCrit ?? false, tags);
+            const float radiusSqr = WindshearRadius * WindshearRadius;
+            for (int i = 0; i < insects.Count; i++)
+            {
+                Insect insect = insects[i];
+                if (insect == null || !insect.IsAlive) continue;
+                if ((insect.transform.position - center).sqrMagnitude > radiusSqr) continue;
+                MulchManager.PayReaction(source, insect.transform.position, ref payouts);
+                insect.Damage(damage, DamageType.Magic, element, source, source?.ElementalReactionCanCrit ?? false, tags);
+            }
+        }
+        finally
+        {
+            UnityEngine.Pool.ListPool<Insect>.Release(insects);
         }
     }
 

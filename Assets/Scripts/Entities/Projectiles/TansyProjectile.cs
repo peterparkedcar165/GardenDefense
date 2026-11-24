@@ -85,11 +85,16 @@ public class TansyProjectile : MonoBehaviour
     {
         _orbitersByCenter.Clear();
         _queuedByCenter.Clear();
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (_, __) =>
-        {
-            _orbitersByCenter.Clear();
-            _queuedByCenter.Clear();
-        };
+        // a named handler, taken off before it goes on, so entering play mode again without a
+        // domain reload doesn't pile up one more subscription each time
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= ClearOrbitsOnSceneLoaded;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += ClearOrbitsOnSceneLoaded;
+    }
+
+    private static void ClearOrbitsOnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        _orbitersByCenter.Clear();
+        _queuedByCenter.Clear();
     }
 
     // true once a center already has MaxFloralGlowPerCenter Floral Glow projectiles orbiting it

@@ -47,4 +47,7 @@ public class OverTimeTicker
     {
         if (previous != null) timer = previous.timer;
     }
+
+    // a separate ticker at the same place in the tick (an echo seed copy of its effect)
+    public OverTimeTicker Clone() => (OverTimeTicker)MemberwiseClone();
 }

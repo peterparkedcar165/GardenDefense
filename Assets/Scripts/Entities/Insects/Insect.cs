@@ -9,7 +9,9 @@ public abstract class Insect : Entity, IAttackable
 {
     public static List<Insect> allInsects = new List<Insect>();          // enemies only (the wave)
     public static List<Insect> friendlyInsects = new List<Insect>();     // minions + hypnotized insects
-    protected static int ObstacleLayer => LayerMask.GetMask("Obstacle");
+    // looked up once: it was a mask lookup by name on every read, several times per frame per insect
+    private static int _obstacleLayer = -1;
+    protected static int ObstacleLayer => _obstacleLayer != -1 ? _obstacleLayer : (_obstacleLayer = LayerMask.GetMask("Obstacle"));
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init()
@@ -292,6 +294,9 @@ public abstract class Insect : Entity, IAttackable
 
     private int _noWeightedTargetFrame = -1;
 
+    private static readonly DamageTag[] MeleeHitTags = { DamageTag.Melee, DamageTag.Attack };
+    private static readonly DamageTag[] MinionMeleeHitTags = { DamageTag.Melee, DamageTag.Attack, DamageTag.MinionAttack };
+
     private float attackTimer;
 
     // bonus
@@ -352,6 +357,7 @@ public abstract class Insect : Entity, IAttackable
         friendlyInsects.Remove(this);
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedInsect() == this)
             PlantUpgradeUI.instance.HidePanel();
+        ReleaseHitFlashMaterial();
     }
 
     private Transform[]   _pendingPath;
@@ -783,15 +789,17 @@ public abstract class Insect : Entity, IAttackable
             return;
         }
 
-        if (target != null)
+        // read once: `target` works its answer out again on every read
+        IAttackable moveTarget = target;
+        if (moveTarget != null)
         {
-            if (!target.IsAlive) { RemoveEffect<TauntEffect>(); }
+            if (!moveTarget.IsAlive) { RemoveEffect<TauntEffect>(); }
             else
             {
                 // held by an unreachable flyer (e.g. a flying friendly): stop in place, don't chase up to it
-                if (target is Insect ti && !CanReach(this, ti)) return;
+                if (moveTarget is Insect ti && !CanReach(this, ti)) return;
 
-                Vector3 approachPoint = target.GetApproachPoint(transform.position);
+                Vector3 approachPoint = moveTarget.GetApproachPoint(transform.position);
                 float dist = Vector3.Distance(transform.position, approachPoint);
                 if (dist > attackRange && ChasesTarget)
                 {
@@ -811,7 +819,7 @@ public abstract class Insect : Entity, IAttackable
                     // progress, because it spotted the plant through/behind an obstacle it has no
                     // way to path around. give up on this one specific plant for a while instead
                     // of beelining into a wall forever
-                    if (target is Plant stuckPlant && (transform.position - beforePos).sqrMagnitude < 0.0001f)
+                    if (moveTarget is Plant stuckPlant && (transform.position - beforePos).sqrMagnitude < 0.0001f)
                     {
                         _stuckTimer += Time.deltaTime;
                         if (_stuckTimer >= StuckDropDuration)
@@ -898,7 +906,6 @@ public abstract class Insect : Entity, IAttackable
 
         if (onPath && !_debugOnPath)
         {
-            Debug.Log($"[{gameObject.name}] entered path tile at {transform.position}");
             if (_offPathSlownessActive)
             {
                 _offPathSlownessActive = false;
@@ -907,7 +914,6 @@ public abstract class Insect : Entity, IAttackable
         }
         else if (!onPath && _debugOnPath)
         {
-            Debug.Log($"[{gameObject.name}] left path tile at {transform.position}");
             if (!isFlying && !isDying && !_offPathSlownessActive && team != Team.Friendly)
             {
                 _offPathSlownessActive = true;
@@ -1032,7 +1038,9 @@ public abstract class Insect : Entity, IAttackable
             if (plant == null || !plant.IsAlive) continue;
             if (!CanReachPlant(plant)) continue;
             if (plant == _stuckIgnoredPlant && _stuckIgnoreTimer > 0f) continue;
-            // how far it looks (Visibility), not how far it is
+            // how far it looks (Visibility), not how far it is. ruled out first from a distance the
+            // approach point can't beat, which skips the physics query for every plant far away
+            if (plant.SeenDistance(plant.ApproachDistanceAtLeast(transform.position)) > targetingRange) continue;
             float dist = plant.SeenDistance(Vector3.Distance(transform.position, plant.GetApproachPoint(transform.position)));
             if (dist > targetingRange) continue;
 
@@ -1134,8 +1142,12 @@ public abstract class Insect : Entity, IAttackable
     // nearest enemy insect within engage range (used by friendlies). enemies live in allInsects
     protected IAttackable FindNearestEnemyInRange()
     {
-        return StickyEnemy(e => Vector3.Distance(transform.position, e.transform.position) <= EngageRange);
+        // one check made per insect, not a new one on every read of `target`
+        _inEngageRange ??= e => Vector3.Distance(transform.position, e.transform.position) <= EngageRange;
+        return StickyEnemy(_inEngageRange);
     }
+
+    private System.Func<Insect, bool> _inEngageRange;
 
     // keeps the friendly locked onto one enemy until it dies or leaves the valid set, then picks the
     // nearest new one. this stops enemies that merely pass by from being briefly targeted/taunted.
@@ -1431,10 +1443,7 @@ public abstract class Insect : Entity, IAttackable
         // few seconds (Plant.HealAssistWindow), is credited as an assist too - see
         // Plant.BuffSupporters/RecentHealers. unlike the attacker itself, this credit is
         // conditional: it only fires while the buff is still up / the heal window hasn't closed
-        foreach (Plant supporter in source.BuffSupporters)
-            attackerSet.Add(supporter);
-        foreach (Plant healer in source.RecentHealers)
-            attackerSet.Add(healer);
+        source.AddAssistersTo(attackerSet);
     }
 
     private void DistributeExp()
@@ -1476,9 +1485,7 @@ public abstract class Insect : Entity, IAttackable
         // Fungal Hypnosis: credit the damage to the controlling plant and slow the victim's attacks
         Entity src = attacker.attackSourceOverride != null ? attacker.attackSourceOverride : attacker;
         // friendlies (minions and hypnotized insects) tag their hits as a minion attack
-        DamageTag[] tags = attacker.team == Team.Friendly
-            ? new DamageTag[] { DamageTag.Melee, DamageTag.Attack, DamageTag.MinionAttack }
-            : new DamageTag[] { DamageTag.Melee, DamageTag.Attack };
+        DamageTag[] tags = attacker.team == Team.Friendly ? MinionMeleeHitTags : MeleeHitTags;
         Damage(damage, attacker.attackDamageType, attacker.attackElementalType, src, false, tags);
         // Damage lifesteals to 'src'; when the credit is overridden (fungal hypnosis) the attacking
         // insect still heals itself off its own lifesteal (e.g. a hypnotized mosquito)

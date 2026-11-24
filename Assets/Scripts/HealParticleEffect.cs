@@ -23,9 +23,15 @@ public static class HealParticleEffect
     private const float PlantShapeRadius = 0.5f;
     private const float InsectShapeRadius = 0.25f;
 
+    // loaded once on first use instead of a resources lookup on every heal
+    private static GameObject prefab;
+    // reused for every burst instead of a new array per heal
+    private static readonly System.Collections.Generic.List<ParticleSystem> systems =
+        new System.Collections.Generic.List<ParticleSystem>();
+
     public static void Spawn(Entity target, Vector3 position, float amount)
     {
-        GameObject prefab = Resources.Load<GameObject>("HealParticles");
+        if (prefab == null) prefab = Resources.Load<GameObject>("HealParticles");
         if (prefab == null) return;
 
         GameObject go = Object.Instantiate(prefab, position, Quaternion.identity);
@@ -38,7 +44,8 @@ public static class HealParticleEffect
 
         float shapeRadius = target is Insect ? InsectShapeRadius : PlantShapeRadius;
 
-        foreach (ParticleSystem ps in go.GetComponentsInChildren<ParticleSystem>())
+        go.GetComponentsInChildren(systems);
+        foreach (ParticleSystem ps in systems)
         {
             ParticleSystem.EmissionModule emission = ps.emission;
             ParticleSystem.Burst burst = emission.GetBurst(0);

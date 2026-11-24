@@ -30,26 +30,33 @@ public abstract class Aura : Plant
         if (data != null) SfxPlayer.Play(data.attackSound, transform.position);
     }
 
+    // one list per aura plant, filled again on every call instead of a new list each time. callers
+    // loop over it straight away and must not keep it, the next call empties it
+    private readonly List<Insect> _insectsInRange = new List<Insect>();
+
     protected List<Insect> GetInsectsInRange()
     {
-        List<Insect> result = new List<Insect>();
+        _insectsInRange.Clear();
+        Vector2 center = transform.position;
+        float rangeSqr = attackRange * attackRange;
 
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            float distance = Vector2.Distance(transform.position, insect.transform.position);
-            if (distance <= attackRange)
-                result.Add(insect);
+            if (((Vector2)insect.transform.position - center).sqrMagnitude <= rangeSqr)
+                _insectsInRange.Add(insect);
         }
-        return result;
+        return _insectsInRange;
     }
 
     protected bool HasInsectsInRange()
     {
+        Vector2 center = transform.position;
+        float rangeSqr = attackRange * attackRange;
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            if (Vector2.Distance(transform.position, insect.transform.position) <= attackRange)
+            if (((Vector2)insect.transform.position - center).sqrMagnitude <= rangeSqr)
                 return true;
         }
         return false;

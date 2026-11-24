@@ -44,8 +44,9 @@ public class ToxicSporeEffect : DoTEffect
     protected override void DealTick(float share)
     {
         // Executioner's Bloom: bonus damage finishing off insects already below 33% health
-        bool execute = source is PoisonShroom ps && SkillTreeManager.HasUnlock(ps, PoisonShroom.ExecutionersBloomUnlock)
-                       && target.health / target.maxHealth < 0.33f;
+        // (the health check first, so the unlock is only looked up for a target that low)
+        bool execute = target.health / target.maxHealth < 0.33f
+                       && source is PoisonShroom ps && SkillTreeManager.HasUnlock(ps, PoisonShroom.ExecutionersBloomUnlock);
 
         // percent-health damage reads the target's CURRENT health at each tick, so it naturally
         // tapers off as the target dies rather than staying fixed like the flat portion

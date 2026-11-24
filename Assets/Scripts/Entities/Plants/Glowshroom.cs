@@ -126,31 +126,50 @@ public class Glowshroom : Shooter
         if (mainTarget != null && mainTarget.IsAlive)
             mainTarget.ApplyEffect(new FungalGlowEffect(mainTarget, FungalGlowDuration, 1, this));
 
-        // splash damage to nearby insects, capped to the nearest N (data-driven, tunable per plant)
-        List<Insect> splashTargets = new List<Insect>();
-        foreach (Insect insect in Insect.allInsects)
+        // splash damage to nearby insects, capped to the nearest N (data-driven, tunable per plant).
+        // one reused list instead of a new one per hit; a hit landing while another is still
+        // being resolved gets its own list so the two never share one
+        List<Insect> splashTargets = _splashInUse ? new List<Insect>() : _splashTargets;
+        bool ownsShared = !_splashInUse;
+        _splashInUse = true;
+        splashTargets.Clear();
+        try
         {
-            if (insect == null || !insect.IsAlive || insect == mainTarget) continue;
-            if (Vector3.Distance(hitPosition, insect.transform.position) <= SplashRadius)
-                splashTargets.Add(insect);
-        }
+            foreach (Insect insect in Insect.allInsects)
+            {
+                if (insect == null || !insect.IsAlive || insect == mainTarget) continue;
+                if (Vector3.Distance(hitPosition, insect.transform.position) <= SplashRadius)
+                    splashTargets.Add(insect);
+            }
 
-        int maxExtraTargets = GMData?.splashMaxExtraTargets ?? 3;
-        if (splashTargets.Count > maxExtraTargets)
-        {
-            splashTargets.Sort((a, b) =>
-                Vector3.Distance(hitPosition, a.transform.position).CompareTo(Vector3.Distance(hitPosition, b.transform.position)));
-            splashTargets.RemoveRange(maxExtraTargets, splashTargets.Count - maxExtraTargets);
-        }
+            int maxExtraTargets = GMData?.splashMaxExtraTargets ?? 3;
+            if (splashTargets.Count > maxExtraTargets)
+            {
+                splashTargets.Sort((a, b) =>
+                    Vector3.Distance(hitPosition, a.transform.position).CompareTo(Vector3.Distance(hitPosition, b.transform.position)));
+                splashTargets.RemoveRange(maxExtraTargets, splashTargets.Count - maxExtraTargets);
+            }
 
-        foreach (Insect insect in splashTargets)
+            foreach (Insect insect in splashTargets)
+            {
+                insect.Damage(attackDamage * SplashMult, damageType, elementalType, this, false, SplashTags);
+                if (insect.IsAlive && IsPath1Maxed)
+                    insect.ApplyEffect(new FungalGlowEffect(insect, FungalGlowDuration, 1, this));
+            }
+        }
+        finally
         {
-            insect.Damage(attackDamage * SplashMult, damageType, elementalType, this, false,
-                new DamageTag[] { DamageTag.AoE });
-            if (insect.IsAlive && IsPath1Maxed)
-                insect.ApplyEffect(new FungalGlowEffect(insect, FungalGlowDuration, 1, this));
+            splashTargets.Clear();
+            if (ownsShared) _splashInUse = false;
         }
     }
+
+    private readonly List<Insect> _splashTargets = new List<Insect>();
+    private bool _splashInUse;
+    // shared by every splash hit instead of a new tag array each time, nothing writes into it
+    private static readonly DamageTag[] SplashTags = { DamageTag.AoE };
+    // reused by the skill's per frame blind pass instead of a new copy of every insect each frame
+    private readonly List<Insect> _flashInsects = new List<Insect>();
 
     public override void ActivateSkill()
     {
@@ -179,8 +198,15 @@ public class Glowshroom : Shooter
             elapsed += Time.deltaTime;
             if (IsPath3Maxed)
             {
-                foreach (Insect insect in new List<Insect>(Insect.allInsects))
+                // still a snapshot (an apply hook could change the live list), copied into one
+                // reused list; overlapping casts share it safely since each finishes its loop
+                // before it yields
+                List<Insect> insects = _flashInsects;
+                insects.Clear();
+                insects.AddRange(Insect.allInsects);
+                for (int i = 0; i < insects.Count; i++)
                 {
+                    Insect insect = insects[i];
                     if (insect == null || !insect.IsAlive) continue;
                     if (Vector3.Distance(transform.position, insect.transform.position) > expandedRange) continue;
                     BlindEffect existing = insect.GetEffect<BlindEffect>();
@@ -189,6 +215,7 @@ public class Glowshroom : Shooter
                     else
                         insect.ApplyEffect(new BlindEffect(insect, BlindDuration, 1, this, BlindPenalty));
                 }
+                insects.Clear();
             }
             yield return null;
         }

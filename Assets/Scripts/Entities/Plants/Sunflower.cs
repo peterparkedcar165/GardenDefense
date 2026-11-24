@@ -283,10 +283,18 @@ public class Sunflower : Shooter
     private bool _attackInProgress;
     private int _pendingAttackShots;
 
+    // the target's game object the last search returned, so its insect component is only looked
+    // up again when the pick changes, not on every search
+    private GameObject _currentTargetGo;
+
     protected override GameObject FindTarget()
     {
         GameObject target = base.FindTarget();
-        _currentTarget = target != null ? target.GetComponent<Insect>() : null;
+        if (!ReferenceEquals(target, _currentTargetGo))
+        {
+            _currentTargetGo = target;
+            _currentTarget = target != null ? target.GetComponent<Insect>() : null;
+        }
         return target;
     }
 

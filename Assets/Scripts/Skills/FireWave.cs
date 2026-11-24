@@ -10,6 +10,10 @@ public class FireWave : MonoBehaviour
     private float speed, radius, damage, travelDistance, burnMultiplier;
     private int flammableStacks;
     private Plant source;
+    // the source's damage and element, kept so the wave can finish its sweep if the stargazer
+    // is sold or dies while it is still flying
+    private DamageType sourceDamageType;
+    private ElementalType sourceElementalType;
     private Vector2 startPos;
     private readonly HashSet<Insect> _hit = new HashSet<Insect>();
     // reused copy of the insect list, refilled each frame so damage killing an insect mid loop is safe
@@ -41,6 +45,11 @@ public class FireWave : MonoBehaviour
         this.travelDistance  = travelDistance;
         this.source          = source;
         _returnsAfterEnd     = returnsAfterEnd;
+        if (source != null)
+        {
+            sourceDamageType    = source.damageType;
+            sourceElementalType = source.elementalType;
+        }
 
         transform.position = startPos;
         transform.localScale = new Vector3(radius * 2f, radius * 2f, 1f);
@@ -96,9 +105,24 @@ public class FireWave : MonoBehaviour
             {
                 // amplified damage against already-burning targets
                 float dmg = insect.HasEffect<BurnEffect>() ? damage * burnMultiplier : damage;
-                insect.Damage(dmg, source.damageType, source.elementalType, source, true, waveTags);
-                (source as Stargazer)?.AddFlammable(insect, flammableStacks);
-                (source as Stargazer)?.ApplySkillBurn(insect);
+                if (source != null)
+                {
+                    sourceDamageType    = source.damageType;
+                    sourceElementalType = source.elementalType;
+                    insect.Damage(dmg, sourceDamageType, sourceElementalType, source, true, waveTags);
+                    Stargazer stargazer = source as Stargazer;
+                    if (stargazer != null)
+                    {
+                        stargazer.AddFlammable(insect, flammableStacks);
+                        stargazer.ApplySkillBurn(insect);
+                    }
+                }
+                else
+                {
+                    // the stargazer is gone: the wave still hits, with no source to credit or
+                    // call back into
+                    insect.Damage(dmg, sourceDamageType, sourceElementalType, waveTags);
+                }
                 _hit.Add(insect);
             }
 

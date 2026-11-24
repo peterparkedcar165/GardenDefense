@@ -8,13 +8,26 @@ public class HealIndicator : TextIndicator
     protected override float MinVerticalSpeed => 1f;
     protected override float MaxVerticalSpeed => 1.25f;
 
+    // loaded once on first use instead of a resources lookup on every heal
+    // shield and skill cooldown indicators reuse this same prefab through Prefab
+    private static GameObject prefab;
+
+    public static GameObject Prefab
+    {
+        get
+        {
+            if (prefab == null) prefab = Resources.Load<GameObject>("HealIndicator");
+            return prefab;
+        }
+    }
+
     public static void Spawn(Vector3 position, float amount, bool isCrit = false)
     {
         if (!SettingsManager.ShowHealingIndicators) return;
 
-        GameObject go = Object.Instantiate(
-            Resources.Load<GameObject>("HealIndicator"), position, Quaternion.identity);
-        go.GetComponent<HealIndicator>()?.Initialize(amount, isCrit);
+        GameObject go = Object.Instantiate(Prefab, position, Quaternion.identity);
+        HealIndicator indicator = go.GetComponent<HealIndicator>();
+        if (indicator != null) indicator.Initialize(amount, isCrit);
     }
 
     public void Initialize(float amount, bool isCrit = false)

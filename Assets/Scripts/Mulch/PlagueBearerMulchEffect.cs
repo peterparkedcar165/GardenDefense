@@ -30,20 +30,36 @@ public class PlagueBearerMulchEffect : MulchEffect
         if (passed <= 0f || count <= 0) return;
 
         Vector3 at = dead.transform.position;
-        List<Insect> near = new List<Insect>();
-        foreach (Insect insect in Insect.allInsects)
-            if (insect != null && insect != dead && insect.IsAlive && insect.team != Team.Friendly
-                && Vector3.Distance(at, insect.transform.position) <= radius)
-                near.Add(insect);
-        near.Sort((a, b) => Vector3.Distance(at, a.transform.position).CompareTo(Vector3.Distance(at, b.transform.position)));
-
-        for (int i = 0; i < near.Count && i < count; i++)
+        // each insect's distance worked out once (the sort used to work out two per comparison),
+        // sorted by the same numbers so the nearest are picked just as before. pooled, since a
+        // spread that kills its new insect spreads again from inside this one
+        List<(Insect insect, float distance)> near = UnityEngine.Pool.ListPool<(Insect, float)>.Get();
+        try
         {
-            if (!PoisonedEffect.SpreadTo(near[i], dying, passed)) continue;
-            passedTo++;
-            seconds += passed;
+            foreach (Insect insect in Insect.allInsects)
+            {
+                if (insect == null || insect == dead || !insect.IsAlive || insect.team == Team.Friendly) continue;
+                float distance = Vector3.Distance(at, insect.transform.position);
+                if (distance <= radius) near.Add((insect, distance));
+            }
+            near.Sort(ByDistance);
+
+            for (int i = 0; i < near.Count && i < count; i++)
+            {
+                if (!PoisonedEffect.SpreadTo(near[i].insect, dying, passed)) continue;
+                passedTo++;
+                seconds += passed;
+            }
+        }
+        finally
+        {
+            UnityEngine.Pool.ListPool<(Insect, float)>.Release(near);
         }
     }
+
+    // one shared comparison, nearest first
+    private static readonly System.Comparison<(Insect insect, float distance)> ByDistance =
+        (a, b) => a.distance.CompareTo(b.distance);
 
     public override string GetStatus() => $"Poison passed on: {passedTo} times ({seconds:0.#}s in all)";
 }

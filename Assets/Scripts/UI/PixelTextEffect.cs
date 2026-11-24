@@ -126,20 +126,40 @@ public class PixelTextEffect : MonoBehaviour
             foreach (TextMeshProUGUI copy in copies) copy.text = plain;
         }
 
+        // the copies' rects are only written when the text's own rect changed since the last sync
         RectTransform from = source.rectTransform;
-        for (int i = 0; i < copies.Length; i++)
+        Vector2 anchorMin = from.anchorMin, anchorMax = from.anchorMax, pivot = from.pivot;
+        Vector2 sizeDelta = from.sizeDelta, anchoredPosition = from.anchoredPosition;
+        Vector3 localScale = from.localScale;
+        if (force || !rectSynced || anchorMin != syncedAnchorMin || anchorMax != syncedAnchorMax || pivot != syncedPivot
+            || sizeDelta != syncedSizeDelta || anchoredPosition != syncedAnchoredPosition || localScale != syncedLocalScale)
         {
-            RectTransform to = copies[i].rectTransform;
-            to.anchorMin = from.anchorMin;
-            to.anchorMax = from.anchorMax;
-            to.pivot = from.pivot;
-            to.sizeDelta = from.sizeDelta;
-            to.anchoredPosition = from.anchoredPosition + offsets[i] * pixel;
-            to.localScale = from.localScale;
+            rectSynced = true;
+            syncedAnchorMin = anchorMin;
+            syncedAnchorMax = anchorMax;
+            syncedPivot = pivot;
+            syncedSizeDelta = sizeDelta;
+            syncedAnchoredPosition = anchoredPosition;
+            syncedLocalScale = localScale;
+            for (int i = 0; i < copies.Length; i++)
+            {
+                RectTransform to = copies[i].rectTransform;
+                to.anchorMin = anchorMin;
+                to.anchorMax = anchorMax;
+                to.pivot = pivot;
+                to.sizeDelta = sizeDelta;
+                to.anchoredPosition = anchoredPosition + offsets[i] * pixel;
+                to.localScale = localScale;
+            }
         }
         foreach (TextMeshProUGUI copy in copies) copy.enabled = source.enabled;
         ApplyColor();
     }
+
+    // the text's rect as the copies were last given it
+    private bool rectSynced;
+    private Vector2 syncedAnchorMin, syncedAnchorMax, syncedPivot, syncedSizeDelta, syncedAnchoredPosition;
+    private Vector3 syncedLocalScale;
 
     private void ApplyColor()
     {

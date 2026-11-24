@@ -181,26 +181,54 @@ public class Cinderwisp : MonoBehaviour
         return !HasUnoccupiedPlantWithoutBoonOfTheWisp();
     }
 
-    // priority 1: an unoccupied plant that needs healing
-    private bool HasUnoccupiedInjuredPlant()
+    // one pass over the plants a frame answers the three seeking questions below (any unoccupied
+    // injured plant, the most injured one, the first one with no Boon of The Wisp), which used to
+    // take three to five passes a frame. nothing this wisp does before it reads them in the same
+    // frame can change the answers: its own claims never count as occupied for itself
+    private int   _plantScanFrame = -1;
+    private bool  _scanAnyInjured;
+    private Plant _scanMostInjured;
+    private Plant _scanFirstWithoutBoon;
+    private bool  _scanFoundWithoutBoon;
+
+    private void ScanPlants()
     {
+        if (_plantScanFrame == Time.frameCount) return;
+        _plantScanFrame       = Time.frameCount;
+        _scanAnyInjured       = false;
+        _scanMostInjured      = null;
+        _scanFirstWithoutBoon = null;
+        _scanFoundWithoutBoon = false;
+        float bestFrac = 1f;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive || IsOccupied(plant)) continue;
-            if (plant.health < plant.maxHealth) return true;
+            if (plant.health < plant.maxHealth)
+            {
+                _scanAnyInjured = true;
+                float frac = plant.health / plant.maxHealth;
+                if (frac < bestFrac) { bestFrac = frac; _scanMostInjured = plant; }
+            }
+            if (!_scanFoundWithoutBoon && !plant.HasEffect<BoonOfTheWispEffect>())
+            {
+                _scanFoundWithoutBoon = true;
+                _scanFirstWithoutBoon = plant;
+            }
         }
-        return false;
+    }
+
+    // priority 1: an unoccupied plant that needs healing
+    private bool HasUnoccupiedInjuredPlant()
+    {
+        ScanPlants();
+        return _scanAnyInjured;
     }
 
     // priority 2: an unoccupied plant with no Boon of The Wisp at all, regardless of health
     private bool HasUnoccupiedPlantWithoutBoonOfTheWisp()
     {
-        foreach (Plant plant in Plant.allPlants)
-        {
-            if (plant == null || !plant.IsAlive || IsOccupied(plant)) continue;
-            if (!plant.HasEffect<BoonOfTheWispEffect>()) return true;
-        }
-        return false;
+        ScanPlants();
+        return _scanFoundWithoutBoon;
     }
 
     // priority 3: holds the same insect until it dies (re-target) or a higher-priority plant
@@ -282,9 +310,11 @@ public class Cinderwisp : MonoBehaviour
 
     private void ClaimInsect(Insect insect) => _insectOccupiedBy[insect] = this;
 
+    // a reference check, not unity null: a chased insect destroyed between frames still has to
+    // give its entry back, or the static map keeps it for good
     private void ReleaseInsectClaim()
     {
-        if (_chasedInsect == null) return;
+        if (ReferenceEquals(_chasedInsect, null)) return;
         if (_insectOccupiedBy.TryGetValue(_chasedInsect, out var wisp) && wisp == this)
             _insectOccupiedBy.Remove(_chasedInsect);
     }
@@ -354,23 +384,9 @@ public class Cinderwisp : MonoBehaviour
     // Boon of The Wisp at all yet (presence only, not remaining duration)
     private Plant FindTarget()
     {
-        Plant best     = null;
-        float bestFrac = 1f;
-        foreach (Plant plant in Plant.allPlants)
-        {
-            if (plant == null || !plant.IsAlive || IsOccupied(plant)) continue;
-            if (plant.health >= plant.maxHealth) continue;
-            float frac = plant.health / plant.maxHealth;
-            if (frac < bestFrac) { bestFrac = frac; best = plant; }
-        }
-        if (best != null) return best;
-
-        foreach (Plant plant in Plant.allPlants)
-        {
-            if (plant == null || !plant.IsAlive || IsOccupied(plant)) continue;
-            if (!plant.HasEffect<BoonOfTheWispEffect>()) return plant;
-        }
-        return null;
+        ScanPlants();
+        if (_scanMostInjured != null) return _scanMostInjured;
+        return _scanFoundWithoutBoon ? _scanFirstWithoutBoon : null;
     }
 
     // post-latch: injured plant with lower frac than threshold, else any unoccupied plant with
@@ -410,9 +426,11 @@ public class Cinderwisp : MonoBehaviour
         _occupiedBy[(plant, _source)] = this;
     }
 
+    // a reference check, not unity null: a claimed plant that died this frame still has to give
+    // its entry back, or the static map keeps it for good
     private void ReleaseClaim()
     {
-        if (_claimedPlant == null) return;
+        if (ReferenceEquals(_claimedPlant, null)) return;
         if (_occupiedBy.TryGetValue((_claimedPlant, _source), out var wisp) && wisp == this)
             _occupiedBy.Remove((_claimedPlant, _source));
         _claimedPlant = null;
@@ -452,15 +470,19 @@ public class Cinderwisp : MonoBehaviour
         if (_auraTimer < _tickInterval) return;
         _auraTimer -= _tickInterval;
 
+        bool cold = WeatherManager.instance != null && WeatherManager.instance.temperature == TemperatureType.Cold;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > _radius) continue;
-            plant.Heal(_healPerSecond * _tickInterval, _source, new HealTag[] { HealTag.Regeneration });
-            if (WeatherManager.instance?.temperature == TemperatureType.Cold)
+            plant.Heal(_healPerSecond * _tickInterval, _source, RegenTags);
+            if (cold)
                 plant.temperature = Mathf.Min(plant.temperature + _temperaturePerSecond * _tickInterval, 10f);
         }
     }
+
+    // shared by every heal instead of a new tag array each tick, nothing writes into it
+    private static readonly HealTag[] RegenTags = { HealTag.Regeneration };
 
     private IEnumerator FadeAndDie()
     {
@@ -492,7 +514,7 @@ public class Cinderwisp : MonoBehaviour
         if (_isLatched) Unlatch();
         else            ReleaseClaim();
         ReleaseInsectClaim();
-        _source?.UnregisterWisp(this);
+        if (_source != null) _source.UnregisterWisp(this);
         DarknessManager.UnregisterLightSource(transform);
     }
 

@@ -52,14 +52,31 @@ public class GameHUD : MonoBehaviour
         // before the first wave there's no countdown yet: the bar waits full and says nothing
         if (float.IsPositiveInfinity(t)) { countdownFull = -1f; ShowCountdown("", 1f); return; }
         if (t < 0f) { countdownFull = -1f; ShowCountdown("Final wave", 0f); return; }
-        ShowCountdown($"Next wave {Mathf.CeilToInt(t)}s", CountdownLeft(t));
+        ShowCountdown(CountdownText(false, Mathf.CeilToInt(t)), CountdownLeft(t));
     }
     // final wave has no next wave to count down to, so this counts down to its last insect spawn instead
     public void SetFinalWaveTimer(float t)
     {
         NextWaveCountdown = t;
         if (t <= 0f) { countdownFull = -1f; ShowCountdown("", 0f); return; }
-        ShowCountdown($"Last spawn {Mathf.CeilToInt(t)}s", CountdownLeft(t));
+        ShowCountdown(CountdownText(true, Mathf.CeilToInt(t)), CountdownLeft(t));
+    }
+
+    // the countdown text last built. these timers are set every frame, so the text is only made
+    // again when its whole seconds (or which countdown it is) change
+    private bool builtLastSpawn;
+    private int builtSeconds;
+    private string builtCountdownText;
+
+    private string CountdownText(bool lastSpawn, int seconds)
+    {
+        if (builtCountdownText == null || lastSpawn != builtLastSpawn || seconds != builtSeconds)
+        {
+            builtLastSpawn = lastSpawn;
+            builtSeconds = seconds;
+            builtCountdownText = lastSpawn ? $"Last spawn {seconds}s" : $"Next wave {seconds}s";
+        }
+        return builtCountdownText;
     }
 
     public void SetPauseButton(bool paused, bool hasStarted)

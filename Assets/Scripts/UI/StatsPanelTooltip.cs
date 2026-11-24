@@ -37,6 +37,22 @@ public class StatsPanelTooltip : MonoBehaviour
     private readonly StringBuilder _key = new StringBuilder();
     private string lastKey;
 
+    // while collecting, BuildCore only records each line's current and base value here (in line
+    // order) and makes no text. the lines were last built from _builtValues for _builtEntity
+    private bool _collecting;
+    private readonly List<float> _values = new List<float>(96);
+    private readonly List<float> _builtValues = new List<float>(96);
+    private Entity _builtEntity;
+    private bool _built;
+
+    private bool SameValues()
+    {
+        if (_values.Count != _builtValues.Count) return false;
+        for (int i = 0; i < _values.Count; i++)
+            if (!_values[i].Equals(_builtValues[i])) return false;
+        return true;
+    }
+
     // the panel keeps its right edge (next to the plant panel) while its width follows the text,
     // and its middle where the prefab put it unless that would put part of it off screen
     private RectTransform _panelRect;
@@ -68,6 +84,18 @@ public class StatsPanelTooltip : MonoBehaviour
         PlantUpgradeUI ui = PlantUpgradeUI.instance;
         Plant plant = ui != null ? ui.GetSelectedPlant() : null;
         Entity entity = plant != null ? (Entity)plant : (ui != null ? ui.GetSelectedInsect() : null);
+
+        // first only the raw numbers behind every line are read (no text made). the lines are
+        // built again only when one of them, or the selection, changed since the last build
+        _values.Clear();
+        _collecting = true;
+        if (entity != null) BuildCore(entity);
+        _collecting = false;
+        if (_built && ReferenceEquals(entity, _builtEntity) && SameValues()) return;
+        _built = true;
+        _builtEntity = entity;
+        _builtValues.Clear();
+        _builtValues.AddRange(_values);
 
         _rows.Clear();
         if (entity != null) BuildCore(entity);
@@ -174,75 +202,125 @@ public class StatsPanelTooltip : MonoBehaviour
     {
         // the icon row above (QuickStatRow) shows a few of these too; this list has them all (Tommy,
         // 2026-11-22), with the same number formats as the icon row
-        ElemLine(HealCol, "Max Health:", $"{e.maxHealth:F0}", e.maxHealth, e.baseMaxHealth);
-        Line("Attack Damage:", $"{e.attackDamage:F0}", e.attackDamage, e.baseAttackDamage);
-        Line("Attack Speed:", $"{e.attackSpeed:F2}", e.attackSpeed, e.baseAttackSpeed);
-        Line("Attack Range:", $"{e.attackRange:F1}", e.attackRange, e.baseAttackRange);
+        // each value is written in its format ("F0" and so on); Pct lines show it times 100 with a
+        // percent sign; the int lines write the whole number as it is
+        ElemLine(HealCol, "Max Health:", e.maxHealth, e.baseMaxHealth, "F0");
+        Line("Attack Damage:", e.attackDamage, e.baseAttackDamage, "F0");
+        Line("Attack Speed:", e.attackSpeed, e.baseAttackSpeed, "F2");
+        Line("Attack Range:", e.attackRange, e.baseAttackRange, "F1");
         if (e is Insect mover)
-            Line("Movement Speed:", $"{mover.movementSpeed:F2}", mover.movementSpeed, mover.baseMovementSpeed);
+            Line("Movement Speed:", mover.movementSpeed, mover.baseMovementSpeed, "F2");
         Blank();
-        ElemLine(Crit, "Crit Chance:", $"{e.criticalChance * 100:F1}%", e.criticalChance, e.baseCriticalChance);
-        ElemLine(Crit, "Crit Damage:", $"{e.criticalDamage * 100:F0}%", e.criticalDamage, e.baseCriticalDamage);
+        ElemLine(Crit, "Crit Chance:", e.criticalChance, e.baseCriticalChance, "F1", Pct);
+        ElemLine(Crit, "Crit Damage:", e.criticalDamage, e.baseCriticalDamage, "F0", Pct);
         Blank();
-        ElemLine(Magic, "Maximum Damage:", $"{e.maximumDamage * 100:F0}%", e.maximumDamage, e.baseMaximumDamage);
-        ElemLine(Magic, "Minimum Damage:", $"{e.minimumDamage * 100:F0}%", e.minimumDamage, e.baseMinimumDamage);
+        ElemLine(Magic, "Maximum Damage:", e.maximumDamage, e.baseMaximumDamage, "F0", Pct);
+        ElemLine(Magic, "Minimum Damage:", e.minimumDamage, e.baseMinimumDamage, "F0", Pct);
         Blank();
-        ElemLine(Magic, "Magic Power:", $"{e.magicPower:F0}", e.magicPower, e.baseMagicPower);
+        ElemLine(Magic, "Magic Power:", e.magicPower, e.baseMagicPower, "F0");
         Blank();
-        ElemLine(Physical, "Armor:", $"{e.armor}", e.armor, e.baseArmor);
-        Line("<color=#FF69B4>Magic Armor:</color>", $"{e.magicArmor}", e.magicArmor, e.baseMagicArmor);
+        ElemIntLine(Physical, "Armor:", e.armor, e.baseArmor);
+        IntLine("<color=#FF69B4>Magic Armor:</color>", e.magicArmor, e.baseMagicArmor);
         Blank();
-        ElemLine(Physical, "Armor Penetration:", $"{e.armorPenFlat:F0}",           e.armorPenFlat,    e.baseArmorPenFlat);
-        ElemLine(Physical, "Armor Shred:",       $"{e.armorPenPercent * 100:F0}%", e.armorPenPercent, e.baseArmorPenPercent);
-        ElemLine(Magic,    "Magic Penetration:", $"{e.magicPenFlat:F0}",           e.magicPenFlat,    e.baseMagicPenFlat);
-        ElemLine(Magic,    "Magic Armor Shred:", $"{e.magicPenPercent * 100:F0}%", e.magicPenPercent, e.baseMagicPenPercent);
+        ElemLine(Physical, "Armor Penetration:", e.armorPenFlat,    e.baseArmorPenFlat,    "F0");
+        ElemLine(Physical, "Armor Shred:",       e.armorPenPercent, e.baseArmorPenPercent, "F0", Pct);
+        ElemLine(Magic,    "Magic Penetration:", e.magicPenFlat,    e.baseMagicPenFlat,    "F0");
+        ElemLine(Magic,    "Magic Armor Shred:", e.magicPenPercent, e.baseMagicPenPercent, "F0", Pct);
         if (e is Shooter shooter)
-            ElemLine(Grass, "Piercing:", $"{shooter.piercing}", shooter.piercing, shooter.basePiercing);
+            ElemIntLine(Grass, "Piercing:", shooter.piercing, shooter.basePiercing);
         Blank();
-        Line("Evasion:", $"{e.evasion * 100:F1}%", e.evasion, e.baseEvasion);
-        ElemLine(Grass, "Accuracy:", $"{e.accuracy * 100:F1}%", e.accuracy, e.baseAccuracy);
-        Line("Visibility:", $"{e.visibility * 100:F0}%", e.visibility, e.baseVisibility);
-        Line("<color=grey>Tenacity:</color>", $"{e.tenacity * 100:F0}%", e.tenacity, e.baseTenacity);
-        ElemLine(HealCol, "Heals & Shield Bonus:", $"{e.healingBonus * 100:F0}%", e.healingBonus, e.baseHealingBonus);
+        Line("Evasion:", e.evasion, e.baseEvasion, "F1", Pct);
+        ElemLine(Grass, "Accuracy:", e.accuracy, e.baseAccuracy, "F1", Pct);
+        Line("Visibility:", e.visibility, e.baseVisibility, "F0", Pct);
+        Line("<color=grey>Tenacity:</color>", e.tenacity, e.baseTenacity, "F0", Pct);
+        ElemLine(HealCol, "Heals & Shield Bonus:", e.healingBonus, e.baseHealingBonus, "F0", Pct);
         // mulch drop stats, in percents: Mulch Drop Rate adds to the base drop chance, Rare Item Drop
         // Rate weighs Rare and Epic more
         if (e is Plant dropper)
         {
-            Line($"{DropCol}Mulch Drop Rate:{End}", DropRateText(dropper.mulchDropRate), dropper.mulchDropRate, 0f);
-            Line($"{DropCol}Rare Item Drop Rate:{End}", DropRateText(dropper.rareItemDropRate), dropper.rareItemDropRate, 0f);
+            DropLine(MulchDropLabel, dropper.mulchDropRate);
+            DropLine(RareDropLabel, dropper.rareItemDropRate);
         }
         Blank();
         if (e is Insect)
         {
-            ElemLine(Fire,   "Fire Resistance:",   $"{e.fireResistance * 100:F0}%",   e.fireResistance,   e.baseFireResistance);
-            ElemLine(Water,  "Water Resistance:",  $"{e.waterResistance * 100:F0}%",  e.waterResistance,  e.baseWaterResistance);
-            ElemLine(Grass,  "Grass Resistance:",  $"{e.grassResistance * 100:F0}%",  e.grassResistance,  e.baseGrassResistance);
-            ElemLine(Ice,    "Ice Resistance:",    $"{e.iceResistance * 100:F0}%",    e.iceResistance,    e.baseIceResistance);
-            ElemLine(Poison, "Poison Resistance:", $"{e.poisonResistance * 100:F0}%", e.poisonResistance, e.basePoisonResistance);
-            ElemLine(Wind,   "Wind Resistance:",   $"{e.windResistance * 100:F0}%",   e.windResistance,   e.baseWindResistance);
+            ElemLine(Fire,   "Fire Resistance:",   e.fireResistance,   e.baseFireResistance,   "F0", Pct);
+            ElemLine(Water,  "Water Resistance:",  e.waterResistance,  e.baseWaterResistance,  "F0", Pct);
+            ElemLine(Grass,  "Grass Resistance:",  e.grassResistance,  e.baseGrassResistance,  "F0", Pct);
+            ElemLine(Ice,    "Ice Resistance:",    e.iceResistance,    e.baseIceResistance,    "F0", Pct);
+            ElemLine(Poison, "Poison Resistance:", e.poisonResistance, e.basePoisonResistance, "F0", Pct);
+            ElemLine(Wind,   "Wind Resistance:",   e.windResistance,   e.baseWindResistance,   "F0", Pct);
         }
         else
         {
-            ElemLine(Grass,  "Elemental Affinity:", $"{e.elementalAffinity * 100:F0}%", e.elementalAffinity, e.baseelementalAffinity);
-            ElemLine(Fire,   "Fire Damage:",   $"{e.fireDamage * 100:F0}%",   e.fireDamage,   e.baseFireDamage);
-            ElemLine(Water,  "Water Damage:",  $"{e.waterDamage * 100:F0}%",  e.waterDamage,  e.baseWaterDamage);
-            ElemLine(Grass,  "Grass Damage:",  $"{e.grassDamage * 100:F0}%",  e.grassDamage,  e.baseGrassDamage);
-            ElemLine(Ice,    "Ice Damage:",    $"{e.iceDamage * 100:F0}%",    e.iceDamage,    e.baseIceDamage);
-            ElemLine(Poison, "Poison Damage:", $"{e.poisonDamage * 100:F0}%", e.poisonDamage, e.basePoisonDamage);
-            ElemLine(Wind,   "Wind Damage:",   $"{e.windDamage * 100:F0}%",   e.windDamage,   e.baseWindDamage);
+            ElemLine(Grass,  "Elemental Affinity:", e.elementalAffinity, e.baseelementalAffinity, "F0", Pct);
+            ElemLine(Fire,   "Fire Damage:",   e.fireDamage,   e.baseFireDamage,   "F0", Pct);
+            ElemLine(Water,  "Water Damage:",  e.waterDamage,  e.baseWaterDamage,  "F0", Pct);
+            ElemLine(Grass,  "Grass Damage:",  e.grassDamage,  e.baseGrassDamage,  "F0", Pct);
+            ElemLine(Ice,    "Ice Damage:",    e.iceDamage,    e.baseIceDamage,    "F0", Pct);
+            ElemLine(Poison, "Poison Damage:", e.poisonDamage, e.basePoisonDamage, "F0", Pct);
+            ElemLine(Wind,   "Wind Damage:",   e.windDamage,   e.baseWindDamage,   "F0", Pct);
         }
         // the old text trimmed trailing empty lines, so a closing blank never showed
-        while (_rows.Count > 0 && _rows[_rows.Count - 1].label == null) _rows.RemoveAt(_rows.Count - 1);
+        while (!_collecting && _rows.Count > 0 && _rows[_rows.Count - 1].label == null) _rows.RemoveAt(_rows.Count - 1);
     }
 
-    private void Blank() => _rows.Add(new Row());
+    private const bool Pct = true;
+    private const string MulchDropLabel = DropCol + "Mulch Drop Rate:" + End;
+    private const string RareDropLabel = DropCol + "Rare Item Drop Rate:" + End;
+
+    private void Blank()
+    {
+        if (_collecting) return;
+        _rows.Add(new Row());
+    }
 
     private static string DropRateText(float percent) =>
         percent > 0f ? $"+{percent:0.#}%" : "0%";
 
-    private void Line(string label, string plain, float current, float baseVal) =>
-        _rows.Add(new Row { label = label, value = Col(current, baseVal, $"<b>{plain}</b>") });
+    // true while only collecting: the two values are recorded and no text is made
+    private bool Collect(float current, float baseVal)
+    {
+        if (!_collecting) return false;
+        _values.Add(current);
+        _values.Add(baseVal);
+        return true;
+    }
 
-    private void ElemLine(string colorTag, string label, string plain, float current, float baseVal) =>
-        _rows.Add(new Row { label = $"{colorTag}{label}{End}", value = Col(current, baseVal, $"<b>{plain}</b>") });
+    // the same text the old "{value:format}" and "{value * 100:format}%" made
+    private static string Format(float current, string format, bool percent) =>
+        percent ? (current * 100).ToString(format) + "%" : current.ToString(format);
+
+    private void Line(string label, float current, float baseVal, string format, bool percent = false)
+    {
+        if (Collect(current, baseVal)) return;
+        AddRow(label, current, baseVal, Format(current, format, percent));
+    }
+
+    private void ElemLine(string colorTag, string label, float current, float baseVal, string format, bool percent = false)
+    {
+        if (Collect(current, baseVal)) return;
+        AddRow($"{colorTag}{label}{End}", current, baseVal, Format(current, format, percent));
+    }
+
+    private void IntLine(string label, int current, int baseVal)
+    {
+        if (Collect(current, baseVal)) return;
+        AddRow(label, current, baseVal, current.ToString());
+    }
+
+    private void ElemIntLine(string colorTag, string label, int current, int baseVal)
+    {
+        if (Collect(current, baseVal)) return;
+        AddRow($"{colorTag}{label}{End}", current, baseVal, current.ToString());
+    }
+
+    private void DropLine(string label, float percent)
+    {
+        if (Collect(percent, 0f)) return;
+        AddRow(label, percent, 0f, DropRateText(percent));
+    }
+
+    private void AddRow(string label, float current, float baseVal, string plain) =>
+        _rows.Add(new Row { label = label, value = Col(current, baseVal, $"<b>{plain}</b>") });
 }

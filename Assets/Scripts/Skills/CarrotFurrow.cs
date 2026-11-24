@@ -14,6 +14,14 @@ public class CarrotFurrow : MonoBehaviour
     private Carrot source;
     private GameObject squareVisualPrefab;
 
+    // the carrot's values the plow needs, read from it every frame while it is alive and kept
+    // for the rest of the plow if it is sold or dies, so the furrow never calls into a
+    // destroyed carrot
+    private bool path3Maxed;
+    private DamageType sourceDamageType;
+    private ElementalType sourceElementalType;
+    private float visualJitter, visualFadeIn, visualHold, visualFadeOut;
+
     private float traveled;      // distance of the plowing square center from the origin
     private float endDistance;   // center of the final segment
     private float speed;
@@ -65,6 +73,8 @@ public class CarrotFurrow : MonoBehaviour
         this.source             = source;
         this.squareVisualPrefab = squareVisualPrefab;
 
+        ReadSource();
+
         traveled    = startOffset;
         speed       = spacing / Mathf.Max(0.01f, interval);   // same pace the old pillar wave had
         endDistance = startOffset + spacing * (segmentCount - 1);
@@ -75,10 +85,26 @@ public class CarrotFurrow : MonoBehaviour
     // one before it, compounding off the PREVIOUS carrot (1st = base, 2nd = +7%, 3rd = +7% on
     // top of that, ...) rather than a flat ramp off the first, so it's exponential growth
     private float SegmentScale(int segmentIndex) =>
-        source.IsPath3Maxed ? Mathf.Pow(1f + MaxLevelGrowthPerSegment, segmentIndex) : 1f;
+        path3Maxed ? Mathf.Pow(1f + MaxLevelGrowthPerSegment, segmentIndex) : 1f;
+
+    private void ReadSource()
+    {
+        if (source == null) return;
+        path3Maxed          = source.IsPath3Maxed;
+        sourceDamageType    = source.damageType;
+        sourceElementalType = source.elementalType;
+        visualJitter        = source.VisualPositionJitter;
+        visualFadeIn        = source.VisualFadeIn;
+        visualHold          = source.VisualHold;
+        visualFadeOut       = source.VisualFadeOut;
+    }
 
     private void Update()
     {
+        ReadSource();
+        // null once the carrot is gone (not a destroyed reference), for the hits and effects below
+        Carrot liveSource = source != null ? source : null;
+
         traveled += speed * Time.deltaTime;
 
         // the hitting square stops at the final segment, travel continues so coverage completes
@@ -104,16 +130,16 @@ public class CarrotFurrow : MonoBehaviour
 
             _hit.Add(insect);
 
-            insect.Damage(damage * segmentScale, source.damageType, source.elementalType, source, true, furrowTags);
+            HitInsect(insect, damage * segmentScale, liveSource);
             if (!insect.IsAlive) continue;
 
-            if (source.IsPath3Maxed)
+            if (path3Maxed)
             {
-                insect.Damage(insect.maxHealth * MaxHealthDamagePercent * segmentScale, source.damageType, source.elementalType, source, true, furrowTags);
+                HitInsect(insect, insect.maxHealth * MaxHealthDamagePercent * segmentScale, liveSource);
                 if (!insect.IsAlive) continue;
             }
 
-            insect.ApplyEffect(new KnockUpEffect(insect, 30f, 1, source, knockUpForce));
+            insect.ApplyEffect(new KnockUpEffect(insect, 30f, 1, liveSource, knockUpForce));
             // pushed sideways, away from the line of carrots (whichever side of it the insect is
             // already on), a distance equal to this carrot's own width, rather than further
             // along the furrow's own direction of travel. the push lasts as long as the knock
@@ -122,7 +148,8 @@ public class CarrotFurrow : MonoBehaviour
             float pushDistance = scaledRadius * 2f;
             float tenacityScale = Mathf.Sqrt(Mathf.Max(0f, 1f - insect.tenacity));
             float airTime = Mathf.Max(0.15f, 2f * knockUpForce * tenacityScale / Insect.gravity);
-            source.PushInsect(insect, pushDir, pushDistance, airTime);
+            // the push runs on the carrot, so a furrow whose carrot is gone only knocks up
+            if (liveSource != null) liveSource.PushInsect(insect, pushDir, pushDistance, airTime);
         }
 
         // spawn each segment's visual square the moment the plow enters it,
@@ -139,16 +166,24 @@ public class CarrotFurrow : MonoBehaviour
             Destroy(gameObject);
     }
 
+    private void HitInsect(Insect insect, float amount, Carrot liveSource)
+    {
+        if (liveSource != null)
+            insect.Damage(amount, sourceDamageType, sourceElementalType, liveSource, true, furrowTags);
+        else
+            insect.Damage(amount, sourceDamageType, sourceElementalType, furrowTags);
+    }
+
     private void SpawnSquareVisual(Vector3 position, float segmentScale)
     {
         if (squareVisualPrefab == null) return;
         // spawned at its authored size (scaled by the current width level and, at path3 max,
         // this segment's own growth) and upright, carrots always render right side up. a small
         // random offset keeps the row from looking machine planted
-        float jitter = source.VisualPositionJitter;
+        float jitter = visualJitter;
         position += new Vector3(Random.Range(-jitter, jitter), Random.Range(-jitter, jitter), 0f);
         GameObject visual = Instantiate(squareVisualPrefab, position, Quaternion.identity);
         visual.transform.localScale *= visualScale * segmentScale;
-        visual.AddComponent<SpriteFadeInOut>().Play(source.VisualFadeIn, source.VisualHold, source.VisualFadeOut);
+        visual.AddComponent<SpriteFadeInOut>().Play(visualFadeIn, visualHold, visualFadeOut);
     }
 }

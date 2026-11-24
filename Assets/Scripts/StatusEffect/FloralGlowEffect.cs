@@ -9,6 +9,8 @@ public class FloralGlowEffect : StatusEffect
     // active, instead of the old on-hit AoE explosion - tracked so OnExpire only removes it if
     // OnApply actually granted it (calendula.IsPath3Maxed could theoretically change in between)
     private bool _maxLevelAttackSpeedApplied;
+    // the exact amount OnApply added, so OnExpire takes back just that
+    private float _maxLevelAttackSpeedAmount;
     private float MaxLevelAttackSpeedBonus => (calendula?.data as CalendulaData)?.floralGlowMaxLevelAttackSpeedBonus ?? 0.15f;
 
     public FloralGlowEffect(Entity target, float duration, int level, Entity source, Calendula calendula)
@@ -56,7 +58,8 @@ public class FloralGlowEffect : StatusEffect
 
         if (calendula != null && calendula.IsPath3Maxed)
         {
-            plant.attackSpeedMultiplier += MaxLevelAttackSpeedBonus;
+            _maxLevelAttackSpeedAmount = MaxLevelAttackSpeedBonus;
+            plant.attackSpeedMultiplier += _maxLevelAttackSpeedAmount;
             _maxLevelAttackSpeedApplied = true;
             plant.UpdateStats();
         }
@@ -78,7 +81,8 @@ public class FloralGlowEffect : StatusEffect
 
         if (_maxLevelAttackSpeedApplied)
         {
-            plant.attackSpeedMultiplier -= MaxLevelAttackSpeedBonus;
+            plant.attackSpeedMultiplier -= _maxLevelAttackSpeedAmount;
+            _maxLevelAttackSpeedApplied = false;
             plant.UpdateStats();
         }
     }
@@ -91,16 +95,19 @@ public class FloralGlowEffect : StatusEffect
 
     private System.Collections.IEnumerator DelayedFireHit(Insect insect, float effectiveness)
     {
-        yield return new UnityEngine.WaitForSeconds(0.03f);
+        yield return FireHitDelay;
         if (calendula == null || insect == null || !insect.IsAlive) yield break;
         float hitDamage = calendula.attackDamage * DamageScaling + calendula.skillDamageMultiplier * calendula.magicPower;
         // Igniting Glow is the only thing that lets this hit apply a Fire Primer like any other
         // Fire damage would - without it, NoPrimer suppresses that generic behavior entirely
-        DamageTag[] tags = calendula.IgnitingGlowActive
-            ? new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.OnHit }
-            : new DamageTag[] { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.OnHit, DamageTag.NoPrimer };
+        DamageTag[] tags = calendula.IgnitingGlowActive ? TagsWithPrimer : TagsNoPrimer;
         insect.Damage(hitDamage, DamageType.Magic, ElementalType.Fire, calendula, false, tags, false, effectiveness);
     }
+
+    // made once and shared by every hit: nothing writes into them
+    private static readonly UnityEngine.WaitForSeconds FireHitDelay = new UnityEngine.WaitForSeconds(0.03f);
+    private static readonly DamageTag[] TagsWithPrimer = { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.OnHit };
+    private static readonly DamageTag[] TagsNoPrimer = { DamageTag.SkillDamage, DamageTag.Coordinated, DamageTag.OnHit, DamageTag.NoPrimer };
 
     private float CoordinatedDamage =>
         ((calendula?.attackDamage ?? 0f) * DamageScaling + (calendula?.skillDamageMultiplier ?? 0f) * (calendula?.magicPower ?? 0f))

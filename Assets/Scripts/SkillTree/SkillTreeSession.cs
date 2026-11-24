@@ -107,6 +107,10 @@ public static class SkillTreeSession
 
     public static bool HasPending => pending.Count > 0;
 
+    // drops every staged pick, nothing was spent on them yet so nothing needs a refund (the
+    // skill tree screen calls this when it is left)
+    public static void ClearPending() => pending.Clear();
+
     public static void ConfirmAll()
     {
         if (Data == null) return;

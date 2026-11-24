@@ -194,15 +194,20 @@ public class Rhodiola : Shooter
 
     private Entity FindMostInjuredHealable()
     {
+        // one pass over the plants finds both the critical pick (tier 1) and the lowest injured
+        // pick (tier 3), which used to be two passes. nothing changes between the tiers, so the
+        // picks are the same
         Plant critical = null;
         float criticalPercent = 1f;
+        Plant lowest = null;
+        float lowestPercent = 1f;
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || plant == this || !plant.IsAlive) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             float percent = plant.health / plant.maxHealth;
-            if (percent >= CriticalHealthPercent) continue;
-            if (percent < criticalPercent) { criticalPercent = percent; critical = plant; }
+            if (percent < CriticalHealthPercent && percent < criticalPercent) { criticalPercent = percent; critical = plant; }
+            if (plant.health < plant.maxHealth && percent < lowestPercent) { lowestPercent = percent; lowest = plant; }
         }
         if (critical != null) return critical;
 
@@ -211,16 +216,6 @@ public class Rhodiola : Shooter
             && Vector2.Distance(transform.position, currentTarget.transform.position) <= attackRange)
             return currentTarget;
 
-        Plant lowest = null;
-        float lowestPercent = 1f;
-        foreach (Plant plant in Plant.allPlants)
-        {
-            if (plant == null || plant == this || !plant.IsAlive) continue;
-            if (plant.health >= plant.maxHealth) continue;
-            if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
-            float percent = plant.health / plant.maxHealth;
-            if (percent < lowestPercent) { lowestPercent = percent; lowest = plant; }
-        }
         if (lowest != null) return lowest;
 
         Insect lowestAlly = null;

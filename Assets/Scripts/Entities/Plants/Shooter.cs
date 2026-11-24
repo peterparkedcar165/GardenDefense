@@ -52,6 +52,7 @@ public abstract class Shooter : Plant
             GameObject target = FindTarget();
             if (target != null)
             {
+                FaceAttackTarget(target);
                 attackCooldownTimer = 0;
                 Vector3 predictedPosition = PredictTargetPosition(target);
                 Shoot(predictedPosition);

@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,11 +36,30 @@ public class SolarFlareMulchEffect : MulchEffect
         ElementalType element = typedData.useSourceElement ? Owner.elementalType : typedData.fixedElement;
         DamageTag[] tags = typedData.appliesPrimer ? FlareTags : FlareTagsNoPrimer;
         Vector3 center = Owner.transform.position;
-        foreach (Insect insect in new List<Insect>(Insect.allInsects))
+        float radiusSqr = radius * radius;
+
+        // a snapshot of the insects, since a flare's damage can kill or spawn insects. rented, not
+        // a new list per sun event; a sun event inside this loop (alchemy paid by a reaction the
+        // flare set off) rents its own array, so the nested flare never touches this one
+        List<Insect> insects = Insect.allInsects;
+        int count = insects.Count;
+        Insect[] snapshot = ArrayPool<Insect>.Shared.Rent(Mathf.Max(1, count));
+        insects.CopyTo(snapshot, 0);
+        try
         {
-            if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(center, insect.transform.position) > radius) continue;
-            dealt += DealDamage(insect, damage, typedData.damageType, element, Owner, tags);
+            for (int i = 0; i < count; i++)
+            {
+                Insect insect = snapshot[i];
+                if (insect == null || !insect.IsAlive) continue;
+                if ((insect.transform.position - center).sqrMagnitude > radiusSqr) continue;
+                dealt += DealDamage(insect, damage, typedData.damageType, element, Owner, tags);
+            }
+        }
+        finally
+        {
+            // cleared so the shared pool doesn't keep dead insects alive
+            System.Array.Clear(snapshot, 0, count);
+            ArrayPool<Insect>.Shared.Return(snapshot);
         }
     }
 }

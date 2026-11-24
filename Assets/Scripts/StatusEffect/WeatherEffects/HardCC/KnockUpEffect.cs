@@ -34,6 +34,7 @@ public class KnockUpEffect : Airborne
     {
         if (insect == null) return;
         if (insect.isOnGround && insect.verticalVelocity >= 0f) { duration = 0f; return; }
-        if (insect.HasEffect<BubblePrisonEffect>() && insect.verticalVelocity >= 0f) { duration = 0f; return; }
+        // the cheap velocity test first, the effect list scan only when it passes
+        if (insect.verticalVelocity >= 0f && insect.HasEffect<BubblePrisonEffect>()) { duration = 0f; return; }
     }
 }

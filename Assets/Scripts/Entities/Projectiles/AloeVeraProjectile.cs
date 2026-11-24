@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class AloeVeraProjectile : MonoBehaviour
 {
+    // made once and shared by every insect the burst hits: nothing writes into it
+    private static readonly DamageTag[] BurstTags = { DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile };
+
     private Transform visual;
     private Transform trackedTarget;
     private Vector3 lastKnownPosition; // updated every frame; used as destination once target dies
@@ -234,8 +237,7 @@ public class AloeVeraProjectile : MonoBehaviour
             if (insect == null || !insect.IsAlive) continue;
             if (!insect.isOnGround) continue;
             if (Vector3.Distance(transform.position, insect.transform.position) <= aoERadius)
-                insect.Damage(damage, damageType, elementalType, source, true,
-                    new DamageTag[] { DamageTag.AoE, DamageTag.Attack, DamageTag.Projectile });
+                insect.Damage(damage, damageType, elementalType, source, true, BurstTags);
         }
     }
 }

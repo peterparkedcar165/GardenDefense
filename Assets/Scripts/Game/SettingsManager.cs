@@ -46,6 +46,10 @@ public class SettingsManager : MonoBehaviour
         if (mainMenuButton != null)
             mainMenuButton.SetActive(GameManager.instance != null && GameManager.instance.IsGameActive);
 
+        // everything below only matters on an escape press, so the checks (the scene name ones
+        // make a new string each) only run on that frame
+        if (Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame) return;
+
         // true if targeting was active (about to be cancelled) or was already cancelled this frame.
         // covers both orderings of Update() between this script and SkillTargetingManager, so an
         // escape press that closes a skill's targeting never also opens the settings panel
@@ -56,11 +60,12 @@ public class SettingsManager : MonoBehaviour
         bool loadoutOpen = LoadoutSelectionUI.instance != null && LoadoutSelectionUI.instance.IsOpen;
         bool fertilizerOpen = FertilizerSelectionUI.instance != null && FertilizerSelectionUI.instance.IsOpen;
         bool mulchOpen = MulchDebugMenu.instance != null && MulchDebugMenu.instance.IsOpen;
-        bool inEncyclopedia = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Encyclopedia";
-        bool inLevelSelector = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "LevelSelector";
-        bool inShop = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Shop";
-        bool inSkillTree = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "SkillTree";
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !skillCancelled && !loadoutOpen && !fertilizerOpen && !mulchOpen && !inEncyclopedia && !inLevelSelector && !inShop && !inSkillTree && !SceneTransition.IsTransitioning && !TutorialManager.BlocksEscape)
+        string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        bool inEncyclopedia = sceneName == "Encyclopedia";
+        bool inLevelSelector = sceneName == "LevelSelector";
+        bool inShop = sceneName == "Shop";
+        bool inSkillTree = sceneName == "SkillTree";
+        if (!skillCancelled && !loadoutOpen && !fertilizerOpen && !mulchOpen && !inEncyclopedia && !inLevelSelector && !inShop && !inSkillTree && !SceneTransition.IsTransitioning && !TutorialManager.BlocksEscape)
         {
             bool isOpen = !settingsPanel.activeSelf;
             settingsPanel.SetActive(isOpen);

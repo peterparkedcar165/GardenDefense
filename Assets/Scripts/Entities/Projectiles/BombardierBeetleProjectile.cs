@@ -8,6 +8,9 @@ using System.Collections.Generic;
 // alive - this is the "shoots at the locked position/empty space" behavior from BombardierBeetle
 public class BombardierBeetleProjectile : MonoBehaviour
 {
+    private static readonly DamageTag[] SingleTags = { DamageTag.Attack, DamageTag.Projectile, DamageTag.SingleTarget };
+    private static readonly DamageTag[] SplashTags = { DamageTag.Attack, DamageTag.Projectile, DamageTag.AoE };
+
     [SerializeField] private Transform visual;
     [SerializeField] private float arcPeakHeight = 1.5f;
 
@@ -79,8 +82,11 @@ public class BombardierBeetleProjectile : MonoBehaviour
 
     private void DealDamage(Plant plant, float damage, DamageTag rangeTag)
     {
-        plant.Damage(damage, damageType, elementalType, source, false,
-            new DamageTag[] { DamageTag.Attack, DamageTag.Projectile, rangeTag });
+        // the two tag sets are made once and shared (nothing writes into them)
+        DamageTag[] tags = rangeTag == DamageTag.SingleTarget ? SingleTags
+                         : rangeTag == DamageTag.AoE ? SplashTags
+                         : new DamageTag[] { DamageTag.Attack, DamageTag.Projectile, rangeTag };
+        plant.Damage(damage, damageType, elementalType, source, false, tags);
 
         if (plant.IsAlive && Random.value < scorchChance)
             plant.ApplyEffect(new ScorchEffect(plant, scorchDuration, 1, source, scorchDPS, scorchHealthPercent));

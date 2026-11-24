@@ -9,6 +9,9 @@ public class CursorIcon : MonoBehaviour
     private SpriteRenderer cachedRenderer;
     private SpriteRenderer cachedPotRenderer;
     private SpriteRenderer cachedWaterPotRenderer;
+    // the plant being transplanted and its renderer, for the transplant preview
+    private Plant cachedTransplant;
+    private SpriteRenderer cachedTransplantRenderer;
 
     [SerializeField] private Image icon;
     [SerializeField] private Sprite shovelSprite;
@@ -98,7 +101,14 @@ public class CursorIcon : MonoBehaviour
             // same preview as placing a brand-new plant (ghost sprite + range circle), just
             // sourced from the live instance being relocated instead of a loadout-bar prefab
             Plant transplanting = PlantSelector.instance.transplantingPlant;
-            SpriteRenderer transplantRenderer = transplanting != null ? transplanting.GetComponentInChildren<SpriteRenderer>() : null;
+            // looked up again only when the plant being moved changes (or its renderer went away)
+            if (transplanting != cachedTransplant || cachedTransplantRenderer == null
+                || !cachedTransplantRenderer.gameObject.activeInHierarchy)
+            {
+                cachedTransplant = transplanting;
+                cachedTransplantRenderer = transplanting != null ? transplanting.GetComponentInChildren<SpriteRenderer>() : null;
+            }
+            SpriteRenderer transplantRenderer = cachedTransplantRenderer;
 
             Collider2D hit = Physics2D.OverlapPoint(worldPosition);
             Tile tile = hit != null ? hit.GetComponent<Tile>() : null;
@@ -169,7 +179,14 @@ public class CursorIcon : MonoBehaviour
             }
             else
             {
-                Tile tile = hit != null ? (hit.GetComponent<Tile>() ?? hit.GetComponentInParent<Tile>()) : null;
+                // unity null check, not ??: in the editor a missing GetComponent is a fake null
+                // object that ?? treats as found, so the parent was never checked there
+                Tile tile = null;
+                if (hit != null)
+                {
+                    tile = hit.GetComponent<Tile>();
+                    if (tile == null) tile = hit.GetComponentInParent<Tile>();
+                }
                 if (tile != null && (tile.flowerPot != null || tile.waterPot != null))
                 {
                     Vector2 tileScreenPos = cam.WorldToScreenPoint(tile.transform.position);

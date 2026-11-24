@@ -8,6 +8,8 @@ public class Zinnia : Aura
     [SerializeField] private float sunRadiusMultiplier = 2f;
 
     private readonly HashSet<Plant> _highlightedPlants = new HashSet<Plant>();
+    // reused every frame by UpdateHighlights instead of a new set each time
+    private readonly HashSet<Plant> _desiredHighlights = new HashSet<Plant>();
 
     // no targeting needed: the skill just conjures the sun at her own position
     private bool autoCastEnabled = false;
@@ -113,28 +115,36 @@ public class Zinnia : Aura
                 lvol.enabled = true;
                 lvol.separateAxes = false;
                 lvol.dampen = 0.4f;
-                AnimationCurve limitCurve = new AnimationCurve(
-                    new Keyframe(0f,   1f, 0f, 0f),
-                    new Keyframe(0.5f, 1f, 0f, 0f),
-                    new Keyframe(1f,   0f, 0f, 0f)
-                );
-                lvol.limit = new ParticleSystem.MinMaxCurve(attackRange / lifetime, limitCurve);
+                // the curve and the fade never change, so they are built once and shared by every
+                // zinnia (the particle system copies them when they are assigned)
+                if (_burstLimitCurve == null)
+                {
+                    _burstLimitCurve = new AnimationCurve(
+                        new Keyframe(0f,   1f, 0f, 0f),
+                        new Keyframe(0.5f, 1f, 0f, 0f),
+                        new Keyframe(1f,   0f, 0f, 0f)
+                    );
+                }
+                lvol.limit = new ParticleSystem.MinMaxCurve(attackRange / lifetime, _burstLimitCurve);
 
                 var col = ps.colorOverLifetime;
                 col.enabled = true;
-                Gradient gradient = new Gradient();
-                gradient.SetKeys(
-                    new GradientColorKey[] {
-                        new GradientColorKey(Color.white, 0f),
-                        new GradientColorKey(Color.white, 1f)
-                    },
-                    new GradientAlphaKey[] {
-                        new GradientAlphaKey(1f, 0f),
-                        new GradientAlphaKey(1f, 0.5f),
-                        new GradientAlphaKey(0f, 1f)
-                    }
-                );
-                col.color = new ParticleSystem.MinMaxGradient(gradient);
+                if (_burstFade == null)
+                {
+                    _burstFade = new Gradient();
+                    _burstFade.SetKeys(
+                        new GradientColorKey[] {
+                            new GradientColorKey(Color.white, 0f),
+                            new GradientColorKey(Color.white, 1f)
+                        },
+                        new GradientAlphaKey[] {
+                            new GradientAlphaKey(1f, 0f),
+                            new GradientAlphaKey(1f, 0.5f),
+                            new GradientAlphaKey(0f, 1f)
+                        }
+                    );
+                }
+                col.color = new ParticleSystem.MinMaxGradient(_burstFade);
             }
         }
         // Smoldering Core (skill tree): bonus damage against Ice-elemental insects specifically
@@ -143,8 +153,7 @@ public class Zinnia : Aura
         foreach (Insect insect in insects)
         {
             float dmg = (smolderingCore && insect.attackElementalType == ElementalType.Ice) ? attackDamage * 1.5f : attackDamage;
-            insect.Damage(dmg, damageType, elementalType, this, true,
-                new DamageTag[] { DamageTag.AoE, DamageTag.Attack });
+            insect.Damage(dmg, damageType, elementalType, this, true, AttackTags);
         }
 
         List<Plant> plants = GetPlantsInRange();
@@ -154,16 +163,24 @@ public class Zinnia : Aura
         }
     }
 
+    // shared by every hit instead of a new tag array per insect, nothing writes into it
+    private static readonly DamageTag[] AttackTags = { DamageTag.AoE, DamageTag.Attack };
+    private static AnimationCurve _burstLimitCurve;
+    private static Gradient _burstFade;
+
+    // one list, filled again on every attack instead of a new list each time
+    private readonly List<Plant> _plantsInRange = new List<Plant>();
+
     private List<Plant> GetPlantsInRange()
     {
-        List<Plant> result = new List<Plant>();
+        _plantsInRange.Clear();
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive || plant == this) continue;
             if (Vector2.Distance(transform.position, plant.transform.position) <= attackRange)
-                result.Add(plant);
+                _plantsInRange.Add(plant);
         }
-        return result;
+        return _plantsInRange;
     }
 
     private bool HasPlantsInRange()
@@ -192,9 +209,13 @@ public class Zinnia : Aura
 
     private void UpdateHighlights()
     {
-        bool isSelected = PlantUpgradeUI.instance?.GetSelectedPlant() == this;
+        bool isSelected = IsSelected;
 
-        var desired = new HashSet<Plant>();
+        // nothing to show and nothing shown, so there is nothing to add or clear
+        if (!isSelected && _highlightedPlants.Count == 0) return;
+
+        HashSet<Plant> desired = _desiredHighlights;
+        desired.Clear();
         if (isSelected)
         {
             foreach (Plant plant in Plant.allPlants)

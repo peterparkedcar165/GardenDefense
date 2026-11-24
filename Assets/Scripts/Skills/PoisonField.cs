@@ -12,8 +12,18 @@ public class PoisonField : MonoBehaviour
     private float tickTimer = 0f;
 
     private readonly List<Insect> affectedInsects = new List<Insect>();
+    // the same insects as affectedInsects, for a quick inside check every frame
+    private readonly HashSet<Insect> affectedSet = new HashSet<Insect>();
     // reused copy of the insect list, refilled each frame instead of allocating a new one
     private readonly List<Insect> insectSnapshot = new List<Insect>();
+
+    // how many poison fields each insect stands in right now. its debuffs stay frozen until it
+    // has left every one of them, so leaving one of two overlapping fields no longer unfreezes it
+    private static readonly Dictionary<Insect, int> fieldsHolding = new Dictionary<Insect, int>();
+
+    // the source as a poison shroom and its lingering toxins unlock, read once in Initialize
+    private PoisonShroom shroom;
+    private bool lingeringToxins;
 
     // Delayed Bloom: the field starts at `startRadius` and ramps up to `endRadius` over the first
     // 60% of `totalDuration`, then holds - both captured once in Initialize since `radius` itself
@@ -38,8 +48,9 @@ public class PoisonField : MonoBehaviour
         this.damagePerSecond = damagePerSecond;
         totalDuration = duration;
 
-        PoisonShroom shroom = source as PoisonShroom;
+        shroom = source as PoisonShroom;
         delayedBloom = shroom != null && SkillTreeManager.HasUnlock(shroom, PoisonShroom.DelayedBloomUnlock);
+        lingeringToxins = shroom != null && SkillTreeManager.HasUnlock(shroom, PoisonShroom.LingeringToxinsUnlock);
         if (delayedBloom)
         {
             startRadius = radius;
@@ -66,9 +77,6 @@ public class PoisonField : MonoBehaviour
             transform.localScale = new Vector3(s, s, 1f);
         }
 
-        PoisonShroom shroom = source as PoisonShroom;
-        bool lingeringToxins = shroom != null && SkillTreeManager.HasUnlock(shroom, PoisonShroom.LingeringToxinsUnlock);
-
         Vector3 center = transform.position;
         float radiusSqr = radius * radius;
 
@@ -79,24 +87,30 @@ public class PoisonField : MonoBehaviour
             Insect insect = insectSnapshot[i];
             if (insect == null || !insect.IsAlive) continue;
             bool inside = (insect.transform.position - center).sqrMagnitude <= radiusSqr;
-            bool tracked = affectedInsects.Contains(insect);
+            bool tracked = affectedSet.Contains(insect);
 
             if (inside && !tracked)
             {
                 affectedInsects.Add(insect);
-                insect.debuffsFrozen = true;
+                affectedSet.Add(insect);
+                Hold(insect);
             }
             else if (!inside && tracked)
             {
                 affectedInsects.Remove(insect);
-                insect.debuffsFrozen = false;
+                affectedSet.Remove(insect);
+                Release(insect);
             }
         }
 
         for (int i = affectedInsects.Count - 1; i >= 0; i--)
         {
             if (affectedInsects[i] == null || affectedInsects[i].gameObject == null)
+            {
+                affectedSet.Remove(affectedInsects[i]);
+                fieldsHolding.Remove(affectedInsects[i]);
                 affectedInsects.RemoveAt(i);
+            }
         }
 
         tickTimer += Time.deltaTime;
@@ -134,9 +148,40 @@ public class PoisonField : MonoBehaviour
 
     private void Die()
     {
-        foreach (Insect insect in affectedInsects)
-            if (insect != null) insect.debuffsFrozen = false;
-        affectedInsects.Clear();
+        ReleaseAll();
         Destroy(gameObject);
+    }
+
+    // a field removed any other way (scene unload) lets go of its insects too
+    private void OnDestroy() => ReleaseAll();
+
+    private void ReleaseAll()
+    {
+        foreach (Insect insect in affectedInsects)
+        {
+            if (insect != null) Release(insect);
+            else fieldsHolding.Remove(insect);
+        }
+        affectedInsects.Clear();
+        affectedSet.Clear();
+    }
+
+    private static void Hold(Insect insect)
+    {
+        fieldsHolding.TryGetValue(insect, out int count);
+        fieldsHolding[insect] = count + 1;
+        insect.debuffsFrozen = true;
+    }
+
+    private static void Release(Insect insect)
+    {
+        fieldsHolding.TryGetValue(insect, out int count);
+        if (count > 1)
+        {
+            fieldsHolding[insect] = count - 1;
+            return;
+        }
+        fieldsHolding.Remove(insect);
+        insect.debuffsFrozen = false;
     }
 }

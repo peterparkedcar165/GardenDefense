@@ -25,7 +25,9 @@ public class StatusEffect
     public int level;
     public Entity target, source;
 
-    public EffectTag[] tags = new EffectTag[0];
+    // one shared empty array (nothing writes into an effect's tags); subclasses assign their own
+    // static readonly arrays
+    public EffectTag[] tags = System.Array.Empty<EffectTag>();
     public bool sourceStackable = false;
 
     // a duration handed over exactly as it is (Plague Bearer's spread): Entity.ApplyEffect leaves it
@@ -76,8 +78,24 @@ public class StatusEffect
             foreach (EffectTag t in tags)
                 if (t == EffectTag.Regenerative) { isRegen = true; break; }
 
-        target.Heal(amount, source, isRegen ? new HealTag[] { HealTag.Regeneration } : null);
+        target.Heal(amount, source, isRegen ? RegenHealTags : null);
     }
+
+    // shared by every regenerative heal tick: heal listeners only read the tags
+    private static readonly HealTag[] RegenHealTags = { HealTag.Regeneration };
+
+    // echo seed's second application of a debuff (EchoSeedMulchEffect): a copy of this effect as
+    // it is now. anything it keeps changing while it runs (a tick timer) gets its own copy
+    // (OnCopiedForEcho), so the copy and this one never share state
+    public StatusEffect CopyForEcho()
+    {
+        StatusEffect copy = (StatusEffect)MemberwiseClone();
+        copy.OnCopiedForEcho();
+        return copy;
+    }
+
+    // runs on the copy right after CopyForEcho made it
+    protected virtual void OnCopiedForEcho() {}
 
 
     public virtual string GetDescription()

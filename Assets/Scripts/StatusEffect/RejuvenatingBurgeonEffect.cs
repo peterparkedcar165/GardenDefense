@@ -27,7 +27,10 @@ public class RejuvenatingBurgeonEffect : RegenerationEffect
     protected override void HealTick(float share)
     {
         HealTarget(healingPerSecond * share);
-        if (source is Rhodiola rhodiola) rhodiola.ReturnMaxLevelHealing(healingPerSecond * share);
+        // the heal goes on after rhodiola dies or is uprooted; only a living rhodiola gets her share
+        // back ("is" skips unity's destroyed check, so test it with != null as well)
+        if (source is Rhodiola rhodiola && rhodiola != null && rhodiola.IsAlive)
+            rhodiola.ReturnMaxLevelHealing(healingPerSecond * share);
     }
 
     public override string GetName()        => "<color=green><b>Rejuvenating Burgeon</b></color>";

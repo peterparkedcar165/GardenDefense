@@ -5,6 +5,9 @@ using UnityEngine;
 // itself if it touches nothing, is where the shield comes to rest and spawns AcornKnightShield
 public class ShieldThrowProjectile : Projectile
 {
+    // made once and shared by every hit: nothing writes into it
+    private static readonly DamageTag[] HitTags = { DamageTag.SkillDamage, DamageTag.Projectile, DamageTag.SingleTarget };
+
     private Vector3 landPosition;
     private System.Action<Vector3, Insect> onLanded;
     private bool _landed;
@@ -53,7 +56,7 @@ public class ShieldThrowProjectile : Projectile
 
         if (hitInsect != null)
         {
-            hitInsect.Damage(projectileDamage, damageType, elementalType, source, true, new DamageTag[] { DamageTag.SkillDamage, DamageTag.Projectile, DamageTag.SingleTarget });
+            hitInsect.Damage(projectileDamage, damageType, elementalType, source, true, HitTags);
             PlaySound(hit);
         }
 

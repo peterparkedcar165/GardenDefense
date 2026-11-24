@@ -28,11 +28,15 @@ public class CriticalRotMulchEffect : MulchEffect
 
     public override void Deactivate()
     {
-        if (Owner == null || !on) return;
+        if (!on) return;
         on = false;
+        // always let go of the static event, even when the plant is already gone
         Entity.OnEntityHit -= HandleHit;
-        Owner.RemoveDotCanCrit();
-        Owner.criticalDotChanceAdder -= applied;
+        if (Owner != null)
+        {
+            Owner.RemoveDotCanCrit();
+            Owner.criticalDotChanceAdder -= applied;
+        }
         applied = 0f;
     }
 

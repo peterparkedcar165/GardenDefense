@@ -40,11 +40,17 @@ public class PoisonedEffect : DoTEffect, IElementalAffinityEffect
         base.OnApply();
         if (!spread) cachedElementalAffinity = source?.elementalAffinity ?? 0f;
         StatusIndicator.Spawn(target.transform.position + new Vector3(0.4f, 0f, 0f), "Poisoned", new Color(0.6f, 0.1f, 0.8f));
-        GameObject fx = Object.Instantiate(Resources.Load<GameObject>("PoisonBubbles"), target.transform.position, Quaternion.identity);
+        // the prefab is looked up once; a missing one just means no bubbles (Instantiate of null
+        // threw in the middle of ApplyEffect)
+        if (_bubblesPrefab == null) _bubblesPrefab = Resources.Load<GameObject>("PoisonBubbles");
+        if (_bubblesPrefab == null) return;
+        GameObject fx = Object.Instantiate(_bubblesPrefab, target.transform.position, Quaternion.identity);
         fx.transform.SetParent(target.transform);
         fx.transform.localPosition = Vector3.zero;
         poisonParticles = fx.GetComponent<ParticleSystem>();
     }
+
+    private static GameObject _bubblesPrefab;
 
     protected override void DealTick(float share)
     {

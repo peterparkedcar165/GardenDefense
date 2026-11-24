@@ -245,10 +245,13 @@ public abstract class Plant : Entity, IAttackable
     // StoreDeadRecord's own comment on the same point) - centers on that child's SpriteRenderer
     // instead, falling back to the base (transform.position) for the rare plant with none (e.g.
     // Waterlily)
+    // looked up once and kept: every heal (regeneration ticks too) asked for it
+    private SpriteRenderer _visualCenterRenderer;
+
     protected override Vector3 GetVisualCenter()
     {
-        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-        return sr != null ? sr.transform.position : base.GetVisualCenter();
+        if (_visualCenterRenderer == null) _visualCenterRenderer = GetComponentInChildren<SpriteRenderer>();
+        return _visualCenterRenderer != null ? _visualCenterRenderer.transform.position : base.GetVisualCenter();
     }
 
     private void StoreDeadRecord()
@@ -696,8 +699,19 @@ public abstract class Plant : Entity, IAttackable
         ClearTargetHighlight();
         MulchManager.OnPlantRemoved(this);
         allPlants.Remove(this);
+        // an aim this plant started (a skill target, a plant to bond, a dead tile to revive) can't be
+        // confirmed for a plant that's gone: a dying or uprooted plant cancels it. aims are started
+        // from the selected plant's panel, so the selected plant going cancels any aim too
+        SkillTargetingManager targeting = SkillTargetingManager.instance;
+        if (targeting != null)
+        {
+            bool selected = PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this;
+            if (selected) targeting.CancelAll();
+            else targeting.CancelFor(this);
+        }
         if (PlantUpgradeUI.instance != null && PlantUpgradeUI.instance.GetSelectedPlant() == this)
             PlantUpgradeUI.instance.HidePanel();
+        ReleaseHitFlashMaterial();
         OnPlantRemoved?.Invoke(this);
     }
 
@@ -908,14 +922,30 @@ public abstract class Plant : Entity, IAttackable
             return;
         }
         _idleTurnTimer = -1f;
+        TurnToward(targetObj, _facingInsect);
+    }
 
-        Insect insect = _facingInsect;
+    private void TurnToward(GameObject targetObj, Insect insect)
+    {
         Vector2 targetPos = insect != null ? insect.GetApproachPoint(transform.position) : (Vector2)targetObj.transform.position;
         float dx = targetPos.x - transform.position.x;
         if (Mathf.Abs(dx) < FacingFlipThreshold) return;
 
         SpriteRenderer sr = GetMainRenderer();
         if (sr != null) sr.flipX = dx > 0f;
+    }
+
+    // the safety net for the facing delay (Tommy, 2026-11-23): whatever a plant actually attacks, it
+    // faces at once and keeps facing until its next pick, even when the last 0.15 s pick chose
+    // something else or nothing. every attack path calls this with its target
+    protected void FaceAttackTarget(GameObject target)
+    {
+        if (target == null || !UsesTargeting) return;
+        _facingTarget = target;
+        _facingInsect = target.GetComponent<Insect>();
+        _facingRetargetTimer = FacingRetargetInterval;
+        _idleTurnTimer = -1f;
+        TurnToward(target, _facingInsect);
     }
 
     private void UpdateIdleTurn()
@@ -1326,7 +1356,6 @@ public abstract class Plant : Entity, IAttackable
     {
         int gained = (int)(amount * (1 + expBoost));
         exp += gained;
-        Debug.Log($"[Exp] {GetName()} gained {gained} exp from a kill/assist (session total: {exp})");
     }
 
     // exp banked mid-level (via Uproot, or a level ending) but not yet committed to the
@@ -1685,12 +1714,23 @@ public abstract class Plant : Entity, IAttackable
     }
 
     // IAttackable
+    // a distance the approach point can't be closer than (its collider's box around the center), so a
+    // range check can rule a plant out before GetApproachPoint's physics query (Insect's plant pick)
+    public float ApproachDistanceAtLeast(Vector3 from)
+    {
+        if (_circleCollider == null) return Vector2.Distance(from, transform.position);
+        Bounds box = _circleCollider.bounds;
+        return Mathf.Max(0f, Vector2.Distance(from, box.center) - box.extents.magnitude);
+    }
+
     public Vector3 GetApproachPoint(Vector3 from)
     {
         if (_circleCollider != null)
             return Physics2D.ClosestPoint(from, _circleCollider);
         return transform.position;
     }
+
+    private static readonly DamageTag[] MeleeHitTags = { DamageTag.Melee, DamageTag.Attack };
 
     public bool ReceiveAttack(float damage, Insect attacker)
     {
@@ -1700,7 +1740,7 @@ public abstract class Plant : Entity, IAttackable
             StatusIndicator.Spawn(GetIndicatorPosition(), "Miss", new Color(0.55f, 0.6f, 0.75f));
             return false;
         }
-        Damage(damage, attacker.attackDamageType, attacker.attackElementalType, attacker, false, new DamageTag[] { DamageTag.Melee, DamageTag.Attack });
+        Damage(damage, attacker.attackDamageType, attacker.attackElementalType, attacker, false, MeleeHitTags);
         OnHitByInsect(attacker);
         return true;
     }
@@ -1728,6 +1768,19 @@ public abstract class Plant : Entity, IAttackable
         if (healer == null || healer == this) return;
         recentHeals.RemoveAll(h => Time.time - h.time > HealAssistWindow);
         recentHeals.Add(new HealRecord { healer = healer, time = Time.time });
+    }
+
+    // every plant that counts as an assist on this plant's hit (buffing or shielding it right now, or
+    // healed it within HealAssistWindow), added straight into the set: Insect.RegisterAttacker runs on
+    // every hit, and walking the two properties below made two new enumerators each time
+    public void AddAssistersTo(HashSet<Plant> set)
+    {
+        foreach (StatusEffect e in activeEffects)
+            if (e.effectType == StatusEffect.Type.positive && e.source is Plant p && p != this)
+                set.Add(p);
+        foreach (HealRecord h in recentHeals)
+            if (Time.time - h.time <= HealAssistWindow)
+                set.Add(h.healer);
     }
 
     public IEnumerable<Plant> RecentHealers
@@ -1842,7 +1895,10 @@ public abstract class Plant : Entity, IAttackable
         GameObject forced = ForcedPriorityTargetOrNull();
         if (forced != null) return forced;
 
-        var inRange = new System.Collections.Generic.List<Insect>();
+        // a reused list (it was a new one on every call, and Fastest and Slowest plants call this
+        // every frame while waiting): filled and read here only, so nothing keeps it between calls
+        System.Collections.Generic.List<Insect> inRange = _speedCandidates;
+        inRange.Clear();
         foreach (Insect insect in insects)
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
@@ -1851,19 +1907,24 @@ public abstract class Plant : Entity, IAttackable
             inRange.Add(insect);
         }
         Insect best = PickBySpeed(inRange, fastest);
+        inRange.Clear();
         return best != null ? best.gameObject : null;
     }
 
+    private readonly System.Collections.Generic.List<Insect> _speedCandidates = new System.Collections.Generic.List<Insect>();
+
     // picks among insects that already passed every range check, so plants with their own
     // candidate lists (e.g. Nerium Oleander's chain) can use the same rule
-    protected static Insect PickBySpeed(System.Collections.Generic.IEnumerable<Insect> candidates, bool fastest)
+    // takes the list itself (it took any sequence, which made a new enumerator on every call)
+    protected static Insect PickBySpeed(System.Collections.Generic.List<Insect> candidates, bool fastest)
     {
         const float SpeedTieTolerance = 0.01f;
         Insect best = null;
         float bestSpeed = 0f, bestDistToNext = Mathf.Infinity;
         int bestWaypoint = -1;
-        foreach (Insect insect in candidates)
+        for (int c = 0; c < candidates.Count; c++)
         {
+            Insect insect = candidates[c];
             if (insect == null) continue;
             float speed = insect.CurrentMoveSpeed;
             Transform waypoint = insect.GetCurrentWaypoint();

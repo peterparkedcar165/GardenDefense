@@ -96,6 +96,7 @@ public class Kelp : Aura
         GameObject primary = FindTarget();
         Insect primaryInsect = primary != null ? primary.GetComponent<Insect>() : null;
         if (primaryInsect == null || !primaryInsect.IsAlive) return;
+        FaceAttackTarget(primary);
 
         primaryInsect.Damage(attackDamage, damageType, elementalType, this, true,
             new DamageTag[] { DamageTag.Attack, DamageTag.Melee, DamageTag.SingleTarget });

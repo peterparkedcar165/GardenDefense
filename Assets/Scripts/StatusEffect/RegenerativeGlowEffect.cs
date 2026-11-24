@@ -24,6 +24,18 @@ public class RegenerativeGlowEffect : RegenerationEffect
         elementalType  = ElementalType.Grass;
     }
 
+    // a refresh from the same glowworm: the new instance takes the old one's light, so the old
+    // one's OnExpire (which runs right after this) has nothing to destroy and the glow stays on
+    public override void OnReapply(StatusEffect previous)
+    {
+        base.OnReapply(previous);
+        if (previous is RegenerativeGlowEffect prev && prev._light != null)
+        {
+            _light = prev._light;
+            prev._light = null;
+        }
+    }
+
     public override void OnApply()
     {
         base.OnApply();
@@ -52,15 +64,22 @@ public class RegenerativeGlowEffect : RegenerationEffect
 
     private void SpawnLight()
     {
-        Transform visualRoot = target.transform.Find("Visual") ?? target.transform;
+        // handed over by the instance this one refreshed (OnReapply): still registered, keep it
+        if (_light != null) return;
 
-        // reuse if the effect is refreshed before the previous one expires
-        Transform existing = visualRoot.Find("RegenerativeGlow");
-        if (existing != null)
+        // another glowworm's glow already on this insect: share its light (one glow per insect).
+        // the light is only destroyed when the last instance using it ends (RemoveLight)
+        foreach (StatusEffect e in target.activeEffects)
         {
-            _light = existing.GetComponent<Light2D>();
-            return;
+            if (e != this && e is RegenerativeGlowEffect other && other._light != null)
+            {
+                _light = other._light;
+                return;
+            }
         }
+
+        Transform visualRoot = target.transform.Find("Visual");
+        if (visualRoot == null) visualRoot = target.transform;
 
         GameObject lightObj = new GameObject("RegenerativeGlow");
         lightObj.transform.SetParent(visualRoot);
@@ -81,6 +100,15 @@ public class RegenerativeGlowEffect : RegenerationEffect
     private void RemoveLight()
     {
         if (_light == null) return;
+        // another glowworm's instance still shares this light: leave it shining for that one
+        foreach (StatusEffect e in target.activeEffects)
+        {
+            if (e != this && e is RegenerativeGlowEffect other && other._light == _light)
+            {
+                _light = null;
+                return;
+            }
+        }
         DarknessManager.UnregisterLightSource(_light.transform);
         Object.Destroy(_light.gameObject);
         _light = null;

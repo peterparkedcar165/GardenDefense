@@ -24,6 +24,10 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
     private Color backgroundColor = Color.white;
     private Color frameColor = Color.white;
     private bool darkened;
+    // the cost the price text shows now (ShownMax while it says MAX, ShownNothing before Update ran)
+    private const int ShownMax = -1;
+    private const int ShownNothing = int.MinValue;
+    private int shownCost = ShownNothing;
 
     public PlantData Data => data;
 
@@ -35,6 +39,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (background != null) background.color = PlantData.ElementBackdropColor(plantData.elementalType);
         if (frame != null) frame.color = PlantData.ElementColor(plantData.elementalType);
         if (sunCostText != null) sunCostText.text = FertilizerManager.GetPlacementCost(data).ToString();
+        shownCost = ShownNothing;
         if (icon != null) iconColor = icon.color;
         if (background != null) backgroundColor = background.color;
         if (frame != null) frameColor = frame.color;
@@ -78,13 +83,19 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (Plant.AtPlacementLimit(data))
         {
             sunCostText.text = "MAX";
+            shownCost = ShownMax;
             sunCostText.fontStyle = FontStyles.Bold;
             sunCostText.color = Color.red;
             SetDarkened(false);
             return;
         }
         int effectiveCost = FertilizerManager.GetPlacementCost(data);
-        sunCostText.text = effectiveCost.ToString();
+        // the number is only turned into text again when it changes, not every frame
+        if (effectiveCost != shownCost)
+        {
+            shownCost = effectiveCost;
+            sunCostText.text = effectiveCost.ToString();
+        }
         if (GameManager.instance.SunCount >= effectiveCost)
         {
             sunCostText.fontStyle = FontStyles.Bold;

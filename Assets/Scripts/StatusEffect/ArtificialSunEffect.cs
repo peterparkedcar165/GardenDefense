@@ -20,8 +20,12 @@ public class ArtificialSunEffect : StatusEffect
     private readonly float heatingPerSecond;
     private readonly bool grantsExtraFirePassiveLevel;
     private GameObject _lightObj;
+    // the light on _lightObj, looked up once when it is made
+    private Light2D _light;
     private readonly List<Plant> _affectedPlants = new List<Plant>();
     private readonly List<Plant> _fireBonusPlants = new List<Plant>();
+    // cleanup runs once, however the effect ends (expiry, zinnia dying, zinnia uprooted or unloaded)
+    private bool _cleanedUp;
 
     public ArtificialSunEffect(Entity target, float duration, Entity source, float radius, int sunIntensity,
                                float lightIntensity, float heatingPerSecond, bool grantsExtraFirePassiveLevel)
@@ -50,6 +54,15 @@ public class ArtificialSunEffect : StatusEffect
             GrantSunlight(plant);
         }
         Plant.OnPlantPlaced += HandlePlantPlaced;
+        Plant.OnPlantRemoved += HandlePlantRemoved;
+    }
+
+    // an uprooted zinnia (or a scene unload) is destroyed without OnExpire or OnTargetDied:
+    // Plant.OnDestroy still fires OnPlantRemoved, so the effect cleans up there too
+    private void HandlePlantRemoved(Plant plant)
+    {
+        if (!ReferenceEquals(plant, target)) return;
+        Cleanup(targetRemoved: true);
     }
 
     // catches plants placed after the cast, while the sun is still up
@@ -76,19 +89,28 @@ public class ArtificialSunEffect : StatusEffect
 
     // OnExpire covers the natural end of duration; OnTargetDied covers Zinnia dying mid-duration
     // (Kill() never calls OnExpire on its own active effects, only OnTargetDied)
-    public override void OnExpire() => Cleanup();
-    public override void OnTargetDied() => Cleanup();
+    public override void OnExpire() => Cleanup(targetRemoved: false);
+    public override void OnTargetDied() => Cleanup(targetRemoved: false);
 
-    private void Cleanup()
+    private void Cleanup(bool targetRemoved)
     {
+        if (_cleanedUp) return;
+        _cleanedUp = true;
         Plant.OnPlantPlaced -= HandlePlantPlaced;
+        Plant.OnPlantRemoved -= HandlePlantRemoved;
         if (_lightObj != null)
         {
             DarknessManager.UnregisterLightSource(_lightObj.transform);
-            LightFader fader = _lightObj.GetComponent<LightFader>();
-            if (fader != null) fader.FadeOut(1f, destroyOnComplete: true);
-            else Object.Destroy(_lightObj);
+            // a removed zinnia takes the light (her child) with her: no fade on an object being destroyed
+            if (!targetRemoved)
+            {
+                LightFader fader = _lightObj.GetComponent<LightFader>();
+                if (fader != null) fader.FadeOut(1f, destroyOnComplete: true);
+                else Object.Destroy(_lightObj);
+            }
         }
+        _lightObj = null;
+        _light = null;
 
         foreach (Plant plant in _affectedPlants)
         {
@@ -110,10 +132,10 @@ public class ArtificialSunEffect : StatusEffect
     public override void OnTick(float deltaTime)
     {
         // keep the light in sync if darkness toggles mid-duration, same as Fire Wave's own light
-        if (_lightObj != null && DarknessManager.instance != null)
+        if (_light != null && DarknessManager.instance != null)
         {
-            Light2D light = _lightObj.GetComponent<Light2D>();
-            if (light != null) light.enabled = DarknessManager.instance.isDark;
+            bool dark = DarknessManager.instance.isDark;
+            if (_light.enabled != dark) _light.enabled = dark;
         }
 
         if (heatingPerSecond <= 0f) return;
@@ -142,6 +164,7 @@ public class ArtificialSunEffect : StatusEffect
         _lightObj.transform.localPosition = Vector3.zero;
 
         Light2D light = _lightObj.AddComponent<Light2D>();
+        _light = light;
         light.lightType             = Light2D.LightType.Point;
         light.color                 = Color.white;
         light.falloffIntensity      = 0.2f;

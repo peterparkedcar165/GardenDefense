@@ -3,35 +3,51 @@ using System.Collections.Generic;
 
 public class AnemoneProjectile : Projectile
 {
+    // made once and shared by every hit: nothing writes into them
+    private static readonly DamageTag[] HitTags = { DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile };
+    private static readonly DamageTag[] SplashTags = { DamageTag.AoE };
+    // nearest first, by distances worked out once per insect
+    private static readonly System.Comparison<(Insect insect, float distance)> ByDistance =
+        (a, b) => a.distance.CompareTo(b.distance);
+
     protected override void OnHit(Insect insect)
     {
-        insect.Damage(projectileDamage, damageType, elementalType, source, true,
-            new DamageTag[] { DamageTag.SingleTarget, DamageTag.Attack, DamageTag.Projectile });
+        insect.Damage(projectileDamage, damageType, elementalType, source, true, HitTags);
 
         Anemone anemone = source as Anemone;
         if (anemone == null) return;
 
         float splashDmg = projectileDamage * 0.5f;
-        List<Insect> splashTargets = new List<Insect>();
-        foreach (Insect splashTarget in Insect.allInsects)
+        // pooled instead of a new list per hit; each insect's distance is worked out once (the
+        // sort used to work out two per comparison) and sorted by the same numbers, so the same
+        // nearest insects are picked
+        List<(Insect insect, float distance)> splashTargets = UnityEngine.Pool.ListPool<(Insect, float)>.Get();
+        try
         {
-            if (splashTarget == null || !splashTarget.IsAlive || splashTarget == insect) continue;
-            if (Vector3.Distance(transform.position, splashTarget.transform.position) > anemone.SplashRadius) continue;
-            splashTargets.Add(splashTarget);
-        }
+            Vector3 center = transform.position;
+            foreach (Insect splashTarget in Insect.allInsects)
+            {
+                if (splashTarget == null || !splashTarget.IsAlive || splashTarget == insect) continue;
+                float distance = Vector3.Distance(center, splashTarget.transform.position);
+                if (distance > anemone.SplashRadius) continue;
+                splashTargets.Add((splashTarget, distance));
+            }
 
-        // splash only hits the nearest N insects (data-driven, tunable per plant) - the main
-        // target above is unaffected by this cap, it always takes full damage
-        int maxExtraTargets = (anemone.data as AnemoneData)?.splashMaxExtraTargets ?? 3;
-        if (splashTargets.Count > maxExtraTargets)
+            // splash only hits the nearest N insects (data-driven, tunable per plant) - the main
+            // target above is unaffected by this cap, it always takes full damage
+            int maxExtraTargets = (anemone.data as AnemoneData)?.splashMaxExtraTargets ?? 3;
+            if (splashTargets.Count > maxExtraTargets)
+            {
+                splashTargets.Sort(ByDistance);
+                splashTargets.RemoveRange(maxExtraTargets, splashTargets.Count - maxExtraTargets);
+            }
+
+            for (int i = 0; i < splashTargets.Count; i++)
+                splashTargets[i].insect.Damage(splashDmg, damageType, elementalType, source, true, SplashTags);
+        }
+        finally
         {
-            splashTargets.Sort((a, b) =>
-                Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
-            splashTargets.RemoveRange(maxExtraTargets, splashTargets.Count - maxExtraTargets);
+            UnityEngine.Pool.ListPool<(Insect, float)>.Release(splashTargets);
         }
-
-        foreach (Insect splashTarget in splashTargets)
-            splashTarget.Damage(splashDmg, damageType, elementalType, source, true,
-                new DamageTag[] { DamageTag.AoE });
     }
 }

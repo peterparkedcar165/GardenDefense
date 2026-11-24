@@ -27,12 +27,22 @@ public class WaterZone : MonoBehaviour
         col.offset = new Vector2((maxX + minX) * 0.5f, (maxY + minY) * 0.5f);
     }
 
+    // the insect each overlapping collider belongs to (null for anything that is not an insect),
+    // looked up once when it enters instead of on every physics step it stays
+    private readonly System.Collections.Generic.Dictionary<Collider2D, Insect> insectByCollider =
+        new System.Collections.Generic.Dictionary<Collider2D, Insect>();
+
     private void OnTriggerEnter2D(Collider2D other) => Check(other);
     private void OnTriggerStay2D(Collider2D other) => Check(other);
+    private void OnTriggerExit2D(Collider2D other) => insectByCollider.Remove(other);
 
     private void Check(Collider2D other)
     {
-        Insect insect = other.GetComponentInParent<Insect>();
+        if (!insectByCollider.TryGetValue(other, out Insect insect))
+        {
+            insect = other.GetComponentInParent<Insect>();
+            insectByCollider[other] = insect;
+        }
         if (insect == null || insect.isFlying || insect.HasEffect<Airborne>()) return;
         if (insect.visual != null && insect.visual.localPosition.y > 0.4f) return;
 

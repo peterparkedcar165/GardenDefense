@@ -23,6 +23,7 @@ public class BubblePrisonEffect : Airborne
     private readonly bool _hasBacktrack;
     private readonly bool _hasPopDamage;
     private static readonly DamageTag[] popDamageTags = { DamageTag.SkillDamage };
+    private static Sprite _bubbleSprite;
 
     public BubblePrisonEffect(Entity target, float duration, int level, Entity source, bool rising = false, float damageTakenBonus = 0f, bool popSoak = false)
         : base(target, duration, level, source)
@@ -51,7 +52,9 @@ public class BubblePrisonEffect : Airborne
         if (insect == null) return;
         visual = insect.transform.Find("Visual");
 
-        Sprite bubbleSprite = Resources.Load<Sprite>("bubblePrisonTrapped");
+        // the sprite is looked up once for every bubble
+        if (_bubbleSprite == null) _bubbleSprite = Resources.Load<Sprite>("bubblePrisonTrapped");
+        Sprite bubbleSprite = _bubbleSprite;
         if (bubbleSprite != null && visual != null)
         {
             bubbleVisual = new GameObject("BubblePrisonVisual");

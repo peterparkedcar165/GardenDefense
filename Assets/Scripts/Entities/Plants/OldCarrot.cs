@@ -97,7 +97,8 @@ public class OldCarrot : Shooter
     {
         base.OnDestroy();
         Unbind();
-        _bondHighlighted?.ClearHighlight();
+        // unity null check, the plant may already be destroyed at scene teardown
+        if (_bondHighlighted != null) _bondHighlighted.ClearHighlight();
     }
 
     // click Bond to pick a Shooter plant to link with, click again to break the bond.

@@ -347,8 +347,20 @@ public class MulchManager : MonoBehaviour
     public static void NotifySunGenerated(Plant plant, int amount, bool fromKill)
     {
         if (plant == null || plant.mulches.Count == 0) return;
-        foreach (MulchEffect effect in new List<MulchEffect>(plant.mulches))
-            effect?.OnSunGenerated(amount, fromKill);
+        // a snapshot in the same order, since an effect can change what's equipped. pooled, not a
+        // new list per sun (alchemy pays sun on dot ticks); a sun event inside an effect's hook
+        // (solar flare setting off alchemy) gets a list of its own
+        List<MulchEffect> effects = UnityEngine.Pool.ListPool<MulchEffect>.Get();
+        effects.AddRange(plant.mulches);
+        try
+        {
+            for (int i = 0; i < effects.Count; i++)
+                effects[i]?.OnSunGenerated(amount, fromKill);
+        }
+        finally
+        {
+            UnityEngine.Pool.ListPool<MulchEffect>.Release(effects);
+        }
     }
 
     // a copy, since an effect reacting to a hook can change what's equipped

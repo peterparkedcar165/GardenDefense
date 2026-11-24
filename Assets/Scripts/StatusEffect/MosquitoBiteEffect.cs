@@ -6,6 +6,10 @@ using UnityEngine;
 // the Mosquito alongside this one in Mosquito.Attack, not managed from here
 public class MosquitoBiteEffect : StatusEffect
 {
+    // shared by every instance and every tick: nothing writes into them
+    private static readonly EffectTag[] DotEffectTags = { EffectTag.DoT };
+    private static readonly DamageTag[] TickTags = { DamageTag.DoT };
+
     private readonly float damagePerSecond;
     private readonly float healingReductionPercent;
     // the shared over time timing (OverTimeTicker): a tick every second
@@ -18,7 +22,7 @@ public class MosquitoBiteEffect : StatusEffect
         this.healingReductionPercent = healingReductionPercent;
         effectType = Type.negative;
         elementalType = ElementalType.Grass;
-        tags = new EffectTag[] { EffectTag.DoT };
+        tags = DotEffectTags;
     }
 
     public override void OnApply()
@@ -41,7 +45,7 @@ public class MosquitoBiteEffect : StatusEffect
 
     private void DealTick(float share) =>
         target.Damage(damagePerSecond * ticks.baseInterval * share, DamageType.True, ElementalType.Grass, source, source.DotCanCrit,
-            new DamageTag[] { DamageTag.DoT });
+            TickTags);
 
     public override void OnExpire()
     {
