@@ -84,4 +84,7 @@ public class Minion : Insect
     // death is handled by Insect.Kill's friendly branch (QuietDeath): no sun, exp, or events
 
     public override string GetName() => data != null ? data.displayName : "Minion";
+
+    // a plant's summon: no description, as before the insect description and ability split
+    public override string GetDescription() => "";
 }

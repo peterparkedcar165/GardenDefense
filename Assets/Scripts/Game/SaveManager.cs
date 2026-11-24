@@ -29,6 +29,20 @@ public class SaveManager : MonoBehaviour
         Load();
     }
 
+    // the first spawn of an insect this save never fought: remembered at once, so the loadout screen's
+    // NEW badge goes even if the level is lost or left. once per kind of insect, so the save is rare
+    public void MarkInsectSeen(InsectData data)
+    {
+        if (data == null || saveData == null) return;
+        if (saveData.seenInsects == null) saveData.seenInsects = new List<string>();
+        if (saveData.seenInsects.Contains(data.name)) return;
+        saveData.seenInsects.Add(data.name);
+        Save();
+    }
+
+    public bool HasSeenInsect(InsectData data) =>
+        data != null && saveData?.seenInsects != null && saveData.seenInsects.Contains(data.name);
+
     public void Save()
     {
         try

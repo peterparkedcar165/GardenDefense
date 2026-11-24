@@ -25,7 +25,7 @@ public class SnowAnt : Ant, ICryotolerant
             plant.temperature = Mathf.Max(plant.temperature - tempDecreasePerHit, plant.temperatureMin);
     }
 
-    public override string GetDescription() =>
-        $"Mildly aggressive insect. Attacks decrease temperature of plants by <color=#00FFFF><b>{(SAData?.tempDecreasePerHit ?? tempDecreasePerHit):F0}</b></color>." +
-        CryotoleranceLine() + AggressivityLine();
+    // cryotolerance is added by Insect.TraitLines (ICryotolerant)
+    public override string GetAbilityDescription() =>
+        $"Attacks decrease temperature of plants by <color=#00FFFF><b>{(SAData?.tempDecreasePerHit ?? tempDecreasePerHit):F0}</b></color>.";
 }

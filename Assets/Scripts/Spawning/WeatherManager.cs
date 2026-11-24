@@ -388,7 +388,7 @@ public class WeatherManager : MonoBehaviour
         {
             case TemperatureType.Hot:    return "The heat steadily raises plant temperature. Plants that exceed their comfort range take damage.";
             case TemperatureType.Warm:   return "Pleasantly warm. No significant effect on plants.";
-            case TemperatureType.Normal: return "Conditions normal";
+            case TemperatureType.Normal: return "Conditions normal. Plants are neither heated nor cooled, so they stay in their comfort range.";
             case TemperatureType.Chill:  return "Pleasantly cool. No significant effect on plants.";
             case TemperatureType.Cold:   return "The cold steadily lowers plant temperature. Plants that fall below their comfort range take damage.";
             default:                     return "";

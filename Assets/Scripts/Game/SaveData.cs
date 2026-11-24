@@ -29,6 +29,10 @@ public class SaveData
     // apart as more get added - see TutorialIds
     public List<string> seenTutorials = new List<string>();
 
+    // insects this save has already fought, by InsectData asset name: the loadout screen marks the
+    // others NEW (Tommy, 2026-11-24). added the first time one spawns (SaveManager.MarkInsectSeen)
+    public List<string> seenInsects = new List<string>();
+
     // plant slots unlock through level progression, not purchase: +1 slot (past the base 4) for
     // every 5 levels unlocked - level 6 unlocked (highestLevelUnlocked >= 5) grants slot 5, level
     // 11 (>= 10) grants slot 6, level 16 (>= 15) grants slot 7, level 21 (>= 20) grants slot 8,

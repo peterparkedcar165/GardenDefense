@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarklingBeetleData
   displayName: Darkling Beetle
   nameColor: {r: 0.24528301, g: 0.06594873, b: 0.06594873, a: 1}
+  description: A heavily armored beetle that carries other insects.
   sprite: {fileID: -2001639675669158682, guid: e31122e50668b2d42afb0fdfbff8a40e, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: af2c6674e6ccba140a62522caacce5fc, type: 3}
   baseMaxHealth: 500

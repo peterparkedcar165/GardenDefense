@@ -112,10 +112,13 @@ public abstract class FlyingInsect : Insect
         }
     }
 
-    // appended by every flying insect's GetDescription(), before the (always-last) AggressivityLine
+    // appended to every flying insect's description (Insect.GetDescription), after cryotolerance and
+    // before the (always last) AggressivityLine
     protected string FlyingLine() =>
         $"\n\n<b>Flying:</b> Immobilization effects ground it for the effect's duration + 4 seconds " +
         $"(5 seconds if Knocked Up).";
+
+    protected override string TraitLines() => base.TraitLines() + FlyingLine();
 }
 
 // whenever a flying insect is HARD CC'ed, they get grounded, bringing their visual down to their original position

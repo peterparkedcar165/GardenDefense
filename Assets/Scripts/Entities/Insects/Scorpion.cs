@@ -29,7 +29,7 @@ public class Scorpion : Insect
             victim.ApplyEffect(new VenomEffect(victim, venomDuration, 1, this, venomDPS));
     }
 
-    public override string GetDescription() =>
-        $"Mildly aggressive and bulky arachnid. Attacks apply Venom, dealing <color=green><b>{(SData?.venomDPS ?? venomDPS):F0}</b></color> " +
-        $"<color=#FFB6C1>Magic</color> Damage per second for <b>{(SData?.venomDuration ?? venomDuration):F0}</b> seconds." + AggressivityLine();
+    public override string GetAbilityDescription() =>
+        $"Attacks apply Venom, dealing <color=green><b>{(SData?.venomDPS ?? venomDPS):F0}</b></color> " +
+        $"<color=#FFB6C1>Magic</color> Damage per second for <b>{(SData?.venomDuration ?? venomDuration):F0}</b> seconds.";
 }

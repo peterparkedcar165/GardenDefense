@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InsectData
   displayName: Firefly
   nameColor: {r: 0.8490566, g: 0.7346397, b: 0.28435388, a: 1}
+  description: A glowing flyer that lights up the plants it hits.
   sprite: {fileID: 8760434079162307657, guid: 9addbd6f45f48d046bd5a3e6058abae1, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d7a6800c607f5f146a2134c6f2bca15d, type: 3}
   baseMaxHealth: 360

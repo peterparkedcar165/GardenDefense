@@ -6,6 +6,9 @@ public class InsectData : ScriptableObject
     [Header("Display")]
     public string displayName;
     public Color nameColor = Color.white;
+    [Tooltip("what the insect is, in a few words: on its card on the loadout screen, at the top of its tooltip and first in " +
+        "its description in the level. its ability, with the numbers, is written by the insect's own script (GetAbilityDescription)")]
+    [TextArea(2, 4)] public string description;
     public Sprite sprite;
     public GameObject insectPrefab;
     [Tooltip("widget pixels to move this insect's health bar up (or down, negative) from just above its sprite")]

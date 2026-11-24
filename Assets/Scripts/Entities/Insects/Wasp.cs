@@ -15,6 +15,6 @@ public class Wasp : FlyingInsect
     protected override float GetTauntAffinity(Plant plant) =>
         plant.data != null && plant.data.generatesSun ? SunGeneratorAffinity : 1f;
 
-    public override string GetDescription() =>
-        "Mildly aggressive insect. Stronger aggressivity towards plants that generate <color=yellow>Sun</color>." + FlyingLine() + AggressivityLine();
+    public override string GetAbilityDescription() =>
+        $"Stronger aggressivity towards plants that generate <color=yellow>Sun</color>: they weigh <b>{SunGeneratorAffinity:F0}x</b> when it picks a plant.";
 }

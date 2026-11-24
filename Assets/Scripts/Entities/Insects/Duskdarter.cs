@@ -45,11 +45,11 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
         evasionAdder            -= evaBonus;
     }
 
-    public override string GetDescription() =>
+    public override string GetAbilityDescription() =>
         "May pick up an insect, allowing it to travel at a quicker rate while flying. Gains " +
         $"<color=green><b>{(DDData?.darkMovementSpeedBonus ?? 0.25f) * 100f:F0}%</b></color> Movement Speed, and " +
         $"<color=green><b>{(DDData?.darkEvasionBonus ?? 0.15f) * 100f:F0}%</b></color> Evasion when in darkness. " +
-        "Immune to plant-based Taunt effects." + FlyingLine() + AggressivityLine();
+        "Immune to plant-based Taunt effects.";
 
     protected override void Update()
     {

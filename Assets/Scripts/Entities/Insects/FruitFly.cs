@@ -81,7 +81,7 @@ public class FruitFly : FlyingInsect
             ApplyEffect(new FruitFlySwarmEffect(this, buffDuration, nearbyCount, this));
     }
 
-    public override string GetDescription() =>
+    public override string GetAbilityDescription() =>
         $"Increases Movement Speed by <color=green><b>{FruitFlySwarmEffect.speedBonusPerLevel:F1}</b></color> for every other Fruit Fly within a " +
-        $"<b>{(FData?.swarmRange ?? 3f):F0}</b>-radius." + FlyingLine() + AggressivityLine();
+        $"<b>{(FData?.swarmRange ?? 3f):F0}</b>-radius.";
 }

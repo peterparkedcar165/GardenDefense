@@ -15,11 +15,10 @@ public class LoadoutSelectionUI : MonoBehaviour
     [SerializeField] private Button confirmButton;
 
     [Header("Insect Preview")]
+    [Tooltip("the old insect strip's grid: its section is hidden once the insect panel (InsectShowcase) is built")]
     [SerializeField] private Transform insectContainer;
-    [SerializeField] private InsectPreviewSlot insectSlotPrefab;
+    [Tooltip("the old insect tooltip, kept hidden")]
     [SerializeField] private GameObject insectTooltipPanel;
-    [SerializeField] private TMP_Text insectTooltipDescription;
-    [SerializeField] private TMP_Text insectTooltipPassiveDescription;
 
     [Header("Tooltip")]
     [SerializeField] private GameObject tooltipPanel;
@@ -46,7 +45,8 @@ public class LoadoutSelectionUI : MonoBehaviour
     private RectTransform slotHint;
     private TMP_Text slotHintText;
     private const float SlotHintGap = 6f;
-    private readonly List<InsectPreviewSlot> insectSlots = new List<InsectPreviewSlot>();
+    // the insect panel on the left (Tommy, 2026-11-24), built the first time the screen opens
+    private InsectShowcase showcase;
 
     public bool IsOpen => panel.activeSelf;
 
@@ -79,6 +79,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         selectedLoadout.Clear();
         HideTooltip();
         HideSlotHint();
+        showcase?.HideTips();
     }
 
     // Re-opens the loadout with the previously confirmed selection still in the slots.
@@ -117,51 +118,33 @@ public class LoadoutSelectionUI : MonoBehaviour
         RefreshUI();
     }
 
+    // the insect panel (InsectShowcase): the level's conditions and a card per insect its waves spawn.
+    // no live Insect exists on this screen, so it reads the prefabs (ProceduralLevel.GetInsectPrefabs)
     private void PopulateInsectPanel()
     {
-        if (insectContainer == null || insectSlotPrefab == null) return;
-
-        foreach (var slot in insectSlots)
-            if (slot != null) Destroy(slot.gameObject);
-        insectSlots.Clear();
-
-        SpawnManager spawner = FindAnyObjectByType<SpawnManager>();
-        if (spawner == null) return;
-
-        var seen = new HashSet<InsectData>();
-        foreach (GameObject prefab in spawner.GetInsectPrefabs())
+        if (showcase == null)
         {
-            if (prefab == null) continue;
-            Insect insect = prefab.GetComponent<Insect>();
-            if (insect == null || insect.data == null) continue;
-            if (!seen.Add(insect.data)) continue;
-
-            InsectPreviewSlot slot = Instantiate(insectSlotPrefab, insectContainer);
-            slot.Initialize(insect.data, ShowInsectTooltip, HideInsectTooltip);
-            insectSlots.Add(slot);
+            showcase = InsectShowcase.Create((RectTransform)panel.transform);
+            // the old strip and its tooltip stay in the scene, hidden
+            if (insectContainer != null && insectContainer.parent != null) insectContainer.parent.gameObject.SetActive(false);
+            if (insectTooltipPanel != null) insectTooltipPanel.SetActive(false);
         }
-
+        SpawnManager spawner = FindAnyObjectByType<SpawnManager>();
+        showcase.Show(ProceduralLevel.CurrentConfig, spawner != null ? spawner.GetInsectPrefabs() : null);
     }
 
-    private void ShowInsectTooltip(InsectData data)
+    // a plant this level recommends (LevelConfig.recommendedPlants, Tommy's picks from Level 6 on)
+    // gets a gold Recommended badge straddling the top of its square
+    private static void AddRecommendedBadge(LoadoutSlot slot, PlantData data)
     {
-        if (insectTooltipPanel == null) return;
-        insectTooltipPanel.SetActive(true);
-
-        // no live Insect instance exists on this screen - read GetDescription() straight off the
-        // prefab's Insect component, same trick the plant tooltip above uses via data.plantPrefab
-        Insect prefabInsect = data.insectPrefab != null ? data.insectPrefab.GetComponent<Insect>() : null;
-        if (insectTooltipDescription != null)
-            insectTooltipDescription.text = prefabInsect != null ? prefabInsect.GetDescription() : "";
-
-        // insects no longer have a separate passive blurb - everything lives in GetDescription()
-        if (insectTooltipPassiveDescription != null)
-            insectTooltipPassiveDescription.gameObject.SetActive(false);
-    }
-
-    private void HideInsectTooltip()
-    {
-        if (insectTooltipPanel != null) insectTooltipPanel.SetActive(false);
+        LevelConfig config = ProceduralLevel.CurrentConfig;
+        if (config == null || config.recommendedPlants == null || slot == null) return;
+        if (System.Array.IndexOf(config.recommendedPlants, data) < 0) return;
+        RectTransform badge = InsectShowcase.AddBadge((RectTransform)slot.transform, "Recommended",
+            InsectShowcaseStyle.Instance.plantBadgeTextSize);
+        badge.anchorMin = badge.anchorMax = new Vector2(0.5f, 1f);
+        badge.pivot = new Vector2(0.5f, 0.5f);
+        badge.anchoredPosition = Vector2.zero;
     }
 
     public void RefreshUI()
@@ -180,6 +163,7 @@ public class LoadoutSelectionUI : MonoBehaviour
             LoadoutSlot slot = Instantiate(slotPrefab, unlockedContainer);
             slot.Initialize(data, OnUnlockedSlotClicked, ShowTooltip, HideTooltip);
             slot.SetDimmed(selectedLoadout.Contains(data.plantName));
+            AddRecommendedBadge(slot, data);
             unlockedSlots.Add(slot);
         }
 
@@ -201,6 +185,7 @@ public class LoadoutSelectionUI : MonoBehaviour
             LoadoutSlot slot = Instantiate(slotPrefab, square.transform);
             slot.Initialize(data, OnSelectedSlotClicked, ShowTooltip, HideTooltip);
             square.ShowPlant(slot, data);
+            AddRecommendedBadge(slot, data);
         }
 
         int open = SaveManager.instance.saveData.MaxLoadoutSize;
@@ -236,6 +221,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         panel.SetActive(false);
         HideTooltip();
         HideSlotHint();
+        showcase?.HideTips();
         GameManager.instance?.OnLoadoutConfirmed();
     }
 

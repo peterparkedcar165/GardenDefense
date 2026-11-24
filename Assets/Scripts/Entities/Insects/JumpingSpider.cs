@@ -280,7 +280,7 @@ public class JumpingSpider : Insect
         _leapState  = LeapState.Walking;
     }
 
-    public override string GetDescription() =>
-        $"Aggressive arachnid. Leaps onto plants and apply Webbed for <b>{WebDuration:F0}</b> seconds, " +
-        "restricting any attacks or skill usage." + AggressivityLine();
+    public override string GetAbilityDescription() =>
+        $"Leaps onto plants and applies Webbed for <b>{WebDuration:F0}</b> seconds, " +
+        "restricting any attacks or skill usage.";
 }

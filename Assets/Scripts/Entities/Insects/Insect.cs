@@ -410,6 +410,8 @@ public abstract class Insect : Entity, IAttackable
         // counted under the wave it spawned in, for the mulch guaranteed when a wave's last insect
         // dies or leaks. friendlies (minions) are never counted
         MulchManager.instance?.RegisterInsect(this);
+        // fought from now on: the loadout screen stops marking this insect NEW
+        if (team != Team.Friendly) SaveManager.instance?.MarkInsectSeen(data);
         waypoints  = _pendingPath ?? PathManager.instance.waypoints;
         expDrop = data != null && data.expDrop > 0 ? data.expDrop : sunDrop / 2;
         aimPoint = transform.Find("AimPoint");
@@ -1035,7 +1037,7 @@ public abstract class Insect : Entity, IAttackable
             attackTimer = 0f;
             Attack();
             if (aggressivity == Aggressivity.Low && currentTarget is Plant)
-                _plantAttackCooldown = 4f;
+                _plantAttackCooldown = PlantBiteCooldown;
         }
     }
 
@@ -1581,15 +1583,54 @@ public abstract class Insect : Entity, IAttackable
         return data != null ? data.displayName : "";
     }
 
-    // no longer backed by an Inspector string - each insect overrides this with its own
-    // code-written text (flavor + passive folded into one, no separate passive concept anymore)
-    public virtual string GetDescription() => "";
+    // what the insect is, in a few words (Tommy's words, InsectData.description)
+    public string GetShortDescription() => data != null && !string.IsNullOrEmpty(data.description) ? data.description : "";
+
+    // the insect's special trait with its numbers (Tommy, 2026-11-24), written by each insect's own
+    // script. null or empty: it has none, shown as "None"
+    public virtual string GetAbilityDescription() => null;
+
+    // lines every insect of a kind shares, after the ability: cryotolerance here, flying in FlyingInsect
+    protected virtual string TraitLines() => this is ICryotolerant ? CryotoleranceLine() : "";
+
+    // the whole description, the same in the level and on the loadout screen: what it is, its ability,
+    // its shared traits and its aggressivity. reads the data asset, so it also works on a prefab
+    public virtual string GetDescription()
+    {
+        string brief = GetShortDescription();
+        string ability = GetAbilityDescription();
+        return (brief.Length > 0 ? brief + "\n\n" : "") + "<b>Ability:</b> " + (string.IsNullOrEmpty(ability) ? "None" : ability)
+            + TraitLines() + AggressivityLine();
+    }
+
+    // the shared trait lines and the aggressivity line without the blank line before them, for the
+    // loadout screen's insect tooltip, which shows the description and the ability in their own boxes
+    public string GetTraitsAndAggressivityText() => (TraitLines() + AggressivityLine()).TrimStart('\n');
+
+    // the word the game shows for an aggressivity (Tommy, 2026-11-24: Passive, not None)
+    public static string AggressivityName(Aggressivity aggressivity) =>
+        aggressivity == Aggressivity.High ? "Aggressive" : aggressivity == Aggressivity.Low ? "Mildly aggressive" : "Passive";
+
+    // seconds a mildly aggressive insect ignores plants after each bite on one
+    public const float PlantBiteCooldown = 4f;
+
+    // an exception to the aggressivity's usual rule, for the loadout screen's aggressivity tooltip
+    // (Moth: passive, but goes after plants that give off light). null when there is none
+    public virtual string AggressivityNote() => null;
+
+    // the bonus armor and magic armor an insect gains from the waves at most: +1 a wave up to the
+    // wave the health plateau starts. int.MaxValue when the level has no cap
+    public static int MaxWaveArmorBonus()
+    {
+        int plateau = PlateauWave();
+        return plateau == int.MaxValue ? int.MaxValue : plateau - 1;
+    }
 
     // appended to the end of every insect's GetDescription() - reads the data asset directly
     // (rather than the live instance field) so it reads correctly both in-battle and from the
     // loadout screen's uninstantiated prefab preview
     protected string AggressivityLine() =>
-        $"\n\n<b>Aggressivity:</b> {(data != null ? data.aggressivity : Aggressivity.None)}";
+        $"\n\n<b>Aggressivity:</b> {AggressivityName(data != null ? data.aggressivity : Aggressivity.None)}";
 
     // shared line for any ICryotolerant insect (Winter Moth, Snow Ant, Snow Fly) - the immunity
     // itself is enforced below in ApplyEffect, not per-insect

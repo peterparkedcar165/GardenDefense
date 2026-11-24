@@ -46,7 +46,7 @@ public class Firefly : FlyingInsect
         }
     }
 
-    public override string GetDescription() =>
-        $"Passive insect. Emits a faint <b>{(data != null ? data.baseLightEmissionRange : lightEmissionRange):F1}</b>-radius light. " +
-        $"Attacks inflict <color=#D9BB48><b>Glowing Swarm</b></color>, lighting up the target plant if it isn't already glowing." + FlyingLine() + AggressivityLine();
+    public override string GetAbilityDescription() =>
+        $"Emits a faint <b>{(data != null ? data.baseLightEmissionRange : lightEmissionRange):F1}</b>-radius light. " +
+        $"Attacks inflict <color=#D9BB48><b>Glowing Swarm</b></color>, lighting up the target plant if it isn't already glowing.";
 }

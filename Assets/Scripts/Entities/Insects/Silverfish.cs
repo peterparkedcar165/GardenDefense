@@ -17,7 +17,7 @@ public class Silverfish : Insect
         if (inDarkness) evasion *= 2f;
     }
 
-    public override string GetDescription() =>
-        "Passive but fast and ellusive insect. <color=green><b>Silver Ellusivity</b></color>: doubles the total " +
-        "<color=green><b>Evasion</b></color> stat while in darkness." + AggressivityLine();
+    public override string GetAbilityDescription() =>
+        "<color=green><b>Silver Ellusivity</b></color>: doubles the total " +
+        "<color=green><b>Evasion</b></color> stat while in darkness.";
 }

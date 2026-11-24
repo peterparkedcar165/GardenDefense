@@ -112,8 +112,7 @@ public class DarklingBeetle : Insect, ICarrierInsect
         carriedInsect = null;
     }
 
-    public override string GetDescription() =>
-        "Mildly aggressive and bulky insect.\n\n" +
+    public override string GetAbilityDescription() =>
         "Has drastically increased Armor, and slightly increased Magic Armor.\n\n" +
-        "May carry an insect and keep it from harm as it travels towards its destination." + AggressivityLine();
+        "May carry an insect and keep it from harm as it travels towards its destination.";
 }

@@ -20,6 +20,15 @@ public class Glowworm : Insect
         _healTimer = GData?.healCooldown ?? 3f;
     }
 
+    // it had no description before (Tommy, 2026-11-24: every insect has an ability). the numbers are
+    // the ones FinishCast and UpdateStats use
+    public override string GetAbilityDescription() =>
+        $"Every <b>{(GData?.healCooldown ?? 3f):0.#}</b> seconds, stops for <b>{(GData?.castDuration ?? 1.5f):0.#}</b> seconds to heal the most injured insect " +
+        $"within a <b>{(GData?.healRange ?? 4f):0.#}</b>-radius for <color=green><b>{(GData?.healAmount ?? 20f):F0}</b></color> + " +
+        $"<color=green><b>{(GData?.healPercent ?? 0.1f) * 100f:0.#}%</b></color> max health, and grants it <color=#99FF1A><b>Regenerative Glow</b></color>: " +
+        $"<color=green><b>{(GData?.regenerationHealing ?? 8f):F0}</b></color> + <color=green><b>{(GData?.regenerationPercent ?? 0.01f) * 100f:0.#}%</b></color> " +
+        $"max health per second for <b>{(GData?.regenerationDuration ?? 6f):F0}</b> seconds. Glows in the dark (<b>{(GData?.glowRadius ?? 2f):0.#}</b>-radius light).";
+
     public override void UpdateStats()
     {
         baseLightEmissionRange = GData?.glowRadius ?? 2f;

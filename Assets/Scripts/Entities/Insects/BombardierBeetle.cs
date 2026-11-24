@@ -171,6 +171,6 @@ public class BombardierBeetle : Insect, IShooterInsect
             attackDamageType, attackElementalType, this, projSpeed);
     }
 
-    public override string GetDescription() =>
+    public override string GetAbilityDescription() =>
         "Lobs a fire bomb at whichever plant sits deepest in the garden, scorching it and anything nearby.";
 }

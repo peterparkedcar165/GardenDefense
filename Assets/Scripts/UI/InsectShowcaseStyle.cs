@@ -1,0 +1,133 @@
+using UnityEngine;
+using TMPro;
+
+// every sprite, colour and size of the loadout screen's insect panel (InsectShowcase), from Tommy's
+// pixel kit: the plant info panel's pieces (Sprites/UI/InfoPanel), the stat icons (Sprites/UI/icons)
+// and the element icons. lives at Resources/InsectShowcaseStyle.asset so tuning it in the inspector
+// changes the panel the next time it opens. sizes are in art pixels: 1 art pixel = 2 canvas units
+[CreateAssetMenu(fileName = "InsectShowcaseStyle", menuName = "Scriptable Objects/Insect Showcase Style")]
+public class InsectShowcaseStyle : ScriptableObject
+{
+    private static InsectShowcaseStyle _instance;
+    public static InsectShowcaseStyle Instance
+    {
+        get
+        {
+            if (_instance == null) _instance = Resources.Load<InsectShowcaseStyle>("InsectShowcaseStyle");
+            if (_instance == null) _instance = CreateInstance<InsectShowcaseStyle>();
+            return _instance;
+        }
+    }
+
+    [Header("Kit (the plant info panel's pieces)")]
+    public TMP_FontAsset font;
+    [Tooltip("12 by 12, sliced 4: the panel and tooltip body, tinted with the panel colour")]
+    public Sprite panelBase;
+    [Tooltip("drawn over panelBase, untinted")]
+    public Sprite panelShine;
+    [Tooltip("the 4 by 2 line under the title")]
+    public Sprite seam;
+    [Tooltip("8 by 8, sliced 2: the insect cards and the ability box, tinted with the panel colour")]
+    public Sprite insetBox;
+    [Tooltip("8 by 8, sliced 2: the chips (conditions, tags) and the stat cells, tinted with the panel colour")]
+    public Sprite stripSunken;
+
+    [Header("Stat icons (Sprites/UI/icons, 16 by 16)")]
+    public Sprite health;
+    public Sprite movementSpeed;
+    public Sprite armor;
+    public Sprite magicArmor;
+    public Sprite attackDamage;
+    public Sprite attackSpeed;
+
+    [Header("Element icons, for the resistances")]
+    public Sprite fire;
+    public Sprite water;
+    public Sprite grass;
+    public Sprite poison;
+    public Sprite ice;
+    public Sprite wind;
+
+    [Header("Colours")]
+    [Tooltip("the panel, cards, chips and tooltips are this colour (proposal: a brick red for the enemy side)")]
+    public Color panel = Hex("#7A3B2A");
+    [Tooltip("the 1 pixel shadow under every text; the plant info panel uses the panel colour x 0.38")]
+    public Color textShadow = Hex("#2E1610");
+    public Color text = Hex("#FFF1D6");
+    [Tooltip("the tier, the tooltip categories, a 0 resistance, an ability of None")]
+    public Color mutedText = Hex("#D2BC9C");
+    [Tooltip("the word Ability over the ability")]
+    public Color label = Hex("#FFD84A");
+    [Tooltip("the NEW and Recommended badges")]
+    public Color badge = Hex("#FFC939");
+    public Color badgeText = Hex("#4A2814");
+    [Tooltip("the portrait's backdrop is the insect's name colour lightened this much toward white")]
+    [Range(0f, 1f)] public float portraitLighten = 0.6f;
+    [Tooltip("a resistance below 0: the insect takes more damage from that element")]
+    public Color weak = Hex("#5ED45E");
+    [Tooltip("a resistance above 0: the insect takes less damage from that element")]
+    public Color resists = Hex("#FF7A66");
+
+    [Header("Tag colours")]
+    public Color passive = Hex("#C9BFA2");
+    public Color mildlyAggressive = Hex("#FFB973");
+    public Color aggressive = Hex("#FF7A66");
+    public Color flying = Hex("#8FD0FF");
+    public Color fast = Hex("#93E28D");
+    public Color slow = Hex("#D6BD84");
+    public Color highArmor = Hex("#D3DAE0");
+
+    [Header("Element colours (the resistance names)")]
+    public Color fireText = Hex("#FFA500");
+    public Color waterText = Hex("#4FC3F7");
+    public Color grassText = Hex("#7CC04A");
+    public Color poisonText = Hex("#C07BE0");
+    public Color iceText = Hex("#00FFFF");
+    public Color windText = Hex("#B2EBF2");
+
+    [Header("Tags: when an insect gets one")]
+    [Tooltip("Fast at this movement speed or more")]
+    public float fastSpeed = 1f;
+    [Tooltip("Slow at this movement speed or less")]
+    public float slowSpeed = 0.3f;
+    [Tooltip("High armor at this base armor or more")]
+    public float highArmorAt = 50f;
+
+    [Header("Sizes (art pixels; 1 art pixel = 2 canvas units)")]
+    public int panelWidth = 240;
+    [Tooltip("space between the panel and the screen's left, top and bottom edges")]
+    public int margin = 12;
+    public int portraitSize = 36;
+    public int tooltipWidth = 250;
+    public int chipTooltipWidth = 180;
+    [Tooltip("canvas units: the font's native 10 pixels")]
+    public float textSize = 20f;
+    [Tooltip("canvas units: twice the native size")]
+    public float titleSize = 40f;
+    [Tooltip("canvas units: the Recommended badge on a plant square, the size of the square's own plant name")]
+    public float plantBadgeTextSize = 14f;
+
+    public Sprite ElementIcon(ElementalType element) => element switch
+    {
+        ElementalType.Fire => fire,
+        ElementalType.Water => water,
+        ElementalType.Grass => grass,
+        ElementalType.Poison => poison,
+        ElementalType.Ice => ice,
+        ElementalType.Wind => wind,
+        _ => null
+    };
+
+    public Color ElementText(ElementalType element) => element switch
+    {
+        ElementalType.Fire => fireText,
+        ElementalType.Water => waterText,
+        ElementalType.Grass => grassText,
+        ElementalType.Poison => poisonText,
+        ElementalType.Ice => iceText,
+        ElementalType.Wind => windText,
+        _ => text
+    };
+
+    private static Color Hex(string hex) => ColorUtility.TryParseHtmlString(hex, out Color c) ? c : Color.magenta;
+}

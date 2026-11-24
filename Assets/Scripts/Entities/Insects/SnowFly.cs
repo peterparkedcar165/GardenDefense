@@ -29,7 +29,8 @@ public class SnowFly : FlyingInsect, ICryotolerant
         flightSpeed = 2f * movementSpeed;
     }
 
-    public override string GetDescription() =>
+    // cryotolerance and flying are added by Insect.TraitLines
+    public override string GetAbilityDescription() =>
         $"Increase Armor and Magic Resist by <color=#00CED1><b>{(SFData?.snowArmorBonus ?? snowArmorBonus):F0}</b></color> when it snows." +
-        "\n\nCannot be slowed past its base Movement Speed." + CryotoleranceLine() + FlyingLine() + AggressivityLine();
+        "\n\nCannot be slowed past its base Movement Speed.";
 }

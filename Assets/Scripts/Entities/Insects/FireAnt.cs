@@ -28,6 +28,6 @@ public class FireAnt : Ant
     // reads straight off the data asset (not the instance field, which is only synced by
     // Awake()) so this is accurate both in-battle and from the loadout screen's uninstantiated
     // prefab preview
-    public override string GetDescription() =>
-        $"Mildy aggressive insect. Attacks increase temperature of plants by <color=orange><b>{(FAData?.tempIncreasePerHit ?? tempIncreasePerHit):F0}</b></color>." + AggressivityLine();
+    public override string GetAbilityDescription() =>
+        $"Attacks increase temperature of plants by <color=orange><b>{(FAData?.tempIncreasePerHit ?? tempIncreasePerHit):F0}</b></color>.";
 }

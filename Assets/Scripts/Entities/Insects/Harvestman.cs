@@ -14,6 +14,14 @@ public class Harvestman : Insect
         LoadData();
     }
 
+    // it had no description before (Tommy, 2026-11-24: every insect has an ability)
+    public override string GetAbilityDescription()
+    {
+        float bonus = HData?.minionDamageBonus ?? 0f;
+        return "Hunts your minions and hypnotized insects within its targeting range before any plant" +
+            (bonus > 0f ? $", dealing <color=green><b>{bonus * 100f:F0}%</b></color> more damage to them." : ".");
+    }
+
     public override IAttackable target
     {
         get

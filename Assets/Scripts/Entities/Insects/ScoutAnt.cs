@@ -29,9 +29,9 @@ public class ScoutAnt : Ant
 
     public override string GetName() => "<color=#8B4513>Scout Ant</color>";
 
-    public override string GetDescription() =>
-        $"Fast insect that grants <color=green><b>Scout's Encouragement</b></color> to other insects within a <color=green><b>{buffRadius:F0}</b></color>-radius, " +
-        $"increasing Movement Speed by <color=green><b>+{speedBonus:F1}</b></color>." + AggressivityLine();
+    public override string GetAbilityDescription() =>
+        $"Grants <color=green><b>Scout's Encouragement</b></color> to other insects within a <color=green><b>{buffRadius:F0}</b></color>-radius, " +
+        $"increasing Movement Speed by <color=green><b>+{speedBonus:F1}</b></color>.";
 
     private void EncourageInsects()
     {

@@ -47,6 +47,10 @@ public class LevelConfig : ScriptableObject
         "mulches aren't listed anywhere: they drop from insects (MulchRegistry)")]
     public FertilizerData[] fertilizers;
 
+    [Header("loadout screen")]
+    [Tooltip("plants marked Recommended on this level's loadout screen. Tommy picks them, from Level 6 on")]
+    public PlantData[] recommendedPlants;
+
     [Header("ambience")]
     [Tooltip("looping background sounds, share one profile asset across a biome")]
     public AmbienceProfile ambience;

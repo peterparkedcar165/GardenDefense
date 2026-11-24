@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScorpionData
   displayName: Scorpion
   nameColor: {r: 0.33962262, g: 0.043253824, b: 0.33063844, a: 1}
+  description: A bulky arachnid with a venomous sting.
   sprite: {fileID: 21300000, guid: 5718fdb702b2cf1408aa3af255f89f80, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 3f24b5768444f7844b72d80407813b09, type: 3}
   baseMaxHealth: 800
@@ -56,7 +57,7 @@ MonoBehaviour:
   currencyDropAdder: 0
   currencyDropMultiplier: 0
   expDrop: 10
-  aggressivity: 0
+  aggressivity: 1
   baseLightEmissionRange: 0
   baseHealingBonus: 0
   baseHealingReceived: 0

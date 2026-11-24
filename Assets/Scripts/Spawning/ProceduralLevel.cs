@@ -513,6 +513,12 @@ public class ProceduralLevel : SpawnManager
                                 prefabs.Add(trickle.insectData.insectPrefab);
             }
 
+        // elites come too when the level has elite waves, so one that only spawns as an elite is shown
+        if (config.eliteWaveInterval > 0 && config.eliteInsects != null)
+            foreach (LevelEliteEntry elite in config.eliteInsects)
+                if (elite?.data != null && elite.data.insectPrefab != null && !prefabs.Contains(elite.data.insectPrefab))
+                    prefabs.Add(elite.data.insectPrefab);
+
         return prefabs.ToArray();
     }
 

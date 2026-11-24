@@ -32,10 +32,10 @@ public class WinterMoth : Moth, ICryotolerant
         flightSpeed = 2f * movementSpeed;
     }
 
-    protected override string DescriptionCore() =>
-        base.DescriptionCore() +
+    // cryotolerance is added by Insect.TraitLines (ICryotolerant)
+    public override string GetAbilityDescription() =>
+        base.GetAbilityDescription() +
         $"\n\nPossess a Cold Aura effect, lowering temperature of plants within <b>{(WMData?.coldAuraRadius ?? coldAuraRadius):F0}</b>-radius for " +
         $"<color=#00FFFF><b>{(WMData?.coldPerSecond ?? coldPerSecond):F1}</b></color> per second." +
-        $"\n\nIncrease Evasion by <color=green><b>{SnowEvasionBonus * 100f:F0}%</b></color> when it snows." +
-        CryotoleranceLine();
+        $"\n\nIncrease Evasion by <color=green><b>{SnowEvasionBonus * 100f:F0}%</b></color> when it snows.";
 }
