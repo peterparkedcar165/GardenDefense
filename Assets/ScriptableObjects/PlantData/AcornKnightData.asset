@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AcornKnightData
   plantPrefab: {fileID: 5277549953005779376, guid: 5b9d0894a6ad0cc458e0f317dbf13a44, type: 3}
   icon: {fileID: 3015211819276721340, guid: 361f336491221e742a6a0da0c409a39c, type: 3}
+  skillIcon: {fileID: 21300000, guid: 942ae933eef0478aa064a321e93a31b9, type: 3}
   plantName: AcornKnight
   displayName: Acorn Knight
   role: 0

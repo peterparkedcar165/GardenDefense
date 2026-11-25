@@ -6,7 +6,8 @@ public class PlantData : ScriptableObject
     [Header("Display")]
     public Plant plantPrefab;
     public Sprite icon;
-    [Tooltip("the skill's icon in the plant info panel's skill frame (32 by 32). empty: the element's icon")]
+    [Tooltip("the skill's icon in the plant info panel's skill frame, drawn at a whole number of canvas units per pixel " +
+        "in its 66 unit window (up to 66 px; Acorn Knight's is 54). empty: the element's icon")]
     public Sprite skillIcon;
 
     // keeps icon following whatever sprite is currently on the prefab's "Visual" child (the
