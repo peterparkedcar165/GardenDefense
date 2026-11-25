@@ -27,9 +27,41 @@ public class RhodiolaProjectile : MonoBehaviour
     private float  _pauseTimer;
     private Entity _pendingBounceTarget;
 
+    // height (Tommy, 2026-11-25): the root is the seed's base, on the ground line it travels along; its
+    // Visual (and the fly particles, moved under it) is drawn launchHeight above, starting at Rhodiola's
+    // staff gem and coming down evenly to the base as it closes in, so it lands on its target. the Shadow
+    // stays on the base. a bounce starts on the ground, at no height
+    private Transform _visual;
+    private Vector3 _visualRestLocal;
+    private float _launchHeight;
+    private float _launchDistance;
+
     private void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        _visual = transform.Find("Visual");
+        if (_visual == null) return;
+        _visualRestLocal = _visual.localPosition;
+        // the fly particles ride with the drawn seed, not its base
+        foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>(true))
+            if (ps.transform.parent == transform) ps.transform.SetParent(_visual, true);
+    }
+
+    // the drawn seed starts at this world height (the gem's), its base staying where it was spawned
+    public void SetLaunchHeight(float worldY)
+    {
+        if (_visual == null) return;
+        _launchHeight = worldY - transform.TransformPoint(_visualRestLocal).y;
+        _launchDistance = Vector3.Distance(transform.position, _lastKnownTargetPosition);
+        PlaceVisual();
+    }
+
+    private void PlaceVisual()
+    {
+        if (_visual == null || _launchHeight == 0f) return;
+        float share = _launchDistance > 0.0001f
+            ? Mathf.Clamp01(Vector3.Distance(transform.position, _lastKnownTargetPosition) / _launchDistance) : 0f;
+        _visual.position = transform.TransformPoint(_visualRestLocal) + Vector3.up * (_launchHeight * share);
     }
 
     public void Initialize(Rhodiola source, Entity target, float speed, float healAmount, bool canBounce)
@@ -64,6 +96,7 @@ public class RhodiolaProjectile : MonoBehaviour
 
         Vector3 targetPos = _lastKnownTargetPosition;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
+        PlaceVisual();
 
         if (Vector3.Distance(transform.position, targetPos) < 0.15f)
             Detonate();

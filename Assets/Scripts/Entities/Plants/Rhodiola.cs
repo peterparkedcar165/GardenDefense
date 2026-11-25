@@ -231,12 +231,66 @@ public class Rhodiola : Shooter
         return lowestAlly;
     }
 
+    // ---------- her attack animation (Tommy, 2026-11-25: rhodiola_attack.png, 17 frames) ----------
+    // she raises her staff and its gem glows; the seed leaves the gem the moment the glow peaks
+    // (attackReleaseFrame). the clip plays at its own speed, only sped up when her attacks come faster
+    // than it lasts, and the release frame keeps its place in it either way. the seed's base starts at
+    // the gem's x on her own ground line, drawn at the gem's height (RhodiolaProjectile.SetLaunchHeight)
+    [Header("Attack Animation")]
+    [SerializeField] private float attackClipFrameRate = 12f;
+    [SerializeField] private int attackClipFrames = 17;
+    [Tooltip("the frame (from 0) the staff's glow peaks on: the seed leaves then")]
+    [SerializeField] private int attackReleaseFrame = 9;
+    [Tooltip("the gem's middle on the release frame, art px from the frame's top left (her unflipped art faces left)")]
+    [SerializeField] private Vector2 gemPixel = new Vector2(20f, 6f);
+    private const string BodyAttackTrigger = "Attack";
+
+    // the attack sound plays when the seed leaves, not when she starts raising the staff
+    protected override bool PlaysOwnAttackSound => true;
+
     protected override void Shoot(Vector3 target)
     {
         if (healProjectilePrefab == null || _mainTarget == null) return;
-        GameObject obj = Instantiate(healProjectilePrefab, transform.position, Quaternion.identity);
+        float frameRate = Mathf.Max(0.01f, attackClipFrameRate);
+        float clipLength = Mathf.Max(1, attackClipFrames) / frameRate;
+        float speed = Mathf.Max(1f, clipLength / Mathf.Max(0.01f, attackCooldown));
+        PlayBodyAnimation(BodyAttackTrigger, clipLength, clipLength / speed);
+        BeginAttackWindup(Mathf.Max(0, attackReleaseFrame) / (frameRate * speed), ReleaseSeed);
+    }
+
+    // the glow's peak: the seed leaves the gem for whoever needs it most now (the target picked when she
+    // raised the staff, unless it died meanwhile)
+    private void ReleaseSeed()
+    {
+        if (!IsAlive || healProjectilePrefab == null) return;
+        if (_mainTarget == null || _mainTarget.health <= 0f) _mainTarget = FindMostInjuredHealable();
+        if (_mainTarget == null) return;
+
+        Vector3 gem = GemWorldPosition();
+        Vector3 basePosition = new Vector3(gem.x, transform.position.y, transform.position.z);
+        GameObject obj = Instantiate(healProjectilePrefab, basePosition, Quaternion.identity);
         RhodiolaProjectile proj = obj.GetComponent<RhodiolaProjectile>();
-        proj?.Initialize(this, _mainTarget, projectileSpeed, HealAmount, SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock));
+        if (proj != null)
+        {
+            proj.Initialize(this, _mainTarget, projectileSpeed, HealAmount, SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock));
+            proj.SetLaunchHeight(gem.y);
+        }
+        if (data != null) SfxPlayer.Play(data.attackSound, gem);
+    }
+
+    // where the gem is on her drawn body: gemPixel on the sprite (its pivot and pixels per unit), mirrored
+    // when she faces right (flipX)
+    private Vector3 GemWorldPosition()
+    {
+        SpriteRenderer body = GetMainRenderer();
+        if (body == null) return transform.position;
+        Sprite sprite = body.sprite;
+        float ppu = sprite != null ? sprite.pixelsPerUnit : 64f;
+        Vector2 pivot = sprite != null ? sprite.pivot : new Vector2(32f, 32f);
+        float height = sprite != null ? sprite.rect.height : 64f;
+        Vector2 local = new Vector2((gemPixel.x - pivot.x) / ppu, (height - gemPixel.y - pivot.y) / ppu);
+        if (body.flipX) local.x = -local.x;
+        return body.transform.TransformPoint(local);
     }
 
     // heals one plant or friendly insect. isPrimaryTarget gates the Path1 max bonus and
