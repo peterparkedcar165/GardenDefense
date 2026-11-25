@@ -52,6 +52,7 @@
     <Compile Include="Assets\Editor\WeatherManagerEditor.cs" />
     <Compile Include="Assets\Editor\MissingScriptCleaner.cs" />
     <Compile Include="Assets\Editor\RestrictedStatTypeDrawer.cs" />
+    <Compile Include="Assets\Editor\MainMenuPlanks.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Lib\Editor\Localization\cm-help.zh-Hans.txt" />

@@ -8,7 +8,7 @@ public class MainMenu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // the planks are saved in the scene once Tools > Garden Defense > Bake Main Menu Planks has run;
+        // the planks are saved in the scene once Tools > Garden Defense > Bake Planks in Open Scene has run;
         // until then (or for a button added since) they're made here when the scene starts
         if (!PlanksBaked()) SkinButtons();
         foreach (Button b in buttons)

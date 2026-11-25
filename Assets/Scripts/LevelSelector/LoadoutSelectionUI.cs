@@ -576,41 +576,19 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
 
         confirmButton.interactable = selectedLoadout.Count > 0;
-        RefreshConfirmPlank();
     }
 
-    // Next (the scene's ConfirmButton) as the game controls' green plank (Tommy, 2026-11-25), as wide as
-    // the old button and centred on it; it presses the old button, so the scene's wiring (Confirm) stays,
-    // and fades and ignores clicks while there's nothing to confirm
-    private PlankButton confirmPlank;
-    private CanvasGroup confirmPlankGroup;
-
-    private void BuildConfirmPlank()
+    // Next (the scene's ConfirmButton) is the game controls' green plank (Tommy, 2026-11-25), turned into
+    // one in place (PlankButton.Adopt, so its Confirm wiring stays), as wide as it was and centred where
+    // it was; faded while there's nothing to confirm (the plank follows the button's interactable). saved
+    // in the scene by Tools > Garden Defense > Bake Planks in Open Scene, else made when the screen opens
+    public void BuildConfirmPlank()
     {
-        if (confirmButton == null || confirmPlank != null) return;
+        if (confirmButton == null || confirmButton.GetComponent<PlankButton>() != null) return;
         RectTransform rect = (RectTransform)confirmButton.transform;
-        Image face = confirmButton.GetComponent<Image>();
-        if (face != null) face.enabled = false;
-        TMP_Text word = confirmButton.GetComponentInChildren<TMP_Text>(true);
-        string text = word != null && !string.IsNullOrEmpty(word.text) ? word.text : "Next";
-        if (word != null) word.gameObject.SetActive(false);
-        confirmPlank = PlankButton.Create(rect, text, GameControlsStyle.Instance.start, InsectShowcaseStyle.Instance.font,
-            () => { if (confirmButton.interactable) confirmButton.onClick.Invoke(); });
-        RectTransform r = confirmPlank.Rect;
-        r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
-        r.anchoredPosition = Vector2.zero;
-        r.sizeDelta = new Vector2(Mathf.Max(r.sizeDelta.x, Mathf.Round(rect.sizeDelta.x / 2f) * 2f), r.sizeDelta.y);
-        confirmPlankGroup = confirmPlank.gameObject.AddComponent<CanvasGroup>();
-        RefreshConfirmPlank();
-    }
-
-    private void RefreshConfirmPlank()
-    {
-        if (confirmPlankGroup == null) return;
-        bool on = confirmButton.interactable;
-        confirmPlankGroup.alpha = on ? 1f : 0.45f;
-        confirmPlankGroup.interactable = on;
-        confirmPlankGroup.blocksRaycasts = on;
+        float width = Mathf.Round(rect.sizeDelta.x / 2f) * 2f;
+        PlankButton plank = PlankButton.Adopt(confirmButton, GameControlsStyle.Instance.start, InsectShowcaseStyle.Instance.font);
+        rect.sizeDelta = new Vector2(Mathf.Max(plank.Rect.sizeDelta.x, width), plank.Rect.sizeDelta.y);
     }
 
     // ---------- Available Plants (Tommy, 2026-11-24) ----------

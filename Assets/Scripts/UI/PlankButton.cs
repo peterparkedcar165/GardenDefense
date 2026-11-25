@@ -190,20 +190,38 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         face.sprite = pressed ? style.buttonPressed : hovered ? style.buttonHover : style.buttonIdle;
         shine.sprite = pressed ? style.buttonPressedShine : hovered ? style.buttonHoverShine : style.buttonIdleShine;
         shine.enabled = shine.sprite != null;
-        face.color = pressed ? colors.facePressed : hovered ? colors.faceHover : colors.face;
+        shownUsable = Usable;
+        float alpha = shownUsable ? 1f : DisabledAlpha;
+        face.color = WithAlpha(pressed ? colors.facePressed : hovered ? colors.faceHover : colors.face, alpha);
+        shine.color = new Color(1f, 1f, 1f, alpha);
         content.anchoredPosition = new Vector2(0f, pressed ? -2f * Px : 0f);
-        label.color = colors.text;
+        // the label's shadow follows its alpha
+        label.color = WithAlpha(colors.text, alpha);
         // a saved plank finds its label's shadow when it first needs it
         if (shadow == null) shadow = label.GetComponent<PixelTextEffect>();
         if (shadow != null) shadow.Color = colors.shadow;
     }
 
-    public void OnPointerEnter(PointerEventData eventData) { hovered = true; Apply(); }
+    // a plank whose Button can't be clicked (a locked level, Next with no plant picked) is faded and
+    // doesn't light up; a hover only plank (Pressable false) never counts as that
+    private const float DisabledAlpha = 0.45f;
+    private bool Usable => !pressable || button == null || button.interactable;
+    private bool shownUsable = true;
+
+    private void Update()
+    {
+        bool usable = Usable;
+        if (usable == shownUsable) return;
+        if (!usable) { hovered = false; pressed = false; }
+        Apply();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData) { if (!Usable) return; hovered = true; Apply(); }
     public void OnPointerExit(PointerEventData eventData) { hovered = false; pressed = false; Apply(); }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left || !pressable) return;
+        if (eventData.button != PointerEventData.InputButton.Left || !pressable || !Usable) return;
         pressed = true;
         Apply();
     }
@@ -229,6 +247,8 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         go.transform.SetParent(parent != null ? parent : transform, false);
         return (RectTransform)go.transform;
     }
+
+    private static Color WithAlpha(Color c, float a) { c.a *= a; return c; }
 
     private static void Stretch(RectTransform r)
     {
