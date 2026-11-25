@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BogIrisData
   plantPrefab: {fileID: -2484804716350021914, guid: b28a384ec7715f24a801e47675e72dc9, type: 3}
   icon: {fileID: 21300000, guid: 845c7e1cec88713438bf40dd26cd8d53, type: 3}
+  skillIcon: {fileID: 0}
   plantName: BogIris
   displayName: Bog Iris
   role: 0
@@ -25,6 +26,7 @@ MonoBehaviour:
   retainsAggro: 1
   generatesSun: 1
   category: 0
+  widgetHeightOffset: 0
   skillTree: {fileID: 11400000, guid: 597fa17295da449db2708e4e15b31dc8, type: 2}
   fertilizerPossibleStats: 30000000
   baseMaxHealth: 200
@@ -57,7 +59,7 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
-  baseBonusEffectChance: 0
+  baseVisibility: 1
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -75,6 +77,12 @@ MonoBehaviour:
   baseProjectileSpeed: 3
   baseMaxRange: 20
   basePiercing: 0
+  baseProjectileHitboxRadius: 0.1
+  baseProjectileVisualHitboxRadius: 0.1
+  projectileEmitLight: 0
+  projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
+  projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
   projectileHeight: 1.2
