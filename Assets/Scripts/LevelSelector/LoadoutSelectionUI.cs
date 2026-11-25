@@ -864,9 +864,9 @@ public class LoadoutSelectionUI : MonoBehaviour
             image.color = Color.black;
             image.raycastTarget = false;
 
-            // the card darkened like a locked Current Loadout slot, Tommy's padlock over the silhouette
-            // (Tommy, 2026-11-25); no hover note, the tooltip doesn't show for it either
-            square.ShowLocked(null);
+            // the card in its plain bright wood, no padlock: the black silhouette says it's not unlocked yet
+            // (Tommy, 2026-11-25)
+            square.ShowOpen();
         }
 
         // the sun cost (the one placing it charges, the skill tree's reduction included) in the card's slot
