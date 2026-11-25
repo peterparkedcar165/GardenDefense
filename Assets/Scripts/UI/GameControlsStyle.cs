@@ -61,6 +61,21 @@ public class GameControlsStyle : ScriptableObject
     public int buttonHeight = 20;
     public int buttonSidePad = 20;
 
+    [Header("Large button (the main menu's, Tommy 2026-11-25)")]
+    [Tooltip("ui_button_leafy_large_base: greyscale wood tinted with the state's colour like the medium one, 119 by 31. " +
+        "drawn at least its own width; a wider one keeps its 25 px leafy ends and repeats the middle (tiled 25 0 25 0), " +
+        "so the grain isn't stretched")]
+    public Sprite largeButton;
+    [Tooltip("ui_button_leafy_large_trim: the gold border and leafy vines, drawn over the wood untinted")]
+    public Sprite largeButtonTrim;
+    [Tooltip("art pixels: its height, the narrowest it's drawn (the art's own width), the room at each end the word " +
+        "keeps clear of (the leaves reach 19 px in), and the word's cap top (centred on the wood between the gold " +
+        "lines, rows 6 to 24)")]
+    public int largeButtonHeight = 31;
+    public int largeButtonWidth = 119;
+    public int largeButtonSidePad = 22;
+    public int largeLabelTop = 12;
+
     [Header("Icons")]
     public Sprite playIcon;
     public Sprite pauseIcon;

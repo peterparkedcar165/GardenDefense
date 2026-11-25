@@ -52,4 +52,10 @@ MonoBehaviour:
   labelTop: 6
   buttonHeight: 20
   buttonSidePad: 20
+  largeButton: {fileID: 21300000, guid: 357604ac3a044aa3b874f44a7569e0f9, type: 3}
+  largeButtonTrim: {fileID: 21300000, guid: ce0a7e36922e4954bca8c2932594e4b1, type: 3}
+  largeButtonHeight: 31
+  largeButtonWidth: 119
+  largeButtonSidePad: 22
+  largeLabelTop: 12
   timerTextInset: 6

@@ -274,14 +274,31 @@ public class LoadoutSelectionUI : MonoBehaviour
             UIHoverRelay hover = mapButton.gameObject.AddComponent<UIHoverRelay>();
             hover.onEnter = () => { if (!IntroPlaying) SetMapShown(true, false); };
             hover.onExit = () => SetMapShown(false, false);
-            // just right of Confirm, level with it
-            RectTransform r = mapButton.Rect;
-            r.anchorMin = r.anchorMax = new Vector2(0.5f, 0.5f);
-            r.pivot = new Vector2(0f, 0.5f);
-            Vector3[] corners = new Vector3[4];
-            ((RectTransform)confirmButton.transform).GetWorldCorners(corners);
-            Vector2 rightMiddle = panelRect.InverseTransformPoint((corners[2] + corners[3]) * 0.5f);
-            r.anchoredPosition = new Vector2(Mathf.Round(rightMiddle.x + 24f), Mathf.Round(rightMiddle.y));
+            PlaceBottomButtons();
+        }
+    }
+
+    // Next and Show Map bigger and the same size (Tommy, 2026-11-25): both as wide as the wider one's word
+    // needs, BottomButtonScale times the plank's size (1 art px = 3 canvas units), side by side BottomButtonGap
+    // apart, the pair centred on the screen where Next stood
+    private const float BottomButtonScale = 1.5f;
+    private const float BottomButtonGap = 24f;
+
+    private void PlaceBottomButtons()
+    {
+        PlankButton next = confirmButton != null ? confirmButton.GetComponent<PlankButton>() : null;
+        if (next == null || mapButton == null) return;
+        RectTransform panelRect = (RectTransform)panel.transform;
+        float width = Mathf.Max(next.NaturalWidth, mapButton.NaturalWidth);
+        float y = Mathf.Round(next.Rect.anchoredPosition.y);
+        float offset = (width * BottomButtonScale + BottomButtonGap) * 0.5f;
+        float centreX = panelRect.rect.center.x;
+        foreach ((RectTransform r, float x) in new[] { (next.Rect, centreX - offset), (mapButton.Rect, centreX + offset) })
+        {
+            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+            r.sizeDelta = new Vector2(width, r.sizeDelta.y);
+            r.localScale = Vector3.one * BottomButtonScale;
+            r.anchoredPosition = new Vector2(Mathf.Round(x), y);
         }
     }
 
@@ -476,14 +493,15 @@ public class LoadoutSelectionUI : MonoBehaviour
         // wants), down to just above Next
         float loadoutBottom = loadoutTop - loadoutSize.y;
         float plantsTop = Even(loadoutBottom - (2f * pad + 4f * Px) - TitleHeight(plantsSection) - TitleGap * Px, false);
-        // Next's top once it's a plank (2 units a pixel, buttonHeight pixels tall), measured from its centre
-        // (before the bake it's still the old, taller button)
+        // Next's top once it's a plank (2 units a pixel, buttonHeight pixels tall, BottomButtonScale times
+        // that), measured from its centre (before the bake it's still the old, taller button)
         float nextTop = panelRect.rect.yMin + 100f;
         if (confirmButton != null)
         {
             Vector3[] corners = new Vector3[4];
             ((RectTransform)confirmButton.transform).GetWorldCorners(corners);
-            nextTop = panelRect.InverseTransformPoint((corners[0] + corners[2]) * 0.5f).y + GameControlsStyle.Instance.buttonHeight;
+            nextTop = panelRect.InverseTransformPoint((corners[0] + corners[2]) * 0.5f).y
+                + GameControlsStyle.Instance.buttonHeight * BottomButtonScale;
         }
         float plantsBottom = Even(nextTop + AboveNext + pad, true);
         Vector2 plantsSize = new Vector2(LevelsPerSection * CardCell.x + 2f * edge, Mathf.Max(CardCell.y + 2f * edge, plantsTop - plantsBottom));
@@ -701,8 +719,9 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     // Next (the scene's ConfirmButton) is the game controls' green plank (Tommy, 2026-11-25), turned into
     // one in place (PlankButton.Adopt, so its Confirm wiring stays), as wide as it was and centred where
-    // it was; faded while there's nothing to confirm (the plank follows the button's interactable). saved
-    // in the scene by Tools > Garden Defense > Bake Planks in Open Scene, else made when the screen opens
+    // it was; grey while there's nothing to confirm (the plank follows the button's interactable). saved
+    // in the scene by Tools > Garden Defense > Bake Planks in Open Scene, else made when the screen opens.
+    // when the screen opens it's sized and placed with Show Map (PlaceBottomButtons)
     public void BuildConfirmPlank()
     {
         if (confirmButton == null || confirmButton.GetComponent<PlankButton>() != null) return;

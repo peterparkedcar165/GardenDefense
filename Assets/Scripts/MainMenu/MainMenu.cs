@@ -16,14 +16,15 @@ public class MainMenu : MonoBehaviour
             b.interactable = true;
     }
 
-    // the menu's buttons big (Tommy, 2026-11-25): each button becomes the game controls' button in place
-    // (PlankButton.Adopt, so its own onClick wiring stays; now Tommy's medium button) at 2 times its size
-    // (1 art px = 4 canvas units, whole pixels), all as wide as the widest, in one evenly spaced column
-    // centred where the column was, Play green, Exit red, the rest yellow; the NOT IMPLEMENTED notes sit
-    // beside their buttons. running it again changes nothing, so the editor's bake and the scene starting
-    // agree
-    private const float PlankScale = 2f;
-    private const float PlankGap = 14f;
+    // the menu's buttons big (Tommy, 2026-11-25): each button becomes a plank button in place
+    // (PlankButton.Adopt, so its own onClick wiring stays), Tommy's large leafy button, at 1.5 times its
+    // size (1 art px = 3 canvas units, whole pixels at 1080), all as wide as the widest (every word fits
+    // the art's own 119 px, so it's drawn exactly as made), in one evenly spaced column centred where the
+    // column was, Play green, Exit red, the rest yellow; the NOT IMPLEMENTED notes sit beside their
+    // buttons. running it again changes nothing, so the editor's bake and the scene starting agree
+    private const float PlankScale = 1.5f;
+    // 4 art px between two buttons
+    private const float PlankGap = 12f;
 
     private Transform MenuCanvas => buttons != null && buttons.Length > 0 && buttons[0] != null ? buttons[0].transform.parent : null;
 
@@ -41,7 +42,7 @@ public class MainMenu : MonoBehaviour
             Button button = child.GetComponent<Button>();
             if (button == null || !(child is RectTransform rect)) continue;
             GameControlsStyle.ButtonColors colors = child.name == "PlayButton" ? look.start : child.name == "QuitButton" ? look.danger : look.pause;
-            rows.Add((rect, rect.anchoredPosition.y, PlankButton.Adopt(button, colors, font)));
+            rows.Add((rect, rect.anchoredPosition.y, PlankButton.Adopt(button, colors, font, true)));
         }
         if (rows.Count == 0) return;
         rows.Sort((a, b) => b.y.CompareTo(a.y));

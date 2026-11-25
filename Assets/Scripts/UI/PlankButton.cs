@@ -13,16 +13,21 @@ using TMPro;
 public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     private const float Px = 2f;
-    // art pixels: the button's height and the room kept clear at each end of the word (the medium
-    // button's ornaments, Tommy 2026-11-25), both from GameControlsStyle
-    private static float Height => GameControlsStyle.Instance.buttonHeight;
-    private static float SidePad => GameControlsStyle.Instance.buttonSidePad;
+    // art pixels, from GameControlsStyle: the button's height, the narrowest it's drawn, the room kept clear
+    // at each end of the word (the medium button's ornaments, Tommy 2026-11-25) and the word's cap top. a
+    // large one (the main menu's leafy button) has its own
+    private float Height => large ? GameControlsStyle.Instance.largeButtonHeight : GameControlsStyle.Instance.buttonHeight;
+    private float MinWidth => large ? GameControlsStyle.Instance.largeButtonWidth : 0f;
+    private float SidePad => large ? GameControlsStyle.Instance.largeButtonSidePad : GameControlsStyle.Instance.buttonSidePad;
+    private int LabelTop => large ? GameControlsStyle.Instance.largeLabelTop : GameControlsStyle.Instance.labelTop;
 
     [SerializeField] private Image face;
     [SerializeField] private Image shine;
     [SerializeField] private RectTransform content;
     [SerializeField] private TextMeshProUGUI label;
     [SerializeField] private GameControlsStyle.ButtonColors colors;
+    [Tooltip("the large leafy button (the main menu's) instead of the medium one")]
+    [SerializeField] private bool large;
     private PixelTextEffect shadow;
     private bool hovered, pressed;
     private Button button;
@@ -43,18 +48,19 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     // Image becomes the face, its text the label (moved into a Content child so it can drop when
     // pressed), and a Shine child is added. the Button keeps its own onClick wiring. running it again on
     // the same button just restyles it
-    public static PlankButton Adopt(Button target, GameControlsStyle.ButtonColors colors, TMP_FontAsset font)
+    public static PlankButton Adopt(Button target, GameControlsStyle.ButtonColors colors, TMP_FontAsset font, bool large = false)
     {
         GameObject go = target.gameObject;
         PlankButton plank = go.GetComponent<PlankButton>();
         if (plank == null) plank = go.AddComponent<PlankButton>();
         plank.button = target;
         plank.colors = colors;
+        plank.large = large;
 
         plank.face = go.GetComponent<Image>();
         if (plank.face == null) plank.face = go.AddComponent<Image>();
         plank.face.enabled = true;
-        plank.face.type = Image.Type.Sliced;
+        plank.face.type = plank.SpriteType;
         plank.face.pixelsPerUnitMultiplier = 1f;
         plank.face.raycastTarget = true;
 
@@ -64,7 +70,7 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             plank.shine = found != null ? found.GetComponent<Image>() : null;
             if (plank.shine == null) plank.shine = plank.NewChild("Shine").gameObject.AddComponent<Image>();
         }
-        plank.shine.type = Image.Type.Sliced;
+        plank.shine.type = plank.SpriteType;
         plank.shine.pixelsPerUnitMultiplier = 1f;
         plank.shine.raycastTarget = false;
         Stretch(plank.shine.rectTransform);
@@ -85,7 +91,7 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         if (plank.label.transform.parent != plank.content) plank.label.transform.SetParent(plank.content, false);
         plank.label.gameObject.SetActive(true);
-        StyleLabel(plank.label, font);
+        StyleLabel(plank.label, font, plank.LabelTop);
         plank.shadow = plank.label.GetComponent<PixelTextEffect>();
         if (plank.shadow == null) plank.shadow = plank.label.gameObject.AddComponent<PixelTextEffect>();
 
@@ -96,8 +102,11 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         return plank;
     }
 
+    // the medium button's middle stretches (it's plain); the large one's repeats, its wood has grain
+    private Image.Type SpriteType => large ? Image.Type.Tiled : Image.Type.Sliced;
+
     // the word: native size, the capitals labelTop art px under the plank's top
-    private static void StyleLabel(TextMeshProUGUI text, TMP_FontAsset font)
+    private static void StyleLabel(TextMeshProUGUI text, TMP_FontAsset font, int labelTop)
     {
         if (font != null) text.font = font;
         text.fontSize = 20f;
@@ -111,7 +120,7 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         r.anchorMin = new Vector2(0f, 1f);
         r.anchorMax = new Vector2(1f, 1f);
         r.pivot = new Vector2(0.5f, 1f);
-        r.anchoredPosition = new Vector2(0f, -(GameControlsStyle.Instance.labelTop - 3) * Px);
+        r.anchoredPosition = new Vector2(0f, -(labelTop - 3) * Px);
         r.sizeDelta = new Vector2(0f, 14f * Px);
     }
 
@@ -159,7 +168,7 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         RectTransform labelRect = NewChild("Label", content);
         label = labelRect.gameObject.AddComponent<TextMeshProUGUI>();
         label.text = text;
-        StyleLabel(label, font);
+        StyleLabel(label, font, LabelTop);
         shadow = labelRect.gameObject.AddComponent<PixelTextEffect>();
 
         button = gameObject.AddComponent<Button>();
@@ -178,18 +187,33 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         Resize();
     }
 
-    private void Resize()
+    private void Resize() => Rect.sizeDelta = new Vector2(NaturalWidth, Height * Px);
+
+    // canvas units: as wide as its word and the clear ends need, at least MinWidth (before any scale)
+    public float NaturalWidth
     {
-        float word = Mathf.Ceil(label.GetPreferredValues(label.text).x / Px);
-        Rect.sizeDelta = new Vector2((word + 2f * SidePad) * Px, Height * Px);
+        get
+        {
+            float word = Mathf.Ceil(label.GetPreferredValues(label.text).x / Px);
+            return Mathf.Max(word + 2f * SidePad, MinWidth) * Px;
+        }
     }
 
     private void Apply()
     {
         if (face == null || shine == null || content == null || label == null) return;
         GameControlsStyle style = GameControlsStyle.Instance;
-        face.sprite = pressed ? style.buttonPressed : hovered ? style.buttonHover : style.buttonIdle;
-        shine.sprite = pressed ? style.buttonPressedShine : hovered ? style.buttonHoverShine : style.buttonIdleShine;
+        if (large && style.largeButton != null)
+        {
+            // one look: hover and pressed are its colours (and the word's drop) only
+            face.sprite = style.largeButton;
+            shine.sprite = style.largeButtonTrim;
+        }
+        else
+        {
+            face.sprite = pressed ? style.buttonPressed : hovered ? style.buttonHover : style.buttonIdle;
+            shine.sprite = pressed ? style.buttonPressedShine : hovered ? style.buttonHoverShine : style.buttonIdleShine;
+        }
         shine.enabled = shine.sprite != null;
         // one that can't be clicked is the grey locked plank (GameControlsStyle.locked), never lit or pressed
         shownUsable = Usable;
