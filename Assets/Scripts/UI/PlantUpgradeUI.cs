@@ -357,9 +357,14 @@ public class PlantUpgradeUI : EntityInfoPanel
                 if (text != null) text.color = style.text;
         if (portraitFrame != null) portraitFrame.color = PlantData.ElementColor(element);
         if (portraitBackdrop != null) portraitBackdrop.color = PlantData.ElementBackdropColor(element);
-        // the skill frame (Tommy, 2026-11-25): its wood takes the element's panel colour; its gold trim
-        // and window stay as drawn. without the wood layer the old per element vine frame shows instead
-        if (SkillFrameBase != null) SkillFrameBase.color = panelColor;
+        // the skill frame (Tommy, 2026-11-25): its wood and its trim (a greyscale copy of the gold, with
+        // the window) both take the element's panel colour. without the wood layer the old per element
+        // vine frame shows instead
+        if (SkillFrameBase != null)
+        {
+            SkillFrameBase.color = panelColor;
+            if (SkillFrameTrim != null) SkillFrameTrim.color = panelColor;
+        }
         else
         {
             PlantInfoPanelStyle.SkillFrame frame = style.FrameFor(element);
@@ -367,19 +372,17 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
-    // the skill frame's wood (SkillFrameBase, next to the icon), found the first time it's needed
-    private Image skillFrameBase;
-    private Image SkillFrameBase
+    // the skill frame's wood and trim (SkillFrameBase and SkillFrameTrim, next to the icon), found the
+    // first time they're needed
+    private Image skillFrameBase, skillFrameTrim;
+    private Image SkillFrameBase => skillFrameBase != null ? skillFrameBase : skillFrameBase = SkillPart("SkillFrameBase");
+    private Image SkillFrameTrim => skillFrameTrim != null ? skillFrameTrim : skillFrameTrim = SkillPart("SkillFrameTrim");
+
+    private Image SkillPart(string name)
     {
-        get
-        {
-            if (skillFrameBase == null && skillIcon != null && skillIcon.transform.parent != null)
-            {
-                Transform found = skillIcon.transform.parent.Find("SkillFrameBase");
-                if (found != null) skillFrameBase = found.GetComponent<Image>();
-            }
-            return skillFrameBase;
-        }
+        Transform parent = skillIcon != null ? skillIcon.transform.parent : null;
+        Transform found = parent != null ? parent.Find(name) : null;
+        return found != null ? found.GetComponent<Image>() : null;
     }
 
     // the plant (or insect) as big as fits the portrait window, bottom centred
