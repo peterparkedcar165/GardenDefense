@@ -255,6 +255,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (!plantPanelsBuilt)
         {
             plantPanelsBuilt = true;
+            // the plant cards' size first: the green panels are measured from the grids
+            UseCardCells();
             BuildPlantPanels();
         }
         if (mapButton == null)
@@ -553,6 +555,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         selectedSquares.Clear();
         HideSlotHint();
 
+        UseCardCells();
         for (int i = 0; i < SaveData.MaxLoadoutSlots; i++)
             selectedSquares.Add(LoadoutSlotSquare.Create(selectedContainer, ShowSlotHint, HideSlotHint));
 
@@ -565,6 +568,7 @@ public class LoadoutSelectionUI : MonoBehaviour
             LoadoutSlot slot = Instantiate(slotPrefab, square.transform);
             slot.Initialize(data, OnSelectedSlotClicked, ShowTooltip, HideTooltip);
             square.ShowPlant(slot, data);
+            square.SetCost(SkillTreeManager.GetEffectiveSunCost(data).ToString(), CardCostColor);
             AddRecommendedBadge(slot, data);
         }
 
@@ -595,15 +599,11 @@ public class LoadoutSelectionUI : MonoBehaviour
     // the plants in sections of five levels, one row each, no labels: levels 1 to 5 at the bottom, later
     // ones above. the registry's slot N is the plant beating level N unlocks (slot 0 the one every save
     // starts with), so a section holds the plants that become available within its five levels. each
-    // plant is a card: its square (the plant bar's bevel frame on its backdrop, tinted by element), its
-    // name and its sun cost under it. a plant not unlocked yet keeps its place as a solid black
-    // silhouette named ??? that costs ?. shown: the section of the level being played and every section
-    // holding an unlocked plant
+    // plant is Tommy's plant card (2026-11-25, PlantCardLook): the plant in its window, its sun cost in
+    // its slot (the card has no room for the name; the tooltip has it). a plant not unlocked yet keeps its
+    // place as a solid black silhouette that costs ?. shown: the section of the level being played and
+    // every section holding an unlocked plant
     private const int LevelsPerSection = 5;
-    private const float CardSquare = 100f;
-    private const float CardNameHeight = 20f;
-    private const float CardCostHeight = 18f;
-    private const float CardHeight = CardSquare + 3f + CardNameHeight + 1f + CardCostHeight;
     private bool availablePrepared;
 
     // the container's grid becomes a column of sections, each with its own grid
@@ -667,7 +667,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         go.layer = panel.layer;
         go.transform.SetParent(unlockedContainer, false);
         GridLayoutGroup grid = go.GetComponent<GridLayoutGroup>();
-        grid.cellSize = new Vector2(CardSquare, CardHeight);
+        grid.cellSize = PlantCardLook.Size;
         grid.spacing = new Vector2(7f, 10f);
         grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         grid.constraintCount = LevelsPerSection;
@@ -695,7 +695,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
     }
 
-    // one plant's card: its square with the plant (or its silhouette), its name, its sun cost
+    // one plant's card: the plant (or its silhouette) in its window, its sun cost in its slot
     private void AddPlantCard(RectTransform grid, PlantData data, bool unlocked)
     {
         GameObject card = new GameObject(data.displayName + " Card", typeof(RectTransform), typeof(CanvasGroup));
@@ -708,14 +708,13 @@ public class LoadoutSelectionUI : MonoBehaviour
         sq.anchorMin = sq.anchorMax = new Vector2(0.5f, 1f);
         sq.pivot = new Vector2(0.5f, 1f);
         sq.anchoredPosition = Vector2.zero;
-        sq.sizeDelta = new Vector2(CardSquare, CardSquare);
 
         if (unlocked)
         {
             LoadoutSlot slot = Instantiate(slotPrefab, square.transform);
             slot.Initialize(data, OnUnlockedSlotClicked, ShowTooltip, HideTooltip);
             square.ShowPlant(slot, data);
-            // the name sits under the square now
+            // the card has no room for the slot's own name
             foreach (TMP_Text own in slot.GetComponentsInChildren<TMP_Text>(true)) own.gameObject.SetActive(false);
             AddRecommendedBadge(slot, data);
             unlockedSlots.Add(slot);
@@ -725,15 +724,12 @@ public class LoadoutSelectionUI : MonoBehaviour
         else
         {
             square.ShowOpen();
-            // its sprite, all dark, between the backdrop and the frame
+            // its sprite, all dark, in the card's window over the trim
             GameObject silhouette = new GameObject("Silhouette", typeof(RectTransform), typeof(Image));
             silhouette.layer = card.layer;
             RectTransform r = (RectTransform)silhouette.transform;
             r.SetParent(square.transform, false);
-            r.SetSiblingIndex(Mathf.Max(0, square.transform.childCount - 2));
-            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
-            r.anchoredPosition = Vector2.zero;
-            r.sizeDelta = new Vector2(CardSquare * 0.9f, CardSquare * 0.9f);
+            PlantCardLook.PlaceInWindow(r);
             Image image = silhouette.GetComponent<Image>();
             image.sprite = data.icon;
             image.preserveAspect = true;
@@ -742,73 +738,20 @@ public class LoadoutSelectionUI : MonoBehaviour
             image.raycastTarget = false;
         }
 
-        // the name, then the sun cost (the one placing it charges, the skill tree's reduction included)
-        TextMeshProUGUI name = NewText(cardRect, unlocked ? data.displayName : "???", 16f, TextAlignmentOptions.Top);
-        // a long name gets a smaller size so it fits the card (set by hand: its shadow copies the size)
-        float nameWidth = name.GetPreferredValues(name.text).x;
-        float roomWidth = CardSquare + 4f;
-        if (nameWidth > roomWidth) name.fontSize = Mathf.Max(10f, Mathf.Floor(16f * roomWidth / nameWidth));
-        PlaceUnder(name.rectTransform, CardSquare + 3f, CardSquare + 6f, CardNameHeight);
-        name.gameObject.AddComponent<PixelTextEffect>().Color = InsectShowcaseStyle.Instance.plantTitleShadow;
-        AddCost(cardRect, unlocked ? SkillTreeManager.GetEffectiveSunCost(data).ToString() : "?", CardSquare + 3f + CardNameHeight + 1f);
+        // the sun cost (the one placing it charges, the skill tree's reduction included) in the card's slot
+        square.SetCost(unlocked ? SkillTreeManager.GetEffectiveSunCost(data).ToString() : "?", CardCostColor);
     }
 
-    // the cost under a card's name: the sun glyph, then the number, centred together
-    private void AddCost(RectTransform card, string cost, float top)
+    // a card's cost: the sun's gold (PlantInfoPanelStyle's sun glyph colour)
+    private static Color CardCostColor => PlantInfoPanelStyle.Instance.normal.sun;
+
+    // the Current Loadout grid's cells the card's size (the scene's grid was made for the old squares)
+    private void UseCardCells()
     {
-        PlantInfoPanelStyle look = PlantInfoPanelStyle.Instance;
-        TextMeshProUGUI text = NewText(card, cost, 16f, TextAlignmentOptions.TopLeft);
-        float textWidth = Mathf.Ceil(text.GetPreferredValues(cost).x);
-        const float SunSize = 14f, Gap = 4f;
-        float total = SunSize + Gap + textWidth;
-
-        GameObject sunGO = new GameObject("Sun", typeof(RectTransform), typeof(Image));
-        sunGO.layer = card.gameObject.layer;
-        RectTransform sun = (RectTransform)sunGO.transform;
-        sun.SetParent(card, false);
-        sun.anchorMin = sun.anchorMax = new Vector2(0.5f, 1f);
-        sun.pivot = new Vector2(0f, 1f);
-        sun.anchoredPosition = new Vector2(Mathf.Round(-total / 2f), -(top + 2f));
-        sun.sizeDelta = new Vector2(SunSize, SunSize);
-        Image sunImage = sunGO.GetComponent<Image>();
-        sunImage.sprite = look.sunGlyph;
-        sunImage.color = look.normal.sun;
-        sunImage.raycastTarget = false;
-
-        RectTransform r = text.rectTransform;
-        r.anchorMin = r.anchorMax = new Vector2(0.5f, 1f);
-        r.pivot = new Vector2(0f, 1f);
-        r.anchoredPosition = new Vector2(Mathf.Round(-total / 2f + SunSize + Gap), -top);
-        r.sizeDelta = new Vector2(textWidth + 2f, CardCostHeight);
-        text.gameObject.AddComponent<PixelTextEffect>().Color = InsectShowcaseStyle.Instance.plantTitleShadow;
+        GridLayoutGroup grid = selectedContainer != null ? selectedContainer.GetComponent<GridLayoutGroup>() : null;
+        if (grid != null && grid.cellSize != PlantCardLook.Size) grid.cellSize = PlantCardLook.Size;
     }
 
-    private TextMeshProUGUI NewText(Transform parent, string value, float size, TextAlignmentOptions align)
-    {
-        InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
-        GameObject go = new GameObject("Text", typeof(RectTransform));
-        go.layer = panel.layer;
-        go.transform.SetParent(parent, false);
-        TextMeshProUGUI text = go.AddComponent<TextMeshProUGUI>();
-        if (s.font != null) text.font = s.font;
-        text.fontSize = size;
-        text.color = s.text;
-        text.alignment = align;
-        text.textWrappingMode = TextWrappingModes.NoWrap;
-        text.raycastTarget = false;
-        text.margin = Vector4.zero;
-        text.text = value;
-        return text;
-    }
-
-    // a rect centred under the top of its card, top units down, width wide and height tall
-    private static void PlaceUnder(RectTransform r, float top, float width, float height)
-    {
-        r.anchorMin = r.anchorMax = new Vector2(0.5f, 1f);
-        r.pivot = new Vector2(0.5f, 1f);
-        r.anchoredPosition = new Vector2(0f, -top);
-        r.sizeDelta = new Vector2(width, height);
-    }
 
     private void OnUnlockedSlotClicked(string plantName)
     {

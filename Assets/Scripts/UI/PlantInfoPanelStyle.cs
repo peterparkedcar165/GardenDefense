@@ -122,6 +122,12 @@ public class PlantInfoPanelStyle : ScriptableObject
     public Sprite slotBackdrop;
     [Tooltip("over a slot that isn't unlocked yet, tinted with lockedText")]
     public Sprite slotPadlock;
+    [Tooltip("the plant card (Tommy, 2026-11-25), the loadout screen's plant squares and the plant bar's: 92 by 117 " +
+        "greyscale wood, tinted with the plant's element panel colour (PlantCardLook)")]
+    public Sprite plantCardBase;
+    [Tooltip("its vines, gold corners, the dark plant window and the cost slot, untinted, drawn over the wood; the " +
+        "plant goes over both")]
+    public Sprite plantCardTrim;
     [Tooltip("frame and backdrop of a slot that isn't unlocked yet")]
     public Color lockedSlotTint = new Color(0.35f, 0.35f, 0.35f, 1f);
     [Tooltip("the whole plant bar square (backdrop, plant and frame) while its plant costs more Sun than the player has")]

@@ -36,8 +36,10 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         data = plantData;
         plant = plantData.plantPrefab;
         if (icon != null) icon.sprite = plantData.icon;
-        if (background != null) background.color = PlantData.ElementBackdropColor(plantData.elementalType);
-        if (frame != null) frame.color = PlantData.ElementColor(plantData.elementalType);
+        // Tommy's plant card (2026-11-25, PlantCardLook): the wood (background) in the element's panel
+        // colour, the trim (frame) as drawn, the plant over both in the card's window
+        if (background != null) background.color = PlantCardLook.Wood(plantData);
+        if (frame != null) frame.color = Color.white;
         if (sunCostText != null) sunCostText.text = FertilizerManager.GetPlacementCost(data).ToString();
         shownCost = ShownNothing;
         if (icon != null) iconColor = icon.color;
@@ -69,12 +71,13 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (icon != null) icon.enabled = false;
         if (sunCostText != null) sunCostText.gameObject.SetActive(false);
         Color tint = PlantSlotLook.UnaffordableTint;
-        if (background != null) background.color = tint;
+        if (background != null) background.color = PlantCardLook.NeutralWood * tint;
         if (frame != null) frame.color = tint;
         // the button off, so an empty square doesn't light up like a plant does under the pointer
         Button button = GetComponent<Button>();
         if (button != null) button.enabled = false;
-        PlantSlotLook.AddPadlock(transform);
+        Image padlock = PlantSlotLook.AddPadlock(transform);
+        if (padlock != null) padlock.rectTransform.anchoredPosition = PlantCardLook.WindowCentre;
     }
 
     void Update()

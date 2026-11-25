@@ -41,6 +41,8 @@ MonoBehaviour:
   skillFrameBase: {fileID: 21300000, guid: 98ffd0318bc849a88508a9c89d28ef31, type: 3}
   skillFrameTrim: {fileID: 21300000, guid: ece3519c6df3489ba40c655a89f824e4, type: 3}
   slotFrame: {fileID: 21300000, guid: eecbfabd503345d09ea5fe0cbfe0cf33, type: 3}
+  plantCardBase: {fileID: 21300000, guid: f55c7821be974508a7c12dcbafb3bc61, type: 3}
+  plantCardTrim: {fileID: 21300000, guid: fadb235113d7475caee65e4929ae827f, type: 3}
   slotBackdrop: {fileID: 21300000, guid: 2e86ae8531494c09b5ed5cc0be85084f, type: 3}
   slotPadlock: {fileID: 21300000, guid: e7c9aa191b7f44af8732924dd926024d, type: 3}
   lockedSlotTint: {r: 0.35, g: 0.35, b: 0.35, a: 1}
