@@ -44,10 +44,8 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     private GameObject lockCover;
     private Image vines;
     private Image padlock;
-    // the frame's wood and gold trim and the icon, darkened while the node is locked (Tommy, 2026-11-25:
-    // like a locked plant slot, PlantSlotLook.LockedTint), with the icon's own colour to go back to
-    private Image frameWood;
-    private Image frameTrim;
+    // the icon, darkened while the node is locked (Tommy, 2026-11-25: like a locked plant slot,
+    // PlantSlotLook.LockedTint; the icon only, the frame stays as it is), with its own colour to go back to
     private Image iconImage;
     private Color iconTint = Color.white;
     private bool hovering;
@@ -124,10 +122,7 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                               : PlantData.ElementBackdropColor(plant.elementalType);
 
         if (lockCover != null) lockCover.SetActive(locked);
-        Color dark = locked ? PlantSlotLook.LockedTint : Color.white;
-        if (frameWood != null) frameWood.color = PlantData.ElementPanelColor(plant.elementalType) * dark;
-        if (frameTrim != null) frameTrim.color = dark;
-        if (iconImage != null) iconImage.color = iconTint * dark;
+        if (iconImage != null) iconImage.color = iconTint * (locked ? PlantSlotLook.LockedTint : Color.white);
         ApplyHover();
     }
 
@@ -172,7 +167,6 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             frame.preserveAspect = false;
             frame.color = PlantData.ElementPanelColor(plant.elementalType);
             frame.raycastTarget = false;
-            frameWood = frame;
             frame.rectTransform.sizeDelta = new Vector2(FrameSize * Px, FrameSize * Px);
             outline.SetAsFirstSibling();
             if (look.skillFrameTrim != null && outline.Find("Trim") == null)
@@ -182,8 +176,6 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 trim.anchorMax = Vector2.one;
                 trim.offsetMin = trim.offsetMax = Vector2.zero;
             }
-            Transform trimFound = outline.Find("Trim");
-            frameTrim = trimFound != null ? trimFound.GetComponent<Image>() : null;
         }
 
         if (rankText != null)
@@ -202,8 +194,8 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 rankText.gameObject.AddComponent<PixelTextEffect>().Color = s.outline;
         }
 
-        // the lock cover, over the frame: the round 6 vines and the padlock (the frame and icon under it are
-        // darkened in Refresh, like a locked plant slot, instead of a black square over them)
+        // the lock cover, over the frame: the round 6 vines and the padlock (the icon under it is darkened in
+        // Refresh, like a locked plant slot, instead of a black square over the frame and icon)
         if (wrapper != null)
         {
             GameObject cover = new GameObject("LockCover", typeof(RectTransform));

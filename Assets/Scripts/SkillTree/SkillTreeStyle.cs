@@ -60,7 +60,7 @@ public class SkillTreeStyle : ScriptableObject
     public Color rankConfirmed = Hex("#FFD84A");
     [Tooltip("the 1 pixel shadow under the ranks and the outline round the links")]
     public Color outline = Hex("#1A1208");
-    [Tooltip("no longer used (2026-11-25): a locked node's frame and icon are darkened with " +
+    [Tooltip("no longer used (2026-11-25): a locked node's icon is darkened with " +
         "PlantInfoPanelStyle.lockedSlotTint, like a locked plant slot, instead of this black over them")]
     [Range(0f, 1f)] public float lockedDim = 0.58f;
 

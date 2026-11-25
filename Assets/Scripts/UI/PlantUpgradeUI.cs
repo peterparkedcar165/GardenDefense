@@ -360,8 +360,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (portraitBackdrop != null) portraitBackdrop.color = PlantData.ElementBackdropColor(element);
         // the skill frame (Tommy, 2026-11-25): its wood takes the element's panel colour; its gold trim
         // and window stay as drawn. without the wood layer the old per element vine frame shows instead
-        skillWood = panelColor;
-        if (SkillFrameBase != null) SkillFrameBase.color = panelColor * skillDarkness;
+        if (SkillFrameBase != null) SkillFrameBase.color = panelColor;
         else
         {
             PlantInfoPanelStyle.SkillFrame frame = style.FrameFor(element);
@@ -396,25 +395,14 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
-    // a skill not unlocked yet is darkened like a locked plant slot (Tommy, 2026-11-25): the frame's wood
-    // (in skillWood, the element's panel colour), its gold trim and the icon times PlantSlotLook.LockedTint,
-    // under the vines and the padlock. the black square the Locked overlay had over them is switched off
-    private Color skillWood = Color.white;
-    private Color skillDarkness = Color.white;
-    private Image skillFrameTrim;
+    // a skill not unlocked yet has its icon darkened like a locked plant slot (Tommy, 2026-11-25: the icon
+    // only, the frame stays as it is), times PlantSlotLook.LockedTint, under the vines and the padlock. the
+    // black square the Locked overlay had over the frame and icon is switched off
     private bool lockedDimOff;
 
     private void DarkenSkill(bool locked)
     {
-        skillDarkness = locked ? PlantSlotLook.LockedTint : Color.white;
-        if (SkillFrameBase != null) SkillFrameBase.color = skillWood * skillDarkness;
-        if (skillFrameTrim == null && skillIcon != null && skillIcon.transform.parent != null)
-        {
-            Transform found = skillIcon.transform.parent.Find("SkillFrameTrim");
-            if (found != null) skillFrameTrim = found.GetComponent<Image>();
-        }
-        if (skillFrameTrim != null) skillFrameTrim.color = skillDarkness;
-        if (skillIcon != null) skillIcon.color = skillDarkness;
+        if (skillIcon != null) skillIcon.color = locked ? PlantSlotLook.LockedTint : Color.white;
         if (!lockedDimOff && lockedSkillSquare != null)
         {
             lockedDimOff = true;
