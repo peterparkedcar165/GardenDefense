@@ -37,6 +37,6 @@ public class Mosquito : FlyingInsect
 
     public override string GetAbilityDescription() =>
         $"Attacks apply <color=#8B0000><b>Mosquito Bite</b></color>, dealing <color=green><b>{(MData?.biteDPS ?? biteDPS):F0}</b></color> " +
-        $"<color=#6B8E23>Grass</color> True damage per second and reducing incoming healing by <color=red><b>{(MData?.biteHealingReductionPercent ?? biteHealingReductionPercent) * 100f:F0}%</b></color> for <b>{(MData?.biteDuration ?? biteDuration):F0}</b> seconds.\n\n" +
-        $"While biting, Mosquito gains <color=#8B0000><b>Bloodsucker</b></color>, healing <color=green><b>{(MData?.bloodsuckerHealPerSecond ?? bloodsuckerHealPerSecond):F0}</b></color> + <color=green><b>{(MData?.bloodsuckerHealPercent ?? bloodsuckerHealPercent) * 100f:F0}%</b></color> max health per second.";
+        $"<color=green><b>Grass</b></color> <color=white><b>True Damage</b></color> per second and reducing <color=#FF6B81><b>Incoming Healing</b></color> by <color=red><b>{(MData?.biteHealingReductionPercent ?? biteHealingReductionPercent) * 100f:F0}%</b></color> for <b>{(MData?.biteDuration ?? biteDuration):F0}</b> seconds.\n\n" +
+        $"While biting, {ColoredName(this)} gains <color=#8B0000><b>Bloodsucker</b></color>, healing <color=green><b>{(MData?.bloodsuckerHealPerSecond ?? bloodsuckerHealPerSecond):F0}</b></color> + <color=green><b>{(MData?.bloodsuckerHealPercent ?? bloodsuckerHealPercent) * 100f:F0}%</b></color> <color=red><b>Max Health</b></color> per second.";
 }

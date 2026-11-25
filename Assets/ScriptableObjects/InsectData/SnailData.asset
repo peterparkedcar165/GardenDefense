@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SnailData
   displayName: Snail
   nameColor: {r: 0.5188679, g: 0.5188679, b: 0.40383586, a: 1}
-  description: A slow, tough insect behind a big shield.
+  description: Slow but tough, benefits strongly from shields.
   sprite: {fileID: 21300000, guid: 6e83769186f25154dab65705b4a8e62c, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d0a925c758eadd44eb3532b9a2eeee0f, type: 3}
   widgetHeightOffset: 0

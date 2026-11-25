@@ -105,8 +105,8 @@ public class Moth : FlyingInsect
 
     // WinterMoth adds its own lines after this one
     public override string GetAbilityDescription() =>
-        $"Goes after the nearest plant that gives off light within its targeting range (<b>{(data != null ? data.baseTargetingRange : targetingRange):0.#}</b>). " +
-        $"Increases Movement Speed by <color=green><b>{IlluminativeHasteEffect.speedBonus * 100f:F0}%</b></color> when illuminated.";
+        $"Increase <color=green><b>Movement Speed</b></color> by <color=green><b>{IlluminativeHasteEffect.speedBonus * 100f:F0}%</b></color> when illuminated.\n" +
+        "Aggressive against plants that emit light.";
 
     // its data says passive, but it goes after plants that give off light (the target override above)
     public override string AggressivityNote() =>

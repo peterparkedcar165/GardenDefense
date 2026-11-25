@@ -25,6 +25,7 @@ public class QueenAnt : Ant
 
     public override string GetAbilityDescription()
     {
+        // the ants it can birth, each in its own name colour (Tommy, 2026-11-25), the last two joined by "and"
         string list = "none configured";
         if (antPrefabs != null && antPrefabs.Length > 0)
         {
@@ -32,13 +33,16 @@ public class QueenAnt : Ant
             foreach (GameObject prefab in antPrefabs)
             {
                 Insect ant = prefab != null ? prefab.GetComponent<Insect>() : null;
-                if (ant != null) names.Add(ant.GetName());
+                if (ant != null) names.Add(ColoredName(ant));
             }
-            list = string.Join(", ", names);
+            list = names.Count > 1
+                ? string.Join(", ", names.GetRange(0, names.Count - 1)) + " and " + names[names.Count - 1]
+                : string.Join("", names);
         }
         return $"Every <b>{spawnInterval:F0}</b> seconds, gives birth to <b>{antsPerSpawn}</b> ants, randomly chosen between {list}.\n\n" +
                $"Grants <color=#FFD700><b>Queen's Aura</b></color> to other ants within a <color=green><b>{auraRadius:F0}</b></color>-radius, " +
-               $"regenerating <color=green><b>{AuraHealPercent * 100f:F0}%</b></color> max health per second and granting <color=#00CED1><b>+{auraArmorBonus:F0} Armor</b></color> / Magic Armor.";
+               $"regenerating <color=green><b>{AuraHealPercent * 100f:F0}%</b></color> <color=red><b>Max Health</b></color> per second and granting " +
+               $"<color=green><b>+{auraArmorBonus:F0}</b></color> <color=#00CED1><b>Armor</b></color> and <color=#FF69B4><b>Magic Armor</b></color>.";
     }
 
     protected override void Awake()

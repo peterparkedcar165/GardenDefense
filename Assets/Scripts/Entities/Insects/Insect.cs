@@ -1627,9 +1627,17 @@ public abstract class Insect : Entity, IAttackable
             + TraitLines() + AggressivityLine();
     }
 
-    // the shared trait lines and the aggressivity line without the blank line before them, for the
-    // loadout screen's insect tooltip, which shows the description and the ability in their own boxes
-    public string GetTraitsAndAggressivityText() => (TraitLines() + AggressivityLine()).TrimStart('\n');
+    // the shared traits the loadout screen's insect tooltip lists under its boxes: only the ones with no
+    // tag of their own (cryotolerance). Flying and the aggressivity are tags there (Tommy, 2026-11-25)
+    public string GetUntaggedTraitsText() => (this is ICryotolerant ? CryotoleranceLine() : "").TrimStart('\n');
+
+    // an insect's name in its own name colour (InsectData.nameColor), bold, for ability texts
+    public static string ColoredName(Insect insect)
+    {
+        if (insect == null) return "";
+        Color color = insect.data != null && insect.data.nameColor.a > 0f ? insect.data.nameColor : Color.white;
+        return $"<color=#{ColorUtility.ToHtmlStringRGB(color)}><b>{insect.GetName()}</b></color>";
+    }
 
     // the word the game shows for an aggressivity (Tommy, 2026-11-24: Passive, not None)
     public static string AggressivityName(Aggressivity aggressivity) =>

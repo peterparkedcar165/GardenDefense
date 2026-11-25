@@ -285,9 +285,6 @@ public class InsectShowcase : MonoBehaviour
             yield return new TipText { title = "Flying", category = "Movement",
                 body = $"Flies over path blockers, and is untargetable by {Keyword("Melee", MeleeColor)} plants. Temporarily grounded " +
                        $"when inflicted with {Keyword("immobilization", ImmobilizeColor)} effects.\n\nMoves faster when flying." };
-        if (data.baseMovementSpeed <= style.slowSpeed)
-            yield return new TipText { title = "Slow", category = "Movement",
-                body = $"Moves at {data.baseMovementSpeed:0.##}. Most insects move at 0.6 to 0.9." };
     }
 
     // the tags' keyword colours: Melee is the tooltips' melee colour (MulchData), immobilization the
@@ -302,7 +299,6 @@ public class InsectShowcase : MonoBehaviour
             return title == Insect.AggressivityName(Aggressivity.High) ? style.aggressive
                  : title == Insect.AggressivityName(Aggressivity.Low) ? style.mildlyAggressive : style.passive;
         if (title == "Flying") return style.flying;
-        if (title == "Slow") return style.slow;
         return style.text;
     }
 
@@ -480,7 +476,11 @@ public class InsectShowcase : MonoBehaviour
             return r;
         }
 
-        y += AddText(cardTip, insect.GetTraitsAndAggressivityText(), 8f, y, w - 16f, style.text, style.textSize, true) + 6f;
+        // Flying and the aggressivity are only tags now (Tommy, 2026-11-25); other traits stay listed
+        string traits = insect.GetUntaggedTraitsText();
+        if (!string.IsNullOrEmpty(traits))
+            y += AddText(cardTip, traits, 8f, y, w - 16f, style.text, style.textSize, true) + 2f;
+        y += 4f;
 
         cardTip.sizeDelta = new Vector2(w * Px, y * Px);
         cardTip.SetAsLastSibling();

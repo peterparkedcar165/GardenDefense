@@ -26,7 +26,7 @@ public class Snail : Insect
     }
 
     public override string GetAbilityDescription() =>
-        $"Spawns with a shield of <b>{(data != null ? data.startingShield : 0f):F0}</b>.\n\n" +
-        $"While Shielded, the Snail gains <color=#00CED1><b>{ArmorBonusWhileShielded:F0}</b></color> Armor.\n\n" +
-        $"While Unshielded, the Snail gains <color=green><b>{MoveSpeedBonusWhileUnshielded * 100f:F0}%</b></color> Movement Speed.";
+        $"Whenever the {ColoredName(this)} is <color=grey><b>Shielded</b></color>, it gains <color=#00CED1><b>{ArmorBonusWhileShielded:F0} Armor</b></color>, " +
+        $"otherwise, it gains <color=green><b>{MoveSpeedBonusWhileUnshielded * 100f:F0}% Movement Speed</b></color>.\n\n" +
+        $"Spawns <color=grey><b>Shielded</b></color> for <color=grey><b>{(data != null ? data.startingShield : 0f):F0}</b></color>.";
 }

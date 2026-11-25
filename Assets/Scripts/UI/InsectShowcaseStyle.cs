@@ -97,7 +97,6 @@ public class InsectShowcaseStyle : ScriptableObject
     public Color mildlyAggressive = Hex("#FFB973");
     public Color aggressive = Hex("#FF7A66");
     public Color flying = Hex("#8FD0FF");
-    public Color slow = Hex("#D6BD84");
 
     [Header("Element colours (the resistance names)")]
     public Color fireText = Hex("#FFA500");
@@ -106,10 +105,6 @@ public class InsectShowcaseStyle : ScriptableObject
     public Color poisonText = Hex("#C07BE0");
     public Color iceText = Hex("#00FFFF");
     public Color windText = Hex("#B2EBF2");
-
-    [Header("Tags: when an insect gets one")]
-    [Tooltip("Slow at this movement speed or less")]
-    public float slowSpeed = 0.3f;
 
     [Header("Sizes (art pixels; 1 art pixel = 2 canvas units)")]
     public int panelWidth = 240;
