@@ -57,12 +57,15 @@ public class PlantUpgradeUI : EntityInfoPanel
     private const float Px = 2f;
     private const int LevelBarStep = 14;
     // round 6: the mulch row's slots grew to 32 at the game's 232 width, so the mulch inset is 4
-    // taller than the design's 38 and the panel 218 (the design's 214)
-    private const int PlantPanelHeight = 218;
-    private const int InsectPanelHeight = 96;
+    // taller than the design's 38 and the panel 218 (the design's 214). the wood panel (Tommy,
+    // 2026-11-25): the name sits on its plate at the top, so everything under the old name line moved
+    // up 10, and the panel ends 10 under the content for the frame's bottom flourishes: 212 for a
+    // plant, 90 for an insect, the first level bar 29 down
+    private const int PlantPanelHeight = 212;
+    private const int InsectPanelHeight = 90;
     private const int TopInsetHeight = 68;
     private const int LevelBarX = 79;
-    private const int FirstLevelBarY = 39;
+    private const int FirstLevelBarY = 29;
     private const int SideButtonGap = 3;
 
     [Header("Layout")]
