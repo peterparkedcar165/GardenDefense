@@ -8,65 +8,69 @@ public class MainMenu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        SkinButtons();
+        // the planks are saved in the scene once Tools > Garden Defense > Bake Main Menu Planks has run;
+        // until then (or for a button added since) they're made here when the scene starts
+        if (!PlanksBaked()) SkinButtons();
         foreach (Button b in buttons)
             b.interactable = true;
     }
 
-    // the menu's buttons as big planks (Tommy, 2026-11-25): the game controls' plank at 1.5 times its
-    // size (1 art px = 3 canvas units, still whole pixels at 1080p), all as wide as the widest, in one
-    // evenly spaced column centred where the old column was, Play green, Exit red, the rest yellow.
-    // each plank clicks its old button (only while that one is interactable), so the scene's wiring
-    // stays; the NOT IMPLEMENTED notes move beside their buttons
+    // the menu's buttons as big planks (Tommy, 2026-11-25): each button becomes the game controls'
+    // plank in place (PlankButton.Adopt, so its own onClick wiring stays) at 1.5 times its size (1 art
+    // px = 3 canvas units, still whole pixels at 1080p), all as wide as the widest, in one evenly spaced
+    // column centred where the column was, Play green, Exit red, the rest yellow; the NOT IMPLEMENTED
+    // notes sit beside their buttons. running it again changes nothing, so the editor's bake and the
+    // scene starting agree
     private const float PlankScale = 1.5f;
     private const float PlankGap = 14f;
 
-    private void SkinButtons()
+    private Transform MenuCanvas => buttons != null && buttons.Length > 0 && buttons[0] != null ? buttons[0].transform.parent : null;
+
+    private bool PlanksBaked()
     {
-        Transform canvas = buttons != null && buttons.Length > 0 && buttons[0] != null ? buttons[0].transform.parent : null;
+        Transform canvas = MenuCanvas;
+        if (canvas == null) return true;
+        foreach (Transform child in canvas)
+            if (child.GetComponent<Button>() != null && child.GetComponent<PlankButton>() == null) return false;
+        return true;
+    }
+
+    public void SkinButtons()
+    {
+        Transform canvas = MenuCanvas;
         if (canvas == null) return;
         GameControlsStyle look = GameControlsStyle.Instance;
         TMPro.TMP_FontAsset font = InsectShowcaseStyle.Instance.font;
 
         // every button on the menu's canvas, top to bottom as the scene has them
-        var rows = new System.Collections.Generic.List<(RectTransform rect, Button button, float oldY, PlankButton plank)>();
+        var rows = new System.Collections.Generic.List<(RectTransform rect, float y, PlankButton plank)>();
         foreach (Transform child in canvas)
         {
             Button button = child.GetComponent<Button>();
             if (button == null || !(child is RectTransform rect)) continue;
-            TMPro.TMP_Text word = child.GetComponentInChildren<TMPro.TMP_Text>(true);
-            string text = word != null && !string.IsNullOrEmpty(word.text) ? word.text : child.name;
             GameControlsStyle.ButtonColors colors = child.name == "PlayButton" ? look.start : child.name == "QuitButton" ? look.danger : look.pause;
-            Image face = child.GetComponent<Image>();
-            if (face != null) face.enabled = false;
-            if (word != null) word.gameObject.SetActive(false);
-            Button target = button;
-            PlankButton plank = PlankButton.Create(rect, text, colors, font, () => { if (target.interactable) target.onClick.Invoke(); });
-            rows.Add((rect, button, rect.anchoredPosition.y, plank));
+            rows.Add((rect, rect.anchoredPosition.y, PlankButton.Adopt(button, colors, font)));
         }
         if (rows.Count == 0) return;
-        rows.Sort((a, b) => b.oldY.CompareTo(a.oldY));
+        rows.Sort((a, b) => b.y.CompareTo(a.y));
 
         float width = 0f, height = 0f, top = float.MinValue, bottom = float.MaxValue;
         foreach (var row in rows)
         {
             width = Mathf.Max(width, row.plank.Rect.sizeDelta.x);
             height = row.plank.Rect.sizeDelta.y;
-            top = Mathf.Max(top, row.oldY);
-            bottom = Mathf.Min(bottom, row.oldY);
+            top = Mathf.Max(top, row.y);
+            bottom = Mathf.Min(bottom, row.y);
         }
         float pitch = height * PlankScale + PlankGap;
         float firstY = Mathf.Round((top + bottom) * 0.5f + (rows.Count - 1) * pitch * 0.5f);
         for (int i = 0; i < rows.Count; i++)
         {
             RectTransform r = rows[i].rect;
-            r.sizeDelta = new Vector2(width * PlankScale, height * PlankScale);
+            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+            r.sizeDelta = new Vector2(width, height);
+            r.localScale = Vector3.one * PlankScale;
             r.anchoredPosition = new Vector2(r.anchoredPosition.x, firstY - i * pitch);
-            RectTransform p = rows[i].plank.Rect;
-            p.anchorMin = p.anchorMax = p.pivot = new Vector2(0.5f, 0.5f);
-            p.anchoredPosition = Vector2.zero;
-            p.sizeDelta = new Vector2(width, height);
-            p.localScale = Vector3.one * PlankScale;
         }
 
         // a NOT IMPLEMENTED note goes right of the button it stood beside
@@ -75,7 +79,7 @@ public class MainMenu : MonoBehaviour
             if (!child.name.StartsWith("NotImplementedText") || !(child is RectTransform note)) continue;
             var nearest = rows[0];
             foreach (var row in rows)
-                if (Mathf.Abs(row.oldY - note.anchoredPosition.y) < Mathf.Abs(nearest.oldY - note.anchoredPosition.y)) nearest = row;
+                if (Mathf.Abs(row.y - note.anchoredPosition.y) < Mathf.Abs(nearest.y - note.anchoredPosition.y)) nearest = row;
             note.pivot = new Vector2(0f, 0.5f);
             note.anchoredPosition = new Vector2(nearest.rect.anchoredPosition.x + width * PlankScale * 0.5f + 24f, nearest.rect.anchoredPosition.y);
             TMPro.TMP_Text label = note.GetComponent<TMPro.TMP_Text>();
