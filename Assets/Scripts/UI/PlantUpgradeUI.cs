@@ -368,12 +368,10 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
-    // the skill icon at a whole number of canvas units per pixel, the most that fits the gold frame's 66
-    // unit window, centred where the prefab puts it (Tommy's 54 px Acorn Knight icon draws 54, the 64 px
-    // element icons 64); one bigger than the window is fitted into 64 as before. the cooldown sweep
-    // covers the same square
+    // the skill icon fills the gold frame's 66 unit window (Tommy, 2026-11-25: stretched to it, not kept
+    // at whole pixels), centred where the prefab puts it; a non square icon keeps its shape inside it.
+    // the cooldown sweep covers the same square
     private const float SkillWindowSize = 66f;
-    private const float SkillIconFallback = 64f;
     private Vector2 skillIconCentre;
     private bool skillIconCentreKnown;
 
@@ -387,10 +385,7 @@ public class PlantUpgradeUI : EntityInfoPanel
             skillIconCentreKnown = true;
         }
         Vector2 pixels = icon.rect.size;
-        float longest = Mathf.Max(pixels.x, pixels.y);
-        Vector2 size = longest <= SkillWindowSize
-            ? pixels * Mathf.Max(1f, Mathf.Floor(SkillWindowSize / longest))
-            : pixels * (SkillIconFallback / longest);
+        Vector2 size = pixels * (SkillWindowSize / Mathf.Max(pixels.x, pixels.y));
         foreach (Image image in new[] { skillIcon, skillCooldownOverlay })
         {
             if (image == null) continue;
