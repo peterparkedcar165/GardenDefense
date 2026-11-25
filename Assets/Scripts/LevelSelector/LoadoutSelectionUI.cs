@@ -255,8 +255,9 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (!plantPanelsBuilt)
         {
             plantPanelsBuilt = true;
-            // the plant cards' size first: the green panels are measured from the grids
+            // the plant cards' size and the sections' places first: the green panels are measured from them
             UseCardCells();
+            LayOutPlantSections();
             BuildPlantPanels();
         }
         if (mapButton == null)
@@ -295,8 +296,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (loadoutSection == null || plantsSection == null) return;
 
         // each title's drawn text clear of its grid's box: they overlapped the dark boxes (Tommy, 2026-11-24)
-        LiftTitle(loadoutSection, selectedContainer as RectTransform);
-        LiftTitle(plantsSection, BoxIn(plantsSection));
+        PlaceTitle(loadoutSection, selectedContainer as RectTransform);
+        PlaceTitle(plantsSection, BoxIn(plantsSection));
 
         Rect upper = BoundsIn(panelRect, loadoutSection);
         Rect lower = BoundsIn(panelRect, plantsSection);
@@ -396,13 +397,11 @@ public class LoadoutSelectionUI : MonoBehaviour
     // art pixels between a section title's drawn letters and the top of its grid's box
     private const float TitleGap = 4f;
 
-    // moves a section's title up until its drawn text ends TitleGap pixels above the box
-    private static void LiftTitle(Transform section, RectTransform box)
+    // moves a section's title up or down until its drawn text ends TitleGap pixels above the box
+    private static void PlaceTitle(Transform section, RectTransform box)
     {
         if (box == null) return;
-        TMP_Text title = null;
-        foreach (Transform child in section)
-            if ((title = child.GetComponent<TMP_Text>()) != null) break;
+        TMP_Text title = TitleOf(section);
         if (title == null) return;
         title.ForceMeshUpdate();
         Bounds drawn = title.textBounds;
@@ -411,9 +410,127 @@ public class LoadoutSelectionUI : MonoBehaviour
         Vector3[] corners = new Vector3[4];
         box.GetWorldCorners(corners);
         float boxTop = section.InverseTransformPoint(corners[1]).y;
-        float lift = boxTop + TitleGap * 2f - textBottom;
-        if (lift > 0f) title.rectTransform.anchoredPosition += new Vector2(0f, Mathf.Ceil(lift));
+        float move = Mathf.Round(boxTop + TitleGap * 2f - textBottom);
+        if (move != 0f) title.rectTransform.anchoredPosition += new Vector2(0f, move);
     }
+
+    private static TMP_Text TitleOf(Transform section)
+    {
+        foreach (Transform child in section)
+        {
+            TMP_Text title = child.GetComponent<TMP_Text>();
+            if (title != null) return title;
+        }
+        return null;
+    }
+
+    // how tall a section title's drawn letters are
+    private static float TitleHeight(Transform section)
+    {
+        TMP_Text title = TitleOf(section);
+        if (title == null) return 0f;
+        title.ForceMeshUpdate();
+        return Mathf.Max(0f, title.textBounds.size.y);
+    }
+
+    // ---------- the cards' size and the two sections' places (Tommy, 2026-11-25) ----------
+    // the plant cards half again the art's size, touching, each grid centred in its dark box. Current
+    // Loadout: its eight cards in two rows of four. Available Plants: five a row, its box as tall as the
+    // screen leaves above Next (it scrolls). both boxes centred on the screen, each title TitleGap pixels
+    // over its box, the two green panels' pads between them (BuildPlantPanels draws the panels after)
+    private const float CardScale = 1.5f;
+    private static readonly Vector2 CardCell = new Vector2(Mathf.Round(PlantCardLook.ArtWidth * CardScale),
+        Mathf.Round(PlantCardLook.ArtHeight * CardScale));
+    private const int LoadoutColumns = 4;
+    // canvas units: the inset box's 2 pixel border, then the room between it and the cards
+    private const float BoxBorder = 4f;
+    private const float CardInset = 4f;
+    // canvas units between the plants panel's bottom and the top of Next
+    private const float AboveNext = 12f;
+
+    private void LayOutPlantSections()
+    {
+        RectTransform panelRect = (RectTransform)panel.transform;
+        Transform loadoutSection = SectionOf(selectedContainer);
+        Transform plantsSection = SectionOf(unlockedContainer);
+        RectTransform loadoutBox = selectedContainer as RectTransform;
+        RectTransform plantsBox = plantsSection != null ? BoxIn(plantsSection) : null;
+        if (loadoutSection == null || plantsSection == null || loadoutBox == null || plantsBox == null) return;
+
+        const float Px = 2f;
+        float pad = InsectShowcaseStyle.Instance.plantPanelPad * Px;
+        float edge = BoxBorder + CardInset;
+        float centreX = panelRect.rect.center.x;
+
+        // Current Loadout: from the screen's top, its panel's pad and its title down
+        float loadoutTop = Even(panelRect.rect.yMax - 8f * Px - pad - TitleHeight(loadoutSection) - TitleGap * Px, false);
+        Vector2 loadoutSize = new Vector2(LoadoutColumns * CardCell.x + 2f * edge,
+            Mathf.CeilToInt((float)SaveData.MaxLoadoutSlots / LoadoutColumns) * CardCell.y + 2f * edge);
+        ContentSizeFitter fitter = loadoutBox.GetComponent<ContentSizeFitter>();
+        if (fitter != null) fitter.enabled = false;
+        PlaceBox(loadoutBox, loadoutSection, panelRect, centreX, loadoutTop, loadoutSize);
+        GridLayoutGroup grid = loadoutBox.GetComponent<GridLayoutGroup>();
+        if (grid != null) grid.padding = new RectOffset((int)edge, (int)edge, (int)edge, (int)edge);
+
+        // Available Plants: under it, room for both panels' pads between them (what BuildPlantPanels
+        // wants), down to just above Next
+        float loadoutBottom = loadoutTop - loadoutSize.y;
+        float plantsTop = Even(loadoutBottom - (2f * pad + 4f * Px) - TitleHeight(plantsSection) - TitleGap * Px, false);
+        // Next's top once it's a plank (2 units a pixel, buttonHeight pixels tall), measured from its centre
+        // (before the bake it's still the old, taller button)
+        float nextTop = panelRect.rect.yMin + 100f;
+        if (confirmButton != null)
+        {
+            Vector3[] corners = new Vector3[4];
+            ((RectTransform)confirmButton.transform).GetWorldCorners(corners);
+            nextTop = panelRect.InverseTransformPoint((corners[0] + corners[2]) * 0.5f).y + GameControlsStyle.Instance.buttonHeight;
+        }
+        float plantsBottom = Even(nextTop + AboveNext + pad, true);
+        Vector2 plantsSize = new Vector2(LevelsPerSection * CardCell.x + 2f * edge, Mathf.Max(CardCell.y + 2f * edge, plantsTop - plantsBottom));
+        PlaceBox(plantsBox, plantsSection, panelRect, centreX, plantsTop, plantsSize);
+        // the cards scroll inside the box's border, not over it
+        ScrollRect scroll = plantsBox.GetComponent<ScrollRect>();
+        RectTransform viewport = scroll != null ? scroll.viewport : null;
+        if (viewport != null)
+        {
+            viewport.offsetMin = new Vector2(BoxBorder, BoxBorder);
+            viewport.offsetMax = new Vector2(-BoxBorder, -BoxBorder);
+        }
+
+        PlaceTitle(loadoutSection, loadoutBox);
+        PlaceTitle(plantsSection, plantsBox);
+        foreach (Transform section in new[] { loadoutSection, plantsSection })
+        {
+            TMP_Text title = TitleOf(section);
+            if (title == null) continue;
+            Vector2 at = title.rectTransform.anchoredPosition;
+            title.rectTransform.anchoredPosition = new Vector2(at.x + XIn(section, panelRect, centreX) - TitleCentreX(title, section), at.y);
+        }
+    }
+
+    // a box centred on x with its top at top (both in the loadout panel's space), size wide and tall
+    private static void PlaceBox(RectTransform box, Transform section, RectTransform panelRect, float x, float top, Vector2 size)
+    {
+        box.anchorMin = box.anchorMax = new Vector2(0.5f, 0.5f);
+        box.pivot = new Vector2(0.5f, 1f);
+        box.sizeDelta = size;
+        Vector3 local = section.InverseTransformPoint(panelRect.TransformPoint(new Vector3(x, top, 0f)));
+        // the section's own rect centre is where a centre anchored child's position starts
+        Vector2 origin = ((RectTransform)section).rect.center;
+        box.anchoredPosition = new Vector2(Mathf.Round(local.x - origin.x), Mathf.Round(local.y - origin.y));
+    }
+
+    private static float XIn(Transform section, RectTransform panelRect, float x) =>
+        section.InverseTransformPoint(panelRect.TransformPoint(new Vector3(x, 0f, 0f))).x;
+
+    private static float TitleCentreX(TMP_Text title, Transform section)
+    {
+        RectTransform r = title.rectTransform;
+        return section.InverseTransformPoint(r.TransformPoint(r.rect.center)).x;
+    }
+
+    // a value on the 2 unit pixel grid, rounded down or up
+    private static float Even(float v, bool up) => (up ? Mathf.Ceil(v / 2f) : Mathf.Floor(v / 2f)) * 2f;
 
     // what a section's active children cover (a text's drawn letters too), in the loadout panel's own space
     private static Rect BoundsIn(RectTransform space, Transform section)
@@ -557,7 +674,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
         UseCardCells();
         for (int i = 0; i < SaveData.MaxLoadoutSlots; i++)
-            selectedSquares.Add(LoadoutSlotSquare.Create(selectedContainer, ShowSlotHint, HideSlotHint));
+            selectedSquares.Add(LoadoutSlotSquare.Create(selectedContainer, CardScale, ShowSlotHint, HideSlotHint));
 
         int filled = 0;
         foreach (string plantName in selectedLoadout)
@@ -611,17 +728,14 @@ public class LoadoutSelectionUI : MonoBehaviour
     {
         if (availablePrepared) return;
         availablePrepared = true;
-        RectOffset padding = new RectOffset(20, 20, 20, 30);
         GridLayoutGroup oldGrid = unlockedContainer.GetComponent<GridLayoutGroup>();
-        if (oldGrid != null)
-        {
-            padding = new RectOffset(oldGrid.padding.left, oldGrid.padding.right, oldGrid.padding.top, oldGrid.padding.bottom);
-            DestroyImmediate(oldGrid);   // one layout group per object
-        }
+        if (oldGrid != null) DestroyImmediate(oldGrid);   // one layout group per object
         VerticalLayoutGroup column = unlockedContainer.gameObject.AddComponent<VerticalLayoutGroup>();
-        column.padding = padding;
-        // a little more room between two sections' rows than between a section's own rows
-        column.spacing = 14f;
+        // the cards touch, across sections too (Tommy, 2026-11-25); the box's border is kept clear by its
+        // viewport (LayOutPlantSections)
+        int inset = (int)CardInset;
+        column.padding = new RectOffset(inset, inset, inset, inset);
+        column.spacing = 0f;
         column.childAlignment = TextAnchor.UpperCenter;
         column.childControlWidth = true;
         column.childControlHeight = true;
@@ -667,13 +781,13 @@ public class LoadoutSelectionUI : MonoBehaviour
         go.layer = panel.layer;
         go.transform.SetParent(unlockedContainer, false);
         GridLayoutGroup grid = go.GetComponent<GridLayoutGroup>();
-        grid.cellSize = PlantCardLook.Size;
-        grid.spacing = new Vector2(7f, 10f);
+        grid.cellSize = CardCell;
+        grid.spacing = Vector2.zero;
         grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         grid.constraintCount = LevelsPerSection;
         grid.startCorner = GridLayoutGroup.Corner.LowerLeft;
         grid.startAxis = GridLayoutGroup.Axis.Horizontal;
-        grid.childAlignment = TextAnchor.UpperLeft;
+        grid.childAlignment = TextAnchor.UpperCenter;
         return (RectTransform)go.transform;
     }
 
@@ -703,19 +817,14 @@ public class LoadoutSelectionUI : MonoBehaviour
         card.transform.SetParent(grid, false);
         RectTransform cardRect = (RectTransform)card.transform;
 
-        LoadoutSlotSquare square = LoadoutSlotSquare.Create(cardRect, null, null);
-        RectTransform sq = square.Rect;
-        sq.anchorMin = sq.anchorMax = new Vector2(0.5f, 1f);
-        sq.pivot = new Vector2(0.5f, 1f);
-        sq.anchoredPosition = Vector2.zero;
+        LoadoutSlotSquare square = LoadoutSlotSquare.Create(cardRect, CardScale, null, null);
+        PlantCardLook.Fill(square.Rect);
 
         if (unlocked)
         {
             LoadoutSlot slot = Instantiate(slotPrefab, square.transform);
             slot.Initialize(data, OnUnlockedSlotClicked, ShowTooltip, HideTooltip);
             square.ShowPlant(slot, data);
-            // the card has no room for the slot's own name
-            foreach (TMP_Text own in slot.GetComponentsInChildren<TMP_Text>(true)) own.gameObject.SetActive(false);
             AddRecommendedBadge(slot, data);
             unlockedSlots.Add(slot);
             // a plant already in the loadout is greyed out here
@@ -729,7 +838,7 @@ public class LoadoutSelectionUI : MonoBehaviour
             silhouette.layer = card.layer;
             RectTransform r = (RectTransform)silhouette.transform;
             r.SetParent(square.transform, false);
-            PlantCardLook.PlaceInWindow(r);
+            PlantCardLook.InWindow(r);
             Image image = silhouette.GetComponent<Image>();
             image.sprite = data.icon;
             image.preserveAspect = true;
@@ -745,11 +854,19 @@ public class LoadoutSelectionUI : MonoBehaviour
     // a card's cost: the sun's gold (PlantInfoPanelStyle's sun glyph colour)
     private static Color CardCostColor => PlantInfoPanelStyle.Instance.normal.sun;
 
-    // the Current Loadout grid's cells the card's size (the scene's grid was made for the old squares)
+    // the Current Loadout grid's cells the card's size, touching, LoadoutColumns a row, centred (the
+    // scene's grid was made for the old squares)
     private void UseCardCells()
     {
         GridLayoutGroup grid = selectedContainer != null ? selectedContainer.GetComponent<GridLayoutGroup>() : null;
-        if (grid != null && grid.cellSize != PlantCardLook.Size) grid.cellSize = PlantCardLook.Size;
+        if (grid == null) return;
+        grid.cellSize = CardCell;
+        grid.spacing = Vector2.zero;
+        grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        grid.constraintCount = LoadoutColumns;
+        grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+        grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+        grid.childAlignment = TextAnchor.UpperCenter;
     }
 
 

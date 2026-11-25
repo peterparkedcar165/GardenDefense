@@ -5,11 +5,9 @@ using TMPro;
 
 public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    // the bevel portrait (gd_portrait_bevel_grey, drawn 72 by 72, shown at the button's 100 by 100,
-    // Tommy): background is the greyscale backdrop filling the frame's window (64 of its 72), tinted
-    // with the element colour mixed 60% toward white; icon is the plant, 10% smaller than the frame;
-    // frame is the greyscale bevel on top, tinted with the element colour. both colours come from
-    // PlantData (ElementColor, ElementBackdropColor)
+    // Tommy's plant card (2026-11-25, PlantCardLook): background is the card's greyscale wood, tinted with
+    // the element's panel colour; frame is its trim (vines, gold corners, the plant window and the cost
+    // slot), untinted; icon is the plant in the window; sunCostText the cost in the slot
     [SerializeField] private Image icon;
     [SerializeField] private Image background;
     [SerializeField] private Image frame;
@@ -31,8 +29,25 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public PlantData Data => data;
 
+    // the card's parts placed as shares of it (PlantCardLook), so it's drawn at whatever size the bar's
+    // grid cell gives it (Tommy, 2026-11-25: as big as fit, touching), the cost's font with it
+    private void FitParts()
+    {
+        if (background != null) PlantCardLook.Fill(background.rectTransform);
+        if (frame != null) PlantCardLook.Fill(frame.rectTransform);
+        if (icon != null) PlantCardLook.InWindow(icon.rectTransform);
+        if (sunCostText != null)
+        {
+            PlantCardLook.InCostSlot(sunCostText.rectTransform);
+            GridLayoutGroup grid = transform.parent != null ? transform.parent.GetComponent<GridLayoutGroup>() : null;
+            float width = grid != null ? grid.cellSize.x : ((RectTransform)transform).rect.width;
+            sunCostText.fontSize = PlantCardLook.CostFontSizeAt(PlantCardLook.ScaleOf(width));
+        }
+    }
+
     public void Setup(PlantData plantData)
     {
+        FitParts();
         data = plantData;
         plant = plantData.plantPrefab;
         if (icon != null) icon.sprite = plantData.icon;
@@ -65,6 +80,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
     // the hover says which one it is
     public void SetupEmpty(string hint)
     {
+        FitParts();
         data = null;
         plant = null;
         emptyHint = hint;
@@ -76,8 +92,7 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         // the button off, so an empty square doesn't light up like a plant does under the pointer
         Button button = GetComponent<Button>();
         if (button != null) button.enabled = false;
-        Image padlock = PlantSlotLook.AddPadlock(transform);
-        if (padlock != null) padlock.rectTransform.anchoredPosition = PlantCardLook.WindowCentre;
+        PlantCardLook.PlacePadlock(PlantSlotLook.AddPadlock(transform));
     }
 
     void Update()
