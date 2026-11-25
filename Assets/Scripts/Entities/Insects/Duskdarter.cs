@@ -34,22 +34,20 @@ public class Duskdarter : FlyingInsect, ICarrierInsect
 
     public override void UpdateStats()
     {
+        // only movement speed in darkness: its evasion there was taken out (Tommy, 2026-11-25)
         bool inDarkness = DarknessManager.instance != null && !DarknessManager.instance.IsIlluminated(transform.position);
         float spdBonus = inDarkness ? (DDData?.darkMovementSpeedBonus ?? 0.25f) : 0f;
-        float evaBonus = inDarkness ? (DDData?.darkEvasionBonus      ?? 0.15f) : 0f;
 
         movementSpeedMultiplier += spdBonus;
-        evasionAdder            += evaBonus;
         base.UpdateStats();
         movementSpeedMultiplier -= spdBonus;
-        evasionAdder            -= evaBonus;
     }
 
+    // Taunt's colour is a proposal: nothing coloured the word before
     public override string GetAbilityDescription() =>
         "May pick up an insect, allowing it to travel at a quicker rate while flying. Gains " +
-        $"<color=green><b>{(DDData?.darkMovementSpeedBonus ?? 0.25f) * 100f:F0}%</b></color> Movement Speed, and " +
-        $"<color=green><b>{(DDData?.darkEvasionBonus ?? 0.15f) * 100f:F0}%</b></color> Evasion when in darkness. " +
-        "Immune to plant-based Taunt effects.";
+        $"<color=green><b>{(DDData?.darkMovementSpeedBonus ?? 0.25f) * 100f:F0}%</b></color> <color=green><b>Movement Speed</b></color> when in darkness. " +
+        "Immune to plant-based <color=#FF8C00><b>Taunt</b></color> effects.";
 
     protected override void Update()
     {

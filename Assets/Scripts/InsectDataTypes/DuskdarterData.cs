@@ -5,7 +5,6 @@ public class DuskdarterData : InsectData
 {
     [Header("Nocturnal")]
     public float darkMovementSpeedBonus = 0.25f;
-    public float darkEvasionBonus = 0.15f;
 
     [Header("Carry")]
     public float carryPickupRange = 3f;
