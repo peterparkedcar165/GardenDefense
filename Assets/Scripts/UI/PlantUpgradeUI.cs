@@ -360,7 +360,8 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (portraitBackdrop != null) portraitBackdrop.color = PlantData.ElementBackdropColor(element);
         // the skill frame (Tommy, 2026-11-25): its wood takes the element's panel colour; its gold trim
         // and window stay as drawn. without the wood layer the old per element vine frame shows instead
-        if (SkillFrameBase != null) SkillFrameBase.color = panelColor;
+        skillWood = panelColor;
+        if (SkillFrameBase != null) SkillFrameBase.color = panelColor * skillDarkness;
         else
         {
             PlantInfoPanelStyle.SkillFrame frame = style.FrameFor(element);
@@ -392,6 +393,33 @@ public class PlantUpgradeUI : EntityInfoPanel
             RectTransform r = image.rectTransform;
             r.sizeDelta = size;
             r.anchoredPosition = skillIconCentre - new Vector2(size.x * (0.5f - r.pivot.x), size.y * (0.5f - r.pivot.y));
+        }
+    }
+
+    // a skill not unlocked yet is darkened like a locked plant slot (Tommy, 2026-11-25): the frame's wood
+    // (in skillWood, the element's panel colour), its gold trim and the icon times PlantSlotLook.LockedTint,
+    // under the vines and the padlock. the black square the Locked overlay had over them is switched off
+    private Color skillWood = Color.white;
+    private Color skillDarkness = Color.white;
+    private Image skillFrameTrim;
+    private bool lockedDimOff;
+
+    private void DarkenSkill(bool locked)
+    {
+        skillDarkness = locked ? PlantSlotLook.LockedTint : Color.white;
+        if (SkillFrameBase != null) SkillFrameBase.color = skillWood * skillDarkness;
+        if (skillFrameTrim == null && skillIcon != null && skillIcon.transform.parent != null)
+        {
+            Transform found = skillIcon.transform.parent.Find("SkillFrameTrim");
+            if (found != null) skillFrameTrim = found.GetComponent<Image>();
+        }
+        if (skillFrameTrim != null) skillFrameTrim.color = skillDarkness;
+        if (skillIcon != null) skillIcon.color = skillDarkness;
+        if (!lockedDimOff && lockedSkillSquare != null)
+        {
+            lockedDimOff = true;
+            Transform dim = lockedSkillSquare.transform.Find("Dim");
+            if (dim != null) dim.gameObject.SetActive(false);
         }
     }
 
@@ -721,6 +749,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         bool locked = !p.path3Unlocked;
         if (lockedSkillStrip != null && lockedSkillStrip.activeSelf != locked) lockedSkillStrip.SetActive(locked);
         if (lockedSkillSquare != null && lockedSkillSquare.activeSelf != locked) lockedSkillSquare.SetActive(locked);
+        DarkenSkill(locked);
         if (!locked) return;
 
         PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;

@@ -168,6 +168,26 @@ public static class SettingsSkin
         r.anchoredPosition = Vector2.zero;
     }
 
+    // the planks Plank made on these buttons all as wide as the widest word needs, scale times their size
+    // (Tommy, 2026-11-25: the escape menu's Restart and Main Menu bigger and the same size)
+    public static void SameSize(float scale, params GameObject[] buttonObjects)
+    {
+        var planks = new System.Collections.Generic.List<PlankButton>();
+        float width = 0f;
+        foreach (GameObject buttonObject in buttonObjects)
+        {
+            PlankButton plank = buttonObject != null ? buttonObject.GetComponentInChildren<PlankButton>(true) : null;
+            if (plank == null) continue;
+            planks.Add(plank);
+            width = Mathf.Max(width, plank.NaturalWidth);
+        }
+        foreach (PlankButton plank in planks)
+        {
+            plank.Rect.sizeDelta = new Vector2(width, plank.Rect.sizeDelta.y);
+            plank.Rect.localScale = Vector3.one * scale;
+        }
+    }
+
     private static RectTransform NewImage(string name, Transform parent, Sprite sprite, Color color, bool sliced)
     {
         GameObject go = new GameObject(name, typeof(RectTransform), typeof(Image));

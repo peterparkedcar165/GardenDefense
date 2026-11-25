@@ -42,6 +42,9 @@ public class SettingsManager : MonoBehaviour
             SettingsSkin.Toggle(toggle);
         SettingsSkin.Plank(restartButton, GameControlsStyle.Instance.speed);
         SettingsSkin.Plank(mainMenuButton, GameControlsStyle.Instance.speed);
+        // bigger and the same size (Tommy, 2026-11-25): 1.5 times (60 tall, 1 art px = 3 units), as wide
+        // as Main Menu needs; they stand 100 apart, so 40 between them
+        SettingsSkin.SameSize(1.5f, restartButton, mainMenuButton);
         settingsPanel.SetActive(false);
         if (restartButton != null) restartButton.SetActive(false);
         if (mainMenuButton != null) mainMenuButton.SetActive(false);
