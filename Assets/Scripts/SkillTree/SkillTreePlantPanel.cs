@@ -283,8 +283,8 @@ public class SkillTreePlantPanel : MonoBehaviour
         RectTransform backdrop = NewImage("PortraitBackdrop", root, look.slotBackdrop, PlantData.ElementBackdropColor(element), false);
         Place(backdrop, new Rect(portrait.center - portrait.size * (32f / 72f), portrait.size * (64f / 72f)));
         backdrop.SetSiblingIndex(next++);
-        // the plant in the frame's window, which clips it: its idle animation when it has one (Tommy,
-        // 2026-11-24, AnimatedPortrait), its still icon otherwise
+        // the plant's still icon in the frame's window, which clips it (an idle animation here was tried
+        // and dropped, Tommy 2026-11-24)
         GameObject windowObject = new GameObject("PortraitWindow", typeof(RectTransform), typeof(RectMask2D));
         windowObject.layer = root.gameObject.layer;
         RectTransform window = (RectTransform)windowObject.transform;
@@ -294,9 +294,7 @@ public class SkillTreePlantPanel : MonoBehaviour
         RectTransform plantImage = NewImage("PortraitPlant", window, plantData.icon, Color.white, false);
         Image plantPicture = plantImage.GetComponent<Image>();
         plantPicture.preserveAspect = true;
-        Rect iconBox = new Rect(-portrait.size * 0.45f, portrait.size * 0.9f);
-        Place(plantImage, iconBox);
-        AnimatedPortrait.TryAttach(plantPicture, plantData, iconBox);
+        Place(plantImage, new Rect(-portrait.size * 0.45f, portrait.size * 0.9f));
         RectTransform frame = NewImage("PortraitFrame", root, look.slotFrame, PlantData.ElementColor(element), false);
         Place(frame, portrait);
         frame.SetSiblingIndex(next++);
