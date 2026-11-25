@@ -35,7 +35,7 @@ public class SoldierAnt : Ant
     public override float eatMultiplier => 1.5f;
 
     public override string GetAbilityDescription() =>
-        $"Takes <b>{(data != null ? data.flatPhysicalDamageReduction : 0f):F0}</b> reduced damage from Physical Attacks, " +
+        $"Takes <b>{(data != null ? data.flatPhysicalDamageReduction : 0f):F0}</b> reduced damage from <color=#A0522D><b>Physical Attacks</b></color>, " +
         $"and deals <b>{eatMultiplier:F1}x</b> damage to path blockers.";
 
     public override void Damage(float damageDealt, DamageType damageType, ElementalType elementalType, Entity source, bool canCrit, DamageTag[] damageTag, bool forceCrit = false, float? onHitEffectivenessOverride = null) // sourced

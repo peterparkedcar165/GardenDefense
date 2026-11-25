@@ -272,35 +272,29 @@ public class InsectShowcase : MonoBehaviour
                 break;
             case Aggressivity.Low:
                 yield return new TipText { title = Insect.AggressivityName(Aggressivity.Low), category = "Aggressivity",
-                    body = $"Attacks plants within its targeting range ({range:0.#}). After each bite on a plant it ignores plants for " +
-                           $"{Insect.PlantBiteCooldown:0} seconds and walks on." };
+                    body = "Periodically targets a plant and attacks it once, then continues onto the path." };
                 break;
             default:
                 string note = insect.AggressivityNote();
                 yield return new TipText { title = Insect.AggressivityName(Aggressivity.None), category = "Aggressivity",
-                    body = "Never goes after plants on its own. It walks the path to your garden and only fights a plant that taunts it." +
+                    body = "Walks along the path normally and only attacks when provoked or when blocked by a path blocker." +
                            (string.IsNullOrEmpty(note) ? "" : " " + note) };
                 break;
         }
         if (insect is FlyingInsect)
             yield return new TipText { title = "Flying", category = "Movement",
-                body = "Melee plants like Acorn Knight can't target it, unless it is attacking that plant. Immobilization effects " +
-                       "ground it for the effect's duration + 4 seconds (5 seconds if Knocked Up)." };
-        if (data.baseMovementSpeed >= style.fastSpeed)
-            yield return new TipText { title = "Fast", category = "Movement",
-                body = $"Moves at {data.baseMovementSpeed:0.##}. Most insects move at 0.6 to 0.9." };
-        else if (data.baseMovementSpeed <= style.slowSpeed)
+                body = $"Flies over path blockers, and is untargetable by {Keyword("Melee", MeleeColor)} plants. Temporarily grounded " +
+                       $"when inflicted with {Keyword("immobilization", ImmobilizeColor)} effects.\n\nMoves faster when flying." };
+        if (data.baseMovementSpeed <= style.slowSpeed)
             yield return new TipText { title = "Slow", category = "Movement",
                 body = $"Moves at {data.baseMovementSpeed:0.##}. Most insects move at 0.6 to 0.9." };
-        if (data.baseArmor >= style.highArmorAt)
-        {
-            int cap = Insect.MaxWaveArmorBonus();
-            string growth = cap == int.MaxValue ? "Armor also grows by 1 each wave." : $"Armor also grows by 1 each wave, up to +{cap}.";
-            yield return new TipText { title = "High armor", category = "Defense",
-                body = $"{data.baseArmor:0} Armor: takes {Mathf.RoundToInt(Entity.ArmorReduction(data.baseArmor) * 100f)}% less Physical damage " +
-                       $"(Armor / (150 + Armor)). Magic damage is checked against its Magic Armor instead ({data.baseMagicArmor:0}). {growth}" };
-        }
     }
+
+    // the tags' keyword colours: Melee is the tooltips' melee colour (MulchData), immobilization the
+    // stun gold (proposal, no colour existed for it)
+    private const string MeleeColor = "#E9967A";
+    private const string ImmobilizeColor = "#FFD700";
+    private static string Keyword(string text, string color) => $"<color={color}><b>{text}</b></color>";
 
     private Color TagColor(string category, string title)
     {
@@ -308,9 +302,7 @@ public class InsectShowcase : MonoBehaviour
             return title == Insect.AggressivityName(Aggressivity.High) ? style.aggressive
                  : title == Insect.AggressivityName(Aggressivity.Low) ? style.mildlyAggressive : style.passive;
         if (title == "Flying") return style.flying;
-        if (title == "Fast") return style.fast;
         if (title == "Slow") return style.slow;
-        if (title == "High armor") return style.highArmor;
         return style.text;
     }
 

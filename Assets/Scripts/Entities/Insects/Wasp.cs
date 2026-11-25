@@ -16,5 +16,5 @@ public class Wasp : FlyingInsect
         plant.data != null && plant.data.generatesSun ? SunGeneratorAffinity : 1f;
 
     public override string GetAbilityDescription() =>
-        $"Stronger aggressivity towards plants that generate <color=yellow>Sun</color>: they weigh <b>{SunGeneratorAffinity:F0}x</b> when it picks a plant.";
+        "When able to, it will always target a <color=yellow><b>Sun</b></color> generating plant.";
 }

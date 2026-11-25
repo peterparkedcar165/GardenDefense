@@ -1618,14 +1618,6 @@ public abstract class Insect : Entity, IAttackable
     // (Moth: passive, but goes after plants that give off light). null when there is none
     public virtual string AggressivityNote() => null;
 
-    // the bonus armor and magic armor an insect gains from the waves at most: +1 a wave up to the
-    // wave the health plateau starts. int.MaxValue when the level has no cap
-    public static int MaxWaveArmorBonus()
-    {
-        int plateau = PlateauWave();
-        return plateau == int.MaxValue ? int.MaxValue : plateau - 1;
-    }
-
     // appended to the end of every insect's GetDescription() - reads the data asset directly
     // (rather than the live instance field) so it reads correctly both in-battle and from the
     // loadout screen's uninstantiated prefab preview

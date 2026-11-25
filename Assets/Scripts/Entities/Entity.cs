@@ -200,8 +200,6 @@ public abstract class Entity : MonoBehaviour
     // shared by both physical and magic mitigation, was 100
     protected const float ArmorCoefficient = 150f;
 
-    // the share of damage an armor value takes away (armor / (150 + armor)), for text that explains it
-    public static float ArmorReduction(float armor) => armor > 0f ? armor / (ArmorCoefficient + armor) : 0f;
     public int armor, magicArmor;
     public float armorPenFlat, magicPenFlat, armorPenPercent, magicPenPercent;
     public float fireResistance, waterResistance, grassResistance, windResistance, poisonResistance, iceResistance;
