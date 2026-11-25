@@ -27,6 +27,10 @@ public static class PlantCardLook
     // an empty or open card's wood (proposal: the medium button's original wood)
     public static readonly Color NeutralWood = new Color32(0x7D, 0x44, 0x29, 0xFF);
 
+    // a Current Loadout slot no plant is picked for yet (Tommy, 2026-11-25: grey), the grey of the game's
+    // locked buttons
+    public static readonly Color EmptyWood = new Color32(0x8D, 0x8D, 0x8D, 0xFF);
+
     public static Color Wood(PlantData data) => data != null ? PlantData.ElementPanelColor(data.elementalType) : NeutralWood;
 
     // the card's size at a scale, canvas units (1 is 1 unit an art px)

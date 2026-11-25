@@ -59,6 +59,13 @@ public class LoadoutSlotSquare : MonoBehaviour, IPointerEnterHandler, IPointerEx
         SetCost(null, Color.white);
     }
 
+    // a Current Loadout slot with no plant picked for it yet: grey wood (Tommy, 2026-11-25)
+    public void ShowEmpty()
+    {
+        ShowOpen();
+        backdrop.color = PlantCardLook.EmptyWood;
+    }
+
     public void ShowLocked(string hint)
     {
         lockedHint = hint;

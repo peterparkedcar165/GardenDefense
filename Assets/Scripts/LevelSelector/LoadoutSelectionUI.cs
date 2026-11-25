@@ -692,7 +692,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         int open = SaveManager.instance.saveData.MaxLoadoutSize;
         for (int i = filled; i < selectedSquares.Count; i++)
         {
-            if (i < open) selectedSquares[i].ShowOpen();
+            if (i < open) selectedSquares[i].ShowEmpty();
             else selectedSquares[i].ShowLocked(SaveData.SlotUnlockHint(i));
         }
 
