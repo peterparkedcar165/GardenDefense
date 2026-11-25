@@ -22,8 +22,24 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private PixelTextEffect shadow;
     private GameControlsStyle.ButtonColors colors;
     private bool hovered, pressed;
+    private Button button;
+    private bool pressable = true;
 
     public RectTransform Rect => (RectTransform)transform;
+
+    // false: a plank that only reacts to the pointer over it (the loadout screen's Show Map, Tommy
+    // 2026-11-25): it still lights up while hovered, but never shows pressed and can't be clicked
+    public bool Pressable
+    {
+        get => pressable;
+        set
+        {
+            pressable = value;
+            if (button != null) button.interactable = value;
+            if (!value) pressed = false;
+            if (face != null) Apply();
+        }
+    }
 
     public static PlankButton Create(RectTransform parent, string text, GameControlsStyle.ButtonColors colors, TMP_FontAsset font, Action onClick)
     {
@@ -69,7 +85,7 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         labelRect.sizeDelta = new Vector2(0f, 14f * Px);
         shadow = labelRect.gameObject.AddComponent<PixelTextEffect>();
 
-        Button button = gameObject.AddComponent<Button>();
+        button = gameObject.AddComponent<Button>();
         button.transition = Selectable.Transition.None;
         button.targetGraphic = face;
         button.onClick.AddListener(() => onClick?.Invoke());
@@ -108,7 +124,7 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left) return;
+        if (eventData.button != PointerEventData.InputButton.Left || !pressable) return;
         pressed = true;
         Apply();
     }

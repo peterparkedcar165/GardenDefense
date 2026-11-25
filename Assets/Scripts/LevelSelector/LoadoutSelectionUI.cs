@@ -49,7 +49,8 @@ public class LoadoutSelectionUI : MonoBehaviour
     private InsectShowcase showcase;
 
     // Show Map (Tommy, 2026-11-24): hides everything on the screen but its own button, the dark
-    // backdrop included, so the whole map shows; pressed again, the screen comes back as it was
+    // backdrop included, so the whole map shows, for as long as the pointer is over it (2026-11-25: hover,
+    // no click); the pointer leaving brings the screen back as it was
     private PlankButton mapButton;
     private bool mapShown;
     private Image backdrop;
@@ -261,8 +262,15 @@ public class LoadoutSelectionUI : MonoBehaviour
             backdrop = panel.GetComponent<Image>();
             if (backdrop != null && backdropAlpha < 0f) backdropAlpha = backdrop.color.a;
             RectTransform panelRect = (RectTransform)panel.transform;
+            BuildConfirmPlank();
+            // hover, not click (Tommy, 2026-11-25): the pointer over Show Map fades everything else out
+            // to show the whole map, the pointer leaving it brings the selection screen back
             mapButton = PlankButton.Create(panelRect, "Show Map", GameControlsStyle.Instance.speed,
-                InsectShowcaseStyle.Instance.font, () => SetMapShown(!mapShown, false));
+                InsectShowcaseStyle.Instance.font, null);
+            mapButton.Pressable = false;
+            UIHoverRelay hover = mapButton.gameObject.AddComponent<UIHoverRelay>();
+            hover.onEnter = () => { if (!IntroPlaying) SetMapShown(true, false); };
+            hover.onExit = () => SetMapShown(false, false);
             // just right of Confirm, level with it
             RectTransform r = mapButton.Rect;
             r.anchorMin = r.anchorMax = new Vector2(0.5f, 0.5f);
@@ -438,7 +446,7 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     // Show Map: everything on the loadout panel but its button hides, and the dark backdrop goes, so
     // the whole map shows. off again, exactly what was showing comes back
-    // the button fades the screen out and back (Tommy, 2026-11-24: a lerp, not a snap); opening,
+    // hovering the button fades the screen out and back (Tommy, 2026-11-24: a lerp, not a snap); opening,
     // closing and confirming put it back at once
     private void SetMapShown(bool shown) => SetMapShown(shown, true);
 
@@ -471,7 +479,6 @@ public class LoadoutSelectionUI : MonoBehaviour
                     mapFaded.Add(group);
                 }
             }
-            if (mapButton != null) mapButton.SetLabel(shown ? "Hide Map" : "Show Map");
         }
         float target = shown ? 0f : 1f;
         if (instant || !isActiveAndEnabled) ApplyMapShare(target);
@@ -569,6 +576,41 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
 
         confirmButton.interactable = selectedLoadout.Count > 0;
+        RefreshConfirmPlank();
+    }
+
+    // Next (the scene's ConfirmButton) as the game controls' green plank (Tommy, 2026-11-25), as wide as
+    // the old button and centred on it; it presses the old button, so the scene's wiring (Confirm) stays,
+    // and fades and ignores clicks while there's nothing to confirm
+    private PlankButton confirmPlank;
+    private CanvasGroup confirmPlankGroup;
+
+    private void BuildConfirmPlank()
+    {
+        if (confirmButton == null || confirmPlank != null) return;
+        RectTransform rect = (RectTransform)confirmButton.transform;
+        Image face = confirmButton.GetComponent<Image>();
+        if (face != null) face.enabled = false;
+        TMP_Text word = confirmButton.GetComponentInChildren<TMP_Text>(true);
+        string text = word != null && !string.IsNullOrEmpty(word.text) ? word.text : "Next";
+        if (word != null) word.gameObject.SetActive(false);
+        confirmPlank = PlankButton.Create(rect, text, GameControlsStyle.Instance.start, InsectShowcaseStyle.Instance.font,
+            () => { if (confirmButton.interactable) confirmButton.onClick.Invoke(); });
+        RectTransform r = confirmPlank.Rect;
+        r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+        r.anchoredPosition = Vector2.zero;
+        r.sizeDelta = new Vector2(Mathf.Max(r.sizeDelta.x, Mathf.Round(rect.sizeDelta.x / 2f) * 2f), r.sizeDelta.y);
+        confirmPlankGroup = confirmPlank.gameObject.AddComponent<CanvasGroup>();
+        RefreshConfirmPlank();
+    }
+
+    private void RefreshConfirmPlank()
+    {
+        if (confirmPlankGroup == null) return;
+        bool on = confirmButton.interactable;
+        confirmPlankGroup.alpha = on ? 1f : 0.45f;
+        confirmPlankGroup.interactable = on;
+        confirmPlankGroup.blocksRaycasts = on;
     }
 
     // ---------- Available Plants (Tommy, 2026-11-24) ----------
