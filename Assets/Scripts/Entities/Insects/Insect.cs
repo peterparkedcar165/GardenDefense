@@ -280,7 +280,16 @@ public abstract class Insect : Entity, IAttackable
             && cachedPlant.SeenDistance(Vector3.Distance(transform.position, cachedPlant.GetApproachPoint(transform.position))) <= targetingRange;
 
         if (cachedStillValid)
+        {
+            // a species that insists on some plants drops one it settled for as soon as one it insists
+            // on comes into range (looked for twice a second); otherwise it keeps its pick as usual
+            if (!HasPlantPreference || PrefersPlant((Plant)_cachedWeightedTarget) || Time.time < _nextPreferenceCheck)
+                return _cachedWeightedTarget;
+            _nextPreferenceCheck = Time.time + PreferenceCheckInterval;
+            if (FindTauntWeightedPlantInRange() is Plant better && PrefersPlant(better))
+                _cachedWeightedTarget = better;
             return _cachedWeightedTarget;
+        }
 
         // nothing in range was found already this frame: don't search every plant again for each of
         // the many reads of `target` in the same frame (a found plant is kept by the cache above)
@@ -1048,20 +1057,28 @@ public abstract class Insect : Entity, IAttackable
     }
 
     // per-species targeting preference: multiplies a candidate plant's tauntValue before the
-    // weighted roll below. 1 (no preference) for everyone except species that override it, e.g.
-    // Wasp favoring sun generating plants
+    // weighted roll below. 1 (no preference) for every species today: the Wasp used it for sun
+    // generators until it got PrefersPlant (2026-11-25)
     protected virtual float GetTauntAffinity(Plant plant) => 1f;
 
-    private readonly List<(Plant plant, float tickets)> _tauntCandidates = new List<(Plant plant, float tickets)>();
+    // plants a species insists on (Tommy, 2026-11-25: the Wasp and sun generators). while any of them
+    // is in range and reachable only they enter the lottery below; with none, every plant does as usual
+    protected virtual bool HasPlantPreference => false;
+    protected virtual bool PrefersPlant(Plant plant) => false;
+    private float _nextPreferenceCheck;
+    private const float PreferenceCheckInterval = 0.5f;
+
+    private readonly List<(Plant plant, float tickets, bool preferred)> _tauntCandidates = new List<(Plant plant, float tickets, bool preferred)>();
 
     // every reachable plant in range enters a weighted lottery: its ticket count is
     // tauntValue * GetTauntAffinity, so per plant tauntValue and species
-    // preference (Wasp -> sun generators) both shift the odds without ever being a hard
-    // guarantee - replaces the old pure-nearest selection
+    // preference both shift the odds - replaces the old pure-nearest selection. a plant the
+    // species insists on (PrefersPlant) beats all the others outright
     private IAttackable FindTauntWeightedPlantInRange()
     {
         _tauntCandidates.Clear();
         float totalTickets = 0f;
+        float preferredTickets = 0f;
 
         foreach (Plant plant in Plant.allPlants)
         {
@@ -1077,19 +1094,26 @@ public abstract class Insect : Entity, IAttackable
             float tickets = plant.tauntValue * GetTauntAffinity(plant);
             if (tickets <= 0f) continue;
 
-            _tauntCandidates.Add((plant, tickets));
+            bool preferred = HasPlantPreference && PrefersPlant(plant);
+            _tauntCandidates.Add((plant, tickets, preferred));
             totalTickets += tickets;
+            if (preferred) preferredTickets += tickets;
         }
 
         if (_tauntCandidates.Count == 0 || totalTickets <= 0f) return null;
 
-        float roll = Random.Range(0f, totalTickets);
-        foreach ((Plant plant, float tickets) in _tauntCandidates)
+        // only the plants it insists on are drawn from while any is here
+        bool onlyPreferred = preferredTickets > 0f;
+        float roll = Random.Range(0f, onlyPreferred ? preferredTickets : totalTickets);
+        Plant last = null;
+        foreach ((Plant plant, float tickets, bool preferred) in _tauntCandidates)
         {
+            if (onlyPreferred && !preferred) continue;
+            last = plant;
             roll -= tickets;
             if (roll <= 0f) return plant;
         }
-        return _tauntCandidates[_tauntCandidates.Count - 1].plant; // floating point fallback
+        return last; // floating point fallback
     }
 
     // retained aggro passive: forces this insect to keep attacking the given plant (if its data

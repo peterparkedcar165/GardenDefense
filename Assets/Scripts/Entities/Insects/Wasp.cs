@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class Wasp : FlyingInsect
 {
-    // how much more likely a sun generating plant is to win the weighted target roll (see
-    // Insect.GetTauntAffinity) compared to everything else, a strong preference but not a guarantee
-    private const float SunGeneratorAffinity = 5f;
-
     protected override void Awake()
     {
         base.Awake();
         LoadData();
     }
 
-    protected override float GetTauntAffinity(Plant plant) =>
-        plant.data != null && plant.data.generatesSun ? SunGeneratorAffinity : 1f;
+    // always goes for a sun generating plant when one is in range and reachable (Tommy, 2026-11-25),
+    // switching to one that comes into range; with none in range it picks a plant like any insect
+    // (Insect.FindTauntWeightedPlantInRange). it was a 5x weight on them before
+    protected override bool HasPlantPreference => true;
+    protected override bool PrefersPlant(Plant plant) => plant != null && plant.data != null && plant.data.generatesSun;
 
     public override string GetAbilityDescription() =>
         "When able to, it will always target a <color=yellow><b>Sun</b></color> generating plant.";
