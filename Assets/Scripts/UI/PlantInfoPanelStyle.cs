@@ -97,7 +97,12 @@ public class PlantInfoPanelStyle : ScriptableObject
     public ButtonLook max = new ButtonLook("#E5E5E5", "#D0D0D0", "", "#9B9B9B", false);
 
     [Header("Skill")]
+    [Tooltip("the per element vine frames (no longer drawn) and the icon each element shows when its plant has no skill icon")]
     public SkillFrame[] skillFrames;
+    [Tooltip("the skill frame (Tommy, 2026-11-25): 46 by 46 greyscale wood, tinted with the element's panel colour")]
+    public Sprite skillFrameBase;
+    [Tooltip("its gold trim and the dark 33 by 33 window, untinted, drawn over the wood; the icon goes over both")]
+    public Sprite skillFrameTrim;
     [Tooltip("darkens the skill icon while it recharges or is silenced")]
     public Color cooldownOverlay = new Color(0f, 0f, 0f, 0.55f);
 

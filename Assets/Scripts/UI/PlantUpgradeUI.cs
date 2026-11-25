@@ -357,8 +357,29 @@ public class PlantUpgradeUI : EntityInfoPanel
                 if (text != null) text.color = style.text;
         if (portraitFrame != null) portraitFrame.color = PlantData.ElementColor(element);
         if (portraitBackdrop != null) portraitBackdrop.color = PlantData.ElementBackdropColor(element);
-        PlantInfoPanelStyle.SkillFrame frame = style.FrameFor(element);
-        if (skillFrame != null && frame.frame != null) skillFrame.sprite = frame.frame;
+        // the skill frame (Tommy, 2026-11-25): its wood takes the element's panel colour; its gold trim
+        // and window stay as drawn. without the wood layer the old per element vine frame shows instead
+        if (SkillFrameBase != null) SkillFrameBase.color = panelColor;
+        else
+        {
+            PlantInfoPanelStyle.SkillFrame frame = style.FrameFor(element);
+            if (skillFrame != null && frame.frame != null) skillFrame.sprite = frame.frame;
+        }
+    }
+
+    // the skill frame's wood (SkillFrameBase, next to the icon), found the first time it's needed
+    private Image skillFrameBase;
+    private Image SkillFrameBase
+    {
+        get
+        {
+            if (skillFrameBase == null && skillIcon != null && skillIcon.transform.parent != null)
+            {
+                Transform found = skillIcon.transform.parent.Find("SkillFrameBase");
+                if (found != null) skillFrameBase = found.GetComponent<Image>();
+            }
+            return skillFrameBase;
+        }
     }
 
     // the plant (or insect) as big as fits the portrait window, bottom centred

@@ -38,6 +38,8 @@ MonoBehaviour:
   - element: 5
     frame: {fileID: 21300000, guid: be84e9d6894148dc8a8e4651fc7bff47, type: 3}
     fallbackIcon: {fileID: 21300000, guid: aada4dc6ea980f84f95b8814446fa98d, type: 3}
+  skillFrameBase: {fileID: 21300000, guid: 98ffd0318bc849a88508a9c89d28ef31, type: 3}
+  skillFrameTrim: {fileID: 21300000, guid: ece3519c6df3489ba40c655a89f824e4, type: 3}
   slotFrame: {fileID: 21300000, guid: eecbfabd503345d09ea5fe0cbfe0cf33, type: 3}
   slotBackdrop: {fileID: 21300000, guid: 2e86ae8531494c09b5ed5cc0be85084f, type: 3}
   slotPadlock: {fileID: 21300000, guid: e7c9aa191b7f44af8732924dd926024d, type: 3}

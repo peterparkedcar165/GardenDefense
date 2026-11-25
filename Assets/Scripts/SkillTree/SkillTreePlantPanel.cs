@@ -39,6 +39,7 @@ public class SkillTreePlantPanel : MonoBehaviour
     [SerializeField] private float forkNodeSpacing = 12f;
 
     private readonly List<SkillNodeButton> nodeButtons = new List<SkillNodeButton>();
+    private const float MinForkSpacing = 40f;
     // the node buttons step by step, for the vine links between them
     private readonly List<List<SkillNodeButton>> columns = new List<List<SkillNodeButton>>();
 
@@ -106,7 +107,10 @@ public class SkillTreePlantPanel : MonoBehaviour
             GameObject column = new GameObject($"Step{stepIndex + 1}", typeof(RectTransform));
             column.transform.SetParent(nodesContainer, false);
             VerticalLayoutGroup colLayout = column.AddComponent<VerticalLayoutGroup>();
-            colLayout.spacing = forkNodeSpacing;
+            // a fork's two nodes far enough apart for the upper one's rank between the 92 unit frames
+            // (Tommy's gold skill frame, 2026-11-25): the frames overhang the 75 unit nodes by 17, plus the
+            // rank's 14 tall capitals and 4 clear above and below
+            colLayout.spacing = Mathf.Max(forkNodeSpacing, MinForkSpacing);
             colLayout.childAlignment = TextAnchor.MiddleCenter;
             colLayout.childControlWidth = false;
             colLayout.childControlHeight = false;

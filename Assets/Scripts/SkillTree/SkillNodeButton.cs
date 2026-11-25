@@ -24,10 +24,15 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     [SerializeField] private TMP_Text rankText;
 
     private const float Px = 2f;
-    // art pixels: the vine frame, its window, the biggest an icon is drawn (at a whole number scale)
-    private const float FrameSize = 40f;
+    // art pixels: the skill frame (Tommy's gold and wood one, 2026-11-25; its dark window is 33), the
+    // coloured window drawn in it, the biggest an icon is drawn (at a whole number scale), the locked
+    // cover's vines (their own 40)
+    private const float FrameSize = 46f;
     private const float WindowSize = 32f;
     private const float IconMax = 24f;
+    private const float VinesSize = 40f;
+    // canvas units: the rank's capitals start this far under the frame
+    private const float RankGap = 4f;
 
     private SkillTreeUI ui;
     private SkillTreeData tree;
@@ -144,20 +149,35 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             }
         }
 
+        // the frame: the wood in the element's panel colour with the gold trim and its dark window on top,
+        // both behind the coloured window and the icon (the old outline object, moved to the back)
         Transform outline = wrapper != null ? wrapper.Find("Outline") : null;
         Image frame = outline != null ? outline.GetComponent<Image>() : null;
-        Sprite frameSprite = look.FrameFor(plant.elementalType).frame;
-        if (frame != null && frameSprite != null)
+        if (frame != null && look.skillFrameBase != null)
         {
-            frame.sprite = frameSprite;
+            frame.sprite = look.skillFrameBase;
             frame.type = Image.Type.Simple;
-            frame.color = Color.white;
+            frame.preserveAspect = false;
+            frame.color = PlantData.ElementPanelColor(plant.elementalType);
             frame.raycastTarget = false;
             frame.rectTransform.sizeDelta = new Vector2(FrameSize * Px, FrameSize * Px);
+            outline.SetAsFirstSibling();
+            if (look.skillFrameTrim != null && outline.Find("Trim") == null)
+            {
+                RectTransform trim = NewImage("Trim", outline, look.skillFrameTrim, Color.white);
+                trim.anchorMin = Vector2.zero;
+                trim.anchorMax = Vector2.one;
+                trim.offsetMin = trim.offsetMax = Vector2.zero;
+            }
         }
 
         if (rankText != null)
         {
+            // under the bigger frame, a gap of RankGap to its capitals (top aligned: they start 6 under
+            // the rect's top at the native size)
+            RectTransform rank = rankText.rectTransform;
+            float rectTop = -FrameSize * Px * 0.5f - RankGap + 6f;
+            rank.anchoredPosition = new Vector2(rank.anchoredPosition.x, rectTop - rank.sizeDelta.y * (1f - rank.pivot.y));
             rankText.fontSize = 20f;
             rankText.textWrappingMode = TextWrappingModes.NoWrap;
             rankText.overflowMode = TextOverflowModes.Overflow;
@@ -176,7 +196,7 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             cover.transform.SetAsLastSibling();
             NewImage("Dim", cover.transform, s.white, new Color(0f, 0f, 0f, s.lockedDim)).sizeDelta = new Vector2(FrameSize * Px, FrameSize * Px);
             RectTransform v = NewImage("Vines", cover.transform, s.vinesSquare, look.lockedVines);
-            v.sizeDelta = new Vector2(FrameSize * Px, FrameSize * Px);
+            v.sizeDelta = new Vector2(VinesSize * Px, VinesSize * Px);
             vines = v.GetComponent<Image>();
             if (look.slotPadlock != null)
             {
