@@ -43,13 +43,6 @@ public class LevelSelector : MonoBehaviour
         level16, level17, level18, level19, level20, level21, level22, level23, level24, level25, level26, level27, level28, level29, level30,
     };
 
-    private bool PlanksBaked()
-    {
-        foreach (Button b in Levels)
-            if (b != null && b.GetComponent<PlankButton>() == null) return false;
-        return true;
-    }
-
     // each level button becomes a plank in place (PlankButton.Adopt keeps its OnLevelSelected wiring),
     // as wide as it was; each column keeps its place and its ten planks are spaced evenly, a wider gap
     // between its two groups of five. running it again changes nothing, so the editor's bake
@@ -100,8 +93,9 @@ public class LevelSelector : MonoBehaviour
 
     void Start()
     {
-        // the planks are saved in the scene once it's been baked; until then they're made here
-        if (!PlanksBaked()) SkinButtons();
+        // saved in the scene by the bake; this runs anyway (it changes nothing on an up to date scene), so
+        // a scene baked with older buttons still shows the current ones
+        SkinButtons();
         int highestLevelUnlocked = SaveManager.instance.saveData.highestLevelUnlocked;
         level1.interactable = true;
         level2.interactable = highestLevelUnlocked >= 1;

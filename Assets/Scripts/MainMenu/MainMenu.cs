@@ -8,32 +8,24 @@ public class MainMenu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // the planks are saved in the scene once Tools > Garden Defense > Bake Planks in Open Scene has run;
-        // until then (or for a button added since) they're made here when the scene starts
-        if (!PlanksBaked()) SkinButtons();
+        // the buttons are saved in the scene by Tools > Garden Defense > Bake Planks in Open Scene; this runs
+        // anyway (it changes nothing on an up to date scene), so a scene baked with older buttons still shows
+        // the current ones
+        SkinButtons();
         foreach (Button b in buttons)
             b.interactable = true;
     }
 
-    // the menu's buttons as big planks (Tommy, 2026-11-25): each button becomes the game controls'
-    // plank in place (PlankButton.Adopt, so its own onClick wiring stays) at 1.5 times its size (1 art
-    // px = 3 canvas units, still whole pixels at 1080p), all as wide as the widest, in one evenly spaced
-    // column centred where the column was, Play green, Exit red, the rest yellow; the NOT IMPLEMENTED
-    // notes sit beside their buttons. running it again changes nothing, so the editor's bake and the
-    // scene starting agree
-    private const float PlankScale = 1.5f;
+    // the menu's buttons big (Tommy, 2026-11-25): each button becomes the game controls' button in place
+    // (PlankButton.Adopt, so its own onClick wiring stays; now Tommy's medium button) at 2 times its size
+    // (1 art px = 4 canvas units, whole pixels), all as wide as the widest, in one evenly spaced column
+    // centred where the column was, Play green, Exit red, the rest yellow; the NOT IMPLEMENTED notes sit
+    // beside their buttons. running it again changes nothing, so the editor's bake and the scene starting
+    // agree
+    private const float PlankScale = 2f;
     private const float PlankGap = 14f;
 
     private Transform MenuCanvas => buttons != null && buttons.Length > 0 && buttons[0] != null ? buttons[0].transform.parent : null;
-
-    private bool PlanksBaked()
-    {
-        Transform canvas = MenuCanvas;
-        if (canvas == null) return true;
-        foreach (Transform child in canvas)
-            if (child.GetComponent<Button>() != null && child.GetComponent<PlankButton>() == null) return false;
-        return true;
-    }
 
     public void SkinButtons()
     {

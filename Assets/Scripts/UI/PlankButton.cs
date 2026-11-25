@@ -13,9 +13,10 @@ using TMPro;
 public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     private const float Px = 2f;
-    // art pixels: the plank sprite's height, and the space left and right of the word
-    private const float Height = 34f;
-    private const float SidePad = 12f;
+    // art pixels: the button's height and the room kept clear at each end of the word (the medium
+    // button's ornaments, Tommy 2026-11-25), both from GameControlsStyle
+    private static float Height => GameControlsStyle.Instance.buttonHeight;
+    private static float SidePad => GameControlsStyle.Instance.buttonSidePad;
 
     [SerializeField] private Image face;
     [SerializeField] private Image shine;

@@ -395,8 +395,8 @@ public class SkillTreeUI : MonoBehaviour
         undoGroup.blocksRaycasts = any;
     }
 
-    // canvas units: the planks are 34 art px tall
-    private const float PlankHeight = 68f;
+    // canvas units: the buttons' height (GameControlsStyle.buttonHeight art px)
+    private static float PlankHeight => GameControlsStyle.Instance.buttonHeight * Px;
 
     // a button's footprint once it is a plank: its own centre and width, the plank's height
     private static Rect Bounds(RectTransform r, float height) =>

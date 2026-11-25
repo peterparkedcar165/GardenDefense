@@ -45,14 +45,21 @@ public class GameControlsStyle : ScriptableObject
     }
 
     [Header("Button sprites (Sprites/UI/GameControls)")]
+    [Tooltip("Tommy's medium button (2026-11-25, ui_button_medium_base): greyscale wood tinted with the state's colour, " +
+        "83 by 20, its 20 px ornaments at each end kept and the middle stretched (sliced 20 0 20 0). it has one look, so " +
+        "hover and pressed use the same sprites in their own colours")]
     public Sprite buttonIdle;
-    [Tooltip("white light edges and nail heads, drawn over the button in the same rect")]
+    [Tooltip("the gold trim (ui_button_medium_trim), drawn over the wood untinted")]
     public Sprite buttonIdleShine;
     public Sprite buttonHover;
     public Sprite buttonHoverShine;
-    [Tooltip("the face sits 2 pixels lower, so the icon and label drop 2 pixels too")]
+    [Tooltip("the icon and label drop 2 pixels while pressed")]
     public Sprite buttonPressed;
     public Sprite buttonPressedShine;
+    [Tooltip("art pixels: every button's height (the sprite's own), and the room at each end the word keeps " +
+        "clear of (the ornaments)")]
+    public int buttonHeight = 20;
+    public int buttonSidePad = 20;
 
     [Header("Icons")]
     public Sprite playIcon;
@@ -62,11 +69,12 @@ public class GameControlsStyle : ScriptableObject
     [Header("Inside the buttons (art pixels from the button's top; everything 2 lower while pressed)")]
     [Tooltip("the icon, this gap, then the word: one group centred on the button by their drawn pixels")]
     public int iconGap = 6;
-    public int playIconTop = 8;
-    public int pauseIconTop = 8;
-    public int speedIconTop = 11;
-    [Tooltip("cap top of the word (Start, Pause, Resume, 1x)")]
-    public int labelTop = 12;
+    [Tooltip("centred between the gold lines (rows 2 to 17 of the 20 px button)")]
+    public int playIconTop = 2;
+    public int pauseIconTop = 2;
+    public int speedIconTop = 5;
+    [Tooltip("cap top of the word (Start, Pause, Resume, 1x, and every plank button's word)")]
+    public int labelTop = 6;
 
     [Header("Timer")]
     [Tooltip("art pixels from each end of the timer bar to the drawn pixels of \"Wave 3/8\" (left) and " +
