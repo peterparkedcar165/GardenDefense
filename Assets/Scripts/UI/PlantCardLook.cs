@@ -50,6 +50,10 @@ public static class PlantCardLook
         if (padlock != null) Span(padlock.rectTransform, PadlockBox);
     }
 
+    // a box size art px big (at the card's own size) centred on the window
+    public static void AtWindowCentre(RectTransform rect, Vector2 size) =>
+        Span(rect, new Rect(46f - size.x * 0.5f, 48f - size.y * 0.5f, size.x, size.y));
+
     // the cost's font size on a card scale times the art's size
     public static float CostFontSizeAt(float scale) => Mathf.Round(CostFontSize * scale);
 

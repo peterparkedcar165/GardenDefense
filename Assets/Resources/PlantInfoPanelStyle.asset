@@ -45,4 +45,5 @@ MonoBehaviour:
   plantCardTrim: {fileID: 21300000, guid: fadb235113d7475caee65e4929ae827f, type: 3}
   slotBackdrop: {fileID: 21300000, guid: 2e86ae8531494c09b5ed5cc0be85084f, type: 3}
   slotPadlock: {fileID: 21300000, guid: e7c9aa191b7f44af8732924dd926024d, type: 3}
+  skillPadlock: {fileID: 21300000, guid: b95cd93d981b40869ecefaed797c049f, type: 3}
   lockedSlotTint: {r: 0.35, g: 0.35, b: 0.35, a: 1}

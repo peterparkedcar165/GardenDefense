@@ -114,6 +114,17 @@ public class PlantInfoPanelStyle : ScriptableObject
         "the locked button look's text and sun colours; otherwise the sun is the normal look's")]
     public Color lockedText = Hex("#FFF1D6");
     public Color lockedTextHover = Color.white;
+    [Tooltip("Tommy's padlock (2026-11-25, 32 by 32, drawn in its own colours): over a locked skill (the Skill strip, " +
+        "the skill square, the skill tree's locked nodes) and over the loadout's plants not unlocked yet. without " +
+        "it they fall back to slotPadlock")]
+    public Sprite skillPadlock;
+    [Tooltip("the padlock's tint, a little dim so the pointer over it can brighten it (lockedPadlockHover)")]
+    public Color lockedPadlock = Hex("#E6E6E6");
+    public Color lockedPadlockHover = Color.white;
+
+    public Sprite SkillPadlock => skillPadlock != null ? skillPadlock : slotPadlock;
+    public Color SkillPadlockColor(bool hover) =>
+        skillPadlock == null ? (hover ? lockedTextHover : lockedText) : hover ? lockedPadlockHover : lockedPadlock;
 
     [Header("Plant slots: the squares of the loadout screen and the plant bar (Tommy, 2026-11-22)")]
     [Tooltip("the bevel frame the plant bar's buttons use (portrait_bevel_grey)")]

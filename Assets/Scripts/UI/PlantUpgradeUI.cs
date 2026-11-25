@@ -732,8 +732,10 @@ public class PlantUpgradeUI : EntityInfoPanel
         Color glyph = hover ? style.lockedTextHover : style.lockedText;
         if (lockedStripVines != null) lockedStripVines.color = vines;
         if (lockedSquareVines != null) lockedSquareVines.color = vines;
-        if (lockedStripPadlock != null) lockedStripPadlock.color = glyph;
-        if (lockedSquarePadlock != null) lockedSquarePadlock.color = glyph;
+        // Tommy's padlock (2026-11-25) is drawn in its own colours, only brightened under the pointer
+        Color padlockColor = style.SkillPadlockColor(hover);
+        if (lockedStripPadlock != null) lockedStripPadlock.color = padlockColor;
+        if (lockedSquarePadlock != null) lockedSquarePadlock.color = padlockColor;
         if (lockedPrice != null) lockedPrice.color = affordable ? glyph : style.locked.text;
         if (lockedSun != null) lockedSun.color = affordable ? style.normal.sun : style.locked.sun;
 
@@ -751,8 +753,9 @@ public class PlantUpgradeUI : EntityInfoPanel
         priceRect.anchoredPosition = new Vector2((groupX + 15f) * Px, priceRect.anchoredPosition.y);
         if (lockedStripPadlock != null)
         {
+            // Tommy's padlock is a 32 unit box with its body 5 units in: the body where the old 12 px one was
             RectTransform padlock = lockedStripPadlock.rectTransform;
-            padlock.anchoredPosition = new Vector2((groupX - 1f) * Px, padlock.anchoredPosition.y);
+            padlock.anchoredPosition = new Vector2((groupX - 3f) * Px, padlock.anchoredPosition.y);
         }
         if (lockedSun != null)
         {

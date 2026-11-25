@@ -845,6 +845,22 @@ public class LoadoutSelectionUI : MonoBehaviour
             image.material = SilhouetteMaterial;
             image.color = Color.black;
             image.raycastTarget = false;
+
+            // Tommy's padlock (2026-11-25) over the silhouette, one of its pixels to one of the card's
+            PlantInfoPanelStyle look = PlantInfoPanelStyle.Instance;
+            Sprite lockSprite = look.SkillPadlock;
+            if (lockSprite != null)
+            {
+                GameObject padlock = new GameObject("Padlock", typeof(RectTransform), typeof(Image));
+                padlock.layer = card.layer;
+                RectTransform p = (RectTransform)padlock.transform;
+                p.SetParent(square.transform, false);
+                PlantCardLook.AtWindowCentre(p, lockSprite.rect.size);
+                Image lockImage = padlock.GetComponent<Image>();
+                lockImage.sprite = lockSprite;
+                lockImage.color = look.SkillPadlockColor(true);
+                lockImage.raycastTarget = false;
+            }
         }
 
         // the sun cost (the one placing it charges, the skill tree's reduction included) in the card's slot

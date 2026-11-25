@@ -198,10 +198,12 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             RectTransform v = NewImage("Vines", cover.transform, s.vinesSquare, look.lockedVines);
             v.sizeDelta = new Vector2(VinesSize * Px, VinesSize * Px);
             vines = v.GetComponent<Image>();
-            if (look.slotPadlock != null)
+            // Tommy's padlock (2026-11-25), as on the info panel's locked skill square
+            Sprite lockSprite = look.SkillPadlock;
+            if (lockSprite != null)
             {
-                RectTransform p = NewImage("Padlock", cover.transform, look.slotPadlock, look.lockedText);
-                p.sizeDelta = new Vector2(look.slotPadlock.rect.width * Px, look.slotPadlock.rect.height * Px);
+                RectTransform p = NewImage("Padlock", cover.transform, lockSprite, look.SkillPadlockColor(false));
+                p.sizeDelta = new Vector2(lockSprite.rect.width * Px, lockSprite.rect.height * Px);
                 padlock = p.GetComponent<Image>();
             }
             lockCover = cover;
@@ -269,7 +271,7 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     {
         PlantInfoPanelStyle look = PlantInfoPanelStyle.Instance;
         if (vines != null) vines.color = hovering ? look.lockedVinesHover : look.lockedVines;
-        if (padlock != null) padlock.color = hovering ? look.lockedTextHover : look.lockedText;
+        if (padlock != null) padlock.color = look.SkillPadlockColor(hovering);
     }
 
     private static RectTransform NewImage(string name, Transform parent, Sprite sprite, Color color)
