@@ -114,16 +114,17 @@ public class PlantInfoPanelStyle : ScriptableObject
         "the locked button look's text and sun colours; otherwise the sun is the normal look's")]
     public Color lockedText = Hex("#FFF1D6");
     public Color lockedTextHover = Color.white;
-    [Tooltip("Tommy's padlock (2026-11-25, 32 by 32, drawn in its own colours): over a locked skill (the Skill strip, " +
-        "the skill square, the skill tree's locked nodes) and over the loadout's plants not unlocked yet. without " +
-        "it they fall back to slotPadlock")]
+    [Tooltip("Tommy's padlock (2026-11-25, 22 by 26, drawn in its own colours), every padlock in the game: a locked " +
+        "skill (the Skill strip, the skill square, the skill tree's locked nodes), the loadout's plants not unlocked " +
+        "yet, and locked or empty slots (Current Loadout, the plant bar). without it they fall back to slotPadlock")]
     public Sprite skillPadlock;
-    [Tooltip("the padlock's tint, a little dim so the pointer over it can brighten it (lockedPadlockHover)")]
+    [Tooltip("the padlock's tint on a locked skill, a little dim so the pointer over it can brighten it " +
+        "(lockedPadlockHover). elsewhere it's shown as drawn")]
     public Color lockedPadlock = Hex("#E6E6E6");
     public Color lockedPadlockHover = Color.white;
 
-    public Sprite SkillPadlock => skillPadlock != null ? skillPadlock : slotPadlock;
-    public Color SkillPadlockColor(bool hover) =>
+    public Sprite Padlock => skillPadlock != null ? skillPadlock : slotPadlock;
+    public Color PadlockColor(bool hover) =>
         skillPadlock == null ? (hover ? lockedTextHover : lockedText) : hover ? lockedPadlockHover : lockedPadlock;
 
     [Header("Plant slots: the squares of the loadout screen and the plant bar (Tommy, 2026-11-22)")]
@@ -131,7 +132,7 @@ public class PlantInfoPanelStyle : ScriptableObject
     public Sprite slotFrame;
     [Tooltip("the backdrop in the frame's window (portrait_backdrop_grey)")]
     public Sprite slotBackdrop;
-    [Tooltip("over a slot that isn't unlocked yet, tinted with lockedText")]
+    [Tooltip("the old padlock (padlock_x3, tinted with lockedText), only used while skillPadlock is empty")]
     public Sprite slotPadlock;
     [Tooltip("the plant card (Tommy, 2026-11-25), the loadout screen's plant squares and the plant bar's: 92 by 117 " +
         "greyscale wood, tinted with the plant's element panel colour (PlantCardLook)")]

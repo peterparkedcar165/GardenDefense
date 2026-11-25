@@ -15,12 +15,11 @@ public static class PlantCardLook
     public const float ArtHeight = 117f;
     public static readonly Vector2 ArtSize = new Vector2(ArtWidth, ArtHeight);
     // as art px from the card's top left: the plant's 64 px box centred on the window (the window is art
-    // px 15 to 76 across, 15 to 80 down, its centre 46 and 48), the cost slot (16 to 75 across, 89 to 102
-    // down) and the padlock (padlock_x3, 34 by 48 at the card's own size) centred on the window
+    // px 15 to 76 across, 15 to 80 down, its centre 46 and 48) and the cost slot (16 to 75 across, 89 to
+    // 102 down)
     private static readonly Rect IconBox = new Rect(14f, 16f, 64f, 64f);
     private static readonly Rect CostBox = new Rect(16f, 89f, 60f, 14f);
-    private static readonly Rect PadlockBox = new Rect(46f - PlantSlotLook.PadlockWidth * 0.5f, 48f - PlantSlotLook.PadlockHeight * 0.5f,
-        PlantSlotLook.PadlockWidth, PlantSlotLook.PadlockHeight);
+    private static readonly Vector2 WindowCentre = new Vector2(46f, 48f);
     // the cost at the card's own pixel size, a little under the font's native size so it fits the slot
     public const float CostFontSize = 16f;
 
@@ -49,14 +48,16 @@ public static class PlantCardLook
     public static void InWindow(RectTransform rect) => Span(rect, IconBox);
     public static void InCostSlot(RectTransform rect) => Span(rect, CostBox);
 
+    // a padlock (PlantSlotLook.AddPadlock) at its own size, its middle on the window's middle whatever the
+    // card's size (the padlock art is cropped to its pixels, so its box's middle is the padlock's)
     public static void PlacePadlock(Image padlock)
     {
-        if (padlock != null) Span(padlock.rectTransform, PadlockBox);
+        if (padlock == null) return;
+        RectTransform rect = padlock.rectTransform;
+        rect.anchorMin = rect.anchorMax = new Vector2(WindowCentre.x / ArtWidth, 1f - WindowCentre.y / ArtHeight);
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.anchoredPosition = Vector2.zero;
     }
-
-    // a box size art px big (at the card's own size) centred on the window
-    public static void AtWindowCentre(RectTransform rect, Vector2 size) =>
-        Span(rect, new Rect(46f - size.x * 0.5f, 48f - size.y * 0.5f, size.x, size.y));
 
     // the cost's font size on a card scale times the art's size
     public static float CostFontSizeAt(float scale) => Mathf.Round(CostFontSize * scale);
