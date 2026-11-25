@@ -428,6 +428,7 @@
     <Compile Include="Assets\Scripts\Mulch\MulchManager.cs" />
     <Compile Include="Assets\Scripts\UI\StatsAreaHoverTrigger.cs" />
     <Compile Include="Assets\Scripts\Mulch\SlowBonusMulchData.cs" />
+    <Compile Include="Assets\Scripts\Spawning\Biome.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SnowBondHasteEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\GlowshroomData.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\RhodiolaData.cs" />
