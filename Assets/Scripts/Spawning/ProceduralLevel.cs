@@ -77,6 +77,8 @@ public class ProceduralLevel : SpawnManager
     {
         CurrentConfig = config;
         Instance = this;
+        // the right panel's wood in the level's biome colour
+        GameHUD.instance?.TintRightPanel(config);
         Plant.ResetPendingExpForNewLevel(); // discard any exp left over from a game-over'd attempt
 
         if (WeatherManager.instance)

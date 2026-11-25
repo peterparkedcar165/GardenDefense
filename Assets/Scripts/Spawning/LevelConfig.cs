@@ -6,7 +6,13 @@ public class LevelConfig : ScriptableObject
     [Header("level settings")]
     [Tooltip("used for save data (CompleteLevel calls)")]
     public int levelNumber;
+    [Tooltip("the level's biome: the right panel's wood colour follows it (GameHUD). Auto goes by the level " +
+        "number, in fives like the level selector: 1-5 Daytime, 6-10 Nighttime, 11-15 Desert, 16-20 Cave, " +
+        "21-25 Snow, 26 on Underwater")]
+    public Biome biome = Biome.Auto;
     public WeatherEntry[] weather;
+
+    public Biome CurrentBiome => biome != Biome.Auto ? biome : Biomes.ForLevel(levelNumber);
     public TemperatureType temperature = TemperatureType.Normal;
     public int maxWaves = 40;
     public int startSunCount = 350;

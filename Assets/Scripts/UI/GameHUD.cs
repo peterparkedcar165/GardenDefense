@@ -21,6 +21,50 @@ public class GameHUD : MonoBehaviour
     // canvas units per art pixel of the game controls
     private const float Px = 2f;
 
+    [System.Serializable]
+    public struct BiomeWood
+    {
+        public Biome biome;
+        [Tooltip("the right panel's wood tint (its greyscale wood times this)")]
+        public Color wood;
+        public BiomeWood(Biome biome, string hex)
+        {
+            this.biome = biome;
+            wood = ColorUtility.TryParseHtmlString(hex, out Color c) ? c : Color.white;
+        }
+    }
+
+    [Header("The right panel's wood colour per biome (Tommy, 2026-11-25)")]
+    [Tooltip("the right panel's wood (UIScreen's Image); found by name next to this when empty")]
+    [SerializeField] private Image rightPanel;
+    [Tooltip("Tommy's colours by name; the exact shades, desert night and underwater are proposals")]
+    [SerializeField] private BiomeWood[] biomeWood =
+    {
+        new BiomeWood(Biome.Daytime, "#557D46"),      // green (the panel spec's leaf green)
+        new BiomeWood(Biome.Nighttime, "#3E5285"),    // dark blue
+        new BiomeWood(Biome.Desert, "#C8A878"),       // beige
+        new BiomeWood(Biome.DesertNight, "#8A7455"),  // dark beige
+        new BiomeWood(Biome.Cave, "#965C3C"),         // brown (the spec's own wood colour)
+        new BiomeWood(Biome.Snow, "#E8EEF2"),         // white
+        new BiomeWood(Biome.Underwater, "#506EB4"),   // the spec's crystal blue
+    };
+
+    // called by the level once it's set up (ProceduralLevel.Start): the right panel's wood takes the
+    // level's biome colour. a biome without a colour leaves the panel as the prefab has it
+    public void TintRightPanel(LevelConfig config)
+    {
+        if (config == null) return;
+        if (rightPanel == null && transform.parent != null)
+        {
+            Transform found = transform.parent.Find("UIScreen");
+            if (found != null) rightPanel = found.GetComponent<Image>();
+        }
+        if (rightPanel == null || biomeWood == null) return;
+        Biome biome = config.CurrentBiome;
+        foreach (BiomeWood entry in biomeWood)
+            if (entry.biome == biome) { rightPanel.color = entry.wood; return; }
+    }
+
     // length of the countdown now running, taken from its first value. negative: none running
     private float countdownFull = -1f;
     private float lastCountdown;
