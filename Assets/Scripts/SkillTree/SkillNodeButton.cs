@@ -162,10 +162,9 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             frame.raycastTarget = false;
             frame.rectTransform.sizeDelta = new Vector2(FrameSize * Px, FrameSize * Px);
             outline.SetAsFirstSibling();
-            // the trim (a greyscale copy of the gold) in the same colour as the wood (Tommy, 2026-11-25)
             if (look.skillFrameTrim != null && outline.Find("Trim") == null)
             {
-                RectTransform trim = NewImage("Trim", outline, look.skillFrameTrim, PlantData.ElementPanelColor(plant.elementalType));
+                RectTransform trim = NewImage("Trim", outline, look.skillFrameTrim, Color.white);
                 trim.anchorMin = Vector2.zero;
                 trim.anchorMax = Vector2.one;
                 trim.offsetMin = trim.offsetMax = Vector2.zero;
