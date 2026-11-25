@@ -145,7 +145,6 @@
     <Compile Include="Assets\Scripts\UI\InsectShowcaseStyle.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\ScorpionData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DecayEffect.cs" />
-    <Compile Include="Assets\Scripts\UI\AnimatedPortrait.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BogIrisData.cs" />
     <Compile Include="Assets\Scripts\UI\GameControlsStyle.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BubbleTrapEffect.cs" />

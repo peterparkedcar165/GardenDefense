@@ -425,42 +425,68 @@ public class InsectShowcase : MonoBehaviour
         }
         y += 2f * cellH + 3f + 4f;
 
-        // resistances (Tommy): one box headed "Resistances", then each element's icon, a colon and its
-        // percentage, three to a row in his order: fire, water, grass, then poison, ice, wind
-        Image resBox = NewImage("Resistances", cardTip, style.insetBox, style.panel, true);
-        float ry = 3f;
-        ry += AddText(resBox.rectTransform, "Resistances", 5f, ry, inner - 10f, style.label, style.textSize, false) + 2f;
-        float colW = Mathf.Floor((inner - 10f) / 3f);
-        float rowH = Mathf.Max(ElementIcon, lh);
-        string colon = ColorUtility.ToHtmlStringRGB(style.text);
-        ResEntry(0, ElementalType.Fire, data.baseFireResistance);
-        ResEntry(1, ElementalType.Water, data.baseWaterResistance);
-        ResEntry(2, ElementalType.Grass, data.baseGrassResistance);
-        ResEntry(3, ElementalType.Poison, data.basePoisonResistance);
-        ResEntry(4, ElementalType.Ice, data.baseIceResistance);
-        ResEntry(5, ElementalType.Wind, data.baseWindResistance);
-        void ResEntry(int i, ElementalType element, float value)
+        // weaknesses and resistances (Tommy, 2026-11-24): two boxes side by side, each just the icons of
+        // the elements the insect takes more damage from (below 0) or less (above 0), in his order fire,
+        // water, grass, poison, ice, wind; None when there are none. no percentages
+        var elements = new (ElementalType element, float value)[]
         {
-            float cx = 5f + (i % 3) * colW;
-            float cy = ry + (i / 3) * (rowH + 2f);
-            float tx = cx;
-            Sprite icon = style.ElementIcon(element);
-            if (icon != null)
-            {
-                Image image = NewImage("Icon " + element, resBox.rectTransform, icon, Color.white, false);
-                image.preserveAspect = true;
-                TopLeft(image.rectTransform, cx, cy + Mathf.Floor((rowH - ElementIcon) / 2f), ElementIcon, ElementIcon);
-                tx = cx + ElementIcon + 2f;
-            }
+            (ElementalType.Fire, data.baseFireResistance), (ElementalType.Water, data.baseWaterResistance),
+            (ElementalType.Grass, data.baseGrassResistance), (ElementalType.Poison, data.basePoisonResistance),
+            (ElementalType.Ice, data.baseIceResistance), (ElementalType.Wind, data.baseWindResistance),
+        };
+        var weaknesses = new List<ElementalType>();
+        var resistances = new List<ElementalType>();
+        foreach (var (element, value) in elements)
+        {
             int percent = Mathf.RoundToInt(value * 100f);
-            string shown = (percent > 0 ? "+" : percent < 0 ? "-" : "") + Mathf.Abs(percent) + "%";
-            Color color = percent < 0 ? style.weak : percent > 0 ? style.resists : style.mutedText;
-            string label = icon != null ? $"<color=#{colon}>:</color> {shown}" : $"<color=#{colon}>{element}:</color> {shown}";
-            AddText(resBox.rectTransform, label, tx, cy + Mathf.Floor((rowH - lh) / 2f), cx + colW - tx - 2f, color, style.textSize, false);
+            if (percent < 0) weaknesses.Add(element);
+            else if (percent > 0) resistances.Add(element);
         }
-        ry += 2f * rowH + 2f + 4f;
-        TopLeft(resBox.rectTransform, Pad, y, inner, ry);
-        y += ry + 4f;
+        float halfW = Mathf.Floor((inner - 3f) / 2f);
+        RectTransform weakBox = ElementBox("Weaknesses", weaknesses, style.weak, Pad, out float weakH);
+        RectTransform resistBox = ElementBox("Resistances", resistances, style.resists, Pad + halfW + 3f, out float resistH);
+        // both as tall as the taller one
+        float boxH = Mathf.Max(weakH, resistH);
+        TopLeft(weakBox, Pad, y, halfW, boxH);
+        TopLeft(resistBox, Pad + halfW + 3f, y, halfW, boxH);
+        y += boxH + 4f;
+        // one box: its title (green for weaknesses, red for resistances, the colours the old percentages had),
+        // then the icons in a row (wrapping if they ever don't fit)
+        RectTransform ElementBox(string title, List<ElementalType> list, Color titleColor, float x, out float height)
+        {
+            Image elementBox = NewImage(title, cardTip, style.insetBox, style.panel, true);
+            RectTransform r = elementBox.rectTransform;
+            float ey = 3f;
+            ey += AddText(r, title, 5f, ey, halfW - 10f, titleColor, style.textSize, false) + 2f;
+            if (list.Count == 0)
+                ey += AddText(r, "None", 5f, ey, halfW - 10f, style.mutedText, style.textSize, false);
+            else
+            {
+                float ex = 5f;
+                foreach (ElementalType element in list)
+                {
+                    if (ex + ElementIcon > halfW - 5f) { ex = 5f; ey += ElementIcon + 2f; }
+                    Sprite icon = style.ElementIcon(element);
+                    if (icon != null)
+                    {
+                        Image image = NewImage("Icon " + element, r, icon, Color.white, false);
+                        image.preserveAspect = true;
+                        TopLeft(image.rectTransform, ex, ey, ElementIcon, ElementIcon);
+                        ex += ElementIcon + 3f;
+                    }
+                    else
+                    {
+                        // no icon for it: its name in its colour, on a line of its own
+                        AddText(r, element.ToString(), ex, ey, halfW - 5f - ex, style.ElementText(element), style.textSize, false);
+                        ex = halfW;
+                    }
+                }
+                ey += Mathf.Max(ElementIcon, lh);
+            }
+            height = ey + 4f;
+            TopLeft(r, x, y, halfW, height);
+            return r;
+        }
 
         y += AddText(cardTip, insect.GetTraitsAndAggressivityText(), 8f, y, w - 16f, style.text, style.textSize, true) + 6f;
 

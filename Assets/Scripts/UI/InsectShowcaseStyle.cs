@@ -79,9 +79,9 @@ public class InsectShowcaseStyle : ScriptableObject
     public Color badgeText = Hex("#4A2814");
     [Tooltip("the portrait's backdrop is the insect's name colour lightened this much toward white")]
     [Range(0f, 1f)] public float portraitLighten = 0.6f;
-    [Tooltip("a resistance below 0: the insect takes more damage from that element")]
+    [Tooltip("the Weaknesses title in the insect tooltip (elements below 0: the insect takes more damage from them)")]
     public Color weak = Hex("#5ED45E");
-    [Tooltip("a resistance above 0: the insect takes less damage from that element")]
+    [Tooltip("the Resistances title in the insect tooltip (elements above 0: the insect takes less damage from them)")]
     public Color resists = Hex("#FF7A66");
 
     [Header("Plant sections (Current Loadout, Available Plants): the same panel, brighter")]
