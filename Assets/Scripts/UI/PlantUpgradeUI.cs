@@ -209,6 +209,27 @@ public class PlantUpgradeUI : EntityInfoPanel
         base.Awake();
         if (tooltipPanel != null)
             tooltipPanel.SetActive(false);
+        UseSmallUpgradeButtons();
+    }
+
+    // the Attack, Passive and Skill upgrade buttons are Tommy's small button (2026-11-25), 112 by 38 at
+    // 2 units a pixel, against their strip's right end (2 units in); the price and glyphs move 2 px down
+    // so the capitals sit in the middle of its wood (rows 3 to 15 of 19)
+    private const int UpgradeButtonDrop = 2;
+
+    private void UseSmallUpgradeButtons()
+    {
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        if (style.upgradeButton == null) return;
+        foreach (PathRow row in Paths)
+        {
+            if (row == null || row.look == null) continue;
+            row.look.UseArt(style.upgradeButton, style.upgradeButtonTrim, UpgradeButtonDrop);
+            RectTransform r = (RectTransform)row.look.transform;
+            RectTransform strip = r.parent as RectTransform;
+            if (strip != null && Mathf.Approximately(r.anchorMin.x, 0f) && Mathf.Approximately(r.pivot.x, 0f))
+                r.anchoredPosition = new Vector2(strip.rect.width - r.sizeDelta.x - 2f, r.anchoredPosition.y);
+        }
     }
 
     protected override void Update()

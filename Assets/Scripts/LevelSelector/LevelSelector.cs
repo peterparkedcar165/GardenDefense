@@ -28,9 +28,13 @@ public class LevelSelector : MonoBehaviour
         Plank("#4A9EDC", "#7CC8F4", "#3478B8", "#F0FAFF", "#183A66"),
     };
 
-    // canvas units: the space between two planks in a column, and the extra between its two groups of five
-    private const float RowGap = 8f;
+    // the planks 1.5 times their size (Tommy, 2026-11-25: bigger; 1 art px = 3 canvas units, whole pixels
+    // at 1080). canvas units: the space between two planks in a column, the extra between its two groups
+    // of five, and between two columns
+    private const float PlankScale = 1.5f;
+    private const float RowGap = 12f;
     private const float GroupGap = 40f;
+    private const float ColumnGap = 40f;
 
     private static GameControlsStyle.ButtonColors Plank(string face, string hover, string pressed, string text, string shadow) =>
         new GameControlsStyle.ButtonColors(Hex(face), Hex(hover), Hex(pressed), Hex(text), Hex(shadow));
@@ -44,8 +48,9 @@ public class LevelSelector : MonoBehaviour
     };
 
     // each level button becomes a plank in place (PlankButton.Adopt keeps its OnLevelSelected wiring),
-    // as wide as it was; each column keeps its place and its ten planks are spaced evenly, a wider gap
-    // between its two groups of five. running it again changes nothing, so the editor's bake
+    // as wide as it was, drawn PlankScale times; the columns are spaced ColumnGap apart around where
+    // their middle was, and each column's ten planks evenly, a wider gap between its two groups of five,
+    // centred where the column was. running it again changes nothing, so the editor's bake
     // (Tools > Garden Defense > Bake Planks in Open Scene) and the scene starting agree
     public void SkinButtons()
     {
@@ -62,6 +67,8 @@ public class LevelSelector : MonoBehaviour
                 ? groupColors[Mathf.Min(i / 5, groupColors.Length - 1)] : GameControlsStyle.Instance.start;
             PlankButton plank = PlankButton.Adopt(b, colors, font);
             rect.sizeDelta = new Vector2(Mathf.Max(plank.Rect.sizeDelta.x, width), plank.Rect.sizeDelta.y);
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.localScale = Vector3.one * PlankScale;
 
             // the column it stands in: the one whose x it shares (within 20 units)
             var column = columns.Find(c => Mathf.Abs(c[0].anchoredPosition.x - rect.anchoredPosition.x) < 20f);
@@ -69,17 +76,33 @@ public class LevelSelector : MonoBehaviour
             column.Add(rect);
         }
 
+        // the columns left to right, ColumnGap apart (as drawn), around the middle of where they were
+        var columnX = new System.Collections.Generic.List<float>();
         foreach (var column in columns)
         {
+            float sum = 0f;
+            foreach (RectTransform r in column) sum += r.anchoredPosition.x;
+            columnX.Add(sum / column.Count);
+        }
+        columns.Sort((a, b) => a[0].anchoredPosition.x.CompareTo(b[0].anchoredPosition.x));
+        columnX.Sort();
+        float widest = 0f;
+        foreach (var column in columns)
+            foreach (RectTransform r in column) widest = Mathf.Max(widest, r.sizeDelta.x * PlankScale);
+        float middle = columnX.Count > 0 ? (columnX[0] + columnX[columnX.Count - 1]) * 0.5f : 0f;
+        float pitch = widest + ColumnGap;
+
+        for (int c = 0; c < columns.Count; c++)
+        {
+            var column = columns[c];
             column.Sort((a, b) => b.anchoredPosition.y.CompareTo(a.anchoredPosition.y));
-            float x = 0f, top = float.MinValue, bottom = float.MaxValue, height = column[0].sizeDelta.y;
+            float top = float.MinValue, bottom = float.MaxValue, height = column[0].sizeDelta.y * PlankScale;
             foreach (RectTransform r in column)
             {
-                x += r.anchoredPosition.x;
                 top = Mathf.Max(top, r.anchoredPosition.y);
                 bottom = Mathf.Min(bottom, r.anchoredPosition.y);
             }
-            x = Mathf.Round(x / column.Count);
+            float x = Mathf.Round(middle + (c - (columns.Count - 1) * 0.5f) * pitch);
             int groups = (column.Count - 1) / 5;
             float span = (column.Count - 1) * (height + RowGap) + groups * GroupGap;
             float y = Mathf.Round((top + bottom) * 0.5f + span * 0.5f);

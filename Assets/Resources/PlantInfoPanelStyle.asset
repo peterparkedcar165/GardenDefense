@@ -44,6 +44,8 @@ MonoBehaviour:
   plantCardBase: {fileID: 21300000, guid: f55c7821be974508a7c12dcbafb3bc61, type: 3}
   plantCardTrim: {fileID: 21300000, guid: fadb235113d7475caee65e4929ae827f, type: 3}
   slotBackdrop: {fileID: 21300000, guid: 2e86ae8531494c09b5ed5cc0be85084f, type: 3}
+  upgradeButton: {fileID: 21300000, guid: a9ed2e7c118c4cc2b6c13b27c99315d3, type: 3}
+  upgradeButtonTrim: {fileID: 21300000, guid: 59d8d8cff90543dba288e0eb10f15177, type: 3}
   slotPadlock: {fileID: 21300000, guid: e7c9aa191b7f44af8732924dd926024d, type: 3}
   skillPadlock: {fileID: 21300000, guid: b95cd93d981b40869ecefaed797c049f, type: 3}
   lockedSlotTint: {r: 0.35, g: 0.35, b: 0.35, a: 1}

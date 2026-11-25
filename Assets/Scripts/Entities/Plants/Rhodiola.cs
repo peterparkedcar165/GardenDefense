@@ -185,6 +185,11 @@ public class Rhodiola : Shooter
     // health plant, once no plant qualifies for the tiers above. 4) friendly insects, lowest
     // health, only once no plant needs healing at all
     private const float CriticalHealthPercent = 0.25f;
+    // she only heals (Tommy): an ally counts as hurt once it's missing at least this much health, so a
+    // plant a fraction of a point under full doesn't keep her casting with nothing to show for it
+    private const float MinMissingHealth = 1f;
+
+    private static bool Hurt(Entity e) => e.maxHealth - e.health >= MinMissingHealth;
 
     protected override GameObject FindTarget()
     {
@@ -207,12 +212,12 @@ public class Rhodiola : Shooter
             if (Vector2.Distance(transform.position, plant.transform.position) > attackRange) continue;
             float percent = plant.health / plant.maxHealth;
             if (percent < CriticalHealthPercent && percent < criticalPercent) { criticalPercent = percent; critical = plant; }
-            if (plant.health < plant.maxHealth && percent < lowestPercent) { lowestPercent = percent; lowest = plant; }
+            if (Hurt(plant) && percent < lowestPercent) { lowestPercent = percent; lowest = plant; }
         }
         if (critical != null) return critical;
 
         if (_mainTarget is Plant currentTarget && currentTarget != null && currentTarget.IsAlive
-            && currentTarget.health < currentTarget.maxHealth
+            && Hurt(currentTarget)
             && Vector2.Distance(transform.position, currentTarget.transform.position) <= attackRange)
             return currentTarget;
 
@@ -223,7 +228,7 @@ public class Rhodiola : Shooter
         foreach (Insect ally in Insect.friendlyInsects)
         {
             if (ally == null || !ally.IsAlive) continue;
-            if (ally.health >= ally.maxHealth) continue;
+            if (!Hurt(ally)) continue;
             if (Vector2.Distance(transform.position, ally.transform.position) > attackRange) continue;
             float percent = ally.health / ally.maxHealth;
             if (percent < lowestAllyPercent) { lowestAllyPercent = percent; lowestAlly = ally; }
@@ -248,23 +253,47 @@ public class Rhodiola : Shooter
     // the attack sound plays when the seed leaves, not when she starts raising the staff
     protected override bool PlaysOwnAttackSound => true;
 
+    // the seed waiting for its release frame, with the ally it was cast for. each cast keeps its own
+    // target (the facing check picks _mainTarget again every 0.15 s and could clear it), and a cast never
+    // waits behind an older one: a new cast releases the old seed at once, and so does her being switched
+    // off, so every cast she animates ends in a seed
+    private Coroutine _releaseRoutine;
+    private Entity _castTarget;
+
     protected override void Shoot(Vector3 target)
     {
         if (healProjectilePrefab == null || _mainTarget == null) return;
+        if (_releaseRoutine != null) { StopCoroutine(_releaseRoutine); _releaseRoutine = null; ReleaseSeed(); }
+        _castTarget = _mainTarget;
         float frameRate = Mathf.Max(0.01f, attackClipFrameRate);
         float clipLength = Mathf.Max(1, attackClipFrames) / frameRate;
         float speed = Mathf.Max(1f, clipLength / Mathf.Max(0.01f, attackCooldown));
         PlayBodyAnimation(BodyAttackTrigger, clipLength, clipLength / speed);
-        BeginAttackWindup(Mathf.Max(0, attackReleaseFrame) / (frameRate * speed), ReleaseSeed);
+        _releaseRoutine = StartCoroutine(ReleaseAfter(Mathf.Max(0, attackReleaseFrame) / (frameRate * speed)));
     }
 
-    // the glow's peak: the seed leaves the gem for whoever needs it most now (the target picked when she
-    // raised the staff, unless it died meanwhile)
+    private System.Collections.IEnumerator ReleaseAfter(float seconds)
+    {
+        if (seconds > 0f) yield return new WaitForSeconds(seconds);
+        _releaseRoutine = null;
+        ReleaseSeed();
+    }
+
+    private void OnDisable()
+    {
+        _releaseRoutine = null;
+        _castTarget = null;
+    }
+
+    // the glow's peak: the seed leaves the gem for the ally it was cast for, or, if that one died
+    // meanwhile, whoever needs it most now
     private void ReleaseSeed()
     {
+        Entity target = _castTarget;
+        _castTarget = null;
         if (!IsAlive || healProjectilePrefab == null) return;
-        if (_mainTarget == null || _mainTarget.health <= 0f) _mainTarget = FindMostInjuredHealable();
-        if (_mainTarget == null) return;
+        if (target == null || target.health <= 0f) target = FindMostInjuredHealable();
+        if (target == null) return;
 
         Vector3 gem = GemWorldPosition();
         Vector3 basePosition = new Vector3(gem.x, transform.position.y, transform.position.z);
@@ -272,7 +301,7 @@ public class Rhodiola : Shooter
         RhodiolaProjectile proj = obj.GetComponent<RhodiolaProjectile>();
         if (proj != null)
         {
-            proj.Initialize(this, _mainTarget, projectileSpeed, HealAmount, SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock));
+            proj.Initialize(this, target, projectileSpeed, HealAmount, SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock));
             proj.SetLaunchHeight(gem.y);
         }
         if (data != null) SfxPlayer.Play(data.attackSound, gem);

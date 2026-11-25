@@ -85,6 +85,11 @@ public class PlantInfoPanelStyle : ScriptableObject
     public Sprite buttonPressed;
     [Tooltip("the 7 by 7 sun after a price drawn in code (the mulch Sell popup), tinted with the look's sun colour")]
     public Sprite sunGlyph;
+    [Tooltip("Tommy's small button (2026-11-25, ui_button_small_base, 56 by 19): greyscale wood tinted with the state's " +
+        "face colour, for the Attack, Passive and Skill upgrade buttons, drawn at its own size (2 units a pixel)")]
+    public Sprite upgradeButton;
+    [Tooltip("its gold and leaf trim (ui_button_small_trim), drawn over the wood untinted")]
+    public Sprite upgradeButtonTrim;
     [Tooltip("can buy")]
     public ButtonLook normal = new ButtonLook("#FFB973", "#FFF1D6", "#4A2814", "#FFC939");
     [Tooltip("pointer over")]

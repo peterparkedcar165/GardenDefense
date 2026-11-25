@@ -51,6 +51,39 @@ public class PixelButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         pressed = false;
     }
 
+    // this button's own art instead of the style's button (Tommy's small button on the upgrade buttons,
+    // 2026-11-25): the face sprite tinted by state as before, the trim drawn over it untinted, both at
+    // the art's own size, the parts moved down drop art pixels so they sit on the art's wood. one look,
+    // so pressed uses the same sprites (the parts still drop while pressed). run once
+    private bool artApplied;
+
+    public void UseArt(Sprite faceArt, Sprite trimArt, int drop)
+    {
+        if (artApplied || faceArt == null || face == null) return;
+        artApplied = true;
+        faceSprite = pressedFaceSprite = faceArt;
+        face.type = Image.Type.Simple;
+        ((RectTransform)transform).sizeDelta = faceArt.rect.size * pixel;
+        if (trimArt != null)
+        {
+            GameObject go = new GameObject("Trim", typeof(RectTransform), typeof(Image));
+            go.layer = gameObject.layer;
+            RectTransform r = (RectTransform)go.transform;
+            r.SetParent(face.transform, false);
+            r.SetAsFirstSibling();
+            r.anchorMin = Vector2.zero;
+            r.anchorMax = Vector2.one;
+            r.offsetMin = r.offsetMax = Vector2.zero;
+            Image trim = go.GetComponent<Image>();
+            trim.sprite = trimArt;
+            trim.raycastTarget = false;
+        }
+        if (parts != null)
+            foreach (RectTransform part in parts)
+                if (part != null) part.anchoredPosition -= new Vector2(0f, drop * pixel);
+        Apply();
+    }
+
     public void SetLook(Look value)
     {
         if (look == value) return;

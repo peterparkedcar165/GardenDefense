@@ -84,9 +84,10 @@ public class GameControlsStyle : ScriptableObject
     [Header("Inside the buttons (art pixels from the button's top; everything 2 lower while pressed)")]
     [Tooltip("the icon, this gap, then the word: one group centred on the button by their drawn pixels")]
     public int iconGap = 6;
-    [Tooltip("centred between the gold lines (rows 2 to 17 of the 20 px button)")]
-    public int playIconTop = 2;
-    public int pauseIconTop = 2;
+    [Tooltip("centred on the word's capitals (rows 6 to 12 of the 20 px button), like the speed icon: play and " +
+        "pause are 9 px tall (play_small, pause_small; Tommy 2026-11-25: the 15 px ones were too big for the frame)")]
+    public int playIconTop = 5;
+    public int pauseIconTop = 5;
     public int speedIconTop = 5;
     [Tooltip("cap top of the word (Start, Pause, Resume, 1x, and every plank button's word)")]
     public int labelTop = 6;

@@ -851,7 +851,6 @@ public class LoadoutSelectionUI : MonoBehaviour
         }
         else
         {
-            square.ShowOpen();
             // its sprite, all dark, in the card's window over the trim
             GameObject silhouette = new GameObject("Silhouette", typeof(RectTransform), typeof(Image));
             silhouette.layer = card.layer;
@@ -865,8 +864,9 @@ public class LoadoutSelectionUI : MonoBehaviour
             image.color = Color.black;
             image.raycastTarget = false;
 
-            // Tommy's padlock (2026-11-25) over the silhouette, centred on the window
-            PlantCardLook.PlacePadlock(PlantSlotLook.AddPadlock(square.transform));
+            // the card darkened like a locked Current Loadout slot, Tommy's padlock over the silhouette
+            // (Tommy, 2026-11-25); no hover note, the tooltip doesn't show for it either
+            square.ShowLocked(null);
         }
 
         // the sun cost (the one placing it charges, the skill tree's reduction included) in the card's slot
