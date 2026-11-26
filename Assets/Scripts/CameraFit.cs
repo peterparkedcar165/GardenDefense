@@ -27,6 +27,11 @@ public class CameraFit : MonoBehaviour
 
     public static CameraFit instance;
 
+    // the view fully zoomed out at the level's start (world units), the most the camera ever shows: the cloud
+    // shadows cover it once (CloudShadows) instead of following every zoom. empty until this level's camera
+    // has centred
+    public static Rect ZoomedOutView { get; private set; }
+
     private Camera _cam;
     private Bounds _mapBounds;
     private float _maxZoom;
@@ -40,6 +45,7 @@ public class CameraFit : MonoBehaviour
     void Awake()
     {
         instance = this;
+        ZoomedOutView = Rect.zero;
     }
 
     void Start()
@@ -78,6 +84,7 @@ public class CameraFit : MonoBehaviour
             : _mapBounds.min.x + halfW;
 
         transform.position = new Vector3(startX, _mapBounds.center.y, transform.position.z);
+        ZoomedOutView = new Rect(startX - halfW, _mapBounds.center.y - _maxZoom, 2f * halfW, 2f * _maxZoom);
     }
 
     void Update()

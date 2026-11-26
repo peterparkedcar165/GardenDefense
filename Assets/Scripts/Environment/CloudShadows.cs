@@ -5,11 +5,13 @@ using UnityEngine;
 // changed here. its particles are his black cloud shapes (one random cell of CloudShadowStyle.sheet each),
 // drifting up and to the right at the style's angle over the whole camera view, on real time like the
 // weather (on while paused, no faster at a higher game speed), drawn above everything in the world and
-// under the indicators and the ui. a shadow is born anywhere upwind of the view and lives long enough to
-// cross it, fading in and out at the two ends of its life; the system is prewarmed, so the view starts
-// full. they show on day, desert and snow levels, and on night and desert night levels only while Sunny
-// weather has the sun out; never in the cave or underwater (the interiors). they fade out while it rains,
-// snows or a sandstorm blows. built by ProceduralLevel when the level starts
+// under the indicators and the ui. they cover the camera's fully zoomed out view (CameraFit.ZoomedOutView),
+// set once: zooming or panning never moves or re-scatters them (Tommy: they re-scattered with every zoom).
+// a shadow is born anywhere upwind of that view and lives long enough to cross it, fading in and out at the
+// two ends of its life; the system is prewarmed, so the view starts full. they show on day, desert and
+// snow levels, and on night and desert night levels only while Sunny weather has the sun out; never in
+// the cave or underwater (the interiors). they fade out while it rains, snows or a sandstorm blows. made
+// by ProceduralLevel when the level starts, built once the camera has centred
 public class CloudShadows : MonoBehaviour
 {
     private CloudShadowStyle style;
@@ -35,12 +37,27 @@ public class CloudShadows : MonoBehaviour
         CloudShadows clouds = go.AddComponent<CloudShadows>();
         clouds.style = style;
         clouds.biome = biome;
-        if (!clouds.Build())
-        {
-            Destroy(go);
-            return null;
-        }
+        // built once the level's camera has centred (its zoomed out view is known), see Update
         return clouds;
+    }
+
+    // the area they cover, fixed when they're built
+    private Rect view;
+    private bool built;
+    private float waited;
+
+    // the camera's fully zoomed out view, or (no CameraFit in the scene) what the camera shows now
+    private static bool TryGetView(bool fallback, out Rect rect)
+    {
+        rect = CameraFit.ZoomedOutView;
+        if (rect.width > 0f) return true;
+        if (!fallback) return false;
+        Camera cam = Camera.main;
+        float h = cam != null && cam.orthographic ? cam.orthographicSize : 8.5f;
+        float w = h * (cam != null ? cam.aspect : 16f / 9f);
+        Vector3 c = cam != null ? cam.transform.position : Vector3.zero;
+        rect = new Rect(c.x - w, c.y - h, 2f * w, 2f * h);
+        return true;
     }
 
     private bool Build()
@@ -129,25 +146,19 @@ public class CloudShadows : MonoBehaviour
         return true;
     }
 
-    // the numbers that follow the style live: size, speed, direction, how many, and the area they're born in
+    // the numbers that follow the style live (size, speed, direction, how many): only a change to one of
+    // them sets the system up again; the camera never does
     private float appliedScale = -1f, appliedSpeed = -1f, appliedAngle = -1f, appliedCount = -1f;
-    private Vector3 appliedCamera;
-    private float appliedView;
 
     private void Configure()
     {
-        Camera cam = Camera.main;
-        float h = cam != null && cam.orthographic ? cam.orthographicSize : 8.5f;
-        float w = h * (cam != null ? cam.aspect : 16f / 9f);
-        Vector3 centre = cam != null ? cam.transform.position : Vector3.zero;
-        if (style.scale == appliedScale && style.speed == appliedSpeed && style.angle == appliedAngle && style.count == appliedCount
-            && centre == appliedCamera && h == appliedView) return;
+        if (style.scale == appliedScale && style.speed == appliedSpeed && style.angle == appliedAngle && style.count == appliedCount) return;
         appliedScale = style.scale;
         appliedSpeed = style.speed;
         appliedAngle = style.angle;
         appliedCount = style.count;
-        appliedCamera = centre;
-        appliedView = h;
+        float w = view.width * 0.5f, h = view.height * 0.5f;
+        Vector2 centre = view.center;
 
         float a = style.angle * Mathf.Deg2Rad;
         Vector2 dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
@@ -159,7 +170,7 @@ public class CloudShadows : MonoBehaviour
         float life = travel / Mathf.Max(0.01f, style.speed);
         // born anywhere in the view swept back upwind by the travel
         float boxW = viewW + travel * dir.x, boxH = viewH + travel * dir.y;
-        Vector2 boxCentre = new Vector2(centre.x, centre.y) - dir * (travel * 0.5f);
+        Vector2 boxCentre = centre - dir * (travel * 0.5f);
         // so about count are over the view at once: each place in the view is crossed by every shadow born
         // in its upwind strip, rate * life * view / box of them
         float rate = style.count * (boxW * boxH) / (life * (2f * w) * (2f * h));
@@ -201,9 +212,17 @@ public class CloudShadows : MonoBehaviour
 
     private void Update()
     {
-        if (particles == null) return;
         // real time, like the weather's particles
         float dt = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
+        if (!built)
+        {
+            // the camera centres in its own Start; without a CameraFit, half a second on, what it shows
+            waited += dt;
+            if (!TryGetView(waited > 0.5f, out view)) return;
+            built = true;
+            if (!Build()) { Destroy(gameObject); return; }
+        }
+        if (particles == null) return;
         Configure();
         float target = Wanted() ? 1f : 0f;
         if (shown != target || appliedOpacity != style.opacity)
