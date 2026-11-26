@@ -28,7 +28,10 @@ public class FertilizerCard : MonoBehaviour
         ui = selectionUI;
         this.fallDelay = fallDelay;
         rectTransform = GetComponent<RectTransform>();
-        canvasGroup.interactable = false;
+        // not clickable until it's face up, but in its clickable look (Tommy: switching the button off greyed
+        // it): the pointer passes through it instead
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = false;
         // hidden until it's above the screen (its first frame is spent where the row lays it out)
         canvasGroup.alpha = 0f;
         highlight.SetActive(false);
@@ -41,39 +44,12 @@ public class FertilizerCard : MonoBehaviour
         StartCoroutine(AnimateIn());
     }
 
-    // the drop (Tommy, 2026-11-26: fast and dramatic): a fall that starts slow and keeps speeding up, like
-    // something dropped, then a slam: squashed flat on landing and springing back, its bottom edge staying
-    // where it landed. real seconds; the screen's title drops the same way (FertilizerSelectionUI.DropTitle)
-    public const float FallSeconds = 0.3f;
-    public const float SlamSeconds = 0.22f;
-    // how far flat the slam squashes it (a share of its height), and how much wider it spreads meanwhile
-    private const float SlamSquash = 0.16f;
-    private const float SlamSpread = 0.8f;
+    // the drop (Tommy, 2026-11-26): like a card slid across a table, fast and gliding to a stop, no squash.
+    // real seconds; the screen's title slides in the same way (FertilizerSelectionUI.DropTitle)
+    public const float FallSeconds = 0.35f;
 
-    // the fall's progress for t from 0 to 1: falling ever faster
-    public static float Fall(float t) => t * t * t;
-
-    // the slam at k from 0 (the impact) to 1 (settled): a squash that springs back past round and settles
-    public static Vector3 Slam(float k)
-    {
-        float s = SlamSquash * Mathf.Cos(k * Mathf.PI * 2f) * (1f - k);
-        return new Vector3(1f + s * SlamSpread, 1f - s, 1f);
-    }
-
-    // plays the slam on r at its resting place, its bottom edge kept on the spot (height: r's own, canvas units)
-    public static IEnumerator SlamDown(RectTransform r, Vector2 rest, float height)
-    {
-        for (float elapsed = 0f; elapsed < SlamSeconds; elapsed += Time.unscaledDeltaTime)
-        {
-            Vector3 scale = Slam(elapsed / SlamSeconds);
-            r.localScale = scale;
-            // scaled about its pivot, its bottom rises by pivot share of the height lost: moved down as much
-            r.anchoredPosition = rest - new Vector2(0f, r.pivot.y * height * (1f - scale.y));
-            yield return null;
-        }
-        r.localScale = Vector3.one;
-        r.anchoredPosition = rest;
-    }
+    // the slide's progress for t from 0 to 1: fast at first, easing to a stop
+    public static float Fall(float t) => 1f - Mathf.Pow(1f - t, 4f);
     // each half of the turn over: narrowing to nothing, then widening back with its face up
     private const float FlipHalfSeconds = 0.14f;
 
@@ -122,7 +98,7 @@ public class FertilizerCard : MonoBehaviour
             yield return null;
         }
         rectTransform.localScale = Vector3.one;
-        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
 
     private void RefreshDisplay()
@@ -344,11 +320,7 @@ public class FertilizerCard : MonoBehaviour
             yield return null;
         }
         rectTransform.anchoredPosition = targetPosition;
-        // the slam, about the packet's own height (the card's rect is a little taller than the packet)
-        RectTransform body = statsText != null ? statsText.transform.parent as RectTransform : null;
-        float height = body != null ? body.rect.height * body.localScale.y : rectTransform.rect.height;
-        yield return SlamDown(rectTransform, targetPosition, height);
-        // landed once the slam has settled; picked only once it's been turned face up (Flip)
+        // picked only once it's been turned face up (Flip)
         Landed = true;
     }
 }
