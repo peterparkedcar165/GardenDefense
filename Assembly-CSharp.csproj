@@ -172,6 +172,7 @@
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeSession.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FruitFlySwarmEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\FungalGlowEffect.cs" />
+    <Compile Include="Assets\Scripts\Environment\CloudShadowStyle.cs" />
     <Compile Include="Assets\Scripts\UI\PersistentCanvas.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PlantPreview.cs" />
     <Compile Include="Assets\Scripts\UI\WaveStartArrow.cs" />
@@ -554,6 +555,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TermiteSwarmEffect.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\CleanGardenFertilizerData.cs" />
+    <Compile Include="Assets\Scripts\Environment\CloudShadows.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FruitFly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\InCombatEffect.cs" />

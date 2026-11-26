@@ -56,4 +56,4 @@ MonoBehaviour:
   count: 10
   speed: 0.35
   angle: 20
-  fadeSeconds: 2
+  fadeSeconds: 2.0

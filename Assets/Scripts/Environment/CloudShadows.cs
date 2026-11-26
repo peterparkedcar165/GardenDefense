@@ -33,7 +33,13 @@ public class CloudShadows : MonoBehaviour
         // the interiors never get them
         if (biome == Biome.Cave || biome == Biome.Underwater) return null;
         CloudShadowStyle style = CloudShadowStyle.Instance;
-        if (style.shapes == null || style.shapes.Length == 0 || style.count <= 0) return null;
+        if (style.shapes == null || style.shapes.Length == 0)
+        {
+            // the settings asset didn't load (it can be imported before its script compiles: reimport it)
+            Debug.LogWarning("[CloudShadows] no cloud shapes: Resources/CloudShadowStyle.asset didn't load or has none. Right click it and Reimport.");
+            return null;
+        }
+        if (style.count <= 0) return null;
         GameObject go = new GameObject("CloudShadows");
         CloudShadows clouds = go.AddComponent<CloudShadows>();
         clouds.style = style;
