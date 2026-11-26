@@ -231,7 +231,9 @@ public class Sunray : MonoBehaviour
                 {
                     Insect insect = allInsects[i];
                     if (insect == null || !insect.IsAlive) continue;
-                    if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius)
+                    // its hitbox, not just its position (Tommy, 2026-11-26): the circle round its feet the
+                    // projectiles use (Insect.BaseHitboxRadius) only has to touch the damage area
+                    if (Vector3.Distance(transform.position, insect.transform.position) <= aoeRadius + insect.BaseHitboxRadius)
                         inRange.Add(insect);
                 }
 

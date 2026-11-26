@@ -531,7 +531,8 @@ public class Sunflower : Shooter
             foreach (Insect insect in Insect.allInsects)
             {
                 if (insect == null || !insect.IsAlive) continue;
-                if (Vector3.Distance(position, insect.transform.position) <= skillAoERadius) continue;
+                // already in the first sunray's area (its hitbox touching it, as Sunray hits)
+                if (Vector3.Distance(position, insect.transform.position) <= skillAoERadius + insect.BaseHitboxRadius) continue;
                 valid.Add(insect);
             }
             if (valid.Count > 0)
