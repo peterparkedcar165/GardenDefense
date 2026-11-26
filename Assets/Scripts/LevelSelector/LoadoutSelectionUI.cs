@@ -1163,10 +1163,10 @@ public class LoadoutSelectionUI : MonoBehaviour
                 if (column != null) column.padding = new RectOffset(edge, edge, edge, edge);
             }
         }
-        // the panel in the level's biome colour like the right panel; its section boxes keep the plant's
-        // element colour
+        // the panel and its section boxes in the plant's element colour, like the level's plant info panel
+        // (Tommy, 2026-11-26)
         Color panelColor = PlantData.ElementPanelColor(data.elementalType);
-        tooltipBody.color = TallPanelLook.Available ? TallPanelLook.Wood : panelColor;
+        tooltipBody.color = panelColor;
         foreach (Image box in tooltipBoxes)
             if (box != null) box.color = panelColor;
     }
