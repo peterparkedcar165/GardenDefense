@@ -87,6 +87,8 @@ public class ProceduralLevel : SpawnManager
             WeatherManager.instance.temperature = config.temperature;
         }
 
+        // cloud shadows on levels with sun (Tommy, 2026-11-26)
+        CloudShadows.Create(config);
         FertilizerSelectionUI.instance?.Configure(config.fertilizers);
         FertilizerManager.instance?.ResetForLevel();
         MulchManager.instance?.ResetForLevel();
