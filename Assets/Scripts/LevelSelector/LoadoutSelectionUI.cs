@@ -190,10 +190,8 @@ public class LoadoutSelectionUI : MonoBehaviour
             bool insects = showcase != null && child == showcase.transform;
             bool plantPart = child == loadoutSection || child == plantsSection || child.name == "PlantsPanel";
             float delay = insects ? 0f : plantPart ? IntroStagger : 2f * IntroStagger;
-            // a green panel goes with the section it's behind: the nearer of the two
-            bool loadoutPart = child == loadoutSection
-                || (child.name == "PlantsPanel" && loadoutSection != null && plantsSection != null
-                    && Mathf.Abs(rt.position.y - loadoutSection.position.y) < Mathf.Abs(rt.position.y - plantsSection.position.y));
+            // the current loadout's green panel goes with it (Tommy: it came up from the bottom)
+            bool loadoutPart = child == loadoutSection || (loadoutPanel != null && child == loadoutPanel);
             int side = insects ? 0 : loadoutPart ? 1 : 2;
             rt.GetWorldCorners(corners);
             Vector3 low = panelRect.InverseTransformPoint(corners[0]), high = panelRect.InverseTransformPoint(corners[2]);
@@ -375,7 +373,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         // the two panels never touch: when the sections are still close the pads between them shrink
         float between = Mathf.Min(pad, Mathf.Max(0f, Mathf.Floor((gap - 4f * Px) / (2f * Px))) * Px);
         float width = Mathf.Max(upper.width, lower.width) + 2f * pad;
-        AddPlantPanel(panelRect, loadoutSection, upper, width, pad, between);
+        loadoutPanel = AddPlantPanel(panelRect, loadoutSection, upper, width, pad, between);
         AddPlantPanel(panelRect, plantsSection, lower, width, between, pad);
 
         foreach (Transform section in new[] { loadoutSection, plantsSection })
@@ -397,7 +395,10 @@ public class LoadoutSelectionUI : MonoBehaviour
             }
     }
 
-    private void AddPlantPanel(RectTransform panelRect, Transform section, Rect bounds, float width, float padTop, float padBottom)
+    // the green panel behind the current loadout: it slides in with it, from the top (PlayIntro)
+    private RectTransform loadoutPanel;
+
+    private RectTransform AddPlantPanel(RectTransform panelRect, Transform section, Rect bounds, float width, float padTop, float padBottom)
     {
         InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
         const float Px = 2f;
@@ -420,7 +421,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         body.raycastTarget = false;
 
         // the in game right panel's wood and gold trim (Tommy, 2026-11-25); the kit's shine without it
-        if (TallPanelLook.Available) { TallPanelLook.Apply(body); return; }
+        if (TallPanelLook.Available) { TallPanelLook.Apply(body); return r; }
         GameObject shineGO = new GameObject("Shine", typeof(RectTransform), typeof(Image));
         shineGO.layer = go.layer;
         RectTransform shine = (RectTransform)shineGO.transform;
@@ -433,6 +434,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         shineImage.type = Image.Type.Sliced;
         shineImage.pixelsPerUnitMultiplier = 1f;
         shineImage.raycastTarget = false;
+        return r;
     }
 
     // the child of the loadout panel that holds t (a plant section)
