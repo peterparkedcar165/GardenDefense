@@ -25,6 +25,12 @@ public class InsectShowcaseStyle : ScriptableObject
     public Sprite panelBase;
     [Tooltip("drawn over panelBase, untinted")]
     public Sprite panelShine;
+    [Tooltip("the in game right panel's wood (ui_panel_tall_base, Tommy 2026-11-25): the loadout screen's Insects, " +
+        "Current Loadout and Available Plants panels and the plant tooltip wear it too, tinted with the level's " +
+        "biome colour (GameHUD) like the right panel (TallPanelLook)")]
+    public Sprite tallPanelBase;
+    [Tooltip("its gold trim and corner scrollwork (ui_panel_tall_trim), drawn over the wood untinted")]
+    public Sprite tallPanelTrim;
     [Tooltip("the 4 by 2 line under the title")]
     public Sprite seam;
     [Tooltip("8 by 8, sliced 2: the insect cards and the ability box, tinted with the panel colour")]

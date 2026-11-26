@@ -49,6 +49,17 @@ public class GameHUD : MonoBehaviour
         new BiomeWood(Biome.Underwater, "#506EB4"),   // the spec's crystal blue
     };
 
+    // the right panel's wood colour for a level's biome; false when the biome has none
+    public bool TryGetWood(LevelConfig config, out Color wood)
+    {
+        wood = Color.white;
+        if (config == null || biomeWood == null) return false;
+        Biome biome = config.CurrentBiome;
+        foreach (BiomeWood entry in biomeWood)
+            if (entry.biome == biome) { wood = entry.wood; return true; }
+        return false;
+    }
+
     // called by the level once it's set up (ProceduralLevel.Start): the right panel's wood takes the
     // level's biome colour. a biome without a colour leaves the panel as the prefab has it
     public void TintRightPanel(LevelConfig config)

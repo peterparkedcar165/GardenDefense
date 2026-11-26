@@ -351,7 +351,7 @@ public class LoadoutSelectionUI : MonoBehaviour
                     box.sprite = s.insetBox;
                     box.type = Image.Type.Sliced;
                     box.pixelsPerUnitMultiplier = 1f;
-                    box.color = s.plantPanel;
+                    box.color = TallPanelLook.Available ? TallPanelLook.Wood : s.plantPanel;
                 }
                 // the title gets the panel's 1 pixel shadow
                 TMP_Text title = child.GetComponent<TMP_Text>();
@@ -382,6 +382,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         body.color = s.plantPanel;
         body.raycastTarget = false;
 
+        // the in game right panel's wood and gold trim (Tommy, 2026-11-25); the kit's shine without it
+        if (TallPanelLook.Available) { TallPanelLook.Apply(body); return; }
         GameObject shineGO = new GameObject("Shine", typeof(RectTransform), typeof(Image));
         shineGO.layer = go.layer;
         RectTransform shine = (RectTransform)shineGO.transform;
@@ -1134,7 +1136,8 @@ public class LoadoutSelectionUI : MonoBehaviour
             tooltipBody.type = Image.Type.Sliced;
             tooltipBody.pixelsPerUnitMultiplier = 1f;
 
-            // the shine over the whole panel, kept out of its layout group
+            // the shine over the whole panel, kept out of its layout group (switched off again when it
+            // wears the in game right panel's look, below)
             GameObject shine = new GameObject("Shine", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
             shine.layer = tooltipPanel.layer;
             RectTransform r = (RectTransform)shine.transform;
@@ -1151,9 +1154,19 @@ public class LoadoutSelectionUI : MonoBehaviour
             shineImage.raycastTarget = false;
 
             LayoutLikeInsectTooltip(s);
+            // the in game right panel's wood and gold trim (Tommy, 2026-11-25), its contents clear of the frame
+            if (TallPanelLook.Available)
+            {
+                TallPanelLook.Apply(tooltipBody);
+                VerticalLayoutGroup column = tooltipPanel.GetComponent<VerticalLayoutGroup>();
+                int edge = (TallPanelLook.Inset + 2) * 2;
+                if (column != null) column.padding = new RectOffset(edge, edge, edge, edge);
+            }
         }
+        // the panel in the level's biome colour like the right panel; its section boxes keep the plant's
+        // element colour
         Color panelColor = PlantData.ElementPanelColor(data.elementalType);
-        tooltipBody.color = panelColor;
+        tooltipBody.color = TallPanelLook.Available ? TallPanelLook.Wood : panelColor;
         foreach (Image box in tooltipBoxes)
             if (box != null) box.color = panelColor;
     }

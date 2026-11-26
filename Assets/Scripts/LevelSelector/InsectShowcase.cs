@@ -15,6 +15,11 @@ public class InsectShowcase : MonoBehaviour
     private const float Px = 2f;
     // art pixels: the panel's inner padding, the gap between cards and chips
     private const float Pad = 6f;
+    // the panel's own padding: room for the in game right panel's frame when it wears it (Tommy,
+    // 2026-11-25, TallPanelLook), else Pad. the tooltips keep Pad
+    private static float Edge => TallPanelLook.Available ? TallPanelLook.Inset : Pad;
+    // the insect cards' boxes: the panel's wood when it wears the right panel's look
+    private Color CardTint => TallPanelLook.Available ? TallPanelLook.Wood : style.panel;
     private const float CardGap = 3f;
     private const float ChipGap = 3f;
     private const float StatIcon = 16f;
@@ -75,6 +80,8 @@ public class InsectShowcase : MonoBehaviour
         SetSprite(body, style.panelBase, style.panel, true);
         body.raycastTarget = true;
         Stretch(NewImage("Shine", rect, style.panelShine, Color.white, true).rectTransform);
+        // the in game right panel's wood and gold trim (Tommy, 2026-11-25)
+        TallPanelLook.Apply(body);
 
         header = NewRect("Header", rect);
         TopLeft(header, 0f, 0f, style.panelWidth, 0f);
@@ -131,10 +138,10 @@ public class InsectShowcase : MonoBehaviour
         Clear(content);
 
         float y = BuildHeader(config);
-        viewport.offsetMin = new Vector2(Pad * Px, Pad * Px);
-        viewport.offsetMax = new Vector2(-Pad * Px, -y * Px);
+        viewport.offsetMin = new Vector2(Edge * Px, Edge * Px);
+        viewport.offsetMax = new Vector2(-Edge * Px, -y * Px);
 
-        float width = style.panelWidth - 2f * Pad;
+        float width = style.panelWidth - 2f * Edge;
         float cardY = 0f;
         var seen = new HashSet<InsectData>();
         if (insectPrefabs != null)
@@ -153,27 +160,27 @@ public class InsectShowcase : MonoBehaviour
         // until that's taller than the screen; then it stops at the screen's full height and the cards
         // scroll
         float room = host.rect.height - 2f * style.margin * Px;
-        float wanted = (y + cardsHeight + Pad) * Px;
+        float wanted = (y + cardsHeight + Edge) * Px;
         rect.sizeDelta = new Vector2(style.panelWidth * Px, room > 0f ? Mathf.Min(wanted, room) : wanted);
     }
 
     // "Insects", the seam under it and the level's conditions; returns the art pixel height it takes
     private float BuildHeader(LevelConfig config)
     {
-        float titleHeight = AddText(header, "Insects", 9f, 5f, style.panelWidth - 18f, style.text, style.titleSize, false);
-        float y = 5f + titleHeight + 2f;
+        float titleHeight = AddText(header, "Insects", Edge + 3f, Edge - 1f, style.panelWidth - 2f * (Edge + 3f), style.text, style.titleSize, false);
+        float y = Edge - 1f + titleHeight + 2f;
         Image seam = NewImage("Seam", header, style.seam, Color.white, false);
-        TopLeft(seam.rectTransform, 4f, y, style.panelWidth - 8f, 2f);
+        TopLeft(seam.rectTransform, Edge - 2f, y, style.panelWidth - 2f * (Edge - 2f), 2f);
         y += 2f + 4f;
         if (config == null) return y + 2f;
 
-        float x = Pad;
+        float x = Edge;
         float rowHeight = ChipHeight();
-        float maxX = style.panelWidth - Pad;
+        float maxX = style.panelWidth - Edge;
         void Place(string label, TipText tip)
         {
             float w = ChipWidth(label);
-            if (x > Pad && x + w > maxX) { x = Pad; y += rowHeight + ChipGap; }
+            if (x > Edge && x + w > maxX) { x = Edge; y += rowHeight + ChipGap; }
             AddChip(header, label, Color.white, x, y, tip);
             x += w + ChipGap;
         }
@@ -206,7 +213,7 @@ public class InsectShowcase : MonoBehaviour
     private float BuildCard(Entry entry, float y, float width)
     {
         InsectData data = entry.data;
-        Image cardImage = NewImage("Card " + data.displayName, content, style.insetBox, style.panel, true);
+        Image cardImage = NewImage("Card " + data.displayName, content, style.insetBox, CardTint, true);
         cardImage.raycastTarget = true;
         RectTransform card = cardImage.rectTransform;
         entry.card = card;
@@ -535,7 +542,7 @@ public class InsectShowcase : MonoBehaviour
 
     private void AddChip(RectTransform parent, string label, Color color, float x, float y, TipText tip)
     {
-        Image chip = NewImage("Chip " + tip.title, parent, style.stripSunken, style.panel, true);
+        Image chip = NewImage("Chip " + tip.title, parent, style.stripSunken, CardTint, true);
         chip.raycastTarget = true;
         float w = ChipWidth(label);
         TopLeft(chip.rectTransform, x, y, w, ChipHeight());
