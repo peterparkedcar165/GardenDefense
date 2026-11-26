@@ -82,7 +82,22 @@ public class CloudShadows : MonoBehaviour
         }
         shown = Wanted() ? 1f : 0f;
         ApplyAlpha();
+        Report("built");
     }
+
+    // what was built and where, against the camera (to find why they can't be seen; Tommy, 2026-11-26)
+    private void Report(string when)
+    {
+        Camera cam = Camera.main;
+        SpriteRenderer first = shadows.Count > 0 ? shadows[0].renderer : null;
+        Debug.Log($"[CloudShadows] {when}: {shadows.Count} shadows, biome {biome}, wanted {Wanted()}, shown {shown}, " +
+            $"opacity {style.opacity}, area {Area()}, camera {(cam != null ? cam.name + " at " + cam.transform.position + " size " + cam.orthographicSize + " aspect " + cam.aspect : "none")}; " +
+            $"first at {(first != null ? first.transform.position.ToString() : "-")}, sprite {(first != null && first.sprite != null ? first.sprite.name + " " + first.sprite.bounds.size : "NONE")}, " +
+            $"enabled {(first != null && first.enabled)}, colour {(first != null ? first.color.ToString() : "-")}, layer {(first != null ? first.sortingLayerName + " " + first.sortingOrder : "-")}, " +
+            $"material {(first != null && first.sharedMaterial != null ? first.sharedMaterial.name : "NONE")}, active {gameObject.activeInHierarchy}");
+    }
+
+    private float reportAt = 5f;
 
     // the camera's view and the margin round it, in world units
     private Rect Area()
@@ -126,6 +141,11 @@ public class CloudShadows : MonoBehaviour
     {
         // real time, so a pause or the game speed never changes them; a long hitch doesn't jump them
         float dt = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
+        if (reportAt > 0f)
+        {
+            reportAt -= dt;
+            if (reportAt <= 0f) Report("after 5 s");
+        }
 
         float target = Wanted() ? 1f : 0f;
         // the opacity follows the style live, so it can be tuned in the inspector while playing
