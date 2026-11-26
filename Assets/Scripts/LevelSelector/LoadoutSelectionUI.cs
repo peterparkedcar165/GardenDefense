@@ -972,6 +972,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         Rect? to = SlotRect(target);
         if (!to.HasValue) return;
 
+        // the sliding sound, once for everything one click sends gliding (Tommy: kept for the plant clicks)
+        UISounds.Slide();
         GameObject go = new GameObject("Flying " + plantName, typeof(RectTransform), typeof(Image));
         go.layer = panel.layer;
         RectTransform flyer = (RectTransform)go.transform;
