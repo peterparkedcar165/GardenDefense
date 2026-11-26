@@ -274,7 +274,6 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (!plantPanelsBuilt)
         {
             plantPanelsBuilt = true;
-            PutTitlesOnPlanks();
             // the plant cards' size and the sections' places first: the green panels are measured from them
             UseCardCells();
             LayOutPlantSections();
@@ -461,53 +460,10 @@ public class LoadoutSelectionUI : MonoBehaviour
     // art pixels between a section title's drawn letters and the top of its grid's box
     private const float TitleGap = 4f;
 
-    // the section titles on the main menu's large leafy plank (Tommy, 2026-11-26), in the yellow of the
-    // menu's buttons like the fertilizer screen's title, at the plank's own size (2 units an art pixel). the
-    // old text hides; the layout measures and places the plank instead (TitleHeight, PlaceTitle)
-    private void PutTitlesOnPlanks()
-    {
-        GameControlsStyle look = GameControlsStyle.Instance;
-        if (look.largeButton == null) return;
-        foreach (Transform section in new[] { SectionOf(selectedContainer), SectionOf(unlockedContainer) })
-        {
-            if (section == null || PlankOf(section) != null) continue;
-            TMP_Text title = TitleOf(section);
-            if (title == null) continue;
-            PlankButton plank = PlankButton.CreateTitle((RectTransform)section, title.text, look.pause, InsectShowcaseStyle.Instance.font);
-            RectTransform r = plank.Rect;
-            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
-            r.localScale = Vector3.one * PlankButton.SectionTitleScale;
-            // where the title was; PlaceTitle and LayOutPlantSections put it in its place
-            r.position = title.rectTransform.TransformPoint(title.rectTransform.rect.center);
-            r.SetSiblingIndex(title.transform.GetSiblingIndex());
-            title.gameObject.SetActive(false);
-        }
-    }
-
-    // a section's title plank, if it has one
-    private static RectTransform PlankOf(Transform section)
-    {
-        foreach (Transform child in section)
-            if (child.GetComponent<PlankButton>() != null) return (RectTransform)child;
-        return null;
-    }
-
-    // moves a section's title up or down until its drawn text (or its plank) ends TitleGap pixels above the box
+    // moves a section's title up or down until its drawn text ends TitleGap pixels above the box
     private static void PlaceTitle(Transform section, RectTransform box)
     {
         if (box == null) return;
-        RectTransform plank = PlankOf(section);
-        if (plank != null)
-        {
-            Vector3[] c = new Vector3[4];
-            box.GetWorldCorners(c);
-            float top = section.InverseTransformPoint(c[1]).y;
-            plank.GetWorldCorners(c);
-            float bottom = section.InverseTransformPoint(c[0]).y;
-            float shift = Mathf.Round(top + TitleGap * 2f - bottom);
-            if (shift != 0f) plank.anchoredPosition += new Vector2(0f, shift);
-            return;
-        }
         TMP_Text title = TitleOf(section);
         if (title == null) return;
         title.ForceMeshUpdate();
@@ -531,11 +487,9 @@ public class LoadoutSelectionUI : MonoBehaviour
         return null;
     }
 
-    // how tall a section title's drawn letters (or its plank) are
+    // how tall a section title's drawn letters are
     private static float TitleHeight(Transform section)
     {
-        RectTransform plank = PlankOf(section);
-        if (plank != null) return plank.rect.height * plank.localScale.y;
         TMP_Text title = TitleOf(section);
         if (title == null) return 0f;
         title.ForceMeshUpdate();
@@ -603,13 +557,6 @@ public class LoadoutSelectionUI : MonoBehaviour
         PlaceTitle(plantsSection, plantsBox);
         foreach (Transform section in new[] { loadoutSection, plantsSection })
         {
-            RectTransform plank = PlankOf(section);
-            if (plank != null)
-            {
-                float middle = section.InverseTransformPoint(plank.TransformPoint(plank.rect.center)).x;
-                plank.anchoredPosition += new Vector2(Mathf.Round(XIn(section, panelRect, centreX) - middle), 0f);
-                continue;
-            }
             TMP_Text title = TitleOf(section);
             if (title == null) continue;
             Vector2 at = title.rectTransform.anchoredPosition;

@@ -190,24 +190,9 @@ public class InsectShowcase : MonoBehaviour
     // "Insects", the seam under it and the level's conditions; returns the art pixel height it takes
     private float BuildHeader(LevelConfig config)
     {
-        // centred over the panel (Tommy, 2026-11-26), on the main menu's large leafy plank (Tommy, same day),
-        // in the yellow of the menu's buttons like the fertilizer screen's title, at the plank's own size;
-        // the plain text without the plank's sprites
-        float titleHeight;
-        GameControlsStyle look = GameControlsStyle.Instance;
-        if (look.largeButton != null)
-        {
-            PlankButton plank = PlankButton.CreateTitle(header, "Insects", look.pause, style.font);
-            RectTransform r = plank.Rect;
-            r.anchorMin = r.anchorMax = new Vector2(0.5f, 1f);
-            r.pivot = new Vector2(0.5f, 1f);
-            r.anchoredPosition = new Vector2(0f, -(Edge - 1f) * Px);
-            r.localScale = Vector3.one * PlankButton.SectionTitleScale;
-            titleHeight = Mathf.Ceil(r.sizeDelta.y * PlankButton.SectionTitleScale / Px);
-        }
-        else
-            titleHeight = AddText(header, "Insects", Edge + 3f, Edge - 1f, style.panelWidth - 2f * (Edge + 3f), style.text, style.titleSize, false,
-                TextAlignmentOptions.Top);
+        // centred over the panel (Tommy, 2026-11-26)
+        float titleHeight = AddText(header, "Insects", Edge + 3f, Edge - 1f, style.panelWidth - 2f * (Edge + 3f), style.text, style.titleSize, false,
+            TextAlignmentOptions.Top);
         float y = Edge - 1f + titleHeight + 2f;
         Image seam = NewImage("Seam", header, style.seam, Color.white, false);
         TopLeft(seam.rectTransform, Edge - 2f, y, style.panelWidth - 2f * (Edge - 2f), 2f);
