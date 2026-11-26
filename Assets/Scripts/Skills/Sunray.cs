@@ -58,6 +58,10 @@ public class Sunray : MonoBehaviour
     private const float BeamFps = 144f;
     private static Sprite[] beamFrames;
     private SpriteRenderer beam;
+    // the beam's own scale under the root's 2 by 40 stretch: kept every frame (something set it 3.2 times
+    // bigger after it was made, Tommy saw a 3 tile beam; LateUpdate logs it if it happens again)
+    private Vector3 beamScale = Vector3.one;
+    private bool beamScaleReported;
     private float beamTime;
     private int beamFrame = -1;
 
@@ -76,7 +80,8 @@ public class Sunray : MonoBehaviour
         Vector2 oldSize = sr.sprite != null ? (Vector2)sr.sprite.bounds.size : new Vector2(0.5f, 0.5f);
         Vector3 stretch = transform.localScale;
         if (Mathf.Approximately(stretch.x, 0f) || Mathf.Approximately(stretch.y, 0f)) return;
-        visual.localScale = new Vector3(1f / stretch.x, 1f / stretch.y, 1f);
+        beamScale = new Vector3(1f / stretch.x, 1f / stretch.y, 1f);
+        visual.localScale = beamScale;
         sr.sprite = beamFrames[0];
         sr.drawMode = SpriteDrawMode.Tiled;
         sr.tileMode = SpriteTileMode.Continuous;
@@ -104,6 +109,22 @@ public class Sunray : MonoBehaviour
         int cut = s.name.LastIndexOf('_');
         return cut >= 0 && int.TryParse(s.name.Substring(cut + 1), out int n) ? n : 0;
     }
+
+    // the beam back at its own scale, saying once what had changed it
+    private void KeepBeamScale(string when)
+    {
+        if (beam == null) return;
+        Transform v = beam.transform;
+        if (v.localScale == beamScale) return;
+        if (!beamScaleReported)
+        {
+            beamScaleReported = true;
+            Debug.Log($"[Sunray] the beam's scale was {v.localScale} at {when}, not {beamScale}; set back");
+        }
+        v.localScale = beamScale;
+    }
+
+    private void LateUpdate() => KeepBeamScale("a frame");
 
     private void Update()
     {
@@ -133,6 +154,7 @@ public class Sunray : MonoBehaviour
 
         targetScale *= visualScaleMultiplier;
         transform.localScale = targetScale;
+        KeepBeamScale("spawn");
         LogSize(aoeRadius, visualScaleMultiplier);
 
         // the particle system's own scaling mode is Local (ignores parent/hierarchy scale), so
