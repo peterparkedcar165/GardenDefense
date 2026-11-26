@@ -21,8 +21,9 @@ public class MulchRegistry : ScriptableObject
     [Tooltip("the bag's tint, the same for every mulch (white: Tommy's coloured bag as drawn)")]
     public Color iconBagColor = new Color32(0xC4, 0x74, 0x14, 0xFF);
     [Tooltip("where the label and the symbol sit on the bag, as shares of it (x and y from its bottom left, width, " +
-        "height). the whole bag for the old 32 px bag; on Tommy's 64 px bag (2026-11-26) the 32 px label at the bag's " +
-        "own pixel size, its square on the bag's front")]
+        "height). the whole bag for the old 32 px bag; on Tommy's 64 px bag (2026-11-26) its square on the bag's front: " +
+        "since the bag fills its 64 by 64 (Tommy, scaled 1.39 times to 51 by 64) the 32 px label is drawn 44 px, at the " +
+        "bag's own pixel size")]
     public Rect iconLabelBox = new Rect(0f, 0f, 1f, 1f);
     [Tooltip("the symbol on the label for each kind of mulch (MulchData.symbol): 32 by 32, the 9 by 9 symbol drawn near white")]
     public Sprite symbolHeal;

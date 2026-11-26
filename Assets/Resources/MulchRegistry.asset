@@ -61,10 +61,10 @@ MonoBehaviour:
   iconBagColor: {r: 1, g: 1, b: 1, a: 1}
   iconLabelBox:
     serializedVersion: 2
-    x: 0.25
-    y: 0.296875
-    width: 0.5
-    height: 0.5
+    x: 0.140625
+    y: 0.171875
+    width: 0.6875
+    height: 0.6875
   symbolHeal: {fileID: 21300000, guid: 43f8695b88764349a9cce5abe1fd1022, type: 3}
   symbolDefense: {fileID: 21300000, guid: 749e239f36bc46639973f329c8e0e51c, type: 3}
   symbolAttack: {fileID: 21300000, guid: 68ef23914abd4e00bc166871755394cd, type: 3}
