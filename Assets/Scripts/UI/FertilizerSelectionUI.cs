@@ -25,6 +25,8 @@ public class FertilizerSelectionUI : MonoBehaviour
         {
             headerRect.anchoredPosition = new Vector2(headerRect.anchoredPosition.x, HeaderY);
             TitleOnPlank(headerRect);
+            if (title == null) title = headerRect;
+            titleHome = title.anchoredPosition;
         }
         panel.SetActive(false);
     }
@@ -50,6 +52,46 @@ public class FertilizerSelectionUI : MonoBehaviour
         r.localScale = Vector3.one * TitleScale;
         r.SetSiblingIndex(headerRect.GetSiblingIndex());
         title.gameObject.SetActive(false);
+        this.title = r;
+    }
+
+    // the title (its plank, or the old text without one) and where it rests
+    private RectTransform title;
+    private Vector2 titleHome;
+
+    // the title falls into place with the cards (Tommy, 2026-11-26): the same distance, time and easing as
+    // FertilizerCard.AnimateIn, starting the same frame later the cards do
+    private System.Collections.IEnumerator DropTitle()
+    {
+        if (title == null) yield break;
+        Vector2 start = titleHome + Vector2.up * Screen.height;
+        title.anchoredPosition = start;
+        yield return null;
+        for (float elapsed = 0f; elapsed < FertilizerCard.FallSeconds; elapsed += Time.unscaledDeltaTime)
+        {
+            float t = elapsed / FertilizerCard.FallSeconds;
+            t = 1f - Mathf.Pow(1f - t, 3f);
+            title.anchoredPosition = Vector2.Lerp(start, titleHome, t);
+            yield return null;
+        }
+        title.anchoredPosition = titleHome;
+    }
+
+    // the cards fall face down; once every one has landed, a moment later they all turn over together
+    // (Tommy, 2026-11-26)
+    private const float RevealPause = 0.15f;
+
+    private System.Collections.IEnumerator RevealWhenLanded()
+    {
+        float waited = 0f;
+        while (activeCards.Exists(c => c != null && !c.Landed) && waited < 3f)
+        {
+            waited += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(RevealPause);
+        foreach (FertilizerCard card in activeCards)
+            if (card != null) card.Flip();
     }
 
     public void Configure(FertilizerData[] pool)
@@ -86,6 +128,8 @@ public class FertilizerSelectionUI : MonoBehaviour
             card.Initialize(fertilizer, this);
             activeCards.Add(card);
         }
+        StartCoroutine(DropTitle());
+        StartCoroutine(RevealWhenLanded());
     }
 
     private void ClearCards()

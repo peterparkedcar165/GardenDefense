@@ -31,7 +31,63 @@ public class FertilizerCard : MonoBehaviour
         if (rerollButton != null) rerollButton.gameObject.SetActive(false);
 
         RefreshDisplay();
+        // face down while it falls (Tommy, 2026-11-26): turned over by FertilizerSelectionUI once every card
+        // has landed
+        ShowFace(false);
         StartCoroutine(AnimateIn());
+    }
+
+    // how long a card takes to fall into place (real seconds); the screen's title falls with them
+    public const float FallSeconds = 0.6f;
+    // each half of the turn over: narrowing to nothing, then widening back with its face up
+    private const float FlipHalfSeconds = 0.14f;
+
+    public bool Landed { get; private set; }
+    private bool faceUp = true;
+
+    // face up: the fertilizer's icon, its name, the seam, the description and its box; face down: the bare
+    // packet (its interior and frame)
+    private void ShowFace(bool up)
+    {
+        faceUp = up;
+        Transform body = statsText != null ? statsText.transform.parent : null;
+        if (icon != null) icon.gameObject.SetActive(up);
+        if (tierText != null) tierText.gameObject.SetActive(up);
+        if (statsText != null) statsText.gameObject.SetActive(up);
+        if (body != null)
+            foreach (string part in new[] { "Seam", "Inset" })
+            {
+                Transform found = body.Find(part);
+                if (found != null) found.gameObject.SetActive(up);
+            }
+        if (!up && highlight != null) highlight.SetActive(false);
+    }
+
+    // turned over where it lies: narrowed to nothing, its face shown, widened back, then it can be picked.
+    // real time (the game is paused on this screen)
+    public void Flip()
+    {
+        if (!faceUp && isActiveAndEnabled) StartCoroutine(FlipRoutine());
+    }
+
+    private IEnumerator FlipRoutine()
+    {
+        for (float t = 0f; t < FlipHalfSeconds; t += Time.unscaledDeltaTime)
+        {
+            float k = t / FlipHalfSeconds;
+            rectTransform.localScale = new Vector3(1f - k * k, 1f, 1f);
+            yield return null;
+        }
+        rectTransform.localScale = new Vector3(0f, 1f, 1f);
+        ShowFace(true);
+        for (float t = 0f; t < FlipHalfSeconds; t += Time.unscaledDeltaTime)
+        {
+            float k = t / FlipHalfSeconds;
+            rectTransform.localScale = new Vector3(1f - (1f - k) * (1f - k), 1f, 1f);
+            yield return null;
+        }
+        rectTransform.localScale = Vector3.one;
+        canvasGroup.interactable = true;
     }
 
     private void RefreshDisplay()
@@ -243,7 +299,7 @@ public class FertilizerCard : MonoBehaviour
         Vector2 startPos = targetPosition + Vector2.up * Screen.height;
         rectTransform.anchoredPosition = startPos;
 
-        float duration = 0.6f;
+        float duration = FallSeconds;
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -256,6 +312,7 @@ public class FertilizerCard : MonoBehaviour
         }
 
         rectTransform.anchoredPosition = targetPosition;
-        canvasGroup.interactable = true;
+        // picked only once it's been turned face up (Flip)
+        Landed = true;
     }
 }
