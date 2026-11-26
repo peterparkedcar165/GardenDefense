@@ -363,8 +363,19 @@ public class LoadoutSelectionUI : MonoBehaviour
         // the two panels never touch: when the sections are still close the pads between them shrink
         float between = Mathf.Min(pad, Mathf.Max(0f, Mathf.Floor((gap - 4f * Px) / (2f * Px))) * Px);
         float width = Mathf.Max(upper.width, lower.width) + 2f * pad;
-        loadoutPanel = AddPlantPanel(panelRect, loadoutSection, upper, width, pad, between);
-        AddPlantPanel(panelRect, plantsSection, lower, width, between, pad);
+        // the current loadout's panel is only as wide as its slots' box and title, LoadoutSidePad out on each
+        // side (Tommy, 2026-11-26: no need to match the available plants' panel, but some wood between the
+        // box and the frame); the available plants' panel keeps the full width
+        Transform currentLoadout = SectionOf(selectedContainer);
+        Rect drawn = BoundsIn(panelRect, currentLoadout, lettersOnly: true);
+        float loadoutWidth = drawn.width + 2f * LoadoutSidePad * Px;
+        Rect Narrow(Rect section) => Rect.MinMaxRect(drawn.xMin, section.yMin, drawn.xMax, section.yMax);
+        bool upperIsLoadout = loadoutSection == currentLoadout;
+        RectTransform upperPanel = AddPlantPanel(panelRect, loadoutSection, upperIsLoadout ? Narrow(upper) : upper,
+            upperIsLoadout ? loadoutWidth : width, pad, between);
+        RectTransform lowerPanel = AddPlantPanel(panelRect, plantsSection, upperIsLoadout ? lower : Narrow(lower),
+            upperIsLoadout ? width : loadoutWidth, between, pad);
+        loadoutPanel = upperIsLoadout ? upperPanel : lowerPanel;
 
         foreach (Transform section in new[] { loadoutSection, plantsSection })
             foreach (Transform child in section)
@@ -387,6 +398,10 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     // the green panel behind the current loadout: it slides in with it, from the top (PlayIntro)
     private RectTransform loadoutPanel;
+
+    // art pixels from the current loadout's slot box (or its title, if wider) to its panel's sides: the
+    // frame's trim takes TallPanelLook.Inset (10), so 6 px of wood show between them (Claude's pick)
+    private const float LoadoutSidePad = 16f;
 
     private RectTransform AddPlantPanel(RectTransform panelRect, Transform section, Rect bounds, float width, float padTop, float padBottom)
     {
@@ -574,7 +589,9 @@ public class LoadoutSelectionUI : MonoBehaviour
     private static float Even(float v, bool up) => (up ? Mathf.Ceil(v / 2f) : Mathf.Floor(v / 2f)) * 2f;
 
     // what a section's active children cover (a text's drawn letters too), in the loadout panel's own space
-    private static Rect BoundsIn(RectTransform space, Transform section)
+    // lettersOnly: a text child counts only its drawn letters, not its whole rect (a title's rect can be
+    // far wider than its words)
+    private static Rect BoundsIn(RectTransform space, Transform section, bool lettersOnly = false)
     {
         Vector2 min = new Vector2(float.MaxValue, float.MaxValue), max = new Vector2(float.MinValue, float.MinValue);
         Vector3[] corners = new Vector3[4];
@@ -587,9 +604,12 @@ public class LoadoutSelectionUI : MonoBehaviour
         foreach (Transform child in section)
         {
             if (!child.gameObject.activeSelf || !(child is RectTransform rt)) continue;
-            rt.GetWorldCorners(corners);
-            foreach (Vector3 corner in corners) Add(corner);
             TMP_Text text = child.GetComponent<TMP_Text>();
+            if (!(lettersOnly && text != null))
+            {
+                rt.GetWorldCorners(corners);
+                foreach (Vector3 corner in corners) Add(corner);
+            }
             if (text != null)
             {
                 text.ForceMeshUpdate();
