@@ -223,6 +223,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
         UseSmallUpgradeButtons();
         UseTargetingClicker();
+        UseVinePortrait();
         // the skill square feels like a button once unlocked (Tommy, 2026-11-26): lit under the pointer,
         // pressed when clicked or cast with Q
         Transform trim = skillIcon != null && skillIcon.transform.parent != null ? skillIcon.transform.parent.Find("SkillFrameTrim") : null;
@@ -489,6 +490,27 @@ public class PlantUpgradeUI : EntityInfoPanel
             }
             return skillFrameBase;
         }
+    }
+
+    // Tommy's round vine frame on the portrait (2026-11-26, VinePortraitLook): drawn whole at the panel's 2
+    // units a pixel (102 by 96), centred where the old 128 square frame was; the backdrop becomes the frame's
+    // inside (the planks), the same size under it, and the plant shows in the window the frame leaves open.
+    // ApplyElement still tints the band (portraitFrame) and the planks (portraitBackdrop); the frame keeps the
+    // portrait's hover tooltip (PlantIconTooltip)
+    private void UseVinePortrait()
+    {
+        if (!VinePortraitLook.Available || portraitFrame == null || portraitBackdrop == null || entityIcon == null) return;
+        RectTransform frame = portraitFrame.rectTransform;
+        Vector2 size = VinePortraitLook.Size;
+        float x = Mathf.Round((frame.anchoredPosition.x + (frame.sizeDelta.x - size.x) * 0.5f) / Px) * Px;
+        float y = Mathf.Round((-frame.anchoredPosition.y + (frame.sizeDelta.y - size.y) * 0.5f) / Px) * Px;
+        VinePortraitLook.TopLeft(frame, x, y, size.x, size.y);
+        VinePortraitLook.MakeFrame(portraitFrame);
+        RectTransform backdrop = portraitBackdrop.rectTransform;
+        VinePortraitLook.TopLeft(backdrop, x, y, size.x, size.y);
+        VinePortraitLook.MakeInterior(portraitBackdrop);
+        RectTransform window = VinePortraitLook.NewWindow(backdrop);
+        entityIcon.transform.SetParent(window, false);
     }
 
     // the plant (or insect) as big as fits the portrait window, bottom centred

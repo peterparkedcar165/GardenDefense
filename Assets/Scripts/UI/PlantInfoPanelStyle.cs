@@ -60,6 +60,19 @@ public class PlantInfoPanelStyle : ScriptableObject
     [Tooltip("the frame's inside alone (ui_frame_flowers_interior), in the info panel wood's grey (148), tinted")]
     public Sprite tooltipInterior;
 
+    [Header("Vine frames (Tommy, 2026-11-26, Sprites/UI/VineFrames)")]
+    [Tooltip("the plant portraits' round frame: the grey band of ui_frame_vines_round_grey alone, tinted with the " +
+        "element's colour (VinePortraitLook), on the info panel and the loadout screen's plant tooltip")]
+    public Sprite portraitFrameBand;
+    [Tooltip("its vines and gold (the coloured pixels of ui_frame_vines_round_grey), drawn over the band as they are")]
+    public Sprite portraitFrameTrim;
+    [Tooltip("the round frame's inside, grey wood planks (ui_frame_vines_round_interior_wood_grey), tinted with the " +
+        "element's backdrop colour, behind the plant")]
+    public Sprite portraitInterior;
+    [Tooltip("the mulch slots' frame, the player's and a plant's (ui_frame_vines_square_original): its own colours, " +
+        "stretched to the slot (Tommy's choice over changing the slot sizes)")]
+    public Sprite mulchSlotFrame;
+
     [Header("Text")]
     [Tooltip("name, stats, path labels and \"Mulches\". the shadow under them is the element's (PlantData.ElementTextShadowColor)")]
     public Color text = Hex("#FFF1D6");

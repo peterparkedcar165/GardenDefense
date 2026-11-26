@@ -189,10 +189,37 @@ public class MulchInventoryUI : MonoBehaviour
             view.frame = frame;
             view.icon = icon;
             view.spriteFrame = true;
+            UseVineSlot(view);
             slots.Add(view);
             adopted++;
         }
         return adopted;
+    }
+
+    // Tommy's square vine frame on every mulch slot, the bag's and the plant's (2026-11-26,
+    // PlantInfoPanelStyle.mulchSlotFrame): its own colours always (not tinted by the rarity), stretched to the
+    // slot's size (64, the plant's 58; his choice over resizing the slots), and the bag inside the opening the
+    // frame leaves (6 of its 48 px on each side)
+    private const float VineSlotOpening = 6f / 48f;
+
+    private static void UseVineSlot(MulchSlotView view)
+    {
+        Sprite vine = PlantInfoPanelStyle.Instance.mulchSlotFrame;
+        if (vine == null || view.frame == null) return;
+        view.frame.sprite = vine;
+        view.frame.type = Image.Type.Simple;
+        view.frame.preserveAspect = false;
+        view.frame.color = Color.white;
+        view.keepFrameColour = true;
+        if (view.icon == null) return;
+        RectTransform slot = (RectTransform)view.frame.transform;
+        float inset = Mathf.Round(slot.rect.width * VineSlotOpening);
+        RectTransform icon = view.icon.rectTransform;
+        icon.anchorMin = Vector2.zero;
+        icon.anchorMax = Vector2.one;
+        icon.pivot = new Vector2(0.5f, 0.5f);
+        icon.offsetMin = new Vector2(inset, inset);
+        icon.offsetMax = new Vector2(-inset, -inset);
     }
 
     private static int PlacedSlotCount(RectTransform root, int count)
@@ -271,6 +298,7 @@ public class MulchInventoryUI : MonoBehaviour
             view.index = i;
             view.frame = frame;
             view.icon = icon;
+            UseVineSlot(view);
             slots.Add(view);
         }
         return size;

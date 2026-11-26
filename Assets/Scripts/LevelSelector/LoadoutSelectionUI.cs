@@ -1166,6 +1166,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         Color panelColor = PlantData.ElementPanelColor(data.elementalType);
         tooltipBody.color = panelColor;
         if (namePlate != null) namePlate.color = panelColor;
+        if (portraitInterior != null) portraitInterior.color = PlantData.ElementBackdropColor(data.elementalType);
+        if (portraitBand != null) portraitBand.color = PlantData.ElementColor(data.elementalType);
         foreach (Image box in tooltipBoxes)
             if (box != null)
             {
@@ -1179,6 +1181,59 @@ public class LoadoutSelectionUI : MonoBehaviour
     // leaf trim over it), 2 units a pixel, as wide as the name needs. it stretches only at the art's plain
     // columns (sprite borders 21 and 33), so both leafy ends keep their pixels. the name moves into it
     private Image namePlate;
+
+    // Tommy's round vine frame round the tooltip's portrait (2026-11-26, VinePortraitLook), as on the level's
+    // plant info panel: in the icon row in the plant's place, drawn whole at 2 units a pixel (102 by 96); the
+    // planks behind (tinted with the element's backdrop colour), the plant in the frame's window, the band
+    // over it (tinted with the element's colour) with its vines and gold
+    private Image portraitInterior, portraitBand;
+    // the row the portrait sits in (the icon's parent until the frame took it in)
+    private Transform tooltipIconRow;
+
+    private void UseVinePortrait()
+    {
+        if (tooltipIcon == null || !VinePortraitLook.Available || portraitBand != null) return;
+        Transform row = tooltipIcon.transform.parent;
+        if (row == null) return;
+        tooltipIconRow = row;
+        GameObject holder = new GameObject("PortraitFrame", typeof(RectTransform), typeof(LayoutElement));
+        holder.layer = tooltipIcon.gameObject.layer;
+        RectTransform h = (RectTransform)holder.transform;
+        h.SetParent(row, false);
+        h.SetSiblingIndex(tooltipIcon.transform.GetSiblingIndex());
+        LayoutElement size = holder.GetComponent<LayoutElement>();
+        size.minWidth = size.preferredWidth = VinePortraitLook.Size.x;
+        size.minHeight = size.preferredHeight = VinePortraitLook.Size.y;
+        size.flexibleWidth = size.flexibleHeight = 0f;
+
+        portraitInterior = NewPortraitLayer("Interior", h);
+        VinePortraitLook.MakeInterior(portraitInterior);
+        RectTransform window = VinePortraitLook.NewWindow(h);
+        tooltipIcon.transform.SetParent(window, false);
+        RectTransform icon = tooltipIcon.rectTransform;
+        icon.anchorMin = Vector2.zero;
+        icon.anchorMax = Vector2.one;
+        icon.offsetMin = icon.offsetMax = Vector2.zero;
+        tooltipIcon.preserveAspect = true;
+        LayoutElement iconSize = tooltipIcon.GetComponent<LayoutElement>();
+        if (iconSize != null) iconSize.ignoreLayout = true;
+        portraitBand = NewPortraitLayer("Frame", h);
+        VinePortraitLook.MakeFrame(portraitBand);
+    }
+
+    private static Image NewPortraitLayer(string name, RectTransform parent)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform), typeof(Image));
+        go.layer = parent.gameObject.layer;
+        RectTransform r = (RectTransform)go.transform;
+        r.SetParent(parent, false);
+        r.anchorMin = Vector2.zero;
+        r.anchorMax = Vector2.one;
+        r.offsetMin = r.offsetMax = Vector2.zero;
+        Image image = go.GetComponent<Image>();
+        image.raycastTarget = false;
+        return image;
+    }
     // the plate drawn at 3 canvas units an art pixel (Tommy, 2026-11-26: bigger, the name overlapped the 2
     // unit one), so its wood (art rows 3 to 15) is 39 units tall around the name's 21 unit capitals.
     // canvas units: its height (the art's 19 px) and the room between the name and the leafy ends (13 px)
@@ -1241,6 +1296,7 @@ public class LoadoutSelectionUI : MonoBehaviour
                 iconRow.childForceExpandHeight = false;
                 iconRow.childAlignment = TextAnchor.MiddleLeft;
             }
+            UseVinePortrait();
         }
 
         // the name inside it, in the middle of the wood, the plate as wide as the name and its ends need
@@ -1350,7 +1406,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         {
             // everything above the line (the portrait's row: the name and the damage type) keeps its size
             // (Tommy, 2026-11-26); only the texts under it shrink to fit
-            Transform fixedRow = tooltipIcon != null ? tooltipIcon.transform.parent : null;
+            Transform fixedRow = tooltipIconRow != null ? tooltipIconRow : tooltipIcon != null ? tooltipIcon.transform.parent : null;
             var scaled = new List<TMP_Text>();
             foreach (TMP_Text text in tooltipPanel.GetComponentsInChildren<TMP_Text>(true))
                 if (fixedRow == null || !text.transform.IsChildOf(fixedRow)) scaled.Add(text);

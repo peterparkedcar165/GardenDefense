@@ -498,6 +498,7 @@
     <Compile Include="Assets\Scripts\UI\PixelLayout.cs" />
     <Compile Include="Assets\Scripts\UI\QuickStatRow.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreenhouseFertilizerData.cs" />
+    <Compile Include="Assets\Scripts\UI\VinePortraitLook.cs" />
     <Compile Include="Assets\Scripts\UI\PlantWidgetStyle.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\BargainSeedsFertilizerData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />

@@ -16,6 +16,8 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public Image icon;
     [Tooltip("the frame is the info panel's slot sprite: drawn as is while empty, tinted toward the rarity when filled")]
     public bool spriteFrame;
+    [Tooltip("Tommy's vine frame (2026-11-26): always its own colours, never tinted by the rarity")]
+    public bool keepFrameColour;
 
     private bool hovered;
     // what the slot last showed, and whose slot it was (the plant, for a plant slot), so a mulch
@@ -49,7 +51,9 @@ public class MulchSlotView : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         bool has = item != null && item.data != null;
         if (has) MulchIcon.Show(icon, item);
         else MulchIcon.Hide(icon);
-        if (has)
+        if (keepFrameColour)
+            frame.color = Color.white;
+        else if (has)
         {
             frame.color = spriteFrame
                 ? Color.Lerp(Color.white, MulchTierColors.Get(item.rarity), 0.5f)
