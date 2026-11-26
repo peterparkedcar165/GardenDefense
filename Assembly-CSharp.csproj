@@ -290,6 +290,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\WeatherFertilizerEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearGrassEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\TooltipFrameLook.cs" />
     <Compile Include="Assets\Scripts\Mulch\SolarFlareMulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\QueensAuraEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\GhostFungus.cs" />
