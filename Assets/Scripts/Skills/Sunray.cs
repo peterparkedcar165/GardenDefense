@@ -47,14 +47,15 @@ public class Sunray : MonoBehaviour
     }
 
     // Tommy's animated beam (2026-11-26, Downloads/gd_sunray_beam: Resources/SunrayBeam, 32 frames of 64 px,
-    // the light flowing down, a seamless loop, played at 60 fps). the Visual used to stretch one 16 px sprite 2 by
+    // the light flowing down, a seamless loop, played at 144 fps). the Visual used to stretch one 16 px sprite 2 by
     // 40 times; now it undoes the root's stretch (so the pixels stay square) and tiles the frame up the
     // beam's whole height instead. the frames are imported at 20 px a tile, so their 20 px of light are
     // exactly as wide as the old beam (its 16 px at 32 a tile, times the root's 2: 1 tile), and the beam just
     // as tall (20 tiles); both still grow with the skill's radius (Initialize scales the root). the
     // frames step on game time, so the beam pauses with the game
-    // Tommy: 60 (the sheet was made for 30, so the light flows twice as fast, a loop every 0.53 s)
-    private const float BeamFps = 60f;
+    // Tommy: 144 (the sheet was made for 30, so the light flows about 5 times as fast, a loop every 0.22 s;
+    // a screen slower than 144 Hz shows only some of the frames)
+    private const float BeamFps = 144f;
     private static Sprite[] beamFrames;
     private SpriteRenderer beam;
     private float beamTime;
