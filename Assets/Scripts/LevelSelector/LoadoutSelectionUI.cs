@@ -200,8 +200,19 @@ public class LoadoutSelectionUI : MonoBehaviour
         while (SceneTransition.IsTransitioning) yield return null;
         float maxDelay = 0f;
         foreach (var m in introMovers) maxDelay = Mathf.Max(maxDelay, m.delay);
+        // the sliding sound as each group starts to rise: the insect panel, the plant panels, the buttons
+        var starts = new List<float>();
+        foreach (var m in introMovers)
+            if (!starts.Contains(m.delay)) starts.Add(m.delay);
+        starts.Sort();
+        int nextStart = 0;
         for (float t = 0f; t < IntroRise + maxDelay; t += Time.unscaledDeltaTime)
         {
+            while (nextStart < starts.Count && t >= starts[nextStart])
+            {
+                UISounds.Slide();
+                nextStart++;
+            }
             foreach (var m in introMovers)
             {
                 if (m.rect == null) continue;
@@ -948,6 +959,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         Rect? to = SlotRect(target);
         if (!to.HasValue) return;
 
+        // the sliding sound, once for everything one click sends gliding
+        UISounds.Slide();
         GameObject go = new GameObject("Flying " + plantName, typeof(RectTransform), typeof(Image));
         go.layer = panel.layer;
         RectTransform flyer = (RectTransform)go.transform;

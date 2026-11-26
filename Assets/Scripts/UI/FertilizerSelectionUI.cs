@@ -67,6 +67,7 @@ public class FertilizerSelectionUI : MonoBehaviour
         Vector2 start = titleHome + Vector2.up * Screen.height;
         title.anchoredPosition = start;
         yield return null;
+        UISounds.Slide();
         for (float elapsed = 0f; elapsed < FertilizerCard.FallSeconds; elapsed += Time.unscaledDeltaTime)
         {
             title.anchoredPosition = Vector2.Lerp(start, titleHome, FertilizerCard.Fall(elapsed / FertilizerCard.FallSeconds));

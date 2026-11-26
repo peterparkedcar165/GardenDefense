@@ -313,6 +313,7 @@ public class FertilizerCard : MonoBehaviour
         rectTransform.anchoredPosition = startPos;
         canvasGroup.alpha = 1f;
         if (fallDelay > 0f) yield return new WaitForSecondsRealtime(fallDelay);
+        UISounds.Slide();
 
         for (float elapsed = 0f; elapsed < FallSeconds; elapsed += Time.unscaledDeltaTime)
         {
