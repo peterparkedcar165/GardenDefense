@@ -468,7 +468,8 @@ public class Sunflower : Shooter
     public override void OnPath3Upgrade(int level)
     {
         baseSkillDuration = data.baseSkillDuration + (SFData?.path3SkillDurationPerLevel ?? 0.5f) * level;
-        skillAoERadius    = data.baseSkillRadius   + (SFData?.path3RadiusPerLevel        ?? 0.2f) * level;
+        // the data gives the damage area's diameter (Tommy): the radius used for hits and targeting is half
+        skillAoERadius    = SunrayDiameter(level) * 0.5f;
     }
 
     public override void ActivateSkill()
@@ -500,19 +501,24 @@ public class Sunflower : Shooter
     // lockout and the skill animation both finish on their own schedule same as before, this
     // just delays the spawn on top of that
     private const float SunraySpawnExtraDelay = 1f;
-    // tiles: the beam's width at its prefab's own size, and how much the hit radius is past the beam's width
+    // tiles: the beam's width at its prefab's own size, and how much narrower the beam is than the damage
+    // area's diameter
     private const float SunrayBaseBeamWidth = 1f;
-    private const float SunrayRadiusPastBeam = 1f;
+    private const float SunrayBeamNarrower = 1f;
+
+    // the damage area across, in tiles, at this Skill level (SunflowerData)
+    private float SunrayDiameter(float level) =>
+        (SFData?.baseSunrayDiameter ?? 2f) + (SFData?.path3DiameterPerLevel ?? 0.1f) * level;
 
     private IEnumerator ChannelAndSpawn(Vector3 position)
     {
         yield return new WaitForSeconds(channelDuration);
         yield return new WaitForSeconds(SunraySpawnExtraDelay);
 
-        // the beam is always 1 tile narrower than the hit radius (Tommy, 2026-11-26): 64 px (1 tile) wide at
-        // the base radius of 2 (SunflowerData), and as much wider as the radius grows. its prefab is 1 tile
-        // wide, so the scale is the width in tiles. a radius under 1.1 leaves the thinnest beam, 0.1 tile
-        float visualScale = Mathf.Max(0.1f, skillAoERadius - SunrayRadiusPastBeam) / SunrayBaseBeamWidth;
+        // the beam is always 1 tile narrower than the damage area's diameter (Tommy, 2026-11-26: a diameter
+        // of 2 draws a 1 tile beam, 3 a 2 tile beam). its prefab is 1 tile wide, so the scale is the width in
+        // tiles; a diameter under 1.1 leaves the thinnest beam, 0.1 tile
+        float visualScale = Mathf.Max(0.1f, skillAoERadius * 2f - SunrayBeamNarrower) / SunrayBaseBeamWidth;
 
         StartCoroutine(SpawnSunray(position, visualScale));
 
@@ -601,15 +607,15 @@ public class Sunflower : Shooter
     {
         float dpspl    = SFData?.path3SunrayDPSPerLevel    ?? 15f;
         float durpl    = SFData?.path3SkillDurationPerLevel ?? 0.5f;
-        float radiuspl = SFData?.path3RadiusPerLevel        ?? 0.2f;
+        float diameterpl = SFData?.path3DiameterPerLevel   ?? 0.1f;
         string desc = details
-            ? $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color> radius for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\n\n" +
+            ? $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({SFData?.baseSunrayDiameter ?? 2f:F2}) + ({diameterpl:F2}/Lvl.)]</b></color> tile wide area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\n\n" +
               $"For each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F1}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
-               $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +
+               $"Increase diameter by <color=green><b>{diameterpl:F2}</b></color> per level. [<color=green><b>+{diameterpl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
                $"{Level5Section(path3Level, "Unleashes an additional <color=orange><b>Sunray</b></color> at a random insect's location on the map.")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +

@@ -20,9 +20,15 @@ public class SunflowerData : PlantData
     [Header("Path 3 Scaling")]
     public float path3SunrayDPSPerLevel = 15f;
     public float path3SkillDurationPerLevel = 0.5f;
-    public float path3RadiusPerLevel = 0.2f;
-    // unused since 2026-11-26: the beam's width follows the hit radius (always 1 tile less, Tommy),
-    // so it grows by path3RadiusPerLevel too (Sunflower.ChannelAndSpawn)
+    // the Sunray's size is its damage area's diameter (Tommy, 2026-11-26: diameter, not radius), in tiles;
+    // the beam drawn is always 1 tile narrower (a diameter of 2 draws a 1 tile beam, 3 a 2 tile beam). the
+    // base PlantData.baseSkillRadius isn't used for Sunflower
+    [Tooltip("the Sunray's damage area across, in tiles, at Skill level 0; its beam is 1 tile narrower")]
+    public float baseSunrayDiameter = 2f;
+    [Tooltip("tiles the damage area's diameter grows a Skill level (the beam grows as much)")]
+    [UnityEngine.Serialization.FormerlySerializedAs("path3RadiusPerLevel")]
+    public float path3DiameterPerLevel = 0.1f;
+    // unused since 2026-11-26: the beam's width follows the damage area's diameter
     public float path3VisualRadiusPerLevel = 0.3f;
 
     [Header("Sunray Audio")]
