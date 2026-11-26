@@ -116,14 +116,14 @@ MonoBehaviour:
   baseSunrayDPS: 60
   baseCooldownReductionPerHit: 1
   path1AttackDamagePerLevel: 3
-  path1AttackSpeedPerLevel: 0.02
+  path1AttackSpeedPerLevel: 0.03
   path2SunPerLevel: 3
   path2CooldownReductionPerLevel: 0.1
   path3SunrayDPSPerLevel: 10
   path3SkillDurationPerLevel: 0.5
   baseSunrayDiameter: 2
   path3DiameterPerLevel: 0.2
-  path3VisualRadiusPerLevel: 0.1
+  path3VisualWidthPerLevel: 0.1
   sunraySpawnSound:
     clips:
     - clip: {fileID: 8300000, guid: 8c1d281c2537c854481083de9a319de7, type: 3}
