@@ -85,6 +85,19 @@ public class Sunray : MonoBehaviour
         beamFrame = 0;
     }
 
+    // what the beam was built at, in world units (Tommy, 2026-11-26: a 3 tile beam at diameter 2; to find why)
+    private void LogSize(float radius, float scale)
+    {
+        string beamInfo = beam != null
+            ? $"sprite {(beam.sprite != null ? beam.sprite.name + " " + beam.sprite.rect.size + " ppu " + beam.sprite.pixelsPerUnit : "none")}, size {beam.size}, " +
+              $"visual lossy {beam.transform.lossyScale}, world bounds {beam.bounds.size}"
+            : "no animated beam (old sprite)";
+        string particles = sunParticles != null
+            ? $"particles start size {sunParticles.main.startSize.constant}, shape radius {sunParticles.shape.radius}, scaling {sunParticles.main.scalingMode}"
+            : "no particles";
+        Debug.Log($"[Sunray] radius {radius} (diameter {radius * 2f}), visual scale {scale}, root scale {transform.localScale}; {beamInfo}; {particles}");
+    }
+
     // SunrayBeam_12 -> 12
     private static int FrameNumber(Sprite s)
     {
@@ -120,6 +133,7 @@ public class Sunray : MonoBehaviour
 
         targetScale *= visualScaleMultiplier;
         transform.localScale = targetScale;
+        LogSize(aoeRadius, visualScaleMultiplier);
 
         // the particle system's own scaling mode is Local (ignores parent/hierarchy scale), so
         // the edge shape it spawns particles along doesn't track the beam's width above on its

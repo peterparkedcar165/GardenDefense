@@ -121,8 +121,9 @@ MonoBehaviour:
   path2CooldownReductionPerLevel: 0.1
   path3SunrayDPSPerLevel: 10
   path3SkillDurationPerLevel: 0.5
-  path3RadiusPerLevel: 0.1
-  path3VisualRadiusPerLevel: 0.3
+  baseSunrayDiameter: 2
+  path3DiameterPerLevel: 0.2
+  path3VisualRadiusPerLevel: 0.1
   sunraySpawnSound:
     clips:
     - clip: {fileID: 8300000, guid: 8c1d281c2537c854481083de9a319de7, type: 3}
