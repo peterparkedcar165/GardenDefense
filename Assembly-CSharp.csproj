@@ -157,6 +157,7 @@
     <Compile Include="Assets\Scripts\UI\StatsPanelTooltip.cs" />
     <Compile Include="Assets\Scripts\Mulch\WildMulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TalonHitCounterEffect.cs" />
+    <Compile Include="Assets\Scripts\Audio\UISounds.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\GerminateEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\RainExposedEffect.cs" />
     <Compile Include="Assets\Scripts\Game\PlantLevelCurve.cs" />

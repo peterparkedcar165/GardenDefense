@@ -8,7 +8,7 @@ public static class UISounds
     private static SoundEffect slide;
     private static int slideFrame = -1;
 
-    // a panel, card or title sliding into place (sliding.mp3, Tommy: volume 1, pitch 0.9 to 1.1). once a
+    // a panel, card or title sliding into place (sliding.mp3, Tommy: volume 0.3, pitch 0.9 to 1.1). once a
     // frame at most, so things that start sliding together sound once
     public static void Slide()
     {
@@ -19,7 +19,7 @@ public static class UISounds
             if (clip == null) return;
             slide = new SoundEffect
             {
-                clips = new[] { new SoundClip { clip = clip, volume = 1f, minPitch = 0.9f, maxPitch = 1.1f } },
+                clips = new[] { new SoundClip { clip = clip, volume = 0.3f, minPitch = 0.9f, maxPitch = 1.1f } },
             };
         }
         slideFrame = Time.frameCount;
