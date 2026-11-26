@@ -107,15 +107,17 @@ public class FertilizerCard : MonoBehaviour
     }
 
     // Tommy's seed packet (2026-11-26): the card's body is the packet at 3 canvas units an art pixel
-    // (402 by 471), its greyscale frame and parchment tinted with the fertilizer's colour and its gold
-    // ornaments over it as drawn. the icon, the name, a seam and the description in a dark inset box fit
-    // its parchment (art px 14 to 119 across, 14 to 144 down); the name and the description shrink to fit.
-    // the pointer's highlight takes the packet's shape
+    // (402 by 471), drawn in three layers (Tommy): its greyscale interior (seed_packet_interior) at the
+    // back, tinted with the fertilizer's colour, then the card's contents, then its frame
+    // (seed_packet_frame: the wood, gold corners and vines, as drawn) over everything. the icon, the name,
+    // a seam and the description in a dark inset box stay where the frame's vines never reach (art px 21
+    // to 112 across, 18 to 140 down); the name and the description shrink to fit. the pointer's highlight
+    // takes the interior's shape
     private const float PacketPx = 3f;
     private static readonly Vector2 PacketArt = new Vector2(134f, 157f);
-    private static readonly Rect Parchment = Rect.MinMaxRect(14f, 14f, 120f, 145f);
-    // canvas units between the parchment's edge and what's on it
-    private const float PacketPad = 12f;
+    private static readonly Rect Parchment = Rect.MinMaxRect(21f, 18f, 113f, 141f);
+    // canvas units between that area's edge and what's on it
+    private const float PacketPad = 6f;
 
     private void SkinAsPacket(Transform body, Image bodyImage, Color color, InsectShowcaseStyle s)
     {
@@ -124,14 +126,6 @@ public class FertilizerCard : MonoBehaviour
         bodyRect.sizeDelta = size;
         SetKit(bodyImage, s.seedPacketBase, color, false);
         bodyImage.preserveAspect = false;
-        if (s.seedPacketTrim != null)
-        {
-            RectTransform trim = AddKitImage(body, "Trim", s.seedPacketTrim, Color.white, false);
-            trim.anchorMin = Vector2.zero;
-            trim.anchorMax = Vector2.one;
-            trim.offsetMin = trim.offsetMax = Vector2.zero;
-            trim.SetSiblingIndex(0);
-        }
 
         // the parchment in the body's own units (its middle at 0, 0)
         float left = -size.x * 0.5f + Parchment.xMin * PacketPx;
@@ -179,7 +173,18 @@ public class FertilizerCard : MonoBehaviour
         inset.anchoredPosition = stats.anchoredPosition;
         inset.SetSiblingIndex(stats.GetSiblingIndex());
 
-        // the pointer's highlight in the packet's shape, the packet's size
+        // the frame last, over the contents
+        if (s.seedPacketTrim != null)
+        {
+            RectTransform frame = AddKitImage(body, "Frame", s.seedPacketTrim, Color.white, false);
+            frame.anchorMin = Vector2.zero;
+            frame.anchorMax = Vector2.one;
+            frame.offsetMin = frame.offsetMax = Vector2.zero;
+            frame.SetAsLastSibling();
+        }
+
+        // the pointer's highlight in the packet's shape, the packet's size: the interior's shape with the
+        // frame's over it in the same light (the two never overlap, so no pixel is lit twice)
         Image glow = highlight != null ? highlight.GetComponent<Image>() : null;
         if (glow != null)
         {
@@ -188,6 +193,13 @@ public class FertilizerCard : MonoBehaviour
             glow.preserveAspect = false;
             glow.rectTransform.sizeDelta = size;
             glow.rectTransform.anchoredPosition = bodyRect.anchoredPosition;
+            if (s.seedPacketTrim != null)
+            {
+                RectTransform glowFrame = AddKitImage(glow.transform, "Frame", s.seedPacketTrim, glow.color, false);
+                glowFrame.anchorMin = Vector2.zero;
+                glowFrame.anchorMax = Vector2.one;
+                glowFrame.offsetMin = glowFrame.offsetMax = Vector2.zero;
+            }
         }
     }
 

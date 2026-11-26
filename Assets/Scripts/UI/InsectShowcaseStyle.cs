@@ -31,10 +31,10 @@ public class InsectShowcaseStyle : ScriptableObject
     public Sprite tallPanelBase;
     [Tooltip("its gold trim and corner scrollwork (ui_panel_tall_trim), drawn over the wood untinted")]
     public Sprite tallPanelTrim;
-    [Tooltip("the fertilizer cards' seed packet (Tommy, 2026-11-26, seed_packet_honey_base): its greyscale frame and " +
-        "parchment, tinted with the fertilizer's element colour (FertilizerCard)")]
+    [Tooltip("the fertilizer cards' seed packet interior (Tommy, 2026-11-26, seed_packet_interior): greyscale parchment " +
+        "at the back of the card, tinted with the fertilizer's element colour (FertilizerCard)")]
     public Sprite seedPacketBase;
-    [Tooltip("its gold ornaments (from seed_packet_honey_grey, where the base has holes for them), drawn over it untinted")]
+    [Tooltip("the packet's frame (seed_packet_frame: wood, gold corners, vines), drawn as is over the card's contents")]
     public Sprite seedPacketTrim;
     [Tooltip("the 4 by 2 line under the title")]
     public Sprite seam;
