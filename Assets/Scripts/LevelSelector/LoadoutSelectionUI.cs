@@ -138,13 +138,16 @@ public class LoadoutSelectionUI : MonoBehaviour
     // ---------- the level's opening (Tommy, 2026-11-24) ----------
     // the level fades in from the loading screen with nothing of this screen on it, only the map and
     // the game's own panel. as soon as the fade is done (no wait after it, Tommy 2026-11-26: it was half a
-    // second), the insect panel, the plant panels and the buttons rise from below the screen into their
-    // places, a little one after another, and the dark backdrop fades in with them. the level is paused,
+    // second), the insect panel, the plant panels and the buttons slide in from their own sides of the
+    // screen (PlayIntro) into their places, a little one after another, and the dark backdrop fades in
+    // with them. the level is paused,
     // so it all runs on unscaled time
     private const float IntroRise = 0.45f;
     private const float IntroStagger = 0.08f;
     private Coroutine intro;
-    private readonly List<(RectTransform rect, Vector2 home, float delay)> introMovers = new List<(RectTransform, Vector2, float)>();
+    // each part, where it rests, when it starts and how far off screen it starts (it slides in from there)
+    private readonly List<(RectTransform rect, Vector2 home, float delay, Vector2 offset)> introMovers =
+        new List<(RectTransform, Vector2, float, Vector2)>();
     private float backdropAlpha = -1f;
     private CanvasGroup panelGroup;
     private readonly List<System.Action> afterIntro = new List<System.Action>();
@@ -168,34 +171,52 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (backdrop == null) backdrop = panel.GetComponent<Image>();
         if (backdrop != null && backdropAlpha < 0f) backdropAlpha = backdrop.color.a;
 
-        // what rises: every shown part of the screen (the tooltips stay hidden), the insect panel
-        // first, then the plant panels, then the buttons. all rise the same distance, enough to put
-        // the highest one fully below the screen, so parts that belong together stay together
+        // what slides in: every shown part of the screen (the tooltips stay hidden), each from its own side
+        // (Tommy, 2026-11-26): the insect panel from the left, the current loadout (its section and the green
+        // panel behind it) from the top, the available plants, their panel and the buttons from the bottom.
+        // the insect panel first, then the plant panels, then the buttons. everything coming from one side
+        // travels the same distance, enough to put the furthest in fully off screen, so parts that belong
+        // together stay together
         RectTransform panelRect = (RectTransform)panel.transform;
         Canvas.ForceUpdateCanvases();
         Transform loadoutSection = SectionOf(selectedContainer), plantsSection = SectionOf(unlockedContainer);
         introMovers.Clear();
-        float distance = 0f;
+        float fromLeft = 0f, fromTop = 0f, fromBottom = 0f;
+        var sides = new List<int>();   // 0 left, 1 top, 2 bottom, per mover
         Vector3[] corners = new Vector3[4];
         foreach (Transform child in panel.transform)
         {
             if (!child.gameObject.activeSelf || !(child is RectTransform rt)) continue;
-            float delay = showcase != null && child == showcase.transform ? 0f
-                : child == loadoutSection || child == plantsSection || child.name == "PlantsPanel" ? IntroStagger
-                : 2f * IntroStagger;
-            introMovers.Add((rt, rt.anchoredPosition, delay));
+            bool insects = showcase != null && child == showcase.transform;
+            bool plantPart = child == loadoutSection || child == plantsSection || child.name == "PlantsPanel";
+            float delay = insects ? 0f : plantPart ? IntroStagger : 2f * IntroStagger;
+            // a green panel goes with the section it's behind: the nearer of the two
+            bool loadoutPart = child == loadoutSection
+                || (child.name == "PlantsPanel" && loadoutSection != null && plantsSection != null
+                    && Mathf.Abs(rt.position.y - loadoutSection.position.y) < Mathf.Abs(rt.position.y - plantsSection.position.y));
+            int side = insects ? 0 : loadoutPart ? 1 : 2;
             rt.GetWorldCorners(corners);
-            float top = panelRect.InverseTransformPoint(corners[1]).y;
-            distance = Mathf.Max(distance, top - panelRect.rect.yMin + 40f);
+            Vector3 low = panelRect.InverseTransformPoint(corners[0]), high = panelRect.InverseTransformPoint(corners[2]);
+            if (side == 0) fromLeft = Mathf.Max(fromLeft, high.x - panelRect.rect.xMin + 40f);
+            else if (side == 1) fromTop = Mathf.Max(fromTop, panelRect.rect.yMax - low.y + 40f);
+            else fromBottom = Mathf.Max(fromBottom, high.y - panelRect.rect.yMin + 40f);
+            introMovers.Add((rt, rt.anchoredPosition, delay, Vector2.zero));
+            sides.Add(side);
         }
-        foreach (var m in introMovers) m.rect.anchoredPosition = m.home - new Vector2(0f, distance);
+        for (int i = 0; i < introMovers.Count; i++)
+        {
+            var m = introMovers[i];
+            Vector2 offset = sides[i] == 0 ? new Vector2(-fromLeft, 0f) : sides[i] == 1 ? new Vector2(0f, fromTop) : new Vector2(0f, -fromBottom);
+            introMovers[i] = (m.rect, m.home, m.delay, offset);
+            m.rect.anchoredPosition = m.home + offset;
+        }
         SetBackdropAlpha(0f);
         // the backdrop still takes the pointer, so nothing under the screen can be clicked meanwhile
         panelGroup.interactable = false;
-        intro = StartCoroutine(Intro(distance));
+        intro = StartCoroutine(Intro());
     }
 
-    private System.Collections.IEnumerator Intro(float distance)
+    private System.Collections.IEnumerator Intro()
     {
         while (SceneTransition.IsTransitioning) yield return null;
         float maxDelay = 0f;
@@ -218,7 +239,7 @@ public class LoadoutSelectionUI : MonoBehaviour
                 if (m.rect == null) continue;
                 float k = Mathf.Clamp01((t - m.delay) / IntroRise);
                 float eased = 1f - Mathf.Pow(1f - k, 3f);   // quick at first, settling into place
-                m.rect.anchoredPosition = m.home - new Vector2(0f, distance * (1f - eased));
+                m.rect.anchoredPosition = m.home + m.offset * (1f - eased);
             }
             SetBackdropAlpha(Mathf.Clamp01(t / IntroRise));
             yield return null;

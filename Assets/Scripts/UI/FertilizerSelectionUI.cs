@@ -67,7 +67,6 @@ public class FertilizerSelectionUI : MonoBehaviour
         Vector2 start = titleHome + Vector2.up * Screen.height;
         title.anchoredPosition = start;
         yield return null;
-        UISounds.Slide();
         for (float elapsed = 0f; elapsed < FertilizerCard.FallSeconds; elapsed += Time.unscaledDeltaTime)
         {
             title.anchoredPosition = Vector2.Lerp(start, titleHome, FertilizerCard.Fall(elapsed / FertilizerCard.FallSeconds));
@@ -79,8 +78,10 @@ public class FertilizerSelectionUI : MonoBehaviour
     // the cards fall face down, one after another; once the last has landed, a moment later they all turn
     // over together (Tommy, 2026-11-26)
     private const float RevealPause = 0.15f;
-    // real seconds between one fall starting and the next: the title, then each card from the left
-    private const float FallStagger = 0.15f;
+    // real seconds: from the title's fall to the first card's, and between one card's and the next (Tommy:
+    // shorter, it was 0.15). only the cards make the sliding sound, not the title
+    private const float TitleLead = 0.15f;
+    private const float CardStagger = 0.08f;
 
     private System.Collections.IEnumerator RevealWhenLanded()
     {
@@ -127,7 +128,7 @@ public class FertilizerSelectionUI : MonoBehaviour
         for (int i = 0; i < offered.Count; i++)
         {
             FertilizerCard card = Instantiate(cardPrefab, cardContainer);
-            card.Initialize(offered[i], this, FallStagger * (i + 1));
+            card.Initialize(offered[i], this, TitleLead + CardStagger * i);
             activeCards.Add(card);
         }
         StartCoroutine(DropTitle());

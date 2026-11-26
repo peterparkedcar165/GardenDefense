@@ -18,7 +18,6 @@ public class FertilizerCard : MonoBehaviour
     private FertilizerData data;
     private FertilizerSelectionUI ui;
     private RectTransform rectTransform;
-    private Vector2 targetPosition;
 
     // fallDelay: real seconds it waits above the screen before falling (the screen's title falls first, then
     // the cards left to right, Tommy 2026-11-26)
@@ -305,23 +304,40 @@ public class FertilizerCard : MonoBehaviour
 
     private float fallDelay;
 
+    // the card's own rect belongs to the row's layout, which can lay it out again a frame after the screen
+    // first opens and snapped it back into the middle mid slide (Tommy saw the cards there for a frame). so
+    // the card stays put and its packet and highlight slide instead, from a canvas height above
     private IEnumerator AnimateIn()
     {
+        RectTransform body = statsText != null ? statsText.transform.parent as RectTransform : null;
+        RectTransform glow = highlight != null ? highlight.transform as RectTransform : null;
+        Vector2 bodyHome = body != null ? body.anchoredPosition : Vector2.zero;
+        Vector2 glowHome = glow != null ? glow.anchoredPosition : Vector2.zero;
+        Canvas canvas = GetComponentInParent<Canvas>();
+        RectTransform root = canvas != null ? (RectTransform)canvas.rootCanvas.transform : null;
+        Vector2 lift = Vector2.up * (root != null ? root.rect.height : Screen.height);
+        Place(body, bodyHome + lift);
+        Place(glow, glowHome + lift);
         yield return null;
-        targetPosition = rectTransform.anchoredPosition;
-        Vector2 startPos = targetPosition + Vector2.up * Screen.height;
-        rectTransform.anchoredPosition = startPos;
         canvasGroup.alpha = 1f;
         if (fallDelay > 0f) yield return new WaitForSecondsRealtime(fallDelay);
         UISounds.Slide();
 
         for (float elapsed = 0f; elapsed < FallSeconds; elapsed += Time.unscaledDeltaTime)
         {
-            rectTransform.anchoredPosition = Vector2.Lerp(startPos, targetPosition, Fall(elapsed / FallSeconds));
+            Vector2 offset = lift * (1f - Fall(elapsed / FallSeconds));
+            Place(body, bodyHome + offset);
+            Place(glow, glowHome + offset);
             yield return null;
         }
-        rectTransform.anchoredPosition = targetPosition;
+        Place(body, bodyHome);
+        Place(glow, glowHome);
         // picked only once it's been turned face up (Flip)
         Landed = true;
+    }
+
+    private static void Place(RectTransform r, Vector2 position)
+    {
+        if (r != null) r.anchoredPosition = position;
     }
 }
