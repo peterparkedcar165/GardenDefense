@@ -66,6 +66,7 @@ public class FertilizerCard : MonoBehaviour
         skinned = true;
         InsectShowcaseStyle s = InsectShowcaseStyle.Instance;
         Color color = data.elementalType == ElementalType.Neutral ? NeutralCardColor : PlantData.ElementPanelColor(data.elementalType);
+        if (s.seedPacketBase != null) { SkinAsPacket(body, bodyImage, color, s); return; }
 
         SetKit(bodyImage, s.panelBase, color, true);
         RectTransform shine = AddKitImage(body, "Shine", s.panelShine, Color.white, true);
@@ -96,6 +97,91 @@ public class FertilizerCard : MonoBehaviour
         inset.anchoredPosition = stats.anchoredPosition;
         inset.sizeDelta = new Vector2(width, stats.sizeDelta.y + 12f);
         inset.SetSiblingIndex(stats.GetSiblingIndex());
+    }
+
+    // Tommy's seed packet (2026-11-26): the card's body is the packet at 3 canvas units an art pixel
+    // (402 by 471), its greyscale frame and parchment tinted with the fertilizer's colour and its gold
+    // ornaments over it as drawn. the icon, the name, a seam and the description in a dark inset box fit
+    // its parchment (art px 14 to 119 across, 14 to 144 down); the name and the description shrink to fit.
+    // the pointer's highlight takes the packet's shape
+    private const float PacketPx = 3f;
+    private static readonly Vector2 PacketArt = new Vector2(134f, 157f);
+    private static readonly Rect Parchment = Rect.MinMaxRect(14f, 14f, 120f, 145f);
+    // canvas units between the parchment's edge and what's on it
+    private const float PacketPad = 12f;
+
+    private void SkinAsPacket(Transform body, Image bodyImage, Color color, InsectShowcaseStyle s)
+    {
+        RectTransform bodyRect = (RectTransform)body;
+        Vector2 size = PacketArt * PacketPx;
+        bodyRect.sizeDelta = size;
+        SetKit(bodyImage, s.seedPacketBase, color, false);
+        bodyImage.preserveAspect = false;
+        if (s.seedPacketTrim != null)
+        {
+            RectTransform trim = AddKitImage(body, "Trim", s.seedPacketTrim, Color.white, false);
+            trim.anchorMin = Vector2.zero;
+            trim.anchorMax = Vector2.one;
+            trim.offsetMin = trim.offsetMax = Vector2.zero;
+            trim.SetSiblingIndex(0);
+        }
+
+        // the parchment in the body's own units (its middle at 0, 0)
+        float left = -size.x * 0.5f + Parchment.xMin * PacketPx;
+        float right = -size.x * 0.5f + Parchment.xMax * PacketPx;
+        float top = size.y * 0.5f - Parchment.yMin * PacketPx;
+        float bottom = size.y * 0.5f - Parchment.yMax * PacketPx;
+        float inner = right - left - 2f * PacketPad;
+        float centreX = Mathf.Round((left + right) * 0.5f);
+
+        float y = top - PacketPad;
+        if (icon != null)
+        {
+            RectTransform ir = icon.rectTransform;
+            ir.anchorMin = ir.anchorMax = ir.pivot = new Vector2(0.5f, 0.5f);
+            ir.anchoredPosition = new Vector2(centreX, Mathf.Round(y - IconSize * 0.5f));
+            y -= IconSize + 6f;
+        }
+
+        RectTransform name = tierText.rectTransform;
+        name.anchorMin = name.anchorMax = name.pivot = new Vector2(0.5f, 0.5f);
+        name.sizeDelta = new Vector2(inner - 24f, 42f);
+        name.anchoredPosition = new Vector2(centreX, Mathf.Round(y - 21f));
+        tierText.enableAutoSizing = true;
+        tierText.fontSizeMax = tierText.fontSize;
+        tierText.fontSizeMin = 18f;
+        y -= 42f + 4f;
+
+        RectTransform seam = AddKitImage(body, "Seam", s.seam, Color.white, false);
+        seam.anchorMin = seam.anchorMax = seam.pivot = new Vector2(0.5f, 0.5f);
+        seam.sizeDelta = new Vector2(inner, 4f);
+        seam.anchoredPosition = new Vector2(centreX, Mathf.Round(y - 2f));
+        y -= 4f + 8f;
+
+        float boxTop = y, boxBottom = bottom + PacketPad;
+        RectTransform stats = statsText.rectTransform;
+        stats.anchorMin = stats.anchorMax = stats.pivot = new Vector2(0.5f, 0.5f);
+        stats.sizeDelta = new Vector2(inner - 24f, boxTop - boxBottom - 12f);
+        stats.anchoredPosition = new Vector2(centreX, Mathf.Round((boxTop + boxBottom) * 0.5f));
+        statsText.enableAutoSizing = true;
+        statsText.fontSizeMax = statsText.fontSize;
+        statsText.fontSizeMin = 12f;
+        RectTransform inset = AddKitImage(body, "Inset", s.insetBox, color, true);
+        inset.anchorMin = inset.anchorMax = inset.pivot = new Vector2(0.5f, 0.5f);
+        inset.sizeDelta = new Vector2(inner, boxTop - boxBottom);
+        inset.anchoredPosition = stats.anchoredPosition;
+        inset.SetSiblingIndex(stats.GetSiblingIndex());
+
+        // the pointer's highlight in the packet's shape, the packet's size
+        Image glow = highlight != null ? highlight.GetComponent<Image>() : null;
+        if (glow != null)
+        {
+            glow.sprite = s.seedPacketBase;
+            glow.type = Image.Type.Simple;
+            glow.preserveAspect = false;
+            glow.rectTransform.sizeDelta = size;
+            glow.rectTransform.anchoredPosition = bodyRect.anchoredPosition;
+        }
     }
 
     private static RectTransform AddKitImage(Transform parent, string name, Sprite sprite, Color color, bool sliced)
