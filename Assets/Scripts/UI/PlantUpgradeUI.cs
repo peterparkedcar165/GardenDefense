@@ -222,6 +222,7 @@ public class PlantUpgradeUI : EntityInfoPanel
             }
         }
         UseSmallUpgradeButtons();
+        UseTargetingClicker();
         // the skill square feels like a button once unlocked (Tommy, 2026-11-26): lit under the pointer,
         // pressed when clicked or cast with Q
         Transform trim = skillIcon != null && skillIcon.transform.parent != null ? skillIcon.transform.parent.Find("SkillFrameTrim") : null;
@@ -281,9 +282,11 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
+    // a right click on the targeting display steps the mode back (TargetingClicker) and keeps the panel open
     protected override bool ShouldBlockRightClickClose()
     {
-        return SkillTargetingManager.instance.IsTargeting || SkillTargetingManager.instance.WasCancelledThisFrame;
+        return SkillTargetingManager.instance.IsTargeting || SkillTargetingManager.instance.WasCancelledThisFrame
+            || (targetingClicker != null && targetingClicker.Hovered);
     }
 
     // --- Show / Hide ---
@@ -1106,9 +1109,64 @@ public class PlantUpgradeUI : EntityInfoPanel
     }
 
     // round 6: two arrow buttons around a display with the mode's name. left steps back through the
-    // modes, right forward, both wrapping round
+    // modes, right forward, both wrapping round. since Tommy's 2026-11-26 the arrows are hidden and the
+    // display is clicked instead (UseTargetingClicker): left click next, right click back
     public void OnTargetingPrevClicked() => StepTargeting(-1);
     public void OnTargetingNextClicked() => StepTargeting(1);
+
+    // the arrows hidden, the display as wide as the slot they shared, and the display itself the button
+    // (TargetingClicker): it takes the pointer, the mode's name doesn't
+    private void UseTargetingClicker()
+    {
+        if (targetingControl == null || targetingModeText == null) return;
+        foreach (string arrow in new[] { "Prev", "Next" })
+        {
+            Transform found = targetingControl.transform.Find(arrow);
+            if (found != null) found.gameObject.SetActive(false);
+        }
+        RectTransform display = targetingModeText.transform.parent as RectTransform;
+        if (display == null || display == targetingControl.transform) return;
+        RectTransform slot = (RectTransform)targetingControl.transform;
+        display.anchoredPosition = new Vector2(0f, display.anchoredPosition.y);
+        display.sizeDelta = new Vector2(slot.rect.width, display.sizeDelta.y);
+        Image image = display.GetComponent<Image>();
+        if (image != null) image.raycastTarget = true;
+        targetingModeText.raycastTarget = false;
+        targetingClicker = display.GetComponent<TargetingClicker>();
+        if (targetingClicker == null) targetingClicker = display.gameObject.AddComponent<TargetingClicker>();
+        targetingClicker.ui = this;
+    }
+
+    private TargetingClicker targetingClicker;
+
+    // what each mode picks among the insects in range (Plant.FindNearest and the others)
+    private static string TargetingMeaning(TARGETING mode) => mode switch
+    {
+        TARGETING.Nearest   => "the closest to the plant",
+        TARGETING.First     => "the furthest along the path",
+        TARGETING.Last      => "the furthest back on the path",
+        TARGETING.Strongest => "the highest max health",
+        TARGETING.Fastest   => "the fastest right now (slows count)",
+        TARGETING.Slowest   => "the slowest right now (slows count)",
+        _ => "",
+    };
+
+    // the targeting display's tooltip: every mode, the plant's own one marked, and the clicks under them
+    public void ShowTargetingTooltip()
+    {
+        if (selectedPlant == null || !selectedPlant.UsesTargeting) return;
+        var modes = new System.Text.StringBuilder();
+        foreach (TARGETING mode in System.Enum.GetValues(typeof(TARGETING)))
+        {
+            if (modes.Length > 0) modes.Append('\n');
+            if (mode == selectedPlant.targeting)
+                modes.Append($"<color=green><b>> {mode}</b></color>: {TargetingMeaning(mode)}");
+            else
+                modes.Append($"<b>{mode}</b>: <color=#BBBBBB>{TargetingMeaning(mode)}</color>");
+        }
+        ShowSectionedTooltip("Targeting", new[] { modes.ToString() },
+            "<color=grey>[Left click to go next]\n[Right click to go back]</color>");
+    }
 
     private void StepTargeting(int step)
     {
