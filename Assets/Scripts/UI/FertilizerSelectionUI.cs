@@ -17,7 +17,7 @@ public class FertilizerSelectionUI : MonoBehaviour
     {
         if (instance != null) return;
         instance = this;
-        // the backdrop a little darker (Tommy, 2026-11-26), and the title moved up clear of the bigger cards
+        // the backdrop darker (Tommy, 2026-11-26: 57% then 72% then 85%), and the title moved up clear of the cards
         UnityEngine.UI.Image backdrop = panel.GetComponent<UnityEngine.UI.Image>();
         if (backdrop != null) backdrop.color = new Color(0f, 0f, 0f, BackdropAlpha);
         Transform header = panel.transform.Find("HeaderText");
@@ -25,7 +25,7 @@ public class FertilizerSelectionUI : MonoBehaviour
         panel.SetActive(false);
     }
 
-    private const float BackdropAlpha = 0.72f;
+    private const float BackdropAlpha = 0.85f;
     private const float HeaderY = 360f;
 
     public void Configure(FertilizerData[] pool)
