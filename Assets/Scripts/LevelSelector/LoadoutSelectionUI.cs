@@ -274,6 +274,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (!plantPanelsBuilt)
         {
             plantPanelsBuilt = true;
+            PutTitlesOnPlanks();
             // the plant cards' size and the sections' places first: the green panels are measured from them
             UseCardCells();
             LayOutPlantSections();
@@ -388,6 +389,8 @@ public class LoadoutSelectionUI : MonoBehaviour
                     box.type = Image.Type.Sliced;
                     box.pixelsPerUnitMultiplier = 1f;
                     box.color = TallPanelLook.Available ? TallPanelLook.Wood : s.plantPanel;
+                    // the tooltip sections' wooden frame over its edge (Tommy, 2026-11-26)
+                    SectionFrameLook.Add(box);
                 }
                 // the title gets the panel's 1 pixel shadow
                 TMP_Text title = child.GetComponent<TMP_Text>();
@@ -460,10 +463,52 @@ public class LoadoutSelectionUI : MonoBehaviour
     // art pixels between a section title's drawn letters and the top of its grid's box
     private const float TitleGap = 4f;
 
-    // moves a section's title up or down until its drawn text ends TitleGap pixels above the box
+    // the section titles on the main menu's large leafy plank (Tommy, 2026-11-26), in the yellow of the
+    // menu's buttons like the fertilizer screen's title, at the plank's own size (2 units an art pixel). the
+    // old text hides; the layout measures and places the plank instead (TitleHeight, PlaceTitle)
+    private void PutTitlesOnPlanks()
+    {
+        GameControlsStyle look = GameControlsStyle.Instance;
+        if (look.largeButton == null) return;
+        foreach (Transform section in new[] { SectionOf(selectedContainer), SectionOf(unlockedContainer) })
+        {
+            if (section == null || PlankOf(section) != null) continue;
+            TMP_Text title = TitleOf(section);
+            if (title == null) continue;
+            PlankButton plank = PlankButton.CreateTitle((RectTransform)section, title.text, look.pause, InsectShowcaseStyle.Instance.font);
+            RectTransform r = plank.Rect;
+            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+            // where the title was; PlaceTitle and LayOutPlantSections put it in its place
+            r.position = title.rectTransform.TransformPoint(title.rectTransform.rect.center);
+            r.SetSiblingIndex(title.transform.GetSiblingIndex());
+            title.gameObject.SetActive(false);
+        }
+    }
+
+    // a section's title plank, if it has one
+    private static RectTransform PlankOf(Transform section)
+    {
+        foreach (Transform child in section)
+            if (child.GetComponent<PlankButton>() != null) return (RectTransform)child;
+        return null;
+    }
+
+    // moves a section's title up or down until its drawn text (or its plank) ends TitleGap pixels above the box
     private static void PlaceTitle(Transform section, RectTransform box)
     {
         if (box == null) return;
+        RectTransform plank = PlankOf(section);
+        if (plank != null)
+        {
+            Vector3[] c = new Vector3[4];
+            box.GetWorldCorners(c);
+            float top = section.InverseTransformPoint(c[1]).y;
+            plank.GetWorldCorners(c);
+            float bottom = section.InverseTransformPoint(c[0]).y;
+            float shift = Mathf.Round(top + TitleGap * 2f - bottom);
+            if (shift != 0f) plank.anchoredPosition += new Vector2(0f, shift);
+            return;
+        }
         TMP_Text title = TitleOf(section);
         if (title == null) return;
         title.ForceMeshUpdate();
@@ -487,9 +532,11 @@ public class LoadoutSelectionUI : MonoBehaviour
         return null;
     }
 
-    // how tall a section title's drawn letters are
+    // how tall a section title's drawn letters (or its plank) are
     private static float TitleHeight(Transform section)
     {
+        RectTransform plank = PlankOf(section);
+        if (plank != null) return plank.rect.height * plank.localScale.y;
         TMP_Text title = TitleOf(section);
         if (title == null) return 0f;
         title.ForceMeshUpdate();
@@ -505,8 +552,10 @@ public class LoadoutSelectionUI : MonoBehaviour
     private static readonly Vector2 CardCell = new Vector2(Mathf.Round(PlantCardLook.ArtWidth * CardScale),
         Mathf.Round(PlantCardLook.ArtHeight * CardScale));
     private const int LoadoutColumns = 4;
-    // canvas units: the inset box's 2 pixel border, then the room between it and the cards
-    private const float BoxBorder = 4f;
+    // canvas units: the box's border, then the room between it and the cards. the border is Tommy's section
+    // frame (SectionFrameLook, 5 art px) when there is one (Tommy, 2026-11-26: the grids' boxes wear the
+    // tooltip sections' frame), else the inset box's 2 pixel edge
+    private static float BoxBorder => SectionFrameLook.Available ? SectionFrameLook.Border * 2f : 4f;
     private const float CardInset = 4f;
     // canvas units between the plants panel's bottom and the top of Next
     private const float AboveNext = 12f;
@@ -557,6 +606,13 @@ public class LoadoutSelectionUI : MonoBehaviour
         PlaceTitle(plantsSection, plantsBox);
         foreach (Transform section in new[] { loadoutSection, plantsSection })
         {
+            RectTransform plank = PlankOf(section);
+            if (plank != null)
+            {
+                float middle = section.InverseTransformPoint(plank.TransformPoint(plank.rect.center)).x;
+                plank.anchoredPosition += new Vector2(Mathf.Round(XIn(section, panelRect, centreX) - middle), 0f);
+                continue;
+            }
             TMP_Text title = TitleOf(section);
             if (title == null) continue;
             Vector2 at = title.rectTransform.anchoredPosition;
@@ -736,6 +792,9 @@ public class LoadoutSelectionUI : MonoBehaviour
         UseCardCells();
         for (int i = 0; i < SaveData.MaxLoadoutSlots; i++)
             selectedSquares.Add(LoadoutSlotSquare.Create(selectedContainer, CardScale, ShowSlotHint, HideSlotHint));
+        // the new squares came after the box's section frame: it goes back on top of them
+        if (selectedContainer.GetComponent<Image>() is Image loadoutBoxImage && loadoutBoxImage.sprite == InsectShowcaseStyle.Instance.insetBox)
+            SectionFrameLook.Add(loadoutBoxImage);
 
         int filled = 0;
         foreach (string plantName in selectedLoadout)
