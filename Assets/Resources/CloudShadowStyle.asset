@@ -19,7 +19,7 @@ MonoBehaviour:
     columns: 4
     rows: 3
     cellPixels: 256
-    count: 8
+    count: 9
   - sheet: {fileID: 2800000, guid: a9440f9eacec432daba395390ca3caec, type: 3}
     columns: 3
     rows: 2
