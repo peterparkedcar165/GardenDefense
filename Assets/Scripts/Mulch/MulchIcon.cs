@@ -108,14 +108,16 @@ public static class MulchIcon
             GameObject go = new GameObject(name, typeof(RectTransform));
             go.layer = bag.gameObject.layer;
             go.transform.SetParent(bag.transform, false);
-            RectTransform rect = (RectTransform)go.transform;
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
             layer = go.AddComponent<Image>();
             layer.raycastTarget = false;
         }
+        // in the registry's label box on the bag (all of it for the old bag)
+        Rect box = Registry != null ? Registry.iconLabelBox : new Rect(0f, 0f, 1f, 1f);
+        RectTransform r = layer.rectTransform;
+        r.anchorMin = new Vector2(box.xMin, box.yMin);
+        r.anchorMax = new Vector2(box.xMax, box.yMax);
+        r.offsetMin = Vector2.zero;
+        r.offsetMax = Vector2.zero;
         layer.preserveAspect = bag.preserveAspect;
         layer.sprite = sprite;
         layer.color = color;

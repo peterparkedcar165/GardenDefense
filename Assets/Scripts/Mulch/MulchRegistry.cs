@@ -18,8 +18,12 @@ public class MulchRegistry : ScriptableObject
         "it in the rarity colour, and the mulch's own symbol (MulchData.symbol) over that in a pale rarity colour")]
     public Sprite iconBag;
     public Sprite iconLabel;
-    [Tooltip("the bag's tint, the same for every mulch")]
+    [Tooltip("the bag's tint, the same for every mulch (white: Tommy's coloured bag as drawn)")]
     public Color iconBagColor = new Color32(0xC4, 0x74, 0x14, 0xFF);
+    [Tooltip("where the label and the symbol sit on the bag, as shares of it (x and y from its bottom left, width, " +
+        "height). the whole bag for the old 32 px bag; on Tommy's 64 px bag (2026-11-26) the 32 px label at the bag's " +
+        "own pixel size, its square on the bag's front")]
+    public Rect iconLabelBox = new Rect(0f, 0f, 1f, 1f);
     [Tooltip("the symbol on the label for each kind of mulch (MulchData.symbol): 32 by 32, the 9 by 9 symbol drawn near white")]
     public Sprite symbolHeal;
     public Sprite symbolDefense;

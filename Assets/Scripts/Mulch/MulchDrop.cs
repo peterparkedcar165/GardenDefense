@@ -155,9 +155,9 @@ public class MulchDrop : MonoBehaviour
         body = AddLayer(go, sprite, 0);
         if (bagIcon)
         {
-            label = AddLayer(NewChild("Label"), registry.iconLabel, 1);
+            label = AddLayer(PlaceOnBag(NewChild("Label"), sprite, registry.iconLabel), registry.iconLabel, 1);
             Sprite symbolSprite = registry.SymbolSprite(Item.data.symbol);
-            if (symbolSprite != null) symbol = AddLayer(NewChild("Symbol"), symbolSprite, 2);
+            if (symbolSprite != null) symbol = AddLayer(PlaceOnBag(NewChild("Symbol"), sprite, symbolSprite), symbolSprite, 2);
         }
         float spriteSize = sprite != null ? Mathf.Max(sprite.bounds.size.x, sprite.bounds.size.y) : 1f;
         float scale = spriteSize > 0f ? registry.dropSize / spriteSize : 1f;
@@ -352,6 +352,18 @@ public class MulchDrop : MonoBehaviour
         if (registry.spriteMaterial != null) layer.sharedMaterial = registry.spriteMaterial;
         layer.sortingLayerName = DropLayer;
         layer.sortingOrder = order;
+        return layer;
+    }
+
+    // the label and symbol in the registry's label box on the bag (MulchIcon does the same on the ui)
+    private GameObject PlaceOnBag(GameObject layer, Sprite bag, Sprite art)
+    {
+        if (bag == null || art == null) return layer;
+        Rect box = registry.iconLabelBox;
+        Vector2 bagSize = bag.bounds.size, artSize = art.bounds.size;
+        layer.transform.localPosition = new Vector3((box.center.x - 0.5f) * bagSize.x, (box.center.y - 0.5f) * bagSize.y, 0f);
+        layer.transform.localScale = new Vector3(box.width * bagSize.x / Mathf.Max(0.0001f, artSize.x),
+            box.height * bagSize.y / Mathf.Max(0.0001f, artSize.y), 1f);
         return layer;
     }
 
