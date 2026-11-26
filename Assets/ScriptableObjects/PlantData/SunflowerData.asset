@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SunflowerData
   plantPrefab: {fileID: 7460911327647547872, guid: 530019c35e88f4345b4a1465a481b7ec, type: 3}
   icon: {fileID: -7978883999570900537, guid: 1e110a04f44af82408fc85aa82f0e30e, type: 3}
+  skillIcon: {fileID: 21300000, guid: 2022df879ae24c659d8e7a7c8c83c4ab, type: 3}
   plantName: Sunflower
   displayName: Sunflower
   role: 1

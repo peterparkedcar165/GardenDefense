@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaterlilyData
   plantPrefab: {fileID: -3831059976541133089, guid: 961eb0b65f44f3f40ba93ba95e58c21c, type: 3}
   icon: {fileID: 21300000, guid: b7a95b314b85b1f48a778c916f6762ef, type: 3}
-  skillIcon: {fileID: 0}
+  skillIcon: {fileID: 21300000, guid: 5f0dc5dfd45a4626802c3b72a2c9c398, type: 3}
   plantName: Waterlily
   displayName: Waterlily
   role: 2
