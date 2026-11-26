@@ -7,8 +7,9 @@ using UnityEngine;
 // weather (on while paused, no faster at a higher game speed), drawn above everything in the world and
 // under the indicators and the ui. they cover the camera's fully zoomed out view (CameraFit.ZoomedOutView),
 // set once: zooming or panning never moves or re-scatters them (Tommy: they re-scattered with every zoom).
-// a shadow is born anywhere upwind of that view and lives long enough to cross it, fading in and out at the
-// two ends of its life; the system is prewarmed, so the view starts full. they show on day, desert and
+// like the rain, a shadow is born along a line just upwind of that view and lives until it's just past it,
+// so none appears or goes in sight; the system is prewarmed, so the view starts full. where two overlap
+// the pixel is darkened once (Custom/CloudShadow, a stencil mark per pixel; Tommy). they show on day, desert and
 // snow levels, and on night and desert night levels only while Sunny weather has the sun out; never in
 // the cave or underwater (the interiors). they fade out while it rains, snows or a sandstorm blows. made
 // by ProceduralLevel when the level starts, built once the camera has centred
@@ -74,8 +75,10 @@ public class CloudShadows : MonoBehaviour
         particles.transform.localScale = Vector3.one;
         particleRenderer = particles.GetComponent<ParticleSystemRenderer>();
 
-        // the weather's own material, given the cloud sheet, black
-        material = new Material(particleRenderer.sharedMaterial) { name = "CloudShadows" };
+        // Custom/CloudShadow, so two overlapping shadows darken a pixel once (Tommy); without it, the
+        // weather's own material. either given the cloud sheet, black
+        material = style.shader != null ? new Material(style.shader) : new Material(particleRenderer.sharedMaterial);
+        material.name = "CloudShadows";
         material.mainTexture = style.sheet;
         particleRenderer.sharedMaterial = material;
         particleRenderer.renderMode = ParticleSystemRenderMode.Billboard;
@@ -108,13 +111,10 @@ public class CloudShadows : MonoBehaviour
         velocity.enabled = true;
         velocity.space = ParticleSystemSimulationSpace.World;
 
-        // fading in at birth and out at the end, so one never pops in or out
+        // no fading over a shadow's life: every one is born and dies out of sight (Configure), and a half faded
+        // one would leave a lighter patch where it overlaps a whole one
         var colour = particles.colorOverLifetime;
-        colour.enabled = true;
-        Gradient fade = new Gradient();
-        fade.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
-            new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.06f), new GradientAlphaKey(1f, 0.94f), new GradientAlphaKey(0f, 1f) });
-        colour.color = new ParticleSystem.MinMaxGradient(fade);
+        colour.enabled = false;
 
         // one random cell of the sheet each, kept for its whole life
         var cells = particles.textureSheetAnimation;
@@ -157,37 +157,45 @@ public class CloudShadows : MonoBehaviour
         appliedSpeed = style.speed;
         appliedAngle = style.angle;
         appliedCount = style.count;
-        float w = view.width * 0.5f, h = view.height * 0.5f;
         Vector2 centre = view.center;
-
         float a = style.angle * Mathf.Deg2Rad;
         Vector2 dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
-        // the view and a shadow's size round it; a shadow travels its full width and height in its life, so
-        // one born at the far upwind corner still crosses the whole view before it fades
+        Vector2 across = new Vector2(-dir.y, dir.x);
+        // like the rain, born along a line just upwind of the view and living until just past it: the view's
+        // corners measured along the drift and across it, a shadow's size clear of them, so every shadow is
+        // born and dies out of sight
         float margin = style.scale;
-        float viewW = 2f * w + 2f * margin, viewH = 2f * h + 2f * margin;
-        float travel = viewW + viewH;
-        float life = travel / Mathf.Max(0.01f, style.speed);
-        // born anywhere in the view swept back upwind by the travel
-        float boxW = viewW + travel * dir.x, boxH = viewH + travel * dir.y;
-        Vector2 boxCentre = centre - dir * (travel * 0.5f);
-        // so about count are over the view at once: each place in the view is crossed by every shadow born
-        // in its upwind strip, rate * life * view / box of them
-        float rate = style.count * (boxW * boxH) / (life * (2f * w) * (2f * h));
+        float tMin = float.MaxValue, tMax = float.MinValue, sMin = float.MaxValue, sMax = float.MinValue;
+        foreach (Vector2 corner in new[] { view.min, view.max, new Vector2(view.xMin, view.yMax), new Vector2(view.xMax, view.yMin) })
+        {
+            Vector2 d = corner - centre;
+            float along = Vector2.Dot(d, dir), side = Vector2.Dot(d, across);
+            tMin = Mathf.Min(tMin, along); tMax = Mathf.Max(tMax, along);
+            sMin = Mathf.Min(sMin, side); sMax = Mathf.Max(sMax, side);
+        }
+        tMin -= margin; tMax += margin; sMin -= margin; sMax += margin;
+        float length = sMax - sMin;
+        float life = (tMax - tMin) / Mathf.Max(0.01f, style.speed);
+        Vector2 lineCentre = centre + dir * tMin + across * ((sMin + sMax) * 0.5f);
+        // so about count are over the view at once: shadows born along the line at this rate cover length *
+        // speed of ground a second between them
+        float rate = style.count * length * style.speed / Mathf.Max(0.01f, view.width * view.height);
 
         // a playing system can't change its duration: stopped and cleared, set, and played again (it's
         // prewarmed, so the view refills at once)
         bool playing = particles.isPlaying;
         if (playing) particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        particles.transform.position = new Vector3(boxCentre.x, boxCentre.y, 0f);
+        particles.transform.position = new Vector3(lineCentre.x, lineCentre.y, 0f);
         var main = particles.main;
         main.duration = life;
         main.startLifetime = life;
         main.startSize = style.scale;
-        main.maxParticles = Mathf.Max(16, Mathf.CeilToInt(rate * life * 1.5f) + 8);
+        main.maxParticles = Mathf.Max(16, Mathf.CeilToInt(rate * life * 1.3f) + 8);
+        // the line: a box only as long as the line, turned so it lies across the drift
         var shape = particles.shape;
         shape.position = Vector3.zero;
-        shape.scale = new Vector3(boxW, boxH, 0f);
+        shape.rotation = new Vector3(0f, 0f, style.angle + 90f);
+        shape.scale = new Vector3(length, 0f, 0f);
         var emission = particles.emission;
         emission.enabled = true;
         emission.rateOverTime = rate;

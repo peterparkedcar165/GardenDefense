@@ -29,6 +29,9 @@ public class CloudShadowStyle : ScriptableObject
     public Sprite[] shapes;
     [Tooltip("unused now: the particle system brings its own material")]
     public Material material;
+    [Tooltip("Custom/CloudShadow (Shaders/CloudShadow): black shapes at the opacity, where two shadows overlap the " +
+        "pixel is darkened once, not twice (Tommy). empty: the weather particles' own material, which adds them up")]
+    public Shader shader;
 
     [Header("Look")]
     [Tooltip("how dark a shadow is: the black shapes' alpha")]
@@ -45,8 +48,8 @@ public class CloudShadowStyle : ScriptableObject
     [Min(0.1f)] public float scale = 3f;
     [Tooltip("tiles a real second; the same whatever the game speed, and on while paused, like the rain")]
     [Min(0.01f)] public float speed = 0.4f;
-    [Tooltip("the direction they drift, in degrees up from straight right (Tommy: 30, up and right)")]
-    [Range(0f, 90f)] public float angle = 30f;
+    [Tooltip("the direction they drift, in degrees up from straight right (Tommy: 50, up and right)")]
+    [Range(0f, 90f)] public float angle = 50f;
     [Tooltip("real seconds to fade in or out when the sun comes or goes, or rain, snow or a sandstorm starts or ends")]
     [Min(0.01f)] public float fadeSeconds = 2f;
 }
