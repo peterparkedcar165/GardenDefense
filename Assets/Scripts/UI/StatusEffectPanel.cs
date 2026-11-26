@@ -26,8 +26,8 @@ public class StatusEffectPanel : MonoBehaviour
 
     private void Awake()
     {
-        // Tommy's flower frame (2026-11-26)
-        TooltipFrameLook.Apply(GetComponent<UnityEngine.UI.Image>());
+        // Tommy's flower frame (2026-11-26), its inside in the shown plant's element colour (Show)
+        TooltipFrameLook.Apply(GetComponent<UnityEngine.UI.Image>(), PlantData.ElementPanelColor(ElementalType.Neutral));
         gameObject.SetActive(false);
     }
 
@@ -35,6 +35,7 @@ public class StatusEffectPanel : MonoBehaviour
     {
         trackedEntity = entity;
         shownText = null;
+        TooltipFrameLook.SetInterior(GetComponent<UnityEngine.UI.Image>(), TooltipFrameLook.InteriorFor(entity));
         gameObject.SetActive(true);
         Refresh();
     }

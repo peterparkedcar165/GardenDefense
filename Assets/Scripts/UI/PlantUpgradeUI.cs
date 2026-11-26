@@ -209,11 +209,11 @@ public class PlantUpgradeUI : EntityInfoPanel
         base.Awake();
         if (tooltipPanel != null)
             tooltipPanel.SetActive(false);
-        // Tommy's flower frame (2026-11-26), the text clear of it (LayoutTooltip's TooltipPadding is the
-        // same 20 above and below)
+        // Tommy's flower frame (2026-11-26), its inside in the element's colour like the panel (ApplyElement),
+        // the text clear of it (LayoutTooltip's TooltipPadding is the same 20 above and below)
         if (tooltipPanel != null && TooltipFrameLook.Available)
         {
-            TooltipFrameLook.Apply(tooltipPanel.GetComponent<Image>());
+            TooltipFrameLook.Apply(tooltipPanel.GetComponent<Image>(), PlantData.ElementPanelColor(ElementalType.Neutral));
             if (tooltipText != null)
             {
                 RectTransform text = tooltipText.rectTransform;
@@ -255,18 +255,9 @@ public class PlantUpgradeUI : EntityInfoPanel
     {
         base.Update();
 
+        // the insect's description is live (its numbers change): laid out again only when a section changed
         if (tooltipPanel != null && tooltipPanel.activeSelf && selectedInsect != null && tooltipText != null)
-        {
-            string desc = selectedInsect.GetDescription();
-            string live = string.IsNullOrEmpty(desc) ? null : $"{selectedInsect.GetName()}\n\n{desc}";
-            // laid out again only when the live text changed, so it fits like any other tooltip
-            if (live != null && live != tooltipText.text)
-            {
-                ReadTooltipBase();
-                tooltipText.text = live;
-                LayoutTooltip();
-            }
-        }
+            ShowSectionedTooltip(selectedInsect.GetName(), selectedInsect.GetDescriptionSections());
 
         if (selectedInsect != null && Mouse.current.leftButton.wasPressedThisFrame && !EventSystem.current.IsPointerOverGameObject())
         {
@@ -391,6 +382,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         Color panelColor = PlantData.ElementPanelColor(element);
         Color shadow = PlantData.ElementTextShadowColor(element);
         if (panelBackground != null) panelBackground.color = panelColor;
+        if (tooltipPanel != null) TooltipFrameLook.SetInterior(tooltipPanel.GetComponent<Image>(), panelColor);
         if (panelTinted != null)
             foreach (Image image in panelTinted)
                 if (image != null) image.color = panelColor;
@@ -1198,8 +1190,24 @@ public class PlantUpgradeUI : EntityInfoPanel
         shownTooltip = text;
     }
 
-    // the text the panel shows (null after the insect's live text, which lays itself out each change)
+    // the text the panel shows (null after a text laid out some other way)
     private string shownTooltip;
+
+    // a tooltip in sections (a plant's or an insect's description, from the icon): the title on top and a
+    // framed box per section, empty ones left out, then the footer. laid out again only when one changed
+    public void ShowSectionedTooltip(string title, string[] sections, string footer = null)
+    {
+        if (tooltipPanel == null || tooltipText == null) return;
+        ReadTooltipBase();
+        bool wasShown = tooltipPanel.activeSelf;
+        tooltipPanel.SetActive(true);
+        sections ??= System.Array.Empty<string>();
+        string key = (title ?? "") + "\u0001" + string.Join("\u0001", sections) + "\u0001" + (footer ?? "");
+        Vector2Int screen = new Vector2Int(Screen.width, Screen.height);
+        if (wasShown && key == shownTooltip && screen == tooltipLaidOutScreen) return;
+        LayoutSections(title, sections, footer);
+        shownTooltip = key;
+    }
 
     private void ReadTooltipBase()
     {
@@ -1277,8 +1285,8 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     private RectTransform sectionRoot;
     private TMP_Text sectionTitle, sectionFooter;
-    private readonly Image[] sectionBoxes = new Image[3];
-    private readonly TMP_Text[] sectionTexts = new TMP_Text[3];
+    private readonly System.Collections.Generic.List<Image> sectionBoxes = new System.Collections.Generic.List<Image>();
+    private readonly System.Collections.Generic.List<TMP_Text> sectionTexts = new System.Collections.Generic.List<TMP_Text>();
     // canvas units: between two sections, and from a box's edge to its text (clear of the frame)
     private const float SectionGap = 8f;
     private const float SectionTextPadX = 16f;
@@ -1316,16 +1324,17 @@ public class PlantUpgradeUI : EntityInfoPanel
     private void LayoutSections(string title, string[] parts, string footer)
     {
         BuildSections();
+        while (sectionBoxes.Count < parts.Length) AddSection();
         tooltipText.gameObject.SetActive(false);
         sectionRoot.gameObject.SetActive(true);
-        Color boxColor = selectedPlant != null ? PlantData.ElementPanelColor(selectedPlant.elementalType) : PlantData.ElementPanelColor(ElementalType.Neutral);
+        Color boxColor = TooltipFrameLook.InteriorFor(selectedPlant != null ? (Entity)selectedPlant : selectedInsect);
         sectionTitle.text = title;
         sectionTitle.gameObject.SetActive(!string.IsNullOrEmpty(title));
         sectionFooter.text = footer;
         sectionFooter.gameObject.SetActive(!string.IsNullOrEmpty(footer));
-        for (int i = 0; i < sectionBoxes.Length; i++)
+        for (int i = 0; i < sectionBoxes.Count; i++)
         {
-            bool shown = !string.IsNullOrEmpty(parts[i]);
+            bool shown = i < parts.Length && !string.IsNullOrEmpty(parts[i]);
             sectionTexts[i].text = shown ? parts[i] : "";
             sectionTexts[i].gameObject.SetActive(shown);
             sectionBoxes[i].gameObject.SetActive(shown);
@@ -1378,7 +1387,7 @@ public class PlantUpgradeUI : EntityInfoPanel
             Gap();
             y += PlaceSectionText(sectionTitle, fontSize, left, y, width);
         }
-        for (int i = 0; i < sectionBoxes.Length; i++)
+        for (int i = 0; i < sectionBoxes.Count; i++)
         {
             if (!sectionBoxes[i].gameObject.activeSelf) continue;
             Gap();
@@ -1419,27 +1428,29 @@ public class PlantUpgradeUI : EntityInfoPanel
         sectionRoot.anchorMax = Vector2.one;
         sectionRoot.offsetMin = sectionRoot.offsetMax = Vector2.zero;
         sectionRoot.SetSiblingIndex(tooltipText.transform.GetSiblingIndex());
-
-        // the boxes first, so every text draws over them
-        InsectShowcaseStyle kit = InsectShowcaseStyle.Instance;
-        for (int i = 0; i < sectionBoxes.Length; i++)
-        {
-            GameObject boxObject = new GameObject("Section " + (i + 1), typeof(RectTransform), typeof(Image));
-            boxObject.layer = go.layer;
-            RectTransform r = (RectTransform)boxObject.transform;
-            r.SetParent(sectionRoot, false);
-            AnchorTopLeft(r);
-            Image box = boxObject.GetComponent<Image>();
-            box.sprite = kit.insetBox;
-            box.type = kit.insetBox != null ? Image.Type.Sliced : Image.Type.Simple;
-            box.pixelsPerUnitMultiplier = 1f;
-            box.raycastTarget = false;
-            SectionFrameLook.Add(box);
-            sectionBoxes[i] = box;
-        }
         sectionTitle = NewSectionText("Title");
-        for (int i = 0; i < sectionTexts.Length; i++) sectionTexts[i] = NewSectionText("Section Text " + (i + 1));
         sectionFooter = NewSectionText("Footer");
+        for (int i = 0; i < 3; i++) AddSection();
+    }
+
+    // one more box and its text (the text after its box, so it draws over it)
+    private void AddSection()
+    {
+        InsectShowcaseStyle kit = InsectShowcaseStyle.Instance;
+        int n = sectionBoxes.Count + 1;
+        GameObject boxObject = new GameObject("Section " + n, typeof(RectTransform), typeof(Image));
+        boxObject.layer = sectionRoot.gameObject.layer;
+        RectTransform r = (RectTransform)boxObject.transform;
+        r.SetParent(sectionRoot, false);
+        AnchorTopLeft(r);
+        Image box = boxObject.GetComponent<Image>();
+        box.sprite = kit.insetBox;
+        box.type = kit.insetBox != null ? Image.Type.Sliced : Image.Type.Simple;
+        box.pixelsPerUnitMultiplier = 1f;
+        box.raycastTarget = false;
+        SectionFrameLook.Add(box);
+        sectionBoxes.Add(box);
+        sectionTexts.Add(NewSectionText("Section Text " + n));
     }
 
     // a copy of the panel's text (its font, size, colour and pixel shadow), placed by PlaceSectionText

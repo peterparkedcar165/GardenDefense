@@ -28,4 +28,60 @@ public static class TooltipFrameLook
         Transform shine = image.transform.Find("Shine");
         if (shine != null) shine.gameObject.SetActive(false);
     }
+
+    // the frame with its inside in a colour (Tommy, 2026-11-26: the info panel's tooltips in the plant's
+    // element colour): the panel's own Image is the inside alone (tooltipInterior, the info panel wood's
+    // grey, so the tint comes out the panel's own shade), and a FlowerFrame child, its first, is the hollow
+    // frame over it, drawn as is. without those two sprites it is the plain frame above
+    private const string HollowName = "FlowerFrame";
+
+    public static void Apply(Image image, Color interior)
+    {
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        if (style.tooltipInterior == null || style.tooltipFrameHollow == null)
+        {
+            Apply(image);
+            return;
+        }
+        if (image == null) return;
+        image.sprite = style.tooltipInterior;
+        image.type = Image.Type.Tiled;
+        image.pixelsPerUnitMultiplier = 1f;
+        image.color = interior;
+        Transform shine = image.transform.Find("Shine");
+        if (shine != null) shine.gameObject.SetActive(false);
+
+        Transform found = image.transform.Find(HollowName);
+        Image frame = found != null ? found.GetComponent<Image>() : null;
+        if (frame == null)
+        {
+            GameObject go = new GameObject(HollowName, typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+            go.layer = image.gameObject.layer;
+            RectTransform r = (RectTransform)go.transform;
+            r.SetParent(image.transform, false);
+            r.anchorMin = Vector2.zero;
+            r.anchorMax = Vector2.one;
+            r.offsetMin = r.offsetMax = Vector2.zero;
+            go.GetComponent<LayoutElement>().ignoreLayout = true;
+            frame = go.GetComponent<Image>();
+            frame.raycastTarget = false;
+        }
+        frame.sprite = style.tooltipFrameHollow;
+        frame.type = Image.Type.Tiled;
+        frame.pixelsPerUnitMultiplier = 1f;
+        frame.color = Color.white;
+        // over the inside, under the panel's contents
+        frame.transform.SetAsFirstSibling();
+    }
+
+    // a new colour for a panel's inside (only one Apply gave an inside of its own)
+    public static void SetInterior(Image image, Color interior)
+    {
+        if (image != null && image.sprite != null && image.sprite == PlantInfoPanelStyle.Instance.tooltipInterior)
+            image.color = interior;
+    }
+
+    // the info panel's colour for what it shows: a plant's element, an insect's neutral grey (as the panel)
+    public static Color InteriorFor(Entity entity) =>
+        PlantData.ElementPanelColor(entity is Plant plant ? plant.elementalType : ElementalType.Neutral);
 }

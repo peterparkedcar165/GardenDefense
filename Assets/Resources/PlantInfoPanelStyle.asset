@@ -45,6 +45,8 @@ MonoBehaviour:
   plantCardTrim: {fileID: 21300000, guid: fadb235113d7475caee65e4929ae827f, type: 3}
   slotBackdrop: {fileID: 21300000, guid: 2e86ae8531494c09b5ed5cc0be85084f, type: 3}
   tooltipFrame: {fileID: 21300000, guid: dbb1899136ab456198c01c212efa294d, type: 3}
+  tooltipFrameHollow: {fileID: 21300000, guid: be607a13f3a54644a5f3bd2dcaa03cbc, type: 3}
+  tooltipInterior: {fileID: 21300000, guid: 36b037b27c0f48f5a427ca647f66b96c, type: 3}
   upgradeButton: {fileID: 21300000, guid: a9ed2e7c118c4cc2b6c13b27c99315d3, type: 3}
   upgradeButtonTrim: {fileID: 21300000, guid: 59d8d8cff90543dba288e0eb10f15177, type: 3}
   slotPadlock: {fileID: 21300000, guid: e7c9aa191b7f44af8732924dd926024d, type: 3}

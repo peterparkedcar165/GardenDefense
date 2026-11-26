@@ -7,20 +7,23 @@ public class PlantIconTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExi
     {
         TutorialManager.instance?.NotifyEvent(TutorialEvents.HoverPlantInfoIcon);
 
+        // the name on top and the description in framed sections, like the Attack, Passive and Skill
+        // tooltips (Tommy, 2026-11-26): a plant's description and its affinity; an insect's short
+        // description, its ability, and its traits and aggressivity
         Plant plant = PlantUpgradeUI.instance?.GetSelectedPlant();
         if (plant != null)
         {
-            string text = $"{plant.GetName()}\n\n{plant.GetDescription()}\n\n<b>Affinity</b>:\n\n{plant.GetElement()}\n{plant.GetElementDescription()}";
-            PlantUpgradeUI.instance.ShowTooltip(text);
+            PlantUpgradeUI.instance.ShowSectionedTooltip(plant.GetName(), new[]
+            {
+                plant.GetDescription(),
+                $"<b>Affinity</b>:\n\n{plant.GetElement()}\n{plant.GetElementDescription()}",
+            });
             return;
         }
 
         Insect insect = PlantUpgradeUI.instance?.GetSelectedInsect();
         if (insect != null)
-        {
-            string text = $"{insect.GetName()}\n\n{insect.GetDescription()}";
-            PlantUpgradeUI.instance.ShowTooltip(text);
-        }
+            PlantUpgradeUI.instance.ShowSectionedTooltip(insect.GetName(), insect.GetDescriptionSections());
     }
 
     public void OnPointerExit(PointerEventData eventData)

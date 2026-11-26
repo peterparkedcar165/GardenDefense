@@ -68,8 +68,8 @@ public class StatsPanelTooltip : MonoBehaviour
         // height was measured at the width it had before the panel resized, lines wider than that
         // counted as wrapped, and the panel came out taller than the stats (Tommy, 2026-11-22)
         if (statsText != null) statsText.textWrappingMode = TextWrappingModes.NoWrap;
-        // Tommy's flower frame (2026-11-26)
-        TooltipFrameLook.Apply(GetComponent<UnityEngine.UI.Image>());
+        // Tommy's flower frame (2026-11-26), its inside in the shown plant's element colour (Update)
+        TooltipFrameLook.Apply(GetComponent<UnityEngine.UI.Image>(), PlantData.ElementPanelColor(ElementalType.Neutral));
     }
 
     private string Col(float current, float baseValue, string formatted)
@@ -96,6 +96,7 @@ public class StatsPanelTooltip : MonoBehaviour
         if (_built && ReferenceEquals(entity, _builtEntity) && SameValues()) return;
         _built = true;
         _builtEntity = entity;
+        TooltipFrameLook.SetInterior(GetComponent<UnityEngine.UI.Image>(), TooltipFrameLook.InteriorFor(entity));
         _builtValues.Clear();
         _builtValues.AddRange(_values);
 

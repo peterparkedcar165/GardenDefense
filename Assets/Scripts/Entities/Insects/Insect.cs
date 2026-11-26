@@ -1627,6 +1627,19 @@ public abstract class Insect : Entity, IAttackable
             + TraitLines() + AggressivityLine();
     }
 
+    // the same description in its parts, one framed box each in the info panel's tooltip (Tommy, 2026-11-26):
+    // the short description, the ability, then the shared traits and the aggressivity
+    public string[] GetDescriptionSections()
+    {
+        string ability = GetAbilityDescription();
+        return new[]
+        {
+            GetShortDescription(),
+            "<b>Ability:</b> " + (string.IsNullOrEmpty(ability) ? "None" : ability),
+            (TraitLines() + AggressivityLine()).Trim(),
+        };
+    }
+
     // the shared traits the loadout screen's insect tooltip lists under its boxes: only the ones with no
     // tag of their own (cryotolerance). Flying and the aggressivity are tags there (Tommy, 2026-11-25)
     public string GetUntaggedTraitsText() => (this is ICryotolerant ? CryotoleranceLine() : "").TrimStart('\n');

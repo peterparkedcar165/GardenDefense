@@ -138,7 +138,12 @@ public class SkillTreeUI : MonoBehaviour
         tooltipPanel.SetActive(true);
         // the kit panel in the hovered plant's element colour, its text shadows to match
         Color shadow = PlantData.ElementTextShadowColor(element);
-        if (tooltipImage != null && !TooltipFrameLook.Available) tooltipImage.color = PlantData.ElementPanelColor(element);
+        // (in the flower frame only its inside takes the colour)
+        if (tooltipImage != null)
+        {
+            if (TooltipFrameLook.Available) TooltipFrameLook.SetInterior(tooltipImage, PlantData.ElementPanelColor(element));
+            else tooltipImage.color = PlantData.ElementPanelColor(element);
+        }
         if (tooltipShadow != null) tooltipShadow.Color = shadow;
         if (tooltipTitleShadow != null) tooltipTitleShadow.Color = shadow;
         if (tooltipText == null) return;
@@ -286,10 +291,10 @@ public class SkillTreeUI : MonoBehaviour
         if (tooltipPanel != null)
         {
             tooltipImage = tooltipPanel.GetComponent<Image>();
-            // Tommy's flower frame (2026-11-26), drawn as is
+            // Tommy's flower frame (2026-11-26), drawn as is, its inside in the hovered plant's element colour
             if (tooltipImage != null && TooltipFrameLook.Available)
             {
-                TooltipFrameLook.Apply(tooltipImage);
+                TooltipFrameLook.Apply(tooltipImage, PlantData.ElementPanelColor(ElementalType.Neutral));
                 tooltipImage.raycastTarget = false;
             }
             else if (tooltipImage != null)
