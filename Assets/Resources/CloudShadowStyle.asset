@@ -54,6 +54,7 @@ MonoBehaviour:
   sortingLayer: Weather
   sortingOrder: 1000
   count: 10
+  scale: 1
   speed: 0.35
   angle: 20
   fadeSeconds: 2.0

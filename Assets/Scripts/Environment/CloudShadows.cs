@@ -51,8 +51,9 @@ public class CloudShadows : MonoBehaviour
     private void Build()
     {
         // room outside the view for the biggest shape, so they come and go out of sight
+        appliedScale = Mathf.Max(1, style.scale);
         foreach (Sprite shape in style.shapes)
-            if (shape != null) margin = Mathf.Max(margin, shape.bounds.extents.magnitude);
+            if (shape != null) margin = Mathf.Max(margin, shape.bounds.extents.magnitude * appliedScale);
         margin += 0.5f;
 
         Rect area = Area();
@@ -69,35 +70,55 @@ public class CloudShadows : MonoBehaviour
             cells.RemoveAt(pick);
             float cx = area.xMin + (cell % columns + Random.value) * area.width / columns;
             float cy = area.yMin + (cell / columns + Random.value) * area.height / rows;
-
-            GameObject go = new GameObject("CloudShadow", typeof(SpriteRenderer));
-            go.transform.SetParent(transform, false);
-            Shadow shadow = new Shadow { renderer = go.GetComponent<SpriteRenderer>(), position = new Vector2(cx, cy) };
-            shadow.renderer.sortingLayerName = style.sortingLayer;
-            shadow.renderer.sortingOrder = style.sortingOrder;
-            if (style.material != null) shadow.renderer.sharedMaterial = style.material;
-            NewShape(shadow);
-            Place(shadow);
-            shadows.Add(shadow);
+            AddShadow(new Vector2(cx, cy));
         }
         shown = Wanted() ? 1f : 0f;
         ApplyAlpha();
-        Report("built");
     }
 
-    // what was built and where, against the camera (to find why they can't be seen; Tommy, 2026-11-26)
-    private void Report(string when)
+    private void AddShadow(Vector2 position)
     {
-        Camera cam = Camera.main;
-        SpriteRenderer first = shadows.Count > 0 ? shadows[0].renderer : null;
-        Debug.Log($"[CloudShadows] {when}: {shadows.Count} shadows, biome {biome}, wanted {Wanted()}, shown {shown}, " +
-            $"opacity {style.opacity}, area {Area()}, camera {(cam != null ? cam.name + " at " + cam.transform.position + " size " + cam.orthographicSize + " aspect " + cam.aspect : "none")}; " +
-            $"first at {(first != null ? first.transform.position.ToString() : "-")}, sprite {(first != null && first.sprite != null ? first.sprite.name + " " + first.sprite.bounds.size : "NONE")}, " +
-            $"enabled {(first != null && first.enabled)}, colour {(first != null ? first.color.ToString() : "-")}, layer {(first != null ? first.sortingLayerName + " " + first.sortingOrder : "-")}, " +
-            $"material {(first != null && first.sharedMaterial != null ? first.sharedMaterial.name : "NONE")}, active {gameObject.activeInHierarchy}");
+        GameObject go = new GameObject("CloudShadow", typeof(SpriteRenderer));
+        go.transform.SetParent(transform, false);
+        Shadow shadow = new Shadow { renderer = go.GetComponent<SpriteRenderer>(), position = position };
+        shadow.renderer.sortingLayerName = style.sortingLayer;
+        shadow.renderer.sortingOrder = style.sortingOrder;
+        if (style.material != null) shadow.renderer.sharedMaterial = style.material;
+        go.transform.localScale = Vector3.one * Mathf.Max(1, style.scale);
+        NewShape(shadow);
+        Place(shadow);
+        shadows.Add(shadow);
     }
 
-    private float reportAt = 5f;
+    // the count and the size follow the style live, for tuning while playing: new ones appear anywhere
+    // over the view, extra ones go, and every one takes the new whole number size
+    private int appliedScale = 1;
+
+    private void FollowStyle()
+    {
+        int scale = Mathf.Max(1, style.scale);
+        if (scale != appliedScale)
+        {
+            appliedScale = scale;
+            margin = 0f;
+            foreach (Sprite shape in style.shapes)
+                if (shape != null) margin = Mathf.Max(margin, shape.bounds.extents.magnitude * scale);
+            margin += 0.5f;
+            foreach (Shadow shadow in shadows) shadow.renderer.transform.localScale = Vector3.one * scale;
+        }
+        if (shadows.Count == style.count) return;
+        Rect area = Area();
+        while (shadows.Count < style.count)
+            AddShadow(new Vector2(Random.Range(area.xMin, area.xMax), Random.Range(area.yMin, area.yMax)));
+        while (shadows.Count > Mathf.Max(0, style.count))
+        {
+            Shadow last = shadows[shadows.Count - 1];
+            shadows.RemoveAt(shadows.Count - 1);
+            Destroy(last.renderer.gameObject);
+        }
+        ApplyAlpha();
+    }
+
 
     // the camera's view and the margin round it, in world units
     private Rect Area()
@@ -141,11 +162,7 @@ public class CloudShadows : MonoBehaviour
     {
         // real time, so a pause or the game speed never changes them; a long hitch doesn't jump them
         float dt = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
-        if (reportAt > 0f)
-        {
-            reportAt -= dt;
-            if (reportAt <= 0f) Report("after 5 s");
-        }
+        FollowStyle();
 
         float target = Wanted() ? 1f : 0f;
         // the opacity follows the style live, so it can be tuned in the inspector while playing

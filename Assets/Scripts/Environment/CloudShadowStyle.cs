@@ -30,9 +30,12 @@ public class CloudShadowStyle : ScriptableObject
     public string sortingLayer = "Weather";
     public int sortingOrder = 1000;
 
-    [Header("Numbers (Tommy tunes these after playing)")]
+    [Header("Numbers (Tommy tunes these after playing; every one changes live while playing)")]
     [Tooltip("shadows over the camera's view at once")]
     [Min(0)] public int count = 10;
+    [Tooltip("whole times the shapes' own size: 1 is the file's own pixels (64 a tile, about one tile across); 2, 3 " +
+        "and up keep every pixel square and the same size (no mixels), just bigger than the map's")]
+    [Range(1, 8)] public int scale = 1;
     [Tooltip("world units (tiles) a real second; the same whatever the game speed, and on while paused, like the rain")]
     [Min(0f)] public float speed = 0.35f;
     [Tooltip("the direction they drift, in degrees up from straight right: right and a little up")]
