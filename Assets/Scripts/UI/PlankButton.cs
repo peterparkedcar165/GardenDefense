@@ -148,6 +148,11 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         return plank;
     }
 
+    // the loadout screen's section titles (Insects, Current Loadout, Available Plants) are drawn at this
+    // times the plank's size, like the main menu's (Tommy, 2026-11-26: wider, the words bigger, they're
+    // titles): 1 art px = 3 canvas units, whole pixels at 1080
+    public const float SectionTitleScale = 1.5f;
+
     // a plank that is only a title (the fertilizer screen's, Tommy 2026-11-26): the large leafy plank (or
     // the medium one) with its word, and no Button, so it never lights up or presses
     public static PlankButton CreateTitle(RectTransform parent, string text, GameControlsStyle.ButtonColors colors, TMP_FontAsset font, bool large = true)

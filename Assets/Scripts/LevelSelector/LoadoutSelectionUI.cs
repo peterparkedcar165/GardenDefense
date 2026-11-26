@@ -478,6 +478,7 @@ public class LoadoutSelectionUI : MonoBehaviour
             PlankButton plank = PlankButton.CreateTitle((RectTransform)section, title.text, look.pause, InsectShowcaseStyle.Instance.font);
             RectTransform r = plank.Rect;
             r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+            r.localScale = Vector3.one * PlankButton.SectionTitleScale;
             // where the title was; PlaceTitle and LayOutPlantSections put it in its place
             r.position = title.rectTransform.TransformPoint(title.rectTransform.rect.center);
             r.SetSiblingIndex(title.transform.GetSiblingIndex());

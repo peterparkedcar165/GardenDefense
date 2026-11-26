@@ -202,7 +202,8 @@ public class InsectShowcase : MonoBehaviour
             r.anchorMin = r.anchorMax = new Vector2(0.5f, 1f);
             r.pivot = new Vector2(0.5f, 1f);
             r.anchoredPosition = new Vector2(0f, -(Edge - 1f) * Px);
-            titleHeight = Mathf.Ceil(r.sizeDelta.y / Px);
+            r.localScale = Vector3.one * PlankButton.SectionTitleScale;
+            titleHeight = Mathf.Ceil(r.sizeDelta.y * PlankButton.SectionTitleScale / Px);
         }
         else
             titleHeight = AddText(header, "Insects", Edge + 3f, Edge - 1f, style.panelWidth - 2f * (Edge + 3f), style.text, style.titleSize, false,
