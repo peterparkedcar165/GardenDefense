@@ -69,11 +69,11 @@ public class InsectShowcase : MonoBehaviour
         style = InsectShowcaseStyle.Instance;
         host = hostRect;
         rect = (RectTransform)transform;
-        // hangs from the top left corner; Show makes it as tall as its insects need, up to the screen's
-        // full height (then the cards scroll)
-        rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
-        rect.pivot = new Vector2(0f, 1f);
-        rect.anchoredPosition = new Vector2(style.margin * Px, -style.margin * Px);
+        // on the left edge, its middle on the screen's middle (Tommy, 2026-11-26); Show makes it as tall as
+        // its insects need, up to the screen's full height (then the cards scroll), growing both ways
+        rect.anchorMin = rect.anchorMax = new Vector2(0f, 0.5f);
+        rect.pivot = new Vector2(0f, 0.5f);
+        rect.anchoredPosition = new Vector2(style.margin * Px, 0f);
         rect.sizeDelta = new Vector2(style.panelWidth * Px, Mathf.Max(0f, host.rect.height - 2f * style.margin * Px));
 
         Image body = gameObject.AddComponent<Image>();

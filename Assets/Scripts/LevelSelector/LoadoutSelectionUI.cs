@@ -279,10 +279,17 @@ public class LoadoutSelectionUI : MonoBehaviour
     }
 
     // Next and Show Map bigger and the same size (Tommy, 2026-11-25): both as wide as the wider one's word
-    // needs, BottomButtonScale times the plank's size (1 art px = 3 canvas units), side by side BottomButtonGap
-    // apart, the pair centred on the screen where Next stood
+    // needs, BottomButtonScale times the plank's size (1 art px = 3 canvas units). centred on the screen,
+    // Show Map under Next (Tommy, 2026-11-26), BottomButtonGap apart, Show Map BottomMargin above the
+    // screen's bottom
     private const float BottomButtonScale = 1.5f;
-    private const float BottomButtonGap = 24f;
+    private const float BottomButtonGap = 12f;
+    private const float BottomMargin = 16f;
+    // canvas units: the buttons' height as drawn (buttonHeight art px at 2 units a px, times the scale)
+    private static float BottomButtonHeight => GameControlsStyle.Instance.buttonHeight * 2f * BottomButtonScale;
+    // the buttons' middles, in the loadout panel's space
+    private static float MapCentreY(RectTransform panelRect) => panelRect.rect.yMin + BottomMargin + BottomButtonHeight * 0.5f;
+    private static float NextCentreY(RectTransform panelRect) => MapCentreY(panelRect) + BottomButtonHeight + BottomButtonGap;
 
     private void PlaceBottomButtons()
     {
@@ -290,15 +297,14 @@ public class LoadoutSelectionUI : MonoBehaviour
         if (next == null || mapButton == null) return;
         RectTransform panelRect = (RectTransform)panel.transform;
         float width = Mathf.Max(next.NaturalWidth, mapButton.NaturalWidth);
-        float y = Mathf.Round(next.Rect.anchoredPosition.y);
-        float offset = (width * BottomButtonScale + BottomButtonGap) * 0.5f;
-        float centreX = panelRect.rect.center.x;
-        foreach ((RectTransform r, float x) in new[] { (next.Rect, centreX - offset), (mapButton.Rect, centreX + offset) })
+        Vector2 centre = panelRect.rect.center;
+        foreach ((RectTransform r, float y) in new[] { (next.Rect, NextCentreY(panelRect)), (mapButton.Rect, MapCentreY(panelRect)) })
         {
             r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
             r.sizeDelta = new Vector2(width, r.sizeDelta.y);
             r.localScale = Vector3.one * BottomButtonScale;
-            r.anchoredPosition = new Vector2(Mathf.Round(x), y);
+            // a centre anchored child's position counts from the panel's middle
+            r.anchoredPosition = new Vector2(0f, Mathf.Round(y - centre.y));
         }
     }
 
@@ -495,16 +501,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         // wants), down to just above Next
         float loadoutBottom = loadoutTop - loadoutSize.y;
         float plantsTop = Even(loadoutBottom - (2f * pad + 4f * Px) - TitleHeight(plantsSection) - TitleGap * Px, false);
-        // Next's top once it's a plank (2 units a pixel, buttonHeight pixels tall, BottomButtonScale times
-        // that), measured from its centre (before the bake it's still the old, taller button)
-        float nextTop = panelRect.rect.yMin + 100f;
-        if (confirmButton != null)
-        {
-            Vector3[] corners = new Vector3[4];
-            ((RectTransform)confirmButton.transform).GetWorldCorners(corners);
-            nextTop = panelRect.InverseTransformPoint((corners[0] + corners[2]) * 0.5f).y
-                + GameControlsStyle.Instance.buttonHeight * BottomButtonScale;
-        }
+        // the top of Next, where PlaceBottomButtons puts it (Show Map is under it)
+        float nextTop = NextCentreY(panelRect) + BottomButtonHeight * 0.5f;
         float plantsBottom = Even(nextTop + AboveNext + pad, true);
         Vector2 plantsSize = new Vector2(LevelsPerSection * CardCell.x + 2f * edge, Mathf.Max(CardCell.y + 2f * edge, plantsTop - plantsBottom));
         PlaceBox(plantsBox, plantsSection, panelRect, centreX, plantsTop, plantsSize);
@@ -1162,13 +1160,79 @@ public class LoadoutSelectionUI : MonoBehaviour
                 int edge = (TallPanelLook.Inset + 2) * 2;
                 if (column != null) column.padding = new RectOffset(edge, edge, edge, edge);
             }
+            BuildNamePlate();
         }
         // the panel and its section boxes in the plant's element colour, like the level's plant info panel
         // (Tommy, 2026-11-26)
         Color panelColor = PlantData.ElementPanelColor(data.elementalType);
         tooltipBody.color = panelColor;
+        if (namePlate != null) namePlate.color = panelColor;
         foreach (Image box in tooltipBoxes)
             if (box != null) box.color = panelColor;
+    }
+
+    // the plant's name on a plate (Tommy, 2026-11-26): the in game upgrade buttons' small button
+    // (PlantInfoPanelStyle.upgradeButton, its wood tinted with the plant's element colour, its gold and
+    // leaf trim over it), 2 units a pixel, as wide as the name needs. it stretches only at the art's plain
+    // columns (sprite borders 21 and 33), so both leafy ends keep their pixels. the name moves into it
+    private Image namePlate;
+    // canvas units: the plate's height (the art's 19 px) and the room between the name and the leafy ends
+    private const float NamePlateHeight = 38f;
+    private const int NamePlateSidePad = 26;
+
+    private void BuildNamePlate()
+    {
+        PlantInfoPanelStyle look = PlantInfoPanelStyle.Instance;
+        if (namePlate != null || tooltipName == null || look.upgradeButton == null) return;
+        Transform column = tooltipName.transform.parent;
+        if (column == null) return;
+
+        GameObject go = new GameObject("NamePlate", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+        go.layer = tooltipName.gameObject.layer;
+        RectTransform plate = (RectTransform)go.transform;
+        plate.SetParent(column, false);
+        plate.SetSiblingIndex(tooltipName.transform.GetSiblingIndex());
+        namePlate = go.GetComponent<Image>();
+        namePlate.sprite = look.upgradeButton;
+        namePlate.type = Image.Type.Sliced;
+        namePlate.pixelsPerUnitMultiplier = 1f;
+        namePlate.raycastTarget = false;
+        LayoutElement size = go.GetComponent<LayoutElement>();
+        size.minHeight = size.preferredHeight = NamePlateHeight;
+
+        if (look.upgradeButtonTrim != null)
+        {
+            GameObject trimGO = new GameObject("Trim", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+            trimGO.layer = go.layer;
+            RectTransform tr = (RectTransform)trimGO.transform;
+            tr.SetParent(plate, false);
+            tr.anchorMin = Vector2.zero;
+            tr.anchorMax = Vector2.one;
+            tr.offsetMin = tr.offsetMax = Vector2.zero;
+            trimGO.GetComponent<LayoutElement>().ignoreLayout = true;
+            Image trim = trimGO.GetComponent<Image>();
+            trim.sprite = look.upgradeButtonTrim;
+            trim.type = Image.Type.Sliced;
+            trim.pixelsPerUnitMultiplier = 1f;
+            trim.raycastTarget = false;
+        }
+
+        // the name inside it, in the middle of the wood, the plate as wide as the name and its ends need
+        tooltipName.transform.SetParent(plate, false);
+        tooltipName.alignment = TextAlignmentOptions.Center;
+        tooltipName.textWrappingMode = TextWrappingModes.NoWrap;
+        HorizontalLayoutGroup row = go.GetComponent<HorizontalLayoutGroup>();
+        row.padding = new RectOffset(NamePlateSidePad, NamePlateSidePad, 0, 0);
+        row.childAlignment = TextAnchor.MiddleCenter;
+        row.childControlWidth = row.childControlHeight = true;
+        row.childForceExpandWidth = row.childForceExpandHeight = false;
+        // the name column gives each child its own width, so the plate hugs the name
+        VerticalLayoutGroup names = column.GetComponent<VerticalLayoutGroup>();
+        if (names != null)
+        {
+            names.childControlWidth = true;
+            names.childForceExpandWidth = false;
+        }
     }
 
     // the dark boxes of the tooltip's sections, tinted with the plant's element colour on every hover
