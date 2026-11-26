@@ -222,7 +222,14 @@ public class PlantUpgradeUI : EntityInfoPanel
             }
         }
         UseSmallUpgradeButtons();
+        // the skill square feels like a button once unlocked (Tommy, 2026-11-26): lit under the pointer,
+        // pressed when clicked or cast with Q
+        Transform trim = skillIcon != null && skillIcon.transform.parent != null ? skillIcon.transform.parent.Find("SkillFrameTrim") : null;
+        skillFeel = SkillButtonFeel.Attach(skillButton, SkillFrameBase,
+            trim != null ? trim.GetComponent<Image>() : null, skillIcon, skillCooldownOverlay);
     }
+
+    private SkillButtonFeel skillFeel;
 
     // the Attack, Passive and Skill upgrade buttons are Tommy's small button (2026-11-25), 112 by 38 at
     // 2 units a pixel, against their strip's right end (2 units in); the price and glyphs move 2 px down
@@ -276,7 +283,10 @@ public class PlantUpgradeUI : EntityInfoPanel
             RefreshAutoCastButton();
             RefreshPaths();
             if (Keyboard.current.qKey.wasPressedThisFrame && selectedPlant.SkillReady)
+            {
                 selectedPlant.TriggerSkill();
+                skillFeel?.Flash();
+            }
         }
     }
 
