@@ -36,16 +36,65 @@ public class RhodiolaProjectile : MonoBehaviour
     private float _launchHeight;
     private float _launchDistance;
 
+    // the fly particles (Tommy, 2026-11-26) drift straight back from the way the seed is moving, not out
+    // from its middle. their prefab's Start Speed is that drift's speed in tiles a second: it's moved onto
+    // Velocity over Lifetime, which is turned every frame to point back along the drawn seed's last move
+    // (so its drop from the gem counts too). they're in Local space, so the drift is relative to the seed
+    private const string FlyParticlesName = "RhodiolaProjectileFlyParticles";
+    private ParticleSystem _flyParticles;
+    private float _flyBackSpeed;
+
     private void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         _visual = transform.Find("Visual");
-        if (_visual == null) return;
-        _visualRestLocal = _visual.localPosition;
-        // the fly particles ride with the drawn seed, not its base
-        foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>(true))
-            if (ps.transform.parent == transform) ps.transform.SetParent(_visual, true);
+        if (_visual != null)
+        {
+            _visualRestLocal = _visual.localPosition;
+            // the fly particles ride with the drawn seed, not its base
+            foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>(true))
+                if (ps.transform.parent == transform) ps.transform.SetParent(_visual, true);
+        }
+        SetUpFlyParticles();
     }
+
+    private void SetUpFlyParticles()
+    {
+        foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>(true))
+            if (ps.name == FlyParticlesName) { _flyParticles = ps; break; }
+        if (_flyParticles == null) return;
+
+        ParticleSystem.MainModule main = _flyParticles.main;
+        _flyBackSpeed = main.startSpeed.constant;
+        main.startSpeed = 0f;
+
+        ParticleSystem.VelocityOverLifetimeModule velocity = _flyParticles.velocityOverLifetime;
+        velocity.enabled = true;
+        // in the system's own space, which its Local scaling keeps at tile size (world space could convert
+        // through the seed's 0.3 scale); the seed never turns, so its axes are the world's
+        velocity.space = ParticleSystemSimulationSpace.Local;
+        velocity.x = 0f;
+        velocity.y = 0f;
+        velocity.z = 0f;
+        velocity.radial = 0f;
+        velocity.orbitalX = 0f;
+        velocity.orbitalY = 0f;
+        velocity.orbitalZ = 0f;
+        velocity.speedModifier = 1f;
+    }
+
+    // points the fly particles' drift back against moving (a world direction, any length); no move
+    // (paused, or held after a hit) keeps the last direction
+    private void PointFlyParticlesBack(Vector3 moving)
+    {
+        if (_flyParticles == null || moving.sqrMagnitude < 1e-10f) return;
+        Vector3 back = -moving.normalized * _flyBackSpeed;
+        ParticleSystem.VelocityOverLifetimeModule velocity = _flyParticles.velocityOverLifetime;
+        velocity.x = back.x;
+        velocity.y = back.y;
+    }
+
+    private Vector3 SeedPosition() => _visual != null ? _visual.position : transform.position;
 
     // the drawn seed starts at this world height (the gem's), its base staying where it was spawned
     public void SetLaunchHeight(float worldY)
@@ -54,6 +103,8 @@ public class RhodiolaProjectile : MonoBehaviour
         _launchHeight = worldY - transform.TransformPoint(_visualRestLocal).y;
         _launchDistance = Vector3.Distance(transform.position, _lastKnownTargetPosition);
         PlaceVisual();
+        // the drawn seed comes down in a straight line to its target's base
+        PointFlyParticlesBack(_lastKnownTargetPosition - _visual.position);
     }
 
     private void PlaceVisual()
@@ -72,6 +123,7 @@ public class RhodiolaProjectile : MonoBehaviour
         _healAmount = healAmount;
         _canBounce  = canBounce;
         _lastKnownTargetPosition = target != null ? target.transform.position : transform.position;
+        PointFlyParticlesBack(_lastKnownTargetPosition - transform.position);
     }
 
     public void MarkAsBounce() => _isBounce = true;
@@ -95,8 +147,10 @@ public class RhodiolaProjectile : MonoBehaviour
             _lastKnownTargetPosition = _target.transform.position;
 
         Vector3 targetPos = _lastKnownTargetPosition;
+        Vector3 seedBefore = SeedPosition();
         transform.position = Vector3.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
         PlaceVisual();
+        PointFlyParticlesBack(SeedPosition() - seedBefore);
 
         if (Vector3.Distance(transform.position, targetPos) < 0.15f)
             Detonate();
