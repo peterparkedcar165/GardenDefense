@@ -116,7 +116,7 @@ public class Anemone : Shooter
         insect.ApplyEffect(new WindErosionEffect(insect, ErosionDuration * ErosionProcChance, newStacks, this, ErosionReductionPerStack));
     }
 
-    public override string GetName() => "<b><color=#D0E8FF>Anemone</color></b>";
+    public override string GetName() => TitleName("#D0E8FF");
 
     public override string GetDescription() =>
         $"The {GetName()} commands the winds to erode and consume her foes, then pulls them into a devastating vortex.";

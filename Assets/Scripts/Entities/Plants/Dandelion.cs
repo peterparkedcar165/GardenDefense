@@ -294,7 +294,7 @@ public class Dandelion : Shooter
         }
     }
 
-    public override string GetName() => $"<b><color=#B2EBF2>{(data != null ? data.displayName : "Dandelion")}</color></b>";
+    public override string GetName() => TitleName("#B2EBF2");
 
     public override string GetDescription() =>
         $"The {GetName()} rides the wind to support her allies, speeding up their skills and sweeping away anything in her path.";

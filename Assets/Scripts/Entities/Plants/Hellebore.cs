@@ -245,7 +245,7 @@ public class Hellebore : Shooter
         if (_autoCastHighlighted != null) _autoCastHighlighted.ClearHighlight();
     }
 
-    public override string GetName() => "<b><color=#9B30D0>Hellebore</color></b>";
+    public override string GetName() => TitleName("#9B30D0");
 
     public override string GetDescription() =>
         $"The {GetName()} weaves poison and shelter together, protecting allies while punishing those who dare attack them.";
@@ -255,10 +255,10 @@ public class Hellebore : Shooter
 
     public override string GetPassiveDescription() =>
         $"Each attack hit reduces skill cooldown by <color=green><b>{CDRPerHit:F1}s</b></color>. " +
-        $"Hellebore gains <color=#00CED1><b>{baseArmor}</b></color> Base Armor " +
+        $"{DisplayName} gains <color=#00CED1><b>{baseArmor}</b></color> Base Armor " +
         $"[<color=#FFB6C1><b>+{(HData?.selfArmorMP ?? 0.14f) * 100f:F0}% Magic Power</b></color>]. " +
         $"Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
-        $"increasing their Armor by <color=green><b>{AuraShare * 100f:F0}%</b></color> of Hellebore's Armor " +
+        $"increasing their Armor by <color=green><b>{AuraShare * 100f:F0}%</b></color> of {DisplayName}'s Armor " +
         $"(<color=#00CED1><b>{(int)AuraArmor}</b></color>).";
 
     public override string GetSkillDesription() =>
@@ -298,9 +298,9 @@ public class Hellebore : Shooter
         float armorMP  = HData?.selfArmorMP            ?? 0.14f;
         string desc = details
             ? $"Each attack hit reduces skill cooldown by <color=green><b>[({HData?.passiveCDRPerHit ?? 0.5f:F1}) + ({cdrpl:F1}/Lvl.)]</b></color> seconds. " +
-              $"Hellebore gains <color=#00CED1><b>[({HData?.selfArmorBase ?? 14}) + ({armorpl}/Lvl.)]</b></color> Base Armor <color=#FFB6C1>[+{armorMP * 100f:F0}% Magic Power]</color>. " +
+              $"{DisplayName} gains <color=#00CED1><b>[({HData?.selfArmorBase ?? 14}) + ({armorpl}/Lvl.)]</b></color> Base Armor <color=#FFB6C1>[+{armorMP * 100f:F0}% Magic Power]</color>. " +
               $"Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
-              $"increasing their Armor by <color=green><b>[({HData?.auraShareBase ?? 0.5f:F0}%) + ({auraShpl * 100f:F0}%/Lvl.)]</b></color> of Hellebore's Armor."
+              $"increasing their Armor by <color=green><b>[({HData?.auraShareBase ?? 0.5f:F0}%) + ({auraShpl * 100f:F0}%/Lvl.)]</b></color> of {DisplayName}'s Armor."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}</b></color> seconds per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}</b></color>]\n\n" +

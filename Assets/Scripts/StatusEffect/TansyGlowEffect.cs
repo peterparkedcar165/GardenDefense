@@ -81,7 +81,7 @@ public class TansyGlowEffect : StatusEffect
     public override string GetName() => "<color=orange>Floral Glow</color>";
     public override string GetDescription()
     {
-        string desc = $"An orbiting petal projectile, sourced from the <color=orange><b>Tansy</b></color>, deals damage to anything it passes through.";
+        string desc = $"An orbiting petal projectile, sourced from the <color=orange><b>{(tansy != null ? tansy.DisplayName : Plant.DisplayNameOf("Tansy"))}</b></color>, deals damage to anything it passes through.";
         if (tansy != null && tansy.NurturingGlowActive)
         {
             Plant plant = target as Plant;

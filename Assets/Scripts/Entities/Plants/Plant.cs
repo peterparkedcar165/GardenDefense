@@ -1657,7 +1657,27 @@ public abstract class Plant : Entity, IAttackable
     }
 
     // DESCRIPTIONS
-    public virtual string GetName() => data != null ? data.displayName : "";
+    public virtual string GetName() => DisplayName;
+
+    // the plant's name as players see it (Tommy, 2026-11-26): PlantData.displayName. every plant's title
+    // and every description that names a plant read it, so renaming a plant in its data renames it
+    // everywhere (Rhodiola is Rhodiola Rosea). plantName stays the save key
+    public string DisplayName => data != null && !string.IsNullOrEmpty(data.displayName) ? data.displayName : GetType().Name;
+
+    // the title the info panel and tooltips show: the display name, bold, in the plant's colour
+    protected string TitleName(string color) => $"<b><color={color}>{DisplayName}</color></b>";
+
+    // another plant's display name by its save key (plantName), from Resources/PlantRegistry, for a
+    // description that mentions a plant it doesn't hold. falls back to the key
+    private static PlantRegistry _nameRegistry;
+    public static string DisplayNameOf(string plantName)
+    {
+        if (_nameRegistry == null) _nameRegistry = Resources.Load<PlantRegistry>("PlantRegistry");
+        if (_nameRegistry != null && _nameRegistry.plants != null)
+            foreach (PlantData d in _nameRegistry.plants)
+                if (d != null && d.plantName == plantName && !string.IsNullOrEmpty(d.displayName)) return d.displayName;
+        return plantName;
+    }
 
     public virtual string GetDescription()
     {

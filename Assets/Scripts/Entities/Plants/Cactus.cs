@@ -224,7 +224,7 @@ public class Cactus : Aura
         UpdateHealthBar();
     }
 
-    public override string GetName() => "<b><color=green>Cactus</color></b>";
+    public override string GetName() => TitleName("green");
 
     public override string GetDescription() =>
         $"A hardy desert plant that slams everything around it and counters harder the more it's hit.";

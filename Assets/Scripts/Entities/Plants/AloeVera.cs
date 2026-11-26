@@ -317,7 +317,7 @@ public class AloeVera : Lobber
         obj.GetComponent<SoothingRain>()?.Initialize(baseSkillRadius, skillDuration, skillHealPerTick, baseSkillHealInterval, baseSkillTempReduction, this);
     }
 
-    public override string GetName() => "<b><color=#4FC3F7>Aloe Vera</color></b>";
+    public override string GetName() => TitleName("#4FC3F7");
 
     public override string GetDescription() =>
         $"The {GetName()} lobs arcing water droplets that burst on impact. She prioritizes healing injured allies before engaging insects.";

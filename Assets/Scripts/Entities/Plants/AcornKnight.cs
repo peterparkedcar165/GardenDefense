@@ -667,7 +667,7 @@ public class AcornKnight : Aura
         _reequipTimer = ShieldReequipDelay;
     }
 
-    public override string GetName() => $"<b><color=green>{(data != null ? data.displayName : "Acorn Knight")}</color></b>";
+    public override string GetName() => TitleName("green");
 
     public override string GetDescription() =>
         $"The {GetName()} is a melee tank with a sword and shield, raising his guard under pressure and able to hurl his shield to stun a target and block the path.";
@@ -729,7 +729,7 @@ public class AcornKnight : Aura
         float hppl      = AcornData?.path3HealthPerLevel        ?? 50f;
         float durMP     = AcornData?.skillDurationMPMultiplier  ?? 0.10f;
         string skillMaxBonus = details
-            ? "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> inherits the Acorn Knight's <color=#00CED1><b>Base Armor</b></color>."
+            ? "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> inherits the " + DisplayName + "'s <color=#00CED1><b>Base Armor</b></color>."
             : $"Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\n\nThe <color=green><b>Shield</b></color> gains <color=#00CED1><b>{baseArmor:F0} Base Armor</b></color>.";
         float aspl = AcornData?.path3AttackSpeedBonusPerLevel ?? 0.05f;
         string desc = details

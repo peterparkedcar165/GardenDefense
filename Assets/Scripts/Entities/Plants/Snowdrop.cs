@@ -487,7 +487,7 @@ public class Snowdrop : Shooter
         baseSkillDuration = data.baseSkillDuration + (SData?.iceBeamDurationPerLevel ?? 1f) * level;
     }
 
-    public override string GetName() => "<b><color=#00FFFF>Snowdrop</color></b>";
+    public override string GetName() => TitleName("#00FFFF");
 
     public override string GetDescription() =>
         $"The {GetName()} is a frosty flower who marks her prey for her bonded partner to finish off.";

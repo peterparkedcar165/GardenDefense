@@ -279,7 +279,7 @@ public class Gloriosa : Shooter
             if (p != null) p.ClearHighlight();
     }
 
-    public override string GetName() => "<b><color=orange>Gloriosa</color></b>";
+    public override string GetName() => TitleName("orange");
 
     public override string GetDescription() =>
         $"The {GetName()} is a fiery flower that nurtures its allies with warm embers, healing injured plants and scorching any insect that dares stand in its way.";

@@ -20,7 +20,7 @@ public class SnowMarkEffect : StatusEffect
 
     public override string GetName() => "<color=#00FFFF>Snow Mark</color>";
     public override string GetDescription() =>
-        "Can be detonated by Snowdrop's bonded partner for bonus <color=#00FFFF>Ice</color> Magic damage equal to a % of Max Health.";
+        $"Can be detonated by {Plant.DisplayNameOf("Snowdrop")}'s bonded partner for bonus <color=#00FFFF>Ice</color> Magic damage equal to a % of Max Health.";
 
     // Chilling Grasp (skill tree): checked once on apply rather than every tick, since the
     // unlock can't change mid-mark - re-checked fresh on every refresh/reapply too, since OnApply

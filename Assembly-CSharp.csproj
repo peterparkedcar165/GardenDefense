@@ -464,6 +464,7 @@
     <Compile Include="Assets\Scripts\Mulch\MulchDrop.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\OldCarrot.cs" />
     <Compile Include="Assets\Scripts\UI\SettingsSkin.cs" />
+    <Compile Include="Assets\Scripts\UI\TallPanelLook.cs" />
     <Compile Include="Assets\Scripts\UI\StatusEffectPanel.cs" />
     <Compile Include="Assets\Scripts\Mulch\MulchItem.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CoolingTouchEffect.cs" />

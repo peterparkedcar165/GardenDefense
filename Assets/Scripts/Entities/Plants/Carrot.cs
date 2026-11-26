@@ -436,7 +436,7 @@ public class Carrot : Shooter
         baseAttackRange = data.baseAttackRange + (GData?.path2AttackRangePerLevel ?? 0.15f) * level;
     }
 
-    public override string GetName() => "<b><color=#ED9121>Carrot</color></b>";
+    public override string GetName() => TitleName("#ED9121");
 
     public override string GetDescription() =>
         $"The {GetName()} is an elderly root sage who commands the earth itself, striking its enemies from below and forging bonds with its allies.";

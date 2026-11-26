@@ -211,7 +211,7 @@ public class BirdOfParadise : Aura
         baseSkillDuration = data.baseSkillDuration + (BOPData?.path3SkillDurationPerLevel ?? 2f) * level;
     }
 
-    public override string GetName() => "<b><color=#FF8C00>Bird of Paradise</color></b>";
+    public override string GetName() => TitleName("#FF8C00");
 
     public override string GetDescription() =>
         $"The {GetName()} focuses its talons on a single foe, striking faster and harder with every hit until even the mightiest insects begin to crumble.";

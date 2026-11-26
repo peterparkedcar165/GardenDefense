@@ -493,7 +493,7 @@ public class Calendula : Aura
         baseSkillDuration = data.baseSkillDuration + (CData?.path3SkillDurationPerLevel ?? 2f) * level;
     }
 
-    public override string GetName() => "<b><color=orange>Calendula</color></b>";
+    public override string GetName() => TitleName("orange");
     public override string GetDescription() => $"The {GetName()} periodically releases waves of flaming petals and can infuse allies with fire energy.";
     public override string GetPath1Name() => "Petals";
     public override string GetPath2Name() => "Illuminate";

@@ -309,7 +309,7 @@ public class Waterlily : Shooter
             bubble.Initialize(position, skillAoERadius, BubbleDuration, bubbleDamage, BubbleDamageTaken, this);
     }
 
-    public override string GetName() => "<b><color=#3399FF>Waterlily</color></b>";
+    public override string GetName() => TitleName("#3399FF");
 
     public override string GetDescription() =>
         $"The {GetName()} shoots her targets with little bubbles that soak surrounding insects. She can also imprison her foes with her larger bubble, leaving them exposed to her allies.";

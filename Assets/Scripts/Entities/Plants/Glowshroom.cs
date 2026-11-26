@@ -264,7 +264,7 @@ public class Glowshroom : Shooter
         baseSkillDuration = data.baseSkillDuration + (GMData?.path3SkillDurationPerLevel ?? 1f) * level;
     }
 
-    public override string GetName() => "<b><color=green>Glowshroom</color></b>";
+    public override string GetName() => TitleName("green");
 
     public override string GetDescription() =>
         $"The {GetName()} is a bioluminescent cave fungus that illuminates the darkness, infects insects with a glow, and blinds them with a sudden flash of light.";

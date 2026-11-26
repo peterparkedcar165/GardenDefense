@@ -431,7 +431,7 @@ public class Rhodiola : Shooter
         }
     }
 
-    public override string GetName() => $"<b><color=green>Rhodiola</color></b>";
+    public override string GetName() => TitleName("green");
 
     public override string GetDescription() =>
         $"The {GetName()} breathes life into its allies, mending wounds with rejuvenating energy.";

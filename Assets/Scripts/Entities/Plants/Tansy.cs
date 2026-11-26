@@ -541,7 +541,7 @@ public class Tansy : Aura
         baseSkillDuration = data.baseSkillDuration + (TData?.path3SkillDurationPerLevel ?? 2f) * level;
     }
 
-    public override string GetName() => "<b><color=orange>Tansy</color></b>";
+    public override string GetName() => TitleName("orange");
     public override string GetDescription() => $"The {GetName()} is circled by an orbiting petal projectile and can summon one to infuse allies with fire energy.";
     public override string GetPath1Name() => "Petals";
     public override string GetPath2Name() => "Illuminate";

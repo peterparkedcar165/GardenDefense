@@ -544,13 +544,13 @@ public class Sunflower : Shooter
                 SFData?.sunrayLoopSound, SFData?.sunrayEndSound, SFData?.sunrayEndLeadTime ?? 0.2f);
     }
 
-    public override string GetName() => "<b><color=orange>Sunflower</color></b>";
+    public override string GetName() => TitleName("orange");
 
     public override string GetDescription() =>
         $"The {GetName()} shoots her targets with sun bolts and generate precious <color=yellow>Sun</color> for the garden.";
 
     public override string GetAttackDescription() =>
-        $"The <color=orange><b>Sunflower</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
+        $"The <color=orange><b>{DisplayName}</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetSkillDesription()
     {
@@ -560,7 +560,7 @@ public class Sunflower : Shooter
     }
 
     public override string GetPassiveDescription() =>
-        $"The <color=orange><b>Sunflower</b></color> periodically generates <color=green><b>{sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{SunGenInterval:F1}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>{cooldownReductionPerHit:F2}</b></color> seconds.";
+        $"The <color=orange><b>{DisplayName}</b></color> periodically generates <color=green><b>{sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{SunGenInterval:F1}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>{cooldownReductionPerHit:F2}</b></color> seconds.";
 
     public override string GetPath1Description(bool details = false)
     {
@@ -568,7 +568,7 @@ public class Sunflower : Shooter
         float aspl = SFData?.path1AttackSpeedPerLevel  ?? 0.05f;
         int projectileCount = SkillTreeManager.HasUnlock(this, ExtraProjectileUnlock) ? 4 : 3;
         string desc = details
-            ? $"The <color=orange><b>Sunflower</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
+            ? $"The <color=orange><b>{DisplayName}</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -584,7 +584,7 @@ public class Sunflower : Shooter
         float cdrpl = SFData?.path2CooldownReductionPerLevel ?? 0.03f;
         string passiveMaxBonus = $"Dealing <color=red><b>Fire Damage</b></color> inflicts <color=#FFD700><b>Sun Mark</b></color> for <color=green><b>{SunMarkDuration:F0}s</b></color>, increasing the <color=yellow><b>Sun</b></color> yield of the target by <color=green><b>27%</b></color>.";
         string desc = details
-            ? $"The <color=orange><b>Sunflower</b></color> periodically generates <color=green><b>[({SFData?.baseSunGenerated ?? 10}) + ({sunpl}/Lvl.)]</b></color> <color=yellow>Sun</color> every <color=green><b>{data.basePassiveCooldown:F0}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>[({SFData?.baseCooldownReductionPerHit ?? 0.35f:F2}) + ({cdrpl:F2}/Lvl.)]</b></color> seconds."
+            ? $"The <color=orange><b>{DisplayName}</b></color> periodically generates <color=green><b>[({SFData?.baseSunGenerated ?? 10}) + ({sunpl}/Lvl.)]</b></color> <color=yellow>Sun</color> every <color=green><b>{data.basePassiveCooldown:F0}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>[({SFData?.baseCooldownReductionPerHit ?? 0.35f:F2}) + ({cdrpl:F2}/Lvl.)]</b></color> seconds."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n" +
                $"Increase <color=yellow><b>Sun Generated</b></color> by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +

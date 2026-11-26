@@ -203,7 +203,7 @@ public class LeafRanger : Shooter
         ApplyEffect(new RapidFocusEffect(this, skillDuration, 1, this, bonus));
     }
 
-    public override string GetName() => "<b><color=green>Leaf Ranger</color></b>";
+    public override string GetName() => TitleName("green");
 
     public override string GetDescription() =>
         $"The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can bounce to another target instead of being destroyed.";

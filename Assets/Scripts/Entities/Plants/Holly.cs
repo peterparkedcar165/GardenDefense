@@ -182,7 +182,7 @@ public class Holly : Aura
         baseSkillRadius    = data.baseSkillRadius    + (HData?.path3BlizzardLengthPerLevel ?? 0.5f) * level;
     }
 
-    public override string GetName() => "<b><color=#00FFFF>Holly</color></b>";
+    public override string GetName() => TitleName("#00FFFF");
     public override string GetDescription() =>
         $"The {GetName()} is a resilient ice bulwark who shields the plants around her from harm and the elements.";
     public override string GetAttackDescription() =>

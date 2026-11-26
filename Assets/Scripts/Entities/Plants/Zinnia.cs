@@ -270,7 +270,7 @@ public class Zinnia : Aura
         baseSkillDuration = data.baseSkillDuration + (ZData?.path3SkillDurationPerLevel ?? 2f) * level;
     }
 
-    public override string GetName() => $"<b><color=orange>{(data != null ? data.displayName : "Zinnia")}</color></b>";
+    public override string GetName() => TitleName("orange");
 
     public override string GetDescription() =>
         $"The {GetName()} ignites the battlefield with fiery synergy, burning nearby insects and marking nearby plants with <color=orange><b>Ablaze</b></color>, empowering them with fire and magic.";

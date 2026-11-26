@@ -241,7 +241,7 @@ public class Kelp : Aura
         baseSkillDuration = data.baseSkillDuration + (KData?.path3DurationPerLevel ?? 2f) * level;
     }
 
-    public override string GetName() => "<b><color=#2E8B57>Kelp</color></b>";
+    public override string GetName() => TitleName("#2E8B57");
 
     public override string GetDescription() =>
         $"The {GetName()} whips insects with her fronds and keeps the garden breathing, releasing Oxygen-rich bubbles that also generate Sun.";

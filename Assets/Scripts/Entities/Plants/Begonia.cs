@@ -368,7 +368,7 @@ public class Begonia : Aura
         baseSkillDuration = data.baseSkillDuration + (BData?.path3SkillDurationPerLevel ?? 1f) * level;
     }
 
-    public override string GetName() => "<b><color=#4FC3F7>Begonia</color></b>";
+    public override string GetName() => TitleName("#4FC3F7");
     public override string GetDescription() =>
         $"The {GetName()} grows wet flowers that prime nearby insects with water, and sharpens nearby allies' precision and power, blessing them with the strength of water.";
 

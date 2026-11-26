@@ -335,7 +335,7 @@ public class Stargazer : Aura
     public override void OnPath2Upgrade(int level) { }
     public override void OnPath3Upgrade(int level) { }
 
-    public override string GetName() => "<b><color=orange>Stargazer</color></b>";
+    public override string GetName() => TitleName("orange");
 
     public override string GetDescription() =>
         $"The {GetName()} sprays a cone of fire that leaves enemies <color=#FF6B1A>Flammable</color>, and can call down a sweeping wall of flame across the entire map.";

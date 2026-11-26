@@ -293,7 +293,7 @@ public class BogIris : Shooter
     }
     public override void OnPath3Upgrade(int level) { }
 
-    public override string GetName() => "<b><color=#4FC3F7>Bog Iris</color></b>";
+    public override string GetName() => TitleName("#4FC3F7");
     public override string GetDescription() =>
         $"The {GetName()} is self-sufficient, providing herself with regeneration as well as generating sun for the garden.";
 
