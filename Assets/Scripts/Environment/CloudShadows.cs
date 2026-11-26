@@ -100,6 +100,9 @@ public class CloudShadows : MonoBehaviour
         main.startRotation = 0f;
         main.gravityModifier = 0f;
         main.startColor = Color.black;
+        main.simulationSpeed = 1f;
+        // never paused for looking off camera
+        main.cullingMode = ParticleSystemCullingMode.AlwaysSimulate;
 
         var shape = particles.shape;
         shape.enabled = true;
@@ -110,6 +113,12 @@ public class CloudShadows : MonoBehaviour
         var velocity = particles.velocityOverLifetime;
         velocity.enabled = true;
         velocity.space = ParticleSystemSimulationSpace.World;
+        // the sandstorm halves its velocity (speed modifier 0.5): left at that, the shadows moved at half the
+        // style's speed and their lives (worked out from it) ran out halfway across the view (Tommy: they
+        // vanished mid screen)
+        velocity.speedModifier = 1f;
+        velocity.orbitalX = velocity.orbitalY = velocity.orbitalZ = 0f;
+        velocity.radial = 0f;
 
         // no fading over a shadow's life: every one is born and dies out of sight (Configure), and a half faded
         // one would leave a lighter patch where it overlaps a whole one
