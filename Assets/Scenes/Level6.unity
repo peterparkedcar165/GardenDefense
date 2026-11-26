@@ -2863,7 +2863,7 @@ Tilemap:
       - {fileID: 1326435913, guid: 5df704488e0176c478f8f5e4273ba571, type: 3}
       m_AnimationSpeed: 2
       m_AnimationTimeOffset: 0
-      m_Flags: 0
+      m_Flags: 8
   - first: {x: 4, y: 0, z: 0}
     second:
       serializedVersion: 2
@@ -2874,7 +2874,7 @@ Tilemap:
       - {fileID: 1326435913, guid: 5df704488e0176c478f8f5e4273ba571, type: 3}
       m_AnimationSpeed: 2
       m_AnimationTimeOffset: 0
-      m_Flags: 0
+      m_Flags: 8
   m_TileAssetArray:
   - serializedVersion: 2
     m_RefCount: 2
@@ -3272,7 +3272,7 @@ Tilemap:
       - {fileID: 1326435913, guid: 5df704488e0176c478f8f5e4273ba571, type: 3}
       m_AnimationSpeed: 2
       m_AnimationTimeOffset: 0
-      m_Flags: 0
+      m_Flags: 8
   - first: {x: 9, y: -7, z: 0}
     second:
       serializedVersion: 2
@@ -3283,7 +3283,7 @@ Tilemap:
       - {fileID: 1326435913, guid: 5df704488e0176c478f8f5e4273ba571, type: 3}
       m_AnimationSpeed: 2
       m_AnimationTimeOffset: 0
-      m_Flags: 0
+      m_Flags: 8
   - first: {x: -2, y: -5, z: 0}
     second:
       serializedVersion: 2
@@ -3294,7 +3294,7 @@ Tilemap:
       - {fileID: 1326435913, guid: 5df704488e0176c478f8f5e4273ba571, type: 3}
       m_AnimationSpeed: 2
       m_AnimationTimeOffset: 0
-      m_Flags: 0
+      m_Flags: 8
   - first: {x: 10, y: -2, z: 0}
     second:
       serializedVersion: 2
@@ -3305,7 +3305,7 @@ Tilemap:
       - {fileID: 1326435913, guid: 5df704488e0176c478f8f5e4273ba571, type: 3}
       m_AnimationSpeed: 2
       m_AnimationTimeOffset: 0
-      m_Flags: 0
+      m_Flags: 8
   - first: {x: 4, y: 0, z: 0}
     second:
       serializedVersion: 2
@@ -3316,7 +3316,7 @@ Tilemap:
       - {fileID: 1326435913, guid: 5df704488e0176c478f8f5e4273ba571, type: 3}
       m_AnimationSpeed: 2
       m_AnimationTimeOffset: 0
-      m_Flags: 0
+      m_Flags: 8
   - first: {x: 7, y: 3, z: 0}
     second:
       serializedVersion: 2
@@ -3327,7 +3327,7 @@ Tilemap:
       - {fileID: 1326435913, guid: 5df704488e0176c478f8f5e4273ba571, type: 3}
       m_AnimationSpeed: 2
       m_AnimationTimeOffset: 0
-      m_Flags: 0
+      m_Flags: 8
   m_TileAssetArray:
   - serializedVersion: 2
     m_RefCount: 6
