@@ -209,6 +209,18 @@ public class PlantUpgradeUI : EntityInfoPanel
         base.Awake();
         if (tooltipPanel != null)
             tooltipPanel.SetActive(false);
+        // Tommy's flower frame (2026-11-26), the text clear of it (LayoutTooltip's TooltipPadding is the
+        // same 20 above and below)
+        if (tooltipPanel != null && TooltipFrameLook.Available)
+        {
+            TooltipFrameLook.Apply(tooltipPanel.GetComponent<Image>());
+            if (tooltipText != null)
+            {
+                RectTransform text = tooltipText.rectTransform;
+                text.offsetMin = new Vector2(TooltipFrameLook.Inset, TooltipFrameLook.Inset);
+                text.offsetMax = new Vector2(-TooltipFrameLook.Inset, -TooltipFrameLook.Inset);
+            }
+        }
         UseSmallUpgradeButtons();
     }
 

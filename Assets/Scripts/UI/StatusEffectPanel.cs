@@ -26,6 +26,8 @@ public class StatusEffectPanel : MonoBehaviour
 
     private void Awake()
     {
+        // Tommy's flower frame (2026-11-26)
+        TooltipFrameLook.Apply(GetComponent<UnityEngine.UI.Image>());
         gameObject.SetActive(false);
     }
 

@@ -1448,6 +1448,13 @@ public class LoadoutSelectionUI : MonoBehaviour
         background.raycastTarget = false;
         VerticalLayoutGroup layout = box.GetComponent<VerticalLayoutGroup>();
         layout.padding = new RectOffset(12, 12, 8, 8);
+        // Tommy's flower frame (2026-11-26), the text clear of it
+        if (TooltipFrameLook.Available)
+        {
+            TooltipFrameLook.Apply(background);
+            int inset = (int)TooltipFrameLook.Inset;
+            layout.padding = new RectOffset(inset, inset, inset, inset);
+        }
         layout.childControlWidth = true;
         layout.childControlHeight = true;
         layout.childForceExpandWidth = false;

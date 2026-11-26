@@ -299,6 +299,13 @@ public class MulchInventoryUI : MonoBehaviour
         tipBackground.raycastTarget = false;
         VerticalLayoutGroup layout = tipGO.AddComponent<VerticalLayoutGroup>();
         layout.padding = new RectOffset(14, 14, 10, 12);
+        // Tommy's flower frame (2026-11-26), the text clear of it
+        if (TooltipFrameLook.Available)
+        {
+            TooltipFrameLook.Apply(tipBackground);
+            int inset = (int)TooltipFrameLook.Inset;
+            layout.padding = new RectOffset(inset, inset, inset, inset);
+        }
         layout.childControlWidth = true;
         layout.childControlHeight = true;
         layout.childForceExpandWidth = true;

@@ -138,7 +138,7 @@ public class SkillTreeUI : MonoBehaviour
         tooltipPanel.SetActive(true);
         // the kit panel in the hovered plant's element colour, its text shadows to match
         Color shadow = PlantData.ElementTextShadowColor(element);
-        if (tooltipImage != null) tooltipImage.color = PlantData.ElementPanelColor(element);
+        if (tooltipImage != null && !TooltipFrameLook.Available) tooltipImage.color = PlantData.ElementPanelColor(element);
         if (tooltipShadow != null) tooltipShadow.Color = shadow;
         if (tooltipTitleShadow != null) tooltipTitleShadow.Color = shadow;
         if (tooltipText == null) return;
@@ -157,7 +157,7 @@ public class SkillTreeUI : MonoBehaviour
             float titleHeight = Mathf.Ceil(tooltipTitle.GetPreferredValues(title, width, 0f).y);
             HangFromTop(tooltipTitle.rectTransform, y, titleHeight, TipSide);
             y += titleHeight + 6f;
-            if (tooltipSeam != null) HangFromTop(tooltipSeam, y, 4f, 8f);
+            if (tooltipSeam != null) HangFromTop(tooltipSeam, y, 4f, TooltipFrameLook.Available ? 18f : 8f);
             y += 4f + 10f;
         }
 
@@ -173,9 +173,10 @@ public class SkillTreeUI : MonoBehaviour
         PositionTooltipAtCursor();
     }
 
-    // canvas units: the tooltip's space above the title and below the text, and at its sides
-    private const float TipPad = 16f;
-    private const float TipSide = 20f;
+    // canvas units: the tooltip's space above the title and below the text, and at its sides (more inside
+    // the flower frame, whose band is 14)
+    private static float TipPad => TooltipFrameLook.Available ? 22f : 16f;
+    private static float TipSide => TooltipFrameLook.Available ? 22f : 20f;
 
     private static void HangFromTop(RectTransform r, float top, float height, float side)
     {
@@ -285,7 +286,13 @@ public class SkillTreeUI : MonoBehaviour
         if (tooltipPanel != null)
         {
             tooltipImage = tooltipPanel.GetComponent<Image>();
-            if (tooltipImage != null)
+            // Tommy's flower frame (2026-11-26), drawn as is
+            if (tooltipImage != null && TooltipFrameLook.Available)
+            {
+                TooltipFrameLook.Apply(tooltipImage);
+                tooltipImage.raycastTarget = false;
+            }
+            else if (tooltipImage != null)
             {
                 SetKit(tooltipImage, kit.panelBase, PlantData.ElementPanelColor(ElementalType.Neutral), true);
                 tooltipImage.raycastTarget = false;

@@ -50,6 +50,11 @@ public class PlantInfoPanelStyle : ScriptableObject
         public Sprite fallbackIcon;
     }
 
+    [Header("Tooltips")]
+    [Tooltip("Tommy's flower frame (2026-11-26, ui_frame_flowers): every tooltip panel wears it, drawn as is, its " +
+        "corners kept and its edges and inside repeated (TooltipFrameLook). empty: the panels keep their old look")]
+    public Sprite tooltipFrame;
+
     [Header("Text")]
     [Tooltip("name, stats, path labels and \"Mulches\". the shadow under them is the element's (PlantData.ElementTextShadowColor)")]
     public Color text = Hex("#FFF1D6");

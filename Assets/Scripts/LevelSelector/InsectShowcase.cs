@@ -121,9 +121,28 @@ public class InsectShowcase : MonoBehaviour
         tip.pivot = new Vector2(0f, 1f);
         Image image = tip.gameObject.AddComponent<Image>();
         SetSprite(image, style.panelBase, style.panel, true);
+        // Tommy's flower frame (2026-11-26)
+        TooltipFrameLook.Apply(image);
         image.raycastTarget = false;
         tip.gameObject.SetActive(false);
         return tip;
+    }
+
+    // art px a tooltip grows on every side when it wears the flower frame (its 7 px band; the contents
+    // were placed for the kit panel's thin edge), its contents moved in by as much
+    private static float TipFrameExtra => TooltipFrameLook.Available ? 5f : 0f;
+
+    private void FrameTip(RectTransform tip, ref float width, ref float height)
+    {
+        float e = TipFrameExtra;
+        if (e <= 0f) return;
+        foreach (Transform child in tip)
+        {
+            if (child.name == "Shine") { child.gameObject.SetActive(false); continue; }
+            ((RectTransform)child).anchoredPosition += new Vector2(e * Px, -e * Px);
+        }
+        width += 2f * e;
+        height += 2f * e;
     }
 
     // ---------- the panel ----------
@@ -489,7 +508,9 @@ public class InsectShowcase : MonoBehaviour
             y += AddText(cardTip, traits, 8f, y, w - 16f, style.text, style.textSize, true) + 2f;
         y += 4f;
 
-        cardTip.sizeDelta = new Vector2(w * Px, y * Px);
+        float tipW = w, tipH = y;
+        FrameTip(cardTip, ref tipW, ref tipH);
+        cardTip.sizeDelta = new Vector2(tipW * Px, tipH * Px);
         cardTip.SetAsLastSibling();
         cardTip.gameObject.SetActive(true);
 
@@ -498,7 +519,7 @@ public class InsectShowcase : MonoBehaviour
         entry.card.GetWorldCorners(corners);
         Vector2 top = host.InverseTransformPoint(corners[1]);
         float yTop = top.y - host.rect.yMax;
-        float lowest = -host.rect.height + style.margin * Px + y * Px;
+        float lowest = -host.rect.height + style.margin * Px + tipH * Px;
         yTop = Mathf.Clamp(yTop, Mathf.Min(lowest, -style.margin * Px), -style.margin * Px);
         cardTip.anchoredPosition = new Vector2((style.margin + style.panelWidth + 6f) * Px, Mathf.Round(yTop / Px) * Px);
     }
@@ -520,7 +541,9 @@ public class InsectShowcase : MonoBehaviour
         y += titleHeight + 3f;
         y += AddText(chipTip, chip.body, 7f, y, w - 14f, style.text, style.textSize, true) + 5f;
 
-        chipTip.sizeDelta = new Vector2(w * Px, y * Px);
+        float tipW = w, tipH = y;
+        FrameTip(chipTip, ref tipW, ref tipH);
+        chipTip.sizeDelta = new Vector2(tipW * Px, tipH * Px);
         chipTip.SetAsLastSibling();
         chipTip.gameObject.SetActive(true);
 
@@ -528,8 +551,8 @@ public class InsectShowcase : MonoBehaviour
         chip.rect.GetWorldCorners(corners);
         Vector2 bottomLeft = host.InverseTransformPoint(corners[0]);
         Vector2 topLeft = host.InverseTransformPoint(corners[1]);
-        float x = Mathf.Clamp(topLeft.x - host.rect.xMin - 2f * Px, style.margin * Px, host.rect.width - (w + style.margin) * Px);
-        float above = topLeft.y - host.rect.yMax + 4f * Px + y * Px;
+        float x = Mathf.Clamp(topLeft.x - host.rect.xMin - 2f * Px, style.margin * Px, host.rect.width - (tipW + style.margin) * Px);
+        float above = topLeft.y - host.rect.yMax + 4f * Px + tipH * Px;
         float yTop = above <= -style.margin * Px ? above : bottomLeft.y - host.rect.yMax - 4f * Px;
         chipTip.anchoredPosition = new Vector2(Mathf.Round(x / Px) * Px, Mathf.Round(yTop / Px) * Px);
     }

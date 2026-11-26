@@ -68,6 +68,8 @@ public class StatsPanelTooltip : MonoBehaviour
         // height was measured at the width it had before the panel resized, lines wider than that
         // counted as wrapped, and the panel came out taller than the stats (Tommy, 2026-11-22)
         if (statsText != null) statsText.textWrappingMode = TextWrappingModes.NoWrap;
+        // Tommy's flower frame (2026-11-26)
+        TooltipFrameLook.Apply(GetComponent<UnityEngine.UI.Image>());
     }
 
     private string Col(float current, float baseValue, string formatted)
