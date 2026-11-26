@@ -45,6 +45,61 @@ public class Sunray : MonoBehaviour
         targetScale = transform.localScale;
         sunParticles = GetComponentInChildren<ParticleSystem>();
         if (sunParticles != null) baseShapeRadius = sunParticles.shape.radius;
+        SetUpBeam();
+    }
+
+    // Tommy's animated beam (2026-11-26, Downloads/gd_sunray_beam: Resources/SunrayBeam, 32 frames of 64 px,
+    // the light flowing down, a seamless loop at 30 fps). the Visual used to stretch one 16 px sprite 2 by
+    // 40 times; now it undoes the root's stretch (so the pixels stay square) and tiles the frame up the
+    // beam's whole height instead. the frames are imported at 20 px a tile, so their 20 px of light are
+    // exactly as wide as the old beam (its 16 px at 32 a tile, times the root's 2: 1 tile), and the beam just
+    // as tall (20 tiles); both still grow with the skill's radius (Initialize scales the root). the
+    // frames step on game time, so the beam pauses with the game
+    private const float BeamFps = 30f;
+    private static Sprite[] beamFrames;
+    private SpriteRenderer beam;
+    private float beamTime;
+    private int beamFrame = -1;
+
+    private void SetUpBeam()
+    {
+        if (beamFrames == null || beamFrames.Length == 0)
+        {
+            beamFrames = Resources.LoadAll<Sprite>("SunrayBeam");
+            System.Array.Sort(beamFrames, (a, b) => FrameNumber(a).CompareTo(FrameNumber(b)));
+        }
+        if (beamFrames.Length == 0) return;
+        Transform visual = transform.Find("Visual");
+        SpriteRenderer sr = visual != null ? visual.GetComponent<SpriteRenderer>() : null;
+        if (sr == null) return;
+        // the old beam's size in the root's own units, before its stretch
+        Vector2 oldSize = sr.sprite != null ? (Vector2)sr.sprite.bounds.size : new Vector2(0.5f, 0.5f);
+        Vector3 stretch = transform.localScale;
+        if (Mathf.Approximately(stretch.x, 0f) || Mathf.Approximately(stretch.y, 0f)) return;
+        visual.localScale = new Vector3(1f / stretch.x, 1f / stretch.y, 1f);
+        sr.sprite = beamFrames[0];
+        sr.drawMode = SpriteDrawMode.Tiled;
+        sr.tileMode = SpriteTileMode.Continuous;
+        sr.size = new Vector2(beamFrames[0].bounds.size.x, oldSize.y * stretch.y);
+        beam = sr;
+        beamFrame = 0;
+    }
+
+    // SunrayBeam_12 -> 12
+    private static int FrameNumber(Sprite s)
+    {
+        int cut = s.name.LastIndexOf('_');
+        return cut >= 0 && int.TryParse(s.name.Substring(cut + 1), out int n) ? n : 0;
+    }
+
+    private void Update()
+    {
+        if (beam == null) return;
+        beamTime += Time.deltaTime;
+        int frame = (int)(beamTime * BeamFps) % beamFrames.Length;
+        if (frame == beamFrame) return;
+        beamFrame = frame;
+        beam.sprite = beamFrames[frame];
     }
 
     // visualScaleMultiplier is aoeRadius relative to the plant's base (level 0) skill radius, so
