@@ -1166,7 +1166,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         Color panelColor = PlantData.ElementPanelColor(data.elementalType);
         tooltipBody.color = panelColor;
         if (namePlate != null) namePlate.color = panelColor;
-        if (portraitInterior != null) portraitInterior.color = PlantData.ElementBackdropColor(data.elementalType);
+        if (portraitBackdrop != null) portraitBackdrop.color = PlantData.ElementBackdropColor(data.elementalType);
         if (portraitBand != null) portraitBand.color = PlantData.ElementColor(data.elementalType);
         foreach (Image box in tooltipBoxes)
             if (box != null)
@@ -1182,19 +1182,17 @@ public class LoadoutSelectionUI : MonoBehaviour
     // columns (sprite borders 21 and 33), so both leafy ends keep their pixels. the name moves into it
     private Image namePlate;
 
-    // Tommy's round vine frame round the tooltip's portrait (2026-11-26, VinePortraitLook), as on the level's
-    // plant info panel: in the icon row in the plant's place, the portrait's original 128 square (Tommy), the
-    // frame stretched to it; the planks behind (tinted with the element's backdrop colour), the plant 8 in
-    // from each side (112, as on the info panel, clear of the band), the band over it (tinted with the
-    // element's colour) with its vines and gold
-    private Image portraitInterior, portraitBand;
-    private const float PortraitInset = 8f;
+    // Tommy's portrait frame round the tooltip's portrait (2026-11-26, PortraitFrameLook), as on the level's
+    // plant info panel: in the icon row in the plant's place, 80 by 80 art px at 2 units a pixel (160 square);
+    // the backdrop in its 128 square opening (tinted with the element's backdrop colour), the plant on it at
+    // exactly its own pixel size, the band over them (tinted with the element's colour) with its gold brackets
+    private Image portraitBackdrop, portraitBand;
     // the row the portrait sits in (the icon's parent until the frame took it in)
     private Transform tooltipIconRow;
 
-    private void UseVinePortrait()
+    private void UsePortraitFrame()
     {
-        if (tooltipIcon == null || !VinePortraitLook.Available || portraitBand != null) return;
+        if (tooltipIcon == null || !PortraitFrameLook.Available || portraitBand != null) return;
         Transform row = tooltipIcon.transform.parent;
         if (row == null) return;
         tooltipIconRow = row;
@@ -1204,14 +1202,15 @@ public class LoadoutSelectionUI : MonoBehaviour
         h.SetParent(row, false);
         h.SetSiblingIndex(tooltipIcon.transform.GetSiblingIndex());
         LayoutElement size = holder.GetComponent<LayoutElement>();
-        size.minWidth = size.preferredWidth = PortraitSize;
-        size.minHeight = size.preferredHeight = PortraitSize;
+        size.minWidth = size.preferredWidth = PortraitFrameLook.Size;
+        size.minHeight = size.preferredHeight = PortraitFrameLook.Size;
         size.flexibleWidth = size.flexibleHeight = 0f;
 
-        portraitInterior = NewPortraitLayer("Interior", h);
-        VinePortraitLook.MakeInterior(portraitInterior);
-        RectTransform window = VinePortraitLook.NewWindow(h, new Rect(PortraitInset, PortraitInset, PortraitSize - 2f * PortraitInset, PortraitSize - 2f * PortraitInset));
-        tooltipIcon.transform.SetParent(window, false);
+        Rect opening = PortraitFrameLook.Opening;
+        portraitBackdrop = NewPortraitLayer("Backdrop", h);
+        PortraitFrameLook.TopLeft(portraitBackdrop.rectTransform, opening.x, opening.y, opening.width, opening.height);
+        PortraitFrameLook.MakeBackdrop(portraitBackdrop);
+        tooltipIcon.transform.SetParent(portraitBackdrop.transform, false);
         RectTransform icon = tooltipIcon.rectTransform;
         icon.anchorMin = Vector2.zero;
         icon.anchorMax = Vector2.one;
@@ -1220,7 +1219,7 @@ public class LoadoutSelectionUI : MonoBehaviour
         LayoutElement iconSize = tooltipIcon.GetComponent<LayoutElement>();
         if (iconSize != null) iconSize.ignoreLayout = true;
         portraitBand = NewPortraitLayer("Frame", h);
-        VinePortraitLook.MakeFrame(portraitBand);
+        PortraitFrameLook.MakeFrame(portraitBand);
     }
 
     private static Image NewPortraitLayer(string name, RectTransform parent)
@@ -1298,7 +1297,7 @@ public class LoadoutSelectionUI : MonoBehaviour
                 iconRow.childForceExpandHeight = false;
                 iconRow.childAlignment = TextAnchor.MiddleLeft;
             }
-            UseVinePortrait();
+            UsePortraitFrame();
         }
 
         // the name inside it, in the middle of the wood, the plate as wide as the name and its ends need

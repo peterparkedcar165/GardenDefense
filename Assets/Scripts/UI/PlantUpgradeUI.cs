@@ -63,10 +63,12 @@ public class PlantUpgradeUI : EntityInfoPanel
     // plant, 92 for an insect. the panel is 4 wider than the window it sits in (the art's outer 2 px
     // each side are see through), so the content sits 2 further right: the first level bar 81 across
     // and 31 down
-    private const int PlantPanelHeight = 214;
-    private const int InsectPanelHeight = 92;
-    private const int TopInsetHeight = 68;
-    private const int LevelBarX = 81;
+    // Tommy's 80 px portrait frame (2026-11-26, UsePortraitFrame) made the top 14 taller and the inset and
+    // its bars start 10 further right: 214, 92, 68 and 81 before
+    private const int PlantPanelHeight = 228;
+    private const int InsectPanelHeight = 108;
+    private const int TopInsetHeight = 82;
+    private const int LevelBarX = 91;
     private const int FirstLevelBarY = 31;
     private const int SideButtonGap = 3;
 
@@ -222,8 +224,8 @@ public class PlantUpgradeUI : EntityInfoPanel
             }
         }
         UseSmallUpgradeButtons();
+        UsePortraitFrame();
         UseTargetingClicker();
-        UseVinePortrait();
         // the skill square feels like a button once unlocked (Tommy, 2026-11-26): lit under the pointer,
         // pressed when clicked or cast with Q
         Transform trim = skillIcon != null && skillIcon.transform.parent != null ? skillIcon.transform.parent.Find("SkillFrameTrim") : null;
@@ -492,24 +494,58 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
-    // Tommy's round vine frame on the portrait (2026-11-26, VinePortraitLook), everything its original size
-    // (Tommy): the frame stretched over the old 128 square frame's place, the backdrop becomes the frame's
-    // inside (the planks) stretched to the same place under it, and the plant stays where and how big it was
-    // (the old 112 backdrop's place, now a Window inside the planks). ApplyElement still tints the band
-    // (portraitFrame) and the planks (portraitBackdrop); the frame keeps the portrait's hover tooltip
-    // (PlantIconTooltip)
-    private void UseVinePortrait()
+    // Tommy's portrait frame (2026-11-26, PortraitFrameLook): 80 by 80 art px at the panel's 2 units a pixel
+    // (160 square), a 64 px plant at exactly that pixel size in its 128 square opening, over the backdrop.
+    // it's bigger than the old 128 frame, so the panel's top makes room (art px): the frame at 4, 16; the top
+    // inset, the health bar, the stats and the action slot 10 further right and 10 narrower (the level bars
+    // too, LevelBarX; the inset now ends with the frame, TopInsetHeight); the stats' second column 7 further
+    // left and its numbers 2 narrower, so the row stays clear of the skill square; the paths and mulches 14
+    // lower and the panel 14 taller (16 for an insect: PlantPanelHeight, InsectPanelHeight). ApplyElement
+    // still tints the band (portraitFrame) and the backdrop (portraitBackdrop); the frame keeps the
+    // portrait's hover tooltip (PlantIconTooltip). runs before the targeting button is made, which takes its
+    // slot's width
+    private const int FrameShiftX = 10;
+    private const int LowerShift = 14;
+
+    private void UsePortraitFrame()
     {
-        if (!VinePortraitLook.Available || portraitFrame == null || portraitBackdrop == null || entityIcon == null) return;
-        RectTransform frame = portraitFrame.rectTransform;
-        RectTransform backdrop = portraitBackdrop.rectTransform;
-        float fx = frame.anchoredPosition.x, fy = -frame.anchoredPosition.y;
-        Rect plant = new Rect(backdrop.anchoredPosition.x - fx, -backdrop.anchoredPosition.y - fy, backdrop.sizeDelta.x, backdrop.sizeDelta.y);
-        VinePortraitLook.MakeFrame(portraitFrame);
-        VinePortraitLook.TopLeft(backdrop, fx, fy, frame.sizeDelta.x, frame.sizeDelta.y);
-        VinePortraitLook.MakeInterior(portraitBackdrop);
-        RectTransform window = VinePortraitLook.NewWindow(backdrop, plant);
-        entityIcon.transform.SetParent(window, false);
+        if (!PortraitFrameLook.Available || portraitFrame == null || portraitBackdrop == null || entityIcon == null) return;
+        float size = PortraitFrameLook.Size;
+        float fx = 4f * Px, fy = 16f * Px;
+        PortraitFrameLook.TopLeft(portraitFrame.rectTransform, fx, fy, size, size);
+        PortraitFrameLook.MakeFrame(portraitFrame);
+        Rect opening = PortraitFrameLook.Opening;
+        PortraitFrameLook.TopLeft(portraitBackdrop.rectTransform, fx + opening.x, fy + opening.y, opening.width, opening.height);
+        PortraitFrameLook.MakeBackdrop(portraitBackdrop);
+
+        float dx = FrameShiftX * Px;
+        if (topInset != null) ShiftRight(topInset, dx);
+        foreach (InfoBar bar in new[] { healthBar, oxygenBar, temperatureBar })
+        {
+            if (bar == null || bar.root == null) continue;
+            ShiftRight(bar.root, dx);
+            if (bar.text != null) bar.text.rectTransform.sizeDelta = new Vector2(bar.root.sizeDelta.x, bar.text.rectTransform.sizeDelta.y);
+        }
+        if (shiftedRoot != null && shiftedRoot.Find("Stats") is RectTransform stats)
+        {
+            stats.anchoredPosition += new Vector2(dx, 0f);
+            stats.sizeDelta = new Vector2(70f * Px, stats.sizeDelta.y);
+            foreach (RectTransform child in stats)
+            {
+                bool secondColumn = child.name.StartsWith("Stat3") || child.name.StartsWith("Stat4");
+                if (secondColumn) child.anchoredPosition -= new Vector2(7f * Px, 0f);
+                if (child.name.EndsWith("Text")) child.sizeDelta = new Vector2(20f * Px, child.sizeDelta.y);
+            }
+        }
+        if (actionSlot != null) ShiftRight(actionSlot, dx);
+        if (lowerSection != null) ((RectTransform)lowerSection.transform).anchoredPosition += new Vector2(0f, -LowerShift * Px);
+    }
+
+    // dx canvas units further right and as much narrower, its right edge kept
+    private static void ShiftRight(RectTransform r, float dx)
+    {
+        r.anchoredPosition += new Vector2(dx, 0f);
+        r.sizeDelta -= new Vector2(dx, 0f);
     }
 
     // the plant (or insect) as big as fits the portrait window, bottom centred

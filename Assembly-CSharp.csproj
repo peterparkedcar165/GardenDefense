@@ -458,6 +458,7 @@
     <Compile Include="Assets\Scripts\Fertilizer\MeltFertilizerEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\PoisonShroom.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\BombardierBeetleProjectile.cs" />
+    <Compile Include="Assets\Scripts\UI\PortraitFrameLook.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\JumpingSpiderData.cs" />
     <Compile Include="Assets\Scripts\Mulch\CriticalRotMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\MorningGlory.cs" />
@@ -498,7 +499,6 @@
     <Compile Include="Assets\Scripts\UI\PixelLayout.cs" />
     <Compile Include="Assets\Scripts\UI\QuickStatRow.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreenhouseFertilizerData.cs" />
-    <Compile Include="Assets\Scripts\UI\VinePortraitLook.cs" />
     <Compile Include="Assets\Scripts\UI\PlantWidgetStyle.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\BargainSeedsFertilizerData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />

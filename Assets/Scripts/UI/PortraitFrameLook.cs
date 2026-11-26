@@ -1,34 +1,42 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Tommy's round vine frame on the plant portraits (2026-11-26, Sprites/UI/VineFrames): the plant info
-// panel's portrait and the loadout screen's plant tooltip. three layers, all 51 by 48 art pixels stretched
-// to the portrait's own size (Tommy: the portraits stay their original size, the frame stretched to fit):
-// the inside, grey wood planks tinted with the element's backdrop colour; the plant, its original size,
-// in the middle; and the frame over it, its grey band tinted with the element's colour and its vines and
-// gold as drawn. sprites on PlantInfoPanelStyle (portraitInterior, portraitFrameBand, portraitFrameTrim)
-public static class VinePortraitLook
+// the plant portraits' frame (Tommy, 2026-11-26, Downloads/gd_frame_portrait, rebuilt to his 80 by 80
+// with an 8 px band and a clear 64 by 64 opening: Sprites/UI/PortraitFrame/ui_frame_portrait_80_*), on the
+// plant info panel's portrait and the loadout screen's plant tooltip. drawn whole at 2 canvas units an art
+// pixel (160 by 160), so a 64 px plant shows at exactly the panel's own pixel size in the 128 square
+// opening. three layers: the backdrop behind the plant (portrait_backdrop_64, tinted with the element's
+// backdrop colour), the plant, and the frame over it, its grey band tinted with the element's colour and
+// its gold corner brackets as drawn. sprites on PlantInfoPanelStyle (portraitBackdrop, portraitFrameBand,
+// portraitFrameTrim)
+public static class PortraitFrameLook
 {
+    public const float Px = 2f;
+    // the frame, and the opening the plant shows in, in canvas units from the frame's top left
+    public const float Size = 80f * Px;
+    public static readonly Rect Opening = new Rect(8f * Px, 8f * Px, 64f * Px, 64f * Px);
+
     public static bool Available
     {
         get
         {
             PlantInfoPanelStyle s = PlantInfoPanelStyle.Instance;
-            return s.portraitFrameBand != null && s.portraitInterior != null;
+            return s.portraitFrameBand != null;
         }
     }
 
-    // the inside: an Image the frame's size
-    public static void MakeInterior(Image image)
+    // the backdrop: an Image the opening's size
+    public static void MakeBackdrop(Image image)
     {
-        if (image == null) return;
-        image.sprite = PlantInfoPanelStyle.Instance.portraitInterior;
+        Sprite backdrop = PlantInfoPanelStyle.Instance.portraitBackdrop;
+        if (image == null || backdrop == null) return;
+        image.sprite = backdrop;
         image.type = Image.Type.Simple;
         image.preserveAspect = false;
         image.pixelsPerUnitMultiplier = 1f;
     }
 
-    // the frame: its band on this Image (tinted by the caller) and a Trim child, the vines and gold
+    // the frame: its band on this Image (tinted by the caller) and a Trim child, the gold brackets
     public static void MakeFrame(Image image)
     {
         PlantInfoPanelStyle s = PlantInfoPanelStyle.Instance;
@@ -58,17 +66,5 @@ public static class VinePortraitLook
         r.anchorMin = r.anchorMax = r.pivot = new Vector2(0f, 1f);
         r.anchoredPosition = new Vector2(x, -y);
         r.sizeDelta = new Vector2(w, h);
-    }
-
-    // a new empty child rect for the plant, inside parent (which is the frame's size): window is its place
-    // in canvas units from the parent's top left
-    public static RectTransform NewWindow(Transform parent, Rect window)
-    {
-        GameObject go = new GameObject("Window", typeof(RectTransform));
-        go.layer = parent.gameObject.layer;
-        RectTransform r = (RectTransform)go.transform;
-        r.SetParent(parent, false);
-        TopLeft(r, window.x, window.y, window.width, window.height);
-        return r;
     }
 }

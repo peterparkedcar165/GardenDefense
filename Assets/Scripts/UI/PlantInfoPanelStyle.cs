@@ -60,15 +60,17 @@ public class PlantInfoPanelStyle : ScriptableObject
     [Tooltip("the frame's inside alone (ui_frame_flowers_interior), in the info panel wood's grey (148), tinted")]
     public Sprite tooltipInterior;
 
-    [Header("Vine frames (Tommy, 2026-11-26, Sprites/UI/VineFrames)")]
-    [Tooltip("the plant portraits' round frame: the grey band of ui_frame_vines_round_grey alone, tinted with the " +
-        "element's colour (VinePortraitLook), on the info panel and the loadout screen's plant tooltip")]
+    [Header("Portrait frame (Tommy, 2026-11-26, Sprites/UI/PortraitFrame) and the vine mulch slots")]
+    [Tooltip("the plant portraits' frame, 80 by 80 with an 8 px band and a clear 64 px opening: its grey wood band " +
+        "(ui_frame_portrait_80_base_grey), tinted with the element's colour (PortraitFrameLook), on the info panel and " +
+        "the loadout screen's plant tooltip")]
     public Sprite portraitFrameBand;
-    [Tooltip("its vines and gold (the coloured pixels of ui_frame_vines_round_grey), drawn over the band as they are")]
+    [Tooltip("its gold corner brackets (ui_frame_portrait_80_trim), drawn over the band as they are")]
     public Sprite portraitFrameTrim;
-    [Tooltip("the round frame's inside, grey wood planks (ui_frame_vines_round_interior_wood_grey), tinted with the " +
-        "element's backdrop colour, behind the plant")]
-    public Sprite portraitInterior;
+    [Tooltip("the backdrop in the opening, behind the plant (portrait_backdrop_64: the old backdrop's four greys at 64 " +
+        "px), tinted with the element's backdrop colour")]
+    [UnityEngine.Serialization.FormerlySerializedAs("portraitInterior")]
+    public Sprite portraitBackdrop;
     [Tooltip("the mulch slots' frame, the player's and a plant's (ui_frame_vines_square_original): its own colours, " +
         "stretched to the slot (Tommy's choice over changing the slot sizes)")]
     public Sprite mulchSlotFrame;
