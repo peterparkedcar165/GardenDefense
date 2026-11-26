@@ -1114,8 +1114,13 @@ public class PlantUpgradeUI : EntityInfoPanel
     public void OnTargetingPrevClicked() => StepTargeting(-1);
     public void OnTargetingNextClicked() => StepTargeting(1);
 
-    // the arrows hidden, the display as wide as the slot they shared, and the display itself the button
-    // (TargetingClicker): it takes the pointer, the mode's name doesn't
+    // the arrows hidden and the display made a button like the upgrade buttons (Tommy, 2026-11-26): Tommy's
+    // small button, the slot's full width (stretched at the art's plain middle, sprite borders 21 and 33),
+    // at its own height, 2 units an art pixel, its trim over the wood; the mode's capitals in the middle of
+    // the wood (rows 3 to 15 of 19). the button itself takes the pointer, the mode's name doesn't
+    // (TargetingClicker does the clicks, the look and the tooltip)
+    private const float TargetingLabelTop = 3f * Px;
+
     private void UseTargetingClicker()
     {
         if (targetingControl == null || targetingModeText == null) return;
@@ -1127,14 +1132,40 @@ public class PlantUpgradeUI : EntityInfoPanel
         RectTransform display = targetingModeText.transform.parent as RectTransform;
         if (display == null || display == targetingControl.transform) return;
         RectTransform slot = (RectTransform)targetingControl.transform;
-        display.anchoredPosition = new Vector2(0f, display.anchoredPosition.y);
-        display.sizeDelta = new Vector2(slot.rect.width, display.sizeDelta.y);
         Image image = display.GetComponent<Image>();
+        PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
+        float height = display.sizeDelta.y;
+        if (image != null && style.upgradeButton != null)
+        {
+            image.sprite = style.upgradeButton;
+            image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = 1f;
+            height = style.upgradeButton.rect.height * Px;
+            if (style.upgradeButtonTrim != null && display.Find("Trim") == null)
+            {
+                GameObject go = new GameObject("Trim", typeof(RectTransform), typeof(Image));
+                go.layer = display.gameObject.layer;
+                RectTransform r = (RectTransform)go.transform;
+                r.SetParent(display, false);
+                r.SetAsFirstSibling();
+                r.anchorMin = Vector2.zero;
+                r.anchorMax = Vector2.one;
+                r.offsetMin = r.offsetMax = Vector2.zero;
+                Image trim = go.GetComponent<Image>();
+                trim.sprite = style.upgradeButtonTrim;
+                trim.type = Image.Type.Sliced;
+                trim.pixelsPerUnitMultiplier = 1f;
+                trim.raycastTarget = false;
+            }
+        }
+        display.anchoredPosition = new Vector2(0f, 0f);
+        display.sizeDelta = new Vector2(slot.rect.width, height);
         if (image != null) image.raycastTarget = true;
         targetingModeText.raycastTarget = false;
         targetingClicker = display.GetComponent<TargetingClicker>();
         if (targetingClicker == null) targetingClicker = display.gameObject.AddComponent<TargetingClicker>();
         targetingClicker.ui = this;
+        targetingClicker.Build(image, targetingModeText, TargetingLabelTop);
     }
 
     private TargetingClicker targetingClicker;

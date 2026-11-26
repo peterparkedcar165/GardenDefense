@@ -366,6 +366,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\PlantAuraBuffEffect.cs" />
     <Compile Include="Assets\Scripts\Game\SkillTargetingManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearEffect.cs" />
+    <Compile Include="Assets\Scripts\UI\TargetingClicker.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeData.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Silverfish.cs" />
     <Compile Include="Assets\Scripts\Environment\ObstacleZone.cs" />
