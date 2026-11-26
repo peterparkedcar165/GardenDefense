@@ -2,19 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // Tommy's round vine frame on the plant portraits (2026-11-26, Sprites/UI/VineFrames): the plant info
-// panel's portrait and the loadout screen's plant tooltip. three layers, all 51 by 48 art pixels drawn
-// whole at 2 canvas units a pixel (102 by 96, the info panel's own pixel size; never stretched, the vines
-// wind round it unbroken): the inside, grey wood planks tinted with the element's backdrop colour; the
-// plant in the window the frame leaves open (art px 7 to 43 across, 6 to 41 down); and the frame over it,
-// its grey band tinted with the element's colour and its vines and gold as drawn. sprites on
-// PlantInfoPanelStyle (portraitInterior, portraitFrameBand, portraitFrameTrim)
+// panel's portrait and the loadout screen's plant tooltip. three layers, all 51 by 48 art pixels stretched
+// to the portrait's own size (Tommy: the portraits stay their original size, the frame stretched to fit):
+// the inside, grey wood planks tinted with the element's backdrop colour; the plant, its original size,
+// in the middle; and the frame over it, its grey band tinted with the element's colour and its vines and
+// gold as drawn. sprites on PlantInfoPanelStyle (portraitInterior, portraitFrameBand, portraitFrameTrim)
 public static class VinePortraitLook
 {
-    public const float Px = 2f;
-    public static readonly Vector2 Size = new Vector2(51f, 48f) * Px;
-    // the window, in canvas units from the frame's top left
-    public static readonly Rect Window = new Rect(7f * Px, 6f * Px, 37f * Px, 36f * Px);
-
     public static bool Available
     {
         get
@@ -66,14 +60,15 @@ public static class VinePortraitLook
         r.sizeDelta = new Vector2(w, h);
     }
 
-    // a new empty child rect for the plant: the frame's window, inside parent (which is the frame's size)
-    public static RectTransform NewWindow(Transform parent)
+    // a new empty child rect for the plant, inside parent (which is the frame's size): window is its place
+    // in canvas units from the parent's top left
+    public static RectTransform NewWindow(Transform parent, Rect window)
     {
         GameObject go = new GameObject("Window", typeof(RectTransform));
         go.layer = parent.gameObject.layer;
         RectTransform r = (RectTransform)go.transform;
         r.SetParent(parent, false);
-        TopLeft(r, Window.x, Window.y, Window.width, Window.height);
+        TopLeft(r, window.x, window.y, window.width, window.height);
         return r;
     }
 }

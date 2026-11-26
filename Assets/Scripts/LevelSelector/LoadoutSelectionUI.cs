@@ -1183,10 +1183,12 @@ public class LoadoutSelectionUI : MonoBehaviour
     private Image namePlate;
 
     // Tommy's round vine frame round the tooltip's portrait (2026-11-26, VinePortraitLook), as on the level's
-    // plant info panel: in the icon row in the plant's place, drawn whole at 2 units a pixel (102 by 96); the
-    // planks behind (tinted with the element's backdrop colour), the plant in the frame's window, the band
-    // over it (tinted with the element's colour) with its vines and gold
+    // plant info panel: in the icon row in the plant's place, the portrait's original 128 square (Tommy), the
+    // frame stretched to it; the planks behind (tinted with the element's backdrop colour), the plant 8 in
+    // from each side (112, as on the info panel, clear of the band), the band over it (tinted with the
+    // element's colour) with its vines and gold
     private Image portraitInterior, portraitBand;
+    private const float PortraitInset = 8f;
     // the row the portrait sits in (the icon's parent until the frame took it in)
     private Transform tooltipIconRow;
 
@@ -1202,13 +1204,13 @@ public class LoadoutSelectionUI : MonoBehaviour
         h.SetParent(row, false);
         h.SetSiblingIndex(tooltipIcon.transform.GetSiblingIndex());
         LayoutElement size = holder.GetComponent<LayoutElement>();
-        size.minWidth = size.preferredWidth = VinePortraitLook.Size.x;
-        size.minHeight = size.preferredHeight = VinePortraitLook.Size.y;
+        size.minWidth = size.preferredWidth = PortraitSize;
+        size.minHeight = size.preferredHeight = PortraitSize;
         size.flexibleWidth = size.flexibleHeight = 0f;
 
         portraitInterior = NewPortraitLayer("Interior", h);
         VinePortraitLook.MakeInterior(portraitInterior);
-        RectTransform window = VinePortraitLook.NewWindow(h);
+        RectTransform window = VinePortraitLook.NewWindow(h, new Rect(PortraitInset, PortraitInset, PortraitSize - 2f * PortraitInset, PortraitSize - 2f * PortraitInset));
         tooltipIcon.transform.SetParent(window, false);
         RectTransform icon = tooltipIcon.rectTransform;
         icon.anchorMin = Vector2.zero;

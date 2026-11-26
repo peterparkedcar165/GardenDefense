@@ -492,24 +492,23 @@ public class PlantUpgradeUI : EntityInfoPanel
         }
     }
 
-    // Tommy's round vine frame on the portrait (2026-11-26, VinePortraitLook): drawn whole at the panel's 2
-    // units a pixel (102 by 96), centred where the old 128 square frame was; the backdrop becomes the frame's
-    // inside (the planks), the same size under it, and the plant shows in the window the frame leaves open.
-    // ApplyElement still tints the band (portraitFrame) and the planks (portraitBackdrop); the frame keeps the
-    // portrait's hover tooltip (PlantIconTooltip)
+    // Tommy's round vine frame on the portrait (2026-11-26, VinePortraitLook), everything its original size
+    // (Tommy): the frame stretched over the old 128 square frame's place, the backdrop becomes the frame's
+    // inside (the planks) stretched to the same place under it, and the plant stays where and how big it was
+    // (the old 112 backdrop's place, now a Window inside the planks). ApplyElement still tints the band
+    // (portraitFrame) and the planks (portraitBackdrop); the frame keeps the portrait's hover tooltip
+    // (PlantIconTooltip)
     private void UseVinePortrait()
     {
         if (!VinePortraitLook.Available || portraitFrame == null || portraitBackdrop == null || entityIcon == null) return;
         RectTransform frame = portraitFrame.rectTransform;
-        Vector2 size = VinePortraitLook.Size;
-        float x = Mathf.Round((frame.anchoredPosition.x + (frame.sizeDelta.x - size.x) * 0.5f) / Px) * Px;
-        float y = Mathf.Round((-frame.anchoredPosition.y + (frame.sizeDelta.y - size.y) * 0.5f) / Px) * Px;
-        VinePortraitLook.TopLeft(frame, x, y, size.x, size.y);
-        VinePortraitLook.MakeFrame(portraitFrame);
         RectTransform backdrop = portraitBackdrop.rectTransform;
-        VinePortraitLook.TopLeft(backdrop, x, y, size.x, size.y);
+        float fx = frame.anchoredPosition.x, fy = -frame.anchoredPosition.y;
+        Rect plant = new Rect(backdrop.anchoredPosition.x - fx, -backdrop.anchoredPosition.y - fy, backdrop.sizeDelta.x, backdrop.sizeDelta.y);
+        VinePortraitLook.MakeFrame(portraitFrame);
+        VinePortraitLook.TopLeft(backdrop, fx, fy, frame.sizeDelta.x, frame.sizeDelta.y);
         VinePortraitLook.MakeInterior(portraitBackdrop);
-        RectTransform window = VinePortraitLook.NewWindow(backdrop);
+        RectTransform window = VinePortraitLook.NewWindow(backdrop, plant);
         entityIcon.transform.SetParent(window, false);
     }
 
