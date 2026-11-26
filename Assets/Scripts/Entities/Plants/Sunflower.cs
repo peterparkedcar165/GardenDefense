@@ -500,16 +500,19 @@ public class Sunflower : Shooter
     // lockout and the skill animation both finish on their own schedule same as before, this
     // just delays the spawn on top of that
     private const float SunraySpawnExtraDelay = 1f;
+    // tiles: the beam's width at its prefab's own size, and how much the hit radius is past the beam's width
+    private const float SunrayBaseBeamWidth = 1f;
+    private const float SunrayRadiusPastBeam = 1f;
 
     private IEnumerator ChannelAndSpawn(Vector3 position)
     {
         yield return new WaitForSeconds(channelDuration);
         yield return new WaitForSeconds(SunraySpawnExtraDelay);
 
-        // sprite scales off its own faster growth rate, not the actual (slower-growing) hit
-        // radius - see path3VisualRadiusPerLevel
-        float visualRadius = data.baseSkillRadius + (SFData?.path3VisualRadiusPerLevel ?? 0.3f) * effectivePath3Level;
-        float visualScale  = data.baseSkillRadius > 0f ? visualRadius / data.baseSkillRadius : 1f;
+        // the beam is always 1 tile narrower than the hit radius (Tommy, 2026-11-26): 64 px (1 tile) wide at
+        // the base radius of 2, and as much wider as the radius grows. its prefab is 1 tile wide, so the
+        // scale is the width in tiles
+        float visualScale = Mathf.Max(0.1f, skillAoERadius - SunrayRadiusPastBeam) / SunrayBaseBeamWidth;
 
         StartCoroutine(SpawnSunray(position, visualScale));
 

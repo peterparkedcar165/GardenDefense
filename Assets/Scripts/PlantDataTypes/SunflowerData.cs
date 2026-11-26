@@ -21,8 +21,8 @@ public class SunflowerData : PlantData
     public float path3SunrayDPSPerLevel = 15f;
     public float path3SkillDurationPerLevel = 0.5f;
     public float path3RadiusPerLevel = 0.2f;
-    // purely cosmetic - the beam sprite grows faster than the actual hit radius per level, so it
-    // reads as a visibly bigger effect without the real hitbox tracking that far outward
+    // unused since 2026-11-26: the beam's width follows the hit radius (always 1 tile less, Tommy),
+    // so it grows by path3RadiusPerLevel too (Sunflower.ChannelAndSpawn)
     public float path3VisualRadiusPerLevel = 0.3f;
 
     [Header("Sunray Audio")]
