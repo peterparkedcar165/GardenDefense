@@ -59,8 +59,8 @@ public class FertilizerSelectionUI : MonoBehaviour
     private RectTransform title;
     private Vector2 titleHome;
 
-    // the title falls into place with the cards (Tommy, 2026-11-26): the same distance, time and easing as
-    // FertilizerCard.AnimateIn, starting the same frame later the cards do
+    // the title falls into place first, the cards after it (Tommy, 2026-11-26): the same drop and slam as
+    // FertilizerCard.AnimateIn, starting the frame after the screen opens like theirs
     private System.Collections.IEnumerator DropTitle()
     {
         if (title == null) yield break;
@@ -69,11 +69,22 @@ public class FertilizerSelectionUI : MonoBehaviour
         yield return null;
         for (float elapsed = 0f; elapsed < FertilizerCard.FallSeconds; elapsed += Time.unscaledDeltaTime)
         {
-            float t = elapsed / FertilizerCard.FallSeconds;
-            t = 1f - Mathf.Pow(1f - t, 3f);
-            title.anchoredPosition = Vector2.Lerp(start, titleHome, t);
+            title.anchoredPosition = Vector2.Lerp(start, titleHome, FertilizerCard.Fall(elapsed / FertilizerCard.FallSeconds));
             yield return null;
         }
+        title.anchoredPosition = titleHome;
+        // its scale is its art's size (2 times), so the slam multiplies it
+        Vector3 rest = title.localScale;
+        for (float elapsed = 0f; elapsed < FertilizerCard.SlamSeconds; elapsed += Time.unscaledDeltaTime)
+        {
+            Vector3 slam = FertilizerCard.Slam(elapsed / FertilizerCard.SlamSeconds);
+            title.localScale = Vector3.Scale(rest, slam);
+            // its bottom edge kept where it landed
+            float height = title.rect.height * rest.y;
+            title.anchoredPosition = titleHome - new Vector2(0f, title.pivot.y * height * (1f - slam.y));
+            yield return null;
+        }
+        title.localScale = rest;
         title.anchoredPosition = titleHome;
     }
 
