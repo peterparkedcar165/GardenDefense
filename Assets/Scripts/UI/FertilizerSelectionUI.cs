@@ -77,14 +77,16 @@ public class FertilizerSelectionUI : MonoBehaviour
         title.anchoredPosition = titleHome;
     }
 
-    // the cards fall face down; once every one has landed, a moment later they all turn over together
-    // (Tommy, 2026-11-26)
+    // the cards fall face down, one after another; once the last has landed, a moment later they all turn
+    // over together (Tommy, 2026-11-26)
     private const float RevealPause = 0.15f;
+    // real seconds between one fall starting and the next: the title, then each card from the left
+    private const float FallStagger = 0.15f;
 
     private System.Collections.IEnumerator RevealWhenLanded()
     {
         float waited = 0f;
-        while (activeCards.Exists(c => c != null && !c.Landed) && waited < 3f)
+        while (activeCards.Exists(c => c != null && !c.Landed) && waited < 6f)
         {
             waited += Time.unscaledDeltaTime;
             yield return null;
@@ -122,10 +124,11 @@ public class FertilizerSelectionUI : MonoBehaviour
             CloseAfterSelect();
             return;
         }
-        foreach (FertilizerData fertilizer in offered)
+        // the title falls first, then the cards one after another, left to right (Tommy, 2026-11-26)
+        for (int i = 0; i < offered.Count; i++)
         {
             FertilizerCard card = Instantiate(cardPrefab, cardContainer);
-            card.Initialize(fertilizer, this);
+            card.Initialize(offered[i], this, FallStagger * (i + 1));
             activeCards.Add(card);
         }
         StartCoroutine(DropTitle());

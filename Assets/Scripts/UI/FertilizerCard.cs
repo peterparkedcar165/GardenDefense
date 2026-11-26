@@ -20,13 +20,17 @@ public class FertilizerCard : MonoBehaviour
     private RectTransform rectTransform;
     private Vector2 targetPosition;
 
-    public void Initialize(FertilizerData fertilizer, FertilizerSelectionUI selectionUI)
+    // fallDelay: real seconds it waits above the screen before falling (the screen's title falls first, then
+    // the cards left to right, Tommy 2026-11-26)
+    public void Initialize(FertilizerData fertilizer, FertilizerSelectionUI selectionUI, float fallDelay = 0f)
     {
         data = fertilizer;
         ui = selectionUI;
+        this.fallDelay = fallDelay;
         rectTransform = GetComponent<RectTransform>();
         canvasGroup.interactable = false;
-        canvasGroup.alpha = 1f;
+        // hidden until it's above the screen (its first frame is spent where the row lays it out)
+        canvasGroup.alpha = 0f;
         highlight.SetActive(false);
         if (rerollButton != null) rerollButton.gameObject.SetActive(false);
 
@@ -292,12 +296,16 @@ public class FertilizerCard : MonoBehaviour
         highlight.SetActive(active);
     }
 
+    private float fallDelay;
+
     private IEnumerator AnimateIn()
     {
         yield return null;
         targetPosition = rectTransform.anchoredPosition;
         Vector2 startPos = targetPosition + Vector2.up * Screen.height;
         rectTransform.anchoredPosition = startPos;
+        canvasGroup.alpha = 1f;
+        if (fallDelay > 0f) yield return new WaitForSecondsRealtime(fallDelay);
 
         float duration = FallSeconds;
         float elapsed = 0f;
