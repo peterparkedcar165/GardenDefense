@@ -1,30 +1,23 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-// cloud shadows over levels with sun (Tommy, 2026-11-26): his black cloud shapes (CloudShadowStyle)
-// drift right and a little up over the whole camera view, drawn above everything in the world and
-// under the indicators and the ui, see through at the style's opacity. they show on day, desert and
-// snow levels, and on night and desert night levels only while Sunny weather has the sun out; never in
-// the cave or underwater (the interiors). they fade out while it rains, snows or a sandstorm blows. like
-// the rain they run on real time: on while the game is paused and no faster at a higher game speed.
-// each one leaving the view on the right or the top comes back in on the left or the bottom, at a new
-// random spot, with a new random shape. built in code by ProceduralLevel when the level starts
+// cloud shadows over levels with sun (Tommy, 2026-11-26), made with the same particle system as the rain,
+// snow and sandstorm (Tommy: same system, same logic, other numbers): the sandstorm's prefab, its numbers
+// changed here. its particles are his black cloud shapes (one random cell of CloudShadowStyle.sheet each),
+// drifting up and to the right at the style's angle over the whole camera view, on real time like the
+// weather (on while paused, no faster at a higher game speed), drawn above everything in the world and
+// under the indicators and the ui. a shadow is born anywhere upwind of the view and lives long enough to
+// cross it, fading in and out at the two ends of its life; the system is prewarmed, so the view starts
+// full. they show on day, desert and snow levels, and on night and desert night levels only while Sunny
+// weather has the sun out; never in the cave or underwater (the interiors). they fade out while it rains,
+// snows or a sandstorm blows. built by ProceduralLevel when the level starts
 public class CloudShadows : MonoBehaviour
 {
-    // art pixels a world unit, the map's: positions snap to them so the edges never shimmer
-    private const float PixelsPerUnit = 64f;
-
-    private class Shadow
-    {
-        public SpriteRenderer renderer;
-        public Vector2 position;
-    }
-
     private CloudShadowStyle style;
     private Biome biome;
-    private readonly List<Shadow> shadows = new List<Shadow>();
+    private ParticleSystem particles;
+    private ParticleSystemRenderer particleRenderer;
+    private Material material;
     private float shown;
-    private float margin;
 
     public static CloudShadows Create(LevelConfig config)
     {
@@ -33,117 +26,165 @@ public class CloudShadows : MonoBehaviour
         // the interiors never get them
         if (biome == Biome.Cave || biome == Biome.Underwater) return null;
         CloudShadowStyle style = CloudShadowStyle.Instance;
-        if (style.shapes == null || style.shapes.Length == 0)
+        if (style.particlePrefab == null || style.sheet == null)
         {
-            // the settings asset didn't load (it can be imported before its script compiles: reimport it)
-            Debug.LogWarning("[CloudShadows] no cloud shapes: Resources/CloudShadowStyle.asset didn't load or has none. Right click it and Reimport.");
+            Debug.LogWarning("[CloudShadows] Resources/CloudShadowStyle.asset has no particle prefab or sheet (or didn't load). Right click it and Reimport.");
             return null;
         }
-        if (style.count <= 0) return null;
         GameObject go = new GameObject("CloudShadows");
         CloudShadows clouds = go.AddComponent<CloudShadows>();
         clouds.style = style;
         clouds.biome = biome;
-        clouds.Build();
+        if (!clouds.Build())
+        {
+            Destroy(go);
+            return null;
+        }
         return clouds;
     }
 
-    private void Build()
+    private bool Build()
     {
-        // room outside the view for the biggest shape, so they come and go out of sight
-        appliedScale = Mathf.Max(1, style.scale);
-        foreach (Sprite shape in style.shapes)
-            if (shape != null) margin = Mathf.Max(margin, shape.bounds.extents.magnitude * appliedScale);
-        margin += 0.5f;
+        GameObject made = Instantiate(style.particlePrefab, transform);
+        made.name = "CloudShadowParticles";
+        particles = made.GetComponentInChildren<ParticleSystem>();
+        if (particles == null) return false;
+        // only the one system: any others in the prefab go
+        foreach (ParticleSystem other in made.GetComponentsInChildren<ParticleSystem>(true))
+            if (other != particles) other.gameObject.SetActive(false);
+        particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        particles.transform.rotation = Quaternion.identity;
+        particles.transform.localScale = Vector3.one;
+        particleRenderer = particles.GetComponent<ParticleSystemRenderer>();
 
-        Rect area = Area();
-        // spread over the area: one in each cell of a rough grid, at a random spot in it, so they start
-        // apart instead of in clumps
-        int columns = Mathf.Max(1, Mathf.RoundToInt(Mathf.Sqrt(style.count * area.width / Mathf.Max(0.01f, area.height))));
-        int rows = Mathf.Max(1, Mathf.CeilToInt(style.count / (float)columns));
-        var cells = new List<int>();
-        for (int i = 0; i < columns * rows; i++) cells.Add(i);
-        for (int i = 0; i < style.count; i++)
-        {
-            int pick = Random.Range(0, cells.Count);
-            int cell = cells[pick];
-            cells.RemoveAt(pick);
-            float cx = area.xMin + (cell % columns + Random.value) * area.width / columns;
-            float cy = area.yMin + (cell / columns + Random.value) * area.height / rows;
-            AddShadow(new Vector2(cx, cy));
-        }
+        // the weather's own material, given the cloud sheet, black
+        material = new Material(particleRenderer.sharedMaterial) { name = "CloudShadows" };
+        material.mainTexture = style.sheet;
+        particleRenderer.sharedMaterial = material;
+        particleRenderer.renderMode = ParticleSystemRenderMode.Billboard;
+        particleRenderer.sortingLayerName = style.sortingLayer;
+        particleRenderer.sortingOrder = style.sortingOrder;
+        // big shadows are allowed (the sandstorm's grains were held to half the screen)
+        particleRenderer.maxParticleSize = 5f;
+        // half of them mirrored, for more shapes
+        particleRenderer.flip = new Vector3(0.5f, 0f, 0f);
+
+        var main = particles.main;
+        main.loop = true;
+        main.prewarm = true;
+        main.playOnAwake = false;
+        main.useUnscaledTime = true;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.scalingMode = ParticleSystemScalingMode.Local;
+        main.startSpeed = 0f;
+        main.startRotation = 0f;
+        main.gravityModifier = 0f;
+        main.startColor = Color.black;
+
+        var shape = particles.shape;
+        shape.enabled = true;
+        shape.shapeType = ParticleSystemShapeType.Box;
+        shape.rotation = Vector3.zero;
+        shape.randomDirectionAmount = 0f;
+
+        var velocity = particles.velocityOverLifetime;
+        velocity.enabled = true;
+        velocity.space = ParticleSystemSimulationSpace.World;
+
+        // fading in at birth and out at the end, so one never pops in or out
+        var colour = particles.colorOverLifetime;
+        colour.enabled = true;
+        Gradient fade = new Gradient();
+        fade.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+            new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.06f), new GradientAlphaKey(1f, 0.94f), new GradientAlphaKey(0f, 1f) });
+        colour.color = new ParticleSystem.MinMaxGradient(fade);
+
+        // one random cell of the sheet each, kept for its whole life
+        var cells = particles.textureSheetAnimation;
+        cells.enabled = true;
+        cells.mode = ParticleSystemAnimationMode.Grid;
+        cells.numTilesX = style.sheetColumns;
+        cells.numTilesY = style.sheetRows;
+        cells.animation = ParticleSystemAnimationType.WholeSheet;
+        cells.frameOverTime = new ParticleSystem.MinMaxCurve(0f, 0.9999f);
+        cells.startFrame = 0f;
+        cells.cycleCount = 1;
+
+        // the sandstorm's other movers off
+        var noise = particles.noise; noise.enabled = false;
+        var force = particles.forceOverLifetime; force.enabled = false;
+        var size = particles.sizeOverLifetime; size.enabled = false;
+        var spin = particles.rotationOverLifetime; spin.enabled = false;
+        var limit = particles.limitVelocityOverLifetime; limit.enabled = false;
+        var inherit = particles.inheritVelocity; inherit.enabled = false;
+        var collision = particles.collision; collision.enabled = false;
+        var trails = particles.trails; trails.enabled = false;
+        var lights = particles.lights; lights.enabled = false;
+        var subs = particles.subEmitters; subs.enabled = false;
+
+        Configure();
         shown = Wanted() ? 1f : 0f;
         ApplyAlpha();
+        particles.Play();
+        return true;
     }
 
-    private void AddShadow(Vector2 position)
-    {
-        GameObject go = new GameObject("CloudShadow", typeof(SpriteRenderer));
-        go.transform.SetParent(transform, false);
-        Shadow shadow = new Shadow { renderer = go.GetComponent<SpriteRenderer>(), position = position };
-        shadow.renderer.sortingLayerName = style.sortingLayer;
-        shadow.renderer.sortingOrder = style.sortingOrder;
-        if (style.material != null) shadow.renderer.sharedMaterial = style.material;
-        go.transform.localScale = Vector3.one * Mathf.Max(1, style.scale);
-        NewShape(shadow);
-        Place(shadow);
-        shadows.Add(shadow);
-    }
+    // the numbers that follow the style live: size, speed, direction, how many, and the area they're born in
+    private float appliedScale = -1f, appliedSpeed = -1f, appliedAngle = -1f, appliedCount = -1f;
+    private Vector3 appliedCamera;
+    private float appliedView;
 
-    // the count and the size follow the style live, for tuning while playing: new ones appear anywhere
-    // over the view, extra ones go, and every one takes the new whole number size
-    private int appliedScale = 1;
-
-    private void FollowStyle()
-    {
-        int scale = Mathf.Max(1, style.scale);
-        if (scale != appliedScale)
-        {
-            appliedScale = scale;
-            margin = 0f;
-            foreach (Sprite shape in style.shapes)
-                if (shape != null) margin = Mathf.Max(margin, shape.bounds.extents.magnitude * scale);
-            margin += 0.5f;
-            foreach (Shadow shadow in shadows) shadow.renderer.transform.localScale = Vector3.one * scale;
-        }
-        if (shadows.Count == style.count) return;
-        Rect area = Area();
-        while (shadows.Count < style.count)
-            AddShadow(new Vector2(Random.Range(area.xMin, area.xMax), Random.Range(area.yMin, area.yMax)));
-        while (shadows.Count > Mathf.Max(0, style.count))
-        {
-            Shadow last = shadows[shadows.Count - 1];
-            shadows.RemoveAt(shadows.Count - 1);
-            Destroy(last.renderer.gameObject);
-        }
-        ApplyAlpha();
-    }
-
-
-    // the camera's view and the margin round it, in world units
-    private Rect Area()
+    private void Configure()
     {
         Camera cam = Camera.main;
-        if (cam == null || !cam.orthographic) return new Rect(-15f - margin, -9f - margin, 30f + 2f * margin, 18f + 2f * margin);
-        float h = cam.orthographicSize, w = h * cam.aspect;
-        Vector3 c = cam.transform.position;
-        return new Rect(c.x - w - margin, c.y - h - margin, 2f * (w + margin), 2f * (h + margin));
-    }
+        float h = cam != null && cam.orthographic ? cam.orthographicSize : 8.5f;
+        float w = h * (cam != null ? cam.aspect : 16f / 9f);
+        Vector3 centre = cam != null ? cam.transform.position : Vector3.zero;
+        if (style.scale == appliedScale && style.speed == appliedSpeed && style.angle == appliedAngle && style.count == appliedCount
+            && centre == appliedCamera && h == appliedView) return;
+        appliedScale = style.scale;
+        appliedSpeed = style.speed;
+        appliedAngle = style.angle;
+        appliedCount = style.count;
+        appliedCamera = centre;
+        appliedView = h;
 
-    // a random shape, flipped or not
-    private void NewShape(Shadow shadow)
-    {
-        Sprite shape = null;
-        for (int tries = 0; tries < 8 && shape == null; tries++) shape = style.shapes[Random.Range(0, style.shapes.Length)];
-        shadow.renderer.sprite = shape;
-        shadow.renderer.flipX = Random.value < 0.5f;
-    }
+        float a = style.angle * Mathf.Deg2Rad;
+        Vector2 dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
+        // the view and a shadow's size round it; a shadow travels its full width and height in its life, so
+        // one born at the far upwind corner still crosses the whole view before it fades
+        float margin = style.scale;
+        float viewW = 2f * w + 2f * margin, viewH = 2f * h + 2f * margin;
+        float travel = viewW + viewH;
+        float life = travel / Mathf.Max(0.01f, style.speed);
+        // born anywhere in the view swept back upwind by the travel
+        float boxW = viewW + travel * dir.x, boxH = viewH + travel * dir.y;
+        Vector2 boxCentre = new Vector2(centre.x, centre.y) - dir * (travel * 0.5f);
+        // so about count are over the view at once: each place in the view is crossed by every shadow born
+        // in its upwind strip, rate * life * view / box of them
+        float rate = style.count * (boxW * boxH) / (life * (2f * w) * (2f * h));
 
-    private void Place(Shadow shadow)
-    {
-        Vector2 p = shadow.position;
-        shadow.renderer.transform.position = new Vector3(Mathf.Round(p.x * PixelsPerUnit) / PixelsPerUnit,
-            Mathf.Round(p.y * PixelsPerUnit) / PixelsPerUnit, 0f);
+        // a playing system can't change its duration: stopped and cleared, set, and played again (it's
+        // prewarmed, so the view refills at once)
+        bool playing = particles.isPlaying;
+        if (playing) particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        particles.transform.position = new Vector3(boxCentre.x, boxCentre.y, 0f);
+        var main = particles.main;
+        main.duration = life;
+        main.startLifetime = life;
+        main.startSize = style.scale;
+        main.maxParticles = Mathf.Max(16, Mathf.CeilToInt(rate * life * 1.5f) + 8);
+        var shape = particles.shape;
+        shape.position = Vector3.zero;
+        shape.scale = new Vector3(boxW, boxH, 0f);
+        var emission = particles.emission;
+        emission.enabled = true;
+        emission.rateOverTime = rate;
+        var velocity = particles.velocityOverLifetime;
+        velocity.x = dir.x * style.speed;
+        velocity.y = dir.y * style.speed;
+        velocity.z = 0f;
+        if (playing) particles.Play();
     }
 
     // the sun is out and the sky isn't overcast
@@ -160,52 +201,32 @@ public class CloudShadows : MonoBehaviour
 
     private void Update()
     {
-        // real time, so a pause or the game speed never changes them; a long hitch doesn't jump them
+        if (particles == null) return;
+        // real time, like the weather's particles
         float dt = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
-        FollowStyle();
-
+        Configure();
         float target = Wanted() ? 1f : 0f;
-        // the opacity follows the style live, so it can be tuned in the inspector while playing
         if (shown != target || appliedOpacity != style.opacity)
         {
             shown = Mathf.MoveTowards(shown, target, dt / style.fadeSeconds);
             ApplyAlpha();
         }
-
-        float a = style.angle * Mathf.Deg2Rad;
-        Vector2 step = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * (style.speed * dt);
-        Rect area = Area();
-        foreach (Shadow shadow in shadows)
-        {
-            shadow.position += step;
-            // out on the right: back in on the left, at any height. out at the top: back in at the bottom
-            if (shadow.position.x > area.xMax)
-            {
-                shadow.position = new Vector2(area.xMin, Random.Range(area.yMin, area.yMax));
-                NewShape(shadow);
-            }
-            else if (shadow.position.y > area.yMax)
-            {
-                shadow.position = new Vector2(Random.Range(area.xMin, area.xMax), area.yMin);
-                NewShape(shadow);
-            }
-            // the view moved (the camera fitting the screen): keep them over it
-            else if (shadow.position.x < area.xMin - 1f || shadow.position.y < area.yMin - 1f)
-                shadow.position = new Vector2(Mathf.Max(shadow.position.x, area.xMin), Mathf.Max(shadow.position.y, area.yMin));
-            Place(shadow);
-        }
     }
 
     private float appliedOpacity = -1f;
 
+    // the whole system's darkness: the material's colour (the particles are black, fading at their ends)
     private void ApplyAlpha()
     {
         appliedOpacity = style.opacity;
         Color c = new Color(0f, 0f, 0f, style.opacity * shown);
-        foreach (Shadow shadow in shadows)
-        {
-            shadow.renderer.color = c;
-            shadow.renderer.enabled = shown > 0f;
-        }
+        if (material.HasProperty("_Color")) material.SetColor("_Color", c);
+        if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", c);
+        particleRenderer.enabled = shown > 0f;
+    }
+
+    private void OnDestroy()
+    {
+        if (material != null) Destroy(material);
     }
 }
