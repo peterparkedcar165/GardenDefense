@@ -1176,9 +1176,14 @@ public class LoadoutSelectionUI : MonoBehaviour
     // leaf trim over it), 2 units a pixel, as wide as the name needs. it stretches only at the art's plain
     // columns (sprite borders 21 and 33), so both leafy ends keep their pixels. the name moves into it
     private Image namePlate;
-    // canvas units: the plate's height (the art's 19 px) and the room between the name and the leafy ends
-    private const float NamePlateHeight = 38f;
-    private const int NamePlateSidePad = 26;
+    // the plate drawn at 3 canvas units an art pixel (Tommy, 2026-11-26: bigger, the name overlapped the 2
+    // unit one), so its wood (art rows 3 to 15) is 39 units tall around the name's 21 unit capitals.
+    // canvas units: its height (the art's 19 px) and the room between the name and the leafy ends (13 px)
+    private const float NamePlateScale = 3f;
+    private const float NamePlateHeight = 19f * NamePlateScale;
+    private const int NamePlateSidePad = (int)(13f * NamePlateScale);
+    // the portrait beside the name: a fixed square, 2 units a pixel of the 64 px plant art
+    private const float PortraitSize = 128f;
 
     private void BuildNamePlate()
     {
@@ -1195,7 +1200,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         namePlate = go.GetComponent<Image>();
         namePlate.sprite = look.upgradeButton;
         namePlate.type = Image.Type.Sliced;
-        namePlate.pixelsPerUnitMultiplier = 1f;
+        // the sprites are 2 units a pixel at 1; less than 1 draws their slices bigger
+        namePlate.pixelsPerUnitMultiplier = 2f / NamePlateScale;
         namePlate.raycastTarget = false;
         LayoutElement size = go.GetComponent<LayoutElement>();
         size.minHeight = size.preferredHeight = NamePlateHeight;
@@ -1213,8 +1219,25 @@ public class LoadoutSelectionUI : MonoBehaviour
             Image trim = trimGO.GetComponent<Image>();
             trim.sprite = look.upgradeButtonTrim;
             trim.type = Image.Type.Sliced;
-            trim.pixelsPerUnitMultiplier = 1f;
+            trim.pixelsPerUnitMultiplier = 2f / NamePlateScale;
             trim.raycastTarget = false;
+        }
+
+        // the portrait a fixed square, its sprite never stretched, in the middle of the name column's height
+        if (tooltipIcon != null)
+        {
+            tooltipIcon.preserveAspect = true;
+            LayoutElement icon = tooltipIcon.GetComponent<LayoutElement>();
+            if (icon == null) icon = tooltipIcon.gameObject.AddComponent<LayoutElement>();
+            icon.minWidth = icon.preferredWidth = PortraitSize;
+            icon.minHeight = icon.preferredHeight = PortraitSize;
+            icon.flexibleWidth = icon.flexibleHeight = 0f;
+            HorizontalLayoutGroup iconRow = tooltipIcon.transform.parent != null ? tooltipIcon.transform.parent.GetComponent<HorizontalLayoutGroup>() : null;
+            if (iconRow != null)
+            {
+                iconRow.childForceExpandHeight = false;
+                iconRow.childAlignment = TextAnchor.MiddleLeft;
+            }
         }
 
         // the name inside it, in the middle of the wood, the plate as wide as the name and its ends need
@@ -1307,8 +1330,9 @@ public class LoadoutSelectionUI : MonoBehaviour
     }
 
     // the plant tooltip is the screen's height; its sections sit at the top. when they're too long for
-    // it, every text in it gets the same smaller share of its own font size, the biggest that fits
-    // (Tommy, 2026-11-24, as the level's tooltip does: PlantUpgradeUI.LayoutTooltip)
+    // it, every text under the line gets the same smaller share of its own font size, the biggest that
+    // fits (Tommy, 2026-11-24, as the level's tooltip does: PlantUpgradeUI.LayoutTooltip); the portrait,
+    // name and damage type above the line never shrink (Tommy, 2026-11-26)
     private TMP_Text[] tooltipTexts;
     private float[] tooltipBaseSizes;
     private const float TooltipMinScale = 0.35f;
@@ -1319,7 +1343,13 @@ public class LoadoutSelectionUI : MonoBehaviour
         RectTransform tip = (RectTransform)tooltipPanel.transform;
         if (tooltipTexts == null)
         {
-            tooltipTexts = tooltipPanel.GetComponentsInChildren<TMP_Text>(true);
+            // everything above the line (the portrait's row: the name and the damage type) keeps its size
+            // (Tommy, 2026-11-26); only the texts under it shrink to fit
+            Transform fixedRow = tooltipIcon != null ? tooltipIcon.transform.parent : null;
+            var scaled = new List<TMP_Text>();
+            foreach (TMP_Text text in tooltipPanel.GetComponentsInChildren<TMP_Text>(true))
+                if (fixedRow == null || !text.transform.IsChildOf(fixedRow)) scaled.Add(text);
+            tooltipTexts = scaled.ToArray();
             tooltipBaseSizes = new float[tooltipTexts.Length];
             for (int i = 0; i < tooltipTexts.Length; i++) tooltipBaseSizes[i] = tooltipTexts[i].fontSize;
         }
