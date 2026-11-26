@@ -389,8 +389,6 @@ public class LoadoutSelectionUI : MonoBehaviour
                     box.type = Image.Type.Sliced;
                     box.pixelsPerUnitMultiplier = 1f;
                     box.color = TallPanelLook.Available ? TallPanelLook.Wood : s.plantPanel;
-                    // the tooltip sections' wooden frame over its edge (Tommy, 2026-11-26)
-                    SectionFrameLook.Add(box);
                 }
                 // the title gets the panel's 1 pixel shadow
                 TMP_Text title = child.GetComponent<TMP_Text>();
@@ -553,10 +551,8 @@ public class LoadoutSelectionUI : MonoBehaviour
     private static readonly Vector2 CardCell = new Vector2(Mathf.Round(PlantCardLook.ArtWidth * CardScale),
         Mathf.Round(PlantCardLook.ArtHeight * CardScale));
     private const int LoadoutColumns = 4;
-    // canvas units: the box's border, then the room between it and the cards. the border is Tommy's section
-    // frame (SectionFrameLook, 5 art px) when there is one (Tommy, 2026-11-26: the grids' boxes wear the
-    // tooltip sections' frame), else the inset box's 2 pixel edge
-    private static float BoxBorder => SectionFrameLook.Available ? SectionFrameLook.Border * 2f : 4f;
+    // canvas units: the inset box's 2 pixel border, then the room between it and the cards
+    private const float BoxBorder = 4f;
     private const float CardInset = 4f;
     // canvas units between the plants panel's bottom and the top of Next
     private const float AboveNext = 12f;
@@ -793,9 +789,6 @@ public class LoadoutSelectionUI : MonoBehaviour
         UseCardCells();
         for (int i = 0; i < SaveData.MaxLoadoutSlots; i++)
             selectedSquares.Add(LoadoutSlotSquare.Create(selectedContainer, CardScale, ShowSlotHint, HideSlotHint));
-        // the new squares came after the box's section frame: it goes back on top of them
-        if (selectedContainer.GetComponent<Image>() is Image loadoutBoxImage && loadoutBoxImage.sprite == InsectShowcaseStyle.Instance.insetBox)
-            SectionFrameLook.Add(loadoutBoxImage);
 
         int filled = 0;
         foreach (string plantName in selectedLoadout)
