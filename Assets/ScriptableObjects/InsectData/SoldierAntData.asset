@@ -16,7 +16,7 @@ MonoBehaviour:
   nameColor: {r: 0.54509807, g: 0.27058825, b: 0.07450981, a: 1}
   description: "A bulky and aggressive variant of the ants, with increased <color=#A0522D><b>Physical</b></color>
     and <color=green><b>Grass</b></color> Resistance."
-  sprite: {fileID: 21300000, guid: 69195ff41f6e5d54c85073e3b72d4501, type: 3}
+  sprite: {fileID: 21300000, guid: e4bbab48f45c49f0bde82ef9d3167960, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 985582eba920e92458761d62b54e7f09, type: 3}
   widgetHeightOffset: 0
   baseMaxHealth: 400
