@@ -353,6 +353,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         statsPanels?.SetActive(false);
         base.HidePanel();
         HideTooltip();
+        lockedSkillTipShown = false;
     }
 
     public Plant  GetSelectedPlant()  => selectedPlant;
@@ -429,6 +430,24 @@ public class PlantUpgradeUI : EntityInfoPanel
             lockedDimOff = true;
             Transform dim = lockedSkillSquare.transform.Find("Dim");
             if (dim != null) dim.gameObject.SetActive(false);
+        }
+    }
+
+    // the pointer over a locked skill's icon shows what unlocking it costs (Tommy, 2026-11-26): the panel's
+    // tooltip, kept up while the pointer stays and the skill stays locked
+    private bool lockedSkillTipShown;
+
+    private void RefreshLockedSkillTip(bool show, int cost)
+    {
+        if (show)
+        {
+            ShowTooltip($"LOCKED.\nUnlock for: {cost} Sun");
+            lockedSkillTipShown = true;
+        }
+        else if (lockedSkillTipShown)
+        {
+            lockedSkillTipShown = false;
+            HideTooltip();
         }
     }
 
@@ -759,10 +778,11 @@ public class PlantUpgradeUI : EntityInfoPanel
         if (lockedSkillStrip != null && lockedSkillStrip.activeSelf != locked) lockedSkillStrip.SetActive(locked);
         if (lockedSkillSquare != null && lockedSkillSquare.activeSelf != locked) lockedSkillSquare.SetActive(locked);
         DarkenSkill(locked);
+        int cost = p.GetPath3Cost();
+        RefreshLockedSkillTip(locked && lockedSquareHover != null && lockedSquareHover.IsHovered, cost);
         if (!locked) return;
 
         PlantInfoPanelStyle style = PlantInfoPanelStyle.Instance;
-        int cost = p.GetPath3Cost();
         bool affordable = sun >= cost;
         bool hover = (lockedSkillHover != null && lockedSkillHover.IsHovered)
             || (lockedSquareHover != null && lockedSquareHover.IsHovered);
