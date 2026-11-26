@@ -26,6 +26,7 @@ MonoBehaviour:
   retainsAggro: 0
   generatesSun: 1
   category: 0
+  widgetHeightOffset: 0
   skillTree: {fileID: 11400000, guid: 7dc2623ca4fd4aeca582b4a4a604da71, type: 2}
   fertilizerPossibleStats: 30000000
   baseMaxHealth: 200
@@ -58,6 +59,7 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
+  baseVisibility: 1
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -89,7 +91,7 @@ MonoBehaviour:
   baseSkillCooldown: 100
   baseSkillDuration: 8
   channelDuration: 1
-  baseSkillRadius: 2
+  baseSkillRadius: 1
   baseSkillDamageMultiplier: 0.25
   baseSkillHealth: 0
   basePassiveDamage: 0
@@ -100,12 +102,14 @@ MonoBehaviour:
       volume: 0.075
       minPitch: 0.8
       maxPitch: 1.2
+      alwaysPlay: 0
   hitSound:
     clips:
     - clip: {fileID: 8300000, guid: 7474fd9bd668de845acb8bb11383f135, type: 3}
       volume: 0.075
       minPitch: 1.4
       maxPitch: 1.7
+      alwaysPlay: 0
   skillSound:
     clips: []
   baseSunGenerated: 10
@@ -117,7 +121,7 @@ MonoBehaviour:
   path2CooldownReductionPerLevel: 0.1
   path3SunrayDPSPerLevel: 10
   path3SkillDurationPerLevel: 0.5
-  path3RadiusPerLevel: 0.2
+  path3RadiusPerLevel: 0.1
   path3VisualRadiusPerLevel: 0.3
   sunraySpawnSound:
     clips:
@@ -125,6 +129,7 @@ MonoBehaviour:
       volume: 0.2
       minPitch: 0.9
       maxPitch: 1.1
+      alwaysPlay: 0
   sunraySpawnLeadTime: 0.35
   sunrayLoopSound:
     clips:
@@ -132,10 +137,12 @@ MonoBehaviour:
       volume: 0.2
       minPitch: 0.9
       maxPitch: 1.1
+      alwaysPlay: 0
   sunrayEndSound:
     clips:
     - clip: {fileID: 8300000, guid: a5e6fecf2b7877e42b55fb0989db4c34, type: 3}
       volume: 0.2
       minPitch: 0.9
       maxPitch: 1.1
+      alwaysPlay: 0
   sunrayEndLeadTime: 0.3

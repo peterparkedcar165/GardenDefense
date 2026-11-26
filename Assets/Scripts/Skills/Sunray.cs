@@ -9,8 +9,6 @@ public class Sunray : MonoBehaviour
     private float duration;
     private Plant source;
     private const float tickInterval = 0.25f;
-    private const float oscillationSpeed = 40f;
-    private const float oscillationAngle = 40f;
     private const float shrinkDuration = 0.2f;
 
     private Vector3 targetScale;
@@ -49,13 +47,14 @@ public class Sunray : MonoBehaviour
     }
 
     // Tommy's animated beam (2026-11-26, Downloads/gd_sunray_beam: Resources/SunrayBeam, 32 frames of 64 px,
-    // the light flowing down, a seamless loop at 30 fps). the Visual used to stretch one 16 px sprite 2 by
+    // the light flowing down, a seamless loop, played at 60 fps). the Visual used to stretch one 16 px sprite 2 by
     // 40 times; now it undoes the root's stretch (so the pixels stay square) and tiles the frame up the
     // beam's whole height instead. the frames are imported at 20 px a tile, so their 20 px of light are
     // exactly as wide as the old beam (its 16 px at 32 a tile, times the root's 2: 1 tile), and the beam just
     // as tall (20 tiles); both still grow with the skill's radius (Initialize scales the root). the
     // frames step on game time, so the beam pauses with the game
-    private const float BeamFps = 30f;
+    // Tommy: 60 (the sheet was made for 30, so the light flows twice as fast, a loop every 0.53 s)
+    private const float BeamFps = 60f;
     private static Sprite[] beamFrames;
     private SpriteRenderer beam;
     private float beamTime;
@@ -168,8 +167,8 @@ public class Sunray : MonoBehaviour
         while (elapsed < duration && source != null && source.IsAlive)
         {
             elapsed += Time.deltaTime;
-            float rotY = Mathf.Sin(elapsed * oscillationSpeed) * oscillationAngle;
-            transform.rotation = Quaternion.Euler(0f, rotY, 0f);
+            // the beam holds still (Tommy, 2026-11-26): it used to rock 40 degrees about its upright axis,
+            // about 6 times a second, which made its width jitter
 
             if (_homing)
             {
