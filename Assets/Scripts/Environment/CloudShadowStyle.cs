@@ -36,9 +36,10 @@ public class CloudShadowStyle : ScriptableObject
     [Header("Look")]
     [Tooltip("how dark a shadow is: the black shapes' alpha")]
     [Range(0f, 1f)] public float opacity = 0.3f;
-    [Tooltip("above everything in the world (the Weather layer, over rain and snow) and under the indicators and the ui")]
+    [Tooltip("above everything in the world (the Weather layer, over the rain, snow and sandstorm at 0 to 2) and under the " +
+        "indicators and the ui; under the mulch drops too (Weather 60 and 61, MulchDrop; Tommy: drops are never covered)")]
     public string sortingLayer = "Weather";
-    public int sortingOrder = 1000;
+    public int sortingOrder = 50;
 
     [Header("Numbers (Tommy tunes these; every one changes live while playing)")]
     [Tooltip("about how many shadows are over the camera's view at once")]

@@ -74,6 +74,7 @@ public class MulchDrop : MonoBehaviour
     private const float FadedAlpha = 0.35f;
 
     private const string DropLayer = "Weather";
+    // above the cloud shadows (Weather 50, CloudShadowStyle.sortingOrder; Tommy: drops are never covered)
     private const int SortingOrder = 60;
     // the shadow sits with the insects' shadows, under every plant and insect body
     private const string ShadowLayer = "Insects";

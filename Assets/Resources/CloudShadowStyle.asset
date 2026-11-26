@@ -57,7 +57,7 @@ MonoBehaviour:
   shader: {fileID: 4800000, guid: 484055471be0469ba17048f6a7099d7a, type: 3}
   opacity: 0.5
   sortingLayer: Weather
-  sortingOrder: 1000
+  sortingOrder: 50
   count: 18
   scale: 3
   speed: 0.3
