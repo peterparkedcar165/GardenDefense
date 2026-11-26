@@ -42,6 +42,12 @@ public class InsectShowcaseStyle : ScriptableObject
     public Sprite insetBox;
     [Tooltip("8 by 8, sliced 2: the chips (conditions, tags) and the stat cells, tinted with the panel colour")]
     public Sprite stripSunken;
+    [Tooltip("Tommy's section frame (ui_frame_wood_leaves_grey, 2026-11-26): 45 by 44, greyscale wood with light corner " +
+        "nails, sliced 6, drawn over the edge of every box that sections text (SectionFrameLook)")]
+    public Sprite sectionFrame;
+    [Tooltip("how far a section frame's colour is its box's colour lightened towards white (proposal 0.45: a frame in the " +
+        "box's own colour all but vanishes into it)")]
+    [Range(0f, 1f)] public float sectionFrameLighten = 0.45f;
 
     [Header("Kit pieces the escape menu uses (SettingsSkin)")]
     [Tooltip("8 by 11, sliced 2: a volume bar's frame, as the plant info panel's health bar")]

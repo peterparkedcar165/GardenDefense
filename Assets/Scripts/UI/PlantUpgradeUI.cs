@@ -1178,7 +1178,8 @@ public class PlantUpgradeUI : EntityInfoPanel
     private static readonly Vector3[] tooltipCorners = new Vector3[4];
 
     // path tooltips call this every frame while hovered: it lays the panel out again only when the
-    // text or the screen size changed
+    // text or the screen size changed. an Attack, Passive or Skill text (one a plant marked with
+    // Plant.MaxLevelBreak) is shown in sections (LayoutSections), anything else as one text
     public void ShowTooltip(string text)
     {
         if (tooltipPanel == null || tooltipText == null) return;
@@ -1186,10 +1187,19 @@ public class PlantUpgradeUI : EntityInfoPanel
         bool wasShown = tooltipPanel.activeSelf;
         tooltipPanel.SetActive(true);
         Vector2Int screen = new Vector2Int(Screen.width, Screen.height);
-        if (wasShown && text == tooltipText.text && screen == tooltipLaidOutScreen) return;
-        tooltipText.text = text;
-        LayoutTooltip();
+        if (wasShown && text == shownTooltip && screen == tooltipLaidOutScreen) return;
+        if (SplitSections(text, out string title, out string[] parts, out string footer))
+            LayoutSections(title, parts, footer);
+        else
+        {
+            tooltipText.text = text;
+            LayoutTooltip();
+        }
+        shownTooltip = text;
     }
+
+    // the text the panel shows (null after the insect's live text, which lays itself out each change)
+    private string shownTooltip;
 
     private void ReadTooltipBase()
     {
@@ -1206,6 +1216,8 @@ public class PlantUpgradeUI : EntityInfoPanel
     // up and down every frame once it was taller than the screen)
     private void LayoutTooltip()
     {
+        HideSections();
+        shownTooltip = null;
         // a panel just switched on has its text's measurements made here first
         Canvas.ForceUpdateCanvases();
         RectTransform tipRect = (RectTransform)tooltipPanel.transform;
@@ -1233,9 +1245,12 @@ public class PlantUpgradeUI : EntityInfoPanel
         tipRect.anchoredPosition = tooltipBasePosition;
         tipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Min(textHeight + TooltipPadding, maxHeight));
         tooltipLaidOutScreen = new Vector2Int(Screen.width, Screen.height);
-        if (root == null) return;
+        if (root != null) KeepTooltipOnScreen(tipRect, root);
+    }
 
-        // its top and bottom in the root canvas's units; at most screen high, so one move puts it all on
+    // its top and bottom in the root canvas's units; at most screen high, so one move puts it all on
+    private static void KeepTooltipOnScreen(RectTransform tipRect, RectTransform root)
+    {
         tipRect.GetWorldCorners(tooltipCorners);
         float bottom = root.InverseTransformPoint(tooltipCorners[0]).y;
         float top = root.InverseTransformPoint(tooltipCorners[1]).y;
@@ -1252,5 +1267,204 @@ public class PlantUpgradeUI : EntityInfoPanel
     {
         if (tooltipPanel != null)
             tooltipPanel.SetActive(false);
+    }
+
+    // --- The Attack, Passive and Skill tooltips in sections (Tommy, 2026-11-26) ---
+    // a path's text (Plant.GetPath1Description and the others) is cut where the plant marked it: its title
+    // on top, then three boxes in Tommy's section frame (SectionFrameLook), the description, the upgrades
+    // and the max level bonus, then the level and the shift hint under them. the boxes are the kit's inset
+    // box in the plant's element colour, like the panel; the texts are copies of the panel's own text
+
+    private RectTransform sectionRoot;
+    private TMP_Text sectionTitle, sectionFooter;
+    private readonly Image[] sectionBoxes = new Image[3];
+    private readonly TMP_Text[] sectionTexts = new TMP_Text[3];
+    // canvas units: between two sections, and from a box's edge to its text (clear of the frame)
+    private const float SectionGap = 8f;
+    private const float SectionTextPadX = 16f;
+    private const float SectionTextPadY = 14f;
+
+    // false for a text no plant marked (an insect's, a hint): that one is shown whole
+    private static bool SplitSections(string text, out string title, out string[] parts, out string footer)
+    {
+        title = footer = null;
+        parts = null;
+        if (string.IsNullOrEmpty(text)) return false;
+        int max = text.IndexOf(Plant.MaxLevelBreak, System.StringComparison.Ordinal);
+        if (max < 0) return false;
+        // a plant that doesn't mark its upgrades (the retired ones) has them in its description's box
+        int upgrades = text.IndexOf(Plant.UpgradesBreak, System.StringComparison.Ordinal);
+        if (upgrades > max) upgrades = -1;
+        string head = text.Substring(0, upgrades >= 0 ? upgrades : max);
+        int lineEnd = head.IndexOf('\n');
+        title = CleanSection(lineEnd >= 0 ? head.Substring(0, lineEnd) : head);
+        string description = lineEnd >= 0 ? head.Substring(lineEnd + 1) : "";
+        int upgradesStart = upgrades + Plant.UpgradesBreak.Length;
+        string upgradeLines = upgrades >= 0 ? text.Substring(upgradesStart, max - upgradesStart) : "";
+        string rest = text.Substring(max + Plant.MaxLevelBreak.Length);
+        // the level line and the shift hint follow the max level bonus
+        int level = rest.LastIndexOf("\n\nLevel: [", System.StringComparison.Ordinal);
+        string bonus = level >= 0 ? rest.Substring(0, level) : rest;
+        footer = level >= 0 ? CleanSection(rest.Substring(level)) : "";
+        parts = new[] { CleanSection(description), CleanSection(upgradeLines), CleanSection(bonus) };
+        return true;
+    }
+
+    private static string CleanSection(string s) =>
+        s.Replace(Plant.UpgradesBreak, "").Replace(Plant.MaxLevelBreak, "").Trim();
+
+    private void LayoutSections(string title, string[] parts, string footer)
+    {
+        BuildSections();
+        tooltipText.gameObject.SetActive(false);
+        sectionRoot.gameObject.SetActive(true);
+        Color boxColor = selectedPlant != null ? PlantData.ElementPanelColor(selectedPlant.elementalType) : PlantData.ElementPanelColor(ElementalType.Neutral);
+        sectionTitle.text = title;
+        sectionTitle.gameObject.SetActive(!string.IsNullOrEmpty(title));
+        sectionFooter.text = footer;
+        sectionFooter.gameObject.SetActive(!string.IsNullOrEmpty(footer));
+        for (int i = 0; i < sectionBoxes.Length; i++)
+        {
+            bool shown = !string.IsNullOrEmpty(parts[i]);
+            sectionTexts[i].text = shown ? parts[i] : "";
+            sectionTexts[i].gameObject.SetActive(shown);
+            sectionBoxes[i].gameObject.SetActive(shown);
+            sectionBoxes[i].color = boxColor;
+            SectionFrameLook.Recolor(sectionBoxes[i]);
+        }
+
+        Canvas.ForceUpdateCanvases();
+        RectTransform tipRect = (RectTransform)tooltipPanel.transform;
+        Canvas canvas = tooltipPanel.GetComponentInParent<Canvas>();
+        RectTransform root = canvas != null ? (RectTransform)canvas.rootCanvas.transform : null;
+        float maxHeight = root != null ? root.rect.height : Screen.height;
+        float panelWidth = tipRect.rect.width;
+
+        // too tall for the screen: every text at the biggest font size that fits, as the one text tooltip
+        float height = PlaceSections(tooltipBaseFontSize, panelWidth);
+        if (height > maxHeight)
+        {
+            float fits = TooltipMinFontSize, tooBig = tooltipBaseFontSize;
+            for (int i = 0; i < 8; i++)
+            {
+                float size = (fits + tooBig) * 0.5f;
+                if (PlaceSections(size, panelWidth) <= maxHeight) fits = size;
+                else tooBig = size;
+            }
+            height = PlaceSections(fits, panelWidth);
+        }
+        tipRect.anchoredPosition = tooltipBasePosition;
+        tipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Min(height, maxHeight));
+        tooltipLaidOutScreen = new Vector2Int(Screen.width, Screen.height);
+        if (root != null) KeepTooltipOnScreen(tipRect, root);
+    }
+
+    // places every shown section at this font size, top down inside the room the one text has (clear of
+    // the flower frame), and returns the panel height they need
+    private float PlaceSections(float fontSize, float panelWidth)
+    {
+        RectTransform room = tooltipText.rectTransform;
+        float left = room.offsetMin.x, right = -room.offsetMax.x, top = -room.offsetMax.y, bottom = room.offsetMin.y;
+        float width = panelWidth - left - right;
+        float y = top;
+        bool first = true;
+        void Gap()
+        {
+            if (!first) y += SectionGap;
+            first = false;
+        }
+        if (sectionTitle.gameObject.activeSelf)
+        {
+            Gap();
+            y += PlaceSectionText(sectionTitle, fontSize, left, y, width);
+        }
+        for (int i = 0; i < sectionBoxes.Length; i++)
+        {
+            if (!sectionBoxes[i].gameObject.activeSelf) continue;
+            Gap();
+            float textHeight = PlaceSectionText(sectionTexts[i], fontSize, left + SectionTextPadX, y + SectionTextPadY, width - 2f * SectionTextPadX);
+            float boxHeight = textHeight + 2f * SectionTextPadY;
+            RectTransform box = sectionBoxes[i].rectTransform;
+            box.anchoredPosition = new Vector2(left, -y);
+            box.sizeDelta = new Vector2(width, boxHeight);
+            y += boxHeight;
+        }
+        if (sectionFooter.gameObject.activeSelf)
+        {
+            Gap();
+            y += PlaceSectionText(sectionFooter, fontSize, left, y, width);
+        }
+        return Mathf.Ceil(y + bottom);
+    }
+
+    // x and y canvas units from the panel's top left; returns the text's height
+    private static float PlaceSectionText(TMP_Text text, float fontSize, float x, float y, float width)
+    {
+        text.fontSize = fontSize;
+        float height = Mathf.Ceil(text.GetPreferredValues(text.text, width, 0f).y);
+        RectTransform r = text.rectTransform;
+        r.anchoredPosition = new Vector2(x, -y);
+        r.sizeDelta = new Vector2(width, height);
+        return height;
+    }
+
+    private void BuildSections()
+    {
+        if (sectionRoot != null) return;
+        GameObject go = new GameObject("Sections", typeof(RectTransform));
+        go.layer = tooltipPanel.layer;
+        sectionRoot = (RectTransform)go.transform;
+        sectionRoot.SetParent(tooltipPanel.transform, false);
+        sectionRoot.anchorMin = Vector2.zero;
+        sectionRoot.anchorMax = Vector2.one;
+        sectionRoot.offsetMin = sectionRoot.offsetMax = Vector2.zero;
+        sectionRoot.SetSiblingIndex(tooltipText.transform.GetSiblingIndex());
+
+        // the boxes first, so every text draws over them
+        InsectShowcaseStyle kit = InsectShowcaseStyle.Instance;
+        for (int i = 0; i < sectionBoxes.Length; i++)
+        {
+            GameObject boxObject = new GameObject("Section " + (i + 1), typeof(RectTransform), typeof(Image));
+            boxObject.layer = go.layer;
+            RectTransform r = (RectTransform)boxObject.transform;
+            r.SetParent(sectionRoot, false);
+            AnchorTopLeft(r);
+            Image box = boxObject.GetComponent<Image>();
+            box.sprite = kit.insetBox;
+            box.type = kit.insetBox != null ? Image.Type.Sliced : Image.Type.Simple;
+            box.pixelsPerUnitMultiplier = 1f;
+            box.raycastTarget = false;
+            SectionFrameLook.Add(box);
+            sectionBoxes[i] = box;
+        }
+        sectionTitle = NewSectionText("Title");
+        for (int i = 0; i < sectionTexts.Length; i++) sectionTexts[i] = NewSectionText("Section Text " + (i + 1));
+        sectionFooter = NewSectionText("Footer");
+    }
+
+    // a copy of the panel's text (its font, size, colour and pixel shadow), placed by PlaceSectionText
+    private TMP_Text NewSectionText(string name)
+    {
+        TMP_Text text = Instantiate(tooltipText, sectionRoot);
+        text.name = name;
+        for (int i = text.transform.childCount - 1; i >= 0; i--) Destroy(text.transform.GetChild(i).gameObject);
+        text.gameObject.SetActive(true);
+        text.textWrappingMode = TextWrappingModes.Normal;
+        text.overflowMode = TextOverflowModes.Overflow;
+        text.raycastTarget = false;
+        AnchorTopLeft(text.rectTransform);
+        return text;
+    }
+
+    private static void AnchorTopLeft(RectTransform r)
+    {
+        r.anchorMin = r.anchorMax = r.pivot = new Vector2(0f, 1f);
+    }
+
+    // the one text back, the sections away
+    private void HideSections()
+    {
+        if (sectionRoot != null) sectionRoot.gameObject.SetActive(false);
+        if (tooltipText != null && !tooltipText.gameObject.activeSelf) tooltipText.gameObject.SetActive(true);
     }
 }

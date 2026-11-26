@@ -463,7 +463,7 @@ public class Rhodiola : Shooter
             ? $"Fires a rejuvenating seed at the most injured nearby plant, healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health.\n\n" +
               $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\n\n*Unaffected by Piercing"
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
@@ -481,7 +481,7 @@ public class Rhodiola : Shooter
             ? $"Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>, while it lasts.\n\n" +
               $"<color=green><b>{SapStoreShare * 100f:F0}%</b></color> of healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>[({RData?.baseSapCap ?? 50f:F0}) + ({sappl:F0}/Lvl.)]</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{sappl:F0}</b></color> per level. [<color=#FFD700><b>+{sappl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Rejuvenating Burgeon</b></color> healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Rejuvenating Burgeon</b></color> armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
@@ -496,7 +496,7 @@ public class Rhodiola : Shooter
         string desc = details
             ? $"Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</color>]</b></color> Health."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Revival Heal</b></color> by <color=green><b>{RevivalHealPerLevel:F0}</b></color> per level. [<color=green><b>+{RevivalHealPerLevel * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level, never below <color=green><b>{MinSkillCooldown:F0}s</b></color>. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

@@ -310,7 +310,7 @@ public class Dandelion : Shooter
         string desc = details
             ? $"Fires a pollen seed at a target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rapl:F2}</b></color> per level. [<color=green><b>+{rapl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#FFB6C1><b>Magic Power</b></color> by <color=green><b>{mppl:F0}</b></color> per level. [<color=green><b>+{mppl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -330,7 +330,7 @@ public class Dandelion : Shooter
         string desc = details
             ? $"Every <color=green><b>[({DData?.basePassiveInterval ?? 16f:F0}) - ({intervalpl:F0}/Lvl.)]</b></color> seconds, reduces the <color=green><b>Skill Cooldown</b></color> of allied plants within her attack radius by <color=green><b>[({DData?.basePassiveTickReduction ?? 1f:F2}) + ({reductionpl:F2}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{PassiveTickReductionMPScaling * 100f:F0}% Magic Power</b></color>] seconds. Attacks reduce this timer by an additional <color=green><b>[({(DData?.basePassiveProcChance ?? 0.5f):F2}) + ({chancepl:F2}/Lvl.)]</b></color> seconds."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Decrease the timer by <color=green><b>{intervalpl:F0}</b></color> second per level. [<color=green><b>-{intervalpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase the per-attack timer reduction rate by <color=green><b>{chancepl * 100f:F0}%</b></color> per level. [<color=green><b>+{chancepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase the Skill Cooldown reduction by <color=green><b>{reductionpl:F2}</b></color> seconds per level. [<color=green><b>+{reductionpl * effectivePath2Level:F2}</b></color>]\n\n" +
@@ -356,7 +356,7 @@ public class Dandelion : Shooter
         string desc = details
             ? $"Fires a slow pollen seed with a <color=green><b>[({baseBeam:F2}) + ({beampl:F2}/Lvl.)]</b></color> unit wide hitbox towards the targeted direction, reaching <color=green><b>[({baseRange:F1}) + ({rangepl:F1}/Lvl.)]</b></color> units away. On impact, deals <color=green><b>[({baseDmg:F0}) + ({dmgpl:F0}/Lvl.)]</b></color> + <color=green><b>[100% Attack Damage]</b></color> <color=#FFB6C1>[+{skillDamageMultiplier * 100f:F0}% Magic Power]</color> {PlantData.DamageTypeLabel(damageType)} to insects and sweeps them along with the wind, <color=#E0E0E0>Displaced</color>, for <color=green><b>1</b></color> second. Allied plants touched by the wind (not herself) gain <color=#B2EBF2><b>Pollen Haste</b></color>, increasing <color=green><b>Skill Charge Rate</b></color> by <color=green><b>[({baseHaste * 100f:F0}%) + ({hastepl * 100f:F0}%/Lvl.)]</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Hits each target once."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase hitbox size by <color=green><b>{beampl:F2}</b></color> per level. [<color=green><b>+{beampl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"Increase travel range by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath3Level:F1}</b></color>]\n\n" +

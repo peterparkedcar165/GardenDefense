@@ -222,7 +222,7 @@ public class LeafRanger : Shooter
         string desc = details
             ? $"Shoots slow but precise and fierce arrows at his target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Increase <color=green><b>Armor Penetration</b></color> by <color=green><b>30</b></color>.")}\n\n" +
@@ -248,7 +248,7 @@ public class LeafRanger : Shooter
         string desc = details
             ? $"The {GetName()}'s vision can never be impaired.\n\nGains <color=green><b>[({baseCrit * 100f:F0}%) + ({critpl * 100f:F0}%/Lvl.)]</b></color> <color=green>Base Critical Chance</color>, and <color=green><b>[(0) + (1/Lvl.)]</b></color> <color=green>Piercing</color>.\n\n<color=green>Piercing</color> instead bounces from target to target, up to a maximum of <color=green><b>[(0) + (1/Lvl.)]</b></color> additional targets, within a <color=green><b>[({baseBounceRadius:F1}) + ({bouncepl:F1}/Lvl.)]</b></color> radius."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green>Piercing</color> by <color=green><b>1</b></color> per level. [<color=green><b>+{effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green>Base Critical Chance</color> by <color=green><b>{critpl * 100f:F0}%</b></color> per level. [<color=green><b>+{critpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green>Bounce Radius</color> by <color=green><b>{bouncepl:F1}</b></color> per level. [<color=green><b>{BounceRadius:F1}</b></color>]\n\n" +
@@ -272,7 +272,7 @@ public class LeafRanger : Shooter
         string desc = details
             ? $"Enter a state of <color=green><b>Rapid Focus</b></color>, increasing <color=green>Attack Speed</color> by <color=green><b>[({baseAS * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color>, for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

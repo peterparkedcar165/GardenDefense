@@ -222,7 +222,7 @@ public class PoisonShroom : Shooter
         string desc = details
             ? $"Fires <color=purple><b>Toxic Spores</b></color> at the target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} per second for <color=green><b>{ToxicSporeDuration:F1}</b></color> seconds."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
@@ -243,7 +243,7 @@ public class PoisonShroom : Shooter
             ? $"While active, <color=purple><b>Toxic Spore</b></color> deals an additional <color=green><b>[({pctBase * 100f:F1}%) + ({pctpl * 100f:F1}%/Lvl.)]</b></color> of the target's current health per second."
             : GetPassiveDescription();
         string maxBonus = $"The {GetName()} is able to deal <color=green><b>Critical Damage</b></color> with <color=#9400D3><b>Damage Over Time</b></color> effects. Increase <color=green><b>Critical Chance</b></color> by <color=green><b>15%</b></color>.";
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=purple><b>Toxic Spore</b></color>'s current health damage by <color=green><b>{pctpl * 100f:F1}%</b></color> per level. [<color=green><b>+{pctpl * effectivePath2Level * 100f:F1}%</b></color>]\n\n" +
                $"Increase <color=purple><b>Toxic Spore</b></color> duration by <color=green><b>{durpl:F1}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path2Level, maxBonus)}\n\n" +
@@ -261,7 +261,7 @@ public class PoisonShroom : Shooter
         string desc = details
             ? $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius that lasts <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Insects inside take <color=green><b>{PoisonBaseDPS:F0}</b></color> <color=#FFB6C1>[+{skillDamageMultiplier * 100f:F0}% Magic Power]</color> {PlantData.DamageTypeLabel(damageType)} per second, and all debuffs on them are frozen in time."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase field duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase field radius by <color=green><b>{radiuspl:F1}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

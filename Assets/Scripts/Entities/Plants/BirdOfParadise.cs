@@ -237,7 +237,7 @@ public class BirdOfParadise : Aura
         string desc = details
             ? $"Attacks a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, gaining a stack of <color=#B2EBF2><b>Talon Focus</b></color>, increasing <color=green><b>Attack Speed</b></color> by <color=green><b>[({(BOPData?.baseTalonFocusASPerStack ?? 0.04f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.)]</b></color> per stack, up to <color=green><b>{TalonFocusCap}</b></color> stacks."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rpl:F2}</b></color> per level. [<color=green><b>+{rpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Talon Focus</b></color> Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
@@ -252,7 +252,7 @@ public class BirdOfParadise : Aura
         string desc = details
             ? $"Each stack of <color=#B2EBF2><b>Talon Focus</b></color> deals an additional <color=green><b>[({BOPData?.basePassiveDamagePerStack ?? 3f:F0}) + ({dmgpl:F0}/Lvl.)]</b></color> {PlantData.DamageTypeLabel(damageType)} on hit."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase bonus damage per stack by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"<color=#B2EBF2><b>Talon Focus</b></color> also grants <color=green><b>{ArmorShredPerStack * 100f:F0}%</b></color> Armor Shred per stack. Every <color=green><b>{ExtraProcEveryNHits}</b></color> attack hits against the same target, apply the on-hit effect an additional time.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
@@ -266,7 +266,7 @@ public class BirdOfParadise : Aura
         string desc = details
             ? $"Grants self <color=#B2EBF2><b>Three Talon Strike</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, increasing Total Attack Speed by <color=green><b>[({(BOPData?.baseSkillAttackSpeedBonus ?? 0.08f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.)]</b></color> and allowing attacks to hit <color=green><b>2</b></color> additional nearest enemies for the exact same effect."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase Total Attack Speed bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

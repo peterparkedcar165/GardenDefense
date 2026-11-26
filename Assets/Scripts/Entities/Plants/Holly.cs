@@ -205,7 +205,7 @@ public class Holly : Aura
         string desc = details
             ? $"Conjures a spiraling cold wind around herself, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=#FF69B4><b>Base Magic Armor</b></color> by <color=green><b>{arpl:F0}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rgpl:F1}</b></color> per level. [<color=green><b>+{rgpl * effectivePath1Level:F1}</b></color>]\n\n" +
@@ -225,7 +225,7 @@ public class Holly : Aura
               $"The effect lingers for <color=green><b>{SnowWardLingerText}</b></color>. <color=#00CED1><b>Shield</b></color> ramp and cap scale with {GetName()}'s <color=#FF6B81><b>Heals & Shield Bonus</b></color>." +
               CannotStackNote
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=#00CED1><b>Shield</b></color> ramp by <color=green><b>{ramppl:F1}</b></color>/s per level. [<color=green><b>+{ramppl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"Increase <color=#00CED1><b>Shield</b></color> cap by <color=green><b>{maxpl:F0}</b></color> per level. [<color=green><b>+{maxpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase cooling by <color=green><b>{coolpl:F1}</b></color>/s per level. [<color=green><b>+{coolpl * effectivePath2Level:F1}</b></color>]\n\n" +
@@ -245,7 +245,7 @@ public class Holly : Aura
             ? $"Conjures a blizzard blowing toward a targeted location for <color=green><b>{skillDuration:F0}s</b></color>, dealing <color=green><b>[({HData?.baseBlizzardDamagePerSecond ?? 20f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{(HData?.blizzardDamageMagicPowerScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within it, " +
               $"and afflicting plants within it with the same <color=#00FFFF><b>Snow Ward</b></color> as her Passive, with its <color=#00CED1><b>Shield</b></color> regenerating at <color=green><b>[({HData?.baseBlizzardPowerMultiplier ?? 1.5f:F1}x) + ({powpl:F1}/Lvl.)]</b></color> the rate (its cap is unaffected)."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase damage by <color=green><b>{dmgpl:F0}</b></color> per second per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase power multiplier by <color=green><b>{powpl:F1}x</b></color> per level. [<color=green><b>+{powpl * effectivePath3Level:F1}x</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +

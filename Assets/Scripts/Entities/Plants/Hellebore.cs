@@ -281,7 +281,7 @@ public class Hellebore : Shooter
         string desc = details
             ? $"Fires a thorned projectile dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#FFB6C1><b>Base Magic Power</b></color> by <color=green><b>{mppl:F0}</b></color> per level. [<color=#FFB6C1><b>+{mppl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rgpl:F1}</b></color> per level. [<color=green><b>+{rgpl * effectivePath1Level:F1}</b></color>]\n\n" +
@@ -302,7 +302,7 @@ public class Hellebore : Shooter
               $"Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
               $"increasing their Armor by <color=green><b>[({HData?.auraShareBase ?? 0.5f:F0}%) + ({auraShpl * 100f:F0}%/Lvl.)]</b></color> of {DisplayName}'s Armor."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}</b></color> seconds per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=green><b>{armorpl}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase aura share by <color=green><b>{auraShpl * 100f:F0}%</b></color> per level. [<color=green><b>+{auraShpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
@@ -327,7 +327,7 @@ public class Hellebore : Shooter
               $"<color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per hit. " +
               $"Negative effects are reflected back to the attacker. The protection fades when the shield breaks."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase shield by <color=green><b>{shieldpl:F0}</b></color> per level. [<color=green><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase protection duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase reflect damage by <color=green><b>{reflpl:F0}</b></color> per level. [<color=green><b>+{reflpl * effectivePath3Level:F0}</b></color>]\n\n" +

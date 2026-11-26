@@ -318,7 +318,7 @@ public class Gloriosa : Shooter
         string desc = details
             ? $"Sends embers of soothing fire towards its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{speedpl:F2}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "When targeting a friendly unit, the ember bounces to nearby injured friendly units.\n\nIncrease <color=green><b>Piercing</b></color> by <color=green><b>1</b></color>.")}\n\n" +
@@ -335,7 +335,7 @@ public class Gloriosa : Shooter
         string desc = details
             ? $"Targets injured plants before insects. Embers heal plants for <color=green><b>[({GData?.healAmount ?? 25f:F0}) + ({healpl:F0}/Lvl.) + <color=#FFB6C1>{healMP * 100f:F0}% Magic Power</color>]</b></color> health and increase temperature by <color=orange><b>[({GData?.temperatureAmount ?? 2f:F1}) + ({temppl:F1}/Lvl.) + <color=#FFB6C1>{tempMP * 100f:F0}% Magic Power</color>]</b></color> until comfort. Plants within <color=green><b>{GData?.auraRadius ?? 1.5f:F1}</b></color> radius receive half the effect."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Healing</b></color> by <color=green><b>{healpl:F0}</b></color> per level. [<color=green><b>+{healpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase temperature regulation by <color=green><b>{temppl:F1}</b></color> per level. [<color=green><b>+{temppl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Healing applies <color=orange><b>Heated Comfort</b></color>, regenerating the full amount of health and temperature over <color=green><b>4s</b></color>.")}\n\n" +
@@ -364,7 +364,7 @@ public class Gloriosa : Shooter
               $"Lingers for <color=orange><b>[({GData?.latchDuration ?? 3f:F1}) + ({ldurpl:F1}/Lvl.)]</b></color>s. " +
               $"Wisps last <color=green><b>[({GData?.wispDuration ?? 20f:F0}) + ({durpl:F0}/Lvl.)]</b></color>s."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase healing by <color=green><b>{healpl:F0}</b></color> per second per level. [<color=green><b>+{healpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase heating by <color=orange><b>{temppl:F1}</b></color>° per second per level. [<color=orange><b>+{temppl * effectivePath3Level:F1}</b></color>]\n\n" +

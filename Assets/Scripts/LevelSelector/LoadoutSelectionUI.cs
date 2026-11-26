@@ -137,10 +137,10 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     // ---------- the level's opening (Tommy, 2026-11-24) ----------
     // the level fades in from the loading screen with nothing of this screen on it, only the map and
-    // the game's own panel. once the fade is done and IntroDelay has passed, the insect panel, the plant
-    // panels and the buttons rise from below the screen into their places, a little one after another,
-    // and the dark backdrop fades in with them. the level is paused, so it all runs on unscaled time
-    private const float IntroDelay = 0.5f;
+    // the game's own panel. as soon as the fade is done (no wait after it, Tommy 2026-11-26: it was half a
+    // second), the insect panel, the plant panels and the buttons rise from below the screen into their
+    // places, a little one after another, and the dark backdrop fades in with them. the level is paused,
+    // so it all runs on unscaled time
     private const float IntroRise = 0.45f;
     private const float IntroStagger = 0.08f;
     private Coroutine intro;
@@ -198,7 +198,6 @@ public class LoadoutSelectionUI : MonoBehaviour
     private System.Collections.IEnumerator Intro(float distance)
     {
         while (SceneTransition.IsTransitioning) yield return null;
-        yield return new WaitForSecondsRealtime(IntroDelay);
         float maxDelay = 0f;
         foreach (var m in introMovers) maxDelay = Mathf.Max(maxDelay, m.delay);
         for (float t = 0f; t < IntroRise + maxDelay; t += Time.unscaledDeltaTime)
@@ -1168,7 +1167,11 @@ public class LoadoutSelectionUI : MonoBehaviour
         tooltipBody.color = panelColor;
         if (namePlate != null) namePlate.color = panelColor;
         foreach (Image box in tooltipBoxes)
-            if (box != null) box.color = panelColor;
+            if (box != null)
+            {
+                box.color = panelColor;
+                SectionFrameLook.Recolor(box);
+            }
     }
 
     // the plant's name on a plate (Tommy, 2026-11-26): the in game upgrade buttons' small button
@@ -1302,7 +1305,8 @@ public class LoadoutSelectionUI : MonoBehaviour
             seamSize.flexibleWidth = 1f;
         }
 
-        // Attack, Passive, Skill, then the element: each section a dark inset box
+        // Attack, Passive, Skill, then the element: each section a dark inset box in Tommy's section frame
+        // (SectionFrameLook, 2026-11-26), its text clear of the frame
         TMP_Text[] titles = { tooltipAttackTitle, tooltipPassiveTitle, tooltipSkillTitle, tooltipElementalType };
         foreach (TMP_Text title in titles)
         {
@@ -1316,7 +1320,8 @@ public class LoadoutSelectionUI : MonoBehaviour
             box.raycastTarget = false;
             tooltipBoxes.Add(box);
             VerticalLayoutGroup inner = section.GetComponent<VerticalLayoutGroup>();
-            if (inner != null) inner.padding = new RectOffset(14, 14, 10, 12);
+            bool framed = SectionFrameLook.Add(box) != null;
+            if (inner != null) inner.padding = framed ? new RectOffset(20, 20, 16, 18) : new RectOffset(14, 14, 10, 12);
             if (title != tooltipElementalType) title.color = s.label;
             section.SetAsLastSibling();
         }

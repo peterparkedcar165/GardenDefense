@@ -567,7 +567,7 @@ public class Tansy : Aura
         string desc = details
             ? $"Two orbiting petal projectiles, evenly spaced, each deal <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to any insect they pass through. Their orbit radius is a fixed, togglable value from <color=green><b>1</b></color> up to <color=green><b>{MaxOrbitRadius}</b></color> (Attack Range, rounded down), completing <color=green><b>[100% Attack Speed]</b></color> revolutions per second regardless of radius - a wider radius means a faster-moving projectile covering more ground per lap, not slower revolutions."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "A third petal projectile joins the orbit, all three staying evenly spaced.")}\n\n" +
@@ -580,7 +580,7 @@ public class Tansy : Aura
         float rangepl = TData?.path2AttackRangePerLevel ?? 0.175f;
         float distpl  = TData?.path2DistanceBonusDamagePerLevel ?? 0.01f;
         string p2Bonus = "Plants within illumination range gain <color=orange><b>Tansy's Light</b></color>, increasing <color=green><b>Attack Speed</b></color> by <color=green><b>15%</b></color>.";
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+        return $"Passive:\n\n{GetPassiveDescription()}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"Increase <color=green><b>Distance Bonus Damage</b></color> by <color=green><b>{distpl * 100f:F0}%</b></color> per level. [<color=green><b>+{distpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path2Level, p2Bonus)}\n\n" +
@@ -595,7 +595,7 @@ public class Tansy : Aura
         string desc = details
             ? $"Target a plant anywhere on the field to grant <color=orange>Floral Glow</color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, summoning an orbiting petal projectile around it that deals <color={PlantData.ElementalColor(elementalType)}><b>[({TData?.floralGlowBaseDamage ?? 20f:F0}) + ({dmgpl:F0}/Lvl.)]</b></color> {PlantData.DamageTypeLabel(damageType)}, sourced from the {GetName()}, to anything it passes through - its orbit speed is driven by the <b>bearer's</b> Attack Speed instead of Tansy's. Emits light equal to <b><color=orange>Tansy</color></b>'s <color=green><b>Base Illumination Range</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

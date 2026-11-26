@@ -152,10 +152,15 @@ public class FertilizerCard : MonoBehaviour
         seam.anchoredPosition = new Vector2(centreX, Mathf.Round(y - 2f));
         y -= 4f + 8f;
 
+        // the description in its box, in Tommy's section frame (SectionFrameLook, 2026-11-26) when there is
+        // one, the text clear of it
         float boxTop = y, boxBottom = bottom + PacketPad;
+        bool framed = SectionFrameLook.Available;
+        float sidePad = framed ? SectionFrameLook.Inset : 12f;
+        float endPad = framed ? SectionFrameLook.Inset - 2f : 6f;
         RectTransform stats = statsText.rectTransform;
         stats.anchorMin = stats.anchorMax = stats.pivot = new Vector2(0.5f, 0.5f);
-        stats.sizeDelta = new Vector2(inner - 24f, boxTop - boxBottom - 12f);
+        stats.sizeDelta = new Vector2(inner - 2f * sidePad, boxTop - boxBottom - 2f * endPad);
         stats.anchoredPosition = new Vector2(centreX, Mathf.Round((boxTop + boxBottom) * 0.5f));
         statsText.enableAutoSizing = true;
         statsText.fontSizeMax = statsText.fontSize;
@@ -165,6 +170,7 @@ public class FertilizerCard : MonoBehaviour
         inset.sizeDelta = new Vector2(inner, boxTop - boxBottom);
         inset.anchoredPosition = stats.anchoredPosition;
         inset.SetSiblingIndex(stats.GetSiblingIndex());
+        SectionFrameLook.Add(inset.GetComponent<Image>());
 
         // the frame last, over the contents
         if (s.seedPacketTrim != null)

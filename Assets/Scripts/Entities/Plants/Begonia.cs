@@ -381,7 +381,7 @@ public class Begonia : Aura
         string desc = details
             ? $"Grows wet flowers around her, applying <color=#4FC3F7><b>Water</b></color> primer to insects in contact with them and reducing its internal cooldown by <color=green><b>[({(BData?.baseWaterCooldownReduction ?? 2f):F1}s) + ({cdrpl:F1}s/Lvl.)]</b></color>. Insects in contact with her flowers have <color=green><b>[({(BData?.baseGrassResistanceShred ?? 0.12f) * 100f:F0}%) + ({shredpl * 100f:F0}%/Lvl.)]</b></color> reduced <color=green><b>Grass Resistance</b></color>."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#4FC3F7><b>Water</b></color> internal cooldown reduction by <color=green><b>{cdrpl:F1}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath1Level:F1}s</b></color>]\n\n" +
                $"Increase <color=green><b>Grass Resistance</b></color> reduction by <color=green><b>{shredpl * 100f:F0}%</b></color> per level. [<color=green><b>+{shredpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
@@ -402,7 +402,7 @@ public class Begonia : Aura
             ? $"The {GetName()} gains <color=green><b>[({(BData?.baseElementalAffinityBonus ?? 0.24f) * 100f:F0}%) + ({eapl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> base <color=green><b>Elemental Affinity</b></color> and <color=green><b>[({(BData?.baseGrassDamageBonus ?? 0.2f) * 100f:F0}%) + ({gdpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color> base <color=green><b>Grass Damage</b></color>.\n\n" +
               $"Other plants within her attack radius are granted <color=#4FC3F7><b>Begonia's Blessing</b></color>, increasing their <color=green><b>Elemental Affinity</b></color> and <color=green><b>Grass Damage</b></color> by <color=green><b>[({(BData?.baseBlessingShare ?? 0.85f) * 100f:F0}%) + ({sharepl * 100f:F0}%/Lvl.)]</b></color> of her own, and making their <color=green><b>Germinate</b></color> triggers detonate <color=green><b>[({(BData?.baseGerminateSpeedup ?? 0.5f):F1}s) + ({gspl:F1}s/Lvl.)]</b></color> earlier."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase her base <color=green><b>Elemental Affinity</b></color> by <color=green><b>{eapl * 100f:F0}%</b></color> per level. [<color=green><b>+{eapl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase her base <color=green><b>Grass Damage</b></color> by <color=green><b>{gdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{gdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase the <color=#4FC3F7><b>Begonia's Blessing</b></color> share by <color=green><b>{sharepl * 100f:F0}%</b></color> per level. [<color=green><b>+{sharepl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
@@ -423,7 +423,7 @@ public class Begonia : Aura
               $"increasing <color=green><b>Attack Speed</b></color> by <color=green><b>[({(BData?.baseAttackSpeedBonus ?? 0f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{mpMult * 100f:F0}% Magic Power</color>]</b></color>. " +
               $"While active, dealing <color=#4FC3F7><b>Water</b></color> or <color=green><b>Grass</b></color> damage reduces that insect's own primer cooldown for that element by <color=green><b>[({(BData?.basePrimerCooldownReduction ?? 0.5f):F1}s) + ({pcrpl:F1}s/Lvl.)]</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase primer cooldown reduction by <color=green><b>{pcrpl:F1}s</b></color> per level. [<color=green><b>+{pcrpl * effectivePath3Level:F1}s</b></color>]\n\n" +

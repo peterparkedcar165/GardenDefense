@@ -356,7 +356,7 @@ public class Stargazer : Aura
         string desc = details
             ? $"Sprays fire in a <color=green><b>{ConeAngle:F0}</b></color> degree cone, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> damage to all insects within it."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Decrease <color=green><b>Total Attack Damage</b></color> by <color=red><b>33%</b></color>, but increase <color=orange><b>Fire Damage</b></color> by <color=green><b>{(SData?.path1MaxFireDamageBonus ?? 0.25f) * 100f:F0}%</b></color>. Increase <color=green><b>Cone Angle</b></color> by <color=green><b>{SData?.path1MaxConeAngleBonus ?? 15f:F0}°</b></color>.")}\n\n" +
@@ -372,7 +372,7 @@ public class Stargazer : Aura
         string desc = details
             ? $"Dealing <color=orange><b>Fire Damage</b></color> applies <color=green><b>[({SData?.baseStacksPerHit ?? 1}) + ({spl}/Lvl.)]</b></color> stack{(StacksPerHit == 1 ? "" : "s")} of <color=#FF6B1A>Flammable</color> to the target for <color=green><b>[({passiveDuration:F1}) + ({ppl * 100f:F0}%/Lvl.)]</b></color> seconds, increasing the <color=orange>Burn</color> damage it takes by <color=green><b>{FlammableBonusPerStack * 100f:F0}%</b></color> per stack. <color=orange>Burn</color> effects caused by the {GetName()} last <color=green><b>[({SData?.baseBurnDurationBonus ?? 0.5f:F0}%) + ({bdpl * 100f:F0}%/Lvl.)]</b></color> longer."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=#FF6B1A>Flammable</color> application duration by <color=green><b>{ppl * 100f:F0}%</b></color> per level. [<color=green><b>+{ppl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#FF6B1A>Flammable</color> stacks applied per hit by <color=green><b>{spl}</b></color> per level. [<color=green><b>+{Mathf.RoundToInt(spl * effectivePath2Level)}</b></color>]\n\n" +
                $"Increase <color=orange>Burn</color> duration by <color=green><b>{bdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
@@ -390,7 +390,7 @@ public class Stargazer : Aura
         string desc = details
             ? $"Aim a direction. After a brief delay, a <color=#FF6B1A><b>Fire Wave</b></color> sweeps across the entire map, dealing <color={PlantData.ElementalColor(elementalType)}><b>[({SData?.skillBaseDamage ?? 200f:F0}) + ({dpl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> damage to everything in its path, applying <color=green><b>[({SData?.skillFlammableStacks ?? 2}) + ({fpl:F1}/Lvl.)]</b></color> stacks of <color=#FF6B1A>Flammable</color>. The wave deals <color=green><b>[({SData?.skillBurnMultiplier ?? 2f:F1}) + ({bpl:F1}/Lvl.)]x</b></color> damage against <color=orange>Burning</color> targets.\n\nInflicts <color=orange>Burn</color> on targets hit."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=#FF6B1A>Fire Wave</color> damage by <color=green><b>{dpl:F0}</b></color> per level. [<color=green><b>+{dpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=#FF6B1A>Fire Wave</color> radius by <color=green><b>{wpl * 0.5f:F1}</b></color> per level. [<color=green><b>+{wpl * 0.5f * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase <color=orange>Burning</color>-target bonus damage by <color=green><b>{bpl * 100f:F0}%</b></color> per level. [<color=green><b>+{bpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +

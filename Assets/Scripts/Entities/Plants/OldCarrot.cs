@@ -353,7 +353,7 @@ public class OldCarrot : Shooter
         string desc = details
             ? $"Conjure a homing oldCarrot projectile that seeks out insects and continuously pierces through the same target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} per hit. The projectile can hit <color=green><b>[(1) + Piercing]</b></color> times."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rngpl:F2}</b></color> per level. [<color=green><b>+{rngpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Piercing</b></color> by <color=green><b>{ppl}</b></color> per level. [<color=green><b>+{ppl * effectivePath1Level}</b></color>]\n\n" +
@@ -371,7 +371,7 @@ public class OldCarrot : Shooter
               $"dealing <color=green><b>[({GData?.psionicDamageBase ?? 30f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{(GData?.psionicDamageMPScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per hit.\n\n" +
               $"Cooldown: <color=green><b>[({GData?.psionicCooldownBase ?? 3f:F1}) - ({cdpl:F1}/Lvl.)]</b></color> seconds."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Decrease Psionic OldCarrot cooldown by <color=green><b>{cdpl:F1}s</b></color> per level. [<color=green><b>-{cdpl * effectivePath2Level:F1}s</b></color>]\n\n" +
                $"Increase Psionic OldCarrot damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"While bonded, both the {GetName()} and the bonded plant gain <color=green><b>{BondMaxLevelBonus * 100f:F0}%</b></color> Attack Speed and <color=green><b>{BondMaxLevelBonus * 100f:F0}%</b></color> Passive Cooldown Reduction.")}\n\n" +
@@ -386,7 +386,7 @@ public class OldCarrot : Shooter
               $"dealing <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} and knocking insects aside."
             : GetSkillDesription();
         float wpl = GData?.path3WidthPerLevel ?? 0.1f;
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>OldCarrots</b></color> by <color=green><b>{GData?.oldCarrotsPerLevel ?? 1}</b></color> per level. [<color=green><b>+{(GData?.oldCarrotsPerLevel ?? 1) * effectivePath3Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Damage</b></color> by <color=green><b>{GData?.path3SkillDamagePerLevel ?? 8f:F0}</b></color> per level. [<color=green><b>+{(GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase oldCarrot width by <color=green><b>{wpl * 100f:F0}%</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +

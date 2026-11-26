@@ -695,7 +695,7 @@ public class AcornKnight : Aura
             ? $"Whenever {GetName()} is not being targeted by a Physical damaging insect, he holds an <color=orange><b>Attack Stance</b></color>.\n\n" +
               $"<color=orange><b>Attack Stance</b></color>: {GetName()} swings his sword down, dealing <color={PlantData.ElementalColor(elementalType)}><b>[{DownStrikeDamagePercent * 100f:F0}% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, then back up, dealing <color={PlantData.ElementalColor(elementalType)}><b>[{UpStrikeDamagePercent * 100f:F0}% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, to all insects in range on the side his target is on, with <color=green><b>{ConeFalloffPerTarget * 100f:F0}%</b></color> falloff per extra insect hit down to a <color=green><b>{SwingMinDamageMultiplier * 100f:F0}%</b></color> minimum."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl}</b></color> per level. [<color=green><b>+{armorpl * effectivePath1Level}</b></color>]\n\n" +
@@ -714,7 +714,7 @@ public class AcornKnight : Aura
               $"While in <color=orange><b>Guard Stance</b></color>, his attacks become an omnidirectional Shield Bash dealing <color={PlantData.ElementalColor(elementalType)}><b>[({(AcornData?.baseBashDamagePercent ?? 0.5f) * 100f:F0}%) + ({bashDmgPl * 100f:F0}%/Lvl.)] Armor</b></color> {PlantData.DamageTypeLabel(damageType)}.\n\n" +
               PlantData.RetainAggroLine()
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase guard <color=#00CED1><b>Armor</b></color> by <color=green><b>{armorpl:F0}</b></color> per level. [<color=green><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Shield Bash</b></color> Armor scaling by <color=green><b>{bashDmgPl * 100f:F0}%</b></color> per level. [<color=green><b>+{bashDmgPl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Decrease <color=orange><b>Guard Stance</b></color>'s <color=green><b>Attack Speed</b></color> penalty by <color=green><b>{DefensiveAttackSpeedPenaltyReductionPerLevel * 100f:F0}%</b></color> per level. [<color=green><b>-{DefensiveAttackSpeedPenaltyReductionPerLevel * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
@@ -736,7 +736,7 @@ public class AcornKnight : Aura
             ? $"The {GetName()} throws his shield, stopping at the first insect hit and dealing <color={PlantData.ElementalColor(elementalType)}><b>[{SkillDamageArmorPercent * 100f:F0}% Armor]</b></color> {PlantData.DamageTypeLabel(damageType)}, <b>Stunning</b> it for <color=green><b>{ShieldStunDuration:F1}s</b></color>. The <color=green><b>Shield</b></color> then sits at the hit location for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> <color=#FFB6C1><b>[+{durMP * 100f:F0}% Magic Power]</b></color> seconds, blocking and <b>Taunting</b> insects who stop at it. The <color=green><b>Shield</b></color> has <color=green><b>[({data.baseSkillHealth:F0}) + ({hppl:F0}/Lvl.)]</b></color> health.\n\n" +
               $"While the shield is out, {GetName()} cannot guard, loses <color=#00CED1><b>{AttackPathArmorBonus:F0} Armor</b></color>, and gains <color=green><b>[({(AcornData?.baseSkillAttackSpeedBonus ?? 0.2f) * 100f:F0}%) + ({aspl * 100f:F0}%/Lvl.)]</b></color> <color=green><b>Attack Speed</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Shield</b></color> lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Shield</b></color> health by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +

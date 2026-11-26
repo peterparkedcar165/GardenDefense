@@ -423,6 +423,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\PoisonShroomProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Duskdarter.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\PsionicOldCarrotProjectile.cs" />
+    <Compile Include="Assets\Scripts\UI\SectionFrameLook.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\FertilizerData.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlotSquare.cs" />
     <Compile Include="Assets\Scripts\Mulch\WisdomLeafMulchData.cs" />

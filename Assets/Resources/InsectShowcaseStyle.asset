@@ -22,6 +22,8 @@ MonoBehaviour:
   seam: {fileID: 21300000, guid: 163469b4294d4109babbd579420958cf, type: 3}
   insetBox: {fileID: 21300000, guid: c165a23d4cbf45c3a22a1084d2041d19, type: 3}
   stripSunken: {fileID: 21300000, guid: 21bb173b97564288bc2aca9c6f794bf1, type: 3}
+  sectionFrame: {fileID: 21300000, guid: 936fa8486c0045f6aad8532d7b05aa42, type: 3}
+  sectionFrameLighten: 0.45
   health: {fileID: 21300000, guid: 2e5c34c595777264697481725ca30bff, type: 3}
   movementSpeed: {fileID: 21300000, guid: 90221d272059a444cb5784d20eaa771b, type: 3}
   armor: {fileID: 21300000, guid: b5cc6c67ad3bcfc4dabb5e6db7b43bd2, type: 3}

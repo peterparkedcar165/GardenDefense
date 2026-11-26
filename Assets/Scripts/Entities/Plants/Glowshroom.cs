@@ -286,7 +286,7 @@ public class Glowshroom : Shooter
         string desc = details
             ? $"Fires a fungal bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to the target, splashing <color=green><b>{(GMData?.splashDamageMultiplier ?? 0.5f) * 100f:F0}%</b></color> <color=#FFB6C1>[+{splashMP * 100f:F0}% Magic Power]</color> of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F2}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Splash damage now applies <color=#88FF88>Fungal Glow</color>.")}\n\n" +
@@ -301,7 +301,7 @@ public class Glowshroom : Shooter
         string desc = details
             ? $"Dealing damage inflicts <color=#88FF88>Fungal Glow</color>, causing the insect to emit a faint light for <color=green><b>[({GMData?.fungalGlowDuration ?? 6f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. When a glowing insect takes <color=#4FC3F7><b>Water</b></color> damage, the duration is refreshed. Whenever an insect affected by <color=#88FF88>Fungal Glow</color> dies, the {GetName()} generates <color=yellow><b>[({GMData?.deathSunGeneration ?? 3f:F0}) + ({sunpl:F0}/Lvl.)]</b></color> <color=yellow>Sun</color>."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=#88FF88>Fungal Glow</color> duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase Sun generated per death by <color=green><b>{sunpl:F0}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Whenever an insect affected by <color=#88FF88>Fungal Glow</color> dies, it creates a flash which <color=#DDDDDD><b>Blinds</b></color> nearby insects for <color=green><b>{DeathBlindDuration:F0}s</b></color> in a <color=green><b>{DeathBlindRadius:F0}</b></color> radius.")}\n\n" +
@@ -317,7 +317,7 @@ public class Glowshroom : Shooter
         string desc = details
             ? $"Unleashes a blinding flash, tripling the illumination radius for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. All insects caught in the expanded radius are <color=#DDDDDD><b>Blinded</b></color> for <color=green><b>[({GMData?.blindDuration ?? 3f:F1}) + ({blindpl:F1}/Lvl.) + <color=#FFB6C1>{blindMP * 100f:F0}% Magic Power</color>]</b></color> seconds, causing their attacks to miss."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=#DDDDDD>Blind</color> duration by <color=green><b>{blindpl:F1}</b></color> seconds per level. [<color=green><b>+{blindpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase skill duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

@@ -307,7 +307,7 @@ public class BogIris : Shooter
         string desc = details
             ? $"Fires a water bolt at a single target dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> [<color=green><b>+{HealthDamageScalingPercent * 100f:F0}% Max Health</b></color>] {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Max Health</b></color> damage scaling by <color=green><b>{hppl * 100f:F0}%</b></color> per level. [<color=green><b>+{hppl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Increase the Sun timer advance per attack hit by <color=green><b>50%</b></color>.")}\n\n" +
@@ -336,7 +336,7 @@ public class BogIris : Shooter
               PlantData.RetainAggroLine()
             : GetPassiveDescription();
         string stateLine = $"<b><color=#4FC3F7>{(_isOpen ? "OPEN" : "CLOSED")}</color></b>";
-        return $"Passive:\n\n{stateLine}\n\n{desc}\n\n" +
+        return $"Passive:\n\n{stateLine}\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase regeneration by <color=red><b>{regenpl * 100f:F0}%</b></color> per level. [<color=red><b>+{regenpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase open-state Sun production by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase the Sun timer reduction per hit by <color=green><b>{reducepl:F2}s</b></color> per level. [<color=green><b>+{reducepl * effectivePath2Level:F2}s</b></color>]\n\n" +
@@ -360,7 +360,7 @@ public class BogIris : Shooter
         string desc = details
             ? $"Target a location. After a brief delay, a geyser erupts, dealing <color=green><b>[({BogData?.baseGeyserDamage:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} and knocking all insects airborne by <color=green><b>[({BogData?.baseKnockUpHeight:F0}) + ({knockpl:F0}/Lvl.)]</b></color> units within radius <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase the flat component of geyser damage by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the knock-up height by <color=green><b>{knockpl:F0}</b></color> per level. [<color=green><b>+{knockpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase the radius of the geyser by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +

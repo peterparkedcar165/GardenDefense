@@ -266,7 +266,7 @@ public class Kelp : Aura
         string desc = details
             ? $"Whips the target insect, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rpl:F2}</b></color> per level. [<color=green><b>+{rpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Whips can also hit nearby insects within a <color=green><b>{AttackSplashRadius:F0}</b></color> radius of the target.")}\n\n" +
@@ -282,7 +282,7 @@ public class Kelp : Aura
         string desc = details
             ? $"Hitting a target releases air bubbles, granting plants within range <color=green><b>[({KData?.baseOxygenReplenish ?? 5f:F1}) + ({oxypl:F1}/Lvl.)]</b></color> <color=#4FC3F7><b>Oxygen</b></color>. For every <color=green><b>[({KData?.baseOxygenRequirement ?? 100f:F0}) - ({reqpl:F0}/Lvl.)]</b></color> <color=#4FC3F7><b>Oxygen</b></color> provided, Kelp produces <color=yellow><b>1</b></color> <color=yellow>Sun</color>."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"Increase Oxygen replenished per hit by <color=green><b>{oxypl:F1}</b></color> per level. [<color=green><b>+{oxypl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"Decrease Oxygen required per Sun by <color=green><b>{reqpl:F0}</b></color> per level. [<color=green><b>-{reqpl * effectivePath2Level:F0}</b></color>]\n\n" +
@@ -300,7 +300,7 @@ public class Kelp : Aura
         string desc = details
             ? $"Fires a bubble in a chosen direction. Plants it touches are enveloped in an <color=#4FC3F7><b>Air Bubble</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, instantly restoring <color=green><b>[({KData?.baseBubbleInitialOxygen ?? 20f:F0}) + ({initpl:F0}/Lvl.)]</b></color> <color=#4FC3F7><b>Oxygen</b></color> and regenerating <color=green><b>[({KData?.baseBubbleRegenPerSecond ?? 2f:F1}) + ({regenpl:F1}/Lvl.)]</b></color> per second."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase initial Oxygen restored by <color=green><b>{initpl:F0}</b></color> per level. [<color=green><b>+{initpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase Oxygen regeneration by <color=green><b>{regenpl:F1}</b></color> per second per level. [<color=green><b>+{regenpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +

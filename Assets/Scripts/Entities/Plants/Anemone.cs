@@ -141,7 +141,7 @@ public class Anemone : Shooter
         string desc = details
             ? $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color={PlantData.ElementalColor(elementalType)}><b>[{100f / ProjectileCount:F0}% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, and half that to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rpl:F2}</b></color> per level. [<color=green><b>+{rpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Increase projectile count by <color=green><b>3</b></color>.")}\n\n" +
@@ -158,7 +158,7 @@ public class Anemone : Shooter
         string desc = details
             ? $"Dealing Wind Damage applies <color=green><b>[({baseStacks}) + ({spl}/Lvl.)]</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>{ErosionDuration * ErosionProcChance:F1}</b></color> seconds, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)baseRed}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase initial <color=#E0E0E0>Wind Erosion</color> application by <color=green><b>{spl}</b></color> per level. [<color=green><b>+{spl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=#E0E0E0>Wind Erosion</color> application duration by <color=green><b>{procpl * 100f:F0}%</b></color> per level. [<color=green><b>+{procpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#E0E0E0>Wind Erosion</color> duration by <color=green><b>{ErosionDurationPerLevel:F0}s</b></color> per level. [<color=green><b>+{ErosionDurationPerLevel * effectivePath2Level:F0}s</b></color>]\n\n" +
@@ -177,7 +177,7 @@ public class Anemone : Shooter
         string desc = details
             ? $"Summon a vortex at target location, dragging insects toward its center (Pull Strength: <color=green><b>[({baseDrag:F2}) + ({dpl:F2}/Lvl.)]</b></color>) while dealing <color={PlantData.ElementalColor(elementalType)}><b>[({VortexDamageFlat:F0}) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> damage every <color=green><b>{tickInterval:F1}s</b></color> within a <color=green><b>[({baseRadius:F1}) + ({rpl:F2}/Lvl.)]</b></color> radius, for <color=green><b>{skillDuration:F0}s</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Vortex Radius</b></color> by <color=green><b>{rpl:F2}</b></color> per level. [<color=green><b>+{rpl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Pull Strength</b></color> by <color=green><b>{dpl:F2}</b></color> per level. [<color=green><b>+{dpl * effectivePath3Level:F2}</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

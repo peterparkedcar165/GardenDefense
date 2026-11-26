@@ -253,7 +253,7 @@ public class Cactus : Aura
         string desc = details
             ? $"Slams all insects within range, dealing <color=#00CED1><b>[100% Attack Damage + {ArmorScalingPercent * 100f:F0}% Armor]</b></color> {PlantData.DamageTypeLabel(damageType)}. Each hit applies <color=green><b>1</b></color> <color=purple><b>Punctured</b></color> stack."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=#00CED1><b>Armor</b></color> scaling by <color=green><b>{scalingpl * 100f:F0}%</b></color> per level. [<color=green><b>+{scalingpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Increase base <color=#00CED1><b>Attack Range</b></color> by <color=green><b>25%</b></color>.")}\n\n" +
@@ -265,7 +265,7 @@ public class Cactus : Aura
     {
         float hppl = CactData?.path2HealthPerLevel ?? 60f;
         float cdrpl = CactData?.path2CooldownRefundPerLevel ?? 0.05f;
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+        return $"Passive:\n\n{GetPassiveDescription()}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Max Health</b></color> by <color=green><b>{hppl:F0}</b></color> per level. [<color=green><b>+{hppl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase Cooldown Refund by <color=green><b>{cdrpl:F2}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath2Level:F2}s</b></color>]\n\n" +
                $"{Level5Section(path2Level, "Attacks now apply <color=green><b>2</b></color> <color=purple><b>Punctured</b></color> stacks.")}\n\n" +
@@ -278,7 +278,7 @@ public class Cactus : Aura
         float shieldpl   = CactData?.path3ShieldPerLevel            ?? 10f;
         float durpl      = CactData?.path3SkillDurationPerLevel     ?? 2f;
         float reflectpl  = CactData?.path3CounterReflectPerLevel    ?? 0.05f;
-        return $"Skill:\n\n{GetSkillDesription()}\n\n" +
+        return $"Skill:\n\n{GetSkillDesription()}\n\n{UpgradesBreak}" +
                $"Increase counter damage by <color=green><b>{reflectpl * 100f:F0}%</b></color> per level. [<color=green><b>+{reflectpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase Shield by <color=grey><b>{shieldpl:F0}</b></color> per level. [<color=grey><b>+{shieldpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +

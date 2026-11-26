@@ -570,7 +570,7 @@ public class Sunflower : Shooter
         string desc = details
             ? $"The <color=orange><b>{DisplayName}</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path1Level, $"Reduce <color=green><b>Total Attack Damage</b></color> by <color=green><b>50%</b></color>. Attacks now shoot <color=green><b>{projectileCount}</b></color> projectiles to the target.")}\n\n" +
@@ -586,7 +586,7 @@ public class Sunflower : Shooter
         string desc = details
             ? $"The <color=orange><b>{DisplayName}</b></color> periodically generates <color=green><b>[({SFData?.baseSunGenerated ?? 10}) + ({sunpl}/Lvl.)]</b></color> <color=yellow>Sun</color> every <color=green><b>{data.basePassiveCooldown:F0}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>[({SFData?.baseCooldownReductionPerHit ?? 0.35f:F2}) + ({cdrpl:F2}/Lvl.)]</b></color> seconds."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=yellow><b>Sun Generated</b></color> by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]\n\n" +
                $"Increase <color=green><b>cooldown reduction on hit</b></color> by <color=green><b>{cdrpl:F2}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath2Level:F2}s</b></color>]\n\n" +
                $"{Level5Section(path2Level, passiveMaxBonus)}\n\n" +
@@ -603,7 +603,7 @@ public class Sunflower : Shooter
             ? $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color> radius for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\n\n" +
               $"For each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F1}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +

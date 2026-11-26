@@ -515,7 +515,7 @@ public class Snowdrop : Shooter
         string desc = details
             ? $"Fires a magical snowball at her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{arpl:F1}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F1}</b></color>]\n\n" +
@@ -533,7 +533,7 @@ public class Snowdrop : Shooter
               $"Attacks against unmarked targets deal <color=#00FFFF><b>[({SData?.snowMarkFlatDamageBase ?? 12f:F0}) + ({flatpl:F0}/Lvl.)]</b></color> + <color=#00FFFF><b>[({(SData?.snowMarkDamagePercentBase ?? 0.02f) * 100f:F1}%) + ({pctpl * 100f:F1}%/Lvl.) + <color=#FFB6C1>{(SData?.snowMarkDamagePercentMP ?? 0.01f) * 100f:F0}% Magic Power</color>]</b></color> of its <color=red><b>Max Health</b></color> as {PlantData.DamageTypeLabel(damageType)}, and apply <color=#00FFFF><b>Snow Mark</b></color> for <color=green><b>{SnowMarkDuration:F0}s</b></color>.\n\n" +
               $"The bonded plant will target at highest priority the <color=#00FFFF><b>Snow Marked</b></color> insect. Direct damage inflicted by the bonded plant against the <color=#00FFFF><b>Marked</b></color> insect detonates the <color=#00FFFF><b>Snow Mark</b></color>, dealing the same bonus as <color=red><b>Max Health</b></color> {PlantData.DamageTypeLabel(damageType)}. If the detonation was dealt by an <color=#00FFFF><b>Attack</b></color>, deal quadruple that <color=red><b>Max Health</b></color> percentage instead."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase damage by <color=green><b>{flatpl:F0}</b></color> per level. [<color=green><b>+{flatpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase <color=red><b>Max Health</b></color> damage by <color=green><b>{pctpl * 100f:F1}%</b></color> per level. [<color=green><b>+{pctpl * effectivePath2Level * 100f:F1}%</b></color>]\n\n" +
                $"{Level5Section(path2Level, "Snowdrop can target insects within the bonded plant's attack radius.\n\n<color=#00FFFF><b>Ice Beam</b></color>'s range cap is removed.")}\n\n" +
@@ -548,7 +548,7 @@ public class Snowdrop : Shooter
         string desc = details
             ? $"{GetName()}'s attacks become an <color=#00FFFF><b>Ice Beam</b></color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds, within which her Attack Speed is fixed at <color=green><b>[({(SData?.iceBeamAttackSpeed ?? 3f):F0}) + ({aspl:F1}/Lvl.)]</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase Attack Speed by <color=green><b>{aspl:F1}</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path3Level, $"While the Skill is active, the bonded plant gains <color=green><b>{PartnerHasteBonus * 100f:F0}%</b></color> Attack Speed.")}\n\n" +

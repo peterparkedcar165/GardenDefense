@@ -516,7 +516,7 @@ public class Calendula : Aura
         string desc = details
             ? $"Releases flaming petals dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects within range. Each insect beyond the first hit reduces damage by <color=green><b>10%</b></color>, down to a minimum of <color=green><b>60%</b></color>."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=orange><b>Fire Damage</b></color> by <color=green><b>{firepl * 100f:F0}%</b></color> per level. [<color=green><b>+{firepl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path1Level, "Increase <color=#6495ED><b>Coordinated Damage</b></color> by <color=green><b>15%</b></color>.")}\n\n" +
@@ -529,7 +529,7 @@ public class Calendula : Aura
         float rangepl = CData?.path2AttackRangePerLevel ?? 0.175f;
         float fireDamageBonus = CData?.maxLevelFireDamageBonus ?? 0.06f;
         string p2Bonus = $"Plants within illumination range gain <color=orange><b>Calendula's Ember</b></color>, increasing <color=orange><b>Fire Damage</b></color> by <color=green><b>{fireDamageBonus * 100f:F0}%</b></color>.";
-        return $"Passive:\n\n{GetPassiveDescription()}\n\n" +
+        return $"Passive:\n\n{GetPassiveDescription()}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath2Level:F1}</b></color>]\n\n" +
                $"{Level5Section(path2Level, p2Bonus)}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
@@ -545,7 +545,7 @@ public class Calendula : Aura
         string desc = details
             ? $"Target a plant anywhere on the field, sending a petal to it that grants <color=orange>Floral Glow</color> for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds on arrival. The plant's single target attacks deal an additional <color=green><b>[({dmgScalingBase * 100f:F0}%) + ({dmgScalingPerLevel * 100f:F0}%/Lvl.) Attack Damage + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} on hit. Emits light equal to <b><color=orange>Calendula</color></b>'s <color=green><b>Base Illumination Range</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Attack Damage</b></color> scaling by <color=green><b>{dmgScalingPerLevel * 100f:F0}%</b></color> per level. [<color=green><b>+{dmgScalingPerLevel * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

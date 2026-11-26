@@ -464,7 +464,7 @@ public class Carrot : Shooter
             ? $"Attacks are also considered to be <b>Coordinated Attacks</b>.\n\n" +
               $"Erupts a chunk of earth beneath its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to it and any insects within <color=green><b>[({GData?.baseEruptionRadius ?? 1f:F1}) + ({rpl:F2}/Lvl.)]</b></color> of it."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Critical Chance</b></color> by <color=green><b>{ccpl * 100f:F0}%</b></color> per level. [<color=green><b>+{ccpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=green><b>Eruption Radius</b></color> by <color=green><b>{rpl:F2}</b></color> per level. [<color=green><b>+{rpl * effectivePath1Level:F2}</b></color>]\n\n" +
@@ -480,7 +480,7 @@ public class Carrot : Shooter
         string desc = details
             ? $"Select a tile to form a <color=#B87333><b>Soil Bond</b></color> with the plant there. The bonded plant shares its targeting range with the {GetName()}. Every time the plant hits an attack, it reduces time before the {GetName()}'s next attack by <color=green><b>[({GData?.bondCountdownBonus ?? 0.3f:F2}) + ({cbpl:F2}/Lvl.)]</b></color> seconds. In return, the bonded plant gains Attack Range equal to <color=green><b>{SoilBondEffect.RangeBonusFraction * 100f:F0}%</b></color> of the {GetName()}'s own."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase Attack Countdown bonus by <color=green><b>{cbpl:F2}</b></color> per level. [<color=green><b>+{cbpl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rgpl:F2}</b></color> per level. [<color=green><b>+{rgpl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"While bonded, the linked plant also gains <color=green><b>{SoilBondEffect.MaxLevelAttackSpeedBonus * 100f:F0}%</b></color> Attack Speed.")}\n\n" +
@@ -495,7 +495,7 @@ public class Carrot : Shooter
               $"dealing <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} and knocking insects aside."
             : GetSkillDesription();
         float wpl = GData?.path3WidthPerLevel ?? 0.1f;
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Carrots</b></color> by <color=green><b>{GData?.carrotsPerLevel ?? 1}</b></color> per level. [<color=green><b>+{(GData?.carrotsPerLevel ?? 1) * effectivePath3Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Damage</b></color> by <color=green><b>{GData?.path3SkillDamagePerLevel ?? 8f:F0}</b></color> per level. [<color=green><b>+{(GData?.path3SkillDamagePerLevel ?? 8f) * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase carrot width by <color=green><b>{wpl * 100f:F0}%</b></color> per level. [<color=green><b>+{wpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +

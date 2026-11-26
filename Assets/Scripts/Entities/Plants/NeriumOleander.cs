@@ -418,7 +418,7 @@ public class NeriumOleander : Shooter
         string desc = details
             ? $"Fires a toxic petal at the target dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}. The petal bounces to <color=green><b>[(1) + Piercing]</b></color> additional target(s). The petal deals <color=green><b>{(OleanderData?.bounceDamageReduction ?? 0.1f) * 100f:F0}%</b></color> reduced damage per bounce."
             : GetAttackDescription();
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{arpl:F1}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=green><b>Piercing</b></color> by <color=green><b>{bpl}</b></color> per level. [<color=green><b>+{bpl * effectivePath1Level}</b></color>]\n\n" +
@@ -440,7 +440,7 @@ public class NeriumOleander : Shooter
               $"<color=#2ECC71><b><u>Oleandic Ward</u></b></color>\n" +
               $"Cleanses a random debuff, and locks them out of receiving that debuff while the effect is active. Grants a weak heal of <color=green><b>{WardHealAmount:F0}</b></color> on application, and regenerates <color=green><b>{WardRegenPerLock:F0}</b></color> Health per second for every debuff currently locked."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"For each debuff locked, also grant <color=#FF69B4><b>{(OleanderData?.path2MaxMagicResistancePerLock ?? 0.05f) * 100f:F0}% Magic Resistance</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
@@ -458,7 +458,7 @@ public class NeriumOleander : Shooter
         string desc = details
             ? $"Place down an <color=purple><b>Oleander Sprout</b></color> for <color=green><b>[({OleanderData?.baseSproutDuration ?? 15f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Attacks may bounce on and off the sprout without reducing the bounce count. While the sprout is active, insects within its <color=green><b>Attack Range</b></color> are inflicted with <color=#9B59B6><b>Oleandic Curse</b></color>, reducing <color=purple><b>Poison Resistance</b></color> by <color=green><b>[({(OleanderData?.baseCursePoisonResistReduction ?? 0.04f) * 100f:F0}%) + ({curvepl * 100f:F0}%/Lvl.)]</b></color>."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase sprout duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase curse strength by <color=green><b>{curvepl * 100f:F0}%</b></color> per level. [<color=green><b>+{curvepl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +

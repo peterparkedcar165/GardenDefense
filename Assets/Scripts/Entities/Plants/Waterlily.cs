@@ -338,7 +338,7 @@ public class Waterlily : Shooter
         string desc = details
             ? $"Blows little bubbles towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}. Splash hits the <color=green><b>[({WLData?.splashMaxExtraTargets ?? 2}) + ({targetspl}/Lvl.)]</b></color> nearest insects around the target."
             : $"{GetAttackDescription()} Splash hits the <color=green><b>{SplashTargets}</b></color> nearest insects around the target.";
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase splash targets by <color=green><b>{targetspl}</b></color> per level. [<color=green><b>+{targetspl * effectivePath1Level}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
@@ -355,7 +355,7 @@ public class Waterlily : Shooter
             ? $"Attacks deal <color={PlantData.ElementalColor(elementalType)}><b>[{SplashDamageRatio * 100f:F0}% <color=green><b>Attack Damage</b></color>]</b></color> {PlantData.DamageTypeLabel(damageType)} to the <color=green><b>{SplashTargets}</b></color> nearest insects around the target within a <color=green><b>[({WLData?.baseAoERange ?? 0.75f:F2}) + ({aoepl:F2}/Lvl.)]</b></color> radius.\n\n" +
               $"Dealing damage with attacks and splash damage inflicts a stacking <color=#4FC3F7><b>Soaked</b></color> for <color=green><b>[({WLData?.baseSoakDuration ?? 4f:F1}) + ({soakpl:F1}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.soakDurationMP ?? 1f):F1}s per 100 Magic Power</b></color>] seconds, slowing by <color=green><b>{SoakedEffect.baseSoakSlowness * 100f:F0}%</b></color> + <color=green><b>{SoakedEffect.soakSlownessPerLevel * 100f:F0}%</b></color> per stack, up to <color=#4FC3F7><b>{MaxSoakStacks}</b></color> stacks. <color=#4FC3F7><b>Soaked</b></color> insects are grounded."
             : GetPassiveDescription();
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=#4FC3F7><b>Soaked</b></color> duration by <color=green><b>{soakpl:F1}s</b></color> per level. [<color=green><b>+{soakpl * effectivePath2Level:F1}s</b></color>]\n\n" +
                $"Increase splash radius by <color=green><b>{aoepl:F2}</b></color> per level. [<color=green><b>+{aoepl * effectivePath2Level:F2}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Inflicts two stacks of <color=#4FC3F7><b>Soaked</b></color> instead of one.")}\n\n" +
@@ -372,7 +372,7 @@ public class Waterlily : Shooter
             ? $"Blows a large bubble onto a targeted area, trapping insects within the bubble while dealing <color=green><b>{bubbleDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} upon impact, and keeping them airborne for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.bubbleDurationMP ?? 2f):F1}s per 100 Magic Power</b></color>] seconds within a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F2}/Lvl.)]</b></color> radius.\n\n" +
               $"Imprisoned insects take <color=green><b>[({(WLData?.baseBubbleDamageTaken ?? 0.08f) * 100f:F0}%) + ({takenpl * 100f:F0}%/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.bubbleDamageTakenMP ?? 0.05f) * 100f:F0}% per 100 Magic Power</b></color>] increased damage from all sources."
             : GetSkillDesription();
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase damage taken by imprisoned insects by <color=green><b>{takenpl * 100f:F0}%</b></color> per level. [<color=green><b>+{takenpl * effectivePath3Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase duration by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Increase bubble radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]\n\n" +

@@ -148,16 +148,29 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         return plank;
     }
 
-    private void Build(string text, GameControlsStyle.ButtonColors buttonColors, TMP_FontAsset font, Action onClick)
+    // a plank that is only a title (the fertilizer screen's, Tommy 2026-11-26): the large leafy plank (or
+    // the medium one) with its word, and no Button, so it never lights up or presses
+    public static PlankButton CreateTitle(RectTransform parent, string text, GameControlsStyle.ButtonColors colors, TMP_FontAsset font, bool large = true)
+    {
+        GameObject go = new GameObject("Title " + text, typeof(RectTransform));
+        go.layer = parent.gameObject.layer;
+        go.transform.SetParent(parent, false);
+        PlankButton plank = go.AddComponent<PlankButton>();
+        plank.large = large;
+        plank.Build(text, colors, font, null, false);
+        return plank;
+    }
+
+    private void Build(string text, GameControlsStyle.ButtonColors buttonColors, TMP_FontAsset font, Action onClick, bool clickable = true)
     {
         colors = buttonColors;
         face = gameObject.AddComponent<Image>();
-        face.type = Image.Type.Sliced;
+        face.type = SpriteType;
         face.pixelsPerUnitMultiplier = 1f;
-        face.raycastTarget = true;
+        face.raycastTarget = clickable;
 
         shine = NewChild("Shine").gameObject.AddComponent<Image>();
-        shine.type = Image.Type.Sliced;
+        shine.type = SpriteType;
         shine.pixelsPerUnitMultiplier = 1f;
         shine.raycastTarget = false;
         Stretch(shine.rectTransform);
@@ -171,10 +184,13 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         StyleLabel(label, font, LabelTop);
         shadow = labelRect.gameObject.AddComponent<PixelTextEffect>();
 
-        button = gameObject.AddComponent<Button>();
-        button.transition = Selectable.Transition.None;
-        button.targetGraphic = face;
-        button.onClick.AddListener(() => onClick?.Invoke());
+        if (clickable)
+        {
+            button = gameObject.AddComponent<Button>();
+            button.transition = Selectable.Transition.None;
+            button.targetGraphic = face;
+            button.onClick.AddListener(() => onClick?.Invoke());
+        }
 
         Resize();
         Apply();
@@ -240,12 +256,13 @@ public class PlankButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         Apply();
     }
 
-    public void OnPointerEnter(PointerEventData eventData) { if (!Usable) return; hovered = true; Apply(); }
+    // a title plank (no Button) never reacts
+    public void OnPointerEnter(PointerEventData eventData) { if (!Usable || button == null) return; hovered = true; Apply(); }
     public void OnPointerExit(PointerEventData eventData) { hovered = false; pressed = false; Apply(); }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left || !pressable || !Usable) return;
+        if (eventData.button != PointerEventData.InputButton.Left || !pressable || !Usable || button == null) return;
         pressed = true;
         Apply();
     }

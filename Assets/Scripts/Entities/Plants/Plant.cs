@@ -1617,10 +1617,17 @@ public abstract class Plant : Entity, IAttackable
 
     protected string SkillCooldownLine() => $"Cooldown: <b>{Mathf.RoundToInt(skillCooldown)}s</b>";
 
+    // where an Attack, Passive or Skill text's sections start (Tommy, 2026-11-26): the upgrades (each plant puts
+    // UpgradesBreak after its description) and the max level bonus (Level5Section starts with MaxLevelBreak).
+    // the plant info panel cuts the text there into framed boxes (PlantUpgradeUI.ShowTooltip); both are zero
+    // width characters, so a text shown whole reads as before
+    public const string UpgradesBreak = "\u200B";
+    public const string MaxLevelBreak = "\u2060";
+
     protected string Level5Section(int pathLevel, string bonusText = null)
     {
         bool unlocked = pathLevel >= absoluteLevelCap;
-        string header = $"<color={(unlocked ? "green" : "grey")}><b>[Max Level Bonus]</b></color>";
+        string header = $"{MaxLevelBreak}<color={(unlocked ? "green" : "grey")}><b>[Max Level Bonus]</b></color>";
         if (bonusText == null) return header;
         string body = unlocked
             ? bonusText

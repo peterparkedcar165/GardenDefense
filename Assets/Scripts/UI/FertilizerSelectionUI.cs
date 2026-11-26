@@ -21,12 +21,36 @@ public class FertilizerSelectionUI : MonoBehaviour
         UnityEngine.UI.Image backdrop = panel.GetComponent<UnityEngine.UI.Image>();
         if (backdrop != null) backdrop.color = new Color(0f, 0f, 0f, BackdropAlpha);
         Transform header = panel.transform.Find("HeaderText");
-        if (header is RectTransform headerRect) headerRect.anchoredPosition = new Vector2(headerRect.anchoredPosition.x, HeaderY);
+        if (header is RectTransform headerRect)
+        {
+            headerRect.anchoredPosition = new Vector2(headerRect.anchoredPosition.x, HeaderY);
+            TitleOnPlank(headerRect);
+        }
         panel.SetActive(false);
     }
 
     private const float BackdropAlpha = 0.85f;
     private const float HeaderY = 360f;
+    // the title plank at 2 times its art (4 canvas units an art pixel, whole pixels at 1080)
+    private const float TitleScale = 2f;
+
+    // the title on the main menu's large leafy plank (Tommy, 2026-11-26), in the yellow of the menu's
+    // other buttons, centred where the title was; the old text hides
+    private void TitleOnPlank(RectTransform headerRect)
+    {
+        TMPro.TMP_Text title = headerRect.GetComponent<TMPro.TMP_Text>();
+        GameControlsStyle look = GameControlsStyle.Instance;
+        if (title == null || look.largeButton == null) return;
+        PlankButton plank = PlankButton.CreateTitle((RectTransform)panel.transform, title.text, look.pause, InsectShowcaseStyle.Instance.font);
+        RectTransform r = plank.Rect;
+        r.anchorMin = headerRect.anchorMin;
+        r.anchorMax = headerRect.anchorMax;
+        r.pivot = new Vector2(0.5f, 0.5f);
+        r.anchoredPosition = headerRect.anchoredPosition;
+        r.localScale = Vector3.one * TitleScale;
+        r.SetSiblingIndex(headerRect.GetSiblingIndex());
+        title.gameObject.SetActive(false);
+    }
 
     public void Configure(FertilizerData[] pool)
     {

@@ -284,7 +284,7 @@ public class Zinnia : Aura
         string desc = details
             ? $"Releases fiery sparks dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects in range. Nearby plants instead take no damage and are marked with <color=orange><b>Ablaze</b></color>, causing their next projectile attack to deal <color=green><b>[({ZData?.baseDetonationFlat ?? 15f:F0}) + ({(ZData?.baseDetonationMultiplier ?? 0.6f) * 100f:F0}% <color=#FFB6C1>Magic Power</color>)]</b></color> + <color=green><b>[({(ZData?.baseAblazeMaxHealthPercent ?? 0.03f) * 100f:F0}%) + ({ablazepl * 100f:F0}%/Lvl.)]</b></color> of the target's Max Health as bonus <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage."
             : $"Releases fiery sparks dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} to all insects in range. Nearby plants instead take no damage and are marked with <color=orange><b>Ablaze</b></color>, causing their next projectile attack to deal <color=orange><b>{AblazeBonusDamage:F0}</b></color> + <color=orange><b>{AblazeMaxHealthPercent * 100f:F0}%</b></color> of the target's Max Health as bonus <color=orange><b>Fire</b></color> <color=#FFB6C1><b>Magic</b></color> damage.";
-        return $"Attack:\n\n{desc}\n\n" +
+        return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=green><b>Attack Range</b></color> by <color=green><b>{arpl:F2}</b></color> per level. [<color=green><b>+{arpl * effectivePath1Level:F2}</b></color>]\n\n" +
                $"Increase <color=orange><b>Ablaze</b></color> Max Health damage by <color=green><b>{ablazepl * 100f:F1}%</b></color> per level. [<color=green><b>+{ablazepl * effectivePath1Level * 100f:F1}%</b></color>]\n\n" +
@@ -302,7 +302,7 @@ public class Zinnia : Aura
         string desc = details
             ? $"Plants within her attack radius gain <color=orange><b>Zinnia's Warmth</b></color>, increasing <color=orange><b>Fire Damage</b></color> by <color=green><b>[({(ZData?.baseFireDamageBonus ?? 0f) * 100f:F0}%) + ({fdpl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{fdMult * 100f:F0}% Magic Power</color>]</b></color> and <color=#FFB6C1><b>Magic Power</b></color> by <color=green><b>[({(ZData?.baseMagicPowerBonus ?? 0f):F0}) + ({mppl:F0}/Lvl.)]</b></color>."
             : $"Plants within her attack radius gain <color=orange><b>Zinnia's Warmth</b></color>, increasing <color=orange><b>Fire Damage</b></color> by <color=green><b>{FireDamageBonusBase * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{FireDamageBonusMP * 100f:F0}%</b></color>] and <color=#FFB6C1><b>Magic Power</b></color> by <color=green><b>{MagicPowerBonus:F0}</b></color>.";
-        return $"Passive:\n\n{desc}\n\n" +
+        return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=orange><b>Fire Damage</b></color> bonus by <color=green><b>{fdpl * 100f:F0}%</b></color> per level. [<color=green><b>+{fdpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase <color=#FFB6C1><b>Magic Power</b></color> bonus by <color=green><b>{mppl:F0}</b></color> per level. [<color=green><b>+{mppl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"Plants affected by <color=orange><b>Zinnia's Warmth</b></color> also gain <color=green><b>{eaBon * 100f:F0}% Elemental Affinity</b></color>.")}\n\n" +
@@ -322,7 +322,7 @@ public class Zinnia : Aura
         string exposureBreakdown = details
             ? $"<color=green><b>[Exposed to Sunlight]</b></color>: Increase <color=orange><b>Fire Damage</b></color> by <color=green><b>{SunlightExposedEffect.baseBonus * 100f:F0}% + {SunlightExposedEffect.bonusPerLevel * 100f:F0}%</b></color> per level of intensity. Decrease <color=#4FC3F7><b>Water Damage</b></color> by <color=green><b>{SunlightExposedEffect.baseBonus * 100f:F0}% + {SunlightExposedEffect.bonusPerLevel * 100f:F0}%</b></color> per level of intensity.\n\n"
             : "";
-        return $"Skill:\n\n{desc}\n\n" +
+        return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                exposureBreakdown +
                $"Increase <color=orange><b>Artificial Sun</b></color> lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}s</b></color>]\n\n" +
                $"Increase intensity by <color=green><b>{sipl}</b></color> per level. [<color=green><b>{SunIntensity}</b></color>]\n\n" +

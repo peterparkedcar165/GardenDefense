@@ -21,6 +21,10 @@ public class InsectShowcase : MonoBehaviour
     // the insect cards' boxes: the panel's wood when it wears the right panel's look
     private Color CardTint => TallPanelLook.Available ? TallPanelLook.Wood : style.panel;
     private const float CardGap = 3f;
+    // art pixels between a card's or a box's edge and its contents: clear of Tommy's section frame
+    // (SectionFrameLook, 2026-11-26) when it wears one, else the old 4 and 5
+    private static float CardPad => SectionFrameLook.Available ? SectionFrameLook.Border + 2f : 4f;
+    private static float BoxPad => SectionFrameLook.Available ? SectionFrameLook.Border + 3f : 5f;
     private const float ChipGap = 3f;
     private const float StatIcon = 16f;
     private const float ElementIcon = 12f;
@@ -186,7 +190,9 @@ public class InsectShowcase : MonoBehaviour
     // "Insects", the seam under it and the level's conditions; returns the art pixel height it takes
     private float BuildHeader(LevelConfig config)
     {
-        float titleHeight = AddText(header, "Insects", Edge + 3f, Edge - 1f, style.panelWidth - 2f * (Edge + 3f), style.text, style.titleSize, false);
+        // centred over the panel (Tommy, 2026-11-26)
+        float titleHeight = AddText(header, "Insects", Edge + 3f, Edge - 1f, style.panelWidth - 2f * (Edge + 3f), style.text, style.titleSize, false,
+            TextAlignmentOptions.Top);
         float y = Edge - 1f + titleHeight + 2f;
         Image seam = NewImage("Seam", header, style.seam, Color.white, false);
         TopLeft(seam.rectTransform, Edge - 2f, y, style.panelWidth - 2f * (Edge - 2f), 2f);
@@ -242,7 +248,7 @@ public class InsectShowcase : MonoBehaviour
         nameColor.a = 1f;
         Color backdrop = Color.Lerp(nameColor, Color.white, style.portraitLighten);
         Image portrait = NewImage("Portrait", card, style.panelBase, backdrop, true);
-        TopLeft(portrait.rectTransform, 4f, 4f, p, p);
+        TopLeft(portrait.rectTransform, CardPad, CardPad, p, p);
         Stretch(NewImage("Shine", portrait.rectTransform, style.panelShine, Color.white, true).rectTransform);
         Image sprite = NewImage("Insect", portrait.rectTransform, data.sprite, Color.white, false);
         sprite.preserveAspect = true;
@@ -253,12 +259,12 @@ public class InsectShowcase : MonoBehaviour
             RectTransform badge = AddBadge(card, "NEW", style.textSize);
             badge.anchorMin = badge.anchorMax = new Vector2(0f, 1f);
             badge.pivot = new Vector2(0f, 1f);
-            badge.anchoredPosition = new Vector2(1f * Px, -1f * Px);
+            badge.anchoredPosition = new Vector2((CardPad - 2f) * Px, -(CardPad - 2f) * Px);
         }
 
-        float x = 4f + p + 5f;
-        float columnWidth = width - x - 4f;
-        float ty = 4f;
+        float x = CardPad + p + 5f;
+        float columnWidth = width - x - CardPad;
+        float ty = CardPad;
         ty += AddText(card, data.displayName, x, ty, columnWidth, nameColor, style.textSize, false) + 1f;
         string brief = entry.insect.GetShortDescription();
         if (brief.Length > 0) ty += AddText(card, brief, x, ty, columnWidth, style.text, style.textSize, true) + 2f;
@@ -274,8 +280,9 @@ public class InsectShowcase : MonoBehaviour
         }
         ty += chipRow;
 
-        float height = Mathf.Max(4f + p + 4f, ty + 4f);
+        float height = Mathf.Max(CardPad + p + CardPad, ty + CardPad);
         TopLeft(card, 0f, y, width, height);
+        SectionFrameLook.Add(cardImage);
 
         UIHoverRelay relay = card.gameObject.AddComponent<UIHoverRelay>();
         relay.onEnter = () => { hoveredCard = entry; Refresh(); };
@@ -410,13 +417,14 @@ public class InsectShowcase : MonoBehaviour
         // the ability, in its own box
         Image box = NewImage("Ability", cardTip, style.insetBox, style.panel, true);
         string ability = insect.GetAbilityDescription();
-        float by = 3f;
-        by += AddText(box.rectTransform, "Ability", 5f, by, inner - 10f, style.label, style.textSize, false) + 1f;
+        float by = BoxPad - 2f;
+        by += AddText(box.rectTransform, "Ability", BoxPad, by, inner - 2f * BoxPad, style.label, style.textSize, false) + 1f;
         by += string.IsNullOrEmpty(ability)
-            ? AddText(box.rectTransform, "None", 5f, by, inner - 10f, style.mutedText, style.textSize, false)
-            : AddText(box.rectTransform, ability, 5f, by, inner - 10f, style.text, style.textSize, true);
-        by += 4f;
+            ? AddText(box.rectTransform, "None", BoxPad, by, inner - 2f * BoxPad, style.mutedText, style.textSize, false)
+            : AddText(box.rectTransform, ability, BoxPad, by, inner - 2f * BoxPad, style.text, style.textSize, true);
+        by += BoxPad - 1f;
         TopLeft(box.rectTransform, Pad, y, inner, by);
+        SectionFrameLook.Add(box);
         y += by + 4f;
 
         // stats, three columns read top then bottom: health over speed, armor over magic armor,
@@ -470,16 +478,16 @@ public class InsectShowcase : MonoBehaviour
         {
             Image elementBox = NewImage(title, cardTip, style.insetBox, style.panel, true);
             RectTransform r = elementBox.rectTransform;
-            float ey = 3f;
-            ey += AddText(r, title, 5f, ey, halfW - 10f, titleColor, style.textSize, false) + 2f;
+            float ey = BoxPad - 2f;
+            ey += AddText(r, title, BoxPad, ey, halfW - 2f * BoxPad, titleColor, style.textSize, false) + 2f;
             if (list.Count == 0)
-                ey += AddText(r, "None", 5f, ey, halfW - 10f, style.mutedText, style.textSize, false);
+                ey += AddText(r, "None", BoxPad, ey, halfW - 2f * BoxPad, style.mutedText, style.textSize, false);
             else
             {
-                float ex = 5f;
+                float ex = BoxPad;
                 foreach (ElementalType element in list)
                 {
-                    if (ex + ElementIcon > halfW - 5f) { ex = 5f; ey += ElementIcon + 2f; }
+                    if (ex + ElementIcon > halfW - BoxPad) { ex = BoxPad; ey += ElementIcon + 2f; }
                     Sprite icon = style.ElementIcon(element);
                     if (icon != null)
                     {
@@ -491,14 +499,15 @@ public class InsectShowcase : MonoBehaviour
                     else
                     {
                         // no icon for it: its name in its colour, on a line of its own
-                        AddText(r, element.ToString(), ex, ey, halfW - 5f - ex, style.ElementText(element), style.textSize, false);
+                        AddText(r, element.ToString(), ex, ey, halfW - BoxPad - ex, style.ElementText(element), style.textSize, false);
                         ex = halfW;
                     }
                 }
                 ey += Mathf.Max(ElementIcon, lh);
             }
-            height = ey + 4f;
+            height = ey + BoxPad - 1f;
             TopLeft(r, x, y, halfW, height);
+            SectionFrameLook.Add(elementBox);
             return r;
         }
 
