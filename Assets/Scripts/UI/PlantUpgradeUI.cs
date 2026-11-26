@@ -419,17 +419,25 @@ public class PlantUpgradeUI : EntityInfoPanel
 
     // a skill not unlocked yet has its icon darkened like a locked plant slot (Tommy, 2026-11-25: the icon
     // only, the frame stays as it is), times PlantSlotLook.LockedTint, under the vines and the padlock. the
-    // black square the Locked overlay had over the frame and icon is switched off
-    private bool lockedDimOff;
+    // black square the Locked overlay had over the frame and icon is made invisible. it stays on: it's what
+    // takes the pointer for the overlay (its hover tooltip and its click to unlock), the vines and padlock
+    // don't
+    private bool lockedDimCleared;
 
     private void DarkenSkill(bool locked)
     {
         if (skillIcon != null) skillIcon.color = locked ? PlantSlotLook.LockedTint : Color.white;
-        if (!lockedDimOff && lockedSkillSquare != null)
+        if (!lockedDimCleared && lockedSkillSquare != null)
         {
-            lockedDimOff = true;
+            lockedDimCleared = true;
             Transform dim = lockedSkillSquare.transform.Find("Dim");
-            if (dim != null) dim.gameObject.SetActive(false);
+            Image dimImage = dim != null ? dim.GetComponent<Image>() : null;
+            if (dimImage != null)
+            {
+                dim.gameObject.SetActive(true);
+                dimImage.color = Color.clear;
+                dimImage.raycastTarget = true;
+            }
         }
     }
 
