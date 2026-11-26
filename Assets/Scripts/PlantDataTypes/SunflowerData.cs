@@ -28,10 +28,10 @@ public class SunflowerData : PlantData
     [Tooltip("tiles the damage area's diameter grows a Skill level (the beam grows as much)")]
     [UnityEngine.Serialization.FormerlySerializedAs("path3RadiusPerLevel")]
     public float path3DiameterPerLevel = 0.1f;
-    // unused since 2026-11-26: the beam's width follows the damage area's diameter (always 1 tile less)
-    [Tooltip("UNUSED: the beam is always 1 tile narrower than the damage area's diameter, so it grows by Diameter Per Level")]
+    [Tooltip("tiles the beam drawn grows a Skill level (it starts 1 tile narrower than Base Sunray Diameter); set it to " +
+        "Diameter Per Level to keep the beam exactly 1 tile narrower than the damage area at every level")]
     [UnityEngine.Serialization.FormerlySerializedAs("path3VisualRadiusPerLevel")]
-    public float path3VisualWidthPerLevel = 0.3f;
+    public float path3VisualWidthPerLevel = 0.1f;
 
     [Header("Sunray Audio")]
     [Tooltip("played this many seconds before the sunray actually appears (not the skill activation sound)")]

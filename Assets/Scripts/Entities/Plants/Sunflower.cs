@@ -515,10 +515,13 @@ public class Sunflower : Shooter
         yield return new WaitForSeconds(channelDuration);
         yield return new WaitForSeconds(SunraySpawnExtraDelay);
 
-        // the beam is always 1 tile narrower than the damage area's diameter (Tommy, 2026-11-26: a diameter
-        // of 2 draws a 1 tile beam, 3 a 2 tile beam). its prefab is 1 tile wide, so the scale is the width in
-        // tiles; a diameter under 1.1 leaves the thinnest beam, 0.1 tile
-        float visualScale = Mathf.Max(0.1f, skillAoERadius * 2f - SunrayBeamNarrower) / SunrayBaseBeamWidth;
+        // the beam starts 1 tile narrower than the damage area's base diameter (Tommy, 2026-11-26: a diameter
+        // of 2 draws a 1 tile beam, 3 a 2 tile beam) and grows by its own Visual Width Per Level, the damage
+        // area by Diameter Per Level. its prefab is 1 tile wide, so the scale is the width in tiles; the
+        // thinnest beam is 0.1 tile
+        float beamWidth = (SFData?.baseSunrayDiameter ?? 2f) - SunrayBeamNarrower
+            + (SFData?.path3VisualWidthPerLevel ?? 0.1f) * effectivePath3Level;
+        float visualScale = Mathf.Max(0.1f, beamWidth) / SunrayBaseBeamWidth;
 
         StartCoroutine(SpawnSunray(position, visualScale));
 
