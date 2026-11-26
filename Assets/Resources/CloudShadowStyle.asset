@@ -13,53 +13,26 @@ MonoBehaviour:
   m_Name: CloudShadowStyle
   m_EditorClassIdentifier: Assembly-CSharp::CloudShadowStyle
   particlePrefab: {fileID: 2712915376308916410, guid: 64957656f922a56409cd2aad883f845e, type: 3}
-  sheet: {fileID: 2800000, guid: 63b67ba0c72d4ac1a78fe0676f61f919, type: 3}
-  sheetColumns: 6
-  sheetRows: 6
-  shapes:
-  - {fileID: 21300000, guid: d71823216baa4e58b01ff3c23f47f432, type: 3}
-  - {fileID: 21300000, guid: f4d1821f9277423f8a6f8a56ee149db2, type: 3}
-  - {fileID: 21300000, guid: d40a558f99ee4c92a9b409bd9fb12c3b, type: 3}
-  - {fileID: 21300000, guid: 39475874341649528d6487f35b71dbb3, type: 3}
-  - {fileID: 21300000, guid: 4855eb4fe648424abadf1ef3556740a1, type: 3}
-  - {fileID: 21300000, guid: 7462292f09794cf0b884e563040f4351, type: 3}
-  - {fileID: 21300000, guid: 416f3b5995e243a3b5cf1ee7841585c6, type: 3}
-  - {fileID: 21300000, guid: 9df4ef307ce24e368c62d6a7ca5858a0, type: 3}
-  - {fileID: 21300000, guid: 149f1184cf7b4b0c9f3f20ef48a8cb7e, type: 3}
-  - {fileID: 21300000, guid: a892939ff09342629fcadf2b631c0b3b, type: 3}
-  - {fileID: 21300000, guid: bb484a6eddd8415aaa6b31967bdd4433, type: 3}
-  - {fileID: 21300000, guid: 1f743ff7140244499304141c7057f8f7, type: 3}
-  - {fileID: 21300000, guid: 41b04e3e9dc342a2815d08c3468fb890, type: 3}
-  - {fileID: 21300000, guid: 5f0f1ea5098d42aababfbf0fabbfd101, type: 3}
-  - {fileID: 21300000, guid: f751e1091955428694fc16f8e66d4125, type: 3}
-  - {fileID: 21300000, guid: b995c7dbf94a4f8c9508098c61dd3a64, type: 3}
-  - {fileID: 21300000, guid: fd65cdf2bdc14786b89e6f1804ea92c0, type: 3}
-  - {fileID: 21300000, guid: ce85ccec5fe54fada2266fcc0978e258, type: 3}
-  - {fileID: 21300000, guid: 337dc13735a14c21a95484c97565f498, type: 3}
-  - {fileID: 21300000, guid: ef38eae8a180474b8de010992b82fb1d, type: 3}
-  - {fileID: 21300000, guid: 55bae4060a2b483c9d90b46cfb0114cc, type: 3}
-  - {fileID: 21300000, guid: a3c7353c35084617a9c14b5d150f8764, type: 3}
-  - {fileID: 21300000, guid: d5bad7e2eb4047eeb4caac36603bdc0e, type: 3}
-  - {fileID: 21300000, guid: 2b6b856587d04f75acf10f6cd4d52096, type: 3}
-  - {fileID: 21300000, guid: 72ff30e5121841ccb6736f7e4dcbdffe, type: 3}
-  - {fileID: 21300000, guid: 3b4069f4df5f4e68b128846a49a65614, type: 3}
-  - {fileID: 21300000, guid: 5eefe5aac64f4774924b0be2423f4389, type: 3}
-  - {fileID: 21300000, guid: 6538b32c62e5440fb1286553c5eaa789, type: 3}
-  - {fileID: 21300000, guid: 6b5a71ed78e942be89586a3dbe39c2a7, type: 3}
-  - {fileID: 21300000, guid: 4cd2d59506464e70aaa74b4eacefe8fd, type: 3}
-  - {fileID: 21300000, guid: 0b0a4d1c9ee54931871364b6df2a2858, type: 3}
-  - {fileID: 21300000, guid: 5bc1fc76221c4ec58625ac14de245b1e, type: 3}
-  - {fileID: 21300000, guid: c3976d24b9474f85b88ac55eab12b786, type: 3}
-  - {fileID: 21300000, guid: 677fe3afaab64494adbb3d2322bdd274, type: 3}
-  - {fileID: 21300000, guid: 4c0c3f06683c4541bf2223005af5a4b3, type: 3}
-  - {fileID: 21300000, guid: 7b5989df8821411b97fd1b23e87fb813, type: 3}
-  material: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   shader: {fileID: 4800000, guid: 484055471be0469ba17048f6a7099d7a, type: 3}
+  sizes:
+  - sheet: {fileID: 2800000, guid: ce094de28dd745159c5e6e6934a6a5cc, type: 3}
+    columns: 4
+    rows: 3
+    cellPixels: 256
+    count: 8
+  - sheet: {fileID: 2800000, guid: a9440f9eacec432daba395390ca3caec, type: 3}
+    columns: 3
+    rows: 2
+    cellPixels: 512
+    count: 3
+  - sheet: {fileID: 2800000, guid: f7b6aabff86a45f7a81f8a4c21c478f5, type: 3}
+    columns: 2
+    rows: 2
+    cellPixels: 1024
+    count: 1
   opacity: 0.5
   sortingLayer: Weather
   sortingOrder: 50
-  count: 18
-  scale: 3
   speed: 0.3
   angle: 50
   fadeSeconds: 2
