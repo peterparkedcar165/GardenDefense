@@ -31,8 +31,15 @@ public class FertilizerCard : MonoBehaviour
         if (rerollButton != null) rerollButton.gameObject.SetActive(false);
 
         RefreshDisplay();
+        // the card a quarter bigger (Tommy, 2026-11-26): its place in the row and everything on it
+        rectTransform.sizeDelta *= CardScale;
+        Transform body = statsText != null ? statsText.transform.parent : null;
+        if (body != null) body.localScale = Vector3.one * CardScale;
+        if (highlight != null) highlight.transform.localScale = Vector3.one * CardScale;
         StartCoroutine(AnimateIn());
     }
+
+    private const float CardScale = 1.25f;
 
     private void RefreshDisplay()
     {
