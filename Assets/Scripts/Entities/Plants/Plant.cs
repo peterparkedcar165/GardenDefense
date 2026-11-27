@@ -852,6 +852,9 @@ public abstract class Plant : Entity, IAttackable
             {
                 _targetRangeIndicator = Instantiate(circleRadius, desired.transform);
                 _targetRangeIndicator.name = "TargetRangeIndicator";
+                // the copy would carry this plant's red line of sight area along (a still picture of it)
+                Transform copiedShade = _targetRangeIndicator.Find("SightShade");
+                if (copiedShade != null) Destroy(copiedShade.gameObject);
                 _targetRangeIndicator.localPosition = Vector3.zero;
                 SpriteRenderer sr = _targetRangeIndicator.GetComponentInChildren<SpriteRenderer>();
                 if (sr != null) sr.color = new Color(0f, 1f, 0f, sr.color.a * 0.6f);
