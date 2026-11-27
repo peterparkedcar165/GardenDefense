@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Level4
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 4
+  biome: 0
   weather:
   - type: 1
     intensity: 1
   temperature: 2
   maxWaves: 12
-  startSunCount: 200
+  startSunCount: 250
   startHealth: 200
   maxUpgradeLevel: 4
   minWaveDuration: 16
@@ -1284,6 +1285,7 @@ MonoBehaviour:
   eliteInsects: []
   fertilizers:
   - {fileID: 11400000, guid: 777fd61cdf034642a3eee9bb0001921f, type: 2}
-  - {fileID: 11400000, guid: ae9f84635e0147e2a88f1eb2314f4fe3, type: 2}
-  - {fileID: 11400000, guid: fd309107a9cf4bd68629ad7c673cff6c, type: 2}
+  - {fileID: 11400000, guid: d0cab36138bf41ad87aeb9b4015da4a3, type: 2}
+  - {fileID: 11400000, guid: 5939dec221844e7fb65fc43c0fc6cab9, type: 2}
+  recommendedPlants: []
   ambience: {fileID: 11400000, guid: d1804b1344ff0b341aff0c11181dc078, type: 2}

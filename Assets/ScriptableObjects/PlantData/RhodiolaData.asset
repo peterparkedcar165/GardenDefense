@@ -30,9 +30,9 @@ MonoBehaviour:
   skillTree: {fileID: 11400000, guid: b55fd20c624741a49c3958b5e412d10f, type: 2}
   fertilizerPossibleStats: 18000000
   baseMaxHealth: 200
-  baseAttackDamage: 20
+  baseAttackDamage: 18
   baseMagicPower: 0
-  baseAttackSpeed: 0.35
+  baseAttackSpeed: 0.5
   baseAttackRange: 2.5
   baseAttackChargeTime: 0
   baseArmor: 0
