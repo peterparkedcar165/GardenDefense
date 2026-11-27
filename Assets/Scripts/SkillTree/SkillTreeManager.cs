@@ -64,6 +64,8 @@ public static class SkillTreeManager
     // behavior unlock query for bespoke code, true if a purchased node carries this unlock id
     public static bool HasUnlock(Plant plant, string unlockId)
     {
+        // a preview copy (the loadout screen's texts) is the plant without its skill tree (Tommy, 2026-11-27)
+        if (Plant.BuildingPreview) return false;
         if (plant == null || plant.data == null || plant.data.skillTree == null) return false;
         return HasUnlock(plant.data.plantName, plant.data.skillTree, unlockId);
     }

@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // the in-game texts of a plant that isn't on the field (the loadout screen's plant tooltip, the
-// encyclopedia), with the numbers of a plant just placed: every path at level 0 (Tommy, 2026-11-24).
+// encyclopedia), with the numbers of a plant just placed: every path at level 0 (Tommy, 2026-11-24),
+// and its base stats, without its skill tree's bonuses or unlocks (Tommy, 2026-11-27).
 // those numbers live in the plant's own stats, which only exist once it's set up, so a copy of its
 // prefab is made far off the map, set up like a placed plant (Awake), read, and destroyed before it
 // runs a single frame. Plant.BuildingPreview keeps the copy from telling anything it was placed or
-// removed. one copy per plant, kept until ClearCache (the loadout screen clears it when it opens,
-// since the skill tree can change between levels)
+// removed. one copy per plant, kept until ClearCache (the loadout screen clears it when it opens)
 public static class PlantPreview
 {
     public struct Texts

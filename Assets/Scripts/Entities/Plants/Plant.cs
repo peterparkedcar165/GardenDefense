@@ -670,7 +670,8 @@ public abstract class Plant : Entity, IAttackable
         damageType                    = data.damageType;
         if (elementalType == ElementalType.Fire) heatResistanceAdder += 0.5f; // 50% resistance to heat-driven warming, not full immunity
         if (elementalType == ElementalType.Ice)  coldResistanceAdder += 0.5f; // 50% resistance to cold-driven cooling, not full immunity
-        SkillTreeManager.ApplyTo(this);
+        // a preview copy (the loadout screen's texts) keeps its base stats: no skill tree (Tommy, 2026-11-27)
+        if (!BuildingPreview) SkillTreeManager.ApplyTo(this);
         if (!BuildingPreview) FertilizerManager.instance?.NotifyPlantPlaced(this);
         // baseSunCost is fixed above; sunCostReductionAdder only ever comes from the skill tree
         // call just above (StatType.SunCostReduction), so this always reflects it once it's run
