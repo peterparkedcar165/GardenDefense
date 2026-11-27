@@ -8,7 +8,7 @@
    "damageType": "Physical",
    "role": "Tank",
    "deprecated": false,
-   "nameTemplate": "<b><color=green>{(data != null ? data.displayName : \"Acorn Knight\")}</color></b>",
+   "nameTemplate": "{TitleName(\"green\")}",
    "overview": "The {GetName()} is a melee tank with a sword and shield, raising his guard under pressure and able to hurl his shield to stun a target and block the path.",
    "blockGetters": [],
    "sections": [
@@ -56,7 +56,7 @@
       "Increase <color=green><b>Attack Speed</b></color> bonus by <color=green><b>{aspl * 100f:F0}%</b></color> per level. [<color=green><b>+{aspl * effectivePath3Level * 100f:F0}%</b></color>]"
      ],
      "maxBonus": "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\\n\\nThe <color=green><b>Shield</b></color> gains <color=#00CED1><b>{baseArmor:F0} Base Armor</b></color>.",
-     "maxBonusDetails": "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\\n\\nThe <color=green><b>Shield</b></color> inherits the Acorn Knight's <color=#00CED1><b>Base Armor</b></color>.",
+     "maxBonusDetails": "Whenever the <color=green><b>Shield</b></color> is healed, its lifetime is extended by 2% of the healing amount, in seconds.\\n\\nThe <color=green><b>Shield</b></color> inherits the {DisplayName}'s <color=#00CED1><b>Base Armor</b></color>.",
      "extra": [],
      "overviewFrom": "GetSkillDesription"
     }
@@ -129,7 +129,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=#4FC3F7>Aloe Vera</color></b>",
+   "nameTemplate": "{TitleName(\"#4FC3F7\")}",
    "overview": "The {GetName()} lobs arcing water droplets that burst on impact. She prioritizes healing injured allies before engaging insects.",
    "blockGetters": [
     "GetSkillDesription"
@@ -192,7 +192,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=#D0E8FF>Anemone</color></b>",
+   "nameTemplate": "{TitleName(\"#D0E8FF\")}",
    "overview": "The {GetName()} commands the winds to erode and consume her foes, then pulls them into a devastating vortex.",
    "blockGetters": [],
    "sections": [
@@ -249,10 +249,10 @@
    "name": "Begonia",
    "file": "Assets/Scripts/Entities/Plants/Begonia.cs",
    "element": "Water",
-   "damageType": "Magic",
+   "damageType": "Physical",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=#4FC3F7>Begonia</color></b>",
+   "nameTemplate": "{TitleName(\"#4FC3F7\")}",
    "overview": "The {GetName()} grows wet flowers that prime nearby insects with water, and sharpens nearby allies' precision and power, blessing them with the strength of water.",
    "blockGetters": [],
    "sections": [
@@ -316,7 +316,7 @@
    "damageType": "Physical",
    "role": "DPS",
    "deprecated": false,
-   "nameTemplate": "<b><color=#FF8C00>Bird of Paradise</color></b>",
+   "nameTemplate": "{TitleName(\"#FF8C00\")}",
    "overview": "The {GetName()} focuses its talons on a single foe, striking faster and harder with every hit until even the mightiest insects begin to crumble.",
    "blockGetters": [],
    "sections": [
@@ -375,7 +375,7 @@
    "damageType": "Magic",
    "role": "Tank",
    "deprecated": false,
-   "nameTemplate": "<b><color=#4FC3F7>Bog Iris</color></b>",
+   "nameTemplate": "{TitleName(\"#4FC3F7\")}",
    "overview": "The {GetName()} is self-sufficient, providing herself with regeneration as well as generating sun for the garden.",
    "blockGetters": [
     "GetSkillDesription"
@@ -439,7 +439,7 @@
    "damageType": "Physical",
    "role": "Tank",
    "deprecated": false,
-   "nameTemplate": "<b><color=green>Cactus</color></b>",
+   "nameTemplate": "{TitleName(\"green\")}",
    "overview": "A hardy desert plant that slams everything around it and counters harder the more it's hit.",
    "blockGetters": [],
    "sections": [
@@ -499,7 +499,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=orange>Calendula</color></b>",
+   "nameTemplate": "{TitleName(\"orange\")}",
    "overview": "The {GetName()} periodically releases waves of flaming petals and can infuse allies with fire energy.",
    "blockGetters": [],
    "sections": [
@@ -557,7 +557,7 @@
    "damageType": "Physical",
    "role": "DPS",
    "deprecated": false,
-   "nameTemplate": "<b><color=#ED9121>Carrot</color></b>",
+   "nameTemplate": "{TitleName(\"#ED9121\")}",
    "overview": "The {GetName()} is an elderly root sage who commands the earth itself, striking its enemies from below and forging bonds with its allies.",
    "blockGetters": [],
    "sections": [
@@ -677,7 +677,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=#B2EBF2>{(data != null ? data.displayName : \"Dandelion\")}</color></b>",
+   "nameTemplate": "{TitleName(\"#B2EBF2\")}",
    "overview": "The {GetName()} rides the wind to support her allies, speeding up their skills and sweeping away anything in her path.",
    "blockGetters": [],
    "sections": [
@@ -803,7 +803,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=orange>Gloriosa</color></b>",
+   "nameTemplate": "{TitleName(\"orange\")}",
    "overview": "The {GetName()} is a fiery flower that nurtures its allies with warm embers, healing injured plants and scorching any insect that dares stand in its way.",
    "blockGetters": [
     "GetSkillDesription"
@@ -868,7 +868,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=green>Glowshroom</color></b>",
+   "nameTemplate": "{TitleName(\"green\")}",
    "overview": "The {GetName()} is a bioluminescent cave fungus that illuminates the darkness, infects insects with a glow, and blinds them with a sudden flash of light.",
    "blockGetters": [],
    "sections": [
@@ -927,7 +927,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=#9B30D0>Hellebore</color></b>",
+   "nameTemplate": "{TitleName(\"#9B30D0\")}",
    "overview": "The {GetName()} weaves poison and shelter together, protecting allies while punishing those who dare attack them.",
    "blockGetters": [],
    "sections": [
@@ -951,8 +951,8 @@
      "key": "passive",
      "title": "Passive",
      "method": "GetPath2Description",
-     "overview": "Each attack hit reduces skill cooldown by <color=green><b>{CDRPerHit:F1}s</b></color>. Hellebore gains <color=#00CED1><b>{baseArmor}</b></color> Base Armor [<color=#FFB6C1><b>+{(HData?.selfArmorMP ?? 0.14f) * 100f:F0}% Magic Power</b></color>]. Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: increasing their Armor by <color=green><b>{AuraShare * 100f:F0}%</b></color> of Hellebore's Armor (<color=#00CED1><b>{(int)AuraArmor}</b></color>).",
-     "details": "Each attack hit reduces skill cooldown by <color=green><b>[({HData?.passiveCDRPerHit ?? 0.5f:F1}) + ({cdrpl:F1}/Lvl.)]</b></color> seconds. Hellebore gains <color=#00CED1><b>[({HData?.selfArmorBase ?? 14}) + ({armorpl}/Lvl.)]</b></color> Base Armor <color=#FFB6C1>[+{armorMP * 100f:F0}% Magic Power]</color>. Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: increasing their Armor by <color=green><b>[({HData?.auraShareBase ?? 0.5f:F0}%) + ({auraShpl * 100f:F0}%/Lvl.)]</b></color> of Hellebore's Armor.",
+     "overview": "Each attack hit reduces skill cooldown by <color=green><b>{CDRPerHit:F1}s</b></color>. {DisplayName} gains <color=#00CED1><b>{baseArmor}</b></color> Base Armor [<color=#FFB6C1><b>+{(HData?.selfArmorMP ?? 0.14f) * 100f:F0}% Magic Power</b></color>]. Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: increasing their Armor by <color=green><b>{AuraShare * 100f:F0}%</b></color> of {DisplayName}'s Armor (<color=#00CED1><b>{(int)AuraArmor}</b></color>).",
+     "details": "Each attack hit reduces skill cooldown by <color=green><b>[({HData?.passiveCDRPerHit ?? 0.5f:F1}) + ({cdrpl:F1}/Lvl.)]</b></color> seconds. {DisplayName} gains <color=#00CED1><b>[({HData?.selfArmorBase ?? 14}) + ({armorpl}/Lvl.)]</b></color> Base Armor <color=#FFB6C1>[+{armorMP * 100f:F0}% Magic Power]</color>. Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: increasing their Armor by <color=green><b>[({HData?.auraShareBase ?? 0.5f:F0}%) + ({auraShpl * 100f:F0}%/Lvl.)]</b></color> of {DisplayName}'s Armor.",
      "upgrades": [
       "Increase Cooldown Reduction per hit by <color=green><b>{cdrpl:F1}</b></color> seconds per level. [<color=green><b>+{cdrpl * effectivePath2Level:F1}</b></color>]",
       "Increase <color=#00CED1><b>Base Armor</b></color> by <color=green><b>{armorpl}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level}</b></color>]",
@@ -989,7 +989,7 @@
    "damageType": "Physical",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=#00FFFF>Holly</color></b>",
+   "nameTemplate": "{TitleName(\"#00FFFF\")}",
    "overview": "The {GetName()} is a resilient ice bulwark who shields the plants around her from harm and the elements.",
    "blockGetters": [],
    "sections": [
@@ -1053,7 +1053,7 @@
    "damageType": "Physical",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=#2E8B57>Kelp</color></b>",
+   "nameTemplate": "{TitleName(\"#2E8B57\")}",
    "overview": "The {GetName()} whips insects with her fronds and keeps the garden breathing, releasing Oxygen-rich bubbles that also generate Sun.",
    "blockGetters": [],
    "sections": [
@@ -1115,7 +1115,7 @@
    "damageType": "Physical",
    "role": "DPS",
    "deprecated": false,
-   "nameTemplate": "<b><color=green>Leaf Ranger</color></b>",
+   "nameTemplate": "{TitleName(\"green\")}",
    "overview": "The {GetName()} shoots slow but precise arrow shots from across the garden. His arrows can bounce to another target instead of being destroyed.",
    "blockGetters": [
     "GetPassiveDescription",
@@ -1238,7 +1238,7 @@
    "damageType": "Physical",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=purple>{(data != null ? data.displayName : \"Nerium Oleander\")}</color></b>",
+   "nameTemplate": "{TitleName(\"purple\")}",
    "overview": "The {GetName()} fires toxic petals that bounce between insects, while nearby allies are granted <color=#2ECC71>Oleandic Ward</color>, which strips and locks out their debuffs - a dedicated answer to debuffer insects.",
    "blockGetters": [],
    "sections": [
@@ -1358,7 +1358,7 @@
    "damageType": "Magic",
    "role": "DPS",
    "deprecated": false,
-   "nameTemplate": "<b><color=purple>{(data != null ? data.displayName : \"Poison Shroom\")}</color></b>",
+   "nameTemplate": "{TitleName(\"purple\")}",
    "overview": "The {GetName()} fires toxic spores that poison the target over time.",
    "blockGetters": [],
    "sections": [
@@ -1412,28 +1412,28 @@
   },
   {
    "id": "Rhodiola",
-   "name": "Rhodiola",
+   "name": "Rhodiola Rosea",
    "file": "Assets/Scripts/Entities/Plants/Rhodiola.cs",
    "element": "Grass",
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=green>Rhodiola</color></b>",
-   "overview": "The {GetName()} breathes life into its allies, mending wounds with rejuvenating energy.",
+   "nameTemplate": "{TitleName(\"green\")}",
+   "overview": "The {GetName()} drains life from insects and pours it into her allies.",
    "blockGetters": [],
    "sections": [
     {
      "key": "attack",
      "title": "Attack",
      "method": "GetPath1Description",
-     "overview": "Fires a rejuvenating seed at the most injured nearby plant, healing it for <color=green><b>{attackDamage:F0}</b></color> [<color=#FFB6C1><b>+{HealMP:F0}</b></color>] health and leaving behind a regenerating bloom.\\n\\nIncrease <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.",
-     "details": "Fires a rejuvenating seed at the most injured nearby plant, healing <color=green><b>[100% Attack Damage]</b></color> [<color=#FFB6C1><b>+{(RData?.attackHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health.\\n\\nIncrease <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>[({(RData?.baseGrassConversion ?? 0.5f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of <color=green><b>Grass Damage</b></color>.\\n\\n*Unaffected by Piercing",
+     "overview": "Flicks her wand at an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage. The drained life flows back to her, healing her for <color=green><b>{DrainHeal:F0}</b></color> health.\\n\\nIncrease <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.",
+     "details": "Flicks her wand at an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage. The drained life flows back to her, healing her for <color=green><b>[{(RData?.drainHealShare ?? 0.25f) * 100f:F0}% Attack Damage]</b></color> health.\\n\\nIncrease <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.",
      "upgrades": [
       "Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]",
-      "Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]",
-      "Increase <color=#FF6B81><b>Heals & Shields</b></color> conversion by <color=green><b>{convpl * 100f:F0}%</b></color> per level. [<color=green><b>+{convpl * effectivePath1Level * 100f:F0}%</b></color>]"
+      "Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{speedpl:0.##}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:0.##}</b></color>]",
+      "Increase <color=green><b>Grass Damage</b></color> by <color=green><b>{grasspl * 100f:F0}%</b></color> per level. [<color=green><b>+{grasspl * effectivePath1Level * 100f:F0}%</b></color>]"
      ],
-     "maxBonus": "Each projectile heals an additional <color=green><b>{MissingHealthPercent * 100f:F0}%</b></color> of the target's missing health.",
+     "maxBonus": null,
      "maxBonusDetails": null,
      "extra": [],
      "overviewFrom": "GetAttackDescription"
@@ -1442,14 +1442,15 @@
      "key": "passive",
      "title": "Passive",
      "method": "GetPath2Description",
-     "overview": "Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>) while it lasts.\\n\\n<color=green><b>{SapStoreShare * 100f:F0}%</b></color> of healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>{SapCap:F0}</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once.",
-     "details": "Healing applies <color=green><b>Rejuvenating Burgeon</b></color>, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>, while it lasts.\\n\\n<color=green><b>{SapStoreShare * 100f:F0}%</b></color> of healing past a plant's full health is stored as {GoldenSapLabel}, up to <color=#FFD700><b>[({RData?.baseSapCap ?? 50f:F0}) + ({sappl:F0}/Lvl.)]</b></color>. When a plant in range drops below <color=green><b>{SapReleaseThreshold * 100f:F0}%</b></color> health, she releases all of it into that plant at once.",
+     "overview": "Healing she gets from her attack and from {BurgeonLabel} on herself fills her {GoldenSapLabel} by <color=#FFD700><b>{SapConversion * 100f:F0}%</b></color> of the healing, even at full health, up to <color=#FFD700><b>{SapCap:F0}</b></color>.\\n\\nWhen a plant in range drops below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> health, or no insects are in range and a plant is hurt, she channels {GoldenSapLabel} into it, healing <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second until it's healed or the sap runs out. She needs over <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> sap to start.\\n\\nHer attack's heal grants her {BurgeonLabel}, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>). While she has it, her channel passes it on.",
+     "details": "Healing she gets from her attack and from {BurgeonLabel} on herself fills her {GoldenSapLabel} by <color=#FFD700><b>[({(RData?.sapConversion ?? 1f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of the healing, even at full health, up to <color=#FFD700><b>[({RData?.goldenSapCap ?? 200f:F0}) + ({cappl:F0}/Lvl.)]</b></color>.\\n\\nWhen a plant in range drops below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> health, or no insects are in range and a plant is hurt, she channels {GoldenSapLabel} into it, healing <color=green><b>[{RData?.channelHealPerSecond ?? 30f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.1f) * 100f:F0}% Magic Power</b></color>] health per second until it's healed or the sap runs out. She needs over <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> sap to start.\\n\\nHer attack's heal grants her {BurgeonLabel}, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>. While she has it, her channel passes it on.",
      "upgrades": [
-      "Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{sappl:F0}</b></color> per level. [<color=#FFD700><b>+{sappl * effectivePath2Level:F0}</b></color>]",
-      "Increase <color=green><b>Rejuvenating Burgeon</b></color> healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]",
-      "Increase <color=green><b>Rejuvenating Burgeon</b></color> armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]"
+      "Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{cappl:F0}</b></color> per level. [<color=#FFD700><b>+{cappl * effectivePath2Level:F0}</b></color>]",
+      "Increase {GoldenSapLabel} conversion by <color=#FFD700><b>{convpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]",
+      "Increase {BurgeonLabel} healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]",
+      "Increase {BurgeonLabel} armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]"
      ],
-     "maxBonus": "If fully healthy, increase <color=green><b>Grass Damage</b></color> by <color=green><b>{MaxLevelGrassDamageBonus * 100f:F0}%</b></color>. Otherwise, <color=green><b>{MaxLevelHealingReturn * 100f:F0}%</b></color> of healing granted through the attack and <color=green><b>Rejuvenating Burgeon</b></color> is returned to the {GetName()}.",
+     "maxBonus": "If fully healthy, increase <color=green><b>Grass Damage</b></color> by <color=green><b>{MaxLevelGrassDamageBonus * 100f:F0}%</b></color>. Otherwise, <color=green><b>{MaxLevelHealingReturn * 100f:F0}%</b></color> of the healing her channel and <color=green><b>Rejuvenating Burgeon</b></color> give is returned to the {GetName()}.",
      "maxBonusDetails": null,
      "extra": [],
      "overviewFrom": "GetPassiveDescription"
@@ -1479,7 +1480,7 @@
    "damageType": "Magic",
    "role": "DPS",
    "deprecated": false,
-   "nameTemplate": "<b><color=#00FFFF>Snowdrop</color></b>",
+   "nameTemplate": "{TitleName(\"#00FFFF\")}",
    "overview": "The {GetName()} is a frosty flower who marks her prey for her bonded partner to finish off.",
    "blockGetters": [],
    "sections": [
@@ -1539,7 +1540,7 @@
    "damageType": "Magic",
    "role": "DPS",
    "deprecated": false,
-   "nameTemplate": "<b><color=orange>Stargazer</color></b>",
+   "nameTemplate": "{TitleName(\"orange\")}",
    "overview": "The {GetName()} sprays a cone of fire that leaves enemies <color=#FF6B1A>Flammable</color>, and can call down a sweeping wall of flame across the entire map.",
    "blockGetters": [],
    "sections": [
@@ -1601,7 +1602,7 @@
    "damageType": "Magic",
    "role": "DPS",
    "deprecated": false,
-   "nameTemplate": "<b><color=orange>Sunflower</color></b>",
+   "nameTemplate": "{TitleName(\"orange\")}",
    "overview": "The {GetName()} shoots her targets with sun bolts and generate precious <color=yellow>Sun</color> for the garden.",
    "blockGetters": [
     "GetSkillDesription"
@@ -1611,8 +1612,8 @@
      "key": "attack",
      "title": "Attack",
      "method": "GetPath1Description",
-     "overview": "The <color=orange><b>Sunflower</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.",
-     "details": "The <color=orange><b>Sunflower</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}.",
+     "overview": "The <color=orange><b>{DisplayName}</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}.",
+     "details": "The <color=orange><b>{DisplayName}</b></color> charges up a solar-powered energy orb then shoots it towards her target, dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}.",
      "upgrades": [
       "Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]",
       "Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{aspl:F2}</b></color> per level. [<color=green><b>+{aspl * effectivePath1Level:F2}</b></color>]"
@@ -1626,8 +1627,8 @@
      "key": "passive",
      "title": "Passive",
      "method": "GetPath2Description",
-     "overview": "The <color=orange><b>Sunflower</b></color> periodically generates <color=green><b>{sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{SunGenInterval:F1}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>{cooldownReductionPerHit:F2}</b></color> seconds.",
-     "details": "The <color=orange><b>Sunflower</b></color> periodically generates <color=green><b>[({SFData?.baseSunGenerated ?? 10}) + ({sunpl}/Lvl.)]</b></color> <color=yellow>Sun</color> every <color=green><b>{data.basePassiveCooldown:F0}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>[({SFData?.baseCooldownReductionPerHit ?? 0.35f:F2}) + ({cdrpl:F2}/Lvl.)]</b></color> seconds.",
+     "overview": "The <color=orange><b>{DisplayName}</b></color> periodically generates <color=green><b>{sunGenerated}</b></color> <color=yellow>Sun</color> every <color=green><b>{SunGenInterval:F1}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>{cooldownReductionPerHit:F2}</b></color> seconds.",
+     "details": "The <color=orange><b>{DisplayName}</b></color> periodically generates <color=green><b>[({SFData?.baseSunGenerated ?? 10}) + ({sunpl}/Lvl.)]</b></color> <color=yellow>Sun</color> every <color=green><b>{data.basePassiveCooldown:F0}</b></color> seconds. Attacks reduce the cooldown by <color=green><b>[({SFData?.baseCooldownReductionPerHit ?? 0.35f:F2}) + ({cdrpl:F2}/Lvl.)]</b></color> seconds.",
      "upgrades": [
       "Increase <color=yellow><b>Sun Generated</b></color> by <color=green><b>{sunpl}</b></color> per level. [<color=green><b>+{sunpl * effectivePath2Level}</b></color>]",
       "Increase <color=green><b>cooldown reduction on hit</b></color> by <color=green><b>{cdrpl:F2}s</b></color> per level. [<color=green><b>+{cdrpl * effectivePath2Level:F2}s</b></color>]"
@@ -1642,11 +1643,11 @@
      "title": "Skill",
      "method": "GetPath3Description",
      "overview": "Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color={PlantData.ElementalColor(elementalType)}><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.\\n\\nFor each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>.",
-     "details": "Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({data.baseSkillRadius:F2}) + ({radiuspl:F2}/Lvl.)]</b></color> radius for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\\n\\nFor each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>.",
+     "details": "Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({SFData?.baseSunrayDiameter ?? 2f:F2}) + ({diameterpl:F2}/Lvl.)]</b></color> tile wide area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\\n\\nFor each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>.",
      "upgrades": [
       "Increase damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]",
       "Increase duration by <color=green><b>{durpl:F1}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]",
-      "Increase radius by <color=green><b>{radiuspl:F2}</b></color> per level. [<color=green><b>+{radiuspl * effectivePath3Level:F2}</b></color>]"
+      "Increase diameter by <color=green><b>{diameterpl:F2}</b></color> per level. [<color=green><b>+{diameterpl * effectivePath3Level:F2}</b></color>]"
      ],
      "maxBonus": "Unleashes an additional <color=orange><b>Sunray</b></color> at a random insect's location on the map.",
      "maxBonusDetails": null,
@@ -1663,7 +1664,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=orange>Tansy</color></b>",
+   "nameTemplate": "{TitleName(\"orange\")}",
    "overview": "The {GetName()} is circled by an orbiting petal projectile and can summon one to infuse allies with fire energy.",
    "blockGetters": [],
    "sections": [
@@ -1722,7 +1723,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=#3399FF>Waterlily</color></b>",
+   "nameTemplate": "{TitleName(\"#3399FF\")}",
    "overview": "The {GetName()} shoots her targets with little bubbles that soak surrounding insects. She can also imprison her foes with her larger bubble, leaving them exposed to her allies.",
    "blockGetters": [],
    "sections": [
@@ -1782,7 +1783,7 @@
    "damageType": "Magic",
    "role": "Support",
    "deprecated": false,
-   "nameTemplate": "<b><color=orange>{(data != null ? data.displayName : \"Zinnia\")}</color></b>",
+   "nameTemplate": "{TitleName(\"orange\")}",
    "overview": "The {GetName()} ignites the battlefield with fiery synergy, burning nearby insects and marking nearby plants with <color=orange><b>Ablaze</b></color>, empowering them with fire and magic.",
    "blockGetters": [],
    "sections": [
@@ -1841,37 +1842,37 @@
    "group": "Elements",
    "value": "orange",
    "name": "Fire",
-   "uses": 92
+   "uses": 86
   },
   {
    "group": "Elements",
    "value": "#4FC3F7",
    "name": "Water",
-   "uses": 47
+   "uses": 44
   },
   {
    "group": "Elements",
    "value": "green",
    "name": "Grass",
-   "uses": 1131
+   "uses": 1124
   },
   {
    "group": "Elements",
    "value": "#B2EBF2",
    "name": "Wind",
-   "uses": 21
+   "uses": 20
   },
   {
    "group": "Elements",
    "value": "purple",
    "name": "Poison",
-   "uses": 24
+   "uses": 22
   },
   {
    "group": "Elements",
    "value": "#00FFFF",
    "name": "Ice",
-   "uses": 33
+   "uses": 31
   },
   {
    "group": "Damage types",
@@ -1899,6 +1900,12 @@
   },
   {
    "group": "Used in plant tooltips",
+   "value": "#FFD700",
+   "name": "Critical Chance",
+   "uses": 29
+  },
+  {
+   "group": "Used in plant tooltips",
    "value": "yellow",
    "name": "Sun",
    "uses": 28
@@ -1908,12 +1915,6 @@
    "value": "red",
    "name": "Max Health",
    "uses": 25
-  },
-  {
-   "group": "Used in plant tooltips",
-   "value": "#FFD700",
-   "name": "Critical Chance",
-   "uses": 23
   },
   {
    "group": "Used in plant tooltips",
@@ -1937,18 +1938,12 @@
    "group": "Used in plant tooltips",
    "value": "#9B30D0",
    "name": "Thorned Guard",
-   "uses": 6
+   "uses": 5
   },
   {
    "group": "Used in plant tooltips",
    "value": "#FF69B4",
    "name": "Magic Resistance",
-   "uses": 5
-  },
-  {
-   "group": "Used in plant tooltips",
-   "value": "#FF6B81",
-   "name": "Heals & Shields",
    "uses": 5
   },
   {
@@ -1960,13 +1955,19 @@
   {
    "group": "Used in plant tooltips",
    "value": "grey",
-   "name": "Release SHIFT for overview",
+   "name": "Shielded",
    "uses": 4
   },
   {
    "group": "Used in plant tooltips",
    "value": "#DDDDDD",
    "name": "Blinded",
+   "uses": 4
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#FF6B81",
+   "name": "Heals & Shield Bonus",
    "uses": 4
   },
   {
@@ -1979,12 +1980,6 @@
    "group": "Used in plant tooltips",
    "value": "#9370DB",
    "name": "Magic Resist",
-   "uses": 2
-  },
-  {
-   "group": "Used in plant tooltips",
-   "value": "#ED9121",
-   "name": "Carrot",
    "uses": 2
   },
   {
@@ -2007,18 +2002,6 @@
   },
   {
    "group": "Used in plant tooltips",
-   "value": "#D0E8FF",
-   "name": "Anemone",
-   "uses": 1
-  },
-  {
-   "group": "Used in plant tooltips",
-   "value": "#FF8C00",
-   "name": "Bird of Paradise",
-   "uses": 1
-  },
-  {
-   "group": "Used in plant tooltips",
    "value": "#6495ED",
    "name": "Coordinated Damage",
    "uses": 1
@@ -2031,20 +2014,14 @@
   },
   {
    "group": "Used in plant tooltips",
-   "value": "#2E8B57",
-   "name": "Kelp",
+   "value": "#ED9121",
+   "name": "OldCarrot",
    "uses": 1
   },
   {
    "group": "Used in plant tooltips",
    "value": "#9400D3",
    "name": "Damage Over Time",
-   "uses": 1
-  },
-  {
-   "group": "Used in plant tooltips",
-   "value": "#3399FF",
-   "name": "Waterlily",
    "uses": 1
   },
   {
@@ -2079,12 +2056,6 @@
   },
   {
    "group": "Used elsewhere in the game",
-   "value": "#6B8E23",
-   "name": "Grass",
-   "uses": 3
-  },
-  {
-   "group": "Used elsewhere in the game",
    "value": "#1B6CA8",
    "name": "Submerged",
    "uses": 3
@@ -2115,9 +2086,9 @@
   },
   {
    "group": "Used elsewhere in the game",
-   "value": "#6E6E6E",
+   "value": "#BBBBBB",
    "name": "",
-   "uses": 2
+   "uses": 3
   },
   {
    "group": "Used elsewhere in the game",
@@ -2141,6 +2112,12 @@
    "group": "Used elsewhere in the game",
    "value": "#A9A9A9",
    "name": "Retained",
+   "uses": 2
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#6B8E23",
+   "name": "Mire",
    "uses": 2
   },
   {
@@ -2175,9 +2152,9 @@
   },
   {
    "group": "Used elsewhere in the game",
-   "value": "#BBBBBB",
-   "name": "",
-   "uses": 2
+   "value": "#FF8C00",
+   "name": "Taunt",
+   "uses": 1
   },
   {
    "group": "Used elsewhere in the game",
@@ -2188,6 +2165,36 @@
   {
    "group": "Used elsewhere in the game",
    "value": "[^",
+   "name": "",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#9C9C9C",
+   "name": "",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#FFD84A",
+   "name": "",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#B4B4B4",
+   "name": "",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#5ED45E",
+   "name": "",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#FF7A66",
    "name": "",
    "uses": 1
   },
@@ -2213,6 +2220,12 @@
    "group": "Used elsewhere in the game",
    "value": "#1E90FF",
    "name": "Steam",
+   "uses": 1
+  },
+  {
+   "group": "Used elsewhere in the game",
+   "value": "#3399FF",
+   "name": "Waterlily",
    "uses": 1
   }
  ]
