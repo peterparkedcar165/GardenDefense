@@ -291,6 +291,7 @@
     <Compile Include="Assets\Scripts\Tutorial\TutorialPopupUI.cs" />
     <Compile Include="Assets\Scripts\Mulch\ThornsMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\CleanGardenFertilizerEffect.cs" />
+    <Compile Include="Assets\Scripts\Environment\PathTile.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AnemoneData.cs" />
     <Compile Include="Assets\Scripts\StatType.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\AloeVeraData.cs" />
