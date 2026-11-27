@@ -100,7 +100,7 @@ public class SkillTargetingManager : MonoBehaviour
                 {
                     Vector3 tileClickPos = GetMouseWorldPosition();
                     Vector2Int key = Tile.TileKey(tileClickPos);
-                    if (Tile.allTiles.TryGetValue(key, out Tile clickedTile) && clickedTile.deadPlant != null)
+                    if (Tile.allTiles.TryGetValue(key, out Tile clickedTile) && clickedTile.HasDeadPlant)
                         ConfirmDeadTile(clickedTile);
                 }
             }

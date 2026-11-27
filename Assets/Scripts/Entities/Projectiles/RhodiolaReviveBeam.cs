@@ -210,6 +210,8 @@ public class ReviveGlitter : MonoBehaviour
 public class DeadPlantGlitter : MonoBehaviour
 {
     private const float PerSecond = 5f;
+    // light green (Tommy, 2026-11-27). the glitter material is unlit, so the night light never dims them
+    private static readonly Color SparkleColor = new Color(0.6f, 1f, 0.5f, 1f);
     private ParticleSystem _ps;
     private float _budget;
     private bool _stopping, _paused;
@@ -221,6 +223,8 @@ public class DeadPlantGlitter : MonoBehaviour
         go.transform.position = tileCenter;
         DeadPlantGlitter glitter = go.AddComponent<DeadPlantGlitter>();
         glitter._ps = ReviveGlitter.MakeSystem(go);
+        ParticleSystem.MainModule main = glitter._ps.main;
+        main.startColor = SparkleColor;
         return glitter;
     }
 

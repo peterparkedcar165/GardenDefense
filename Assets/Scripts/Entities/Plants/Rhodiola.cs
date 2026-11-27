@@ -140,13 +140,13 @@ public class Rhodiola : Shooter
         foreach (var kvp in Tile.allTiles)
         {
             Tile t = kvp.Value;
-            if (t == null || t.deadPlant == null || _deadGlitter.ContainsKey(t)) continue;
+            if (t == null || !t.HasDeadPlant || _deadGlitter.ContainsKey(t)) continue;
             _deadGlitter[t] = DeadPlantGlitter.Begin(t.transform.position);
         }
         // a tile whose plant came back (or whose record went) stops
         _glitterGone.Clear();
         foreach (var kvp in _deadGlitter)
-            if (kvp.Key == null || kvp.Key.deadPlant == null) _glitterGone.Add(kvp.Key);
+            if (kvp.Key == null || !kvp.Key.HasDeadPlant) _glitterGone.Add(kvp.Key);
         foreach (Tile t in _glitterGone)
         {
             if (_deadGlitter[t] != null) _deadGlitter[t].Stop();
@@ -589,7 +589,7 @@ public class Rhodiola : Shooter
         if (!SkillReady) return;
         bool anyDead = false;
         foreach (var kvp in Tile.allTiles)
-            if (kvp.Value.deadPlant != null) { anyDead = true; break; }
+            if (kvp.Value.HasDeadPlant) { anyDead = true; break; }
         if (!anyDead) return;
         SkillTargetingManager.instance.BeginDeadTileTargeting(OnTargetConfirmed);
     }
@@ -648,7 +648,7 @@ public class Rhodiola : Shooter
         foreach (Vector3 offset in offsets)
         {
             if (!Tile.allTiles.TryGetValue(Tile.TileKey(center + offset), out Tile neighbor)) continue;
-            if (neighbor.deadPlant == null) continue;
+            if (!neighbor.HasDeadPlant) continue;
             Plant revivedNeighbor = Plant.RevivePlant(neighbor, true);
             if (revivedNeighbor == null) continue;
             RhodiolaReviveBeam.Play(neighbor.transform.position);

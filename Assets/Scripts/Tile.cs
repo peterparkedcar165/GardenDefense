@@ -82,6 +82,9 @@ public class Tile : MonoBehaviour
 
     public bool isOccupied = false, isHighground = false, isLowground = false;
     public DeadPlantRecord deadPlant;
+    // a plant fell here and can be brought back. unity fills deadPlant with an empty record on every tile
+    // (the class is serializable), so the record alone says nothing: a fallen plant's record has its prefab
+    public bool HasDeadPlant => deadPlant != null && deadPlant.prefab != null;
     public bool isWaterAdjacent = false;
     public bool isHeatAdjacent  = false;
     // true if this exact tile radiates heat, independent of its resolved tileType — lets a
