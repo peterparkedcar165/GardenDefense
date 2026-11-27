@@ -362,7 +362,8 @@ public class Rhodiola : Shooter
     // with more than SapToChannel of her cap in sap she channels into an ally: at once for the lowest
     // plant in range under LowHealthThreshold (cutting off her attack), or, with no insects in her range,
     // for the lowest hurt plant, and only when no plant is hurt, the lowest hurt friendly insect (Tommy:
-    // last priority). it heals every ChannelTickInterval, spending as much sap as it heals, until the ally
+    // last priority). with less, only as a last resort: no insects in her range and a plant hurt, she spends
+    // what's left on it (Tommy, 2026-11-27). it heals every ChannelTickInterval, spending as much sap as it heals, until the ally
     // is healed, dies or leaves her range, the sap runs out, or she's stunned. a channel started with no
     // insects around gives way to her attack when insects come, unless its plant is under the line by then,
     // to any plant that drops under the line, and (one on a friendly insect) to any hurt plant
@@ -460,7 +461,13 @@ public class Rhodiola : Shooter
     {
         // kept up to date while she isn't healing too, so only a drop during a heal counts as one
         NewlyCritical(null);
-        if (IsStunned || Time.time < _channelRecoverUntil || _storedSap < SapCap * SapToChannel) return;
+        if (IsStunned || Time.time < _channelRecoverUntil) return;
+        bool insectsNear = InsectInRange();
+        // under SapToChannel of her cap she heals only as a last resort (Tommy, 2026-11-27): no insects in her range, a
+        // plant hurt (never a friendly insect), and sap left for at least a point of health, so her step back is never
+        // for a sliver; she spends what she has left
+        bool lastResort = _storedSap < SapCap * SapToChannel;
+        if (lastResort && (insectsNear || _storedSap * Mathf.Max(0.01f, SapEfficiency) < MinMissingHealth)) return;
         if (_switchTo != null)
         {
             Plant next = _switchTo;
@@ -472,10 +479,9 @@ public class Rhodiola : Shooter
         // with her golden sap full she heals any hurt plant in her range, insects about or not: healing is what
         // she's for (Tommy, 2026-11-27). she goes on until that plant is full or her sap runs out (still handing
         // over to a plant that drops under the line). hurt friendly insects still wait for no insects in range
-        bool insectsNear = InsectInRange();
         if (insectsNear && !SapFull) return;
         Entity hurt = LowestPlant(false);
-        if (hurt == null && !insectsNear) hurt = LowestFriendlyInsect();
+        if (hurt == null && !insectsNear && !lastResort) hurt = LowestFriendlyInsect();
         if (hurt != null) StartChannel(hurt, false, hurt is Plant && SapFull);
     }
 
