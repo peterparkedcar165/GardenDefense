@@ -282,14 +282,12 @@ MonoBehaviour:
   lastSource: {fileID: 0}
   aggressivity: 0
   targetingRange: 0
-  spriteRight: {fileID: 21300000, guid: 346601dc7eabf504b9e15c1efa1a5fe3, type: 3}
   spriteLeft: {fileID: 21300000, guid: 391555e3e3050d74188d6c6c908b1045, type: 3}
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
   sunDrop: 0
   expDrop: 0
   visual: {fileID: 0}
-  spriteFlyRight: {fileID: 21300000, guid: f1901fcfcdedfe44a9982814b2eb01f2, type: 3}
   spriteFlyLeft: {fileID: 21300000, guid: b36b0c2e5d5cb4c4e85243ec192b48df, type: 3}
   flightSpeed: 0
   flightHeight: 0
@@ -468,7 +466,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: f1901fcfcdedfe44a9982814b2eb01f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b36b0c2e5d5cb4c4e85243ec192b48df, type: 3}
   m_Color: {r: 0.8962264, g: 0.7877299, b: 0.6045301, a: 1}
   m_FlipX: 0
   m_FlipY: 0

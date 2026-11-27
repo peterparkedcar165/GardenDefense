@@ -1507,8 +1507,8 @@ public abstract class Entity : MonoBehaviour
     }
 
     // keeps the outline's sprite/orientation in sync with the main renderer every frame while
-    // highlighted - without this, flipping direction (Plant.UpdateFacingFlip's flipX) or
-    // swapping left/right sprites (insects) after SetHighlight() was first called left the
+    // highlighted - without this, flipping direction (flipX, plants and insects) or
+    // a new sprite (a flyer landing) after SetHighlight() was first called left the
     // outline showing the stale, pre-flip silhouette until the next hover/select toggle
     // happened to refresh it
     private void SyncHighlightOutline()

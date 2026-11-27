@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Moth
   nameColor: {r: 0.21680315, g: 0.5283019, b: 0.27133015, a: 1}
   description: A flyer that is empowered by light, and is drawn to plants that emit it.
-  sprite: {fileID: 21300000, guid: 86e03e6413fbb824fbe7b74c0a584f70, type: 3}
+  sprite: {fileID: 21300000, guid: 5a4d73bb0e8f0404e82cee4ba4f21acc, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: ee01b098ec878574e9fe75ef5aa9fd22, type: 3}
   widgetHeightOffset: 0
   baseMaxHealth: 300

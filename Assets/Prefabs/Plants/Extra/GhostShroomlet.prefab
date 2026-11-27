@@ -327,7 +327,6 @@ MonoBehaviour:
   targetingRange: 0
   team: 0
   movingBackward: 0
-  spriteRight: {fileID: 21300000, guid: 53a6e763447d294408b69f5d42674ef3, type: 3}
   spriteLeft: {fileID: 21300000, guid: 32ff0d867d19558419a16eea966a2604, type: 3}
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0
@@ -605,7 +604,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 53a6e763447d294408b69f5d42674ef3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 32ff0d867d19558419a16eea966a2604, type: 3}
   m_Color: {r: 0.13519046, g: 0.9245283, b: 0.88129836, a: 1}
   m_FlipX: 0
   m_FlipY: 0

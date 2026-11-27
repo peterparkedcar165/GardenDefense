@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Firefly
   nameColor: {r: 0.8490566, g: 0.7346397, b: 0.28435388, a: 1}
   description: A flyer that emits light. Its attacks make its target glow.
-  sprite: {fileID: 8760434079162307657, guid: 9addbd6f45f48d046bd5a3e6058abae1, type: 3}
+  sprite: {fileID: 21300000, guid: 39a96eff103848d45a1e36b5c4e85f6c, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d7a6800c607f5f146a2134c6f2bca15d, type: 3}
   baseMaxHealth: 360
   baseAttackDamage: 15

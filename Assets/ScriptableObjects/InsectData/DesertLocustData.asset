@@ -17,7 +17,7 @@ MonoBehaviour:
   description: Deadly to plants
   passiveDescription: Attacks inflict Devour on the target, reducing Max Health by
     50% of the original damage
-  sprite: {fileID: 21300000, guid: a61ee61892e251048b0fb5752020d103, type: 3}
+  sprite: {fileID: 21300000, guid: f0c79590b5b8e7a4b801533eea39fdfb, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 1cc03d1bb5c0ee1449b80df99f4f73b3, type: 3}
   baseMaxHealth: 300
   baseAttackDamage: 32

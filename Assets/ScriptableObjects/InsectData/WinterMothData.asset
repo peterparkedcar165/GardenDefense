@@ -19,7 +19,7 @@ MonoBehaviour:
     range. Slowing effects cannot reduce its Movement Speed below base. Gains 15%
     Evasion while it is snowing. Increases speed when illuminated. Will target and
     attack plants with illumination
-  sprite: {fileID: 21300000, guid: b6b3c2f84468cad408128e3fbe2de937, type: 3}
+  sprite: {fileID: 21300000, guid: ab90fa52baaf82b41be1360223d538ab, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 0231c371239eb23408cb0e401e7c131d, type: 3}
   baseMaxHealth: 280
   baseAttackDamage: 14

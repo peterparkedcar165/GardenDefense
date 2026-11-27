@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class FlyingInsect : Insect
 {
-    [SerializeField] private Sprite spriteFlyRight;
+    // its flying sprite, facing left like the ground one (both mirrored to face right, Insect.ShowFacing)
     [SerializeField] private Sprite spriteFlyLeft;
 
     public float flightSpeed; // flight speed is ALWAYS 2x of movementSpeed
@@ -85,14 +85,7 @@ public abstract class FlyingInsect : Insect
         transform.position = obstacleCenter + (Vector3)(pushDir * pushDistance);
     }
 
-    protected override void UpdateFacingSprite()
-    {
-        if (_spriteRenderer == null) return;
-        Sprite s = isFlying
-            ? (_facingRight ? spriteFlyRight  : spriteFlyLeft)
-            : (_facingRight ? spriteRight     : spriteLeft);
-        if (s != null) _spriteRenderer.sprite = s;
-    }
+    protected override void UpdateFacingSprite() => ShowFacing(isFlying && spriteFlyLeft != null ? spriteFlyLeft : spriteLeft);
 
     public override void ApplyEffect(StatusEffect effect)
     {

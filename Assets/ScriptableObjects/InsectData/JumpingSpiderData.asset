@@ -16,7 +16,7 @@ MonoBehaviour:
   nameColor: {r: 0.043137256, g: 0.5686275, b: 0.8666667, a: 1}
   description: Tiny and elusive, it leaps to plants
   passiveDescription: Leaps and webs plants that it lands on
-  sprite: {fileID: 21300000, guid: cd9243fb2c4a36a409323299a31861f7, type: 3}
+  sprite: {fileID: 21300000, guid: 402df407676a1db43a7f53546d84fa62, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: d6d7e387d4af5d9458dbdb4861ece95b, type: 3}
   baseMaxHealth: 160
   baseAttackDamage: 18

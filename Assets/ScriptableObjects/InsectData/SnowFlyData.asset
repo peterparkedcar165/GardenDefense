@@ -17,7 +17,7 @@ MonoBehaviour:
   description: Fast but vulnerable, unbothered by the cold
   passiveDescription: Slowing effects cannot reduce its Movement Speed below base.
     Gains 25 Armor and Magic Armor while it is snowing
-  sprite: {fileID: 21300000, guid: e1247a6f7d64b60449fb8343389185f2, type: 3}
+  sprite: {fileID: 21300000, guid: 8773642fec2e0f54cbde124ebe6d2082, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: be6b9b5c8df82634ebb6902da46e4187, type: 3}
   baseMaxHealth: 140
   baseAttackDamage: 10

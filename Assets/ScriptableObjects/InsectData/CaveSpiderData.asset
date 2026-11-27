@@ -16,7 +16,7 @@ MonoBehaviour:
   nameColor: {r: 0.34117648, g: 0.14117648, b: 0.14117648, a: 1}
   description: Fast traveler that webs plants
   passiveDescription: 'Attacks against plants inflict Webbed, restricting attacks. '
-  sprite: {fileID: 21300000, guid: 251fe8e3774b8284f8432e99f7ee7e40, type: 3}
+  sprite: {fileID: 21300000, guid: 26740c44acad36c4395ba4a199725991, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: 7392a9b745c16b548b662ff70c43da6b, type: 3}
   baseMaxHealth: 240
   baseAttackDamage: 20

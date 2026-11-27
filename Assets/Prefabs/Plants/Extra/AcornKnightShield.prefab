@@ -359,7 +359,6 @@ MonoBehaviour:
   carryPriority: 0
   team: 0
   movingBackward: 0
-  spriteRight: {fileID: 0}
   spriteLeft: {fileID: 0}
   movementSpeedAdder: 0
   movementSpeedMultiplier: 0

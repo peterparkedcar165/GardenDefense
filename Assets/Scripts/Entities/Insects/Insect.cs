@@ -185,10 +185,10 @@ public abstract class Insect : Entity, IAttackable
     private bool _debugOnPath = false;
     private bool _offPathSlownessActive = false;
 
-    [SerializeField] protected Sprite spriteRight;
+    // insect art faces left, like plants, and flipX mirrors it to face right (Tommy, 2026-11-27): one sprite is enough
     [SerializeField] protected Sprite spriteLeft;
     [System.NonSerialized] protected SpriteRenderer _spriteRenderer;
-    protected bool _facingRight = true;
+    protected bool _facingRight = false;
 
     protected override SpriteRenderer GetMainRenderer() => _spriteRenderer != null ? _spriteRenderer : base.GetMainRenderer();
     private Vector3 _prevPosition;
@@ -585,11 +585,15 @@ public abstract class Insect : Entity, IAttackable
         _prevPosition = transform.position;
     }
 
-    protected virtual void UpdateFacingSprite()
+    protected virtual void UpdateFacingSprite() => ShowFacing(spriteLeft);
+
+    // shows the insect's left facing sprite, mirrored while it faces right. an insect with no sprite of its own (the
+    // acorn knight's shield) keeps its own look and flip
+    protected void ShowFacing(Sprite sprite)
     {
-        if (_spriteRenderer == null) return;
-        Sprite s = _facingRight ? spriteRight : spriteLeft;
-        if (s != null) _spriteRenderer.sprite = s;
+        if (_spriteRenderer == null || sprite == null) return;
+        _spriteRenderer.sprite = sprite;
+        _spriteRenderer.flipX = _facingRight;
     }
 
     private void ApplyGravity()

@@ -16,7 +16,7 @@ MonoBehaviour:
   nameColor: {r: 0.011747932, g: 0.8301887, b: 0.6435974, a: 1}
   description: Fast and evasive
   passiveDescription: Can dodge attacks
-  sprite: {fileID: 21300000, guid: 96a0d6b89d71dc44d99295f9b93fe1f7, type: 3}
+  sprite: {fileID: 21300000, guid: 09b74bfa964c1e54aa11247ff08b43e2, type: 3}
   insectPrefab: {fileID: 2279086888993795066, guid: e882afe36e318764e82aadfbb50ff046, type: 3}
   baseMaxHealth: 350
   baseAttackDamage: 22
