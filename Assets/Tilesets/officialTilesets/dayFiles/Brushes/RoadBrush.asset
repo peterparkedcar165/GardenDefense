@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e78f6b58224acfbe7cea066a9657a9, type: 3}
+  m_Name: RoadBrush
+  m_EditorClassIdentifier: Assembly-CSharp::RoadTile
+  pieces:
+  - {fileID: -1396483287286313306, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -1192837784, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 174411308, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -691229157, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 1711272946, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -149438581, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 1971434720, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -1179004702, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -511280011, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 1332898585, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 840627548, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 1140230047, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -50015213, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -286502792, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -569688314, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -622027795, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 1496423851, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -1108741859, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 607009403, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 252662523, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -174669935, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 57977028, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -486656319, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: 830602695, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}
+  - {fileID: -567281990, guid: b25094bf14ab0d741aa6b76a832622b8, type: 3}

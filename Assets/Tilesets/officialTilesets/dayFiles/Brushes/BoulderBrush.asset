@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46d47746b82c4efbb2a9c8dec8bc5f94, type: 3}
+  m_Name: BoulderBrush
+  m_EditorClassIdentifier: Assembly-CSharp::RandomVariantTile
+  variants:
+  - {fileID: 11400000, guid: 634cba39372296f45b72141eaf801fce, type: 2}
+  - {fileID: 11400000, guid: d63538d76eafd5e4384c0289244afc48, type: 2}
+  - {fileID: 11400000, guid: 3eccaa27a4b5c72449b4bd150b0f5d5d, type: 2}
+  - {fileID: 11400000, guid: 1ed7805e5c793ba4e8543ae483f62991, type: 2}
+  - {fileID: 11400000, guid: f9c3d1688f40dc94fb4c38a00665656c, type: 2}
+  - {fileID: 11400000, guid: b513663c3869b1345b7bd874b57d1181, type: 2}
+  - {fileID: 11400000, guid: c24d4068d07bd28418a8d81e92747614, type: 2}
+  - {fileID: 11400000, guid: e3d4355d181971642a12b86a95b5602a, type: 2}
+  - {fileID: 11400000, guid: 0f2748e46fbb18642bbf052b9f31de81, type: 2}
+  - {fileID: 11400000, guid: 686db1fe1cebf3b43b5b7ab880eb82bc, type: 2}
+  - {fileID: 11400000, guid: 556a145e7fd2dd3409530f83c48044f7, type: 2}
+  - {fileID: 11400000, guid: 75e886b631ade11439b2f98ea029a702, type: 2}
+  - {fileID: 11400000, guid: 3d96fb643d8a3904ea84ef5197ac65e3, type: 2}
+  - {fileID: 11400000, guid: e638b765a355e284487e7632c7499574, type: 2}
+  - {fileID: 11400000, guid: 7bc5605cd4800a1499deabc986156a25, type: 2}
+  - {fileID: 11400000, guid: 43349adf6ab9e804aa3c4d955ff24433, type: 2}
+  seed: 0
