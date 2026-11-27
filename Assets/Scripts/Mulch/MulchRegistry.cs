@@ -83,7 +83,7 @@ public class MulchRegistry : ScriptableObject
     public float dropSize = 0.6f;
     [Tooltip("how high the drop hops and for how long")]
     public float hopHeight = 0.55f;
-    public float hopSeconds = 0.35f;
+    public float hopSeconds = 0.6f;
     [Tooltip("how far sideways the drop lands from where it popped out, a random amount between these")]
     public float sideOffsetMin = 0.35f;
     public float sideOffsetMax = 1.1f;
