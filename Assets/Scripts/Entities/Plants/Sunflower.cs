@@ -444,9 +444,9 @@ public class Sunflower : Shooter
         passiveCooldownTimer -= cooldownReductionPerHit;
     }
 
-    // skill tree node 3.1: non-attack Fire damage (the Sunray's DoT ticks) scales by the same
-    // rate as ReduceSunTimer, but for a much smaller reduction, since a beam can tick many
-    // times a second across several targets
+    // skill tree node 5a, Solar Harvest (Tommy, 2026-11-27; was Lingering Warmth): every Sunray tick on an insect takes
+    // AmbientSunProcReduction (10%) of an attack's reduction off the sun timer, small since a beam ticks many times a
+    // second across several insects
     public void TryReduceSunTimerSmall()
     {
         passiveCooldownTimer -= cooldownReductionPerHit * AmbientSunProcReduction;

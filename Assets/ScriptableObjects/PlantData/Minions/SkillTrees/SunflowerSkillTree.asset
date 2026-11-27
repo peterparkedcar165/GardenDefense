@@ -59,8 +59,8 @@ MonoBehaviour:
     ranksToUnlockNext: 1
   - nodes:
     - id: node5a_ambientsunproc
-      nodeName: Lingering Warmth
-      description: Non-attack Fire damage has the same chance as the passive to reduce the Sun generation cooldown, by 0.1 seconds.
+      nodeName: Solar Harvest
+      description: Each time the Sunray burns an insect, it reduces the Sun generation cooldown by <color=green><b>10%</b></color> as much as an attack does.
       maxRank: 1
       costPerRank: 2
       effects: []
