@@ -1426,8 +1426,8 @@
      "key": "attack",
      "title": "Attack",
      "method": "GetPath1Description",
-     "overview": "Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapCap * SapToChannel:F0}</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second.",
-     "details": "Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second.",
+     "overview": "Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapCap * SapToChannel:F0}</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second. If another plant falls below <color=green><b>{CriticalHealthShare * 100f:F0}%</b></color> <color=red><b>Health</b></color>, she switches to it.",
+     "details": "Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second. If another plant falls below <color=green><b>{CriticalHealthShare * 100f:F0}%</b></color> <color=red><b>Health</b></color>, she switches to it.",
      "upgrades": [
       "Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]",
       "Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]",
@@ -1450,7 +1450,7 @@
       "Increase {BurgeonLabel} healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]",
       "Increase {BurgeonLabel} armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]"
      ],
-     "maxBonus": "{BurgeonLabel} applied onto plants including herself also fills up {GoldenSapLabel}.",
+     "maxBonus": "{BurgeonLabel} applied onto plants including herself also fills up {GoldenSapLabel} at the same rate (<color=#FFD700><b>{SapConversion * 100f:F0}%</b></color>).",
      "maxBonusDetails": null,
      "extra": [],
      "overviewFrom": "GetPassiveDescription"
@@ -1459,13 +1459,13 @@
      "key": "skill",
      "title": "Skill",
      "method": "GetPath3Description",
-     "overview": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.",
-     "details": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1><b>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</b></color>]</b></color> Health.",
+     "overview": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.\\n\\nHealing the dead plant past its <color=red><b>Max Health</b></color> overheals it, granting <color=green><b>Verdant Guard</b></color> equal to the amount of overheal, for <color=green><b>{VerdantGuardDuration:F0}</b></color> seconds.",
+     "details": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1><b>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</b></color>]</b></color> Health.\\n\\nHealing the dead plant past its <color=red><b>Max Health</b></color> overheals it, granting <color=green><b>Verdant Guard</b></color> equal to the amount of overheal, for <color=green><b>{VerdantGuardDuration:F0}</b></color> seconds.",
      "upgrades": [
       "Increase <color=green><b>Revival Heal</b></color> by <color=green><b>{RevivalHealPerLevel:F0}</b></color> per level. [<color=green><b>+{RevivalHealPerLevel * effectivePath3Level:F0}</b></color>]",
       "Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level, never below <color=green><b>{MinSkillCooldown:F0}s</b></color>. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]"
      ],
-     "maxBonus": "Upon reviving a plant, grant it <color=green><b>Verdant Guardian</b></color>, shielding it for <color=grey><b>{RData?.verdantGuardianShield ?? 200f:F0}</b></color> health and regenerating <color=green><b>{RData?.verdantGuardianRegen ?? 20f:F0}</b></color> health per second while the shield lasts, for <color=green><b>{skillDuration:F0}s</b></color>.",
+     "maxBonus": "The revival heal also fills up her {GoldenSapLabel} at the same rate as her attack's heal (<color=#FFD700><b>{SapConversion * 100f:F0}%</b></color>).",
      "maxBonusDetails": null,
      "extra": [],
      "overviewFrom": "GetSkillDesription"
@@ -1854,7 +1854,7 @@
    "group": "Elements",
    "value": "green",
    "name": "Grass",
-   "uses": 1113
+   "uses": 1116
   },
   {
    "group": "Elements",
@@ -1900,21 +1900,21 @@
   },
   {
    "group": "Used in plant tooltips",
+   "value": "red",
+   "name": "Max Health",
+   "uses": 31
+  },
+  {
+   "group": "Used in plant tooltips",
    "value": "#FFD700",
    "name": "Critical Chance",
-   "uses": 29
+   "uses": 31
   },
   {
    "group": "Used in plant tooltips",
    "value": "yellow",
    "name": "Sun",
    "uses": 28
-  },
-  {
-   "group": "Used in plant tooltips",
-   "value": "red",
-   "name": "Max Health",
-   "uses": 27
   },
   {
    "group": "Used in plant tooltips",
@@ -1954,12 +1954,6 @@
   },
   {
    "group": "Used in plant tooltips",
-   "value": "grey",
-   "name": "Shielded",
-   "uses": 4
-  },
-  {
-   "group": "Used in plant tooltips",
    "value": "#DDDDDD",
    "name": "Blinded",
    "uses": 4
@@ -1969,6 +1963,12 @@
    "value": "#B266FF",
    "name": "Psionic Bond",
    "uses": 4
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "grey",
+   "name": "Shielded",
+   "uses": 3
   },
   {
    "group": "Used in plant tooltips",
