@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: GrassMeadow5Animated
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 8000402963744735463, guid: e457a481dc2446db81a0191073802328, type: 3}
+  - {fileID: -1535731252368212524, guid: e457a481dc2446db81a0191073802328, type: 3}
+  - {fileID: -3391915374372596800, guid: e457a481dc2446db81a0191073802328, type: 3}
+  - {fileID: -1108019698286332880, guid: e457a481dc2446db81a0191073802328, type: 3}
+  - {fileID: -1122678738580449264, guid: e457a481dc2446db81a0191073802328, type: 3}
+  - {fileID: -2301163325778388949, guid: e457a481dc2446db81a0191073802328, type: 3}
+  - {fileID: 4824202301736459774, guid: e457a481dc2446db81a0191073802328, type: 3}
+  - {fileID: 8772499984680924538, guid: e457a481dc2446db81a0191073802328, type: 3}
+  m_MinSpeed: 7
+  m_MaxSpeed: 7
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 8

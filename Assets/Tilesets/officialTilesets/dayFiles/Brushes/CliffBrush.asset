@@ -13,8 +13,13 @@ MonoBehaviour:
   m_Name: CliffBrush
   m_EditorClassIdentifier: Assembly-CSharp::RaisedGroundTile
   variants:
-  - {fileID: 11400000, guid: 2164ed792b0d4713840227b831e589cb, type: 2}
-  - {fileID: 11400000, guid: d4a4836b300f40129ccbb1666688d9c4, type: 2}
-  - {fileID: 11400000, guid: 97d084b369f14b54846c23866a982d28, type: 2}
+  - {fileID: 11400000, guid: 9e240d7bf366439b8e29ce915d8165b5, type: 2}
+  - {fileID: 11400000, guid: 70c86758b62448b5b0b8e25af3ff5d34, type: 2}
+  - {fileID: 11400000, guid: ada552b1c4824251bac4f29489e1e046, type: 2}
+  - {fileID: 11400000, guid: 11cd02fd969d4afd9252f70630dfc6cd, type: 2}
+  - {fileID: 11400000, guid: cb022a23946b4eb6878cf6099365b938, type: 2}
+  - {fileID: 11400000, guid: 1274952358b04545999128cb83b4dce6, type: 2}
+  - {fileID: 11400000, guid: 408ed7d2226e4400a13df85a8db146eb, type: 2}
+  - {fileID: 11400000, guid: a6ec9e25830d441eb42ffc228ac2cdf9, type: 2}
   seed: 0
   paletteIcon: {fileID: 21300000, guid: 4d34239f6c9f4058a33c50eba136fcb3, type: 3}

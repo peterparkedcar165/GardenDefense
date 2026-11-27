@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46d47746b82c4efbb2a9c8dec8bc5f94, type: 3}
+  m_Name: GrassBrush
+  m_EditorClassIdentifier: Assembly-CSharp::RandomVariantTile
+  variants:
+  - {fileID: 11400000, guid: 9e240d7bf366439b8e29ce915d8165b5, type: 2}
+  - {fileID: 11400000, guid: 70c86758b62448b5b0b8e25af3ff5d34, type: 2}
+  - {fileID: 11400000, guid: ada552b1c4824251bac4f29489e1e046, type: 2}
+  - {fileID: 11400000, guid: 11cd02fd969d4afd9252f70630dfc6cd, type: 2}
+  - {fileID: 11400000, guid: cb022a23946b4eb6878cf6099365b938, type: 2}
+  - {fileID: 11400000, guid: 1274952358b04545999128cb83b4dce6, type: 2}
+  - {fileID: 11400000, guid: 408ed7d2226e4400a13df85a8db146eb, type: 2}
+  - {fileID: 11400000, guid: a6ec9e25830d441eb42ffc228ac2cdf9, type: 2}
+  seed: 0

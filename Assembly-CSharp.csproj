@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\InsectDataTypes\CaveSpiderData.cs" />
     <Compile Include="Assets\Scripts\GridManagers\SnowGridManager.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\GhostShroomlet.cs" />
+    <Compile Include="Assets\Scripts\Environment\RaisedGroundTile.cs" />
     <Compile Include="Assets\Scripts\UI\FertilizerFormat.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TansyGlowEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />

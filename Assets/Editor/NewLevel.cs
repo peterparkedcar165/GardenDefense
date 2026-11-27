@@ -13,13 +13,13 @@ using UnityEngine.Tilemaps;
 // route objects, lights, music, weather) and so is its LevelConfig (waves, sun, health, weather), given the new
 // level number and the old level's biome (left on Auto it would go by the new number). the copy's map is
 // cleared: every tilemap beside the Ground emptied (the cliffs go with the raised ground) and, on a day level,
-// the Ground filled with the clover brush. the new scene goes into the build settings and opens with the Route
+// the Ground filled with the grass brush. the new scene goes into the build settings and opens with the Route
 // Builder beside it: paint the map, then build the route
 public static class NewLevel
 {
     private const string ScenesFolder = "Assets/Scenes/";
     private const string ConfigsFolder = "Assets/ScriptableObjects/LevelData/";
-    private const string CloverBrushPath = "Assets/Tilesets/officialTilesets/dayFiles/Brushes/CloverBrush.asset";
+    private const string GrassBrushPath = "Assets/Tilesets/officialTilesets/dayFiles/Brushes/GrassBrush.asset";
 
     [MenuItem("Tools/Garden Defense/New Level From Open Level")]
     public static void Make()
@@ -104,7 +104,8 @@ public static class NewLevel
         return max + 1;
     }
 
-    // every tilemap beside the Ground emptied; a Ground of day clover filled again with the clover brush
+    // every tilemap beside the Ground emptied; a Ground of day grass (the Meadow, or the clover before it) filled again
+    // with the grass brush
     private static void ClearMap(Scene scene)
     {
         Tilemap ground = Object.FindObjectsByType<Tilemap>(FindObjectsInactive.Include)
@@ -113,7 +114,7 @@ public static class NewLevel
         foreach (Tilemap map in ground.transform.parent.GetComponentsInChildren<Tilemap>(true))
             if (map != ground) map.ClearAllTiles();
 
-        TileBase clover = AssetDatabase.LoadAssetAtPath<TileBase>(CloverBrushPath);
+        TileBase grass = AssetDatabase.LoadAssetAtPath<TileBase>(GrassBrushPath);
         var cells = new List<Vector3Int>();
         bool day = false;
         foreach (Vector3Int p in ground.cellBounds.allPositionsWithin)
@@ -121,9 +122,9 @@ public static class NewLevel
             TileBase tile = ground.GetTile(p);
             if (tile == null) continue;
             cells.Add(p);
-            if (tile == clover || tile.name.StartsWith("GrassClover")) day = true;
+            if (tile == grass || tile.name.StartsWith("GrassMeadow") || tile.name.StartsWith("GrassClover")) day = true;
         }
-        if (clover == null || !day) return;
-        ground.SetTiles(cells.ToArray(), Enumerable.Repeat(clover, cells.Count).ToArray());
+        if (grass == null || !day) return;
+        ground.SetTiles(cells.ToArray(), Enumerable.Repeat(grass, cells.Count).ToArray());
     }
 }
