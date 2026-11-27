@@ -220,6 +220,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\WinterMoth.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\KelpData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\HardCrowdControl.cs" />
+    <Compile Include="Assets\Scripts\UI\MirrorGraphic.cs" />
     <Compile Include="Assets\Scripts\UI\MulchSellPopup.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\SunflowerProjectile.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\TextIndicator.cs" />
