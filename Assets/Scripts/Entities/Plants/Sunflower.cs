@@ -564,8 +564,7 @@ public class Sunflower : Shooter
     public override string GetSkillDesription()
     {
         float dpspl = SFData?.path3SunrayDPSPerLevel ?? 15f;
-        return $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color={PlantData.ElementalColor(elementalType)}><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.\n\n" +
-        $"For each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>.";
+        return $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color={PlantData.ElementalColor(elementalType)}><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.";
     }
 
     public override string GetPassiveDescription() =>
@@ -609,8 +608,7 @@ public class Sunflower : Shooter
         float durpl    = SFData?.path3SkillDurationPerLevel ?? 0.5f;
         float diameterpl = SFData?.path3DiameterPerLevel   ?? 0.1f;
         string desc = details
-            ? $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({SFData?.baseSunrayDiameter ?? 2f:F2}) + ({diameterpl:F2}/Lvl.)]</b></color> tile wide area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\n\n" +
-              $"For each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>."
+            ? $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({SFData?.baseSunrayDiameter ?? 2f:F2}) + ({diameterpl:F2}/Lvl.)]</b></color> tile wide area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]\n\n" +

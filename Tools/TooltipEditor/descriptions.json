@@ -1642,8 +1642,8 @@
      "key": "skill",
      "title": "Skill",
      "method": "GetPath3Description",
-     "overview": "Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color={PlantData.ElementalColor(elementalType)}><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.\\n\\nFor each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>.",
-     "details": "Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({SFData?.baseSunrayDiameter ?? 2f:F2}) + ({diameterpl:F2}/Lvl.)]</b></color> tile wide area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.\\n\\nFor each insect affected, reduce the damage by <color=green><b>10%</b></color> down to a minimum of <color=green><b>50%</b></color>.",
+     "overview": "Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color={PlantData.ElementalColor(elementalType)}><b>{(SFData?.baseSunrayDPS ?? 0f) + dpspl * effectivePath3Level:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * magicPower:F0}</b></color>] {PlantData.DamageTypeLabel(damageType)} per second to insects within the designated area for <color=green><b>{skillDuration}</b></color> seconds.",
+     "details": "Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({SFData?.baseSunrayDiameter ?? 2f:F2}) + ({diameterpl:F2}/Lvl.)]</b></color> tile wide area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds.",
      "upgrades": [
       "Increase damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]",
       "Increase duration by <color=green><b>{durpl:F1}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F1}</b></color>]",
@@ -1854,7 +1854,7 @@
    "group": "Elements",
    "value": "green",
    "name": "Grass",
-   "uses": 1116
+   "uses": 1112
   },
   {
    "group": "Elements",

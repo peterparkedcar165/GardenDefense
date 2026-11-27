@@ -22,11 +22,6 @@ public class Sunray : MonoBehaviour
 
     private static readonly DamageTag[] damageTags = new DamageTag[] { DamageTag.SkillDamage, DamageTag.AoE, DamageTag.DoT };
 
-    // damage falloff based on how many insects are hit in a single tick: one shared multiplier,
-    // not a per-insect rank - every insect hit this tick loses 10% per other insect also hit,
-    // down to a 50% floor. recalculated fresh each tick, not cumulative over the skill's duration
-    private const float FalloffPerInsect = 0.10f;
-    private const float MinDamageMultiplier = 0.5f;
 
     // skill tree nodes 3.1, 6.1, 6.2
     private const float HomingSpeed = 0.6f;
@@ -242,13 +237,11 @@ public class Sunray : MonoBehaviour
                         inRange.Add(insect);
                 }
 
-                // one shared multiplier for the whole tick, from how many insects are hit at once -
-                // not a per-insect rank/distance falloff, every insect hit this tick takes the same
-                // reduced damage
-                float falloff = Mathf.Max(MinDamageMultiplier, 1f - FalloffPerInsect * (inRange.Count - 1));
+                // every insect in the beam takes the full damage, however many there are (Tommy, 2026-11-27: the
+                // falloff, 10% less per other insect down to 50%, is gone)
                 foreach (Insect insect in inRange)
                 {
-                    insect.Damage(damagePerSecond * tickInterval * falloff, source.damageType, source.elementalType, source, true, damageTags);
+                    insect.Damage(damagePerSecond * tickInterval, source.damageType, source.elementalType, source, true, damageTags);
                     if (_ambientSunProc && source is Sunflower ambientSunflower)
                         ambientSunflower.TryReduceSunTimerSmall();
                     if (_refreshOnKill && !insect.IsAlive)
