@@ -210,11 +210,13 @@ public abstract class Projectile : MonoBehaviour
         _aimedAtFlyer = trackedInsect != null && trackedInsect.isFlying;
     }
 
-    // line of sight (Tommy, 2026-11-27): a shot from low ground by a plant that needs a clear line stops at the
-    // first obstacle or cliff on its way (it flew at a ground target that went behind one). a shot at a flying
-    // insect, or from high ground, flies over them. a shot keeps counting as one at a flyer after its target's gone
+    // line of sight (Tommy, 2026-11-27): a shot by a plant that needs a clear line stops at the first blocker on
+    // its way (it flew at a ground target that went behind one). from low ground that's any obstacle or cliff;
+    // from high ground only an obstacle standing on high ground (it flies down past cliffs and over obstacles
+    // below). a shot at a flying insect flies over them all. a shot keeps counting as one at a flyer after its
+    // target's gone
     private bool _aimedAtFlyer;
-    protected virtual bool StopsAtBlockers => source != null && source.NeedsLineOfSight && !source.OnHighground && !_aimedAtFlyer;
+    protected virtual bool StopsAtBlockers => source != null && source.NeedsLineOfSight && !_aimedAtFlyer;
 
     // stopped by a blocker: no hit, gone, its particles left to fade
     protected virtual void OnBlocked()
@@ -273,7 +275,7 @@ public abstract class Projectile : MonoBehaviour
         if (trackedInsect != null) _aimedAtFlyer = trackedInsect.isFlying;
         Vector3 stepFrom = transform.position;
         transform.position += direction * groundSpeed * Time.deltaTime;
-        if (StopsAtBlockers && LineOfSight.Blocked(stepFrom, transform.position, out Vector2 blockedAt))
+        if (StopsAtBlockers && LineOfSight.Blocked(stepFrom, transform.position, source.OnHighground, out Vector2 blockedAt))
         {
             transform.position = new Vector3(blockedAt.x, blockedAt.y, transform.position.z);
             OnBlocked();

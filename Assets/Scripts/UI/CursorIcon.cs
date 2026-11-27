@@ -245,11 +245,11 @@ public class CursorIcon : MonoBehaviour
     private void ShowPreviewSight(Tile tile, float range)
     {
         if (_previewShade == null) _previewShade = SightShade.On(rangePreviewCircle);
-        if (!cachedPlant.NeedsLineOfSight || tile.isHighground) { _previewShade.Hide(); return; }
+        if (!cachedPlant.NeedsLineOfSight) { _previewShade.Hide(); return; }
         if (_previewRays == null || _previewRaysTile != tile)
         {
             if (_previewRays == null) _previewRays = new float[LineOfSight.Rays];
-            LineOfSight.Cast(tile.transform.position, _previewRays);
+            LineOfSight.Cast(tile.transform.position, _previewRays, tile.isHighground);
             _previewRaysTile = tile;
             _previewRaysVersion++;
         }

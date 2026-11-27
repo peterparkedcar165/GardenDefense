@@ -3,9 +3,10 @@ using UnityEngine;
 
 // what a plant that needs a clear line can see (Tommy, 2026-11-27). from where it stands, Rays rays go out
 // (one every half degree) to the first blocker: an obstacle tile's box (Tile.SpawnObstacleZone) or a cliff's
-// edge (CliffBuilder), both on the Obstacle layer. who casts them and when is the plant's business (Plant:
-// only from low ground; high ground sees over everything, down past cliffs too; flying insects are never
-// hidden). the same rays decide its targeting and draw the red part of its range circle (SightShade)
+// edge (CliffBuilder), both on the Obstacle layer. from high ground only obstacles standing on high ground block
+// (it sees down past cliffs and over obstacles below). who casts them and when is the plant's business (Plant;
+// flying insects are never hidden). the same rays decide its targeting and draw the red part of its range
+// circle (SightShade)
 public static class LineOfSight
 {
     public const int Rays = 720;
@@ -17,14 +18,50 @@ public static class LineOfSight
     private static int _mask = -1;
     public static int BlockMask => _mask != -1 ? _mask : (_mask = LayerMask.GetMask("Obstacle"));
 
-    // each ray's clear distance from origin, MaxDistance where nothing blocks it
-    public static void Cast(Vector2 origin, float[] into)
+    // every blocker along a ray, nearest first (for a look from high ground, which skips some)
+    private static readonly RaycastHit2D[] Hits = new RaycastHit2D[64];
+    private static ContactFilter2D _filter;
+    private static bool _filterReady;
+    private static ContactFilter2D Filter
+    {
+        get
+        {
+            if (_filterReady) return _filter;
+            _filter = new ContactFilter2D();
+            _filter.SetLayerMask(BlockMask);
+            _filter.useTriggers = true;
+            _filterReady = true;
+            return _filter;
+        }
+    }
+
+    // from high ground only an obstacle standing on high ground blocks (Tommy, 2026-11-27): a tile's box whose
+    // tile is raised. it sees down past cliff edges and over obstacles on low ground
+    private static bool BlocksFromHigh(Collider2D col)
+    {
+        Transform tile = col.transform.parent;
+        return tile != null && tile.TryGetComponent(out Tile t) && t.isHighground;
+    }
+
+    // each ray's clear distance from origin, MaxDistance where nothing blocks it. fromHigh: looking from high ground
+    public static void Cast(Vector2 origin, float[] into, bool fromHigh = false)
     {
         for (int i = 0; i < Rays; i++)
         {
             float a = i * Step;
-            RaycastHit2D hit = Physics2D.CircleCast(origin, RayRadius, new Vector2(Mathf.Cos(a), Mathf.Sin(a)), MaxDistance, BlockMask);
-            into[i] = hit.collider != null ? hit.distance + RayRadius : MaxDistance;
+            Vector2 dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
+            if (!fromHigh)
+            {
+                RaycastHit2D hit = Physics2D.CircleCast(origin, RayRadius, dir, MaxDistance, BlockMask);
+                into[i] = hit.collider != null ? hit.distance + RayRadius : MaxDistance;
+                continue;
+            }
+            float best = MaxDistance;
+            int n = Physics2D.CircleCast(origin, RayRadius, dir, Filter, Hits, MaxDistance);
+            for (int k = 0; k < n; k++)
+                if (Hits[k].collider != null && BlocksFromHigh(Hits[k].collider) && Hits[k].distance + RayRadius < best)
+                    best = Hits[k].distance + RayRadius;
+            into[i] = best;
         }
     }
 
@@ -40,12 +77,25 @@ public static class LineOfSight
         return dist <= rays[i];
     }
 
-    // whether a shot's step from a to b runs into a blocker, and where
-    public static bool Blocked(Vector2 a, Vector2 b, out Vector2 at)
+    // whether a shot's step from a to b runs into a blocker, and where. fromHigh: shot from high ground
+    public static bool Blocked(Vector2 a, Vector2 b, bool fromHigh, out Vector2 at)
     {
-        RaycastHit2D hit = Physics2D.Linecast(a, b, BlockMask);
-        at = hit.collider != null ? hit.point : b;
-        return hit.collider != null;
+        if (!fromHigh)
+        {
+            RaycastHit2D hit = Physics2D.Linecast(a, b, BlockMask);
+            at = hit.collider != null ? hit.point : b;
+            return hit.collider != null;
+        }
+        int n = Physics2D.Linecast(a, b, Filter, Hits);
+        float best = float.MaxValue;
+        at = b;
+        for (int k = 0; k < n; k++)
+        {
+            if (Hits[k].collider == null || !BlocksFromHigh(Hits[k].collider) || Hits[k].distance >= best) continue;
+            best = Hits[k].distance;
+            at = Hits[k].point;
+        }
+        return best < float.MaxValue;
     }
 
     private static readonly List<Vector3> Verts = new List<Vector3>();

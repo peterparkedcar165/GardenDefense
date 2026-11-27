@@ -2057,14 +2057,14 @@ public abstract class Plant : Entity, IAttackable
     // ---------- line of sight (Tommy, 2026-11-27) ----------
     // a plant that needs a clear line (straight and homing shooters, Stargazer, Kelp, Rhodiola: NeedsLineOfSight)
     // can't target a ground insect or an ally it can't see. from low ground, obstacle tiles and cliff edges
-    // block the line; from high ground nothing does (it sees down over cliffs and over trees, bushes and
-    // boulders). flying insects are never hidden. what it sees is cast once from where it stands
-    // (LineOfSight) and kept until it moves or its ground changes. the part of its range it can't see shows
-    // red on its range circle (SightShade)
+    // block the line; from high ground only trees, bushes and boulders standing on high ground do (it sees
+    // down over cliffs and over everything on low ground). flying insects are never hidden. what it sees is
+    // cast once from where it stands (LineOfSight) and kept until it moves or its ground changes. the part
+    // of its range it can't see shows red on its range circle (SightShade)
     // melee plants need one too (Tommy, 2026-11-27: Acorn Knight, Bird of Paradise, Cactus)
     public virtual bool NeedsLineOfSight => IsMeleeAttacker;
 
-    // the rays from where it stands, null when it sees everything (high ground, or it needs no clear line)
+    // the rays from where it stands, null when it sees everything (it needs no clear line)
     private float[] _sightRays;
     private bool _sightCast;
     private Vector3 _sightOrigin;
@@ -2082,9 +2082,9 @@ public abstract class Plant : Entity, IAttackable
         _sightOrigin = here;
         _sightFromHigh = high;
         _sightVersion++;
-        if (high || !NeedsLineOfSight) { _sightRays = null; return; }
+        if (!NeedsLineOfSight) { _sightRays = null; return; }
         if (_sightRays == null) _sightRays = new float[LineOfSight.Rays];
-        LineOfSight.Cast(here, _sightRays);
+        LineOfSight.Cast(here, _sightRays, high);
     }
 
     // can this plant see a point on the ground (an ally, or a ground insect's spot)
