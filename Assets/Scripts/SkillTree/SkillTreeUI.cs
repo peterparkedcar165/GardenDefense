@@ -55,9 +55,24 @@ public class SkillTreeUI : MonoBehaviour
     // one panel per plant that has an authored tree - each panel then decides for itself
     // (in its own Start) whether the plant is actually unlocked and worth showing. new plants
     // getting a tree, or a save unlocking a new plant, both need zero changes here
+    // the plants with a skill tree, in the registry's order: the plant cards measure every name, so they all share
+    // one width (Tommy, 2026-11-27)
+    public IEnumerable<PlantData> TreePlants
+    {
+        get
+        {
+            if (plantRegistry == null || plantRegistry.plants == null) yield break;
+            foreach (PlantData d in plantRegistry.plants)
+                if (d != null && d.skillTree != null) yield return d;
+        }
+    }
+
     private void SpawnPanels()
     {
         if (plantRegistry == null || panelPrefab == null || panelsContainer == null) return;
+        // each row is as tall as its card now (SkillTreePlantPanel), so the rows only need a gap between them
+        VerticalLayoutGroup rows = panelsContainer.GetComponent<VerticalLayoutGroup>();
+        if (rows != null) rows.spacing = SkillTreePlantPanel.RowGap;
         foreach (PlantData data in plantRegistry.plants)
         {
             if (data == null || data.skillTree == null) continue;
@@ -337,8 +352,13 @@ public class SkillTreeUI : MonoBehaviour
         SkinDock();
     }
 
-    // Unspent Points over Confirm and Reset, all three in one kit box. the planks keep the old buttons'
-    // centres and widths; the points line is centred over the two
+    // Unspent Points over Undo, Confirm and Reset in one box: Tommy's wood panel (2026-11-27, the plant cards' wood in the
+    // dock colour, its gold corners over it), at least its own smallest height, in the screen's bottom right, the line
+    // and the planks in its middle, clear of its frame and its corner flowers; the kit's box without the wood. the
+    // planks keep the old buttons' spacing and widths
+    private const float DockLineGap = 16f;
+    private const float DockMargin = 12f;
+
     private void SkinDock()
     {
         if (pointsText == null) return;
@@ -357,26 +377,70 @@ public class SkillTreeUI : MonoBehaviour
         pointsText.gameObject.AddComponent<PixelTextEffect>().Color = new Color32(0x30, 0x1E, 0x12, 0xFF);
 
         if (confirm == null || reset == null) return;
+        RectTransform label = pointsText.rectTransform;
+        bool wood = s.woodPanel != null;
+        RectTransform area = parent as RectTransform;
         Rect a = Bounds(confirm, PlankHeight);
         Rect b = Bounds(reset, PlankHeight);
         // Undo goes left of Confirm, as far from it as Reset is on the other side
         Rect u = new Rect(a.x - (b.x - a.x), a.y, a.width, a.height);
-        float left = Mathf.Min(u.xMin, a.xMin, b.xMin) - 12f;
-        float right = Mathf.Max(a.xMax, b.xMax) + 12f;
-        float bottom = Mathf.Min(a.yMin, b.yMin) - 10f;
+        float left, right, top, bottom;
+        if (wood && area != null)
+        {
+            float lineCaps = 7f * Px;
+            float block = lineCaps + DockLineGap + PlankHeight;
+            float padX = (SkillTreePlantPanel.WoodCornerPx + SkillTreePlantPanel.WoodGapPx) * Px;
+            float padY = (SkillTreePlantPanel.WoodFramePx + SkillTreePlantPanel.WoodGapPx) * Px;
+            float contentLeft = Mathf.Min(u.xMin, a.xMin, b.xMin), contentRight = Mathf.Max(a.xMax, b.xMax);
+            float width = Mathf.Max(SkillTreePlantPanel.WoodMinWidthPx * Px, Mathf.Ceil((contentRight - contentLeft + 2f * padX) / Px) * Px);
+            float height = Mathf.Max(SkillTreePlantPanel.WoodMinHeightPx * Px, Mathf.Ceil((block + 2f * padY) / Px) * Px);
+            left = Mathf.Round(((contentLeft + contentRight) * 0.5f - width * 0.5f) / Px) * Px;
+            // kept on the screen, in its bottom right
+            float dx = Mathf.Min(0f, Mathf.Floor((area.rect.xMax - DockMargin - (left + width)) / Px) * Px);
+            left += dx;
+            right = left + width;
+            bottom = Mathf.Round((area.rect.yMin + DockMargin) / Px) * Px;
+            top = bottom + height;
+            // the line and the planks in the middle of the wood
+            float blockTop = Mathf.Round(((bottom + top) * 0.5f + block * 0.5f) / Px) * Px;
+            float planksY = blockTop - lineCaps - DockLineGap - PlankHeight * 0.5f;
+            confirm.anchoredPosition = new Vector2(confirm.anchoredPosition.x + dx, planksY);
+            reset.anchoredPosition = new Vector2(reset.anchoredPosition.x + dx, planksY);
+            a = Bounds(confirm, PlankHeight);
+            b = Bounds(reset, PlankHeight);
+            u = new Rect(a.x - (b.x - a.x), a.y, a.width, a.height);
+            pointsText.alignment = TextAlignmentOptions.Top;
+            label.anchoredPosition = new Vector2((left + right) * 0.5f, blockTop + 3f * Px - label.sizeDelta.y * (1f - label.pivot.y));
+        }
+        else
+        {
+            left = Mathf.Min(u.xMin, a.xMin, b.xMin) - 12f;
+            right = Mathf.Max(a.xMax, b.xMax) + 12f;
+            bottom = Mathf.Min(a.yMin, b.yMin) - 10f;
+            label.anchoredPosition = new Vector2((left + right) * 0.5f, label.anchoredPosition.y);
+            float rectTop = label.anchoredPosition.y + label.sizeDelta.y * (1f - label.pivot.y);
+            top = rectTop - 3f * Px + 14f;
+        }
 
-        RectTransform label = pointsText.rectTransform;
-        label.anchoredPosition = new Vector2((left + right) * 0.5f, label.anchoredPosition.y);
-        float rectTop = label.anchoredPosition.y + label.sizeDelta.y * (1f - label.pivot.y);
-        float top = rectTop - 3f * Px + 14f;
-
-        RectTransform dock = NewImage("Dock", parent, kit.panelBase, s.dock, true);
+        RectTransform dock = NewImage("Dock", parent, wood ? s.woodPanel : kit.panelBase, s.dock, !wood);
         dock.anchorMin = dock.anchorMax = confirm.anchorMin;
         dock.pivot = new Vector2(0.5f, 0.5f);
         dock.anchoredPosition = new Vector2((left + right) * 0.5f, (top + bottom) * 0.5f);
         dock.sizeDelta = new Vector2(right - left, top - bottom);
         dock.SetSiblingIndex(Mathf.Min(confirm.GetSiblingIndex(), reset.GetSiblingIndex(), label.GetSiblingIndex()));
-        Stretch(NewImage("Shine", dock, kit.panelShine, Color.white, true));
+        if (wood)
+        {
+            Image dockImage = dock.GetComponent<Image>();
+            dockImage.type = Image.Type.Tiled;
+            dockImage.fillCenter = true;
+            if (s.woodPanelTrim != null)
+            {
+                RectTransform dockTrim = NewImage("Trim", dock, s.woodPanelTrim, Color.white, false);
+                dockTrim.GetComponent<Image>().type = Image.Type.Tiled;
+                Stretch(dockTrim);
+            }
+        }
+        else Stretch(NewImage("Shine", dock, kit.panelShine, Color.white, true));
 
         Plank(confirm, GameControlsStyle.Instance.start);
         Plank(reset, s.resetPlank);
