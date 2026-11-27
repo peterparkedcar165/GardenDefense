@@ -1607,7 +1607,11 @@ public class PlantUpgradeUI : EntityInfoPanel
     private static float PlaceSectionText(TMP_Text text, float fontSize, float x, float y, float width)
     {
         text.fontSize = fontSize;
-        float height = Mathf.Ceil(text.GetPreferredValues(text.text, width, 0f).y);
+        // TMP measures as if the text had no margins but draws inside them (the panel's text has about 2 units left and
+        // right): measured at the full width, a line that only just fit wrapped once drawn and its box came out a line
+        // short (Tommy, 2026-11-27). so it's measured at the width it really wraps in, plus its top and bottom margins
+        Vector4 margin = text.margin;
+        float height = Mathf.Ceil(text.GetPreferredValues(text.text, width - margin.x - margin.z, 0f).y + margin.y + margin.w);
         RectTransform r = text.rectTransform;
         r.anchoredPosition = new Vector2(x, -y);
         r.sizeDelta = new Vector2(width, height);
