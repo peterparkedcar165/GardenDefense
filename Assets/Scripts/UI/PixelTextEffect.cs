@@ -56,9 +56,11 @@ public class PixelTextEffect : MonoBehaviour
         offsets = mode == Mode.Shadow ? ShadowOffsets : mode == Mode.Outline ? OutlineOffsets : OutlineBelowOffsets;
         copies = new TextMeshProUGUI[offsets.Length];
         Transform parent = transform.parent;
+        string copyName = $"{name} {(mode == Mode.Shadow ? "Shadow" : "Outline")}";
+        DropClonedCopies(parent, copyName);
         for (int i = 0; i < offsets.Length; i++)
         {
-            GameObject go = new GameObject($"{name} {(mode == Mode.Shadow ? "Shadow" : "Outline")}", typeof(RectTransform));
+            GameObject go = new GameObject(copyName, typeof(RectTransform));
             go.layer = gameObject.layer;
             go.transform.SetParent(parent, false);
             go.transform.SetSiblingIndex(transform.GetSiblingIndex());
@@ -68,6 +70,21 @@ public class PixelTextEffect : MonoBehaviour
         }
         CopyStyle();
         Sync(true);
+    }
+
+    // a parent copied with Instantiate (the info panel's health bar, cloned for Rhodiola's golden sap bar) brings this
+    // text's old copies along as plain texts nothing updates: the old number in the shadow colour, where the old rect
+    // was. they sit right before the text under its copy name, and go before this one makes its own
+    private void DropClonedCopies(Transform parent, string copyName)
+    {
+        if (parent == null) return;
+        for (int i = transform.GetSiblingIndex() - 1, left = offsets.Length; i >= 0 && left > 0; i--, left--)
+        {
+            Transform sibling = parent.GetChild(i);
+            if (sibling.name != copyName || sibling.GetComponent<TextMeshProUGUI>() == null) break;
+            sibling.gameObject.SetActive(false);
+            Destroy(sibling.gameObject);
+        }
     }
 
     private void OnEnable()
