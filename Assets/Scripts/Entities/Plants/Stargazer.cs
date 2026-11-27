@@ -317,7 +317,14 @@ public class Stargazer : Aura
 
         // start the wave at the back of the lane (behind the plant) so it sweeps the full screen.
         // the wave is bounded to the lane width, matching the indicator
-        Vector2 startPos = (Vector2)transform.position - dir * (SkillLength * 0.5f);
+        Vector2 here = transform.position;
+        Vector2 startPos = here - dir * (SkillLength * 0.5f);
+        Vector2 endPos = here + dir * (SkillLength * 0.5f);
+        // line of sight (Tommy, 2026-11-27): it stops at the first obstacle (from low ground any obstacle or cliff,
+        // from high ground only an obstacle on high ground), so it only sweeps the clear stretch of the lane around
+        // the stargazer: it starts just past the nearest blocker behind and stops at the first one ahead
+        if (LineOfSight.Blocked(here, startPos, OnHighground, out Vector2 behind)) startPos = behind + dir * 0.05f;
+        if (LineOfSight.Blocked(here, endPos, OnHighground, out Vector2 ahead)) endPos = ahead;
         GameObject obj = Instantiate(fireWavePrefab, startPos, Quaternion.identity);
         obj.GetComponent<FireWave>()?.Initialize(
             startPos, dir,
@@ -326,7 +333,7 @@ public class Stargazer : Aura
             SkillDamage,
             SkillBurnMultiplier,
             SkillFlammableStacks,
-            SkillLength,
+            Vector2.Distance(startPos, endPos),
             this,
             IsPath3Maxed);
     }

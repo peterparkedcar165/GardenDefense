@@ -33,7 +33,8 @@ public class IceBeam : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
-    public void UpdateBeam(Vector3 targetPosition, float maxRange)
+    // targetHeight: how far the aim point sits above the target's feet (a flying insect's body is about 2 up)
+    public void UpdateBeam(Vector3 targetPosition, float maxRange, float targetHeight = 0f)
     {
         Vector3 origin = transform.position;
         Vector3 toTarget = targetPosition - origin;
@@ -46,6 +47,7 @@ public class IceBeam : MonoBehaviour
 
         Vector3 direction = transform.right;
         float range = Mathf.Max(0f, maxRange);
+        range = Mathf.Min(range, ClearLength(origin, direction, range, toTarget.magnitude, targetHeight));
 
         // every hostile insect within beamWidth of the beam's CURRENT facing line - may not be
         // the same insects the beam was aimed at a moment ago if it's still mid-turn, which is
@@ -89,6 +91,27 @@ public class IceBeam : MonoBehaviour
             t.localScale = new Vector3(beamLength, beamWidth, t.localScale.z);
             t.localPosition = new Vector3(beamLength * 0.5f, 0f, 0f);
         }
+    }
+
+    // line of sight (Tommy, 2026-11-27): the beam stops at the first obstacle in its way, like her shots (from low
+    // ground any obstacle or cliff, from high ground only an obstacle on high ground). it rises in a straight line
+    // from her to the target's body, so it runs over the ground toward the target's feet, and the part of it higher
+    // than Projectile.FliesOverHeight (on its way up to a flying insect) passes over them all. gives how far along
+    // the beam it reaches
+    private Plant _owner;
+    private float ClearLength(Vector3 origin, Vector3 direction, float range, float targetDistance, float targetHeight)
+    {
+        if (_owner == null) _owner = GetComponentInParent<Plant>();
+        if (_owner == null || targetDistance < 0.0001f) return range;
+        float length = Mathf.Min(range, LineOfSight.MaxDistance);
+        // the beam's height at a point is targetHeight times how far along to the target it is
+        if (targetHeight > Projectile.FliesOverHeight)
+            length = Mathf.Min(length, targetDistance * Projectile.FliesOverHeight / targetHeight);
+        if (length <= 0f) return range;
+        Vector2 groundEnd = (Vector2)(origin + direction * length) - Vector2.up * (targetHeight * length / targetDistance);
+        if (!LineOfSight.Blocked(origin, groundEnd, _owner.OnHighground, out Vector2 at)) return range;
+        float groundLength = Vector2.Distance(origin, groundEnd);
+        return groundLength > 0.0001f ? length * Vector2.Distance(origin, at) / groundLength : 0f;
     }
 
     // damages whatever the beam is touching right now (as of the most recent UpdateBeam call) -

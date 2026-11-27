@@ -152,7 +152,7 @@ public class Snowdrop : Shooter
                 // target's own distance - otherwise anything standing behind that target would
                 // get excluded from the piercing scan even though piercing should still reach it)
                 float beamMaxRange = IsPath2Maxed ? Mathf.Infinity : attackRange;
-                iceBeam.UpdateBeam(aimPoint, beamMaxRange);
+                iceBeam.UpdateBeam(aimPoint, beamMaxRange, targetInsect != null ? aimPoint.y - targetInsect.transform.position.y : 0f);
             }
             _beamWasActive = beamShouldBeActive;
         }
@@ -177,7 +177,7 @@ public class Snowdrop : Shooter
                 Vector3 aimPoint2 = targetInsect2 != null ? targetInsect2.GetAimPoint() : secondaryTarget.transform.position;
                 if (!_beam2WasActive) iceBeam2.SnapToTarget(aimPoint2);
                 float beam2MaxRange = IsPath2Maxed ? Mathf.Infinity : attackRange;
-                iceBeam2.UpdateBeam(aimPoint2, beam2MaxRange);
+                iceBeam2.UpdateBeam(aimPoint2, beam2MaxRange, targetInsect2 != null ? aimPoint2.y - targetInsect2.transform.position.y : 0f);
             }
             _beam2WasActive = beam2ShouldBeActive;
         }

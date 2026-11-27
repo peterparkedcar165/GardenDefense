@@ -19,6 +19,9 @@ public class EmberProjectile : MonoBehaviour
     private bool          _isBounce;
     private int           _bouncesRemaining;
     private readonly HashSet<IAttackable> _hitHistory = new HashSet<IAttackable>();
+    // how high it has climbed: it flies straight at a flying insect's body, so it rises as it closes in (like a
+    // plant's shot, Projectile). where it is on the ground is its position less this
+    private float _height;
 
     // brief freeze on impact before spawning the next bounce ember, matching the Oleander's
     // bounce pacing. each bounce is a fresh instance, so this holds the current one in place
@@ -96,12 +99,17 @@ public class EmberProjectile : MonoBehaviour
 
         Insect targetInsect = _target as Insect;
         Vector3 targetPos = targetInsect != null ? targetInsect.GetAimPoint() : ((Entity)_target).transform.position;
+        float targetHeight = targetInsect != null ? targetPos.y - targetInsect.transform.position.y : 0f;
         Vector3 stepFrom = transform.position;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
-        // line of sight (Tommy, 2026-11-27): it stops at the first blocker on its way (from low ground any obstacle
-        // or cliff, from high ground only an obstacle on high ground), unless it's flying at a flying insect
-        bool atFlyer = targetInsect != null && targetInsect.isFlying;
-        if (_source != null && !atFlyer && LineOfSight.Blocked(stepFrom, transform.position, _source.OnHighground, out _))
+        float heightFrom = _height;
+        float left = Vector3.Distance(stepFrom, targetPos);
+        transform.position = Vector3.MoveTowards(stepFrom, targetPos, _speed * Time.deltaTime);
+        if (left > 0.0001f) _height += (targetHeight - _height) * Mathf.Clamp01(_speed * Time.deltaTime / left);
+        // line of sight (Tommy, 2026-11-27): it crashes into the first blocker on its way (from low ground any
+        // obstacle or cliff, from high ground only an obstacle on high ground), checked where it is on the ground,
+        // unless it has climbed higher than Projectile.FliesOverHeight (on its way up to a flying insect)
+        if (_source != null && heightFrom <= Projectile.FliesOverHeight &&
+            LineOfSight.Blocked((Vector2)stepFrom - Vector2.up * heightFrom, (Vector2)transform.position - Vector2.up * _height, _source.OnHighground, out _))
         {
             Destroy(gameObject);
             return;

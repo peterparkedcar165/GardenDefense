@@ -207,15 +207,14 @@ public abstract class Projectile : MonoBehaviour
     {
         trackedTarget = target;
         trackedInsect = target != null ? target.GetComponent<Insect>() : null;
-        _aimedAtFlyer = trackedInsect != null && trackedInsect.isFlying;
     }
 
-    // line of sight (Tommy, 2026-11-27): a shot by a plant that needs a clear line stops at the first blocker on
-    // its way (it flew at a ground target that went behind one). from low ground that's any obstacle or cliff;
-    // from high ground only an obstacle on high ground (it flies down past cliffs and over obstacles below). a shot at a flying insect flies
-    // over them all. a shot keeps counting as one at a flyer after its target's gone
-    private bool _aimedAtFlyer;
-    protected virtual bool StopsAtBlockers => source != null && source.NeedsLineOfSight && !_aimedAtFlyer;
+    // line of sight (Tommy, 2026-11-27): a shot by a plant that needs a clear line crashes into the first blocker on
+    // its way and is gone. from low ground that's any obstacle or cliff; from high ground only an obstacle on high
+    // ground (it flies down past cliffs and over obstacles below). a shot whose visual has climbed higher than
+    // FliesOverHeight (on its way up to a flying insect, about 2 up) flies over them all, wherever it is by then
+    public const float FliesOverHeight = 1f;
+    protected virtual bool StopsAtBlockers => source != null && source.NeedsLineOfSight && _visualHeightOffset <= FliesOverHeight;
 
     // stopped by a blocker: no hit, gone, its particles left to fade
     protected virtual void OnBlocked()
@@ -271,7 +270,6 @@ public abstract class Projectile : MonoBehaviour
             }
         }
 
-        if (trackedInsect != null) _aimedAtFlyer = trackedInsect.isFlying;
         Vector3 stepFrom = transform.position;
         transform.position += direction * groundSpeed * Time.deltaTime;
         if (StopsAtBlockers && LineOfSight.Blocked(stepFrom, transform.position, source.OnHighground, out Vector2 blockedAt))

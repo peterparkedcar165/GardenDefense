@@ -61,6 +61,11 @@ public class Blizzard : MonoBehaviour
         this.auraMagicResistanceBonus = auraMagicResistanceBonus;
         this.auraLingerDuration       = auraLingerDuration;
 
+        // line of sight (Tommy, 2026-11-27): the beam stops at the first obstacle in its way (from low ground any
+        // obstacle or cliff, from high ground only an obstacle on high ground), nothing past it is touched
+        if (source != null && LineOfSight.Blocked(origin, origin + this.direction * maxRange, source.OnHighground, out Vector2 blockedAt))
+            this.maxRange = Vector2.Distance(origin, blockedAt);
+
         if (visualRenderer != null)
         {
             float angle = Mathf.Atan2(this.direction.y, this.direction.x) * Mathf.Rad2Deg;

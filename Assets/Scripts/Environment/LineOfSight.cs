@@ -14,7 +14,7 @@ public static class LineOfSight
     // (0.16 across) can't slip through either; at 0.12 the 45 degree ones went through diagonal tree lines (Tommy saw
     // plants target past obstacles from certain tiles)
     private const float RayRadius = 0.08f;
-    private const float MaxDistance = 40f;
+    public const float MaxDistance = 40f;
     private const float Step = 2f * Mathf.PI / Rays;
 
     private static int _mask = -1;

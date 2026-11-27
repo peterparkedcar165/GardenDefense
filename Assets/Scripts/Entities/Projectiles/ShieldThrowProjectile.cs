@@ -31,9 +31,23 @@ public class ShieldThrowProjectile : Projectile
         if (sr != null) sr.flipX = direction.x > 0f;
     }
 
+    // how far short of an obstacle the shield comes down, so it rests in front of it rather than in it
+    private const float ObstacleBackOff = 0.1f;
+
     protected override void Move()
     {
+        Vector3 stepFrom = transform.position;
         transform.position += direction * projectileSpeed * Time.deltaTime;
+        // line of sight (Tommy, 2026-11-27): it stops at the first obstacle in its way and lands right in front of it
+        // (from low ground any obstacle or cliff, from high ground only an obstacle on high ground)
+        if (source != null && LineOfSight.Blocked(stepFrom, transform.position, source.OnHighground, out Vector2 blockedAt))
+        {
+            Vector3 hitPoint = new Vector3(blockedAt.x, blockedAt.y, transform.position.z);
+            Vector3 rest = hitPoint - direction * Mathf.Min(ObstacleBackOff, Vector3.Distance(spawnPosition, hitPoint));
+            transform.position = rest;
+            Land(null, rest);
+            return;
+        }
         if (!Tile.IsInsideGrid(transform.position) || Vector3.Distance(spawnPosition, transform.position) >= maxRange)
             Land(null, landPosition);
     }

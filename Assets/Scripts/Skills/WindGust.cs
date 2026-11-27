@@ -59,8 +59,13 @@ public class WindGust : MonoBehaviour
         if (source == null || !source.IsAlive) { Destroy(gameObject); return; }
 
         float step = speed * Time.deltaTime;
+        Vector3 stepFrom = transform.position;
         transform.position += (Vector3)(direction * step);
         distanceTraveled += step;
+        // line of sight (Tommy, 2026-11-27): the gust stops at the first obstacle its middle runs into (from low
+        // ground any obstacle or cliff, from high ground only an obstacle on high ground) and ends there, Seed Bomb and all
+        bool blocked = LineOfSight.Blocked(stepFrom, transform.position, source.OnHighground, out Vector2 blockedAt);
+        if (blocked) transform.position = new Vector3(blockedAt.x, blockedAt.y, transform.position.z);
 
         Vector2 windVelocity = direction * speed;
         Vector2 center = transform.position;
@@ -93,7 +98,7 @@ public class WindGust : MonoBehaviour
                 plant.ReduceSkillCooldown(plant.skillCooldown * cooldownRefundPercent);
         }
 
-        if (distanceTraveled >= maxDistance)
+        if (blocked || distanceTraveled >= maxDistance)
         {
             // Seed Bomb (skill tree): one last damage pass over everything still caught in the
             // hitbox at the moment it expires - including insects it already hit earlier
