@@ -125,6 +125,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: aloevera_monsoon
+      modifiesSkill: 1
     - id: node10b_cleansingrain
       nodeName: Cleansing Rain
       description: Plants affected by <color=#4FC3F7><b>Soothing Rain</b></color> have their debuffs deplete <color=green><b>2x</b></color> as fast. <color=orange><b>Fire</b></color> elemental debuffs deplete <color=green><b>4x</b></color> as fast.
@@ -132,4 +133,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: aloevera_cleansing_rain
+      modifiesSkill: 1
     ranksToUnlockNext: 1

@@ -125,6 +125,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: cactus_retaliatory_spikes
+      modifiesSkill: 1
     - id: node10b_fortifiedstance
       nodeName: Fortified Stance
       description: Increase <color=green><b>Skill</b></color> duration by <color=green><b>1</b></color> second.

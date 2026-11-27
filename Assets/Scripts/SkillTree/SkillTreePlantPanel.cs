@@ -230,9 +230,11 @@ public class SkillTreePlantPanel : MonoBehaviour
     // the points: a small square in Tommy's vine frame, the mulch slots' (PlantInfoPanelStyle.mulchSlotFrame), as big as
     // the bag's mulch slots, the number in its opening and the word Points under it (Tommy, 2026-11-27)
     private const float ChipSize = 64f;
-    // under the portrait: the level line in a sunken box as wide as the exp bar, then the exp bar (Tommy, 2026-11-27:
-    // the level first, the exp under it)
-    private const float LevelBoxHeight = 28f;
+    // under the portrait: the level line on the in game upgrade buttons' plank (PlantInfoPanelStyle.upgradeButton, its
+    // trim over it, in the buttons' wood colour and words; Tommy, 2026-11-27) as wide as the exp bar, then the exp bar
+    // (the level first, the exp under it). its capitals sit in the middle of the plank's wood, 6 px under its top
+    private const float LevelBoxHeightFallback = 28f;
+    private const float LevelCapFromTopPx = 6f;
     private const float UnderPortraitGap = 16f;
     private const float LevelToExpGap = 12f;
     // the vine out of the card starts this far inside it, under the wood, so it leaves the frame's visible edge
@@ -294,7 +296,9 @@ public class SkillTreePlantPanel : MonoBehaviour
                 widestPlate = Mathf.Max(widestPlate, PlateWidth(nameText.GetPreferredValues(DisplayName(other)).x));
 
         // under the portrait: the level line in its box, then the exp bar
-        Rect levelBox = new Rect(portrait.center.x - ExpBarWidth * 0.5f, portrait.yMin - UnderPortraitGap - LevelBoxHeight, ExpBarWidth, LevelBoxHeight);
+        bool levelPlank = look.upgradeButton != null;
+        float levelBoxHeight = levelPlank ? look.upgradeButton.rect.height * Px : LevelBoxHeightFallback;
+        Rect levelBox = new Rect(portrait.center.x - ExpBarWidth * 0.5f, portrait.yMin - UnderPortraitGap - levelBoxHeight, ExpBarWidth, levelBoxHeight);
         Rect expBar = new Rect(portrait.center.x - ExpBarWidth * 0.5f, levelBox.yMin - LevelToExpGap - ExpBarHeight, ExpBarWidth, ExpBarHeight);
 
         // the card's middle sits on the nodes' middle line (Tommy, 2026-11-24): it runs from the name plate's lower
@@ -420,14 +424,18 @@ public class SkillTreePlantPanel : MonoBehaviour
             PlaceText(pointsText.rectTransform, chip.center.x, chip.center.y + 7f * Px, 40f, chip.width);
         }
 
-        // the level line in a sunken box in the card's colour
+        // the level line on the upgrade buttons' plank in their wood colour, its trim over it, its words in the buttons'
+        // colours (a sunken box in the card's colour without that art)
         if (levelText != null)
         {
-            RectTransform box = NewImage("LevelBox", root, kit.stripSunken, panel, true);
+            RectTransform box = NewImage("LevelBox", root, levelPlank ? look.upgradeButton : kit.stripSunken, levelPlank ? look.normal.face : panel, true);
             Place(box, levelBox);
             box.SetSiblingIndex(levelText.transform.GetSiblingIndex());
+            if (levelPlank && look.upgradeButtonTrim != null) Stretch(NewImage("Trim", box, look.upgradeButtonTrim, Color.white, true));
             levelText.alignment = TextAlignmentOptions.Top;
-            PlaceText(levelText.rectTransform, levelBox.center.x, levelBox.center.y + 7f, 20f, levelBox.width);
+            float capTop = levelPlank ? levelBox.yMax - LevelCapFromTopPx * Px : levelBox.center.y + 7f;
+            PlaceText(levelText.rectTransform, levelBox.center.x, capTop, 20f, levelBox.width);
+            if (levelPlank) levelText.color = look.normal.text;
         }
 
         // the exp on the kit's bar, the number inside it in white with a dark shadow
@@ -449,10 +457,25 @@ public class SkillTreePlantPanel : MonoBehaviour
             expText.gameObject.AddComponent<PixelTextEffect>().Color = new Color32(0x14, 0x14, 0x14, 0xFF);
         }
         if (nameText != null) nameText.gameObject.AddComponent<PixelTextEffect>().Color = shadow;
-        if (levelText != null) levelText.gameObject.AddComponent<PixelTextEffect>().Color = shadow;
+        if (levelText != null) levelText.gameObject.AddComponent<PixelTextEffect>().Color = levelPlank ? look.normal.shadow : shadow;
         if (pointsText != null) pointsText.gameObject.AddComponent<PixelTextEffect>().Color = shadow;
 
         BuildLinks(root, right);
+        CentreGroup(root, left);
+    }
+
+    // the row's group, from the card's left edge to the last nodes' right edge, centred on the row's middle: the rows
+    // sit in the middle of the screen (SkillTreeUI), so the group has the same room on both sides (Tommy, 2026-11-27)
+    private void CentreGroup(RectTransform root, float cardLeft)
+    {
+        float groupRight = cardLeft;
+        foreach (List<SkillNodeButton> column in columns)
+            foreach (SkillNodeButton b in column)
+                groupRight = Mathf.Max(groupRight, root.InverseTransformPoint(b.Wrapper.position).x + SkillNodeButton.HalfWidth);
+        float dx = Mathf.Round(-(cardLeft + groupRight) * 0.5f / Px) * Px;
+        if (Mathf.Abs(dx) < Px) return;
+        foreach (Transform child in root)
+            if (child is RectTransform r) r.anchoredPosition += new Vector2(dx, 0f);
     }
 
     // the vine links: from the card to the first node, then node to node; a fork's two nodes branch

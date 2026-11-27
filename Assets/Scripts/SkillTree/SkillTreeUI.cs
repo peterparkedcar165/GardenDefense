@@ -72,7 +72,12 @@ public class SkillTreeUI : MonoBehaviour
         if (plantRegistry == null || panelPrefab == null || panelsContainer == null) return;
         // each row is as tall as its card now (SkillTreePlantPanel), so the rows only need a gap between them
         VerticalLayoutGroup rows = panelsContainer.GetComponent<VerticalLayoutGroup>();
-        if (rows != null) rows.spacing = SkillTreePlantPanel.RowGap;
+        if (rows != null)
+        {
+            rows.spacing = SkillTreePlantPanel.RowGap;
+            // every row in the middle of the screen; each card and node chain is centred on its row (SkillTreePlantPanel)
+            rows.childAlignment = TextAnchor.UpperCenter;
+        }
         foreach (PlantData data in plantRegistry.plants)
         {
             if (data == null || data.skillTree == null) continue;
@@ -299,8 +304,21 @@ public class SkillTreeUI : MonoBehaviour
             // still takes the drags, just isn't seen
             Image haze = scroll.GetComponent<Image>();
             if (haze != null) haze.color = Color.clear;
-            SkinScrollbar(scroll.horizontalScrollbar);
-            SkinScrollbar(scroll.verticalScrollbar);
+            // no scroll bars (Tommy, 2026-11-27): the rows fit across the screen, so no sideways scrolling; up and down
+            // still scrolls with the wheel or a drag, without a bar
+            scroll.horizontal = false;
+            HideScrollbar(scroll.horizontalScrollbar);
+            HideScrollbar(scroll.verticalScrollbar);
+            scroll.horizontalScrollbar = null;
+            scroll.verticalScrollbar = null;
+            // the scroll view sized the viewport round its bars (the scene keeps it 0 by 0); without them it covers
+            // the whole view
+            if (scroll.viewport != null)
+            {
+                scroll.viewport.anchorMin = Vector2.zero;
+                scroll.viewport.anchorMax = Vector2.one;
+                scroll.viewport.offsetMin = scroll.viewport.offsetMax = Vector2.zero;
+            }
         }
 
         if (tooltipPanel != null)
@@ -352,12 +370,15 @@ public class SkillTreeUI : MonoBehaviour
         SkinDock();
     }
 
-    // Unspent Points over Undo, Confirm and Reset in one box: Tommy's wood panel (2026-11-27, the plant cards' wood in the
-    // dock colour, its gold corners over it), at least its own smallest height, in the screen's bottom right, the line
-    // and the planks in its middle, clear of its frame and its corner flowers; the kit's box without the wood. the
-    // planks keep the old buttons' spacing and widths
-    private const float DockLineGap = 16f;
+    // Unspent Points over Undo, Confirm and Reset in the plant info panel's description box (Tommy, 2026-11-27): the inset
+    // box in the dock colour with his section frame over its edge (SectionFrameLook), in the screen's bottom right corner
+    // (on the root canvas, so on any screen shape), all of it 1.5 times the screen's other sizes (3 canvas units an art
+    // pixel, the pixels still square): bigger planks and bigger words, the points line too
+    private const float DockScale = 1.5f;
     private const float DockMargin = 12f;
+    private const float DockLineGap = 12f;
+    private const float DockPlankGap = 8f;
+    private const float DockPlankMinWidth = 160f;
 
     private void SkinDock()
     {
@@ -374,85 +395,76 @@ public class SkillTreeUI : MonoBehaviour
         pointsText.textWrappingMode = TextWrappingModes.NoWrap;
         pointsText.overflowMode = TextOverflowModes.Overflow;
         pointsText.raycastTarget = false;
+        pointsText.alignment = TextAlignmentOptions.Top;
         pointsText.gameObject.AddComponent<PixelTextEffect>().Color = new Color32(0x30, 0x1E, 0x12, 0xFF);
 
         if (confirm == null || reset == null) return;
-        RectTransform label = pointsText.rectTransform;
-        bool wood = s.woodPanel != null;
-        RectTransform area = parent as RectTransform;
-        Rect a = Bounds(confirm, PlankHeight);
-        Rect b = Bounds(reset, PlankHeight);
-        // Undo goes left of Confirm, as far from it as Reset is on the other side
-        Rect u = new Rect(a.x - (b.x - a.x), a.y, a.width, a.height);
-        float left, right, top, bottom;
-        if (wood && area != null)
-        {
-            float lineCaps = 7f * Px;
-            float block = lineCaps + DockLineGap + PlankHeight;
-            float padX = (SkillTreePlantPanel.WoodCornerPx + SkillTreePlantPanel.WoodGapPx) * Px;
-            float padY = (SkillTreePlantPanel.WoodFramePx + SkillTreePlantPanel.WoodGapPx) * Px;
-            float contentLeft = Mathf.Min(u.xMin, a.xMin, b.xMin), contentRight = Mathf.Max(a.xMax, b.xMax);
-            float width = Mathf.Max(SkillTreePlantPanel.WoodMinWidthPx * Px, Mathf.Ceil((contentRight - contentLeft + 2f * padX) / Px) * Px);
-            float height = Mathf.Max(SkillTreePlantPanel.WoodMinHeightPx * Px, Mathf.Ceil((block + 2f * padY) / Px) * Px);
-            left = Mathf.Round(((contentLeft + contentRight) * 0.5f - width * 0.5f) / Px) * Px;
-            // kept on the screen, in its bottom right
-            float dx = Mathf.Min(0f, Mathf.Floor((area.rect.xMax - DockMargin - (left + width)) / Px) * Px);
-            left += dx;
-            right = left + width;
-            bottom = Mathf.Round((area.rect.yMin + DockMargin) / Px) * Px;
-            top = bottom + height;
-            // the line and the planks in the middle of the wood
-            float blockTop = Mathf.Round(((bottom + top) * 0.5f + block * 0.5f) / Px) * Px;
-            float planksY = blockTop - lineCaps - DockLineGap - PlankHeight * 0.5f;
-            confirm.anchoredPosition = new Vector2(confirm.anchoredPosition.x + dx, planksY);
-            reset.anchoredPosition = new Vector2(reset.anchoredPosition.x + dx, planksY);
-            a = Bounds(confirm, PlankHeight);
-            b = Bounds(reset, PlankHeight);
-            u = new Rect(a.x - (b.x - a.x), a.y, a.width, a.height);
-            pointsText.alignment = TextAlignmentOptions.Top;
-            label.anchoredPosition = new Vector2((left + right) * 0.5f, blockTop + 3f * Px - label.sizeDelta.y * (1f - label.pivot.y));
-        }
-        else
-        {
-            left = Mathf.Min(u.xMin, a.xMin, b.xMin) - 12f;
-            right = Mathf.Max(a.xMax, b.xMax) + 12f;
-            bottom = Mathf.Min(a.yMin, b.yMin) - 10f;
-            label.anchoredPosition = new Vector2((left + right) * 0.5f, label.anchoredPosition.y);
-            float rectTop = label.anchoredPosition.y + label.sizeDelta.y * (1f - label.pivot.y);
-            top = rectTop - 3f * Px + 14f;
-        }
 
-        RectTransform dock = NewImage("Dock", parent, wood ? s.woodPanel : kit.panelBase, s.dock, !wood);
-        dock.anchorMin = dock.anchorMax = confirm.anchorMin;
-        dock.pivot = new Vector2(0.5f, 0.5f);
-        dock.anchoredPosition = new Vector2((left + right) * 0.5f, (top + bottom) * 0.5f);
-        dock.sizeDelta = new Vector2(right - left, top - bottom);
-        dock.SetSiblingIndex(Mathf.Min(confirm.GetSiblingIndex(), reset.GetSiblingIndex(), label.GetSiblingIndex()));
-        if (wood)
-        {
-            Image dockImage = dock.GetComponent<Image>();
-            dockImage.type = Image.Type.Tiled;
-            dockImage.fillCenter = true;
-            if (s.woodPanelTrim != null)
-            {
-                RectTransform dockTrim = NewImage("Trim", dock, s.woodPanelTrim, Color.white, false);
-                dockTrim.GetComponent<Image>().type = Image.Type.Tiled;
-                Stretch(dockTrim);
-            }
-        }
-        else Stretch(NewImage("Shine", dock, kit.panelShine, Color.white, true));
+        // the group, anchored to the screen's bottom right corner on the root canvas, just over the scroll view
+        Canvas canvas = pointsText.canvas;
+        RectTransform screen = canvas != null ? (RectTransform)canvas.rootCanvas.transform : (RectTransform)parent;
+        GameObject groupObject = new GameObject("UnspentPointsDock", typeof(RectTransform));
+        groupObject.layer = parent.gameObject.layer;
+        RectTransform group = (RectTransform)groupObject.transform;
+        group.SetParent(screen, false);
+        if (parent.parent == screen) group.SetSiblingIndex(parent.GetSiblingIndex() + 1);
+        group.anchorMin = group.anchorMax = group.pivot = new Vector2(1f, 0f);
+        group.anchoredPosition = new Vector2(-DockMargin, DockMargin);
+        group.localScale = new Vector3(DockScale, DockScale, 1f);
 
+        // the box: the description sections' inset box in the dock colour, the section frame over its edge
+        RectTransform box = NewImage("Box", group, kit.insetBox, s.dock, true);
+        Stretch(box);
+        if (SectionFrameLook.Available) SectionFrameLook.Add(box.GetComponent<Image>());
+
+        // the planks in a row, all as wide as the widest (the old buttons' 160 at least): Undo, Confirm, Reset. Undo has
+        // no button in the scene: a plank of its own in the game controls' blue, faded while there's nothing to undo
+        PlankButton undo = PlankButton.Create(group, "Undo", GameControlsStyle.Instance.speed, kit.font, OnUndo);
+        float plankWidth = Mathf.Max(DockPlankMinWidth, undo.NaturalWidth);
+        foreach (RectTransform b in new[] { confirm, reset })
+        {
+            b.SetParent(group, false);
+            b.sizeDelta = new Vector2(plankWidth, PlankHeight);
+        }
         Plank(confirm, GameControlsStyle.Instance.start);
         Plank(reset, s.resetPlank);
+        foreach (RectTransform b in new[] { confirm, reset })
+        {
+            PlankButton p = b.GetComponentInChildren<PlankButton>(true);
+            if (p != null) plankWidth = Mathf.Max(plankWidth, p.Rect.sizeDelta.x);
+        }
+        plankWidth = Mathf.Ceil(plankWidth / Px) * Px;
 
-        // Undo has no button in the scene: a plank of its own in the game controls' blue, faded while
-        // there's nothing to undo
-        PlankButton undo = PlankButton.Create((RectTransform)parent, "Undo", GameControlsStyle.Instance.speed, kit.font, OnUndo);
-        RectTransform ur = undo.Rect;
-        ur.anchorMin = ur.anchorMax = confirm.anchorMin;
-        ur.pivot = new Vector2(0.5f, 0.5f);
-        ur.anchoredPosition = u.center;
-        ur.sizeDelta = new Vector2(Mathf.Max(ur.sizeDelta.x, u.width), ur.sizeDelta.y);
+        float pad = SectionFrameLook.Inset;
+        float lineCaps = 7f * Px;
+        float width = 2f * pad + 3f * plankWidth + 2f * DockPlankGap;
+        float height = 2f * pad + PlankHeight + DockLineGap + lineCaps;
+        group.sizeDelta = new Vector2(width, height);
+
+        RectTransform[] row = { undo.Rect, confirm, reset };
+        for (int i = 0; i < row.Length; i++)
+        {
+            RectTransform r = row[i];
+            r.anchorMin = r.anchorMax = Vector2.zero;
+            r.pivot = new Vector2(0.5f, 0.5f);
+            r.anchoredPosition = new Vector2(pad + plankWidth * 0.5f + i * (plankWidth + DockPlankGap), pad + PlankHeight * 0.5f);
+            r.sizeDelta = new Vector2(plankWidth, PlankHeight);
+        }
+        // the planks inside the scene's buttons follow their width
+        foreach (RectTransform b in new[] { confirm, reset })
+        {
+            PlankButton p = b.GetComponentInChildren<PlankButton>(true);
+            if (p != null) p.Rect.sizeDelta = new Vector2(plankWidth, p.Rect.sizeDelta.y);
+        }
+
+        // the points line over the planks, centred, its capitals at the box's inner top
+        RectTransform label = pointsText.rectTransform;
+        label.SetParent(group, false);
+        label.anchorMin = label.anchorMax = Vector2.zero;
+        label.pivot = new Vector2(0.5f, 1f);
+        label.sizeDelta = new Vector2(width - 2f * pad, 14f * Px);
+        label.anchoredPosition = new Vector2(width * 0.5f, height - pad + 3f * Px);
+
         undoGroup = undo.gameObject.AddComponent<CanvasGroup>();
         RefreshUndo();
     }
@@ -494,6 +506,11 @@ public class SkillTreeUI : MonoBehaviour
         r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
         r.anchoredPosition = Vector2.zero;
         r.sizeDelta = new Vector2(Mathf.Max(r.sizeDelta.x, Mathf.Round(buttonRect.sizeDelta.x / Px) * Px), r.sizeDelta.y);
+    }
+
+    private static void HideScrollbar(Scrollbar bar)
+    {
+        if (bar != null) bar.gameObject.SetActive(false);
     }
 
     private static void SkinScrollbar(Scrollbar bar)

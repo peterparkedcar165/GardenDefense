@@ -34,6 +34,11 @@ public class SkillTreeNode
 
     // optional behavior unlock checked in code via SkillTreeManager.HasUnlock
     public string unlockId;
+
+    // the node changes the plant's skill: it shows the plant's skill icon (Tommy, 2026-11-27). a node raising a
+    // skill stat and the instant skill unlock show it anyway (SkillNodeButton.ShowsSkillIcon)
+    [Tooltip("this node changes the plant's skill, so it shows the skill's icon")]
+    public bool modifiesSkill;
 }
 
 [System.Serializable]

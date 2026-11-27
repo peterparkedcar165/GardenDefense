@@ -123,6 +123,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: snowdrop_assist_refund
+      modifiesSkill: 1
     - id: node10b_shatteringmark
       nodeName: Shattering Mark
       description: <color=#00FFFF><b>Snow Mark</b></color> damage can now critically strike.

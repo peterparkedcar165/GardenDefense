@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: waterlily_bubble_backtrack
+      modifiesSkill: 1
     - id: node5b_bubblepopdamage
       nodeName: Bursting Pressure
       description: Bubble Prison deals an extra instance of 10% max health damage when it pops.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: waterlily_bubble_pop_damage
+      modifiesSkill: 1
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown
@@ -130,4 +132,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: waterlily_extend_bubble_duration
+      modifiesSkill: 1
     ranksToUnlockNext: 1

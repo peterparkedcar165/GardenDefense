@@ -125,6 +125,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: zinnia_solar_flare
+      modifiesSkill: 1
     - id: node10b_lingeringrays
       nodeName: Lingering Rays
       description: Increase <color=green><b>Skill</b></color> duration by <color=green><b>1</b></color> second.

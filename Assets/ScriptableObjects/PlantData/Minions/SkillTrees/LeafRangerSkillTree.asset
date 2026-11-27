@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: leafranger_focused_strikes
+      modifiesSkill: 1
     - id: node5b_verdantfocus
       nodeName: Verdant Focus
       description: While <color=green><b>Rapid Focus</b></color> is active, increase <color=green><b>Grass Damage</b></color> and <color=green><b>Elemental Affinity</b></color> by <color=green><b>20%</b></color>.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: leafranger_verdant_focus
+      modifiesSkill: 1
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

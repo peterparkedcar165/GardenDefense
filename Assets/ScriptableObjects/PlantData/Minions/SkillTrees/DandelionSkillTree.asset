@@ -123,6 +123,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: dandelion_tailwind
+      modifiesSkill: 1
     - id: node10b_seedbomb
       nodeName: Seed Bomb
       description: When the <color=green><b>Wind Gust</b></color> reaches the end of its path, it detonates, dealing its damage again to every insect still caught within it.
@@ -130,4 +131,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: dandelion_seedbomb
+      modifiesSkill: 1
     ranksToUnlockNext: 1

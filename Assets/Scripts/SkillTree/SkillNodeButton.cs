@@ -148,7 +148,7 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             {
                 // the biggest whole number scale that fits, so the icon's pixels stay square
                 float longest = Mathf.Max(iconSprite.rect.width, iconSprite.rect.height);
-                float scale = Mathf.Max(1f, Mathf.Floor(IconMax * Px / longest));
+                float scale = plant != null && iconSprite == plant.skillIcon ? SkillIconScale(longest) : Mathf.Max(1f, Mathf.Floor(IconMax * Px / longest));
                 RectTransform icon = NewImage("Icon", background.transform, iconSprite, tint);
                 icon.sizeDelta = new Vector2(iconSprite.rect.width * scale, iconSprite.rect.height * scale);
                 iconImage = icon.GetComponent<Image>();
@@ -217,13 +217,47 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
     }
 
+    // a node that changes the plant's skill shows the skill's own icon (Tommy, 2026-11-27): one flagged so in its tree
+    // (modifiesSkill), the instant skill unlock, or one whose first effect is a skill stat (its points, cooldown,
+    // duration, charge or damage)
+    private bool ShowsSkillIcon
+    {
+        get
+        {
+            if (node.modifiesSkill) return true;
+            if (!string.IsNullOrEmpty(node.unlockId) && node.unlockId.EndsWith("_instant_skill")) return true;
+            if (node.effects == null || node.effects.Count == 0) return false;
+            switch (node.effects[0].statType)
+            {
+                case StatType.Path3LevelAdder:
+                case StatType.SkillCooldownFlat:
+                case StatType.SkillDurationAdder:
+                case StatType.SkillChargeRate:
+                case StatType.SkillDamage:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    // a skill icon (bigger art than the stat icons) as big as fits the window with a little room at a whole number
+    // scale, or a half or a third of its size when it's bigger than that, so its pixels stay square
+    private static float SkillIconScale(float longest)
+    {
+        float room = WindowSize * Px - 8f;
+        return longest <= room ? Mathf.Floor(room / longest) : 1f / Mathf.Ceil(longest / room);
+    }
+
     // what the node raises, by its first effect: the stat icons, the sun for a cheaper plant, a path's
-    // bloom pip in its colour for a path or its cooldown. anything else gets a pip in the element colour
+    // bloom pip in its colour for a path or its cooldown, the plant's skill icon for its skill. anything else gets a
+    // pip in the element colour
     private Sprite IconFor(out Color tint)
     {
         InsectShowcaseStyle kit = InsectShowcaseStyle.Instance;
         PlantInfoPanelStyle look = PlantInfoPanelStyle.Instance;
         tint = Color.white;
+        if (ShowsSkillIcon && plant != null && plant.skillIcon != null) return plant.skillIcon;
         if (node.effects == null || node.effects.Count == 0)
         {
             tint = PlantData.ElementPanelColor(plant.elementalType);

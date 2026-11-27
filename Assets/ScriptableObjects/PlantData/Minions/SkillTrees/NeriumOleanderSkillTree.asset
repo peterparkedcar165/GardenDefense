@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: oleander_venom_chain
+      modifiesSkill: 1
     - id: node5b_hardyroots
       nodeName: Hardy Roots
       description: Increase <color=green><b>Max Health</b></color> by <color=green><b>15%</b></color>.
@@ -125,6 +126,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: oleander_thorned_petals
+      modifiesSkill: 1
     - id: node10b_precisepetals
       nodeName: Precise Petals
       description: Increase <color=green><b>Critical Chance</b></color> by <color=green><b>5%</b></color>.

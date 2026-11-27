@@ -123,6 +123,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: bogiris_tidal_surge
+      modifiesSkill: 1
     - id: node10b_lingeringmire
       nodeName: Lingering Mire
       description: After detonating, the <color=green><b>Geyser</b></color> remains for <color=green><b>6</b></color> seconds, slowing down ground insects by <color=green><b>50%</b></color>.
@@ -130,4 +131,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: bogiris_lingering_mire
+      modifiesSkill: 1
     ranksToUnlockNext: 1

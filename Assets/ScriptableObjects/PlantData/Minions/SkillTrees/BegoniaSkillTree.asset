@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: begonia_blooming_affinity
+      modifiesSkill: 1
     - id: node5b_bloomingvigor
       nodeName: Blooming Vigor
       description: <color=green><b>Blossoming</b></color> targets also benefit from <color=green><b>Grass Damage</b></color> equal to the current <b><color=#4FC3F7>Begonia's Blessing</color></b>.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: begonia_blooming_vigor
+      modifiesSkill: 1
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown
@@ -123,6 +125,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: begonia_fertile_waters
+      modifiesSkill: 1
     - id: node10b_rebloom
       nodeName: Rebloom
       description: If the target is still within <b><color=#4FC3F7>Begonia</color></b>'s Attack Range when <color=orange><b>Blossoming</b></color> expires, it blooms again at half duration.
@@ -130,4 +133,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: begonia_rebloom
+      modifiesSkill: 1
     ranksToUnlockNext: 1

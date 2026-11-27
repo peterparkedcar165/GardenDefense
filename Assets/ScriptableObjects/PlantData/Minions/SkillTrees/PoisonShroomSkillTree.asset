@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: poison_field_lingering
+      modifiesSkill: 1
     - id: node5b_delayedbloom
       nodeName: Delayed Bloom
       description: The <color=purple><b>Poison Field</b></color> starts <color=green><b>25%</b></color> smaller, then blooms outward to <color=green><b>1.5x</b></color> that size over the first <color=green><b>60%</b></color> of its lifetime before holding. Increase <color=green><b>Skill Duration</b></color> by <color=green><b>4</b></color> seconds.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: poison_field_delayed_bloom
+      modifiesSkill: 1
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

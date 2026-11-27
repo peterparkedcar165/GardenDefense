@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: holly_resilient_frost
+      modifiesSkill: 1
     - id: node5b_frozenreach
       nodeName: Frozen Reach
       description: Increase <color=green><b>Attack Range</b></color> by <color=green><b>20%</b></color>.

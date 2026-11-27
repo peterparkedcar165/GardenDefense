@@ -123,6 +123,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: tansy_borrowed_light
+      modifiesSkill: 1
     - id: node10b_nurturingglow
       nodeName: Nurturing Glow
       description: <color=orange><b>Floral Glow</b></color> now also heals its target for <color=green><b>6 + 3%</b></color> Max Health per second.
@@ -130,4 +131,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: tansy_nurturing_glow
+      modifiesSkill: 1
     ranksToUnlockNext: 1
