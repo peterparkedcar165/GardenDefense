@@ -176,6 +176,7 @@ public class CursorIcon : MonoBehaviour
             {
                 Vector2 plantScreenPos = cam.WorldToScreenPoint(hit.transform.position);
                 Show(shovelSprite, plantScreenPos);
+                MatchSizeToSprite(shovelSprite);
             }
             else
             {
@@ -191,6 +192,7 @@ public class CursorIcon : MonoBehaviour
                 {
                     Vector2 tileScreenPos = cam.WorldToScreenPoint(tile.transform.position);
                     Show(shovelSprite, tileScreenPos);
+                    MatchSizeToSprite(shovelSprite);
                 }
                 else
                 {
@@ -279,9 +281,16 @@ public class CursorIcon : MonoBehaviour
         rectTransform.position = worldPos;
     }
 
-    private void MatchSizeToRenderer(SpriteRenderer sr)
+    private void MatchSizeToRenderer(SpriteRenderer sr) => MatchSizeToWorld(sr.bounds.size);
+
+    // the shovel (Tommy's 64 px pixel art, 2026-11-27) at its own size in the world: one tile, the same pixels as the map
+    private void MatchSizeToSprite(Sprite sprite)
     {
-        Vector2 worldSize = sr.bounds.size;
+        if (sprite != null) MatchSizeToWorld(sprite.bounds.size);
+    }
+
+    private void MatchSizeToWorld(Vector2 worldSize)
+    {
         Vector2 screenP1 = cam.WorldToScreenPoint(Vector3.zero);
         Vector2 screenP2 = cam.WorldToScreenPoint(new Vector3(worldSize.x, worldSize.y, 0f));
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenP1, canvas.worldCamera, out Vector2 cp1);
