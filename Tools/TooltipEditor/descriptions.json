@@ -1426,14 +1426,14 @@
      "key": "attack",
      "title": "Attack",
      "method": "GetPath1Description",
-     "overview": "Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> Health.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second.",
-     "details": "Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> Health.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second.",
+     "overview": "Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second.",
+     "details": "Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second.",
      "upgrades": [
       "Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]",
       "Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]",
       "Increase the healing to {GoldenSapLabel} depletion ratio by <color=#FFD700><b>{effpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{effpl * effectivePath1Level * 100f:F0}%</b></color>]"
      ],
-     "maxBonus": "Convert <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color> to <color=#FF6B81><b>Heals & Shields</b></color> Bonus.",
+     "maxBonus": "<color=green><b>Healing</b></color> also benefits from <color=green><b>Grass Damage</b></color>.",
      "maxBonusDetails": null,
      "extra": [],
      "overviewFrom": "GetAttackDescription"
@@ -1446,11 +1446,11 @@
      "details": "Whenever the {GetName()} would get healed from her attacks, she fills up her {GoldenSapLabel} by <color=#FFD700><b>[({(RData?.sapConversion ?? 1f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of the healing, and grants herself {BurgeonLabel}, regenerating <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}</b></color> seconds and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=#FFB6C1><b>(100% + 1% per Magic Power)</b></color>.\\n\\nIf the {GetName()} heals a plant while she is blessed by {BurgeonLabel}, she applies the buff at equal strength onto that plant.",
      "upgrades": [
       "Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{cappl:F0}</b></color> per level. [<color=#FFD700><b>+{cappl * effectivePath2Level:F0}</b></color>]",
-      "Increase Attack to {GoldenSapLabel} conversion ratio by <color=#FFD700><b>{convpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]",
+      "Increase <color=green><b>Attack</b></color> to {GoldenSapLabel} conversion ratio by <color=#FFD700><b>{convpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]",
       "Increase {BurgeonLabel} healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]",
       "Increase {BurgeonLabel} armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]"
      ],
-     "maxBonus": "If fully healthy, increase <color=green><b>Grass Damage</b></color> by <color=green><b>{MaxLevelGrassDamageBonus * 100f:F0}%</b></color>. Otherwise, <color=green><b>{MaxLevelHealingReturn * 100f:F0}%</b></color> of the healing her channel and <color=green><b>Rejuvenating Burgeon</b></color> give is returned to the {GetName()}.",
+     "maxBonus": "{BurgeonLabel} applied onto plants including herself also fills up {GoldenSapLabel}.",
      "maxBonusDetails": null,
      "extra": [],
      "overviewFrom": "GetPassiveDescription"
@@ -1460,7 +1460,7 @@
      "title": "Skill",
      "method": "GetPath3Description",
      "overview": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.",
-     "details": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</color>]</b></color> Health.",
+     "details": "Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1><b>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</b></color>]</b></color> Health.",
      "upgrades": [
       "Increase <color=green><b>Revival Heal</b></color> by <color=green><b>{RevivalHealPerLevel:F0}</b></color> per level. [<color=green><b>+{RevivalHealPerLevel * effectivePath3Level:F0}</b></color>]",
       "Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level, never below <color=green><b>{MinSkillCooldown:F0}s</b></color>. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]"
@@ -1854,7 +1854,7 @@
    "group": "Elements",
    "value": "green",
    "name": "Grass",
-   "uses": 1116
+   "uses": 1113
   },
   {
    "group": "Elements",
@@ -1914,7 +1914,7 @@
    "group": "Used in plant tooltips",
    "value": "red",
    "name": "Max Health",
-   "uses": 25
+   "uses": 27
   },
   {
    "group": "Used in plant tooltips",
@@ -1972,12 +1972,6 @@
   },
   {
    "group": "Used in plant tooltips",
-   "value": "#FF6B81",
-   "name": "Heals & Shield Bonus",
-   "uses": 3
-  },
-  {
-   "group": "Used in plant tooltips",
    "value": "#9370DB",
    "name": "Magic Resist",
    "uses": 2
@@ -1992,6 +1986,12 @@
    "group": "Used in plant tooltips",
    "value": "#E8D9A8",
    "name": "Sandstorm",
+   "uses": 2
+  },
+  {
+   "group": "Used in plant tooltips",
+   "value": "#FF6B81",
+   "name": "Heals & Shield Bonus",
    "uses": 2
   },
   {
