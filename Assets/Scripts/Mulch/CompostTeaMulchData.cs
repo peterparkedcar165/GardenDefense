@@ -11,6 +11,7 @@ public class CompostTeaMulchData : MulchData
     public override string GetDescription(MulchItem item)
     {
         MulchTier r = item.rarity;
-        return $"Assists scored by this plant heal it for {Green(Pct(healPercentPerKill.Get(r)))} of its {Kw("Max Health", HealthColor)}.";
+        // kills and assists alike, as the effect counts them (Tommy, 2026-11-27: the text said assists only)
+        return $"Kills and assists scored by this plant heal it for {Green(Pct(healPercentPerKill.Get(r)))} of its {Kw("Max Health", HealthColor)}.";
     }
 }
