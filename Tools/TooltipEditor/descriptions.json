@@ -1426,14 +1426,14 @@
      "key": "attack",
      "title": "Attack",
      "method": "GetPath1Description",
-     "overview": "Flicks her wand at an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage. The drained life flows back to her, healing her for <color=green><b>{DrainHeal:F0}</b></color> health.\\n\\nIncrease <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.",
-     "details": "Flicks her wand at an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage. The drained life flows back to her, healing her for <color=green><b>[{(RData?.drainHealShare ?? 0.25f) * 100f:F0}% Attack Damage]</b></color> health.\\n\\nIncrease <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.",
+     "overview": "Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> Health.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second.",
+     "details": "Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\\n\\nAs long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> Health.\\n\\nWhile targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second.",
      "upgrades": [
       "Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]",
-      "Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{speedpl:0.##}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:0.##}</b></color>]",
-      "Increase <color=green><b>Grass Damage</b></color> by <color=green><b>{grasspl * 100f:F0}%</b></color> per level. [<color=green><b>+{grasspl * effectivePath1Level * 100f:F0}%</b></color>]"
+      "Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]",
+      "Increase the healing to {GoldenSapLabel} depletion ratio by <color=#FFD700><b>{effpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{effpl * effectivePath1Level * 100f:F0}%</b></color>]"
      ],
-     "maxBonus": null,
+     "maxBonus": "Convert <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color> to <color=#FF6B81><b>Heals & Shields</b></color> Bonus.",
      "maxBonusDetails": null,
      "extra": [],
      "overviewFrom": "GetAttackDescription"
@@ -1442,11 +1442,11 @@
      "key": "passive",
      "title": "Passive",
      "method": "GetPath2Description",
-     "overview": "Healing she gets from her attack and from {BurgeonLabel} on herself fills her {GoldenSapLabel} by <color=#FFD700><b>{SapConversion * 100f:F0}%</b></color> of the healing, even at full health, up to <color=#FFD700><b>{SapCap:F0}</b></color>.\\n\\nWhen a plant in range drops below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> health, or no insects are in range and a plant is hurt, she channels {GoldenSapLabel} into it, healing <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second until it's healed or the sap runs out. She needs over <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> sap to start.\\n\\nHer attack's heal grants her {BurgeonLabel}, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>). While she has it, her channel passes it on.",
-     "details": "Healing she gets from her attack and from {BurgeonLabel} on herself fills her {GoldenSapLabel} by <color=#FFD700><b>[({(RData?.sapConversion ?? 1f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of the healing, even at full health, up to <color=#FFD700><b>[({RData?.goldenSapCap ?? 200f:F0}) + ({cappl:F0}/Lvl.)]</b></color>.\\n\\nWhen a plant in range drops below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> health, or no insects are in range and a plant is hurt, she channels {GoldenSapLabel} into it, healing <color=green><b>[{RData?.channelHealPerSecond ?? 30f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.1f) * 100f:F0}% Magic Power</b></color>] health per second until it's healed or the sap runs out. She needs over <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> sap to start.\\n\\nHer attack's heal grants her {BurgeonLabel}, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>. While she has it, her channel passes it on.",
+     "overview": "Whenever the {GetName()} would get healed from her attacks, she fills up her {GoldenSapLabel} by <color=#FFD700><b>{SapConversion * 100f:F0}%</b></color> of the healing, and grants herself {BurgeonLabel}, regenerating <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}</b></color> seconds and granting <color=#00CED1><b>+{BurgeonArmorBase:F0}</b></color> [<color=#FFB6C1><b>+{BurgeonArmorMP:F0}</b></color>] <color=#00CED1><b>Armor</b></color>.\\n\\nIf the {GetName()} heals a plant while she is blessed by {BurgeonLabel}, she applies the buff at equal strength onto that plant.",
+     "details": "Whenever the {GetName()} would get healed from her attacks, she fills up her {GoldenSapLabel} by <color=#FFD700><b>[({(RData?.sapConversion ?? 1f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of the healing, and grants herself {BurgeonLabel}, regenerating <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}</b></color> seconds and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=#FFB6C1><b>(100% + 1% per Magic Power)</b></color>.\\n\\nIf the {GetName()} heals a plant while she is blessed by {BurgeonLabel}, she applies the buff at equal strength onto that plant.",
      "upgrades": [
       "Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{cappl:F0}</b></color> per level. [<color=#FFD700><b>+{cappl * effectivePath2Level:F0}</b></color>]",
-      "Increase {GoldenSapLabel} conversion by <color=#FFD700><b>{convpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]",
+      "Increase Attack to {GoldenSapLabel} conversion ratio by <color=#FFD700><b>{convpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]",
       "Increase {BurgeonLabel} healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]",
       "Increase {BurgeonLabel} armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]"
      ],
@@ -1854,7 +1854,7 @@
    "group": "Elements",
    "value": "green",
    "name": "Grass",
-   "uses": 1124
+   "uses": 1116
   },
   {
    "group": "Elements",
@@ -1884,7 +1884,7 @@
    "group": "Damage types",
    "value": "#FFB6C1",
    "name": "Magic",
-   "uses": 73
+   "uses": 75
   },
   {
    "group": "Damage types",
@@ -1896,7 +1896,7 @@
    "group": "Used in plant tooltips",
    "value": "#00CED1",
    "name": "Armor",
-   "uses": 46
+   "uses": 47
   },
   {
    "group": "Used in plant tooltips",
@@ -1966,15 +1966,15 @@
   },
   {
    "group": "Used in plant tooltips",
-   "value": "#FF6B81",
-   "name": "Heals & Shield Bonus",
+   "value": "#B266FF",
+   "name": "Psionic Bond",
    "uses": 4
   },
   {
    "group": "Used in plant tooltips",
-   "value": "#B266FF",
-   "name": "Psionic Bond",
-   "uses": 4
+   "value": "#FF6B81",
+   "name": "Heals & Shield Bonus",
+   "uses": 3
   },
   {
    "group": "Used in plant tooltips",
