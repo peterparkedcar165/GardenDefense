@@ -442,6 +442,11 @@ TextureImporter:
     nameFileIdTable:
       pine_block_2x3_0: -4265675714323979563
       pine_block_2x3_1: -1819096361685486201
+      pine_block_2x3_10: 1394618230631493729
+      pine_block_2x3_11: -8528577976248175649
+      pine_block_2x3_12: 6940602988986173467
+      pine_block_2x3_13: -4688777686029794087
+      pine_block_2x3_14: -1416989627528306587
       pine_block_2x3_2: 2534655470340300804
       pine_block_2x3_3: -7125715497259098011
       pine_block_2x3_4: 2181036856952484218
@@ -450,11 +455,6 @@ TextureImporter:
       pine_block_2x3_7: 1634792070713479460
       pine_block_2x3_8: 312142721393307497
       pine_block_2x3_9: -1421687827563097299
-      pine_block_2x3_10: 1394618230631493729
-      pine_block_2x3_11: -8528577976248175649
-      pine_block_2x3_12: 6940602988986173467
-      pine_block_2x3_13: -4688777686029794087
-      pine_block_2x3_14: -1416989627528306587
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

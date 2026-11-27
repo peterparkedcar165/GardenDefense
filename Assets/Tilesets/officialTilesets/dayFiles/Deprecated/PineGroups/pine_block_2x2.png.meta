@@ -376,6 +376,8 @@ TextureImporter:
     nameFileIdTable:
       pine_block_2x2_0: 1076107721943886599
       pine_block_2x2_1: 4813018204694314080
+      pine_block_2x2_10: 8567956594555892060
+      pine_block_2x2_11: -8555391673037454459
       pine_block_2x2_2: 1828844497820309717
       pine_block_2x2_3: -8374626231600291424
       pine_block_2x2_4: -6499738003208241272
@@ -384,8 +386,6 @@ TextureImporter:
       pine_block_2x2_7: 7730890787907999655
       pine_block_2x2_8: 7900454853360445466
       pine_block_2x2_9: 8748575226022728761
-      pine_block_2x2_10: 8567956594555892060
-      pine_block_2x2_11: -8555391673037454459
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
