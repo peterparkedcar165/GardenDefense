@@ -102,7 +102,7 @@ MonoBehaviour:
     clips: []
   skillSound:
     clips: []
-  drainHealShare: 0.25
+  drainHealShare: 0.5
   drainMoteSpeed: 2.5
   drainArcPerUnit: 0.3
   drainArcMin: 0.4
@@ -110,7 +110,7 @@ MonoBehaviour:
   path1AttackRangePerLevel: 0.3
   path1GrassDamagePerLevel: 0.05
   path1SapEfficiencyPerLevel: 0.1
-  baseGrassConversion: 0.5
+  baseGrassConversion: 1
   goldenSapCap: 200
   path2GoldenSapCapPerLevel: 40
   sapConversion: 1
@@ -118,8 +118,8 @@ MonoBehaviour:
   sapToChannel: 0.1
   lowHealthThreshold: 0.5
   sapGlowMaxAlpha: 0.6
-  channelHealPerSecond: 30
-  channelHealMPScaling: 0.1
+  channelHealPerSecond: 40
+  channelHealMPScaling: 0.05
   channelTickInterval: 0.25
   channelMoteSpeed: 5
   maxLevelGrassDamageBonus: 0.25

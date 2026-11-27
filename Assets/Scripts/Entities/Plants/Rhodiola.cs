@@ -43,7 +43,7 @@ public class Rhodiola : Shooter
 
     // ---------- attack: drain ----------
     // her drain heals her for this share of the damage the hit really dealt
-    public float DrainHealShare => RData?.drainHealShare ?? 0.3f;
+    public float DrainHealShare => RData?.drainHealShare ?? 0.5f;
     private float DrainMoteSpeed => RData?.drainMoteSpeed ?? 5f;
 
     // ---------- passive: golden sap and the channel ----------
@@ -573,8 +573,8 @@ public class Rhodiola : Shooter
 
     // Tommy's tooltips (2026-11-27)
     public override string GetAttackDescription() =>
-        $"Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\n\n" +
-        $"As long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\n\n" +
+        $"Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\n\n" +
+        $"As long as the {GetName()} has at least <color=#FFD700><b>{SapCap * SapToChannel:F0}</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\n\n" +
         $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second.";
 
     public override string GetPassiveDescription() =>
@@ -594,7 +594,7 @@ public class Rhodiola : Shooter
         float rangepl = RData?.path1AttackRangePerLevel   ?? 0.3f;
         float effpl   = RData?.path1SapEfficiencyPerLevel ?? 0.1f;
         string desc = details
-            ? $"Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\n\n" +
+            ? $"Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\n\n" +
               $"As long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\n\n" +
               $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second."
             : GetAttackDescription();
