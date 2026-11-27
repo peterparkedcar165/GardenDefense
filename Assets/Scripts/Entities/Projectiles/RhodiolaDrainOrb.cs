@@ -3,8 +3,8 @@ using UnityEngine;
 // her drain's orb (Tommy, 2026-11-27: Resources/RhodiolaDrainOrb, the glowing in and out orb, 17 frames at 130 ms):
 // it leaves the insect she hit and arcs to the crystal at the tip of her staff, following the tip wherever her
 // animation takes it (a hop into her heal, the staff swung out sideways), and only lands there, never on her body.
-// landing runs onArrive (her heal, her sap, her Rejuvenating Burgeon). if she dies or is uprooted first, it fades
-// out where it is with nothing
+// landing runs onArrive (her heal, her sap, her Rejuvenating Burgeon) and pops the orb into a ring of sparkles
+// flying outward (Burst). if she dies or is uprooted first, it fades out where it is with nothing
 public class RhodiolaDrainOrb : MonoBehaviour
 {
     private const float FrameSeconds = 0.13f;
@@ -90,7 +90,15 @@ public class RhodiolaDrainOrb : MonoBehaviour
         foreach (ParticleSystem ps in _glitter)
         {
             if (ps == null) continue;
-            ps.transform.SetParent(null, true);
+            // not SetParent(null, true): keeping the world size would rewrite the system's localScale to the orb's
+            // (half size at the tip), and these systems scale Local, drawing their sparkles by that localScale, so
+            // every sparkle snapped smaller as the orb landed (Tommy). as Projectile.OnBeforeDestroy does
+            Transform t = ps.transform;
+            Vector3 worldPos = t.position;
+            Quaternion worldRot = t.rotation;
+            t.SetParent(null, false);
+            t.position = worldPos;
+            t.rotation = worldRot;
             ParticleSystem.MainModule main = ps.main;
             main.stopAction = ParticleSystemStopAction.Destroy;
             ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
@@ -124,8 +132,57 @@ public class RhodiolaDrainOrb : MonoBehaviour
         if (_t >= 1f)
         {
             _onArrive?.Invoke();
+            Burst();
             ReleaseGlitter();
             Destroy(gameObject);
+        }
+    }
+
+    // landing on the tip (Tommy, 2026-11-27): the orb pops into a ring of its own sparkles flying outward, slowing
+    // as they spread. they go into its world space trail system, so they stay where it landed and fade with the
+    // rest of its glitter. numbers are proposals
+    private const int BurstCount = 14;
+    private const float BurstSpeedMin = 0.9f, BurstSpeedMax = 1.5f;   // units a second
+    private const float BurstLifeMin = 0.45f, BurstLifeMax = 0.7f;    // seconds
+    private const float BurstDrag = 3f;                               // how fast they slow down
+    private const float BurstSizeMin = 1f, BurstSizeMax = 1.35f;      // times the glitter's own start size
+
+    private void Burst()
+    {
+        if (_glitter == null) return;
+        ParticleSystem ps = null;
+        foreach (ParticleSystem p in _glitter)
+        {
+            if (p == null) continue;
+            bool pWorld = p.main.simulationSpace == ParticleSystemSimulationSpace.World;
+            if (ps == null || pWorld && ps.main.simulationSpace != ParticleSystemSimulationSpace.World) ps = p;
+        }
+        if (ps == null) return;
+
+        ParticleSystem.MainModule main = ps.main;
+        bool world = main.simulationSpace == ParticleSystemSimulationSpace.World;
+        // the glitter has no drag of its own; the trail's sparkles barely move, so this only shows on the burst
+        ParticleSystem.LimitVelocityOverLifetimeModule slow = ps.limitVelocityOverLifetime;
+        slow.enabled = true;
+        slow.limit = 1000f;
+        slow.drag = BurstDrag;
+        slow.multiplyDragByParticleSize = false;
+        slow.multiplyDragByParticleVelocity = false;
+
+        float size = main.startSize.constantMax;
+        Vector3 at = world ? transform.position : ps.transform.InverseTransformPoint(transform.position);
+        var emit = new ParticleSystem.EmitParams { applyShapeToPosition = false };
+        float turn = Random.value * 360f;
+        for (int i = 0; i < BurstCount; i++)
+        {
+            float a = (turn + (i + Random.Range(-0.3f, 0.3f)) * 360f / BurstCount) * Mathf.Deg2Rad;
+            Vector3 dir = new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f);
+            if (!world) dir = ps.transform.InverseTransformDirection(dir);
+            emit.position = at;
+            emit.velocity = dir * Random.Range(BurstSpeedMin, BurstSpeedMax);
+            emit.startLifetime = Random.Range(BurstLifeMin, BurstLifeMax);
+            emit.startSize = size * Random.Range(BurstSizeMin, BurstSizeMax);
+            ps.Emit(emit, 1);
         }
     }
 }
