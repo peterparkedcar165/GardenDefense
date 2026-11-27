@@ -229,12 +229,13 @@ public class Rhodiola : Shooter
             insect = again != null ? again.GetComponent<Insect>() : null;
         }
         if (insect == null || !insect.IsAlive) return;
-        Vector3 ground = insect.transform.position;
-        float height = insect.GetAimPoint().y;
+        Vector3 from = insect.GetAimPoint();
         insect.Damage(attackDamage, damageType, elementalType, this, true,
             new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget });
         if (data != null) SfxPlayer.Play(data.attackSound, GemWorldPosition());
-        SendMote(ground, height, this, DrainMoteSpeed, OnDrainReturned);
+        // the drained life: Tommy's orb, arcing from the insect to the tip of her staff (RhodiolaDrainOrb)
+        RhodiolaDrainOrb.Launch(this, from, DrainMoteSpeed, RData?.drainArcPerUnit ?? 0.3f, RData?.drainArcMin ?? 0.4f,
+            () => OnDrainReturned(this));
     }
 
     // the drain reaches her: it heals her, fills her sap and puts Rejuvenating Burgeon on her
@@ -433,10 +434,15 @@ public class Rhodiola : Shooter
         mote.SetLaunchHeight(launchY);
     }
 
-    // where the gem on her staff is, the channel's motes leave from it: gemPixel on her drawn sprite (its
-    // pivot and pixels per unit), mirrored when she faces right (flipX)
-    [Tooltip("the gem's middle, art px from the frame's top left (her unflipped art faces left)")]
+    // where the crystal at the tip of her staff is right now: the tip in the frame she's showing
+    // (RhodiolaStaffTips, read off every frame of her idle, attack and heal), or gemPixel for a frame not in it,
+    // through her sprite's pivot and pixels per unit, mirrored when she faces right (flipX). her drain's orb
+    // lands on it and her channel's life energy leaves from it
+    [Tooltip("the crystal's middle for a frame RhodiolaStaffTips doesn't know, art px from the frame's top left (her unflipped art faces left)")]
     [SerializeField] private Vector2 gemPixel = new Vector2(20f, 6f);
+
+    public Vector3 StaffTipPosition => GemWorldPosition();
+    public SpriteRenderer BodyRenderer => GetMainRenderer();
 
     private Vector3 GemWorldPosition()
     {
@@ -446,7 +452,8 @@ public class Rhodiola : Shooter
         float ppu = sprite != null ? sprite.pixelsPerUnit : 64f;
         Vector2 pivot = sprite != null ? sprite.pivot : new Vector2(32f, 32f);
         float height = sprite != null ? sprite.rect.height : 64f;
-        Vector2 local = new Vector2((gemPixel.x - pivot.x) / ppu, (height - gemPixel.y - pivot.y) / ppu);
+        Vector2 tip = sprite != null && RhodiolaStaffTips.TryGet(sprite.name, out Vector2 known) ? known : gemPixel;
+        Vector2 local = new Vector2((tip.x - pivot.x) / ppu, (height - tip.y - pivot.y) / ppu);
         if (body.flipX) local.x = -local.x;
         return body.transform.TransformPoint(local);
     }
