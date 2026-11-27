@@ -9,8 +9,8 @@ public class RhodiolaData : PlantData
     [Header("Attack: Drain")]
     [Tooltip("share of her Attack Damage that flows back and heals her, e.g. 0.25 = 25% (proposal)")]
     public float drainHealShare = 0.25f;
-    [Tooltip("how fast the drained life flies back to her, units per second along the straight line (proposal)")]
-    public float drainMoteSpeed = 5f;
+    [Tooltip("how fast the drained life flies back to her, units per second along the straight line (Tommy: half the first 5)")]
+    public float drainMoteSpeed = 2.5f;
     [Tooltip("how high the orb's arc rises for every unit between the insect and her staff (proposal)")]
     public float drainArcPerUnit = 0.3f;
     [Tooltip("the lowest the orb's arc rises, units (proposal)")]

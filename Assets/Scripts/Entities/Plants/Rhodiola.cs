@@ -235,7 +235,7 @@ public class Rhodiola : Shooter
         if (data != null) SfxPlayer.Play(data.attackSound, GemWorldPosition());
         // the drained life: Tommy's orb, arcing from the insect to the tip of her staff (RhodiolaDrainOrb)
         RhodiolaDrainOrb.Launch(this, from, DrainMoteSpeed, RData?.drainArcPerUnit ?? 0.3f, RData?.drainArcMin ?? 0.4f,
-            () => OnDrainReturned(this));
+            lifeMotePrefab, () => OnDrainReturned(this));
     }
 
     // the drain reaches her: it heals her, fills her sap and puts Rejuvenating Burgeon on her
