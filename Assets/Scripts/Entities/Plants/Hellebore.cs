@@ -298,7 +298,7 @@ public class Hellebore : Shooter
         float armorMP  = HData?.selfArmorMP            ?? 0.14f;
         string desc = details
             ? $"Each attack hit reduces skill cooldown by <color=green><b>[({HData?.passiveCDRPerHit ?? 0.5f:F1}) + ({cdrpl:F1}/Lvl.)]</b></color> seconds. " +
-              $"{DisplayName} gains <color=#00CED1><b>[({HData?.selfArmorBase ?? 14}) + ({armorpl}/Lvl.)]</b></color> Base Armor <color=#FFB6C1>[+{armorMP * 100f:F0}% Magic Power]</color>. " +
+              $"{DisplayName} gains <color=#00CED1><b>[({HData?.selfArmorBase ?? 14}) + ({armorpl}/Lvl.)]</b></color> Base Armor [<color=#FFB6C1><b>+{armorMP * 100f:F0}% Magic Power</b></color>]. " +
               $"Plants within attack range (excluding herself) gain <color=#9B30D0><b>Hellebore's Protection</b></color>: " +
               $"increasing their Armor by <color=green><b>[({HData?.auraShareBase ?? 0.5f:F0}%) + ({auraShpl * 100f:F0}%/Lvl.)]</b></color> of {DisplayName}'s Armor."
             : GetPassiveDescription();
@@ -323,7 +323,7 @@ public class Hellebore : Shooter
               $"a shield of <color=green><b>[({HData?.shieldAmount ?? 120f:F0}) + ({shieldpl:F0}/Lvl.) + <color=#FFB6C1>{shieldMP * 100f:F0}% Magic Power</color>]</b></color> health " +
               $"for <color=green><b>[({HData?.shieldDuration ?? 12f:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. " +
               $"While shielded, attackers receive <color=purple><b>[({HData?.reflectPoisonBase ?? 15f:F0}) + ({reflpl:F0}/Lvl.)]</b></color> " +
-              $"<color=#FFB6C1>[+{reflMP * 100f:F0}% Magic Power]</color> " +
+              $"[<color=#FFB6C1><b>+{reflMP * 100f:F0}% Magic Power</b></color>] " +
               $"<color=purple>Poison</color> <color=#FFB6C1>Magic</color> damage per hit. " +
               $"Negative effects are reflected back to the attacker. The protection fades when the shield breaks."
             : GetSkillDesription();

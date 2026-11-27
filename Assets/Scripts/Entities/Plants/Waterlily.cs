@@ -372,7 +372,7 @@ public class Waterlily : Shooter
         float durpl    = WLData?.path3SkillDurationPerLevel ?? 2f;
         float radiuspl = WLData?.path3RadiusPerLevel        ?? 0.2f;
         string desc = details
-            ? $"Blows a large bubble onto a targeted area, trapping insects within the bubble while dealing <color=green><b>{bubbleDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} upon impact, and keeping them airborne for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.bubbleDurationMP ?? 2f):F1}s per 100 Magic Power</b></color>] seconds within a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F2}/Lvl.)]</b></color> radius.\n\n" +
+            ? $"Blows a large bubble onto a targeted area, trapping insects within the bubble while dealing <color={PlantData.ElementalColor(elementalType)}><b>{bubbleDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)} upon impact, and keeping them airborne for <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.bubbleDurationMP ?? 2f):F1}s per 100 Magic Power</b></color>] seconds within a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F2}/Lvl.)]</b></color> radius.\n\n" +
               $"Imprisoned insects take <color=green><b>[({(WLData?.baseBubbleDamageTaken ?? 0.08f) * 100f:F0}%) + ({takenpl * 100f:F0}%/Lvl.)]</b></color> [<color=#FFB6C1><b>+{(WLData?.bubbleDamageTakenMP ?? 0.05f) * 100f:F0}% per 100 Magic Power</b></color>] increased damage from all sources."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +

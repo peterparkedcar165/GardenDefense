@@ -122,7 +122,7 @@ public class Anemone : Shooter
         $"The {GetName()} commands the winds to erode and consume her foes, then pulls them into a devastating vortex.";
 
     public override string GetAttackDescription() =>
-        $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color=green><b>{attackDamage / ProjectileCount:F0}</b></color> [<color=green><b>{100f / ProjectileCount:F0}%</b></color>] {PlantData.DamageTypeLabel(damageType)}, and <color=green><b>{attackDamage / ProjectileCount * 0.5f:F0}</b></color> to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius.";
+        $"Launches <color=green><b>{ProjectileCount}</b></color> wind balls at the target, each dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage / ProjectileCount:F0}</b></color> [<color={PlantData.ElementalColor(elementalType)}><b>{100f / ProjectileCount:F0}%</b></color>] {PlantData.DamageTypeLabel(damageType)}, and <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage / ProjectileCount * 0.5f:F0}</b></color> to surrounding insects within a <color=green><b>{SplashRadius:F1}</b></color> radius.";
 
     public override string GetPassiveDescription() =>
         $"Dealing Wind Damage applies <color=green><b>{InitialErosionStacks}</b></color> stacks of <color=#E0E0E0><b>Wind Erosion</b></color> for <color=green><b>{ErosionDuration * ErosionProcChance:F1}s</b></color>, reducing <color=#00CED1><b>Armor</b></color> and <color=#9370DB><b>Magic Resist</b></color> by <color=red><b>{(int)ErosionReductionPerStack}</b></color> per stack. If the target is already afflicted with <color=#E0E0E0><b>Wind Erosion</b></color>, adds <color=green><b>1</b></color> stack instead.";

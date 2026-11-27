@@ -259,7 +259,7 @@ public class PoisonShroom : Shooter
         float durpl    = PSData?.path3SkillDurationPerLevel ?? 1f;
         float radiuspl = PSData?.path3RadiusPerLevel        ?? 0.2f;
         string desc = details
-            ? $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius that lasts <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Insects inside take <color=green><b>{PoisonBaseDPS:F0}</b></color> <color=#FFB6C1>[+{skillDamageMultiplier * 100f:F0}% Magic Power]</color> {PlantData.DamageTypeLabel(damageType)} per second, and all debuffs on them are frozen in time."
+            ? $"Hurls a toxic blob towards a targeted area, creating a poison field with a <color=green><b>[({data.baseSkillRadius:F1}) + ({radiuspl:F1}/Lvl.)]</b></color> radius that lasts <color=green><b>[({data.baseSkillDuration:F0}) + ({durpl:F0}/Lvl.)]</b></color> seconds. Insects inside take <color={PlantData.ElementalColor(elementalType)}><b>{PoisonBaseDPS:F0}</b></color> [<color=#FFB6C1><b>+{skillDamageMultiplier * 100f:F0}% Magic Power</b></color>] {PlantData.DamageTypeLabel(damageType)} per second, and all debuffs on them are frozen in time."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase field duration by <color=green><b>{durpl:F0}</b></color> second per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +

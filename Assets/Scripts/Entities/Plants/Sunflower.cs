@@ -608,7 +608,7 @@ public class Sunflower : Shooter
         float durpl    = SFData?.path3SkillDurationPerLevel ?? 0.5f;
         float diameterpl = SFData?.path3DiameterPerLevel   ?? 0.1f;
         string desc = details
-            ? $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color=green><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color=green><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({SFData?.baseSunrayDiameter ?? 2f:F2}) + ({diameterpl:F2}/Lvl.)]</b></color> tile wide area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
+            ? $"Conjures a large burst of solar energy and unleashes it, calling down a scorching beam from above dealing <color={PlantData.ElementalColor(elementalType)}><b>[({SFData?.baseSunrayDPS ?? 0f:F0}) + ({dpspl:F0}/Lvl.) + </b></color><color=#FFB6C1><b>{skillDamageMultiplier * 100f:F0}% Magic Power</b></color><color={PlantData.ElementalColor(elementalType)}><b>]</b></color> {PlantData.DamageTypeLabel(damageType)} per second to insects within a <color=green><b>[({SFData?.baseSunrayDiameter ?? 2f:F2}) + ({diameterpl:F2}/Lvl.)]</b></color> tile wide area for <color=green><b>[({data.baseSkillDuration:F1}) + ({durpl:F1}/Lvl.)]</b></color> seconds."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase damage by <color=green><b>{dpspl:F0}</b></color> per level. [<color=green><b>+{dpspl * effectivePath3Level:F0}</b></color>]\n\n" +

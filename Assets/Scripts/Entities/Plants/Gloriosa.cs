@@ -288,7 +288,7 @@ public class Gloriosa : Shooter
         $"The {GetName()} is a fiery flower that nurtures its allies with warm embers, healing injured plants and scorching any insect that dares stand in its way.";
 
     public override string GetAttackDescription() =>
-        $"Sends embers of soothing fire towards its target, dealing <color=green><b>{attackDamage:F0}</b></color> " +
+        $"Sends embers of soothing fire towards its target, dealing <color={PlantData.ElementalColor(elementalType)}><b>{attackDamage:F0}</b></color> " +
         $"{PlantData.DamageTypeLabel(damageType)}.";
 
     public override string GetPassiveDescription() =>
@@ -358,14 +358,14 @@ public class Gloriosa : Shooter
         float latchHealMP = GData?.latchHealMP ?? 0.1f;
         float latchFireMP = GData?.latchFireDamageBonusMP ?? 0.05f;
         string desc = details
-            ? $"Summons <color=green><b>{GData?.wispCount ?? 2}</b></color> Cinderwisps that fly across the map seeking the most injured plant. " +
+            ? $"Summons <color=green><b>{GData?.wispCount ?? 2}</b></color> <color=orange><b>Cinderwisps</b></color> that fly across the map seeking the most injured plant. " +
               $"Plants within <color=green><b>{GData?.wispRadius ?? 1.5f:F1}</b></color> radius heal " +
               $"<color=green><b>[({GData?.wispHealPerSecond ?? 4f:F0}) + ({healpl:F0}/Lvl.) + <color=#FFB6C1>{wispHealMP * 100f:F0}% Magic Power</color>]</b></color> health and " +
               $"warm <color=orange><b>[({GData?.wispTemperaturePerSecond ?? 1f:F1}) + ({temppl:F1}/Lvl.)]</b></color> per second. " +
               $"When a wisp latches: heals <color=green><b>[({GData?.latchHealPerSecond ?? 8f:F0}) + ({lhealpl:F0}/Lvl.) + <color=#FFB6C1>{latchHealMP * 100f:F0}% Magic Power</color>]</b></color> per second and " +
               $"increases <color=orange><b>Fire Damage</b></color> by <color=orange><b>[({(GData?.latchFireDamageBonus ?? 0.2f) * 100f:F0}%) + ({lfirepl * 100f:F0}%/Lvl.) + <color=#FFB6C1>{latchFireMP * 100f:F0}% Magic Power</color>]</b></color>. " +
-              $"Lingers for <color=orange><b>[({GData?.latchDuration ?? 3f:F1}) + ({ldurpl:F1}/Lvl.)]</b></color>s. " +
-              $"Wisps last <color=green><b>[({GData?.wispDuration ?? 20f:F0}) + ({durpl:F0}/Lvl.)]</b></color>s."
+              $"Lingers for <color=orange><b>[({GData?.latchDuration ?? 3f:F1}) + ({ldurpl:F1}/Lvl.)]s</b></color>. " +
+              $"Wisps last <color=green><b>[({GData?.wispDuration ?? 20f:F0}) + ({durpl:F0}/Lvl.)]s</b></color>."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase lifetime by <color=green><b>{durpl:F0}</b></color> seconds per level. [<color=green><b>+{durpl * effectivePath3Level:F0}</b></color>]\n\n" +

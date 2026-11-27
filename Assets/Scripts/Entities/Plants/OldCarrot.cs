@@ -368,7 +368,7 @@ public class OldCarrot : Shooter
         float dmgpl = GData?.psionicDamagePerLevel ?? 20f;
         string desc = details
             ? $"Target a <color=green><b>Shooter</b></color> plant to form a <color=#B266FF><b>Psionic Bond</b></color>. When the targeted ally shoots, the {GetName()} unleashes a coordinated <color=#B266FF><b>Psionic OldCarrot</b></color>, behaving identically to the Attack, but " +
-              $"dealing <color=green><b>[({GData?.psionicDamageBase ?? 30f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{(GData?.psionicDamageMPScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per hit.\n\n" +
+              $"dealing <color={PlantData.ElementalColor(elementalType)}><b>[({GData?.psionicDamageBase ?? 30f:F0}) + ({dmgpl:F0}/Lvl.) + <color=#FFB6C1>{(GData?.psionicDamageMPScaling ?? 0.5f) * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} per hit.\n\n" +
               $"Cooldown: <color=green><b>[({GData?.psionicCooldownBase ?? 3f:F1}) - ({cdpl:F1}/Lvl.)]</b></color> seconds."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
@@ -383,7 +383,7 @@ public class OldCarrot : Shooter
     {
         string desc = details
             ? $"Aim in a direction. A line of <color=green><b>[({GData?.oldCarrotCountBase ?? 3}) + ({GData?.oldCarrotsPerLevel ?? 1}/Lvl.)]</b></color> oldCarrots erupt from the ground, " +
-              $"dealing <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} and knocking insects aside."
+              $"dealing <color={PlantData.ElementalColor(elementalType)}><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} and knocking insects aside."
             : GetSkillDesription();
         float wpl = GData?.path3WidthPerLevel ?? 0.1f;
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +

@@ -284,7 +284,7 @@ public class Glowshroom : Shooter
         float rangepl = GMData?.path1AttackRangePerLevel  ?? 0.15f;
         float splashMP = GMData?.splashDamageMPMultiplier ?? 0.5f;
         string desc = details
-            ? $"Fires a fungal bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to the target, splashing <color=green><b>{(GMData?.splashDamageMultiplier ?? 0.5f) * 100f:F0}%</b></color> <color=#FFB6C1>[+{splashMP * 100f:F0}% Magic Power]</color> of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius."
+            ? $"Fires a fungal bolt dealing <color={PlantData.ElementalColor(elementalType)}><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)} to the target, splashing <color=green><b>{(GMData?.splashDamageMultiplier ?? 0.5f) * 100f:F0}%</b></color> [<color=#FFB6C1><b>+{splashMP * 100f:F0}% Magic Power</b></color>] of that damage to all insects within <color=green><b>{SplashRadius:F1}</b></color> radius."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{adpl:F0}</b></color> per level. [<color=green><b>+{adpl * effectivePath1Level:F0}</b></color>]\n\n" +

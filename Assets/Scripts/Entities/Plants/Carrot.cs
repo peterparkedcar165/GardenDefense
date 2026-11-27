@@ -495,7 +495,7 @@ public class Carrot : Shooter
     {
         string desc = details
             ? $"Aim in a direction. A line of <color=green><b>[({GData?.carrotCountBase ?? 3}) + ({GData?.carrotsPerLevel ?? 1}/Lvl.)]</b></color> carrots erupt from the ground, " +
-              $"dealing <color=green><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} and knocking insects aside."
+              $"dealing <color={PlantData.ElementalColor(elementalType)}><b>[({GData?.skillBaseDamage ?? 40f:F0}) + ({GData?.path3SkillDamagePerLevel ?? 8f:F0}/Lvl.) + <color=#FFB6C1>{skillDamageMultiplier * 100f:F0}% Magic Power</color>]</b></color> {PlantData.DamageTypeLabel(damageType)} and knocking insects aside."
             : GetSkillDesription();
         float wpl = GData?.path3WidthPerLevel ?? 0.1f;
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +

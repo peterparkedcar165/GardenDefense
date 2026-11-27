@@ -251,7 +251,7 @@ public class Cactus : Aura
         float armorpl   = CactData?.path1ArmorPerLevel        ?? 5f;
         float scalingpl = CactData?.path1ArmorScalingPerLevel ?? 0.05f;
         string desc = details
-            ? $"Slams all insects within range, dealing <color=#00CED1><b>[100% Attack Damage + {ArmorScalingPercent * 100f:F0}% Armor]</b></color> {PlantData.DamageTypeLabel(damageType)}. Each hit applies <color=green><b>1</b></color> <color=purple><b>Punctured</b></color> stack."
+            ? $"Slams all insects within range, dealing <color=purple><b>[100% Attack Damage + {ArmorScalingPercent * 100f:F0}% Armor]</b></color> {PlantData.DamageTypeLabel(damageType)}. Each hit applies <color=green><b>1</b></color> <color=purple><b>Punctured</b></color> stack."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=#00CED1><b>Base Armor</b></color> by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath1Level:F0}</b></color>]\n\n" +
