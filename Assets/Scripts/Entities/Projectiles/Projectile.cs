@@ -212,7 +212,7 @@ public abstract class Projectile : MonoBehaviour
 
     // line of sight (Tommy, 2026-11-27): a shot by a plant that needs a clear line stops at the first blocker on
     // its way (it flew at a ground target that went behind one). from low ground that's any obstacle or cliff;
-    // from high ground any obstacle but not a cliff (it flies down past cliffs). a shot at a flying insect flies
+    // from high ground only an obstacle on high ground (it flies down past cliffs and over obstacles below). a shot at a flying insect flies
     // over them all. a shot keeps counting as one at a flyer after its target's gone
     private bool _aimedAtFlyer;
     protected virtual bool StopsAtBlockers => source != null && source.NeedsLineOfSight && !_aimedAtFlyer;

@@ -2060,8 +2060,8 @@ public abstract class Plant : Entity, IAttackable
     // ---------- line of sight (Tommy, 2026-11-27) ----------
     // a plant that needs a clear line (straight and homing shooters, Stargazer, Kelp, Rhodiola: NeedsLineOfSight)
     // can't target a ground insect or an ally it can't see. from low ground, obstacle tiles and cliff edges
-    // block the line; from high ground every tree, bush and boulder does, high or low, but cliffs don't (it
-    // sees down past them). flying insects are never hidden. what it sees is
+    // block the line; from high ground only trees, bushes and boulders standing on high ground do (it sees
+    // down past cliffs and over everything on low ground). flying insects are never hidden. what it sees is
     // cast once from where it stands (LineOfSight) and kept until it moves or its ground changes. the part
     // of its range it can't see shows red on its range circle (SightShade)
     // melee plants need one too (Tommy, 2026-11-27: Acorn Knight, Bird of Paradise, Cactus)

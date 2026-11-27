@@ -2,8 +2,8 @@ using UnityEngine;
 
 // what a plant that needs a clear line can see (Tommy, 2026-11-27). from where it stands, Rays rays go out
 // (one every half degree) to the first blocker: an obstacle tile's box (Tile.SpawnObstacleZone) or a cliff's
-// edge (CliffBuilder), both on the Obstacle layer. from high ground every obstacle blocks, on high ground or low,
-// but the cliff edges don't (it sees down past them). who casts them and when is the plant's business (Plant;
+// edge (CliffBuilder), both on the Obstacle layer. from high ground only obstacles standing on high ground block
+// (it sees down past cliffs and over everything on low ground). who casts them and when is the plant's business (Plant;
 // flying insects are never hidden). the same rays decide its targeting and paint the red part of its range
 // circle (SightShade)
 public static class LineOfSight
@@ -37,10 +37,14 @@ public static class LineOfSight
         }
     }
 
-    // from high ground everything blocks but a cliff edge (Tommy, 2026-11-27): it sees down past the cliffs, while
-    // trees, bushes and boulders block it on high ground and low alike (at first only the ones on high ground did).
-    // the cliff edges are the only edge colliders on the Obstacle layer
-    private static bool BlocksFromHigh(Collider2D col) => !(col is EdgeCollider2D);
+    // from high ground only an obstacle standing on high ground blocks (Tommy, 2026-11-27, "block on same level"; for a
+    // while low ones blocked too, until he saw a raised Sunflower in Level 2 blocked by bushes below): a tile's box whose
+    // tile is raised. it sees down past cliff edges and over everything on low ground
+    private static bool BlocksFromHigh(Collider2D col)
+    {
+        Transform tile = col.transform.parent;
+        return tile != null && tile.TryGetComponent(out Tile t) && t.isHighground;
+    }
 
     // each ray's clear distance from origin, MaxDistance where nothing blocks it. fromHigh: looking from high ground
     public static void Cast(Vector2 origin, float[] into, bool fromHigh = false)
