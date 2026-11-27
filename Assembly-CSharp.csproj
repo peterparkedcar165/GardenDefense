@@ -125,6 +125,7 @@
     <Compile Include="Assets\Scripts\Fertilizer\SeedLoanFertilizerData.cs" />
     <Compile Include="Assets\Scripts\Mulch\FourLeafCloverMulchData.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SoldierAnt.cs" />
+    <Compile Include="Assets\Scripts\Environment\WaterTile.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\KnockUpEffect.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\BirdOfParadiseData.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\AloeVera.cs" />
@@ -392,6 +393,7 @@
     <Compile Include="Assets\Scripts\Tutorial\TutorialPage.cs" />
     <Compile Include="Assets\Scripts\Entities\Projectiles\HelleboreProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\JumpingSpider.cs" />
+    <Compile Include="Assets\Scripts\Environment\SeaTile.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\WinterMothData.cs" />
     <Compile Include="Assets\Scripts\Mulch\BotanicalAlchemyMulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AblazeEffect.cs" />
