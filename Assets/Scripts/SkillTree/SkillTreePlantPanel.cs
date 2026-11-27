@@ -9,9 +9,11 @@ using System.Collections.Generic;
 // only ever needs editing in ONE place (this script's constants and the shared prefab) rather
 // than being redone per plant. duplicating a plant's panel is then just swapping plantData
 //
-// the panel hides itself entirely unless the plant is both unlocked (in SaveData.unlockedPlants)
-// and has an authored SkillTreeData assigned, so newly added plants simply appear once both are
-// true, with no manual scene work needed per plant beyond duplicating this panel
+// the panel hides itself entirely unless the plant is unlocked (in SaveData.unlockedPlants), has been
+// seen (a level started after its unlock, SaveData.seenPlants; Tommy, 2026-11-27) and has an authored
+// SkillTreeData assigned, so newly added plants simply appear once all are true, with no manual scene
+// work needed per plant beyond duplicating this panel. a plant new to this screen wears a NEW badge on
+// its portrait until the screen is left (SkillTreeUI)
 //
 // look (Tommy's pixel kit, 2026-11-24; the wood, 2026-11-27): the wood skill panel as the card, its wood in the
 // plant's element colour, behind the points, the portrait and the lines under it; the name on the wood name
@@ -50,6 +52,8 @@ public class SkillTreePlantPanel : MonoBehaviour
     // spawner assign the plant instead of hand-setting it in the Inspector per duplicated panel
     public void Bind(PlantData data) => plantData = data;
 
+    public string PlantName => plantData != null ? plantData.plantName : null;
+
     private void Start()
     {
         if (!ShouldShow())
@@ -73,7 +77,9 @@ public class SkillTreePlantPanel : MonoBehaviour
         if (plantData == null || plantData.skillTree == null) return false;
         if (nodeButtonPrefab == null || nodesContainer == null) return false;
         if (SaveManager.instance == null) return false;
-        return SaveManager.instance.saveData.unlockedPlants.Contains(plantData.plantName);
+        // unlocked is not enough: a plant shows once a level has started since its unlock (Tommy, 2026-11-27)
+        return SaveManager.instance.saveData.unlockedPlants.Contains(plantData.plantName)
+            && SaveManager.instance.HasSeenPlant(plantData.plantName);
     }
 
     // one column per step (a plain RectTransform with a VerticalLayoutGroup, so a fork's two
@@ -460,6 +466,16 @@ public class SkillTreePlantPanel : MonoBehaviour
         if (nameText != null) nameText.gameObject.AddComponent<PixelTextEffect>().Color = shadow;
         if (levelText != null) levelText.gameObject.AddComponent<PixelTextEffect>().Color = levelPlank ? look.normal.shadow : shadow;
         if (pointsText != null) pointsText.gameObject.AddComponent<PixelTextEffect>().Color = shadow;
+
+        // a plant new to this screen: the insects' NEW badge in the portrait's top left corner, over the frame, until
+        // the screen is left (Tommy, 2026-11-27). made before CentreGroup, which moves it with the card
+        if (SaveManager.instance != null && !SaveManager.instance.HasSeenPlantGrowth(plantData.plantName))
+        {
+            RectTransform badge = InsectShowcase.AddBadge(root, "NEW", 20f);
+            badge.anchorMin = badge.anchorMax = new Vector2(0.5f, 0.5f);
+            badge.pivot = new Vector2(0f, 1f);
+            badge.anchoredPosition = new Vector2(portrait.xMin + 3f * Px, portrait.yMax - 3f * Px);
+        }
 
         BuildLinks(root, right);
         CentreGroup(root, left);

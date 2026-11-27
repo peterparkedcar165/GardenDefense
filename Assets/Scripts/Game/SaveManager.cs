@@ -43,6 +43,62 @@ public class SaveManager : MonoBehaviour
     public bool HasSeenInsect(InsectData data) =>
         data != null && saveData?.seenInsects != null && saveData.seenInsects.Contains(data.name);
 
+    // a level starting (the loadout's Confirm): every unlocked plant counts as seen from now on, so its loadout NEW goes
+    // and Plant Growth shows it (Tommy, 2026-11-27). saves only when a plant is new to the list
+    public void MarkUnlockedPlantsSeen()
+    {
+        if (saveData == null) return;
+        if (saveData.seenPlants == null) saveData.seenPlants = new List<string>();
+        bool changed = false;
+        foreach (string plant in saveData.unlockedPlants)
+        {
+            if (saveData.seenPlants.Contains(plant)) continue;
+            saveData.seenPlants.Add(plant);
+            changed = true;
+        }
+        if (changed) Save();
+    }
+
+    public bool HasSeenPlant(string plantName) =>
+        plantName != null && saveData?.seenPlants != null && saveData.seenPlants.Contains(plantName);
+
+    // Plant Growth's NEW on a plant: gone once that screen has been left with the plant on it
+    public bool HasSeenPlantGrowth(string plantName) =>
+        plantName != null && saveData?.seenGrowthPlants != null && saveData.seenGrowthPlants.Contains(plantName);
+
+    public void MarkPlantGrowthSeen(IEnumerable<string> plantNames)
+    {
+        if (saveData == null || plantNames == null) return;
+        if (saveData.seenGrowthPlants == null) saveData.seenGrowthPlants = new List<string>();
+        bool changed = false;
+        foreach (string plant in plantNames)
+        {
+            if (plant == null || saveData.seenGrowthPlants.Contains(plant)) continue;
+            saveData.seenGrowthPlants.Add(plant);
+            changed = true;
+        }
+        if (changed) Save();
+    }
+
+    // a save from before the seen plant lists (2026-11-27) counts every plant it already has as seen, in Plant Growth
+    // too, so nothing the player owns turns NEW or leaves Plant Growth. a new game starts with none seen
+    private void MigrateSeenPlants(bool fromFile)
+    {
+        if (saveData.seenPlantsVersion >= 1) return;
+        if (saveData.seenPlants == null) saveData.seenPlants = new List<string>();
+        if (saveData.seenGrowthPlants == null) saveData.seenGrowthPlants = new List<string>();
+        if (fromFile)
+        {
+            foreach (string plant in saveData.unlockedPlants)
+            {
+                if (!saveData.seenPlants.Contains(plant)) saveData.seenPlants.Add(plant);
+                if (!saveData.seenGrowthPlants.Contains(plant)) saveData.seenGrowthPlants.Add(plant);
+            }
+        }
+        saveData.seenPlantsVersion = 1;
+        Save();
+    }
+
     public void Save()
     {
         try
@@ -98,6 +154,7 @@ public class SaveManager : MonoBehaviour
     public void Load()
     {
         Debug.Log("Started");
+        bool fromFile = false;
         if (File.Exists(savePath))
         {
             SaveData loaded = ReadSaveFile(savePath);
@@ -111,6 +168,7 @@ public class SaveManager : MonoBehaviour
             if (loaded != null)
             {
                 saveData = loaded;
+                fromFile = true;
                 Debug.Log("Loaded save data");
             }
         }
@@ -120,6 +178,7 @@ public class SaveManager : MonoBehaviour
         // on load, fill any plant gaps caused by levels already completed
         RepairPlantsFromLevels();
         RepairFlowerPotFromLevel();
+        MigrateSeenPlants(fromFile);
     }
 
     // legacy curve constants, kept only for MigrateExpCurve below - the live curve is now
@@ -209,10 +268,13 @@ public class SaveManager : MonoBehaviour
             saveData.highestLevelUnlocked = 0;
             saveData.unlockedPlants.Clear();
             saveData.unlockedPlants.Add("AcornKnight");
+            // and forgets which plants were seen, so plants unlocked again are NEW again
+            saveData.seenPlants?.Clear();
+            saveData.seenGrowthPlants?.Clear();
             RepairFlowerPotFromLevel();
             Save();
             LoadoutSelectionUI.instance?.RefreshUI();
-            Debug.Log("Reset to level 1 only");
+            Debug.Log("Reset to level 1 only (seen plants forgotten)");
         }
         if (UnityEngine.InputSystem.Keyboard.current.minusKey.wasPressedThisFrame)
         {

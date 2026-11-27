@@ -709,16 +709,31 @@ public class LoadoutSelectionUI : MonoBehaviour
 
     // a plant this level recommends (LevelConfig.recommendedPlants, Tommy's picks from Level 6 on)
     // gets a gold Recommended badge straddling the top of its square
-    private static void AddRecommendedBadge(LoadoutSlot slot, PlantData data)
+    private static RectTransform AddRecommendedBadge(LoadoutSlot slot, PlantData data)
     {
         LevelConfig config = ProceduralLevel.CurrentConfig;
-        if (config == null || config.recommendedPlants == null || slot == null) return;
-        if (System.Array.IndexOf(config.recommendedPlants, data) < 0) return;
+        if (config == null || config.recommendedPlants == null || slot == null) return null;
+        if (System.Array.IndexOf(config.recommendedPlants, data) < 0) return null;
         RectTransform badge = InsectShowcase.AddBadge((RectTransform)slot.transform, "Recommended",
             InsectShowcaseStyle.Instance.plantBadgeTextSize);
         badge.anchorMin = badge.anchorMax = new Vector2(0.5f, 1f);
         badge.pivot = new Vector2(0.5f, 0.5f);
         badge.anchoredPosition = Vector2.zero;
+        return badge;
+    }
+
+    // a plant unlocked but not seen in a level yet gets a NEW badge in its square's top left corner, like the insects'
+    // (Tommy, 2026-11-27); under the Recommended badge when it has that too. gone once a level starts (Confirm)
+    private static void AddNewBadge(LoadoutSlot slot, PlantData data, RectTransform recommended)
+    {
+        if (slot == null || data == null || SaveManager.instance == null || SaveManager.instance.HasSeenPlant(data.plantName)) return;
+        const float Px = 2f;
+        RectTransform badge = InsectShowcase.AddBadge((RectTransform)slot.transform, "NEW",
+            InsectShowcaseStyle.Instance.plantBadgeTextSize);
+        badge.anchorMin = badge.anchorMax = new Vector2(0f, 1f);
+        badge.pivot = new Vector2(0f, 1f);
+        float below = recommended != null ? recommended.sizeDelta.y * 0.5f + Px : 0f;
+        badge.anchoredPosition = new Vector2(2f * Px, -(2f * Px + below));
     }
 
     public void RefreshUI()
@@ -747,7 +762,7 @@ public class LoadoutSelectionUI : MonoBehaviour
             slot.Initialize(data, OnSelectedSlotClicked, ShowTooltip, HideTooltip);
             square.ShowPlant(slot, data);
             square.SetCost(SkillTreeManager.GetEffectiveSunCost(data).ToString(), CardCostColor);
-            AddRecommendedBadge(slot, data);
+            AddNewBadge(slot, data, AddRecommendedBadge(slot, data));
         }
 
         int open = SaveManager.instance.saveData.MaxLoadoutSize;
@@ -887,7 +902,7 @@ public class LoadoutSelectionUI : MonoBehaviour
             LoadoutSlot slot = Instantiate(slotPrefab, square.transform);
             slot.Initialize(data, OnUnlockedSlotClicked, ShowTooltip, HideTooltip);
             square.ShowPlant(slot, data);
-            AddRecommendedBadge(slot, data);
+            AddNewBadge(slot, data, AddRecommendedBadge(slot, data));
             unlockedSlots.Add(slot);
             // a plant already in the loadout is greyed out here
             if (selectedLoadout.Contains(data.plantName)) card.GetComponent<CanvasGroup>().alpha = 0.35f;
@@ -1107,6 +1122,8 @@ public class LoadoutSelectionUI : MonoBehaviour
         CompleteFlights();
         SetMapShown(false);
         SaveManager.instance.selectedLoadout = new List<string>(selectedLoadout);
+        // the level starts: every unlocked plant counts as seen, its NEW goes and Plant Growth shows it (Tommy, 2026-11-27)
+        SaveManager.instance.MarkUnlockedPlantsSeen();
         panel.SetActive(false);
         HideTooltip();
         HideSlotHint();

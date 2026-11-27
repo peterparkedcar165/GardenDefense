@@ -40,8 +40,13 @@ public class SkillTreeUI : MonoBehaviour
     void OnDestroy()
     {
         SkillTreeSession.ClearPending();
+        // every plant shown here has now been seen on this screen, so its NEW is gone next time (Tommy, 2026-11-27).
+        // names, not panels: on leaving, the panels may already be gone
+        SaveManager.instance?.MarkPlantGrowthSeen(shownPlants);
         if (instance == this) instance = null;
     }
+
+    private readonly List<string> shownPlants = new List<string>();
 
     private RectTransform TooltipRect
     {
@@ -106,6 +111,7 @@ public class SkillTreeUI : MonoBehaviour
     public void RegisterPanel(SkillTreePlantPanel panel)
     {
         if (!panels.Contains(panel)) panels.Add(panel);
+        if (panel.PlantName != null && !shownPlants.Contains(panel.PlantName)) shownPlants.Add(panel.PlantName);
     }
 
     public void RefreshAll()

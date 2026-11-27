@@ -33,6 +33,16 @@ public class SaveData
     // others NEW (Tommy, 2026-11-24). added the first time one spawns (SaveManager.MarkInsectSeen)
     public List<string> seenInsects = new List<string>();
 
+    // plants this save has seen, by plantName (Tommy, 2026-11-27): one counts as seen once a level starts after it's
+    // unlocked (the loadout's Confirm, SaveManager.MarkUnlockedPlantsSeen). the loadout screen marks unlocked plants not
+    // in here NEW, like the insects, and Plant Growth only shows the ones in here
+    public List<string> seenPlants = new List<string>();
+    // plants whose NEW on Plant Growth is gone: every plant shown there is added when that screen is left
+    public List<string> seenGrowthPlants = new List<string>();
+    // 0 until the save's plants have been counted as seen (SaveManager.MigrateSeenPlants): a save from before these
+    // lists counts every plant it already has as seen in both places
+    public int seenPlantsVersion;
+
     // plant slots unlock through level progression, not purchase: +1 slot (past the base 4) for
     // every 5 levels unlocked - level 6 unlocked (highestLevelUnlocked >= 5) grants slot 5, level
     // 11 (>= 10) grants slot 6, level 16 (>= 15) grants slot 7, level 21 (>= 20) grants slot 8,
