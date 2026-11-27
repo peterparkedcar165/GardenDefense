@@ -266,8 +266,8 @@ public class Rhodiola : Shooter
     }
 
     // the flick lands: instant grass damage on the insect it was for (or, if that one died, left her range or
-    // went out of her sight while she raised the wand, whoever her targeting picks now), then the drained life
-    // flies back from the insect to her
+    // went out of her sight while she raised the wand, whoever her targeting picks now). the drained life flying
+    // back to her is that hit's on hit effect (OnAttackHit)
     private void ReleaseFlick()
     {
         Insect insect = _castTarget;
@@ -279,15 +279,38 @@ public class Rhodiola : Shooter
             insect = again != null ? again.GetComponent<Insect>() : null;
         }
         if (insect == null || !insect.IsAlive) return;
-        Vector3 from = insect.GetAimPoint();
-        // what the hit really did, after the insect's armor, resistances and any crit (Damage adds its final
-        // amount to totalDamageDealt): her drain heal is a share of it (Tommy)
-        float before = totalDamageDealt;
-        insect.Damage(attackDamage, damageType, elementalType, this, true,
-            new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget });
-        float heal = Mathf.Max(0f, totalDamageDealt - before) * DrainHealShare;
+        _attackLandingOn = insect;
+        try
+        {
+            insect.Damage(attackDamage, damageType, elementalType, this, true,
+                new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget });
+        }
+        finally { _attackLandingOn = null; }
         if (data != null) SfxPlayer.Play(data.attackSound, GemWorldPosition());
-        // the drained life: Tommy's orb, arcing from the insect to the tip of her staff (RhodiolaDrainOrb)
+    }
+
+    // her attack's on hit effect (Tommy, 2026-11-27), from Entity's on hit dispatcher: the drained life comes out of
+    // the insect she hit, Tommy's orb arcing to the tip of her staff (RhodiolaDrainOrb). it carries a share of what the
+    // hit really did, after the insect's armor, resistances and any crit. only her attack sends one, a hit that kills
+    // still does, and an Echo Seed makes the same attack send a second (RepeatOnHitEffects)
+    private Insect _attackLandingOn;
+    private float _lastDrainHeal;
+
+    public void OnAttackHit(Insect insect, float damageDealt)
+    {
+        if (insect == null || !ReferenceEquals(insect, _attackLandingOn)) return;
+        _attackLandingOn = null;
+        _lastDrainHeal = Mathf.Max(0f, damageDealt) * DrainHealShare;
+        LaunchDrain(insect.GetAimPoint(), _lastDrainHeal);
+    }
+
+    // an Echo Seed repeating her attack: a second orb from where the insect was, carrying the same heal
+    public override void RepeatOnHitEffects(Insect target, Vector3 groundPoint, Vector3 aimPoint) =>
+        LaunchDrain(aimPoint, _lastDrainHeal);
+
+    private void LaunchDrain(Vector3 from, float heal)
+    {
+        if (!IsAlive) return;
         RhodiolaDrainOrb.Launch(this, from, DrainMoteSpeed, RData?.drainArcPerUnit ?? 0.3f, RData?.drainArcMin ?? 0.4f,
             lifeMotePrefab, () => OnDrainReturned(heal));
     }
@@ -333,6 +356,9 @@ public class Rhodiola : Shooter
 
     private Entity _channelTarget;
     private bool _channelUrgent;
+    // begun on a plant with her golden sap full: insects coming into range don't stop it (Tommy, 2026-11-27)
+    private bool _channelOnFullSap;
+    private bool SapFull => SapCap > 0f && _storedSap >= SapCap - 0.01f;
     private float _channelTickTimer;
     private float _channelCheckTimer;
     private float _channelStartedAt;
@@ -395,7 +421,7 @@ public class Rhodiola : Shooter
         bool isPlant = ally is Plant;
         if (!_channelUrgent && (!isPlant || HealthShare(ally) >= LowHealthThreshold))
         {
-            if (InsectInRange()) return false;
+            if (!_channelOnFullSap && InsectInRange()) return false;
             Plant low = LowestPlant(true);
             if (low != null && low != ally) return false;
             if (!isPlant && LowestPlant(false) != null) return false;
@@ -416,10 +442,14 @@ public class Rhodiola : Shooter
         }
         Plant low = LowestPlant(true);
         if (low != null) { StartChannel(low, true); return; }
-        if (InsectInRange()) return;
+        // with her golden sap full she heals any hurt plant in her range, insects about or not: healing is what
+        // she's for (Tommy, 2026-11-27). she goes on until that plant is full or her sap runs out (still handing
+        // over to a plant that drops under the line). hurt friendly insects still wait for no insects in range
+        bool insectsNear = InsectInRange();
+        if (insectsNear && !SapFull) return;
         Entity hurt = LowestPlant(false);
-        if (hurt == null) hurt = LowestFriendlyInsect();
-        if (hurt != null) StartChannel(hurt, false);
+        if (hurt == null && !insectsNear) hurt = LowestFriendlyInsect();
+        if (hurt != null) StartChannel(hurt, false, hurt is Plant && SapFull);
     }
 
     // a plant under this share of its health that wasn't at the last look makes her switch to it mid heal
@@ -476,12 +506,13 @@ public class Rhodiola : Shooter
         return best;
     }
 
-    private void StartChannel(Entity ally, bool urgent)
+    private void StartChannel(Entity ally, bool urgent, bool onFullSap = false)
     {
         CancelFlick();
         _channelTarget = ally;
         _rayBegun = false;
         _channelUrgent = urgent;
+        _channelOnFullSap = onFullSap;
         _channelStartedAt = Time.time;
         // the first heal goes out once she has stepped back
         _channelTickTimer = ChannelTickInterval - HealStartSeconds;
@@ -669,7 +700,7 @@ public class Rhodiola : Shooter
     // Tommy's tooltips (2026-11-27)
     public override string GetAttackDescription() =>
         $"Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\n\n" +
-        $"As long as the {GetName()} has at least <color=#FFD700><b>{SapCap * SapToChannel:F0}</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\n\n" +
+        $"As long as the {GetName()} has at least <color=#FFD700><b>{SapCap * SapToChannel:F0}</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>. When her {GoldenSapLabel} is full, she also heals nearby plants below their <color=red><b>Max Health</b></color>, even with insects around.\n\n" +
         $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second. If another plant falls below <color=green><b>{CriticalHealthShare * 100f:F0}%</b></color> <color=red><b>Health</b></color>, she switches to it.";
 
     public override string GetPassiveDescription() =>
@@ -691,7 +722,7 @@ public class Rhodiola : Shooter
         float effpl   = RData?.path1SapEfficiencyPerLevel ?? 0.1f;
         string desc = details
             ? $"Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\n\n" +
-              $"As long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\n\n" +
+              $"As long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>. When her {GoldenSapLabel} is full, she also heals nearby plants below their <color=red><b>Max Health</b></color>, even with insects around.\n\n" +
               $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second. If another plant falls below <color=green><b>{CriticalHealthShare * 100f:F0}%</b></color> <color=red><b>Health</b></color>, she switches to it."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +

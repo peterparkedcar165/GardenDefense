@@ -151,6 +151,11 @@ public abstract class Entity : MonoBehaviour
         if (data.source is Waterlily waterlily && HasTag(data.tags, DamageTag.Projectile))
             waterlily.Splash(insect, data.position);
 
+        // Rhodiola: her attack's drained life comes out of the insect as its on hit effect (Tommy, 2026-11-27).
+        // before the alive check too, so a hit that kills still drains
+        if (data.source is Rhodiola rhodiola)
+            rhodiola.OnAttackHit(insect, data.damage);
+
         if (!insect.IsAlive) return;
 
         // fast-attacking sources (Snowdrop, Stargazer) deal reduced on-hit effect damage per hit,
