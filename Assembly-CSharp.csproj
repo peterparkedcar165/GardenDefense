@@ -54,6 +54,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\WindshearFireEffect.cs" />
     <Compile Include="Assets\Scripts\UI\MulchDebugMenu.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LevelSelector.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\HeatstrokeEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\DroughtMulchData.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\PlantsPanelUI.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TalonFocusEffect.cs" />
