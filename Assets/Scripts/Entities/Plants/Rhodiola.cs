@@ -494,6 +494,8 @@ public class Rhodiola : Shooter
         if (revived == null) return;
 
         skillCooldownTimer = skillCooldown;
+        // the light coming down on it (Tommy, 2026-11-27)
+        RhodiolaReviveBeam.Play(tile.transform.position);
         revived.Heal(RevivalHeal, this);
 
         if (SkillTreeManager.HasUnlock(this, RevivalAoeUnlock))
@@ -524,8 +526,9 @@ public class Rhodiola : Shooter
             if (!Tile.allTiles.TryGetValue(Tile.TileKey(center + offset), out Tile neighbor)) continue;
             if (neighbor.deadPlant == null) continue;
             Plant revivedNeighbor = Plant.RevivePlant(neighbor, true);
-            if (revivedNeighbor != null)
-                revivedNeighbor.Heal(RevivalHeal, this);
+            if (revivedNeighbor == null) continue;
+            RhodiolaReviveBeam.Play(neighbor.transform.position);
+            revivedNeighbor.Heal(RevivalHeal, this);
         }
     }
 
