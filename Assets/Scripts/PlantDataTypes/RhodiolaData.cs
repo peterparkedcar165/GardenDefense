@@ -18,8 +18,8 @@ public class RhodiolaData : PlantData
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 2f;
-    [Tooltip("proposal")]
-    public float path1AttackSpeedPerLevel = 0.04f;
+    [Tooltip("added to her base attack range per level (Tommy: as her old path had it)")]
+    public float path1AttackRangePerLevel = 0.3f;
     [Tooltip("share of Grass Damage per level, e.g. 0.05 = 5% (proposal)")]
     public float path1GrassDamagePerLevel = 0.05f;
     [Tooltip("share of her Grass Damage added to Heals & Shields she gives, e.g. 0.5 = 50%")]

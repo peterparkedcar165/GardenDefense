@@ -470,11 +470,12 @@ public class Rhodiola : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
+        // attack damage, attack range (back as her old path had it, Tommy 2026-11-27: no attack speed) and grass damage
         baseAttackDamage    = data.baseAttackDamage + level * (RData?.path1AttackDamagePerLevel ?? 2f);
-        baseAttackSpeed     = data.baseAttackSpeed  + level * (RData?.path1AttackSpeedPerLevel  ?? 0.04f);
+        baseAttackRange     = data.baseAttackRange  + level * (RData?.path1AttackRangePerLevel  ?? 0.3f);
         baseGrassDamage     = data.baseGrassDamage  + level * (RData?.path1GrassDamagePerLevel  ?? 0.05f);
+        baseAttackSpeed     = data.baseAttackSpeed;
         baseProjectileSpeed = data.baseProjectileSpeed;
-        baseAttackRange     = data.baseAttackRange;
     }
 
     public override void OnPath3Upgrade(int level)
@@ -569,7 +570,7 @@ public class Rhodiola : Shooter
     public override string GetPath1Description(bool details = false)
     {
         float dmgpl   = RData?.path1AttackDamagePerLevel ?? 2f;
-        float speedpl = RData?.path1AttackSpeedPerLevel  ?? 0.04f;
+        float rangepl = RData?.path1AttackRangePerLevel  ?? 0.3f;
         float grasspl = RData?.path1GrassDamagePerLevel  ?? 0.05f;
         string desc = details
             ? $"Flicks her wand at an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage. When the drained life reaches her staff, it heals her for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\n\n" +
@@ -577,7 +578,7 @@ public class Rhodiola : Shooter
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
-               $"Increase <color=green><b>Base Attack Speed</b></color> by <color=green><b>{speedpl:0.##}</b></color> per level. [<color=green><b>+{speedpl * effectivePath1Level:0.##}</b></color>]\n\n" +
+               $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase <color=green><b>Grass Damage</b></color> by <color=green><b>{grasspl * 100f:F0}%</b></color> per level. [<color=green><b>+{grasspl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
                $"{Level5Section(path1Level)}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
