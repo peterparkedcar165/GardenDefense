@@ -934,9 +934,9 @@ public abstract class Entity : MonoBehaviour
         float bonus = source != null ? source.healingBonus : 0f;
         float intended = healingAmount * (1f + healingReceived) * (1f + bonus);
         float actual = Mathf.Min(intended, maxHealth - health);
-        // the part of the heal past full health, told to whoever gave it (rhodiola's golden sap
-        // stores it). before any heal crit, and before the early out so a heal on a plant already
-        // at full health counts in full
+        // the part of the heal past full health, told to whoever gave it (nothing uses it since
+        // rhodiola's 2026-11-27 kit; her golden sap used to store it). before any heal crit, and before
+        // the early out so a heal on a plant already at full health counts in full
         float overflow = intended - Mathf.Max(0f, actual);
         if (source != null && overflow > 0f) source.OnHealOverflow(this, overflow);
         if (actual <= 0f) return;
