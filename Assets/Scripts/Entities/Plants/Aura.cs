@@ -43,8 +43,10 @@ public abstract class Aura : Plant
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            if (((Vector2)insect.transform.position - center).sqrMagnitude <= rangeSqr)
-                _insectsInRange.Add(insect);
+            if (((Vector2)insect.transform.position - center).sqrMagnitude > rangeSqr) continue;
+            // a plant that needs a clear line leaves out what it can't see (line of sight)
+            if (NeedsLineOfSight && !InSight(insect)) continue;
+            _insectsInRange.Add(insect);
         }
         return _insectsInRange;
     }
@@ -56,8 +58,9 @@ public abstract class Aura : Plant
         foreach (Insect insect in Insect.allInsects)
         {
             if (insect == null || !insect.IsAlive) continue;
-            if (((Vector2)insect.transform.position - center).sqrMagnitude <= rangeSqr)
-                return true;
+            if (((Vector2)insect.transform.position - center).sqrMagnitude > rangeSqr) continue;
+            if (NeedsLineOfSight && !InSight(insect)) continue;
+            return true;
         }
         return false;
     }

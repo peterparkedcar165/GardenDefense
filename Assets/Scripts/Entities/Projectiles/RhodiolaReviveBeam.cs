@@ -3,7 +3,8 @@ using UnityEngine;
 // the light that comes down on a plant Rhodiola's skill revives (Tommy, 2026-11-27: Resources/RhodiolaReviveBeam,
 // his beam, 14 frames of 64x64 at 65 ms, played once, drawn at 2.5x). its pattern repeats upward, so it's tiled from
 // the bottom of the plant's tile to past the top of the camera, as if it came down from the sky. drawn over plants,
-// insects and tree tops (below the weather), unlit so it glows at night, on real time so a pause doesn't stop it
+// insects and tree tops (below the weather), unlit so it glows at night, on real time (game speed doesn't change
+// it) but frozen while paused
 public class RhodiolaReviveBeam : MonoBehaviour
 {
     private const float FrameSeconds = 0.065f;
@@ -62,7 +63,8 @@ public class RhodiolaReviveBeam : MonoBehaviour
 
     private void Update()
     {
-        _age += Time.unscaledDeltaTime;
+        // real time, so a game speed up doesn't hurry it, but frozen while the game is paused (Tommy)
+        _age += Time.timeScale > 0f ? Time.unscaledDeltaTime : 0f;
         int frame = Mathf.FloorToInt(_age / FrameSeconds);
         if (frame >= _frames.Length) { Destroy(gameObject); return; }
         _renderer.sprite = _frames[frame];

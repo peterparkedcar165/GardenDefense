@@ -520,6 +520,7 @@
     <Compile Include="Assets\Scripts\Skills\CarrotFurrow.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BlindEffect.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\RhodiolaReviveBeam.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Earthworm.cs" />
     <Compile Include="Assets\Scripts\Mulch\SunSapMulchEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PlantUpgradeUI.cs" />

@@ -6,8 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class SightShade : MonoBehaviour
 {
-    // stronger than the circle itself (0.2), so the blocked part reads clearly (Tommy, 2026-11-27)
-    private static readonly Color ShadeColor = new Color(1f, 0.15f, 0.15f, 0.5f);
+    // well over the circle itself (0.2), so the blocked part reads clearly (Tommy, 2026-11-27: 0.32, then 0.5, then this)
+    private static readonly Color ShadeColor = new Color(1f, 0.15f, 0.15f, 0.7f);
 
     private Mesh _mesh;
     private MeshRenderer _renderer;

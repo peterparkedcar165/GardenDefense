@@ -2061,7 +2061,8 @@ public abstract class Plant : Entity, IAttackable
     // boulders). flying insects are never hidden. what it sees is cast once from where it stands
     // (LineOfSight) and kept until it moves or its ground changes. the part of its range it can't see shows
     // red on its range circle (SightShade)
-    public virtual bool NeedsLineOfSight => false;
+    // melee plants need one too (Tommy, 2026-11-27: Acorn Knight, Bird of Paradise, Cactus)
+    public virtual bool NeedsLineOfSight => IsMeleeAttacker;
 
     // the rays from where it stands, null when it sees everything (high ground, or it needs no clear line)
     private float[] _sightRays;
