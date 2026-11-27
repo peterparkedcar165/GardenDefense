@@ -1566,8 +1566,9 @@ public class PlantUpgradeUI : EntityInfoPanel
             Gap();
             y += PlaceSectionText(sectionTitle, fontSize, left, y, width);
         }
-        // the path's bar (Rhodiola's Golden Sap) goes between the description and the upgrades, the health bar's size,
-        // in the middle
+        // the path's bar (Rhodiola's Golden Sap) goes between the description and the upgrades, as wide as the boxes
+        // (Tommy), in whole art pixels: the frame is sliced, the fill follows the frame's width (SetFill), the value text
+        // is centred across it
         bool barPlaced = false;
         void PlaceBar()
         {
@@ -1575,7 +1576,10 @@ public class PlantUpgradeUI : EntityInfoPanel
             barPlaced = true;
             Gap();
             RectTransform bar = tipBar.root;
-            bar.anchoredPosition = new Vector2(left + Mathf.Round((width - bar.rect.width) * 0.5f / Px) * Px, -y);
+            float barWidth = Mathf.Floor(width / Px) * Px;
+            bar.sizeDelta = new Vector2(barWidth, bar.sizeDelta.y);
+            if (tipBar.text != null) tipBar.text.rectTransform.sizeDelta = new Vector2(barWidth, tipBar.text.rectTransform.sizeDelta.y);
+            bar.anchoredPosition = new Vector2(left, -y);
             y += bar.rect.height;
         }
         for (int i = 0; i < sectionBoxes.Count; i++)
