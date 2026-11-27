@@ -252,6 +252,8 @@ public class InsectShowcase : MonoBehaviour
         Stretch(NewImage("Shine", portrait.rectTransform, style.panelShine, Color.white, true).rectTransform);
         Image sprite = NewImage("Insect", portrait.rectTransform, data.sprite, Color.white, false);
         sprite.preserveAspect = true;
+        // insect art faces left; the showcase shows them facing right
+        MirrorGraphic.Apply(sprite);
         TopLeft(sprite.rectTransform, 3f, 3f, p - 6f, p - 6f);
 
         if (SaveManager.instance != null && !SaveManager.instance.HasSeenInsect(data))

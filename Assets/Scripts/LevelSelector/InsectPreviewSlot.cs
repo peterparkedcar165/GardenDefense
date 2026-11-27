@@ -23,6 +23,8 @@ public class InsectPreviewSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         {
             icon.sprite = data.sprite;
             icon.enabled = data.sprite != null;
+            // insect art faces left; here they face right
+            MirrorGraphic.Apply(icon);
         }
         if (nameLabel != null)
             nameLabel.text = data.displayName;
