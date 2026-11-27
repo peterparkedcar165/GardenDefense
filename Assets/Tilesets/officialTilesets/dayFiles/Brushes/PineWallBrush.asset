@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd9705969e763243bc4316d18364218, type: 3}
+  m_Name: PineWallBrush
+  m_EditorClassIdentifier: Assembly-CSharp::PineWallTile
+  top:
+  - {fileID: 3754088142704283647, guid: 66e2e17a5245442aa77f6bc68faa22cd, type: 3}
+  - {fileID: 5646587156812945264, guid: 66e2e17a5245442aa77f6bc68faa22cd, type: 3}
+  - {fileID: 5059878766097079465, guid: 66e2e17a5245442aa77f6bc68faa22cd, type: 3}
+  - {fileID: 4473385894665841742, guid: 66e2e17a5245442aa77f6bc68faa22cd, type: 3}
+  mid:
+  - {fileID: -8447284118822691817, guid: a0931b8c687541df8e3147e27e20f41a, type: 3}
+  - {fileID: -657018364111367629, guid: a0931b8c687541df8e3147e27e20f41a, type: 3}
+  - {fileID: -4617066015497654823, guid: a0931b8c687541df8e3147e27e20f41a, type: 3}
+  - {fileID: 4670395953128144944, guid: a0931b8c687541df8e3147e27e20f41a, type: 3}
+  - {fileID: -7518301592499989340, guid: a0931b8c687541df8e3147e27e20f41a, type: 3}
+  - {fileID: -4654313911936724334, guid: a0931b8c687541df8e3147e27e20f41a, type: 3}
+  endEven:
+  - {fileID: 7134614819734741575, guid: 28bcfdf139684b67841afa259b7fa96d, type: 3}
+  - {fileID: -1184702392577612973, guid: 28bcfdf139684b67841afa259b7fa96d, type: 3}
+  - {fileID: 7414718173647336769, guid: 28bcfdf139684b67841afa259b7fa96d, type: 3}
+  - {fileID: 6941074610083871486, guid: 28bcfdf139684b67841afa259b7fa96d, type: 3}
+  - {fileID: 8039998929843787535, guid: 28bcfdf139684b67841afa259b7fa96d, type: 3}
+  - {fileID: 784003743741855000, guid: 28bcfdf139684b67841afa259b7fa96d, type: 3}
+  endOdd:
+  - {fileID: 1098436714769679395, guid: d94b215934634b3eb6459b42dc2cc1bd, type: 3}
+  - {fileID: -1963481030201448027, guid: d94b215934634b3eb6459b42dc2cc1bd, type: 3}
+  - {fileID: -3144882605436636049, guid: d94b215934634b3eb6459b42dc2cc1bd, type: 3}
+  - {fileID: -8175513200202020127, guid: d94b215934634b3eb6459b42dc2cc1bd, type: 3}
+  - {fileID: -5614378319651417817, guid: d94b215934634b3eb6459b42dc2cc1bd, type: 3}
+  - {fileID: -486873610533837559, guid: d94b215934634b3eb6459b42dc2cc1bd, type: 3}
+  - {fileID: -2861482947251277786, guid: d94b215934634b3eb6459b42dc2cc1bd, type: 3}
+  - {fileID: 8426628249082304176, guid: d94b215934634b3eb6459b42dc2cc1bd, type: 3}
+  single:
+  - {fileID: -8667466294985060184, guid: 2d0241cef21ea494383908f08bc3dbab, type: 3}
+  - {fileID: -2092759421, guid: 2d0241cef21ea494383908f08bc3dbab, type: 3}
+  - {fileID: 80700443, guid: 2d0241cef21ea494383908f08bc3dbab, type: 3}
+  - {fileID: -398820789, guid: 2d0241cef21ea494383908f08bc3dbab, type: 3}
+  - {fileID: 1442475629, guid: 2d0241cef21ea494383908f08bc3dbab, type: 3}
+  - {fileID: 22065573, guid: 2d0241cef21ea494383908f08bc3dbab, type: 3}
+  paletteIcon: {fileID: 21300000, guid: 63cb825fa0714682b97c7a8b47341845, type: 3}
