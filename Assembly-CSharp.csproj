@@ -511,6 +511,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\RhodiolaHealRay.cs" />
     <Compile Include="Assets\Scripts\UI\QuickStatRow.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreenhouseFertilizerData.cs" />
+    <Compile Include="Assets\Scripts\StatusEffect\VerdantGuardEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PlantWidgetStyle.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\BargainSeedsFertilizerData.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\TermiteData.cs" />
