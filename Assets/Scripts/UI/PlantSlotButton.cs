@@ -104,7 +104,8 @@ public class PlantSlotButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
             shownCost = ShownMax;
             sunCostText.fontStyle = FontStyles.Bold;
             sunCostText.color = Color.red;
-            SetDarkened(false);
+            // can't be placed again, so the square darkens as for a plant that can't be afforded (Tommy, 2026-11-27)
+            SetDarkened(true);
             return;
         }
         int effectiveCost = FertilizerManager.GetPlacementCost(data);

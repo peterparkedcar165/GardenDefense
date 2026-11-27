@@ -57,7 +57,7 @@ MonoBehaviour:
   currencyDrop: 5
   currencyDropAdder: 0
   currencyDropMultiplier: 0
-  expDrop: 5
+  expDrop: 9
   aggressivity: 1
   baseLightEmissionRange: 0
   baseHealingBonus: 0
