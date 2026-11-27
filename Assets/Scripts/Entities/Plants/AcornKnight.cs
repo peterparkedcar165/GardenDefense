@@ -40,8 +40,10 @@ public class AcornKnight : Aura
     [SerializeField] private float shieldLandAhead = 0.4f;
     [SerializeField] private float shieldBounceHeight = 0.35f;
 
-    // while the throw animation plays he faces where the shield is going instead of his target
+    // while the throw animation plays he faces where the shield is going instead of his target,
+    // and starts no attack
     private float _throwFacingUntil;
+    private bool Throwing => Time.time < _throwFacingUntil;
     private bool _throwFacingRight;
     private Coroutine _throwRoutine;
 
@@ -225,10 +227,13 @@ public class AcornKnight : Aura
         if (_mainTarget != null)
             SetFacing(_mainTarget.GetApproachPoint(transform.position));
 
+        // no attack starts while the throw animation plays: its swing couldn't show, so its hits
+        // would land with no swing (Tommy, 2026-11-27). the cooldown still fills, so he swings the
+        // moment the throw ends
         bool stunned = IsStunned || IsChanneling;
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else if (!stunned && _mainTarget != null)
+        else if (!stunned && !Throwing && _mainTarget != null)
         {
             FaceAttackTarget(_mainTarget.gameObject);
             Attack();
@@ -591,8 +596,16 @@ public class AcornKnight : Aura
         _shieldSwingTimer = SwingDuration;
         skillCooldownTimer = skillCooldown; // cooldown starts the instant the shield is cast
 
-        // the throw animation cuts off whatever his body was showing (an attack set keeps striking
-        // underneath it), and the shield leaves his hand on its release frame
+        // the throw animation cuts off whatever his body was showing, and the hits of a sword set or
+        // a bash still to come go with it, so no damage lands without its swing showing (Tommy,
+        // 2026-11-27; they used to keep striking underneath the throw). the shield leaves his hand
+        // on its release frame
+        if (_swordSetRoutine != null)
+        {
+            StopCoroutine(_swordSetRoutine);
+            _swordSetRoutine = null;
+        }
+        CancelAttackWindup();
         float throwLength = ClipLength(throwClipFrames);
         PlayBodyAnimation(BodySkillTrigger, throwLength, throwLength, interrupt: true);
         _throwFacingUntil = Time.time + throwLength;

@@ -2203,6 +2203,15 @@ public abstract class Plant : Entity, IAttackable
         _attackWindupRoutine = StartCoroutine(AttackWindupRoutine(windupSeconds, onResolve));
     }
 
+    // drops a windup that hasn't landed yet, so its hit never happens (Acorn Knight's shield throw
+    // cutting off a bash whose animation it replaced)
+    protected void CancelAttackWindup()
+    {
+        if (_attackWindupRoutine == null) return;
+        StopCoroutine(_attackWindupRoutine);
+        _attackWindupRoutine = null;
+    }
+
     private IEnumerator AttackWindupRoutine(float windupSeconds, System.Action onResolve)
     {
         if (windupSeconds > 0f)
