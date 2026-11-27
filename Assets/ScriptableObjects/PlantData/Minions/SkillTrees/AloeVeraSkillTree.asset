@@ -74,6 +74,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: aloevera_cooling_touch
+      bonusIn: 1
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

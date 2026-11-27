@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: cactus_barbed_retort
+      bonusIn: 2
     - id: node5b_thornyresolve
       nodeName: Thorny Resolve
       description: Increase <color=green><b>Max Health</b></color> by <color=green><b>15%</b></color>.

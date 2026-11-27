@@ -125,6 +125,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: leafranger_executioner
+      bonusIn: 1
     - id: node10b_trueflight
       nodeName: True Flight
       description: <color=green><b>Piercing</b></color> no longer reduces damage to subsequent targets. Attacks deal <color=green><b>3%</b></color> bonus damage per unit of distance traveled.
@@ -132,4 +133,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: leafranger_true_flight
+      bonusIn: 1
     ranksToUnlockNext: 1

@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: acorn_counter_stance
+      bonusIn: 2
     - id: node5b_evasiveguard
       nodeName: Evasive Guard
       description: While in <color=orange><b>Guard Stance</b></color>, increase <color=green><b>Evasion</b></color> by <color=green><b>15%</b></color>.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: acorn_evasive_guard
+      bonusIn: 2
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

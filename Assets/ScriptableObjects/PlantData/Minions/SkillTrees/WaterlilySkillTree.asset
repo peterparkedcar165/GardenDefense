@@ -125,6 +125,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: waterlily_extra_target
+      bonusIn: 1
     - id: node10b_extendbubble
       nodeName: Lingering Tide
       description: Dealing Water damage against a Bubble Prisoned insect extends its duration by 0.2 seconds.

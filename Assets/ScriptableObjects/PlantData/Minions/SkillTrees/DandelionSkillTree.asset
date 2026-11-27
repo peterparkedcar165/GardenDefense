@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: dandelion_windfall
+      bonusIn: 2
     - id: node5b_overgrowth
       nodeName: Overgrowth
       description: Dandelion regenerates <color=green><b>1%</b></color> of her <color=green><b>Max Health</b></color> every second.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: dandelion_overgrowth
+      bonusIn: 2
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

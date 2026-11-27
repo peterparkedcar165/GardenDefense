@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: bogiris_bogged_barrier
+      bonusIn: 2
     - id: node5b_fruitfulbloom
       nodeName: Fruitful Bloom
       description: While <b><color=#4FC3F7>open</color></b>, increase <color=yellow><b>Sun</b></color> Yield by <color=green><b>15%</b></color> and reduce <color=yellow><b>Sun</b></color> generation cooldown by <color=green><b>1</b></color> second.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: bogiris_fruitful_bloom
+      bonusIn: 2
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

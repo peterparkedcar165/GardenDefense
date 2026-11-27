@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: calendula_guiding_light
+      bonusIn: 2
     - id: node5b_radiantaura
       nodeName: Radiant Aura
       description: Plants within <b><color=orange>Calendula</color></b>'s illumination regenerate <color=green><b>2.5%</b></color> Max Health per second.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: calendula_radiant_aura
+      bonusIn: 2
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

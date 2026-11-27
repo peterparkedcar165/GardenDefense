@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: snowdrop_second_target
+      bonusIn: 1
     - id: node5b_chillinggrasp
       nodeName: Chilling Grasp
       description: <color=#00FFFF><b>Snow Marked</b></color> insects have their <color=red><b>Movement Speed</b></color> reduced by <color=red><b>25%</b></color>.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: snowdrop_chilling_grasp
+      bonusIn: 2
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown
@@ -131,4 +133,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: snowdrop_mark_crit
+      bonusIn: 2
     ranksToUnlockNext: 1

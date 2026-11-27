@@ -39,7 +39,14 @@ public class SkillTreeNode
     // skill stat and the instant skill unlock show it anyway (SkillNodeButton.ShowsSkillIcon)
     [Tooltip("this node changes the plant's skill, so it shows the skill's icon")]
     public bool modifiesSkill;
+
+    // which of the plant's Attack, Passive and Skill tooltips shows this node's Skill Tree Bonus once it has a point
+    // (Tommy, 2026-11-27; SkillTreeBonus). Auto goes by its first stat, or the Skill when it changes the skill
+    [Tooltip("which tooltip shows this node's bonus once it has a point: Auto goes by its stat (or the Skill when it changes the skill)")]
+    public SkillTreeBonusIn bonusIn;
 }
+
+public enum SkillTreeBonusIn { Auto, Attack, Passive, Skill, Hidden }
 
 [System.Serializable]
 public struct SkillNodeEffect

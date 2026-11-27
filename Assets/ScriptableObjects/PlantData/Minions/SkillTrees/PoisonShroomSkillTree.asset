@@ -125,6 +125,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: poison_toxic_catalyst
+      bonusIn: 1
     - id: node10b_executionersbloom
       nodeName: Executioner's Bloom
       description: <color=purple><b>Toxic Spore</b></color> deals <color=green><b>66%</b></color> increased damage to insects below <color=green><b>33%</b></color> health. <color=green><b>Attack Damage</b></color> reduced by <color=green><b>25%</b></color>.
@@ -132,4 +133,5 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: poison_executioners_bloom
+      bonusIn: 1
     ranksToUnlockNext: 1

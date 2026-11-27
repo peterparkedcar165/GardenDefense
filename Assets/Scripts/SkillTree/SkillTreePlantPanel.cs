@@ -202,9 +202,10 @@ public class SkillTreePlantPanel : MonoBehaviour
     // ---- the look ----
 
     private const float Px = 2f;
-    // canvas units: the exp bar (88 by 11 art px), the links' core (2 art px) and with their outline (4)
-    private const float ExpBarWidth = 176f;
-    private const float ExpBarHeight = 22f;
+    // canvas units: the exp bar (96 by 13 art px: a little bigger than the kit's 88 by 11 so the numbers fit better,
+    // Tommy 2026-11-27; the words stay size 20), the links' core (2 art px) and with their outline (4)
+    private const float ExpBarWidth = 192f;
+    private const float ExpBarHeight = 26f;
     private const float LinkCore = 4f;
     private const float LinkOutline = 8f;
     // the shortest vine between the card and the first node (16 art px)
@@ -453,7 +454,7 @@ public class SkillTreePlantPanel : MonoBehaviour
             expFill = fill.GetComponent<Image>();
             expText.color = Color.white;
             expText.alignment = TextAlignmentOptions.Top;
-            PlaceText(expText.rectTransform, expBar.center.x, expBar.yMax - 4f, 20f, ExpBarWidth);
+            PlaceText(expText.rectTransform, expBar.center.x, expBar.yMax - (ExpBarHeight - 7f * Px) * 0.5f, 20f, ExpBarWidth);
             expText.gameObject.AddComponent<PixelTextEffect>().Color = new Color32(0x14, 0x14, 0x14, 0xFF);
         }
         if (nameText != null) nameText.gameObject.AddComponent<PixelTextEffect>().Color = shadow;

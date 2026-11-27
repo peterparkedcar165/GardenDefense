@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: rhodiola_overgrowth
+      bonusIn: 1
     - id: node5b_widespreadbloom
       nodeName: Widespread Bloom
       description: While she heals a plant, a second healing line blooms from it to the most injured plant it can see within her <color=green><b>Attack Range</b></color>, healing that plant for <color=green><b>50%</b></color> as much.
@@ -72,6 +73,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: rhodiola_widespread_bloom
+      bonusIn: 1
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

@@ -65,6 +65,7 @@ MonoBehaviour:
       costPerRank: 2
       effects: []
       unlockId: zinnia_smoldering_core
+      bonusIn: 1
     - id: node5b_scorchingheat
       nodeName: Scorching Heat
       description: Increase <color=orange><b>Fire Damage</b></color> by <color=orange><b>10</b></color>.

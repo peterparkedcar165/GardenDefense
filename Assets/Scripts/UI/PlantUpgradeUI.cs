@@ -1356,7 +1356,16 @@ public class PlantUpgradeUI : EntityInfoPanel
         tipBarPlant = wantBar ? barPlant : null;
         tipBarPath = barPath;
         if (SplitSections(text, out string title, out string[] parts, out string footer))
+        {
+            // the plant's Skill Tree Bonus for this path, a box of its own after the max level bonus (Tommy, 2026-11-27)
+            string treeBonus = barPlant != null ? SkillTreeBonus.SectionFor(barPlant, barPath) : null;
+            if (!string.IsNullOrEmpty(treeBonus))
+            {
+                System.Array.Resize(ref parts, parts.Length + 1);
+                parts[parts.Length - 1] = treeBonus;
+            }
             LayoutSections(title, parts, footer);
+        }
         else
         {
             tooltipText.text = text;
