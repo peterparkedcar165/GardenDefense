@@ -95,6 +95,8 @@ public class Rhodiola : Shooter
     private void OnDisable()
     {
         _channelTarget = null;
+        _releaseRoutine = null;
+        _castTarget = null;
     }
 
     // a soft gold glow over her root (Resources/RhodiolaSapGlow), drawn just above her own sprite
@@ -161,28 +163,77 @@ public class Rhodiola : Shooter
     }
 
     // ---------- attack: drain ----------
+    // her attack animation (rhodiola_attack.png, 17 frames; gold hair 2026-11-27): she raises her wand
+    // and flicks it, and the hit lands on attackReleaseFrame. the clip plays at its own speed, only sped up
+    // when her attacks come faster than it lasts, and the release frame keeps its place in it either way
+    [Header("Attack Animation")]
+    [SerializeField] private float attackClipFrameRate = 12f;
+    [SerializeField] private int attackClipFrames = 17;
+    [Tooltip("the frame (from 0) her wand's flick lands on: the hit and the drain happen then")]
+    [SerializeField] private int attackReleaseFrame = 9;
+    private const string BodyAttackTrigger = "Attack";
 
-    // the insect her flick is for, picked by Shooter's usual targeting
+    // the attack sound plays when the flick lands, not when she starts raising the wand
+    protected override bool PlaysOwnAttackSound => true;
+
+    // the insect her targeting picked, and the one the flick in progress is for. a new flick lands the old
+    // one at once; a channel starting cuts it off with no hit, and so does her being switched off
     private Insect _attackTarget;
+    private Insect _castTarget;
+    private Coroutine _releaseRoutine;
 
-    // while channeling she never attacks
+    // while channeling, and while she steps back into place after it, she never attacks
     protected override GameObject FindTarget()
     {
-        if (_channelTarget != null) return null;
+        if (_channelTarget != null || Time.time < _channelRecoverUntil) return null;
         GameObject target = base.FindTarget();
         _attackTarget = target != null ? target.GetComponent<Insect>() : null;
         return target;
     }
 
-    // the flick: instant grass damage, then the drained life flies back from the insect to her
     protected override void Shoot(Vector3 aim)
     {
-        Insect insect = _attackTarget;
+        if (_attackTarget == null) return;
+        if (_releaseRoutine != null) { StopCoroutine(_releaseRoutine); _releaseRoutine = null; ReleaseFlick(); }
+        _castTarget = _attackTarget;
+        float frameRate = Mathf.Max(0.01f, attackClipFrameRate);
+        float clipLength = Mathf.Max(1, attackClipFrames) / frameRate;
+        float speed = Mathf.Max(1f, clipLength / Mathf.Max(0.01f, attackCooldown));
+        PlayBodyAnimation(BodyAttackTrigger, clipLength, clipLength / speed);
+        _releaseRoutine = StartCoroutine(ReleaseAfter(Mathf.Max(0, attackReleaseFrame) / (frameRate * speed)));
+    }
+
+    private System.Collections.IEnumerator ReleaseAfter(float seconds)
+    {
+        if (seconds > 0f) yield return new WaitForSeconds(seconds);
+        _releaseRoutine = null;
+        ReleaseFlick();
+    }
+
+    private void CancelFlick()
+    {
+        if (_releaseRoutine != null) { StopCoroutine(_releaseRoutine); _releaseRoutine = null; }
+        _castTarget = null;
+    }
+
+    // the flick lands: instant grass damage on the insect it was for (or, if that one died meanwhile,
+    // whoever her targeting picks now), then the drained life flies back from the insect to her
+    private void ReleaseFlick()
+    {
+        Insect insect = _castTarget;
+        _castTarget = null;
+        if (!IsAlive || _channelTarget != null) return;
+        if (insect == null || !insect.IsAlive)
+        {
+            GameObject again = base.FindTarget();
+            insect = again != null ? again.GetComponent<Insect>() : null;
+        }
         if (insect == null || !insect.IsAlive) return;
         Vector3 ground = insect.transform.position;
         float height = insect.GetAimPoint().y;
         insect.Damage(attackDamage, damageType, elementalType, this, true,
             new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget });
+        if (data != null) SfxPlayer.Play(data.attackSound, GemWorldPosition());
         SendMote(ground, height, this, DrainMoteSpeed, OnDrainReturned);
     }
 
@@ -203,25 +254,44 @@ public class Rhodiola : Shooter
     }
 
     // ---------- passive: the channel ----------
-    // with more than SapToChannel of her cap in sap she channels into a plant: at once for the lowest
-    // plant in range under LowHealthThreshold (stopping her attacks), or, with no insects in her range,
-    // for the lowest hurt plant. it heals every ChannelTickInterval, spending as much sap as it heals,
-    // until the plant is healed, dies or leaves her range, the sap runs out, or she's stunned. a channel
-    // started with no insects around gives way to her attack when insects come, unless its plant is under
-    // the line by then, and to any plant that drops under the line
-    private Plant _channelTarget;
+    // with more than SapToChannel of her cap in sap she channels into an ally: at once for the lowest
+    // plant in range under LowHealthThreshold (cutting off her attack), or, with no insects in her range,
+    // for the lowest hurt plant, and only when no plant is hurt, the lowest hurt friendly insect (Tommy:
+    // last priority). it heals every ChannelTickInterval, spending as much sap as it heals, until the ally
+    // is healed, dies or leaves her range, the sap runs out, or she's stunned. a channel started with no
+    // insects around gives way to her attack when insects come, unless its plant is under the line by then,
+    // to any plant that drops under the line, and (one on a friendly insect) to any hurt plant
+    //
+    // her heal animation (Tommy, 2026-11-27, rhodiola_heal.png: the steps back sheet): she steps back
+    // (Rhodiola_HealStart), holds the channel (Rhodiola_HealLoop) and steps forward into place
+    // (Rhodiola_HealEnd), on the body animator's Channeling bool. the first heal goes out once she has
+    // stepped back, and she attacks again only once she's back in place
+    [Header("Heal Animation")]
+    [SerializeField] private float healClipFrameRate = 8f;
+    [Tooltip("frames of her step back, before the channel's first heal")]
+    [SerializeField] private int healStartFrames = 12;
+    [Tooltip("frames of her step forward after the channel, before she attacks again")]
+    [SerializeField] private int healEndFrames = 9;
+    private const string BodyChannelBool = "Channeling";
+    private float HealStartSeconds => Mathf.Max(0, healStartFrames) / Mathf.Max(0.01f, healClipFrameRate);
+    private float HealEndSeconds => Mathf.Max(0, healEndFrames) / Mathf.Max(0.01f, healClipFrameRate);
+
+    private Entity _channelTarget;
     private bool _channelUrgent;
     private float _channelTickTimer;
     private float _channelCheckTimer;
+    private float _channelStartedAt;
+    private float _channelRecoverUntil;
     private const float ChannelCheckInterval = 0.1f;
 
     public bool IsChannelingHeal => _channelTarget != null;
-    public Plant ChannelTarget => _channelTarget;
+    public Entity ChannelTarget => _channelTarget;
 
     // an ally counts as hurt once it's missing at least this much health, so a plant a fraction of a
     // point under full doesn't keep her channeling with nothing to show for it
     private const float MinMissingHealth = 1f;
     private static bool Hurt(Entity e) => e.maxHealth - e.health >= MinMissingHealth;
+    private static bool Alive(Entity e) => e != null && e.health > 0f;
     private bool InRange(Entity e) => Vector2.Distance(transform.position, e.transform.position) <= attackRange;
     private static float HealthShare(Entity e) => e.maxHealth > 0f ? e.health / e.maxHealth : 1f;
     private bool InsectInRange() => base.FindTarget() != null;
@@ -254,26 +324,43 @@ public class Rhodiola : Shooter
 
     private bool KeepChanneling()
     {
-        Plant plant = _channelTarget;
+        Entity ally = _channelTarget;
         if (IsStunned || _storedSap <= 0f) return false;
-        if (plant == null || !plant.IsAlive || !InRange(plant) || !Hurt(plant)) return false;
-        if (!_channelUrgent && HealthShare(plant) >= LowHealthThreshold)
+        if (!Alive(ally) || !InRange(ally) || !Hurt(ally)) return false;
+        bool isPlant = ally is Plant;
+        if (!_channelUrgent && (!isPlant || HealthShare(ally) >= LowHealthThreshold))
         {
             if (InsectInRange()) return false;
             Plant low = LowestPlant(true);
-            if (low != null && low != plant) return false;
+            if (low != null && low != ally) return false;
+            if (!isPlant && LowestPlant(false) != null) return false;
         }
         return true;
     }
 
     private void TryStartChannel()
     {
-        if (IsStunned || _storedSap <= SapCap * SapToChannel) return;
+        if (IsStunned || Time.time < _channelRecoverUntil || _storedSap <= SapCap * SapToChannel) return;
         Plant low = LowestPlant(true);
         if (low != null) { StartChannel(low, true); return; }
         if (InsectInRange()) return;
-        Plant hurt = LowestPlant(false);
+        Entity hurt = LowestPlant(false);
+        if (hurt == null) hurt = LowestFriendlyInsect();
         if (hurt != null) StartChannel(hurt, false);
+    }
+
+    // the lowest health hurt friendly insect (minions, hypnotized insects) in her range
+    private Insect LowestFriendlyInsect()
+    {
+        Insect best = null;
+        float bestShare = 1f;
+        foreach (Insect ally in Insect.friendlyInsects)
+        {
+            if (!Alive(ally) || !Hurt(ally) || !InRange(ally)) continue;
+            float share = HealthShare(ally);
+            if (share < bestShare) { bestShare = share; best = ally; }
+        }
+        return best;
     }
 
     // the lowest health plant in her range, herself left out: under the low health line, or just hurt
@@ -291,36 +378,47 @@ public class Rhodiola : Shooter
         return best;
     }
 
-    private void StartChannel(Plant plant, bool urgent)
+    private void StartChannel(Entity ally, bool urgent)
     {
-        _channelTarget = plant;
+        CancelFlick();
+        _channelTarget = ally;
         _channelUrgent = urgent;
-        // the first heal goes out at once
-        _channelTickTimer = ChannelTickInterval;
-        FaceAttackTarget(plant.gameObject);
+        _channelStartedAt = Time.time;
+        // the first heal goes out once she has stepped back
+        _channelTickTimer = ChannelTickInterval - HealStartSeconds;
+        FaceAttackTarget(ally.gameObject);
+        if (bodyAnimator != null) bodyAnimator.speed = 1f;
+        SetBodyBool(BodyChannelBool, true);
     }
 
+    // she steps forward into place (after finishing her step back, if it was still going), and only
+    // attacks or channels again once she's there
     private void StopChannel()
     {
+        if (_channelTarget != null)
+        {
+            SetBodyBool(BodyChannelBool, false);
+            _channelRecoverUntil = Mathf.Max(Time.time, _channelStartedAt + HealStartSeconds) + HealEndSeconds;
+        }
         _channelTarget = null;
         _channelCheckTimer = 0f;
     }
 
-    // one heal of the channel: as much sap as it heals, never more than the plant is missing. while
+    // one heal of the channel: as much sap as it heals, never more than the ally is missing. while
     // she has Rejuvenating Burgeon herself, it passes the burgeon on
     private void ChannelTick(float interval)
     {
-        Plant plant = _channelTarget;
-        float amount = Mathf.Min(_storedSap, ChannelHealPerSecond * interval, plant.maxHealth - plant.health);
+        Entity ally = _channelTarget;
+        float amount = Mathf.Min(_storedSap, ChannelHealPerSecond * interval, ally.maxHealth - ally.health);
         if (amount <= 0f) { StopChannel(); return; }
         _storedSap -= amount;
-        FaceAttackTarget(plant.gameObject);
-        plant.Heal(amount, this);
+        FaceAttackTarget(ally.gameObject);
+        ally.Heal(amount, this);
         ReturnMaxLevelHealing(amount);
-        if (HasEffect<RejuvenatingBurgeonEffect>()) ApplyBurgeon(plant);
+        if (HasEffect<RejuvenatingBurgeonEffect>()) ApplyBurgeon(ally);
 
         Vector3 gem = GemWorldPosition();
-        SendMote(new Vector3(gem.x, transform.position.y, transform.position.z), gem.y, plant, ChannelMoteSpeed, null);
+        SendMote(new Vector3(gem.x, transform.position.y, transform.position.z), gem.y, ally, ChannelMoteSpeed, null);
     }
 
     // a mote of life energy from ground (drawn launchY high) to target; onArrive runs when it gets there.

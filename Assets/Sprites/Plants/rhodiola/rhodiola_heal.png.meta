@@ -1,0 +1,1107 @@
+fileFormatVersion: 2
+guid: a119297faafc410dafd661fac27fc555
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1707170331186280388
+    second: rhodiola_heal_0
+  - first:
+      213: -6508870672603787886
+    second: rhodiola_heal_1
+  - first:
+      213: -1963141752061179867
+    second: rhodiola_heal_2
+  - first:
+      213: 8168658227737940722
+    second: rhodiola_heal_3
+  - first:
+      213: -654772329130866371
+    second: rhodiola_heal_4
+  - first:
+      213: 7698061766392468021
+    second: rhodiola_heal_5
+  - first:
+      213: -5460002533620324068
+    second: rhodiola_heal_6
+  - first:
+      213: -182085462142421511
+    second: rhodiola_heal_7
+  - first:
+      213: -8707757318086738027
+    second: rhodiola_heal_8
+  - first:
+      213: 481200168827491255
+    second: rhodiola_heal_9
+  - first:
+      213: 5271517108806162881
+    second: rhodiola_heal_10
+  - first:
+      213: 207977511147921807
+    second: rhodiola_heal_11
+  - first:
+      213: 8090143749226527175
+    second: rhodiola_heal_12
+  - first:
+      213: 7598650989670721353
+    second: rhodiola_heal_13
+  - first:
+      213: 3967003023228222120
+    second: rhodiola_heal_14
+  - first:
+      213: -6685292653326245027
+    second: rhodiola_heal_15
+  - first:
+      213: 7225907488911773182
+    second: rhodiola_heal_16
+  - first:
+      213: 494703556635247188
+    second: rhodiola_heal_17
+  - first:
+      213: -4308078355091429900
+    second: rhodiola_heal_18
+  - first:
+      213: -6678913959661593551
+    second: rhodiola_heal_19
+  - first:
+      213: -7754159048778665277
+    second: rhodiola_heal_20
+  - first:
+      213: 1385207574513904171
+    second: rhodiola_heal_21
+  - first:
+      213: -5183292717677460717
+    second: rhodiola_heal_22
+  - first:
+      213: -4712800448113677162
+    second: rhodiola_heal_23
+  - first:
+      213: 1992910575734396892
+    second: rhodiola_heal_24
+  - first:
+      213: -6041333888139926807
+    second: rhodiola_heal_25
+  - first:
+      213: -7382269411660290370
+    second: rhodiola_heal_26
+  - first:
+      213: -4282138937021591549
+    second: rhodiola_heal_27
+  - first:
+      213: 9097454123963811000
+    second: rhodiola_heal_28
+  - first:
+      213: -479669511056929747
+    second: rhodiola_heal_29
+  - first:
+      213: -6521233487911620902
+    second: rhodiola_heal_30
+  - first:
+      213: -3699725156831389994
+    second: rhodiola_heal_31
+  - first:
+      213: 8000402963744735463
+    second: rhodiola_heal_32
+  - first:
+      213: -1535731252368212524
+    second: rhodiola_heal_33
+  - first:
+      213: -3391915374372596800
+    second: rhodiola_heal_34
+  - first:
+      213: -1108019698286332880
+    second: rhodiola_heal_35
+  - first:
+      213: -1122678738580449264
+    second: rhodiola_heal_36
+  - first:
+      213: -2301163325778388949
+    second: rhodiola_heal_37
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 4096
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: rhodiola_heal_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 504
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7bf883e13534305bbf5331725d7806b
+      internalID: 1707170331186280388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_1
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 504
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed211f9c77b349d1b0b62510fd47a313
+      internalID: -6508870672603787886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_2
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 504
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 326bdd20d4154d5a80c2893eeb6de3df
+      internalID: -1963141752061179867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_3
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 504
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b96faa5117f41a6bbf739ce2a162d4a
+      internalID: 8168658227737940722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_4
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 504
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80a9e8409a344eea8251c9171ddc6a53
+      internalID: -654772329130866371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 432
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaf9a794f94842f1a5f0893654972210
+      internalID: 7698061766392468021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_6
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 432
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c62328060e46420f972f228162433995
+      internalID: -5460002533620324068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_7
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 432
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81575e86a7ef49a3bccc92238392ff0f
+      internalID: -182085462142421511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_8
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 432
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e20863eb55d40009ce03034d2dfe391
+      internalID: -8707757318086738027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_9
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 432
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ae7349c94ea4bdea3c8849b12b5ac17
+      internalID: 481200168827491255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 360
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d486bd5e27c43188644d61ae685a5b6
+      internalID: 5271517108806162881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_11
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 360
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1614a8e9ca4140caa940fe065f209960
+      internalID: 207977511147921807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_12
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 360
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bc40c1fc55a41a99bd20bd46ac189ab
+      internalID: 8090143749226527175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_13
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 360
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3be1d92b65ae43a2bb4ca9dab6bf8c22
+      internalID: 7598650989670721353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_14
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 360
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 473f59f616724841a07b1054d1c7efb1
+      internalID: 3967003023228222120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 288
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30fb5dc7bcfe44ff9c33d266246bf599
+      internalID: -6685292653326245027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_16
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 288
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c696a1b3005d4128b0e1478e41354088
+      internalID: 7225907488911773182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_17
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 288
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f7203da43df4ea2a00a61eaa652bcd9
+      internalID: 494703556635247188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_18
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 288
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4ff16f168ab4566a6454a368ce19568
+      internalID: -4308078355091429900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_19
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 288
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b737a1bbf3ba408ebf925c966c899b6f
+      internalID: -6678913959661593551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 216
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9aa3a325c344466beb0dfb15e2fc7f7
+      internalID: -7754159048778665277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_21
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 216
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d26b843a57cd44e690e5c524a84da340
+      internalID: 1385207574513904171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_22
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 216
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f288573e1e2041778bbf00fddebe1e64
+      internalID: -5183292717677460717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_23
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 216
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b231eda675714887b7e8e70cf6185ccf
+      internalID: -4712800448113677162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_24
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 216
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc70575caf084cd6911e9e1a1bff430b
+      internalID: 1992910575734396892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a03f86a987942fa8919104f05061150
+      internalID: -6041333888139926807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_26
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 144
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97206e0ff4cd453b862e0d9a3e1add9b
+      internalID: -7382269411660290370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_27
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 144
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe5a1b0a0c3c4698ba2d1da9cb1ae364
+      internalID: -4282138937021591549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_28
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 144
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b442822d23b4986bae478cd82957a6d
+      internalID: 9097454123963811000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_29
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 144
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c7a18de4fd14155a1d4011cb864a65b
+      internalID: -479669511056929747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 72
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b20a1f0dac040c0836732a4bb709e3c
+      internalID: -6521233487911620902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_31
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 72
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4100972f585b42c8801d50e2858ddd5e
+      internalID: -3699725156831389994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_32
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 72
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c71716a93b604747a9650092b72b5901
+      internalID: 8000402963744735463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_33
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 72
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1700e4addb12479ea0699db0449031ed
+      internalID: -1535731252368212524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_34
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 72
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a786ee14c8e14d829ba4caf324dfcee5
+      internalID: -3391915374372596800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 808181f616714064bbceede183f74547
+      internalID: -1108019698286332880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_36
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 0
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db3c4f7343494dc98ccf41ed830a4512
+      internalID: -1122678738580449264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rhodiola_heal_37
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 72
+        height: 72
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4444444}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c65b23e28b714fb0a6a1a16474246b24
+      internalID: -2301163325778388949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 33eb188e94df465a9ae66cb7746f18bb
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":72.0,"y":72.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.4444444},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":9,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      rhodiola_heal_0: 1707170331186280388
+      rhodiola_heal_1: -6508870672603787886
+      rhodiola_heal_2: -1963141752061179867
+      rhodiola_heal_3: 8168658227737940722
+      rhodiola_heal_4: -654772329130866371
+      rhodiola_heal_5: 7698061766392468021
+      rhodiola_heal_6: -5460002533620324068
+      rhodiola_heal_7: -182085462142421511
+      rhodiola_heal_8: -8707757318086738027
+      rhodiola_heal_9: 481200168827491255
+      rhodiola_heal_10: 5271517108806162881
+      rhodiola_heal_11: 207977511147921807
+      rhodiola_heal_12: 8090143749226527175
+      rhodiola_heal_13: 7598650989670721353
+      rhodiola_heal_14: 3967003023228222120
+      rhodiola_heal_15: -6685292653326245027
+      rhodiola_heal_16: 7225907488911773182
+      rhodiola_heal_17: 494703556635247188
+      rhodiola_heal_18: -4308078355091429900
+      rhodiola_heal_19: -6678913959661593551
+      rhodiola_heal_20: -7754159048778665277
+      rhodiola_heal_21: 1385207574513904171
+      rhodiola_heal_22: -5183292717677460717
+      rhodiola_heal_23: -4712800448113677162
+      rhodiola_heal_24: 1992910575734396892
+      rhodiola_heal_25: -6041333888139926807
+      rhodiola_heal_26: -7382269411660290370
+      rhodiola_heal_27: -4282138937021591549
+      rhodiola_heal_28: 9097454123963811000
+      rhodiola_heal_29: -479669511056929747
+      rhodiola_heal_30: -6521233487911620902
+      rhodiola_heal_31: -3699725156831389994
+      rhodiola_heal_32: 8000402963744735463
+      rhodiola_heal_33: -1535731252368212524
+      rhodiola_heal_34: -3391915374372596800
+      rhodiola_heal_35: -1108019698286332880
+      rhodiola_heal_36: -1122678738580449264
+      rhodiola_heal_37: -2301163325778388949
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
