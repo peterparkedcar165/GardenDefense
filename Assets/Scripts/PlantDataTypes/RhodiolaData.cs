@@ -7,7 +7,7 @@ public class RhodiolaData : PlantData
     // and a channel that spends the sap healing a plant. numbers marked proposal are Claude's, the rest
     // are Tommy's
     [Header("Attack: Drain")]
-    [Tooltip("share of her Attack Damage that flows back and heals her, e.g. 0.25 = 25% (proposal)")]
+    [Tooltip("share of the damage her hit really dealt (after the insect's armor and resistances) that heals her when the orb reaches her staff, e.g. 0.25 = 25% (proposal)")]
     public float drainHealShare = 0.25f;
     [Tooltip("how fast the drained life flies back to her, units per second along the straight line (Tommy: half the first 5)")]
     public float drainMoteSpeed = 2.5f;

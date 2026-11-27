@@ -117,9 +117,10 @@ public class ReviveGlitter : MonoBehaviour
         main.loop = true;
         main.playOnAwake = false;
         main.duration = 1f;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(0.6f, 1.0f);
+        // 1.5 times the first 0.6 to 1 s and 0.06 to 0.11 (Tommy: bigger and longer)
+        main.startLifetime = new ParticleSystem.MinMaxCurve(0.9f, 1.5f);
         main.startSpeed = 0f;
-        main.startSize = new ParticleSystem.MinMaxCurve(0.06f, 0.11f);
+        main.startSize = new ParticleSystem.MinMaxCurve(0.09f, 0.165f);
         main.startColor = GlitterColor;
         main.gravityModifier = 0f;
         main.simulationSpace = ParticleSystemSimulationSpace.World;

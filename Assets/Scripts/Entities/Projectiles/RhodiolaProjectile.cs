@@ -90,8 +90,10 @@ public class RhodiolaProjectile : MonoBehaviour
             t.position = worldPos;
             t.rotation = worldRot;
 
+            // every sparkle already out lives out its own life; unity removes the system after the last one
+            ParticleSystem.MainModule main = ps.main;
+            main.stopAction = ParticleSystemStopAction.Destroy;
             ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            Destroy(ps.gameObject, ps.main.startLifetime.constantMax);
         }
     }
 }

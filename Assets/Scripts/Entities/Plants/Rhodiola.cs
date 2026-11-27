@@ -32,7 +32,8 @@ public class Rhodiola : Shooter
     public float GrassConversion => RData?.baseGrassConversion ?? 0.5f;
 
     // ---------- attack: drain ----------
-    public float DrainHeal => attackDamage * (RData?.drainHealShare ?? 0.25f);
+    // her drain heals her for this share of the damage the hit really dealt
+    public float DrainHealShare => RData?.drainHealShare ?? 0.25f;
     private float DrainMoteSpeed => RData?.drainMoteSpeed ?? 5f;
 
     // ---------- passive: golden sap and the channel ----------
@@ -128,11 +129,13 @@ public class Rhodiola : Shooter
     }
 
     // healing she gets from her attack or from her own Rejuvenating Burgeon fills the sap by the
-    // conversion, counted in full even when she's already at full health
+    // conversion: the heal she'd get (with her heal bonuses and the healing she receives), counted in full
+    // even when she's already at full health
     public void AddSap(float healing)
     {
         if (healing <= 0f) return;
-        _storedSap = Mathf.Min(SapCap, _storedSap + healing * SapConversion);
+        float wouldHeal = healing * (1f + healingReceived) * (1f + healingBonus);
+        _storedSap = Mathf.Min(SapCap, _storedSap + wouldHeal * SapConversion);
     }
 
     // Symbiosis max level bonus: while not fully healthy, a portion of the healing her channel and her
@@ -216,33 +219,38 @@ public class Rhodiola : Shooter
         _castTarget = null;
     }
 
-    // the flick lands: instant grass damage on the insect it was for (or, if that one died meanwhile,
-    // whoever her targeting picks now), then the drained life flies back from the insect to her
+    // the flick lands: instant grass damage on the insect it was for (or, if that one died, left her range or
+    // went out of her sight while she raised the wand, whoever her targeting picks now), then the drained life
+    // flies back from the insect to her
     private void ReleaseFlick()
     {
         Insect insect = _castTarget;
         _castTarget = null;
         if (!IsAlive || _channelTarget != null) return;
-        if (insect == null || !insect.IsAlive)
+        if (insect == null || !insect.IsAlive || !CanReachInsect(insect))
         {
             GameObject again = base.FindTarget();
             insect = again != null ? again.GetComponent<Insect>() : null;
         }
         if (insect == null || !insect.IsAlive) return;
         Vector3 from = insect.GetAimPoint();
+        // what the hit really did, after the insect's armor, resistances and any crit (Damage adds its final
+        // amount to totalDamageDealt): her drain heal is a share of it (Tommy)
+        float before = totalDamageDealt;
         insect.Damage(attackDamage, damageType, elementalType, this, true,
             new DamageTag[] { DamageTag.Attack, DamageTag.SingleTarget });
+        float heal = Mathf.Max(0f, totalDamageDealt - before) * DrainHealShare;
         if (data != null) SfxPlayer.Play(data.attackSound, GemWorldPosition());
         // the drained life: Tommy's orb, arcing from the insect to the tip of her staff (RhodiolaDrainOrb)
         RhodiolaDrainOrb.Launch(this, from, DrainMoteSpeed, RData?.drainArcPerUnit ?? 0.3f, RData?.drainArcMin ?? 0.4f,
-            lifeMotePrefab, () => OnDrainReturned(this));
+            lifeMotePrefab, () => OnDrainReturned(heal));
     }
 
-    // the drain reaches her: it heals her, fills her sap and puts Rejuvenating Burgeon on her
-    private void OnDrainReturned(Entity self)
+    // the orb reaches her staff: all at that moment, and all of it even when she's at full health, she's healed,
+    // her sap fills by the heal she'd get, and she gains Rejuvenating Burgeon (which fills the sap as it ticks)
+    private void OnDrainReturned(float heal)
     {
         if (!IsAlive) return;
-        float heal = DrainHeal;
         Heal(heal, this);
         AddSap(heal);
         ApplyBurgeon(this);
@@ -543,7 +551,7 @@ public class Rhodiola : Shooter
     private string BurgeonLabel => "<color=green><b>Rejuvenating Burgeon</b></color>";
 
     public override string GetAttackDescription() =>
-        $"Flicks her wand at an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage. The drained life flows back to her, healing her for <color=green><b>{DrainHeal:F0}</b></color> health.\n\n" +
+        $"Flicks her wand at an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage. When the drained life reaches her staff, it heals her for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\n\n" +
         $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.";
 
     public override string GetPassiveDescription() =>
@@ -564,7 +572,7 @@ public class Rhodiola : Shooter
         float speedpl = RData?.path1AttackSpeedPerLevel  ?? 0.04f;
         float grasspl = RData?.path1GrassDamagePerLevel  ?? 0.05f;
         string desc = details
-            ? $"Flicks her wand at an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage. The drained life flows back to her, healing her for <color=green><b>[{(RData?.drainHealShare ?? 0.25f) * 100f:F0}% Attack Damage]</b></color> health.\n\n" +
+            ? $"Flicks her wand at an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage. When the drained life reaches her staff, it heals her for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\n\n" +
               $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +

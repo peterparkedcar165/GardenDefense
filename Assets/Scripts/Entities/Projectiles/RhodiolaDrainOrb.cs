@@ -82,7 +82,8 @@ public class RhodiolaDrainOrb : MonoBehaviour
         foreach (ParticleSystem ps in _glitter) ps.Play(true);
     }
 
-    // the glitter is let go and stops, so what's out finishes fading instead of popping away with the orb
+    // the glitter is let go and stops making more: every sparkle already out stays in the world and lives out
+    // its own life (Tommy), and unity removes the empty system after the last one (stop action Destroy)
     private void ReleaseGlitter()
     {
         if (_glitter == null) return;
@@ -90,8 +91,9 @@ public class RhodiolaDrainOrb : MonoBehaviour
         {
             if (ps == null) continue;
             ps.transform.SetParent(null, true);
+            ParticleSystem.MainModule main = ps.main;
+            main.stopAction = ParticleSystemStopAction.Destroy;
             ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            Destroy(ps.gameObject, ps.main.startLifetime.constantMax + 0.1f);
         }
         _glitter = null;
     }
