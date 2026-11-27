@@ -139,7 +139,49 @@ public class LevelSelector : MonoBehaviour
         if (level28 != null) level28.interactable = highestLevelUnlocked >= 27;
         if (level29 != null) level29.interactable = highestLevelUnlocked >= 28;
         if (level30 != null) level30.interactable = highestLevelUnlocked >= 29;
+#if UNITY_EDITOR
+        AddTestLevels();
+#endif
     }
+
+    // ---- test copies of levels (editor only, never in a build): a plank beside the level it copies, always
+    // open, that plays it in its test scene (Tommy, 2026-11-27: the border cliffs in Level7_CliffTest) ----
+#if UNITY_EDITOR
+    private Button _cliffTestButton;
+    private const string CliffTestScene = "Assets/Scenes/Level7_CliffTest.unity";
+    private const float TestPlankGap = 24f;
+
+    private void AddTestLevels()
+    {
+        if (level7 == null || UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEditor.SceneAsset>(CliffTestScene) == null) return;
+        Button test = Instantiate(level7, level7.transform.parent);
+        test.name = "Level 7 Cliff Test";
+        // the copy keeps level 7's own click (OnLevelSelected(7) from the inspector): switched off for it
+        for (int i = 0; i < test.onClick.GetPersistentEventCount(); i++)
+            test.onClick.SetPersistentListenerState(i, UnityEngine.Events.UnityEventCallState.Off);
+        test.onClick.AddListener(() => OnTestLevelSelected(7, CliffTestScene));
+        test.interactable = true;
+        PlankButton plank = test.GetComponent<PlankButton>();
+        if (plank != null) plank.SetLabel("2.2 Cliffs");
+
+        // just right of level 7's plank, on its row
+        RectTransform source = (RectTransform)level7.transform, rect = (RectTransform)test.transform;
+        float x = source.anchoredPosition.x + (source.sizeDelta.x + rect.sizeDelta.x) * 0.5f * PlankScale + TestPlankGap;
+        rect.anchoredPosition = new Vector2(x, source.anchoredPosition.y);
+        _cliffTestButton = test;
+    }
+
+    // plays the level (its waves, loadout and unlocks are the scene's, so the copy counts as that level)
+    // in its test scene, which isn't in the build settings, so it's loaded by its path
+    private void OnTestLevelSelected(int level, string scenePath)
+    {
+        DisableAllButtons();
+        SaveManager.instance.selectedLevel = level;
+        LoadoutSelectionUI.instance?.ResetUnlockedScroll();
+        SceneTransition transition = FindAnyObjectByType<SceneTransition>();
+        transition.StartCoroutine(transition.FadeToScenePath(scenePath));
+    }
+#endif
 
     void Update()
     {
@@ -186,6 +228,9 @@ public class LevelSelector : MonoBehaviour
         if (level28 != null) level28.interactable = false;
         if (level29 != null) level29.interactable = false;
         if (level30 != null) level30.interactable = false;
+#if UNITY_EDITOR
+        if (_cliffTestButton != null) _cliffTestButton.interactable = false;
+#endif
     }
 
     public void OnLevelSelected(int level)

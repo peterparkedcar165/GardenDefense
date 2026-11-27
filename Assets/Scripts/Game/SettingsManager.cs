@@ -105,7 +105,7 @@ public class SettingsManager : MonoBehaviour
         if (GameManager.instance != null)
             GameManager.instance.Restart();
         else
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneTransition.ReloadActiveScene();
     }
 
     public void GoToMainMenu()

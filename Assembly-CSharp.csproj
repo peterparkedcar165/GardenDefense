@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\TansyGlowEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\PoisonField.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Shooter.cs" />
+    <Compile Include="Assets\Scripts\Environment\CliffBuilder.cs" />
     <Compile Include="Assets\Scripts\LoadoutCondition.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\TansyData.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSelectionUI.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Assets\Scripts\Entities\Projectiles\BogIrisProjectile.cs" />
     <Compile Include="Assets\Scripts\Game\DarknessManager.cs" />
     <Compile Include="Assets\Scripts\Audio\AmbienceProfile.cs" />
+    <Compile Include="Assets\Scripts\Environment\CliffSet.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\PollenBoonEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreeLineConnector.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\FreezeEffect.cs" />

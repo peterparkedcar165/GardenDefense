@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[Restart] Sun: {SunCount} | Health: {playerHealth}");
         Time.timeScale = 1f;
         paused = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneTransition.ReloadActiveScene();
     }
 
     public void GoToMainMenu()

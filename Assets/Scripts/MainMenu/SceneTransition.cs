@@ -36,7 +36,31 @@ public class SceneTransition : MonoBehaviour
     public static bool IsTransitioning { get; private set; }
     private bool isTransitioning = false;
 
-    public IEnumerator FadeToScene(string sceneName)
+    public IEnumerator FadeToScene(string sceneName) => FadeAndLoad(() => SceneManager.LoadScene(sceneName));
+
+#if UNITY_EDITOR
+    // a scene that isn't in the build settings (an editor test copy, e.g. Level7_CliffTest), by its asset
+    // path: editor only
+    public IEnumerator FadeToScenePath(string path) => FadeAndLoad(() =>
+        UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(path, new LoadSceneParameters(LoadSceneMode.Single)));
+#endif
+
+    // reloads the scene being played (restart). a test copy missing from the build settings can't be
+    // loaded by name, so in the editor it's loaded by its path
+    public static void ReloadActiveScene()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+#if UNITY_EDITOR
+        if (SceneUtility.GetBuildIndexByScenePath(scene.path) < 0)
+        {
+            UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(scene.path, new LoadSceneParameters(LoadSceneMode.Single));
+            return;
+        }
+#endif
+        SceneManager.LoadScene(scene.name);
+    }
+
+    private IEnumerator FadeAndLoad(System.Action load)
     {
         if (isTransitioning) yield break;
         isTransitioning = true;
@@ -49,7 +73,7 @@ public class SceneTransition : MonoBehaviour
             yield return null;
         }
 
-        SceneManager.LoadScene(sceneName);
+        load();
 
         while (canvasGroup.alpha > 0)
         {
