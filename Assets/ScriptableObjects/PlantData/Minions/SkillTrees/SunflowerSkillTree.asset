@@ -66,12 +66,12 @@ MonoBehaviour:
       effects: []
       unlockId: sunflower_ambient_sun_proc
     - id: node5b_sunskillcd
-      nodeName: Scorching Mark
-      description: Whenever the Sunflower applies Sun Mark, Skill Cooldown is reduced by 3.
+      nodeName: Heatstroke
+      description: Insects inside the <color=orange><b>Sunray</b></color> are slowed by <color=green><b>25%</b></color>.
       maxRank: 1
       costPerRank: 2
       effects: []
-      unlockId: sunflower_sun_skillcd
+      unlockId: sunflower_heatstroke
     ranksToUnlockNext: 1
   - nodes:
     - id: node6_skillcooldown

@@ -34,6 +34,10 @@ public class Sunray : MonoBehaviour
     private bool _ambientSunProc;
     private bool _homing;
     private bool _refreshOnKill;
+    // Heatstroke (skill tree): insects inside the beam are slowed, put on every tick and lasting this long, a little
+    // more than a tick, so it holds while they're inside and goes soon after they leave
+    private bool _heatstroke;
+    private const float HeatstrokeLinger = 0.35f;
     private Insect _trackedInsect;
     // insects hit this tick, cleared and refilled every tick instead of a new list
     private readonly List<Insect> _inRange = new List<Insect>();
@@ -171,6 +175,7 @@ public class Sunray : MonoBehaviour
             _ambientSunProc = SkillTreeManager.HasUnlock(sunflower, Sunflower.AmbientSunProcUnlock);
             _refreshOnKill  = SkillTreeManager.HasUnlock(sunflower, Sunflower.SunrayRefreshUnlock);
             _homing         = SkillTreeManager.HasUnlock(sunflower, Sunflower.HomingSunrayUnlock);
+            _heatstroke     = SkillTreeManager.HasUnlock(sunflower, Sunflower.HeatstrokeUnlock);
             if (_homing) _trackedInsect = FindNearestInsect();
         }
 
@@ -248,6 +253,8 @@ public class Sunray : MonoBehaviour
                         ambientSunflower.TryReduceSunTimerSmall();
                     if (_refreshOnKill && !insect.IsAlive)
                         duration += KillRefreshDuration;
+                    if (_heatstroke && insect.IsAlive)
+                        insect.ApplyEffect(new HeatstrokeEffect(insect, HeatstrokeLinger, source));
                 }
                 nextTick += tickInterval;
             }

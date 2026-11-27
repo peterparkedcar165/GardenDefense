@@ -162,7 +162,8 @@ public class Sunflower : Shooter
 
     // skill tree node unlock ids
     public const string AmbientSunProcUnlock = "sunflower_ambient_sun_proc";
-    public const string SunSkillCooldownUnlock = "sunflower_sun_skillcd";
+    // Heatstroke (Tommy, 2026-11-27), in the slot Scorching Mark had (its node id kept, so a bought one carries over)
+    public const string HeatstrokeUnlock = "sunflower_heatstroke";
     public const string ExtraProjectileUnlock = "sunflower_extra_projectile";
     public const string HomingSunrayUnlock    = "sunflower_homing_sunray";
     public const string SunrayRefreshUnlock   = "sunflower_sunray_refresh";
@@ -214,11 +215,6 @@ public class Sunflower : Shooter
         if (data.target is Insect insect)
         {
             insect.ApplyEffect(new SunMarkEffect(insect, SunMarkDuration, 1, this));
-
-            // skill tree node 5.2 - keyed off applying Sun Mark itself now, not the passive's own
-            // sun-income tick (the two are unrelated systems; "Scorching Mark" is about the mark)
-            if (SkillTreeManager.HasUnlock(this, SunSkillCooldownUnlock))
-                ReduceSkillCooldown(3f);
         }
     }
 
