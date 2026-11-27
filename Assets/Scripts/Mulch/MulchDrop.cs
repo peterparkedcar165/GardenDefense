@@ -8,7 +8,9 @@ using System.Collections.Generic;
 // lands a random distance to the side, always inside the map and never under the mulch inventory
 // bar or any other on screen UI (a drop from a leaked insect hops back toward the map instead). it
 // stays MulchRegistry.groundSeconds of real time (frozen while paused, never sped up), flashing
-// near the end. clicking it flies it into its inventory slot (MulchInventoryUI.FlyToSlot); with a
+// near the end. its movement (the hop, the float and bob, the glints) runs on real time and keeps
+// going while paused (Tommy, 2026-11-27: a tutorial pauses the game as the first one drops).
+// clicking it flies it into its inventory slot (MulchInventoryUI.FlyToSlot); with a
 // full inventory it stays where it is, flashing "Inventory full". it can also be dragged straight
 // onto a plant (or onto the inventory bar): the drop fades and stays where it lies while an opaque
 // copy follows the pointer, and let go over nothing the copy glides back onto it (Tommy, 2026-11-20).
@@ -45,13 +47,15 @@ public class MulchDrop : MonoBehaviour
     private CircleCollider2D hitbox;
     private Vector3 start, landing;
     private float restHeight;
+    // age: on the drop's clock, for how long it stays. hopAge: real time, for the hop
     private float age;
+    private float hopAge;
     private float fullFlash;
     // the fade in and out while it's about to expire: where in the wave it is, and the alpha it
     // gives every part (icon layers and shadow)
     private float expiryPhase;
     private float expiryAlpha = 1f;
-    // seconds since it landed, on the drop's clock: it rises to its float and bobs (Tommy,
+    // seconds since it landed, in real time: it rises to its float and bobs (Tommy,
     // 2026-11-20: like a dropped item in minecraft, without the spin). visual only
     private float floatAge;
     private bool hovered;
@@ -216,7 +220,7 @@ public class MulchDrop : MonoBehaviour
         main.gravityModifier = 0f;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.maxParticles = 40;
-        // the drop's own clock: real time, so a game speed up doesn't speed the sparkle (paused in Update)
+        // real time, so neither a game speed up nor a pause changes the sparkle
         main.useUnscaledTime = true;
 
         ParticleSystem.EmissionModule emission = glitter.emission;
@@ -268,16 +272,20 @@ public class MulchDrop : MonoBehaviour
 
     private void Update()
     {
+        // dt: the drop's clock, for its stay and the fade before it goes. moveDt: real time, for
+        // the movement and the click's blink, never sped up or stopped by game speed or a pause
         float dt = MulchManager.DropDeltaTime;
+        float moveDt = Time.unscaledDeltaTime;
         age += dt;
+        hopAge += moveDt;
 
-        float hop = registry.hopSeconds > 0f ? Mathf.Clamp01(age / registry.hopSeconds) : 1f;
+        float hop = registry.hopSeconds > 0f ? Mathf.Clamp01(hopAge / registry.hopSeconds) : 1f;
         // once landed it rests on landing for good, so only a hopping drop moves its root
         if (!landed) transform.position = Vector3.Lerp(start, landing, hop);
         float height = registry.hopHeight * 4f * hop * (1f - hop);
         if (landed)
         {
-            floatAge += dt;
+            floatAge += moveDt;
             height += FloatOffset();
         }
         PlaceParts(height);
@@ -285,13 +293,6 @@ public class MulchDrop : MonoBehaviour
         {
             landed = true;
             if (glitter != null) glitter.Play();
-        }
-
-        // the glints keep the drop's clock: frozen while paused
-        if (glitter != null && landed)
-        {
-            if (Time.timeScale <= 0f && !glitter.isPaused) glitter.Pause();
-            else if (Time.timeScale > 0f && glitter.isPaused) glitter.Play();
         }
 
         float left = registry.groundSeconds - age;
@@ -305,7 +306,7 @@ public class MulchDrop : MonoBehaviour
         expiryAlpha = 1f;
         if (fullFlash > 0f)
         {
-            fullFlash -= dt;
+            fullFlash -= moveDt;
             visible = Mathf.FloorToInt(fullFlash / 0.08f) % 2 == 0;
         }
         else if (left <= registry.flashSeconds)
