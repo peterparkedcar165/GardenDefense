@@ -11,10 +11,12 @@ public class RhodiolaData : PlantData
     public float drainHealShare = 0.5f;
     [Tooltip("how fast the drained life flies back to her, units per second along the straight line (Tommy: half the first 5)")]
     public float drainMoteSpeed = 2.5f;
-    [Tooltip("how high the orb's arc rises for every unit between the insect and her staff (proposal)")]
+    [Tooltip("how high the orb's arc rises for every unit between the insect and her staff, on average (proposal; each orb picks around it, see drainArcRandom)")]
     public float drainArcPerUnit = 0.3f;
-    [Tooltip("the lowest the orb's arc rises, units (proposal)")]
+    [Tooltip("the lowest the orb's arc rises, units, at the average rise (proposal; it scales with each orb's pick)")]
     public float drainArcMin = 0.4f;
+    [Tooltip("how far each orb's rise per unit can be from drainArcPerUnit, picked at random either way, e.g. 0.1 = 0.2 to 0.4, about 22 to 39 degrees (Tommy, 2026-11-27)")]
+    public float drainArcRandom = 0.1f;
 
     [Header("Path 1 Scaling")]
     public float path1AttackDamagePerLevel = 2f;

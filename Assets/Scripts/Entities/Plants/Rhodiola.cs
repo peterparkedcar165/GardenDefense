@@ -332,8 +332,14 @@ public class Rhodiola : Shooter
     private void LaunchDrain(Vector3 from, float heal)
     {
         if (!IsAlive) return;
-        RhodiolaDrainOrb.Launch(this, from, DrainMoteSpeed, RData?.drainArcPerUnit ?? 0.3f, RData?.drainArcMin ?? 0.4f,
-            lifeMotePrefab, () => OnDrainReturned(heal));
+        // every orb its own arc (Tommy, 2026-11-27): the rise per unit is picked between drainArcPerUnit less and more
+        // drainArcRandom (0.2 to 0.4, about 22 to 39 degrees off the line), and the least rise scales with it, so close
+        // insects vary too and an echo seed's two orbs fly apart
+        float perUnit = RData?.drainArcPerUnit ?? 0.3f;
+        float spread = RData?.drainArcRandom ?? 0.1f;
+        float picked = Mathf.Max(0f, perUnit + Random.Range(-spread, spread));
+        float least = (RData?.drainArcMin ?? 0.4f) * (perUnit > 0f ? picked / perUnit : 1f);
+        RhodiolaDrainOrb.Launch(this, from, DrainMoteSpeed, picked, least, lifeMotePrefab, () => OnDrainReturned(heal));
     }
 
     // the orb reaches her staff: all at that moment, and all of it even when she's at full health, she's healed,
