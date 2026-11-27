@@ -64,6 +64,18 @@ public abstract class FlyingInsect : Insect
         Collider2D hit = Physics2D.OverlapCircle(transform.position, 0.15f, ObstacleLayer);
         if (hit == null) return;
 
+        // a cliff's thin wall (CliffBuilder) has no middle to push away from: the insect steps just off
+        // the line, on the side it landed on
+        if (hit is EdgeCollider2D)
+        {
+            Vector2 closest = hit.ClosestPoint(transform.position);
+            Vector2 away = (Vector2)transform.position - closest;
+            if (away.sqrMagnitude < 0.0001f) away = Vector2.down;
+            Vector2 off = closest + away.normalized * 0.2f;
+            transform.position = new Vector3(off.x, off.y, transform.position.z);
+            return;
+        }
+
         Vector3 obstacleCenter = hit.bounds.center;
         Vector2 pushDir = transform.position - obstacleCenter;
         if (pushDir.sqrMagnitude < 0.0001f) pushDir = Vector2.up;

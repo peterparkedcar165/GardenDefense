@@ -48,12 +48,6 @@ public class DaytimeGridManager : MonoBehaviour
                 bool hasLowgroundGround  = lowgroundGroundTilemap  != null && lowgroundGroundTilemap.HasTile(cell);
                 bool hasLowgroundWater   = lowgroundWaterTilemap   != null && lowgroundWaterTilemap.HasTile(cell);
 
-                // the cliff rule tile is painted over a whole raised area on the collider map: its ring draws
-                // the cliffs, its inside draws nothing, and a collider cell that draws nothing is that raised
-                // grass, buildable and high ground, not an obstacle
-                bool cliffTop = hasCollider && colliderTilemap.GetSprite(cell) == null;
-                if (cliffTop) hasCollider = false;
-
                 // priority: collider > path > water > dirt > highground > lowground > ground (default grass)
                 if      (hasCollider)         t.tileType = TileType.Obstacle;
                 else if (hasPath)             t.tileType = TileType.Path;
@@ -63,7 +57,7 @@ public class DaytimeGridManager : MonoBehaviour
                 else if (hasDirt)             t.tileType = TileType.Dirt;
                 else                          t.tileType = TileType.Grass;
 
-                if (hasHighgroundGround || hasHighgroundWater || cliffTop) t.isHighground = true;
+                if (hasHighgroundGround || hasHighgroundWater) t.isHighground = true;
                 if (hasLowgroundGround  || hasLowgroundWater)  t.isLowground  = true;
             }
         }
