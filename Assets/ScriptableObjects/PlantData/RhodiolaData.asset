@@ -32,7 +32,7 @@ MonoBehaviour:
   baseMaxHealth: 200
   baseAttackDamage: 20
   baseMagicPower: 0
-  baseAttackSpeed: 0.4
+  baseAttackSpeed: 0.35
   baseAttackRange: 2.5
   baseAttackChargeTime: 0
   baseArmor: 0

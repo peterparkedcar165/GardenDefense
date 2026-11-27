@@ -4,7 +4,8 @@ using UnityEngine;
 // it leaves the insect she hit and arcs to the crystal at the tip of her staff, following the tip wherever her
 // animation takes it (a hop into her heal, the staff swung out sideways), and only lands there, never on her body.
 // landing runs onArrive (her heal, her sap, her Rejuvenating Burgeon) and pops the orb into a ring of sparkles
-// flying outward (Burst). if she dies or is uprooted first, it fades out where it is with nothing
+// flying outward (Burst); the same ring bursts from the insect as the orb rises off it. if she dies or is uprooted
+// first, it fades out where it is with nothing
 public class RhodiolaDrainOrb : MonoBehaviour
 {
     private const float FrameSeconds = 0.13f;
@@ -46,6 +47,9 @@ public class RhodiolaDrainOrb : MonoBehaviour
         go.transform.position = from;
         go.transform.localScale = Vector3.one * (0.5f * SizeScale);
         orb.TakeGlitter(trailSource);
+        // her hit on the insect (Tommy, 2026-11-27): the same ring of sparkles as the landing on her staff bursts out
+        // where the orb rises. world space, so they stay on the insect's spot as the orb flies off
+        orb.Burst();
         float distance = Vector2.Distance(from, owner.StaffTipPosition);
         orb._duration = Mathf.Max(0.15f, distance / Mathf.Max(0.01f, speed));
         orb._arcHeight = Mathf.Max(minArc, distance * arcPerUnit);
