@@ -99,7 +99,7 @@ public class EmberProjectile : MonoBehaviour
         Vector3 stepFrom = transform.position;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
         // line of sight (Tommy, 2026-11-27): it stops at the first blocker on its way (from low ground any obstacle
-        // or cliff, from high ground only an obstacle on high ground), unless it's flying at a flying insect
+        // or cliff, from high ground any obstacle but not a cliff), unless it's flying at a flying insect
         bool atFlyer = targetInsect != null && targetInsect.isFlying;
         if (_source != null && !atFlyer && LineOfSight.Blocked(stepFrom, transform.position, _source.OnHighground, out _))
         {
