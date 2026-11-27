@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-// the Skill Tree Bonus section in a plant's Attack, Passive and Skill tooltips (Tommy, 2026-11-27): every node the
+// the Growth Bonus section in a plant's Attack, Passive and Skill tooltips (Tommy, 2026-11-27; the skill tree is called
+// Plant Growth in the game, its points Growth Points, so this was the Skill Tree Bonus): every node the
 // player has a point in, under the description its bonus belongs to. a stat node shows its total (its value a point
 // times the points), a node that changes how the plant works shows its name and its own text. which description: the
 // node's bonusIn, or by what it changes (Auto: its first stat, or the Skill when it changes the skill)
 public static class SkillTreeBonus
 {
-    public const string Heading = "Skill Tree Bonus:";
+    public const string Heading = "Growth Bonus:";
 
     // path: 1 attack, 2 passive, 3 skill. null when there's nothing to show
     public static string SectionFor(Plant plant, int path)

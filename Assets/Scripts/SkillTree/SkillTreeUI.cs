@@ -121,7 +121,8 @@ public class SkillTreeUI : MonoBehaviour
                 totalDisplay += SkillTreeSession.DisplaySkillPoints(record.plantName);
             SkillTreeStyle s = SkillTreeStyle.Instance;
             Color number = totalDisplay > 0 ? s.points : s.mutedText;
-            pointsText.text = $"Unspent Points: <color=#{ColorUtility.ToHtmlStringRGB(number)}>{totalDisplay}</color>";
+            // the skill tree is Plant Growth to the player, its points Growth Points (Tommy, 2026-11-27)
+            pointsText.text = $"Growth Points: <color=#{ColorUtility.ToHtmlStringRGB(number)}>{totalDisplay}</color>";
         }
         foreach (SkillTreePlantPanel panel in panels)
             if (panel != null) panel.Refresh();
