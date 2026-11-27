@@ -309,6 +309,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\QueensAuraEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\GhostFungus.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CounteringStanceEffect.cs" />
+    <Compile Include="Assets\Scripts\SkillTree\SkillTreeBonus.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\IShooterInsect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Zinnia.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SunMarkEffect.cs" />
