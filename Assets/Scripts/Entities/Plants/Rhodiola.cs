@@ -579,12 +579,15 @@ public class Rhodiola : Shooter
 
     // one heal of the channel, never more than the ally is missing, spending the heal divided by her healing to sap
     // depletion ratio (SapEfficiency). while she has Rejuvenating Burgeon herself, it passes the burgeon on. the heal
-    // ray shows it (no motes any more)
+    // ray shows it (no motes any more). her Heals & Shield Bonus and the ally's Healing Received multiply the heal
+    // for free, so what the ally misses is counted before them: the heal that tops it off costs only the sap it needs
+    // (Tommy, 2026-11-27; it used to pay for the whole missing health, the bonuses' share wasted)
     private void ChannelTick(float interval)
     {
         Entity ally = _channelTarget;
         float efficiency = Mathf.Max(0.01f, SapEfficiency);
-        float amount = Mathf.Min(_storedSap * efficiency, ChannelHealPerSecond * interval, ally.maxHealth - ally.health);
+        float boost = Mathf.Max(0.01f, (1f + ally.healingReceived) * (1f + healingBonus));
+        float amount = Mathf.Min(_storedSap * efficiency, ChannelHealPerSecond * interval, (ally.maxHealth - ally.health) / boost);
         if (amount <= 0f) { StopChannel(); return; }
         _storedSap = Mathf.Max(0f, _storedSap - amount / efficiency);
         FaceAttackTarget(ally.gameObject);
