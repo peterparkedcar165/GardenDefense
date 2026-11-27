@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -47,7 +48,7 @@ public class Rhodiola : Shooter
     private float DrainMoteSpeed => RData?.drainMoteSpeed ?? 5f;
 
     // ---------- passive: golden sap and the channel ----------
-    public float SapCap        => (RData?.goldenSapCap ?? 200f) + (RData?.path2GoldenSapCapPerLevel ?? 40f) * effectivePath2Level;
+    public float SapCap        => (RData?.goldenSapCap ?? 200f) + (RData?.path2GoldenSapCapPerLevel ?? 20f) * effectivePath2Level;
     public float SapConversion => (RData?.sapConversion ?? 1f) + (RData?.path2SapConversionPerLevel ?? 0.1f) * effectivePath2Level;
     public float SapToChannel  => RData?.sapToChannel ?? 0.1f;
     public float LowHealthThreshold => RData?.lowHealthThreshold ?? 0.5f;
@@ -77,10 +78,12 @@ public class Rhodiola : Shooter
     public float BurgeonArmorMP       => BurgeonArmorBase * magicPower / 100f;
     public float BurgeonArmor         => BurgeonArmorBase + BurgeonArmorMP;
 
-    public float RevivalBaseHeal     => RData?.revivalBaseHeal     ?? 40f;
+    public float RevivalBaseHeal     => RData?.revivalBaseHeal     ?? 100f;
     public float RevivalHealPerLevel => RData?.revivalHealPerLevel ?? 20f;
     public float RevivalHealFlat     => RevivalBaseHeal + RevivalHealPerLevel * effectivePath3Level;
-    public float RevivalMPHeal       => (RData?.skillHealMPScaling ?? 0.30f) * magicPower;
+    public float RevivalMPHeal       => (RData?.skillHealMPScaling ?? 0.5f) * magicPower;
+    // the revival heal past the plant's max health becomes Verdant Guard for this long (Tommy, 2026-11-27)
+    public float VerdantGuardDuration => RData?.verdantGuardDuration ?? 20f;
     public float RevivalHeal         => RevivalHealFlat + RevivalMPHeal;
 
     protected override void Awake()
@@ -99,6 +102,7 @@ public class Rhodiola : Shooter
 
     protected override void Update()
     {
+        UpdateDeadPlantGlitter();
         // the channel is decided before the attack, so a plant dropping low stops her next flick
         if (IsAlive) UpdateChannel();
         base.Update();
@@ -113,6 +117,47 @@ public class Rhodiola : Shooter
         _castTarget = null;
         _rayBegun = false;
         if (_healRay != null) _healRay.Hide();
+        _switchTo = null;
+        ClearDeadPlantGlitter();
+    }
+
+    // sparkles rising over every tile where a plant has fallen, while she's selected (Tommy, 2026-11-27): the plants
+    // her skill can bring back (DeadPlantGlitter)
+    private readonly Dictionary<Tile, DeadPlantGlitter> _deadGlitter = new Dictionary<Tile, DeadPlantGlitter>();
+    private readonly List<Tile> _glitterGone = new List<Tile>();
+    private float _deadGlitterCheck;
+
+    private void UpdateDeadPlantGlitter()
+    {
+        if (!IsSelected || !IsAlive)
+        {
+            if (_deadGlitter.Count > 0) ClearDeadPlantGlitter();
+            return;
+        }
+        _deadGlitterCheck -= Time.unscaledDeltaTime;
+        if (_deadGlitterCheck > 0f) return;
+        _deadGlitterCheck = 0.25f;
+        foreach (var kvp in Tile.allTiles)
+        {
+            Tile t = kvp.Value;
+            if (t == null || t.deadPlant == null || _deadGlitter.ContainsKey(t)) continue;
+            _deadGlitter[t] = DeadPlantGlitter.Begin(t.transform.position);
+        }
+        // a tile whose plant came back (or whose record went) stops
+        _glitterGone.Clear();
+        foreach (var kvp in _deadGlitter)
+            if (kvp.Key == null || kvp.Key.deadPlant == null) _glitterGone.Add(kvp.Key);
+        foreach (Tile t in _glitterGone)
+        {
+            if (_deadGlitter[t] != null) _deadGlitter[t].Stop();
+            _deadGlitter.Remove(t);
+        }
+    }
+
+    private void ClearDeadPlantGlitter()
+    {
+        foreach (DeadPlantGlitter g in _deadGlitter.Values) if (g != null) g.Stop();
+        _deadGlitter.Clear();
     }
 
     // a soft gold glow over her root (Resources/RhodiolaSapGlow), drawn just above her own sprite
@@ -343,6 +388,10 @@ public class Rhodiola : Shooter
         Entity ally = _channelTarget;
         if (IsStunned || _storedSap <= 0f) return false;
         if (!Alive(ally) || !InRange(ally) || !Hurt(ally) || !CanSee(ally.transform.position)) return false;
+        // another plant just dropped under 25%: she stops (steps forward) and starts over on it (steps back), the whole
+        // animation every time (Tommy, 2026-11-27)
+        Plant fell = NewlyCritical(ally);
+        if (fell != null) { _switchTo = fell; return false; }
         bool isPlant = ally is Plant;
         if (!_channelUrgent && (!isPlant || HealthShare(ally) >= LowHealthThreshold))
         {
@@ -356,13 +405,45 @@ public class Rhodiola : Shooter
 
     private void TryStartChannel()
     {
+        // kept up to date while she isn't healing too, so only a drop during a heal counts as one
+        NewlyCritical(null);
         if (IsStunned || Time.time < _channelRecoverUntil || _storedSap < SapCap * SapToChannel) return;
+        if (_switchTo != null)
+        {
+            Plant next = _switchTo;
+            _switchTo = null;
+            if (Alive(next) && Hurt(next) && InRange(next) && CanSee(next.transform.position)) { StartChannel(next, true); return; }
+        }
         Plant low = LowestPlant(true);
         if (low != null) { StartChannel(low, true); return; }
         if (InsectInRange()) return;
         Entity hurt = LowestPlant(false);
         if (hurt == null) hurt = LowestFriendlyInsect();
         if (hurt != null) StartChannel(hurt, false);
+    }
+
+    // a plant under this share of its health that wasn't at the last look makes her switch to it mid heal
+    private const float CriticalHealthShare = 0.25f;
+    private readonly HashSet<Plant> _critical = new HashSet<Plant>();
+    private readonly List<Plant> _criticalNow = new List<Plant>();
+    private Plant _switchTo;
+
+    // the plants under 25% now; returns one in her range and sight, other than ally, that wasn't at the last look
+    private Plant NewlyCritical(Entity ally)
+    {
+        Plant fell = null;
+        _criticalNow.Clear();
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || plant == this || !plant.IsAlive || plant.maxHealth <= 0f) continue;
+            if (HealthShare(plant) >= CriticalHealthShare) continue;
+            _criticalNow.Add(plant);
+            if (fell == null && !ReferenceEquals(plant, ally) && !_critical.Contains(plant) && InRange(plant) && CanSee(plant.transform.position))
+                fell = plant;
+        }
+        _critical.Clear();
+        foreach (Plant p in _criticalNow) _critical.Add(p);
+        return fell;
     }
 
     // the lowest health hurt friendly insect (minions, hypnotized insects) in her range
@@ -500,7 +581,7 @@ public class Rhodiola : Shooter
 
     public override void OnPath3Upgrade(int level)
     {
-        baseSkillCooldown = Mathf.Max(MinSkillCooldown, data.baseSkillCooldown - level * (RData?.path3CooldownReductionPerLevel ?? 0f));
+        baseSkillCooldown = Mathf.Max(MinSkillCooldown, data.baseSkillCooldown - level * (RData?.path3CooldownReductionPerLevel ?? 10f));
     }
 
     public override void ActivateSkill()
@@ -525,7 +606,7 @@ public class Rhodiola : Shooter
         skillCooldownTimer = skillCooldown;
         // the light coming down on it (Tommy, 2026-11-27)
         RhodiolaReviveBeam.Play(tile.transform.position);
-        revived.Heal(RevivalHeal, this);
+        HealRevived(revived);
 
         if (SkillTreeManager.HasUnlock(this, RevivalAoeUnlock))
             ReviveNeighbors(tile);
@@ -533,12 +614,26 @@ public class Rhodiola : Shooter
         if (SkillTreeManager.HasUnlock(this, RevivalEmpowerUnlock))
             revived.ApplyEffect(new VerdantEmpowermentEffect(revived, 8f, 1, this));
 
-        if (IsPath3Maxed)
-        {
-            float shield = RData?.verdantGuardianShield ?? 200f;
-            float regen  = RData?.verdantGuardianRegen  ?? 20f;
-            revived.ApplyEffect(new VerdantGuardianEffect(revived, skillDuration, this, shield, regen));
-        }
+    }
+
+    // her skill's heal on a plant it brought back (Tommy, 2026-11-27): past the plant's max health it becomes Verdant Guard
+    // (OnHealOverflow), and with the skill at max level it fills her golden sap as her attack's heal does
+    private Plant _revivalHealing;
+
+    private void HealRevived(Plant revived)
+    {
+        _revivalHealing = revived;
+        revived.Heal(RevivalHeal, this);
+        _revivalHealing = null;
+        if (IsPath3Maxed) AddSap(RevivalHeal);
+    }
+
+    public override void OnHealOverflow(Entity healed, float overflow)
+    {
+        if (healed == null || overflow <= 0f || !ReferenceEquals(healed, _revivalHealing)) return;
+        // a shield grows with her heals bonus and the plant's healing received itself, and the overheal already has both
+        float scale = (1f + healed.healingReceived) * (1f + healingBonus);
+        healed.ApplyEffect(new VerdantGuardEffect(healed, VerdantGuardDuration, this, overflow / Mathf.Max(0.01f, scale)));
     }
 
     // Verdant Resurgence: also revives any fallen plant on the 8 tiles surrounding the target
@@ -557,7 +652,7 @@ public class Rhodiola : Shooter
             Plant revivedNeighbor = Plant.RevivePlant(neighbor, true);
             if (revivedNeighbor == null) continue;
             RhodiolaReviveBeam.Play(neighbor.transform.position);
-            revivedNeighbor.Heal(RevivalHeal, this);
+            HealRevived(revivedNeighbor);
         }
     }
 
@@ -575,14 +670,15 @@ public class Rhodiola : Shooter
     public override string GetAttackDescription() =>
         $"Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\n\n" +
         $"As long as the {GetName()} has at least <color=#FFD700><b>{SapCap * SapToChannel:F0}</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\n\n" +
-        $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second.";
+        $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second. If another plant falls below <color=green><b>{CriticalHealthShare * 100f:F0}%</b></color> <color=red><b>Health</b></color>, she switches to it.";
 
     public override string GetPassiveDescription() =>
         $"Whenever the {GetName()} would get healed from her attacks, she fills up her {GoldenSapLabel} by <color=#FFD700><b>{SapConversion * 100f:F0}%</b></color> of the healing, and grants herself {BurgeonLabel}, regenerating <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}</b></color> seconds and granting <color=#00CED1><b>+{BurgeonArmorBase:F0}</b></color> [<color=#FFB6C1><b>+{BurgeonArmorMP:F0}</b></color>] <color=#00CED1><b>Armor</b></color>.\n\n" +
         $"If the {GetName()} heals a plant while she is blessed by {BurgeonLabel}, she applies the buff at equal strength onto that plant.";
 
     public override string GetSkillDesription() =>
-        $"Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
+        $"Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.\n\n" +
+        $"Healing the dead plant past its <color=red><b>Max Health</b></color> overheals it, granting <color=green><b>Verdant Guard</b></color> equal to the amount of overheal, for <color=green><b>{VerdantGuardDuration:F0}</b></color> seconds.";
 
     public override string GetPath1Name() => "Verdance";
     public override string GetPath2Name() => "Symbiosis";
@@ -596,7 +692,7 @@ public class Rhodiola : Shooter
         string desc = details
             ? $"Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> {PlantData.DamageTypeLabel(damageType)}, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\n\n" +
               $"As long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> <color=red><b>Health</b></color>.\n\n" +
-              $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second."
+              $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second. If another plant falls below <color=green><b>{CriticalHealthShare * 100f:F0}%</b></color> <color=red><b>Health</b></color>, she switches to it."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
@@ -609,7 +705,7 @@ public class Rhodiola : Shooter
 
     public override string GetPath2Description(bool details = false)
     {
-        float cappl   = RData?.path2GoldenSapCapPerLevel  ?? 40f;
+        float cappl   = RData?.path2GoldenSapCapPerLevel  ?? 20f;
         float convpl  = RData?.path2SapConversionPerLevel ?? 0.1f;
         float burgpl  = RData?.path2BurgeonHealPerLevel   ?? 2f;
         float armorpl = RData?.path2BurgeonArmorPerLevel  ?? 8f;
@@ -622,22 +718,23 @@ public class Rhodiola : Shooter
                $"Increase <color=green><b>Attack</b></color> to {GoldenSapLabel} conversion ratio by <color=#FFD700><b>{convpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase {BurgeonLabel} healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase {BurgeonLabel} armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"{Level5Section(path2Level, $"{BurgeonLabel} applied onto plants including herself also fills up {GoldenSapLabel}.")}\n\n" +
+               $"{Level5Section(path2Level, $"{BurgeonLabel} applied onto plants including herself also fills up {GoldenSapLabel} at the same rate (<color=#FFD700><b>{SapConversion * 100f:F0}%</b></color>).")}\n\n" +
                $"Level: [<color=green><b>{path2Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath2Level - path2Level})</b></color>\n\n" +
                ShiftHint(details);
     }
 
     public override string GetPath3Description(bool details = false)
     {
-        float cdrpl = RData?.path3CooldownReductionPerLevel ?? 0.1f;
+        float cdrpl = RData?.path3CooldownReductionPerLevel ?? 10f;
         string desc = details
-            ? $"Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1><b>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</b></color>]</b></color> Health."
+            ? $"Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>[({RevivalBaseHeal:F0}) + ({RevivalHealPerLevel:F0}/Lvl.) + <color=#FFB6C1><b>{(RData?.skillHealMPScaling ?? 0.30f) * 100f:F0}% Magic Power</b></color>]</b></color> Health.\n\n" +
+              $"Healing the dead plant past its <color=red><b>Max Health</b></color> overheals it, granting <color=green><b>Verdant Guard</b></color> equal to the amount of overheal, for <color=green><b>{VerdantGuardDuration:F0}</b></color> seconds."
             : GetSkillDesription();
         return $"Skill:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Revival Heal</b></color> by <color=green><b>{RevivalHealPerLevel:F0}</b></color> per level. [<color=green><b>+{RevivalHealPerLevel * effectivePath3Level:F0}</b></color>]\n\n" +
                $"Reduce <color=green><b>Base Skill Cooldown</b></color> by <color=green><b>{Mathf.RoundToInt(cdrpl)}s</b></color> per level, never below <color=green><b>{MinSkillCooldown:F0}s</b></color>. [<color=green><b>-{Mathf.RoundToInt(cdrpl * effectivePath3Level)}s</b></color>]\n\n" +
                $"{SkillCooldownLine()}\n\n" +
-               $"{Level5Section(path3Level, $"Upon reviving a plant, grant it <color=green><b>Verdant Guardian</b></color>, shielding it for <color=grey><b>{RData?.verdantGuardianShield ?? 200f:F0}</b></color> health and regenerating <color=green><b>{RData?.verdantGuardianRegen ?? 20f:F0}</b></color> health per second while the shield lasts, for <color=green><b>{skillDuration:F0}s</b></color>.")}\n\n" +
+               $"{Level5Section(path3Level, $"The revival heal also fills up her {GoldenSapLabel} at the same rate as her attack's heal (<color=#FFD700><b>{SapConversion * 100f:F0}%</b></color>).")}\n\n" +
                $"Level: [<color=green><b>{path3Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath3Level - path3Level})</b></color>\n\n" +
                ShiftHint(details);
     }

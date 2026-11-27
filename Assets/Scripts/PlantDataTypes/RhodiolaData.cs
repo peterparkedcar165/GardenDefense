@@ -30,7 +30,8 @@ public class RhodiolaData : PlantData
     [Header("Golden Sap (passive)")]
     [Tooltip("how much golden sap she can hold at passive level 0")]
     public float goldenSapCap = 200f;
-    public float path2GoldenSapCapPerLevel = 40f;
+    [Tooltip("added to her sap cap per passive level (Tommy, 2026-11-27: 20, 200 to 300 at level 5)")]
+    public float path2GoldenSapCapPerLevel = 20f;
     [Tooltip("healing she gets from her attack becomes this much sap, e.g. 1 = 100%, even at full health (her Rejuvenating Burgeon no longer fills it, Tommy 2026-11-27)")]
     public float sapConversion = 1f;
     [Tooltip("added to the conversion per passive level, e.g. 0.1 = +10% (Tommy)")]
@@ -68,10 +69,17 @@ public class RhodiolaData : PlantData
     public float path2BurgeonArmorPerLevel = 8f;
 
     [Header("Path 3 Scaling")]
-    public float revivalBaseHeal                = 40f;
+    [Tooltip("her skill's heal on the revived plant (Tommy, 2026-11-27: 100); past its max health it becomes Verdant Guard")]
+    public float revivalBaseHeal                = 100f;
     public float revivalHealPerLevel            = 20f;
-    public float skillHealMPScaling             = 0.30f;
-    public float path3CooldownReductionPerLevel = 0f;
+    [Tooltip("share of Magic Power added to the revival heal, e.g. 0.5 = 50% (Tommy)")]
+    public float skillHealMPScaling             = 0.5f;
+    [Tooltip("seconds off her skill cooldown per skill level, never under 10 s (Tommy, 2026-11-27: 10, from a base of 120)")]
+    public float path3CooldownReductionPerLevel = 10f;
+    [Tooltip("how long Verdant Guard (the revival heal past max health, as a shield) lasts, seconds (Tommy)")]
+    public float verdantGuardDuration           = 20f;
+    [Tooltip("unused since 2026-11-27 (the old skill max level bonus, Verdant Guardian)")]
     public float verdantGuardianShield          = 200f;
+    [Tooltip("unused since 2026-11-27 (see above)")]
     public float verdantGuardianRegen           = 20f;
 }

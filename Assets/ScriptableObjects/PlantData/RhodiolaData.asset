@@ -88,7 +88,7 @@ MonoBehaviour:
   projectileHeight: 1.2
   basePassiveCooldown: 0
   basePassiveDuration: 0
-  baseSkillCooldown: 160
+  baseSkillCooldown: 120
   baseSkillDuration: 20
   channelDuration: 0
   baseSkillRadius: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
   path1SapEfficiencyPerLevel: 0.1
   baseGrassConversion: 1
   goldenSapCap: 200
-  path2GoldenSapCapPerLevel: 40
+  path2GoldenSapCapPerLevel: 20
   sapConversion: 1
   path2SapConversionPerLevel: 0.1
   sapToChannel: 0.1
@@ -130,9 +130,10 @@ MonoBehaviour:
   burgeonTickInterval: 0.5
   burgeonBaseArmor: 6
   path2BurgeonArmorPerLevel: 3
-  revivalBaseHeal: 40
+  revivalBaseHeal: 100
   revivalHealPerLevel: 20
-  skillHealMPScaling: 0.3
-  path3CooldownReductionPerLevel: 20
+  skillHealMPScaling: 0.5
+  path3CooldownReductionPerLevel: 10
+  verdantGuardDuration: 20
   verdantGuardianShield: 200
   verdantGuardianRegen: 20

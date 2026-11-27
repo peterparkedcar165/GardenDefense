@@ -107,9 +107,12 @@ public class ReviveGlitter : MonoBehaviour
         glitter.Build();
     }
 
-    private void Build()
+    private void Build() => _ps = MakeSystem(gameObject);
+
+    // the glitter's particle system on go, playing, emitted by hand (also the dead plant glitter's, DeadPlantGlitter)
+    public static ParticleSystem MakeSystem(GameObject go)
     {
-        _ps = gameObject.AddComponent<ParticleSystem>();
+        ParticleSystem _ps = go.AddComponent<ParticleSystem>();
         _ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
         ParticleSystem.MainModule main = _ps.main;
@@ -157,7 +160,7 @@ public class ReviveGlitter : MonoBehaviour
             new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.15f), new GradientAlphaKey(1f, 0.6f), new GradientAlphaKey(0f, 1f) });
         color.color = fade;
 
-        ParticleSystemRenderer renderer = GetComponent<ParticleSystemRenderer>();
+        ParticleSystemRenderer renderer = go.GetComponent<ParticleSystemRenderer>();
         MulchRegistry registry = Resources.Load<MulchRegistry>("MulchRegistry");
         if (registry != null && registry.glitterMaterial != null) renderer.sharedMaterial = registry.glitterMaterial;
         renderer.renderMode = ParticleSystemRenderMode.Billboard;
@@ -165,6 +168,7 @@ public class ReviveGlitter : MonoBehaviour
         renderer.sortingOrder = 101;
 
         _ps.Play();
+        return _ps;
     }
 
     private void Update()
@@ -196,6 +200,54 @@ public class ReviveGlitter : MonoBehaviour
         else if (_ps.particleCount == 0)
         {
             Destroy(gameObject);
+        }
+    }
+}
+
+// sparkles rising from a tile where a plant has fallen, while a Rhodiola is selected (Tommy, 2026-11-27): a sign there's
+// a plant her skill can bring back. the revive beam's glitter, born over the tile and drifting up, on real time but
+// frozen while paused. Stop lets the last ones fade
+public class DeadPlantGlitter : MonoBehaviour
+{
+    private const float PerSecond = 5f;
+    private ParticleSystem _ps;
+    private float _budget;
+    private bool _stopping, _paused;
+
+    public static DeadPlantGlitter Begin(Vector3 tileCenter)
+    {
+        GameObject go = new GameObject("DeadPlantGlitter");
+        go.layer = LayerMask.NameToLayer("Ignore Raycast");
+        go.transform.position = tileCenter;
+        DeadPlantGlitter glitter = go.AddComponent<DeadPlantGlitter>();
+        glitter._ps = ReviveGlitter.MakeSystem(go);
+        return glitter;
+    }
+
+    public void Stop() => _stopping = true;
+
+    private void Update()
+    {
+        bool paused = Time.timeScale <= 0f;
+        if (paused != _paused)
+        {
+            _paused = paused;
+            if (paused) _ps.Pause(); else _ps.Play();
+        }
+        if (paused) return;
+        if (_stopping)
+        {
+            if (_ps.particleCount == 0) Destroy(gameObject);
+            return;
+        }
+        _budget += PerSecond * Time.unscaledDeltaTime;
+        ParticleSystem.EmitParams p = new ParticleSystem.EmitParams();
+        while (_budget >= 1f)
+        {
+            _budget -= 1f;
+            p.position = transform.position + new Vector3(Random.Range(-0.4f, 0.4f), Random.Range(-0.45f, 0.15f), 0f);
+            p.velocity = new Vector3(Random.Range(-0.08f, 0.08f), Random.Range(0.35f, 0.7f), 0f);
+            _ps.Emit(p, 1);
         }
     }
 }
