@@ -4,22 +4,20 @@ using UnityEngine.EventSystems;
 
 // the plant info panel's skill square feels like a button once the skill is unlocked (Tommy,
 // 2026-11-26): the pointer over it lights it up, pressing it drops it 2 art pixels like the plank
-// buttons, and casting with Q plays the same press for a moment. only while the skill can be cast (its
+// buttons, and holding Q on the selected plant holds the same press (2026-11-27). only while the skill can be cast (its
 // Button interactable); a locked skill's overlay takes the pointer itself. the square's pieces (the
 // wood, the gold trim, the icon and the cooldown sweep) are gathered under one SkillVisual so they move
 // together; the light is the wood's own shape in white, over them
 public class SkillButtonFeel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     private const float Px = 2f;
-    // how much the light shows, and how long Q's press lasts (unscaled seconds)
+    // how much the light shows
     private const float LightAlpha = 0.22f;
-    private const float FlashSeconds = 0.14f;
 
     private Button button;
     private RectTransform visual;
     private Image glow;
     private bool hovered, pressed;
-    private float flashUntil = -1f;
     private bool shownDown, shownLit;
 
     // gathers the pieces named here (siblings of the button) under SkillVisual and puts this on the button
@@ -76,17 +74,17 @@ public class SkillButtonFeel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
     }
 
-    // Q cast the skill: the press, a moment
-    public void Flash() => flashUntil = Time.unscaledTime + FlashSeconds;
+    // Q held on the selected plant (PlantUpgradeUI): down and lit for as long as it's held, like the pointer pressing it
+    private bool keyHeld;
+    public void SetKeyHeld(bool held) => keyHeld = held;
 
     private bool Usable => button != null && button.interactable && button.isActiveAndEnabled;
 
     private void Update()
     {
         bool usable = Usable;
-        bool flashing = Time.unscaledTime < flashUntil;
-        bool down = flashing || (usable && pressed);
-        bool lit = flashing || (usable && hovered);
+        bool down = usable && (pressed || keyHeld);
+        bool lit = usable && (hovered || keyHeld);
         if (down != shownDown && visual != null)
         {
             shownDown = down;
@@ -114,8 +112,7 @@ public class SkillButtonFeel : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private void OnDisable()
     {
-        hovered = pressed = false;
-        flashUntil = -1f;
+        hovered = pressed = keyHeld = false;
         if (visual != null) visual.anchoredPosition = Vector2.zero;
         if (glow != null) glow.color = new Color(1f, 1f, 1f, 0f);
         shownDown = shownLit = false;

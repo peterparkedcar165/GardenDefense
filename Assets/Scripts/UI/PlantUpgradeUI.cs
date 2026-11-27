@@ -271,6 +271,11 @@ public class PlantUpgradeUI : EntityInfoPanel
                 HidePanel();
         }
 
+        // Q works like clicking the skill button (Tommy, 2026-11-27): the button stays down while Q is held, and the
+        // skill (its targeting, say) starts when Q is let go, if the same plant is still selected and can still cast it.
+        // selecting another plant or closing the panel while it's held lets it go with nothing
+        if (qHeldFor != null && qHeldFor != selectedPlant) ReleaseQ();
+
         if (selectedPlant != null)
         {
             RefreshSkillButton();
@@ -279,10 +284,25 @@ public class PlantUpgradeUI : EntityInfoPanel
             RefreshPaths();
             if (Keyboard.current.qKey.wasPressedThisFrame && selectedPlant.SkillReady)
             {
-                selectedPlant.TriggerSkill();
-                skillFeel?.Flash();
+                qHeldFor = selectedPlant;
+                if (skillFeel != null) skillFeel.SetKeyHeld(true);
+            }
+            if (qHeldFor != null && !Keyboard.current.qKey.isPressed)
+            {
+                Plant plant = qHeldFor;
+                ReleaseQ();
+                if (plant == selectedPlant && plant.SkillReady) plant.TriggerSkill();
             }
         }
+    }
+
+    // the plant Q was pressed on, while Q is held
+    private Plant qHeldFor;
+
+    private void ReleaseQ()
+    {
+        qHeldFor = null;
+        if (skillFeel != null) skillFeel.SetKeyHeld(false);
     }
 
     // a right click on the targeting display steps the mode back (TargetingClicker) and keeps the panel open
@@ -370,6 +390,7 @@ public class PlantUpgradeUI : EntityInfoPanel
         cachedInsectRenderer = null;
         statusEffectPanel?.Hide();
         statsPanels?.SetActive(false);
+        ReleaseQ();
         base.HidePanel();
         HideTooltip();
         lockedSkillTipShown = false;
