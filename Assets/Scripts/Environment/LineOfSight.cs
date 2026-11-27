@@ -10,8 +10,11 @@ using UnityEngine;
 public static class LineOfSight
 {
     public const int Rays = 720;
-    // a little thicker than the 0.1 gap between two neighbouring obstacle boxes, so no ray slips through one
-    private const float RayRadius = 0.06f;
+    // obstacle boxes are 0.9 of a cell: two side by side leave a 0.1 gap, two meeting only at a corner a 0.14 slit
+    // (0.1 times root 2) right where a ray from a tile's middle runs at 45 degrees. rays a bit thicker than the slit
+    // (0.16 across) can't slip through either; at 0.12 the 45 degree ones went through diagonal tree lines (Tommy saw
+    // plants target past obstacles from certain tiles)
+    private const float RayRadius = 0.08f;
     private const float MaxDistance = 40f;
     private const float Step = 2f * Mathf.PI / Rays;
 
