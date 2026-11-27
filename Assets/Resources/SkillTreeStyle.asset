@@ -15,3 +15,8 @@ MonoBehaviour:
   white: {fileID: 21300000, guid: e5bd54be99b84feba478c0a543f02e25, type: 3}
   vinesSquare: {fileID: 21300000, guid: 718a87041ffa4030ae26fe1e24f6b891, type: 3}
   attackRange: {fileID: 21300000, guid: b0409f8379a4c684fb2fd640b22d7c75, type: 3}
+  woodPanel: {fileID: 21300000, guid: c9593a8fea21417cb5b796800c408acc, type: 3}
+  woodPanelTrim: {fileID: 21300000, guid: 09e831fde20340608b2dedf3dbe4aa53, type: 3}
+  namePlate: {fileID: 21300000, guid: 73daa8bd2496467284bdadf4a98b5923, type: 3}
+  namePlateTrim: {fileID: 21300000, guid: 86adf69740fd4a24b42ff939251ca3ce, type: 3}
+  namePlateShade: 0.4

@@ -41,6 +41,16 @@ public class SkillTreeStyle : ScriptableObject
         Hex("#D0583A"), Hex("#EE7C5C"), Hex("#A8402A"), Hex("#FFF1E8"), Hex("#4E170C"));
 
     [Header("Plant cards")]
+    [Tooltip("the card (Tommy, 2026-11-27, Downloads/gd_wood_skill_panel): greyscale wood, tinted with the plant's element panel colour, Tiled (borders 47 47 71 48)")]
+    public Sprite woodPanel;
+    [Tooltip("the card's gold corners and leaves, over the wood, untinted")]
+    public Sprite woodPanelTrim;
+    [Tooltip("the name plate on the card's top border: its fill, greyscale, tinted (borders 44 32 14 15)")]
+    public Sprite namePlate;
+    [Tooltip("the name plate's gold rim, stamps and vines, untinted")]
+    public Sprite namePlateTrim;
+    [Tooltip("the name plate's fill: the element's panel colour times this (proposal: Tommy's original browns, plate #422921 to panel #A97350, about 0.4)")]
+    [Range(0f, 1f)] public float namePlateShade = 0.4f;
     [Tooltip("the Exp bar's fill (proposal: the wave timer's blue)")]
     public Color expFill = Hex("#4FC3F7");
     [Tooltip("the number of points a plant can spend, and the Level number, when above 0")]

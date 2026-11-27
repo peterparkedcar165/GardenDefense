@@ -13,11 +13,12 @@ using System.Collections.Generic;
 // and has an authored SkillTreeData assigned, so newly added plants simply appear once both are
 // true, with no manual scene work needed per plant beyond duplicating this panel
 //
-// look (Tommy's pixel kit, 2026-11-24): a card in the plant's element colour behind the points, the
-// portrait and the lines under it, the plant bar's bevel portrait, the points in a sunken box, a seam
-// under the name, the exp on the kit's bar, and vine links from the card through every node. nothing
-// here moves a node, a text or the portrait: it is all drawn round where the prefab and the layout put
-// them. colours in SkillTreeStyle
+// look (Tommy's pixel kit, 2026-11-24; the wood, 2026-11-27): the wood skill panel as the card, its wood in the
+// plant's element colour, behind the points, the portrait and the lines under it; the name on the wood name
+// plate on the card's top border, as wide as the name; Tommy's portrait frame (PortraitFrameLook, as on the info
+// panel); the points in a sunken box; the exp on the kit's bar; and vine links from the card through every node.
+// the nodes and the exp and level lines stay where the prefab and the layout put them; the name goes up onto the
+// plate and the points box beside the frame. colours and sprites in SkillTreeStyle
 public class SkillTreePlantPanel : MonoBehaviour
 {
     [SerializeField] private PlantData plantData;
@@ -199,15 +200,28 @@ public class SkillTreePlantPanel : MonoBehaviour
     // ---- the look ----
 
     private const float Px = 2f;
-    // canvas units: space round the card's contents, the exp bar (88 by 11 art px), the links' core
-    // (2 art px) and with their outline (4)
-    private const float CardPad = 10f;
+    // canvas units: the exp bar (88 by 11 art px), the links' core (2 art px) and with their outline (4)
     private const float ExpBarWidth = 176f;
     private const float ExpBarHeight = 22f;
     private const float LinkCore = 4f;
     private const float LinkOutline = 8f;
     // the shortest vine between the card and the first node (16 art px)
     private const float MinStem = 32f;
+    // the wood card (Tommy, 2026-11-27, Downloads/gd_wood_skill_panel), in art px: its frame reaches 16 in from every
+    // side before the planks, its corner flowers and leaves 43, and the contents keep 4 clear of the frame
+    private const float WoodFramePx = 16f;
+    private const float WoodCornerPx = 43f;
+    private const float WoodGapPx = 4f;
+    // the name plate, 29 art px tall, sits on the card's top border with its middle on the frame's: 5 px above the
+    // card's top, 24 below it. its end ornaments reach 26 px in, so the name keeps that clear, and it's never under
+    // 76 wide (its borders). the name's capitals start 12 px under its top, in the middle of the plate's fill
+    private const float NamePlateHeightPx = 29f;
+    private const float NamePlateAbovePx = 5f;
+    private const float NamePlateSidePx = 26f;
+    private const float NamePlateMinPx = 76f;
+    private const float NameCapFromPlateTopPx = 12f;
+    // the points box keeps this far from the portrait frame (canvas units)
+    private const float ChipGap = 8f;
 
     private struct Link
     {
@@ -233,22 +247,31 @@ public class SkillTreePlantPanel : MonoBehaviour
             if (t != null) SetText(t, 20f, kit.text);
         if (pointsText != null) SetText(pointsText, 40f, s.points);
 
-        // the portrait: the plant bar's bevel frame on its backdrop, in the element's colours, exactly
-        // where the plant's old square was
+        // the portrait, centred where the plant's old square was: Tommy's portrait frame (PortraitFrameLook, Tommy
+        // 2026-11-27: the same as the info panel's), 80 art px, or the plant bar's bevel frame at the square's own
+        // size when that frame isn't there
+        bool frameLook = PortraitFrameLook.Available;
         Rect portrait = new Rect(-50f, -50f, 100f, 100f);
         if (plantSprite != null)
         {
             RectTransform p = plantSprite.rectTransform;
             Vector2 centre = root.InverseTransformPoint(p.TransformPoint(p.rect.center));
-            portrait = new Rect(centre - p.rect.size * 0.5f, p.rect.size);
+            Vector2 size = frameLook ? Vector2.one * PortraitFrameLook.Size : p.rect.size;
+            portrait = new Rect(centre - size * 0.5f, size);
             plantSprite.enabled = false;
         }
+        else if (frameLook)
+            portrait = new Rect(-PortraitFrameLook.Size * 0.5f, -PortraitFrameLook.Size * 0.5f, PortraitFrameLook.Size, PortraitFrameLook.Size);
 
-        // the card's contents (points, portrait, name, exp and level) move up together so the card's
-        // middle sits on the nodes' middle line (Tommy, 2026-11-24): the card runs from just above the
-        // portrait to just under the level line
-        float top = portrait.yMax + 8f;
-        float bottom = levelText != null ? CapTop(levelText) - 7f * Px - 10f : portrait.yMin - 8f;
+        // the name plate: as wide as the name with its ornaments clear
+        float nameWidth = nameText != null ? nameText.GetPreferredValues(nameText.text).x : 0f;
+        float plateWidth = Mathf.Max(NamePlateMinPx, Mathf.Ceil(nameWidth / Px) + 2f * NamePlateSidePx) * Px;
+
+        // the card's contents (points, portrait, exp and level) move up together so the card's middle sits on the
+        // nodes' middle line (Tommy, 2026-11-24): the card runs from the name plate's lower edge, just over the
+        // portrait, to the frame just under the level line
+        float top = portrait.yMax + (NamePlateHeightPx - NamePlateAbovePx + WoodGapPx) * Px;
+        float bottom = (levelText != null ? CapTop(levelText) - 7f * Px : portrait.yMin) - (WoodFramePx + WoodGapPx) * Px;
         RectTransform nodesRect = (RectTransform)nodesContainer;
         float nodesY = root.InverseTransformPoint(nodesRect.TransformPoint(nodesRect.rect.center)).y;
         float shift = Mathf.Round((nodesY - (top + bottom) * 0.5f) / Px) * Px;
@@ -258,19 +281,23 @@ public class SkillTreePlantPanel : MonoBehaviour
         foreach (TMP_Text t in new[] { nameText, expText, levelText, pointsText })
             if (t != null) t.rectTransform.anchoredPosition += new Vector2(0f, shift);
 
-        // as wide on both sides of the portrait (Tommy): wide enough for the points box on its left, the
-        // name and the exp bar under it
+        // as wide on both sides of the portrait (Tommy): wide enough for the points box on its left and the exp bar
+        // under it, inside the wood's frame, and for the name plate between the top corners' flowers
         Rect chip = default;
         bool hasChip = pointsText != null;
-        float nameWidth = nameText != null ? nameText.GetPreferredValues(nameText.text).x : 0f;
-        float half = Mathf.Max(portrait.width * 0.5f, nameWidth * 0.5f, ExpBarWidth * 0.5f) + CardPad;
+        float half = Mathf.Max(portrait.width * 0.5f, ExpBarWidth * 0.5f);
         if (hasChip)
         {
+            // the points box left of the frame, on the points' own line
             Vector2 at = pointsText.rectTransform.anchoredPosition;
-            chip = new Rect(at.x - 38f, at.y - 38f, 76f, 76f);
-            half = Mathf.Max(half, portrait.center.x - chip.xMin + CardPad);
+            chip = new Rect(portrait.xMin - ChipGap - 76f, at.y - 38f, 76f, 76f);
+            half = Mathf.Max(half, portrait.center.x - chip.xMin);
         }
+        half += (WoodFramePx + WoodGapPx) * Px;
+        half = Mathf.Max(half, plateWidth * 0.5f + WoodCornerPx * Px);
         half = Mathf.Ceil(half / Px) * Px;
+        top = Mathf.Round(top / Px) * Px;
+        bottom = Mathf.Round(bottom / Px) * Px;
         float left = portrait.center.x - half;
         float right = portrait.center.x + half;
 
@@ -278,28 +305,75 @@ public class SkillTreePlantPanel : MonoBehaviour
         float firstNodeLeft = FirstNodeLeft(root);
         if (!float.IsNaN(firstNodeLeft) && firstNodeLeft < right + MinStem)
             nodesRect.anchoredPosition += new Vector2(Mathf.Ceil((right + MinStem - firstNodeLeft) / Px) * Px, 0f);
-        RectTransform card = NewImage("Card", root, kit.panelBase, panel, true);
+        // the card: the wood panel, its greyscale wood in the element's panel colour, Tiled so the planks repeat at
+        // their own pixel size, its gold corners and leaves over it as drawn (the kit's panel if the wood is missing)
+        bool wood = s.woodPanel != null;
+        RectTransform card = NewImage("Card", root, wood ? s.woodPanel : kit.panelBase, panel, !wood);
         Place(card, new Rect(left, bottom, right - left, top - bottom));
         card.SetSiblingIndex(0);
-        Stretch(NewImage("Shine", card, kit.panelShine, Color.white, true));
+        if (wood)
+        {
+            Image cardImage = card.GetComponent<Image>();
+            cardImage.type = Image.Type.Tiled;
+            cardImage.fillCenter = true;
+            if (s.woodPanelTrim != null)
+            {
+                RectTransform cardTrim = NewImage("Trim", card, s.woodPanelTrim, Color.white, false);
+                cardTrim.GetComponent<Image>().type = Image.Type.Tiled;
+                Stretch(cardTrim);
+            }
+        }
+        else Stretch(NewImage("Shine", card, kit.panelShine, Color.white, true));
         int next = 1;
 
+        // the name plate on the card's top border, centred: its fill in a darker shade of the card's colour
+        // (SkillTreeStyle.namePlateShade), its gold rim and vines over it, the name in the middle of the fill
+        float plateTop = top + NamePlateAbovePx * Px;
+        if (s.namePlate != null)
+        {
+            Color plateColor = panel * s.namePlateShade;
+            plateColor.a = 1f;
+            RectTransform plate = NewImage("NamePlate", root, s.namePlate, plateColor, true);
+            Place(plate, new Rect(portrait.center.x - plateWidth * 0.5f, plateTop - NamePlateHeightPx * Px, plateWidth, NamePlateHeightPx * Px));
+            plate.SetSiblingIndex(next++);
+            if (s.namePlateTrim != null) Stretch(NewImage("Trim", plate, s.namePlateTrim, Color.white, true));
+        }
+        if (nameText != null)
+        {
+            nameText.alignment = TextAlignmentOptions.Top;
+            PlaceText(nameText.rectTransform, portrait.center.x, plateTop - NameCapFromPlateTopPx * Px, 20f, Mathf.Max(plateWidth, nameWidth + 8f));
+        }
+
+        // the portrait: the backdrop in the element's backdrop colour, the plant's still icon in the opening (an idle
+        // animation here was tried and dropped, Tommy 2026-11-24), and the frame over them in the element's colour
+        Rect opening = frameLook
+            ? new Rect(portrait.xMin + PortraitFrameLook.Opening.x, portrait.yMax - PortraitFrameLook.Opening.y - PortraitFrameLook.Opening.height,
+                PortraitFrameLook.Opening.width, PortraitFrameLook.Opening.height)
+            : new Rect(portrait.center - portrait.size * (32f / 72f), portrait.size * (64f / 72f));
         RectTransform backdrop = NewImage("PortraitBackdrop", root, look.slotBackdrop, PlantData.ElementBackdropColor(element), false);
-        Place(backdrop, new Rect(portrait.center - portrait.size * (32f / 72f), portrait.size * (64f / 72f)));
+        if (frameLook) PortraitFrameLook.MakeBackdrop(backdrop.GetComponent<Image>());
+        Place(backdrop, opening);
         backdrop.SetSiblingIndex(next++);
-        // the plant's still icon in the frame's window, which clips it (an idle animation here was tried
-        // and dropped, Tommy 2026-11-24)
         GameObject windowObject = new GameObject("PortraitWindow", typeof(RectTransform), typeof(RectMask2D));
         windowObject.layer = root.gameObject.layer;
         RectTransform window = (RectTransform)windowObject.transform;
         window.SetParent(root, false);
-        Place(window, new Rect(portrait.center - portrait.size * (32f / 72f), portrait.size * (64f / 72f)));
+        Place(window, opening);
         window.SetSiblingIndex(next++);
         RectTransform plantImage = NewImage("PortraitPlant", window, plantData.icon, Color.white, false);
         Image plantPicture = plantImage.GetComponent<Image>();
         plantPicture.preserveAspect = true;
-        Place(plantImage, new Rect(-portrait.size * 0.45f, portrait.size * 0.9f));
+        if (frameLook && plantData.icon != null)
+        {
+            // as big as fits the opening, bottom centred, like the info panel's portrait (PlantUpgradeUI.SetPortrait)
+            Vector2 iconSize = plantData.icon.rect.size;
+            float scale = Mathf.Min(opening.width / Mathf.Max(1f, iconSize.x), opening.height / Mathf.Max(1f, iconSize.y));
+            Vector2 shown = new Vector2(Mathf.Round(iconSize.x * scale), Mathf.Round(iconSize.y * scale));
+            Place(plantImage, new Rect(-shown.x * 0.5f, -opening.height * 0.5f, shown.x, shown.y));
+        }
+        else Place(plantImage, new Rect(-portrait.size * 0.45f, portrait.size * 0.9f));
         RectTransform frame = NewImage("PortraitFrame", root, look.slotFrame, PlantData.ElementColor(element), false);
+        if (frameLook) PortraitFrameLook.MakeFrame(frame.GetComponent<Image>());
         Place(frame, portrait);
         frame.SetSiblingIndex(next++);
 
@@ -314,15 +388,6 @@ public class SkillTreePlantPanel : MonoBehaviour
             word.gameObject.AddComponent<PixelTextEffect>().Color = shadow;
             pointsText.alignment = TextAlignmentOptions.Top;
             PlaceText(pointsText.rectTransform, chip.center.x, chip.yMax - 36f, 40f, chip.width);
-        }
-
-        // a seam between the name and the exp bar
-        if (nameText != null && expText != null)
-        {
-            float seamY = Mathf.Round(((CapTop(nameText) - 7f * Px - 4f) + (CapTop(expText) + 4f)) * 0.25f) * Px;
-            RectTransform seam = NewImage("Seam", root, kit.seam, Color.white, false);
-            Place(seam, new Rect(left + 8f, seamY - 2f, right - left - 16f, 4f));
-            seam.SetSiblingIndex(next++);
         }
 
         // the exp on the kit's bar, the number inside it in white with a dark shadow
