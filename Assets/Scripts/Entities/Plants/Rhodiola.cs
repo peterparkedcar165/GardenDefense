@@ -135,6 +135,9 @@ public class Rhodiola : Shooter
         _castTarget = null;
         _rayBegun = false;
         if (_healRay != null) _healRay.Hide();
+        if (_bloomRay != null) _bloomRay.Hide();
+        _bloomTo = null;
+        _bloomFrom = null;
         _switchTo = null;
         ClearDeadPlantGlitter();
     }
@@ -550,6 +553,7 @@ public class Rhodiola : Shooter
         }
         if (_rayBegun && _healRay != null) _healRay.Stop();
         _rayBegun = false;
+        EndBloom();
         _channelTarget = null;
         _channelCheckTimer = 0f;
     }
@@ -579,7 +583,65 @@ public class Rhodiola : Shooter
         _storedSap = Mathf.Max(0f, _storedSap - amount / efficiency);
         FaceAttackTarget(ally.gameObject);
         ally.Heal(amount, this);
+        Bloom(ally, amount);
         if (HasEffect<RejuvenatingBurgeonEffect>()) ApplyBurgeon(ally);
+    }
+
+    // Widespread Bloom (skill tree, Tommy, 2026-11-27): while she heals one, a second heal line blooms from it to the most
+    // injured plant within her attack range of it that it can see, and heals that plant for half of each heal. it costs
+    // no sap of its own, and passes no burgeon on
+    private const float BloomShare = 0.5f;
+    private RhodiolaHealRay _bloomRay;
+    private Entity _bloomFrom;
+    private Plant _bloomTo;
+    private Vector3 _bloomFromPoint;
+
+    private void Bloom(Entity healed, float amount)
+    {
+        Plant next = amount > 0f && SkillTreeManager.HasUnlock(this, WidespreadBloomUnlock) ? BloomTarget(healed) : null;
+        if (next == null) { EndBloom(); return; }
+        next.Heal(amount * BloomShare, this);
+        _bloomFrom = healed;
+        _bloomTo = next;
+        if (_bloomRay == null)
+            _bloomRay = RhodiolaHealRay.Create(this, GetMainRenderer(), () =>
+            {
+                if (_bloomFrom != null) _bloomFromPoint = _bloomFrom.VisualCenter;
+                return _bloomFromPoint;
+            }, false);
+        if (_bloomRay != null)
+        {
+            _bloomFromPoint = healed.VisualCenter;
+            _bloomRay.Begin(next);
+        }
+    }
+
+    // the most injured plant (the lowest share of its health) within her attack range of the healed one, other than it
+    // and her, that the healed one can see
+    private Plant BloomTarget(Entity healed)
+    {
+        if (healed == null) return null;
+        Vector2 from = healed.transform.position;
+        bool high = healed is Plant healedPlant && healedPlant.OnHighground;
+        Plant best = null;
+        float bestShare = 1f;
+        foreach (Plant plant in Plant.allPlants)
+        {
+            if (plant == null || plant == this || ReferenceEquals(plant, healed) || !plant.IsAlive || plant.maxHealth <= 0f) continue;
+            if (!Hurt(plant) || Vector2.Distance(from, plant.transform.position) > attackRange) continue;
+            float share = HealthShare(plant);
+            if (share >= bestShare || LineOfSight.Blocked(from, plant.transform.position, high, out _)) continue;
+            bestShare = share;
+            best = plant;
+        }
+        return best;
+    }
+
+    private void EndBloom()
+    {
+        if (_bloomTo != null && _bloomRay != null) _bloomRay.Stop();
+        _bloomTo = null;
+        _bloomFrom = null;
     }
 
     // where the crystal at the tip of her staff is right now: the tip in the frame she's showing

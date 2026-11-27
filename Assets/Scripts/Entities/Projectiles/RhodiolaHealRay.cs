@@ -31,6 +31,8 @@ public class RhodiolaHealRay : MonoBehaviour
     private Vector3 _targetPoint;
     private bool _stopRequested, _beamOn, _beamFading;
     private int _spiralFrame, _beamFrame;
+    // a beam with no spiral (Widespread Bloom's, from the plant she heals on to the next): it shoots at Begin
+    private bool _beamOnly;
     private float _frameTimer, _extendT, _fadeT;
 
     // how long after Begin the beam reaches the ally: the spiral's start, then the beam's shot
@@ -62,14 +64,15 @@ public class RhodiolaHealRay : MonoBehaviour
     }
 
     // owner: who it belongs to (it goes when they do). look: the sprite it's drawn like. origin: where the ray leaves
-    // her, asked every frame. null when the art isn't there
-    public static RhodiolaHealRay Create(Component owner, SpriteRenderer look, System.Func<Vector3> origin)
+    // her, asked every frame. spiral: false for the beam alone. null when the art isn't there
+    public static RhodiolaHealRay Create(Component owner, SpriteRenderer look, System.Func<Vector3> origin, bool spiral = true)
     {
         if (!Load()) return null;
         GameObject go = new GameObject("RhodiolaHealRay");
         RhodiolaHealRay ray = go.AddComponent<RhodiolaHealRay>();
         ray._owner = owner;
         ray._origin = origin;
+        ray._beamOnly = !spiral;
         ray._spiral = ray.MakeRenderer("HealSpiral", look, SpiralOrderAbove);
         ray._beam = ray.MakeRenderer("HealBeam", look, SpiralOrderAbove + 1);
         ray._beam.drawMode = SpriteDrawMode.Tiled;
@@ -101,7 +104,11 @@ public class RhodiolaHealRay : MonoBehaviour
         _target = ally;
         if (ally != null) _targetPoint = ally.VisualCenter;
         _stopRequested = false;
-        if (_state == SpiralState.Off || _state == SpiralState.End)
+        if (_beamOnly)
+        {
+            if (!_beamOn || _beamFading) StartBeam();
+        }
+        else if (_state == SpiralState.Off || _state == SpiralState.End)
         {
             _state = SpiralState.Start;
             _spiralFrame = 0;
