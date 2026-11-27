@@ -29,6 +29,8 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     // cover's vines (their own 40)
     private const float FrameSize = 46f;
     private const float WindowSize = 32f;
+    // the frame's own dark window: a skill icon covers all of it (Tommy, 2026-11-27), over the coloured window
+    private const float FrameWindowSize = 33f;
     private const float IconMax = 24f;
     private const float VinesSize = 40f;
     // canvas units: the rank's capitals start this far under the frame
@@ -148,9 +150,15 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             {
                 // the biggest whole number scale that fits, so the icon's pixels stay square
                 float longest = Mathf.Max(iconSprite.rect.width, iconSprite.rect.height);
-                float scale = plant != null && iconSprite == plant.skillIcon ? SkillIconScale(longest) : Mathf.Max(1f, Mathf.Floor(IconMax * Px / longest));
+                float scale = Mathf.Max(1f, Mathf.Floor(IconMax * Px / longest));
                 RectTransform icon = NewImage("Icon", background.transform, iconSprite, tint);
                 icon.sizeDelta = new Vector2(iconSprite.rect.width * scale, iconSprite.rect.height * scale);
+                // a skill icon fills the frame's whole window, its picture as the node (Tommy, 2026-11-27)
+                if (plant != null && iconSprite == plant.skillIcon)
+                {
+                    icon.sizeDelta = new Vector2(FrameWindowSize * Px, FrameWindowSize * Px);
+                    icon.GetComponent<Image>().preserveAspect = false;
+                }
                 iconImage = icon.GetComponent<Image>();
                 iconTint = tint;
             }
@@ -239,14 +247,6 @@ public class SkillNodeButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                     return false;
             }
         }
-    }
-
-    // a skill icon (bigger art than the stat icons) as big as fits the window with a little room at a whole number
-    // scale, or a half or a third of its size when it's bigger than that, so its pixels stay square
-    private static float SkillIconScale(float longest)
-    {
-        float room = WindowSize * Px - 8f;
-        return longest <= room ? Mathf.Floor(room / longest) : 1f / Mathf.Ceil(longest / room);
     }
 
     // what the node raises, by its first effect: the stat icons, the sun for a cheaper plant, a path's
