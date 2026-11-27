@@ -35,6 +35,9 @@ public class SkillTargetingManager : MonoBehaviour
     private float lineWidth = DefaultLineIndicatorWidth;
     private Sprite customLineSprite;
     private float? fixedLineLength;
+    // line of sight (Tommy, 2026-11-27): a skill that stops at the first obstacle shows its line cut there, from this
+    // plant's ground (from low ground any obstacle or cliff, from high ground only an obstacle on high ground)
+    private Plant lineStopsFor;
     private static Sprite _lineSprite;
 
     private static Sprite GetLineSprite()
@@ -120,12 +123,14 @@ public class SkillTargetingManager : MonoBehaviour
             {
                 Vector3 delta = mouseWorld - clampCenter;
                 float length = fixedLineLength ?? delta.magnitude;
+                Vector3 dir = delta.sqrMagnitude > 0.0001f ? delta.normalized : Vector3.right;
+                if (lineStopsFor != null && LineOfSight.Blocked(clampCenter, clampCenter + dir * length, lineStopsFor.OnHighground, out Vector2 blockedAt))
+                    length = Vector2.Distance(clampCenter, blockedAt);
                 indicatorInstance.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg);
                 if (customLineSprite != null)
                 {
                     // standard center-pivoted sprite: position at the segment's midpoint, same
                     // convention Blizzard's own live visual uses
-                    Vector3 dir = delta.sqrMagnitude > 0.0001f ? delta.normalized : Vector3.right;
                     indicatorInstance.transform.position = clampCenter + dir * (length * 0.5f);
                 }
                 else
@@ -169,7 +174,7 @@ public class SkillTargetingManager : MonoBehaviour
         if (isDeadTileTargeting && onDeadTileConfirm != null && ReferenceEquals(onDeadTileConfirm.Target, plant)) CancelDeadTileTargeting();
     }
 
-    public void BeginTargeting(float radius, Action<Vector3> onConfirm, Vector3? clampCenter = null, float clampRadius = 0f, bool asLine = false, float lineWidth = DefaultLineIndicatorWidth, Sprite lineSprite = null, float? fixedLineLength = null)
+    public void BeginTargeting(float radius, Action<Vector3> onConfirm, Vector3? clampCenter = null, float clampRadius = 0f, bool asLine = false, float lineWidth = DefaultLineIndicatorWidth, Sprite lineSprite = null, float? fixedLineLength = null, Plant lineStopsAtObstaclesFor = null)
     {
         PlantSelector.instance?.ClearAll();
         if (isTargeting) Cancel();
@@ -185,6 +190,7 @@ public class SkillTargetingManager : MonoBehaviour
         this.lineWidth = lineWidth;
         customLineSprite = lineSprite;
         this.fixedLineLength = fixedLineLength;
+        lineStopsFor = lineStopsAtObstaclesFor;
         if (lineMode)
             indicatorInstance = CreateLineIndicator(lineSprite);
         else if (targetIndicatorPrefab != null)

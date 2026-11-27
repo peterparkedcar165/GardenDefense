@@ -4,7 +4,7 @@ using UnityEngine;
 // (one every half degree) to the first blocker: an obstacle tile's box (Tile.SpawnObstacleZone) or a cliff's
 // edge (CliffBuilder), both on the Obstacle layer. from high ground only obstacles standing on high ground block
 // (it sees down past cliffs and over everything on low ground). who casts them and when is the plant's business (Plant;
-// flying insects are never hidden). the same rays decide its targeting and paint the red part of its range
+// a flying insect is hidden only when the low part of the line to it is blocked, Plant.InSight). the same rays decide its targeting and paint the red part of its range
 // circle (SightShade)
 public static class LineOfSight
 {

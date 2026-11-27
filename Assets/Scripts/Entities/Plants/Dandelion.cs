@@ -243,7 +243,10 @@ public class Dandelion : Shooter
         float   angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         // the gust always travels forward only (a single projectile, never bidirectional, even
-        // at max level), so the preview is always a forward-facing rectangle
+        // at max level), so the preview is always a forward-facing rectangle. it ends at the first
+        // obstacle in the way, like the gust (line of sight, Tommy 2026-11-27)
+        if (LineOfSight.Blocked(transform.position, (Vector2)transform.position + dir * indicatorRange, OnHighground, out Vector2 blockedAt))
+            indicatorRange = Vector2.Distance(transform.position, blockedAt);
         Vector3 indicatorCenter = transform.position + (Vector3)(dir * indicatorRange * 0.5f);
         windGustIndicatorInstance.transform.SetPositionAndRotation(indicatorCenter, Quaternion.Euler(0f, 0f, angle));
         windGustIndicatorInstance.transform.localScale = new Vector3(indicatorRange, beamWidth, 1f);

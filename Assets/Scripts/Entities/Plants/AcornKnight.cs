@@ -554,7 +554,7 @@ public class AcornKnight : Aura
     public override void ActivateSkill()
     {
         if (!SkillReady || _shieldOut) return;
-        SkillTargetingManager.instance.BeginTargeting(SkillThrowRange, OnTargetConfirmed, transform.position, SkillThrowRange, asLine: true, lineWidth: GetProjectileLineWidth());
+        SkillTargetingManager.instance.BeginTargeting(SkillThrowRange, OnTargetConfirmed, transform.position, SkillThrowRange, asLine: true, lineWidth: GetProjectileLineWidth(), lineStopsAtObstaclesFor: this);
     }
 
     // reads straight off the projectile prefab's own CircleCollider2D so the targeting line always

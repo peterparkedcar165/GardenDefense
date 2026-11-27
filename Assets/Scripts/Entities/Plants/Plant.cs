@@ -2061,7 +2061,7 @@ public abstract class Plant : Entity, IAttackable
     // a plant that needs a clear line (straight and homing shooters, Stargazer, Kelp, Rhodiola: NeedsLineOfSight)
     // can't target a ground insect or an ally it can't see. from low ground, obstacle tiles and cliff edges
     // block the line; from high ground only trees, bushes and boulders standing on high ground do (it sees
-    // down past cliffs and over everything on low ground). flying insects are never hidden. what it sees is
+    // down past cliffs and over everything on low ground). a flying insect is hidden only when the low part of the line to it is blocked (InSight). what it sees is
     // cast once from where it stands (LineOfSight) and kept until it moves or its ground changes. the part
     // of its range it can't see shows red on its range circle (SightShade)
     // melee plants need one too (Tommy, 2026-11-27: Acorn Knight, Bird of Paradise, Cactus)
@@ -2098,8 +2098,22 @@ public abstract class Plant : Entity, IAttackable
         return _sightRays == null || LineOfSight.Sees(_sightRays, _sightOrigin, point);
     }
 
-    // a flying insect is never hidden
-    public bool InSight(Insect insect) => insect.isFlying || CanSee(insect.transform.position);
+    // a flying insect: the line to it rises from the plant to its body, the way a shot climbs to it (Projectile), so
+    // only its part lower than Projectile.FliesOverHeight can be blocked. hidden when the first blocker toward the
+    // spot under it comes before that height (Tommy, 2026-11-27: skip a flyer whose shot would crash first)
+    public bool InSight(Insect insect)
+    {
+        if (!insect.isFlying) return CanSee(insect.transform.position);
+        if (!NeedsLineOfSight) return true;
+        EnsureSight();
+        if (_sightRays == null) return true;
+        Vector2 toward = (Vector2)(insect.transform.position - _sightOrigin);
+        float ground = toward.magnitude;
+        if (ground < 0.001f) return true;
+        float height = insect.GetAimPoint().y - insect.transform.position.y;
+        float lowPart = height > Projectile.FliesOverHeight ? ground * Projectile.FliesOverHeight / height : ground;
+        return _sightRays[LineOfSight.RayIndex(Mathf.Atan2(toward.y, toward.x))] >= lowPart;
+    }
 
     // the red part of its range circle, kept up to date while the circle shows
     private SightShade _sightShade;

@@ -145,10 +145,11 @@ public class Holly : Aura
         // preview matches the real Blizzard exactly: same sprite (pulled straight off the
         // prefab's own visual, a plain white square) and a constant length equal to skillRadius -
         // Blizzard always travels that full distance regardless of where within range you click,
-        // so the length should never vary with the live aim point either
+        // so the length should never vary with the live aim point either (only cut at the first
+        // obstacle in the way, where the beam itself stops)
         Sprite blizzardSprite = blizzardPrefab != null ? blizzardPrefab.GetComponentInChildren<SpriteRenderer>()?.sprite : null;
         SkillTargetingManager.instance.BeginTargeting(skillRadius, OnTargetConfirmed, transform.position, skillRadius,
-            asLine: true, lineWidth: BlizzardWidth, lineSprite: blizzardSprite, fixedLineLength: skillRadius);
+            asLine: true, lineWidth: BlizzardWidth, lineSprite: blizzardSprite, fixedLineLength: skillRadius, lineStopsAtObstaclesFor: this);
     }
 
     private void OnTargetConfirmed(Vector3 position)
